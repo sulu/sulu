@@ -260,7 +260,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
         return new CategoryListRepresentation(
             $categories,
             self::$entityKey,
-            'get_categories',
+            'sulu_category.get_categories',
             $request->query->all(),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),

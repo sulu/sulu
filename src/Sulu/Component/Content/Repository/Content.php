@@ -29,7 +29,7 @@ use Sulu\Exception\FeatureNotImplementedException;
  * @Relation(
  *      "children",
  *      href = @Route(
- *          "get_nodes",
+ *          "sulu_page.get_nodes",
  *          parameters = {"parent" = "expr(object.getId())", "language" = "expr(object.getLocale())", "webspace" = "expr(object.getWebspaceKey())", "fields" = "expr(object.getMapping())"}
  *      )
  * )

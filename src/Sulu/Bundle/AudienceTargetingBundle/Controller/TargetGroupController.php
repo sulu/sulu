@@ -100,7 +100,7 @@ class TargetGroupController extends RestController implements ClassResourceInter
         $list = new ListRepresentation(
             $results,
             static::$entityKey,
-            'get_target-groups',
+            'sulu_audience_targeting.get_target-groups',
             $request->query->all(),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),

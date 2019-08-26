@@ -85,7 +85,7 @@ class VersionController extends FOSRestController implements
         $versionCollection = new ListRepresentation(
             $versionData,
             'page_versions',
-            'get_page_versions',
+            'sulu_page.get_page_versions',
             [
                 'id' => $id,
                 'locale' => $locale,

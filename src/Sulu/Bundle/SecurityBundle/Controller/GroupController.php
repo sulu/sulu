@@ -78,7 +78,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
             $list = new ListRepresentation(
                 $listBuilder->execute(),
                 static::$entityKey,
-                'get_groups',
+                'sulu_security.get_groups',
                 $request->query->all(),
                 $listBuilder->getCurrentPage(),
                 $listBuilder->getLimit(),

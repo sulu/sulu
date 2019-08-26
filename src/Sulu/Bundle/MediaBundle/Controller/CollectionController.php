@@ -195,7 +195,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             $list = new ListRepresentation(
                 $collections,
                 self::$entityKey,
-                'get_collections',
+                'sulu_media.get_collections',
                 $request->query->all(),
                 $listRestHelper->getPage(),
                 $listRestHelper->getLimit(),

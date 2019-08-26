@@ -49,7 +49,7 @@ class CustomUrlController extends RestController implements SecuredControllerInt
 
         $list = new RouteAwareRepresentation(
             new CollectionRepresentation($result, self::$relationName),
-            'cget_webspace_custom-urls',
+            'sulu_custom_url.cget_webspace_custom-urls',
             array_merge($request->request->all(), ['webspace' => $webspace])
         );
 

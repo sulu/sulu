@@ -34,7 +34,7 @@ class SuluRouteExtension extends Extension implements PrependExtensionInterface
                     'resources' => [
                         'routes' => [
                             'routes' => [
-                                'list' => 'get_routes',
+                                'list' => 'sulu_routes.get_routes',
                             ],
                         ],
                     ],

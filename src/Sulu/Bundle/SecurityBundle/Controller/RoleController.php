@@ -83,7 +83,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
             $list = new ListRepresentation(
                 $listBuilder->execute(),
                 static::$entityKey,
-                'get_roles',
+                'sulu_security.get_roles',
                 $request->query->all(),
                 $listBuilder->getCurrentPage(),
                 $listBuilder->getLimit(),

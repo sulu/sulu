@@ -323,7 +323,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
             // TODO return 404 and handle this edge case on client side
             return $this->redirect(
                 $this->generateUrl(
-                    'get_nodes',
+                    'sulu_page.get_nodes',
                     [
                         'tree' => 'false',
                         'depth' => 1,

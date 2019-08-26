@@ -38,7 +38,7 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
     {
         return $this->getMultipleView(
             $this->getContactEntityName(),
-            'get_contact_medias',
+            'sulu_contact.get_contact_medias',
             $this->get('sulu_contact.contact_manager'),
             $contactId,
             $request

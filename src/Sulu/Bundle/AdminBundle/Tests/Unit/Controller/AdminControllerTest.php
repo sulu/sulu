@@ -141,8 +141,8 @@ class AdminControllerTest extends TestCase
     private $resources = [
         'tags' => [
             'endpoint' => [
-                'list' => 'get_tags',
-                'detail' => 'get_tag',
+                'list' => 'sulu_tag.get_tags',
+                'detail' => 'sulu_tag.get_tag',
             ],
         ],
     ];
@@ -236,7 +236,7 @@ class AdminControllerTest extends TestCase
         $this->urlGenerator->generate('sulu_preview.update')->willReturn('/preview/update');
         $this->urlGenerator->generate('sulu_preview.update-context')->willReturn('/preview/update-context');
         $this->urlGenerator->generate('sulu_preview.stop')->willReturn('/preview/stop');
-        $this->urlGenerator->generate('cget_contexts')->willReturn('/security/contexts');
+        $this->urlGenerator->generate('sulu_security.cget_contexts')->willReturn('/security/contexts');
         $this->urlGenerator->generate('sulu_website.cache.remove')->willReturn('/admin/website/cache');
         $this->urlGenerator->generate('sulu_media.redirect', ['id' => ':id'])->willReturn('/media/redirect');
 

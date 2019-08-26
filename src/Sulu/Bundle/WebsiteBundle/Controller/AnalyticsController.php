@@ -41,7 +41,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
 
         $list = new RouteAwareRepresentation(
             new CollectionRepresentation($entities, self::RESULT_KEY),
-            'cget_webspace_analytics',
+            'sulu_website.cget_webspace_analytics',
             array_merge($request->request->all(), ['webspace' => $webspace])
         );
 

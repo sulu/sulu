@@ -107,42 +107,42 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                     'resources' => [
                         'contacts' => [
                             'routes' => [
-                                'list' => 'get_contacts',
-                                'detail' => 'get_contact',
+                                'list' => 'sulu_contact.get_contacts',
+                                'detail' => 'sulu_contact.get_contact',
                             ],
                         ],
                         'contact_titles' => [
                             'routes' => [
-                                'list' => 'get_contact-titles',
+                                'list' => 'sulu_contact.get_contact-titles',
                             ],
                         ],
                         'contact_positions' => [
                             'routes' => [
-                                'list' => 'get_contact-positions',
+                                'list' => 'sulu_contact.get_contact-positions',
                             ],
                         ],
                         'contact_media' => [
                             'routes' => [
-                                'list' => 'cget_contact_medias',
-                                'detail' => 'delete_contact_medias',
+                                'list' => 'sulu_contact.cget_contact_medias',
+                                'detail' => 'sulu_contact.delete_contact_medias',
                             ],
                         ],
                         'accounts' => [
                             'routes' => [
-                                'list' => 'get_accounts',
-                                'detail' => 'get_account',
+                                'list' => 'sulu_contact.get_accounts',
+                                'detail' => 'sulu_contact.get_account',
                             ],
                         ],
                         'account_media' => [
                             'routes' => [
-                                'list' => 'cget_account_medias',
-                                'detail' => 'delete_account_medias',
+                                'list' => 'sulu_contact.cget_account_medias',
+                                'detail' => 'sulu_contact.delete_account_medias',
                             ],
                         ],
                         'account_contacts' => [
                             'routes' => [
-                                'list' => 'get_account_contacts',
-                                'detail' => 'delete_account_contacts',
+                                'list' => 'sulu_contact.get_account_addresses',
+                                'detail' => 'sulu_contact.delete_account_contacts',
                             ],
                         ],
                     ],
@@ -217,8 +217,8 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                 'fos_js_routing',
                 [
                     'routes_to_expose' => [
-                        'delete_contact_medias',
-                        'delete_account_medias',
+                        'sulu_contact.delete_contact_medias',
+                        'sulu_contact.delete_account_medias',
                     ],
                 ]
             );
@@ -229,7 +229,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                 'fos_js_routing',
                 [
                     'routes_to_expose' => [
-                        'delete_account_contacts',
+                        'sulu_contact.delete_account_contacts',
                     ],
                 ]
             );
