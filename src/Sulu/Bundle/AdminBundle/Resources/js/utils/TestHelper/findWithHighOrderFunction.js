@@ -1,9 +1,9 @@
 // @flow
-import type {Component} from 'react';
+import type {Component as ComponentType} from 'react';
 
 export default function findWithHighOrderFunction(
     withHighOrderFunction: any,
-    Component: Class<Component<*, *>>
+    Component: Class<ComponentType<*, *>>
 ): Function {
     if (!withHighOrderFunction
         || !withHighOrderFunction.hasOwnProperty('mock')

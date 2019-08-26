@@ -184,7 +184,7 @@ exports[`ColorPicker should render with open overlay 1`] = `
             <div style=\\"position: relative; height: 10px; margin-top: 4px; overflow: hidden; display: none;\\">
               <div style=\\"position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;\\">
                 <div style=\\"position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; overflow: hidden;\\">
-                  <div style=\\"position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: url() left;\\"></div>
+                  <div style=\\"position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: url(data:image/png;base64,00) left;\\"></div>
                 </div>
                 <div style=\\"position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;\\"></div>
                 <div style=\\"position: relative; height: 100%; margin: 0px 3px;\\">
@@ -196,7 +196,7 @@ exports[`ColorPicker should render with open overlay 1`] = `
             </div>
           </div>
           <div style=\\"width: 24px; height: 10px; position: relative; margin-top: 4px; margin-left: 4px; border-radius: 3px;\\">
-            <div style=\\"position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: url() left;\\"></div>
+            <div style=\\"position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background: url(data:image/png;base64,00) left;\\"></div>
             <div style=\\"position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; border-radius: 2px; background: rgb(34, 25, 77); box-shadow: inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25);\\"></div>
           </div>
         </div>

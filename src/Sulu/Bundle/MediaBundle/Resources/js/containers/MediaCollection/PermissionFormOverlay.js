@@ -17,7 +17,7 @@ type Props = {|
 const API_OPTIONS = {resourceKey: 'media'};
 
 @observer
-export default class PermissionFormOverlay extends React.Component<Props> {
+class PermissionFormOverlay extends React.Component<Props> {
     formRef: ?Form;
     resourceStore: ResourceStore;
     formStore: ResourceFormStore;
@@ -89,3 +89,5 @@ export default class PermissionFormOverlay extends React.Component<Props> {
         );
     }
 }
+
+export default PermissionFormOverlay;
