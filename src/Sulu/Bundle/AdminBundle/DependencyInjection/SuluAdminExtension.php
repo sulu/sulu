@@ -98,7 +98,7 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                 'fos_js_routing',
                 [
                     'routes_to_expose' => [
-                        '.+\.c?get_.*',
+                        '(.+\.)?c?get_.*',
                         'sulu_admin.metadata',
                     ],
                 ]
