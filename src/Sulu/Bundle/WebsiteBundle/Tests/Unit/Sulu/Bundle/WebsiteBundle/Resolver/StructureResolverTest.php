@@ -98,6 +98,7 @@ class StructureResolverTest extends TestCase
             'extension' => [
                 'excerpt' => ['test1' => 'test1'],
             ],
+            'id' => 'some-uuid',
             'uuid' => 'some-uuid',
             'view' => [
                 'property' => 'view',
@@ -161,6 +162,7 @@ class StructureResolverTest extends TestCase
         $document->getAuthor()->willReturn(1);
 
         $expected = [
+            'id' => 'some-uuid',
             'uuid' => 'some-uuid',
             'view' => [
                 'property' => 'view',
