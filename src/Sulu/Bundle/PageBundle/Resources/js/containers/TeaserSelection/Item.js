@@ -28,7 +28,7 @@ type Props = {|
 |};
 
 @observer
-export default class Item extends React.Component<Props> {
+class Item extends React.Component<Props> {
     static mediaUrl: ?string = undefined;
 
     @observable title: ?string = undefined;
@@ -165,3 +165,5 @@ export default class Item extends React.Component<Props> {
         );
     }
 }
+
+export default Item;

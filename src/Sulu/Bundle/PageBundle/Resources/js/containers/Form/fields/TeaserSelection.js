@@ -9,7 +9,7 @@ import TeaserSelectionComponent from '../../TeaserSelection';
 import type {TeaserSelectionValue} from '../../TeaserSelection/types';
 
 @observer
-export default class TeaserSelection extends React.Component<FieldTypeProps<TeaserSelectionValue>> {
+class TeaserSelection extends React.Component<FieldTypeProps<TeaserSelectionValue>> {
     @computed get locale(): IObservableValue<string> {
         const {formInspector} = this.props;
 
@@ -59,3 +59,5 @@ export default class TeaserSelection extends React.Component<FieldTypeProps<Teas
         );
     }
 }
+
+export default TeaserSelection;

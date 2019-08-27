@@ -1,4 +1,3 @@
-/.env
 /vendor/
 /.web-server-pid
 phpunit.stderr
@@ -54,7 +53,9 @@ jackrabbit-standalone*
 jackrabbit/*
 
 ###> symfony/framework-bundle ###
-/.env
+/.env.local
+/.env.local.php
+/.env.*.local
 /public/bundles/
 /var/
 /vendor/

@@ -5,7 +5,7 @@ import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import SearchResultComponent from '../../../components/SearchResult';
 
 @observer
-export default class SearchResult extends React.Component<FieldTypeProps<typeof undefined>> {
+class SearchResult extends React.Component<FieldTypeProps<typeof undefined>> {
     render() {
         const {formInspector} = this.props;
         const locale = formInspector.locale ? formInspector.locale.get() : undefined;
@@ -35,3 +35,5 @@ export default class SearchResult extends React.Component<FieldTypeProps<typeof 
         );
     }
 }
+
+export default SearchResult;

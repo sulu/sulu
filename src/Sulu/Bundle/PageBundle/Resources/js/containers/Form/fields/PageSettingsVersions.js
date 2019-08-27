@@ -12,7 +12,7 @@ import {translate} from 'sulu-admin-bundle/utils';
 type Props = FieldTypeProps<void>;
 
 @observer
-export default class PageSettingsVersions extends React.Component<Props> {
+class PageSettingsVersions extends React.Component<Props> {
     listStore: ListStore;
     @observable page: IObservableValue<number> = observable.box(1);
     @observable restoreId: ?string | number = undefined;
@@ -105,3 +105,5 @@ export default class PageSettingsVersions extends React.Component<Props> {
         );
     }
 }
+
+export default PageSettingsVersions;

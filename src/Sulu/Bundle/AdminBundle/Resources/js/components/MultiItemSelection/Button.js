@@ -14,7 +14,7 @@ type Props<T> = {|
 |};
 
 @observer
-export default class Button<T: string | number> extends React.Component<Props<T>> {
+class Button<T: string | number> extends React.Component<Props<T>> {
     @observable open: boolean = false;
 
     static defaultProps = {
@@ -95,3 +95,5 @@ export default class Button<T: string | number> extends React.Component<Props<T>
         );
     }
 }
+
+export default Button;
