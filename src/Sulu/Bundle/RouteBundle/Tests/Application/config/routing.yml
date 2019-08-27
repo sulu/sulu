@@ -1,4 +1,4 @@
 sulu_route_api:
-    resource: "@SuluRouteBundle/Resources/config/routing_api.xml"
+    resource: "@SuluRouteBundle/Resources/config/routing_api.yml"
     type: rest
     prefix: /api

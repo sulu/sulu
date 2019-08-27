@@ -25,7 +25,7 @@ sulu_media_api:
     prefix: /admin/api
 
 sulu_security_api:
-    resource: "@SuluSecurityBundle/Resources/config/routing_api.xml"
+    resource: "@SuluSecurityBundle/Resources/config/routing_api.yml"
     type: rest
     prefix: /api
 
@@ -33,12 +33,12 @@ sulu_security_api:
 # Can be removed once its content is not hardcoded anymore.
 sulu_preview:
     type: rest
-    resource: "@SuluPreviewBundle/Resources/config/routing.xml"
+    resource: "@SuluPreviewBundle/Resources/config/routing.yml"
     prefix: /admin
 
 sulu_security:
     type: rest
-    resource: "@SuluSecurityBundle/Resources/config/routing.xml"
+    resource: "@SuluSecurityBundle/Resources/config/routing.yml"
     prefix: /admin
 
 sulu_website:
