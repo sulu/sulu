@@ -1,0 +1,4 @@
+sulu_routes.routes:
+    type: rest
+    name_prefix: sulu_routes.
+    resource: Sulu\Bundle\RouteBundle\Controller\RouteController

@@ -83,8 +83,8 @@ class SuluAudienceTargetingExtension extends Extension implements PrependExtensi
                     'resources' => [
                         'target_groups' => [
                             'routes' => [
-                                'list' => 'get_target-groups',
-                                'detail' => 'get_target-group',
+                                'list' => 'sulu_audience_targeting.get_target-groups',
+                                'detail' => 'sulu_audience_targeting.get_target-group',
                             ],
                         ],
                     ],

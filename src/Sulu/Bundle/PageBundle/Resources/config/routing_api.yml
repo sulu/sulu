@@ -1,33 +1,41 @@
 sulu_page.rl:
     type: rest
+    name_prefix: sulu_page.
     resource: Sulu\Bundle\PageBundle\Controller\PageResourcelocatorController
 
 sulu_page.resource_locator:
     type: rest
+    name_prefix: sulu_page.
     resource: sulu_page.resource_locator_controller
 
 sulu_page.node:
     type: rest
+    name_prefix: sulu_page.
     resource: Sulu\Bundle\PageBundle\Controller\NodeController
 
 sulu_page.page:
     type: rest
+    name_prefix: sulu_page.
     resource: Sulu\Bundle\PageBundle\Controller\PageController
 
 sulu_page.webspace.localization:
     type: rest
+    name_prefix: sulu_page.
     resource: Sulu\Bundle\PageBundle\Controller\WebspaceLocalizationController
 
 sulu_page.smart_content:
     type: rest
+    name_prefix: sulu_page.
     resource: Sulu\Bundle\PageBundle\Controller\SmartContentItemController
 
 sulu_page.webspace:
     type: rest
+    name_prefix: sulu_page.
     resource: Sulu\Bundle\PageBundle\Controller\WebspaceController
 
 sulu_page.teaser:
     type: rest
+    name_prefix: sulu_page.
     resource: sulu_page.teaser_controller
 
 sulu_page.page.versioning:

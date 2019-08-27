@@ -261,7 +261,7 @@ class ContactController extends RestController implements ClassResourceInterface
         return new ListRepresentation(
             $listResponse,
             self::$entityKey,
-            'get_contacts',
+            'sulu_contact.get_contacts',
             $request->query->all(),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),

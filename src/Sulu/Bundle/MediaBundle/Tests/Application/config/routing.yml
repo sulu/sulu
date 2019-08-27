@@ -3,8 +3,8 @@ sulu_admin:
     prefix: /admin
 
 sulu_media_api:
-    resource: "@SuluMediaBundle/Resources/config/routing_api.yml"
     type: rest
+    resource: "@SuluMediaBundle/Resources/config/routing_api.yml"
     prefix: /api
 
 sulu_media:
@@ -24,16 +24,18 @@ sulu_contact_api:
     prefix: /admin
 
 sulu_snippet_api:
+    type: rest
     resource: "@SuluSnippetBundle/Resources/config/routing_api.yml"
     prefix: /admin
 
 sulu_pages_api:
+    type: rest
     resource: "@SuluPageBundle/Resources/config/routing_api.yml"
     prefix: /admin
 
 sulu_core_api:
     type: rest
-    resource: "@SuluCoreBundle/Resources/config/routing_api.xml"
+    resource: "@SuluCoreBundle/Resources/config/routing_api.yml"
     prefix: /admin
 
 sulu_categories_api:
@@ -42,17 +44,18 @@ sulu_categories_api:
     prefix: /admin
 
 sulu_tag_api:
+    type: rest
     resource: "@SuluTagBundle/Resources/config/routing_api.yml"
     prefix: /admin
 
 sulu_security_api:
     type: rest
-    resource: "@SuluSecurityBundle/Resources/config/routing_api.xml"
+    resource: "@SuluSecurityBundle/Resources/config/routing_api.yml"
     prefix: /admin
 
 sulu_security:
     type: rest
-    resource: "@SuluSecurityBundle/Resources/config/routing.xml"
+    resource: "@SuluSecurityBundle/Resources/config/routing.yml"
     prefix: /admin
 
 sulu_website:
@@ -62,5 +65,5 @@ sulu_website:
 
 sulu_preview:
     type: rest
-    resource: "@SuluPreviewBundle/Resources/config/routing.xml"
+    resource: "@SuluPreviewBundle/Resources/config/routing.yml"
     prefix: /admin

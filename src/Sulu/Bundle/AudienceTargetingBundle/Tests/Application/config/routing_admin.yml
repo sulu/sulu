@@ -3,7 +3,7 @@ sulu_admin:
     prefix: /admin
 
 sulu_category_api:
-    resource: "@SuluAudienceTargetingBundle/Resources/config/routing_api.xml"
+    resource: "@SuluAudienceTargetingBundle/Resources/config/routing_api.yml"
     type: rest
     prefix: /api
 
@@ -15,12 +15,12 @@ sulu_media:
 
 sulu_preview:
     type: rest
-    resource: "@SuluPreviewBundle/Resources/config/routing.xml"
+    resource: "@SuluPreviewBundle/Resources/config/routing.yml"
     prefix: /admin
 
 sulu_security:
     type: rest
-    resource: "@SuluSecurityBundle/Resources/config/routing.xml"
+    resource: "@SuluSecurityBundle/Resources/config/routing.yml"
     prefix: /admin
 
 sulu_website:

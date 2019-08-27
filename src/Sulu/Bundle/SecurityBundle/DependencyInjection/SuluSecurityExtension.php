@@ -103,24 +103,24 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
                     'resources' => [
                         'permissions' => [
                             'routes' => [
-                                'detail' => 'get_permissions',
+                                'detail' => 'sulu_security.get_permissions',
                             ],
                         ],
                         'roles' => [
                             'routes' => [
-                                'list' => 'get_roles',
-                                'detail' => 'get_role',
+                                'list' => 'sulu_security.get_roles',
+                                'detail' => 'sulu_security.get_role',
                             ],
                         ],
                         'users' => [
                             'routes' => [
-                                'list' => 'get_users',
-                                'detail' => 'get_user',
+                                'list' => 'sulu_security.get_users',
+                                'detail' => 'sulu_security.get_user',
                             ],
                         ],
                         'profile' => [
                             'routes' => [
-                                'detail' => 'get_profile',
+                                'detail' => 'sulu_security.get_profile',
                             ],
                         ],
                     ],

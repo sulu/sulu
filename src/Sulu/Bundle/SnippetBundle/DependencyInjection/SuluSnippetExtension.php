@@ -45,14 +45,14 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                     'resources' => [
                         'snippets' => [
                             'routes' => [
-                                'list' => 'get_snippets',
-                                'detail' => 'get_snippet',
+                                'list' => 'sulu_snippet.get_snippets',
+                                'detail' => 'sulu_snippet.get_snippet',
                             ],
                         ],
                         'snippet_areas' => [
                             'routes' => [
-                                'list' => 'get_snippet-areas',
-                                'detail' => 'put_snippet-area',
+                                'list' => 'sulu_snippet.get_snippet-areas',
+                                'detail' => 'sulu_snippet.put_snippet-area',
                             ],
                         ],
                     ],
@@ -83,7 +83,7 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                 'fos_js_routing',
                 [
                     'routes_to_expose' => [
-                        'put_snippet-area',
+                        'sulu_snippet.put_snippet-area',
                     ],
                 ]
             );

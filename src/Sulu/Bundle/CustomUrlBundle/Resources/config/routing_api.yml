@@ -1,9 +1,11 @@
 sulu_custom_urls:
     type: rest
+    name_prefix: sulu_custom_url.
     parent: sulu_page.webspace
     resource: Sulu\Bundle\CustomUrlBundle\Controller\CustomUrlController
 
 sulu_custom_url_routes:
     type: rest
+    name_prefix: sulu_custom_url.
     parent: sulu_custom_urls
     resource: Sulu\Bundle\CustomUrlBundle\Controller\CustomUrlRouteController

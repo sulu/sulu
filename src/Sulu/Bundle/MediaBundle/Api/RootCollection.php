@@ -24,7 +24,7 @@ use JMS\Serializer\Annotation\Expose;
  * @Relation(
  *      "children",
  *      href = @Route(
- *          "get_collections",
+ *          "sulu_media.get_collections",
  *          parameters = { "include-root" = "true" }
  *      )
  * )

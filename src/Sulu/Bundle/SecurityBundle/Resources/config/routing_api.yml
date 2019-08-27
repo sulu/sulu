@@ -1,0 +1,25 @@
+sulu_security.roles:
+    type: rest
+    name_prefix: sulu_security.
+    resource: Sulu\Bundle\SecurityBundle\Controller\RoleController
+
+sulu_security.role_settings:
+    type: rest
+    name_prefix: sulu_security.
+    parent: sulu_security.roles
+    resource: Sulu\Bundle\SecurityBundle\Controller\RoleSettingController
+
+sulu_security.groups:
+    type: rest
+    name_prefix: sulu_security.
+    resource: Sulu\Bundle\SecurityBundle\Controller\GroupController
+
+sulu_security.users:
+    type: rest
+    name_prefix: sulu_security.
+    resource: Sulu\Bundle\SecurityBundle\Controller\UserController
+
+sulu_security.permissions:
+    type: rest
+    name_prefix: sulu_security.
+    resource: sulu_security.permission_controller

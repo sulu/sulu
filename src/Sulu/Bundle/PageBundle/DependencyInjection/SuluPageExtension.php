@@ -48,13 +48,13 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                     'resources' => [
                         'page_resourcelocators' => [
                             'routes' => [
-                                'list' => 'get_page_resourcelocators',
+                                'list' => 'sulu_page.get_page_resourcelocators',
                             ],
                         ],
                         'pages' => [
                             'routes' => [
-                                'list' => 'get_pages',
-                                'detail' => 'get_page',
+                                'list' => 'sulu_page.get_pages',
+                                'detail' => 'sulu_page.get_page',
                             ],
                             'security_context' => PageAdmin::SECURITY_CONTEXT_PREFIX . '#webspace#',
                             'security_class' => SecurityBehavior::class,
@@ -62,13 +62,13 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                         'page_versions' => [
                             'routes' => [
                                 'list' => 'get_page_versions',
-                                'detail' => 'post_page_version_trigger',
+                                'detail' => 'sulu_page.post_page_version_trigger',
                             ],
                         ],
                         'webspaces' => [
                             'routes' => [
-                                'list' => 'get_webspaces',
-                                'detail' => 'get_webspace',
+                                'list' => 'sulu_page.get_webspaces',
+                                'detail' => 'sulu_page.get_webspace',
                             ],
                         ],
                     ],
@@ -202,7 +202,7 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                 'fos_js_routing',
                 [
                     'routes_to_expose' => [
-                        'post_page_version_trigger',
+                        'sulu_page.post_page_version_trigger',
                     ],
                 ]
             );

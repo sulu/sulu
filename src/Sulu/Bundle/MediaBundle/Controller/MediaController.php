@@ -152,7 +152,7 @@ class MediaController extends AbstractMediaController implements
         $list = new ListRepresentation(
             $listResponse,
             self::$entityKey,
-            'cget_media',
+            'sulu_media.cget_media',
             $request->query->all(),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),

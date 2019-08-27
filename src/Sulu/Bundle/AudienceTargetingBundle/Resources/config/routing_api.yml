@@ -1,0 +1,4 @@
+sulu_audience_targeting.target_groups:
+    type: rest
+    name_prefix: sulu_audience_targeting.
+    resource: Sulu\Bundle\AudienceTargetingBundle\Controller\TargetGroupController

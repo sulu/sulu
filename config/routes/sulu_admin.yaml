@@ -12,12 +12,12 @@ sulu_contact_api:
     prefix: /admin/api
 
 sulu_security:
-    resource: "@SuluSecurityBundle/Resources/config/routing.xml"
+    resource: "@SuluSecurityBundle/Resources/config/routing.yml"
     prefix: /admin/security
 
 sulu_security_api:
     type: rest
-    resource: "@SuluSecurityBundle/Resources/config/routing_api.xml"
+    resource: "@SuluSecurityBundle/Resources/config/routing_api.yml"
     prefix: /admin/api
 
 sulu_page_api:
@@ -62,7 +62,7 @@ sulu_website_api:
 
 sulu_core:
     type: rest
-    resource: "@SuluCoreBundle/Resources/config/routing_api.xml"
+    resource: "@SuluCoreBundle/Resources/config/routing_api.yml"
     prefix: /admin/api
 
 sulu_custom_urls_api:
@@ -72,14 +72,13 @@ sulu_custom_urls_api:
 
 sulu_route_api:
     type: rest
-    resource: "@SuluRouteBundle/Resources/config/routing_api.xml"
+    resource: "@SuluRouteBundle/Resources/config/routing_api.yml"
     prefix: /admin/api
 
 sulu_preview:
-    resource: "@SuluPreviewBundle/Resources/config/routing.xml"
+    resource: "@SuluPreviewBundle/Resources/config/routing.yml"
     prefix: /admin/preview
 
-# for preview
 sulu_search:
     resource: "@SuluSearchBundle/Resources/config/routing.yml"
     prefix: /admin/search

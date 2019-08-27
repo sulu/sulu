@@ -1,4 +1,5 @@
 sulu_page.page.versions:
     type: rest
+    name_prefix: sulu_page.
     parent: sulu_page.page
     resource: Sulu\Bundle\PageBundle\Controller\VersionController

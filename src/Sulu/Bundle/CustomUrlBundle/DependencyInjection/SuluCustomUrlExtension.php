@@ -62,13 +62,13 @@ class SuluCustomUrlExtension extends Extension implements PrependExtensionInterf
                     'resources' => [
                         'custom_urls' => [
                             'routes' => [
-                                'list' => 'cget_webspace_custom-urls',
-                                'detail' => 'get_webspace_custom-urls',
+                                'list' => 'sulu_custom_url.cget_webspace_custom-urls',
+                                'detail' => 'sulu_custom_url.get_webspace_custom-urls',
                             ],
                         ],
                         'custom_url_routes' => [
                             'routes' => [
-                                'list' => 'get_webspace_custom-urls_routes',
+                                'list' => 'sulu_custom_url.get_webspace_custom-urls_routes',
                             ],
                         ],
                     ],

@@ -107,7 +107,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
             $list = new ListRepresentation(
                 $listBuilder->execute(),
                 self::$entityKey,
-                'get_tags',
+                'sulu_tag.get_tags',
                 $request->query->all(),
                 $listBuilder->getCurrentPage(),
                 $listBuilder->getLimit(),
@@ -251,7 +251,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
                 null,
                 303,
                 [
-                    'location' => $this->get('router')->generate('get_tag', ['id' => $destTag->getId()]),
+                    'location' => $this->get('router')->generate('sulu_tag.get_tag', ['id' => $destTag->getId()]),
                 ]
             );
         } catch (TagNotFoundException $exc) {

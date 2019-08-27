@@ -1,10 +1,11 @@
 sulu_security:
-    resource: "@SuluSecurityBundle/Resources/config/routing.xml"
+    type: rest
+    resource: "@SuluSecurityBundle/Resources/config/routing.yml"
     prefix: /security
 
 sulu_security_api:
-    resource: "@SuluSecurityBundle/Resources/config/routing_api.xml"
     type: rest
+    resource: "@SuluSecurityBundle/Resources/config/routing_api.yml"
     prefix: /api
 
 sulu_admin:

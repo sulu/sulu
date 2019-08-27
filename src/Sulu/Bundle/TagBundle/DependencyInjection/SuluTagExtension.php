@@ -44,8 +44,8 @@ class SuluTagExtension extends Extension implements PrependExtensionInterface
                     'resources' => [
                         'tags' => [
                             'routes' => [
-                                'list' => 'get_tags',
-                                'detail' => 'get_tag',
+                                'list' => 'sulu_tag.get_tags',
+                                'detail' => 'sulu_tag.get_tag',
                             ],
                         ],
                     ],

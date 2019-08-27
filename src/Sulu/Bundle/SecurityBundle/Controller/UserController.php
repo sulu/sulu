@@ -301,7 +301,7 @@ class UserController extends RestController implements ClassResourceInterface, S
             $list = new ListRepresentation(
                 $listBuilder->execute(),
                 static::$entityKey,
-                'get_users',
+                'sulu_security.get_users',
                 $request->query->all(),
                 $listBuilder->getCurrentPage(),
                 $listBuilder->getLimit(),

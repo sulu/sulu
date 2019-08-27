@@ -84,7 +84,7 @@ class KeywordController extends RestController implements ClassResourceInterface
         $list = new ListRepresentation(
             $listResponse,
             self::$entityKey,
-            'get_category_keywords',
+            'sulu_category.get_category_keywords',
             array_merge(['categoryId' => $categoryId], $request->query->all()),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),

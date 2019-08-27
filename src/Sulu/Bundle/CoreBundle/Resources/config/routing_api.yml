@@ -1,0 +1,4 @@
+sulu_core.localizations:
+    type: rest
+    name_prefix: sulu_core.
+    resource: Sulu\Bundle\CoreBundle\Controller\LocalizationController

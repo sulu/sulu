@@ -86,7 +86,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                 'fos_js_routing',
                 [
                     'routes_to_expose' => [
-                        'put_media_format',
+                        'sulu_media.put_media_format',
                     ],
                 ]
             );
@@ -125,28 +125,28 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                     'resources' => [
                         'media' => [
                             'routes' => [
-                                'list' => 'cget_media',
-                                'detail' => 'get_media',
+                                'list' => 'sulu_media.cget_media',
+                                'detail' => 'sulu_media.get_media',
                             ],
                             'security_context' => 'sulu.media.collections',
                             'security_class' => Collection::class,
                         ],
                         'media_formats' => [
                             'routes' => [
-                                'list' => 'get_media_formats',
-                                'detail' => 'put_media_format',
+                                'list' => 'sulu_media.get_media_formats',
+                                'detail' => 'sulu_media.put_media_format',
                             ],
                         ],
                         'collections' => [
                             'routes' => [
-                                'list' => 'get_collections',
-                                'detail' => 'get_collection',
+                                'list' => 'sulu_media.get_collections',
+                                'detail' => 'sulu_media.get_collection',
                             ],
                         ],
                         'formats' => [
                             'routes' => [
-                                'list' => 'get_formats',
-                                'detail' => 'get_format',
+                                'list' => 'sulu_media.get_formats',
+                                'detail' => 'sulu_media.get_format',
                             ],
                         ],
                     ],

@@ -140,7 +140,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $list = new ListRepresentation(
                 $values,
                 'account_contacts',
-                'get_account_contacts',
+                'sulu_contact.get_account_addresses',
                 array_merge(['id' => $id], $request->query->all()),
                 $listBuilder->getCurrentPage(),
                 $listBuilder->getLimit(),
@@ -186,7 +186,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $list = new ListRepresentation(
                 $values,
                 'addresses',
-                'get_account_addresses',
+                'sulu_contact.get_account_addresses',
                 array_merge(['id' => $id], $request->query->all()),
                 $listBuilder->getCurrentPage(),
                 $listBuilder->getLimit(),
@@ -356,7 +356,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $list = new ListRepresentation(
                 $listResponse,
                 self::$entityKey,
-                'get_accounts',
+                'sulu_contact.get_accounts',
                 $request->query->all(),
                 $listBuilder->getCurrentPage(),
                 $listBuilder->getLimit(),

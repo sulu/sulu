@@ -1,4 +1,5 @@
 sulu_snippet:
+    type: rest
     prefix: /api
     resource: '@SuluSnippetBundle/Resources/config/routing_api.yml'
 

@@ -1,4 +1,5 @@
 sulu_website.webspace_analytics:
     type: rest
+    name_prefix: sulu_website.
     parent: sulu_page.webspace
     resource: Sulu\Bundle\WebsiteBundle\Controller\AnalyticsController

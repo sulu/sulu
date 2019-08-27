@@ -1,8 +1,10 @@
 sulu_category.categories:
     type: rest
+    name_prefix: sulu_category.
     resource: Sulu\Bundle\CategoryBundle\Controller\CategoryController
 
 sulu_category.keywords:
     type: rest
+    name_prefix: sulu_category.
     parent: sulu_category.categories
     resource: Sulu\Bundle\CategoryBundle\Controller\KeywordController

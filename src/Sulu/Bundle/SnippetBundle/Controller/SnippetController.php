@@ -178,7 +178,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $data = new ListRepresentation(
             $snippets,
             'snippets',
-            'get_snippets',
+            'sulu_snippet.get_snippets',
             $request->query->all(),
             $this->listRestHelper->getPage(),
             $this->listRestHelper->getLimit(),
@@ -362,16 +362,16 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
             [
                 '_links' => [
                     'self' => $this->urlGenerator->generate(
-                        'get_snippet',
+                        'sulu_snippet.get_snippet',
                         ['id' => $snippet['id'], 'language' => $locale]
                     ),
                     'delete' => $this->urlGenerator->generate(
-                        'delete_snippet',
+                        'sulu_snippet.delete_snippet',
                         ['id' => $snippet['id'], 'language' => $locale]
                     ),
-                    'new' => $this->urlGenerator->generate('post_snippet', ['language' => $locale]),
+                    'new' => $this->urlGenerator->generate('sulu_snippet.post_snippet', ['language' => $locale]),
                     'update' => $this->urlGenerator->generate(
-                        'put_snippet',
+                        'sulu_snippet.put_snippet',
                         ['id' => $snippet['id'], 'language' => $locale]
                     ),
                 ],

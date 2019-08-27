@@ -1,0 +1,25 @@
+sulu_preview.start:
+    path: "/start"
+    defaults:
+        _controller: sulu_preview.preview_controller:startAction
+
+sulu_preview.render:
+    path: "/render"
+    defaults:
+        _controller: sulu_preview.preview_controller:renderAction
+
+sulu_preview.update:
+    path: "/update"
+    methods: [POST]
+    defaults:
+        _controller: sulu_preview.preview_controller:updateAction
+
+sulu_preview.update-context:
+    path: "/update-context"
+    defaults:
+        _controller: sulu_preview.preview_controller:updateContextAction
+
+sulu_preview.stop:
+    path: "/stop"
+    defaults:
+        _controller: sulu_preview.preview_controller:stopAction
