@@ -195,7 +195,6 @@ in the future. The following route names were changed:
 | delete_target-group                | sulu_audience_targeting.delete_target-group          |
 | delete_target-groups               | sulu_audience_targeting.delete_target-groups         |
 
-
 ### Added Type-Hints
 
 We added type-hints to following interfaces:
