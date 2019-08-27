@@ -2,6 +2,22 @@
 
 ## dev-develop
 
+### Use yaml files for configuring routes
+
+All remaining XML route definition files were migrated to use the YAML format. Therefore, the following resource paths 
+must be adjusted:
+
+| Previous Path                                                     | New Path                                                          |
+|-------------------------------------------------------------------|-------------------------------------------------------------------|
+| @SuluAudienceTargetingBundle/Resources/config/routing_api.xml     | @SuluAudienceTargetingBundle/Resources/config/routing_api.yml     |
+| @SuluAudienceTargetingBundle/Resources/config/routing_website.xml | @SuluAudienceTargetingBundle/Resources/config/routing_website.yml |
+| @SuluCoreBundle/Resources/config/routing_api.xml                  | @SuluCoreBundle/Resources/config/routing_api.yml                  |
+| @SuluPreviewBundle/Resources/config/routing.xml                   | @SuluPreviewBundle/Resources/config/routing.yml                   |
+| @SuluRouteBundle/Resources/config/routing_api.xml                 | @SuluRouteBundle/Resources/config/routing_api.yml                 |
+| @SuluSearchBundle/Resources/config/routing_website.xml            | @SuluSearchBundle/Resources/config/routing_website.yml            |
+| @SuluSecurityBundle/Resources/config/routing.xml                  | @SuluSecurityBundle/Resources/config/routing.yml                  |
+| @SuluSecurityBundle/Resources/config/routing_api.xml              | @SuluSecurityBundle/Resources/config/routing_api.yml              |
+
 ### Add bundle prefix to rest route names
 
 We decided to add a bundle prefix to all of our rest routes to keep things consistent and prevent eventual collisions 
