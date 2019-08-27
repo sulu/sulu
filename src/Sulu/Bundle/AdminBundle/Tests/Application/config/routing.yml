@@ -1,4 +1,5 @@
 sulu_tag_api:
+    type: rest
     resource: "@SuluTagBundle/Resources/config/routing_api.yml"
     prefix:   /admin/api
 
@@ -12,6 +13,7 @@ sulu_contact_api:
     prefix: /admin/api
 
 sulu_security:
+    type: rest
     resource: "@SuluSecurityBundle/Resources/config/routing.yml"
     prefix: /admin/security
 
@@ -43,8 +45,8 @@ sulu_category_api:
     prefix: /admin/api
 
 sulu_snippet_api:
-    resource: "@SuluSnippetBundle/Resources/config/routing_api.yml"
     type: rest
+    resource: "@SuluSnippetBundle/Resources/config/routing_api.yml"
     prefix: /admin/api
 
 sulu_location:
@@ -56,8 +58,8 @@ sulu_website:
     prefix: /admin/website
 
 sulu_website_api:
-    resource: "@SuluWebsiteBundle/Resources/config/routing_api.yml"
     type: rest
+    resource: "@SuluWebsiteBundle/Resources/config/routing_api.yml"
     prefix: /admin/api
 
 sulu_core:

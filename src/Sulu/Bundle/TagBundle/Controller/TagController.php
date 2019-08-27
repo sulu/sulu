@@ -107,7 +107,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
             $list = new ListRepresentation(
                 $listBuilder->execute(),
                 self::$entityKey,
-                'sulu_tag.get_tag',
+                'sulu_tag.get_tags',
                 $request->query->all(),
                 $listBuilder->getCurrentPage(),
                 $listBuilder->getLimit(),

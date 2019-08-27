@@ -60,9 +60,8 @@ class TagControllerTest extends SuluTestCase
             '/api/tags/' . $tag->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent(), true);
-
         $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('tag1', $response['name']);
         $this->assertNotContains('creator', array_keys($response));
@@ -82,6 +81,7 @@ class TagControllerTest extends SuluTestCase
             '/api/tags?flat=true'
         );
 
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(2, $response->total);
@@ -103,6 +103,7 @@ class TagControllerTest extends SuluTestCase
             '/api/tags?flat=true&excludedIds=' . $tag1->getId() . ',' . $tag2->getId()
         );
 
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
@@ -122,6 +123,7 @@ class TagControllerTest extends SuluTestCase
             '/api/tags?flat=true&names=tag1'
         );
 
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
@@ -141,6 +143,7 @@ class TagControllerTest extends SuluTestCase
             '/api/tags?flat=true&search=tag2&searchFields=name'
         );
 
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
@@ -156,8 +159,8 @@ class TagControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(404, $client->getResponse());
-
         $response = json_decode($client->getResponse()->getContent());
+
         $this->assertEquals(0, $response->code);
         $this->assertTrue(isset($response->message));
     }
@@ -171,6 +174,7 @@ class TagControllerTest extends SuluTestCase
             ['name' => 'tag3']
         );
 
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('tag3', $response->name);
@@ -180,9 +184,8 @@ class TagControllerTest extends SuluTestCase
             '/api/tags/' . $response->id
         );
 
-        $response = json_decode($client->getResponse()->getContent(), true);
-
         $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('tag3', $response['name']);
         $this->assertNotContains('creator', array_keys($response));
@@ -202,8 +205,8 @@ class TagControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(400, $client->getResponse());
-
         $response = json_decode($client->getResponse()->getContent());
+
         $this->assertEquals('A tag with the name "tag1"already exists!', $response->message);
         $this->assertEquals('name', $response->field);
     }
@@ -229,9 +232,8 @@ class TagControllerTest extends SuluTestCase
             '/api/tags/' . $tag->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent(), true);
-
         $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('tag1_new', $response['name']);
         $this->assertNotContains('creator', array_keys($response));
@@ -252,8 +254,8 @@ class TagControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(400, $client->getResponse());
-
         $response = json_decode($client->getResponse()->getContent());
+
         $this->assertEquals('A tag with the name "tag1"already exists!', $response->message);
         $this->assertEquals('name', $response->field);
     }

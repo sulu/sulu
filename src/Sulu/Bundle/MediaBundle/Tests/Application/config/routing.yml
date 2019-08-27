@@ -3,8 +3,8 @@ sulu_admin:
     prefix: /admin
 
 sulu_media_api:
-    resource: "@SuluMediaBundle/Resources/config/routing_api.yml"
     type: rest
+    resource: "@SuluMediaBundle/Resources/config/routing_api.yml"
     prefix: /api
 
 sulu_media:
@@ -24,10 +24,12 @@ sulu_contact_api:
     prefix: /admin
 
 sulu_snippet_api:
+    type: rest
     resource: "@SuluSnippetBundle/Resources/config/routing_api.yml"
     prefix: /admin
 
 sulu_pages_api:
+    type: rest
     resource: "@SuluPageBundle/Resources/config/routing_api.yml"
     prefix: /admin
 
@@ -42,6 +44,7 @@ sulu_categories_api:
     prefix: /admin
 
 sulu_tag_api:
+    type: rest
     resource: "@SuluTagBundle/Resources/config/routing_api.yml"
     prefix: /admin
 
