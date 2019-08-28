@@ -5,6 +5,28 @@ $primaryColor: $blueZodiac;
 $secondaryColor: $white;
 $disabledColor: $silver;
 
+.checkbox.dark {
+    input + span {
+        border-color: $primaryColor;
+        color: $secondaryColor;
+    }
+
+    input:checked + span {
+        background: $primaryColor;
+    }
+}
+
+.checkbox.light {
+    input + span {
+        border-color: $secondaryColor;
+        color: $primaryColor;
+    }
+
+    input:checked + span {
+        background: $secondaryColor;
+    }
+}
+
 .checkbox {
     width: $length;
     height: $length;
@@ -30,31 +52,7 @@ $disabledColor: $silver;
             font-size: $length;
         }
     }
-}
 
-.checkbox.dark {
-    input + span {
-        border-color: $primaryColor;
-        color: $secondaryColor;
-    }
-
-    input:checked + span {
-        background: $primaryColor;
-    }
-}
-
-.checkbox.light {
-    input + span {
-        border-color: $secondaryColor;
-        color: $primaryColor;
-    }
-
-    input:checked + span {
-        background: $secondaryColor;
-    }
-}
-
-.checkbox {
     input:disabled + span {
         border-color: $disabledColor;
         color: $disabledColor;

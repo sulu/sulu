@@ -1,4 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-module.exports = { // eslint-disable-line no-undef
+// eslint-disable-next-line no-undef
+module.exports = {
     generate: jest.fn(),
 };

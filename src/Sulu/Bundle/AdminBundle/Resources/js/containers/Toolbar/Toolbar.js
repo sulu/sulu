@@ -78,7 +78,7 @@ class Toolbar extends React.Component<ToolbarProps> {
         const backButtonConfig = this.toolbarStore.getBackButtonConfig();
 
         if (!backButtonConfig) {
-            return;
+            return undefined;
         }
 
         if (this.disableAllButtons) {

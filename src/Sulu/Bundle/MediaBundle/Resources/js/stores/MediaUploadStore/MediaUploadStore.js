@@ -21,7 +21,7 @@ export default class MediaUploadStore {
         const {media} = this;
 
         if (!media) {
-            return;
+            return undefined;
         }
 
         return media.id;
@@ -31,7 +31,7 @@ export default class MediaUploadStore {
         const {media} = this;
 
         if (!media) {
-            return;
+            return undefined;
         }
 
         return media.url;
@@ -59,7 +59,7 @@ export default class MediaUploadStore {
         const {media} = this;
 
         if (!media) {
-            return;
+            return undefined;
         }
 
         return media.mimeType;

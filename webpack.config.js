@@ -20,7 +20,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
     }
 
     const CleanObsoleteChunksPlugin = require(path.resolve(nodeModulesPath, 'webpack-clean-obsolete-chunks'));
-    const CleanWebpackPlugin = require(path.resolve(nodeModulesPath, 'clean-webpack-plugin'));
+    const CleanWebpackPlugin = require(path.resolve(nodeModulesPath, 'clean-webpack-plugin')).CleanWebpackPlugin;
     const ManifestPlugin = require(path.resolve(nodeModulesPath, 'webpack-manifest-plugin'));
     const MiniCssExtractPlugin = require(path.resolve(nodeModulesPath, 'mini-css-extract-plugin'));
     const OptimizeCssAssetsPlugin = require(path.resolve(nodeModulesPath, 'optimize-css-assets-webpack-plugin'));
@@ -85,10 +85,11 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                         {
                             loader: 'css-loader',
                             options: {
-                                modules: true,
+                                modules: {
+                                    localIdentName: '[local]--[hash:base64:10]',
+                                },
                                 importLoaders: 1,
-                                camelCase: true,
-                                localIdentName: '[local]--[hash:base64:10]',
+                                localsConvention: 'camelCase',
                             },
                         },
                         'postcss-loader',

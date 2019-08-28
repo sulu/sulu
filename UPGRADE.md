@@ -2,6 +2,9 @@
 
 ## dev-develop
 
+When upgrading also have a look at the changes in the
+[sulu skeleton](https://github.com/sulu/sulu-minimal/compare/2.0.0-RC1...2.0.0-RC2).
+
 ### Use yaml files for configuring routes
 
 All remaining XML route definition files were migrated to use the YAML format. Therefore, the following resource paths 
