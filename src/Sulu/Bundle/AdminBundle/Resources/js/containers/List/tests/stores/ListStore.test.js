@@ -552,6 +552,7 @@ test('The loading strategy should be called with the active item as parentId', (
     );
     listStore.schema = {};
 
+    // $FlowFixMe
     structureStrategy.findById.mockReturnValue({});
     listStore.setActive('some-uuid');
     listStore.updateLoadingStrategy(loadingStrategy);
@@ -634,6 +635,7 @@ test('The loading strategy should be called with expandedIds if some items are a
     const promise = Promise.resolve({});
     loadingStrategy.load.mockReturnValue(promise);
 
+    // $FlowFixMe
     structureStrategy.findById.mockImplementation((id) => {
         switch (id) {
             case 1:
@@ -689,6 +691,7 @@ test('The loading strategy should be called only once even if the data changes a
     );
     listStore.schema = {};
     listStore.setActive('some-uuid');
+    // $FlowFixMe
     structureStrategy.findById.mockImplementation(() => Array.from(structureStrategy.data));
     listStore.updateStructureStrategy(structureStrategy);
     listStore.updateLoadingStrategy(loadingStrategy);
@@ -1047,6 +1050,7 @@ test('Should reload data but not change the page or the active item when the rel
 
     locale.set('en');
     page.set(3);
+    // $FlowFixMe
     structureStrategy.findById.mockReturnValue({});
     listStore.setActive(1);
     expect(structureStrategy.findById).toBeCalledWith(1);
@@ -1381,6 +1385,7 @@ test('Should trigger a mobx autorun if activate is called with the same id', () 
     listStore.schema = {};
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
+    // $FlowFixMe
     structureStrategy.findById.mockReturnValue({});
 
     listStore.updateLoadingStrategy(loadingStrategy);
@@ -1405,6 +1410,7 @@ test('Should activate the current item if structure strategy is changed to trigg
 
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
+    // $FlowFixMe
     structureStrategy.findById.mockReturnValue({});
     listStore.updateLoadingStrategy(loadingStrategy);
     listStore.updateStructureStrategy(structureStrategy);
@@ -1422,6 +1428,7 @@ test('Should call the activate method of the structure strategy if an item gets 
     listStore.schema = {};
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
+    // $FlowFixMe
     structureStrategy.findById.mockReturnValue({});
     listStore.updateLoadingStrategy(loadingStrategy);
     listStore.updateStructureStrategy(structureStrategy);
