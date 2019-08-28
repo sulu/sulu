@@ -1,52 +1,64 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-/* eslint-disable import/no-nodejs-modules*/
+/* eslint-disable import/no-nodejs-modules */
+/* eslint-disable import/no-dynamic-require */
 const fs = require('fs');
 const path = require('path');
-const CleanObsoleteChunksPlugin = require('webpack-clean-obsolete-chunks');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const ManifestPlugin = require('webpack-manifest-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const {styles} = require('@ckeditor/ckeditor5-dev-utils'); // eslint-disable-line import/no-extraneous-dependencies
-
 const babelConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, '.babelrc'))); // eslint-disable-line no-undef
+
 module.exports = (env, argv) => { // eslint-disable-line no-undef
     let publicDir = 'public';
-    const basePath = env && env.base_path ? env.base_path : 'build/admin';
-    const rootPath = env && env.root_path ? env.root_path : __dirname; // eslint-disable-line no-undef
+    const outputPath = env && env.output_path ? env.output_path : path.join('build', 'admin');
+    // eslint-disable-next-line no-undef
+    const projectRootPath = env && env.project_root_path ? env.project_root_path : __dirname;
+    const nodeModulesPath = env && env.node_modules_path
+        ? env.node_modules_path
+        : path.resolve(projectRootPath, 'node_modules');
 
-    const composerConfig = require(path.resolve('composer.json')); // eslint-disable-line import/no-dynamic-require
+    const composerConfig = require(path.resolve(projectRootPath, 'composer.json'));
     if (composerConfig.extra && composerConfig.extra['public-dir']) {
         publicDir = composerConfig.extra['public-dir'];
     }
 
+    const CleanObsoleteChunksPlugin = require(path.resolve(nodeModulesPath, 'webpack-clean-obsolete-chunks'));
+    const CleanWebpackPlugin = require(path.resolve(nodeModulesPath, 'clean-webpack-plugin'));
+    const ManifestPlugin = require(path.resolve(nodeModulesPath, 'webpack-manifest-plugin'));
+    const MiniCssExtractPlugin = require(path.resolve(nodeModulesPath, 'mini-css-extract-plugin'));
+    const OptimizeCssAssetsPlugin = require(path.resolve(nodeModulesPath, 'optimize-css-assets-webpack-plugin'));
+    const {styles} = require(path.resolve(nodeModulesPath, '@ckeditor/ckeditor5-dev-utils'));
+
     return {
-        entry: [path.resolve(__dirname, 'assets/admin/index.js')], // eslint-disable-line no-undef
+        entry: [path.resolve(__dirname, 'index.js')], // eslint-disable-line no-undef
         output: {
-            path: path.resolve(publicDir),
-            filename: basePath + '/[name].[chunkhash].js',
+            path: path.resolve(projectRootPath, publicDir),
+            filename: outputPath + '/[name].[chunkhash].js',
         },
         devtool: argv.mode === 'development' ? 'eval-source-map' : 'source-map',
         plugins: [
             new CleanWebpackPlugin({
-                cleanOnceBeforeBuildPatterns: [path.resolve(publicDir, basePath)],
+                cleanOnceBeforeBuildPatterns: [path.resolve(projectRootPath, publicDir, outputPath)],
+                dangerouslyAllowCleanPatternsOutsideProject: true,
+                dry: false,
             }),
             new MiniCssExtractPlugin({
-                filename: basePath + '/[name].[chunkhash].css',
+                filename: outputPath + '/[name].[chunkhash].css',
             }),
             new OptimizeCssAssetsPlugin(),
             new ManifestPlugin({
-                fileName: basePath + '/manifest.json',
+                fileName: outputPath + '/manifest.json',
             }),
             new CleanObsoleteChunksPlugin(),
         ],
         resolve: {
             alias: {
                 'fos-jsrouting': path.resolve(
-                    rootPath,
+                    projectRootPath,
                     'vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js'
                 ),
             },
+            modules: [nodeModulesPath, 'node_modules'],
+        },
+        resolveLoader: {
+            modules: [nodeModulesPath, 'node_modules'],
         },
         module: {
             rules: [
@@ -97,7 +109,9 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                             loader: 'postcss-loader',
                             options: styles.getPostCssConfig({
                                 themeImporter: {
-                                    themePath: require.resolve('@ckeditor/ckeditor5-theme-lark'),
+                                    themePath: require.resolve(
+                                        path.resolve(nodeModulesPath, '@ckeditor/ckeditor5-theme-lark')
+                                    ),
                                 },
                                 minify: true,
                             }),
@@ -111,7 +125,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                         {
                             loader: 'file-loader',
                             options: {
-                                name: '/' + basePath + '/fonts/[name].[hash].[ext]',
+                                name: '/' + outputPath + '/fonts/[name].[hash].[ext]',
                             },
                         },
                     ],
@@ -122,7 +136,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                         {
                             loader: 'file-loader',
                             options: {
-                                name: '/' + basePath + '/images/[name].[hash].[ext]',
+                                name: '/' + outputPath + '/images/[name].[hash].[ext]',
                             },
                         },
                     ],

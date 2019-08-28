@@ -22,4 +22,4 @@ UPGRADE.md export-ignore
 /public export-ignore
 /tests export-ignore
 /templates export-ignore
-/assets export-ignore
+/index.js export-ignore

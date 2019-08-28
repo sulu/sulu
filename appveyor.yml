@@ -1,79 +1,76 @@
 build: false
 
 platform:
-  - x64
+    - x64
 
 environment:
-  APP_ENV: test
-  APP_SECRET: a448d1dfcaa563fce56c2fd9981f662b
-  MAILER_URL: null://localhost
-  SULU_ADMIN_EMAIL:
-  PHPCR_TRANSPORT: doctrinedbal
-  DATABASE_URL: mysql://root:root@127.0.0.1/sulu_test
-  DATABASE_CHARSET: utf8mb4
-  DATABASE_COLLATE: utf8mb4_unicode_ci
-  SYMFONY_DEPRECATIONS_HELPER: weak
-  MYSQL_VERSION: 8.0.17
-  matrix:
-   - PHP_VERSION: 7.2.4
+    APP_ENV: test
+    APP_SECRET: a448d1dfcaa563fce56c2fd9981f662b
+    MAILER_URL: null://localhost
+    SULU_ADMIN_EMAIL:
+    PHPCR_TRANSPORT: doctrinedbal
+    DATABASE_URL: mysql://root:root@127.0.0.1/sulu_test
+    DATABASE_CHARSET: utf8mb4
+    DATABASE_COLLATE: utf8mb4_unicode_ci
+    SYMFONY_DEPRECATIONS_HELPER: weak
+    MYSQL_VERSION: 8.0.17
+    NODEJS_VERSION: "12"
+    matrix:
+        - PHP_VERSION: 7.2.4
 
 hosts:
-  localhost: 127.0.0.1
+    localhost: 127.0.0.1
 
 init:
-  - SET PATH=C:\tools\php;%PATH%
+    - SET PATH=C:\tools\php;%PATH%
 
 cache:
-  - '%APPDATA%\Composer'
-  - '%LOCALAPPDATA%\Composer'
-  - jackrabbit-standalone-%JACKRABBIT_VERSION%.jar
-  # Redownload when appveyor.yml changed
-  - C:\tools\php -> appveyor.yml
-  - C:\tools\composer.phar -> appveyor.yml
+    - '%APPDATA%\Composer'
+    - '%LOCALAPPDATA%\Composer'
+    - jackrabbit-standalone-%JACKRABBIT_VERSION%.jar
+    - C:\tools\php -> appveyor.yml
+    - C:\tools\composer.phar -> appveyor.yml
 
 install:
-  # disable wuauserv service
-  - ps: Set-Service wuauserv -StartupType Manual
+    - ps: Set-Service wuauserv -StartupType Manual
+    - ps: Install-Product node $env:NODEJS_VERSION
 
-  # install configured mysql version and set authentication-plugin for root
-  - choco install mysql --version %MYSQL_VERSION%
-  - cd C:\tools\mysql\current\bin
-  - mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';"
+    - choco install mysql --version %MYSQL_VERSION%
+    - cd C:\tools\mysql\current\bin
+    - mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';"
 
-  # install composer
-  - IF NOT EXIST C:\tools\composer.phar (
-        cd C:\tools
-        && appveyor DownloadFile https://getcomposer.org/composer.phar
-    )
+    - IF NOT EXIST C:\tools\composer.phar (
+          cd C:\tools
+          && appveyor DownloadFile https://getcomposer.org/composer.phar
+      )
 
-  # install configured php version
-  - IF NOT EXIST C:\tools\php (
-        choco install --yes --allow-empty-checksums php --version %PHP_VERSION% --params '/InstallDir:C:\tools\php'
-    )
+    - IF NOT EXIST C:\tools\php (
+          choco install --yes --allow-empty-checksums php --version %PHP_VERSION% --params '/InstallDir:C:\tools\php'
+      )
 
-  # configure PHP and enable extensions.
-  - cd C:\tools\php
-  - ps: cat php.ini-production | %{$_ -replace "memory_limit = 128M","memory_limit = -1"} | Out-File -Encoding "Default" php.ini
-  - echo date.timezone="UTC" >> php.ini
-  - echo extension_dir=ext >> php.ini
-  - echo extension=php_curl.dll >> php.ini
-  - echo extension=php_openssl.dll >> php.ini
-  - echo extension=php_mbstring.dll >> php.ini
-  - echo extension=php_gd2.dll >> php.ini
-  - echo extension=php_intl.dll >> php.ini
-  - echo extension=php_pdo_mysql.dll >> php.ini
-  - echo extension=php_pdo_sqlite.dll >> php.ini
-  - echo extension=php_fileinfo.dll >> php.ini
+    - cd C:\tools\php
+    - ps: cat php.ini-production | %{$_ -replace "memory_limit = 128M","memory_limit = -1"} | Out-File -Encoding "Default" php.ini
+    - echo date.timezone="UTC" >> php.ini
+    - echo extension_dir=ext >> php.ini
+    - echo extension=php_curl.dll >> php.ini
+    - echo extension=php_openssl.dll >> php.ini
+    - echo extension=php_mbstring.dll >> php.ini
+    - echo extension=php_gd2.dll >> php.ini
+    - echo extension=php_intl.dll >> php.ini
+    - echo extension=php_pdo_mysql.dll >> php.ini
+    - echo extension=php_pdo_sqlite.dll >> php.ini
+    - echo extension=php_fileinfo.dll >> php.ini
 
 before_test:
-  - cd %APPVEYOR_BUILD_FOLDER%
+    - cd %APPVEYOR_BUILD_FOLDER%
 
-  # Composer install
-  - IF "%SULU_PHPCR_TRANSPORT%" == "jackrabbit" (
-        php -dmemory_limit=-1 C:\tools\composer.phar require jackalope/jackalope-jackrabbit:~1.2 --no-update --no-interaction
-    )
-  - php -dmemory_limit=-1 C:\tools\composer.phar update --no-interaction --no-progress --prefer-dist --no-ansi
+    - IF "%SULU_PHPCR_TRANSPORT%" == "jackrabbit" (
+          php -dmemory_limit=-1 C:\tools\composer.phar require jackalope/jackalope-jackrabbit:~1.2 --no-update --no-interaction
+      )
+    - php -dmemory_limit=-1 C:\tools\composer.phar update --no-interaction --no-progress --prefer-dist --no-ansi
 
 test_script:
-   - cd %APPVEYOR_BUILD_FOLDER%
-   - php bin/runtests -i -a
+    - cd %APPVEYOR_BUILD_FOLDER%
+    - php bin/runtests -i -a
+    - npm install
+    - npm run build
