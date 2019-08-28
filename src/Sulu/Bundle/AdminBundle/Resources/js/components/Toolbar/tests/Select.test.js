@@ -12,6 +12,7 @@ const selectPropsMock = {
             label: 'An option',
         },
     ],
+    value: undefined,
 };
 
 test('Render select', () => {
@@ -91,6 +92,7 @@ test('Click on disabled option will not fire onChange', () => {
                 disabled: true,
             },
         ],
+        value: undefined,
     };
 
     const select = mount(<Select {...propsMock} />);
@@ -116,6 +118,7 @@ test('Click on option fires onChange with the selected value as the first argume
                 label: 'Another option',
             },
         ],
+        value: undefined,
     };
 
     const select = mount(<Select {...propsMock} />);
