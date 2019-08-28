@@ -29,7 +29,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
     return {
         entry: [path.resolve(__dirname, 'assets/admin/index.js')], // eslint-disable-line no-undef
         output: {
-            path: path.resolve(publicDir),
+            path: path.resolve(projectRootPath, publicDir),
             filename: outputPath + '/[name].[chunkhash].js',
         },
         devtool: argv.mode === 'development' ? 'eval-source-map' : 'source-map',
