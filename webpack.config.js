@@ -35,7 +35,9 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
         devtool: argv.mode === 'development' ? 'eval-source-map' : 'source-map',
         plugins: [
             new CleanWebpackPlugin({
-                cleanOnceBeforeBuildPatterns: [path.resolve(publicDir, outputPath)],
+                cleanOnceBeforeBuildPatterns: [path.resolve(projectRootPath, publicDir, outputPath)],
+                dangerouslyAllowCleanPatternsOutsideProject: true,
+                dry: false,
             }),
             new MiniCssExtractPlugin({
                 filename: outputPath + '/[name].[chunkhash].css',
