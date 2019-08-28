@@ -144,6 +144,6 @@ test('Should call the navigation callback, pin callback and router navigate', ()
     expect(router.navigate).toHaveBeenCalledWith('returned_main_route');
     expect(handleNavigate).toHaveBeenCalledWith('returned_main_route');
 
-    navigation.find('Button.pin').simulate('click');
+    navigation.find('button.pin').simulate('click');
     expect(handlePin).toBeCalled();
 });

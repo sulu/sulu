@@ -3,8 +3,8 @@ import React from 'react';
 import type {ChildrenArray, Element} from 'react';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
+import classNames from 'classnames';
 import Icon from '../Icon';
-import Button from '../Button';
 import Item from './Item';
 import navigationStyles from './navigation.scss';
 
@@ -135,6 +135,8 @@ class Navigation extends React.Component<Props> {
             onPinToggle,
         } = this.props;
 
+        const pinClass = classNames(navigationStyles.pin, {[navigationStyles.pinActive]: pinned});
+
         return (
             <div className={navigationStyles.navigation}>
                 <div className={navigationStyles.header}>
@@ -163,15 +165,9 @@ class Navigation extends React.Component<Props> {
                 </div>
                 <div className={navigationStyles.footer}>
                     {onPinToggle &&
-                        <Button
-                            active={pinned}
-                            activeClassName={navigationStyles.pinActive}
-                            className={navigationStyles.pin}
-                            icon="fa-thumb-tack"
-                            iconClassName={navigationStyles.pinIcon}
-                            onClick={this.handlePinToggle}
-                            skin="icon"
-                        />
+                        <button className={pinClass} onClick={this.handlePinToggle} type="button">
+                            <Icon className={navigationStyles.pinIcon} name="fa-thumb-tack" />
+                        </button>
                     }
                     <div className={navigationStyles.versions}>
                         {this.renderAppVersion()}
