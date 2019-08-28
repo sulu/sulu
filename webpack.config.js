@@ -7,10 +7,12 @@ const babelConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, '.babelrc
 
 module.exports = (env, argv) => { // eslint-disable-line no-undef
     let publicDir = 'public';
-    const outputPath = env && env.output_path ? env.output_path : 'build/admin';
+    const outputPath = env && env.output_path ? env.output_path : path.join('build', 'admin');
     // eslint-disable-next-line no-undef
     const projectRootPath = env && env.project_root_path ? env.project_root_path : __dirname;
-    const nodeModulesPath = env && env.node_modules_path ? env.node_modules_path : '';
+    const nodeModulesPath = env && env.node_modules_path
+        ? env.node_modules_path
+        : path.resolve(projectRootPath, 'node_modules');
 
     const composerConfig = require(path.resolve(projectRootPath, 'composer.json'));
     if (composerConfig.extra && composerConfig.extra['public-dir']) {
