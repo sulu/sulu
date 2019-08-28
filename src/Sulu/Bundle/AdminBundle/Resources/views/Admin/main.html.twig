@@ -12,7 +12,7 @@
         <script type="text/javascript">
             {% autoescape false %}
             const SULU_CONFIG = Object.freeze({
-                initialLoginState: {{ app.user ? 'true' : 'false' }},
+                initialLoginState: {{ is_granted('IS_AUTHENTICATED_REMEMBERED') ? 'true' : 'false' }},
                 translations: {{ translations|json_encode }},
                 fallbackLocale: '{{ fallback_locale }}',
                 endpoints: {{ endpoints|json_encode }},
