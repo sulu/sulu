@@ -310,12 +310,12 @@ exports[`The component should render with all available props and handle clicks 
     class="footer"
   >
     <button
-      class="button icon pin"
+      class="pin"
       type="button"
     >
       <span
         aria-label="fa-thumb-tack"
-        class="fa fa-thumb-tack buttonIcon pinIcon"
+        class="fa fa-thumb-tack pinIcon"
       />
     </button>
     <div

@@ -68,12 +68,12 @@ exports[`Render based on current route 1`] = `
         class="footer"
       >
         <button
-          class="button icon pin"
+          class="pin"
           type="button"
         >
           <span
             aria-label="fa-thumb-tack"
-            class="fa fa-thumb-tack buttonIcon pinIcon"
+            class="fa fa-thumb-tack pinIcon"
           />
         </button>
         <div
@@ -230,12 +230,12 @@ exports[`Render based on current route with app version 1`] = `
         class="footer"
       >
         <button
-          class="button icon pin"
+          class="pin"
           type="button"
         >
           <span
             aria-label="fa-thumb-tack"
-            class="fa fa-thumb-tack buttonIcon pinIcon"
+            class="fa fa-thumb-tack pinIcon"
           />
         </button>
         <div
@@ -593,12 +593,12 @@ exports[`Render opened navigation 1`] = `
         class="footer"
       >
         <button
-          class="button icon pin"
+          class="pin"
           type="button"
         >
           <span
             aria-label="fa-thumb-tack"
-            class="fa fa-thumb-tack buttonIcon pinIcon"
+            class="fa fa-thumb-tack pinIcon"
           />
         </button>
         <div
@@ -759,12 +759,12 @@ exports[`Should not fail if current route does not exist 1`] = `
         class="footer"
       >
         <button
-          class="button icon pin"
+          class="pin"
           type="button"
         >
           <span
             aria-label="fa-thumb-tack"
-            class="fa fa-thumb-tack buttonIcon pinIcon"
+            class="fa fa-thumb-tack pinIcon"
           />
         </button>
         <div

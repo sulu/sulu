@@ -126,15 +126,17 @@ $pinBorderColor: $shakespeare;
 }
 
 .pin {
+    position: relative;
     flex: 0 0 auto;
     align-self: flex-end;
     min-width: 25px;
     height: 25px;
     border-radius: 5px;
-    border-color: $pinBorderColor;
+    border: 1px $pinBorderColor solid;
     margin-right: 20px;
     background-color: $pinBackgroundColor;
     color: $pinColor;
+    cursor: pointer;
 
     &:hover,
     &.pin-active {
