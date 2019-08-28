@@ -168,7 +168,7 @@ test('Should login', () => {
 
     return loginPromise.then(() => {
         expect(Requester.post).toBeCalledWith('login_check_url', {username: 'test', password: 'password'});
-        expect(initializer.initialize).toBeCalled();
+        expect(initializer.initialize).toBeCalledWith(true);
 
         return initializePromise.then(() => {
             expect(userStore.loading).toBe(false);
@@ -209,7 +209,7 @@ test('Should login with initializing when it`s not the same user', () => {
             'login_check_url',
             {username: 'other-user-than-test', password: 'password'}
         );
-        expect(initializer.initialize).toBeCalled();
+        expect(initializer.initialize).toBeCalledWith(true);
         expect(userStore.loading).toBe(true);
         expect(userStore.loggedIn).toBe(false);
         expect(userStore.loginError).toBe(false);

@@ -73,7 +73,7 @@ test('Should initialize when everything works', () => {
     const hook = jest.fn();
     initializer.addUpdateConfigHook('sulu_admin', hook);
 
-    const initPromise = initializer.initialize();
+    const initPromise = initializer.initialize(true);
     expect(initializer.loading).toBe(true);
 
     return initPromise
@@ -86,6 +86,38 @@ test('Should initialize when everything works', () => {
             expect(initializer.loading).toBe(false);
 
             expect(hook).toBeCalledWith(configData['sulu_admin'], false);
+        });
+});
+
+test('Should only initialize translations if no user is logged in', () => {
+    const translationData = {
+        'sulu_admin.test1': 'Test1',
+    };
+    const translationPromise = Promise.resolve(translationData);
+
+    Requester.get.mockImplementation((key) => {
+        switch (key) {
+            case 'translations_url?locale=en':
+                return translationPromise;
+        }
+    });
+
+    const hook = jest.fn();
+    initializer.addUpdateConfigHook('sulu_admin', hook);
+
+    const initPromise = initializer.initialize(false);
+    expect(initializer.loading).toBe(true);
+
+    return initPromise
+        .then(() => {
+            expect(resourceRouteRegistry.setRoutingData).not.toBeCalled();
+            expect(setTranslations).toBeCalledWith(translationData, 'en');
+            expect(initializer.initializedTranslationsLocale).toBe('en');
+
+            expect(initializer.initialized).toBe(false);
+            expect(initializer.loading).toBe(false);
+
+            expect(hook).not.toBeCalled();
         });
 });
 
@@ -124,7 +156,7 @@ test('Should not reinitialize everything when it was already initialized', () =>
     initializer.setInitialized();
     initializer.setInitializedTranslationsLocale('en');
 
-    const initPromise = initializer.initialize();
+    const initPromise = initializer.initialize(true);
     expect(initializer.loading).toBe(true);
 
     return initPromise
@@ -157,7 +189,7 @@ test('Should not crash when the config request throws an 401 error', () => {
         }
     });
 
-    const initPromise = initializer.initialize();
+    const initPromise = initializer.initialize(true);
     expect(initializer.loading).toBe(true);
 
     return initPromise

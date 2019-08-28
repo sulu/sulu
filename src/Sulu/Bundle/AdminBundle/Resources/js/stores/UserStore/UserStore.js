@@ -98,7 +98,7 @@ class UserStore {
                 }
 
                 this.setLoading(true);
-                return initializer.initialize().then(() => {
+                return initializer.initialize(true).then(() => {
                     this.setLoading(false);
                 });
             })
