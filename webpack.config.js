@@ -55,6 +55,10 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                     'vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js'
                 ),
             },
+            modules: [nodeModulesPath, 'node_modules'],
+        },
+        resolveLoader: {
+            modules: [nodeModulesPath, 'node_modules'],
         },
         module: {
             rules: [
