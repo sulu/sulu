@@ -89,8 +89,7 @@ class WebsiteAdmin extends Admin
                 ->setTabOrder(2048)
                 ->addToolbarActions($listToolbarActions)
                 ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
-                ->addRerenderAttribute('webspace')
-                ->getRoute();
+                ->addRerenderAttribute('webspace');
         }
 
         return $routes;

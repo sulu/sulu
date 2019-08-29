@@ -115,14 +115,12 @@ class MediaAdmin extends Admin
                     'delete' => $this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::DELETE),
                     'edit' => $this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT),
                 ])
-                ->setAttributeDefault('locale', $mediaLocales[0])
-                ->getRoute();
+                ->setAttributeDefault('locale', $mediaLocales[0]);
             $routes[] = $this->routeBuilderFactory
                 ->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/media/:locale/:id')
                 ->setResourceKey('media')
                 ->addLocales($mediaLocales)
-                ->setTitleProperty('title')
-                ->getRoute();
+                ->setTitleProperty('title');
             $routes[] = $this->routeBuilderFactory->createFormRouteBuilder(static::EDIT_FORM_DETAILS_ROUTE, '/details')
                 ->setResourceKey('media')
                 ->setFormKey('media_details')
@@ -130,18 +128,15 @@ class MediaAdmin extends Admin
                 ->setEditRoute(static::EDIT_FORM_DETAILS_ROUTE)
                 ->addToolbarActions($toolbarActions)
                 ->setParent(static::EDIT_FORM_ROUTE)
-                ->setBackRoute(static::MEDIA_OVERVIEW_ROUTE)
-                ->getRoute();
+                ->setBackRoute(static::MEDIA_OVERVIEW_ROUTE);
             $routes[] = $this->routeBuilderFactory
                 ->createRouteBuilder(static::EDIT_FORM_FORMATS_ROUTE, '/formats', 'sulu_media.formats')
                 ->setOption('tabTitle', 'sulu_media.formats')
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
+                ->setParent(static::EDIT_FORM_ROUTE);
             $routes[] = $this->routeBuilderFactory
                 ->createRouteBuilder(static::EDIT_FORM_HISTORY_ROUTE, '/history', 'sulu_media.history')
                 ->setOption('tabTitle', 'sulu_media.history')
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
+                ->setParent(static::EDIT_FORM_ROUTE);
         }
 
         return $routes;

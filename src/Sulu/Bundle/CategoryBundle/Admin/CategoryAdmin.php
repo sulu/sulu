@@ -111,14 +111,12 @@ class CategoryAdmin extends Admin
                 ->setAddRoute(static::ADD_FORM_ROUTE)
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
                 ->enableSearching()
-                ->addToolbarActions($listToolbarActions)
-                ->getRoute();
+                ->addToolbarActions($listToolbarActions);
             $routes[] = $this->routeBuilderFactory
                 ->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/categories/:locale/add')
                 ->setResourceKey('categories')
                 ->addLocales($locales)
-                ->setBackRoute(static::LIST_ROUTE)
-                ->getRoute();
+                ->setBackRoute(static::LIST_ROUTE);
             $routes[] = $this->routeBuilderFactory
                 ->createFormRouteBuilder('sulu_category.add_form.details', '/details')
                 ->setResourceKey('categories')
@@ -127,24 +125,21 @@ class CategoryAdmin extends Admin
                 ->addToolbarActions($formToolbarActions)
                 ->addRouterAttributesToFormStore(['parentId'])
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
-                ->setParent(static::ADD_FORM_ROUTE)
-                ->getRoute();
+                ->setParent(static::ADD_FORM_ROUTE);
             $routes[] = $this->routeBuilderFactory
                 ->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/categories/:locale/:id')
                 ->setResourceKey('categories')
                 ->addLocales($locales)
                 ->setBackRoute(static::LIST_ROUTE)
                 ->addRouterAttributesToBackRoute(['id' => 'active'])
-                ->setTitleProperty('name')
-                ->getRoute();
+                ->setTitleProperty('name');
             $routes[] = $this->routeBuilderFactory
                 ->createFormRouteBuilder('sulu_category.edit_form.details', '/details')
                 ->setResourceKey('categories')
                 ->setFormKey('category_details')
                 ->setTabTitle('sulu_admin.details')
                 ->addToolbarActions($formToolbarActions)
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
+                ->setParent(static::EDIT_FORM_ROUTE);
             $routes[] = $this->routeBuilderFactory
                 ->createFormOverlayListRouteBuilder('sulu_category.edit_form.keywords', '/keywords')
                 ->setResourceKey('category_keywords')
@@ -155,8 +150,7 @@ class CategoryAdmin extends Admin
                 ->addRouterAttributesToFormStore(['id' => 'categoryId'])
                 ->setTabTitle('sulu_category.keywords')
                 ->addToolbarActions(['sulu_admin.add', 'sulu_admin.delete'])
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
+                ->setParent(static::EDIT_FORM_ROUTE);
         }
 
         return $routes;

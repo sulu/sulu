@@ -97,32 +97,27 @@ class TagAdmin extends Admin
                 ->addListAdapters(['table'])
                 ->setAddRoute(static::ADD_FORM_ROUTE)
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
-                ->addToolbarActions($listToolbarActions)
-                ->getRoute();
+                ->addToolbarActions($listToolbarActions);
             $routes[] = $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/tags/add')
                 ->setResourceKey('tags')
-                ->setBackRoute(static::LIST_ROUTE)
-                ->getRoute();
+                ->setBackRoute(static::LIST_ROUTE);
             $routes[] = $this->routeBuilderFactory->createFormRouteBuilder('sulu_tag.add_form.details', '/details')
                 ->setResourceKey('tags')
                 ->setFormKey('tag_details')
                 ->setTabTitle('sulu_admin.details')
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
                 ->addToolbarActions($formToolbarActions)
-                ->setParent(static::ADD_FORM_ROUTE)
-                ->getRoute();
+                ->setParent(static::ADD_FORM_ROUTE);
             $routes[] = $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/tags/:id')
                 ->setResourceKey('tags')
                 ->setBackRoute(static::LIST_ROUTE)
-                ->setTitleProperty('name')
-                ->getRoute();
+                ->setTitleProperty('name');
             $routes[] = $this->routeBuilderFactory->createFormRouteBuilder('sulu_tag.edit_form.details', '/details')
                 ->setResourceKey('tags')
                 ->setFormKey('tag_details')
                 ->setTabTitle('sulu_admin.details')
                 ->addToolbarActions($formToolbarActions)
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
+                ->setParent(static::EDIT_FORM_ROUTE);
         }
 
         return $routes;

@@ -18,6 +18,11 @@ trait RouteBuilderTrait
      */
     private $route;
 
+    public function getName(): string
+    {
+        return $this->route->getName();
+    }
+
     public function setView(string $view): RouteBuilderInterface
     {
         $this->route->setView($view);

@@ -138,8 +138,7 @@ class PageAdmin extends Admin
             // Otherwise the application breaks when other bundles try to add child routes to this one
             $routes[] = $this->routeBuilderFactory
                 ->createRouteBuilder(static::WEBSPACE_TABS_ROUTE, '/webspaces/:webspace', 'sulu_page.webspace_tabs')
-                ->setAttributeDefault('webspace', $firstWebspace->getKey())
-                ->getRoute(),
+                ->setAttributeDefault('webspace', $firstWebspace->getKey()),
         ];
 
         if ($this->hasSomeWebspacePermission()) {
@@ -150,8 +149,7 @@ class PageAdmin extends Admin
                 ->setOption('tabOrder', 0)
                 ->setOption('tabPriority', 1024)
                 ->addRerenderAttribute('webspace')
-                ->setParent(static::WEBSPACE_TABS_ROUTE)
-                ->getRoute();
+                ->setParent(static::WEBSPACE_TABS_ROUTE);
             $routes[] = $this->routeBuilderFactory->createRouteBuilder(
                 static::ADD_FORM_ROUTE,
                 '/webspaces/:webspace/pages/:locale/add/:parentId',
@@ -159,8 +157,7 @@ class PageAdmin extends Admin
             )
                 ->setOption('backRoute', static::PAGES_ROUTE)
                 ->setOption('routerAttributesToBackRoute', ['webspace'])
-                ->setOption('resourceKey', 'pages')
-                ->getRoute();
+                ->setOption('resourceKey', 'pages');
             $routes[] = $this->routeBuilderFactory
                 ->createFormRouteBuilder('sulu_page.page_add_form.details', '/details')
                 ->setResourceKey('pages')
@@ -170,8 +167,7 @@ class PageAdmin extends Admin
                 ->addRouterAttributesToEditRoute(['webspace'])
                 ->addToolbarActions($formToolbarActionsWithType)
                 ->addRouterAttributesToFormStore($routerAttributesToFormStore)
-                ->setParent(static::ADD_FORM_ROUTE)
-                ->getRoute();
+                ->setParent(static::ADD_FORM_ROUTE);
             $routes[] = $this->routeBuilderFactory->createRouteBuilder(
                 static::EDIT_FORM_ROUTE,
                 '/webspaces/:webspace/pages/:locale/:id',
@@ -179,8 +175,7 @@ class PageAdmin extends Admin
             )
                 ->setOption('backRoute', static::PAGES_ROUTE)
                 ->setOption('routerAttributesToBackRoute', ['id' => 'active', 'webspace'])
-                ->setOption('resourceKey', 'pages')
-                ->getRoute();
+                ->setOption('resourceKey', 'pages');
             $routes[] = $this->routeBuilderFactory
                 ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.details', '/details')
                 ->setResourceKey('pages')
@@ -192,8 +187,7 @@ class PageAdmin extends Admin
                 ->addRouterAttributesToFormStore($routerAttributesToFormStore)
                 ->setPreviewCondition($previewCondition)
                 ->setTabOrder(1024)
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
+                ->setParent(static::EDIT_FORM_ROUTE);
             $routes[] = $this->routeBuilderFactory
                 ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.seo', '/seo')
                 ->setResourceKey('pages')
@@ -205,8 +199,7 @@ class PageAdmin extends Admin
                 ->setPreviewCondition($previewCondition)
                 ->setTitleVisible(true)
                 ->setTabOrder(2048)
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
+                ->setParent(static::EDIT_FORM_ROUTE);
             $routes[] = $this->routeBuilderFactory
                 ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.excerpt', '/excerpt')
                 ->setResourceKey('pages')
@@ -218,8 +211,7 @@ class PageAdmin extends Admin
                 ->setPreviewCondition($previewCondition)
                 ->setTitleVisible(true)
                 ->setTabOrder(3072)
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
+                ->setParent(static::EDIT_FORM_ROUTE);
             $routes[] = $this->routeBuilderFactory
                 ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.settings', '/settings')
                 ->setResourceKey('pages')
@@ -231,8 +223,7 @@ class PageAdmin extends Admin
                 ->setPreviewCondition($previewCondition)
                 ->setTitleVisible(true)
                 ->setTabOrder(4096)
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
+                ->setParent(static::EDIT_FORM_ROUTE);
             $routes[] = $this->routeBuilderFactory
                 ->createFormRouteBuilder('sulu_page.page_edit_form.permissions', '/permissions')
                 ->setResourceKey('permissions')
@@ -244,8 +235,7 @@ class PageAdmin extends Admin
                 ->addRouterAttributesToFormStore(['webspace'])
                 ->setTitleVisible(true)
                 ->setTabOrder(5120)
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
+                ->setParent(static::EDIT_FORM_ROUTE);
         }
 
         return $routes;

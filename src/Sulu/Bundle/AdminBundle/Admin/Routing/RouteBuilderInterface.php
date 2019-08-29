@@ -13,6 +13,8 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 interface RouteBuilderInterface
 {
+    public function getName(): string;
+
     public function setView(string $view): self;
 
     public function setOption(string $key, $value): self;

@@ -70,11 +70,11 @@ class SnippetAdminTest extends TestCase
         $this->webspaceManager->getAllLocales()->willReturn(array_values($locales));
 
         $routes = $snippetAdmin->getRoutes();
-        $listRoute = $routes[0];
-        $addFormRoute = $routes[1];
-        $addDetailRoute = $routes[2];
-        $editFormRoute = $routes[3];
-        $editDetailRoute = $routes[4];
+        $listRoute = $routes[0]->getRoute();
+        $addFormRoute = $routes[1]->getRoute();
+        $addDetailRoute = $routes[2]->getRoute();
+        $editFormRoute = $routes[3]->getRoute();
+        $editDetailRoute = $routes[4]->getRoute();
 
         $this->assertAttributeEquals('sulu_snippet.list', 'name', $listRoute);
         $this->assertAttributeEquals([

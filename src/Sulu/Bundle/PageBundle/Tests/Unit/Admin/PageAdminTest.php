@@ -90,13 +90,13 @@ class PageAdminTest extends TestCase
             false
         );
 
-        $route = $admin->getRoutes()[0];
+        $route = $admin->getRoutes()[0]->getRoute();
         $this->assertAttributeEquals('sulu_page.webspaces', 'name', $route);
         $this->assertAttributeEquals([
             'webspace' => 'test-1',
         ], 'attributeDefaults', $route);
 
-        $route = $admin->getRoutes()[1];
+        $route = $admin->getRoutes()[1]->getRoute();
         $this->assertAttributeEquals('sulu_page.pages_list', 'name', $route);
         $this->assertAttributeEquals([
             'locale' => 'de',

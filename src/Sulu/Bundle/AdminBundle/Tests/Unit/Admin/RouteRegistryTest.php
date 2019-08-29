@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
-use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilder;
 use Sulu\Bundle\AdminBundle\Exception\ParentRouteNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\RouteNotFoundException;
 
@@ -54,17 +54,17 @@ class RouteRegistryTest extends TestCase
 
     public function testFindRouteByName()
     {
-        $route1 = new Route('test1', '/test1', 'test1');
-        $route1->setOption('value', 'test1');
-        $route2 = new Route('test2', '/test2', 'test2');
-        $route2->setOption('value', 'test2');
-        $route3 = new Route('test3', '/test3', 'test3');
-        $route3->setOption('value', 'test3');
-        $this->admin1->getRoutes()->willReturn([$route1]);
-        $this->admin2->getRoutes()->willReturn([$route2, $route3]);
+        $routeBuilder1 = new RouteBuilder('test1', '/test1', 'test1');
+        $routeBuilder1->setOption('value', 'test1');
+        $routeBuilder2 = new RouteBuilder('test2', '/test2', 'test2');
+        $routeBuilder2->setOption('value', 'test2');
+        $routeBuilder3 = new RouteBuilder('test3', '/test3', 'test3');
+        $routeBuilder3->setOption('value', 'test3');
+        $this->admin1->getRoutes()->willReturn([$routeBuilder1]);
+        $this->admin2->getRoutes()->willReturn([$routeBuilder2, $routeBuilder3]);
 
         $route = $this->routeRegistry->findRouteByName('test2');
-        $this->assertEquals($route, $route2);
+        $this->assertEquals($route, $routeBuilder2->getRoute());
     }
 
     public function testFindRouteByNameException()
@@ -79,32 +79,32 @@ class RouteRegistryTest extends TestCase
 
     public function testGetRoutes()
     {
-        $route1 = new Route('test1', '/test1', 'test1');
-        $route1->setOption('value', 'test1');
-        $route2 = new Route('test2', '/test2', 'test2');
-        $route2->setOption('value', 'test2');
-        $route3 = new Route('test3', '/test3', 'test3');
-        $route3->setOption('value', 'test3');
-        $this->admin1->getRoutes()->willReturn([$route1]);
-        $this->admin2->getRoutes()->willReturn([$route2, $route3]);
+        $routeBuilder1 = new RouteBuilder('test1', '/test1', 'test1');
+        $routeBuilder1->setOption('value', 'test1');
+        $routeBuilder2 = new RouteBuilder('test2', '/test2', 'test2');
+        $routeBuilder2->setOption('value', 'test2');
+        $routeBuilder3 = new RouteBuilder('test3', '/test3', 'test3');
+        $routeBuilder3->setOption('value', 'test3');
+        $this->admin1->getRoutes()->willReturn([$routeBuilder1]);
+        $this->admin2->getRoutes()->willReturn([$routeBuilder2, $routeBuilder3]);
 
         $routes = $this->routeRegistry->getRoutes();
         $this->assertCount(3, $routes);
-        $this->assertEquals($route1, $routes[0]);
-        $this->assertEquals($route2, $routes[1]);
-        $this->assertEquals($route3, $routes[2]);
+        $this->assertEquals($routeBuilder1->getRoute(), $routes[0]);
+        $this->assertEquals($routeBuilder2->getRoute(), $routes[1]);
+        $this->assertEquals($routeBuilder3->getRoute(), $routes[2]);
     }
 
     public function testGetRoutesMemoryCache()
     {
-        $route1 = new Route('test1', '/test1', 'test1');
-        $route1->setOption('value', 'test1');
-        $route2 = new Route('test2', '/test2', 'test2');
-        $route2->setOption('value', 'test2');
-        $route3 = new Route('test3', '/test3', 'test3');
-        $route3->setOption('value', 'test3');
-        $this->admin1->getRoutes()->willReturn([$route1])->shouldBeCalledTimes(1);
-        $this->admin2->getRoutes()->willReturn([$route2, $route3])->shouldBeCalledTimes(1);
+        $routeBuilder1 = new RouteBuilder('test1', '/test1', 'test1');
+        $routeBuilder1->setOption('value', 'test1');
+        $routeBuilder2 = new RouteBuilder('test2', '/test2', 'test2');
+        $routeBuilder2->setOption('value', 'test2');
+        $routeBuilder3 = new RouteBuilder('test3', '/test3', 'test3');
+        $routeBuilder3->setOption('value', 'test3');
+        $this->admin1->getRoutes()->willReturn([$routeBuilder1])->shouldBeCalledTimes(1);
+        $this->admin2->getRoutes()->willReturn([$routeBuilder2, $routeBuilder3])->shouldBeCalledTimes(1);
 
         $routes1 = $this->routeRegistry->getRoutes();
         $routes2 = $this->routeRegistry->getRoutes();
@@ -116,9 +116,9 @@ class RouteRegistryTest extends TestCase
     {
         $this->expectException(ParentRouteNotFoundException::class);
 
-        $route = new Route('test1', '/test1', 'test1');
-        $route->setParent('not-existing');
-        $this->admin1->getRoutes()->willReturn([$route]);
+        $routeBuilder = new RouteBuilder('test1', '/test1', 'test1');
+        $routeBuilder->setParent('not-existing');
+        $this->admin1->getRoutes()->willReturn([$routeBuilder]);
         $this->admin2->getRoutes()->willReturn([]);
 
         $this->routeRegistry->getRoutes();
@@ -126,20 +126,20 @@ class RouteRegistryTest extends TestCase
 
     public function testRoutesMergeOptions()
     {
-        $route1 = new Route('test1', '/test1', 'test1');
-        $route1->setOption('route1', 'test1');
-        $route1->setOption('override', 'override');
-        $route1_1 = new Route('test1_1', '/test1_1', 'test1_1');
-        $route1_1->setOption('route1_1', 'test1_1');
-        $route1_1->setParent('test1');
-        $route1_1_1 = new Route('test1_1_1', '/test1_1_1', 'test1_1_1');
-        $route1_1_1->setOption('override', 'overriden-value');
-        $route1_1_1->setOption('route1_1_1', 'test1_1_1');
-        $route1_1_1->setParent('test1_1');
-        $route2 = new Route('test2', '/test2', 'test2');
-        $route2->setOption('value', 'test');
+        $routeBuilder1 = new RouteBuilder('test1', '/test1', 'test1');
+        $routeBuilder1->setOption('route1', 'test1');
+        $routeBuilder1->setOption('override', 'override');
+        $routeBuilder1_1 = new RouteBuilder('test1_1', '/test1_1', 'test1_1');
+        $routeBuilder1_1->setOption('route1_1', 'test1_1');
+        $routeBuilder1_1->setParent('test1');
+        $routeBuilder1_1_1 = new RouteBuilder('test1_1_1', '/test1_1_1', 'test1_1_1');
+        $routeBuilder1_1_1->setOption('override', 'overriden-value');
+        $routeBuilder1_1_1->setOption('route1_1_1', 'test1_1_1');
+        $routeBuilder1_1_1->setParent('test1_1');
+        $routeBuilder2 = new RouteBuilder('test2', '/test2', 'test2');
+        $routeBuilder2->setOption('value', 'test');
 
-        $this->admin1->getRoutes()->willReturn([$route1, $route1_1, $route1_1_1, $route2]);
+        $this->admin1->getRoutes()->willReturn([$routeBuilder1, $routeBuilder1_1, $routeBuilder1_1_1, $routeBuilder2]);
         $this->admin2->getRoutes()->willReturn([]);
 
         $routes = $this->routeRegistry->getRoutes();

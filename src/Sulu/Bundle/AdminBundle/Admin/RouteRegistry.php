@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderInterface;
 use Sulu\Bundle\AdminBundle\Exception\ParentRouteNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\RouteNotFoundException;
 
@@ -59,20 +60,22 @@ class RouteRegistry
 
     private function loadRoutes(): void
     {
-        $routes = [];
+        $routeCollection = new RouteCollection();
         foreach ($this->adminPool->getAdmins() as $admin) {
             if (!$admin instanceof RouteProviderInterface) {
                 continue;
             }
 
-            $routes = array_merge($routes, $admin->getRoutes());
+            foreach ($admin->getRoutes() as $routeBuilder) {
+                $routeCollection->add($routeBuilder);
+            }
         }
 
-        $this->validateRoutes($routes);
+        $routes = array_map(function(RouteBuilderInterface $routeBuilder) {
+            return $routeBuilder->getRoute();
+        }, $routeCollection->all());
 
-        array_walk($routes, function(&$route, $index) {
-            $route = clone $route;
-        });
+        $this->validateRoutes($routes);
 
         $this->routes = $this->mergeRouteOptions($routes);
 

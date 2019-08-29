@@ -109,13 +109,11 @@ class AudienceTargetingAdmin extends Admin
                 ->addListAdapters(['table'])
                 ->setAddRoute(static::ADD_FORM_ROUTE)
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
-                ->addToolbarActions($listToolbarActions)
-                ->getRoute();
+                ->addToolbarActions($listToolbarActions);
             $routes[] = $this->routeBuilderFactory
                 ->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/target-groups/add')
                 ->setResourceKey('target_groups')
-                ->setBackRoute(static::LIST_ROUTE)
-                ->getRoute();
+                ->setBackRoute(static::LIST_ROUTE);
             $routes[] = $this->routeBuilderFactory
                 ->createFormRouteBuilder('sulu_audience_targeting.add_form.details', '/details')
                 ->setResourceKey('target_groups')
@@ -123,22 +121,19 @@ class AudienceTargetingAdmin extends Admin
                 ->setTabTitle('sulu_admin.details')
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
                 ->addToolbarActions($formToolbarActions)
-                ->setParent(static::ADD_FORM_ROUTE)
-                ->getRoute();
+                ->setParent(static::ADD_FORM_ROUTE);
             $routes[] = $this->routeBuilderFactory
                 ->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/target-groups/:id')
                 ->setResourceKey('target_groups')
                 ->setBackRoute(static::LIST_ROUTE)
-                ->setTitleProperty('title')
-                ->getRoute();
+                ->setTitleProperty('title');
             $routes[] = $this->routeBuilderFactory
                 ->createFormRouteBuilder('sulu_audience_targeting.edit_form.details', '/details')
                 ->setResourceKey('target_groups')
                 ->setFormKey('target_group_details')
                 ->setTabTitle('sulu_admin.details')
                 ->addToolbarActions($formToolbarActions)
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
+                ->setParent(static::EDIT_FORM_ROUTE);
         }
 
         return $routes;

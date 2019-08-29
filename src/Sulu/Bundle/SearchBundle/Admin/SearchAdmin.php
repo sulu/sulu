@@ -46,7 +46,7 @@ class SearchAdmin extends Admin
     public function getRoutes(): array
     {
         return [
-            $this->routeBuilderFactory->createRouteBuilder(static::SEARCH_ROUTE, '/', 'sulu_search.search')->getRoute(),
+            $this->routeBuilderFactory->createRouteBuilder(static::SEARCH_ROUTE, '/', 'sulu_search.search'),
         ];
     }
 }

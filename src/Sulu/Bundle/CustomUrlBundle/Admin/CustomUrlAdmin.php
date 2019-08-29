@@ -84,8 +84,7 @@ class CustomUrlAdmin extends Admin
                 ->addToolbarActions($listToolbarActions)
                 ->setTabOrder(1024)
                 ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
-                ->addRerenderAttribute('webspace')
-                ->getRoute();
+                ->addRerenderAttribute('webspace');
         }
 
         return $routes;

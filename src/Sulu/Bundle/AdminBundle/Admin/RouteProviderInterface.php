@@ -11,12 +11,12 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin;
 
-use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderInterface;
 
 interface RouteProviderInterface
 {
     /**
-     * @return Route[]
+     * @return RouteBuilderInterface[]
      */
     public function getRoutes(): array;
 }

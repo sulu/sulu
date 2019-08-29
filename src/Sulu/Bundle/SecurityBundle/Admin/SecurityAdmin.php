@@ -152,12 +152,10 @@ class SecurityAdmin extends Admin
                 ->addListAdapters(['table'])
                 ->setAddRoute(static::ADD_FORM_ROUTE)
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
-                ->addToolbarActions($listToolbarActions)
-                ->getRoute();
+                ->addToolbarActions($listToolbarActions);
             $routes[] = $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/roles/add')
                 ->setResourceKey('roles')
-                ->setBackRoute(static::LIST_ROUTE)
-                ->getRoute();
+                ->setBackRoute(static::LIST_ROUTE);
             $routes[] = $this->routeBuilderFactory
                 ->createFormRouteBuilder('sulu_security.role_add_form.details', '/details')
                 ->setResourceKey('roles')
@@ -165,21 +163,18 @@ class SecurityAdmin extends Admin
                 ->setTabTitle('sulu_admin.details')
                 ->setEditRoute(static::EDIT_FORM_ROUTE)
                 ->addToolbarActions($formToolbarActions)
-                ->setParent(static::ADD_FORM_ROUTE)
-                ->getRoute();
+                ->setParent(static::ADD_FORM_ROUTE);
             $routes[] = $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/roles/:id')
                 ->setResourceKey('roles')
                 ->setBackRoute(static::LIST_ROUTE)
-                ->setTitleProperty('name')
-                ->getRoute();
+                ->setTitleProperty('name');
             $routes[] = $this->routeBuilderFactory
                 ->createFormRouteBuilder('sulu_security.role_edit_form.details', '/details')
                 ->setResourceKey('roles')
                 ->setFormKey('role_details')
                 ->setTabTitle('sulu_admin.details')
                 ->addToolbarActions($formToolbarActions)
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
+                ->setParent(static::EDIT_FORM_ROUTE);
         }
 
         if ($this->securityChecker->hasPermission(static::USER_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
@@ -201,8 +196,7 @@ class SecurityAdmin extends Admin
                 ->setIdQueryParameter('contactId')
                 ->setTitleVisible(true)
                 ->setTabOrder(3072)
-                ->setParent(ContactAdmin::CONTACT_EDIT_FORM_ROUTE)
-                ->getRoute();
+                ->setParent(ContactAdmin::CONTACT_EDIT_FORM_ROUTE);
         }
 
         return $routes;

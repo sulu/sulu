@@ -88,4 +88,11 @@ class RouteBuilderTest extends TestCase
 
         $this->assertEquals($expectedRoute, $routeBuilder->getRoute());
     }
+
+    public function testGetName()
+    {
+        $routeBuilder = new RouteBuilder('sulu_admin.test', '/test', 'test1');
+
+        $this->assertEquals('sulu_admin.test', $routeBuilder->getName());
+    }
 }
