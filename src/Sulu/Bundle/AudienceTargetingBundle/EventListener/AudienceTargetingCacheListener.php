@@ -18,6 +18,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Listen to the cache events, sets the needed headers and cookies for audience targeting.
@@ -97,7 +99,7 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
             $visitorTargetGroup = $this->requestTargetGroup($request, $kernel, $visitorTargetGroup);
         }
 
-        if ($request->isMethodCacheable()) {
+        if (null !== $visitorTargetGroup && $request->isMethodCacheable()) {
             // add the target group as separate header to vary on it
             $request->headers->set(static::TARGET_GROUP_HEADER, (string) $visitorTargetGroup);
         }
@@ -112,7 +114,7 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
      * @param CacheInvalidation $kernel
      * @param null|int $currentTargetGroup
      *
-     * @return string
+     * @return ?string
      */
     private function requestTargetGroup(Request $request, CacheInvalidation $kernel, int $currentTargetGroup = null)
     {
@@ -131,7 +133,12 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
 
         $targetGroupRequest->headers->set(static::USER_CONTEXT_URL_HEADER, $request->getUri());
 
-        $targetGroupResponse = $kernel->handle($targetGroupRequest);
+        try {
+            $targetGroupResponse = $kernel->handle($targetGroupRequest, HttpKernelInterface::MASTER_REQUEST, false);
+        } catch (NotFoundHttpException $e) {
+            // happens on command execution in the admin context because there is no target-group-url route registered
+            return null;
+        }
 
         return $targetGroupResponse->headers->get(static::TARGET_GROUP_HEADER);
     }
