@@ -38,6 +38,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
     protected function setUp()
     {
         $this->session = $this->getContainer()->get('doctrine')->getConnection();
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->purgeDatabase();
         $this->initPhpcr();
         $this->data = $this->prepareRepositoryContent();
@@ -112,15 +113,26 @@ class PageResourcelocatorControllerTest extends SuluTestCase
                 'PHP_AUTH_PW' => 'test',
             ]
         );
-        $client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish', $data[0]);
+
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $client->request(
+            'POST',
+            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&locale=en&action=publish',
+            $data[0]
+        );
         $data[0] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish', $data[1]);
+        $client->request(
+            'POST',
+            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&locale=en&action=publish',
+            $data[1]
+        );
         $data[1] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish&parent=' . $data[1]['id'], $data[2]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish&parentId=' . $data[1]['id'], $data[2]);
         $data[2] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish&parent=' . $data[1]['id'], $data[3]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish&parentId=' . $data[1]['id'], $data[3]);
         $data[3] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish&parent=' . $data[3]['id'], $data[4]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish&parentId=' . $data[3]['id'], $data[4]);
         $data[4] = (array) json_decode($client->getResponse()->getContent(), true);
 
         return $data;

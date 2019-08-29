@@ -2,6 +2,7 @@
 export type ItemButtonConfig = {
     icon: string,
     onClick: (string | number) => void,
+    visible?: boolean,
 };
 
 export type ToolbarDropdownOptionConfig = {

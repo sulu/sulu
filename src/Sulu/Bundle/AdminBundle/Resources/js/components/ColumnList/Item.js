@@ -98,7 +98,7 @@ class Item extends React.Component<Props> {
             const key = `button-${index}`;
 
             return (
-                <ItemButton config={button} id={id} key={key} />
+                <ItemButton {...button} id={id} key={key} />
             );
         });
     };

@@ -47,7 +47,7 @@ exports[`Render data with disabled items 1`] = `
             >
               <span
                 aria-label="su-check"
-                class="su-check clickable button"
+                class="su-check clickable button visible"
                 role="button"
                 tabindex="0"
               />
@@ -107,7 +107,7 @@ exports[`Render data with disabled items 1`] = `
             >
               <span
                 aria-label="su-check"
-                class="su-check clickable button"
+                class="su-check clickable button visible"
                 role="button"
                 tabindex="0"
               />
@@ -429,7 +429,7 @@ exports[`Render data with selection 1`] = `
             >
               <span
                 aria-label="su-check"
-                class="su-check clickable button"
+                class="su-check clickable button visible"
                 role="button"
                 tabindex="0"
               />
@@ -630,7 +630,7 @@ exports[`Render different kind of data with edit button 1`] = `
             >
               <span
                 aria-label="su-pen"
-                class="su-pen clickable button"
+                class="su-pen clickable button visible"
                 role="button"
                 tabindex="0"
               />
@@ -689,7 +689,7 @@ exports[`Render different kind of data with edit button 1`] = `
             >
               <span
                 aria-label="su-pen"
-                class="su-pen clickable button"
+                class="su-pen clickable button visible"
                 role="button"
                 tabindex="0"
               />
@@ -746,7 +746,7 @@ exports[`Render different kind of data with edit button 1`] = `
             >
               <span
                 aria-label="su-pen"
-                class="su-pen clickable button"
+                class="su-pen clickable button visible"
                 role="button"
                 tabindex="0"
               />
@@ -811,7 +811,7 @@ exports[`Render different kind of data with edit button 1`] = `
             >
               <span
                 aria-label="su-pen"
-                class="su-pen clickable button"
+                class="su-pen clickable button visible"
                 role="button"
                 tabindex="0"
               />
@@ -871,7 +871,7 @@ exports[`Render different kind of data with edit button 1`] = `
             >
               <span
                 aria-label="su-plus-circle"
-                class="su-plus-circle clickable button"
+                class="su-plus-circle clickable button visible"
                 role="button"
                 tabindex="0"
               />
@@ -932,7 +932,7 @@ exports[`Render different kind of data with edit button 1`] = `
             >
               <span
                 aria-label="su-plus-circle"
-                class="su-plus-circle clickable button"
+                class="su-plus-circle clickable button visible"
                 role="button"
                 tabindex="0"
               />
@@ -993,7 +993,7 @@ exports[`Render different kind of data with edit button 1`] = `
             >
               <span
                 aria-label="su-pen"
-                class="su-pen clickable button"
+                class="su-pen clickable button visible"
                 role="button"
                 tabindex="0"
               />
@@ -1058,7 +1058,7 @@ exports[`Render different kind of data with edit button 1`] = `
             >
               <span
                 aria-label="su-pen"
-                class="su-pen clickable button"
+                class="su-pen clickable button visible"
                 role="button"
                 tabindex="0"
               />
@@ -1118,7 +1118,7 @@ exports[`Render different kind of data with edit button 1`] = `
             >
               <span
                 aria-label="su-pen"
-                class="su-pen clickable button"
+                class="su-pen clickable button visible"
                 role="button"
                 tabindex="0"
               />

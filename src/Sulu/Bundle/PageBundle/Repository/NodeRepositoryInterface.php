@@ -123,14 +123,6 @@ interface NodeRepositoryInterface
     public function getIndexNode($webspaceKey, $languageCode);
 
     /**
-     * removes given node.
-     *
-     * @param string $uuid
-     * @param string $webspaceKey
-     */
-    public function deleteNode($uuid, $webspaceKey);
-
-    /**
      * Return the nodes which refer to the structure with the
      * given UUID.
      *

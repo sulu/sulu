@@ -32,6 +32,8 @@ class ResourcelocatorControllerTest extends SuluTestCase
                 'PHP_AUTH_PW' => 'test',
             ]
         );
+
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
     }
 
     public function testGenerate()
@@ -48,9 +50,11 @@ class ResourcelocatorControllerTest extends SuluTestCase
 
     public function testGenerateWithParent()
     {
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
         $this->client->request(
             'POST',
-            '/api/nodes?webspace=sulu_io&language=en&action=publish',
+            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&locale=en&action=publish',
             [
                 'title' => 'Produkte',
                 'template' => 'default',
@@ -72,11 +76,17 @@ class ResourcelocatorControllerTest extends SuluTestCase
 
     public function testGenerateWithConflict()
     {
-        $this->client->request('POST', '/api/nodes?webspace=sulu_io&language=en&action=publish', [
-            'title' => 'Test',
-            'template' => 'default',
-            'url' => '/test',
-        ]);
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $this->client->request(
+            'POST',
+            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en&action=publish',
+            [
+                'title' => 'Test',
+                'template' => 'default',
+                'url' => '/test',
+            ]
+        );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->client->request('POST', '/api/resourcelocators?action=generate', [
