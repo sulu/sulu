@@ -279,7 +279,7 @@ function startAdmin() {
     const router = new Router(createHashHistory());
     router.addUpdateAttributesHook(updateRouterAttributesFromView);
 
-    initializer.initialize().then(() => {
+    initializer.initialize(Config.initialLoginState).then(() => {
         router.reload();
     });
 

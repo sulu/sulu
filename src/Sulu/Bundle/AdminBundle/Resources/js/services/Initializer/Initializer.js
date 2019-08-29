@@ -83,8 +83,15 @@ class Initializer {
         });
     }
 
-    initialize() {
+    initialize(userIsLoggedIn: boolean) {
         this.setLoading(true);
+
+        // the config and the routes are accessible only for authenticated users
+        // if no user is logged in, we do not want to fetch this data to prevent unnecessary 401 responses
+        // a 401 response will reset cached basic auth credentials and lead to a second authentication prompt
+        if (!userIsLoggedIn) {
+            return this.initializeTranslations();
+        }
 
         const configPromise = Requester.get(Config.endpoints.config);
         const routePromise = this.initializeSymfonyRouting();
