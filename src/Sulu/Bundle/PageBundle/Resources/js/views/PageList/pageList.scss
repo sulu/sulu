@@ -2,6 +2,9 @@
 @import 'sulu-page-bundle/views/WebspaceTabs/variables.scss';
 
 .page-list {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
     height: calc(100% - $tabMenuHeight - 8px);
     margin-top: calc(-$webspaceTabsWebspaceSelectMargin - 38px);
 }
