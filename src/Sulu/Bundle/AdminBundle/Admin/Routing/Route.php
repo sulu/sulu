@@ -128,7 +128,7 @@ class Route
         return $this->options[$key];
     }
 
-    public function mergeRoute(self $route): self
+    public function mergeRouteOptions(self $route): self
     {
         $this->options = array_merge($route->options, $this->options);
 

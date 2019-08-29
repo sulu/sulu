@@ -127,7 +127,7 @@ class RouteRegistry
 
         $mergedRoutes = [];
         foreach ($childRoutes as $childRoute) {
-            $mergedRoutes[] = $parentRoute ? $childRoute->mergeRoute($parentRoute) : $childRoute;
+            $mergedRoutes[] = $parentRoute ? $childRoute->mergeRouteOptions($parentRoute) : $childRoute;
             $mergedRoutes = array_merge($mergedRoutes, $this->mergeRouteOptions($routes, $childRoute->getName()));
         }
 
