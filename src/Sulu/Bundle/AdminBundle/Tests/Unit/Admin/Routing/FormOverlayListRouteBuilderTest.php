@@ -312,6 +312,20 @@ class FormOverlayListRouteBuilderTest extends TestCase
         $this->assertEquals('sulu_role.parent_view', $route->getParent());
     }
 
+    public function testBuildListSetOption()
+    {
+        $route = (new FormOverlayListRouteBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->setFormKey('role_details')
+            ->addListAdapters(['tree'])
+            ->setParent('sulu_role.parent_view')
+            ->setOption('listKey', 'overridden_roles')
+            ->getRoute();
+
+        $this->assertEquals('overridden_roles', $route->getOption('listKey'));
+    }
+
     public function testBuildListSetTabTitle()
     {
         $route = (new FormOverlayListRouteBuilder('sulu_role.list', '/roles'))

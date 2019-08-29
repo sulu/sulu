@@ -68,6 +68,4 @@ interface ListRouteBuilderInterface extends RouteBuilderInterface
      * @param string[] $resourceStorePropertiesToListStore
      */
     public function addResourceStorePropertiesToListStore(array $resourceStorePropertiesToListStore): self;
-
-    public function setParent(string $parent): self;
 }

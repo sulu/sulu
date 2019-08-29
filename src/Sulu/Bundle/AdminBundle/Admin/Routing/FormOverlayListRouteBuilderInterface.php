@@ -74,7 +74,5 @@ interface FormOverlayListRouteBuilderInterface extends RouteBuilderInterface
      */
     public function addResourceStorePropertiesToFormStore(array $resourceStorePropertiesToFormStore): self;
 
-    public function setParent(string $parent): self;
-
     public function setOverlaySize(string $overlaySize): self;
 }

@@ -113,6 +113,26 @@ class ResourceTabRouteBuilderTest extends TestCase
         $this->assertSame('sulu_admin.resource_tabs', $route->getView());
     }
 
+    public function testBuildFormWithParent()
+    {
+        $route = (new ResourceTabRouteBuilder('sulu_role.add_form', '/roles'))
+            ->setResourceKey('roles')
+            ->setParent('sulu_admin.test')
+            ->getRoute();
+
+        $this->assertSame('sulu_admin.test', $route->getParent());
+    }
+
+    public function testBuildFormWithOption()
+    {
+        $route = (new ResourceTabRouteBuilder('sulu_role.add_form', '/roles'))
+            ->setResourceKey('roles')
+            ->setOption('resourceKey', 'test')
+            ->getRoute();
+
+        $this->assertSame('test', $route->getOption('resourceKey'));
+    }
+
     public function testBuildResourceTabWithLocales()
     {
         $route = (new ResourceTabRouteBuilder('sulu_role.add_form', '/roles/:locale'))

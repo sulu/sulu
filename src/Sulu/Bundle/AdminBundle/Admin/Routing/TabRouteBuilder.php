@@ -13,6 +13,8 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 class TabRouteBuilder implements TabRouteBuilderInterface
 {
+    use RouteBuilderTrait;
+
     const VIEW = 'sulu_admin.tabs';
 
     /**

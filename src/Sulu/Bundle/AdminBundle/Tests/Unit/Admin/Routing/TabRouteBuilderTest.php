@@ -51,4 +51,22 @@ class TabRouteBuilderTest extends TestCase
         $this->assertSame($path, $route->getPath());
         $this->assertSame('sulu_admin.tabs', $route->getView());
     }
+
+    public function testBuildFormWithParent()
+    {
+        $route = (new TabRouteBuilder('sulu_role.add_form', '/roles/:locale'))
+            ->setParent('sulu_admin.test')
+            ->getRoute();
+
+        $this->assertSame('sulu_admin.test', $route->getParent());
+    }
+
+    public function testBuildFormWithOption()
+    {
+        $route = (new TabRouteBuilder('sulu_role.add_form', '/roles/:locale'))
+            ->setOption('resourceKey', 'test')
+            ->getRoute();
+
+        $this->assertSame('test', $route->getOption('resourceKey'));
+    }
 }

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 class FormOverlayListRouteBuilder implements FormOverlayListRouteBuilderInterface
 {
+    use RouteBuilderTrait;
     use ListRouteBuilderTrait, FormRouteBuilderTrait {
         ListRouteBuilderTrait::setResourceKeyToRoute insteadof FormRouteBuilderTrait;
         ListRouteBuilderTrait::setBackRouteToRoute insteadof FormRouteBuilderTrait;
@@ -186,20 +187,6 @@ class FormOverlayListRouteBuilder implements FormOverlayListRouteBuilderInterfac
     public function setOverlaySize(string $overlaySize): FormOverlayListRouteBuilderInterface
     {
         $this->route->setOption('overlaySize', $overlaySize);
-
-        return $this;
-    }
-
-    public function setParent(string $parent): FormOverlayListRouteBuilderInterface
-    {
-        $this->route->setParent($parent);
-
-        return $this;
-    }
-
-    public function addRerenderAttribute(string $attribute)
-    {
-        $this->route->addRerenderAttribute($attribute);
 
         return $this;
     }

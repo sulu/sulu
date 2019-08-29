@@ -270,6 +270,18 @@ class ListRouteBuilderTest extends TestCase
         $this->assertSame('sulu_role.parent_view', $route->getParent());
     }
 
+    public function testBuildListSetOption()
+    {
+        $route = (new ListRouteBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->setOption('resourceKey', 'test')
+            ->getRoute();
+
+        $this->assertSame('test', $route->getOption('resourceKey'));
+    }
+
     public function testBuildListSetTabTitle()
     {
         $route = (new ListRouteBuilder('sulu_role.list', '/roles'))
