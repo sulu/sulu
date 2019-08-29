@@ -19,11 +19,6 @@ class PreviewFormRouteBuilder implements PreviewFormRouteBuilderInterface
 
     const VIEW = 'sulu_admin.preview_form';
 
-    /**
-     * @var Route
-     */
-    private $route;
-
     public function __construct(string $name, string $path)
     {
         $this->route = new Route($name, $path, static::VIEW);

@@ -19,11 +19,6 @@ class FormRouteBuilder implements FormRouteBuilderInterface
 
     const VIEW = 'sulu_admin.form';
 
-    /**
-     * @var Route
-     */
-    private $route;
-
     public function __construct(string $name, string $path)
     {
         $this->route = new Route($name, $path, static::VIEW);

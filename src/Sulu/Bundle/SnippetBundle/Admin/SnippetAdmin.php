@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\SnippetBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
@@ -176,11 +175,13 @@ class SnippetAdmin extends Admin
                 ->setTitleVisible(true)
                 ->setParent(static::EDIT_FORM_ROUTE)
                 ->getRoute();
-            $routes[] = (new Route('sulu_snippet.snippet_areas', '/snippet-areas', 'sulu_snippet.snippet_areas'))
+            $routes[] = $this->routeBuilderFactory
+                ->createRouteBuilder('sulu_snippet.snippet_areas', '/snippet-areas', 'sulu_snippet.snippet_areas')
                 ->setOption('tabTitle', 'sulu_snippet.default_snippets')
                 ->setOption('tabOrder', 3072)
                 ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
-                ->addRerenderAttribute('webspace');
+                ->addRerenderAttribute('webspace')
+                ->getRoute();
         }
 
         return $routes;

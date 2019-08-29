@@ -136,26 +136,31 @@ class PageAdmin extends Admin
         $routes = [
             // This route has to be registered even if permissions for pages are missing
             // Otherwise the application breaks when other bundles try to add child routes to this one
-            $routes[] = (new Route(static::WEBSPACE_TABS_ROUTE, '/webspaces/:webspace', 'sulu_page.webspace_tabs'))
-                ->setAttributeDefault('webspace', $firstWebspace->getKey()),
+            $routes[] = $this->routeBuilderFactory
+                ->createRouteBuilder(static::WEBSPACE_TABS_ROUTE, '/webspaces/:webspace', 'sulu_page.webspace_tabs')
+                ->setAttributeDefault('webspace', $firstWebspace->getKey())
+                ->getRoute(),
         ];
 
         if ($this->hasSomeWebspacePermission()) {
-            $routes[] = (new Route(static::PAGES_ROUTE, '/pages/:locale', 'sulu_page.page_list'))
+            $routes[] = $this->routeBuilderFactory
+                ->createRouteBuilder(static::PAGES_ROUTE, '/pages/:locale', 'sulu_page.page_list')
                 ->setAttributeDefault('locale', $firstWebspace->getDefaultLocalization()->getLocale())
                 ->setOption('tabTitle', 'sulu_page.pages')
                 ->setOption('tabOrder', 0)
                 ->setOption('tabPriority', 1024)
                 ->addRerenderAttribute('webspace')
-                ->setParent(static::WEBSPACE_TABS_ROUTE);
-            $routes[] = (new Route(
+                ->setParent(static::WEBSPACE_TABS_ROUTE)
+                ->getRoute();
+            $routes[] = $this->routeBuilderFactory->createRouteBuilder(
                 static::ADD_FORM_ROUTE,
                 '/webspaces/:webspace/pages/:locale/add/:parentId',
                 'sulu_page.page_tabs'
-            ))
+            )
                 ->setOption('backRoute', static::PAGES_ROUTE)
                 ->setOption('routerAttributesToBackRoute', ['webspace'])
-                ->setOption('resourceKey', 'pages');
+                ->setOption('resourceKey', 'pages')
+                ->getRoute();
             $routes[] = $this->routeBuilderFactory
                 ->createFormRouteBuilder('sulu_page.page_add_form.details', '/details')
                 ->setResourceKey('pages')
@@ -167,14 +172,15 @@ class PageAdmin extends Admin
                 ->addRouterAttributesToFormStore($routerAttributesToFormStore)
                 ->setParent(static::ADD_FORM_ROUTE)
                 ->getRoute();
-            $routes[] = (new Route(
+            $routes[] = $this->routeBuilderFactory->createRouteBuilder(
                 static::EDIT_FORM_ROUTE,
                 '/webspaces/:webspace/pages/:locale/:id',
                 'sulu_page.page_tabs'
-            ))
+            )
                 ->setOption('backRoute', static::PAGES_ROUTE)
                 ->setOption('routerAttributesToBackRoute', ['id' => 'active', 'webspace'])
-                ->setOption('resourceKey', 'pages');
+                ->setOption('resourceKey', 'pages')
+                ->getRoute();
             $routes[] = $this->routeBuilderFactory
                 ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.details', '/details')
                 ->setResourceKey('pages')

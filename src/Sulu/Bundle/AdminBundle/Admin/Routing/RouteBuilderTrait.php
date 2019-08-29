@@ -13,6 +13,11 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 trait RouteBuilderTrait
 {
+    /**
+     * @var Route
+     */
+    private $route;
+
     public function setView(string $view): RouteBuilderInterface
     {
         $this->route->setView($view);

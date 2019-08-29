@@ -11,15 +11,13 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
-class TabRouteBuilder implements TabRouteBuilderInterface
+class RouteBuilder implements RouteBuilderInterface
 {
     use RouteBuilderTrait;
 
-    const VIEW = 'sulu_admin.tabs';
-
-    public function __construct(string $name, string $path)
+    public function __construct(string $name, string $path, string $view)
     {
-        $this->route = new Route($name, $path, static::VIEW);
+        $this->route = new Route($name, $path, $view);
     }
 
     public function getRoute(): Route

@@ -19,11 +19,6 @@ class ListRouteBuilder implements ListRouteBuilderInterface
 
     const VIEW = 'sulu_admin.list';
 
-    /**
-     * @var Route
-     */
-    private $route;
-
     public function __construct(string $name, string $path)
     {
         $this->route = new Route($name, $path, static::VIEW);

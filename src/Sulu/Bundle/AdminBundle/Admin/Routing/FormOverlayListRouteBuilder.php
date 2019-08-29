@@ -25,11 +25,6 @@ class FormOverlayListRouteBuilder implements FormOverlayListRouteBuilderInterfac
 
     const VIEW = 'sulu_admin.form_overlay_list';
 
-    /**
-     * @var Route
-     */
-    private $route;
-
     public function __construct(string $name, string $path)
     {
         $this->route = new Route($name, $path, static::VIEW);

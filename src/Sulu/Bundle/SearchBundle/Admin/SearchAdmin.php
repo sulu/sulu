@@ -12,13 +12,22 @@
 namespace Sulu\Bundle\SearchBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
 class SearchAdmin extends Admin
 {
     const SEARCH_ROUTE = 'sulu_search.search';
+    /**
+     * @var RouteBuilderFactoryInterface
+     */
+    private $routeBuilderFactory;
+
+    public function __construct(RouteBuilderFactoryInterface $routeBuilderFactory)
+    {
+        $this->routeBuilderFactory = $routeBuilderFactory;
+    }
 
     public function getNavigation(): Navigation
     {
@@ -37,7 +46,7 @@ class SearchAdmin extends Admin
     public function getRoutes(): array
     {
         return [
-            (new Route(static::SEARCH_ROUTE, '/', 'sulu_search.search')),
+            $this->routeBuilderFactory->createRouteBuilder(static::SEARCH_ROUTE, '/', 'sulu_search.search')->getRoute(),
         ];
     }
 }

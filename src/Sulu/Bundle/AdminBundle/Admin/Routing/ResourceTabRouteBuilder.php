@@ -18,11 +18,6 @@ class ResourceTabRouteBuilder implements ResourceTabRouteBuilderInterface
 
     const VIEW = 'sulu_admin.resource_tabs';
 
-    /**
-     * @var Route
-     */
-    private $route;
-
     public function __construct(string $name, string $path)
     {
         $this->route = new Route($name, $path, static::VIEW);

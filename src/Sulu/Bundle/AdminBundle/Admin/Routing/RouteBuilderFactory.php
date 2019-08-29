@@ -13,6 +13,11 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 class RouteBuilderFactory implements RouteBuilderFactoryInterface
 {
+    public function createRouteBuilder(string $name, string $path, string $view): RouteBuilderInterface
+    {
+        return new RouteBuilder($name, $path, $view);
+    }
+
     public function createListRouteBuilder(string $name, string $path): ListRouteBuilderInterface
     {
         return new ListRouteBuilder($name, $path);
