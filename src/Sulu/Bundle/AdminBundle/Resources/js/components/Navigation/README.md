@@ -3,7 +3,6 @@ The `Navigation` is used to display the navigation in our application.
 Example with all props:
 
 ```javascript
-const Navigation = require('./Navigation').default;
 const handleLogoutClick = () => {
     // Do what every you like..
     alert('Handle logout click');
@@ -53,8 +52,6 @@ const handleNavigationClick = (value) => {
 Example with the minimal required props:
 
 ```javascript
-const Navigation = require('./Navigation').default;
-
 const handleLogoutClick = () => {
     // Do what every you like..
     alert('Handle logout click');

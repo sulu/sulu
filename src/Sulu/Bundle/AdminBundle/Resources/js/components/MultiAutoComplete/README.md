@@ -2,8 +2,6 @@ This component is the counterpart of the [`SingleAutoComplete`](#singleautocompl
 assigning multiple items to it.
 
 ```javascript
-const MultiAutoComplete = require('./MultiAutoComplete').default;
-
 initialState = {
     value: [],
     loading: false,
@@ -76,8 +74,6 @@ const handleChange = (value) => {
 If the `allowAdd` prop is set to true, then the user can also add new items on its own.
 
 ```javascript
-const MultiAutoComplete = require('./MultiAutoComplete').default;
-
 initialState = {
     value: [],
     loading: false,

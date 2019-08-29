@@ -5,8 +5,6 @@ To display the suggestions you pass the data as the `suggestions` props to the c
 Here a basic example (Pssh, look for your favourite Harry Potter character):
 
 ```javascript
-const SingleAutoComplete = require('./SingleAutoComplete').default;
-
 initialState = {
     value: '',
     loading: false,

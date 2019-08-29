@@ -35,9 +35,6 @@ const babelConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, '.babelrc
 module.exports = { // eslint-disable-line
     require: [
         'regenerator-runtime/runtime',
-        'core-js/fn/array/includes',
-        'core-js/fn/array/from',
-        'core-js/fn/array/fill',
         './src/Sulu/Bundle/AdminBundle/Resources/js/containers/Application/global.scss',
         './src/Sulu/Bundle/AdminBundle/Resources/js/containers/Application/styleguidist.scss',
     ],
@@ -175,7 +172,7 @@ module.exports = { // eslint-disable-line
                         {
                             loader: 'style-loader',
                             options: {
-                                singleton: true,
+                                injectType: 'singletonStyleTag',
                             },
                         },
                         {
@@ -195,10 +192,11 @@ module.exports = { // eslint-disable-line
                         {
                             loader: 'css-loader',
                             options: {
-                                modules: true,
-                                camelCase: true,
                                 importLoaders: 1,
-                                localIdentName: '[local]--[hash:base64:10]',
+                                localsConvention: 'camelCase',
+                                modules: {
+                                    localIdentName: '[local]--[hash:base64:10]',
+                                },
                             },
                         },
                         'postcss-loader',

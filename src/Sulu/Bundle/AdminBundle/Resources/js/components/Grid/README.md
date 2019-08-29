@@ -6,6 +6,8 @@ of style. The `Section` has no padding on the right side like the `Item` does bu
 side.
 
 ```javascript
+import Input from '../Input';
+
 const boxStyles = {
     width: `100%`,
     height: 30,
