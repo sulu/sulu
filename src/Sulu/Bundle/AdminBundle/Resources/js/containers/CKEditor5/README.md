@@ -22,7 +22,7 @@ const handleBlur = () => alert('Text editing finished!');
 The editor can be extended by adding more plugins and more configuration. That's what the `PluginRegistry` and
 `ConfigRegistry` are for:
 
-```javascript
+```javascript static
 import {ckeditorPluginRegistry, ckeditorConfigRegistry} from 'sulu-admin-bundle/containers';
 import Font from '@ckeditor/ckeditor5-font/src/font';
 

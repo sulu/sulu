@@ -24,15 +24,11 @@ $teaserSelectionMediaWidth: 25px;
     background: transparent;
     height: $teaserSelectionMediaHeight;
     width: $teaserSelectionMediaWidth;
+    cursor: pointer;
 
     &:hover .media-button-edit-icon {
         display: flex;
     }
-}
-
-.media-button {
-    position: relative;
-    cursor: pointer;
 
     &:hover .media-button-icon {
         display: flex;

@@ -22,6 +22,7 @@ const route = {
     view: 'view',
 };
 const router = {
+    addUpdateRouteHook: () => () => undefined,
     attributes: {
         content: 'Some trivial content!',
     },
@@ -68,7 +69,9 @@ const childRoute = {
     view: 'child',
 };
 
+// instead of this mocked Router you would usually use a real one
 const router = {
+    addUpdateRouteHook: () => () => undefined,
     route: childRoute,
 };
 

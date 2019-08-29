@@ -2,8 +2,6 @@ The `Toolbar` component serves as container for `Controls`. The `Controls` compo
 the user interaction like `Button`, `Select` or `Dropdown`.
 
 ```javascript
-const Toolbar = require('./Toolbar').default;
-
 <Toolbar>
     <Toolbar.Controls>
         <Toolbar.Button onClick={() => null}>Test 1</Toolbar.Button>
@@ -16,8 +14,6 @@ The space inside of the `Toolbar` will be divided fairly for all the `Controls` 
 component you can group the items by using the `Items` component.
 
 ```javascript
-const Toolbar = require('./Toolbar').default;
-
 <Toolbar>
     <Toolbar.Controls>
         <Toolbar.Button onClick={() => null}>Test 1</Toolbar.Button>
@@ -59,8 +55,6 @@ const Toolbar = require('./Toolbar').default;
 The appearance of the `Toolbar` can be changed by passing the attribute `skin`. Available skins are `light` and `dark`. 
 
 ```javascript
-const Toolbar = require('./Toolbar').default;
-
 <Toolbar skin="dark">
     <Toolbar.Controls>
         <Toolbar.Toggler
@@ -98,27 +92,9 @@ const Toolbar = require('./Toolbar').default;
 </Toolbar>
 ```
 
-The toolbar can also show error using a snackbar. The error will fill the entire toolbar and hide any controls
-behind it.
+It is also possible to show a success message.
 
 ```javascript
-const Toolbar = require('./Toolbar').default;
-
-initialState = {error: true};
-
-<Toolbar>
-    {state.error && <Toolbar.Snackbar onCloseClick={() => setState({error: false})} type="error" />}
-    <Toolbar.Controls>
-        <Toolbar.Button onClick={() => setState({error: true})}>Cause error</Toolbar.Button>
-    </Toolbar.Controls>
-</Toolbar>
-```
-
-In the same way it is possible to show success messages.
-
-```javascript
-const Toolbar = require('./Toolbar').default;
-
 initialState = {success: false};
 
 const buttonClick = () => {
@@ -127,9 +103,8 @@ const buttonClick = () => {
 };
 
 <Toolbar>
-    {state.success && <Toolbar.Snackbar type="success" />}
     <Toolbar.Controls>
-        <Toolbar.Button onClick={buttonClick}>Cause success</Toolbar.Button>
+        <Toolbar.Button onClick={buttonClick} success={state.success}>Cause success</Toolbar.Button>
     </Toolbar.Controls>
 </Toolbar>
 ```

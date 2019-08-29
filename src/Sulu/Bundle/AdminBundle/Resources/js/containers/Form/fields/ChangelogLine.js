@@ -74,7 +74,7 @@ class ChangelogLine extends React.Component<FieldTypeProps<typeof undefined>> {
         const {formInspector} = this.props;
         const changed = formInspector.getValueByPath('/changed');
         if (typeof changed !== 'string') {
-            return;
+            return undefined;
         }
 
         return (new Date(changed)).toLocaleString();
@@ -88,7 +88,7 @@ class ChangelogLine extends React.Component<FieldTypeProps<typeof undefined>> {
         const {formInspector} = this.props;
         const created = formInspector.getValueByPath('/created');
         if (typeof created !== 'string') {
-            return;
+            return undefined;
         }
 
         return (new Date(created)).toLocaleString();

@@ -3,6 +3,9 @@ The `ButtonGroup` component displays a group of buttons.
 Example with two buttons:
 
 ```javascript
+import Button from '../Button';
+import Icon from '../Icon';
+
 const onClick = () => {
     /* do click things */
     alert('Clicked this nice button, congrats!');
@@ -21,6 +24,9 @@ const onClick = () => {
 Example with three buttons:
 
 ```javascript
+import Button from '../Button';
+import Icon from '../Icon';
+
 const onClick = () => {
     /* do click things */
     alert('Clicked this nice button, congrats!');
@@ -42,6 +48,9 @@ const onClick = () => {
 It's also possible to have just one button inside:
 
 ```javascript
+import Button from '../Button';
+import Icon from '../Icon';
+
 const onClick = () => {
     /* do click things */
     alert('Clicked this nice button, congrats!');

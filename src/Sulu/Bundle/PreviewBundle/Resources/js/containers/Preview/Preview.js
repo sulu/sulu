@@ -159,7 +159,7 @@ class Preview extends React.Component<Props> {
         sidebarStore.setSize('medium');
     };
 
-    @action handleDeviceSelectChange = (value: string) => {
+    @action handleDeviceSelectChange = (value: string | number) => {
         this.selectedDeviceOption = value;
     };
 

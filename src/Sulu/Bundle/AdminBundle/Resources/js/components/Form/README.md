@@ -5,8 +5,6 @@ Each field can also have one of multiple types. The `onTypeChange` callback is t
 the dropdown right next to the label of the field.
 
 ```javascript
-const Form = require('./Form').default;
-
 const types = [
     {label: 'Work', value: 'work'},
     {label: 'Private', value: 'private'},

@@ -185,6 +185,7 @@ export default class AbstractFormStore
         const errors = {};
 
         if (validator && !validator(toJS(this.data))) {
+            // $FlowFixMe
             for (const error of validator.errors) {
                 switch (error.keyword) {
                     case 'oneOf':

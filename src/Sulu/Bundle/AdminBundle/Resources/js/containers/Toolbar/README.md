@@ -10,8 +10,7 @@ offer.
 Here is a basic example of the `Toolbar` component:
 
 ```javascript
-const withToolbar = require('./withToolbar').default;
-const Toolbar = require('./Toolbar').default;
+import withToolbar from './withToolbar';
 
 class Page extends React.PureComponent {
     render() {
@@ -36,9 +35,14 @@ const PageWithToolbar = withToolbar(Page, function() {
     };
 }, 'toolbar-demo-1');
 
-<div>
+// instead of this mocked Router you would usually use a real one
+const router = {
+    addUpdateRouteHook: () => () => undefined,
+};
+
+<div style={{overflow: 'hidden'}}>
     <Toolbar storeKey="toolbar-demo-1" />
-    <PageWithToolbar />
+    <PageWithToolbar router={router} />
 </div>
 ```
 
@@ -51,8 +55,7 @@ offers three kinds of items which can be used by defining them inside the items 
 Here a `Toolbar` example which is using all three of them:
 
 ```javascript
-const withToolbar = require('./withToolbar').default;
-const Toolbar = require('./Toolbar').default;
+import withToolbar from './withToolbar';
 
 initialState = {selectVal: 1}
 
@@ -118,9 +121,14 @@ const PageWithToolbar = withToolbar(Page, function() {
     };
 }, 'toolbar-demo-2');
 
-<div>
+// instead of this mocked Router you would usually use a real one
+const router = {
+    addUpdateRouteHook: () => () => undefined,
+};
+
+<div style={{overflow: 'hidden'}}>
     <Toolbar storeKey="toolbar-demo-2" />
-    <PageWithToolbar />
+    <PageWithToolbar router={router} />
 </div>
 ```
 
@@ -130,8 +138,8 @@ and the option to show icons in order to display notifications or other state in
 Example with special control elements:
 
 ```javascript
-const withToolbar = require('./withToolbar').default;
-const Toolbar = require('./Toolbar').default;
+import withToolbar from './withToolbar';
+import Icon from '../../components/Icon';
 
 initialState = {localeVal: 'en'};
 
@@ -188,9 +196,14 @@ const PageWithToolbar = withToolbar(Page, function() {
     };
 }, 'toolbar-demo-3');
 
-<div>
+// instead of this mocked Router you would usually use a real one
+const router = {
+    addUpdateRouteHook: () => () => undefined,
+};
+
+<div style={{overflow: 'hidden'}}>
     <Toolbar storeKey="toolbar-demo-3" />
-    <PageWithToolbar />
+    <PageWithToolbar router={router} />
 </div>
 ```
 
@@ -198,9 +211,8 @@ Each item has also the possibility to show a loader instead of its text by using
 when an asynchronous action is sent:
 
 ```javascript
-const withToolbar = require('./withToolbar').default;
-const Toolbar = require('./Toolbar').default;
-const observable = require('mobx').observable;
+import withToolbar from './withToolbar';
+import {observable} from 'mobx';
 
 class Page extends React.PureComponent {
     constructor() {
@@ -277,17 +289,21 @@ const PageWithToolbar = withToolbar(Page, function() {
     };
 }, 'toolbar-demo-4');
 
-<div>
+// instead of this mocked Router you would usually use a real one
+const router = {
+    addUpdateRouteHook: () => () => undefined,
+};
+
+<div style={{overflow: 'hidden'}}>
     <Toolbar storeKey="toolbar-demo-4" />
-    <PageWithToolbar />
+    <PageWithToolbar router={router} />
 </div>
 ```
 
 The `errors` property can be set to show an error instead of the toolbar.
 
 ```javascript
-const withToolbar = require('./withToolbar').default;
-const Toolbar = require('./Toolbar').default;
+import withToolbar from './withToolbar';
 
 class Page extends React.PureComponent {
     render() {
@@ -305,19 +321,22 @@ const PageWithToolbar = withToolbar(Page, function() {
     };
 }, 'toolbar-demo-5');
 
-<div>
+// instead of this mocked Router you would usually use a real one
+const router = {
+    addUpdateRouteHook: () => () => undefined,
+};
+
+<div style={{overflow: 'hidden'}}>
     <Toolbar storeKey="toolbar-demo-5" />
-    <PageWithToolbar />
+    <PageWithToolbar router={router} />
 </div>
 ```
 
 Corresponding to that the `showSuccess` property can be used to show a success icon for 1.5 seconds.
 
 ```javascript
-const extendObservable = require('mobx').extendObservable;
-const observable = require('mobx').observable;
-const withToolbar = require('./withToolbar').default;
-const Toolbar = require('./Toolbar').default;
+import withToolbar from './withToolbar';
+import {extendObservable, observable} from 'mobx';
 
 class Page extends React.PureComponent {
     render() {
@@ -333,8 +352,13 @@ const PageWithToolbar = withToolbar(Page, function() {
     };
 }, 'toolbar-demo-6');
 
-<div>
+// instead of this mocked Router you would usually use a real one
+const router = {
+    addUpdateRouteHook: () => () => undefined,
+};
+
+<div style={{overflow: 'hidden'}}>
     <Toolbar storeKey="toolbar-demo-6" />
-    <PageWithToolbar />
+    <PageWithToolbar router={router} />
 </div>
 ```

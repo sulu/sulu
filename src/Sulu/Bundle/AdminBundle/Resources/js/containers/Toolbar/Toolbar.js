@@ -78,7 +78,7 @@ class Toolbar extends React.Component<ToolbarProps> {
         const backButtonConfig = this.toolbarStore.getBackButtonConfig();
 
         if (!backButtonConfig) {
-            return;
+            return undefined;
         }
 
         if (this.disableAllButtons) {
@@ -128,7 +128,7 @@ class Toolbar extends React.Component<ToolbarProps> {
                                 success={showSuccess}
                             />
                         }
-                        {this.toolbarStore.hasBackButtonConfig() &&
+                        {!!this.backButtonConfig &&
                             <ToolbarComponent.Button
                                 {...this.backButtonConfig}
                                 icon={!onNavigationButtonClick && showSuccess ? SUCCESS_ICON : 'su-angle-left'}
