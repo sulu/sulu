@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
-interface ResourceTabRouteBuilderInterface
+interface ResourceTabRouteBuilderInterface extends RouteBuilderInterface
 {
     public function setResourceKey(string $resourceKey): self;
 
@@ -33,6 +33,4 @@ interface ResourceTabRouteBuilderInterface
     public function addRouterAttributesToBlacklist(array $routerAttributesToBlacklist): self;
 
     public function setTitleProperty(string $titleProperty): self;
-
-    public function getRoute(): Route;
 }

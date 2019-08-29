@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
-interface PreviewFormRouteBuilderInterface
+interface PreviewFormRouteBuilderInterface extends RouteBuilderInterface
 {
     public function setResourceKey(string $resourceKey): self;
 
@@ -56,6 +56,4 @@ interface PreviewFormRouteBuilderInterface
     public function setTitleVisible(bool $titleVisible): self;
 
     public function setParent(string $parent): self;
-
-    public function getRoute(): Route;
 }

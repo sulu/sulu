@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
-interface TabRouteBuilderInterface extends RouteBuilderInterface
+interface RouteBuilderInterface
 {
+    public function getRoute(): Route;
 }

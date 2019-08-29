@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
-interface ListRouteBuilderInterface
+interface ListRouteBuilderInterface extends RouteBuilderInterface
 {
     public function setResourceKey(string $resourceKey): self;
 
@@ -70,6 +70,4 @@ interface ListRouteBuilderInterface
     public function addResourceStorePropertiesToListStore(array $resourceStorePropertiesToListStore): self;
 
     public function setParent(string $parent): self;
-
-    public function getRoute(): Route;
 }
