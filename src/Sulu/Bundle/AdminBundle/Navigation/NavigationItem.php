@@ -114,16 +114,11 @@ class NavigationItem implements \Iterator
 
     /**
      * @param string $name The name of the item
-     * @param NavigationItem $parent The parent of the item
      */
-    public function __construct($name, $parent = null)
+    public function __construct($name)
     {
         $this->name = $name;
         $this->disabled = false;
-
-        if (null != $parent) {
-            $parent->addChild($this);
-        }
     }
 
     /**

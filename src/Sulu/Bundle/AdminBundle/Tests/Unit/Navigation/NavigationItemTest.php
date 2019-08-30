@@ -38,19 +38,27 @@ class NavigationItemTest extends TestCase
         $this->item1 = new NavigationItem('Root');
         $this->item1->setHeaderIcon('logo');
         $this->item1->setHeaderTitle('title');
-        new NavigationItem('Portals', $this->item1);
-        new NavigationItem('Settings', $this->item1);
+
+        $portalItem1 = new NavigationItem('Portals');
+        $this->item1->addChild($portalItem1);
+        $settingsItem1 = new NavigationItem('Settings');
+        $this->item1->addChild($settingsItem1);
+
         $this->item2 = new NavigationItem('Root');
-        new NavigationItem('Portals', $this->item2);
-        new NavigationItem('Settings', $this->item2);
-        new NavigationItem('Globals', $this->item2);
+        $portalItem2 = new NavigationItem('Portals');
+        $this->item2->addChild($portalItem2);
+        $settingsItem2 = new NavigationItem('Settings');
+        $this->item2->addChild($settingsItem2);
+        $globalItem2 = new NavigationItem('Globals');
+        $this->item2->addChild($globalItem2);
     }
 
     public function testConstructor()
     {
         $this->assertEquals('NavigationItem', $this->navigationItem->getName());
 
-        $item = new NavigationItem('ChildItem', $this->navigationItem);
+        $item = new NavigationItem('ChildItem');
+        $this->navigationItem->addChild($item);
         $this->assertEquals($item, $this->navigationItem->getChildren()[0]);
     }
 
