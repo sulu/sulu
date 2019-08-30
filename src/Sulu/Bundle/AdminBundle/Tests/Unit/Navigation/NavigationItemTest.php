@@ -93,17 +93,6 @@ class NavigationItemTest extends TestCase
         $this->assertNull($this->item1->find(new NavigationItem('Nothing')));
     }
 
-    public function testMerge()
-    {
-        $merged = $this->item1->merge($this->item2);
-
-        $this->assertEquals('Root', $merged->getName());
-        $mergedChildren = $merged->getChildren();
-        $this->assertEquals('Portals', $mergedChildren[0]->getName());
-        $this->assertEquals('Settings', $mergedChildren[1]->getName());
-        $this->assertEquals('Globals', $mergedChildren[2]->getName());
-    }
-
     public function testHasChildren()
     {
         $this->assertTrue($this->item1->hasChildren());
