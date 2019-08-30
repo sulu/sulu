@@ -3,13 +3,13 @@ import React from 'react';
 import {render} from 'enzyme';
 import Sidebar from '../Sidebar';
 import sidebarStore from '../stores/SidebarStore';
-import sidebarRegistry from '../registries/SidebarRegistry';
+import sidebarRegistry from '../registries/sidebarRegistry';
 
 const component = (props) => (<h1>{props.title}</h1>);
 
 jest.mock('../stores/SidebarStore', () => ({}));
 
-jest.mock('../registries/SidebarRegistry', () => ({
+jest.mock('../registries/sidebarRegistry', () => ({
     get: jest.fn(),
     isDisabled: jest.fn(),
 }));
