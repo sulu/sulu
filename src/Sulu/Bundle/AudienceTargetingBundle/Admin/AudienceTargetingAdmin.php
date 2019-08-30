@@ -12,10 +12,10 @@
 namespace Sulu\Bundle\AudienceTargetingBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
-use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleCollectionInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -59,7 +59,7 @@ class AudienceTargetingAdmin extends Admin
         $this->securityChecker = $securityChecker;
     }
 
-    public function configureNavigationItem(NavigationItemCollection $navigationItemCollection): void
+    public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $targetGroups = new NavigationItem('sulu_audience_targeting.target_groups');

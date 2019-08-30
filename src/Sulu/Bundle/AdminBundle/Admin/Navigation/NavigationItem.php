@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Navigation;
+namespace Sulu\Bundle\AdminBundle\Admin\Navigation;
 
 class NavigationItem implements \Iterator
 {

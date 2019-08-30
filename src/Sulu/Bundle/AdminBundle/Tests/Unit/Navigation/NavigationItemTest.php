@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Navigation;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 
 class NavigationItemTest extends TestCase
 {

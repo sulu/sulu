@@ -15,10 +15,10 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteRegistry;
-use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class NavigationRegistryTest extends TestCase

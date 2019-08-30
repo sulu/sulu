@@ -12,10 +12,10 @@
 namespace Sulu\Bundle\MediaBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
-use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Localization\Manager\LocalizationManager;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
