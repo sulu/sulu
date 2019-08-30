@@ -6,7 +6,7 @@ import {Icon, Loader} from 'sulu-admin-bundle/components';
 import {Router} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import jsonpointer from 'json-pointer';
-import searchStore from './stores/SearchStore';
+import searchStore from './stores/searchStore';
 import indexStore from './stores/IndexStore';
 import SearchField from './SearchField';
 import SearchResult from './SearchResult';

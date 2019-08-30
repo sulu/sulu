@@ -4,7 +4,7 @@ import {mount} from 'enzyme';
 import {Router} from 'sulu-admin-bundle/services';
 import Search from '../Search';
 import indexStore from '../stores/IndexStore';
-import searchStore from '../stores/SearchStore';
+import searchStore from '../stores/searchStore';
 
 jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
@@ -18,7 +18,7 @@ jest.mock('../stores/IndexStore', () => ({
     loadIndexes: jest.fn(),
 }));
 
-jest.mock('../stores/SearchStore', () => ({
+jest.mock('../stores/searchStore', () => ({
     indexName: undefined,
     query: undefined,
     results: [],
