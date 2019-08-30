@@ -1,8 +1,8 @@
 // @flow
 import updateRouterAttributesFromView from '../updateRouterAttributesFromView';
-import viewRegistry from '../registries/ViewRegistry';
+import viewRegistry from '../registries/viewRegistry';
 
-jest.mock('../registries/ViewRegistry', () => ({
+jest.mock('../registries/viewRegistry', () => ({
     get: jest.fn(),
 }));
 

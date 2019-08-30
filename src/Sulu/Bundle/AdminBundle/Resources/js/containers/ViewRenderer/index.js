@@ -1,7 +1,7 @@
 // @flow
 import updateRouterAttributesFromView from './updateRouterAttributesFromView';
 import ViewRenderer from './ViewRenderer';
-import viewRegistry from './registries/ViewRegistry';
+import viewRegistry from './registries/viewRegistry';
 import type {ViewProps} from './types';
 
 export default ViewRenderer;

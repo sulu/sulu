@@ -1,6 +1,6 @@
 // @flow
 import type {UpdateAttributesHook} from '../../services/Router/types';
-import viewRegistry from './registries/ViewRegistry';
+import viewRegistry from './registries/viewRegistry';
 
 const updateRouterAttributesFromView: UpdateAttributesHook = function(route, attributes) {
     const parentAttributes = route.parent ? updateRouterAttributesFromView(route.parent, attributes) : {};
