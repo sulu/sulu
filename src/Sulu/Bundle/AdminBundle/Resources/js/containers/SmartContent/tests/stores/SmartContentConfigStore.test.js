@@ -1,5 +1,5 @@
 // @flow
-import smartContentConfigStore from '../../stores/SmartContentConfigStore';
+import smartContentConfigStore from '../../stores/smartContentConfigStore';
 
 beforeEach(() => {
     smartContentConfigStore.clear();

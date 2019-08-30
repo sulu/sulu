@@ -7,7 +7,7 @@ import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import SmartContent from '../../fields/SmartContent';
 import SmartContentStore from '../../../SmartContent/stores/SmartContentStore';
-import smartContentConfigStore from '../../../SmartContent/stores/SmartContentConfigStore';
+import smartContentConfigStore from '../../../SmartContent/stores/smartContentConfigStore';
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id) {
     this.resourceKey = resourceKey;
@@ -28,7 +28,7 @@ jest.mock('../../../SmartContent/stores/SmartContentStore', () => jest.fn(functi
     this.loading = false;
     this.destroy = jest.fn();
 }));
-jest.mock('../../../SmartContent/stores/SmartContentConfigStore', () => ({
+jest.mock('../../../SmartContent/stores/smartContentConfigStore', () => ({
     getConfig: jest.fn().mockReturnValue({}),
 }));
 

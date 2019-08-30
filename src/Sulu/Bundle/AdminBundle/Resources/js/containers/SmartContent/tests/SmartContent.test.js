@@ -3,13 +3,13 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import {translate} from '../../../utils/Translator';
 import SmartContentStore from '../stores/SmartContentStore';
-import smartContentConfigStore from '../stores/SmartContentConfigStore';
+import smartContentConfigStore from '../stores/smartContentConfigStore';
 import SmartContent from '../SmartContent';
 
 jest.mock('../stores/SmartContentStore', () => jest.fn(function() {
     this.items = [];
 }));
-jest.mock('../stores/SmartContentConfigStore', () => ({
+jest.mock('../stores/smartContentConfigStore', () => ({
     getConfig: jest.fn().mockReturnValue({}),
 }));
 
