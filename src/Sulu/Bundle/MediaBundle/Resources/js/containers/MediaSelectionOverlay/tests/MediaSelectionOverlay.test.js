@@ -18,7 +18,7 @@ jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function() {
     };
 }));
 
-jest.mock('sulu-admin-bundle/containers/List/registries/ListAdapterRegistry', () => {
+jest.mock('sulu-admin-bundle/containers/List/registries/listAdapterRegistry', () => {
     return {
         getOptions: jest.fn().mockReturnValue({}),
         has: jest.fn().mockReturnValue(true),

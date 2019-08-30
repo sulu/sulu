@@ -128,7 +128,7 @@ jest.mock('sulu-admin-bundle/containers/Form/registries/FieldRegistry', () => ({
     getOptions: jest.fn().mockReturnValue({}),
 }));
 
-jest.mock('sulu-admin-bundle/containers/List/registries/ListAdapterRegistry', () => {
+jest.mock('sulu-admin-bundle/containers/List/registries/listAdapterRegistry', () => {
     const getAllAdaptersMock = jest.fn();
 
     return {
@@ -191,7 +191,7 @@ beforeEach(() => {
     MediaCollection.editable = true;
     MediaCollection.securable = true;
 
-    const listAdapterRegistry = require('sulu-admin-bundle/containers/List/registries/ListAdapterRegistry');
+    const listAdapterRegistry = require('sulu-admin-bundle/containers/List/registries/listAdapterRegistry');
 
     // $FlowFixMe
     listAdapterRegistry.has.mockReturnValue(true);

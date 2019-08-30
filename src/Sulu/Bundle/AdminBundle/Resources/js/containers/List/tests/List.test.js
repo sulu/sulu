@@ -6,7 +6,7 @@ import {translate} from '../../../utils/Translator';
 import SingleListOverlay from '../../SingleListOverlay';
 import List from '../List';
 import ListStore from '../stores/ListStore';
-import listAdapterRegistry from '../registries/ListAdapterRegistry';
+import listAdapterRegistry from '../registries/listAdapterRegistry';
 import listFieldTransformerRegistry from '../registries/ListFieldTransformerRegistry';
 import AbstractAdapter from '../adapters/AbstractAdapter';
 import TableAdapter from '../adapters/TableAdapter';
@@ -92,7 +92,7 @@ jest.mock('../stores/ListStore', () => {
     });
 });
 
-jest.mock('../registries/ListAdapterRegistry', () => ({
+jest.mock('../registries/listAdapterRegistry', () => ({
     add: jest.fn(),
     get: jest.fn(),
     getOptions: jest.fn().mockReturnValue({}),

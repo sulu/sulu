@@ -50,7 +50,7 @@ jest.mock('sulu-admin-bundle/containers', () => ({
     withToolbar: jest.fn((Component) => Component),
 }));
 
-jest.mock('sulu-admin-bundle/containers/List/registries/ListAdapterRegistry', () => ({
+jest.mock('sulu-admin-bundle/containers/List/registries/listAdapterRegistry', () => ({
     get: jest.fn().mockReturnValue(require('sulu-admin-bundle/containers/List/adapters/ColumnListAdapter').default),
     has: jest.fn().mockReturnValue(true),
     getOptions: jest.fn().mockReturnValue({}),

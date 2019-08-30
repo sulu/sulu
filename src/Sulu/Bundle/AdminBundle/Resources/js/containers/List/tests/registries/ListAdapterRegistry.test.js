@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import listAdapterRegistry from '../../registries/ListAdapterRegistry';
+import listAdapterRegistry from '../../registries/listAdapterRegistry';
 import AbstractAdapter from '../../adapters/AbstractAdapter';
 
 beforeEach(() => {

@@ -3,9 +3,9 @@ import {mount} from 'enzyme';
 import React from 'react';
 import AdapterSwitch from '../AdapterSwitch';
 import AbstractAdapter from '../adapters/AbstractAdapter';
-import listAdapterRegistry from '../registries/ListAdapterRegistry';
+import listAdapterRegistry from '../registries/listAdapterRegistry';
 
-jest.mock('../registries/ListAdapterRegistry', () => ({
+jest.mock('../registries/listAdapterRegistry', () => ({
     add: jest.fn(),
     get: jest.fn(),
     has: jest.fn(),

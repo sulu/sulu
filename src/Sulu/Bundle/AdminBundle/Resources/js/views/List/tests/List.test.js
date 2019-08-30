@@ -110,7 +110,7 @@ jest.mock(
     })
 );
 
-jest.mock('../../../containers/List/registries/ListAdapterRegistry', () => ({
+jest.mock('../../../containers/List/registries/listAdapterRegistry', () => ({
     add: jest.fn(),
     get: jest.fn(),
     getOptions: jest.fn().mockReturnValue({}),
@@ -153,7 +153,7 @@ jest.mock('../../../services/initializer', () => ({
 beforeEach(() => {
     jest.resetModules();
 
-    const listAdapterRegistry = require('../../../containers/List/registries/ListAdapterRegistry');
+    const listAdapterRegistry = require('../../../containers/List/registries/listAdapterRegistry');
     listAdapterRegistry.has.mockReturnValue(true);
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
 
