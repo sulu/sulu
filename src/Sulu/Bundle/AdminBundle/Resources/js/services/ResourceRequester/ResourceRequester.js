@@ -1,6 +1,6 @@
 // @flow
 import Requester from '../Requester';
-import resourceRouteRegistry from './registries/ResourceRouteRegistry';
+import resourceRouteRegistry from './registries/resourceRouteRegistry';
 import type {ListOptions} from './types';
 
 export default class ResourceRequester {

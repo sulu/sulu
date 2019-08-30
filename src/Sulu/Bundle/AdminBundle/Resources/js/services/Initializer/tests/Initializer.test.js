@@ -3,9 +3,9 @@ import 'core-js/library/fn/promise';
 import initializer from '../Initializer';
 import Requester from '../../Requester';
 import {setTranslations} from '../../../utils/Translator';
-import resourceRouteRegistry from '../../ResourceRequester/registries/ResourceRouteRegistry';
+import resourceRouteRegistry from '../../ResourceRequester/registries/resourceRouteRegistry';
 
-jest.mock('../../ResourceRequester/registries/ResourceRouteRegistry', () => ({
+jest.mock('../../ResourceRequester/registries/resourceRouteRegistry', () => ({
     setRoutingData: jest.fn(),
 }));
 

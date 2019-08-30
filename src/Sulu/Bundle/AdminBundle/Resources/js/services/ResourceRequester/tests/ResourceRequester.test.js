@@ -2,7 +2,7 @@
 import 'url-search-params-polyfill';
 import ResourceRequester from '../ResourceRequester';
 import Requester from '../../Requester/Requester';
-import resourceRouteRegistry from '../registries/ResourceRouteRegistry';
+import resourceRouteRegistry from '../registries/resourceRouteRegistry';
 
 jest.mock('../../Requester/Requester', () => ({
     get: jest.fn(),
@@ -12,7 +12,7 @@ jest.mock('../../Requester/Requester', () => ({
     delete: jest.fn(),
 }));
 
-jest.mock('../registries/ResourceRouteRegistry', () => ({
+jest.mock('../registries/resourceRouteRegistry', () => ({
     getDetailUrl: jest.fn(),
     getListUrl: jest.fn(),
 }));

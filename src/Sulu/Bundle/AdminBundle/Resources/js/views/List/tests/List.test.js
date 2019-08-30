@@ -8,7 +8,7 @@ import StringFieldTransformer from '../../../containers/List/fieldTransformers/S
 import {findWithHighOrderFunction} from '../../../utils/TestHelper';
 import ResourceStore from '../../../stores/ResourceStore';
 
-jest.mock('../../../services/ResourceRequester/registries/ResourceRouteRegistry', () => ({
+jest.mock('../../../services/ResourceRequester/registries/resourceRouteRegistry', () => ({
     getListUrl: jest.fn()
         .mockReturnValue('testfile.csv?locale=en&flat=true&delimiter=%3B&escape=%5C&enclosure=%22&newLine=%5Cn'),
 }));
@@ -1426,7 +1426,7 @@ test('Export method should be called when the export-button is pressed', () => {
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const ExportToolbarAction = require('../toolbarActions/ExportToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.export', ExportToolbarAction);
-    const resourceRouteRegistry = require('../../../services/ResourceRequester/registries/ResourceRouteRegistry');
+    const resourceRouteRegistry = require('../../../services/ResourceRequester/registries/resourceRouteRegistry');
     const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
     const router = {
         bind: jest.fn(),
