@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import internalLinkTypeRegistry from '../../registries/InternalLinkTypeRegistry';
+import internalLinkTypeRegistry from '../../registries/internalLinkTypeRegistry';
 
 beforeEach(() => {
     internalLinkTypeRegistry.clear();
