@@ -9,12 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Tests\Admin;
+namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Symfony\Component\Console\Command\Command;
 
@@ -61,15 +60,15 @@ class AdminPoolTest extends TestCase
     {
         $rootItem1 = new NavigationItem('Root');
         $rootItem1->addChild(new NavigationItem('Child1'));
-        $this->admin1->getNavigation()->willReturn(new Navigation($rootItem1));
+        $this->admin1->getNavigation()->willReturn($rootItem1);
 
         $rootItem2 = new NavigationItem('Root');
         $rootItem2->addChild(new NavigationItem('Child2'));
-        $this->admin2->getNavigation()->willReturn(new Navigation($rootItem2));
+        $this->admin2->getNavigation()->willReturn($rootItem2);
 
         $navigation = $this->adminPool->getNavigation();
-        $this->assertEquals('Child1', $navigation->getRoot()->getChildren()[0]->getName());
-        $this->assertEquals('Child2', $navigation->getRoot()->getChildren()[1]->getName());
+        $this->assertEquals('Child1', $navigation->getChildren()[0]->getName());
+        $this->assertEquals('Child2', $navigation->getChildren()[1]->getName());
     }
 
     public function testSecurityContexts()

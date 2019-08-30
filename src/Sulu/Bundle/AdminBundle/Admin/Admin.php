@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\AdminBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
 /**
@@ -65,11 +64,9 @@ abstract class Admin implements RouteProviderInterface, NavigationProviderInterf
         return $this->getSecurityContexts();
     }
 
-    public function getNavigation(): Navigation
+    public function getNavigation(): NavigationItem
     {
-        $rootNavigationItem = new NavigationItem('root');
-
-        return new Navigation($rootNavigationItem);
+        return new NavigationItem('root');
     }
 
     public function getConfig(): ?array

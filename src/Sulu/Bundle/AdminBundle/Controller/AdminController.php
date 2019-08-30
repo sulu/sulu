@@ -226,7 +226,7 @@ class AdminController
             'sulu_admin' => [
                 'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
                 'internalLinkTypes' => $this->linkProviderPool->getConfiguration(),
-                'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
+                'navigation' => $this->navigationRegistry->getNavigation()->toArray()['items'],
                 'routes' => $this->routeRegistry->getRoutes(),
                 'resources' => $this->resources,
                 'smartContent' => array_map(function(DataProviderInterface $dataProvider) {

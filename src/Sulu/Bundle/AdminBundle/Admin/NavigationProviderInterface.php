@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin;
 
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
+use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
 interface NavigationProviderInterface
 {
-    public function getNavigation(): Navigation;
+    public function getNavigation(): NavigationItem;
 }

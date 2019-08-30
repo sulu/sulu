@@ -15,7 +15,6 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -72,7 +71,7 @@ class ContactAdmin extends Admin
         return $contacts;
     }
 
-    public function getNavigation(): Navigation
+    public function getNavigation(): NavigationItem
     {
         $rootNavigationItem = $this->getNavigationItemRoot();
         $contacts = $this->getNavigationItemContacts();
@@ -97,7 +96,7 @@ class ContactAdmin extends Admin
             $rootNavigationItem->addChild($contacts);
         }
 
-        return new Navigation($rootNavigationItem);
+        return $rootNavigationItem;
     }
 
     public function configureRoutes(RouteCollection $routeCollection): void

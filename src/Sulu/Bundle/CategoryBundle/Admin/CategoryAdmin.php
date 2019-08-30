@@ -14,7 +14,6 @@ namespace Sulu\Bundle\CategoryBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -55,7 +54,7 @@ class CategoryAdmin extends Admin
         $this->localizationManager = $localizationManager;
     }
 
-    public function getNavigation(): Navigation
+    public function getNavigation(): NavigationItem
     {
         $rootNavigationItem = $this->getNavigationItemRoot();
         $settings = $this->getNavigationItemSettings();
@@ -70,7 +69,7 @@ class CategoryAdmin extends Admin
             $rootNavigationItem->addChild($settings);
         }
 
-        return new Navigation($rootNavigationItem);
+        return $rootNavigationItem;
     }
 
     public function configureRoutes(RouteCollection $routeCollection): void

@@ -14,7 +14,6 @@ namespace Sulu\Bundle\SnippetBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -79,7 +78,7 @@ class SnippetAdmin extends Admin
         $this->defaultEnabled = $defaultEnabled;
     }
 
-    public function getNavigation(): Navigation
+    public function getNavigation(): NavigationItem
     {
         $rootNavigationItem = $this->getNavigationItemRoot();
 
@@ -92,7 +91,7 @@ class SnippetAdmin extends Admin
             $rootNavigationItem->addChild($snippet);
         }
 
-        return new Navigation($rootNavigationItem);
+        return $rootNavigationItem;
     }
 
     /**

@@ -11,16 +11,15 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin;
 
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class NavigationRegistry
 {
     /**
-     * @var Navigation
+     * @var NavigationItem
      */
-    private $navigation;
+    private $navigationItem;
 
     /**
      * @var TranslatorInterface
@@ -47,38 +46,38 @@ class NavigationRegistry
     /**
      * Returns the navigation combined from all Admin objects.
      */
-    public function getNavigation(): Navigation
+    public function getNavigation(): NavigationItem
     {
-        if (!$this->navigation) {
-            $this->loadNavigation();
+        if (!$this->navigationItem) {
+            $this->loadNavigationItems();
         }
 
-        return $this->navigation;
+        return $this->navigationItem;
     }
 
-    private function loadNavigation(): void
+    private function loadNavigationItems(): void
     {
-        /** @var Navigation $navigation */
-        $navigation = null;
+        /** @var NavigationItem $navigation */
+        $navigationItem = null;
         foreach ($this->adminPool->getAdmins() as $admin) {
             if (!$admin instanceof NavigationProviderInterface) {
                 continue;
             }
 
-            if (null === $navigation) {
-                $navigation = $admin->getNavigation();
+            if (null === $navigationItem) {
+                $navigationItem = $admin->getNavigation();
 
                 continue;
             }
 
-            $navigation = $navigation->merge($admin->getNavigation());
+            $navigationItem = $navigationItem->merge($admin->getNavigation());
         }
 
-        foreach ($navigation->getRoot()->getChildren() as $child) {
+        foreach ($navigationItem->getChildren() as $child) {
             $this->processNavigationItem($child);
         }
 
-        $this->navigation = $navigation;
+        $this->navigationItem = $navigationItem;
     }
 
     /**

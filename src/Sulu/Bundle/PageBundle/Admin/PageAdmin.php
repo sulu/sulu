@@ -15,7 +15,6 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -87,7 +86,7 @@ class PageAdmin extends Admin
         $this->versioningEnabled = $versioningEnabled;
     }
 
-    public function getNavigation(): Navigation
+    public function getNavigation(): NavigationItem
     {
         $rootNavigationItem = $this->getNavigationItemRoot();
 
@@ -100,7 +99,7 @@ class PageAdmin extends Admin
             $rootNavigationItem->addChild($webspaceItem);
         }
 
-        return new Navigation($rootNavigationItem);
+        return $rootNavigationItem;
     }
 
     /**

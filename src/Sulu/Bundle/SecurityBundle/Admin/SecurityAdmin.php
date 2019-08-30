@@ -14,7 +14,6 @@ namespace Sulu\Bundle\SecurityBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -75,7 +74,7 @@ class SecurityAdmin extends Admin
         $this->resources = $resources;
     }
 
-    public function getNavigation(): Navigation
+    public function getNavigation(): NavigationItem
     {
         $rootNavigationItem = $this->getNavigationItemRoot();
 
@@ -91,7 +90,7 @@ class SecurityAdmin extends Admin
             $rootNavigationItem->addChild($settings);
         }
 
-        return new Navigation($rootNavigationItem);
+        return $rootNavigationItem;
     }
 
     public function getSecurityContexts()

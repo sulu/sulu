@@ -14,7 +14,6 @@ namespace Sulu\Bundle\MediaBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Localization\Manager\LocalizationManager;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
@@ -68,7 +67,7 @@ class MediaAdmin extends Admin
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function getNavigation(): Navigation
+    public function getNavigation(): NavigationItem
     {
         $rootNavigationItem = $this->getNavigationItemRoot();
 
@@ -85,7 +84,7 @@ class MediaAdmin extends Admin
             $rootNavigationItem->addChild($media);
         }
 
-        return new Navigation($rootNavigationItem);
+        return $rootNavigationItem;
     }
 
     /**

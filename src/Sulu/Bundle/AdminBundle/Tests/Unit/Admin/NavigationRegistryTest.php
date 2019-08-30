@@ -17,7 +17,6 @@ use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -80,7 +79,7 @@ class NavigationRegistryTest extends TestCase
         $navigation1->setMainRoute('route1');
 
         $rootItem1->addChild($navigation1);
-        $this->admin1->getNavigation()->willReturn(new Navigation($rootItem1));
+        $this->admin1->getNavigation()->willReturn($rootItem1);
 
         $rootItem2 = new NavigationItem('Root');
 
@@ -93,7 +92,7 @@ class NavigationRegistryTest extends TestCase
         $navigation2->addChild($navigationChild2);
 
         $rootItem2->addChild($navigation2);
-        $this->admin2->getNavigation()->willReturn(new Navigation($rootItem2));
+        $this->admin2->getNavigation()->willReturn($rootItem2);
 
         $route1 = $this->prophesize(Route::class);
         $route1->getPath()->willReturn('/route1');
@@ -132,29 +131,29 @@ class NavigationRegistryTest extends TestCase
         $this->translator->trans('navigation_2_child_2', [], 'admin')->willReturn('Navigation 2 - Child 2');
 
         $navigation = $this->navigationRegistry->getNavigation();
-        $this->assertCount(2, $navigation->getRoot()->getChildren());
-        $this->assertEquals('Navigation 1', $navigation->getRoot()->getChildren()[0]->getLabel());
-        $this->assertEquals('Navigation 2', $navigation->getRoot()->getChildren()[1]->getLabel());
+        $this->assertCount(2, $navigation->getChildren());
+        $this->assertEquals('Navigation 1', $navigation->getChildren()[0]->getLabel());
+        $this->assertEquals('Navigation 2', $navigation->getChildren()[1]->getLabel());
 
         // check for children of first navigation
-        $this->assertCount(2, $navigation->getRoot()->getChildren()[1]->getChildren());
+        $this->assertCount(2, $navigation->getChildren()[1]->getChildren());
         $this->assertEquals(
             'Navigation 2 - Child 1',
-            $navigation->getRoot()->getChildren()[1]->getChildren()[0]->getLabel()
+            $navigation->getChildren()[1]->getChildren()[0]->getLabel()
         );
         // check for created child routes
         $this->assertCount(
             1,
-            $navigation->getRoot()->getChildren()[1]->getChildren()[0]->getChildRoutes()
+            $navigation->getChildren()[1]->getChildren()[0]->getChildRoutes()
         );
         $this->assertEquals(
             'route2_child1',
-            $navigation->getRoot()->getChildren()[1]->getChildren()[0]->getChildRoutes()[0]
+            $navigation->getChildren()[1]->getChildren()[0]->getChildRoutes()[0]
         );
         // check for "Navigation 2 - Child 2"
         $this->assertEquals(
             'Navigation 2 - Child 2',
-            $navigation->getRoot()->getChildren()[1]->getChildren()[1]->getLabel()
+            $navigation->getChildren()[1]->getChildren()[1]->getLabel()
         );
     }
 
@@ -166,8 +165,8 @@ class NavigationRegistryTest extends TestCase
         $navigation1->setMainRoute('route1');
 
         $rootItem1->addChild($navigation1);
-        $this->admin1->getNavigation()->willReturn(new Navigation($rootItem1))->shouldBeCalledTimes(1);
-        $this->admin2->getNavigation()->willReturn(new Navigation($rootItem1))->shouldBeCalledTimes(1);
+        $this->admin1->getNavigation()->willReturn($rootItem1)->shouldBeCalledTimes(1);
+        $this->admin2->getNavigation()->willReturn($rootItem1)->shouldBeCalledTimes(1);
 
         $route1 = $this->prophesize(Route::class);
         $route1->getPath()->willReturn('/route1');
@@ -185,8 +184,8 @@ class NavigationRegistryTest extends TestCase
     public function testGetNavigationWithChildren()
     {
         $rootItem = new NavigationItem('Root');
-        $this->admin1->getNavigation()->willReturn(new Navigation($rootItem));
-        $this->admin2->getNavigation()->willReturn(new Navigation());
+        $this->admin1->getNavigation()->willReturn($rootItem);
+        $this->admin2->getNavigation()->willReturn(new NavigationItem('Root'));
 
         $navigationItem1 = new NavigationItem('navigation_1');
         $navigationItem1->setMainRoute('route1');
@@ -210,14 +209,14 @@ class NavigationRegistryTest extends TestCase
 
         $navigation = $this->navigationRegistry->getNavigation();
 
-        $this->assertEquals(['route1', 'route11'], $navigation->getRoot()->getChildren()[0]->getChildRoutes());
+        $this->assertEquals(['route1', 'route11'], $navigation->getChildren()[0]->getChildRoutes());
     }
 
     public function testGetNavigationWithChildrenSlashOnly()
     {
         $rootItem = new NavigationItem('Root');
-        $this->admin1->getNavigation()->willReturn(new Navigation($rootItem));
-        $this->admin2->getNavigation()->willReturn(new Navigation());
+        $this->admin1->getNavigation()->willReturn($rootItem);
+        $this->admin2->getNavigation()->willReturn(new NavigationItem('Root'));
 
         $navigationItem1 = new NavigationItem('navigation_1');
         $navigationItem1->setMainRoute('route1');
@@ -241,7 +240,7 @@ class NavigationRegistryTest extends TestCase
         $this->routeRegistry->findRouteByName('route2')->willReturn($route2);
 
         $navigation = $this->navigationRegistry->getNavigation();
-        $rootNavigationItems = $navigation->getRoot()->getChildren();
+        $rootNavigationItems = $navigation->getChildren();
 
         $this->assertEquals([], $rootNavigationItems[0]->getChildRoutes());
         $this->assertEquals(['route2'], $rootNavigationItems[1]->getChildRoutes());

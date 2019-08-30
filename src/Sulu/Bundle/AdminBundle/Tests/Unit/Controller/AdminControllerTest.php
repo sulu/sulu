@@ -26,7 +26,7 @@ use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
+use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
@@ -223,8 +223,8 @@ class AdminControllerTest extends TestCase
         ];
         $this->routeRegistry->getRoutes()->willReturn($routes);
 
-        $navigation = $this->prophesize(Navigation::class);
-        $navigation->getChildrenAsArray()->willReturn(['navigation_item1', 'navigation_item2']);
+        $navigation = $this->prophesize(NavigationItem::class);
+        $navigation->toArray()->willReturn(['items' => ['navigation_item1', 'navigation_item2']]);
         $this->navigationRegistry->getNavigation()->willReturn($navigation->reveal());
 
         $this->urlGenerator->generate('route_id_1')->willReturn('/path1');
