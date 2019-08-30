@@ -1,6 +1,6 @@
 // @flow
 import Sidebar from './Sidebar';
-import sidebarStore from './stores/SidebarStore';
+import sidebarStore from './stores/sidebarStore';
 import sidebarRegistry from './registries/sidebarRegistry';
 import withSidebar from './withSidebar';
 import type {SidebarConfig} from './types';

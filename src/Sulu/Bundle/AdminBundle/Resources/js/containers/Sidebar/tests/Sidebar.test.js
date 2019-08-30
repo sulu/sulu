@@ -2,12 +2,12 @@
 import React from 'react';
 import {render} from 'enzyme';
 import Sidebar from '../Sidebar';
-import sidebarStore from '../stores/SidebarStore';
+import sidebarStore from '../stores/sidebarStore';
 import sidebarRegistry from '../registries/sidebarRegistry';
 
 const component = (props) => (<h1>{props.title}</h1>);
 
-jest.mock('../stores/SidebarStore', () => ({}));
+jest.mock('../stores/sidebarStore', () => ({}));
 
 jest.mock('../registries/sidebarRegistry', () => ({
     get: jest.fn(),

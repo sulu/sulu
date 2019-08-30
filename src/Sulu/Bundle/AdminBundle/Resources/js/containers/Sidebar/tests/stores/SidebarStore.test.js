@@ -1,5 +1,5 @@
 // @flow
-import sidebarStore, {DEFAULT_SIZE} from '../../stores/SidebarStore';
+import sidebarStore, {DEFAULT_SIZE} from '../../stores/sidebarStore';
 
 beforeEach(() => {
     sidebarStore.clearConfig();

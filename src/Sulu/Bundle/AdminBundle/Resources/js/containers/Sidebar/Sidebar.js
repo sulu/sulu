@@ -2,7 +2,7 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
-import sidebarStore from './stores/SidebarStore';
+import sidebarStore from './stores/sidebarStore';
 import sidebarRegistry from './registries/sidebarRegistry';
 import sidebarStyles from './sidebar.scss';
 
