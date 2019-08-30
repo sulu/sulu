@@ -6,7 +6,7 @@ The `onFinish` callback is called when one of the sub fields in the block finish
 its focus.
 
 ```javascript
-const fieldRegistry = require('../Form/registries/FieldRegistry').default;
+const fieldRegistry = require('../Form/registries/fieldRegistry').default;
 
 if (!fieldRegistry.has('text_line')) {
     fieldRegistry.add('text_line', () => (<input type="text" />));

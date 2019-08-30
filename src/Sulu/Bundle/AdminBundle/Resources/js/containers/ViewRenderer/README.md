@@ -5,7 +5,7 @@ Registering a component in the `ViewRegistry` and rendering it using the `ViewRe
 example:
 
 ```javascript
-const viewRegistry = require('./registries/ViewRegistry').default;
+const viewRegistry = require('./registries/viewRegistry').default;
 viewRegistry.clear(); // Just to make sure the ViewRegistry is empty, not needed in a real world application
 
 const Component = ({router}) => (
@@ -38,7 +38,7 @@ property. The `children` property is a function, which returns the corresponding
 argument, which will be merged with the passed `route` and `router` props from the view.
 
 ```javascript
-const viewRegistry = require('./registries/ViewRegistry').default;
+const viewRegistry = require('./registries/viewRegistry').default;
 viewRegistry.clear();
 
 const Parent = ({route, children}) => (
