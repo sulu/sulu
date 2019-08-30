@@ -12,7 +12,7 @@ import Application from './containers/Application';
 import {updateRouterAttributesFromView, viewRegistry} from './containers/ViewRenderer';
 import userStore, {logoutOnUnauthorizedResponse} from './stores/UserStore';
 import {Config, resourceRouteRegistry} from './services';
-import initializer from './services/Initializer';
+import initializer from './services/initializer';
 import ResourceTabs from './views/ResourceTabs';
 import List, {
     listToolbarActionRegistry,

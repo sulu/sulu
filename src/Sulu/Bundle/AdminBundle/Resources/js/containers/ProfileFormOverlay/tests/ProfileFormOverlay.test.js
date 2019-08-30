@@ -8,7 +8,7 @@ import Form from '../../Form';
 import ProfileFormOverlay from '../ProfileFormOverlay';
 const React = mockReact;
 
-jest.mock('sulu-admin-bundle/services/Initializer', () => jest.fn());
+jest.mock('sulu-admin-bundle/services/initializer', () => jest.fn());
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),

@@ -1,6 +1,6 @@
 // @flow
 import 'core-js/library/fn/promise';
-import initializer from '../Initializer';
+import initializer from '../initializer';
 import Requester from '../../Requester';
 import {setTranslations} from '../../../utils/Translator';
 import resourceRouteRegistry from '../../ResourceRequester/registries/resourceRouteRegistry';

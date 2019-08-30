@@ -1,7 +1,7 @@
 // @flow
 import userStore from '../UserStore';
 import Requester from '../../../services/Requester';
-import initializer from '../../../services/Initializer';
+import initializer from '../../../services/initializer';
 import localizationStore from '../../../stores/LocalizationStore';
 
 jest.mock('debounce', () => jest.fn((callback) => callback));
@@ -12,7 +12,7 @@ jest.mock('../../../services/Requester', () => ({
     patch: jest.fn(),
 }));
 
-jest.mock('../../../services/Initializer', () => ({
+jest.mock('../../../services/initializer', () => ({
     initialize: jest.fn(),
 }));
 

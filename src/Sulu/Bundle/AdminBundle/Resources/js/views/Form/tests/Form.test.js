@@ -5,7 +5,7 @@ import {mount, shallow} from 'enzyme';
 import {findWithHighOrderFunction} from '../../../utils/TestHelper';
 import AbstractFormToolbarAction from '../toolbarActions/AbstractFormToolbarAction';
 
-jest.mock('../../../services/Initializer', () => jest.fn());
+jest.mock('../../../services/initializer', () => jest.fn());
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 jest.mock('../toolbarActions/DeleteToolbarAction', () => jest.fn());
 jest.mock('../toolbarActions/SaveWithPublishingToolbarAction', () => jest.fn());

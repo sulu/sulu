@@ -2,7 +2,7 @@
 import formToolbarActionRegistry from '../../registries/formToolbarActionRegistry';
 import AbstractFormToolbarAction from '../../toolbarActions/AbstractFormToolbarAction';
 
-jest.mock('../../../../services/Initializer', () => jest.fn());
+jest.mock('../../../../services/initializer', () => jest.fn());
 jest.mock('../../toolbarActions/DeleteToolbarAction', () => jest.fn());
 jest.mock('../../toolbarActions/SaveWithPublishingToolbarAction', () => jest.fn());
 jest.mock('../../toolbarActions/SaveToolbarAction', () => jest.fn());

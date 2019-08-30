@@ -4,7 +4,7 @@ import {mount, shallow} from 'enzyme';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import CollectionFormOverlay from '../CollectionFormOverlay';
 
-jest.mock('sulu-admin-bundle/services/Initializer', () => jest.fn());
+jest.mock('sulu-admin-bundle/services/initializer', () => jest.fn());
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     ResourceFormStore: jest.fn(),

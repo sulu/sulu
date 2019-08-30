@@ -7,7 +7,7 @@ import log from 'loglevel';
 import Navigation from '../Navigation';
 import Backdrop from '../../components/Backdrop';
 import Loader from '../../components/Loader';
-import initializer from '../../services/Initializer';
+import initializer from '../../services/initializer';
 import Router from '../../services/Router';
 import userStore from '../../stores/UserStore';
 import Login from '../Login';

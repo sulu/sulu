@@ -22,7 +22,7 @@ const mockInitializerInitialized = jest.fn();
 const mockInitializerLoading = jest.fn();
 const mockInitializedTranslationsLocale = jest.fn();
 
-jest.mock('../../../services/Initializer', () => {
+jest.mock('../../../services/initializer', () => {
     return new class {
         get loading() {
             return mockInitializerLoading();

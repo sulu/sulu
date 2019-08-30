@@ -146,7 +146,7 @@ jest.mock('../../../utils/Translator', () => ({
     },
 }));
 
-jest.mock('../../../services/Initializer', () => ({
+jest.mock('../../../services/initializer', () => ({
     initializedTranslationsLocale: true,
 }));
 

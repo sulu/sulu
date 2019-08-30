@@ -3,7 +3,7 @@ import 'core-js/library/fn/promise';
 import {action, computed, observable} from 'mobx';
 import debounce from 'debounce';
 import {Config, Requester} from '../../services';
-import initializer from '../../services/Initializer';
+import initializer from '../../services/initializer';
 import localizationStore from '../LocalizationStore';
 import type {Contact, User} from './types';
 

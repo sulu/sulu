@@ -16,7 +16,7 @@ jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../../services/Initializer', () => ({
+jest.mock('../../../services/initializer', () => ({
     initializedTranslationsLocale: true,
 }));
 
