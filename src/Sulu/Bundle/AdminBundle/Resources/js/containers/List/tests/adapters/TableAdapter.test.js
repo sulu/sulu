@@ -4,7 +4,7 @@ import {render, shallow} from 'enzyme';
 import listAdapterDefaultProps from '../../../../utils/TestHelper/listAdapterDefaultProps';
 import TableAdapter from '../../adapters/TableAdapter';
 import StringFieldTransformer from '../../fieldTransformers/StringFieldTransformer';
-import listFieldTransformerRegistry from '../../registries/ListFieldTransformerRegistry';
+import listFieldTransformerRegistry from '../../registries/listFieldTransformerRegistry';
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: function(key) {
@@ -17,7 +17,7 @@ jest.mock('../../../../utils/Translator', () => ({
     },
 }));
 
-jest.mock('../../registries/ListFieldTransformerRegistry', () => ({
+jest.mock('../../registries/listFieldTransformerRegistry', () => ({
     add: jest.fn(),
     get: jest.fn(),
     has: jest.fn(),

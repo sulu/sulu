@@ -3,7 +3,7 @@ import React from 'react';
 import {mount, render, shallow} from 'enzyme';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import TableAdapter from '../../../containers/List/adapters/TableAdapter';
-import listFieldTransformRegistry from '../../../containers/List/registries/ListFieldTransformerRegistry';
+import listFieldTransformRegistry from '../../../containers/List/registries/listFieldTransformerRegistry';
 import StringFieldTransformer from '../../../containers/List/fieldTransformers/StringFieldTransformer';
 import {findWithHighOrderFunction} from '../../../utils/TestHelper';
 import ResourceStore from '../../../stores/ResourceStore';
@@ -117,7 +117,7 @@ jest.mock('../../../containers/List/registries/listAdapterRegistry', () => ({
     has: jest.fn(),
 }));
 
-jest.mock('../../../containers/List/registries/ListFieldTransformerRegistry', () => ({
+jest.mock('../../../containers/List/registries/listFieldTransformerRegistry', () => ({
     add: jest.fn(),
     get: jest.fn(),
     has: jest.fn(),

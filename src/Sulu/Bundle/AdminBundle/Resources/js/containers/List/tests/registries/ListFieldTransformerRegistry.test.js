@@ -1,5 +1,5 @@
 // @flow
-import listFieldTransformerRegistry from '../../registries/ListFieldTransformerRegistry';
+import listFieldTransformerRegistry from '../../registries/listFieldTransformerRegistry';
 
 beforeEach(() => {
     listFieldTransformerRegistry.clear();

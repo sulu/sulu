@@ -7,7 +7,7 @@ import SingleListOverlay from '../../SingleListOverlay';
 import List from '../List';
 import ListStore from '../stores/ListStore';
 import listAdapterRegistry from '../registries/listAdapterRegistry';
-import listFieldTransformerRegistry from '../registries/ListFieldTransformerRegistry';
+import listFieldTransformerRegistry from '../registries/listFieldTransformerRegistry';
 import AbstractAdapter from '../adapters/AbstractAdapter';
 import TableAdapter from '../adapters/TableAdapter';
 import FolderAdapter from '../adapters/FolderAdapter';
@@ -99,7 +99,7 @@ jest.mock('../registries/listAdapterRegistry', () => ({
     has: jest.fn(),
 }));
 
-jest.mock('../registries/ListFieldTransformerRegistry', () => ({
+jest.mock('../registries/listFieldTransformerRegistry', () => ({
     add: jest.fn(),
     get: jest.fn(),
     has: jest.fn(),

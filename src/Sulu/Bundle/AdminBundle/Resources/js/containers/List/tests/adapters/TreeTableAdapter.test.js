@@ -15,7 +15,7 @@ jest.mock('../../../../utils/Translator', () => ({
     },
 }));
 
-jest.mock('../../registries/ListFieldTransformerRegistry', () => ({
+jest.mock('../../registries/listFieldTransformerRegistry', () => ({
     add: jest.fn(),
     get: jest.fn(() => {
         return {
