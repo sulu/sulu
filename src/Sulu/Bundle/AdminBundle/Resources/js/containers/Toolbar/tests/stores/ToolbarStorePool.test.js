@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import ToolbarStore from '../../stores/ToolbarStore';
-import toolbarStorePool from '../../stores/ToolbarStorePool';
+import toolbarStorePool from '../../stores/toolbarStorePool';
 
 const storeKey = 'testKey';
 

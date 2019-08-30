@@ -2,11 +2,11 @@
 import React from 'react';
 import {render, shallow} from 'enzyme';
 import Toolbar from '../Toolbar';
-import toolbarStorePool from '../stores/ToolbarStorePool';
+import toolbarStorePool from '../stores/toolbarStorePool';
 
 let toolbarStoreMock = {};
 
-jest.mock('../stores/ToolbarStorePool', () => ({
+jest.mock('../stores/toolbarStorePool', () => ({
     createStore: jest.fn(),
     getStore: jest.fn(),
     hasStore: jest.fn(),

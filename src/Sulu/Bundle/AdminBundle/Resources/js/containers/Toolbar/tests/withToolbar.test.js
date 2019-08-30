@@ -2,10 +2,10 @@
 import React from 'react';
 import {extendObservable, observable} from 'mobx';
 import {mount, render} from 'enzyme';
-import toolbarStorePool, {DEFAULT_STORE_KEY} from '../stores/ToolbarStorePool';
+import toolbarStorePool, {DEFAULT_STORE_KEY} from '../stores/toolbarStorePool';
 import withToolbar from '../withToolbar';
 
-jest.mock('../stores/ToolbarStorePool', () => ({
+jest.mock('../stores/toolbarStorePool', () => ({
     setToolbarConfig: jest.fn(),
 }));
 

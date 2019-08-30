@@ -6,7 +6,7 @@ import {getViewKeyFromRoute} from '../../services/Router';
 import {buildHocDisplayName} from '../../utils/react';
 import type {ViewProps} from '../index';
 import type {ToolbarConfig} from './types';
-import toolbarStorePool, {DEFAULT_STORE_KEY} from './stores/ToolbarStorePool';
+import toolbarStorePool, {DEFAULT_STORE_KEY} from './stores/toolbarStorePool';
 
 const UPDATE_ROUTE_HOOK_PRIORITY = 1024;
 
