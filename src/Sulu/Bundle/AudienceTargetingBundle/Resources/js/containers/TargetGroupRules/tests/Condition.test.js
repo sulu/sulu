@@ -1,15 +1,15 @@
 // @flow
 import React from 'react';
 import {render, shallow} from 'enzyme';
-import ruleRegistry from '../registries/RuleRegistry';
-import ruleTypeRegistry from '../registries/RuleTypeRegistry';
+import ruleRegistry from '../registries/ruleRegistry';
+import ruleTypeRegistry from '../registries/ruleTypeRegistry';
 import Condition from '../Condition';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../registries/RuleRegistry', () => {
+jest.mock('../registries/ruleRegistry', () => {
     const getAllMock = jest.fn();
 
     return {
@@ -18,7 +18,7 @@ jest.mock('../registries/RuleRegistry', () => {
     };
 });
 
-jest.mock('../registries/RuleTypeRegistry', () => ({
+jest.mock('../registries/ruleTypeRegistry', () => ({
     get: jest.fn(),
 }));
 

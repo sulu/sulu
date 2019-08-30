@@ -1,5 +1,5 @@
 // @flow
-import ruleRegistry from '../../registries/RuleRegistry';
+import ruleRegistry from '../../registries/ruleRegistry';
 
 beforeEach(() => {
     ruleRegistry.clear();
