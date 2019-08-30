@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import fieldRegistry from '../../registries/FieldRegistry';
+import fieldRegistry from '../../registries/fieldRegistry';
 
 beforeEach(() => {
     fieldRegistry.clear();

@@ -17,7 +17,7 @@ jest.mock('../../Form/FormInspector', () => jest.fn(function() {
 jest.mock('../../Form/stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../../stores/ResourceStore', () => jest.fn());
 
-jest.mock('../../Form/registries/FieldRegistry', () => ({
+jest.mock('../../Form/registries/fieldRegistry', () => ({
     get: jest.fn((type) => {
         switch (type) {
             case 'text_line':

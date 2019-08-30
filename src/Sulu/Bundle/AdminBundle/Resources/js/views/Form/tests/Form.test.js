@@ -16,7 +16,7 @@ jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
-jest.mock('../../../containers/Form/registries/FieldRegistry', () => ({
+jest.mock('../../../containers/Form/registries/fieldRegistry', () => ({
     get: jest.fn().mockReturnValue(function() {
         return null;
     }),

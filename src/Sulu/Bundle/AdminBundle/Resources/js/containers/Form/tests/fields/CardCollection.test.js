@@ -26,7 +26,7 @@ jest.mock('../../FormInspector', () => jest.fn(function() {
     this.isFieldModified = jest.fn();
 }));
 
-jest.mock('../../registries/FieldRegistry', () => ({
+jest.mock('../../registries/fieldRegistry', () => ({
     get: jest.fn((type) => {
         switch (type) {
             case 'text_line':

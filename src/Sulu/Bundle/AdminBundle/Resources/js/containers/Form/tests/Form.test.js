@@ -14,7 +14,7 @@ jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
-jest.mock('../registries/FieldRegistry', () => ({
+jest.mock('../registries/fieldRegistry', () => ({
     get: jest.fn((type) => {
         switch (type) {
             case 'block':

@@ -4,7 +4,7 @@ import React from 'react';
 import ResourceStore from '../../../stores/ResourceStore';
 import Router from '../../../services/Router';
 import Field from '../Field';
-import fieldRegistry from '../registries/FieldRegistry';
+import fieldRegistry from '../registries/fieldRegistry';
 import FormInspector from '../FormInspector';
 import ResourceFormStore from '../stores/ResourceFormStore';
 
@@ -13,7 +13,7 @@ jest.mock('../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../FormInspector', () => jest.fn());
 jest.mock('../stores/ResourceFormStore', () => jest.fn());
 
-jest.mock('../registries/FieldRegistry', () => ({
+jest.mock('../registries/fieldRegistry', () => ({
     get: jest.fn(),
     getOptions: jest.fn(),
 }));
