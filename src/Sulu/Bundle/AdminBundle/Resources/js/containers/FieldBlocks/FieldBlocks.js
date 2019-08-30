@@ -5,7 +5,7 @@ import {toJS} from 'mobx';
 import BlockCollection from '../../components/BlockCollection';
 import type {BlockEntry} from '../../components/BlockCollection/types';
 import type {BlockError, FieldTypeProps} from '../Form/types';
-import blockPreviewTransformerRegistry from './registries/BlockPreviewTransformerRegistry';
+import blockPreviewTransformerRegistry from './registries/blockPreviewTransformerRegistry';
 import FieldRenderer from './FieldRenderer';
 import fieldBlocksStyles from './fieldBlocks.scss';
 
