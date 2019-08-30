@@ -44,15 +44,15 @@ class NavigationRegistry
     }
 
     /**
-     * Returns the navigation combined from all Admin objects.
+     * @return NavigationItem[]
      */
-    public function getNavigation(): NavigationItem
+    public function getNavigationItems(): array
     {
         if (!$this->navigationItem) {
             $this->loadNavigationItems();
         }
 
-        return $this->navigationItem;
+        return $this->navigationItem->getChildren();
     }
 
     private function loadNavigationItems(): void
