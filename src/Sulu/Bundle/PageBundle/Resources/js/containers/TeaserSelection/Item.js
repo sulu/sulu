@@ -10,7 +10,7 @@ import type {Media} from 'sulu-media-bundle/types';
 import {Button, Icon, Input} from 'sulu-admin-bundle/components';
 import {TextEditor} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
-import teaserProviderRegistry from './registries/TeaserProviderRegistry';
+import teaserProviderRegistry from './registries/teaserProviderRegistry';
 import itemStyles from './item.scss';
 import type {TeaserItem} from './types';
 

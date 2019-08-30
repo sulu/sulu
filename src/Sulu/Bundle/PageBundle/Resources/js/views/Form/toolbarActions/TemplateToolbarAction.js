@@ -2,8 +2,8 @@
 import {action, computed, observable} from 'mobx';
 import {AbstractFormToolbarAction} from 'sulu-admin-bundle/views';
 import type {ToolbarItemConfig} from 'sulu-admin-bundle/types';
-import webspaceStore from '../../../stores/WebspaceStore';
-import type {Webspace} from '../../../stores/WebspaceStore/types';
+import webspaceStore from '../../../stores/webspaceStore';
+import type {Webspace} from '../../../stores/webspaceStore/types';
 
 export default class TemplateToolbarAction extends AbstractFormToolbarAction {
     @observable webspace: ?Webspace = undefined;

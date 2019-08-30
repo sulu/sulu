@@ -1,5 +1,5 @@
 // @flow
-import teaserProviderRegistry from '../../registries/TeaserProviderRegistry';
+import teaserProviderRegistry from '../../registries/teaserProviderRegistry';
 
 const defaultTeaserProviderOptions = {
     displayProperties: [],

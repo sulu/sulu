@@ -4,14 +4,14 @@ import {mount, render} from 'enzyme';
 import {Router} from 'sulu-admin-bundle/services';
 import {userStore} from 'sulu-admin-bundle/stores';
 import WebspaceTabs from '../WebspaceTabs';
-import webspaceStore from '../../../stores/WebspaceStore';
+import webspaceStore from '../../../stores/webspaceStore';
 
 jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
     this.addUpdateRouteHook = jest.fn();
     this.bind = jest.fn();
 }));
 
-jest.mock('../../../stores/WebspaceStore', () => ({
+jest.mock('../../../stores/webspaceStore', () => ({
     loadWebspaces: jest.fn(() => Promise.resolve()),
 }));
 

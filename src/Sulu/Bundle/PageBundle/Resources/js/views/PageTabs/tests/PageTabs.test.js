@@ -3,9 +3,9 @@ import React from 'react';
 import {mount} from 'enzyme';
 import {ResourceTabs} from 'sulu-admin-bundle/views';
 import PageTabs from '../PageTabs';
-import webspaceStore from '../../../stores/WebspaceStore';
+import webspaceStore from '../../../stores/webspaceStore';
 
-jest.mock('../../../stores/WebspaceStore', () => ({
+jest.mock('../../../stores/webspaceStore', () => ({
     loadWebspace: jest.fn(),
 }));
 

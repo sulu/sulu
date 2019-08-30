@@ -3,7 +3,7 @@ import {ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {Router} from 'sulu-admin-bundle/services';
 import {Form} from 'sulu-admin-bundle/views';
-import webspaceStore from '../../../../stores/WebspaceStore';
+import webspaceStore from '../../../../stores/webspaceStore';
 import TemplateToolbarAction from '../../toolbarActions/TemplateToolbarAction';
 
 jest.mock('sulu-admin-bundle/utils', () => ({
@@ -41,7 +41,7 @@ jest.mock('sulu-admin-bundle/views', () => ({
     }),
 }));
 
-jest.mock('../../../../stores/WebspaceStore', () => ({
+jest.mock('../../../../stores/webspaceStore', () => ({
     loadWebspace: jest.fn(),
 }));
 

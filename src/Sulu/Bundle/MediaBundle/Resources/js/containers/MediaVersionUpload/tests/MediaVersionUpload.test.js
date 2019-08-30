@@ -26,7 +26,7 @@ jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function() {
     this.getThumbnail = jest.fn((size) => size);
 }));
 
-jest.mock('../../../stores/FormatStore', () => ({
+jest.mock('../../../stores/formatStore', () => ({
     loadFormats: jest.fn().mockReturnValue(Promise.resolve([{key: 'test', scale: {}}])),
 }));
 

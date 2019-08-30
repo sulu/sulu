@@ -14,7 +14,7 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 
 jest.mock('sulu-admin-bundle/containers/TextEditor', () => jest.fn(({value}) => (<textarea value={value} />)));
 
-jest.mock('../registries/TeaserProviderRegistry', () => ({
+jest.mock('../registries/teaserProviderRegistry', () => ({
     keys: ['pages', 'articles'],
     get: jest.fn((key) => {
         switch (key) {

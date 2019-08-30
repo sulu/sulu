@@ -9,7 +9,7 @@ import type {ViewProps} from 'sulu-admin-bundle/containers';
 import type {AttributeMap, Route} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import {CacheClearToolbarAction} from 'sulu-website-bundle/containers';
-import type {Webspace} from '../../stores/WebspaceStore/types';
+import type {Webspace} from '../../stores/webspaceStore/types';
 import pageListStyles from './pageList.scss';
 
 const USER_SETTINGS_KEY = 'page_list';

@@ -9,8 +9,8 @@ import type {AttributeMap, Route} from 'sulu-admin-bundle/services';
 import {userStore} from 'sulu-admin-bundle/stores';
 import {Tabs} from 'sulu-admin-bundle/views';
 import WebspaceSelect from '../../components/WebspaceSelect';
-import webspaceStore from '../../stores/WebspaceStore';
-import type {Webspace} from '../../stores/WebspaceStore/types';
+import webspaceStore from '../../stores/webspaceStore';
+import type {Webspace} from '../../stores/webspaceStore/types';
 import webspaceTabsStyles from './webspaceTabs.scss';
 
 const USER_SETTING_PREFIX = 'sulu_page.webspace_tabs';
