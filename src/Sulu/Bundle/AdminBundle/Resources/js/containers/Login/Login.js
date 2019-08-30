@@ -5,7 +5,7 @@ import {observer} from 'mobx-react';
 import Icon from '../../components/Icon/index';
 import {translate} from '../../utils/index';
 import Loader from '../../components/Loader/Loader';
-import userStore from '../../stores/UserStore';
+import userStore from '../../stores/userStore';
 import LoginForm from './LoginForm';
 import ResetForm from './ResetForm';
 import loginStyles from './login.scss';

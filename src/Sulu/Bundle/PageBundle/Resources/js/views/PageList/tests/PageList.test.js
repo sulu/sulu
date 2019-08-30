@@ -58,7 +58,7 @@ jest.mock('sulu-admin-bundle/containers/List/registries/listAdapterRegistry', ()
 
 jest.mock('sulu-admin-bundle/containers/SingleListOverlay', () => jest.fn(() => null));
 
-jest.mock('sulu-admin-bundle/stores/UserStore', () => ({
+jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     getPersistentSetting: jest.fn(),
 }));
 

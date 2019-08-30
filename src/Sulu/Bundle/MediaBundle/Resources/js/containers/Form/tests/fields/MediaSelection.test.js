@@ -25,7 +25,7 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('sulu-admin-bundle/stores/UserStore', () => ({
+jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     contentLocale: 'userContentLocale',
 }));
 

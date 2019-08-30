@@ -15,7 +15,7 @@ jest.mock('../../../stores/webspaceStore', () => ({
     loadWebspaces: jest.fn(() => Promise.resolve()),
 }));
 
-jest.mock('sulu-admin-bundle/stores/UserStore', () => ({
+jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     setPersistentSetting: jest.fn(),
     getPersistentSetting: jest.fn(),
 }));

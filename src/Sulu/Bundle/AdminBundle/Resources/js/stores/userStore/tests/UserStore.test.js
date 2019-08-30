@@ -1,5 +1,5 @@
 // @flow
-import userStore from '../UserStore';
+import userStore from '../userStore';
 import Requester from '../../../services/Requester';
 import initializer from '../../../services/initializer';
 import localizationStore from '../../../stores/LocalizationStore';

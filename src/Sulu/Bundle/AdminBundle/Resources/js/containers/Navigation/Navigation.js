@@ -4,7 +4,7 @@ import {observer} from 'mobx-react';
 import {computed} from 'mobx';
 import {default as NavigationComponent} from '../../components/Navigation';
 import Router from '../../services/Router';
-import userStore from '../../stores/UserStore';
+import userStore from '../../stores/userStore';
 import navigationRegistry from './registries/navigationRegistry';
 import type {NavigationItem} from './types';
 

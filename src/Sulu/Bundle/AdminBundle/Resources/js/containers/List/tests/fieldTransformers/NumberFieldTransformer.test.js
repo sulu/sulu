@@ -12,7 +12,7 @@ const mockUserStoreUser = jest.fn().mockReturnValue({
     locale: jest.fn(),
 });
 
-jest.mock('../../../../stores/UserStore', () => {
+jest.mock('../../../../stores/userStore', () => {
     return new class {
         get user() {
             return mockUserStoreUser();

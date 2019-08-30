@@ -1,5 +1,5 @@
 // @flow
-import userStore from './UserStore';
+import userStore from './userStore';
 import logoutOnUnauthorizedResponse from './logoutOnUnauthorizedResponse';
 
 export default userStore;

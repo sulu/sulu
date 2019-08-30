@@ -44,7 +44,7 @@ const mockUserStoreUser = jest.fn();
 const mockUserStoreGetPersistentSetting = jest.fn().mockReturnValue(0);
 const mockUserStoreSetPersistentSetting = jest.fn();
 
-jest.mock('../../../stores/UserStore', () => {
+jest.mock('../../../stores/userStore', () => {
     return new class {
         get loggedIn() {
             return mockUserStoreLoggedIn();

@@ -2,7 +2,7 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
-import userStore from 'sulu-admin-bundle/stores/UserStore';
+import userStore from 'sulu-admin-bundle/stores/userStore';
 import {observable} from 'mobx';
 import {
     convertDisplayOptionsFromParams,

@@ -8,7 +8,7 @@ import ListStore from '../../../containers/List/stores/ListStore';
 import MultiAutoComplete from '../../../containers/MultiAutoComplete';
 import {translate} from '../../../utils/Translator';
 import MultiSelectionComponent from '../../MultiSelection';
-import userStore from '../../../stores/UserStore';
+import userStore from '../../../stores/userStore';
 import type {FieldTypeProps} from '../../../types';
 import selectionStyles from './selection.scss';
 

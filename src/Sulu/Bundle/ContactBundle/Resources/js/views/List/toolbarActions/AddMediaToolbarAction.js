@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {action, observable} from 'mobx';
-import userStore from 'sulu-admin-bundle/stores/UserStore';
+import userStore from 'sulu-admin-bundle/stores/userStore';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import {AbstractListToolbarAction} from 'sulu-admin-bundle/views';

@@ -10,7 +10,7 @@ import type {
     SortOrder,
     StructureStrategyInterface,
 } from '../types';
-import userStore from '../../../stores/UserStore';
+import userStore from '../../../stores/userStore';
 import metadataStore from './metadataStore';
 
 const USER_SETTING_PREFIX = 'sulu_admin.list_store';

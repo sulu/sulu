@@ -1,7 +1,7 @@
 // @flow
 import {action, observable} from 'mobx';
 import moment from 'moment';
-import userStore from '../../stores/UserStore';
+import userStore from '../../stores/userStore';
 import Config from '../Config';
 import {setTranslations} from '../../utils/Translator';
 import Requester from '../Requester';

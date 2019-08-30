@@ -1,8 +1,8 @@
 // @flow
 import logoutOnUnauthorizedResponse from '../logoutOnUnauthorizedResponse';
-import userStore from '../UserStore';
+import userStore from '../userStore';
 
-jest.mock('../UserStore', () => ({
+jest.mock('../userStore', () => ({
     setLoggedIn: jest.fn(),
 }));
 

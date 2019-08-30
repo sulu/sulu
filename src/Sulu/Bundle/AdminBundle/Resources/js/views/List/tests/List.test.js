@@ -19,7 +19,7 @@ jest.mock('../../../containers/List/stores/metadataStore', () => ({
     getSchema: jest.fn().mockReturnValue({}),
 }));
 
-jest.mock('../../../stores/UserStore', () => ({
+jest.mock('../../../stores/userStore', () => ({
     setPersistentSetting: jest.fn(),
     getPersistentSetting: jest.fn(),
 }));

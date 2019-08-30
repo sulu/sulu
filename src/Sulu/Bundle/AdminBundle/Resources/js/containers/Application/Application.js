@@ -9,7 +9,7 @@ import Backdrop from '../../components/Backdrop';
 import Loader from '../../components/Loader';
 import initializer from '../../services/initializer';
 import Router from '../../services/Router';
-import userStore from '../../stores/UserStore';
+import userStore from '../../stores/userStore';
 import Login from '../Login';
 import ProfileFormOverlay from '../ProfileFormOverlay';
 import Sidebar, {sidebarStore} from '../Sidebar';

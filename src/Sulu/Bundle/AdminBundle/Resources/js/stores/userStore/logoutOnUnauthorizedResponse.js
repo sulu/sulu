@@ -1,6 +1,6 @@
 // @flow
 import type {HandleResponseHook} from '../../services/Requester/types';
-import userStore from './UserStore';
+import userStore from './userStore';
 
 const logoutOnUnauthorizedResponse: HandleResponseHook = function(response: Response) {
     if (response.status === 401) {

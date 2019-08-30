@@ -2,7 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {SingleSelection as SingleSelectionComponent} from 'sulu-admin-bundle/containers';
-import userStore from 'sulu-admin-bundle/stores/UserStore';
+import userStore from 'sulu-admin-bundle/stores/userStore';
 import type {RuleTypeProps} from '../types';
 
 export default class SingleSelection extends React.Component<RuleTypeProps> {

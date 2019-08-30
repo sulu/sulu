@@ -15,7 +15,7 @@ jest.mock('../../../../services/ResourceRequester', () => ({
     post: jest.fn(),
 }));
 
-jest.mock('../../../../stores/UserStore', () => ({
+jest.mock('../../../../stores/userStore', () => ({
     getPersistentSetting: jest.fn(),
     setPersistentSetting: jest.fn(),
 }));

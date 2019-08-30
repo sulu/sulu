@@ -10,7 +10,7 @@ import Requester from './services/Requester';
 import Router, {routeRegistry} from './services/Router';
 import Application from './containers/Application';
 import {updateRouterAttributesFromView, viewRegistry} from './containers/ViewRenderer';
-import userStore, {logoutOnUnauthorizedResponse} from './stores/UserStore';
+import userStore, {logoutOnUnauthorizedResponse} from './stores/userStore';
 import {Config, resourceRouteRegistry} from './services';
 import initializer from './services/initializer';
 import ResourceTabs from './views/ResourceTabs';
