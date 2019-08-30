@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\CategoryBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
@@ -54,22 +55,15 @@ class CategoryAdmin extends Admin
         $this->localizationManager = $localizationManager;
     }
 
-    public function getNavigation(): NavigationItem
+    public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
-        $rootNavigationItem = $this->getNavigationItemRoot();
-        $settings = $this->getNavigationItemSettings();
-
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $categoryItem = new NavigationItem('sulu_category.categories', $settings);
+            $categoryItem = new NavigationItem('sulu_category.categories');
             $categoryItem->setPosition(20);
             $categoryItem->setMainRoute(static::LIST_ROUTE);
-        }
 
-        if ($settings->hasChildren()) {
-            $rootNavigationItem->addChild($settings);
+            $navigationItemCollection->get(Admin::SETTINGS_NAVIGATION_ITEM)->addChild($categoryItem);
         }
-
-        return $rootNavigationItem;
     }
 
     public function configureRoutes(RouteCollection $routeCollection): void

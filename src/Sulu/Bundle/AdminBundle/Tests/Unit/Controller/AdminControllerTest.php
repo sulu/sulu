@@ -277,8 +277,8 @@ class AdminControllerTest extends TestCase
                         && $data['sulu_admin']['fieldTypeOptions'] === $fieldTypeOptions
                         && $data['sulu_admin']['smartContent'] === $dataProviders
                         && $data['sulu_admin']['routes'] === $routes
-                        && $data['sulu_admin']['navigation'][0]['title'] === 'navigation_item1'
-                        && $data['sulu_admin']['navigation'][1]['title'] === 'navigation_item2'
+                        && 'navigation_item1' === $data['sulu_admin']['navigation'][0]['title']
+                        && 'navigation_item2' === $data['sulu_admin']['navigation'][1]['title']
                         && $data['sulu_admin']['resources'] === $this->resources
                         && $data['admin1'] === $admin1Config
                         && $data['admin2'] === $admin2Config;

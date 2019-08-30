@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Admin;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
@@ -62,19 +63,11 @@ class ContactAdmin extends Admin
         $this->managerRegistry = $managerRegistry;
     }
 
-    public function getNavigationItemContacts(): NavigationItem
+    public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
         $contacts = new NavigationItem('sulu_contact.contacts');
         $contacts->setPosition(40);
         $contacts->setIcon('su-user');
-
-        return $contacts;
-    }
-
-    public function getNavigation(): NavigationItem
-    {
-        $rootNavigationItem = $this->getNavigationItemRoot();
-        $contacts = $this->getNavigationItemContacts();
 
         if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $people = new NavigationItem('sulu_contact.people');
@@ -92,11 +85,7 @@ class ContactAdmin extends Admin
             $contacts->addChild($companies);
         }
 
-        if ($contacts->hasChildren()) {
-            $rootNavigationItem->addChild($contacts);
-        }
-
-        return $rootNavigationItem;
+        $navigationItemCollection->add($contacts);
     }
 
     public function configureRoutes(RouteCollection $routeCollection): void

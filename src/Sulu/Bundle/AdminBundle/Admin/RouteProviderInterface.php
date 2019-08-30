@@ -11,12 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin;
 
-use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderInterface;
-
 interface RouteProviderInterface
 {
-    /**
-     * @return RouteBuilderInterface[]
-     */
     public function configureRoutes(RouteCollection $routeCollection): void;
 }

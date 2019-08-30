@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
@@ -74,23 +75,15 @@ class SecurityAdmin extends Admin
         $this->resources = $resources;
     }
 
-    public function getNavigation(): NavigationItem
+    public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
-        $rootNavigationItem = $this->getNavigationItemRoot();
-
-        $settings = Admin::getNavigationItemSettings();
-
         if ($this->securityChecker->hasPermission(static::ROLE_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $roles = new NavigationItem('sulu_security.roles', $settings);
+            $roles = new NavigationItem('sulu_security.roles');
             $roles->setPosition(10);
             $roles->setMainRoute(static::LIST_ROUTE);
-        }
 
-        if ($settings->hasChildren()) {
-            $rootNavigationItem->addChild($settings);
+            $navigationItemCollection->get(Admin::SETTINGS_NAVIGATION_ITEM)->addChild($roles);
         }
-
-        return $rootNavigationItem;
     }
 
     public function getSecurityContexts()

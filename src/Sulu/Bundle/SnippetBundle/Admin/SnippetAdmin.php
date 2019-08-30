@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SnippetBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
@@ -78,20 +79,16 @@ class SnippetAdmin extends Admin
         $this->defaultEnabled = $defaultEnabled;
     }
 
-    public function getNavigation(): NavigationItem
+    public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
-        $rootNavigationItem = $this->getNavigationItemRoot();
-
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $snippet = new NavigationItem('sulu_snippet.snippets');
             $snippet->setPosition(20);
             $snippet->setIcon('su-snippet');
             $snippet->setMainRoute(static::LIST_ROUTE);
 
-            $rootNavigationItem->addChild($snippet);
+            $navigationItemCollection->add($snippet);
         }
-
-        return $rootNavigationItem;
     }
 
     /**

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Admin;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\NavigationRegistry;
@@ -73,26 +74,24 @@ class NavigationRegistryTest extends TestCase
 
     public function testGetNavigation()
     {
-        $rootItem1 = new NavigationItem('Root');
+        $navigationItem1 = new NavigationItem('navigation_1');
+        $navigationItem1->setMainRoute('route1');
 
-        $navigation1 = new NavigationItem('navigation_1');
-        $navigation1->setMainRoute('route1');
+        $this->admin1->configureNavigationItems(Argument::any())->will(function($arguments) use ($navigationItem1) {
+            $arguments[0]->add($navigationItem1);
+        });
 
-        $rootItem1->addChild($navigation1);
-        $this->admin1->getNavigation()->willReturn($rootItem1);
+        $navigationItem2 = new NavigationItem('navigation_2');
+        $navigationChildItem1 = new NavigationItem('navigation_2_child_1');
+        $navigationChildItem1->setMainRoute('route2_child1');
+        $navigationChildItem2 = new NavigationItem('navigation_2_child_2');
+        $navigationChildItem2->setMainRoute('route2_child2');
+        $navigationItem2->addChild($navigationChildItem1);
+        $navigationItem2->addChild($navigationChildItem2);
 
-        $rootItem2 = new NavigationItem('Root');
-
-        $navigation2 = new NavigationItem('navigation_2');
-        $navigationChild1 = new NavigationItem('navigation_2_child_1');
-        $navigationChild1->setMainRoute('route2_child1');
-        $navigationChild2 = new NavigationItem('navigation_2_child_2');
-        $navigationChild2->setMainRoute('route2_child2');
-        $navigation2->addChild($navigationChild1);
-        $navigation2->addChild($navigationChild2);
-
-        $rootItem2->addChild($navigation2);
-        $this->admin2->getNavigation()->willReturn($rootItem2);
+        $this->admin2->configureNavigationItems(Argument::any())->will(function($arguments) use ($navigationItem2) {
+            $arguments[0]->add($navigationItem2);
+        });
 
         $route1 = $this->prophesize(Route::class);
         $route1->getPath()->willReturn('/route1');
@@ -159,14 +158,16 @@ class NavigationRegistryTest extends TestCase
 
     public function testGetNavigationMemoryCache()
     {
-        $rootItem1 = new NavigationItem('Root');
+        $navigationItem1 = new NavigationItem('navigation_1');
+        $navigationItem1->setMainRoute('route1');
 
-        $navigation1 = new NavigationItem('navigation_1');
-        $navigation1->setMainRoute('route1');
+        $this->admin1->configureNavigationItems(Argument::any())->will(function($arguments) use ($navigationItem1) {
+            $arguments[0]->add($navigationItem1);
+        })->shouldBeCalledTimes(1);
 
-        $rootItem1->addChild($navigation1);
-        $this->admin1->getNavigation()->willReturn($rootItem1)->shouldBeCalledTimes(1);
-        $this->admin2->getNavigation()->willReturn($rootItem1)->shouldBeCalledTimes(1);
+        $this->admin2->configureNavigationItems(Argument::any())->will(function($arguments) use ($navigationItem1) {
+            $arguments[0]->add($navigationItem1);
+        })->shouldBeCalledTimes(1);
 
         $route1 = $this->prophesize(Route::class);
         $route1->getPath()->willReturn('/route1');
@@ -183,14 +184,8 @@ class NavigationRegistryTest extends TestCase
 
     public function testGetNavigationWithChildren()
     {
-        $rootItem = new NavigationItem('Root');
-        $this->admin1->getNavigation()->willReturn($rootItem);
-        $this->admin2->getNavigation()->willReturn(new NavigationItem('Root'));
-
         $navigationItem1 = new NavigationItem('navigation_1');
         $navigationItem1->setMainRoute('route1');
-
-        $rootItem->addChild($navigationItem1);
 
         $route1 = $this->prophesize(Route::class);
         $route1->getPath()->willReturn('/route1');
@@ -204,6 +199,10 @@ class NavigationRegistryTest extends TestCase
         $route21->getPath()->willReturn('/route2/route1');
         $route21->getName()->willReturn('route2_1');
 
+        $this->admin1->configureNavigationItems(Argument::any())->will(function($arguments) use ($navigationItem1) {
+            $arguments[0]->add($navigationItem1);
+        });
+
         $this->routeRegistry->getRoutes()->willReturn([$route1, $route11, $route21]);
         $this->routeRegistry->findRouteByName('route1')->willReturn($route1);
 
@@ -214,18 +213,17 @@ class NavigationRegistryTest extends TestCase
 
     public function testGetNavigationWithChildrenSlashOnly()
     {
-        $rootItem = new NavigationItem('Root');
-        $this->admin1->getNavigation()->willReturn($rootItem);
-        $this->admin2->getNavigation()->willReturn(new NavigationItem('Root'));
-
         $navigationItem1 = new NavigationItem('navigation_1');
         $navigationItem1->setMainRoute('route1');
 
         $navigationItem2 = new NavigationItem('navigation_2');
         $navigationItem2->setMainRoute('route2');
 
-        $rootItem->addChild($navigationItem1);
-        $rootItem->addChild($navigationItem2);
+        $this->admin1->configureNavigationItems(Argument::any())
+             ->will(function($arguments) use ($navigationItem1, $navigationItem2) {
+                 $arguments[0]->add($navigationItem1);
+                 $arguments[0]->add($navigationItem2);
+             });
 
         $route1 = $this->prophesize(Route::class);
         $route1->getPath()->willReturn('/');

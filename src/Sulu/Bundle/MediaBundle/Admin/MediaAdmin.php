@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
@@ -67,10 +68,8 @@ class MediaAdmin extends Admin
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function getNavigation(): NavigationItem
+    public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
-        $rootNavigationItem = $this->getNavigationItemRoot();
-
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $media = new NavigationItem('sulu_media.media');
             $media->setPosition(30);
@@ -81,10 +80,8 @@ class MediaAdmin extends Admin
             $media->addChildRoute(static::EDIT_FORM_FORMATS_ROUTE);
             $media->addChildRoute(static::EDIT_FORM_HISTORY_ROUTE);
 
-            $rootNavigationItem->addChild($media);
+            $navigationItemCollection->add($media);
         }
-
-        return $rootNavigationItem;
     }
 
     /**

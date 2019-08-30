@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AudienceTargetingBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
@@ -58,24 +59,15 @@ class AudienceTargetingAdmin extends Admin
         $this->securityChecker = $securityChecker;
     }
 
-    public function getNavigation(): NavigationItem
+    public function configureNavigationItem(NavigationItemCollection $navigationItemCollection): void
     {
-        $rootNavigationItem = $this->getNavigationItemRoot();
-
-        $settings = Admin::getNavigationItemSettings();
-
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $targetGroups = new NavigationItem('sulu_audience_targeting.target_groups');
             $targetGroups->setPosition(10);
             $targetGroups->setMainRoute(static::LIST_ROUTE);
-            $settings->addChild($targetGroups);
-        }
 
-        if ($settings->hasChildren()) {
-            $rootNavigationItem->addChild($settings);
+            $navigationItemCollection->get(Admin::SETTINGS_NAVIGATION_ITEM)->addChild($targetGroups);
         }
-
-        return $rootNavigationItem;
     }
 
     public function configureRoutes(RouteCollection $routeCollection): void

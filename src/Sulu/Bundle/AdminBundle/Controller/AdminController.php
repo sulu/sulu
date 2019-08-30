@@ -229,7 +229,7 @@ class AdminController
                 'internalLinkTypes' => $this->linkProviderPool->getConfiguration(),
                 'navigation' => array_map(function(NavigationItem $navigationItem) {
                     return $navigationItem->toArray();
-                }, $this->navigationRegistry->getNavigationItems()),
+                }, array_values($this->navigationRegistry->getNavigationItems())),
                 'routes' => $this->routeRegistry->getRoutes(),
                 'resources' => $this->resources,
                 'smartContent' => array_map(function(DataProviderInterface $dataProvider) {

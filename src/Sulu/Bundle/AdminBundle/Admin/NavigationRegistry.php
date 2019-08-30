@@ -17,9 +17,9 @@ use Symfony\Component\Translation\TranslatorInterface;
 class NavigationRegistry
 {
     /**
-     * @var NavigationItem
+     * @var NavigationItem[]
      */
-    private $navigationItem;
+    private $navigationItems;
 
     /**
      * @var TranslatorInterface
@@ -48,36 +48,50 @@ class NavigationRegistry
      */
     public function getNavigationItems(): array
     {
-        if (!$this->navigationItem) {
+        if (!$this->navigationItems) {
             $this->loadNavigationItems();
         }
 
-        return $this->navigationItem->getChildren();
+        return $this->navigationItems;
     }
 
     private function loadNavigationItems(): void
     {
-        /** @var NavigationItem $navigation */
-        $navigationItem = null;
+        $navigationItemCollection = new NavigationItemCollection();
+
+        $settingsNavigationItem = new NavigationItem(Admin::SETTINGS_NAVIGATION_ITEM);
+        $settingsNavigationItem->setPosition(1000);
+        $settingsNavigationItem->setIcon('su-cog');
+
+        $navigationItemCollection->add($settingsNavigationItem);
+
         foreach ($this->adminPool->getAdmins() as $admin) {
             if (!$admin instanceof NavigationProviderInterface) {
                 continue;
             }
 
-            if (null === $navigationItem) {
-                $navigationItem = $admin->getNavigation();
+            $admin->configureNavigationItems($navigationItemCollection);
+        }
 
-                continue;
+        $navigationItems = array_filter($navigationItemCollection->all(), function($navigationItem) {
+            return $navigationItem->getChildren() || $navigationItem->getMainRoute();
+        });
+
+        foreach ($navigationItems as $navigationItem) {
+            $this->processNavigationItem($navigationItem);
+        }
+
+        usort(
+            $navigationItems,
+            function(NavigationItem $a, NavigationItem $b) {
+                $aPosition = $a->getPosition() ?? PHP_INT_MAX;
+                $bPosition = $b->getPosition() ?? PHP_INT_MAX;
+
+                return $aPosition - $bPosition;
             }
+        );
 
-            $navigationItem = $navigationItem->merge($admin->getNavigation());
-        }
-
-        foreach ($navigationItem->getChildren() as $child) {
-            $this->processNavigationItem($child);
-        }
-
-        $this->navigationItem = $navigationItem;
+        $this->navigationItems = $navigationItems;
     }
 
     /**

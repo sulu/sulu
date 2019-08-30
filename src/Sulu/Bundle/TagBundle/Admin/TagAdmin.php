@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\TagBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
@@ -46,23 +47,15 @@ class TagAdmin extends Admin
         $this->securityChecker = $securityChecker;
     }
 
-    public function getNavigation(): NavigationItem
+    public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
-        $rootNavigationItem = $this->getNavigationItemRoot();
-
-        $settings = Admin::getNavigationItemSettings();
-
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $roles = new NavigationItem('sulu_tag.tags', $settings);
-            $roles->setPosition(30);
-            $roles->setMainRoute(static::LIST_ROUTE);
-        }
+            $tags = new NavigationItem('sulu_tag.tags');
+            $tags->setPosition(30);
+            $tags->setMainRoute(static::LIST_ROUTE);
 
-        if ($settings->hasChildren()) {
-            $rootNavigationItem->addChild($settings);
+            $navigationItemCollection->get(Admin::SETTINGS_NAVIGATION_ITEM)->addChild($tags);
         }
-
-        return $rootNavigationItem;
     }
 
     public function configureRoutes(RouteCollection $routeCollection): void

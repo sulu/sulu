@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
@@ -86,20 +87,16 @@ class PageAdmin extends Admin
         $this->versioningEnabled = $versioningEnabled;
     }
 
-    public function getNavigation(): NavigationItem
+    public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
-        $rootNavigationItem = $this->getNavigationItemRoot();
-
         if ($this->hasSomeWebspacePermission()) {
             $webspaceItem = new NavigationItem('sulu_page.webspaces');
             $webspaceItem->setPosition(10);
             $webspaceItem->setIcon('su-webspace');
             $webspaceItem->setMainRoute(static::WEBSPACE_TABS_ROUTE);
 
-            $rootNavigationItem->addChild($webspaceItem);
+            $navigationItemCollection->add($webspaceItem);
         }
-
-        return $rootNavigationItem;
     }
 
     /**

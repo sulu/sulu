@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SearchBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
@@ -29,18 +30,14 @@ class SearchAdmin extends Admin
         $this->routeBuilderFactory = $routeBuilderFactory;
     }
 
-    public function getNavigation(): NavigationItem
+    public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
-        $rootNavigationItem = $this->getNavigationItemRoot();
-
         $search = new NavigationItem('sulu_search.search');
         $search->setPosition(0);
         $search->setIcon('su-search');
         $search->setMainRoute(static::SEARCH_ROUTE);
 
-        $rootNavigationItem->addChild($search);
-
-        return $rootNavigationItem;
+        $navigationItemCollection->add($search);
     }
 
     public function configureRoutes(RouteCollection $routeCollection): void
