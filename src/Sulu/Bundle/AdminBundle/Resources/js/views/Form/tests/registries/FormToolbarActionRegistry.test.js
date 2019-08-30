@@ -1,5 +1,5 @@
 // @flow
-import formToolbarActionRegistry from '../../registries/FormToolbarActionRegistry';
+import formToolbarActionRegistry from '../../registries/formToolbarActionRegistry';
 import AbstractFormToolbarAction from '../../toolbarActions/AbstractFormToolbarAction';
 
 jest.mock('../../../../services/Initializer', () => jest.fn());

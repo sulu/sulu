@@ -23,7 +23,7 @@ jest.mock('../../../containers/Form/registries/FieldRegistry', () => ({
     getOptions: jest.fn().mockReturnValue({}),
 }));
 
-jest.mock('../registries/FormToolbarActionRegistry', () => ({
+jest.mock('../registries/formToolbarActionRegistry', () => ({
     get: jest.fn(),
 }));
 
@@ -248,7 +248,7 @@ test('Should instantiate the ResourceStore with the idQueryParameter if given', 
 });
 
 test('Throw error if options are not passed correctly', () => {
-    const formToolbarActionRegistry = require('../registries/FormToolbarActionRegistry');
+    const formToolbarActionRegistry = require('../registries/formToolbarActionRegistry');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippet', 1);
@@ -301,7 +301,7 @@ test('Throw error if options are not passed correctly', () => {
 });
 
 test('Should add items defined in ToolbarActions to Toolbar with options', () => {
-    const formToolbarActionRegistry = require('../registries/FormToolbarActionRegistry');
+    const formToolbarActionRegistry = require('../registries/formToolbarActionRegistry');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippet', 1);
@@ -511,7 +511,7 @@ test('Should add PublishIndicator if publish status is available showing publish
 });
 
 test('Should set and update locales defined in ToolbarActions', () => {
-    const formToolbarActionRegistry = require('../registries/FormToolbarActionRegistry');
+    const formToolbarActionRegistry = require('../registries/formToolbarActionRegistry');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippet', 1);
