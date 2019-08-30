@@ -4,7 +4,7 @@ import {fieldRegistry} from 'sulu-admin-bundle/containers';
 import {formToolbarActionRegistry} from 'sulu-admin-bundle/views';
 import {Permissions, RoleAssignments, RolePermissions} from './containers/Form';
 import RolePermissionsContainer from './containers/RolePermissions';
-import securityContextStore from './stores/SecurityContextStore';
+import securityContextStore from './stores/securityContextStore';
 import EnableUserToolbarAction from './views/Form/toolbarActions/EnableUserToolbarAction';
 
 fieldRegistry.add('permissions', Permissions);

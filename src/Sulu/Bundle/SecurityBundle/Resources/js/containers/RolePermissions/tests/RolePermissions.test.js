@@ -2,7 +2,7 @@
 import React from 'react';
 import {mount, shallow} from 'enzyme';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
-import securityContextStore from '../../../stores/SecurityContextStore';
+import securityContextStore from '../../../stores/securityContextStore';
 import RolePermissions from '../RolePermissions';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
@@ -13,7 +13,7 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
     get: jest.fn(),
 }));
 
-jest.mock('../../../stores/SecurityContextStore', () => ({
+jest.mock('../../../stores/securityContextStore', () => ({
     loadAvailableActions: jest.fn(),
 }));
 

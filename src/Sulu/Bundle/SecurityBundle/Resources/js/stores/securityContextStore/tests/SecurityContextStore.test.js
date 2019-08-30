@@ -1,6 +1,6 @@
 // @flow
 import {Requester} from 'sulu-admin-bundle/services';
-import securityContextStore from '../SecurityContextStore';
+import securityContextStore from '../securityContextStore';
 
 jest.mock('sulu-admin-bundle/services/Requester', () => ({
     get: jest.fn(),

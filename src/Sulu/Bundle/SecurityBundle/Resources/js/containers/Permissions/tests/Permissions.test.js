@@ -6,13 +6,13 @@ import {ResourceMultiSelect} from 'sulu-admin-bundle/containers';
 import {userStore} from 'sulu-admin-bundle/stores';
 import Permissions from '../Permissions';
 import type {ContextPermission} from '../types';
-import type {SecurityContextGroups} from '../../../stores/SecurityContextStore/types';
-import securityContextStore from '../../../stores/SecurityContextStore/SecurityContextStore';
+import type {SecurityContextGroups} from '../../../stores/securityContextStore/types';
+import securityContextStore from '../../../stores/securityContextStore/securityContextStore';
 import PermissionMatrix from '../PermissionMatrix';
 
 jest.mock('sulu-admin-bundle/stores/ResourceListStore', () => jest.fn());
 
-jest.mock('../../../stores/SecurityContextStore/SecurityContextStore', () => ({
+jest.mock('../../../stores/securityContextStore/securityContextStore', () => ({
     loadSecurityContextGroups: jest.fn(() => Promise.resolve()),
 }));
 
