@@ -18,7 +18,7 @@ import TableToolbarPlugin from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import {translate} from '../../utils/Translator';
 import ExternalLinkPlugin from './plugins/ExternalLinkPlugin';
 import InternalLinkPlugin from './plugins/InternalLinkPlugin';
-import configRegistry from './registries/ConfigRegistry';
+import configRegistry from './registries/configRegistry';
 import pluginRegistry from './registries/PluginRegistry';
 import './ckeditor5.scss';
 

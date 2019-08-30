@@ -1,5 +1,5 @@
 // @flow
-import configRegistry from '../../registries/ConfigRegistry';
+import configRegistry from '../../registries/configRegistry';
 
 beforeEach(() => {
     configRegistry.clear();
