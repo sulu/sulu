@@ -1,5 +1,5 @@
 // @flow
-import navigationRegistry from '../../registries/NavigationRegistry';
+import navigationRegistry from '../../registries/navigationRegistry';
 
 beforeEach(() => {
     navigationRegistry.clear();
