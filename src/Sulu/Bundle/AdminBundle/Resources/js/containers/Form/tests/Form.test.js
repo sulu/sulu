@@ -6,7 +6,7 @@ import Form from '../Form';
 import Router from '../../../services/Router';
 import ResourceStore from '../../../stores/ResourceStore';
 import ResourceFormStore from '../stores/ResourceFormStore';
-import metadataStore from '../stores/MetadataStore';
+import metadataStore from '../stores/metadataStore';
 
 jest.mock('../../../services/Router', () => jest.fn());
 
@@ -51,7 +51,7 @@ jest.mock('../../../stores/ResourceStore', () => jest.fn(function(resourceKey, i
     this.loading = false;
 }));
 
-jest.mock('../stores/MetadataStore', () => ({
+jest.mock('../stores/metadataStore', () => ({
     getSchema: jest.fn(),
 }));
 

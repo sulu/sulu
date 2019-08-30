@@ -11,7 +11,7 @@ import type {
     StructureStrategyInterface,
 } from '../types';
 import userStore from '../../../stores/UserStore';
-import metadataStore from './MetadataStore';
+import metadataStore from './metadataStore';
 
 const USER_SETTING_PREFIX = 'sulu_admin.list_store';
 

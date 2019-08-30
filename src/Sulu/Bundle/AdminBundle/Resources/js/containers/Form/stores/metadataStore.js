@@ -1,5 +1,5 @@
 // @flow
-import metadataStore from '../../../stores/MetadataStore';
+import metadataStore from '../../../stores/metadataStore';
 import type {RawSchema, SchemaTypes} from '../types';
 
 const FORM_TYPE = 'form';

@@ -29,7 +29,7 @@ jest.mock('sulu-admin-bundle/stores/UserStore', () => ({
     setFullName: jest.fn(),
 }));
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/MetadataStore', () => ({
+jest.mock('sulu-admin-bundle/containers/Form/stores/metadataStore', () => ({
     getSchema: jest.fn().mockImplementation(() => Promise.resolve({})),
     getJsonSchema: jest.fn().mockImplementation(()=> Promise.resolve({})),
 }));

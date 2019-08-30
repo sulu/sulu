@@ -1,5 +1,5 @@
 // @flow
-import metadataStore from '../../../stores/MetadataStore';
+import metadataStore from '../../../stores/metadataStore';
 import type {Schema} from '../types';
 
 const LIST_TYPE = 'list';

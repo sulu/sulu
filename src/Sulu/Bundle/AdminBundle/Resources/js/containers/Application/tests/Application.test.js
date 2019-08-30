@@ -10,7 +10,7 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester/ResourceRequester', () =
     get: jest.fn(),
 }));
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/MetadataStore', () => ({
+jest.mock('sulu-admin-bundle/containers/Form/stores/metadataStore', () => ({
     getSchema: jest.fn(),
     getJsonSchema: jest.fn(),
 }));

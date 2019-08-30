@@ -8,7 +8,7 @@ import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import MediaVersionUploadComponent from '../../../MediaVersionUpload/MediaVersionUpload';
 import MediaVersionUpload from '../../fields/MediaVersionUpload';
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/MetadataStore', () => ({
+jest.mock('sulu-admin-bundle/containers/Form/stores/metadataStore', () => ({
     getSchema: jest.fn().mockReturnValue(Promise.resolve({})),
     getJsonSchema: jest.fn().mockReturnValue(Promise.resolve({})),
     getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve([])),

@@ -15,7 +15,7 @@ jest.mock('../../../services/ResourceRequester/registries/resourceRouteRegistry'
 
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 
-jest.mock('../../../containers/List/stores/MetadataStore', () => ({
+jest.mock('../../../containers/List/stores/metadataStore', () => ({
     getSchema: jest.fn().mockReturnValue({}),
 }));
 

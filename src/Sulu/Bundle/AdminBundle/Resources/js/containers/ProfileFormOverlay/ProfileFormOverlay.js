@@ -9,7 +9,7 @@ import ResourceRequester from '../../services/ResourceRequester';
 import userStore from '../../stores/UserStore';
 import {translate} from '../../utils/Translator';
 import MemoryFormStore from '../Form/stores/MemoryFormStore';
-import MetadataStore from '../Form/stores/MetadataStore';
+import metadataStore from '../Form/stores/metadataStore';
 import type {RawSchema} from '../Form/types';
 import profileFormOverlayStyles from './profileFormOverlay.scss';
 
@@ -32,8 +32,8 @@ class ProfileFormOverlay extends React.Component<Props> {
         super(props);
 
         Promise.all([
-            MetadataStore.getSchema(FORM_KEY),
-            MetadataStore.getJsonSchema(FORM_KEY),
+            metadataStore.getSchema(FORM_KEY),
+            metadataStore.getJsonSchema(FORM_KEY),
             ResourceRequester.get(RESOURCE_KEY),
         ]).then(this.handleResponse);
     }

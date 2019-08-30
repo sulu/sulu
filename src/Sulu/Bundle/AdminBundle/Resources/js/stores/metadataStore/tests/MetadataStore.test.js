@@ -1,6 +1,6 @@
 // @flow
 import SymfonyRouting from 'fos-jsrouting/router';
-import metadataStore from '../MetadataStore';
+import metadataStore from '../metadataStore';
 
 test('Load metadata for given type and key', () => {
     const snippetMetadata = {

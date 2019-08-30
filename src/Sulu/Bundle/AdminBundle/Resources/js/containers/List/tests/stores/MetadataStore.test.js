@@ -1,8 +1,8 @@
 // @flow
-import metadataStore from '../../stores/MetadataStore';
-import generalMetadataStore from '../../../../stores/MetadataStore';
+import metadataStore from '../../stores/metadataStore';
+import generalMetadataStore from '../../../../stores/metadataStore';
 
-jest.mock('../../../../stores/MetadataStore', () => ({
+jest.mock('../../../../stores/metadataStore', () => ({
     loadMetadata: jest.fn(),
 }));
 
