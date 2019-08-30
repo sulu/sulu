@@ -1,6 +1,6 @@
 // @flow
 import {ResourceRequester} from 'sulu-admin-bundle/services';
-import indexStore from '../../stores/IndexStore';
+import indexStore from '../../stores/indexStore';
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
     getList: jest.fn().mockReturnValue({

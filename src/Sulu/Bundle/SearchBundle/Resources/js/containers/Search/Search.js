@@ -7,7 +7,7 @@ import {Router} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import jsonpointer from 'json-pointer';
 import searchStore from './stores/searchStore';
-import indexStore from './stores/IndexStore';
+import indexStore from './stores/indexStore';
 import SearchField from './SearchField';
 import SearchResult from './SearchResult';
 import type {Index} from './types';

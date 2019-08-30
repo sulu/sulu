@@ -3,7 +3,7 @@ import React from 'react';
 import {mount} from 'enzyme';
 import {Router} from 'sulu-admin-bundle/services';
 import Search from '../Search';
-import indexStore from '../stores/IndexStore';
+import indexStore from '../stores/indexStore';
 import searchStore from '../stores/searchStore';
 
 jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
@@ -14,7 +14,7 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../stores/IndexStore', () => ({
+jest.mock('../stores/indexStore', () => ({
     loadIndexes: jest.fn(),
 }));
 
