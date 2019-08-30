@@ -1,7 +1,7 @@
 // @flow
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import userStore from 'sulu-admin-bundle/stores/UserStore';
-import formatStore from '../FormatStore';
+import formatStore from '../formatStore';
 
 jest.mock('sulu-admin-bundle/stores/UserStore', () => ({
     user: undefined,

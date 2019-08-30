@@ -4,7 +4,7 @@ import {observable} from 'mobx';
 import React from 'react';
 import ResourceRequester from 'sulu-admin-bundle/services/ResourceRequester';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
-import FormatStore from '../../../stores/FormatStore';
+import FormatStore from '../../../stores/formatStore';
 import MediaVersionUpload from '../MediaVersionUpload';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({

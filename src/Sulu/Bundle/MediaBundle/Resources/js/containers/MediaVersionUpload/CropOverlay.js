@@ -7,7 +7,7 @@ import type {SelectionData} from 'sulu-admin-bundle/types';
 import {translate} from 'sulu-admin-bundle/utils';
 import MediaFormatStore from '../../stores/MediaFormatStore';
 import type {MediaFormat} from '../../stores/MediaFormatStore';
-import formatStore from '../../stores/FormatStore';
+import formatStore from '../../stores/formatStore';
 import cropOverlayStyles from './cropOverlay.scss';
 
 type Props = {|

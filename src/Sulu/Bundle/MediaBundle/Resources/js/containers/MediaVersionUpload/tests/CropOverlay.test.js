@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {shallow} from 'enzyme';
-import FormatStore from '../../../stores/FormatStore';
+import formatStore from '../../../stores/formatStore';
 import MediaFormatStore from '../../../stores/MediaFormatStore';
 import CropOverlay from '../CropOverlay';
 
@@ -9,7 +9,7 @@ jest.mock('sulu-admin-bundle/utils', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../../stores/FormatStore', () => ({
+jest.mock('../../../stores/formatStore', () => ({
     loadFormats: jest.fn().mockReturnValue(Promise.resolve([{key: 'test', scale: {}}])),
 }));
 
@@ -69,7 +69,7 @@ test('Reset format croppings when closing overlay', () => {
     ];
 
     const formatsPromise = Promise.resolve(formats);
-    FormatStore.loadFormats.mockReturnValue(formatsPromise);
+    formatStore.loadFormats.mockReturnValue(formatsPromise);
 
     const cropOverlay = shallow(
         <CropOverlay
@@ -155,7 +155,7 @@ test('Select first non-internal image format as default and change dimensions of
     ];
 
     const formatsPromise = Promise.resolve(formats);
-    FormatStore.loadFormats.mockReturnValue(formatsPromise);
+    formatStore.loadFormats.mockReturnValue(formatsPromise);
 
     const cropOverlay = shallow(
         <CropOverlay
@@ -259,7 +259,7 @@ test('Save changes of formats', () => {
     ];
 
     const formatsPromise = Promise.resolve(formats);
-    FormatStore.loadFormats.mockReturnValue(formatsPromise);
+    formatStore.loadFormats.mockReturnValue(formatsPromise);
 
     const cropOverlay = shallow(
         <CropOverlay
@@ -373,7 +373,7 @@ test('Show which formats have already been cropped', () => {
     ];
 
     const formatsPromise = Promise.resolve(formats);
-    FormatStore.loadFormats.mockReturnValue(formatsPromise);
+    formatStore.loadFormats.mockReturnValue(formatsPromise);
 
     const cropOverlay = shallow(
         <CropOverlay
