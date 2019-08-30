@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -66,33 +67,31 @@ class WebsiteAdmin extends Admin
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function getRoutes(): array
+    public function configureRoutes(RouteCollection $routeCollection): void
     {
         $listToolbarActions = [
             'sulu_admin.add',
             'sulu_admin.delete',
         ];
 
-        $routes = [];
-
         if ($this->hasSomeWebspaceAnalyticsPermission()) {
-            $routes[] = $this->routeBuilderFactory
-                ->createFormOverlayListRouteBuilder('sulu_webspace.analytics_list', '/analytics')
-                ->setResourceKey('analytics')
-                ->setListKey('analytics')
-                ->addListAdapters(['table_light'])
-                ->addRouterAttributesToListStore(['webspace'])
-                ->addRouterAttributesToFormStore(['webspace'])
-                ->disableSearching()
-                ->setFormKey('analytic_details')
-                ->setTabTitle('sulu_website.analytics')
-                ->setTabOrder(2048)
-                ->addToolbarActions($listToolbarActions)
-                ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
-                ->addRerenderAttribute('webspace');
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createFormOverlayListRouteBuilder('sulu_webspace.analytics_list', '/analytics')
+                    ->setResourceKey('analytics')
+                    ->setListKey('analytics')
+                    ->addListAdapters(['table_light'])
+                    ->addRouterAttributesToListStore(['webspace'])
+                    ->addRouterAttributesToFormStore(['webspace'])
+                    ->disableSearching()
+                    ->setFormKey('analytic_details')
+                    ->setTabTitle('sulu_website.analytics')
+                    ->setTabOrder(2048)
+                    ->addToolbarActions($listToolbarActions)
+                    ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
+                    ->addRerenderAttribute('webspace')
+            );
         }
-
-        return $routes;
     }
 
     /**

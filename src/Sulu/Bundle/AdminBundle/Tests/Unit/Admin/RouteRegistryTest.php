@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Admin;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
@@ -60,8 +61,15 @@ class RouteRegistryTest extends TestCase
         $routeBuilder2->setOption('value', 'test2');
         $routeBuilder3 = new RouteBuilder('test3', '/test3', 'test3');
         $routeBuilder3->setOption('value', 'test3');
-        $this->admin1->getRoutes()->willReturn([$routeBuilder1]);
-        $this->admin2->getRoutes()->willReturn([$routeBuilder2, $routeBuilder3]);
+        $this->admin1->configureRoutes(Argument::any())->will(function($arguments) use ($routeBuilder1) {
+            $arguments[0]->add($routeBuilder1);
+        });
+        $this->admin2->configureRoutes(Argument::any())->will(
+            function($arguments) use ($routeBuilder2, $routeBuilder3) {
+                $arguments[0]->add($routeBuilder2);
+                $arguments[0]->add($routeBuilder3);
+            }
+        );
 
         $route = $this->routeRegistry->findRouteByName('test2');
         $this->assertEquals($route, $routeBuilder2->getRoute());
@@ -70,9 +78,6 @@ class RouteRegistryTest extends TestCase
     public function testFindRouteByNameException()
     {
         $this->expectException(RouteNotFoundException::class);
-
-        $this->admin1->getRoutes()->willReturn([]);
-        $this->admin2->getRoutes()->willReturn([]);
 
         $this->routeRegistry->findRouteByName('not_existing');
     }
@@ -85,8 +90,18 @@ class RouteRegistryTest extends TestCase
         $routeBuilder2->setOption('value', 'test2');
         $routeBuilder3 = new RouteBuilder('test3', '/test3', 'test3');
         $routeBuilder3->setOption('value', 'test3');
-        $this->admin1->getRoutes()->willReturn([$routeBuilder1]);
-        $this->admin2->getRoutes()->willReturn([$routeBuilder2, $routeBuilder3]);
+
+        $this->admin1->configureRoutes(Argument::any())->will(
+            function($arguments) use ($routeBuilder1) {
+                $arguments[0]->add($routeBuilder1);
+            }
+        )->shouldBeCalledTimes(1);
+        $this->admin2->configureRoutes(Argument::any())->will(
+            function($arguments) use ($routeBuilder2, $routeBuilder3) {
+                $arguments[0]->add($routeBuilder2);
+                $arguments[0]->add($routeBuilder3);
+            }
+        )->shouldBeCalledTimes(1);
 
         $routes = $this->routeRegistry->getRoutes();
         $this->assertCount(3, $routes);
@@ -103,8 +118,17 @@ class RouteRegistryTest extends TestCase
         $routeBuilder2->setOption('value', 'test2');
         $routeBuilder3 = new RouteBuilder('test3', '/test3', 'test3');
         $routeBuilder3->setOption('value', 'test3');
-        $this->admin1->getRoutes()->willReturn([$routeBuilder1])->shouldBeCalledTimes(1);
-        $this->admin2->getRoutes()->willReturn([$routeBuilder2, $routeBuilder3])->shouldBeCalledTimes(1);
+        $this->admin1->configureRoutes(Argument::any())->will(
+            function($arguments) use ($routeBuilder1) {
+                $arguments[0]->add($routeBuilder1);
+            }
+        )->shouldBeCalledTimes(1);
+        $this->admin2->configureRoutes(Argument::any())->will(
+            function($arguments) use ($routeBuilder2, $routeBuilder3) {
+                $arguments[0]->add($routeBuilder2);
+                $arguments[0]->add($routeBuilder3);
+            }
+        )->shouldBeCalledTimes(1);
 
         $routes1 = $this->routeRegistry->getRoutes();
         $routes2 = $this->routeRegistry->getRoutes();
@@ -118,8 +142,9 @@ class RouteRegistryTest extends TestCase
 
         $routeBuilder = new RouteBuilder('test1', '/test1', 'test1');
         $routeBuilder->setParent('not-existing');
-        $this->admin1->getRoutes()->willReturn([$routeBuilder]);
-        $this->admin2->getRoutes()->willReturn([]);
+        $this->admin1->configureRoutes(Argument::any())->will(function($arguments) use ($routeBuilder) {
+            $arguments[0]->add($routeBuilder);
+        });
 
         $this->routeRegistry->getRoutes();
     }
@@ -139,8 +164,14 @@ class RouteRegistryTest extends TestCase
         $routeBuilder2 = new RouteBuilder('test2', '/test2', 'test2');
         $routeBuilder2->setOption('value', 'test');
 
-        $this->admin1->getRoutes()->willReturn([$routeBuilder1, $routeBuilder1_1, $routeBuilder1_1_1, $routeBuilder2]);
-        $this->admin2->getRoutes()->willReturn([]);
+        $this->admin1->configureRoutes(Argument::any())->will(
+            function($arguments) use ($routeBuilder1, $routeBuilder1_1, $routeBuilder1_1_1, $routeBuilder2) {
+                $arguments[0]->add($routeBuilder1);
+                $arguments[0]->add($routeBuilder1_1);
+                $arguments[0]->add($routeBuilder1_1_1);
+                $arguments[0]->add($routeBuilder2);
+            }
+        );
 
         $routes = $this->routeRegistry->getRoutes();
         $this->assertCount(4, $routes);

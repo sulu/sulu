@@ -66,9 +66,7 @@ class RouteRegistry
                 continue;
             }
 
-            foreach ($admin->getRoutes() as $routeBuilder) {
-                $routeCollection->add($routeBuilder);
-            }
+            $admin->configureRoutes($routeCollection);
         }
 
         $routes = array_map(function(RouteBuilderInterface $routeBuilder) {

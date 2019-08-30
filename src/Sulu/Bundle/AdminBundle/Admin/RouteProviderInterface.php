@@ -18,5 +18,5 @@ interface RouteProviderInterface
     /**
      * @return RouteBuilderInterface[]
      */
-    public function getRoutes(): array;
+    public function configureRoutes(RouteCollection $routeCollection): void;
 }

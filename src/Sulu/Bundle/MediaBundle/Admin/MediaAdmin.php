@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
@@ -90,7 +91,7 @@ class MediaAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    public function getRoutes(): array
+    public function configureRoutes(RouteCollection $routeCollection): void
     {
         $mediaLocales = $this->localizationManager->getLocales();
 
@@ -107,39 +108,54 @@ class MediaAdmin extends Admin
         $routes = [];
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $routes[] = $this->routeBuilderFactory
-                ->createRouteBuilder(static::MEDIA_OVERVIEW_ROUTE, '/collections/:locale/:id?', 'sulu_media.overview')
-                ->setOption('locales', $mediaLocales)
-                ->setOption('permissions', [
-                    'add' => $this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::ADD),
-                    'delete' => $this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::DELETE),
-                    'edit' => $this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT),
-                ])
-                ->setAttributeDefault('locale', $mediaLocales[0]);
-            $routes[] = $this->routeBuilderFactory
-                ->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/media/:locale/:id')
-                ->setResourceKey('media')
-                ->addLocales($mediaLocales)
-                ->setTitleProperty('title');
-            $routes[] = $this->routeBuilderFactory->createFormRouteBuilder(static::EDIT_FORM_DETAILS_ROUTE, '/details')
-                ->setResourceKey('media')
-                ->setFormKey('media_details')
-                ->setTabTitle('sulu_media.information_taxonomy')
-                ->setEditRoute(static::EDIT_FORM_DETAILS_ROUTE)
-                ->addToolbarActions($toolbarActions)
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->setBackRoute(static::MEDIA_OVERVIEW_ROUTE);
-            $routes[] = $this->routeBuilderFactory
-                ->createRouteBuilder(static::EDIT_FORM_FORMATS_ROUTE, '/formats', 'sulu_media.formats')
-                ->setOption('tabTitle', 'sulu_media.formats')
-                ->setParent(static::EDIT_FORM_ROUTE);
-            $routes[] = $this->routeBuilderFactory
-                ->createRouteBuilder(static::EDIT_FORM_HISTORY_ROUTE, '/history', 'sulu_media.history')
-                ->setOption('tabTitle', 'sulu_media.history')
-                ->setParent(static::EDIT_FORM_ROUTE);
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createRouteBuilder(
+                        static::MEDIA_OVERVIEW_ROUTE,
+                        '/collections/:locale/:id?',
+                        'sulu_media.overview'
+                    )
+                    ->setOption('locales', $mediaLocales)
+                    ->setOption('permissions', [
+                        'add' => $this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::ADD),
+                        'delete' => $this->securityChecker->hasPermission(
+                            static::SECURITY_CONTEXT,
+                            PermissionTypes::DELETE
+                        ),
+                        'edit' => $this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT),
+                    ])
+                    ->setAttributeDefault('locale', $mediaLocales[0])
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/media/:locale/:id')
+                    ->setResourceKey('media')
+                    ->addLocales($mediaLocales)
+                    ->setTitleProperty('title')
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory->createFormRouteBuilder(static::EDIT_FORM_DETAILS_ROUTE, '/details')
+                    ->setResourceKey('media')
+                    ->setFormKey('media_details')
+                    ->setTabTitle('sulu_media.information_taxonomy')
+                    ->setEditRoute(static::EDIT_FORM_DETAILS_ROUTE)
+                    ->addToolbarActions($toolbarActions)
+                    ->setParent(static::EDIT_FORM_ROUTE)
+                    ->setBackRoute(static::MEDIA_OVERVIEW_ROUTE)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createRouteBuilder(static::EDIT_FORM_FORMATS_ROUTE, '/formats', 'sulu_media.formats')
+                    ->setOption('tabTitle', 'sulu_media.formats')
+                    ->setParent(static::EDIT_FORM_ROUTE)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createRouteBuilder(static::EDIT_FORM_HISTORY_ROUTE, '/history', 'sulu_media.history')
+                    ->setOption('tabTitle', 'sulu_media.history')
+                    ->setParent(static::EDIT_FORM_ROUTE)
+            );
         }
-
-        return $routes;
     }
 
     public function getSecurityContexts()

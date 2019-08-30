@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactory;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
 use Sulu\Component\Security\Authorization\SecurityChecker;
@@ -41,7 +42,7 @@ class SnippetAdminTest extends TestCase
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
     }
 
-    public function provideGetRoutes()
+    public function provideConfigureRoutes()
     {
         return [
             [['en' => 'en', 'de' => 'de', 'fr' => 'fr']],
@@ -50,9 +51,9 @@ class SnippetAdminTest extends TestCase
     }
 
     /**
-     * @dataProvider provideGetRoutes
+     * @dataProvider provideConfigureRoutes
      */
-    public function testGetRoutes($locales)
+    public function testConfigureRoutes($locales)
     {
         $snippetAdmin = new SnippetAdmin(
             $this->routeBuilderFactory,
@@ -69,12 +70,14 @@ class SnippetAdminTest extends TestCase
 
         $this->webspaceManager->getAllLocales()->willReturn(array_values($locales));
 
-        $routes = $snippetAdmin->getRoutes();
-        $listRoute = $routes[0]->getRoute();
-        $addFormRoute = $routes[1]->getRoute();
-        $addDetailRoute = $routes[2]->getRoute();
-        $editFormRoute = $routes[3]->getRoute();
-        $editDetailRoute = $routes[4]->getRoute();
+        $routeCollection = new RouteCollection();
+        $snippetAdmin->configureRoutes($routeCollection);
+
+        $listRoute = $routeCollection->get('sulu_snippet.list')->getRoute();
+        $addFormRoute = $routeCollection->get('sulu_snippet.add_form')->getRoute();
+        $addDetailRoute = $routeCollection->get('sulu_snippet.add_form.details')->getRoute();
+        $editFormRoute = $routeCollection->get('sulu_snippet.edit_form')->getRoute();
+        $editDetailRoute = $routeCollection->get('sulu_snippet.edit_form.details')->getRoute();
 
         $this->assertAttributeEquals('sulu_snippet.list', 'name', $listRoute);
         $this->assertAttributeEquals([

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\TagBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
@@ -65,7 +66,7 @@ class TagAdmin extends Admin
         return new Navigation($rootNavigationItem);
     }
 
-    public function getRoutes(): array
+    public function configureRoutes(RouteCollection $routeCollection): void
     {
         $formToolbarActions = [];
         $listToolbarActions = [];
@@ -87,40 +88,46 @@ class TagAdmin extends Admin
             $listToolbarActions[] = 'sulu_admin.export';
         }
 
-        $routes = [];
-
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $routes[] = $this->routeBuilderFactory->createListRouteBuilder(static::LIST_ROUTE, '/tags')
-                ->setResourceKey('tags')
-                ->setListKey('tags')
-                ->setTitle('sulu_tag.tags')
-                ->addListAdapters(['table'])
-                ->setAddRoute(static::ADD_FORM_ROUTE)
-                ->setEditRoute(static::EDIT_FORM_ROUTE)
-                ->addToolbarActions($listToolbarActions);
-            $routes[] = $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/tags/add')
-                ->setResourceKey('tags')
-                ->setBackRoute(static::LIST_ROUTE);
-            $routes[] = $this->routeBuilderFactory->createFormRouteBuilder('sulu_tag.add_form.details', '/details')
-                ->setResourceKey('tags')
-                ->setFormKey('tag_details')
-                ->setTabTitle('sulu_admin.details')
-                ->setEditRoute(static::EDIT_FORM_ROUTE)
-                ->addToolbarActions($formToolbarActions)
-                ->setParent(static::ADD_FORM_ROUTE);
-            $routes[] = $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/tags/:id')
-                ->setResourceKey('tags')
-                ->setBackRoute(static::LIST_ROUTE)
-                ->setTitleProperty('name');
-            $routes[] = $this->routeBuilderFactory->createFormRouteBuilder('sulu_tag.edit_form.details', '/details')
-                ->setResourceKey('tags')
-                ->setFormKey('tag_details')
-                ->setTabTitle('sulu_admin.details')
-                ->addToolbarActions($formToolbarActions)
-                ->setParent(static::EDIT_FORM_ROUTE);
+            $routeCollection->add(
+                $this->routeBuilderFactory->createListRouteBuilder(static::LIST_ROUTE, '/tags')
+                    ->setResourceKey('tags')
+                    ->setListKey('tags')
+                    ->setTitle('sulu_tag.tags')
+                    ->addListAdapters(['table'])
+                    ->setAddRoute(static::ADD_FORM_ROUTE)
+                    ->setEditRoute(static::EDIT_FORM_ROUTE)
+                    ->addToolbarActions($listToolbarActions)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/tags/add')
+                    ->setResourceKey('tags')
+                    ->setBackRoute(static::LIST_ROUTE)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory->createFormRouteBuilder('sulu_tag.add_form.details', '/details')
+                    ->setResourceKey('tags')
+                    ->setFormKey('tag_details')
+                    ->setTabTitle('sulu_admin.details')
+                    ->setEditRoute(static::EDIT_FORM_ROUTE)
+                    ->addToolbarActions($formToolbarActions)
+                    ->setParent(static::ADD_FORM_ROUTE)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/tags/:id')
+                    ->setResourceKey('tags')
+                    ->setBackRoute(static::LIST_ROUTE)
+                    ->setTitleProperty('name')
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory->createFormRouteBuilder('sulu_tag.edit_form.details', '/details')
+                    ->setResourceKey('tags')
+                    ->setFormKey('tag_details')
+                    ->setTabTitle('sulu_admin.details')
+                    ->addToolbarActions($formToolbarActions)
+                    ->setParent(static::EDIT_FORM_ROUTE)
+            );
         }
-
-        return $routes;
     }
 
     /**
