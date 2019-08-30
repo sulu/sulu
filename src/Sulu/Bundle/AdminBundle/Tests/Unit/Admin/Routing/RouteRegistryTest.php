@@ -9,14 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Tests\Admin;
+namespace Sulu\Bundle\AdminBundle\Tests\Admin\Routing;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
-use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilder;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteRegistry;
 use Sulu\Bundle\AdminBundle\Exception\ParentRouteNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\RouteNotFoundException;
 

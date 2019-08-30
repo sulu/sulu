@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Admin;
+namespace Sulu\Bundle\AdminBundle\Admin\Navigation;
 
 use Sulu\Bundle\AdminBundle\Exception\NavigationItemNotFoundException;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;

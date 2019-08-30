@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\AdminBundle\Admin\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactory;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
 use Sulu\Component\Security\Authorization\SecurityChecker;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;

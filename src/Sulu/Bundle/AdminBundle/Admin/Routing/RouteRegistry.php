@@ -9,10 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Admin;
+namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
-use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
-use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderInterface;
+use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Exception\ParentRouteNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\RouteNotFoundException;
 

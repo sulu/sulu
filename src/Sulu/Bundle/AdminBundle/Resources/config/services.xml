@@ -103,11 +103,11 @@
             <tag name="kernel.cache_warmer" />
         </service>
 
-        <service id="sulu_admin.route_registry" class="Sulu\Bundle\AdminBundle\Admin\RouteRegistry">
+        <service id="sulu_admin.route_registry" class="Sulu\Bundle\AdminBundle\Admin\Routing\RouteRegistry">
             <argument type="service" id="sulu_admin.admin_pool"/>
         </service>
 
-        <service id="sulu_admin.navigation_registry" class="Sulu\Bundle\AdminBundle\Admin\NavigationRegistry">
+        <service id="sulu_admin.navigation_registry" class="Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry">
             <argument type="service" id="translator"/>
             <argument type="service" id="sulu_admin.admin_pool"/>
             <argument type="service" id="sulu_admin.route_registry"/>

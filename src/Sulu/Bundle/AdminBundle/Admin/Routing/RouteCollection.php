@@ -9,9 +9,8 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Admin;
+namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
-use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderInterface;
 use Sulu\Bundle\AdminBundle\Exception\RouteNotFoundException;
 
 class RouteCollection

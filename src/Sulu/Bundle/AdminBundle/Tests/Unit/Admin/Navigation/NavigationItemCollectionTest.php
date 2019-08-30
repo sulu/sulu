@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\Routing;
+namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\Navigation;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\AdminBundle\Admin\NavigationItemCollection;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Exception\NavigationItemNotFoundException;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
