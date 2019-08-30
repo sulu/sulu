@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import textEditorRegistry from './registries/TextEditorRegistry';
+import textEditorRegistry from './registries/textEditorRegistry';
 import type {TextEditorProps} from './types';
 
 type Props = {|

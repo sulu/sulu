@@ -3,9 +3,9 @@ import React from 'react';
 import {observable} from 'mobx';
 import {render, shallow, mount} from 'enzyme';
 import TextEditor from '../TextEditor';
-import textEditorRegistry from '../registries/TextEditorRegistry';
+import textEditorRegistry from '../registries/textEditorRegistry';
 
-jest.mock('../registries/TextEditorRegistry', () => ({
+jest.mock('../registries/textEditorRegistry', () => ({
     get: jest.fn(),
 }));
 

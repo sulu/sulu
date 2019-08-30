@@ -1,5 +1,5 @@
 // @flow
-import pluginRegistry from '../../registries/PluginRegistry';
+import pluginRegistry from '../../registries/pluginRegistry';
 
 beforeEach(() => {
     pluginRegistry.clear();

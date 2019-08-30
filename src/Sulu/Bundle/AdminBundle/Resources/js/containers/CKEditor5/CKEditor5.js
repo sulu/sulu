@@ -19,7 +19,7 @@ import {translate} from '../../utils/Translator';
 import ExternalLinkPlugin from './plugins/ExternalLinkPlugin';
 import InternalLinkPlugin from './plugins/InternalLinkPlugin';
 import configRegistry from './registries/configRegistry';
-import pluginRegistry from './registries/PluginRegistry';
+import pluginRegistry from './registries/pluginRegistry';
 import './ckeditor5.scss';
 
 type Props = {|
