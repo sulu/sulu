@@ -4,7 +4,7 @@ import {action, computed, observable} from 'mobx';
 import debounce from 'debounce';
 import {Config, Requester} from '../../services';
 import initializer from '../../services/initializer';
-import localizationStore from '../LocalizationStore';
+import localizationStore from '../localizationStore';
 import type {Contact, User} from './types';
 
 const UPDATE_PERSISTENT_SETTINGS_DELAY = 2500;

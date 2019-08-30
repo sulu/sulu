@@ -1,6 +1,6 @@
 // @flow
 import {ResourceRequester} from '../../../services';
-import localizationStore from '../LocalizationStore';
+import localizationStore from '../localizationStore';
 
 jest.mock('../../../services/ResourceRequester', () => ({
     getList: jest.fn().mockReturnValue({

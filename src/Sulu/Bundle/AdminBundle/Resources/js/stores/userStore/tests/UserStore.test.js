@@ -2,7 +2,7 @@
 import userStore from '../userStore';
 import Requester from '../../../services/Requester';
 import initializer from '../../../services/initializer';
-import localizationStore from '../../../stores/LocalizationStore';
+import localizationStore from '../../../stores/localizationStore';
 
 jest.mock('debounce', () => jest.fn((callback) => callback));
 
@@ -16,7 +16,7 @@ jest.mock('../../../services/initializer', () => ({
     initialize: jest.fn(),
 }));
 
-jest.mock('../../../stores/LocalizationStore', () => ({
+jest.mock('../../../stores/localizationStore', () => ({
     loadLocalizations: jest.fn(() => new Promise((resolve) => resolve([]))),
 }));
 
