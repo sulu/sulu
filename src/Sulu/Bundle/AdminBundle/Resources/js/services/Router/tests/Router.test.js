@@ -3,11 +3,11 @@ import 'url-search-params-polyfill';
 import {createMemoryHistory} from 'history';
 import {extendObservable, observable, isObservable} from 'mobx';
 import Router from '../Router';
-import routeRegistry from '../registries/RouteRegistry';
+import routeRegistry from '../registries/routeRegistry';
 
 window.addEventListener = jest.fn();
 
-jest.mock('../registries/RouteRegistry', () => {
+jest.mock('../registries/routeRegistry', () => {
     const getAllMock = jest.fn();
 
     return {

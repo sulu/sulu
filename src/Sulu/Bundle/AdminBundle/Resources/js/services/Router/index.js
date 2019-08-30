@@ -1,7 +1,7 @@
 // @flow
 import Router from './Router';
 import getViewKeyFromRoute from './getViewKeyFromRoute';
-import routeRegistry from './registries/RouteRegistry';
+import routeRegistry from './registries/routeRegistry';
 import type {AttributeMap, Route} from './types';
 
 export default Router;
