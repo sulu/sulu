@@ -1,5 +1,5 @@
 // @flow
-import listToolbarActionRegistry from '../../registries/ListToolbarActionRegistry';
+import listToolbarActionRegistry from '../../registries/listToolbarActionRegistry';
 import AbstractListToolbarAction from '../../toolbarActions/AbstractListToolbarAction';
 
 jest.mock('../../../../services/Initializer', () => jest.fn());

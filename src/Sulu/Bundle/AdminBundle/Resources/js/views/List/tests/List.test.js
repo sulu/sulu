@@ -198,7 +198,7 @@ test('Should render the list with a title', () => {
 
 test('Pass correct arguments to ToolbarActions', () => {
     const List = require('../List').default;
-    const listToolbarActionRegistry = require('../registries/ListToolbarActionRegistry').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
 
     const ToolbarActionMock1 = jest.fn(function() {
         this.getNode = jest.fn().mockReturnValue(null);
@@ -256,7 +256,7 @@ test('Pass correct arguments to ToolbarActions', () => {
 
 test('Throw error if options are not passed correctly', () => {
     const List = require('../List').default;
-    const listToolbarActionRegistry = require('../registries/ListToolbarActionRegistry').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
 
     const ToolbarActionMock1 = jest.fn(function() {
         this.getNode = jest.fn().mockReturnValue(null);
@@ -285,7 +285,7 @@ test('Throw error if options are not passed correctly', () => {
 
 test('Pass correct arguments with passed ResourceStore to ToolbarActions', () => {
     const List = require('../List').default;
-    const listToolbarActionRegistry = require('../registries/ListToolbarActionRegistry').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const resourceStore = new ResourceStore('tests', '123-456-789');
 
     const ToolbarActionMock = jest.fn(function() {
@@ -324,7 +324,7 @@ test('Pass correct arguments with passed ResourceStore to ToolbarActions', () =>
 
 test('Should pass correct props to move list overlay', () => {
     const List = require('../List').default;
-    const listToolbarActionRegistry = require('../registries/ListToolbarActionRegistry').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const MoveToolbarAction = require('../toolbarActions/MoveToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.move', MoveToolbarAction);
 
@@ -405,7 +405,7 @@ test('Should not pass the onItemClick callback if no editRoute has been passed a
 
 test('Should render the list with the add icon if a addRoute has been passed', () => {
     const List = require('../List').default;
-    const listToolbarActionRegistry = require('../registries/ListToolbarActionRegistry').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const AddToolbarAction = require('../toolbarActions/AddToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.add', AddToolbarAction);
 
@@ -428,7 +428,7 @@ test('Should render the list with the add icon if a addRoute has been passed', (
 
 test('Should render the list with the add icon if onItemAdd prop is set', () => {
     const List = require('../List').default;
-    const listToolbarActionRegistry = require('../registries/ListToolbarActionRegistry').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const AddToolbarAction = require('../toolbarActions/AddToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.add', AddToolbarAction);
 
@@ -650,7 +650,7 @@ test('Should render the add button in the toolbar only if an addRoute has been p
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
-    const listToolbarActionRegistry = require('../registries/ListToolbarActionRegistry').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const AddToolbarAction = require('../toolbarActions/AddToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.add', AddToolbarAction);
     const router = {
@@ -682,7 +682,7 @@ test('Should navigate when add button is clicked and locales have been passed in
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
-    const listToolbarActionRegistry = require('../registries/ListToolbarActionRegistry').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const AddToolbarAction = require('../toolbarActions/AddToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.add', AddToolbarAction);
     const router = {
@@ -717,7 +717,7 @@ test('Should navigate without locale when add button is clicked', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
-    const listToolbarActionRegistry = require('../registries/ListToolbarActionRegistry').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const AddToolbarAction = require('../toolbarActions/AddToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.add', AddToolbarAction);
     const router = {
@@ -746,7 +746,7 @@ test('Should fire callback instead of navigate when onItemAdd prop is set and ad
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
-    const listToolbarActionRegistry = require('../registries/ListToolbarActionRegistry').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const AddToolbarAction = require('../toolbarActions/AddToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.add', AddToolbarAction);
     const router = {
@@ -941,7 +941,7 @@ test('Should render the delete item enabled only if something is selected', () =
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
-    const listToolbarActionRegistry = require('../registries/ListToolbarActionRegistry').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const DeleteToolbarAction = require('../toolbarActions/DeleteToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.delete', DeleteToolbarAction);
     const router = {
@@ -1224,7 +1224,7 @@ test('Should delete selected items when delete button is clicked', () => {
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
-    const listToolbarActionRegistry = require('../registries/ListToolbarActionRegistry').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const DeleteToolbarAction = require('../toolbarActions/DeleteToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.delete', DeleteToolbarAction);
     const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
@@ -1260,7 +1260,7 @@ test('Should make move overlay disappear if cancel is clicked', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
-    const listToolbarActionRegistry = require('../registries/ListToolbarActionRegistry').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const MoveToolbarAction = require('../toolbarActions/MoveToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.move', MoveToolbarAction);
     const router = {
@@ -1299,7 +1299,7 @@ test('Should move items after move overlay was confirmed', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
-    const listToolbarActionRegistry = require('../registries/ListToolbarActionRegistry').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const MoveToolbarAction = require('../toolbarActions/MoveToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.move', MoveToolbarAction);
     const router = {
@@ -1350,7 +1350,7 @@ test('Export dialog should open when the button is pressed', () => {
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
-    const listToolbarActionRegistry = require('../registries/ListToolbarActionRegistry').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const ExportToolbarAction = require('../toolbarActions/ExportToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.export', ExportToolbarAction);
     const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
@@ -1386,7 +1386,7 @@ test('Render export dialog', () => {
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
-    const listToolbarActionRegistry = require('../registries/ListToolbarActionRegistry').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const ExportToolbarAction = require('../toolbarActions/ExportToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.export', ExportToolbarAction);
     const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
@@ -1423,7 +1423,7 @@ test('Export method should be called when the export-button is pressed', () => {
 
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
-    const listToolbarActionRegistry = require('../registries/ListToolbarActionRegistry').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const ExportToolbarAction = require('../toolbarActions/ExportToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.export', ExportToolbarAction);
     const resourceRouteRegistry = require('../../../services/ResourceRequester/registries/ResourceRouteRegistry');
