@@ -3,7 +3,7 @@ import React from 'react';
 import ButtonGroup from '../../components/ButtonGroup';
 import Button from '../../components/Button';
 import Icon from '../../components/Icon';
-import listAdapterRegistry from './registries/ListAdapterRegistry';
+import listAdapterRegistry from './registries/listAdapterRegistry';
 
 type Props = {
     adapters: Array<string>,

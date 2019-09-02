@@ -14,7 +14,7 @@ import LinkBalloonView from '../../LinkBalloonView';
 import LinkCommand from '../../LinkCommand';
 import {addLinkConversion, findModelItemInSelection, findViewLinkItemInSelection} from '../../utils';
 import UnlinkCommand from '../../UnlinkCommand';
-import internalLinkTypeRegistry from './registries/InternalLinkTypeRegistry';
+import internalLinkTypeRegistry from './registries/internalLinkTypeRegistry';
 // $FlowFixMe
 import linkIcon from '!!raw-loader!./link.svg'; // eslint-disable-line import/no-webpack-loader-syntax
 

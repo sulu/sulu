@@ -1,7 +1,7 @@
 // @flow
 import Form from './Form';
 import FormInspector from './FormInspector';
-import fieldRegistry from './registries/FieldRegistry';
+import fieldRegistry from './registries/fieldRegistry';
 import ResourceFormStore from './stores/ResourceFormStore';
 import MemoryFormStore from './stores/MemoryFormStore';
 import ChangelogLine from './fields/ChangelogLine';

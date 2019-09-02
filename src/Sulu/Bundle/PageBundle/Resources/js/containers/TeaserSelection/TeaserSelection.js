@@ -8,7 +8,7 @@ import {MultiListOverlay} from 'sulu-admin-bundle/containers';
 import {arrayMove} from 'sulu-admin-bundle/utils';
 import TeaserStore from './stores/TeaserStore';
 import Item from './Item';
-import teaserProviderRegistry from './registries/TeaserProviderRegistry';
+import teaserProviderRegistry from './registries/teaserProviderRegistry';
 import type {PresentationItem, TeaserItem, TeaserSelectionValue} from './types';
 
 type Props = {|

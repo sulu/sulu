@@ -21,7 +21,7 @@ jest.mock('sulu-admin-bundle/containers/TextEditor', () => jest.fn(
 
 jest.mock('../stores/TeaserStore', () => jest.fn());
 
-jest.mock('../registries/TeaserProviderRegistry', () => ({
+jest.mock('../registries/teaserProviderRegistry', () => ({
     keys: ['pages', 'articles'],
     get: jest.fn((key) => {
         switch (key) {

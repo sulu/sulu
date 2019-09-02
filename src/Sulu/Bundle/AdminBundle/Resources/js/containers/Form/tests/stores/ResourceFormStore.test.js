@@ -2,7 +2,7 @@
 import {isObservable, observable, observable as mockObservable, toJS, when} from 'mobx';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import ResourceStore from '../../../../stores/ResourceStore';
-import metadataStore from '../../stores/MetadataStore';
+import metadataStore from '../../stores/metadataStore';
 
 jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, options) {
     this.id = id;
@@ -21,7 +21,7 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, op
     }
 });
 
-jest.mock('../../stores/MetadataStore', () => ({}));
+jest.mock('../../stores/metadataStore', () => ({}));
 
 beforeEach(() => {
     // $FlowFixMe

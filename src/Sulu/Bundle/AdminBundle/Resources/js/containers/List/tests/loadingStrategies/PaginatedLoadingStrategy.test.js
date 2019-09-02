@@ -11,7 +11,7 @@ jest.mock('../../../../services/ResourceRequester', () => ({
     })),
 }));
 
-jest.mock('../../../List/stores/MetadataStore', () => ({
+jest.mock('../../../List/stores/metadataStore', () => ({
     getSchema: jest.fn().mockReturnValue(Promise.resolve()),
 }));
 

@@ -4,7 +4,7 @@ import {shallow} from 'enzyme';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
-import webspaceStore from '../../../../stores/WebspaceStore';
+import webspaceStore from '../../../../stores/webspaceStore';
 import PageSettingsNavigationSelect from '../../fields/PageSettingsNavigationSelect';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
@@ -24,7 +24,7 @@ jest.mock('sulu-admin-bundle/utils', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../../../stores/WebspaceStore', () => ({
+jest.mock('../../../../stores/webspaceStore', () => ({
     loadWebspace: jest.fn(),
 }));
 

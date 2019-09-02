@@ -123,12 +123,12 @@ jest.mock('sulu-admin-bundle/containers', () => {
     };
 });
 
-jest.mock('sulu-admin-bundle/containers/Form/registries/FieldRegistry', () => ({
+jest.mock('sulu-admin-bundle/containers/Form/registries/fieldRegistry', () => ({
     get: jest.fn().mockReturnValue(jest.fn().mockReturnValue(null)),
     getOptions: jest.fn().mockReturnValue({}),
 }));
 
-jest.mock('sulu-admin-bundle/containers/List/registries/ListAdapterRegistry', () => {
+jest.mock('sulu-admin-bundle/containers/List/registries/listAdapterRegistry', () => {
     const getAllAdaptersMock = jest.fn();
 
     return {
@@ -191,7 +191,7 @@ beforeEach(() => {
     MediaCollection.editable = true;
     MediaCollection.securable = true;
 
-    const listAdapterRegistry = require('sulu-admin-bundle/containers/List/registries/ListAdapterRegistry');
+    const listAdapterRegistry = require('sulu-admin-bundle/containers/List/registries/listAdapterRegistry');
 
     // $FlowFixMe
     listAdapterRegistry.has.mockReturnValue(true);
@@ -653,7 +653,7 @@ test('Deactive dropzone by passing no collectionId if dropzone should not be sho
 });
 
 test('Should send a request to add a new collection via the overlay', () => {
-    const fieldRegistry = require('sulu-admin-bundle/containers/Form/registries/FieldRegistry');
+    const fieldRegistry = require('sulu-admin-bundle/containers/Form/registries/fieldRegistry');
     const promise = Promise.resolve();
     const field = jest.fn().mockReturnValue(null);
     // $FlowFixMe
@@ -733,7 +733,7 @@ test('Should send a request to add a new collection via the overlay', () => {
 });
 
 test('Should send a request to update the collection via the overlay', () => {
-    const fieldRegistry = require('sulu-admin-bundle/containers/Form/registries/FieldRegistry');
+    const fieldRegistry = require('sulu-admin-bundle/containers/Form/registries/fieldRegistry');
     const field = jest.fn().mockReturnValue(null);
     // $FlowFixMe
     fieldRegistry.get.mockReturnValue(field);

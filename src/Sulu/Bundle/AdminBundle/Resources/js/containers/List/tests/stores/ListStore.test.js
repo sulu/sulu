@@ -3,10 +3,10 @@ import 'url-search-params-polyfill';
 import {autorun, observable, toJS, when} from 'mobx';
 import ResourceRequester from '../../../../services/ResourceRequester';
 import ListStore from '../../stores/ListStore';
-import metadataStore from '../../stores/MetadataStore';
+import metadataStore from '../../stores/metadataStore';
 import {userStore} from '../../../../stores';
 
-jest.mock('../../stores/MetadataStore', () => ({
+jest.mock('../../stores/metadataStore', () => ({
     getSchema: jest.fn(() => Promise.resolve()),
 }));
 
@@ -15,7 +15,7 @@ jest.mock('../../../../services/ResourceRequester', () => ({
     post: jest.fn(),
 }));
 
-jest.mock('../../../../stores/UserStore', () => ({
+jest.mock('../../../../stores/userStore', () => ({
     getPersistentSetting: jest.fn(),
     setPersistentSetting: jest.fn(),
 }));

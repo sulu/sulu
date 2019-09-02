@@ -4,7 +4,7 @@ import React from 'react';
 import {listAdapterDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import MediaCardOverviewAdapter from '../../adapters/MediaCardOverviewAdapter';
 
-jest.mock('sulu-admin-bundle/services/Initializer', () => jest.fn());
+jest.mock('sulu-admin-bundle/services/initializer', () => jest.fn());
 
 jest.mock('sulu-admin-bundle/utils', () => ({
     translate: function(key) {

@@ -4,8 +4,8 @@ import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {ResourceTabs} from 'sulu-admin-bundle/views';
-import webspaceStore from '../../stores/WebspaceStore';
-import type {Webspace} from '../../stores/WebspaceStore/types';
+import webspaceStore from '../../stores/webspaceStore';
+import type {Webspace} from '../../stores/webspaceStore/types';
 
 @observer
 class PageTabs extends React.Component<ViewProps> {

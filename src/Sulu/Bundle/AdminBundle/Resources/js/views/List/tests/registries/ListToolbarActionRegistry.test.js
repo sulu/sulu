@@ -1,8 +1,8 @@
 // @flow
-import listToolbarActionRegistry from '../../registries/ListToolbarActionRegistry';
+import listToolbarActionRegistry from '../../registries/listToolbarActionRegistry';
 import AbstractListToolbarAction from '../../toolbarActions/AbstractListToolbarAction';
 
-jest.mock('../../../../services/Initializer', () => jest.fn());
+jest.mock('../../../../services/initializer', () => jest.fn());
 jest.mock('../../toolbarActions/DeleteToolbarAction', () => jest.fn());
 
 beforeEach(() => {

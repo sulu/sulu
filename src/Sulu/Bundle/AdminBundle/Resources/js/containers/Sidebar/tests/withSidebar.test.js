@@ -2,10 +2,10 @@
 import React from 'react';
 import {extendObservable, observable} from 'mobx';
 import {mount, render} from 'enzyme';
-import sidebarStore from '../stores/SidebarStore';
+import sidebarStore from '../stores/sidebarStore';
 import withSidebar from '../withSidebar';
 
-jest.mock('../stores/SidebarStore', () => ({
+jest.mock('../stores/sidebarStore', () => ({
     setConfig: jest.fn(),
     clearConfig: jest.fn(),
 }));

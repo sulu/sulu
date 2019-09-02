@@ -8,7 +8,7 @@ initialState = {
     value: '',
 }
 
-const textEditorRegistry = require('./registries/TextEditorRegistry').default;
+const textEditorRegistry = require('./registries/textEditorRegistry').default;
 textEditorRegistry.clear();
 textEditorRegistry.add('ckeditor5', CKEditor5);
 

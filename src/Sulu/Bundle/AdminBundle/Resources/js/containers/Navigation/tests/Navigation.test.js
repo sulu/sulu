@@ -8,7 +8,7 @@ jest.mock('../../../services/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
 }));
 
-jest.mock('../registries/NavigationRegistry', () => ({
+jest.mock('../registries/navigationRegistry', () => ({
     get: jest.fn().mockReturnValue(
         {
             id: '111-111',

@@ -1,6 +1,6 @@
 // @flow
 import Config from './Config';
-import initializer from './Initializer';
+import initializer from './initializer';
 import ResourceRequester, {resourceRouteRegistry} from './ResourceRequester';
 import Requester from './Requester';
 import Router from './Router';

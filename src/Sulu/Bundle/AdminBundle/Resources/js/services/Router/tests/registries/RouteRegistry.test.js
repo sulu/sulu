@@ -1,6 +1,6 @@
 //@flow
 import {toJS} from 'mobx';
-import routeRegistry from '../../registries/RouteRegistry';
+import routeRegistry from '../../registries/routeRegistry';
 
 beforeEach(() => {
     routeRegistry.clear();

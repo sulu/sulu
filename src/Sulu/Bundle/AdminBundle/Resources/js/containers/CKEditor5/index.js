@@ -1,7 +1,7 @@
 // @flow
 import CKEditor5 from './CKEditor5';
-import configRegistry from './registries/ConfigRegistry';
-import pluginRegistry from './registries/PluginRegistry';
+import configRegistry from './registries/configRegistry';
+import pluginRegistry from './registries/pluginRegistry';
 import {InternalLinkTypeOverlay, internalLinkTypeRegistry} from './plugins/InternalLinkPlugin';
 
 export default CKEditor5;

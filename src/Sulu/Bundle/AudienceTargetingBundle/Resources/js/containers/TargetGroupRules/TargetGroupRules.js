@@ -4,7 +4,7 @@ import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Button, ButtonGroup, Table} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
-import ruleRegistry from './registries/RuleRegistry';
+import ruleRegistry from './registries/ruleRegistry';
 import RuleOverlay from './RuleOverlay';
 import targetGroupRulesStyles from './targetGroupRules.scss';
 import {getFrequencyTranslation} from './utils';

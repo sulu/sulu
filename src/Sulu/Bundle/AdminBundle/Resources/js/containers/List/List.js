@@ -22,7 +22,7 @@ import type {
     SortOrder,
 } from './types';
 import ListStore from './stores/ListStore';
-import listAdapterRegistry from './registries/ListAdapterRegistry';
+import listAdapterRegistry from './registries/listAdapterRegistry';
 import AbstractAdapter from './adapters/AbstractAdapter';
 import AdapterSwitch from './AdapterSwitch';
 import Search from './Search';

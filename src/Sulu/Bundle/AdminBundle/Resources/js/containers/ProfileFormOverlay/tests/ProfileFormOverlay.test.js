@@ -3,12 +3,12 @@ import {shallow, mount} from 'enzyme/build';
 import mockReact from 'react';
 import Overlay from '../../../components/Overlay';
 import ResourceRequester from '../../../services/ResourceRequester';
-import userStore from '../../../stores/UserStore';
+import userStore from '../../../stores/userStore';
 import Form from '../../Form';
 import ProfileFormOverlay from '../ProfileFormOverlay';
 const React = mockReact;
 
-jest.mock('sulu-admin-bundle/services/Initializer', () => jest.fn());
+jest.mock('sulu-admin-bundle/services/initializer', () => jest.fn());
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -25,11 +25,11 @@ jest.mock('sulu-admin-bundle/containers/Form/stores/MemoryFormStore', () => clas
         }
 });
 
-jest.mock('sulu-admin-bundle/stores/UserStore', () => ({
+jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     setFullName: jest.fn(),
 }));
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/MetadataStore', () => ({
+jest.mock('sulu-admin-bundle/containers/Form/stores/metadataStore', () => ({
     getSchema: jest.fn().mockImplementation(() => Promise.resolve({})),
     getJsonSchema: jest.fn().mockImplementation(()=> Promise.resolve({})),
 }));

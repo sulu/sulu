@@ -3,7 +3,7 @@ The `Navigation` container uses the `NavigationRegistry` to load all navigation 
 Set navigation items in the `NavigationRegistry` and rendering it using the `Navigation` is shown in the following example:
 
 ```javascript
-import navigationRegistry from './registries/NavigationRegistry';
+import navigationRegistry from './registries/navigationRegistry';
 navigationRegistry.clear(); // Just to make sure the NavigationRegistry is empty, not needed in a real world application
 
 const items = [

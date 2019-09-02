@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import {Button, SingleSelect} from 'sulu-admin-bundle/components';
-import ruleRegistry from './registries/RuleRegistry';
-import ruleTypeRegistry from './registries/RuleTypeRegistry';
+import ruleRegistry from './registries/ruleRegistry';
+import ruleTypeRegistry from './registries/ruleTypeRegistry';
 import conditionStyles from './condition.scss';
 import type {Condition as ConditionType} from './types';
 

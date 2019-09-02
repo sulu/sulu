@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import ruleTypeRegistry from '../../registries/RuleTypeRegistry';
+import ruleTypeRegistry from '../../registries/ruleTypeRegistry';
 
 beforeEach(() => {
     ruleTypeRegistry.clear();

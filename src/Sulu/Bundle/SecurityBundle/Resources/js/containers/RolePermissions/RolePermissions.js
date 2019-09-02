@@ -4,7 +4,7 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Loader, Matrix} from 'sulu-admin-bundle/components';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
-import securityContextStore from '../../stores/SecurityContextStore';
+import securityContextStore from '../../stores/securityContextStore';
 import {getActionIcon} from '../../utils/Permission';
 import type {Role} from '../../types';
 import type {RolePermissions as RolePermissionsType} from './types';

@@ -7,7 +7,7 @@ import FieldBlocks from '../FieldBlocks';
 import FormInspector from '../../Form/FormInspector';
 import ResourceFormStore from '../../Form/stores/ResourceFormStore';
 import ResourceStore from '../../../stores/ResourceStore';
-import blockPreviewTransformerRegistry from '../registries/BlockPreviewTransformerRegistry';
+import blockPreviewTransformerRegistry from '../registries/blockPreviewTransformerRegistry';
 
 jest.mock('../../../services/Router', () => jest.fn());
 jest.mock('../../Form/FormInspector', () => jest.fn(function() {
@@ -17,7 +17,7 @@ jest.mock('../../Form/FormInspector', () => jest.fn(function() {
 jest.mock('../../Form/stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../../stores/ResourceStore', () => jest.fn());
 
-jest.mock('../../Form/registries/FieldRegistry', () => ({
+jest.mock('../../Form/registries/fieldRegistry', () => ({
     get: jest.fn((type) => {
         switch (type) {
             case 'text_line':
@@ -33,7 +33,7 @@ jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
-jest.mock('../registries/BlockPreviewTransformerRegistry', () => ({
+jest.mock('../registries/blockPreviewTransformerRegistry', () => ({
     has: jest.fn(),
     get: jest.fn(),
     blockPreviewTransformerKeysByPriority: [],

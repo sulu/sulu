@@ -2,7 +2,7 @@
 import {computed} from 'mobx';
 import React from 'react';
 import Table from '../../../components/Table';
-import listFieldTransformerRegistry from '../registries/ListFieldTransformerRegistry';
+import listFieldTransformerRegistry from '../registries/listFieldTransformerRegistry';
 import type {Schema} from '../types';
 import AbstractAdapter from './AbstractAdapter';
 

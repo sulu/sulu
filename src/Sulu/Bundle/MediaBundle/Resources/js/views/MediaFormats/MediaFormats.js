@@ -8,7 +8,7 @@ import {withToolbar} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
-import formatStore from '../../stores/FormatStore';
+import formatStore from '../../stores/formatStore';
 import mediaFormatsStyles from './mediaFormats.scss';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';

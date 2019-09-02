@@ -6,7 +6,7 @@ import {getViewKeyFromRoute} from '../../services/Router';
 import {buildHocDisplayName} from '../../utils/react';
 import type {ViewProps} from '../index';
 import type {SidebarConfig} from './types';
-import sidebarStore from './stores/SidebarStore';
+import sidebarStore from './stores/sidebarStore';
 
 const UPDATE_ROUTE_HOOK_PRIORITY = 1024;
 

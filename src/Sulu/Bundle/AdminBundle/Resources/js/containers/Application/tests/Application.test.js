@@ -10,7 +10,7 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester/ResourceRequester', () =
     get: jest.fn(),
 }));
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/MetadataStore', () => ({
+jest.mock('sulu-admin-bundle/containers/Form/stores/metadataStore', () => ({
     getSchema: jest.fn(),
     getJsonSchema: jest.fn(),
 }));
@@ -22,7 +22,7 @@ const mockInitializerInitialized = jest.fn();
 const mockInitializerLoading = jest.fn();
 const mockInitializedTranslationsLocale = jest.fn();
 
-jest.mock('../../../services/Initializer', () => {
+jest.mock('../../../services/initializer', () => {
     return new class {
         get loading() {
             return mockInitializerLoading();
@@ -44,7 +44,7 @@ const mockUserStoreUser = jest.fn();
 const mockUserStoreGetPersistentSetting = jest.fn().mockReturnValue(0);
 const mockUserStoreSetPersistentSetting = jest.fn();
 
-jest.mock('../../../stores/UserStore', () => {
+jest.mock('../../../stores/userStore', () => {
     return new class {
         get loggedIn() {
             return mockUserStoreLoggedIn();

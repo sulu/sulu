@@ -1,6 +1,6 @@
 // @flow
 import SmartContent from './SmartContent';
-import smartContentConfigStore from './stores/SmartContentConfigStore';
+import smartContentConfigStore from './stores/smartContentConfigStore';
 import SmartContentStore from './stores/SmartContentStore';
 
 export default SmartContent;

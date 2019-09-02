@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import sidebarRegistry from '../../registries/SidebarRegistry';
+import sidebarRegistry from '../../registries/sidebarRegistry';
 
 class Component extends React.Component<*> {
     render() {

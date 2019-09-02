@@ -1,9 +1,9 @@
 // @flow
-import localizationStore from './LocalizationStore';
-import type {Localization} from './LocalizationStore/types';
+import localizationStore from './localizationStore';
+import type {Localization} from './localizationStore/types';
 import MultiSelectionStore from './MultiSelectionStore';
 import ResourceStore from './ResourceStore';
-import userStore from './UserStore';
+import userStore from './userStore';
 
 export {
     MultiSelectionStore,

@@ -133,7 +133,7 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: (key) => key,
 }));
 
-jest.mock('sulu-admin-bundle/containers/List/registries/ListAdapterRegistry', () => {
+jest.mock('sulu-admin-bundle/containers/List/registries/listAdapterRegistry', () => {
     const getAllAdaptersMock = jest.fn();
 
     return {
@@ -150,7 +150,7 @@ jest.mock('sulu-admin-bundle/containers/SingleListOverlay', () => jest.fn(() => 
 beforeEach(() => {
     jest.resetModules();
 
-    const listAdapterRegistry = require('sulu-admin-bundle/containers/List/registries/ListAdapterRegistry');
+    const listAdapterRegistry = require('sulu-admin-bundle/containers/List/registries/listAdapterRegistry');
 
     listAdapterRegistry.has.mockReturnValue(true);
     listAdapterRegistry.getAllAdaptersMock.mockReturnValue({

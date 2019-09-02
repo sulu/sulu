@@ -1,5 +1,5 @@
 // @flow
-import blockPreviewTransformerRegistry from './registries/BlockPreviewTransformerRegistry';
+import blockPreviewTransformerRegistry from './registries/blockPreviewTransformerRegistry';
 import FieldBlocks from './FieldBlocks';
 import DateTimeBlockPreviewTransformer from './blockPreviewTransformers/DateTimeBlockPreviewTransformer';
 import SelectBlockPreviewTransformer from './blockPreviewTransformers/SelectBlockPreviewTransformer';

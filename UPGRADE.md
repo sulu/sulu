@@ -5,6 +5,11 @@
 When upgrading also have a look at the changes in the
 [sulu skeleton](https://github.com/sulu/sulu-minimal/compare/2.0.0-RC1...2.0.0-RC2).
 
+### Renaming of JS files
+
+All JavaScript files containing not a constructor but export an instance of a class instead have been renamed to start
+with a lowercase letter now.
+
 ### Use yaml files for configuring routes
 
 All remaining XML route definition files were migrated to use the YAML format. Therefore, the following resource paths 

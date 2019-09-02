@@ -13,7 +13,7 @@ import type {ViewProps} from '../../containers/ViewRenderer';
 import type {AttributeMap, Route, UpdateRouteMethod} from '../../services/Router/types';
 import ResourceStore from '../../stores/ResourceStore';
 import {translate} from '../../utils/Translator';
-import formToolbarActionRegistry from './registries/FormToolbarActionRegistry';
+import formToolbarActionRegistry from './registries/formToolbarActionRegistry';
 import AbstractFormToolbarAction from './toolbarActions/AbstractFormToolbarAction';
 import formStyles from './form.scss';
 

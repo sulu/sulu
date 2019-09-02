@@ -2,7 +2,7 @@
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
 import Login from '../Login';
-import userStore from '../../../stores/UserStore';
+import userStore from '../../../stores/userStore';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn(function(key) {
@@ -18,7 +18,7 @@ const mockUserStoreSetResetSuccess = jest.fn();
 const mockUserStoreLoading = jest.fn().mockReturnValue(false);
 const mockUserStoreResetSuccess = jest.fn().mockReturnValue(false);
 
-jest.mock('../../../stores/UserStore', () => {
+jest.mock('../../../stores/userStore', () => {
     return new class {
         clear() {
             return mockUserStoreClear();

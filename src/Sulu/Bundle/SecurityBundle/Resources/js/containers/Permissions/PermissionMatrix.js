@@ -5,7 +5,7 @@ import {observer} from 'mobx-react';
 import {Matrix} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import type {MatrixValues} from 'sulu-admin-bundle/components/Matrix/types';
-import type {Actions, SecurityContexts} from '../../stores/SecurityContextStore/types';
+import type {Actions, SecurityContexts} from '../../stores/securityContextStore/types';
 import {getActionIcon} from '../../utils/Permission';
 import type {ContextPermission} from './types';
 import permissionsStyle from './permissions.scss';

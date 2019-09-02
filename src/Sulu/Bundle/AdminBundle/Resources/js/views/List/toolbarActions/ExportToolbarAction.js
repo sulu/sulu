@@ -5,7 +5,7 @@ import {translate} from '../../../utils/Translator';
 import Overlay from '../../../components/Overlay';
 import Form from '../../../components/Form';
 import SingleSelect from '../../../components/SingleSelect';
-import resourceRouteRegistry from '../../../services/ResourceRequester/registries/ResourceRouteRegistry';
+import resourceRouteRegistry from '../../../services/ResourceRequester/registries/resourceRouteRegistry';
 import exportToolbarActionStyles from './exportToolbarAction.scss';
 import AbstractListToolbarAction from './AbstractListToolbarAction';
 

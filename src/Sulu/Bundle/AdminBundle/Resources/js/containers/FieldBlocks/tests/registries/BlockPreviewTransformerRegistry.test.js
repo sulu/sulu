@@ -1,5 +1,5 @@
 // @flow
-import blockPreviewTransformerRegistry from '../../registries/BlockPreviewTransformerRegistry';
+import blockPreviewTransformerRegistry from '../../registries/blockPreviewTransformerRegistry';
 
 beforeEach(() => {
     blockPreviewTransformerRegistry.clear();

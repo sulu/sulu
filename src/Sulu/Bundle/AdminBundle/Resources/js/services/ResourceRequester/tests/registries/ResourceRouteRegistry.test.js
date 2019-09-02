@@ -1,6 +1,6 @@
 // @flow
 import SymfonyRouting from 'fos-jsrouting/router';
-import resourceRouteRegistry from '../../registries/ResourceRouteRegistry';
+import resourceRouteRegistry from '../../registries/resourceRouteRegistry';
 
 test('Set and get endpoints for given key', () => {
     SymfonyRouting.generate.mockImplementation((routeName, {value}) => {

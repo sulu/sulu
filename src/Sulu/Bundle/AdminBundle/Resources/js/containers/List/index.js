@@ -1,8 +1,8 @@
 // @flow
 import List from './List';
 import ListStore from './stores/ListStore';
-import listAdapterRegistry from './registries/ListAdapterRegistry';
-import listFieldTransformerRegistry from './registries/ListFieldTransformerRegistry';
+import listAdapterRegistry from './registries/listAdapterRegistry';
+import listFieldTransformerRegistry from './registries/listFieldTransformerRegistry';
 import ArrayFieldTransformer from './fieldTransformers/ArrayFieldTransformer';
 import ThumbnailFieldTransformer from './fieldTransformers/ThumbnailFieldTransformer';
 import StringFieldTransformer from './fieldTransformers/StringFieldTransformer';

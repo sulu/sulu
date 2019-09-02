@@ -2,8 +2,8 @@
 import React from 'react';
 import {mount, render} from 'enzyme';
 import TargetGroupRules from '../TargetGroupRules';
-import ruleRegistry from '../registries/RuleRegistry';
-import ruleTypeRegistry from '../registries/RuleTypeRegistry';
+import ruleRegistry from '../registries/ruleRegistry';
+import ruleTypeRegistry from '../registries/ruleTypeRegistry';
 import KeyValue from '../ruleTypes/KeyValue';
 import SingleSelect from '../ruleTypes/SingleSelect';
 
@@ -11,11 +11,11 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../registries/RuleTypeRegistry', () => ({
+jest.mock('../registries/ruleTypeRegistry', () => ({
     get: jest.fn(),
 }));
 
-jest.mock('../registries/RuleRegistry', () => ({
+jest.mock('../registries/ruleRegistry', () => ({
     getAll: jest.fn(),
     get: jest.fn(),
 }));

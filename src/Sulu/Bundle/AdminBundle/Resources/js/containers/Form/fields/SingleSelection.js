@@ -6,7 +6,7 @@ import type {FieldTypeProps} from '../../../types';
 import ResourceSingleSelect from '../../../containers/ResourceSingleSelect';
 import SingleAutoComplete from '../../../containers/SingleAutoComplete';
 import SingleSelectionComponent from '../../../containers/SingleSelection';
-import userStore from '../../../stores/UserStore';
+import userStore from '../../../stores/userStore';
 import {translate} from '../../../utils/Translator';
 
 type Props = FieldTypeProps<?Object | string | number>;

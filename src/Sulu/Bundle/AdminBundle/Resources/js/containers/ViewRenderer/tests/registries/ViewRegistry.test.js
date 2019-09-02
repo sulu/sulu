@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import viewRegistry from '../../registries/ViewRegistry';
+import viewRegistry from '../../registries/viewRegistry';
 
 beforeEach(() => {
     viewRegistry.clear();

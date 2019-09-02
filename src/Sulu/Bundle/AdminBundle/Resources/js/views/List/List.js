@@ -11,7 +11,7 @@ import type {ViewProps} from '../../containers/ViewRenderer';
 import type {Route} from '../../services/Router/types';
 import {translate} from '../../utils/Translator';
 import ResourceStore from '../../stores/ResourceStore';
-import listToolbarActionRegistry from './registries/ListToolbarActionRegistry';
+import listToolbarActionRegistry from './registries/listToolbarActionRegistry';
 import AbstractListToolbarAction from './toolbarActions/AbstractListToolbarAction';
 import listStyles from './list.scss';
 

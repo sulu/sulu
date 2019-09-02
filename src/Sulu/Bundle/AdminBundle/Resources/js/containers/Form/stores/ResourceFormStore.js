@@ -6,7 +6,7 @@ import jsonpointer from 'json-pointer';
 import ResourceStore from '../../../stores/ResourceStore';
 import type {FormStoreInterface, RawSchema, SchemaEntry, SchemaTypes} from '../types';
 import AbstractFormStore from './AbstractFormStore';
-import metadataStore from './MetadataStore';
+import metadataStore from './metadataStore';
 
 // TODO do not hardcode "template", use some kind of metadata instead
 const TYPE = 'template';

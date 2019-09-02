@@ -5,8 +5,8 @@ import {observer} from 'mobx-react';
 import {MultiSelect} from 'sulu-admin-bundle/components';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import {translate} from 'sulu-admin-bundle/utils';
-import webspaceStore from '../../../stores/WebspaceStore';
-import type {Webspace} from '../../../stores/WebspaceStore/types';
+import webspaceStore from '../../../stores/webspaceStore';
+import type {Webspace} from '../../../stores/webspaceStore/types';
 
 @observer
 class PageSettingsNavigationSelect extends React.Component<FieldTypeProps<Array<string | number>>> {

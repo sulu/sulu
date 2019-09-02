@@ -1,6 +1,6 @@
 // @flow
 import Form from './Form';
-import formToolbarActionRegistry from './registries/FormToolbarActionRegistry';
+import formToolbarActionRegistry from './registries/formToolbarActionRegistry';
 import AbstractFormToolbarAction from './toolbarActions/AbstractFormToolbarAction';
 import DeleteToolbarAction from './toolbarActions/DeleteToolbarAction';
 import SaveWithPublishingToolbarAction from './toolbarActions/SaveWithPublishingToolbarAction';

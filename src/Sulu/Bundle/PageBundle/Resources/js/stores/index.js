@@ -1,4 +1,4 @@
 // @flow
-import webspaceStore from './WebspaceStore';
+import webspaceStore from './webspaceStore';
 
 export {webspaceStore};

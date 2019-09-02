@@ -4,7 +4,7 @@ import {shallow} from 'enzyme';
 import {observable} from 'mobx';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
-import userStore from '../../../../stores/UserStore';
+import userStore from '../../../../stores/userStore';
 import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import SingleSelection from '../../fields/SingleSelection';
@@ -16,7 +16,7 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey
     this.locale = locale;
 }));
 
-jest.mock('../../../../stores/UserStore', () => jest.fn());
+jest.mock('../../../../stores/userStore', () => jest.fn());
 
 jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore, formKey, options) {
     this.resourceKey = resourceStore.resourceKey;

@@ -6,7 +6,7 @@ import log from 'loglevel';
 import Router from '../../services/Router';
 import {translate} from '../../utils';
 import FieldComponent from '../../components/Form/Field';
-import fieldRegistry from './registries/FieldRegistry';
+import fieldRegistry from './registries/fieldRegistry';
 import fieldStyles from './field.scss';
 import FormInspector from './FormInspector';
 import type {Error, ErrorCollection, SchemaEntry} from './types';

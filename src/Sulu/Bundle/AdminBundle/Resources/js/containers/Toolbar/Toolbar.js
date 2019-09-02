@@ -5,7 +5,7 @@ import React, {Fragment} from 'react';
 import ToolbarComponent from '../../components/Toolbar';
 import Snackbar from '../../components/Snackbar';
 import ToolbarStore from './stores/ToolbarStore';
-import toolbarStorePool, {DEFAULT_STORE_KEY} from './stores/ToolbarStorePool';
+import toolbarStorePool, {DEFAULT_STORE_KEY} from './stores/toolbarStorePool';
 import toolbarStyles from './toolbar.scss';
 import type {ToolbarProps} from './types';
 

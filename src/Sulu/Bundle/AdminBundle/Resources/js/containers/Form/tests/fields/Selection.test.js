@@ -5,7 +5,7 @@ import {mount, shallow} from 'enzyme';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import {translate} from '../../../../utils/Translator';
 import ResourceStore from '../../../../stores/ResourceStore';
-import userStore from '../../../../stores/UserStore';
+import userStore from '../../../../stores/userStore';
 import List from '../../../List';
 import Selection from '../../fields/Selection';
 import FormInspector from '../../FormInspector';
@@ -30,7 +30,7 @@ jest.mock('../../../List/stores/ListStore',
     }
 );
 
-jest.mock('../../../../stores/UserStore', () => ({}));
+jest.mock('../../../../stores/userStore', () => ({}));
 
 jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.id = formStore.id;

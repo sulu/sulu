@@ -4,14 +4,14 @@ import {observable} from 'mobx';
 import {mount} from 'enzyme';
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 import CKEditor5 from '../CKEditor5';
-import configRegistry from '../registries/ConfigRegistry';
-import pluginRegistry from '../registries/PluginRegistry';
+import configRegistry from '../registries/configRegistry';
+import pluginRegistry from '../registries/pluginRegistry';
 
-jest.mock('../registries/PluginRegistry', () => ({
+jest.mock('../registries/pluginRegistry', () => ({
     plugins: [],
 }));
 
-jest.mock('../registries/ConfigRegistry', () => ({
+jest.mock('../registries/configRegistry', () => ({
     configs: [],
 }));
 

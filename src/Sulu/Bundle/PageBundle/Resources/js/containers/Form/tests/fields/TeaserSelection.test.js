@@ -20,7 +20,7 @@ jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(funct
     this.locale = formStore.locale;
 }));
 
-jest.mock('sulu-admin-bundle/stores/UserStore', () => ({}));
+jest.mock('sulu-admin-bundle/stores/userStore', () => ({}));
 
 test('Pass props correctly to component', () => {
     const changeSpy = jest.fn();

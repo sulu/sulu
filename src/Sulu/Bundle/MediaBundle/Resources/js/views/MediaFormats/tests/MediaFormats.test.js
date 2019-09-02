@@ -25,7 +25,7 @@ jest.mock('sulu-admin-bundle/utils', () => ({
     translate: (key) => key,
 }));
 
-jest.mock('../../../stores/FormatStore', () => ({
+jest.mock('../../../stores/formatStore', () => ({
     loadFormats: jest.fn(),
 }));
 
@@ -72,7 +72,7 @@ test('Render a loading MediaFormats view if formats have not been loaded yet', (
 });
 
 test('Render a MediaFormats view', () => {
-    const formatStore = require('../../../stores/FormatStore');
+    const formatStore = require('../../../stores/formatStore');
     const formatPromise = Promise.resolve([
         {
             key: '400x400',
@@ -109,7 +109,7 @@ test('Render a MediaFormats view', () => {
 });
 
 test('Open the image in the given format when icon is clicked', () => {
-    const formatStore = require('../../../stores/FormatStore');
+    const formatStore = require('../../../stores/formatStore');
     const formatPromise = Promise.resolve([
         {
             key: '400x400',
@@ -151,7 +151,7 @@ test('Open the image in the given format when icon is clicked', () => {
 });
 
 test('Copy the image URL for the given format when icon is clicked and show a success message', () => {
-    const formatStore = require('../../../stores/FormatStore');
+    const formatStore = require('../../../stores/formatStore');
     const formatPromise = Promise.resolve([
         {
             key: '400x400',
@@ -203,7 +203,7 @@ test('Copy the image URL for the given format when icon is clicked and show a su
 });
 
 test('Should change locale via locale chooser', () => {
-    const formatStore = require('../../../stores/FormatStore');
+    const formatStore = require('../../../stores/formatStore');
     formatStore.loadFormats.mockReturnValue(Promise.resolve());
 
     const MediaFormats = require('../MediaFormats').default;
@@ -231,7 +231,7 @@ test('Should change locale via locale chooser', () => {
 });
 
 test('Should show locales from router options in toolbar', () => {
-    const formatStore = require('../../../stores/FormatStore');
+    const formatStore = require('../../../stores/formatStore');
     formatStore.loadFormats.mockReturnValue(Promise.resolve());
 
     const MediaFormats = require('../MediaFormats').default;
@@ -258,7 +258,7 @@ test('Should show locales from router options in toolbar', () => {
 });
 
 test('Should navigate to defined route on back button click', () => {
-    const formatStore = require('../../../stores/FormatStore');
+    const formatStore = require('../../../stores/formatStore');
     formatStore.loadFormats.mockReturnValue(Promise.resolve());
 
     const MediaFormats = require('../MediaFormats').default;

@@ -4,7 +4,7 @@ import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import MultiItemSelection from '../../components/MultiItemSelection';
 import {translate} from '../../utils/Translator';
-import smartContentConfigStore from './stores/SmartContentConfigStore';
+import smartContentConfigStore from './stores/smartContentConfigStore';
 import SmartContentStore from './stores/SmartContentStore';
 import FilterOverlay from './FilterOverlay';
 import SmartContentItem from './SmartContentItem';
