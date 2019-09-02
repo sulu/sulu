@@ -13,6 +13,7 @@ jest.mock('../../../utils/Translator', () => ({
 const mockUserStoreLogin = jest.fn().mockReturnValue(Promise.resolve({}));
 const mockUserStoreClear = jest.fn();
 const mockUserStoreForgotPassword = jest.fn();
+const mockUserStoreResetPassword = jest.fn().mockReturnValue(Promise.resolve({}));
 const mockUserStoreLoginError = jest.fn();
 const mockUserStoreSetResetSuccess = jest.fn();
 const mockUserStoreLoading = jest.fn().mockReturnValue(false);
@@ -30,6 +31,10 @@ jest.mock('../../../stores/userStore', () => {
 
         forgotPassword(user) {
             return mockUserStoreForgotPassword(user);
+        }
+
+        resetPassword(password) {
+            return mockUserStoreResetPassword(password);
         }
 
         setLoginError(value) {
@@ -56,46 +61,54 @@ beforeEach(() => {
 
 test('Should render the Login component when initialized is true', () => {
     expect(render(
-        <Login initialized={true} onLoginSuccess={jest.fn()} />)
+        <Login forgotPasswordToken={undefined} initialized={true} onLoginSuccess={jest.fn()} />)
     ).toMatchSnapshot();
 });
 
 test('Should render the component with loader', () => {
     expect(render(
-        <Login initialized={false} onLoginSuccess={jest.fn()} />)
+        <Login forgotPasswordToken={undefined} initialized={false} onLoginSuccess={jest.fn()} />)
     ).toMatchSnapshot();
 });
 
 test('Should render the LoginForm component with error', () => {
     mockUserStoreLoading.mockReturnValueOnce(true);
     expect(render(
-        <Login initialized={true} onLoginSuccess={jest.fn()} />
+        <Login forgotPasswordToken={undefined} initialized={true} onLoginSuccess={jest.fn()} />
     )).toMatchSnapshot();
 });
 
-test('Should render the Login with reset password view', () => {
-    const loginForm = shallow(
-        <Login initialized={true} onLoginSuccess={jest.fn()} />
+test('Should render the Login with forgot password view', () => {
+    const loginForm = mount(
+        <Login forgotPasswordToken={undefined} initialized={true} onLoginSuccess={jest.fn()} />
     );
     loginForm.instance().handleChangeToForgotPasswordForm();
 
     expect(loginForm.render()).toMatchSnapshot();
 });
 
-test('Should render the Login with reset password with success', () => {
+test('Should render the Login with forgot password with success', () => {
     mockUserStoreForgotPasswordSuccess.mockReturnValueOnce(true);
     const loginForm = shallow(
-        <Login initialized={true} onLoginSuccess={jest.fn()} />
+        <Login forgotPasswordToken={undefined} initialized={true} onLoginSuccess={jest.fn()} />
     );
     loginForm.instance().handleChangeToForgotPasswordForm();
 
     expect(loginForm.render()).toMatchSnapshot();
 });
 
-test('Should call the submit handler of the current view', () => {
+test('Should render the Login with reset password view', () => {
+    const loginForm = mount(
+        <Login forgotPasswordToken="some-uuid" initialized={true} onLoginSuccess={jest.fn()} />
+    );
+
+    expect(loginForm.render()).toMatchSnapshot();
+});
+
+test('Should call the submit handler of the login view', () => {
     const eventMock = {preventDefault: () => {}};
     const login = mount(
-        <Login initialized={true} onLoginSuccess={jest.fn()} />
+        <Login forgotPasswordToken={undefined} initialized={true} onLoginSuccess={jest.fn()} />
     );
 
     login.find('Input[icon="su-user"]').prop('onChange')('testUser');
@@ -104,6 +117,13 @@ test('Should call the submit handler of the current view', () => {
     login.find('form').prop('onSubmit')(eventMock);
 
     expect(mockUserStoreLogin).toBeCalledWith('testUser', 'testPassword');
+});
+
+test('Should call the submit handler of the forgot password view', () => {
+    const eventMock = {preventDefault: () => {}};
+    const login = mount(
+        <Login forgotPasswordToken={undefined} initialized={true} onLoginSuccess={jest.fn()} />
+    );
 
     login.find('Button[children="sulu_admin.forgot_password"]').prop('onClick')();
 
@@ -112,4 +132,17 @@ test('Should call the submit handler of the current view', () => {
     login.find('form').prop('onSubmit')(eventMock);
 
     expect(mockUserStoreForgotPassword).toBeCalledWith('testUser');
+});
+
+test('Should call the submit handler of the reset password view', () => {
+    const eventMock = {preventDefault: () => {}};
+    const login = mount(
+        <Login forgotPasswordToken="some-uuid" initialized={true} onLoginSuccess={jest.fn()} />
+    );
+
+    login.find('Input[icon="su-lock"]').at(0).prop('onChange')('test');
+    login.find('Input[icon="su-lock"]').at(1).prop('onChange')('test');
+    login.find('form').prop('onSubmit')(eventMock);
+
+    expect(mockUserStoreResetPassword).toBeCalledWith('test');
 });

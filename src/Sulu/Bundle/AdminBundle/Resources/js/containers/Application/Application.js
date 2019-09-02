@@ -124,7 +124,7 @@ class Application extends React.Component<Props>{
     };
 
     render() {
-        const {router, suluVersion, appVersion} = this.props;
+        const {appVersion, router, suluVersion} = this.props;
         const {loggedIn} = userStore;
 
         const rootClass = classNames(
@@ -156,6 +156,7 @@ class Application extends React.Component<Props>{
                 {!loggedIn &&
                     <Login
                         backLink="/" // TODO: Get the correct link here from the backend
+                        forgotPasswordToken={router.attributes.forgotPasswordToken}
                         initialized={!initializer.loading && !!initializer.initializedTranslationsLocale}
                         onLoginSuccess={this.handleLoginSuccess}
                     />

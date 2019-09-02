@@ -6,14 +6,17 @@ import Icon from '../../components/Icon/index';
 import {translate} from '../../utils/index';
 import Loader from '../../components/Loader/Loader';
 import userStore from '../../stores/userStore';
-import LoginForm from './LoginForm';
 import ForgotPasswordForm from './ForgotPasswordForm';
+import LoginForm from './LoginForm';
+import ResetPasswordForm from './ResetPasswordForm';
 import loginStyles from './login.scss';
+import type {FormTypes} from './types';
 
 const BACK_LINK_ARROW_LEFT_ICON = 'su-angle-left';
 
 type Props = {|
     backLink: string,
+    forgotPasswordToken: ?string,
     initialized: boolean,
     onLoginSuccess: () => void,
 |};
@@ -25,7 +28,7 @@ class Login extends React.Component<Props> {
         initialized: false,
     };
 
-    @observable visibleForm: 'login' | 'forgot-password' = 'login';
+    @observable visibleForm: FormTypes = this.props.forgotPasswordToken ? 'reset-password' : 'login';
 
     @computed get loginFormVisible(): boolean {
         return this.visibleForm === 'login';
@@ -33,6 +36,10 @@ class Login extends React.Component<Props> {
 
     @computed get forgotPasswordFormVisible(): boolean {
         return this.visibleForm === 'forgot-password';
+    }
+
+    @computed get resetPasswordFormVisible(): boolean {
+        return this.visibleForm === 'reset-password';
     }
 
     @action clearState = () => {
@@ -59,6 +66,19 @@ class Login extends React.Component<Props> {
 
     handleForgotPasswordFormSubmit = (user: string) => {
         userStore.forgotPassword(user);
+    };
+
+    handleResetPasswordFormSubmit = (password: string) => {
+        const {forgotPasswordToken, onLoginSuccess} = this.props;
+
+        if (!forgotPasswordToken) {
+            throw new Error('The "forgotPasswordToken" is not set. This should not happen and is likely a bug.');
+        }
+
+        userStore.resetPassword(password, forgotPasswordToken)
+            .then(() => {
+                onLoginSuccess();
+            });
     };
 
     render() {
@@ -90,6 +110,13 @@ class Login extends React.Component<Props> {
                                 onChangeForm={this.handleChangeToLoginForm}
                                 onSubmit={this.handleForgotPasswordFormSubmit}
                                 success={userStore.forgotPasswordSuccess}
+                            />
+                        }
+                        {initialized && this.resetPasswordFormVisible &&
+                            <ResetPasswordForm
+                                loading={userStore.loading}
+                                onChangeForm={this.handleChangeToLoginForm}
+                                onSubmit={this.handleResetPasswordFormSubmit}
                             />
                         }
                     </div>

@@ -79,29 +79,31 @@ class UserStore {
         }
     }
 
+    handleLogin = (user: string) => {
+        if (this.user) {
+            // when the user was logged in already and comes again with the same user
+            // we don't need to initialize again
+            if (user === this.user.username) {
+                this.setLoggedIn(true);
+                this.setLoading(false);
+
+                return;
+            }
+
+            this.clear();
+        }
+
+        this.setLoading(true);
+        return initializer.initialize(true).then(() => {
+            this.setLoading(false);
+        });
+    };
+
     login = (user: string, password: string) => {
         this.setLoading(true);
 
         return Requester.post(Config.endpoints.loginCheck, {username: user, password: password})
-            .then(() => {
-                if (this.user) {
-                    // when the user was logged in already and comes again with the same user
-                    // we don't need to initialize again
-                    if (user === this.user.username) {
-                        this.setLoggedIn(true);
-                        this.setLoading(false);
-
-                        return;
-                    }
-
-                    this.clear();
-                }
-
-                this.setLoading(true);
-                return initializer.initialize(true).then(() => {
-                    this.setLoading(false);
-                });
-            })
+            .then(() => this.handleLogin(user))
             .catch((error) => {
                 this.setLoading(false);
                 if (error.status !== 401) {
@@ -140,6 +142,16 @@ class UserStore {
                 if (error.status !== 400) {
                     return Promise.reject(error);
                 }
+            });
+    }
+
+    resetPassword(password: string, token: string) {
+        this.setLoading(true);
+
+        return Requester.post(Config.endpoints.resetPassword, {password, token})
+            .then(({user}) => this.handleLogin(user))
+            .catch(() => {
+                this.setLoading(false);
             });
     }
 

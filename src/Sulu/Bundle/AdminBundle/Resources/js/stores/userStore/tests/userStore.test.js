@@ -176,6 +176,26 @@ test('Should login', () => {
     });
 });
 
+test('Should login after the password was reset', () => {
+    const resetPromise = Promise.resolve({});
+    const initializePromise = Promise.resolve({});
+
+    Requester.post.mockReturnValue(resetPromise);
+    initializer.initialize.mockReturnValue(initializePromise);
+
+    userStore.resetPassword('test', 'some-uuid');
+    expect(userStore.loading).toBe(true);
+
+    return resetPromise.then(() => {
+        expect(Requester.post).toBeCalledWith('reset_password', {password: 'test', token: 'some-uuid'});
+        expect(initializer.initialize).toBeCalledWith(true);
+
+        return initializePromise.then(() => {
+            expect(userStore.loading).toBe(false);
+        });
+    });
+});
+
 test('Should login without initializing when it`s the same user', () => {
     const user = {id: 1, locale: 'cool_locale', settings: {}, username: 'test'};
     const loginPromise = Promise.resolve({});
@@ -239,7 +259,7 @@ test('Should show error when login is not working and error status is 401', () =
         });
 });
 
-test('Should reset password', () => {
+test('Should send an email when the password is forgotten', () => {
     Requester.post.mockReturnValue(Promise.resolve({}));
 
     const promise = userStore.forgotPassword('test');
