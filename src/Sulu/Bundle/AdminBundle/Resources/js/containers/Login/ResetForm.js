@@ -41,26 +41,14 @@ class ResetForm extends React.Component<Props> {
         }
     }
 
-    renderHeader() {
-        if (this.props.success) {
-            return (
-                <Header small={true}>
-                    {translate('sulu_admin.reset_password_success')}
-                </Header>
-            );
-        }
-
-        return (
-            <Header>
-                {translate('sulu_admin.reset_password')}
-            </Header>
-        );
-    }
-
     render() {
+        const {success} = this.props;
+
         return (
             <Fragment>
-                {this.renderHeader()}
+                <Header small={success}>
+                    {translate(success ? 'sulu_admin.reset_password_success' : 'sulu_admin.reset_password')}
+                </Header>
                 <form className={formStyles.form} onSubmit={this.props.onSubmit}>
                     <fieldset>
                         <label className={formStyles.inputField}>

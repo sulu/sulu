@@ -44,33 +44,21 @@ class LoginForm extends React.Component<Props> {
         }
     }
 
-    renderHeader() {
-        if (this.props.error) {
-            return (
-                <Header small={true}>
-                    {translate('sulu_admin.login_error')}
-                </Header>
-            );
-        }
-
-        return (
-            <Header>
-                {translate('sulu_admin.welcome')}
-            </Header>
-        );
-    }
-
     render() {
+        const {error} = this.props;
+
         const inputFieldClass = classNames(
             formStyles.inputField,
             {
-                [formStyles.error]: this.props.error,
+                [formStyles.error]: error,
             }
         );
 
         return (
             <Fragment>
-                {this.renderHeader()}
+                <Header small={error}>
+                    {translate(error ? 'sulu_admin.login_error' : 'sulu_admin.welcome')}
+                </Header>
                 <form className={formStyles.form} onSubmit={this.props.onSubmit}>
                     <fieldset>
                         <label className={inputFieldClass}>

@@ -12,11 +12,11 @@ import loginStyles from './login.scss';
 
 const BACK_LINK_ARROW_LEFT_ICON = 'su-angle-left';
 
-type Props = {
+type Props = {|
     backLink: string,
     initialized: boolean,
     onLoginSuccess: () => void,
-};
+|};
 
 @observer
 class Login extends React.Component<Props> {
@@ -85,60 +85,9 @@ class Login extends React.Component<Props> {
         userStore.resetPassword(this.user);
     };
 
-    renderForm() {
-        if (!this.props.initialized) {
-            return (
-                <div className={loginStyles.loaderContainer}>
-                    <Loader size={20} />
-                </div>
-            );
-        }
-
-        if (this.loginFormVisible) {
-            return (
-                <LoginForm
-                    error={userStore.loginError}
-                    loading={userStore.loading}
-                    onChangeForm={this.handleChangeToResetForm}
-                    onPasswordChange={this.handlePasswordChange}
-                    onSubmit={this.handleLoginFormSubmit}
-                    onUserChange={this.handleUserChange}
-                    password={this.password}
-                    user={this.user}
-                />
-            );
-        }
-
-        if (this.resetFormVisible) {
-            return (
-                <ResetForm
-                    loading={userStore.loading}
-                    onChangeForm={this.handleChangeToLoginForm}
-                    onSubmit={this.handleResetFormSubmit}
-                    onUserChange={this.handleUserChange}
-                    success={userStore.resetSuccess}
-                    user={this.user}
-                />
-            );
-        }
-    }
-
-    renderBackLink() {
+    render() {
         const {backLink, initialized} = this.props;
 
-        if (!initialized) {
-            return null;
-        }
-
-        return (
-            <a className={loginStyles.backLink} href={backLink}>
-                <Icon className={loginStyles.backLinkIcon} name={BACK_LINK_ARROW_LEFT_ICON} />
-                {translate('sulu_admin.back_to_website')}
-            </a>
-        );
-    }
-
-    render() {
         return (
             <div className={loginStyles.login}>
                 <div className={loginStyles.loginContainer}>
@@ -146,10 +95,41 @@ class Login extends React.Component<Props> {
                         <div className={loginStyles.logoContainer}>
                             <Icon name="su-sulu" />
                         </div>
-                        {this.renderForm()}
+                        {!initialized &&
+                            <div className={loginStyles.loaderContainer}>
+                                <Loader size={20} />
+                            </div>
+                        }
+                        {initialized && this.loginFormVisible &&
+                            <LoginForm
+                                error={userStore.loginError}
+                                loading={userStore.loading}
+                                onChangeForm={this.handleChangeToResetForm}
+                                onPasswordChange={this.handlePasswordChange}
+                                onSubmit={this.handleLoginFormSubmit}
+                                onUserChange={this.handleUserChange}
+                                password={this.password}
+                                user={this.user}
+                            />
+                        }
+                        {initialized && this.resetFormVisible &&
+                            <ResetForm
+                                loading={userStore.loading}
+                                onChangeForm={this.handleChangeToLoginForm}
+                                onSubmit={this.handleResetFormSubmit}
+                                onUserChange={this.handleUserChange}
+                                success={userStore.resetSuccess}
+                                user={this.user}
+                            />
+                        }
                     </div>
                     <div className={loginStyles.backLinkContainer}>
-                        {this.renderBackLink()}
+                        {initialized &&
+                            <a className={loginStyles.backLink} href={backLink}>
+                                <Icon className={loginStyles.backLinkIcon} name={BACK_LINK_ARROW_LEFT_ICON} />
+                                {translate('sulu_admin.back_to_website')}
+                            </a>
+                        }
                     </div>
                 </div>
             </div>
