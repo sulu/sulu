@@ -26,8 +26,6 @@ class Login extends React.Component<Props> {
     };
 
     @observable visibleForm: 'login' | 'reset' = 'login';
-    @observable user: ?string;
-    @observable password: ?string;
 
     @computed get loginFormVisible(): boolean {
         return this.visibleForm === 'login';
@@ -53,36 +51,14 @@ class Login extends React.Component<Props> {
         this.visibleForm = 'reset';
     };
 
-    @action handleUserChange = (user: ?string) => {
-        this.clearState();
-        this.user = user;
-    };
-
-    @action handlePasswordChange = (password: ?string) => {
-        this.clearState();
-        this.password = password;
-    };
-
-    handleLoginFormSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        if (!this.user || !this.password) {
-            return;
-        }
-
-        userStore.login(this.user, this.password).then(() => {
+    handleLoginFormSubmit = (user: string, password: string) => {
+        userStore.login(user, password).then(() => {
             this.props.onLoginSuccess();
         });
     };
 
-    handleResetFormSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        if (!this.user) {
-            return;
-        }
-
-        userStore.resetPassword(this.user);
+    handleResetFormSubmit = (user: string) => {
+        userStore.resetPassword(user);
     };
 
     render() {
@@ -105,11 +81,7 @@ class Login extends React.Component<Props> {
                                 error={userStore.loginError}
                                 loading={userStore.loading}
                                 onChangeForm={this.handleChangeToResetForm}
-                                onPasswordChange={this.handlePasswordChange}
                                 onSubmit={this.handleLoginFormSubmit}
-                                onUserChange={this.handleUserChange}
-                                password={this.password}
-                                user={this.user}
                             />
                         }
                         {initialized && this.resetFormVisible &&
@@ -117,9 +89,7 @@ class Login extends React.Component<Props> {
                                 loading={userStore.loading}
                                 onChangeForm={this.handleChangeToLoginForm}
                                 onSubmit={this.handleResetFormSubmit}
-                                onUserChange={this.handleUserChange}
                                 success={userStore.resetSuccess}
-                                user={this.user}
                             />
                         }
                     </div>

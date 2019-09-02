@@ -9,14 +9,12 @@ import Input from '../../components/Input/index';
 import Header from './Header';
 import formStyles from './form.scss';
 
-type Props = {
+type Props = {|
     loading: boolean,
     onChangeForm: () => void,
-    onSubmit: (event: SyntheticEvent<HTMLFormElement>) => void,
-    onUserChange: (user: ?string) => void,
+    onSubmit: (user: string) => void,
     success: boolean,
-    user: ?string,
-};
+|};
 
 @observer
 class ResetForm extends React.Component<Props> {
@@ -27,8 +25,10 @@ class ResetForm extends React.Component<Props> {
 
     @observable inputRef: ?ElementRef<*>;
 
+    @observable user: ?string;
+
     @computed get submitButtonDisabled(): boolean {
-        return !this.props.user;
+        return !this.user;
     }
 
     @action setInputRef = (ref: ?ElementRef<*>) => {
@@ -41,6 +41,22 @@ class ResetForm extends React.Component<Props> {
         }
     }
 
+    @action handleUserChange = (user: ?string) => {
+        this.user = user;
+    };
+
+    handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        if (!this.user) {
+            return;
+        }
+
+        const {onSubmit} = this.props;
+
+        onSubmit(this.user);
+    };
+
     render() {
         const {success} = this.props;
 
@@ -49,7 +65,7 @@ class ResetForm extends React.Component<Props> {
                 <Header small={success}>
                     {translate(success ? 'sulu_admin.reset_password_success' : 'sulu_admin.reset_password')}
                 </Header>
-                <form className={formStyles.form} onSubmit={this.props.onSubmit}>
+                <form className={formStyles.form} onSubmit={this.handleSubmit}>
                     <fieldset>
                         <label className={formStyles.inputField}>
                             <div className={formStyles.labelText}>
@@ -58,8 +74,8 @@ class ResetForm extends React.Component<Props> {
                             <Input
                                 icon="su-user"
                                 inputRef={this.setInputRef}
-                                onChange={this.props.onUserChange}
-                                value={this.props.user}
+                                onChange={this.handleUserChange}
+                                value={this.user}
                             />
                         </label>
                         <div className={formStyles.buttons}>

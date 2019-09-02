@@ -14,21 +14,6 @@ test('Should render the component', () => {
         <ResetForm
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
-            onUserChange={jest.fn()}
-            user={undefined}
-        />)
-    ).toMatchSnapshot();
-});
-
-test('Should render the component with data', () => {
-    expect(render(
-        <ResetForm
-            onChangeForm={jest.fn()}
-            onPasswordChange={jest.fn()}
-            onSubmit={jest.fn()}
-            onUserChange={jest.fn()}
-            password="test"
-            user="test"
         />)
     ).toMatchSnapshot();
 });
@@ -36,11 +21,8 @@ test('Should render the component with data', () => {
 test('Should render the component loading', () => {
     expect(render(
         <ResetForm
-            error={true}
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
-            onUserChange={jest.fn()}
-            user="test"
         />)
     ).toMatchSnapshot();
 });
@@ -50,27 +32,9 @@ test('Should render the component with success', () => {
         <ResetForm
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
-            onUserChange={jest.fn()}
             success={true}
-            user="test"
         />)
     ).toMatchSnapshot();
-});
-
-test('Should trigger onUserChange correctly', () => {
-    const onUserChange = jest.fn();
-    const resetForm = shallow(
-        <ResetForm
-            onChangeForm={jest.fn()}
-            onSubmit={jest.fn()}
-            onUserChange={onUserChange}
-            user="test"
-        />
-    );
-
-    resetForm.find('Input').at(0).simulate('change', 'test-user-123');
-
-    expect(onUserChange).toBeCalledWith('test-user-123');
 });
 
 test('Should trigger onChangeForm correctly', () => {
@@ -79,8 +43,6 @@ test('Should trigger onChangeForm correctly', () => {
         <ResetForm
             onChangeForm={onChangeForm}
             onSubmit={jest.fn()}
-            onUserChange={jest.fn()}
-            user="test"
         />
     );
 
@@ -89,17 +51,41 @@ test('Should trigger onChangeForm correctly', () => {
     expect(onChangeForm).toBeCalled();
 });
 
+test('Should not trigger onSubmit if user is missing', () => {
+    const onSubmit = jest.fn();
+    const resetForm = shallow(
+        <ResetForm
+            onChangeForm={jest.fn()}
+            onSubmit={onSubmit}
+        />
+    );
+
+    const event = {
+        preventDefault: jest.fn(),
+    };
+
+    resetForm.find('form').prop('onSubmit')(event);
+
+    expect(event.preventDefault).toBeCalledWith();
+    expect(onSubmit).not.toBeCalled();
+});
+
 test('Should trigger onSubmit correctly', () => {
     const onSubmit = jest.fn();
     const resetForm = shallow(
         <ResetForm
             onChangeForm={jest.fn()}
             onSubmit={onSubmit}
-            onUserChange={jest.fn()}
-            user="test"
         />
     );
-    resetForm.find('form').simulate('submit');
 
-    expect(onSubmit).toBeCalled();
+    const event = {
+        preventDefault: jest.fn(),
+    };
+
+    resetForm.find('Input[icon="su-user"]').prop('onChange')('Max');
+    resetForm.find('form').prop('onSubmit')(event);
+
+    expect(event.preventDefault).toBeCalledWith();
+    expect(onSubmit).toBeCalledWith('Max');
 });

@@ -94,50 +94,22 @@ test('Should render the Login with reset password with success', () => {
 
 test('Should call the submit handler of the current view', () => {
     const eventMock = {preventDefault: () => {}};
-    const login = shallow(
+    const login = mount(
         <Login initialized={true} onLoginSuccess={jest.fn()} />
     );
-    const loginInstance = login.instance();
 
-    loginInstance.handleUserChange('testUser');
-    loginInstance.handlePasswordChange('testPassword');
+    login.find('Input[icon="su-user"]').prop('onChange')('testUser');
+    login.find('Input[icon="su-lock"]').prop('onChange')('testPassword');
 
-    loginInstance.handleLoginFormSubmit(eventMock);
+    login.find('form').prop('onSubmit')(eventMock);
+
     expect(mockUserStoreLogin).toBeCalledWith('testUser', 'testPassword');
 
-    loginInstance.handleChangeToResetForm();
-    loginInstance.handleResetFormSubmit(eventMock);
-    expect(mockUserStoreResetPassword).toBeCalledWith('testUser');
-});
+    login.find('Button[children="sulu_admin.forgot_password"]').prop('onClick')();
 
-test('Should clear the state when user is changed', () => {
-    const login = mount(
-        <Login initialized={true} onLoginSuccess={jest.fn()} />
-    );
-
-    expect(login.instance().user).toBeUndefined();
-    login.find('LoginForm').prop('onUserChange')('testi');
-
-    expect(mockUserStoreLoginError).toBeCalledWith(false);
-    expect(login.instance().user).toBe('testi');
-
-    // switch to reset form and the onUserChange should trigger the same
-    login.instance().handleChangeToResetForm();
     login.update();
+    login.find('Input[icon="su-user"]').prop('onChange')('testUser');
+    login.find('form').prop('onSubmit')(eventMock);
 
-    login.find('ResetForm').prop('onUserChange')('testi-forgotten');
-    expect(mockUserStoreSetResetSuccess).toBeCalledWith(false);
-    expect(login.instance().user).toBe('testi-forgotten');
-});
-
-test('Should call the onClearError handler when password is changed', () => {
-    const login = mount(
-        <Login initialized={true} onLoginSuccess={jest.fn()} />
-    );
-
-    expect(login.instance().password).toBeUndefined();
-    login.find('LoginForm').prop('onPasswordChange')('no-pw');
-
-    expect(mockUserStoreLoginError).toBeCalledWith(false);
-    expect(login.instance().password).toBe('no-pw');
+    expect(mockUserStoreResetPassword).toBeCalledWith('testUser');
 });

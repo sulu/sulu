@@ -10,16 +10,12 @@ import Input from '../../components/Input/index';
 import formStyles from './form.scss';
 import Header from './Header';
 
-type Props = {
+type Props = {|
     error: boolean,
     loading: boolean,
     onChangeForm: () => void,
-    onPasswordChange: (user: ?string) => void,
-    onSubmit: (event: SyntheticEvent<HTMLFormElement>) => void,
-    onUserChange: (user: ?string) => void,
-    password: ?string,
-    user: ?string,
-};
+    onSubmit: (user: string, password: string) => void,
+|};
 
 @observer
 class LoginForm extends React.Component<Props> {
@@ -30,8 +26,11 @@ class LoginForm extends React.Component<Props> {
 
     @observable inputRef: ?ElementRef<*>;
 
+    @observable user: ?string;
+    @observable password: ?string;
+
     @computed get submitButtonDisabled(): boolean {
-        return this.props.error || !(this.props.user && this.props.password);
+        return !(this.user && this.password);
     }
 
     @action setInputRef = (ref: ?ElementRef<*>) => {
@@ -43,6 +42,26 @@ class LoginForm extends React.Component<Props> {
             this.inputRef.focus();
         }
     }
+
+    @action handleUserChange = (user: ?string) => {
+        this.user = user;
+    };
+
+    @action handlePasswordChange = (password: ?string) => {
+        this.password = password;
+    };
+
+    @action handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        if (!this.user || !this.password) {
+            return;
+        }
+
+        const {onSubmit} = this.props;
+
+        onSubmit(this.user, this.password);
+    };
 
     render() {
         const {error} = this.props;
@@ -59,7 +78,7 @@ class LoginForm extends React.Component<Props> {
                 <Header small={error}>
                     {translate(error ? 'sulu_admin.login_error' : 'sulu_admin.welcome')}
                 </Header>
-                <form className={formStyles.form} onSubmit={this.props.onSubmit}>
+                <form className={formStyles.form} onSubmit={this.handleSubmit}>
                     <fieldset>
                         <label className={inputFieldClass}>
                             <div className={formStyles.labelText}>
@@ -68,9 +87,9 @@ class LoginForm extends React.Component<Props> {
                             <Input
                                 icon="su-user"
                                 inputRef={this.setInputRef}
-                                onChange={this.props.onUserChange}
+                                onChange={this.handleUserChange}
                                 valid={!this.props.error}
-                                value={this.props.user}
+                                value={this.user}
                             />
                         </label>
                         <label className={inputFieldClass}>
@@ -79,10 +98,10 @@ class LoginForm extends React.Component<Props> {
                             </div>
                             <Input
                                 icon="su-lock"
-                                onChange={this.props.onPasswordChange}
+                                onChange={this.handlePasswordChange}
                                 type="password"
                                 valid={!this.props.error}
-                                value={this.props.password}
+                                value={this.password}
                             />
                         </label>
                         <div className={formStyles.buttons}>

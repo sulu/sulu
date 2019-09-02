@@ -98,7 +98,7 @@ Array [
           </div>
           <input
             type="text"
-            value="test"
+            value=""
           />
         </label>
       </label>
@@ -117,71 +117,7 @@ Array [
         </button>
         <button
           class="button primary"
-          type="submit"
-        >
-          <span
-            class="text"
-          >
-            sulu_admin.reset
-          </span>
-        </button>
-      </div>
-    </fieldset>
-  </form>,
-]
-`;
-
-exports[`Should render the component with data 1`] = `
-Array [
-  <div
-    class="header"
-  >
-    sulu_admin.reset_password
-  </div>,
-  <form
-    class="form"
-  >
-    <fieldset>
-      <label
-        class="inputField"
-      >
-        <div
-          class="labelText"
-        >
-          sulu_admin.username_or_email
-        </div>
-        <label
-          class="input default left"
-        >
-          <div
-            class="prependedContainer default"
-          >
-            <span
-              aria-label="su-user"
-              class="su-user icon default"
-            />
-          </div>
-          <input
-            type="text"
-            value="test"
-          />
-        </label>
-      </label>
-      <div
-        class="buttons"
-      >
-        <button
-          class="button link"
-          type="button"
-        >
-          <span
-            class="text"
-          >
-            sulu_admin.to_login
-          </span>
-        </button>
-        <button
-          class="button primary"
+          disabled=""
           type="submit"
         >
           <span
@@ -228,7 +164,7 @@ Array [
           </div>
           <input
             type="text"
-            value="test"
+            value=""
           />
         </label>
       </label>
@@ -247,6 +183,7 @@ Array [
         </button>
         <button
           class="button primary"
+          disabled=""
           type="submit"
         >
           <span

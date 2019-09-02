@@ -13,24 +13,7 @@ test('Should render the component', () => {
     expect(render(
         <LoginForm
             onChangeForm={jest.fn()}
-            onPasswordChange={jest.fn()}
             onSubmit={jest.fn()}
-            onUserChange={jest.fn()}
-            password={undefined}
-            user={undefined}
-        />)
-    ).toMatchSnapshot();
-});
-
-test('Should render the component with data', () => {
-    expect(render(
-        <LoginForm
-            onChangeForm={jest.fn()}
-            onPasswordChange={jest.fn()}
-            onSubmit={jest.fn()}
-            onUserChange={jest.fn()}
-            password="test"
-            user="test"
         />)
     ).toMatchSnapshot();
 });
@@ -38,13 +21,9 @@ test('Should render the component with data', () => {
 test('Should render the component loading', () => {
     expect(render(
         <LoginForm
-            error={true}
+            loading={true}
             onChangeForm={jest.fn()}
-            onPasswordChange={jest.fn()}
             onSubmit={jest.fn()}
-            onUserChange={jest.fn()}
-            password="test"
-            user="test"
         />)
     ).toMatchSnapshot();
 });
@@ -54,49 +33,9 @@ test('Should render the component with error', () => {
         <LoginForm
             error={true}
             onChangeForm={jest.fn()}
-            onPasswordChange={jest.fn()}
             onSubmit={jest.fn()}
-            onUserChange={jest.fn()}
-            password="test"
-            user="test"
         />)
     ).toMatchSnapshot();
-});
-
-test('Should trigger onUserChange correctly', () => {
-    const onUserChange = jest.fn();
-    const loginForm = shallow(
-        <LoginForm
-            onChangeForm={jest.fn()}
-            onPasswordChange={jest.fn()}
-            onSubmit={jest.fn()}
-            onUserChange={onUserChange}
-            password="test"
-            user="test"
-        />
-    );
-
-    loginForm.find('Input').at(0).simulate('change', 'test-user-123');
-
-    expect(onUserChange).toBeCalledWith('test-user-123');
-});
-
-test('Should trigger onPasswordChange correctly', () => {
-    const onPasswordChange = jest.fn();
-    const loginForm = shallow(
-        <LoginForm
-            onChangeForm={jest.fn()}
-            onPasswordChange={onPasswordChange}
-            onSubmit={jest.fn()}
-            onUserChange={jest.fn()}
-            password="test"
-            user="test"
-        />
-    );
-
-    loginForm.find('Input').at(1).simulate('change', '123');
-
-    expect(onPasswordChange).toBeCalledWith('123');
 });
 
 test('Should trigger onChangeForm correctly', () => {
@@ -104,11 +43,7 @@ test('Should trigger onChangeForm correctly', () => {
     const loginForm = shallow(
         <LoginForm
             onChangeForm={onChangeForm}
-            onPasswordChange={jest.fn()}
             onSubmit={jest.fn()}
-            onUserChange={jest.fn()}
-            password="test"
-            user="test"
         />
     );
 
@@ -117,19 +52,43 @@ test('Should trigger onChangeForm correctly', () => {
     expect(onChangeForm).toBeCalled();
 });
 
+test('Should not trigger onSubmit if password or user is missing', () => {
+    const onSubmit = jest.fn();
+    const loginForm = shallow(
+        <LoginForm
+            onChangeForm={jest.fn()}
+            onSubmit={onSubmit}
+        />
+    );
+
+    const event = {
+        preventDefault: jest.fn(),
+    };
+
+    loginForm.find('Input[icon="su-user"]').prop('onChange')('Max');
+    loginForm.find('form').prop('onSubmit')(event);
+
+    expect(event.preventDefault).toBeCalledWith();
+    expect(onSubmit).not.toBeCalled();
+});
+
 test('Should trigger onSubmit correctly', () => {
     const onSubmit = jest.fn();
     const loginForm = shallow(
         <LoginForm
             onChangeForm={jest.fn()}
-            onPasswordChange={jest.fn()}
             onSubmit={onSubmit}
-            onUserChange={jest.fn()}
-            password="test"
-            user="test"
         />
     );
-    loginForm.find('form').simulate('submit');
 
-    expect(onSubmit).toBeCalled();
+    const event = {
+        preventDefault: jest.fn(),
+    };
+
+    loginForm.find('Input[icon="su-user"]').prop('onChange')('Max');
+    loginForm.find('Input[icon="su-lock"]').prop('onChange')('max');
+    loginForm.find('form').prop('onSubmit')(event);
+
+    expect(event.preventDefault).toBeCalledWith();
+    expect(onSubmit).toBeCalledWith('Max', 'max');
 });
