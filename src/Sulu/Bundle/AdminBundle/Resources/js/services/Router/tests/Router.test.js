@@ -309,6 +309,17 @@ test('Navigate to route using URL', () => {
     expect(history.location.pathname).toBe('/pages/some-uuid/value');
 });
 
+test('Navigate to route using non-existant URL with attributes', () => {
+    routeRegistry.getAll.mockReturnValue({});
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+
+    history.push('/?token=some-uuid');
+    expect(router.route).toEqual(undefined);
+    expect(router.attributes.token).toBe('some-uuid');
+});
+
 test('Navigate to route using URL with search parameters', () => {
     routeRegistry.getAll.mockReturnValue({
         page: {

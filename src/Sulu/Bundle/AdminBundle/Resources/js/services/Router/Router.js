@@ -107,7 +107,7 @@ export default class Router {
         this.match(this.history.location.pathname, this.history.location.search);
     };
 
-    match(path: string, queryString: string) {
+    @action match(path: string, queryString: string) {
         for (const name in routeRegistry.getAll()) {
             const route = routeRegistry.get(name);
             const names = [];
@@ -129,8 +129,16 @@ export default class Router {
 
             this.handleNavigation(name, attributes, this.navigate);
 
-            break;
+            return;
         }
+
+        const attributes = {};
+        const search = new URLSearchParams(queryString);
+        search.forEach((value, key) => {
+            attributes[key] = Router.tryParse(value);
+        });
+
+        this.attributes = attributes;
     }
 
     handleNavigation(name: string, attributes: Object, updateRouteMethod: UpdateRouteMethod): void {
