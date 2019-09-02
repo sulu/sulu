@@ -12,11 +12,11 @@ jest.mock('../../../utils/Translator', () => ({
 
 const mockUserStoreLogin = jest.fn().mockReturnValue(Promise.resolve({}));
 const mockUserStoreClear = jest.fn();
-const mockUserStoreResetPassword = jest.fn();
+const mockUserStoreForgotPassword = jest.fn();
 const mockUserStoreLoginError = jest.fn();
 const mockUserStoreSetResetSuccess = jest.fn();
 const mockUserStoreLoading = jest.fn().mockReturnValue(false);
-const mockUserStoreResetSuccess = jest.fn().mockReturnValue(false);
+const mockUserStoreForgotPasswordSuccess = jest.fn().mockReturnValue(false);
 
 jest.mock('../../../stores/userStore', () => {
     return new class {
@@ -28,8 +28,8 @@ jest.mock('../../../stores/userStore', () => {
             return mockUserStoreLogin(user, password);
         }
 
-        resetPassword(user) {
-            return mockUserStoreResetPassword(user);
+        forgotPassword(user) {
+            return mockUserStoreForgotPassword(user);
         }
 
         setLoginError(value) {
@@ -44,8 +44,8 @@ jest.mock('../../../stores/userStore', () => {
             return mockUserStoreLoading();
         }
 
-        get resetSuccess() {
-            return mockUserStoreResetSuccess();
+        get forgotPasswordSuccess() {
+            return mockUserStoreForgotPasswordSuccess();
         }
     };
 });
@@ -77,17 +77,17 @@ test('Should render the Login with reset password view', () => {
     const loginForm = shallow(
         <Login initialized={true} onLoginSuccess={jest.fn()} />
     );
-    loginForm.instance().handleChangeToResetForm();
+    loginForm.instance().handleChangeToForgotPasswordForm();
 
     expect(loginForm.render()).toMatchSnapshot();
 });
 
 test('Should render the Login with reset password with success', () => {
-    mockUserStoreResetSuccess.mockReturnValueOnce(true);
+    mockUserStoreForgotPasswordSuccess.mockReturnValueOnce(true);
     const loginForm = shallow(
         <Login initialized={true} onLoginSuccess={jest.fn()} />
     );
-    loginForm.instance().handleChangeToResetForm();
+    loginForm.instance().handleChangeToForgotPasswordForm();
 
     expect(loginForm.render()).toMatchSnapshot();
 });
@@ -111,5 +111,5 @@ test('Should call the submit handler of the current view', () => {
     login.find('Input[icon="su-user"]').prop('onChange')('testUser');
     login.find('form').prop('onSubmit')(eventMock);
 
-    expect(mockUserStoreResetPassword).toBeCalledWith('testUser');
+    expect(mockUserStoreForgotPassword).toBeCalledWith('testUser');
 });

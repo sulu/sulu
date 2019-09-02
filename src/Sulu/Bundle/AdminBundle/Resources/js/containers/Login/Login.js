@@ -7,7 +7,7 @@ import {translate} from '../../utils/index';
 import Loader from '../../components/Loader/Loader';
 import userStore from '../../stores/userStore';
 import LoginForm from './LoginForm';
-import ResetForm from './ResetForm';
+import ForgotPasswordForm from './ForgotPasswordForm';
 import loginStyles from './login.scss';
 
 const BACK_LINK_ARROW_LEFT_ICON = 'su-angle-left';
@@ -25,21 +25,21 @@ class Login extends React.Component<Props> {
         initialized: false,
     };
 
-    @observable visibleForm: 'login' | 'reset' = 'login';
+    @observable visibleForm: 'login' | 'forgot-password' = 'login';
 
     @computed get loginFormVisible(): boolean {
         return this.visibleForm === 'login';
     }
 
-    @computed get resetFormVisible(): boolean {
-        return this.visibleForm === 'reset';
+    @computed get forgotPasswordFormVisible(): boolean {
+        return this.visibleForm === 'forgot-password';
     }
 
     @action clearState = () => {
         if (this.loginFormVisible) {
             userStore.setLoginError(false);
-        } else if (this.resetFormVisible) {
-            userStore.setResetSuccess(false);
+        } else if (this.forgotPasswordFormVisible) {
+            userStore.setForgotPasswordSuccess(false);
         }
     };
 
@@ -47,8 +47,8 @@ class Login extends React.Component<Props> {
         this.visibleForm = 'login';
     };
 
-    @action handleChangeToResetForm = () => {
-        this.visibleForm = 'reset';
+    @action handleChangeToForgotPasswordForm = () => {
+        this.visibleForm = 'forgot-password';
     };
 
     handleLoginFormSubmit = (user: string, password: string) => {
@@ -57,8 +57,8 @@ class Login extends React.Component<Props> {
         });
     };
 
-    handleResetFormSubmit = (user: string) => {
-        userStore.resetPassword(user);
+    handleForgotPasswordFormSubmit = (user: string) => {
+        userStore.forgotPassword(user);
     };
 
     render() {
@@ -80,16 +80,16 @@ class Login extends React.Component<Props> {
                             <LoginForm
                                 error={userStore.loginError}
                                 loading={userStore.loading}
-                                onChangeForm={this.handleChangeToResetForm}
+                                onChangeForm={this.handleChangeToForgotPasswordForm}
                                 onSubmit={this.handleLoginFormSubmit}
                             />
                         }
-                        {initialized && this.resetFormVisible &&
-                            <ResetForm
+                        {initialized && this.forgotPasswordFormVisible &&
+                            <ForgotPasswordForm
                                 loading={userStore.loading}
                                 onChangeForm={this.handleChangeToLoginForm}
-                                onSubmit={this.handleResetFormSubmit}
-                                success={userStore.resetSuccess}
+                                onSubmit={this.handleForgotPasswordFormSubmit}
+                                success={userStore.forgotPasswordSuccess}
                             />
                         }
                     </div>

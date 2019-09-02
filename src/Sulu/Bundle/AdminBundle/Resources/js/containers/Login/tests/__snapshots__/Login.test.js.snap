@@ -144,7 +144,7 @@ exports[`Should render the Login with reset password view 1`] = `
       <div
         class="header"
       >
-        sulu_admin.reset_password
+        sulu_admin.forgot_password
       </div>
       <form
         class="form"
@@ -242,7 +242,7 @@ exports[`Should render the Login with reset password with success 1`] = `
       <div
         class="header small"
       >
-        sulu_admin.reset_password_success
+        sulu_admin.forgot_password_success
       </div>
       <form
         class="form"

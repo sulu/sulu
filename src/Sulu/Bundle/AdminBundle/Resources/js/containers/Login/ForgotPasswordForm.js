@@ -17,7 +17,7 @@ type Props = {|
 |};
 
 @observer
-class ResetForm extends React.Component<Props> {
+class ForgotPasswordForm extends React.Component<Props> {
     static defaultProps = {
         loading: false,
         success: false,
@@ -63,7 +63,7 @@ class ResetForm extends React.Component<Props> {
         return (
             <Fragment>
                 <Header small={success}>
-                    {translate(success ? 'sulu_admin.reset_password_success' : 'sulu_admin.reset_password')}
+                    {translate(success ? 'sulu_admin.forgot_password_success' : 'sulu_admin.forgot_password')}
                 </Header>
                 <form className={formStyles.form} onSubmit={this.handleSubmit}>
                     <fieldset>
@@ -100,4 +100,4 @@ class ResetForm extends React.Component<Props> {
     }
 }
 
-export default ResetForm;
+export default ForgotPasswordForm;

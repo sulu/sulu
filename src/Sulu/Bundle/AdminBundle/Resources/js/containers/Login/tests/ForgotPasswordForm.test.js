@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {render, shallow} from 'enzyme';
-import ResetForm from '../ResetForm';
+import ForgotPasswordForm from '../ForgotPasswordForm';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn(function(key) {
@@ -11,7 +11,7 @@ jest.mock('../../../utils/Translator', () => ({
 
 test('Should render the component', () => {
     expect(render(
-        <ResetForm
+        <ForgotPasswordForm
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
         />)
@@ -20,7 +20,7 @@ test('Should render the component', () => {
 
 test('Should render the component loading', () => {
     expect(render(
-        <ResetForm
+        <ForgotPasswordForm
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
         />)
@@ -29,7 +29,7 @@ test('Should render the component loading', () => {
 
 test('Should render the component with success', () => {
     expect(render(
-        <ResetForm
+        <ForgotPasswordForm
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
             success={true}
@@ -40,7 +40,7 @@ test('Should render the component with success', () => {
 test('Should trigger onChangeForm correctly', () => {
     const onChangeForm = jest.fn();
     const resetForm = shallow(
-        <ResetForm
+        <ForgotPasswordForm
             onChangeForm={onChangeForm}
             onSubmit={jest.fn()}
         />
@@ -54,7 +54,7 @@ test('Should trigger onChangeForm correctly', () => {
 test('Should not trigger onSubmit if user is missing', () => {
     const onSubmit = jest.fn();
     const resetForm = shallow(
-        <ResetForm
+        <ForgotPasswordForm
             onChangeForm={jest.fn()}
             onSubmit={onSubmit}
         />
@@ -73,7 +73,7 @@ test('Should not trigger onSubmit if user is missing', () => {
 test('Should trigger onSubmit correctly', () => {
     const onSubmit = jest.fn();
     const resetForm = shallow(
-        <ResetForm
+        <ForgotPasswordForm
             onChangeForm={jest.fn()}
             onSubmit={onSubmit}
         />

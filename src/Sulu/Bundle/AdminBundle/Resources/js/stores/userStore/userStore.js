@@ -20,7 +20,7 @@ class UserStore {
     @observable loggedIn: boolean = false;
     @observable loading: boolean = false;
     @observable loginError: boolean = false;
-    @observable resetSuccess: boolean = false;
+    @observable forgotPasswordSuccess: boolean = false;
 
     @action clear() {
         this.persistentSettings = new Map();
@@ -29,7 +29,7 @@ class UserStore {
         this.user = undefined;
         this.contact = undefined;
         this.loginError = false;
-        this.resetSuccess = false;
+        this.forgotPasswordSuccess = false;
     }
 
     @computed get systemLocale() {
@@ -48,8 +48,8 @@ class UserStore {
         this.loginError = loginError;
     }
 
-    @action setResetSuccess(resetSuccess: boolean) {
-        this.resetSuccess = resetSuccess;
+    @action setForgotPasswordSuccess(forgotPasswordSuccess: boolean) {
+        this.forgotPasswordSuccess = forgotPasswordSuccess;
     }
 
     @action setUser(user: User) {
@@ -112,12 +112,12 @@ class UserStore {
             });
     };
 
-    resetPassword(user: string) {
+    forgotPassword(user: string) {
         this.setLoading(true);
 
-        if (this.resetSuccess) {
+        if (this.forgotPasswordSuccess) {
             // if email was already sent use different api
-            return Requester.post(Config.endpoints.resetResend, {user: user})
+            return Requester.post(Config.endpoints.forgotPasswordResend, {user: user})
                 .then(() => {
                     this.setLoading(false);
                 })
@@ -129,14 +129,14 @@ class UserStore {
                 });
         }
 
-        return Requester.post(Config.endpoints.reset, {user: user})
+        return Requester.post(Config.endpoints.forgotPasswordReset, {user: user})
             .then(() => {
                 this.setLoading(false);
-                this.setResetSuccess(true);
+                this.setForgotPasswordSuccess(true);
             })
             .catch((error) => {
                 this.setLoading(false);
-                this.setResetSuccess(true);
+                this.setForgotPasswordSuccess(true);
                 if (error.status !== 400) {
                     return Promise.reject(error);
                 }
