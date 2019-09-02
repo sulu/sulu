@@ -37,7 +37,7 @@ use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
  */
 class ResettingController extends Controller
 {
-    protected static $resetRouteId = 'sulu_admin.reset';
+    protected static $resetRouteId = 'sulu_admin';
 
     /**
      * The interval in which the token is valid.
@@ -112,7 +112,7 @@ class ResettingController extends Controller
             $this->changePassword($user, $request->get('password', ''));
             $this->deleteToken($user);
             $this->loginUser($user, $request);
-            $response = new JsonResponse(['url' => $this->get('router')->generate('sulu_admin')]);
+            $response = new JsonResponse(['user' => $user->getUsername()]);
         } catch (InvalidTokenException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
         } catch (MissingPasswordException $ex) {
@@ -182,11 +182,7 @@ class ResettingController extends Controller
      */
     protected function getMessage($user)
     {
-        $resetUrl = $this->generateUrl(
-            static::$resetRouteId,
-            ['token' => $user->getPasswordResetToken()],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
+        $resetUrl = $this->generateUrl(static::$resetRouteId, [], UrlGeneratorInterface::ABSOLUTE_URL);
         $template = $this->getParameter('sulu_security.reset_password.mail.template');
         $translationDomain = $this->getParameter('sulu_security.reset_password.mail.translation_domain');
 
@@ -199,7 +195,7 @@ class ResettingController extends Controller
                 $template,
                 [
                     'user' => $user,
-                    'reset_url' => $resetUrl,
+                    'reset_url' => $resetUrl . '#/?forgotPasswordToken=' . $user->getPasswordResetToken(),
                     'translation_domain' => $translationDomain,
                 ]
             )
@@ -333,11 +329,12 @@ class ResettingController extends Controller
         }
         $mailer = $this->get('mailer');
         $em = $this->getDoctrine()->getManager();
-        $message = $mailer->createMessage()->setSubject(
-                $this->getSubject()
-            )->setFrom($from)->setTo($to)->setBody(
-                $this->getMessage($user)
-            );
+        $message = $mailer->createMessage()
+            ->setSubject($this->getSubject())
+            ->setFrom($from)
+            ->setTo($to)
+            ->setBody($this->getMessage($user));
+
         $mailer->send($message);
         $user->setPasswordResetTokenEmailsSent($user->getPasswordResetTokenEmailsSent() + 1);
         $em->persist($user);
