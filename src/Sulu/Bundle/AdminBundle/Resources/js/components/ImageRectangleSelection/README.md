@@ -19,7 +19,7 @@ const handleChange = (selection) => {
 
 <div style={{width: 500, height: 500, background: '#e8e8e8'}}>
     <ImageRectangleSelection
-        image="https://unsplash.it/1920/1080"
+        image="https://picsum.photos/1920/1080"
         onChange={handleChange}
         value={state.selection}
     />
@@ -39,7 +39,7 @@ const handleChange = (selection) => {
 <div>
     <div style={{width: 800, height: 300, background: '#e8e8e8'}}>
         <ImageRectangleSelection
-            image="https://unsplash.it/1920/1080"
+            image="https://picsum.photos/1920/1080"
             initialSelection={{width: 1500, height: 800, top: 200, left: 300}}
             minWidth={100}
             minHeight={60}

@@ -65,8 +65,8 @@ class RectangleSelection extends React.Component<Props> {
         this.normalizers = RectangleSelection.createNormalizers(this.props);
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        this.normalizers = RectangleSelection.createNormalizers(nextProps);
+    componentDidUpdate() {
+        this.normalizers = RectangleSelection.createNormalizers(this.props);
     }
 
     normalize(selection: SelectionData): SelectionData {
