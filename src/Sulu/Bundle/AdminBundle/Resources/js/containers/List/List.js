@@ -65,6 +65,7 @@ class List extends React.Component<Props> {
     @observable currentAdapterKey: string;
     @observable showCopyOverlay: boolean = false;
     @observable showDeleteDialog: boolean = false;
+    @observable showDeleteLinkedDialog: boolean = false;
     @observable showMoveOverlay: boolean = false;
     @observable showDeleteSelectionDialog: boolean = false;
     @observable showOrderDialog: boolean = false;
@@ -156,9 +157,34 @@ class List extends React.Component<Props> {
                 return response;
             }
 
-            this.props.store.delete(id).then(action(() => {
-                this.showDeleteDialog = false;
-            }));
+            this.props.store.delete(id)
+                .then(action(() => {
+                    this.showDeleteDialog = false;
+                }))
+                .catch(action((response) => {
+                    if (response.status !== 409) {
+                        throw response;
+                    }
+
+                    this.showDeleteDialog = false;
+                    this.showDeleteLinkedDialog = true;
+
+                    const deleteLinkedPromise: Promise<ResolveDeleteArgument> = new Promise(
+                        (resolve) => this.resolveDelete = resolve
+                    );
+
+                    deleteLinkedPromise.then(action((response) => {
+                        if (!response.deleted) {
+                            this.showDeleteDialog = this.showDeleteLinkedDialog = false;
+                            return response;
+                        }
+
+                        this.props.store.delete(id, {force: true})
+                            .then(action(() => {
+                                this.showDeleteLinkedDialog = false;
+                            }));
+                    }));
+                }));
 
             return response;
         }));
@@ -515,17 +541,30 @@ class List extends React.Component<Props> {
                     {translate('sulu_admin.delete_selection_warning_text', {count: store.selections.length})}
                 </Dialog>
                 {deletable &&
-                    <Dialog
-                        cancelText={translate('sulu_admin.cancel')}
-                        confirmLoading={store.deleting}
-                        confirmText={translate('sulu_admin.ok')}
-                        onCancel={this.handleDeleteDialogCancelClick}
-                        onConfirm={this.handleDeleteDialogConfirmClick}
-                        open={this.showDeleteDialog}
-                        title={translate('sulu_admin.delete_warning_title')}
-                    >
-                        {translate('sulu_admin.delete_warning_text')}
-                    </Dialog>
+                    <Fragment>
+                        <Dialog
+                            cancelText={translate('sulu_admin.cancel')}
+                            confirmLoading={store.deleting}
+                            confirmText={translate('sulu_admin.ok')}
+                            onCancel={this.handleDeleteDialogCancelClick}
+                            onConfirm={this.handleDeleteDialogConfirmClick}
+                            open={this.showDeleteDialog}
+                            title={translate('sulu_admin.delete_warning_title')}
+                        >
+                            {translate('sulu_admin.delete_warning_text')}
+                        </Dialog>
+                        <Dialog
+                            cancelText={translate('sulu_admin.cancel')}
+                            confirmLoading={store.deleting}
+                            confirmText={translate('sulu_admin.ok')}
+                            onCancel={this.handleDeleteDialogCancelClick}
+                            onConfirm={this.handleDeleteDialogConfirmClick}
+                            open={this.showDeleteLinkedDialog}
+                            title={translate('sulu_admin.delete_linked_warning_title')}
+                        >
+                            {translate('sulu_admin.delete_linked_warning_text')}
+                        </Dialog>
+                    </Fragment>
                 }
                 {movable &&
                     <SingleListOverlay

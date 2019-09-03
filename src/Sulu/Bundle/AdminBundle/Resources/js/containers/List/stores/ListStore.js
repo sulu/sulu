@@ -340,10 +340,10 @@ export default class ListStore {
         return this.structureStrategy.findById(id);
     }
 
-    delete = (id: string | number): Promise<Object> => {
+    delete = (id: string | number, options: Object): Promise<Object> => {
         this.deleting = true;
 
-        return ResourceRequester.delete(this.resourceKey, {...this.queryOptions, id})
+        return ResourceRequester.delete(this.resourceKey, {...this.queryOptions, ...options, id})
             .then(action(() => {
                 this.deleting = false;
                 this.deselectById(id);

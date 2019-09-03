@@ -786,6 +786,95 @@ test('ListStore should delete item when onRequestItemDelete callback is called a
         return deletePromise.then(() => {
             list.update();
             expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
+            expect(list.find('Dialog').at(2).prop('open')).toEqual(false);
+        });
+    });
+});
+
+test('ListStore should delete linked item when onRequestItemDelete callback is is confirmed twice', (done) => {
+    const deletePromise = Promise.reject({status: 409});
+
+    listAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    // $FlowFixMe
+    listStore.delete.mockReturnValueOnce(deletePromise);
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const list = mount(<List adapters={['table']} store={listStore} />);
+
+    const requestDeletePromise = list.find('TableAdapter').prop('onRequestItemDelete')(5);
+    list.update();
+    expect(list.find('Dialog').at(1).prop('open')).toEqual(true);
+
+    list.find('Dialog').at(1).prop('onConfirm')();
+    return requestDeletePromise.then(() => {
+        expect(listStore.delete).toBeCalledWith(5);
+
+        setTimeout(() => {
+            list.update();
+            expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
+            expect(list.find('Dialog').at(2).prop('open')).toEqual(true);
+
+            const deletePromise = Promise.resolve();
+            // $FlowFixMe
+            listStore.delete.mockReturnValueOnce(deletePromise);
+            list.find('Dialog').at(2).prop('onConfirm')();
+
+            setTimeout(() => {
+                expect(listStore.delete).toBeCalledWith(5, {force: true});
+                list.update();
+                expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
+                expect(list.find('Dialog').at(2).prop('open')).toEqual(false);
+                done();
+            });
+        });
+    });
+});
+
+test('ListStore should not delete linked item when onRequestItemDelete callback is is confirmed once', (done) => {
+    const deletePromise = Promise.reject({status: 409});
+
+    listAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    // $FlowFixMe
+    listStore.delete.mockReturnValueOnce(deletePromise);
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const list = mount(<List adapters={['table']} store={listStore} />);
+
+    const requestDeletePromise = list.find('TableAdapter').prop('onRequestItemDelete')(5);
+    list.update();
+    expect(list.find('Dialog').at(1).prop('open')).toEqual(true);
+
+    list.find('Dialog').at(1).prop('onConfirm')();
+    return requestDeletePromise.then(() => {
+        expect(listStore.delete).toBeCalledWith(5);
+        // $FlowFixMe
+        listStore.delete.mockReset();
+
+        setTimeout(() => {
+            list.update();
+            expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
+            expect(list.find('Dialog').at(2).prop('open')).toEqual(true);
+
+            const deletePromise = Promise.resolve();
+            // $FlowFixMe
+            listStore.delete.mockReturnValueOnce(deletePromise);
+            list.find('Dialog').at(2).prop('onCancel')();
+
+            setTimeout(() => {
+                expect(listStore.delete).not.toBeCalled();
+                list.update();
+                expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
+                expect(list.find('Dialog').at(2).prop('open')).toEqual(false);
+                done();
+            });
         });
     });
 });
@@ -802,13 +891,13 @@ test('Order warning should just disappear when onRequestItemOrder callback is ca
 
     const requestOrderPromise = list.find('TableAdapter').prop('onRequestItemOrder')(5);
     list.update();
-    expect(list.find('Dialog').at(2).prop('open')).toEqual(true);
+    expect(list.find('Dialog').at(3).prop('open')).toEqual(true);
 
-    list.find('Dialog').at(2).prop('onCancel')();
+    list.find('Dialog').at(3).prop('onCancel')();
 
     return requestOrderPromise.then(() => {
         list.update();
-        expect(list.find('Dialog').at(2).prop('open')).toEqual(false);
+        expect(list.find('Dialog').at(3).prop('open')).toEqual(false);
 
         expect(listStore.order).not.toBeCalled();
     });
@@ -819,7 +908,6 @@ test('ListStore should order item when onRequestItemOrder callback is called and
 
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
-    // $FlowFixMe
     listStore.order.mockReturnValue(orderPromise);
     mockStructureStrategyData = [
         {id: 1},
@@ -830,15 +918,15 @@ test('ListStore should order item when onRequestItemOrder callback is called and
 
     const requestOrderPromise = list.find('TableAdapter').prop('onRequestItemOrder')(5, 8);
     list.update();
-    expect(list.find('Dialog').at(2).prop('open')).toEqual(true);
-    list.find('Dialog').at(2).prop('onConfirm')();
+    expect(list.find('Dialog').at(3).prop('open')).toEqual(true);
+    list.find('Dialog').at(3).prop('onConfirm')();
 
     return requestOrderPromise.then(() => {
         expect(listStore.order).toBeCalledWith(5, 8);
 
         return orderPromise.then(() => {
             list.update();
-            expect(list.find('Dialog').at(2).prop('open')).toEqual(false);
+            expect(list.find('Dialog').at(3).prop('open')).toEqual(false);
         });
     });
 });
