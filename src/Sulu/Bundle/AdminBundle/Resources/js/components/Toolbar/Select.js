@@ -40,13 +40,13 @@ class Select extends React.Component<SelectProps> {
         });
     }
 
-    componentWillReceiveProps = (nextProps: SelectProps) => {
-        const {disabled} = nextProps;
+    componentDidUpdate() {
+        const {disabled} = this.props;
 
         if (disabled) {
             this.close();
         }
-    };
+    }
 
     handleButtonClick = () => {
         this.toggle();
