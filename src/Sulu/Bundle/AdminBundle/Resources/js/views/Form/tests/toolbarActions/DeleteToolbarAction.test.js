@@ -1,5 +1,5 @@
 // @flow
-import {shallow} from 'enzyme';
+import {mount} from 'enzyme';
 import {observable} from 'mobx';
 import DeleteToolbarAction from '../../toolbarActions/DeleteToolbarAction';
 import {ResourceFormStore} from '../../../../containers/Form';
@@ -71,13 +71,20 @@ test('Return item config with correct disabled, loading, icon, type and value an
         type: 'button',
     }));
 
-    const element = shallow(deleteToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    const element = mount(deleteToolbarAction.getNode());
+    expect(element.at(0).instance().props).toEqual(expect.objectContaining({
         cancelText: 'sulu_admin.cancel',
         children: 'sulu_admin.delete_warning_text',
         confirmText: 'sulu_admin.ok',
         open: false,
         title: 'sulu_admin.delete_warning_title',
+    }));
+    expect(element.at(1).instance().props).toEqual(expect.objectContaining({
+        cancelText: 'sulu_admin.cancel',
+        children: 'sulu_admin.delete_linked_warning_text',
+        confirmText: 'sulu_admin.ok',
+        open: false,
+        title: 'sulu_admin.delete_linked_warning_title',
     }));
 });
 
@@ -113,8 +120,8 @@ test('Open dialog on toolbar item click', () => {
     }
     toolbarItemConfig.onClick();
 
-    const element = shallow(deleteToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    const element = mount(deleteToolbarAction.getNode());
+    expect(element.at(0).instance().props).toEqual(expect.objectContaining({
         open: true,
     }));
 });
@@ -129,14 +136,14 @@ test('Close dialog on cancel click', () => {
     }
     toolbarItemConfig.onClick();
 
-    let element = shallow(deleteToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    let element = mount(deleteToolbarAction.getNode());
+    expect(element.at(0).instance().props).toEqual(expect.objectContaining({
         open: true,
     }));
 
     element.find('Button[skin="secondary"]').simulate('click');
-    element = shallow(deleteToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    element = mount(deleteToolbarAction.getNode());
+    expect(element.at(0).instance().props).toEqual(expect.objectContaining({
         open: false,
     }));
 });
@@ -155,8 +162,8 @@ test('Call delete when dialog is confirmed', () => {
     }
     toolbarItemConfig.onClick();
 
-    let element = shallow(deleteToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    let element = mount(deleteToolbarAction.getNode());
+    expect(element.at(0).instance().props).toEqual(expect.objectContaining({
         open: true,
     }));
 
@@ -164,10 +171,58 @@ test('Call delete when dialog is confirmed', () => {
     expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith();
 
     return deletePromise.then(() => {
-        element = shallow(deleteToolbarAction.getNode());
+        element = mount(deleteToolbarAction.getNode());
         expect(deleteToolbarAction.router.navigate).toBeCalledWith('sulu_test.list', {locale: 'en'});
-        expect(element.instance().props).toEqual(expect.objectContaining({
+        expect(element.at(0).instance().props).toEqual(expect.objectContaining({
             open: false,
         }));
+    });
+});
+
+test('Call delete with force when dialog is confirmed twice', (done) => {
+    const deleteToolbarAction = createDeleteToolbarAction();
+    deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
+    deleteToolbarAction.router.route.options.backRoute = 'sulu_test.list';
+
+    const deletePromise = Promise.reject({status: 409});
+    deleteToolbarAction.resourceFormStore.delete.mockReturnValueOnce(deletePromise);
+
+    const toolbarItemConfig = deleteToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+    toolbarItemConfig.onClick();
+
+    let element = mount(deleteToolbarAction.getNode());
+    expect(element.at(0).instance().props).toEqual(expect.objectContaining({
+        open: true,
+    }));
+
+    element.find('Button[skin="primary"]').simulate('click');
+    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith();
+
+    setTimeout(() => {
+        element = mount(deleteToolbarAction.getNode());
+        expect(deleteToolbarAction.router.navigate).toBeCalledTimes(0);
+        expect(element.at(0).instance().props).toEqual(expect.objectContaining({
+            open: false,
+        }));
+        expect(element.at(1).instance().props).toEqual(expect.objectContaining({
+            open: true,
+        }));
+
+        const deletePromise = Promise.resolve({});
+        deleteToolbarAction.resourceFormStore.delete.mockReturnValueOnce(deletePromise);
+
+        element.find('Button[skin="primary"]').simulate('click');
+
+        setTimeout(() => {
+            expect(deleteToolbarAction.router.navigate).toBeCalledWith('sulu_test.list', {locale: 'en'});
+            expect(element.at(0).instance().props).toEqual(expect.objectContaining({
+                open: false,
+            }));
+
+            done();
+        });
     });
 });

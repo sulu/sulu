@@ -117,8 +117,8 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         });
     }
 
-    delete(): Promise<Object> {
-        return this.resourceStore.delete(this.options);
+    delete(options: Object): Promise<Object> {
+        return this.resourceStore.delete({...this.options, ...options});
     }
 
     copyFromLocale(locale: string) {
