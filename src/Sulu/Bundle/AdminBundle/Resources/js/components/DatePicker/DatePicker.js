@@ -62,12 +62,12 @@ class DatePicker extends React.Component<Props> {
         this.setValue(this.props.value);
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (this.value && !nextProps.value) {
+    componentDidUpdate() {
+        if (this.value && !this.props.value) {
             return;
         }
 
-        this.setValue(nextProps.value);
+        this.setValue(this.props.value);
     }
 
     handleChange = (date: ?Date) => {
