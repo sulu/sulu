@@ -180,8 +180,9 @@ export default class ResourceStore {
 
                 this.destroy();
             }))
-            .catch(action(() => {
+            .catch(action((error) => {
                 this.deleting = false;
+                throw error;
             }));
     }
 
@@ -204,8 +205,9 @@ export default class ResourceStore {
             .then(action(() => {
                 this.moving = false;
             }))
-            .catch(action(() => {
+            .catch(action((error) => {
                 this.moving = false;
+                throw error;
             }));
     };
 

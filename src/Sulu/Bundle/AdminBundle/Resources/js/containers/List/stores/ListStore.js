@@ -348,6 +348,10 @@ export default class ListStore {
                 this.deleting = false;
                 this.deselectById(id);
                 this.remove(id);
+            }))
+            .catch(action((error) => {
+                this.deleting = false;
+                throw error;
             }));
     };
 
