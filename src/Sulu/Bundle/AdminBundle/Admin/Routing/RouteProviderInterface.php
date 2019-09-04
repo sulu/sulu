@@ -9,11 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Admin;
+namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
-
-interface NavigationProviderInterface
+interface RouteProviderInterface
 {
-    public function getNavigation(): Navigation;
+    public function configureRoutes(RouteCollection $routeCollection): void;
 }

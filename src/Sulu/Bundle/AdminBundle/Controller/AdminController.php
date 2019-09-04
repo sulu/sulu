@@ -16,8 +16,9 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
-use Sulu\Bundle\AdminBundle\Admin\NavigationRegistry;
-use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteRegistry;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
@@ -226,7 +227,9 @@ class AdminController
             'sulu_admin' => [
                 'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
                 'internalLinkTypes' => $this->linkProviderPool->getConfiguration(),
-                'navigation' => $this->navigationRegistry->getNavigation()->getChildrenAsArray(),
+                'navigation' => array_map(function(NavigationItem $navigationItem) {
+                    return $navigationItem->toArray();
+                }, array_values($this->navigationRegistry->getNavigationItems())),
                 'routes' => $this->routeRegistry->getRoutes(),
                 'resources' => $this->resources,
                 'smartContent' => array_map(function(DataProviderInterface $dataProvider) {

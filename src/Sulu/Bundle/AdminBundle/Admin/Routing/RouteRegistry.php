@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Admin;
+namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
-use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
+use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Exception\ParentRouteNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\RouteNotFoundException;
 
@@ -59,20 +59,20 @@ class RouteRegistry
 
     private function loadRoutes(): void
     {
-        $routes = [];
+        $routeCollection = new RouteCollection();
         foreach ($this->adminPool->getAdmins() as $admin) {
             if (!$admin instanceof RouteProviderInterface) {
                 continue;
             }
 
-            $routes = array_merge($routes, $admin->getRoutes());
+            $admin->configureRoutes($routeCollection);
         }
 
-        $this->validateRoutes($routes);
+        $routes = array_map(function(RouteBuilderInterface $routeBuilder) {
+            return $routeBuilder->getRoute();
+        }, $routeCollection->all());
 
-        array_walk($routes, function(&$route, $index) {
-            $route = clone $route;
-        });
+        $this->validateRoutes($routes);
 
         $this->routes = $this->mergeRouteOptions($routes);
 
@@ -127,7 +127,7 @@ class RouteRegistry
 
         $mergedRoutes = [];
         foreach ($childRoutes as $childRoute) {
-            $mergedRoutes[] = $parentRoute ? $childRoute->mergeRoute($parentRoute) : $childRoute;
+            $mergedRoutes[] = $parentRoute ? $childRoute->mergeRouteOptions($parentRoute) : $childRoute;
             $mergedRoutes = array_merge($mergedRoutes, $this->mergeRouteOptions($routes, $childRoute->getName()));
         }
 

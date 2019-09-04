@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactory;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Component\Localization\Localization;
@@ -90,17 +91,17 @@ class PageAdminTest extends TestCase
             false
         );
 
-        $route = $admin->getRoutes()[0];
-        $this->assertAttributeEquals('sulu_page.webspaces', 'name', $route);
-        $this->assertAttributeEquals([
-            'webspace' => 'test-1',
-        ], 'attributeDefaults', $route);
+        $routeCollection = new RouteCollection();
+        $admin->configureRoutes($routeCollection);
 
-        $route = $admin->getRoutes()[1];
-        $this->assertAttributeEquals('sulu_page.pages_list', 'name', $route);
-        $this->assertAttributeEquals([
-            'locale' => 'de',
-        ], 'attributeDefaults', $route);
+        $webspaceRoute = $routeCollection->get('sulu_page.webspaces')->getRoute();
+        $pageListRoute = $routeCollection->get('sulu_page.pages_list')->getRoute();
+
+        $this->assertAttributeEquals('sulu_page.webspaces', 'name', $webspaceRoute);
+        $this->assertAttributeEquals(['webspace' => 'test-1'], 'attributeDefaults', $webspaceRoute);
+
+        $this->assertAttributeEquals('sulu_page.pages_list', 'name', $pageListRoute);
+        $this->assertAttributeEquals(['locale' => 'de'], 'attributeDefaults', $pageListRoute);
     }
 
     public function testGetConfigWithVersioning()

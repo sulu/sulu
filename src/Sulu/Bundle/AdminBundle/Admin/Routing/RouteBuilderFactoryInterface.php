@@ -13,6 +13,8 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 interface RouteBuilderFactoryInterface
 {
+    public function createRouteBuilder(string $name, string $path, string $view): RouteBuilderInterface;
+
     public function createListRouteBuilder(string $name, string $path): ListRouteBuilderInterface;
 
     public function createFormOverlayListRouteBuilder(string $name, string $path): FormOverlayListRouteBuilderInterface;

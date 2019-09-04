@@ -12,9 +12,10 @@
 namespace Sulu\Bundle\CategoryBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
-use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -54,25 +55,18 @@ class CategoryAdmin extends Admin
         $this->localizationManager = $localizationManager;
     }
 
-    public function getNavigation(): Navigation
+    public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
-        $rootNavigationItem = $this->getNavigationItemRoot();
-        $settings = $this->getNavigationItemSettings();
-
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $categoryItem = new NavigationItem('sulu_category.categories', $settings);
+            $categoryItem = new NavigationItem('sulu_category.categories');
             $categoryItem->setPosition(20);
             $categoryItem->setMainRoute(static::LIST_ROUTE);
-        }
 
-        if ($settings->hasChildren()) {
-            $rootNavigationItem->addChild($settings);
+            $navigationItemCollection->get(Admin::SETTINGS_NAVIGATION_ITEM)->addChild($categoryItem);
         }
-
-        return new Navigation($rootNavigationItem);
     }
 
-    public function getRoutes(): array
+    public function configureRoutes(RouteCollection $routeCollection): void
     {
         $locales = $this->localizationManager->getLocales();
 
@@ -97,69 +91,71 @@ class CategoryAdmin extends Admin
             $listToolbarActions[] = 'sulu_admin.export';
         }
 
-        $routes = [];
-
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $routes[] = $this->routeBuilderFactory
-                ->createListRouteBuilder(static::LIST_ROUTE, '/categories/:locale')
-                ->setResourceKey('categories')
-                ->setListKey('categories')
-                ->setTitle('sulu_category.categories')
-                ->addListAdapters(['tree_table'])
-                ->addLocales($locales)
-                ->setDefaultLocale($locales[0])
-                ->setAddRoute(static::ADD_FORM_ROUTE)
-                ->setEditRoute(static::EDIT_FORM_ROUTE)
-                ->enableSearching()
-                ->addToolbarActions($listToolbarActions)
-                ->getRoute();
-            $routes[] = $this->routeBuilderFactory
-                ->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/categories/:locale/add')
-                ->setResourceKey('categories')
-                ->addLocales($locales)
-                ->setBackRoute(static::LIST_ROUTE)
-                ->getRoute();
-            $routes[] = $this->routeBuilderFactory
-                ->createFormRouteBuilder('sulu_category.add_form.details', '/details')
-                ->setResourceKey('categories')
-                ->setFormKey('category_details')
-                ->setTabTitle('sulu_admin.details')
-                ->addToolbarActions($formToolbarActions)
-                ->addRouterAttributesToFormStore(['parentId'])
-                ->setEditRoute(static::EDIT_FORM_ROUTE)
-                ->setParent(static::ADD_FORM_ROUTE)
-                ->getRoute();
-            $routes[] = $this->routeBuilderFactory
-                ->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/categories/:locale/:id')
-                ->setResourceKey('categories')
-                ->addLocales($locales)
-                ->setBackRoute(static::LIST_ROUTE)
-                ->addRouterAttributesToBackRoute(['id' => 'active'])
-                ->setTitleProperty('name')
-                ->getRoute();
-            $routes[] = $this->routeBuilderFactory
-                ->createFormRouteBuilder('sulu_category.edit_form.details', '/details')
-                ->setResourceKey('categories')
-                ->setFormKey('category_details')
-                ->setTabTitle('sulu_admin.details')
-                ->addToolbarActions($formToolbarActions)
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
-            $routes[] = $this->routeBuilderFactory
-                ->createFormOverlayListRouteBuilder('sulu_category.edit_form.keywords', '/keywords')
-                ->setResourceKey('category_keywords')
-                ->setListKey('category_keywords')
-                ->addListAdapters(['table'])
-                ->addRouterAttributesToListStore(['id' => 'categoryId'])
-                ->setFormKey('category_keywords')
-                ->addRouterAttributesToFormStore(['id' => 'categoryId'])
-                ->setTabTitle('sulu_category.keywords')
-                ->addToolbarActions(['sulu_admin.add', 'sulu_admin.delete'])
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createListRouteBuilder(static::LIST_ROUTE, '/categories/:locale')
+                    ->setResourceKey('categories')
+                    ->setListKey('categories')
+                    ->setTitle('sulu_category.categories')
+                    ->addListAdapters(['tree_table'])
+                    ->addLocales($locales)
+                    ->setDefaultLocale($locales[0])
+                    ->setAddRoute(static::ADD_FORM_ROUTE)
+                    ->setEditRoute(static::EDIT_FORM_ROUTE)
+                    ->enableSearching()
+                    ->addToolbarActions($listToolbarActions)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/categories/:locale/add')
+                    ->setResourceKey('categories')
+                    ->addLocales($locales)
+                    ->setBackRoute(static::LIST_ROUTE)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createFormRouteBuilder('sulu_category.add_form.details', '/details')
+                    ->setResourceKey('categories')
+                    ->setFormKey('category_details')
+                    ->setTabTitle('sulu_admin.details')
+                    ->addToolbarActions($formToolbarActions)
+                    ->addRouterAttributesToFormStore(['parentId'])
+                    ->setEditRoute(static::EDIT_FORM_ROUTE)
+                    ->setParent(static::ADD_FORM_ROUTE)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/categories/:locale/:id')
+                    ->setResourceKey('categories')
+                    ->addLocales($locales)
+                    ->setBackRoute(static::LIST_ROUTE)
+                    ->addRouterAttributesToBackRoute(['id' => 'active'])
+                    ->setTitleProperty('name')
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createFormRouteBuilder('sulu_category.edit_form.details', '/details')
+                    ->setResourceKey('categories')
+                    ->setFormKey('category_details')
+                    ->setTabTitle('sulu_admin.details')
+                    ->addToolbarActions($formToolbarActions)
+                    ->setParent(static::EDIT_FORM_ROUTE)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createFormOverlayListRouteBuilder('sulu_category.edit_form.keywords', '/keywords')
+                    ->setResourceKey('category_keywords')
+                    ->setListKey('category_keywords')
+                    ->addListAdapters(['table'])
+                    ->addRouterAttributesToListStore(['id' => 'categoryId'])
+                    ->setFormKey('category_keywords')
+                    ->addRouterAttributesToFormStore(['id' => 'categoryId'])
+                    ->setTabTitle('sulu_category.keywords')
+                    ->addToolbarActions(['sulu_admin.add', 'sulu_admin.delete'])
+                    ->setParent(static::EDIT_FORM_ROUTE)
+            );
         }
-
-        return $routes;
     }
 
     /**

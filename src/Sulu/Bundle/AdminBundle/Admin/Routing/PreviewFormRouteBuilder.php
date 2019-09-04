@@ -13,15 +13,11 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 class PreviewFormRouteBuilder implements PreviewFormRouteBuilderInterface
 {
+    use RouteBuilderTrait;
     use FormRouteBuilderTrait;
     use TabRouteBuilderTrait;
 
     const VIEW = 'sulu_admin.preview_form';
-
-    /**
-     * @var Route
-     */
-    private $route;
 
     public function __construct(string $name, string $path)
     {
@@ -136,13 +132,6 @@ class PreviewFormRouteBuilder implements PreviewFormRouteBuilderInterface
     public function setTitleVisible(bool $titleVisible): PreviewFormRouteBuilderInterface
     {
         $this->setTitleVisibleToRoute($this->route, $titleVisible);
-
-        return $this;
-    }
-
-    public function setParent(string $parent): PreviewFormRouteBuilderInterface
-    {
-        $this->route->setParent($parent);
 
         return $this;
     }

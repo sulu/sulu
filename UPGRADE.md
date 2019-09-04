@@ -24,6 +24,164 @@ The TestKernel option `sulu_context` was renamed to `sulu.context` to match its 
 All JavaScript files containing not a constructor but export an instance of a class instead have been renamed to start
 with a lowercase letter now.
 
+### Configuring the navigation and routes using the Admin classes
+
+Previously it was hard to change already existing `Routes` and `NavigationItems` for the administration interface. In
+order to make that easier, we have changed the way this is happening. Instead of returning these items from the
+`getNavigation` and `getRoutes` function we have introduced the `configureNavigationItems` and the `configureRoutes`
+functions.
+
+These functions get a `NavigationItemCollection` resp. a `RouteCollection` passed as their first argument. Instead of
+returning these items they get added to these collections. The collections also allow to get one of its item by passing
+the item's name to the `get` method of the collection. These items can then be manipulated, which e.g. enables the
+developer to add another item in a form's toolbar from another bundle or the application.
+
+The `RouteCollection` now also holds objects implementing one of the `RouteBuilder` interfaces. This means that instead
+of working with the low-level functions from the `Route` class the methods of the `RouteBuilder` can be used.
+
+Also, the `NavigationItem` has no `$parent` parameter in the constructor anymore:
+
+```php
+// Before
+$parentNavigationItem = new NavigationItem('parent');
+$childNavigationItem = new NavigationItem('child', $parentNavigationItem);
+
+// After
+$parentNavigationItem = new NavigationItem('parent');
+$childNavigationItem = new NavigationItem('child');
+$parentNavigationItem->addChild($childNavigationItem);
+```
+
+The namespaces of some classes have been changed, as described in the following table:
+
+| Old FQCN | New FQCN |
+|----------|----------|
+| Sulu\Bundle\AdminBundle\Navigation\NavigationItem | Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem |
+| Sulu\Bundle\AdminBundle\Admin\NavigationProviderInterface | Sulu\Bundle\AdminBudnle\Admin\Navigation\NavigationProviderInterface |
+| Sulu\Bundle\AdminBundle\Admin\NavigationRegistry | Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry |
+| Sulu\Bundle\AdminBundle\Admin\RouteProviderInterface | Sulu\Bundle\AdminBundle\Admin\Routing\RouteProviderInterface |
+| Sulu\Bundle\AdminBundle\Admin\RouteRegistry | Sulu\Bundle\AdminBundle\Admin\Routing\RouteRegistry |
+
+The following snippet shows an example of an old vs. a new `Admin` class. The example shows how to add a navigation item
+to the existing Settings navigation item.
+
+```php
+// Before
+<?php
+class TagAdmin extends Admin
+{
+    const SECURITY_CONTEXT = 'sulu.settings.tags';
+
+    const LIST_ROUTE = 'sulu_tag.list';
+
+    public function getNavigation(): Navigation
+    {
+        $rootNavigationItem = $this->getNavigationItemRoot();
+
+        $settings = Admin::getNavigationItemSettings();
+
+        if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
+            $roles = new NavigationItem('sulu_tag.tags', $settings);
+            $roles->setPosition(30);
+            $roles->setMainRoute(static::LIST_ROUTE);
+        }
+
+        if ($settings->hasChildren()) {
+            $rootNavigationItem->addChild($settings);
+        }
+
+        return new Navigation($rootNavigationItem);
+    }
+
+    public function getRoutes(): array
+    {
+        $routes = [];
+
+        if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
+            $routes[] = $this->routeBuilderFactory->createListRouteBuilder(static::LIST_ROUTE, '/tags')
+                ->setResourceKey('tags')
+                ->setListKey('tags')
+                ->setTitle('sulu_tag.tags')
+                ->addListAdapters(['table'])
+                ->setAddRoute(static::ADD_FORM_ROUTE)
+                ->setEditRoute(static::EDIT_FORM_ROUTE)
+                ->addToolbarActions($listToolbarActions)
+                ->getRoute();
+        }
+
+        return $routes;
+    }
+}
+
+// After
+class TagAdmin extends Admin
+{
+    const SECURITY_CONTEXT = 'sulu.settings.tags';
+
+    const LIST_ROUTE = 'sulu_tag.list';
+
+    public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
+    {
+        if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
+            $tags = new NavigationItem('sulu_tag.tags');
+            $tags->setPosition(30);
+            $tags->setMainRoute(static::LIST_ROUTE);
+
+            $navigationItemCollection->get(Admin::SETTINGS_NAVIGATION_ITEM)->addChild($tags);
+        }
+    }
+
+    public function configureRoutes(RouteCollection $routeCollection): void
+    {
+        if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
+            $routeCollection->add(
+                $this->routeBuilderFactory->createListRouteBuilder(static::LIST_ROUTE, '/tags')
+                    ->setResourceKey('tags')
+                    ->setListKey('tags')
+                    ->setTitle('sulu_tag.tags')
+                    ->addListAdapters(['table'])
+                    ->setAddRoute(static::ADD_FORM_ROUTE)
+                    ->setEditRoute(static::EDIT_FORM_ROUTE)
+            );
+        }
+    }
+}
+```
+
+Since the `RouteCollection` only takes `RouteBuilder` instances, we have introduced a new `RouteBuilder` for standard
+routes:
+
+```php
+<?php
+// Before
+class SearchAdmin extends Admin
+{
+    const SEARCH_ROUTE = 'sulu_search.search';
+
+    public function getRoutes(): array
+    {
+        return [
+            (new Route(static::SEARCH_ROUTE, '/', 'sulu_search.search'))
+                ->setOption('test1', 'value1'),
+        ];
+    }
+}
+
+// After
+class SearchAdmin extends Admin
+{
+    const SEARCH_ROUTE = 'sulu_search.search';
+
+    public function configureRoutes(RouteCollection $routeCollection): void
+    {
+        $routeCollection->add(
+            $this->routeBuilderFactory->createRouteBuilder(static::SEARCH_ROUTE, '/', 'sulu_search.search')
+                ->setOption('test1', 'value1')
+        );
+    }
+}
+```
+
 ### Use yaml files for configuring routes
 
 All remaining XML route definition files were migrated to use the YAML format. Therefore, the following resource paths 

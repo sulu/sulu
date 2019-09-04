@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CustomUrlBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -61,7 +62,7 @@ class CustomUrlAdmin extends Admin
         $this->securityChecker = $securityChecker;
     }
 
-    public function getRoutes(): array
+    public function configureRoutes(RouteCollection $routeCollection): void
     {
         $listToolbarActions = [
             'sulu_admin.add',
@@ -71,24 +72,23 @@ class CustomUrlAdmin extends Admin
         $routes = [];
 
         if ($this->hasSomeWebspaceCustomUrlPermission()) {
-            $routes[] = $this->routeBuilderFactory
-                ->createFormOverlayListRouteBuilder('sulu_custom_url.custom_urls_list', '/custom-urls')
-                ->setResourceKey('custom_urls')
-                ->setListKey('custom_urls')
-                ->addListAdapters(['table_light'])
-                ->addRouterAttributesToListStore(['webspace'])
-                ->addRouterAttributesToFormStore(['webspace'])
-                ->disableSearching()
-                ->setFormKey('custom_url_details')
-                ->setTabTitle('sulu_custom_url.custom_urls')
-                ->addToolbarActions($listToolbarActions)
-                ->setTabOrder(1024)
-                ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
-                ->addRerenderAttribute('webspace')
-                ->getRoute();
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createFormOverlayListRouteBuilder('sulu_custom_url.custom_urls_list', '/custom-urls')
+                    ->setResourceKey('custom_urls')
+                    ->setListKey('custom_urls')
+                    ->addListAdapters(['table_light'])
+                    ->addRouterAttributesToListStore(['webspace'])
+                    ->addRouterAttributesToFormStore(['webspace'])
+                    ->disableSearching()
+                    ->setFormKey('custom_url_details')
+                    ->setTabTitle('sulu_custom_url.custom_urls')
+                    ->addToolbarActions($listToolbarActions)
+                    ->setTabOrder(1024)
+                    ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
+                    ->addRerenderAttribute('webspace')
+            );
         }
-
-        return $routes;
     }
 
     /**

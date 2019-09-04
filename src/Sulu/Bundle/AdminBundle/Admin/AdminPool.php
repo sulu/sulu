@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin;
 
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
-
 /**
  * The AdminPool is a container for all the registered admin-objects.
  */
@@ -41,27 +39,6 @@ class AdminPool
     public function getAdmins(): array
     {
         return $this->pool;
-    }
-
-    /**
-     * Returns the navigation combined from all Admin objects.
-     *
-     * @return Navigation
-     */
-    public function getNavigation()
-    {
-        /** @var Navigation $navigation */
-        $navigation = null;
-        $this->iterateAdmins(function(Admin $admin) use (&$navigation) {
-            if (null === $navigation) {
-                $navigation = $admin->getNavigation();
-
-                return;
-            }
-            $navigation = $navigation->merge($admin->getNavigation());
-        });
-
-        return $navigation;
     }
 
     /**

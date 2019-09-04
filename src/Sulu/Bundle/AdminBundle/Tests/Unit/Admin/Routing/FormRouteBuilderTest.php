@@ -236,6 +236,28 @@ class FormRouteBuilderTest extends TestCase
         );
     }
 
+    public function testBuildFormWithParent()
+    {
+        $route = (new FormRouteBuilder('sulu_role.add_form', '/roles'))
+            ->setResourceKey('roles')
+            ->setFormKey('roles')
+            ->setParent('sulu_admin.test')
+            ->getRoute();
+
+        $this->assertSame('sulu_admin.test', $route->getParent());
+    }
+
+    public function testBuildFormWithOption()
+    {
+        $route = (new FormRouteBuilder('sulu_role.add_form', '/roles'))
+            ->setResourceKey('roles')
+            ->setFormKey('roles')
+            ->setOption('resourceKey', 'test')
+            ->getRoute();
+
+        $this->assertSame('test', $route->getOption('resourceKey'));
+    }
+
     public function testBuildFormWithLocales()
     {
         $route = (new FormRouteBuilder('sulu_role.add_form', '/roles/:locale'))

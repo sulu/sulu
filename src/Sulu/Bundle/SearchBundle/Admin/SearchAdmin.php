@@ -12,32 +12,38 @@
 namespace Sulu\Bundle\SearchBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
-use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
 
 class SearchAdmin extends Admin
 {
     const SEARCH_ROUTE = 'sulu_search.search';
+    /**
+     * @var RouteBuilderFactoryInterface
+     */
+    private $routeBuilderFactory;
 
-    public function getNavigation(): Navigation
+    public function __construct(RouteBuilderFactoryInterface $routeBuilderFactory)
     {
-        $rootNavigationItem = $this->getNavigationItemRoot();
+        $this->routeBuilderFactory = $routeBuilderFactory;
+    }
 
+    public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
+    {
         $search = new NavigationItem('sulu_search.search');
         $search->setPosition(0);
         $search->setIcon('su-search');
         $search->setMainRoute(static::SEARCH_ROUTE);
 
-        $rootNavigationItem->addChild($search);
-
-        return new Navigation($rootNavigationItem);
+        $navigationItemCollection->add($search);
     }
 
-    public function getRoutes(): array
+    public function configureRoutes(RouteCollection $routeCollection): void
     {
-        return [
-            (new Route(static::SEARCH_ROUTE, '/', 'sulu_search.search')),
-        ];
+        $routeCollection->add(
+            $this->routeBuilderFactory->createRouteBuilder(static::SEARCH_ROUTE, '/', 'sulu_search.search')
+        );
     }
 }

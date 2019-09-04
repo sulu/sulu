@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Navigation;
+namespace Sulu\Bundle\AdminBundle\Admin\Navigation;
 
 class NavigationItem implements \Iterator
 {
@@ -114,16 +114,11 @@ class NavigationItem implements \Iterator
 
     /**
      * @param string $name The name of the item
-     * @param NavigationItem $parent The parent of the item
      */
-    public function __construct($name, $parent = null)
+    public function __construct($name)
     {
         $this->name = $name;
         $this->disabled = false;
-
-        if (null != $parent) {
-            $parent->addChild($this);
-        }
     }
 
     /**
@@ -461,38 +456,6 @@ class NavigationItem implements \Iterator
         }
 
         return;
-    }
-
-    /**
-     * Merges this navigation item with the other parameter and returns a new NavigationItem.
-     * Works only if there are no duplicate values on one level.
-     *
-     * @param NavigationItem $other The navigation item this one should be merged with
-     *
-     * @return NavigationItem
-     */
-    public function merge(self $other = null)
-    {
-        // Create new item
-        $new = $this->copyChildless();
-
-        // Add all children from this item
-        foreach ($this->getChildren() as $child) {
-            /* @var NavigationItem $child */
-            $new->addChild($child->merge((null != $other) ? $other->findChildren($child) : null));
-        }
-
-        // Add all children from the other item
-        if (null != $other) {
-            foreach ($other->getChildren() as $child) {
-                /** @var NavigationItem $child */
-                if (!$new->find($child)) {
-                    $new->addChild($child->merge($this->copyChildless()));
-                }
-            }
-        }
-
-        return $new;
     }
 
     /**

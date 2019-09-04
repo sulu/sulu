@@ -18,15 +18,15 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
-use Sulu\Bundle\AdminBundle\Admin\NavigationRegistry;
-use Sulu\Bundle\AdminBundle\Admin\RouteRegistry;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteRegistry;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
@@ -223,9 +223,9 @@ class AdminControllerTest extends TestCase
         ];
         $this->routeRegistry->getRoutes()->willReturn($routes);
 
-        $navigation = $this->prophesize(Navigation::class);
-        $navigation->getChildrenAsArray()->willReturn(['navigation_item1', 'navigation_item2']);
-        $this->navigationRegistry->getNavigation()->willReturn($navigation->reveal());
+        $navigationItem1 = new NavigationItem('navigation_item1');
+        $navigationItem2 = new NavigationItem('navigation_item2');
+        $this->navigationRegistry->getNavigationItems()->willReturn([$navigationItem1, $navigationItem2]);
 
         $this->urlGenerator->generate('route_id_1')->willReturn('/path1');
         $this->urlGenerator->generate('route_id_2')->willReturn('/path2');
@@ -277,7 +277,8 @@ class AdminControllerTest extends TestCase
                         && $data['sulu_admin']['fieldTypeOptions'] === $fieldTypeOptions
                         && $data['sulu_admin']['smartContent'] === $dataProviders
                         && $data['sulu_admin']['routes'] === $routes
-                        && $data['sulu_admin']['navigation'] === ['navigation_item1', 'navigation_item2']
+                        && 'navigation_item1' === $data['sulu_admin']['navigation'][0]['title']
+                        && 'navigation_item2' === $data['sulu_admin']['navigation'][1]['title']
                         && $data['sulu_admin']['resources'] === $this->resources
                         && $data['admin1'] === $admin1Config
                         && $data['admin2'] === $admin2Config;

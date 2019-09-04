@@ -12,10 +12,10 @@
 namespace Sulu\Bundle\SnippetBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
-use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -79,26 +79,22 @@ class SnippetAdmin extends Admin
         $this->defaultEnabled = $defaultEnabled;
     }
 
-    public function getNavigation(): Navigation
+    public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
-        $rootNavigationItem = $this->getNavigationItemRoot();
-
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $snippet = new NavigationItem('sulu_snippet.snippets');
             $snippet->setPosition(20);
             $snippet->setIcon('su-snippet');
             $snippet->setMainRoute(static::LIST_ROUTE);
 
-            $rootNavigationItem->addChild($snippet);
+            $navigationItemCollection->add($snippet);
         }
-
-        return new Navigation($rootNavigationItem);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getRoutes(): array
+    public function configureRoutes(RouteCollection $routeCollection): void
     {
         $snippetLocales = $this->webspaceManager->getAllLocales();
 
@@ -125,65 +121,70 @@ class SnippetAdmin extends Admin
             $listToolbarActions[] = 'sulu_admin.export';
         }
 
-        $routes = [];
-
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $routes[] = $this->routeBuilderFactory->createListRouteBuilder(static::LIST_ROUTE, '/snippets/:locale')
-                ->setResourceKey('snippets')
-                ->setListKey('snippets')
-                ->setTitle('sulu_snippet.snippets')
-                ->addListAdapters(['table'])
-                ->addLocales($snippetLocales)
-                ->setDefaultLocale($snippetLocales[0])
-                ->setAddRoute(static::ADD_FORM_ROUTE)
-                ->setEditRoute(static::EDIT_FORM_ROUTE)
-                ->addToolbarActions($listToolbarActions)
-                ->getRoute();
-            $routes[] = $this->routeBuilderFactory
-                ->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/snippets/:locale/add')
-                ->setResourceKey('snippets')
-                ->addLocales($snippetLocales)
-                ->setBackRoute(static::LIST_ROUTE)
-                ->getRoute();
-            $routes[] = $this->routeBuilderFactory->createFormRouteBuilder('sulu_snippet.add_form.details', '/details')
-                ->setResourceKey('snippets')
-                ->setFormKey('snippet')
-                ->setTabTitle('sulu_admin.details')
-                ->setEditRoute(static::EDIT_FORM_ROUTE)
-                ->addToolbarActions($formToolbarActionsWithType)
-                ->setParent(static::ADD_FORM_ROUTE)
-                ->getRoute();
-            $routes[] = $this->routeBuilderFactory
-                ->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/snippets/:locale/:id')
-                ->setResourceKey('snippets')
-                ->addLocales($snippetLocales)
-                ->setBackRoute(static::LIST_ROUTE)
-                ->setTitleProperty('title')
-                ->getRoute();
-            $routes[] = $this->routeBuilderFactory->createFormRouteBuilder('sulu_snippet.edit_form.details', '/details')
-                ->setResourceKey('snippets')
-                ->setFormKey('snippet')
-                ->setTabTitle('sulu_admin.details')
-                ->addToolbarActions($formToolbarActionsWithType)
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
-            $routes[] = $this->routeBuilderFactory
-                ->createFormRouteBuilder('sulu_snippet.edit_form.taxonomies', '/taxonomies')
-                ->setResourceKey('snippets')
-                ->setFormKey('snippet_taxonomies')
-                ->setTabTitle('sulu_snippet.taxonomies')
-                ->addToolbarActions($formToolbarActionsWithoutType)
-                ->setTitleVisible(true)
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
-            $routes[] = (new Route('sulu_snippet.snippet_areas', '/snippet-areas', 'sulu_snippet.snippet_areas'))
-                ->setOption('tabTitle', 'sulu_snippet.default_snippets')
-                ->setOption('tabOrder', 3072)
-                ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
-                ->addRerenderAttribute('webspace');
+            $routeCollection->add(
+                $this->routeBuilderFactory->createListRouteBuilder(static::LIST_ROUTE, '/snippets/:locale')
+                    ->setResourceKey('snippets')
+                    ->setListKey('snippets')
+                    ->setTitle('sulu_snippet.snippets')
+                    ->addListAdapters(['table'])
+                    ->addLocales($snippetLocales)
+                    ->setDefaultLocale($snippetLocales[0])
+                    ->setAddRoute(static::ADD_FORM_ROUTE)
+                    ->setEditRoute(static::EDIT_FORM_ROUTE)
+                    ->addToolbarActions($listToolbarActions)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/snippets/:locale/add')
+                    ->setResourceKey('snippets')
+                    ->addLocales($snippetLocales)
+                    ->setBackRoute(static::LIST_ROUTE)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory->createFormRouteBuilder('sulu_snippet.add_form.details', '/details')
+                    ->setResourceKey('snippets')
+                    ->setFormKey('snippet')
+                    ->setTabTitle('sulu_admin.details')
+                    ->setEditRoute(static::EDIT_FORM_ROUTE)
+                    ->addToolbarActions($formToolbarActionsWithType)
+                    ->setParent(static::ADD_FORM_ROUTE)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/snippets/:locale/:id')
+                    ->setResourceKey('snippets')
+                    ->addLocales($snippetLocales)
+                    ->setBackRoute(static::LIST_ROUTE)
+                    ->setTitleProperty('title')
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory->createFormRouteBuilder('sulu_snippet.edit_form.details', '/details')
+                    ->setResourceKey('snippets')
+                    ->setFormKey('snippet')
+                    ->setTabTitle('sulu_admin.details')
+                    ->addToolbarActions($formToolbarActionsWithType)
+                    ->setParent(static::EDIT_FORM_ROUTE)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createFormRouteBuilder('sulu_snippet.edit_form.taxonomies', '/taxonomies')
+                    ->setResourceKey('snippets')
+                    ->setFormKey('snippet_taxonomies')
+                    ->setTabTitle('sulu_snippet.taxonomies')
+                    ->addToolbarActions($formToolbarActionsWithoutType)
+                    ->setTitleVisible(true)
+                    ->setParent(static::EDIT_FORM_ROUTE)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createRouteBuilder('sulu_snippet.snippet_areas', '/snippet-areas', 'sulu_snippet.snippet_areas')
+                    ->setOption('tabTitle', 'sulu_snippet.default_snippets')
+                    ->setOption('tabOrder', 3072)
+                    ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
+                    ->addRerenderAttribute('webspace')
+            );
         }
-
-        return $routes;
     }
 
     /**

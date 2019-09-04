@@ -9,18 +9,19 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Admin;
+namespace Sulu\Bundle\AdminBundle\Admin\Navigation;
 
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
-use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\AdminPool;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteRegistry;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class NavigationRegistry
 {
     /**
-     * @var Navigation
+     * @var NavigationItem[]
      */
-    private $navigation;
+    private $navigationItems;
 
     /**
      * @var TranslatorInterface
@@ -45,40 +46,54 @@ class NavigationRegistry
     }
 
     /**
-     * Returns the navigation combined from all Admin objects.
+     * @return NavigationItem[]
      */
-    public function getNavigation(): Navigation
+    public function getNavigationItems(): array
     {
-        if (!$this->navigation) {
-            $this->loadNavigation();
+        if (!$this->navigationItems) {
+            $this->loadNavigationItems();
         }
 
-        return $this->navigation;
+        return $this->navigationItems;
     }
 
-    private function loadNavigation(): void
+    private function loadNavigationItems(): void
     {
-        /** @var Navigation $navigation */
-        $navigation = null;
+        $navigationItemCollection = new NavigationItemCollection();
+
+        $settingsNavigationItem = new NavigationItem(Admin::SETTINGS_NAVIGATION_ITEM);
+        $settingsNavigationItem->setPosition(1000);
+        $settingsNavigationItem->setIcon('su-cog');
+
+        $navigationItemCollection->add($settingsNavigationItem);
+
         foreach ($this->adminPool->getAdmins() as $admin) {
             if (!$admin instanceof NavigationProviderInterface) {
                 continue;
             }
 
-            if (null === $navigation) {
-                $navigation = $admin->getNavigation();
+            $admin->configureNavigationItems($navigationItemCollection);
+        }
 
-                continue;
+        $navigationItems = array_filter($navigationItemCollection->all(), function($navigationItem) {
+            return $navigationItem->getChildren() || $navigationItem->getMainRoute();
+        });
+
+        foreach ($navigationItems as $navigationItem) {
+            $this->processNavigationItem($navigationItem);
+        }
+
+        usort(
+            $navigationItems,
+            function(NavigationItem $a, NavigationItem $b) {
+                $aPosition = $a->getPosition() ?? PHP_INT_MAX;
+                $bPosition = $b->getPosition() ?? PHP_INT_MAX;
+
+                return $aPosition - $bPosition;
             }
+        );
 
-            $navigation = $navigation->merge($admin->getNavigation());
-        }
-
-        foreach ($navigation->getRoot()->getChildren() as $child) {
-            $this->processNavigationItem($child);
-        }
-
-        $this->navigation = $navigation;
+        $this->navigationItems = $navigationItems;
     }
 
     /**

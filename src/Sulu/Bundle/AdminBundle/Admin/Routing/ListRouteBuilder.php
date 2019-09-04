@@ -13,15 +13,11 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 class ListRouteBuilder implements ListRouteBuilderInterface
 {
+    use RouteBuilderTrait;
     use ListRouteBuilderTrait;
     use TabRouteBuilderTrait;
 
     const VIEW = 'sulu_admin.list';
-
-    /**
-     * @var Route
-     */
-    private $route;
 
     public function __construct(string $name, string $path)
     {
@@ -157,20 +153,6 @@ class ListRouteBuilder implements ListRouteBuilderInterface
     public function addResourceStorePropertiesToListStore(array $resourceStorePropertiesToListStore): ListRouteBuilderInterface
     {
         $this->addResourceStorePropertiesToListStoreToRoute($this->route, $resourceStorePropertiesToListStore);
-
-        return $this;
-    }
-
-    public function setParent(string $parent): ListRouteBuilderInterface
-    {
-        $this->route->setParent($parent);
-
-        return $this;
-    }
-
-    public function addRerenderAttribute(string $attribute)
-    {
-        $this->route->addRerenderAttribute($attribute);
 
         return $this;
     }

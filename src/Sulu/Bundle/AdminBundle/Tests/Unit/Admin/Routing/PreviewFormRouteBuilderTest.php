@@ -209,6 +209,28 @@ class PreviewFormRouteBuilderTest extends TestCase
         $this->assertSame('nodeType == 1', $route->getOption('previewCondition'));
     }
 
+    public function testBuildFormWithParent()
+    {
+        $route = (new PreviewFormRouteBuilder('sulu_role.add_form', '/roles'))
+            ->setResourceKey('roles')
+            ->setFormKey('roles')
+            ->setParent('sulu_admin.test')
+            ->getRoute();
+
+        $this->assertSame('sulu_admin.test', $route->getParent());
+    }
+
+    public function testBuildFormWithOption()
+    {
+        $route = (new PreviewFormRouteBuilder('sulu_role.add_form', '/roles'))
+            ->setResourceKey('roles')
+            ->setFormKey('roles')
+            ->setOption('resourceKey', 'test')
+            ->getRoute();
+
+        $this->assertSame('test', $route->getOption('resourceKey'));
+    }
+
     public function testBuildFormWithLocales()
     {
         $route = (new PreviewFormRouteBuilder('sulu_role.add_form', '/roles/:locale'))

@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Navigation;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 
 class NavigationItemTest extends TestCase
 {
@@ -38,19 +38,27 @@ class NavigationItemTest extends TestCase
         $this->item1 = new NavigationItem('Root');
         $this->item1->setHeaderIcon('logo');
         $this->item1->setHeaderTitle('title');
-        new NavigationItem('Portals', $this->item1);
-        new NavigationItem('Settings', $this->item1);
+
+        $portalItem1 = new NavigationItem('Portals');
+        $this->item1->addChild($portalItem1);
+        $settingsItem1 = new NavigationItem('Settings');
+        $this->item1->addChild($settingsItem1);
+
         $this->item2 = new NavigationItem('Root');
-        new NavigationItem('Portals', $this->item2);
-        new NavigationItem('Settings', $this->item2);
-        new NavigationItem('Globals', $this->item2);
+        $portalItem2 = new NavigationItem('Portals');
+        $this->item2->addChild($portalItem2);
+        $settingsItem2 = new NavigationItem('Settings');
+        $this->item2->addChild($settingsItem2);
+        $globalItem2 = new NavigationItem('Globals');
+        $this->item2->addChild($globalItem2);
     }
 
     public function testConstructor()
     {
         $this->assertEquals('NavigationItem', $this->navigationItem->getName());
 
-        $item = new NavigationItem('ChildItem', $this->navigationItem);
+        $item = new NavigationItem('ChildItem');
+        $this->navigationItem->addChild($item);
         $this->assertEquals($item, $this->navigationItem->getChildren()[0]);
     }
 
@@ -91,17 +99,6 @@ class NavigationItemTest extends TestCase
     {
         $this->assertEquals('Globals', $this->item2->find(new NavigationItem('Globals'))->getName());
         $this->assertNull($this->item1->find(new NavigationItem('Nothing')));
-    }
-
-    public function testMerge()
-    {
-        $merged = $this->item1->merge($this->item2);
-
-        $this->assertEquals('Root', $merged->getName());
-        $mergedChildren = $merged->getChildren();
-        $this->assertEquals('Portals', $mergedChildren[0]->getName());
-        $this->assertEquals('Settings', $mergedChildren[1]->getName());
-        $this->assertEquals('Globals', $mergedChildren[2]->getName());
     }
 
     public function testHasChildren()

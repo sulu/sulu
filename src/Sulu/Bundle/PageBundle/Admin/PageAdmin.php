@@ -12,10 +12,11 @@
 namespace Sulu\Bundle\PageBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
-use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -86,26 +87,22 @@ class PageAdmin extends Admin
         $this->versioningEnabled = $versioningEnabled;
     }
 
-    public function getNavigation(): Navigation
+    public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
-        $rootNavigationItem = $this->getNavigationItemRoot();
-
         if ($this->hasSomeWebspacePermission()) {
             $webspaceItem = new NavigationItem('sulu_page.webspaces');
             $webspaceItem->setPosition(10);
             $webspaceItem->setIcon('su-webspace');
             $webspaceItem->setMainRoute(static::WEBSPACE_TABS_ROUTE);
 
-            $rootNavigationItem->addChild($webspaceItem);
+            $navigationItemCollection->add($webspaceItem);
         }
-
-        return new Navigation($rootNavigationItem);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getRoutes(): array
+    public function configureRoutes(RouteCollection $routeCollection): void
     {
         /** @var Webspace $firstWebspace */
         $firstWebspace = current($this->webspaceManager->getWebspaceCollection()->getWebspaces());
@@ -133,116 +130,128 @@ class PageAdmin extends Admin
 
         $previewCondition = 'nodeType == 1';
 
-        $routes = [
-            // This route has to be registered even if permissions for pages are missing
-            // Otherwise the application breaks when other bundles try to add child routes to this one
-            $routes[] = (new Route(static::WEBSPACE_TABS_ROUTE, '/webspaces/:webspace', 'sulu_page.webspace_tabs'))
-                ->setAttributeDefault('webspace', $firstWebspace->getKey()),
-        ];
+        // This route has to be registered even if permissions for pages are missing
+        // Otherwise the application breaks when other bundles try to add child routes to this one
+        $routeCollection->add(
+            $this->routeBuilderFactory
+                ->createRouteBuilder(static::WEBSPACE_TABS_ROUTE, '/webspaces/:webspace', 'sulu_page.webspace_tabs')
+                ->setAttributeDefault('webspace', $firstWebspace->getKey())
+        );
 
         if ($this->hasSomeWebspacePermission()) {
-            $routes[] = (new Route(static::PAGES_ROUTE, '/pages/:locale', 'sulu_page.page_list'))
-                ->setAttributeDefault('locale', $firstWebspace->getDefaultLocalization()->getLocale())
-                ->setOption('tabTitle', 'sulu_page.pages')
-                ->setOption('tabOrder', 0)
-                ->setOption('tabPriority', 1024)
-                ->addRerenderAttribute('webspace')
-                ->setParent(static::WEBSPACE_TABS_ROUTE);
-            $routes[] = (new Route(
-                static::ADD_FORM_ROUTE,
-                '/webspaces/:webspace/pages/:locale/add/:parentId',
-                'sulu_page.page_tabs'
-            ))
-                ->setOption('backRoute', static::PAGES_ROUTE)
-                ->setOption('routerAttributesToBackRoute', ['webspace'])
-                ->setOption('resourceKey', 'pages');
-            $routes[] = $this->routeBuilderFactory
-                ->createFormRouteBuilder('sulu_page.page_add_form.details', '/details')
-                ->setResourceKey('pages')
-                ->setFormKey('page')
-                ->setTabTitle('sulu_admin.details')
-                ->setEditRoute(static::EDIT_FORM_ROUTE)
-                ->addRouterAttributesToEditRoute(['webspace'])
-                ->addToolbarActions($formToolbarActionsWithType)
-                ->addRouterAttributesToFormStore($routerAttributesToFormStore)
-                ->setParent(static::ADD_FORM_ROUTE)
-                ->getRoute();
-            $routes[] = (new Route(
-                static::EDIT_FORM_ROUTE,
-                '/webspaces/:webspace/pages/:locale/:id',
-                'sulu_page.page_tabs'
-            ))
-                ->setOption('backRoute', static::PAGES_ROUTE)
-                ->setOption('routerAttributesToBackRoute', ['id' => 'active', 'webspace'])
-                ->setOption('resourceKey', 'pages');
-            $routes[] = $this->routeBuilderFactory
-                ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.details', '/details')
-                ->setResourceKey('pages')
-                ->setFormKey('page')
-                ->setTabTitle('sulu_admin.details')
-                ->setTabPriority(1024)
-                ->setTabCondition('nodeType == 1 && shadowOn == false')
-                ->addToolbarActions($formToolbarActionsWithType)
-                ->addRouterAttributesToFormStore($routerAttributesToFormStore)
-                ->setPreviewCondition($previewCondition)
-                ->setTabOrder(1024)
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
-            $routes[] = $this->routeBuilderFactory
-                ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.seo', '/seo')
-                ->setResourceKey('pages')
-                ->setFormKey('page_seo')
-                ->setTabTitle('sulu_page.seo')
-                ->setTabCondition('nodeType == 1 && shadowOn == false')
-                ->addToolbarActions($formToolbarActionsWithoutType)
-                ->addRouterAttributesToFormStore($routerAttributesToFormStore)
-                ->setPreviewCondition($previewCondition)
-                ->setTitleVisible(true)
-                ->setTabOrder(2048)
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
-            $routes[] = $this->routeBuilderFactory
-                ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.excerpt', '/excerpt')
-                ->setResourceKey('pages')
-                ->setFormKey('page_excerpt')
-                ->setTabTitle('sulu_page.excerpt')
-                ->setTabCondition('(nodeType == 1 || nodeType == 4) && shadowOn == false')
-                ->addToolbarActions($formToolbarActionsWithoutType)
-                ->addRouterAttributesToFormStore($routerAttributesToFormStore)
-                ->setPreviewCondition($previewCondition)
-                ->setTitleVisible(true)
-                ->setTabOrder(3072)
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
-            $routes[] = $this->routeBuilderFactory
-                ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.settings', '/settings')
-                ->setResourceKey('pages')
-                ->setFormKey('page_settings')
-                ->setTabTitle('sulu_page.settings')
-                ->setTabPriority(512)
-                ->addToolbarActions($formToolbarActionsWithoutType)
-                ->addRouterAttributesToFormStore($routerAttributesToFormStore)
-                ->setPreviewCondition($previewCondition)
-                ->setTitleVisible(true)
-                ->setTabOrder(4096)
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
-            $routes[] = $this->routeBuilderFactory
-                ->createFormRouteBuilder('sulu_page.page_edit_form.permissions', '/permissions')
-                ->setResourceKey('permissions')
-                ->setFormKey('permission_details')
-                ->setApiOptions(['resourceKey' => 'pages'])
-                ->setTabCondition('_permissions.security')
-                ->setTabTitle('sulu_security.permissions')
-                ->addToolbarActions(['sulu_admin.save'])
-                ->addRouterAttributesToFormStore(['webspace'])
-                ->setTitleVisible(true)
-                ->setTabOrder(5120)
-                ->setParent(static::EDIT_FORM_ROUTE)
-                ->getRoute();
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createRouteBuilder(static::PAGES_ROUTE, '/pages/:locale', 'sulu_page.page_list')
+                    ->setAttributeDefault('locale', $firstWebspace->getDefaultLocalization()->getLocale())
+                    ->setOption('tabTitle', 'sulu_page.pages')
+                    ->setOption('tabOrder', 0)
+                    ->setOption('tabPriority', 1024)
+                    ->addRerenderAttribute('webspace')
+                    ->setParent(static::WEBSPACE_TABS_ROUTE)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory->createRouteBuilder(
+                    static::ADD_FORM_ROUTE,
+                    '/webspaces/:webspace/pages/:locale/add/:parentId',
+                    'sulu_page.page_tabs'
+                )
+                    ->setOption('backRoute', static::PAGES_ROUTE)
+                    ->setOption('routerAttributesToBackRoute', ['webspace'])
+                    ->setOption('resourceKey', 'pages')
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createFormRouteBuilder('sulu_page.page_add_form.details', '/details')
+                    ->setResourceKey('pages')
+                    ->setFormKey('page')
+                    ->setTabTitle('sulu_admin.details')
+                    ->setEditRoute(static::EDIT_FORM_ROUTE)
+                    ->addRouterAttributesToEditRoute(['webspace'])
+                    ->addToolbarActions($formToolbarActionsWithType)
+                    ->addRouterAttributesToFormStore($routerAttributesToFormStore)
+                    ->setParent(static::ADD_FORM_ROUTE)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory->createRouteBuilder(
+                    static::EDIT_FORM_ROUTE,
+                    '/webspaces/:webspace/pages/:locale/:id',
+                    'sulu_page.page_tabs'
+                )
+                    ->setOption('backRoute', static::PAGES_ROUTE)
+                    ->setOption('routerAttributesToBackRoute', ['id' => 'active', 'webspace'])
+                    ->setOption('resourceKey', 'pages')
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.details', '/details')
+                    ->setResourceKey('pages')
+                    ->setFormKey('page')
+                    ->setTabTitle('sulu_admin.details')
+                    ->setTabPriority(1024)
+                    ->setTabCondition('nodeType == 1 && shadowOn == false')
+                    ->addToolbarActions($formToolbarActionsWithType)
+                    ->addRouterAttributesToFormStore($routerAttributesToFormStore)
+                    ->setPreviewCondition($previewCondition)
+                    ->setTabOrder(1024)
+                    ->setParent(static::EDIT_FORM_ROUTE)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.seo', '/seo')
+                    ->setResourceKey('pages')
+                    ->setFormKey('page_seo')
+                    ->setTabTitle('sulu_page.seo')
+                    ->setTabCondition('nodeType == 1 && shadowOn == false')
+                    ->addToolbarActions($formToolbarActionsWithoutType)
+                    ->addRouterAttributesToFormStore($routerAttributesToFormStore)
+                    ->setPreviewCondition($previewCondition)
+                    ->setTitleVisible(true)
+                    ->setTabOrder(2048)
+                    ->setParent(static::EDIT_FORM_ROUTE)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.excerpt', '/excerpt')
+                    ->setResourceKey('pages')
+                    ->setFormKey('page_excerpt')
+                    ->setTabTitle('sulu_page.excerpt')
+                    ->setTabCondition('(nodeType == 1 || nodeType == 4) && shadowOn == false')
+                    ->addToolbarActions($formToolbarActionsWithoutType)
+                    ->addRouterAttributesToFormStore($routerAttributesToFormStore)
+                    ->setPreviewCondition($previewCondition)
+                    ->setTitleVisible(true)
+                    ->setTabOrder(3072)
+                    ->setParent(static::EDIT_FORM_ROUTE)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.settings', '/settings')
+                    ->setResourceKey('pages')
+                    ->setFormKey('page_settings')
+                    ->setTabTitle('sulu_page.settings')
+                    ->setTabPriority(512)
+                    ->addToolbarActions($formToolbarActionsWithoutType)
+                    ->addRouterAttributesToFormStore($routerAttributesToFormStore)
+                    ->setPreviewCondition($previewCondition)
+                    ->setTitleVisible(true)
+                    ->setTabOrder(4096)
+                    ->setParent(static::EDIT_FORM_ROUTE)
+            );
+            $routeCollection->add(
+                $this->routeBuilderFactory
+                    ->createFormRouteBuilder('sulu_page.page_edit_form.permissions', '/permissions')
+                    ->setResourceKey('permissions')
+                    ->setFormKey('permission_details')
+                    ->setApiOptions(['resourceKey' => 'pages'])
+                    ->setTabCondition('_permissions.security')
+                    ->setTabTitle('sulu_security.permissions')
+                    ->addToolbarActions(['sulu_admin.save'])
+                    ->addRouterAttributesToFormStore(['webspace'])
+                    ->setTitleVisible(true)
+                    ->setTabOrder(5120)
+                    ->setParent(static::EDIT_FORM_ROUTE)
+            );
         }
-
-        return $routes;
     }
 
     /**

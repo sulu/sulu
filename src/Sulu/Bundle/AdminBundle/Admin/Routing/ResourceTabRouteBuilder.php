@@ -13,14 +13,10 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 class ResourceTabRouteBuilder implements ResourceTabRouteBuilderInterface
 {
+    use RouteBuilderTrait;
     use FormRouteBuilderTrait;
 
     const VIEW = 'sulu_admin.resource_tabs';
-
-    /**
-     * @var Route
-     */
-    private $route;
 
     public function __construct(string $name, string $path)
     {
