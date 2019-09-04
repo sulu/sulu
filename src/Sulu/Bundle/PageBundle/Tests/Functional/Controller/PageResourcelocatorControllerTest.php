@@ -37,18 +37,12 @@ class PageResourcelocatorControllerTest extends SuluTestCase
 
     protected function setUp()
     {
-        $this->session = $this->getContainer()->get('doctrine')->getConnection();
-        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $this->client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
         $this->initPhpcr();
+        $this->session = $this->getContainer()->get('doctrine')->getConnection();
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->data = $this->prepareRepositoryContent();
-        $this->client = $this->createClient(
-            [],
-            [
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            ]
-        );
     }
 
     private function prepareRepositoryContent()
@@ -106,34 +100,26 @@ class PageResourcelocatorControllerTest extends SuluTestCase
             ],
         ];
 
-        $client = $this->createClient(
-            [],
-            [
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            ]
-        );
-
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&locale=en&action=publish',
             $data[0]
         );
-        $data[0] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request(
+        $data[0] = (array) json_decode($this->client->getResponse()->getContent(), true);
+        $this->client->request(
             'POST',
             '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&locale=en&action=publish',
             $data[1]
         );
-        $data[1] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish&parentId=' . $data[1]['id'], $data[2]);
-        $data[2] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish&parentId=' . $data[1]['id'], $data[3]);
-        $data[3] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish&parentId=' . $data[3]['id'], $data[4]);
-        $data[4] = (array) json_decode($client->getResponse()->getContent(), true);
+        $data[1] = (array) json_decode($this->client->getResponse()->getContent(), true);
+        $this->client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish&parentId=' . $data[1]['id'], $data[2]);
+        $data[2] = (array) json_decode($this->client->getResponse()->getContent(), true);
+        $this->client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish&parentId=' . $data[1]['id'], $data[3]);
+        $data[3] = (array) json_decode($this->client->getResponse()->getContent(), true);
+        $this->client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish&parentId=' . $data[3]['id'], $data[4]);
+        $data[4] = (array) json_decode($this->client->getResponse()->getContent(), true);
 
         return $data;
     }

@@ -26,6 +26,6 @@ parameters:
         # The following should be removed at some point
         - %currentWorkingDirectory%/*/Tests/*
     ignoreErrors:
-        - '#Service "sulu_document_manager.node_manager" is private.#'
         - '#Service "sulu_test.doctrine_phpcr.session" is not registered in the container.#'
+        - '#Service "test_user_provider" is not registered in the container.#'
         - '#Service "sulu_test.doctrine_phpcr.live_session" is not registered in the container.#'

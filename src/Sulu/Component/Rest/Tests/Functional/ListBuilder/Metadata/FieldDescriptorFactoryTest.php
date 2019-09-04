@@ -78,9 +78,12 @@ class FieldDescriptorFactoryTest extends TestCase
     {
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('complete');
 
+        $expectedFieldDescriptors = ['extension', 'id', 'firstName', 'lastName', 'avatar', 'fullName', 'city'];
+        $fieldDescriptorKeys = array_keys($fieldDescriptor);
+
         $this->assertEquals(
-            ['extension', 'id', 'firstName', 'lastName', 'avatar', 'fullName', 'city'],
-            array_keys($fieldDescriptor)
+            asort($expectedFieldDescriptors),
+            asort($fieldDescriptorKeys)
         );
 
         $expected = [

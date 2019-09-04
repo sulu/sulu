@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
+use Sulu\Bundle\TestBundle\Testing\PHPCRImporter;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
@@ -28,36 +29,52 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 class NodeControllerTest extends SuluTestCase
 {
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
-    protected $em;
+    private static $em;
 
     /**
      * @var SessionInterface
      */
-    private $session;
+    private static $session;
 
     /**
      * @var SessionInterface
      */
-    private $liveSession;
+    private static $liveSession;
 
     /**
      * @var DocumentManagerInterface
      */
-    private $documentManager;
+    private static $documentManager;
+
+    /**
+     * @var PHPCRImporter
+     */
+    private static $importer;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->em = $this->getEntityManager();
-        $this->session = $this->getContainer()->get('sulu_document_manager.default_session');
-        $this->liveSession = $this->getContainer()->get('sulu_document_manager.live_session');
-        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-
         $this->initOrm();
         $this->initPhpcr();
+    }
+
+    protected static function bootKernel(array $options = [])
+    {
+        $kernel = parent::bootKernel($options);
+
+        self::$em = self::getContainer()->get('doctrine.orm.entity_manager');
+        self::$session = self::getContainer()->get('sulu_document_manager.default_session');
+        self::$liveSession = self::getContainer()->get('sulu_document_manager.live_session');
+        self::$documentManager = self::getContainer()->get('sulu_document_manager.document_manager');
+        self::$importer = new PHPCRImporter(
+            self::$session,
+            self::$liveSession
+        );
+
+        return $kernel;
     }
 
     protected function initOrm()
@@ -68,32 +85,32 @@ class NodeControllerTest extends SuluTestCase
 
         $tag1 = $tagRepository->createNew();
 
-        $metadata = $this->em->getClassMetaData(get_class($tag1));
+        $metadata = self::$em->getClassMetaData(get_class($tag1));
         $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
         $tag1->setId(1);
         $tag1->setName('tag1');
-        $this->em->persist($tag1);
-        $this->em->flush();
+        self::$em->persist($tag1);
+        self::$em->flush();
 
         $tag2 = $tagRepository->createNew();
         $tag2->setId(2);
         $tag2->setName('tag2');
-        $this->em->persist($tag2);
-        $this->em->flush();
+        self::$em->persist($tag2);
+        self::$em->flush();
 
         $tag3 = $tagRepository->createNew();
         $tag3->setId(3);
         $tag3->setName('tag3');
-        $this->em->persist($tag3);
-        $this->em->flush();
+        self::$em->persist($tag3);
+        self::$em->flush();
 
         $tag4 = $tagRepository->createNew();
         $tag4->setId(4);
         $tag4->setName('tag4');
-        $this->em->persist($tag4);
-        $this->em->flush();
+        self::$em->persist($tag4);
+        self::$em->flush();
     }
 
     public function testPost()
@@ -119,7 +136,7 @@ class NodeControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
-        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+        $homeDocument = self::$documentManager->find('/cmf/sulu_io/contents');
 
         $client = $this->createAuthenticatedClient();
         $client->request(
@@ -147,7 +164,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($this->getTestUserId(), $response->changer);
 
         /** @var NodeInterface $content */
-        $defaultContent = $this->session->getNode('/cmf/sulu_io/contents/news/test-1');
+        $defaultContent = self::$session->getNode('/cmf/sulu_io/contents/news/test-1');
 
         $this->assertEquals('test-1', $defaultContent->getProperty('i18n:en-title')->getString());
         $this->assertEquals('Test', $defaultContent->getProperty('i18n:en-article')->getString());
@@ -158,7 +175,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($uuid, $defaultContent->getParent()->getIdentifier());
 
         /** @var NodeInterface $content */
-        $liveContent = $this->liveSession->getNode('/cmf/sulu_io/contents/news/test-1');
+        $liveContent = self::$liveSession->getNode('/cmf/sulu_io/contents/news/test-1');
         $this->assertEquals($liveContent->getIdentifier(), $defaultContent->getIdentifier());
         $this->assertFalse($liveContent->hasProperty('i18n:en-title'));
     }
@@ -178,7 +195,7 @@ class NodeControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+        $homeDocument = self::$documentManager->find('/cmf/sulu_io/contents');
 
         $client->request(
             'POST',
@@ -197,7 +214,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($this->getTestUserId(), $response->changer);
 
         /** @var NodeInterface $content */
-        $content = $this->session->getNode('/cmf/sulu_io/routes/en/test')->getPropertyValue('sulu:content');
+        $content = self::$session->getNode('/cmf/sulu_io/routes/en/test')->getPropertyValue('sulu:content');
 
         $this->assertEquals('Testtitle', $content->getProperty('i18n:en-title')->getString());
         $this->assertEquals('Test', $content->getProperty('i18n:en-article')->getString());
@@ -207,7 +224,8 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($this->getTestUserId(), $content->getPropertyValue('i18n:en-changer'));
 
         /** @var NodeInterface $content */
-        $content = $this->liveSession->getNode('/cmf/sulu_io/routes/en/test')->getPropertyValue('sulu:content');
+        $content = self::getContainer()->get('sulu_document_manager.live_session')
+            ->getNode('/cmf/sulu_io/routes/en/test')->getPropertyValue('sulu:content');
 
         $this->assertEquals('Testtitle', $content->getProperty('i18n:en-title')->getString());
         $this->assertEquals('Test', $content->getProperty('i18n:en-article')->getString());
@@ -232,7 +250,7 @@ class NodeControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
-        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+        $homeDocument = self::$documentManager->find('/cmf/sulu_io/contents');
 
         $client->request(
             'POST',
@@ -262,8 +280,8 @@ class NodeControllerTest extends SuluTestCase
             ],
             'article' => 'Test English',
         ]);
-        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->flush();
 
         $document->setTitle('test_de');
         $document->setResourceSegment('/test_de');
@@ -275,8 +293,8 @@ class NodeControllerTest extends SuluTestCase
             ],
             'article' => 'Test German',
         ]);
-        $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->flush();
 
         $client = $this->createAuthenticatedClient();
 
@@ -312,8 +330,8 @@ class NodeControllerTest extends SuluTestCase
             ],
             'article' => 'Test English',
         ]);
-        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->flush();
 
         $document->setTitle('test_de');
         $document->setResourceSegment('/test_de');
@@ -325,15 +343,15 @@ class NodeControllerTest extends SuluTestCase
             ],
             'article' => 'Test German',
         ]);
-        $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->flush();
 
         // change the template now to "simple"
         // the old data "article" should still exists
         $document->setStructureType('simple');
-        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->flush();
 
         $client = $this->createAuthenticatedClient();
 
@@ -378,8 +396,8 @@ class NodeControllerTest extends SuluTestCase
             'article' => 'Test English',
         ]);
 
-        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->flush();
 
         $client = $this->createAuthenticatedClient();
 
@@ -409,8 +427,8 @@ class NodeControllerTest extends SuluTestCase
             ],
             'article' => 'Test English',
         ]);
-        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->flush();
 
         $document->setTitle('test_de');
         $document->setResourceSegment('/test_de');
@@ -424,8 +442,8 @@ class NodeControllerTest extends SuluTestCase
         ]);
         $document->setShadowLocaleEnabled(true);
         $document->setShadowLocale('en');
-        $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->flush();
 
         $client = $this->createAuthenticatedClient();
 
@@ -450,21 +468,21 @@ class NodeControllerTest extends SuluTestCase
         $targetPage->setTitle('target');
         $targetPage->setResourceSegment('/target');
         $targetPage->setStructureType('default');
-        $this->documentManager->persist($targetPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
+        self::$documentManager->persist($targetPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->flush();
 
         $internalLinkPage = $this->createPageDocument();
         $internalLinkPage->setTitle('page');
         $internalLinkPage->setStructureType('default');
         $internalLinkPage->setResourceSegment('/test');
-        $this->documentManager->persist($internalLinkPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
+        self::$documentManager->persist($internalLinkPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->flush();
 
-        $internalLinkPage = $this->documentManager->find($internalLinkPage->getUuid());
+        $internalLinkPage = self::$documentManager->find($internalLinkPage->getUuid());
         $internalLinkPage->setRedirectType(RedirectType::INTERNAL);
         $internalLinkPage->setRedirectTarget($targetPage);
-        $this->documentManager->persist($internalLinkPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
+        self::$documentManager->persist($internalLinkPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->flush();
 
         $client->request('GET', '/api/nodes/' . $internalLinkPage->getUuid() . '?webspace=sulu_io&language=en');
         $response = json_decode($client->getResponse()->getContent(), true);
@@ -483,8 +501,8 @@ class NodeControllerTest extends SuluTestCase
         $externalLinkPage->setRedirectType(RedirectType::EXTERNAL);
         $externalLinkPage->setRedirectExternal('http://www.sulu.io');
         $externalLinkPage->setResourceSegment('/test');
-        $this->documentManager->persist($externalLinkPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
+        self::$documentManager->persist($externalLinkPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->flush();
 
         $client->request('GET', '/api/nodes/' . $externalLinkPage->getUuid() . '?webspace=sulu_io&language=en');
         $response = json_decode($client->getResponse()->getContent(), true);
@@ -520,7 +538,7 @@ class NodeControllerTest extends SuluTestCase
             ],
         ];
 
-        $data = $this->setUpContent($data);
+        $data = $this->setUpContent($client, $data);
 
         $client->request('DELETE', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(204, $client->getResponse());
@@ -537,9 +555,9 @@ class NodeControllerTest extends SuluTestCase
         $linkedDocument->setTitle('test1');
         $linkedDocument->setResourceSegment('/test1');
         $linkedDocument->setStructureType('simple');
-        $this->documentManager->persist($linkedDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->publish($linkedDocument, 'en');
-        $this->documentManager->flush();
+        self::$documentManager->persist($linkedDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->publish($linkedDocument, 'en');
+        self::$documentManager->flush();
 
         $document = $this->createPageDocument();
         $document->setTitle('test2');
@@ -550,9 +568,9 @@ class NodeControllerTest extends SuluTestCase
                 $linkedDocument->getUuid(),
             ],
         ]);
-        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->publish($document, 'en');
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->publish($document, 'en');
+        self::$documentManager->flush();
 
         $client->request('DELETE', '/api/nodes/' . $linkedDocument->getUuid() . '?webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(409, $client->getResponse());
@@ -574,7 +592,7 @@ class NodeControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+        $homeDocument = self::$documentManager->find('/cmf/sulu_io/contents');
 
         $client->request(
             'POST',
@@ -633,7 +651,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(1, $response['author']);
 
         $this->assertFalse(
-            $this->liveSession->getNode('/cmf/sulu_io/contents/testtitle-en')->hasProperty('i18n:en-changed')
+            self::$liveSession->getNode('/cmf/sulu_io/contents/testtitle-en')->hasProperty('i18n:en-changed')
         );
     }
 
@@ -654,7 +672,7 @@ class NodeControllerTest extends SuluTestCase
             ],
         ];
 
-        $data = $this->setUpContent($data);
+        $data = $this->setUpContent($client, $data);
 
         $data[0]['title'] = 'test123';
         $data[0]['tags'] = ['new tag'];
@@ -691,7 +709,8 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($this->getTestUserId(), $response->creator);
 
         /** @var NodeInterface $content */
-        $content = $this->liveSession->getNode('/cmf/sulu_io/routes/en/test1')->getPropertyValue('sulu:content');
+        $content = $client->getContainer()->get('sulu_document_manager.live_session')
+            ->getNode('/cmf/sulu_io/routes/en/test1')->getPropertyValue('sulu:content');
 
         $this->assertEquals('test123', $content->getProperty('i18n:en-title')->getString());
         $this->assertEquals('thats a new article', $content->getProperty('i18n:en-article')->getString());
@@ -715,7 +734,7 @@ class NodeControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+        $homeDocument = self::$documentManager->find('/cmf/sulu_io/contents');
 
         $client->request('POST', '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en', $data);
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -767,7 +786,7 @@ class NodeControllerTest extends SuluTestCase
             ],
         ];
 
-        $data = $this->setUpContent($data);
+        $data = $this->setUpContent($client, $data);
 
         $data[0]['template'] = 'default';
         $data[0]['article'] = 'article test';
@@ -803,7 +822,7 @@ class NodeControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+        $homeDocument = self::$documentManager->find('/cmf/sulu_io/contents');
 
         $client->request(
             'POST',
@@ -851,17 +870,17 @@ class NodeControllerTest extends SuluTestCase
             ],
             'article' => 'Test English',
         ]);
-        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->flush();
 
         $document->setStructureType('overview');
-        $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->flush();
 
         $document->setShadowLocale('en');
         $document->setShadowLocaleEnabled(true);
-        $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->flush();
 
         $client = $this->createAuthenticatedClient();
 
@@ -900,7 +919,7 @@ class NodeControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+        $homeDocument = self::$documentManager->find('/cmf/sulu_io/contents');
 
         $client->request('POST', '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en', $data);
         $response = json_decode($client->getResponse()->getContent(), true);
@@ -927,7 +946,7 @@ class NodeControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+        $homeDocument = self::$documentManager->find('/cmf/sulu_io/contents');
 
         $client->request(
             'POST',
@@ -966,7 +985,7 @@ class NodeControllerTest extends SuluTestCase
             'url' => '/test',
         ];
 
-        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+        $homeDocument = self::$documentManager->find('/cmf/sulu_io/contents');
 
         $client->request(
             'POST',
@@ -977,7 +996,7 @@ class NodeControllerTest extends SuluTestCase
 
         $data['url'] = '/test2';
 
-        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+        $homeDocument = self::$documentManager->find('/cmf/sulu_io/contents');
 
         $client->request(
             'POST',
@@ -1001,7 +1020,7 @@ class NodeControllerTest extends SuluTestCase
     public function testTreeGet()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
+        $data = self::$importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         // get child nodes from root
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
@@ -1041,7 +1060,7 @@ class NodeControllerTest extends SuluTestCase
     public function testTreeGetTillId()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
+        $data = self::$importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         $client->request(
             'GET',
@@ -1077,7 +1096,7 @@ class NodeControllerTest extends SuluTestCase
     public function testTreeGetTillSelectedId()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
+        $data = self::$importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         $client->request(
             'GET',
@@ -1113,7 +1132,7 @@ class NodeControllerTest extends SuluTestCase
     public function testGetFlat()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
+        $data = self::$importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         // get child nodes from root
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
@@ -1187,7 +1206,7 @@ class NodeControllerTest extends SuluTestCase
     public function testGetTree()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
+        $data = self::$importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         // get child nodes from root
         $client->request('GET', '/api/nodes?depth=1&flat=false&webspace=sulu_io&language=en');
@@ -1279,7 +1298,7 @@ class NodeControllerTest extends SuluTestCase
     public function testBreadcrumb()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
+        $data = self::$importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         $client->request('GET', '/api/nodes/' . $data[4]['id'] . '?breadcrumb=true&webspace=sulu_io&language=en');
 
@@ -1337,7 +1356,7 @@ class NodeControllerTest extends SuluTestCase
             ],
         ];
 
-        $data = $this->setUpContent($data);
+        $data = $this->setUpContent($client, $data);
 
         $client->request('GET', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en&complete=false');
 
@@ -1369,7 +1388,7 @@ class NodeControllerTest extends SuluTestCase
     public function testCgetAction()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
+        $data = self::$importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         // get child nodes from root
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
@@ -1414,7 +1433,7 @@ class NodeControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
-        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+        $homeDocument = self::$documentManager->find('/cmf/sulu_io/contents');
 
         $client->request(
             'POST',
@@ -1462,7 +1481,7 @@ class NodeControllerTest extends SuluTestCase
     public function testMove()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
+        $data = self::$importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         $client->request(
             'POST',
@@ -1477,7 +1496,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals('/test2/test3/test5', $response['path']);
         $this->assertEquals('/test2/test3/testing5', $response['url']);
 
-        $node = $this->session->getNode('/cmf/sulu_io/contents/test2/test3/test5');
+        $node = self::$session->getNode('/cmf/sulu_io/contents/test2/test3/test5');
         $this->assertEquals(
             $node->getPropertyValue('i18n:de-url', PropertyType::STRING),
             '/test2/test3/testing5'
@@ -1491,23 +1510,23 @@ class NodeControllerTest extends SuluTestCase
             '/test2/test3/testing5'
         );
 
-        $englishRouteNode = $this->session->getNode('/cmf/sulu_io/routes/en/test2/test3/testing5');
+        $englishRouteNode = self::$session->getNode('/cmf/sulu_io/routes/en/test2/test3/testing5');
         $this->assertEquals(
             $englishRouteNode->getPropertyValue('sulu:content', PropertyType::REFERENCE),
             $data[4]['id']
         );
-        $germanRouteNode = $this->session->getNode('/cmf/sulu_io/routes/de/test2/test3/testing5');
+        $germanRouteNode = self::$session->getNode('/cmf/sulu_io/routes/de/test2/test3/testing5');
         $this->assertEquals(
             $germanRouteNode->getPropertyValue('sulu:content', PropertyType::REFERENCE),
             $data[4]['id']
         );
-        $frenchRouteNode = $this->session->getNode('/cmf/sulu_io/routes/de/test2/test3/testing5');
+        $frenchRouteNode = self::$session->getNode('/cmf/sulu_io/routes/de/test2/test3/testing5');
         $this->assertEquals(
             $frenchRouteNode->getPropertyValue('sulu:content', PropertyType::REFERENCE),
             $data[4]['id']
         );
 
-        $rootNode = $this->session->getRootNode();
+        $rootNode = self::$session->getRootNode();
         $this->assertTrue($rootNode->hasNode('cmf/sulu_io/routes/de/test2/test3/testing5'));
         $this->assertTrue($rootNode->hasNode('cmf/sulu_io/routes/en/test2/test3/testing5'));
         $this->assertFalse($rootNode->hasNode('cmf/sulu_io/routes/de_at/test2/test3/testing5'));
@@ -1518,7 +1537,7 @@ class NodeControllerTest extends SuluTestCase
     public function testMoveNonExistingSource()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
+        $data = self::$importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         $client->request(
             'POST',
@@ -1530,7 +1549,7 @@ class NodeControllerTest extends SuluTestCase
     public function testMoveNonExistingDestination()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
+        $data = self::$importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         $client->request(
             'POST',
@@ -1542,7 +1561,7 @@ class NodeControllerTest extends SuluTestCase
     public function testCopy()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
+        $data = self::$importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         $client->request(
             'POST',
@@ -1574,7 +1593,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($data[4]['url'], $response['url']);
         $this->assertEquals($data[4]['article'], $response['article']);
 
-        $rootNode = $this->session->getRootNode();
+        $rootNode = self::$session->getRootNode();
         $this->assertFalse($rootNode->hasNode('cmf/sulu_io/routes/de/test2/test3/testing5'));
         $this->assertFalse($rootNode->hasNode('cmf/sulu_io/routes/en/test2/test3/testing5'));
     }
@@ -1582,7 +1601,7 @@ class NodeControllerTest extends SuluTestCase
     public function testCopyNonExistingSource()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
+        $data = self::$importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         $client->request(
             'POST',
@@ -1594,7 +1613,7 @@ class NodeControllerTest extends SuluTestCase
     public function testCopyNonExistingDestination()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
+        $data = self::$importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
         $client->request(
             'POST',
@@ -1616,11 +1635,11 @@ class NodeControllerTest extends SuluTestCase
             ],
             'article' => 'Test English',
         ]);
-        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->publish($document, 'en');
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->publish($document, 'en');
+        self::$documentManager->flush();
 
-        $document = $this->documentManager->find($document->getUuid(), 'de', ['load_ghost_content' => false]);
+        $document = self::$documentManager->find($document->getUuid(), 'de', ['load_ghost_content' => false]);
         $document->setTitle('test_de');
         $document->setResourceSegment('/test_de');
         $document->setStructureType('default');
@@ -1631,15 +1650,15 @@ class NodeControllerTest extends SuluTestCase
             ],
             'article' => 'Test German',
         ]);
-        $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->publish($document, 'de');
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->publish($document, 'de');
+        self::$documentManager->flush();
 
         $document->setShadowLocaleEnabled(true);
         $document->setShadowLocale('en');
-        $this->documentManager->persist($document, 'de');
-        $this->documentManager->publish($document, 'de');
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'de');
+        self::$documentManager->publish($document, 'de');
+        self::$documentManager->flush();
 
         $client = $this->createAuthenticatedClient();
 
@@ -1654,10 +1673,10 @@ class NodeControllerTest extends SuluTestCase
 
         $uuid = json_decode($client->getResponse()->getContent(), true)['id'];
 
-        $germanDocument = $this->documentManager->find($uuid, 'de');
+        $germanDocument = self::$documentManager->find($uuid, 'de');
         $this->assertStringStartsWith('/test_de/test_de', $germanDocument->getResourceSegment());
 
-        $englishDocument = $this->documentManager->find($uuid, 'en');
+        $englishDocument = self::$documentManager->find($uuid, 'en');
         $this->assertStringStartsWith('/test_en/test_en', $englishDocument->getResourceSegment());
     }
 
@@ -1667,9 +1686,9 @@ class NodeControllerTest extends SuluTestCase
         $document->setTitle('test_de');
         $document->setResourceSegment('/test_de');
         $document->setStructureType('default');
-        $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->publish($document, 'de');
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->publish($document, 'de');
+        self::$documentManager->flush();
 
         $client = $this->createAuthenticatedClient();
 
@@ -1680,11 +1699,11 @@ class NodeControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $defaultNode = $this->session->getNodeByIdentifier($document->getUuid());
+        $defaultNode = self::$session->getNodeByIdentifier($document->getUuid());
         $this->assertFalse($defaultNode->hasProperty('i18n:de-published'));
         $this->assertEquals(WorkflowStage::TEST, $defaultNode->getPropertyValue('i18n:de-state'));
 
-        $liveNode = $this->liveSession->getNodeByIdentifier($document->getUuid());
+        $liveNode = self::$liveSession->getNodeByIdentifier($document->getUuid());
         $this->assertEmpty($liveNode->getProperties('i18n:de-*'));
     }
 
@@ -1693,18 +1712,18 @@ class NodeControllerTest extends SuluTestCase
         $document = $this->createPageDocument();
         $document->setTitle('published title');
         $document->setStructureType('default');
-        $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->publish($document, 'de');
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->publish($document, 'de');
+        self::$documentManager->flush();
 
-        $document = $this->documentManager->find($document->getUuid(), 'de');
+        $document = self::$documentManager->find($document->getUuid(), 'de');
         $document->setTitle('draft title');
-        $this->documentManager->persist($document, 'de');
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'de');
+        self::$documentManager->flush();
 
-        $defaultNode = $this->session->getNodeByIdentifier($document->getUuid());
+        $defaultNode = self::$session->getNodeByIdentifier($document->getUuid());
         $this->assertEquals('draft title', $defaultNode->getPropertyValue('i18n:de-title'));
-        $liveNode = $this->liveSession->getNodeByIdentifier($document->getUuid());
+        $liveNode = self::$liveSession->getNodeByIdentifier($document->getUuid());
         $this->assertEquals('published title', $liveNode->getPropertyValue('i18n:de-title'));
 
         $client = $this->createAuthenticatedClient();
@@ -1718,12 +1737,12 @@ class NodeControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals('published title', $response['title']);
 
-        $this->session->refresh(false);
-        $this->liveSession->refresh(false);
+        self::$session->refresh(false);
+        self::$liveSession->refresh(false);
 
-        $defaultNode = $this->session->getNodeByIdentifier($document->getUuid());
+        $defaultNode = self::$session->getNodeByIdentifier($document->getUuid());
         $this->assertEquals('published title', $defaultNode->getPropertyValue('i18n:de-title'));
-        $liveNode = $this->liveSession->getNodeByIdentifier($document->getUuid());
+        $liveNode = self::$liveSession->getNodeByIdentifier($document->getUuid());
         $this->assertEquals('published title', $liveNode->getPropertyValue('i18n:de-title'));
     }
 
@@ -1732,18 +1751,18 @@ class NodeControllerTest extends SuluTestCase
         $document = $this->createPageDocument();
         $document->setTitle('published title');
         $document->setStructureType('default');
-        $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->publish($document, 'de');
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->publish($document, 'de');
+        self::$documentManager->flush();
 
-        $document = $this->documentManager->find($document->getUuid(), 'de');
+        $document = self::$documentManager->find($document->getUuid(), 'de');
         $document->setTitle('draft title');
-        $this->documentManager->persist($document, 'de');
-        $this->documentManager->flush();
+        self::$documentManager->persist($document, 'de');
+        self::$documentManager->flush();
 
-        $defaultNode = $this->session->getNodeByIdentifier($document->getUuid());
+        $defaultNode = self::$session->getNodeByIdentifier($document->getUuid());
         $this->assertEquals('draft title', $defaultNode->getPropertyValue('i18n:de-title'));
-        $liveNode = $this->liveSession->getNodeByIdentifier($document->getUuid());
+        $liveNode = self::$liveSession->getNodeByIdentifier($document->getUuid());
         $this->assertEquals('published title', $liveNode->getPropertyValue('i18n:de-title'));
 
         $client = $this->createAuthenticatedClient();
@@ -1758,7 +1777,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testOrder()
     {
-        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/order.xml');
+        $data = self::$importer->import(__DIR__ . '/../../fixtures/exports/order.xml');
 
         $client = $this->createAuthenticatedClient();
         $client->request(
@@ -1814,7 +1833,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testOrderWithGhosts()
     {
-        $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/order.xml');
+        $data = self::$importer->import(__DIR__ . '/../../fixtures/exports/order.xml');
 
         $client = $this->createAuthenticatedClient();
         $client->request(
@@ -1888,7 +1907,7 @@ class NodeControllerTest extends SuluTestCase
             ],
         ];
 
-        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+        $homeDocument = self::$documentManager->find('/cmf/sulu_io/contents');
 
         $client = $this->createAuthenticatedClient();
         $client->request(
@@ -1922,7 +1941,7 @@ class NodeControllerTest extends SuluTestCase
             'navContexts' => ['main', 'footer'],
         ];
 
-        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+        $homeDocument = self::$documentManager->find('/cmf/sulu_io/contents');
 
         $client->request(
             'POST',
@@ -1969,7 +1988,7 @@ class NodeControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
-        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+        $homeDocument = self::$documentManager->find('/cmf/sulu_io/contents');
 
         $client->request(
             'POST',
@@ -2007,7 +2026,7 @@ class NodeControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
-        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+        $homeDocument = self::$documentManager->find('/cmf/sulu_io/contents');
 
         $client->request(
             'POST',
@@ -2052,9 +2071,9 @@ class NodeControllerTest extends SuluTestCase
         $securedPage->setTitle('secured');
         $securedPage->setResourceSegment('/secured');
         $securedPage->setStructureType('default');
-        $this->documentManager->persist($securedPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
-        $this->documentManager->clear();
+        self::$documentManager->persist($securedPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        self::$documentManager->flush();
+        self::$documentManager->clear();
 
         $client = $this->createAuthenticatedClient();
         $client->request(
@@ -2162,7 +2181,7 @@ class NodeControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+        $homeDocument = self::$documentManager->find('/cmf/sulu_io/contents');
 
         $client->request(
             'POST',
@@ -2188,9 +2207,9 @@ class NodeControllerTest extends SuluTestCase
     public function testRenamePageWithLinkedChild()
     {
         $client = $this->createAuthenticatedClient();
-        $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
+        self::$importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
-        $document = $this->documentManager->find('585ccd35-a98e-4e41-a62c-e502ca905496', 'en');
+        $document = self::$documentManager->find('585ccd35-a98e-4e41-a62c-e502ca905496', 'en');
         $document->setStructureType('internallinks');
         $document->getStructure()->bind(
             [
@@ -2199,10 +2218,10 @@ class NodeControllerTest extends SuluTestCase
                 ],
             ]
         );
-        $this->documentManager->persist($document, 'en');
-        $this->documentManager->publish($document, 'en');
-        $this->documentManager->flush();
-        $this->documentManager->clear();
+        self::$documentManager->persist($document, 'en');
+        self::$documentManager->publish($document, 'en');
+        self::$documentManager->flush();
+        self::$documentManager->clear();
 
         $client->request('GET', '/api/nodes/' . $document->getUuid() . '?webspace=sulu_io&language=en');
         $data = json_decode($client->getResponse()->getContent(), true);
@@ -2231,11 +2250,9 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($data['id'], $node->getIdentifier());
     }
 
-    private function setUpContent($data)
+    private function setUpContent($client, $data)
     {
-        $client = $this->createAuthenticatedClient();
-
-        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+        $homeDocument = self::$documentManager->find('/cmf/sulu_io/contents');
 
         for ($i = 0; $i < count($data); ++$i) {
             $client->request(
@@ -2254,6 +2271,6 @@ class NodeControllerTest extends SuluTestCase
      */
     private function createPageDocument()
     {
-        return $this->documentManager->create('page');
+        return self::$documentManager->create('page');
     }
 }

@@ -11,19 +11,17 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Functional;
 
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\TestBundle\Testing\KernelTestCase;
 
-abstract class BaseTestCase extends SuluTestCase
+abstract class BaseTestCase extends KernelTestCase
 {
     const BASE_NAME = 'test';
 
     const BASE_PATH = '/test';
 
-    private $container;
-
     public function setUp()
     {
-        $workspace = $this->getPhpcrDefaultSession()->getWorkspace();
+        $workspace = $this->getSession()->getWorkspace();
         $nodeTypeManager = $workspace->getNodeTypeManager();
         if (!$nodeTypeManager->hasNodeType('mix:test')) {
             $nodeTypeManager->registerNodeTypesCnd(<<<'EOT'

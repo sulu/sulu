@@ -321,7 +321,7 @@ function is_everything_ok()
     global $failedTests;
 
     if ($failedTests->count() == 0) {
-        write_header('Everythig is AWESOME! \o/');
+        write_header('Everything is AWESOME! \o/');
 
         return true;
     }

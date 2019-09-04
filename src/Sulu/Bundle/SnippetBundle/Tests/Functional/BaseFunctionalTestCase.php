@@ -38,14 +38,6 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
      */
     private $manager;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getKernelConfiguration()
-    {
-        return ['environment' => 'dev'];
-    }
-
     private function createSnippet($type, array $localizedData)
     {
         $snippet = new SnippetDocument();

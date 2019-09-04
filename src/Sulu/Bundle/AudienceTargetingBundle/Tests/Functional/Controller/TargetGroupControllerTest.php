@@ -250,6 +250,7 @@ class TargetGroupControllerTest extends SuluTestCase
         ]);
 
         $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
         $data = [
             'title' => 'Target Group Title',

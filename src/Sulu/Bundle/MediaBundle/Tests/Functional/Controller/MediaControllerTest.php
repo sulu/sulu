@@ -1332,12 +1332,11 @@ class MediaControllerTest extends SuluTestCase
     {
         $media = $this->createMedia('photo');
 
-        $client = $this->createAuthenticatedClient();
-
         // Check Tag Remove
         $this->getEntityManager()->remove($this->tag1);
         $this->getEntityManager()->flush();
 
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
             '/api/media/' . $media->getId() . '?locale=en'
