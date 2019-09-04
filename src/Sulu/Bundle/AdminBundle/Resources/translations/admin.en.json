@@ -135,5 +135,7 @@
     "sulu_admin.has_changed_warning_dialog_text": "This content has been edited by another user. When you save the content this data will get lost.",
     "sulu_admin.edit_profile": "Edit profile",
     "sulu_admin.no_permissions": "No permissions",
-    "sulu_admin.no_options_available": "No options available"
+    "sulu_admin.no_options_available": "No options available",
+    "sulu_admin.form_contains_invalid_values": "The form contains invalid values",
+    "sulu_admin.form_save_server_error": "There was an error on the server when trying to save the form"
 }

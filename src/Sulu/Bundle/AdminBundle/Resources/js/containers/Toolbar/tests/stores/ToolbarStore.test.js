@@ -11,10 +11,7 @@ beforeEach(() => {
 });
 
 test('Set toolbar items and let mobx react', () => {
-    const errors = [{
-        code: 100,
-        message: 'You failed!',
-    }];
+    const errors = ['You failed!'];
 
     toolbarStore.setConfig({
         items: [

@@ -93,6 +93,31 @@ test('Render the items and icons from the ToolbarStore', () => {
     expect(toolbarStorePool.createStore).toBeCalledWith(storeKey);
 });
 
+test('Render the error from the ToolbarStore', () => {
+    const storeKey = 'testStore';
+
+    // $FlowFixMe
+    toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
+
+    toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
+    toolbarStoreMock.hasIconsConfig.mockReturnValue(true);
+    toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
+    toolbarStoreMock.hasBackButtonConfig.mockReturnValue(false);
+    toolbarStoreMock.errors.push('Something went wrong');
+
+    toolbarStoreMock.getIconsConfig.mockReturnValue(
+        [
+            <p key={1}>Test1</p>,
+            <p key={2}>Test2</p>,
+        ]
+    );
+
+    toolbarStoreMock.getItemsConfig.mockReturnValue([]);
+
+    expect(render(<Toolbar storeKey={storeKey} />)).toMatchSnapshot();
+    expect(toolbarStorePool.createStore).toBeCalledWith(storeKey);
+});
+
 test('Render the items as disabled if one is loading', () => {
     const storeKey = 'testStore';
 

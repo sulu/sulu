@@ -103,14 +103,15 @@ class Toolbar extends React.Component<ToolbarProps> {
     render() {
         const {handleSnackbarCloseClick} = this;
         const {onNavigationButtonClick, navigationOpen} = this.props;
-        const {showSuccess} = this.toolbarStore;
+        const {errors, showSuccess} = this.toolbarStore;
 
         return (
             <Fragment>
                 <Snackbar
+                    message={errors[errors.length - 1]}
                     onCloseClick={handleSnackbarCloseClick}
                     type="error"
-                    visible={this.toolbarStore.errors.length > 0}
+                    visible={errors.length > 0}
                 />
                 <ToolbarComponent>
                     <ToolbarComponent.Controls grow={true}>

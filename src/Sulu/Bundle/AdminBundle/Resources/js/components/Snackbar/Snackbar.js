@@ -6,6 +6,7 @@ import Icon from '../Icon';
 import snackbarStyles from './snackbar.scss';
 
 type Props = {|
+    message: string,
     onClick?: () => void,
     onCloseClick?: () => void,
     type: 'error' | 'warning',
@@ -23,7 +24,7 @@ export default class Snackbar extends React.Component<Props> {
     };
 
     render() {
-        const {onCloseClick, onClick, type, visible} = this.props;
+        const {message, onCloseClick, onClick, type, visible} = this.props;
 
         const snackbarClass = classNames(
             snackbarStyles.snackbar,
@@ -38,7 +39,7 @@ export default class Snackbar extends React.Component<Props> {
             <div className={snackbarClass} onClick={onClick} role="button">
                 <Icon className={snackbarStyles.icon} name={ICONS[type]} />
                 <div className={snackbarStyles.text}>
-                    <strong>{translate('sulu_admin.' + type)}</strong>
+                    <strong>{translate('sulu_admin.' + type)}</strong> - {message}
                 </div>
                 {onCloseClick &&
                     <Icon className={snackbarStyles.closeIcon} name="su-times" onClick={onCloseClick} />

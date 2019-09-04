@@ -37,30 +37,31 @@ Array [
         </header>
         <article>
           <div
+            class="snackbar error"
+            role="button"
+          >
+            <span
+              aria-label="su-exclamation-triangle"
+              class="su-exclamation-triangle icon"
+            />
+            <div
+              class="text"
+            >
+              <strong>
+                sulu_admin.error
+              </strong>
+               - 
+            </div>
+            <span
+              aria-label="su-times"
+              class="su-times clickable closeIcon"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <div
             class="form"
           >
-            <div
-              class="snackbar error"
-              role="button"
-            >
-              <span
-                aria-label="su-exclamation-triangle"
-                class="su-exclamation-triangle icon"
-              />
-              <div
-                class="text"
-              >
-                <strong>
-                  sulu_admin.error
-                </strong>
-              </div>
-              <span
-                aria-label="su-times"
-                class="su-times clickable closeIcon"
-                role="button"
-                tabindex="0"
-              />
-            </div>
             <div>
               form container mock
             </div>

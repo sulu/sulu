@@ -15,6 +15,7 @@ exports[`Render a warning snackbar 1`] = `
     <strong>
       sulu_admin.warning
     </strong>
+     - Something unimportant went wrong
   </div>
   <span
     aria-label="su-times"
@@ -40,6 +41,7 @@ exports[`Render an error snackbar 1`] = `
     <strong>
       sulu_admin.error
     </strong>
+     - Something went wrong
   </div>
   <span
     aria-label="su-times"
@@ -65,6 +67,7 @@ exports[`Render an error snackbar without close button 1`] = `
     <strong>
       sulu_admin.error
     </strong>
+     - Something went wrong
   </div>
 </div>
 `;

@@ -3,6 +3,7 @@
 @import '../../components/ColumnList/variables.scss';
 
 .form {
-    padding: $viewPadding;
+    margin: $viewPadding;
+    overflow: hidden;
     position: relative;
 }

@@ -1,5 +1,70 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render the error from the ToolbarStore 1`] = `
+Array [
+  <div
+    class="snackbar error visible"
+    role="button"
+  >
+    <span
+      aria-label="su-exclamation-triangle"
+      class="su-exclamation-triangle icon"
+    />
+    <div
+      class="text"
+    >
+      <strong>
+        sulu_admin.error
+      </strong>
+       - Something went wrong
+    </div>
+    <span
+      aria-label="su-times"
+      class="su-times clickable closeIcon"
+      role="button"
+      tabindex="0"
+    />
+  </div>,
+  <nav
+    class="toolbar light"
+  >
+    <div
+      class="controls light grow"
+    >
+      <div
+        class="itemsContainer"
+      >
+        <ul
+          class="items light"
+        />
+      </div>
+    </div>
+    <div
+      class="controls light"
+    >
+      <div
+        class="icons light"
+      >
+        <div
+          class="icon"
+        >
+          <p>
+            Test1
+          </p>
+        </div>
+        <div
+          class="icon"
+        >
+          <p>
+            Test2
+          </p>
+        </div>
+      </div>
+    </div>
+  </nav>,
+]
+`;
+
 exports[`Render the items and icons from the ToolbarStore 1`] = `
 Array [
   <div
@@ -16,6 +81,7 @@ Array [
       <strong>
         sulu_admin.error
       </strong>
+       - 
     </div>
     <span
       aria-label="su-times"
@@ -146,6 +212,7 @@ Array [
       <strong>
         sulu_admin.error
       </strong>
+       - 
     </div>
     <span
       aria-label="su-times"
@@ -199,6 +266,7 @@ Array [
       <strong>
         sulu_admin.error
       </strong>
+       - 
     </div>
     <span
       aria-label="su-times"

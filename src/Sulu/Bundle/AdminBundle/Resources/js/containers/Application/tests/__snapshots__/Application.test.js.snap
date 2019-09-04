@@ -117,6 +117,7 @@ exports[`Render based on current route 1`] = `
             <strong>
               sulu_admin.error
             </strong>
+             - 
           </div>
           <span
             aria-label="su-times"
@@ -282,6 +283,7 @@ exports[`Render based on current route with app version 1`] = `
             <strong>
               sulu_admin.error
             </strong>
+             - 
           </div>
           <span
             aria-label="su-times"
@@ -646,6 +648,7 @@ exports[`Render opened navigation 1`] = `
             <strong>
               sulu_admin.error
             </strong>
+             - 
           </div>
           <span
             aria-label="su-times"
@@ -808,6 +811,7 @@ exports[`Should not fail if current route does not exist 1`] = `
             <strong>
               sulu_admin.error
             </strong>
+             - 
           </div>
           <span
             aria-label="su-times"

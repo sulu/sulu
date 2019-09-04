@@ -27,7 +27,7 @@ class FormOverlayList extends React.Component<Props> {
     formRef: ?ElementRef<typeof Form>;
 
     @observable formStore: ?ResourceFormStore;
-    @observable formErrors = [];
+    @observable formErrors: Array<string> = [];
 
     handleItemAdd = () => {
         this.createFormOverlay(undefined);
@@ -61,13 +61,17 @@ class FormOverlayList extends React.Component<Props> {
                     this.listRef.reload();
                 }
             })
-            .catch(action((error) => {
-                this.formErrors.push(error);
+            .catch(action(() => {
+                this.formErrors.push(translate('sulu_admin.form_save_server_error'));
             }));
     };
 
     @action handleErrorSnackbarClose = () => {
         this.formErrors.pop();
+    };
+
+    handleFormError = () => {
+        this.formErrors.push(translate('sulu_admin.form_contains_invalid_values'));
     };
 
     @action createFormOverlay = (itemId: ?string | number) => {
@@ -196,13 +200,15 @@ class FormOverlayList extends React.Component<Props> {
                         size={overlaySize ? overlaySize : 'small'}
                         title={overlayTitle}
                     >
+                        <Snackbar
+                            message={this.formErrors[this.formErrors.length - 1]}
+                            onCloseClick={this.handleErrorSnackbarClose}
+                            type="error"
+                            visible={!!this.formErrors.length}
+                        />
                         <div className={formOverlayListStyles.form}>
-                            <Snackbar
-                                onCloseClick={this.handleErrorSnackbarClose}
-                                type="error"
-                                visible={!!this.formErrors.length}
-                            />
                             <Form
+                                onError={this.handleFormError}
                                 onSubmit={this.handleFormSubmit}
                                 ref={this.setFormRef}
                                 store={this.formStore}
