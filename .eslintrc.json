@@ -118,7 +118,7 @@
         "import/no-absolute-path": "error",
         "import/named": "error",
         "import/default": "error",
-        "react/no-deprecated": "warn",
+        "react/no-deprecated": "error",
         "react/jsx-curly-brace-presence": [
             "error",
             "never"
