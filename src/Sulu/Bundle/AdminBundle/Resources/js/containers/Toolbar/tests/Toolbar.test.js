@@ -23,6 +23,7 @@ jest.mock('../../../services/initializer', () => ({
 beforeEach(() => {
     toolbarStoreMock = {
         errors: [],
+        warnings: [],
         showSuccess: false,
         hasBackButtonConfig: jest.fn(),
         getBackButtonConfig: jest.fn(),
@@ -104,6 +105,31 @@ test('Render the error from the ToolbarStore', () => {
     toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
     toolbarStoreMock.hasBackButtonConfig.mockReturnValue(false);
     toolbarStoreMock.errors.push('Something went wrong');
+
+    toolbarStoreMock.getIconsConfig.mockReturnValue(
+        [
+            <p key={1}>Test1</p>,
+            <p key={2}>Test2</p>,
+        ]
+    );
+
+    toolbarStoreMock.getItemsConfig.mockReturnValue([]);
+
+    expect(render(<Toolbar storeKey={storeKey} />)).toMatchSnapshot();
+    expect(toolbarStorePool.createStore).toBeCalledWith(storeKey);
+});
+
+test('Render the warning from the ToolbarStore', () => {
+    const storeKey = 'testStore';
+
+    // $FlowFixMe
+    toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
+
+    toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
+    toolbarStoreMock.hasIconsConfig.mockReturnValue(true);
+    toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
+    toolbarStoreMock.hasBackButtonConfig.mockReturnValue(false);
+    toolbarStoreMock.warnings.push('Something unimportant went wrong');
 
     toolbarStoreMock.getIconsConfig.mockReturnValue(
         [

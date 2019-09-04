@@ -42,6 +42,7 @@
     "sulu_admin.reset_password_success": "An email with instructions how to reset your password has been sent if a user was found",
     "sulu_admin.list_search_placeholder": "Search…",
     "sulu_admin.error": "Error",
+    "sulu_admin.warning": "Warning",
     "sulu_admin.close": "Close",
     "sulu_admin.id": "ID",
     "sulu_admin.key": "Key",

@@ -45,6 +45,14 @@ export default class ToolbarStore {
         return this.config.errors;
     }
 
+    @computed get warnings(): Array<*> {
+        if (!this.config.warnings) {
+            return [];
+        }
+
+        return this.config.warnings;
+    }
+
     @computed get showSuccess(): boolean {
         if (!this.config.showSuccess) {
             return false;

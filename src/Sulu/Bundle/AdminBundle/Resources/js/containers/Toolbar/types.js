@@ -40,6 +40,7 @@ export type ToolbarConfig = {
     items?: Array<ToolbarItemConfig>,
     locale?: Select,
     showSuccess?: IObservableValue<boolean>,
+    warnings?: Array<string>,
 };
 
 export interface ToolbarAction {
