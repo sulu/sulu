@@ -42,6 +42,10 @@ class Navigation extends React.Component<Props> {
     handleNavigationItemClick = (value: string) => {
         const navigationItem = navigationRegistry.get(value);
 
+        if (!navigationItem.mainRoute) {
+            return;
+        }
+
         this.props.router.navigate(navigationItem.mainRoute);
         this.props.onNavigate(navigationItem.mainRoute);
     };
@@ -72,6 +76,7 @@ class Navigation extends React.Component<Props> {
         return (
             <NavigationComponent
                 appVersion={appVersion}
+                onItemClick={this.handleNavigationItemClick}
                 onLogoutClick={this.props.onLogout}
                 onPinToggle={this.handlePinToggle}
                 onProfileClick={this.handleProfileEditClick}
@@ -87,7 +92,6 @@ class Navigation extends React.Component<Props> {
                         active={this.isItemActive(navigationItem)}
                         icon={navigationItem.icon}
                         key={navigationItem.id}
-                        onClick={this.handleNavigationItemClick}
                         title={navigationItem.label}
                         value={navigationItem.id}
                     >
@@ -96,7 +100,6 @@ class Navigation extends React.Component<Props> {
                                 <NavigationComponent.Item
                                     active={this.isItemActive(subNavigationItem)}
                                     key={subNavigationItem.id}
-                                    onClick={this.handleNavigationItemClick}
                                     title={subNavigationItem.label}
                                     value={subNavigationItem.id}
                                 />
