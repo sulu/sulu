@@ -28,6 +28,23 @@ class RouteCollectionTest extends TestCase
         $this->assertEquals($routeBuilder, $routeCollection->get('sulu_test'));
     }
 
+    public function testHas()
+    {
+        $routeBuilder = new RouteBuilder('sulu_test', '/test', 'test');
+
+        $routeCollection = new RouteCollection();
+        $routeCollection->add($routeBuilder);
+
+        $this->assertTrue($routeCollection->has('sulu_test'));
+    }
+
+    public function testHasNotExisting()
+    {
+        $routeCollection = new RouteCollection();
+
+        $this->assertFalse($routeCollection->has('sulu_test'));
+    }
+
     public function testAll()
     {
         $routeBuilder1 = new RouteBuilder('sulu_test_1', '/test', 'test');

@@ -34,6 +34,11 @@ class RouteCollection
         return $this->routes[$routeName];
     }
 
+    public function has(string $routeName): bool
+    {
+        return array_key_exists($routeName, $this->routes);
+    }
+
     /**
      * @return RouteBuilderInterface[]
      */

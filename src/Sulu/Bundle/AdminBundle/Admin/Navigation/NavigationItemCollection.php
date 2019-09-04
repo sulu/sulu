@@ -34,6 +34,11 @@ class NavigationItemCollection
         return $this->navigationItems[$navigationItemName];
     }
 
+    public function has(string $navigationItemName): bool
+    {
+        return array_key_exists($navigationItemName, $this->navigationItems);
+    }
+
     /**
      * @return NavigationItem[]
      */

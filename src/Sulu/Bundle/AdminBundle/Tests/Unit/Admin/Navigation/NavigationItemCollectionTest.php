@@ -28,6 +28,23 @@ class NavigationItemCollectionTest extends TestCase
         $this->assertEquals($navigationItem, $navigationItemCollection->get('sulu_test'));
     }
 
+    public function testHas()
+    {
+        $navigationItem = new NavigationItem('sulu_test');
+
+        $navigationItemCollection = new NavigationItemCollection();
+        $navigationItemCollection->add($navigationItem);
+
+        $this->assertTrue($navigationItemCollection->has('sulu_test'));
+    }
+
+    public function testHasNotExistingRoute()
+    {
+        $navigationItemCollection = new NavigationItemCollection();
+
+        $this->assertFalse($navigationItemCollection->has('sulu_test'));
+    }
+
     public function testAll()
     {
         $navigationItem1 = new NavigationItem('sulu_test_1');
