@@ -82,8 +82,7 @@ test('Pass correct props to SingleSelect when no shadow-locale exists', () => {
 
     expect(pageSettingsShadowSelect.find('SingleSelect').prop('disabled')).toEqual(true);
     expect(pageSettingsShadowSelect.find('SingleSelect').prop('value')).toEqual(undefined);
-    expect(pageSettingsShadowSelect.find('Option').at(0).prop('children')).toEqual('sulu_page.no_shadow_locale');
-    expect(pageSettingsShadowSelect.find('Option').at(0).prop('disabled')).toEqual(true);
+    expect(pageSettingsShadowSelect.find('Option').length).toEqual(0);
 });
 
 test('Call onChange and onFinish if the value is changed', () => {

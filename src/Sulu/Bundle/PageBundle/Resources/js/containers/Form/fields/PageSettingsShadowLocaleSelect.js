@@ -2,7 +2,6 @@
 import React from 'react';
 import {toJS} from 'mobx';
 import {SingleSelect} from 'sulu-admin-bundle/components';
-import {translate} from 'sulu-admin-bundle/utils';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 
 export default class PageSettingsShadowLocaleSelect extends React.Component<FieldTypeProps<string>> {
@@ -42,11 +41,6 @@ export default class PageSettingsShadowLocaleSelect extends React.Component<Fiel
                         </SingleSelect.Option>
                     );
                 })}
-                {filteredContentLocales.length === 0 && (
-                    <SingleSelect.Option disabled={true}>
-                        {translate('sulu_page.no_shadow_locale')}
-                    </SingleSelect.Option>
-                )}
             </SingleSelect>
         );
     }

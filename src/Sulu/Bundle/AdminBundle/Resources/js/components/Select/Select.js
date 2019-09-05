@@ -3,6 +3,7 @@ import React from 'react';
 import type {Element, ElementRef} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
+import {translate} from '../../utils/Translator';
 import Popover from '../Popover';
 import Menu from '../Menu';
 import Action from './Action';
@@ -145,7 +146,11 @@ class Select<T> extends React.Component<Props<T>> {
                                 menuRef={setPopoverElementRef}
                                 style={popoverStyle}
                             >
-                                {clonedChildren}
+                                {React.Children.count(clonedChildren) > 0 ? clonedChildren : (
+                                    <Option disabled={true} value={null}>
+                                        {translate('sulu_admin.no_options_available')}
+                                    </Option>
+                                )}
                             </Menu>
                         )
                     }

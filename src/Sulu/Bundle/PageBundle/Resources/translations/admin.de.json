@@ -51,6 +51,5 @@
     "sulu_page.unpublish_warning_text": "Soll die Seite wirklich nicht mehr veröffentlicht werden? Dadurch gehen sämtliche Verknüpfungen auf der Website verloren. Dieser Status kann jederzeit ohne Datenverlust geändert werden.",
     "sulu_page.unpublish": "Nicht mehr veröffentlichen",
     "sulu_page.restore_version": "Version wiederherstellen?",
-    "sulu_page.restore_version_text": "Aus dieser Version wird ein neuer Entwurf erstellt. Wenn bereits eine Entwurfsversion besteht, wird diese überschrieben.",
-    "sulu_page.no_shadow_locale": "Keine Shadow Sprache vorhanden ..."
+    "sulu_page.restore_version_text": "Aus dieser Version wird ein neuer Entwurf erstellt. Wenn bereits eine Entwurfsversion besteht, wird diese überschrieben."
 }
