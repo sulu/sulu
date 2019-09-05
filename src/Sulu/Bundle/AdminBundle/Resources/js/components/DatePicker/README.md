@@ -24,6 +24,8 @@ const onChange = (newValue) => {
 <div>
     <div style={{paddingBottom: '50px'}}>Current value: {state.value ? state.value.toLocaleDateString() : 'null'}</div>
     <DatePicker value={state.value} onChange={onChange} />
+
+    <button onClick={() => onChange(new Date('2017-03-10'))}>Test</button>
 </div>
 ```
 

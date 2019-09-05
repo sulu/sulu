@@ -8,10 +8,11 @@ import Icon from '../Icon';
 import Item from './Item';
 import navigationStyles from './navigation.scss';
 
-type Props = {
+type Props = {|
     appVersion: ?string,
     appVersionLink?: string,
     children: ChildrenArray<Element<typeof Item>>,
+    onItemClick: (id: string) => void,
     onLogoutClick: () => void,
     onPinToggle?: () => void,
     onProfileClick: () => void,
@@ -21,7 +22,7 @@ type Props = {
     title: string,
     userImage: ?string,
     username: string,
-};
+|};
 
 @observer
 class Navigation extends React.Component<Props> {
@@ -39,14 +40,16 @@ class Navigation extends React.Component<Props> {
         this.expandedChild = value;
     }
 
-    componentWillReceiveProps(newProps: Props) {
-        this.findDefaultExpandedChild(newProps.children);
-    }
-
     constructor(props: Props) {
         super(props);
 
         this.findDefaultExpandedChild(this.props.children);
+    }
+
+    componentDidUpdate(prevProps: Props) {
+        if (prevProps.children !== this.props.children) {
+            this.findDefaultExpandedChild(this.props.children);
+        }
     }
 
     findDefaultExpandedChild = (children: ChildrenArray<Element<typeof Item>>) => {
@@ -64,7 +67,7 @@ class Navigation extends React.Component<Props> {
         this.setExpandedChild(newExpandedChild);
     };
 
-    handleExpand = (value: *) => {
+    handleItemClick = (value: *) => {
         if (this.expandedChild === value) {
             this.setExpandedChild(null);
 
@@ -72,13 +75,27 @@ class Navigation extends React.Component<Props> {
         }
 
         this.setExpandedChild(value);
+        this.props.onItemClick(value);
     };
 
     cloneChildren(): ChildrenArray<Element<typeof Item>> {
         return React.Children.map(this.props.children, (child) => {
             return React.cloneElement(child, {
-                onClick: child.props.children ? this.handleExpand : child.props.onClick,
-                expanded: child.props.value === this.expandedChild,
+                children: child.props.children ? React.Children.map(child.props.children, (subChild) => {
+                    if (!subChild) {
+                        return;
+                    }
+
+                    return React.cloneElement(subChild, {
+                        onClick: this.handleItemClick,
+                    });
+                }) : undefined,
+                expanded: child.props.value === this.expandedChild
+                    || (
+                        child.props.children
+                        && child.props.children.some((child) => child.props.value === this.expandedChild)
+                    ),
+                onClick: this.handleItemClick,
             });
         });
     }
