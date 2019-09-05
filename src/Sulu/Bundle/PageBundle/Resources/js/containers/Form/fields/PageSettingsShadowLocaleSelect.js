@@ -21,25 +21,26 @@ export default class PageSettingsShadowLocaleSelect extends React.Component<Fiel
             throw new Error('The "contentLocales" should be an array!');
         }
 
+        const filteredContentLocales = contentLocales.filter(
+            (contentLocale) => locale && contentLocale !== locale.get()
+        );
+
         return (
             <SingleSelect disabled={!!disabled} onChange={this.handleChange} value={value}>
-                {contentLocales
-                    .filter((contentLocale) => locale && contentLocale !== locale.get())
-                    .map((contentLocale) => {
-                        if (typeof contentLocale !== 'string') {
-                            throw new Error('All entries in the "contentLocales" array must be strings!');
-                        }
+                {filteredContentLocales.length > 0 && filteredContentLocales.map((contentLocale) => {
+                    if (typeof contentLocale !== 'string') {
+                        throw new Error('All entries in the "contentLocales" array must be strings!');
+                    }
 
-                        return (
-                            <SingleSelect.Option
-                                key={contentLocale}
-                                value={contentLocale}
-                            >
-                                {contentLocale}
-                            </SingleSelect.Option>
-                        );
-                    })
-                }
+                    return (
+                        <SingleSelect.Option
+                            key={contentLocale}
+                            value={contentLocale}
+                        >
+                            {contentLocale}
+                        </SingleSelect.Option>
+                    );
+                })}
             </SingleSelect>
         );
     }

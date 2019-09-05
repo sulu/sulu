@@ -25,6 +25,10 @@ jest.mock('sulu-admin-bundle/stores', () => ({
     }),
 }));
 
+jest.mock('sulu-admin-bundle/utils', () => ({
+    translate: jest.fn((key) => key),
+}));
+
 test('Pass correct props to SingleSelect', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(
@@ -53,6 +57,32 @@ test('Pass correct props to SingleSelect', () => {
     expect(pageSettingsShadowSelect.find('Option').at(0).prop('value')).toEqual('de');
     expect(pageSettingsShadowSelect.find('Option').at(1).prop('children')).toEqual('nl');
     expect(pageSettingsShadowSelect.find('Option').at(1).prop('value')).toEqual('nl');
+});
+
+test('Pass correct props to SingleSelect when no shadow-locale exists', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('de')}),
+            'test'
+        )
+    );
+    formInspector.getValueByPath.mockImplementation((path) => {
+        if (path === '/contentLocales') {
+            return ['de'];
+        }
+    });
+
+    const pageSettingsShadowSelect = shallow(
+        <PageSettingsShadowLocaleSelect
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            formInspector={formInspector}
+        />
+    );
+
+    expect(pageSettingsShadowSelect.find('SingleSelect').prop('disabled')).toEqual(true);
+    expect(pageSettingsShadowSelect.find('SingleSelect').prop('value')).toEqual(undefined);
+    expect(pageSettingsShadowSelect.find('Option').length).toEqual(0);
 });
 
 test('Call onChange and onFinish if the value is changed', () => {
