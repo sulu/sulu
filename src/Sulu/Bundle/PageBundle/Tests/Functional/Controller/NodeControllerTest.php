@@ -574,6 +574,9 @@ class NodeControllerTest extends SuluTestCase
 
         $client->request('DELETE', '/api/nodes/' . $linkedDocument->getUuid() . '?webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(409, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertCount(1, $response['items'][0]);
+        $this->assertEquals('test2', $response['items'][0]['name']);
 
         $client->request('DELETE', '/api/nodes/' . $linkedDocument->getUuid() . '?webspace=sulu_io&language=en&force=true');
         $this->assertHttpStatusCode(204, $client->getResponse());

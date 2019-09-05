@@ -534,8 +534,7 @@ class NodeController extends RestController implements ClassResourceInterface
 
             if (count($references) > 0) {
                 $data = [
-                    'structures' => [],
-                    'other' => [],
+                    'items' => [],
                 ];
 
                 foreach ($references as $reference) {
@@ -545,7 +544,8 @@ class NodeController extends RestController implements ClassResourceInterface
                         $locale,
                         true
                     );
-                    $data['structures'][] = $content->toArray();
+
+                    $data['items'][] = ['name' => $content->getTitle()];
                 }
 
                 return $this->handleView($this->view($data, 409));

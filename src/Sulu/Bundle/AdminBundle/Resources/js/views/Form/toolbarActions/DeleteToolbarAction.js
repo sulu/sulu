@@ -7,8 +7,9 @@ import {translate} from '../../../utils/Translator';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
 export default class DeleteToolbarAction extends AbstractFormToolbarAction {
-    @observable showDialog = false;
-    @observable showLinkedDialog = false;
+    @observable showDialog: boolean = false;
+    @observable showLinkedDialog: boolean = false;
+    @observable referencingItems: Array<Object> = [];
 
     getNode() {
         return (
@@ -34,6 +35,11 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
                     title={translate('sulu_admin.delete_linked_warning_title')}
                 >
                     {translate('sulu_admin.delete_linked_warning_text')}
+                    <ul>
+                        {this.referencingItems.map((referencingItem, index) => (
+                            <li key={index}>{referencingItem.name}</li>
+                        ))}
+                    </ul>
                 </Dialog>
             </Fragment>
         );
@@ -82,6 +88,10 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
 
                 this.showDialog = false;
                 this.showLinkedDialog = true;
+                response.json().then(action((data) => {
+                    this.referencingItems.splice(0, this.referencingItems.length);
+                    this.referencingItems.push(...data.items);
+                }));
             }));
     };
 

@@ -71,6 +71,7 @@ class List extends React.Component<Props> {
     @observable showOrderDialog: boolean = false;
     @observable adapterOptionsOpen: boolean = false;
     @observable columnOptionsOpen: boolean = false;
+    @observable referencingItemsForDelete: Array<Object> = [];
     resolveCopy: ?(ResolveCopyArgument) => void;
     resolveDelete: ?(ResolveDeleteArgument) => void;
     resolveMove: ?(ResolveMoveArgument) => void;
@@ -168,21 +169,25 @@ class List extends React.Component<Props> {
 
                     this.showDeleteDialog = false;
                     this.showDeleteLinkedDialog = true;
+                    response.json().then(action((data) => {
+                        this.referencingItemsForDelete.splice(0, this.referencingItemsForDelete.length);
+                        this.referencingItemsForDelete.push(...data.items);
 
-                    const deleteLinkedPromise: Promise<ResolveDeleteArgument> = new Promise(
-                        (resolve) => this.resolveDelete = resolve
-                    );
+                        const deleteLinkedPromise: Promise<ResolveDeleteArgument> = new Promise(
+                            (resolve) => this.resolveDelete = resolve
+                        );
 
-                    deleteLinkedPromise.then(action((response) => {
-                        if (!response.deleted) {
-                            this.showDeleteDialog = this.showDeleteLinkedDialog = false;
-                            return response;
-                        }
+                        deleteLinkedPromise.then(action((response) => {
+                            if (!response.deleted) {
+                                this.showDeleteDialog = this.showDeleteLinkedDialog = false;
+                                return response;
+                            }
 
-                        this.props.store.delete(id, {force: true})
-                            .then(action(() => {
-                                this.showDeleteLinkedDialog = false;
-                            }));
+                            this.props.store.delete(id, {force: true})
+                                .then(action(() => {
+                                    this.showDeleteLinkedDialog = false;
+                                }));
+                        }));
                     }));
                 }));
 
@@ -563,6 +568,11 @@ class List extends React.Component<Props> {
                             title={translate('sulu_admin.delete_linked_warning_title')}
                         >
                             {translate('sulu_admin.delete_linked_warning_text')}
+                            <ul>
+                                {this.referencingItemsForDelete.map((referencingItem, index) => (
+                                    <li key={index}>{referencingItem.name}</li>
+                                ))}
+                            </ul>
                         </Dialog>
                     </Fragment>
                 }

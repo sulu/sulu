@@ -792,7 +792,11 @@ test('ListStore should delete item when onRequestItemDelete callback is called a
 });
 
 test('ListStore should delete linked item when onRequestItemDelete callback is is confirmed twice', (done) => {
-    const deletePromise = Promise.reject({status: 409});
+    const jsonDeletePromise = Promise.resolve({items: [{name: 'Item 1'}, {name: 'Item 2'}]});
+    const deletePromise = Promise.reject({
+        json: jest.fn().mockReturnValue(jsonDeletePromise),
+        status: 409,
+    });
 
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
@@ -835,7 +839,11 @@ test('ListStore should delete linked item when onRequestItemDelete callback is i
 });
 
 test('ListStore should not delete linked item when onRequestItemDelete callback is is confirmed once', (done) => {
-    const deletePromise = Promise.reject({status: 409});
+    const jsonDeletePromise = Promise.resolve({items: [{name: 'Item 1'}, {name: 'Item 2'}]});
+    const deletePromise = Promise.reject({
+        json: jest.fn().mockReturnValue(jsonDeletePromise),
+        status: 409,
+    });
 
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
@@ -862,6 +870,9 @@ test('ListStore should not delete linked item when onRequestItemDelete callback 
             list.update();
             expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
             expect(list.find('Dialog').at(2).prop('open')).toEqual(true);
+            expect(list.find('Dialog').at(2).find('li')).toHaveLength(2);
+            expect(list.find('Dialog').at(2).find('li').at(0).prop('children')).toEqual('Item 1');
+            expect(list.find('Dialog').at(2).find('li').at(1).prop('children')).toEqual('Item 2');
 
             const deletePromise = Promise.resolve();
             // $FlowFixMe
