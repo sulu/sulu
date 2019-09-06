@@ -3,6 +3,7 @@ import {mount, render, shallow} from 'enzyme';
 import React from 'react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import {translate} from '../../../utils/Translator';
+import userStore from '../../../stores/userStore';
 import SingleListOverlay from '../../SingleListOverlay';
 import List from '../List';
 import ListStore from '../stores/ListStore';
@@ -14,6 +15,15 @@ import FolderAdapter from '../adapters/FolderAdapter';
 import StringFieldTransformer from '../fieldTransformers/StringFieldTransformer';
 
 let mockStructureStrategyData;
+
+jest.mock('../../../stores/userStore', () => ({
+    setPersistentSetting: jest.fn(),
+    getPersistentSetting: jest.fn(),
+}));
+
+beforeEach(() => {
+    userStore.getPersistentSetting.mockReturnValue(undefined);
+});
 
 jest.mock('../stores/ListStore', () => {
     return jest.fn(function(
@@ -496,6 +506,27 @@ test('Trigger a search should call search on the store', () => {
     expect(listStore.search).toBeCalledWith('search-value');
 });
 
+test('Should start with adapter from user settings', () => {
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+
+    listAdapterRegistry.get.mockImplementation((adapter) => {
+        switch (adapter) {
+            case 'table':
+                return TableAdapter;
+            case 'folder':
+                return FolderAdapter;
+        }
+    });
+
+    userStore.getPersistentSetting.mockReturnValue('folder');
+
+    const list = mount(<List adapters={['table', 'folder']} store={listStore} />);
+
+    expect(userStore.getPersistentSetting).toBeCalledWith('sulu_admin.list.test.list_test.adapter');
+    expect(list.find('AdapterSwitch').length).toBe(1);
+    expect(list.find('FolderAdapter').length).toBe(1);
+});
+
 test('Switching the adapter should render the correct adapter', () => {
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
 
@@ -515,6 +546,7 @@ test('Switching the adapter should render the correct adapter', () => {
     list.find('AdapterSwitch Button').at(1).simulate('click');
     expect(list.find('TableAdapter').length).toBe(0);
     expect(list.find('FolderAdapter').length).toBe(1);
+    expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.list.test.list_test.adapter', 'folder');
 });
 
 test('ListStore should be initialized correctly on init and update', () => {
@@ -819,7 +851,6 @@ test('ListStore should order item when onRequestItemOrder callback is called and
 
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
-    // $FlowFixMe
     listStore.order.mockReturnValue(orderPromise);
     mockStructureStrategyData = [
         {id: 1},
