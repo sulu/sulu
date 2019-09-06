@@ -1,11 +1,13 @@
 // @flow
-import React from 'react';
-import {computed} from 'mobx';
+import React, {Fragment} from 'react';
+import {action, computed, observable} from 'mobx';
+import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
-import {Loader, Table} from 'sulu-admin-bundle/components';
+import {Dialog, Loader, Table} from 'sulu-admin-bundle/components';
 import {withToolbar} from 'sulu-admin-bundle/containers';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
+import {ResourceRequester} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import mediaHistoryStyles from './mediaHistory.scss';
 
@@ -18,6 +20,10 @@ type Props = ViewProps & {
 
 @observer
 class MediaHistory extends React.Component<Props> {
+    @observable deleteId: ?string | number = undefined;
+    @observable deleting: boolean = false;
+    showSuccess: IObservableValue<boolean> = observable.box(false);
+
     constructor(props: Props) {
         super(props);
 
@@ -48,6 +54,32 @@ class MediaHistory extends React.Component<Props> {
         window.open(version.url + '&inline=1');
     };
 
+    @action handleDeleteClick = (version: string | number) => {
+        this.deleteId = version;
+    };
+
+    @action handleDeleteCancel = () => {
+        this.deleteId = undefined;
+    };
+
+    @action handleDeleteConfirm = () => {
+        if (!this.deleteId) {
+            throw new Error('The "deleteId" is not set. This should not happen and is likely a bug.');
+        }
+
+        const {resourceStore} = this.props;
+        const {id, locale} = resourceStore;
+
+        this.deleting = true;
+        ResourceRequester.delete('media_versions', {id, locale, version: this.deleteId})
+            .then(action(() => {
+                this.deleting = false;
+                this.deleteId = undefined;
+                this.showSuccess.set(true);
+                resourceStore.reload();
+            }));
+    };
+
     render() {
         const {resourceStore, title} = this.props;
 
@@ -56,27 +88,52 @@ class MediaHistory extends React.Component<Props> {
             onClick: this.handleShowClick,
         };
 
+        const deleteButton = {
+            icon: 'su-trash-alt',
+            onClick: this.handleDeleteClick,
+        };
+
         return (
-            <div className={mediaHistoryStyles.mediaHistory}>
-                {title && <h1>{title}</h1>}
-                {resourceStore.loading
-                    ? <Loader />
-                    : <Table>
-                        <Table.Header buttons={[viewButton]}>
-                            <Table.HeaderCell>{translate('sulu_media.version')}</Table.HeaderCell>
-                            <Table.HeaderCell>{translate('sulu_admin.created')}</Table.HeaderCell>
-                        </Table.Header>
-                        <Table.Body>
-                            {this.versions.reverse().map((version: Object) => (
-                                <Table.Row buttons={[viewButton]} id={version.version} key={version.version}>
-                                    <Table.Cell>{translate('sulu_media.version')} {version.version}</Table.Cell>
-                                    <Table.Cell>{(new Date(version.created)).toLocaleString()}</Table.Cell>
-                                </Table.Row>
-                            ))}
-                        </Table.Body>
-                    </Table>
-                }
-            </div>
+            <Fragment>
+                <div className={mediaHistoryStyles.mediaHistory}>
+                    {title && <h1>{title}</h1>}
+                    {resourceStore.loading
+                        ? <Loader />
+                        : <Table>
+                            <Table.Header buttons={[viewButton, deleteButton]}>
+                                <Table.HeaderCell>{translate('sulu_media.version')}</Table.HeaderCell>
+                                <Table.HeaderCell>{translate('sulu_admin.created')}</Table.HeaderCell>
+                            </Table.Header>
+                            <Table.Body>
+                                {this.versions.reverse().map((version: Object) => (
+                                    <Table.Row
+                                        buttons={[
+                                            viewButton,
+                                            {...deleteButton, visible: version.version !== resourceStore.data.version},
+                                        ]}
+                                        id={version.version}
+                                        key={version.version}
+                                    >
+                                        <Table.Cell>{translate('sulu_media.version')} {version.version}</Table.Cell>
+                                        <Table.Cell>{(new Date(version.created)).toLocaleString()}</Table.Cell>
+                                    </Table.Row>
+                                ))}
+                            </Table.Body>
+                        </Table>
+                    }
+                </div>
+                <Dialog
+                    cancelText={translate('sulu_admin.cancel')}
+                    confirmLoading={this.deleting}
+                    confirmText={translate('sulu_admin.ok')}
+                    onCancel={this.handleDeleteCancel}
+                    onConfirm={this.handleDeleteConfirm}
+                    open={!!this.deleteId}
+                    title={translate('sulu_admin.delete_warning_title')}
+                >
+                    {translate('sulu_admin.delete_warning_text')}
+                </Dialog>
+            </Fragment>
         );
     }
 }
@@ -104,5 +161,6 @@ export default withToolbar(MediaHistory, function() {
                 router.restore(COLLECTION_ROUTE, {locale: resourceStore.locale.get()});
             },
         },
+        showSuccess: this.showSuccess,
     };
 });

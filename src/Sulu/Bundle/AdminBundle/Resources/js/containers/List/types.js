@@ -26,6 +26,7 @@ export type SortOrder = 'asc' | 'desc';
 export type Action = {|
     icon: string,
     onClick: ?(itemId: string | number, index: number) => void,
+    visible?: boolean,
 |};
 
 export type ListAdapterProps = {|

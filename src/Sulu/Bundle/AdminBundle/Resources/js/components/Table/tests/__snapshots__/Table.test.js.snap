@@ -95,7 +95,7 @@ exports[`Render a table with buttons 1`] = `
         class="row"
       >
         <td
-          class="buttonCell cell"
+          class="buttonCell visible cell"
         >
           <div
             class="cellContent"
@@ -190,7 +190,7 @@ exports[`Render a table with different buttons for each row 1`] = `
         class="row"
       >
         <td
-          class="buttonCell cell"
+          class="buttonCell visible cell"
         >
           <div
             class="cellContent"
@@ -235,7 +235,7 @@ exports[`Render a table with different buttons for each row 1`] = `
         class="row"
       >
         <td
-          class="buttonCell cell"
+          class="buttonCell visible cell"
         >
           <div
             class="cellContent"

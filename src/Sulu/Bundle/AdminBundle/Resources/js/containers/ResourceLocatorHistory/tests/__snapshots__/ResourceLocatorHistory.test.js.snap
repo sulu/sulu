@@ -71,7 +71,7 @@ Array [
                     class="row"
                   >
                     <td
-                      class="buttonCell cell"
+                      class="buttonCell visible cell"
                     >
                       <div
                         class="cellContent"
@@ -107,7 +107,7 @@ Array [
                     class="row"
                   >
                     <td
-                      class="buttonCell cell"
+                      class="buttonCell visible cell"
                     >
                       <div
                         class="cellContent"

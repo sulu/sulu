@@ -35,7 +35,7 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
         class="row"
       >
         <td
-          class="buttonCell cell"
+          class="buttonCell visible cell"
         >
           <div
             class="cellContent"
@@ -96,7 +96,7 @@ exports[`Render data with plus button when onItemAdd callback is passed 1`] = `
         class="row"
       >
         <td
-          class="buttonCell cell"
+          class="buttonCell visible cell"
         >
           <div
             class="cellContent"
