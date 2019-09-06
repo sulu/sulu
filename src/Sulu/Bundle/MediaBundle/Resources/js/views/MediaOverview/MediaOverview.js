@@ -37,6 +37,8 @@ class MediaOverview extends React.Component<ViewProps> {
         return {
             collectionLimit: ListStore.getLimitSetting(COLLECTIONS_RESOURCE_KEY, USER_SETTINGS_KEY),
             mediaLimit: ListStore.getLimitSetting(MEDIA_RESOURCE_KEY, USER_SETTINGS_KEY),
+            mediaSortColumn: ListStore.getSortColumnSetting(MEDIA_RESOURCE_KEY, USER_SETTINGS_KEY),
+            mediaSortOrder: ListStore.getSortOrderSetting(MEDIA_RESOURCE_KEY, USER_SETTINGS_KEY),
         };
     }
 
@@ -60,6 +62,8 @@ class MediaOverview extends React.Component<ViewProps> {
         router.bind('search', this.mediaListStore.searchTerm);
         router.bind('collectionLimit', this.collectionListStore.limit, 10);
         router.bind('mediaLimit', this.mediaListStore.limit, 10);
+        router.bind('mediaSortColumn', this.mediaListStore.sortColumn);
+        router.bind('mediaSortOrder', this.mediaListStore.sortOrder);
     }
 
     componentWillUnmount() {
