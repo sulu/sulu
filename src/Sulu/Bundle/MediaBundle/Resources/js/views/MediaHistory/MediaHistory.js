@@ -36,7 +36,6 @@ class MediaHistory extends React.Component<Props> {
     }
 
     @computed get versions(): Array<Object> {
-        // $FlowFixMe
         return Object.values(this.props.resourceStore.data.versions);
     }
 
@@ -52,26 +51,24 @@ class MediaHistory extends React.Component<Props> {
     render() {
         const {resourceStore, title} = this.props;
 
-        const buttons = [
-            {
-                icon: 'su-eye',
-                onClick: this.handleShowClick,
-            },
-        ];
+        const viewButton = {
+            icon: 'su-eye',
+            onClick: this.handleShowClick,
+        };
 
         return (
             <div className={mediaHistoryStyles.mediaHistory}>
                 {title && <h1>{title}</h1>}
                 {resourceStore.loading
                     ? <Loader />
-                    : <Table buttons={buttons}>
-                        <Table.Header>
+                    : <Table>
+                        <Table.Header buttons={[viewButton]}>
                             <Table.HeaderCell>{translate('sulu_media.version')}</Table.HeaderCell>
                             <Table.HeaderCell>{translate('sulu_admin.created')}</Table.HeaderCell>
                         </Table.Header>
                         <Table.Body>
                             {this.versions.reverse().map((version: Object) => (
-                                <Table.Row id={version.version} key={version.version}>
+                                <Table.Row buttons={[viewButton]} id={version.version} key={version.version}>
                                     <Table.Cell>{translate('sulu_media.version')} {version.version}</Table.Cell>
                                     <Table.Cell>{(new Date(version.created)).toLocaleString()}</Table.Cell>
                                 </Table.Row>

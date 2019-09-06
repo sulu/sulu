@@ -9,7 +9,6 @@ import tableStyles from './table.scss';
 
 type Props = {
     allSelected: boolean,
-    /** @ignore */
     buttons?: Array<ButtonConfig>,
     children: ChildrenArray<Element<typeof HeaderCell>>,
     /** @ignore */
