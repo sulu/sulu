@@ -8,15 +8,20 @@ $snackbarWarningColor: $blueZodiac;
 $snackbarWarningBackgroundColor: $gold;
 
 .snackbar {
+    position: relative;
+    z-index: 2;
     height: $snackbarHeight;
     padding: 0 20px;
     display: flex;
     align-items: center;
     will-change: margin-top;
-    transition: margin-top .15s;
+    transition: margin-top .15s, z-index 0s .15s;
     width: 100%;
 
     &:not(.visible) {
+        z-index: 1;
+        transition: margin-top .15s, visibility 0s .15s;
+        visibility: hidden;
         margin-top: -$snackbarHeight;
     }
 }
