@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {mount, render, shallow} from 'enzyme';
 import Toolbar from '../Toolbar';
 import toolbarStorePool from '../stores/toolbarStorePool';
 
@@ -21,6 +21,10 @@ jest.mock('../../../services/initializer', () => ({
 }));
 
 beforeEach(() => {
+    window.ResizeObserver = jest.fn(function() {
+        this.observe = jest.fn();
+    });
+
     toolbarStoreMock = {
         errors: [],
         warnings: [],
@@ -115,7 +119,8 @@ test('Render the error from the ToolbarStore', () => {
 
     toolbarStoreMock.getItemsConfig.mockReturnValue([]);
 
-    expect(render(<Toolbar storeKey={storeKey} />)).toMatchSnapshot();
+    const toolbar = mount(<Toolbar storeKey={storeKey} />);
+    expect(toolbar.render()).toMatchSnapshot();
     expect(toolbarStorePool.createStore).toBeCalledWith(storeKey);
 });
 
@@ -140,7 +145,9 @@ test('Render the warning from the ToolbarStore', () => {
 
     toolbarStoreMock.getItemsConfig.mockReturnValue([]);
 
-    expect(render(<Toolbar storeKey={storeKey} />)).toMatchSnapshot();
+    const toolbar = mount(<Toolbar storeKey={storeKey} />);
+
+    expect(toolbar.render()).toMatchSnapshot();
     expect(toolbarStorePool.createStore).toBeCalledWith(storeKey);
 });
 

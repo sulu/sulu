@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import Snackbar from '../Snackbar';
 
 jest.mock('../../../utils/Translator', () => ({
@@ -8,17 +8,27 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 test('Render an error snackbar', () => {
-    expect(render(<Snackbar message="Something went wrong" onCloseClick={jest.fn()} type="error" />)).toMatchSnapshot();
+    const snackbar = mount(<Snackbar message="Something went wrong" onCloseClick={jest.fn()} type="error" />);
+    expect(snackbar.render()).toMatchSnapshot();
+});
+
+test('Render an updated error snackbar', () => {
+    const snackbar = mount(<Snackbar message="Something went wrong" onCloseClick={jest.fn()} type="error" />);
+    snackbar.setProps({message: 'Something went wrong again'});
+    expect(snackbar.render()).toMatchSnapshot();
 });
 
 test('Render a warning snackbar', () => {
-    expect(render(
+    const snackbar = mount(
         <Snackbar message="Something unimportant went wrong" onCloseClick={jest.fn()} type="warning" />
-    )).toMatchSnapshot();
+    );
+
+    expect(snackbar.render()).toMatchSnapshot();
 });
 
 test('Render an error snackbar without close button', () => {
-    expect(render(<Snackbar message="Something went wrong" type="error" />)).toMatchSnapshot();
+    const snackbar = mount(<Snackbar message="Something went wrong" type="error" />);
+    expect(snackbar.render()).toMatchSnapshot();
 });
 
 test('Click the snackbar should call the onClick callback', () => {

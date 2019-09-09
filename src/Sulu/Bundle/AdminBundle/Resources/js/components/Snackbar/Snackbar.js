@@ -1,5 +1,7 @@
 // @flow
 import React from 'react';
+import {action, observable} from 'mobx';
+import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import {translate} from '../../utils/Translator';
 import Icon from '../Icon';
@@ -18,13 +20,40 @@ const ICONS = {
     warning: 'su-bell',
 };
 
-export default class Snackbar extends React.Component<Props> {
+@observer
+class Snackbar extends React.Component<Props> {
     static defaultProps = {
         visible: true,
     };
 
+    @observable message: ?string;
+
+    @action updateMessage = () => {
+        this.message = this.props.message;
+    };
+
+    componentDidMount() {
+        this.updateMessage();
+    }
+
+    componentDidUpdate(prevProps: Props) {
+        const {message, visible} = this.props;
+
+        if (prevProps.message !== message && visible) {
+            this.updateMessage();
+        }
+    }
+
+    @action handleTransitionEnd = () => {
+        const {visible} = this.props;
+
+        if (!visible) {
+            this.message = undefined;
+        }
+    };
+
     render() {
-        const {message, onCloseClick, onClick, type, visible} = this.props;
+        const {onCloseClick, onClick, type, visible} = this.props;
 
         const snackbarClass = classNames(
             snackbarStyles.snackbar,
@@ -36,10 +65,10 @@ export default class Snackbar extends React.Component<Props> {
         );
 
         return (
-            <div className={snackbarClass} onClick={onClick} role="button">
+            <div className={snackbarClass} onClick={onClick} onTransitionEnd={this.handleTransitionEnd} role="button">
                 <Icon className={snackbarStyles.icon} name={ICONS[type]} />
                 <div className={snackbarStyles.text}>
-                    <strong>{translate('sulu_admin.' + type)}</strong> - {message}
+                    <strong>{translate('sulu_admin.' + type)}</strong> - {this.message}
                 </div>
                 {onCloseClick &&
                     <Icon className={snackbarStyles.closeIcon} name="su-times" onClick={onCloseClick} />
@@ -48,3 +77,5 @@ export default class Snackbar extends React.Component<Props> {
         );
     }
 }
+
+export default Snackbar;
