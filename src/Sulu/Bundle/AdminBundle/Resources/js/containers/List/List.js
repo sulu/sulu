@@ -1,6 +1,7 @@
 // @flow
 import {observer} from 'mobx-react';
-import {observable, action, computed} from 'mobx';
+import {action, computed, intercept, observable} from 'mobx';
+import type {IValueWillChange} from 'mobx';
 import React, {Fragment} from 'react';
 import type {Node} from 'react';
 import equal from 'fast-deep-equal';
@@ -10,6 +11,7 @@ import Button from '../../components/Button';
 import Dialog from '../../components/Dialog';
 import Icon from '../../components/Icon';
 import Loader from '../../components/Loader';
+import userStore from '../../stores/userStore';
 import SingleListOverlay from '../SingleListOverlay';
 import {translate} from '../../utils/Translator';
 import type {
@@ -48,6 +50,9 @@ type Props = {|
     store: ListStore,
 |};
 
+const USER_SETTING_PREFIX = 'sulu_admin.list';
+const USER_SETTING_ADAPTER = 'adapter';
+
 @observer
 class List extends React.Component<Props> {
     static defaultProps = {
@@ -75,6 +80,19 @@ class List extends React.Component<Props> {
     resolveMove: ?(ResolveMoveArgument) => void;
     resolveOrder: ?(ResolveOrderArgument) => void;
     moveId: ?string | number;
+    adapterDisposer: () => void;
+
+    static getAdapterSetting(listKey: string, userSettingsKey: string): string {
+        const key = [USER_SETTING_PREFIX, listKey, userSettingsKey, USER_SETTING_ADAPTER].join('.');
+
+        return userStore.getPersistentSetting(key);
+    }
+
+    static setAdapterSetting(listKey: string, userSettingsKey: string, value: *) {
+        const key = [USER_SETTING_PREFIX, listKey, userSettingsKey, USER_SETTING_ADAPTER].join('.');
+
+        userStore.setPersistentSetting(key, value);
+    }
 
     @computed get currentAdapter(): typeof AbstractAdapter {
         return listAdapterRegistry.get(this.currentAdapterKey);
@@ -88,6 +106,13 @@ class List extends React.Component<Props> {
         super(props);
 
         this.validateAdapters();
+
+        const {store} = this.props;
+
+        this.adapterDisposer = intercept(this, 'currentAdapterKey', (change: IValueWillChange<*>) => {
+            List.setAdapterSetting(store.listKey, store.userSettingsKey, change.newValue);
+            return change;
+        });
     }
 
     componentDidUpdate(prevProps: Props) {
@@ -103,7 +128,7 @@ class List extends React.Component<Props> {
     }
 
     validateAdapters() {
-        const {adapters} = this.props;
+        const {adapters, store} = this.props;
 
         adapters.forEach((adapterName) => {
             if (!listAdapterRegistry.has(adapterName)) {
@@ -115,7 +140,8 @@ class List extends React.Component<Props> {
         });
 
         if (!this.currentAdapterKey) {
-            this.setCurrentAdapterKey(this.props.adapters[0]);
+            const adapterKey = List.getAdapterSetting(store.listKey, store.userSettingsKey);
+            this.setCurrentAdapterKey(adapterKey || this.props.adapters[0]);
         }
     }
 

@@ -203,6 +203,8 @@ test('Destroy all stores on unmount', () => {
     const locale = router.bind.mock.calls[2][1];
     const collectionLimit = router.bind.mock.calls[5][1];
     const mediaLimit = router.bind.mock.calls[6][1];
+    const mediaSortColumn = router.bind.mock.calls[7][1];
+    const mediaSortOrder = router.bind.mock.calls[8][1];
 
     expect(mediaOverviewInstance.collectionListStore.sort).toBeCalledWith('title', 'asc');
     expect(collectionPage.get()).toBe(undefined);
@@ -213,6 +215,8 @@ test('Destroy all stores on unmount', () => {
     expect(router.bind).toBeCalledWith('locale', locale);
     expect(router.bind).toBeCalledWith('collectionLimit', collectionLimit, 10);
     expect(router.bind).toBeCalledWith('mediaLimit', mediaLimit, 10);
+    expect(router.bind).toBeCalledWith('mediaSortColumn', mediaSortColumn);
+    expect(router.bind).toBeCalledWith('mediaSortOrder', mediaSortOrder);
 
     mediaOverview.unmount();
     expect(mediaOverviewInstance.mediaListStore.destroy).toBeCalled();
