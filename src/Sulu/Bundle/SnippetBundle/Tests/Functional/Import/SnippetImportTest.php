@@ -69,7 +69,7 @@ class SnippetImportTest extends SuluTestCase
     /**
      * Remove all created Data.
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->removeImportFile();
     }

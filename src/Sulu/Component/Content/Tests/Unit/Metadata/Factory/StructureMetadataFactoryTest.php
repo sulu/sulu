@@ -124,7 +124,7 @@ class StructureMetadataFactoryTest extends TestCase
         );
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->cleanUp();
     }

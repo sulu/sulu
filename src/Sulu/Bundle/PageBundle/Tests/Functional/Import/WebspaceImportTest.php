@@ -66,7 +66,7 @@ class WebspaceImportTest extends SuluTestCase
     /**
      * Remove all created Data.
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->removeImportFile();
         parent::tearDown();

@@ -37,7 +37,7 @@ class SeoStructureExtensionTest extends TestCase
         $this->extension = new SeoStructureExtension();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
     }
