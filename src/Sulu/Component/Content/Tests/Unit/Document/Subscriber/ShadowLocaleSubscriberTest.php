@@ -44,7 +44,7 @@ class ShadowLocaleSubscriberTest extends TestCase
      */
     private $shadowLocaleSubscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->propertyEncoder = $this->prophesize(PropertyEncoder::class);
         $this->documentInspector = $this->prophesize(DocumentInspector::class);

@@ -53,7 +53,7 @@ class NodeControllerTest extends SuluTestCase
      */
     private static $importer;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

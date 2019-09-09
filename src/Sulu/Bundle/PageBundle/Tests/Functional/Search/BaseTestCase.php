@@ -36,7 +36,7 @@ class BaseTestCase extends SuluTestCase
      */
     protected $homeDocument;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->initPhpcr();
 

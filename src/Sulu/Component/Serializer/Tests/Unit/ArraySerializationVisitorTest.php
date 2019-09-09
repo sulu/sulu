@@ -27,7 +27,7 @@ class ArraySerializationVisitorTest extends TestCase
      */
     private $propertyNamingStrategy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->propertyNamingStrategy = $this->prophesize(PropertyNamingStrategyInterface::class);
         $this->arraySerializationVisitor = new ArraySerializationVisitor($this->propertyNamingStrategy->reveal());

@@ -21,7 +21,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
      */
     protected $client;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->purgeDatabase();
         $this->initPhpcr();

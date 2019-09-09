@@ -53,7 +53,7 @@ class UserLocaleListenerTest extends TestCase
      */
     private $userLocaleListener;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->request = $this->prophesize(Request::class);
         $this->event = $this->prophesize(GetResponseEvent::class);

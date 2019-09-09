@@ -44,7 +44,7 @@ class RoleControllerTest extends SuluTestCase
      */
     protected $securityType2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->em = $this->getEntityManager();
         $this->purgeDatabase();

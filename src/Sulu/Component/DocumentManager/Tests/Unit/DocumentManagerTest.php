@@ -75,7 +75,7 @@ class DocumentManagerTest extends TestCase
      */
     private $queryResultCollection;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->eventDispatcher = new EventDispatcher();
         $this->nodeManager = $this->prophesize(NodeManager::class);

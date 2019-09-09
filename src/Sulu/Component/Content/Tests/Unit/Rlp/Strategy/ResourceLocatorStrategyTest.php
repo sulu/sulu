@@ -71,7 +71,7 @@ class ResourceLocatorStrategyTest extends TestCase
      */
     private $resourceLocatorStrategy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mapper = $this->prophesize(ResourceLocatorMapperInterface::class);
         $this->cleaner = $this->prophesize(PathCleanupInterface::class);

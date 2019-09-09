@@ -74,7 +74,7 @@ class ContactRepositoryTest extends SuluTestCase
         ['Leon', 'Mustermann', [], []],
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->em = $this->getEntityManager();
         $this->initOrm();

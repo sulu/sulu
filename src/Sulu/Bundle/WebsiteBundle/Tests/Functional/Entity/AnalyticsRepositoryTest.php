@@ -21,7 +21,7 @@ class AnalyticsRepositoryTest extends BaseFunctional
      */
     private $analyticsRepository;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

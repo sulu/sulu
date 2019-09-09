@@ -44,7 +44,7 @@ class StructureBridgeSerializationTest extends SuluTestCase
      */
     private $documentManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->initPhpcr();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');

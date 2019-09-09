@@ -71,7 +71,7 @@ class VersionSubscriberTest extends TestCase
      */
     private $versionSubscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->versionManager = $this->prophesize(VersionManagerInterface::class);
         $this->propertyEncoder = $this->prophesize(PropertyEncoder::class);

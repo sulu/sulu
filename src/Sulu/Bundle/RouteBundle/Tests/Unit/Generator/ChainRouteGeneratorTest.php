@@ -49,7 +49,7 @@ class ChainRouteGeneratorTest extends TestCase
      */
     private $entity;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->entity = $this->prophesize(RoutableInterface::class);
         $this->routeGenerator = $this->prophesize(RouteGeneratorInterface::class);

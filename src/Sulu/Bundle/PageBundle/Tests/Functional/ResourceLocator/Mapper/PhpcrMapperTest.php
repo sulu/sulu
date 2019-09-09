@@ -74,7 +74,7 @@ class PhpcrMapperTest extends SuluTestCase
      */
     private $homeDocument;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->initPhpcr();
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');

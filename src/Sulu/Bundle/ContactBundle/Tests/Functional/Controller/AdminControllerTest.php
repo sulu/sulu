@@ -24,7 +24,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminControllerTest extends SuluTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->purgeDatabase();
         $em = $this->getEntityManager();

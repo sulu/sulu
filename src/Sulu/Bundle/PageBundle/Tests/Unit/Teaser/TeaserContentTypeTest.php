@@ -51,7 +51,7 @@ class TeaserContentTypeTest extends TestCase
      */
     private $contentType;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->teaserProviderPool = $this->prophesize(TeaserProviderPoolInterface::class);
         $this->teaserManager = $this->prophesize(TeaserManagerInterface::class);

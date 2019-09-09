@@ -23,7 +23,7 @@ class SecuritySubscriberTest extends SubscriberTestCase
      */
     private $subscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

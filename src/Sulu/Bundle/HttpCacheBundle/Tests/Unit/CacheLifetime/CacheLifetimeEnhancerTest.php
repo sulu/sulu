@@ -64,7 +64,7 @@ class CacheLifetimeEnhancerTest extends TestCase
      */
     private $sharedMaxAge = 300;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->cacheLifetimeResolver = $this->prophesize(CacheLifetimeResolver::class);
         $this->page = $this->prophesize(PageBridge::class);

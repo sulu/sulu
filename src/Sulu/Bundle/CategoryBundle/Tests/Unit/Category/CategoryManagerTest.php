@@ -69,7 +69,7 @@ class CategoryManagerTest extends TestCase
      */
     private $keywordManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->categoryRepository = $this->prophesize(CategoryRepositoryInterface::class);
         $this->categoryMetaRepository = $this->prophesize(CategoryMetaRepositoryInterface::class);

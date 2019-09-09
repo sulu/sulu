@@ -33,7 +33,7 @@ class DeviceTypeRuleTest extends TestCase
      */
     private $deviceTypeRule;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->deviceDetector = $this->prophesize(DeviceDetector::class);
         $this->translator = $this->prophesize(TranslatorInterface::class);

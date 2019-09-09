@@ -47,7 +47,7 @@ class MediaRepositoryTest extends SuluTestCase
      */
     private $mediaRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -49,7 +49,7 @@ class DoctrineAccessControlProviderTest extends TestCase
      */
     private $maskConverter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->objectManager = $this->prophesize(ObjectManager::class);
         $this->roleRepository = $this->prophesize(RoleRepositoryInterface::class);

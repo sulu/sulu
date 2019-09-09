@@ -57,7 +57,7 @@ class RequestAnalyzerTest extends TestCase
      */
     private $requestStack;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->contentMapper = $this->prophesize(ContentMapperInterface::class);

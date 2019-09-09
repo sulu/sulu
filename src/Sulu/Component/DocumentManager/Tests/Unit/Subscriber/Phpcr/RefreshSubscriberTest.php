@@ -38,7 +38,7 @@ class RefreshSubscriberTest extends TestCase
      */
     private $refreshSubscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
         $this->documentRegistry = $this->prophesize(DocumentRegistry::class);

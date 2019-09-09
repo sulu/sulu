@@ -54,7 +54,7 @@ class SingleContactSelectionTest extends TestCase
      */
     private $contact;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->contactRepository = $this->prophesize(ContactRepositoryInterface::class);
         $this->contactReferenceStore = $this->prophesize(ReferenceStore::class);

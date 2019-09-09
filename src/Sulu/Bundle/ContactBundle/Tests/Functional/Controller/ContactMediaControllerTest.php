@@ -37,7 +37,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class ContactMediaControllerTest extends SuluTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->em = $this->getEntityManager();
         $this->initOrm();

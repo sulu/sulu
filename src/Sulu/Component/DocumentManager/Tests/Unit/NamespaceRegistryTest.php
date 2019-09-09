@@ -16,7 +16,7 @@ use Sulu\Component\DocumentManager\NamespaceRegistry;
 
 class NamespaceRegistryTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->registry = new NamespaceRegistry([
             'system' => 'asys',

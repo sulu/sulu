@@ -77,7 +77,7 @@ class SuluNodeHelperTest extends TestCase
      */
     private $helper;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->session = $this->getMockBuilder(SessionInterface::class)->disableOriginalConstructor()->getMock();
         $this->node = $this->getMockBuilder(Node::class)->disableOriginalConstructor()->getMock();

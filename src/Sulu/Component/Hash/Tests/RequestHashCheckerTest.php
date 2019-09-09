@@ -29,7 +29,7 @@ class RequestHashCheckerTest extends TestCase
      */
     private $requestHashChecker;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->hasher = $this->prophesize(HasherInterface::class);
         $this->requestHashChecker = new RequestHashChecker($this->hasher->reveal());

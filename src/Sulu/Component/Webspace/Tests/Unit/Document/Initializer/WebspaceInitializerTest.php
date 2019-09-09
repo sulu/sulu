@@ -68,7 +68,7 @@ class WebspaceInitializerTest extends TestCase
      */
     private $webspaceCollection;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);

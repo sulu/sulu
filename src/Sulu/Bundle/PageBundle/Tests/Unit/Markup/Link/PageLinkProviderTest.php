@@ -76,7 +76,7 @@ class PageLinkProviderTest extends TestCase
      */
     protected $pageLinkProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->request = $this->prophesize(Request::class);
         $this->contentRepository = $this->prophesize(ContentRepositoryInterface::class);

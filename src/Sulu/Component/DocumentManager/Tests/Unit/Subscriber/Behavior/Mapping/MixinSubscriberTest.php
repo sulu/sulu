@@ -31,7 +31,7 @@ class MixinSubscriberTest extends TestCase
      */
     private $mixinSubscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $this->mixinSubscriber = new MixinSubscriber($this->metadataFactory->reveal());

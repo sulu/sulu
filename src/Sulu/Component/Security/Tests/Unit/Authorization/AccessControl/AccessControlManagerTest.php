@@ -41,7 +41,7 @@ class AccessControlManagerTest extends TestCase
      */
     private $eventDispatcher;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->maskConverter = $this->prophesize(MaskConverterInterface::class);
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);

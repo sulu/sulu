@@ -28,7 +28,7 @@ class AutoIncrementConflictResolverTest extends TestCase
      */
     private $resolver;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
         $this->resolver = new AutoIncrementConflictResolver($this->routeRepository->reveal());

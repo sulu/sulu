@@ -22,7 +22,7 @@ class AdminControllerTest extends SuluTestCase
      */
     protected $em;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->purgeDatabase();
         $this->em = $this->getContainer()->get('sulu_test.doctrine.orm.default_entity_manager');

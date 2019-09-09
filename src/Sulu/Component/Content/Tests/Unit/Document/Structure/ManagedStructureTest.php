@@ -84,7 +84,7 @@ class ManagedStructureTest extends TestCase
      */
     private $structure;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
         $this->node = $this->prophesize(NodeInterface::class);

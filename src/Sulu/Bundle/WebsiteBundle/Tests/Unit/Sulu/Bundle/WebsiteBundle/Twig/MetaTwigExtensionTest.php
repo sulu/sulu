@@ -36,7 +36,7 @@ class MetaTwigExtensionTest extends TestCase
      */
     private $portal;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -40,7 +40,7 @@ class RouterListenerTest extends TestCase
      */
     private $event;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->baseRouteListener = $this->prophesize(BaseRouteListener::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);

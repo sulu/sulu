@@ -23,7 +23,7 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
      */
     private $xmlFormMetadataLoader;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->xmlFormMetadataLoader = $this->getContainer()->get('sulu_admin_test.xml_form_metadata_loader');
     }

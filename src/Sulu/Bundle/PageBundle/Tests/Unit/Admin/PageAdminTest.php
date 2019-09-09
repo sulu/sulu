@@ -50,7 +50,7 @@ class PageAdminTest extends TestCase
      */
     private $teaserProviderPool;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->routeBuilderFactory = new RouteBuilderFactory();
         $this->securityChecker = $this->prophesize(SecurityChecker::class);

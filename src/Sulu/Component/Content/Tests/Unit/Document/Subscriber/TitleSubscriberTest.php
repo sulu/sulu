@@ -32,7 +32,7 @@ class TitleSubscriberTest extends TestCase
      */
     private $titleSubscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->propertyEncoder = $this->prophesize(PropertyEncoder::class);
         $this->titleSubscriber = new TitleSubscriber($this->propertyEncoder->reveal());

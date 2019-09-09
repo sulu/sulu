@@ -56,7 +56,7 @@ class StructureXmlLoaderTest extends TestCase
      */
     private $cacheLifetimeResolver;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->translator = $this->prophesize(TranslatorInterface::class);
         $propertiesXmlParser = new PropertiesXmlParser(

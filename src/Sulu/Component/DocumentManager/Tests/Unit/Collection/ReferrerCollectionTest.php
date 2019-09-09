@@ -21,7 +21,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ReferrerCollectionTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->reference = $this->prophesize(PropertyInterface::class);
         $this->referrerNode = $this->prophesize(NodeInterface::class);

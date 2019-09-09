@@ -53,7 +53,7 @@ class TagManagerTest extends TestCase
      */
     private $tagManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->tagRepository = $this->getMockForAbstractClass(
             'Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface',

@@ -34,7 +34,7 @@ class SecurityCheckerTest extends TestCase
      */
     private $authorizationChecker;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

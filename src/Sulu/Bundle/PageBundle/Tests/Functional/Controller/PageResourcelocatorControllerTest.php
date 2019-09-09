@@ -35,7 +35,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
      */
     private $data;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = $this->createAuthenticatedClient();
         $this->purgeDatabase();

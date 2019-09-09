@@ -51,7 +51,7 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
      */
     private $referenceStore;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

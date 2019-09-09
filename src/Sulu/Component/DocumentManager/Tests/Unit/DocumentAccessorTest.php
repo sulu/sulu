@@ -16,7 +16,7 @@ use Sulu\Component\DocumentManager\DocumentAccessor;
 
 class DocumentAccessorTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->object = new TestAccessObject();
         $this->accessor = new DocumentAccessor($this->object);

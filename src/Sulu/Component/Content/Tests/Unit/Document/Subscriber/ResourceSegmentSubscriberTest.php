@@ -92,7 +92,7 @@ class ResourceSegmentSubscriberTest extends TestCase
      */
     private $propertyMetaData;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->encoder = $this->prophesize(PropertyEncoder::class);
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);

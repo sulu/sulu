@@ -29,7 +29,7 @@ class ReorderSubscriberTest extends TestCase
      */
     private $reorderSubscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->nodeHelper = $this->prophesize(NodeHelperInterface::class);
         $this->reorderSubscriber = new ReorderSubscriber(

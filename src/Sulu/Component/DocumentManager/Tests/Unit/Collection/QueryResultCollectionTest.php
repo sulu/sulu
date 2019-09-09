@@ -22,7 +22,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class QueryResultCollectionTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->queryResult = $this->prophesize(QueryResultInterface::class);
         $this->dispatcher = $this->prophesize(EventDispatcherInterface::class);

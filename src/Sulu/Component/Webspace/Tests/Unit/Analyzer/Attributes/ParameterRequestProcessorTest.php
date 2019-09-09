@@ -30,7 +30,7 @@ class ParameterRequestProcessorTest extends TestCase
      */
     private $parameterRequestProcessor;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
 

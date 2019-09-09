@@ -15,7 +15,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class SitemapControllerTest extends SuluTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->initPhpcr();
     }

@@ -33,7 +33,7 @@ class PageSelectionContainerTest extends TestCase
      */
     private $builder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->executor = $this->prophesize(ContentQueryExecutor::class);
         $this->builder = $this->prophesize(ContentQueryBuilder::class);

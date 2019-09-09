@@ -42,7 +42,7 @@ class StructureResolverTest extends TestCase
      */
     private $extensionManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

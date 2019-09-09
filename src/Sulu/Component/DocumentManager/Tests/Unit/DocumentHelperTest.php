@@ -17,7 +17,7 @@ use Sulu\Component\DocumentManager\DocumentHelper;
 
 class DocumentHelperTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->document = new \stdClass();
         $this->titleDocument = $this->prophesize(TitleBehavior::class);

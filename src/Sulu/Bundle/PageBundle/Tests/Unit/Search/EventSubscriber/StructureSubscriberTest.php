@@ -35,7 +35,7 @@ class StructureSubscriberTest extends TestCase
      */
     private $subscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->searchManager = $this->prophesize(SearchManagerInterface::class);
         $this->subscriber = new StructureSubscriber($this->searchManager->reveal());

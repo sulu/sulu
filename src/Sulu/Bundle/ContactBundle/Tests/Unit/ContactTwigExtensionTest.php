@@ -35,7 +35,7 @@ class ContactTwigExtensionTest extends TestCase
      */
     private $contactRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->cache = new ArrayCache();
         $this->contactRepository = $this->prophesize(ContactRepository::class);

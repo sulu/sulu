@@ -64,7 +64,7 @@ class SecuredEntitySubscriberTest extends TestCase
      */
     private $visitor;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->user = $this->prophesize(UserInterface::class);
         $this->token = $this->prophesize(TokenInterface::class);

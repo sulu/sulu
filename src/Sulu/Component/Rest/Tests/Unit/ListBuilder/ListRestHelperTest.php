@@ -23,7 +23,7 @@ class ListRestHelperTest extends TestCase
      */
     protected $requestStack;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->requestStack = $this->prophesize(RequestStack::class);
     }

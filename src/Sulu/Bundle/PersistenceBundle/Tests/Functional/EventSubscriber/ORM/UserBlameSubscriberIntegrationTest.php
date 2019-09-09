@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\User\User as SymfonyUser;
 
 class UserBlameSubscriberIntegrationTest extends SuluTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->initOrm();

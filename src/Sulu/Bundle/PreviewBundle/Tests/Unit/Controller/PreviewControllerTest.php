@@ -42,7 +42,7 @@ class PreviewControllerTest extends TestCase
      */
     private $encodingOptions = JsonResponse::DEFAULT_ENCODING_OPTIONS;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->preview = $this->prophesize(PreviewInterface::class);
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);

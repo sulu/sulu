@@ -51,7 +51,7 @@ class WebspaceExportTest extends SuluTestCase
      */
     private $creator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::initPhpcr();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');

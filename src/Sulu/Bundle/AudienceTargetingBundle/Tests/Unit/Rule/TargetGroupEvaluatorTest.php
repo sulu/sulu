@@ -46,7 +46,7 @@ class TargetGroupEvaluatorTest extends TestCase
      */
     private $targetGroupEvaluator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->ruleCollection = $this->prophesize(RuleCollectionInterface::class);
         $this->targetGroupRepository = $this->prophesize(TargetGroupRepositoryInterface::class);

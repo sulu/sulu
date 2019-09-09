@@ -29,7 +29,7 @@ class SitemapProviderPoolTest extends TestCase
      */
     public $pool;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->providers = [
             'pages' => $this->prophesize(SitemapProviderInterface::class),

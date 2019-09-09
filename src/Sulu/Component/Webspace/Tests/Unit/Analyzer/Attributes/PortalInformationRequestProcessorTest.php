@@ -28,7 +28,7 @@ class PortalInformationRequestProcessorTest extends TestCase
      */
     private $portalInformationRequestProcessor;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->portalInformationRequestProcessor = new PortalInformationRequestProcessor();
     }

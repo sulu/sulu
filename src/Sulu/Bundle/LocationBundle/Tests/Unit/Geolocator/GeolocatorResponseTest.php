@@ -18,7 +18,7 @@ class GeolocatorResponseTest extends TestCase
 {
     protected $geolocatorResponse;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->response = new GeolocatorResponse();
         $this->location = $this->getMockBuilder('Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation')->getMock();

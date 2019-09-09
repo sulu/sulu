@@ -30,7 +30,7 @@ class FormMetadataMapperTest extends TestCase
      */
     private $formMetadataMapper;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->formMetadataMapper = new FormMetadataMapper();
     }

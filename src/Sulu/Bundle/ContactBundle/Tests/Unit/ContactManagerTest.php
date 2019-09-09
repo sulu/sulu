@@ -65,7 +65,7 @@ class ContactManagerTest extends TestCase
      */
     private $mediaRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->em = $this->prophesize(ObjectManager::class);
         $this->tagManager = $this->prophesize(TagManagerInterface::class);

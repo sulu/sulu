@@ -33,7 +33,7 @@ class OrderByTraitTest extends TestCase
      */
     private $addOrderByFunction;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

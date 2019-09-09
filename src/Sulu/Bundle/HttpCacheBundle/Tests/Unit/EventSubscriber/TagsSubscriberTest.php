@@ -74,7 +74,7 @@ class TagsSubscriberTest extends TestCase
      */
     private $currentStructureUuid;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->uuid1 = Uuid::uuid4()->toString();
         $this->uuid2 = Uuid::uuid4()->toString();

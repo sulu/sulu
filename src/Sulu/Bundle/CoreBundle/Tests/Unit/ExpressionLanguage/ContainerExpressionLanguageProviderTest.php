@@ -28,7 +28,7 @@ class ContainerExpressionLanguageProviderTest extends TestCase
      */
     private $container;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->container = $this->prophesize(ContainerInterface::class);
         $containerExpressionLanguageProvider = new ContainerExpressionLanguageProvider($this->container->reveal());

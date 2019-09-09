@@ -20,7 +20,7 @@ class CustomUrlRouteControllerTest extends SuluTestCase
      */
     private $contentDocument;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->initPhpcr();
         $this->contentDocument = $this->getContainer()->get('sulu_document_manager.document_manager')

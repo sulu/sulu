@@ -27,7 +27,7 @@ class NodeNameSlugifierTest extends TestCase
      */
     private $nodeNameSlugifier;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->slugifier = $this->prophesize(SlugifierInterface::class);
         $this->nodeNameSlugifier = new NodeNameSlugifier($this->slugifier->reveal());

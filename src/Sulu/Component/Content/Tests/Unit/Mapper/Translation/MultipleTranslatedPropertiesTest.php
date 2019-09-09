@@ -22,7 +22,7 @@ class MultipleTranslatedPropertiesTest extends TestCase
      */
     private $properties;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->properties = new MultipleTranslatedProperties(
             [

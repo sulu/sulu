@@ -40,7 +40,7 @@ class NavigationContextSubscriberTest extends TestCase
      */
     private $event;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->document = $this->prophesize(NavigationContextBehavior::class);
         $this->metadata = $this->prophesize(Metadata::class);

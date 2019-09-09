@@ -80,7 +80,7 @@ class ParentSubscriberTest extends TestCase
      */
     private $subscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->hydrateEvent = $this->prophesize(HydrateEvent::class);
         $this->moveEvent = $this->prophesize(MoveEvent::class);

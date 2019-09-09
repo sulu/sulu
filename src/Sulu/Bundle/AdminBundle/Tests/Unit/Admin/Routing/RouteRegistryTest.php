@@ -42,7 +42,7 @@ class RouteRegistryTest extends TestCase
      */
     protected $admin2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->admin1 = $this->prophesize(Admin::class);
         $this->admin2 = $this->prophesize(Admin::class);

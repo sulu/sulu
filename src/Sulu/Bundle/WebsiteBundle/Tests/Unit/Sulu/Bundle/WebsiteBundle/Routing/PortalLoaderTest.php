@@ -48,7 +48,7 @@ class PortalLoaderTest extends TestCase
      */
     private $condition = 'request.get("_sulu").getAttribute("portalInformation") !== null && request.get("_sulu").getAttribute("portalInformation").getType() === 1';
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

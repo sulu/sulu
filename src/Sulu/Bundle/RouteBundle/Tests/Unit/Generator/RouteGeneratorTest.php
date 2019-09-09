@@ -34,7 +34,7 @@ class RouteGeneratorTest extends TestCase
      */
     private $generator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->tokenProvider = $this->prophesize(TokenProviderInterface::class);
         $this->slugifier = $this->prophesize(SlugifierInterface::class);

@@ -33,7 +33,7 @@ class TagControllerTest extends SuluTestCase
      */
     protected $tagRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->em = $this->getEntityManager();
 

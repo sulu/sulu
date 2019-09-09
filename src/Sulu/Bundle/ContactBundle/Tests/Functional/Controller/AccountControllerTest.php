@@ -47,7 +47,7 @@ class AccountControllerTest extends SuluTestCase
      */
     private $em;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->purgeDatabase();
         $this->em = $this->getEntityManager();

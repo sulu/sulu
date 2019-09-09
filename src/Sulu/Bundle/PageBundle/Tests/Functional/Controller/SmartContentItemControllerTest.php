@@ -89,7 +89,7 @@ class SmartContentItemControllerTest extends SuluTestCase
      */
     private $inspector;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->em = $this->getEntityManager();
         $this->session = $this->getContainer()->get('sulu_test.doctrine_phpcr')->getConnection();

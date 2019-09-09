@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 class DocumentExecutorTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->documentManager = $this->prophesize(DocumentManager::class);
         $this->initializer = $this->prophesize(Initializer::class);

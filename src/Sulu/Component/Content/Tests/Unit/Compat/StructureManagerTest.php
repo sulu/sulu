@@ -53,7 +53,7 @@ class StructureManagerTest extends TestCase
      */
     private $structureManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->factory = $this->prophesize(StructureMetadataFactory::class);
         $this->inspector = $this->prophesize(DocumentInspector::class);

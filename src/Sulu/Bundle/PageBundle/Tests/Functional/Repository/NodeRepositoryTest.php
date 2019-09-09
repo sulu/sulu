@@ -64,7 +64,7 @@ class NodeRepositoryTest extends SuluTestCase
      */
     private $documentManager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->initPhpcr();
         $this->extensions = [new TestExtension('test1', 'test1')];

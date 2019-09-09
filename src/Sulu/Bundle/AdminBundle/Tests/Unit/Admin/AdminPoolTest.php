@@ -38,7 +38,7 @@ class AdminPoolTest extends TestCase
      */
     protected $command;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->adminPool = new AdminPool();
         $this->admin1 = $this->prophesize(Admin::class);

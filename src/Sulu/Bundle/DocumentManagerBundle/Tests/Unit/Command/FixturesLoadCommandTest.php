@@ -61,7 +61,7 @@ class FixturesLoadCommandTest extends TestCase
      */
     private $commandTester;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->loader = $this->prophesize(DocumentFixtureLoader::class);
         $this->executor = $this->prophesize(DocumentExecutor::class);

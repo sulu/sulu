@@ -49,7 +49,7 @@ class TargetGroupSubscriberTest extends TestCase
      */
     private $targetGroupRepository;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->twig = $this->prophesize(Environment::class);
         $this->targetGroupStore = $this->prophesize(TargetGroupStoreInterface::class);

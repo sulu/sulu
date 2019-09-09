@@ -50,7 +50,7 @@ class PageSelectionTest extends TestCase
      */
     private $referenceStore;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->contentQueryExecutor = $this->prophesize(ContentQueryExecutorInterface::class);
         $this->contentQueryBuilder = $this->prophesize(ContentQueryBuilderInterface::class);

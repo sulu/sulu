@@ -16,7 +16,7 @@ use Sulu\Bundle\CoreBundle\Cache\StructureWarmer;
 
 class StructureWarmerTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->structureManager = $this->prophesize('Sulu\Component\Content\Compat\StructureManagerInterface');

@@ -79,7 +79,7 @@ class UserControllerTest extends SuluTestCase
      */
     private $group2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->em = $this->getEntityManager();
         $this->purgeDatabase();

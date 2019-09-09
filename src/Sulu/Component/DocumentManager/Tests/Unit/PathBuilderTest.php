@@ -19,7 +19,7 @@ class PathBuilderTest extends TestCase
 {
     private $pathBuilder;
 
-    public function setUp()
+    public function setUp(): void
     {
         $pathRegistry = new PathSegmentRegistry([
             'one' => 'one',

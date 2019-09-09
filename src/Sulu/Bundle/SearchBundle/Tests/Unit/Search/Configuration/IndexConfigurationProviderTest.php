@@ -22,7 +22,7 @@ class IndexConfigurationProviderTest extends TestCase
      */
     private $translator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->translator = $this->prophesize(TranslatorInterface::class);
         $this->translator->trans(Argument::cetera())->willReturnArgument(0);

@@ -55,7 +55,7 @@ class CollectionManagerTest extends TestCase
      */
     private $collectionManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->collectionRepository = $this->prophesize(CollectionRepository::class);
         $this->mediaRepository = $this->prophesize(MediaRepository::class);

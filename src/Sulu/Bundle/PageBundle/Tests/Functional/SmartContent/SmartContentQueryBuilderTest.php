@@ -97,7 +97,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
      */
     private $audienceTargetGroupRepository;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

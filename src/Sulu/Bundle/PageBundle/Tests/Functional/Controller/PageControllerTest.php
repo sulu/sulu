@@ -21,7 +21,7 @@ class PageControllerTest extends SuluTestCase
      */
     private $session;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

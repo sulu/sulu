@@ -62,7 +62,7 @@ class PathSubscriberTest extends TestCase
      */
     private $pathSubscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->abstractMappingEvent = $this->prophesize(AbstractMappingEvent::class);
         $this->document = $this->prophesize(PathBehavior::class);

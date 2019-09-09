@@ -30,7 +30,7 @@ class LocalFormatCacheTest extends TestCase
     /**
      * setUp.
      */
-    public function setUp()
+    public function setUp(): void
     {
         $fileSystem = new Filesystem();
         $this->localStorage = new LocalFormatCache(

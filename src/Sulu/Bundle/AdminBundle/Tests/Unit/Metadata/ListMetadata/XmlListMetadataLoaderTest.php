@@ -35,7 +35,7 @@ class XmlListMetadataLoaderTest extends TestCase
      */
     private $fieldDescriptorFactory;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->fieldDescriptorFactory = $this->prophesize(FieldDescriptorFactoryInterface::class);
         $this->translator = $this->prophesize(TranslatorInterface::class);

@@ -43,7 +43,7 @@ class DefaultControllerTest extends TestCase
 
     private $requestAnalyzer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->structure = $this->prophesize(PageBridge::class);
         $this->structure->getView()->willReturn('pages/default');

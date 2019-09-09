@@ -31,7 +31,7 @@ class PhpcrAccessControlProviderTest extends TestCase
      */
     private $documentManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
         $this->phpcrAccessControlProvider = new PhpcrAccessControlProvider(

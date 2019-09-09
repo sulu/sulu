@@ -47,7 +47,7 @@ class RouteProviderTest extends TestCase
      */
     private $requestStack;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);

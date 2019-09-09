@@ -22,7 +22,7 @@ class DocumentRegistryTest extends TestCase
      */
     private $registry;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->registry = new DocumentRegistry('de');
         $this->node = $this->prophesize(NodeInterface::class);

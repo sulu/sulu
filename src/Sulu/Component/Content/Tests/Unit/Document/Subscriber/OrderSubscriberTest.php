@@ -41,7 +41,7 @@ class OrderSubscriberTest extends SubscriberTestCase
      */
     private $document;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

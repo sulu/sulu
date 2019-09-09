@@ -21,7 +21,7 @@ class PathSegmentRegistryTest extends TestCase
      */
     private $pathRegistry;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->pathRegistry = new PathSegmentRegistry(
             [

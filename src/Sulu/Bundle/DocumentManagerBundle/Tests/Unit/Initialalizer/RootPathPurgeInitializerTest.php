@@ -57,7 +57,7 @@ class RootPathPurgeInitializerTest extends TestCase
      */
     private $node;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->session1 = $this->prophesize(SessionInterface::class);
         $this->session2 = $this->prophesize(SessionInterface::class);

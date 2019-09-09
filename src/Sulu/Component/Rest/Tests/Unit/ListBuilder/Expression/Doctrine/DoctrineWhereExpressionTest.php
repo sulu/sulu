@@ -39,7 +39,7 @@ class DoctrineWhereExpressionTest extends TestCase
      */
     private $queryBuilder;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->queryBuilder = $this->prophesize(QueryBuilder::class);
         $this->queryBuilder->setParameter(Argument::any(), Argument::any())->willReturn($this->queryBuilder->reveal());

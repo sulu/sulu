@@ -53,7 +53,7 @@ class AccountMediaControllerTest extends SuluTestCase
      */
     protected $media2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->em = $this->getEntityManager();
         $this->purgeDatabase();

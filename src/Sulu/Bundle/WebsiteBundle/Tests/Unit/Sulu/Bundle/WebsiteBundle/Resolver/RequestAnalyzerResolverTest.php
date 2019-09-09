@@ -36,7 +36,7 @@ class RequestAnalyzerResolverTest extends TestCase
      */
     private $requestStack;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

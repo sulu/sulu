@@ -52,7 +52,7 @@ class WebspaceTest extends TestCase
      */
     private $segment;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

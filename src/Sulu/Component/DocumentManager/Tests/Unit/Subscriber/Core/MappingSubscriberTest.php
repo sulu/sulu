@@ -80,7 +80,7 @@ class MappingSubscriberTest extends TestCase
      */
     private $mappingSubscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $this->encoder = $this->prophesize(PropertyEncoder::class);

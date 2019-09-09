@@ -41,7 +41,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
      */
     private $snippet2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->initPhpcr();
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');

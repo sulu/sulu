@@ -72,7 +72,7 @@ class StructureProviderTest extends TestCase
      */
     private $secureStructure;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
         $this->metadataFactory = $this->prophesize(MetadataFactoryInterface::class);

@@ -43,7 +43,7 @@ class UserProviderTest extends TestCase
      */
     private $user;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
         $this->requestStack = $this->prophesize(RequestStack::class);

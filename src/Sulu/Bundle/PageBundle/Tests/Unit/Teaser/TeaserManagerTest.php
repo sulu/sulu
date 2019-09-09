@@ -30,7 +30,7 @@ class TeaserManagerTest extends TestCase
      */
     private $teaserManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->providerPool = $this->prophesize(TeaserProviderPoolInterface::class);
 

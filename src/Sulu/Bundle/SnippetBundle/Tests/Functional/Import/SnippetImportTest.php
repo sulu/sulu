@@ -53,7 +53,7 @@ class SnippetImportTest extends SuluTestCase
     /**
      * Setup data for import.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->distPath = __DIR__ . '/../../Fixtures/import/export.xliff.dist';
         $this->path = __DIR__ . '/../../Fixtures/import/export.xliff';

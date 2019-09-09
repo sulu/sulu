@@ -20,7 +20,7 @@ class GeolocatorManagerTest extends TestCase
 
     protected $manager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
         $this->geolocator = $this->getMockBuilder('Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface')->getMock();

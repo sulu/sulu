@@ -52,7 +52,7 @@ class MarkupListenerTest extends TestCase
      */
     private $listener;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->markupParser = $this->prophesize(MarkupParserInterface::class);
         $this->event = $this->prophesize(FilterResponseEvent::class);

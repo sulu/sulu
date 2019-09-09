@@ -42,7 +42,7 @@ class SnippetContentTest extends TestCase
      */
     private $contentType;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
         $this->snippetResolver = $this->prophesize(SnippetResolverInterface::class);

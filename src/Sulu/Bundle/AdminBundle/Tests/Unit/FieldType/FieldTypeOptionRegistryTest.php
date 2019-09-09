@@ -21,7 +21,7 @@ class FieldTypeOptionRegistryTest extends TestCase
      */
     private $fieldTypeOptionRegistry;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->fieldTypeOptionRegistry = new FieldTypeOptionRegistry();
     }

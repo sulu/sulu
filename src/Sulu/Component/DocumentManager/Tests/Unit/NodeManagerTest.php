@@ -53,7 +53,7 @@ class NodeManagerTest extends TestCase
      */
     private $node2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->session = $this->prophesize(SessionInterface::class);
         $this->workspace = $this->prophesize(WorkspaceInterface::class);

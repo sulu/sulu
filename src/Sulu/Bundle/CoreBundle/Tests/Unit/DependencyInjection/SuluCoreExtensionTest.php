@@ -16,7 +16,7 @@ use Sulu\Bundle\CoreBundle\DependencyInjection\SuluCoreExtension;
 
 class SuluCoreExtensionTest extends AbstractExtensionTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

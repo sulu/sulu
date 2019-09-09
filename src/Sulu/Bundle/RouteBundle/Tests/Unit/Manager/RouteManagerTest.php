@@ -50,7 +50,7 @@ class RouteManagerTest extends TestCase
      */
     private $entity;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->entity = $this->prophesize(RoutableInterface::class);
         $this->chainRouteGenerator = $this->prophesize(ChainRouteGeneratorInterface::class);

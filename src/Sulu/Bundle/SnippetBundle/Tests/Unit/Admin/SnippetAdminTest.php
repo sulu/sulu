@@ -35,7 +35,7 @@ class SnippetAdminTest extends TestCase
      */
     private $webspaceManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->routeBuilderFactory = new RouteBuilderFactory();
         $this->securityChecker = $this->prophesize(SecurityChecker::class);

@@ -29,7 +29,7 @@ class QueryStringRuleTest extends TestCase
      */
     private $translator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->requestStack = $this->prophesize(RequestStack::class);
         $this->translator = $this->prophesize(TranslatorInterface::class);

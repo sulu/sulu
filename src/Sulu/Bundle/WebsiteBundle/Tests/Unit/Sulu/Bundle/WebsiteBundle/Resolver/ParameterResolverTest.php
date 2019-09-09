@@ -54,7 +54,7 @@ class ParameterResolverTest extends TestCase
      */
     private $localization;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->structureResolver = $this->prophesize(StructureResolverInterface::class);
         $this->requestAnalyzerResolver = $this->prophesize(RequestAnalyzerResolver::class);

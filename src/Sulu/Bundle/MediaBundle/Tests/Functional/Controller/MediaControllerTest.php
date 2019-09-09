@@ -101,7 +101,7 @@ class MediaControllerTest extends SuluTestCase
      */
     protected $mediaDefaultDescription = 'description';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->purgeDatabase();

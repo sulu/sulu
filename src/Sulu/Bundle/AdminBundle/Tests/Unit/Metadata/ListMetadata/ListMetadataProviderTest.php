@@ -36,7 +36,7 @@ class ListMetadataProviderTest extends TestCase
      */
     private $xmlListMetadataLoader2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->xmlListMetadataLoader1 = $this->prophesize(ListMetadataLoaderInterface::class);
         $this->xmlListMetadataLoader2 = $this->prophesize(ListMetadataLoaderInterface::class);

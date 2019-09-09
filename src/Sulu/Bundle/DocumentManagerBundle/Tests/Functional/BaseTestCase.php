@@ -19,7 +19,7 @@ abstract class BaseTestCase extends KernelTestCase
 
     const BASE_PATH = '/test';
 
-    public function setUp()
+    public function setUp(): void
     {
         $workspace = $this->getSession()->getWorkspace();
         $nodeTypeManager = $workspace->getNodeTypeManager();

@@ -33,7 +33,7 @@ class SessionManagerTest extends TestCase
      */
     private $sessionManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->defaultSession = $this->prophesize(SessionInterface::class);
         $this->liveSession = $this->prophesize(SessionInterface::class);

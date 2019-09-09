@@ -21,7 +21,7 @@ use Sulu\Component\DocumentManager\Subscriber\Phpcr\RemoveSubscriber;
 
 class RemoveSubscriberTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->nodeManager = $this->prophesize(NodeManager::class);
         $this->documentRegistry = $this->prophesize(DocumentRegistry::class);

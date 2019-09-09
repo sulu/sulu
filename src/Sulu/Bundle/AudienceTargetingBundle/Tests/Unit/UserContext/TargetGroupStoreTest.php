@@ -21,7 +21,7 @@ class TargetGroupStoreTest extends TestCase
      */
     private $targetGroupStore;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->targetGroupStore = new TargetGroupStore();
     }

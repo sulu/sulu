@@ -36,7 +36,7 @@ class NodeHelperTest extends TestCase
      */
     private $session;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->nodeHelper = new NodeHelper();
 

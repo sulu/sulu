@@ -91,7 +91,7 @@ class DocumentInspectorTest extends TestCase
      */
     private $documentInspector;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->documentRegistry = $this->prophesize(DocumentRegistry::class);
         $this->pathSegmentRegistry = $this->prophesize(PathSegmentRegistry::class);

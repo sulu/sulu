@@ -40,7 +40,7 @@ class PageDocumentSerializationTest extends SuluTestCase
      */
     private $registry;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->initPhpcr();

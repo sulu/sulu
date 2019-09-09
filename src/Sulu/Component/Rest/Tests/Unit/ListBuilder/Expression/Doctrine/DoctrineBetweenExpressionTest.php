@@ -37,7 +37,7 @@ class DoctrineBetweenExpressionTest extends TestCase
      */
     private $queryBuilder;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->queryBuilder = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
             ->disableOriginalConstructor()

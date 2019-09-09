@@ -65,7 +65,7 @@ class NodeOrderBuilderTest extends TestCase
      */
     private $nodeOrderBuilder;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sessionManager = $this->prophesize(SessionManagerInterface::class);
         $this->defaultSession = $this->prophesize(SessionInterface::class);

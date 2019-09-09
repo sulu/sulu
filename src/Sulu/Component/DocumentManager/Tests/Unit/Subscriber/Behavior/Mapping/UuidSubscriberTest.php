@@ -20,7 +20,7 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\UuidSubscriber;
 
 class UuidSubscriberTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->hydrateEvent = $this->prophesize(HydrateEvent::class);
         $this->notImplementing = new \stdClass();

@@ -30,7 +30,7 @@ class LinkProviderPoolTest extends TestCase
      */
     protected $pool;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->providers = [
             'content' => $this->prophesize(LinkProviderInterface::class),

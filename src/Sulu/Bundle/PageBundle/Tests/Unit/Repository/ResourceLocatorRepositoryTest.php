@@ -54,7 +54,7 @@ class ResourceLocatorRepositoryTest extends TestCase
      */
     private $documentManager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);
         $this->resourceLocatorStrategy = $this->prophesize(ResourceLocatorStrategyInterface::class);

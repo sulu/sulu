@@ -24,7 +24,7 @@ class XmlFileLoader10Test extends WebspaceTestCase
      */
     protected $loader;
 
-    public function setUp()
+    public function setUp(): void
     {
         $locator = $this->prophesize(FileLocatorInterface::class);
         $locator->locate(Argument::any())->will(function($arguments) {

@@ -19,7 +19,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class BaseMetadataFactoryTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->strategy = $this->prophesize(DocumentStrategyInterface::class);
         $this->dispatcher = $this->prophesize(EventDispatcherInterface::class);

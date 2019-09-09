@@ -54,7 +54,7 @@ class PermissionControllerTest extends TestCase
      */
     private $resources;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->accessControlManager = $this->prophesize(AccessControlManagerInterface::class);
         $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);

@@ -39,7 +39,7 @@ class LocaleRuleTest extends TestCase
      */
     private $localeRule;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->request = $this->prophesize(Request::class);
         $this->requestStack = $this->prophesize(RequestStack::class);

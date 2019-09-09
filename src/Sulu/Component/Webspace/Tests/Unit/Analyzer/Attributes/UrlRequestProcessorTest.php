@@ -23,7 +23,7 @@ class UrlRequestProcessorTest extends TestCase
      */
     private $urlRequestProcessor;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->urlRequestProcessor = new UrlRequestProcessor();
     }

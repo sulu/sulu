@@ -48,7 +48,7 @@ class SnippetQueryBuilderTest extends TestCase
      */
     private $snippetQueryBuilder;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);
         $this->extensionManager = $this->prophesize(ExtensionManagerInterface::class);

@@ -33,7 +33,7 @@ class OperatingSystemRuleTest extends TestCase
      */
     private $operatingSystemRule;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->deviceDetector = $this->prophesize(DeviceDetector::class);
         $this->translator = $this->prophesize(TranslatorInterface::class);

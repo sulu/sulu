@@ -83,7 +83,7 @@ class AliasFilingSubscriberTest extends TestCase
      */
     private $subscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->persistEvent = $this->prophesize(PersistEvent::class);
         $this->document = $this->prophesize(AliasFilingBehavior::class);

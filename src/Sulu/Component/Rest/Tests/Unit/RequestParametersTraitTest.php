@@ -24,7 +24,7 @@ class RequestParametersTraitTest extends TestCase
      */
     private $requestParametersTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->requestParametersTrait = $this->getObjectForTrait('Sulu\Component\Rest\RequestParametersTrait');
     }

@@ -84,7 +84,7 @@ class DoctrineListBuilderTest extends TestCase
 
     private static $translationEntityNameAlias = 'SuluCoreBundle_ExampleTranslation';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->entityManager = $this->prophesize(EntityManager::class);
 

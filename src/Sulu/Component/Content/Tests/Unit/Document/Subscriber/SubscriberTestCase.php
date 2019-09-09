@@ -55,7 +55,7 @@ class SubscriberTestCase extends TestCase
      */
     protected $parentNode;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->persistEvent = $this->prophesize(PersistEvent::class);
         $this->hydrateEvent = $this->prophesize(HydrateEvent::class);

@@ -86,7 +86,7 @@ class SecurityContextVoterTest extends TestCase
      */
     protected $accessControlManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $roleIdReflection = new \ReflectionProperty(Role::class, 'id');
         $roleIdReflection->setAccessible(true);

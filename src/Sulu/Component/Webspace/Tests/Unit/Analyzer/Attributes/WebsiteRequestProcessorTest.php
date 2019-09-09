@@ -48,7 +48,7 @@ class WebsiteRequestProcessorTest extends TestCase
      */
     private $replacer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->contentMapper = $this->prophesize(ContentMapperInterface::class);

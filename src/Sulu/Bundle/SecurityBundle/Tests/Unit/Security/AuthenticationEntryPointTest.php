@@ -20,7 +20,7 @@ class AuthenticationEntryPointTest extends TestCase
      */
     private $authenticationEntryPoint;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

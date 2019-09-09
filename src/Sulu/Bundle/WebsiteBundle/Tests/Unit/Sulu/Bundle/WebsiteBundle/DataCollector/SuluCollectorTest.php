@@ -45,7 +45,7 @@ class SuluCollectorTest extends TestCase
      */
     private $suluCollector;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->request = $this->prophesize(Request::class);
         $this->attributes = $this->prophesize(ParameterBag::class);
