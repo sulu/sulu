@@ -14,6 +14,7 @@ namespace Sulu\Bundle\RouteBundle\Tests\Unit\DependencyInjection;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionConfigurationTestCase;
 use Sulu\Bundle\RouteBundle\DependencyInjection\Configuration;
 use Sulu\Bundle\RouteBundle\DependencyInjection\SuluRouteExtension;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
 class ConfigurationTest extends AbstractExtensionConfigurationTestCase
@@ -23,7 +24,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         return new SuluRouteExtension();
     }
 
-    protected function getConfiguration()
+    protected function getConfiguration(): ConfigurationInterface
     {
         return new Configuration();
     }
