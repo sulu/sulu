@@ -80,7 +80,7 @@ class DateTest extends TestCase
             Argument::that(
                 function(\DateTime $value) use ($dateValue) {
                     // let there a delta of 2 seconds is ok
-                    $this->assertEquals($dateValue->getTimestamp(), $value->getTimestamp(), '', 60);
+                    $this->assertEqualsWithDelta($dateValue->getTimestamp(), $value->getTimestamp(), 60);
 
                     return true;
                 }

@@ -547,7 +547,7 @@ class AccountControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(400, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertContains('16', $response->message);
+        $this->assertStringContainsString('16', $response->message);
 
         $client->request(
             'POST',
@@ -572,7 +572,7 @@ class AccountControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(400, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertContains('17', $response->message);
+        $this->assertStringContainsString('17', $response->message);
 
         $client->request(
             'POST',
@@ -596,7 +596,7 @@ class AccountControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(400, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertContains('18', $response->message);
+        $this->assertStringContainsString('18', $response->message);
 
         $client->request(
             'POST',
@@ -614,7 +614,7 @@ class AccountControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(400, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertContains('19', $response->message);
+        $this->assertStringContainsString('19', $response->message);
     }
 
     public function testPostWithNotExistingUrlType()

@@ -76,7 +76,7 @@ class ContentLocaleCopyCommandTest extends SuluTestCase
             ]
         );
         $output = $this->tester->getDisplay();
-        $this->assertContains('Done', $output);
+        $this->assertStringContainsString('Done', $output);
 
         $this->documentRegistry->clear();
 

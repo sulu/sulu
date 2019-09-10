@@ -51,10 +51,10 @@ class ValidateWebspacesCommandTest extends SuluTestCase
         $this->tester->execute([]);
         $output = $this->tester->getDisplay();
 
-        $this->assertContains('sulu_io', $output);
-        $this->assertContains('Default Templates:', $output);
-        $this->assertContains('Page Templates:', $output);
-        $this->assertContains('Templates:', $output);
-        $this->assertContains('Localizations:', $output);
+        $this->assertStringContainsString('sulu_io', $output);
+        $this->assertStringContainsString('Default Templates:', $output);
+        $this->assertStringContainsString('Page Templates:', $output);
+        $this->assertStringContainsString('Templates:', $output);
+        $this->assertStringContainsString('Localizations:', $output);
     }
 }

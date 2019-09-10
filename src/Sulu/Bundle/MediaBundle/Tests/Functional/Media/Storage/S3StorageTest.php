@@ -84,9 +84,9 @@ class S3StorageTest extends SuluTestCase
 
         $result = $storage->getPath(['segment' => '02', 'fileName' => 'sulu.jpg']);
 
-        $this->assertContains('eu-west-1', $result);
-        $this->assertContains('test-bucket', $result);
-        $this->assertContains('02/sulu.jpg', $result);
+        $this->assertStringContainsString('eu-west-1', $result);
+        $this->assertStringContainsString('test-bucket', $result);
+        $this->assertStringContainsString('02/sulu.jpg', $result);
     }
 
     public function testGetType(): void

@@ -85,7 +85,7 @@ EOT;
 
         $response = $this->parser->parse($content, 'de');
 
-        $this->assertContains('<a href="/test" title="test">page title</a>', $response);
+        $this->assertStringContainsString('<a href="/test" title="test">page title</a>', $response);
     }
 
     public function testParseMultiple()
@@ -114,8 +114,8 @@ EOT;
 
         $response = $this->parser->parse($content, 'de');
 
-        $this->assertContains('<a href="/test" title="test">page title</a>', $response);
-        $this->assertContains('<a href="/test-2" title="test">page-2 title</a>', $response);
+        $this->assertStringContainsString('<a href="/test" title="test">page title</a>', $response);
+        $this->assertStringContainsString('<a href="/test-2" title="test">page-2 title</a>', $response);
     }
 
     public function testParseSame()
@@ -139,7 +139,7 @@ EOT;
         $response = $this->parser->parse($content, 'de');
 
         $this->assertEquals(2, preg_match_all('/<a href="\/test" title="test">page title<\/a>/', $response));
-        $this->assertNotContains('<sulu-link href="123-123-123" title="test" />', $response);
+        $this->assertStringNotContainsString('<sulu-link href="123-123-123" title="test" />', $response);
     }
 
     public function testParseDifferentTags()
@@ -168,8 +168,8 @@ EOT;
 
         $response = $this->parser->parse($content, 'de');
 
-        $this->assertContains('<a href="/test" title="test">page title</a>', $response);
-        $this->assertContains('<img src="/img/test.jpg" title="test"/>', $response);
+        $this->assertStringContainsString('<a href="/test" title="test">page title</a>', $response);
+        $this->assertStringContainsString('<img src="/img/test.jpg" title="test"/>', $response);
     }
 
     public function testParseNonEmptyTag()
@@ -197,7 +197,7 @@ EOT;
 
         $response = $this->parser->parse($content, 'de');
 
-        $this->assertContains('<a href="/test" title="test">link content</a>', $response);
+        $this->assertStringContainsString('<a href="/test" title="test">link content</a>', $response);
     }
 
     public function testParseNested()
@@ -228,7 +228,7 @@ EOT;
 
         $response = $this->parser->parse($content, 'de');
 
-        $this->assertContains('<a href="/test" title="test"><img src="test.jpg"/></a>', $response);
+        $this->assertStringContainsString('<a href="/test" title="test"><img src="test.jpg"/></a>', $response);
     }
 
     public function testValidate()

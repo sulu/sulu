@@ -57,7 +57,7 @@ class ValidatePagesCommandTest extends SuluTestCase
 
         // should complain on smartcontent, setupPages() sets up 2 smartcontent nodes
         $output = $this->tester->getDisplay();
-        $this->assertContains('2 Errors found', $output);
+        $this->assertStringContainsString('2 Errors found', $output);
     }
 
     /**

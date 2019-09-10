@@ -105,7 +105,7 @@ class SitemapControllerTest extends SuluTestCase
         $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
 
         $this->assertCount(1, $crawler->filterXPath('//x:urlset/x:url'));
-        $this->assertNotContains('sulu.at', $crawler->text());
+        $this->assertStringNotContainsString('sulu.at', $crawler->text());
     }
 
     public function testProvider()
