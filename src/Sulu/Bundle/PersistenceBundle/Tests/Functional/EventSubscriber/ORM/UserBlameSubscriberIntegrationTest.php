@@ -95,7 +95,7 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
         $this->getEntityManager()->persist($permission);
         $this->getEntityManager()->flush();
 
-        $this->assertInternalType('int', $permission->getId());
+        $this->assertIsInt($permission->getId());
     }
 
     public function testSetUserBlame()

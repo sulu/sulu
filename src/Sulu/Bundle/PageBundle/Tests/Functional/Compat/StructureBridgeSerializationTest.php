@@ -91,7 +91,7 @@ class StructureBridgeSerializationTest extends SuluTestCase
         $this->assertInstanceOf(Property::class, $property);
 
         $value = $property->getValue();
-        $this->assertInternalType('array', $value);
+        $this->assertIsArray($value);
         $this->assertCount(1, $value);
     }
 

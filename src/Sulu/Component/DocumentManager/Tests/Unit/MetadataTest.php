@@ -56,6 +56,6 @@ class MetadataTest extends TestCase
 
     public function testGetFieldMappingsEmpty()
     {
-        $this->assertInternalType('array', $this->metadata->getFieldMappings());
+        $this->assertIsArray($this->metadata->getFieldMappings());
     }
 }
