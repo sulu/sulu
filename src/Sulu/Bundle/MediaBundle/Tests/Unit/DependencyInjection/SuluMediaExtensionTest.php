@@ -16,7 +16,7 @@ use Sulu\Bundle\MediaBundle\DependencyInjection\SuluMediaExtension;
 
 class SuluMediaExtensionTest extends AbstractExtensionTestCase
 {
-    protected function getContainerExtensions()
+    protected function getContainerExtensions(): array
     {
         return [
             new SuluMediaExtension(),

@@ -73,7 +73,7 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
         $this->container->set('sulu_website.reference_store_pool', $this->referenceStore->reveal());
     }
 
-    protected function getContainerExtensions()
+    protected function getContainerExtensions(): array
     {
         return [
             new SuluHttpCacheExtension(),
