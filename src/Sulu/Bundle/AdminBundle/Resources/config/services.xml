@@ -121,5 +121,24 @@
         <service id="sulu_admin.schema_handler" class="Sulu\Bundle\AdminBundle\Serializer\Handler\SchemaHandler">
             <tag name="jms_serializer.subscribing_handler"/>
         </service>
+
+        <service
+            id="sulu_admin.collaboration_controller"
+            class="Sulu\Bundle\AdminBundle\Controller\CollaborationController"
+            public="true"
+        >
+            <argument type="service" id="security.token_storage" />
+            <argument type="service" id="sulu_admin.collaboration_repository" />
+            <argument type="service" id="fos_rest.view_handler"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service
+            id="sulu_admin.collaboration_repository"
+            class="Sulu\Bundle\AdminBundle\Entity\CollaborationRepository"
+        >
+            <argument type="service" id="sulu_admin.collaboration_cache"/>
+            <argument>%sulu_admin.collaboration_threshold%</argument>
+        </service>
     </services>
 </container>

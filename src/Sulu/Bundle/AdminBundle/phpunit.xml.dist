@@ -22,4 +22,23 @@
         <env name="KERNEL_CLASS" value="Sulu\Bundle\AdminBundle\Tests\Application\Kernel"/>
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
     </php>
+
+    <listeners>
+        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
+            <arguments>
+                <array>
+                    <element key="time-sensitive">
+                        <array>
+                            <element>
+                                <string>Sulu\Bundle\AdminBundle\Entity</string>
+                            </element>
+                            <element>
+                                <string>Sulu\Bundle\AdminBundle\Tests\Unit\Entity</string>
+                            </element>
+                        </array>
+                    </element>
+                </array>
+            </arguments>
+        </listener>
+    </listeners>
 </phpunit>
