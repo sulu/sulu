@@ -63,6 +63,15 @@ class CollaborationController implements ClassResourceInterface
         );
     }
 
+    public function cdeleteAction(Request $request)
+    {
+        $collaborations = array_values($this->collaborationRepository->delete($this->createCollaboration($request)));
+
+        return $this->viewHandler->handle(
+            View::create(new CollectionRepresentation($collaborations, static::$resourceKey))
+        );
+    }
+
     private function createCollaboration(Request $request)
     {
         $user = $this->tokenStorage->getToken()->getUser();
@@ -72,8 +81,8 @@ class CollaborationController implements ClassResourceInterface
             $user->getId(),
             $user->getUserName(),
             $user->getFullName(),
-            $request->request->get('resourceKey'),
-            $request->request->get('id')
+            $request->query->get('resourceKey'),
+            $request->query->get('id')
         );
     }
 

@@ -161,4 +161,40 @@ class CollaborationRepositoryTest extends TestCase
 
         $this->assertEquals([$collaboration1], $result);
     }
+
+    public function testDelete()
+    {
+        $cacheItem = new CacheItem();
+        $this->cache->getItem('page_8')->willReturn($cacheItem);
+        $collaborationRepository = new CollaborationRepository($this->cache->reveal(), 20);
+
+        $collaboration1 = new Collaboration(
+            'collaboration1',
+            1,
+            'max',
+            'Max Mustermann',
+            'page',
+            8
+        );
+
+        $collaboration2 = new Collaboration(
+            'collaboration2',
+            2,
+            'erika',
+            'Erika Mustermann',
+            'page',
+            8
+        );
+
+        $this->cache->save($cacheItem)->shouldBeCalled();
+        $result = $collaborationRepository->update($collaboration1);
+        $result = $collaborationRepository->update($collaboration2);
+
+        $this->assertEquals([$collaboration1, $collaboration2], $result);
+
+        $this->cache->save($cacheItem)->shouldBeCalled();
+        $result = $collaborationRepository->delete($collaboration1);
+
+        $this->assertEquals([$collaboration2], $result);
+    }
 }

@@ -36,17 +36,38 @@ class CollaborationRepository
      */
     public function update(Collaboration $collaboration): array
     {
-        $cacheItem = $this->cache->getItem($collaboration->getResourceKey() . '_' . $collaboration->getId());
+        $cacheItem = $this->cache->getItem($this->getCacheId($collaboration));
         $value = $cacheItem->get() ?? [];
         $value[$collaboration->getConnectionId()] = $collaboration;
-        $cacheItem->set($value);
 
         $value = array_filter($value, function(Collaboration $collaboration) {
             return $collaboration->getChanged() > time() - $this->threshold;
         });
 
+        $cacheItem->set($value);
+
         $this->cache->save($cacheItem);
 
         return array_values($value);
+    }
+
+    /**
+     * @return Collaboration[]
+     */
+    public function delete(Collaboration $collaboration): array
+    {
+        $cacheItem = $this->cache->getItem($this->getCacheId($collaboration));
+        $value = array_filter($cacheItem->get() ?? [], function(Collaboration $cachedCollaboration) use($collaboration) {
+            return $collaboration->getConnectionId() !== $cachedCollaboration->getConnectionId();
+        });
+        $cacheItem->set($value);
+
+        $this->cache->save($cacheItem);
+
+        return array_values($value);
+    }
+
+    private function getCacheId(Collaboration $collaboration): string {
+        return $collaboration->getResourceKey() . '_' . $collaboration->getId();
     }
 }

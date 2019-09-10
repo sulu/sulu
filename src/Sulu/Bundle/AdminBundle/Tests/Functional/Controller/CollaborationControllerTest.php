@@ -26,7 +26,7 @@ class CollaborationControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $session = $client->getContainer()->get('session');
         $session->start();
-        $client->request('POST', '/admin/api/collaborations', ['resourceKey' => 'page', 'id' => 4]);
+        $client->request('POST', '/admin/api/collaborations?id=4&resourceKey=page');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -40,7 +40,7 @@ class CollaborationControllerTest extends SuluTestCase
 
         $this->assertCount(1, $collaborations);
         $this->assertEquals('page', $collaborations[0]->getResourceKey());
-        $this->assertEquals('page', $collaborations[0]->getResourceKey());
+        $this->assertEquals('4', $collaborations[0]->getId());
     }
 
     public function testPostWithMultipleUsers()
@@ -55,7 +55,7 @@ class CollaborationControllerTest extends SuluTestCase
 
         $cache->save($cacheItem);
 
-        $client->request('POST', '/admin/api/collaborations', ['resourceKey' => 'page', 'id' => 4]);
+        $client->request('POST', '/admin/api/collaborations?id=4&resourceKey=page');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -71,5 +71,29 @@ class CollaborationControllerTest extends SuluTestCase
         $this->assertEquals('page', $collaborations[1]->resourceKey);
         $this->assertEquals(4, $collaborations[1]->id);
         $this->assertEquals('Erika Mustermann', $collaborations[1]->fullName);
+    }
+
+    public function testDelete()
+    {
+        $client = $this->createAuthenticatedClient();
+        $session = $client->getContainer()->get('session');
+        $session->start();
+        $cache = $this->getContainer()->get('sulu_admin.collaboration_cache');
+
+        $cacheItem = $cache->getItem('page_4')->set([
+            new Collaboration('collaboration1', 1, 'Max', 'Max Mustermann', 'page', 4),
+            new Collaboration('collaboration2', 2, 'Erika', 'Erika Mustermann', 'page', 4),
+        ]);
+
+        $cache->save($cacheItem);
+
+        $client->request('POST', '/admin/api/collaborations?id=4&resourceKey=page');
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $this->assertCount(3, $cache->getItem('page_4')->get());
+
+        $client->request('DELETE', '/admin/api/collaborations?id=4&resourceKey=page');
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertCount(2, $cache->getItem('page_4')->get());
     }
 }
