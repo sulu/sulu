@@ -14,10 +14,11 @@ namespace Sulu\Bundle\RouteBundle\Tests\Unit\DependencyInjection;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionConfigurationTestCase;
 use Sulu\Bundle\RouteBundle\DependencyInjection\Configuration;
 use Sulu\Bundle\RouteBundle\DependencyInjection\SuluRouteExtension;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
 class ConfigurationTest extends AbstractExtensionConfigurationTestCase
 {
-    protected function getContainerExtension()
+    protected function getContainerExtension(): ExtensionInterface
     {
         return new SuluRouteExtension();
     }
