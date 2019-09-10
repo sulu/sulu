@@ -1,4 +1,4 @@
-The `Snackbar` componetn is used to display information that is moving in from the top of the screen using an animation.
+The `Snackbar` component is used to display information that is moving in from the top of the screen using an animation.
 
 ```javascript
 <Snackbar message="Something went wrong" type="error" />
