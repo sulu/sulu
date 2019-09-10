@@ -45,7 +45,7 @@ class PathSegmentRegistryTest extends TestCase
      */
     public function testThrowException()
     {
-        $this->expecteExceptionMessage('Unknown path segment "not exist". Known path segments: "base", "foobar"');
+        $this->expectExceptionMessage('Unknown path segment "not exist". Known path segments: "base", "foobar"');
         $this->expectException(\InvalidArgumentException::class);
         $this->pathRegistry->getPathSegment('not exist');
     }

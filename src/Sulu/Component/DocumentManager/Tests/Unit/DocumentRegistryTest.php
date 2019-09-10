@@ -81,7 +81,7 @@ class DocumentRegistryTest extends TestCase
      */
     public function testDifferentInstanceSameNode()
     {
-        $this->expecteExceptionMessage('is already registered');
+        $this->expectExceptionMessage('is already registered');
         $this->expectException(\RuntimeException::class);
         $this->node->getPath()->willReturn('/path/to');
         $this->registry->registerDocument(new \stdClass(), $this->node->reveal(), 'fr');

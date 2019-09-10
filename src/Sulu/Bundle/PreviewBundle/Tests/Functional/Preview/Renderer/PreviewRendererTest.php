@@ -13,9 +13,12 @@ namespace Sulu\Bundle\PreviewBundle\Tests\Functional\Preview\Renderer;
 
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRenderer;
 use Sulu\Bundle\TestBundle\Testing\KernelTestCase;
+use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
 
 class PreviewRendererTest extends KernelTestCase
 {
+    use ReadObjectAttributeTrait;
+
     /**
      * @var PreviewRenderer
      */
@@ -29,6 +32,9 @@ class PreviewRendererTest extends KernelTestCase
 
     public function testTargetGroupProperty()
     {
-        $this->assertAttributeEquals('X-Sulu-Target-Group', 'targetGroupHeader', $this->previewRenderer);
+        $this->assertSame(
+            'X-Sulu-Target-Group',
+            $this->readObjectAttribute($this->previewRenderer, 'targetGroupHeader')
+        );
     }
 }

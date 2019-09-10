@@ -15,11 +15,14 @@ use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
+use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
 use Sulu\Component\Security\Authorization\SecurityChecker;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 class SnippetAdminTest extends TestCase
 {
+    use ReadObjectAttributeTrait;
+
     /**
      * @var RouteBuilderFactory
      */
@@ -79,8 +82,8 @@ class SnippetAdminTest extends TestCase
         $editFormRoute = $routeCollection->get('sulu_snippet.edit_form')->getRoute();
         $editDetailRoute = $routeCollection->get('sulu_snippet.edit_form.details')->getRoute();
 
-        $this->assertAttributeEquals('sulu_snippet.list', 'name', $listRoute);
-        $this->assertAttributeEquals([
+        $this->assertEquals('sulu_snippet.list', $listRoute->getName());
+        $this->assertEquals([
             'title' => 'sulu_snippet.snippets',
             'toolbarActions' => ['sulu_admin.add' => [], 'sulu_admin.delete' => [], 'sulu_admin.export' => []],
             'resourceKey' => 'snippets',
@@ -89,16 +92,16 @@ class SnippetAdminTest extends TestCase
             'addRoute' => 'sulu_snippet.add_form',
             'editRoute' => 'sulu_snippet.edit_form',
             'locales' => array_keys($locales),
-        ], 'options', $listRoute);
-        $this->assertAttributeEquals(['locale' => array_keys($locales)[0]], 'attributeDefaults', $listRoute);
-        $this->assertAttributeEquals('sulu_snippet.add_form', 'name', $addFormRoute);
-        $this->assertAttributeEquals([
+        ], $this->readObjectAttribute($listRoute, 'options'));
+        $this->assertEquals(['locale' => array_keys($locales)[0]], $this->readObjectAttribute($listRoute, 'attributeDefaults'));
+        $this->assertEquals('sulu_snippet.add_form', $addFormRoute->getName());
+        $this->assertEquals([
             'resourceKey' => 'snippets',
             'backRoute' => 'sulu_snippet.list',
             'locales' => array_keys($locales),
-        ], 'options', $addFormRoute);
-        $this->assertAttributeEquals('sulu_snippet.add_form', 'parent', $addDetailRoute);
-        $this->assertAttributeEquals([
+        ], $this->readObjectAttribute($addFormRoute, 'options'));
+        $this->assertEquals('sulu_snippet.add_form', $addDetailRoute->getParent());
+        $this->assertEquals([
             'resourceKey' => 'snippets',
             'tabTitle' => 'sulu_admin.details',
             'formKey' => 'snippet',
@@ -108,17 +111,17 @@ class SnippetAdminTest extends TestCase
                 'sulu_admin.type' => [],
                 'sulu_admin.delete' => [],
             ],
-        ], 'options', $addDetailRoute);
-        $this->assertAttributeEquals('sulu_snippet.edit_form', 'name', $editFormRoute);
-        $this->assertAttributeEquals([
+        ], $this->readObjectAttribute($addDetailRoute, 'options'));
+        $this->assertEquals('sulu_snippet.edit_form', $editFormRoute->getName());
+        $this->assertEquals([
             'resourceKey' => 'snippets',
             'backRoute' => 'sulu_snippet.list',
             'locales' => array_keys($locales),
             'titleProperty' => 'title',
-        ], 'options', $editFormRoute);
-        $this->assertAttributeEquals('sulu_snippet.edit_form.details', 'name', $editDetailRoute);
-        $this->assertAttributeEquals('sulu_snippet.edit_form', 'parent', $editDetailRoute);
-        $this->assertAttributeEquals([
+        ], $this->readObjectAttribute($editFormRoute, 'options'));
+        $this->assertEquals('sulu_snippet.edit_form.details', $editDetailRoute->getName());
+        $this->assertEquals('sulu_snippet.edit_form', $editDetailRoute->getParent());
+        $this->assertEquals([
             'resourceKey' => 'snippets',
             'tabTitle' => 'sulu_admin.details',
             'formKey' => 'snippet',
@@ -127,6 +130,6 @@ class SnippetAdminTest extends TestCase
                 'sulu_admin.type' => [],
                 'sulu_admin.delete' => [],
             ],
-        ], 'options', $editDetailRoute);
+        ], $this->readObjectAttribute($editDetailRoute, 'options'));
     }
 }

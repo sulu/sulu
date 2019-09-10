@@ -39,6 +39,6 @@ class DocumentHelperTest extends TestCase
     {
         $this->titleDocument->getTitle()->willReturn('Hello');
         $title = DocumentHelper::getDebugTitle($this->titleDocument->reveal());
-        $this->assertContains('Hello', $title);
+        $this->assertStringContainsString('Hello', $title);
     }
 }
