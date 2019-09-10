@@ -35,11 +35,10 @@ class NamespaceRegistryTest extends TestCase
 
     /**
      * It should thow an exception if the alias is not known.
-     *
-     * @expectedException \Sulu\Component\DocumentManager\Exception\DocumentManagerException
      */
     public function testGetUnknownPrefix()
     {
+        $this->expectException(\Sulu\Component\DocumentManager\Exception\DocumentManagerException::class);
         $this->registry->getPrefix('foobarbar');
     }
 }

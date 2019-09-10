@@ -29,11 +29,10 @@ class MetadataTest extends TestCase
     /**
      * It should throw an exception if no class is set and the ReflectionClass
      * is requested.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testNoClassGetReflection()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->metadata->getReflectionClass();
     }
 

@@ -73,11 +73,10 @@ class ExplicitSubscriberTest extends TestCase
 
     /**
      * It should throw an exception if both path name and node_name options are given.
-     *
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     public function testExceptionNodeNameAndPath()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
         $options = $this->resolveOptions([
             'path' => '/path/to/nodename',
             'node_name' => '/foo',
@@ -88,11 +87,10 @@ class ExplicitSubscriberTest extends TestCase
 
     /**
      * It should throw an exception if both path name and parent_path options are given.
-     *
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     public function testExceptionParentPathAndPath()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
         $options = $this->resolveOptions([
             'path' => '/path/to/nodename',
             'parent_path' => '/foo',
@@ -211,11 +209,10 @@ class ExplicitSubscriberTest extends TestCase
 
     /**
      * It should throw an exception if node_name is specified but no parent node is available.
-     *
-     * @expectedException \Sulu\Component\DocumentManager\Exception\DocumentManagerException
      */
     public function testNodeNameButNotParentNode()
     {
+        $this->expectException(\Sulu\Component\DocumentManager\Exception\DocumentManagerException::class);
         $options = $this->resolveOptions([
             'node_name' => 'foobar',
         ]);

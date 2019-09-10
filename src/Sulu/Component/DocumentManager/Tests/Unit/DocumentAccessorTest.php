@@ -33,11 +33,10 @@ class DocumentAccessorTest extends TestCase
 
     /**
      * It should throw an exception if the property does not exist.
-     *
-     * @expectedException \Sulu\Component\DocumentManager\Exception\DocumentManagerException
      */
     public function testAccessObjectNotExist()
     {
+        $this->expectException(\Sulu\Component\DocumentManager\Exception\DocumentManagerException::class);
         $this->accessor->set('asdf', 'asd');
     }
 }

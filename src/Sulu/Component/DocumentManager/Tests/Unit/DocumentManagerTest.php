@@ -211,11 +211,10 @@ class DocumentManagerTest extends TestCase
 
     /**
      * It should throw an exception with invalid options.
-     *
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException
      */
     public function testFindWithInvalidOptions()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException::class);
         $subscriber = $this->addSubscriber();
         $this->documentManager->find('foo', 'bar', ['foo123' => 'bar']);
     }

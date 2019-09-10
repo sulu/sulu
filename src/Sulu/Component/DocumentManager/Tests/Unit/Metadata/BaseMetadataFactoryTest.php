@@ -55,11 +55,10 @@ class BaseMetadataFactoryTest extends TestCase
 
     /**
      * It should throw an exception if there is no mapping for the class name.
-     *
-     * @expectedException \Sulu\Component\DocumentManager\Exception\MetadataNotFoundException
      */
     public function testGetForClassNotFound()
     {
+        $this->expectException(\Sulu\Component\DocumentManager\Exception\MetadataNotFoundException::class);
         $this->factory->getMetadataForClass('Class\Page\NotFound');
     }
 
@@ -77,11 +76,10 @@ class BaseMetadataFactoryTest extends TestCase
 
     /**
      * It should throw an exception if there is no mapping for given alias.
-     *
-     * @expectedException \Sulu\Component\DocumentManager\Exception\MetadataNotFoundException
      */
     public function testGetForAliasNotFound()
     {
+        $this->expectException(\Sulu\Component\DocumentManager\Exception\MetadataNotFoundException::class);
         $this->factory->getMetadataForAlias('yak');
     }
 
@@ -124,11 +122,10 @@ class BaseMetadataFactoryTest extends TestCase
 
     /**
      * It should throw an exception if there is no mapping for given phpcrType.
-     *
-     * @expectedException \Sulu\Component\DocumentManager\Exception\MetadataNotFoundException
      */
     public function testGetForPhpcrTypeNotFound()
     {
+        $this->expectException(\Sulu\Component\DocumentManager\Exception\MetadataNotFoundException::class);
         $this->factory->getMetadataForPhpcrType('yak');
     }
 

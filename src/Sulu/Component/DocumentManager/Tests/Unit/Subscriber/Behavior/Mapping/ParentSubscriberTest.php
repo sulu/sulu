@@ -137,11 +137,9 @@ class ParentSubscriberTest extends TestCase
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testThrowExceptionRootNode()
     {
+        $this->expectException(\RuntimeException::class);
         $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
 
         $this->node->getParent()->willReturn($this->parentNode->reveal());

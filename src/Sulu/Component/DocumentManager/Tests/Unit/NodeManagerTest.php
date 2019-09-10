@@ -89,11 +89,10 @@ class NodeManagerTest extends TestCase
 
     /**
      * It should throw an exception if the node1 was not found.
-     *
-     * @expectedException \Sulu\Component\DocumentManager\Exception\DocumentNotFoundException
      */
     public function testFindNotFound()
     {
+        $this->expectException(\Sulu\Component\DocumentManager\Exception\DocumentNotFoundException::class);
         $this->session->getNode(self::PATH1)->willThrow(new PathNotFoundException('Not found'));
         $this->manager->find(self::PATH1);
     }

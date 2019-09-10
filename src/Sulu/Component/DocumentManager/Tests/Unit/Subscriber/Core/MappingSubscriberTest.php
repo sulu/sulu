@@ -160,11 +160,10 @@ class MappingSubscriberTest extends TestCase
 
     /**
      * It should throw an exception when mapped non-array values to non-multiple fields.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testPersistNonArray()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->metadata->getFieldMappings()->willReturn(
             [
                 'test' => [
