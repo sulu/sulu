@@ -522,7 +522,7 @@ class AccountControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(400, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertContains('15', $response->message);
+        $this->assertStringContainsString('15', $response->message);
 
         $client->request(
             'POST',

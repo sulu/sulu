@@ -47,8 +47,8 @@ class CachingTest extends SuluTestCase
         $client->request('GET', '/');
         $response = $client->getResponse();
         $this->assertHttpStatusCode(200, $response);
-        $this->assertContains('X-Sulu-Target-Group', $response->getVary());
-        $this->assertContains('miss', $response->headers->get('x-symfony-cache'));
+        $this->assertStringContainsString('X-Sulu-Target-Group', $response->getVary());
+        $this->assertStringContainsString('miss', $response->headers->get('x-symfony-cache'));
         $this->assertCount(2, $response->headers->getCookies());
         /** @var Cookie $visitorTargetGroupCookie */
         $visitorTargetGroupCookie = $response->headers->getCookies()[0];
@@ -73,7 +73,7 @@ class CachingTest extends SuluTestCase
         $response = $client->getResponse();
 
         $this->assertHttpStatusCode(200, $response);
-        $this->assertContains('fresh', $response->headers->get('x-symfony-cache'));
+        $this->assertStringContainsString('fresh', $response->headers->get('x-symfony-cache'));
         $this->assertCount(0, $response->headers->getCookies());
 
         return [$client, $cookieJar];
@@ -89,7 +89,7 @@ class CachingTest extends SuluTestCase
         $cookieJar->clear(); // new client does not have any cookies yet
         $client->request('GET', '/', [], [], ['HTTP_ACCEPT_LANGUAGE' => 'de']);
         $response = $client->getResponse();
-        $this->assertContains('miss', $response->headers->get('x-symfony-cache'));
+        $this->assertStringContainsString('miss', $response->headers->get('x-symfony-cache'));
         $this->assertCount(2, $response->headers->getCookies());
         /** @var Cookie $cookie */
         $visitorTargetGroupCookie = $response->headers->getCookies()[0];
@@ -114,7 +114,7 @@ class CachingTest extends SuluTestCase
 
         $client->request('GET', '/');
         $response = $client->getResponse();
-        $this->assertContains('fresh', $response->headers->get('x-symfony-cache'));
+        $this->assertStringContainsString('fresh', $response->headers->get('x-symfony-cache'));
         $this->assertCount(2, $response->headers->getCookies());
 
         /** @var Cookie $visitorTargetGroupCookie */
@@ -153,7 +153,7 @@ class CachingTest extends SuluTestCase
 
         $client->request('GET', '/');
         $response = $client->getResponse();
-        $this->assertContains('miss', $response->headers->get('x-symfony-cache'));
+        $this->assertStringContainsString('miss', $response->headers->get('x-symfony-cache'));
         $this->assertCount(2, $response->headers->getCookies());
 
         /** @var Cookie $visitorTargetGroupCookie */
