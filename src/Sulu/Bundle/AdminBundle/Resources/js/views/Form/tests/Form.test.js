@@ -1538,7 +1538,7 @@ test('Should show error if form has been tried to save although it is not valid'
             form.find('Form').at(1).instance().submit();
             expect(resourceStore.destroy).not.toBeCalled();
             expect(ResourceRequester.put).not.toBeCalled();
-            expect(form.instance().errors).toHaveLength(1);
+            expect(form.instance().errors).toEqual(['sulu_admin.form_contains_invalid_values']);
         });
     });
 });
@@ -1642,7 +1642,7 @@ test('Should keep errors after form submission has failed', (done) => {
     form.find('Form').at(1).instance().submit().then(() => {
         expect(resourceStore.destroy).not.toBeCalled();
         expect(ResourceRequester.put).toBeCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en'});
-        expect(form.instance().errors).toEqual([error]);
+        expect(form.instance().errors).toEqual(['sulu_admin.form_save_server_error']);
         done();
     });
 });

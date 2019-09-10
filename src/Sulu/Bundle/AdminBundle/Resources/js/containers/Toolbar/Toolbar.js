@@ -65,8 +65,12 @@ class Toolbar extends React.Component<ToolbarProps> {
         }
     };
 
-    @action handleSnackbarCloseClick = () => {
+    @action handleErrorSnackbarCloseClick = () => {
         this.toolbarStore.errors.pop();
+    };
+
+    @action handleWarningSnackbarCloseClick = () => {
+        this.toolbarStore.warnings.pop();
     };
 
     @computed get disableAllButtons() {
@@ -101,16 +105,22 @@ class Toolbar extends React.Component<ToolbarProps> {
     }
 
     render() {
-        const {handleSnackbarCloseClick} = this;
         const {onNavigationButtonClick, navigationOpen} = this.props;
-        const {showSuccess} = this.toolbarStore;
+        const {errors, showSuccess, warnings} = this.toolbarStore;
 
         return (
             <Fragment>
                 <Snackbar
-                    onCloseClick={handleSnackbarCloseClick}
+                    message={errors[errors.length - 1]}
+                    onCloseClick={this.handleErrorSnackbarCloseClick}
                     type="error"
-                    visible={this.toolbarStore.errors.length > 0}
+                    visible={errors.length > 0}
+                />
+                <Snackbar
+                    message={warnings[warnings.length - 1]}
+                    onCloseClick={this.handleWarningSnackbarCloseClick}
+                    type="warning"
+                    visible={warnings.length > 0}
                 />
                 <ToolbarComponent>
                     <ToolbarComponent.Controls grow={true}>

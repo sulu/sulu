@@ -32,19 +32,15 @@ export type ToolbarProps = {
     storeKey?: string,
 };
 
-type Error = {
-    code: number,
-    message: string,
-};
-
 export type ToolbarConfig = {
     backButton?: Button,
     disableAll?: boolean,
-    errors?: Array<Error>,
+    errors?: Array<string>,
     icons?: Array<Node>,
     items?: Array<ToolbarItemConfig>,
     locale?: Select,
     showSuccess?: IObservableValue<boolean>,
+    warnings?: Array<string>,
 };
 
 export interface ToolbarAction {

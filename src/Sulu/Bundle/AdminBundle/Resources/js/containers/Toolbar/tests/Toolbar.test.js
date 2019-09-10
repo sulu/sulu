@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {mount, render, shallow} from 'enzyme';
 import Toolbar from '../Toolbar';
 import toolbarStorePool from '../stores/toolbarStorePool';
 
@@ -21,8 +21,13 @@ jest.mock('../../../services/initializer', () => ({
 }));
 
 beforeEach(() => {
+    window.ResizeObserver = jest.fn(function() {
+        this.observe = jest.fn();
+    });
+
     toolbarStoreMock = {
         errors: [],
+        warnings: [],
         showSuccess: false,
         hasBackButtonConfig: jest.fn(),
         getBackButtonConfig: jest.fn(),
@@ -90,6 +95,59 @@ test('Render the items and icons from the ToolbarStore', () => {
     );
 
     expect(render(<Toolbar storeKey={storeKey} />)).toMatchSnapshot();
+    expect(toolbarStorePool.createStore).toBeCalledWith(storeKey);
+});
+
+test('Render the error from the ToolbarStore', () => {
+    const storeKey = 'testStore';
+
+    // $FlowFixMe
+    toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
+
+    toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
+    toolbarStoreMock.hasIconsConfig.mockReturnValue(true);
+    toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
+    toolbarStoreMock.hasBackButtonConfig.mockReturnValue(false);
+    toolbarStoreMock.errors.push('Something went wrong');
+
+    toolbarStoreMock.getIconsConfig.mockReturnValue(
+        [
+            <p key={1}>Test1</p>,
+            <p key={2}>Test2</p>,
+        ]
+    );
+
+    toolbarStoreMock.getItemsConfig.mockReturnValue([]);
+
+    const toolbar = mount(<Toolbar storeKey={storeKey} />);
+    expect(toolbar.render()).toMatchSnapshot();
+    expect(toolbarStorePool.createStore).toBeCalledWith(storeKey);
+});
+
+test('Render the warning from the ToolbarStore', () => {
+    const storeKey = 'testStore';
+
+    // $FlowFixMe
+    toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
+
+    toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
+    toolbarStoreMock.hasIconsConfig.mockReturnValue(true);
+    toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
+    toolbarStoreMock.hasBackButtonConfig.mockReturnValue(false);
+    toolbarStoreMock.warnings.push('Something unimportant went wrong');
+
+    toolbarStoreMock.getIconsConfig.mockReturnValue(
+        [
+            <p key={1}>Test1</p>,
+            <p key={2}>Test2</p>,
+        ]
+    );
+
+    toolbarStoreMock.getItemsConfig.mockReturnValue([]);
+
+    const toolbar = mount(<Toolbar storeKey={storeKey} />);
+
+    expect(toolbar.render()).toMatchSnapshot();
     expect(toolbarStorePool.createStore).toBeCalledWith(storeKey);
 });
 

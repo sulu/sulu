@@ -42,6 +42,7 @@
     "sulu_admin.reset_password_success": "Eine Email mit Anweisungen, wie Sie Ihr Passwort zurücksetzen können wurde gesendet, falls ein User gefunden wurde",
     "sulu_admin.list_search_placeholder": "Suche…",
     "sulu_admin.error": "Fehler",
+    "sulu_admin.warning": "Warnung",
     "sulu_admin.close": "Schließen",
     "sulu_admin.id": "ID",
     "sulu_admin.key": "Schlüssel",
@@ -135,5 +136,7 @@
     "sulu_admin.has_changed_warning_dialog_text": "Dieser Inhalt wurde zwischenzeitlich von einem anderen Benutzer geändert. Wenn der Inhalt gespeichert wird, gehen diese Daten verloren.",
     "sulu_admin.edit_profile": "Profil bearbeiten",
     "sulu_admin.no_permissions": "Keine Berechtigung",
-    "sulu_admin.no_options_available": "Keine Optionen verfügbar"
+    "sulu_admin.no_options_available": "Keine Optionen verfügbar",
+    "sulu_admin.form_contains_invalid_values": "Das Formular beinhaltet ungültige Werte",
+    "sulu_admin.form_save_server_error": "Beim Speichern des Formulars auf dem Server ist ein Fehler aufgetreten"
 }

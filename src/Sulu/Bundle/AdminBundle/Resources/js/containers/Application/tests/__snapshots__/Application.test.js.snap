@@ -117,6 +117,30 @@ exports[`Render based on current route 1`] = `
             <strong>
               sulu_admin.error
             </strong>
+             - 
+          </div>
+          <span
+            aria-label="su-times"
+            class="su-times clickable closeIcon"
+            role="button"
+            tabindex="0"
+          />
+        </div>
+        <div
+          class="snackbar warning"
+          role="button"
+        >
+          <span
+            aria-label="su-bell"
+            class="su-bell icon"
+          />
+          <div
+            class="text"
+          >
+            <strong>
+              sulu_admin.warning
+            </strong>
+             - 
           </div>
           <span
             aria-label="su-times"
@@ -282,6 +306,30 @@ exports[`Render based on current route with app version 1`] = `
             <strong>
               sulu_admin.error
             </strong>
+             - 
+          </div>
+          <span
+            aria-label="su-times"
+            class="su-times clickable closeIcon"
+            role="button"
+            tabindex="0"
+          />
+        </div>
+        <div
+          class="snackbar warning"
+          role="button"
+        >
+          <span
+            aria-label="su-bell"
+            class="su-bell icon"
+          />
+          <div
+            class="text"
+          >
+            <strong>
+              sulu_admin.warning
+            </strong>
+             - 
           </div>
           <span
             aria-label="su-times"
@@ -646,6 +694,30 @@ exports[`Render opened navigation 1`] = `
             <strong>
               sulu_admin.error
             </strong>
+             - 
+          </div>
+          <span
+            aria-label="su-times"
+            class="su-times clickable closeIcon"
+            role="button"
+            tabindex="0"
+          />
+        </div>
+        <div
+          class="snackbar warning"
+          role="button"
+        >
+          <span
+            aria-label="su-bell"
+            class="su-bell icon"
+          />
+          <div
+            class="text"
+          >
+            <strong>
+              sulu_admin.warning
+            </strong>
+             - 
           </div>
           <span
             aria-label="su-times"
@@ -808,6 +880,30 @@ exports[`Should not fail if current route does not exist 1`] = `
             <strong>
               sulu_admin.error
             </strong>
+             - 
+          </div>
+          <span
+            aria-label="su-times"
+            class="su-times clickable closeIcon"
+            role="button"
+            tabindex="0"
+          />
+        </div>
+        <div
+          class="snackbar warning"
+          role="button"
+        >
+          <span
+            aria-label="su-bell"
+            class="su-bell icon"
+          />
+          <div
+            class="text"
+          >
+            <strong>
+              sulu_admin.warning
+            </strong>
+             - 
           </div>
           <span
             aria-label="su-times"

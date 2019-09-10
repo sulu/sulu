@@ -32,7 +32,7 @@ class Form extends React.Component<Props> {
     resourceStore: ResourceStore;
     resourceFormStore: ResourceFormStore;
     form: ?ElementRef<typeof FormContainer>;
-    @observable errors = [];
+    @observable errors: Array<string> = [];
     showSuccess: IObservableValue<boolean> = observable.box(false);
     @observable toolbarActions: Array<AbstractFormToolbarAction> = [];
     @observable showDirtyWarning: boolean = false;
@@ -311,12 +311,12 @@ class Form extends React.Component<Props> {
                     return;
                 }
 
-                this.errors.push(error);
+                this.errors.push(translate('sulu_admin.form_save_server_error'));
             }));
     };
 
     handleError = () => {
-        this.errors.push('Errors occured when trying to save the data from the FormStore');
+        this.errors.push(translate('sulu_admin.form_contains_invalid_values'));
     };
 
     @action clearErrors = () => {
