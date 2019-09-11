@@ -13,10 +13,24 @@ sulu_page.node:
     name_prefix: sulu_page.
     resource: Sulu\Bundle\PageBundle\Controller\NodeController
 
+sulu_page.post_node_trigger:
+    path: /nodes/{id}.{_format}
+    methods: POST
+    defaults:
+        _controller: Sulu\Bundle\PageBundle\Controller\NodeController::postTriggerAction
+        _format: json
+
 sulu_page.page:
     type: rest
     name_prefix: sulu_page.
     resource: Sulu\Bundle\PageBundle\Controller\PageController
+
+sulu_page.post_page_trigger:
+    path: /pages/{id}.{_format}
+    methods: POST
+    defaults:
+        _controller: Sulu\Bundle\PageBundle\Controller\PageController::postTriggerAction
+        _format: json
 
 sulu_page.webspace.localization:
     type: rest

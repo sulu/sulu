@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -347,8 +345,6 @@ class MediaController extends AbstractMediaController implements
 
     /**
      * Trigger an action for given media. Action is specified over get-action parameter.
-     *
-     * @Post("media/{id}")
      *
      * @param int $id
      * @param Request $request

@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\SnippetBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
@@ -195,8 +193,6 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      * @param string $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @Get(defaults={"id" = ""})
      */
     public function getAction(Request $request, $id = null)
     {
@@ -283,8 +279,6 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
 
     /**
      * trigger a action for given snippet specified over get-action parameter.
-     *
-     * @Post("/snippets/{id}")
      *
      * @param string $id
      * @param Request $request

@@ -14,7 +14,6 @@ namespace Sulu\Bundle\SecurityBundle\EventListener;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sensio\Bundle\FrameworkExtraBundle\EventListener\SecurityListener;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
@@ -26,7 +25,7 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 class SuluSecurityListenerTest extends TestCase
 {
     /**
-     * @var SecurityListener
+     * @var SuluSecurityListener
      */
     private $securityListener;
 

@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\AudienceTargetingBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use JMS\Serializer\DeserializationContext;
@@ -46,30 +45,6 @@ class TargetGroupController extends RestController implements ClassResourceInter
     public function getSecurityContext()
     {
         return 'sulu.settings.target-groups';
-    }
-
-    /**
-     * Returns all fields that can be used by list.
-     *
-     * @Get("target-groups/fields")
-     *
-     * @return Response
-     */
-    public function getFieldsAction()
-    {
-        return $this->handleView($this->view($this->getFieldDescriptors()));
-    }
-
-    /**
-     * Returns all fields for rules that can be used by list.
-     *
-     * @Get("target-groups/rule-fields")
-     *
-     * @return Response
-     */
-    public function getRuleFieldsAction()
-    {
-        return $this->handleView($this->view($this->getRuleFieldDescriptors()));
     }
 
     /**

@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\MediaBundle\Api\Collection;
@@ -266,8 +264,6 @@ class CollectionController extends RestController implements ClassResourceInterf
 
     /**
      * Trigger an action for given media. Action is specified over get-action parameter.
-     *
-     * @Post("collections/{id}")
      *
      * @param int $id
      * @param Request $request

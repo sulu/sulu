@@ -3,16 +3,37 @@ sulu_media.collections:
     name_prefix: sulu_media.
     resource: Sulu\Bundle\MediaBundle\Controller\CollectionController
 
+sulu_media.post_collection_trigger:
+    path: /collections/{id}.{_format}
+    methods: POST
+    defaults:
+        _controller: Sulu\Bundle\MediaBundle\Controller\CollectionController::postTriggerAction
+        _format: json
+
 sulu_media.media:
     type: rest
     name_prefix: sulu_media.
     resource: Sulu\Bundle\MediaBundle\Controller\MediaController
+
+sulu_media.post_media_trigger:
+    path: /media/{id}.{_format}
+    methods: POST
+    defaults:
+        _controller: Sulu\Bundle\MediaBundle\Controller\MediaController::postTriggerAction
+        _format: json
 
 sulu_media.media_preview:
     type: rest
     name_prefix: sulu_media.
     parent: sulu_media.media
     resource: Sulu\Bundle\MediaBundle\Controller\MediaPreviewController
+
+sulu_media.post_media_preview:
+    path: /media/{id}/preview.{_format}
+    methods: POST
+    defaults:
+        _controller: Sulu\Bundle\MediaBundle\Controller\MediaPreviewController::postAction
+        _format: json
 
 sulu_media.format:
     type: rest

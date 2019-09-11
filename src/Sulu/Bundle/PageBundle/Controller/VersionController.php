@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\PageBundle\Controller;
 
 use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
@@ -103,8 +102,6 @@ class VersionController extends FOSRestController implements
      * @param Request $request
      * @param string $id
      * @param int $version
-     *
-     * @Post("/pages/{id}/versions/{version}")
      *
      * @return Response
      */

@@ -3,6 +3,13 @@ sulu_snippet.snippet:
     name_prefix: sulu_snippet.
     resource: sulu_snippet.controller.snippet
 
+sulu_snippet.post_snippet_trigger:
+    path: /snippets/{id}.{_format}
+    methods: POST
+    defaults:
+        _controller: sulu_snippet.controller.snippet:postTriggerAction
+        _format: json
+
 sulu_snippet.snippet-areas:
     type: rest
     name_prefix: sulu_snippet.

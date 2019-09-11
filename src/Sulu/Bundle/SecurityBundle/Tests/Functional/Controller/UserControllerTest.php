@@ -1130,6 +1130,8 @@ class UserControllerTest extends SuluTestCase
             '/api/users/' . $this->user2->getId() . '?action=enable'
         );
 
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(true, $response->enabled);
