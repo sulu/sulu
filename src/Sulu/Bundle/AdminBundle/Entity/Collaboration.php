@@ -20,7 +20,6 @@ class Collaboration
 {
     /**
      * @var int
-     * @Exclude
      */
     private $connectionId;
 

@@ -130,6 +130,7 @@
             <argument type="service" id="security.token_storage" />
             <argument type="service" id="sulu_admin.collaboration_repository" />
             <argument type="service" id="fos_rest.view_handler"/>
+            <argument>%kernel.secret%</argument>
             <tag name="sulu.context" context="admin"/>
         </service>
 

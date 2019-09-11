@@ -19,6 +19,7 @@ use Sulu\Bundle\AdminBundle\Entity\Collaboration;
 use Sulu\Bundle\AdminBundle\Entity\CollaborationRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class CollaborationController implements ClassResourceInterface
 {
@@ -39,14 +40,21 @@ class CollaborationController implements ClassResourceInterface
      */
     private $viewHandler;
 
+    /**
+     * @var string
+     */
+    private $secret;
+
     public function __construct(
         TokenStorageInterface $tokenStorage,
         CollaborationRepository $collaborationRepository,
-        ViewHandler $viewHandler
+        ViewHandler $viewHandler,
+        string $secret
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->collaborationRepository = $collaborationRepository;
         $this->viewHandler = $viewHandler;
+        $this->secret = $secret;
     }
 
     public function postAction(Request $request)
@@ -88,6 +96,6 @@ class CollaborationController implements ClassResourceInterface
 
     private function getConnectionId(Request $request)
     {
-        return $request->getSession()->getId();
+        return crypt($request->getSession()->getId(), $this->secret);
     }
 }
