@@ -132,6 +132,8 @@ class FormMetadataMapper
         $field->setRequired($property->isRequired());
         $field->setOnInvalid($property->getOnInvalid());
         $field->setSpaceAfter($property->getSpaceAfter());
+        $field->setMinOccurs($property->getMinOccurs());
+        $field->setMaxOccurs($property->getMaxOccurs());
 
         foreach ($property->getParameters() as $parameter) {
             $field->addOption($this->mapOption($parameter, $locale));

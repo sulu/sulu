@@ -58,9 +58,9 @@ class AdminControllerTest extends SuluTestCase
 
         $types = $response->types;
 
-        // check for both types
         $this->assertObjectHasAttribute('default', $types);
         $this->assertObjectHasAttribute('overview', $types);
+        $this->assertObjectHasAttribute('blocks', $types);
 
         $defaultType = $types->default;
         $this->assertObjectHasAttribute('name', $defaultType);
@@ -72,7 +72,6 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('url', $defaultType->form);
         $this->assertEquals('sulu.rlp.part', $defaultType->form->title->tags[0]->name);
         $this->assertEquals(1, $defaultType->form->title->tags[0]->priority);
-
         $this->assertObjectHasAttribute('schema', $defaultType);
         $this->assertEquals(['title'], $defaultType->schema->required);
 
@@ -87,8 +86,13 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('url', $overviewType->form);
         $this->assertObjectHasAttribute('article', $overviewType->form);
         $this->assertObjectHasAttribute('schema', $overviewType);
-
         $this->assertEquals(['required' => []], (array) $overviewType->schema);
+
+        $blocksType = $types->blocks;
+        $this->assertEquals(1, $blocksType->form->block->minOccurs);
+        $this->assertEquals(5, $blocksType->form->block->maxOccurs);
+        $this->assertEquals(2, $blocksType->form->block->types->article->form->lines->minOccurs);
+        $this->assertEquals(2, $blocksType->form->block->types->article->form->lines->maxOccurs);
     }
 
     public function testPageSeoFormMetadataAction()
