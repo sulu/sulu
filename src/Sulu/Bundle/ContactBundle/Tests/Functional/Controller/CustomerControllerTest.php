@@ -21,7 +21,7 @@ class CustomerControllerTest extends SuluTestCase
 
     private $accounts = [];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->em = $this->getEntityManager();
         $this->initOrm();

@@ -40,7 +40,7 @@ class WebspaceManagerTest extends WebspaceTestCase
      */
     private $cacheDirectory;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->cacheDirectory = $this->getResourceDirectory() . '/cache';
 

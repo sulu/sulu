@@ -71,7 +71,7 @@ class NavigationTest extends SuluTestCase
 
     private $homeDocument;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->initPhpcr();
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');

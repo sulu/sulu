@@ -45,7 +45,7 @@ class FieldDescriptorFactoryTest extends TestCase
      */
     private $chain;
 
-    public function setup()
+    public function setup(): void
     {
         parent::setUp();
 

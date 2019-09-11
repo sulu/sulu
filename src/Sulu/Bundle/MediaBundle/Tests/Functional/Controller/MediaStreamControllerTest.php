@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MediaStreamControllerTest extends SuluTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

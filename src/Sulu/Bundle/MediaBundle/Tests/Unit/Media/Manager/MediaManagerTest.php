@@ -132,7 +132,7 @@ class MediaManagerTest extends TestCase
      */
     private $categoryManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

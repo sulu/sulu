@@ -54,7 +54,7 @@ class MediaSearchSubscriberTest extends TestCase
 
     private $factory;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mediaManager = $this->prophesize(MediaManagerInterface::class);
         $this->logger = $this->prophesize(LoggerInterface::class);

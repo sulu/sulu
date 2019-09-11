@@ -70,7 +70,7 @@ class ImagineImageConverterTest extends TestCase
      */
     private $imagineImageConverter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->imagine = $this->prophesize(ImagineInterface::class);
         $this->storage = $this->prophesize(StorageInterface::class);

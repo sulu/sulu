@@ -57,7 +57,7 @@ class WebsiteSearchControllerTest extends TestCase
      */
     private $websiteSearchController;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->searchManager = $this->prophesize(SearchManagerInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);

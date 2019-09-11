@@ -18,7 +18,7 @@ class GeolocatorLocationTest extends TestCase
 {
     protected $geolocatorLocation;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->location = new GeolocatorLocation();
     }

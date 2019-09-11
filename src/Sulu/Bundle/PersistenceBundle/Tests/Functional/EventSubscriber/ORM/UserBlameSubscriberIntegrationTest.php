@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\User\User as SymfonyUser;
 
 class UserBlameSubscriberIntegrationTest extends SuluTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->initOrm();
@@ -95,7 +95,7 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
         $this->getEntityManager()->persist($permission);
         $this->getEntityManager()->flush();
 
-        $this->assertInternalType('int', $permission->getId());
+        $this->assertIsInt($permission->getId());
     }
 
     public function testSetUserBlame()

@@ -64,7 +64,7 @@ class FormatOptionsManagerTest extends TestCase
      */
     private $formatOptionsManager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

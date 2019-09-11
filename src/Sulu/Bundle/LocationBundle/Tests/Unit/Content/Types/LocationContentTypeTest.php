@@ -23,7 +23,7 @@ class LocationContentTypeTest extends TestCase
 
     protected $mapManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->nodeRepository = $this->getMockBuilder('Sulu\Bundle\PageBundle\Repository\NodeRepositoryInterface')->getMock();
         $this->phpcrNode = $this->getMockBuilder('PHPCR\NodeInterface')->getMock();

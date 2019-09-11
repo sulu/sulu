@@ -24,7 +24,7 @@ class FocusTest extends TestCase
      */
     private $focus;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->focus = new Focus();
     }

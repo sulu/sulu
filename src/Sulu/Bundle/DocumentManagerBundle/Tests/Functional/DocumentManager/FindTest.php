@@ -15,7 +15,7 @@ use Sulu\Bundle\DocumentManagerBundle\Tests\Functional\BaseTestCase;
 
 class FindTest extends BaseTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->initPhpcr();

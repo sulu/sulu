@@ -62,7 +62,7 @@ class SearchControllerTest extends TestCase
      */
     private $searchController;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->searchManager = $this->prophesize(SearchManagerInterface::class);
         $this->metadataProvider = $this->prophesize(ProviderInterface::class);

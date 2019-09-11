@@ -22,7 +22,7 @@ class LocalizationManagerTest extends TestCase
      */
     private $localizationManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

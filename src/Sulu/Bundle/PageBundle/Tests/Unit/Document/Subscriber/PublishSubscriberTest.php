@@ -62,7 +62,7 @@ class PublishSubscriberTest extends TestCase
      */
     private $node;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->liveSession = $this->prophesize(SessionInterface::class);
         $this->nodeHelper = $this->prophesize(NodeHelperInterface::class);

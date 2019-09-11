@@ -25,7 +25,7 @@ class RestControllerTest extends TestCase
      */
     protected $controller;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->controller = $this->getMockForAbstractClass(RestController::class);
     }

@@ -44,7 +44,7 @@ class RoleControllerTest extends SuluTestCase
      */
     protected $securityType2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->em = $this->getEntityManager();
         $this->purgeDatabase();
@@ -491,7 +491,7 @@ class RoleControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(404, $client->getResponse());
-        $this->assertContains('11230', $response->message);
+        $this->assertStringContainsString('11230', $response->message);
     }
 
     public function testPutWithExistingName()
@@ -555,7 +555,7 @@ class RoleControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(404, $client->getResponse());
-        $this->assertContains('11230', $response->message);
+        $this->assertStringContainsString('11230', $response->message);
     }
 
     public function testGetAllRoles()

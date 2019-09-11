@@ -17,6 +17,7 @@ use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManager;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlProviderInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
@@ -26,6 +27,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class AccessControlManagerTest extends TestCase
 {
+    use ReadObjectAttributeTrait;
+
     /**
      * @var AccessControlManager
      */
@@ -41,7 +44,7 @@ class AccessControlManagerTest extends TestCase
      */
     private $eventDispatcher;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->maskConverter = $this->prophesize(MaskConverterInterface::class);
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
@@ -205,16 +208,14 @@ class AccessControlManagerTest extends TestCase
         $this->accessControlManager->addAccessControlProvider($accessControlProvider1->reveal());
         $this->accessControlManager->addAccessControlProvider($accessControlProvider2->reveal());
 
-        $this->assertAttributeCount(2, 'accessControlProviders', $this->accessControlManager);
-        $this->assertAttributeContains(
+        $this->assertCount(2, $this->readObjectAttribute($this->accessControlManager, 'accessControlProviders'));
+        $this->assertContains(
             $accessControlProvider1->reveal(),
-            'accessControlProviders',
-            $this->accessControlManager
+            $this->readObjectAttribute($this->accessControlManager, 'accessControlProviders')
         );
-        $this->assertAttributeContains(
+        $this->assertContains(
             $accessControlProvider2->reveal(),
-            'accessControlProviders',
-            $this->accessControlManager
+            $this->readObjectAttribute($this->accessControlManager, 'accessControlProviders')
         );
     }
 

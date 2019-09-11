@@ -89,7 +89,7 @@ class GoogleGeolocatorTest extends TestCase
         $stack->push(
             Middleware::mapRequest(
                 function(Request $request) {
-                    $this->assertContains('key=foobar', $request->getUri()->getQuery());
+                    $this->assertStringContainsString('key=foobar', $request->getUri()->getQuery());
 
                     return $request;
                 }

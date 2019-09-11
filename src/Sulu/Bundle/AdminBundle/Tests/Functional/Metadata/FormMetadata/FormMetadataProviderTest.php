@@ -24,7 +24,7 @@ class FormMetadataProviderTest extends KernelTestCase
      */
     private $formMetadataProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->formMetadataProvider = $this->getContainer()->get('sulu_admin_test.form_metadata_provider');
     }

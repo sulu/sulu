@@ -26,7 +26,7 @@ class InstantiatorSubscriberTest extends TestCase
 
     private $subscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $this->subscriber = new InstantiatorSubscriber(

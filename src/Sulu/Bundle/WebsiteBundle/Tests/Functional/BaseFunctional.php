@@ -35,7 +35,7 @@ class BaseFunctional extends SuluTestCase
      */
     protected $domainRepository;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
         $this->analyticsManager = $this->getContainer()->get('sulu_website.analytics.manager');

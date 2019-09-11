@@ -16,8 +16,10 @@ use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\DocumentManager\Subscriber\Behavior\Path\ExplicitSubscriber;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ExplicitSubscriberTest extends TestCase
@@ -57,7 +59,7 @@ class ExplicitSubscriberTest extends TestCase
      */
     private $subscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->persistEvent = $this->prophesize(PersistEvent::class);
         $this->document = new \stdClass();
@@ -73,11 +75,10 @@ class ExplicitSubscriberTest extends TestCase
 
     /**
      * It should throw an exception if both path name and node_name options are given.
-     *
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     public function testExceptionNodeNameAndPath()
     {
+        $this->expectException(InvalidOptionsException::class);
         $options = $this->resolveOptions([
             'path' => '/path/to/nodename',
             'node_name' => '/foo',
@@ -88,11 +89,10 @@ class ExplicitSubscriberTest extends TestCase
 
     /**
      * It should throw an exception if both path name and parent_path options are given.
-     *
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     public function testExceptionParentPathAndPath()
     {
+        $this->expectException(InvalidOptionsException::class);
         $options = $this->resolveOptions([
             'path' => '/path/to/nodename',
             'parent_path' => '/foo',
@@ -211,11 +211,10 @@ class ExplicitSubscriberTest extends TestCase
 
     /**
      * It should throw an exception if node_name is specified but no parent node is available.
-     *
-     * @expectedException \Sulu\Component\DocumentManager\Exception\DocumentManagerException
      */
     public function testNodeNameButNotParentNode()
     {
+        $this->expectException(DocumentManagerException::class);
         $options = $this->resolveOptions([
             'node_name' => 'foobar',
         ]);

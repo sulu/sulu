@@ -79,7 +79,7 @@ class UserControllerTest extends SuluTestCase
      */
     private $group2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->em = $this->getEntityManager();
         $this->purgeDatabase();
@@ -269,7 +269,7 @@ class UserControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(404, $client->getResponse());
-        $this->assertContains('1120', $response->message);
+        $this->assertStringContainsString('1120', $response->message);
     }
 
     public function testPost()
@@ -422,7 +422,7 @@ class UserControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(400, $client->getResponse());
-        $this->assertContains('username', $response->message);
+        $this->assertStringContainsString('username', $response->message);
     }
 
     public function testPostWithMissingPassword()
@@ -454,7 +454,7 @@ class UserControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(400, $client->getResponse());
-        $this->assertContains('password', $response->message);
+        $this->assertStringContainsString('password', $response->message);
     }
 
     public function testPostWithNotUniqueEmail()
@@ -485,7 +485,7 @@ class UserControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(409, $client->getResponse());
-        $this->assertContains('email', strtolower($response->message));
+        $this->assertStringContainsString('email', strtolower($response->message));
         $this->assertEquals(1004, $response->code);
     }
 
@@ -808,7 +808,7 @@ class UserControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(400, $client->getResponse());
-        $this->assertContains('username', $response->message);
+        $this->assertStringContainsString('username', $response->message);
     }
 
     public function testPutWithMissingPassword()

@@ -35,7 +35,7 @@ class PermissionListenerTest extends TestCase
      */
     private $searchManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
         $this->searchManager = $this->prophesize(SearchManagerInterface::class);

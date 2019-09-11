@@ -89,7 +89,7 @@ class InvalidationSubscriberTest extends TestCase
      */
     private $env = 'prod';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->cacheManager = $this->prophesize(CacheManager::class);
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);

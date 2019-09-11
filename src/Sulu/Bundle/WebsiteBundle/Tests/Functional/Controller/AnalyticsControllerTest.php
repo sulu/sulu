@@ -27,7 +27,7 @@ class AnalyticsControllerTest extends SuluTestCase
      */
     private $entities = [];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->analyticsManager = $this->getContainer()->get('sulu_website.analytics.manager');
 

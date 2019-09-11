@@ -38,7 +38,7 @@ class TargetGroupEvaluationControllerTest extends TestCase
      */
     private $targetGroupStore;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->targetGroupEvaluator = $this->prophesize(TargetGroupEvaluatorInterface::class);
         $this->targetGroupRepository = $this->prophesize(TargetGroupRepositoryInterface::class);

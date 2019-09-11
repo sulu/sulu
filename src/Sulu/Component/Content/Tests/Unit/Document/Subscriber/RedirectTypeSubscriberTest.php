@@ -39,7 +39,7 @@ class RedirectTypeSubscriberTest extends SubscriberTestCase
      */
     private $event;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

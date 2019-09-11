@@ -80,7 +80,7 @@ class MappingSubscriberTest extends TestCase
      */
     private $mappingSubscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $this->encoder = $this->prophesize(PropertyEncoder::class);
@@ -160,11 +160,10 @@ class MappingSubscriberTest extends TestCase
 
     /**
      * It should throw an exception when mapped non-array values to non-multiple fields.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testPersistNonArray()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->metadata->getFieldMappings()->willReturn(
             [
                 'test' => [

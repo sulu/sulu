@@ -21,7 +21,7 @@ class EncodeAliasTraitTest extends TestCase
      */
     private $encodeAlias;
 
-    public function setup()
+    public function setup(): void
     {
         $this->encodeAlias = $this->getMockForTrait(EncodeAliasTrait::class);
     }

@@ -25,7 +25,7 @@ class TargetGroupControllerTest extends SuluTestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->purgeDatabase();
     }

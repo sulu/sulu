@@ -39,7 +39,7 @@ class DocumentManagerTest extends SuluTestCase
      */
     private $homeDocument;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->initPhpcr();
 

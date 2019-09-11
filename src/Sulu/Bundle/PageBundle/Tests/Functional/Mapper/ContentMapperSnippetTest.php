@@ -63,7 +63,7 @@ class ContentMapperSnippetTest extends SuluTestCase
      */
     private $snippet1Node;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->initPhpcr();
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');

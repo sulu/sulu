@@ -21,7 +21,7 @@ class PortalInformationTest extends TestCase
      */
     private $portalInformation;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->portalInformation = new PortalInformation(null, null, null, null, null);

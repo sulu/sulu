@@ -52,7 +52,7 @@ class WebspaceImportTest extends SuluTestCase
     /**
      * Setup data for import.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->initPhpcr();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
@@ -66,7 +66,7 @@ class WebspaceImportTest extends SuluTestCase
     /**
      * Remove all created Data.
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->removeImportFile();
         parent::tearDown();

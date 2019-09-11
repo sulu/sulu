@@ -47,7 +47,7 @@ class ResourceLocatorTest extends SuluTestCase
      */
     private $resourceLocator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->purgeDatabase();
         $this->initOrm();

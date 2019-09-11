@@ -76,7 +76,7 @@ class QuerySubscriberTest extends TestCase
      */
     private $subscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->session = $this->prophesize(SessionInterface::class);
         $this->workspace = $this->prophesize(WorkspaceInterface::class);

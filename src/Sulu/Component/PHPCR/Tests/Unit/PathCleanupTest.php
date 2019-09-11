@@ -22,7 +22,7 @@ class PathCleanupTest extends TestCase
      */
     private $cleaner;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->cleaner = new PathCleanup(
             [

@@ -49,7 +49,7 @@ class AuthenticationHandlerTest extends TestCase
      */
     private $user;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->exception = $this->prophesize(AuthenticationException::class);
         $this->request = $this->prophesize(Request::class);

@@ -110,7 +110,7 @@ class AutoNameSubscriberTest extends TestCase
      */
     private $liveSession;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->documentRegistry = $this->prophesize(DocumentRegistry::class);
         $this->slugifier = $this->prophesize(SlugifierInterface::class);

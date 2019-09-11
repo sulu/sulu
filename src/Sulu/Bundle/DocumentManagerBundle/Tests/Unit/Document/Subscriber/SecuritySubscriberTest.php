@@ -32,7 +32,7 @@ class SecuritySubscriberTest extends TestCase
      */
     private $securitySubscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $this->securitySubscriber = new SecuritySubscriber($this->tokenStorage->reveal());

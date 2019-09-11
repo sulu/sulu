@@ -12,11 +12,12 @@
 namespace Sulu\Component\DocumentManager\tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 
 class NamespaceRegistryTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->registry = new NamespaceRegistry([
             'system' => 'asys',
@@ -35,11 +36,10 @@ class NamespaceRegistryTest extends TestCase
 
     /**
      * It should thow an exception if the alias is not known.
-     *
-     * @expectedException \Sulu\Component\DocumentManager\Exception\DocumentManagerException
      */
     public function testGetUnknownPrefix()
     {
+        $this->expectException(DocumentManagerException::class);
         $this->registry->getPrefix('foobarbar');
     }
 }

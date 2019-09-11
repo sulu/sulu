@@ -47,7 +47,7 @@ class PagesSitemapProviderTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->contentRepository = $this->prophesize(ContentRepositoryInterface::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);

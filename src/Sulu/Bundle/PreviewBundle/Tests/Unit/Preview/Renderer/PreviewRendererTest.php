@@ -93,7 +93,7 @@ class PreviewRendererTest extends TestCase
      */
     private $environment = 'prod';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->routeDefaultsProvider = $this->prophesize(RouteDefaultsProviderInterface::class);
         $this->requestStack = $this->prophesize(RequestStack::class);

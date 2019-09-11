@@ -15,12 +15,12 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Select;
 use Doctrine\ORM\QueryBuilder;
-use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
@@ -35,6 +35,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class DoctrineListBuilderTest extends TestCase
 {
+    use ReadObjectAttributeTrait;
+
     /**
      * @var EventDispatcherInterface
      */
@@ -84,7 +86,7 @@ class DoctrineListBuilderTest extends TestCase
 
     private static $translationEntityNameAlias = 'SuluCoreBundle_ExampleTranslation';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->entityManager = $this->prophesize(EntityManager::class);
 
@@ -683,12 +685,12 @@ class DoctrineListBuilderTest extends TestCase
             $this->doctrineListBuilder->where($fieldDescriptors[$key], $value);
         }
 
-        $this->assertCount(2, Assert::readAttribute($this->doctrineListBuilder, 'expressions'));
-        $expressions = Assert::readAttribute($this->doctrineListBuilder, 'expressions');
+        $this->assertCount(2, $this->readObjectAttribute($this->doctrineListBuilder, 'expressions'));
+        $expressions = $this->readObjectAttribute($this->doctrineListBuilder, 'expressions');
         $this->assertEquals(3, $expressions[0]->getValue());
         $this->assertEquals(1, $expressions[1]->getValue());
 
-        $this->assertCount(2, Assert::readAttribute($this->doctrineListBuilder, 'expressions'));
+        $this->assertCount(2, $this->readObjectAttribute($this->doctrineListBuilder, 'expressions'));
         $this->assertEquals('title_id', $expressions[0]->getFieldName());
         $this->assertEquals('desc_id', $expressions[1]->getFieldName());
         $this->doctrineListBuilder->execute();
@@ -768,12 +770,12 @@ class DoctrineListBuilderTest extends TestCase
             $this->doctrineListBuilder->where($fieldDescriptors[$key], $value, ListBuilderInterface::WHERE_COMPARATOR_UNEQUAL);
         }
 
-        $this->assertCount(2, Assert::readAttribute($this->doctrineListBuilder, 'expressions'));
-        $expressions = Assert::readAttribute($this->doctrineListBuilder, 'expressions');
+        $this->assertCount(2, $this->readObjectAttribute($this->doctrineListBuilder, 'expressions'));
+        $expressions = $this->readObjectAttribute($this->doctrineListBuilder, 'expressions');
         $this->assertEquals(3, $expressions[0]->getValue());
         $this->assertEquals(1, $expressions[1]->getValue());
 
-        $this->assertCount(2, Assert::readAttribute($this->doctrineListBuilder, 'expressions'));
+        $this->assertCount(2, $this->readObjectAttribute($this->doctrineListBuilder, 'expressions'));
         $this->assertEquals('title_id', $expressions[0]->getFieldName());
         $this->assertEquals('desc_id', $expressions[1]->getFieldName());
         $this->doctrineListBuilder->execute();

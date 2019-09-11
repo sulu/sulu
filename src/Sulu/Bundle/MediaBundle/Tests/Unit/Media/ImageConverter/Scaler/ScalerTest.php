@@ -25,7 +25,7 @@ class ScalerTest extends SuluTestCase
      */
     private $scaler;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->scaler = new Scaler();

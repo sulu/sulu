@@ -28,7 +28,7 @@ class PropertyEncoderTest extends TestCase
      */
     private $namespaceRegistry;
 
-    public function setUp()
+    public function setUp(): void
     {
         $map = [
             'system' => 'nsys',

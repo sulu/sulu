@@ -57,7 +57,7 @@ class SingleMediaSelectionTest extends TestCase
      */
     private $media;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->mediaManager = $this->prophesize(MediaManager::class);
         $this->mediaReferenceStore = $this->prophesize(ReferenceStore::class);

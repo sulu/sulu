@@ -34,7 +34,7 @@ class CacheInvalidationListenerTest extends TestCase
      */
     private $listener;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->cacheManager = $this->prophesize(CacheManager::class);
 

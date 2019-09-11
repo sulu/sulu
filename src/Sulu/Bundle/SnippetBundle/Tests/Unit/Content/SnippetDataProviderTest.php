@@ -60,7 +60,7 @@ class SnippetDataProviderTest extends TestCase
      */
     private $snippetDataProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->contentQueryExecutor = $this->prophesize(ContentQueryExecutorInterface::class);
         $this->snippetQueryBuilder = $this->prophesize(ContentQueryBuilderInterface::class);

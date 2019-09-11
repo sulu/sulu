@@ -15,7 +15,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class VersionControllerTest extends SuluTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         if (!$this->getContainer()->getParameter('sulu_document_manager.versioning.enabled')) {
             $this->markTestSkipped('Versioning is not enabled');

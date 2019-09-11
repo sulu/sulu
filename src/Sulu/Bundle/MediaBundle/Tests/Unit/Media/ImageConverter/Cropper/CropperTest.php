@@ -24,7 +24,7 @@ class CropperTest extends SuluTestCase
      */
     private $cropper;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->cropper = new Cropper();

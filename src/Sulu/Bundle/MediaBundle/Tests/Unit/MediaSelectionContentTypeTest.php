@@ -35,7 +35,7 @@ class MediaSelectionContentTypeTest extends TestCase
      */
     private $mediaManager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->mediaManager = $this->prophesize(MediaManagerInterface::class);
         $this->mediaReferenceStore = $this->prophesize(ReferenceStoreInterface::class);

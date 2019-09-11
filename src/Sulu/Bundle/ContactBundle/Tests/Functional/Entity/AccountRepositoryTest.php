@@ -74,7 +74,7 @@ class AccountRepositoryTest extends SuluTestCase
         ['SensioLabs', [], []],
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->em = $this->getEntityManager();
         $this->initOrm();

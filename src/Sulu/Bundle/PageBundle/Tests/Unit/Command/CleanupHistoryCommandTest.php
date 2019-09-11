@@ -62,7 +62,7 @@ class CleanupHistoryCommandTest extends TestCase
      */
     private $output;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sessionManager = $this->prophesize(SessionManagerInterface::class);
 

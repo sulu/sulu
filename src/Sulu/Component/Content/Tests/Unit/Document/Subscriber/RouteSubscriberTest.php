@@ -55,7 +55,7 @@ class RouteSubscriberTest extends TestCase
      */
     private $routeSubscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
         $this->documentInspector = $this->prophesize(DocumentInspector::class);

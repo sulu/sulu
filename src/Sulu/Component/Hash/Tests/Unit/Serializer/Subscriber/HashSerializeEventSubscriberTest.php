@@ -42,7 +42,7 @@ class HashSerializeEventSubscriberTest extends TestCase
      */
     private $objectEvent;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->hasher = $this->prophesize(HasherInterface::class);
         $this->visitor = $this->prophesize(JsonSerializationVisitor::class);

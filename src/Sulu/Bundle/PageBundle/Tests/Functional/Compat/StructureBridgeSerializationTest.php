@@ -44,7 +44,7 @@ class StructureBridgeSerializationTest extends SuluTestCase
      */
     private $documentManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->initPhpcr();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
@@ -91,7 +91,7 @@ class StructureBridgeSerializationTest extends SuluTestCase
         $this->assertInstanceOf(Property::class, $property);
 
         $value = $property->getValue();
-        $this->assertInternalType('array', $value);
+        $this->assertIsArray($value);
         $this->assertCount(1, $value);
     }
 

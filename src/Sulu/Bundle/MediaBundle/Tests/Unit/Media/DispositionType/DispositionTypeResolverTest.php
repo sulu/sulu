@@ -27,7 +27,7 @@ class DispositionTypeResolverTest extends TestCase
      */
     protected $dispositionType;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dispositionType = new DispositionTypeResolver(
             $this->defaultDispositionType,

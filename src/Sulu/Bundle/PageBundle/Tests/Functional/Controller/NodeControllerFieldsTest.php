@@ -29,7 +29,7 @@ class NodeControllerFieldsTest extends SuluTestCase
      */
     private $sessionManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');

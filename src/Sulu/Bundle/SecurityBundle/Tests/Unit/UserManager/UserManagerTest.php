@@ -28,7 +28,7 @@ class UserManagerTest extends TestCase
      */
     private $userRepository;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->objectManager = $this->prophesize(ObjectManager::class);
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);

@@ -21,7 +21,7 @@ class LocalizationTest extends TestCase
      */
     private $localization;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->localization = new Localization('de', 'at');
         $this->localization->setDefault(true);

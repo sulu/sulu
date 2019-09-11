@@ -46,7 +46,7 @@ class NumberTest extends TestCase
      */
     private $nodeProperty;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->node = $this->prophesize(NodeInterface::class);
         $this->property = $this->prophesize(PropertyInterface::class);

@@ -42,7 +42,7 @@ class CacheManagerTest extends TestCase
      */
     private $urlReplacer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->fosCacheManager = $this->prophesize(FOSCacheManager::class);
         $this->requestStack = $this->prophesize(RequestStack::class);

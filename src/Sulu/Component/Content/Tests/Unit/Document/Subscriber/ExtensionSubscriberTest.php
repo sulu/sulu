@@ -55,7 +55,7 @@ class ExtensionSubscriberTest extends SubscriberTestCase
      */
     private $subscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->hydrateEvent = $this->prophesize(HydrateEvent::class);
         $this->persistEvent = $this->prophesize(PersistEvent::class);

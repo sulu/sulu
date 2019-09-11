@@ -95,7 +95,7 @@ class ContentRepositoryTest extends TestCase
      */
     private $query;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->session = $this->prophesize(SessionInterface::class);
         $this->sessionManager = $this->prophesize(SessionManagerInterface::class);

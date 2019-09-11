@@ -31,7 +31,7 @@ class NavigationItemTest extends TestCase
      */
     protected $item2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->navigationItem = new NavigationItem('NavigationItem');
 

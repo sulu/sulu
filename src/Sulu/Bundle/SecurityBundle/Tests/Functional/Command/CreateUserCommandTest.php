@@ -30,7 +30,7 @@ class CreateUserCommandTest extends SuluTestCase
      */
     private $command;
 
-    public function setUp()
+    public function setUp(): void
     {
         $application = new Application($this->getContainer()->get('kernel'));
 
@@ -80,7 +80,7 @@ class CreateUserCommandTest extends SuluTestCase
     {
         $this->createRole('test');
         $this->createUser('sulu', 'test', 'ax');
-        $this->assertContains('Given locale "ax" is invalid, must be one of "', $this->tester->getDisplay());
+        $this->assertStringContainsString('Given locale "ax" is invalid, must be one of "', $this->tester->getDisplay());
     }
 
     public function testCreateUserNoRoles()

@@ -13,9 +13,12 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\Routing;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\Routing\ListRouteBuilder;
+use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
 
 class ListRouteBuilderTest extends TestCase
 {
+    use ReadObjectAttributeTrait;
+
     public function testBuildListRouteWithClone()
     {
         $routeBuilder = (new ListRouteBuilder('sulu_role.add_form', '/roles'))
@@ -108,7 +111,7 @@ class ListRouteBuilderTest extends TestCase
 
         $this->assertSame($name, $route->getName());
         $this->assertSame($path, $route->getPath());
-        $this->assertAttributeEquals([$rerenderAttribute], 'rerenderAttributes', $route);
+        $this->assertSame([$rerenderAttribute], $this->readObjectAttribute($route, 'rerenderAttributes'));
         $this->assertSame($resourceKey, $route->getOption('resourceKey'));
         $this->assertSame($listKey, $route->getOption('listKey'));
         $this->assertSame($userSettingsKey, $route->getOption('userSettingsKey'));

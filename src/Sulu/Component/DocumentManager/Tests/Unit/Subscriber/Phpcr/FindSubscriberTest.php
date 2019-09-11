@@ -26,7 +26,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class FindSubscriberTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
         $this->nodeManager = $this->prophesize(NodeManager::class);

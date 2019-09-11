@@ -22,7 +22,7 @@ class DocumentRegistryTest extends TestCase
      */
     private $registry;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->registry = new DocumentRegistry('de');
         $this->node = $this->prophesize(NodeInterface::class);
@@ -55,11 +55,10 @@ class DocumentRegistryTest extends TestCase
 
     /**
      * It should throw an exception when an unregistered document is deregistered.
-     *
-     * @expectedException \RuntimeException
      */
     public function testDeregisterDocumentUnknown()
     {
+        $this->expectException(\RuntimeException::class);
         $this->registry->deregisterDocument($this->document);
     }
 
@@ -79,12 +78,11 @@ class DocumentRegistryTest extends TestCase
 
     /**
      * Throw an exception if an attempt is made to re-register a document.
-     *
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage is already registered
      */
     public function testDifferentInstanceSameNode()
     {
+        $this->expectExceptionMessage('is already registered');
+        $this->expectException(\RuntimeException::class);
         $this->node->getPath()->willReturn('/path/to');
         $this->registry->registerDocument(new \stdClass(), $this->node->reveal(), 'fr');
         $this->registry->registerDocument(new \stdClass(), $this->node->reveal(), 'fr');
@@ -92,11 +90,10 @@ class DocumentRegistryTest extends TestCase
 
     /**
      * It should throw an exception if an unregistered document is passed to get node for document.
-     *
-     * @expectedException \RuntimeException
      */
     public function testGetNodeForDocumentUnknown()
     {
+        $this->expectException(\RuntimeException::class);
         $this->registry->getNodeForDocument($this->document);
     }
 

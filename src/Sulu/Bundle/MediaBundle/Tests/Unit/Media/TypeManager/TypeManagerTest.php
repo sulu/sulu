@@ -47,7 +47,7 @@ class TypeManagerTest extends SuluTestCase
         ],
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

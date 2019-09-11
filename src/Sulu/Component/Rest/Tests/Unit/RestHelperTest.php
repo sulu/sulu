@@ -28,7 +28,7 @@ class RestHelperTest extends TestCase
      */
     private $listRestHelper;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->listRestHelper = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\ListRestHelper')
             ->disableOriginalConstructor()

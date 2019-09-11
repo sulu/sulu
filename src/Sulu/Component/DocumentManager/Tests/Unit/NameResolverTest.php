@@ -32,7 +32,7 @@ class NameResolverTest extends TestCase
      */
     private $nameResolver;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->parentNode = $this->prophesize(NodeInterface::class);
         $this->node = $this->prophesize(NodeInterface::class);

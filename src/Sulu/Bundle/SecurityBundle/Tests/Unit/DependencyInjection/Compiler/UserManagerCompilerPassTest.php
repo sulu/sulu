@@ -29,7 +29,7 @@ class UserManagerCompilerPassTest extends TestCase
      */
     private $userManagerCompilerPass;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->containerBuilder = $this->prophesize(ContainerBuilder::class);
         $this->userManagerCompilerPass = new UserManagerCompilerPass();

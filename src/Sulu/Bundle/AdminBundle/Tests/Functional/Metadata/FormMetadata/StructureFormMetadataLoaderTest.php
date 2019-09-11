@@ -23,7 +23,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
      */
     private $structureFormMetadataLoader;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->structureFormMetadataLoader = $this->getContainer()->get('sulu_admin_test.structure_form_metadata_loader');
     }

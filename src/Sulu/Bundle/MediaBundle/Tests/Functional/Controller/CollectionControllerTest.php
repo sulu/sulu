@@ -59,7 +59,7 @@ class CollectionControllerTest extends SuluTestCase
      */
     private $systemCollectionConfig;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -33,7 +33,7 @@ class MediaLinkProviderTest extends TestCase
      */
     private $mediaLinkProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mediaRepository = $this->prophesize(MediaRepositoryInterface::class);
         $this->mediaManager = $this->prophesize(MediaManagerInterface::class);

@@ -24,7 +24,7 @@ class RouteDefaultsProviderTest extends TestCase
 
     private $providers = [];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->providers = [
             $this->prophesize(RouteDefaultsProviderInterface::class),

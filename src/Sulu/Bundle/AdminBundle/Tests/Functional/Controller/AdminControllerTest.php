@@ -22,7 +22,7 @@ class AdminControllerTest extends SuluTestCase
      */
     protected $em;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->purgeDatabase();
         $this->em = $this->getContainer()->get('sulu_test.doctrine.orm.default_entity_manager');
@@ -44,9 +44,9 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('resources', $response->sulu_admin);
         $this->assertObjectHasAttribute('routes', $response->sulu_admin);
         $this->assertObjectHasAttribute('fieldTypeOptions', $response->sulu_admin);
-        $this->assertInternalType('array', $response->sulu_admin->navigation);
-        $this->assertInternalType('array', $response->sulu_admin->routes);
-        $this->assertInternalType('object', $response->sulu_admin->resources);
+        $this->assertIsArray($response->sulu_admin->navigation);
+        $this->assertIsArray($response->sulu_admin->routes);
+        $this->assertIsObject($response->sulu_admin->resources);
         $this->assertObjectHasAttribute('sulu_preview', $response);
     }
 

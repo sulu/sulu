@@ -35,7 +35,7 @@ class SettingsManagerTest extends TestCase
      */
     private $deprecatedSessionManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sessionManager = $this->prophesize(SessionManagerInterface::class);
         $this->deprecatedSessionManager = $this->prophesize(DeprecatedSessionManagerInterface::class);

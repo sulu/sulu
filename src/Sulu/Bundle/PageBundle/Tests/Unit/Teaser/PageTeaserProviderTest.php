@@ -44,7 +44,7 @@ class PageTeaserProviderTest extends TestCase
      */
     private $translator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->searchManager = $this->prophesize(SearchManagerInterface::class);
         $this->search = $this->prophesize(SearchQueryBuilder::class);

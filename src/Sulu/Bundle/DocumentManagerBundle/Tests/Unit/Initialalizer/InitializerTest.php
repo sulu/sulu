@@ -44,7 +44,7 @@ class InitializerTest extends TestCase
      */
     private $initializer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->container = $this->prophesize(ContainerInterface::class);
         $this->initializer1 = $this->prophesize(InitializerInterface::class);

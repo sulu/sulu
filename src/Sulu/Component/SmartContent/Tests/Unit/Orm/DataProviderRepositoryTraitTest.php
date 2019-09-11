@@ -43,7 +43,7 @@ class DataProviderRepositoryTraitTest extends TestCase
      */
     private $dataProviderRepositoryTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->dataProviderRepositoryTrait = $this->getMockForTrait(DataProviderRepositoryTrait::class);
     }

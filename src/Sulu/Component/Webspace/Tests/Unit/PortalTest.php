@@ -40,7 +40,7 @@ class PortalTest extends TestCase
      */
     private $url;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->portal = new Portal();

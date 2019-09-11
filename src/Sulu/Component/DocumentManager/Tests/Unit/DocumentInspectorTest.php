@@ -20,7 +20,7 @@ use Sulu\Component\DocumentManager\ProxyFactory;
 
 class DocumentInspectorTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->documentRegistry = $this->prophesize(DocumentRegistry::class);
         $this->pathRegistry = $this->prophesize(PathSegmentRegistry::class);

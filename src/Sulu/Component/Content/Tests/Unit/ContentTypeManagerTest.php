@@ -18,7 +18,7 @@ class ContentTypeManagerTest extends TestCase
 {
     protected $container;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
         $this->manager = new ContentTypeManager($this->container);

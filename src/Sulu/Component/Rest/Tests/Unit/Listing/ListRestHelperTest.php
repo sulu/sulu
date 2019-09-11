@@ -20,7 +20,7 @@ class ListRestHelperTest extends TestCase
 {
     protected $em;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->em = $this->prophesize(ObjectManager::class);
     }

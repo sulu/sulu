@@ -59,7 +59,7 @@ class CustomUrlSubscriberTest extends TestCase
      */
     private $webspaceManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->generator = $this->prophesize(GeneratorInterface::class);
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);

@@ -62,7 +62,7 @@ class ContentMapperSubscriberTest extends TestCase
      */
     private $contentMapperSubscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->documentInspector = $this->prophesize(DocumentInspector::class);
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);

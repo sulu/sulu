@@ -45,7 +45,7 @@ class PageRuleTest extends TestCase
      */
     private $resourceLocatorStrategyPool;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->requestStack = $this->prophesize(RequestStack::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);

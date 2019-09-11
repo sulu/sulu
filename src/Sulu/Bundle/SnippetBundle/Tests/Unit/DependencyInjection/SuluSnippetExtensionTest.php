@@ -16,7 +16,7 @@ use Sulu\Bundle\SnippetBundle\DependencyInjection\SuluSnippetExtension;
 
 class SuluSnippetExtensionTest extends AbstractExtensionTestCase
 {
-    protected function getContainerExtensions()
+    protected function getContainerExtensions(): array
     {
         return [
             new SuluSnippetExtension(),

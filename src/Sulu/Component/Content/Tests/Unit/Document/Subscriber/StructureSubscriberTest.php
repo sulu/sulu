@@ -92,7 +92,7 @@ class StructureSubscriberTest extends SubscriberTestCase
      */
     private $subscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);

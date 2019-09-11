@@ -35,7 +35,7 @@ class PasteTransformationTest extends SuluTestCase
      */
     protected $fileLocator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->fileLocator = $this->prophesize(FileLocator::class);
         $this->fileLocator->locate('test.jpg')->willReturn(

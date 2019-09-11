@@ -23,7 +23,7 @@ class MetadataProviderRegistryTest extends TestCase
      */
     private $metadataProviderRegistry;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->metadataProviderRegistry = new MetadataProviderRegistry();
     }

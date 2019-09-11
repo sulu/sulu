@@ -16,7 +16,7 @@ use Sulu\Bundle\CoreBundle\DependencyInjection\SuluCoreExtension;
 
 class SuluCoreExtensionTest extends AbstractExtensionTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -26,7 +26,7 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
         $this->container->setParameter('sulu.context', 'admin');
     }
 
-    protected function getContainerExtensions()
+    protected function getContainerExtensions(): array
     {
         return [
             new SuluCoreExtension(),

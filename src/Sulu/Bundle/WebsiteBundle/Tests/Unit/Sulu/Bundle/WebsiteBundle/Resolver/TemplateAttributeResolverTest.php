@@ -83,7 +83,7 @@ class TemplateAttributeResolverTest extends TestCase
      */
     protected $environment = 'test';
 
-    public function setUp()
+    public function setUp(): void
     {
         $webspacePortalKey = 'sulu_io';
         $webspacePortalName = 'Sulu';

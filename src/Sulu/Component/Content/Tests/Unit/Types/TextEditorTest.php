@@ -49,7 +49,7 @@ class TextEditorTest extends TestCase
      */
     private $nodeProperty;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->markupParser = $this->prophesize(MarkupParserInterface::class);
         $this->node = $this->prophesize(NodeInterface::class);

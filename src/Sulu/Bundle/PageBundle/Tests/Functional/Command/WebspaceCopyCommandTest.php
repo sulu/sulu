@@ -39,7 +39,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
      */
     private $documentRegistry;
 
-    public function setUp()
+    public function setUp(): void
     {
         $application = new Application();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
@@ -72,7 +72,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
             ]
         );
         $output = $this->tester->getDisplay();
-        $this->assertContains('Aborted', $output);
+        $this->assertStringContainsString('Aborted', $output);
 
         $this->tester->execute(
             [
@@ -83,7 +83,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
             ]
         );
         $output = $this->tester->getDisplay();
-        $this->assertContains('Aborted', $output);
+        $this->assertStringContainsString('Aborted', $output);
     }
 
     public function testRun()
@@ -103,7 +103,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
         );
 
         $output = $this->tester->getDisplay();
-        $this->assertContains('Done', $output);
+        $this->assertStringContainsString('Done', $output);
 
         $this->documentRegistry->clear();
 
@@ -161,9 +161,9 @@ class WebspaceCopyCommandTest extends SuluTestCase
         /** @var PageDocument $page2_1 */
         $page2_1 = $this->documentManager->find('/cmf/destination_io/contents/node5', 'es');
         $structure = $page2_1->getStructure()->toArray()['teasers'];
-        $this->assertContains($targetDocument1->getUuid(), $structure['items'][0]['id']);
-        $this->assertContains($targetDocument2->getUuid(), $structure['items'][1]['id']);
-        $this->assertContains($targetDocument3->getUuid(), $structure['items'][2]['id']);
+        $this->assertSame($targetDocument1->getUuid(), $structure['items'][0]['id']);
+        $this->assertSame($targetDocument2->getUuid(), $structure['items'][1]['id']);
+        $this->assertSame($targetDocument3->getUuid(), $structure['items'][2]['id']);
     }
 
     protected function checkInternalLinks()
@@ -197,7 +197,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
         $targetDocument = $this->documentManager->find('/cmf/destination_io/contents/node1', 'es');
         /** @var PageDocument $page4 */
         $page4 = $this->documentManager->find('/cmf/destination_io/contents/node4', 'es');
-        $this->assertContains($targetDocument->getUuid(), $page4->getStructure()->toArray()['article'][0]['text']);
+        $this->assertStringContainsString($targetDocument->getUuid(), $page4->getStructure()->toArray()['article'][0]['text']);
     }
 
     /**

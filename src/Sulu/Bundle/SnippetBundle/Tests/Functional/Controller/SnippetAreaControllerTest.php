@@ -24,7 +24,7 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
      */
     protected $contentMapper;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
         $this->initPhpcr();

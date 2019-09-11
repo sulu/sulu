@@ -19,9 +19,12 @@ use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilder;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteRegistry;
 use Sulu\Bundle\AdminBundle\Exception\ParentRouteNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\RouteNotFoundException;
+use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
 
 class RouteRegistryTest extends TestCase
 {
+    use ReadObjectAttributeTrait;
+
     /**
      * @var RouteRegistry
      */
@@ -42,7 +45,7 @@ class RouteRegistryTest extends TestCase
      */
     protected $admin2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->admin1 = $this->prophesize(Admin::class);
         $this->admin2 = $this->prophesize(Admin::class);
@@ -175,26 +178,23 @@ class RouteRegistryTest extends TestCase
 
         $routes = $this->routeRegistry->getRoutes();
         $this->assertCount(4, $routes);
-        $this->assertAttributeEquals(
+        $this->assertEquals(
             ['route1' => 'test1', 'override' => 'override'],
-            'options',
-            $routes[0]
+            $this->readObjectAttribute($routes[0], 'options')
         );
-        $this->assertAttributeEquals(
+        $this->assertEquals(
             ['route1' => 'test1', 'route1_1' => 'test1_1', 'override' => 'override'],
-            'options',
-            $routes[1]
+            $this->readObjectAttribute($routes[1], 'options')
         );
-        $this->assertAttributeEquals(
+        $this->assertEquals(
             [
                 'route1' => 'test1',
                 'route1_1' => 'test1_1',
                 'route1_1_1' => 'test1_1_1',
                 'override' => 'overriden-value',
             ],
-            'options',
-            $routes[2]
+            $this->readObjectAttribute($routes[2], 'options')
         );
-        $this->assertAttributeEquals(['value' => 'test'], 'options', $routes[3]);
+        $this->assertEquals(['value' => 'test'], $this->readObjectAttribute($routes[3], 'options'));
     }
 }

@@ -48,7 +48,7 @@ class SnippetQueryBuilderTest extends TestCase
      */
     private $snippetQueryBuilder;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);
         $this->extensionManager = $this->prophesize(ExtensionManagerInterface::class);
@@ -69,7 +69,7 @@ class SnippetQueryBuilderTest extends TestCase
     {
         list($sql2) = $this->snippetQueryBuilder->build('sulu_io', ['de']);
 
-        $this->assertContains('page.[jcr:mixinTypes] = "sulu:snippet"', $sql2);
+        $this->assertStringContainsString('page.[jcr:mixinTypes] = "sulu:snippet"', $sql2);
     }
 
     public function testBuildWithTypes()
@@ -87,7 +87,7 @@ class SnippetQueryBuilderTest extends TestCase
 
         list($sql2) = $this->snippetQueryBuilder->build('sulu_io', ['de']);
 
-        $this->assertContains('(ISDESCENDANTNODE(page, \'/cmf/snippets/default\')', $sql2);
+        $this->assertStringContainsString('(ISDESCENDANTNODE(page, \'/cmf/snippets/default\')', $sql2);
     }
 
     public function testBuildWithProperties()

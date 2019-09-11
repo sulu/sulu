@@ -49,7 +49,7 @@ class SeoTwigExtensionTest extends TestCase
      */
     private $request;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->contentPath = $this->prophesize(ContentPathInterface::class);

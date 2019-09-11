@@ -30,7 +30,7 @@ class RoleSettingControllerTest extends SuluTestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->entityManager = $this->getEntityManager();
         $this->purgeDatabase();

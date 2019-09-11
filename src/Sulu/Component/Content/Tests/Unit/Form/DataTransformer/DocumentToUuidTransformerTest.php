@@ -25,7 +25,7 @@ class DocumentToUuidTransformerTest extends TestCase
 
     private $document;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->documentManager = $this->prophesize(DocumentManager::class);
         $this->node = $this->prophesize('PHPCR\NodeInterface');

@@ -38,7 +38,7 @@ class ListXmlLoaderTest extends TestCase
      */
     private $listXmlLoader;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -21,7 +21,7 @@ class DocumentFixtureLoaderTest extends TestCase
 
     private $loader;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->container = $this->prophesize(ContainerInterface::class);
         $this->loader = new DocumentFixtureLoader($this->container->reveal());

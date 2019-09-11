@@ -61,7 +61,7 @@ class FixturesLoadCommandTest extends TestCase
      */
     private $commandTester;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->loader = $this->prophesize(DocumentFixtureLoader::class);
         $this->executor = $this->prophesize(DocumentExecutor::class);
@@ -99,7 +99,7 @@ class FixturesLoadCommandTest extends TestCase
         $tester = $this->execute([
             '--no-interaction' => true,
         ]);
-        $this->assertContains('Could not find any candidate fixture paths', $tester->getDisplay());
+        $this->assertStringContainsString('Could not find any candidate fixture paths', $tester->getDisplay());
     }
 
     /**
@@ -243,7 +243,7 @@ class FixturesLoadCommandTest extends TestCase
 
         $this->kernel->getBundles()->willReturn([]);
         $tester = $this->execute([], true);
-        $this->assertContains('Could not find any candidate fixture paths', $tester->getDisplay());
+        $this->assertStringContainsString('Could not find any candidate fixture paths', $tester->getDisplay());
     }
 
     private function execute(array $args, $interactive = false)

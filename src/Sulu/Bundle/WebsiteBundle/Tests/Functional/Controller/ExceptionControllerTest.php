@@ -55,7 +55,7 @@ class ExceptionControllerTest extends TestCase
      */
     private $requestAnalyzer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->twig = $this->prophesize(Environment::class);
         $this->loader = $this->prophesize(FilesystemLoader::class);

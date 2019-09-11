@@ -31,7 +31,7 @@ class WebspaceCollectionTest extends TestCase
      */
     private $webspaceCollection;
 
-    public function setUp()
+    public function setUp(): void
     {
         $webspaces = [];
         $portals = [];

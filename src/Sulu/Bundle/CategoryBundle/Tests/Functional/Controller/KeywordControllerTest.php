@@ -33,7 +33,7 @@ class KeywordControllerTest extends SuluTestCase
      */
     private $category2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->entityManager = $this->getEntityManager();
 

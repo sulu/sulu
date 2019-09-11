@@ -40,7 +40,7 @@ class PageDocumentSerializationTest extends SuluTestCase
      */
     private $registry;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->initPhpcr();
@@ -96,7 +96,7 @@ class PageDocumentSerializationTest extends SuluTestCase
         $this->assertEquals('Foobar', $page->getTitle());
         $content = $page->getStructure();
 
-        $this->assertInternalType('integer', $content->getProperty('integer')->getValue());
+        $this->assertIsInt($content->getProperty('integer')->getValue());
 
         $this->assertInstanceOf(Structure::class, $content);
         $this->assertCount(2, $content->getProperty('arrayOfObjects')->getValue());

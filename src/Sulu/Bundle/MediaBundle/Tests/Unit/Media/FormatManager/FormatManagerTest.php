@@ -51,7 +51,7 @@ class FormatManagerTest extends TestCase
      */
     private $formatManager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->mediaRepository = $this->prophesize(MediaRepositoryInterface::class);
         $this->formatCache = $this->prophesize(FormatCacheInterface::class);

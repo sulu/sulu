@@ -64,7 +64,7 @@ class LegacyPropertyFactoryTest extends TestCase
      */
     private $component;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->namespaceRegistry = $this->prophesize(NamespaceRegistry::class);
         $this->factory = new LegacyPropertyFactory(

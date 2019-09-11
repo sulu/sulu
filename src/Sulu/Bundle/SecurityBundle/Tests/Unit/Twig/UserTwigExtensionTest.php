@@ -35,7 +35,7 @@ class UserTwigExtensionTest extends TestCase
      */
     private $userRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->cache = new ArrayCache();
         $this->userRepository = $this->prophesize(UserRepository::class);

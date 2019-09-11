@@ -86,7 +86,7 @@ class GeneralSubscriberTest extends TestCase
      */
     private $generalSubscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->nodeManager = $this->prophesize(NodeManager::class);
         $this->documentRegistry = $this->prophesize(DocumentRegistry::class);

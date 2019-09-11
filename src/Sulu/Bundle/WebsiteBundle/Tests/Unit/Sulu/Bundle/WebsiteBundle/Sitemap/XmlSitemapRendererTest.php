@@ -42,7 +42,7 @@ class XmlSitemapRendererTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->providerPoolInterface = $this->prophesize(SitemapProviderPoolInterface::class);
         $this->engine = $this->prophesize(EngineInterface::class);

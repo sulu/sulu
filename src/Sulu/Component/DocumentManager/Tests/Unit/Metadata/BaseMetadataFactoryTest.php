@@ -13,13 +13,14 @@ namespace Sulu\Component\DocumentManager\tests\Unit\Metadata;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\DocumentStrategyInterface;
+use Sulu\Component\DocumentManager\Exception\MetadataNotFoundException;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class BaseMetadataFactoryTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->strategy = $this->prophesize(DocumentStrategyInterface::class);
         $this->dispatcher = $this->prophesize(EventDispatcherInterface::class);
@@ -55,11 +56,10 @@ class BaseMetadataFactoryTest extends TestCase
 
     /**
      * It should throw an exception if there is no mapping for the class name.
-     *
-     * @expectedException \Sulu\Component\DocumentManager\Exception\MetadataNotFoundException
      */
     public function testGetForClassNotFound()
     {
+        $this->expectException(MetadataNotFoundException::class);
         $this->factory->getMetadataForClass('Class\Page\NotFound');
     }
 
@@ -77,11 +77,10 @@ class BaseMetadataFactoryTest extends TestCase
 
     /**
      * It should throw an exception if there is no mapping for given alias.
-     *
-     * @expectedException \Sulu\Component\DocumentManager\Exception\MetadataNotFoundException
      */
     public function testGetForAliasNotFound()
     {
+        $this->expectException(MetadataNotFoundException::class);
         $this->factory->getMetadataForAlias('yak');
     }
 
@@ -124,11 +123,10 @@ class BaseMetadataFactoryTest extends TestCase
 
     /**
      * It should throw an exception if there is no mapping for given phpcrType.
-     *
-     * @expectedException \Sulu\Component\DocumentManager\Exception\MetadataNotFoundException
      */
     public function testGetForPhpcrTypeNotFound()
     {
+        $this->expectException(MetadataNotFoundException::class);
         $this->factory->getMetadataForPhpcrType('yak');
     }
 

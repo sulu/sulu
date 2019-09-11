@@ -35,7 +35,7 @@ class ResettingControllerTest extends SuluTestCase
      */
     private $role;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->em = $this->getEntityManager();
         $this->purgeDatabase();

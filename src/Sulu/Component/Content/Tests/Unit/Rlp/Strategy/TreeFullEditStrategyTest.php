@@ -71,7 +71,7 @@ class TreeFullEditStrategyTest extends TestCase
      */
     private $treeStrategy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mapper = $this->prophesize(ResourceLocatorMapperInterface::class);
         $this->cleaner = $this->prophesize(PathCleanupInterface::class);

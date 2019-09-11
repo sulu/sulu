@@ -31,13 +31,13 @@ class SeoStructureExtensionTest extends TestCase
      */
     private $extension;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->node = $this->prophesize(NodeInterface::class);
         $this->extension = new SeoStructureExtension();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
     }

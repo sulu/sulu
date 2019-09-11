@@ -47,7 +47,7 @@ class SnippetControllerTest extends SuluTestCase
      */
     private $phpcrSession;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->initPhpcr();

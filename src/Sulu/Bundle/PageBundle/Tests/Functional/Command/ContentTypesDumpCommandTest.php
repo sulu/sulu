@@ -24,7 +24,7 @@ class ContentTypesDumpCommandTest extends SuluTestCase
      */
     private $tester;
 
-    public function setUp()
+    public function setUp(): void
     {
         $application = new Application($this->getContainer()->get('kernel'));
 
@@ -43,33 +43,33 @@ class ContentTypesDumpCommandTest extends SuluTestCase
 
         $output = $this->tester->getDisplay();
 
-        $this->assertContains('block', $output);
-        $this->assertContains('checkbox', $output);
-        $this->assertContains('color', $output);
-        $this->assertContains('date', $output);
-        $this->assertContains('email', $output);
-        $this->assertContains('page_selection', $output);
-        $this->assertContains('select', $output);
-        $this->assertContains('number', $output);
-        $this->assertContains('password', $output);
-        $this->assertContains('phone', $output);
-        $this->assertContains('resource_locator', $output);
-        $this->assertContains('single_page_selection', $output);
-        $this->assertContains('single_select', $output);
-        $this->assertContains('text_area', $output);
-        $this->assertContains('text_editor', $output);
-        $this->assertContains('text_line', $output);
-        $this->assertContains('time', $output);
-        $this->assertContains('url', $output);
-        $this->assertContains('target_group_selection', $output);
-        $this->assertContains('category_selection', $output);
-        $this->assertContains('contact', $output);
-        $this->assertContains('smart_content', $output);
-        $this->assertContains('teaser_selection', $output);
-        $this->assertContains('location', $output);
-        $this->assertContains('media_selection', $output);
-        $this->assertContains('route', $output);
-        $this->assertContains('snippet_selection', $output);
-        $this->assertContains('tag_selection', $output);
+        $this->assertStringContainsString('block', $output);
+        $this->assertStringContainsString('checkbox', $output);
+        $this->assertStringContainsString('color', $output);
+        $this->assertStringContainsString('date', $output);
+        $this->assertStringContainsString('email', $output);
+        $this->assertStringContainsString('page_selection', $output);
+        $this->assertStringContainsString('select', $output);
+        $this->assertStringContainsString('number', $output);
+        $this->assertStringContainsString('password', $output);
+        $this->assertStringContainsString('phone', $output);
+        $this->assertStringContainsString('resource_locator', $output);
+        $this->assertStringContainsString('single_page_selection', $output);
+        $this->assertStringContainsString('single_select', $output);
+        $this->assertStringContainsString('text_area', $output);
+        $this->assertStringContainsString('text_editor', $output);
+        $this->assertStringContainsString('text_line', $output);
+        $this->assertStringContainsString('time', $output);
+        $this->assertStringContainsString('url', $output);
+        $this->assertStringContainsString('target_group_selection', $output);
+        $this->assertStringContainsString('category_selection', $output);
+        $this->assertStringContainsString('contact', $output);
+        $this->assertStringContainsString('smart_content', $output);
+        $this->assertStringContainsString('teaser_selection', $output);
+        $this->assertStringContainsString('location', $output);
+        $this->assertStringContainsString('media_selection', $output);
+        $this->assertStringContainsString('route', $output);
+        $this->assertStringContainsString('snippet_selection', $output);
+        $this->assertStringContainsString('tag_selection', $output);
     }
 }

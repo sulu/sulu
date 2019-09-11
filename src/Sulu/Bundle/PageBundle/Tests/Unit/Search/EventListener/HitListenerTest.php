@@ -46,7 +46,7 @@ class HitListenerTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $reflection = $this->prophesize(\ReflectionClass::class);
         $reflection->isSubclassOf(BasePageDocument::class)->willReturn(true);

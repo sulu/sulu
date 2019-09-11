@@ -13,10 +13,11 @@ namespace Sulu\Component\DocumentManager\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\DocumentAccessor;
+use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 
 class DocumentAccessorTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->object = new TestAccessObject();
         $this->accessor = new DocumentAccessor($this->object);
@@ -33,11 +34,10 @@ class DocumentAccessorTest extends TestCase
 
     /**
      * It should throw an exception if the property does not exist.
-     *
-     * @expectedException \Sulu\Component\DocumentManager\Exception\DocumentManagerException
      */
     public function testAccessObjectNotExist()
     {
+        $this->expectException(DocumentManagerException::class);
         $this->accessor->set('asdf', 'asd');
     }
 }

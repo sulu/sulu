@@ -26,7 +26,7 @@ class TargetGroupRepositoryTest extends SuluTestCase
      */
     private $targetGroupRepository;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->targetGroupRepository = $this->getEntityManager()->getRepository(TargetGroup::class);
         $this->purgeDatabase();

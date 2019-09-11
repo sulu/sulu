@@ -73,7 +73,7 @@ class RedirectExceptionSubscriberTest extends TestCase
      */
     private $event;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->router = $this->prophesize(RequestMatcherInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);

@@ -41,7 +41,7 @@ abstract class AbstractTransformationTest extends SuluTestCase
      */
     protected $imageHeight = 500;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->transformation = $this->getContainer()->get($this->transformationServiceName);

@@ -94,7 +94,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
      */
     private $collections;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

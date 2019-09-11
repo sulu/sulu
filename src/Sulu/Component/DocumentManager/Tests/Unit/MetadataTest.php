@@ -21,7 +21,7 @@ class MetadataTest extends TestCase
      */
     private $metadata;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->metadata = new Metadata();
     }
@@ -29,11 +29,10 @@ class MetadataTest extends TestCase
     /**
      * It should throw an exception if no class is set and the ReflectionClass
      * is requested.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testNoClassGetReflection()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->metadata->getReflectionClass();
     }
 
@@ -56,6 +55,6 @@ class MetadataTest extends TestCase
 
     public function testGetFieldMappingsEmpty()
     {
-        $this->assertInternalType('array', $this->metadata->getFieldMappings());
+        $this->assertIsArray($this->metadata->getFieldMappings());
     }
 }

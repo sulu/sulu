@@ -32,7 +32,7 @@ class TargetGroupSelectionTest extends TestCase
      */
     private $audienceTargetingGroups;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->targetGroupRepository = $this->prophesize(TargetGroupRepositoryInterface::class);
         $this->audienceTargetingGroups = new TargetGroupSelection($this->targetGroupRepository->reveal());

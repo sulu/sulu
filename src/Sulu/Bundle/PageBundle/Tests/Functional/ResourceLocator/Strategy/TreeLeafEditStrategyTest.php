@@ -41,7 +41,7 @@ class TreeLeafEditStrategyTest extends SuluTestCase
      */
     private $session;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->resourceLocatorStrategy = $this->getContainer()->get('sulu_page_test.resource_locator.strategy.tree_leaf_edit');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');

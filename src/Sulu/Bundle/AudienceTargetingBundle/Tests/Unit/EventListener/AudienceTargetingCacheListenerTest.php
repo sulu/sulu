@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\AudienceTargetingBundle\EventListener\AudienceTargetingCacheListener;
 use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
+use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -23,6 +24,8 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class AudienceTargetingCacheListenerTest extends TestCase
 {
+    use ReadObjectAttributeTrait;
+
     public function testHandle()
     {
         $request = $this->getRequest();
@@ -32,7 +35,7 @@ class AudienceTargetingCacheListenerTest extends TestCase
         $audienceTargetingCacheListener = new AudienceTargetingCacheListener();
         $audienceTargetingCacheListener->preHandle($this->getCacheEvent($httpCache, $request, $response));
 
-        $this->assertAttributeEquals(false, 'hadValidTargetGroupCookie', $audienceTargetingCacheListener);
+        $this->assertFalse($this->readObjectAttribute($audienceTargetingCacheListener, 'hadValidTargetGroupCookie'));
         $this->assertEmpty($response->headers->getCookies());
 
         $audienceTargetingCacheListener->postHandle($this->getCacheEvent($httpCache, $request, $response));
@@ -78,7 +81,7 @@ class AudienceTargetingCacheListenerTest extends TestCase
 
         $audienceTargetingCacheListener->preHandle($this->getCacheEvent($httpCache, $request, $response));
 
-        $this->assertAttributeEquals(true, 'hadValidTargetGroupCookie', $audienceTargetingCacheListener);
+        $this->assertTrue($this->readObjectAttribute($audienceTargetingCacheListener, 'hadValidTargetGroupCookie'));
         $this->assertEmpty($response->headers->getCookies());
 
         $audienceTargetingCacheListener->postHandle($this->getCacheEvent($httpCache, $request, $response));

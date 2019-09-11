@@ -57,7 +57,7 @@ class RegistratorSubscriberTest extends TestCase
      */
     private $removeEvent;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->registry = $this->prophesize(DocumentRegistry::class);
         $this->subscriber = new RegistratorSubscriber(

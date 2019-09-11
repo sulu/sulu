@@ -33,7 +33,7 @@ class InitializeCommandTest extends TestCase
      */
     private $initializer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->questionHelper = $this->prophesize(QuestionHelper::class);
         $this->initializer = $this->prophesize(Initializer::class);

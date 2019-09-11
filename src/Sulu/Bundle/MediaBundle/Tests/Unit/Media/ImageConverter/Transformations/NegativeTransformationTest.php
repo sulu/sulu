@@ -26,7 +26,7 @@ class NegativeTransformationTest extends SuluTestCase
      */
     protected $transformation;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->transformation = new NegativeTransformation();
 

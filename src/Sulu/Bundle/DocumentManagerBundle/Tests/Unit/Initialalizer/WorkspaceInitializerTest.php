@@ -51,7 +51,7 @@ class WorkspaceInitializerTest extends TestCase
      */
     private $workspace2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->session1 = $this->prophesize(SessionInterface::class);
         $this->session2 = $this->prophesize(SessionInterface::class);

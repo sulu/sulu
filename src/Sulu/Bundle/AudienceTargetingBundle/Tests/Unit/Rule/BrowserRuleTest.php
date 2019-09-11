@@ -33,7 +33,7 @@ class BrowserRuleTest extends TestCase
      */
     private $browserRule;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->deviceDetector = $this->prophesize(DeviceDetector::class);
         $this->translator = $this->prophesize(TranslatorInterface::class);

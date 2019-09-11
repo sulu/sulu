@@ -35,7 +35,7 @@ class LinkTagTest extends TestCase
      */
     private $linkTag;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $providers = $this->providers = [
             'page' => $this->prophesize(LinkProviderInterface::class),

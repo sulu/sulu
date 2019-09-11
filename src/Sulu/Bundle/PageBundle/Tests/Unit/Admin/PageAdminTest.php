@@ -50,7 +50,7 @@ class PageAdminTest extends TestCase
      */
     private $teaserProviderPool;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->routeBuilderFactory = new RouteBuilderFactory();
         $this->securityChecker = $this->prophesize(SecurityChecker::class);
@@ -97,11 +97,11 @@ class PageAdminTest extends TestCase
         $webspaceRoute = $routeCollection->get('sulu_page.webspaces')->getRoute();
         $pageListRoute = $routeCollection->get('sulu_page.pages_list')->getRoute();
 
-        $this->assertAttributeEquals('sulu_page.webspaces', 'name', $webspaceRoute);
-        $this->assertAttributeEquals(['webspace' => 'test-1'], 'attributeDefaults', $webspaceRoute);
+        $this->assertSame('sulu_page.webspaces', $webspaceRoute->getName());
+        $this->assertSame('test-1', $webspaceRoute->getAttributeDefault('webspace'));
 
-        $this->assertAttributeEquals('sulu_page.pages_list', 'name', $pageListRoute);
-        $this->assertAttributeEquals(['locale' => 'de'], 'attributeDefaults', $pageListRoute);
+        $this->assertSame('sulu_page.pages_list', $pageListRoute->getName());
+        $this->assertSame('de', $pageListRoute->getAttributeDefault('locale'));
     }
 
     public function testGetConfigWithVersioning()

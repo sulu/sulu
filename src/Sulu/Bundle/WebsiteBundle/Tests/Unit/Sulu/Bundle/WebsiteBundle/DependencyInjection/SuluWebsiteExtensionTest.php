@@ -16,7 +16,7 @@ use Sulu\Bundle\WebsiteBundle\DependencyInjection\SuluWebsiteExtension;
 
 class SuluWebsiteExtensionTest extends AbstractExtensionTestCase
 {
-    protected function getContainerExtensions()
+    protected function getContainerExtensions(): array
     {
         return [
             new SuluWebsiteExtension(),

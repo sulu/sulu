@@ -40,7 +40,7 @@ class SuluSecurityListenerTest extends TestCase
      */
     private $filterControllerEvent;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

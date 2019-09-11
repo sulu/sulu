@@ -55,7 +55,7 @@ class MemoizeTwigExtensionTraitTest extends TestCase
      */
     protected $lifeTimeProperty;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->memoizeCache = $this->prophesize(MemoizeInterface::class);
         $this->extension = $this->prophesize(ExtensionInterface::class);

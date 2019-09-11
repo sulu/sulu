@@ -56,7 +56,7 @@ class SingleAccountSelectionTest extends TestCase
      */
     private $account;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->accountManager = $this->prophesize(AccountManager::class);
         $this->accountReferenceStore = $this->prophesize(ReferenceStore::class);

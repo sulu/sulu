@@ -40,7 +40,7 @@ class VideoThumbnailServiceTest extends TestCase
      */
     protected $ffmpeg;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -84,7 +84,7 @@ class ContentMapperTest extends SuluTestCase
      */
     private $contentTypeManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->initPhpcr();
         $this->extensions = [new TestExtension('test1'), new TestExtension('test2', 'test2')];

@@ -32,7 +32,7 @@ class MemoizeTest extends TestCase
      */
     private $defaultLifeTime = 600;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

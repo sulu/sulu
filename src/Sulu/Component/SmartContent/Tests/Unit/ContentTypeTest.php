@@ -91,7 +91,7 @@ class ContentTypeTest extends TestCase
      */
     private $tagReferenceStore;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->pageDataProvider = $this->prophesize(DataProviderInterface::class);
         $this->pageDataProvider->getConfiguration()->willReturn($this->getProviderConfiguration());
