@@ -12,6 +12,7 @@ import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import type {AttributeMap, Route, UpdateRouteMethod} from '../../services/Router/types';
 import ResourceStore from '../../stores/ResourceStore';
+import CollaborationStore from '../../stores/CollaborationStore';
 import {translate} from '../../utils/Translator';
 import formToolbarActionRegistry from './registries/formToolbarActionRegistry';
 import AbstractFormToolbarAction from './toolbarActions/AbstractFormToolbarAction';
@@ -31,6 +32,7 @@ const HAS_CHANGED_ERROR_CODE = 1102;
 class Form extends React.Component<Props> {
     resourceStore: ResourceStore;
     resourceFormStore: ResourceFormStore;
+    collaborationStore: ?CollaborationStore;
     form: ?ElementRef<typeof FormContainer>;
     @observable errors: Array<string> = [];
     showSuccess: IObservableValue<boolean> = observable.box(false);
@@ -125,6 +127,10 @@ class Form extends React.Component<Props> {
             this.checkFormStoreDirtyStateBeforeNavigation,
             FORM_STORE_UPDATE_ROUTE_HOOK_PRIORITY
         );
+
+        if (resourceKey && id) {
+            this.collaborationStore = new CollaborationStore(resourceKey, id);
+        }
     }
 
     @action checkFormStoreDirtyStateBeforeNavigation = (
@@ -231,6 +237,10 @@ class Form extends React.Component<Props> {
         this.checkFormStoreDirtyStateBeforeNavigationDisposer();
 
         this.resourceFormStore.destroy();
+
+        if (this.collaborationStore) {
+            this.collaborationStore.destroy();
+        }
 
         if (this.hasOwnResourceStore) {
             this.resourceStore.destroy();
@@ -471,6 +481,14 @@ export default withToolbar(Form, function() {
         );
     }
 
+    const warnings = [];
+    if (this.collaborationStore && this.collaborationStore.collaborations.length > 0) {
+        warnings.push([
+            translate('sulu_admin.form_used_by'),
+            this.collaborationStore.collaborations.map((collaboration) => collaboration.fullName).join(', '),
+        ].join(' '));
+    }
+
     return {
         backButton,
         errors,
@@ -478,5 +496,6 @@ export default withToolbar(Form, function() {
         items,
         icons,
         showSuccess,
+        warnings,
     };
 });

@@ -32,7 +32,8 @@ jest.mock('../../../services/ResourceRequester', () => ({
         then: jest.fn(),
     }),
     put: jest.fn(),
-    post: jest.fn().mockReturnValue(Promise.resolve({})),
+    post: jest.fn(),
+    delete: jest.fn(),
 }));
 
 jest.mock('../../../containers/Form/stores/metadataStore', () => ({
@@ -245,6 +246,72 @@ test('Should instantiate the ResourceStore with the idQueryParameter if given', 
     const formResourceStore = form.instance().resourceStore;
 
     expect(formResourceStore.idQueryParameter).toEqual('contactId');
+});
+
+test('Should not instantiate a CollaborationStore if it is an add form', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets');
+    const route = {
+        options: {
+            formKey: 'snippets',
+            resourceKey: 'snippets',
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {},
+        route,
+    };
+
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    expect(form.instance().collaborationStore).toEqual(undefined);
+});
+
+test('Should instantiate a CollaborationStore if it is an edit form and show ', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 6);
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
+
+    const collaborations = [
+        {
+            fullName: 'Max Mustermann',
+        },
+        {
+            fullName: 'Erika Mustermann',
+        },
+    ];
+    const collaborationsPromise = Promise.resolve({_embedded: {collaborations}});
+    ResourceRequester.post.mockReturnValue(collaborationsPromise);
+
+    const route = {
+        options: {
+            formKey: 'snippets',
+            resourceKey: 'snippets',
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {
+            id: 6,
+        },
+        route,
+    };
+
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    expect(form.instance().collaborationStore.resourceKey).toEqual('snippets');
+    expect(form.instance().collaborationStore.id).toEqual(6);
+    expect(ResourceRequester.post).toBeCalledWith('collaborations', null, {id: 6, resourceKey: 'snippets'});
+
+    return collaborationsPromise.then(() => {
+        const toolbarConfig = toolbarFunction.call(form.instance());
+        expect(toolbarConfig.warnings).toEqual(['sulu_admin.form_used_by Max Mustermann, Erika Mustermann']);
+    });
 });
 
 test('Throw error if options are not passed correctly', () => {
@@ -1650,6 +1717,7 @@ test('Should keep errors after form submission has failed', (done) => {
 test('Should save form when submitted and redirect to editRoute', () => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve());
+    ResourceRequester.post.mockReturnValue(Promise.resolve({}));
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const metadataStore = require('../../../containers/Form/stores/metadataStore');
@@ -1702,6 +1770,7 @@ test('Should save form when submitted and redirect to editRoute', () => {
 test('Should save form when submitted and redirect to editRoute', () => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve());
+    ResourceRequester.post.mockReturnValue(Promise.resolve({}));
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const metadataStore = require('../../../containers/Form/stores/metadataStore');
@@ -1817,7 +1886,9 @@ test('Should destroy the own resourceStore if existing on unmount', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippets', 11);
+    const ResourceRequester = require('../../../services/ResourceRequester');
     resourceStore.destroy = jest.fn();
+    ResourceRequester.post.mockReturnValue(Promise.resolve({_embedded: {collaborations: []}}));
 
     const route = {
         options: {
@@ -1828,7 +1899,9 @@ test('Should destroy the own resourceStore if existing on unmount', () => {
     };
     const router = {
         addUpdateRouteHook: jest.fn(),
-        attributes: {},
+        attributes: {
+            id: 12,
+        },
         route,
     };
 
@@ -1837,9 +1910,13 @@ test('Should destroy the own resourceStore if existing on unmount', () => {
     const formResourceStore = form.instance().resourceStore;
     formResourceStore.destroy = jest.fn();
 
+    const collaborationStore = form.instance().collaborationStore;
+    collaborationStore.destroy = jest.fn();
+
     form.unmount();
     expect(resourceStore.destroy).not.toBeCalled();
     expect(formResourceStore.destroy).toBeCalled();
+    expect(collaborationStore.destroy).toBeCalled();
 });
 
 test('Should not bind the locale if no locales have been passed via options', () => {
