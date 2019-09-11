@@ -35,7 +35,7 @@ class AudienceTargetingCacheListenerTest extends TestCase
         $audienceTargetingCacheListener = new AudienceTargetingCacheListener();
         $audienceTargetingCacheListener->preHandle($this->getCacheEvent($httpCache, $request, $response));
 
-        $this->assertFalse(false, $this->readObjectAttribute($audienceTargetingCacheListener, 'hadValidTargetGroupCookie'));
+        $this->assertFalse($this->readObjectAttribute($audienceTargetingCacheListener, 'hadValidTargetGroupCookie'));
         $this->assertEmpty($response->headers->getCookies());
 
         $audienceTargetingCacheListener->postHandle($this->getCacheEvent($httpCache, $request, $response));
