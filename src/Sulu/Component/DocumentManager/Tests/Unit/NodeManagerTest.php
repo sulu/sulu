@@ -16,6 +16,7 @@ use PHPCR\PathNotFoundException;
 use PHPCR\SessionInterface;
 use PHPCR\WorkspaceInterface;
 use PHPUnit\Framework\TestCase;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\DocumentManager\NodeManager;
 
 class NodeManagerTest extends TestCase
@@ -92,7 +93,7 @@ class NodeManagerTest extends TestCase
      */
     public function testFindNotFound()
     {
-        $this->expectException(\Sulu\Component\DocumentManager\Exception\DocumentNotFoundException::class);
+        $this->expectException(DocumentNotFoundException::class);
         $this->session->getNode(self::PATH1)->willThrow(new PathNotFoundException('Not found'));
         $this->manager->find(self::PATH1);
     }

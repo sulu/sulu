@@ -12,6 +12,7 @@
 namespace Sulu\Component\DocumentManager\tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 
 class NamespaceRegistryTest extends TestCase
@@ -38,7 +39,7 @@ class NamespaceRegistryTest extends TestCase
      */
     public function testGetUnknownPrefix()
     {
-        $this->expectException(\Sulu\Component\DocumentManager\Exception\DocumentManagerException::class);
+        $this->expectException(DocumentManagerException::class);
         $this->registry->getPrefix('foobarbar');
     }
 }

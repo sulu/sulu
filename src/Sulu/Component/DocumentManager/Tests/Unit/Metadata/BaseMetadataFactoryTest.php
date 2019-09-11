@@ -13,6 +13,7 @@ namespace Sulu\Component\DocumentManager\tests\Unit\Metadata;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\DocumentStrategyInterface;
+use Sulu\Component\DocumentManager\Exception\MetadataNotFoundException;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -58,7 +59,7 @@ class BaseMetadataFactoryTest extends TestCase
      */
     public function testGetForClassNotFound()
     {
-        $this->expectException(\Sulu\Component\DocumentManager\Exception\MetadataNotFoundException::class);
+        $this->expectException(MetadataNotFoundException::class);
         $this->factory->getMetadataForClass('Class\Page\NotFound');
     }
 
@@ -79,7 +80,7 @@ class BaseMetadataFactoryTest extends TestCase
      */
     public function testGetForAliasNotFound()
     {
-        $this->expectException(\Sulu\Component\DocumentManager\Exception\MetadataNotFoundException::class);
+        $this->expectException(MetadataNotFoundException::class);
         $this->factory->getMetadataForAlias('yak');
     }
 
@@ -125,7 +126,7 @@ class BaseMetadataFactoryTest extends TestCase
      */
     public function testGetForPhpcrTypeNotFound()
     {
-        $this->expectException(\Sulu\Component\DocumentManager\Exception\MetadataNotFoundException::class);
+        $this->expectException(MetadataNotFoundException::class);
         $this->factory->getMetadataForPhpcrType('yak');
     }
 

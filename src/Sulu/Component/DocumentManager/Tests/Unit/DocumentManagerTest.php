@@ -37,6 +37,7 @@ use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\DocumentManager\Query\Query;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
 class DocumentManagerTest extends TestCase
 {
@@ -214,7 +215,7 @@ class DocumentManagerTest extends TestCase
      */
     public function testFindWithInvalidOptions()
     {
-        $this->expectException(\Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException::class);
+        $this->expectException(UndefinedOptionsException::class);
         $subscriber = $this->addSubscriber();
         $this->documentManager->find('foo', 'bar', ['foo123' => 'bar']);
     }

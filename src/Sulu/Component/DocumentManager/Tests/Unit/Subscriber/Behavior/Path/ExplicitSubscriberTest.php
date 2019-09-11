@@ -16,8 +16,10 @@ use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\DocumentManager\Subscriber\Behavior\Path\ExplicitSubscriber;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ExplicitSubscriberTest extends TestCase
@@ -76,7 +78,7 @@ class ExplicitSubscriberTest extends TestCase
      */
     public function testExceptionNodeNameAndPath()
     {
-        $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
+        $this->expectException(InvalidOptionsException::class);
         $options = $this->resolveOptions([
             'path' => '/path/to/nodename',
             'node_name' => '/foo',
@@ -90,7 +92,7 @@ class ExplicitSubscriberTest extends TestCase
      */
     public function testExceptionParentPathAndPath()
     {
-        $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
+        $this->expectException(InvalidOptionsException::class);
         $options = $this->resolveOptions([
             'path' => '/path/to/nodename',
             'parent_path' => '/foo',
@@ -212,7 +214,7 @@ class ExplicitSubscriberTest extends TestCase
      */
     public function testNodeNameButNotParentNode()
     {
-        $this->expectException(\Sulu\Component\DocumentManager\Exception\DocumentManagerException::class);
+        $this->expectException(DocumentManagerException::class);
         $options = $this->resolveOptions([
             'node_name' => 'foobar',
         ]);
