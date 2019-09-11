@@ -107,7 +107,7 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                     'routes_to_expose' => [
                         '(.+\.)?c?get_.*',
                         'sulu_admin.metadata',
-                        'sulu_admin.post_collaboration',
+                        'sulu_admin.put_collaborations',
                     ],
                 ]
             );
@@ -119,7 +119,7 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                 'resources' => [
                     'collaborations' => [
                         'routes' => [
-                            'detail' => 'sulu_admin.post_collaboration',
+                            'detail' => 'sulu_admin.put_collaborations',
                         ],
                     ],
                     'localizations' => [

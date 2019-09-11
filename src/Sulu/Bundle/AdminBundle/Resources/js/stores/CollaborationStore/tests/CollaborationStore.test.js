@@ -5,7 +5,7 @@ import ResourceRequester from '../../../services/ResourceRequester';
 jest.useFakeTimers();
 
 jest.mock('../../../services/ResourceRequester', () => ({
-    post: jest.fn(),
+    put: jest.fn(),
     delete: jest.fn(),
 }));
 
@@ -16,20 +16,20 @@ test('Load collaborators repeatedly and stop when destroyed', () => {
         },
     ];
 
-    const postPromise1 = Promise.resolve({
+    const putPromise1 = Promise.resolve({
         _embedded: {
             collaborations: collaborations1,
         },
     });
 
-    ResourceRequester.post.mockReturnValue(postPromise1);
+    ResourceRequester.put.mockReturnValue(putPromise1);
 
     const collaborationStore = new CollaborationStore('pages', 1);
 
-    expect(ResourceRequester.post).toHaveBeenLastCalledWith('collaborations', null, {id: 1, resourceKey: 'pages'});
-    expect(ResourceRequester.post).toBeCalledTimes(1);
+    expect(ResourceRequester.put).toHaveBeenLastCalledWith('collaborations', null, {id: 1, resourceKey: 'pages'});
+    expect(ResourceRequester.put).toBeCalledTimes(1);
 
-    return postPromise1.then(() => {
+    return putPromise1.then(() => {
         expect(collaborationStore.collaborations).toEqual(collaborations1);
 
         const collaborations2 = [
@@ -41,25 +41,25 @@ test('Load collaborators repeatedly and stop when destroyed', () => {
             },
         ];
 
-        const postPromise2 = Promise.resolve({
+        const putPromise2 = Promise.resolve({
             _embedded: {
                 collaborations: collaborations2,
             },
         });
 
-        ResourceRequester.post.mockReturnValue(postPromise2);
+        ResourceRequester.put.mockReturnValue(putPromise2);
 
         jest.runOnlyPendingTimers();
-        expect(ResourceRequester.post).toHaveBeenLastCalledWith('collaborations', null, {id: 1, resourceKey: 'pages'});
-        expect(ResourceRequester.post).toBeCalledTimes(2);
+        expect(ResourceRequester.put).toHaveBeenLastCalledWith('collaborations', null, {id: 1, resourceKey: 'pages'});
+        expect(ResourceRequester.put).toBeCalledTimes(2);
 
-        return postPromise2.then(() => {
+        return putPromise2.then(() => {
             expect(collaborationStore.collaborations).toEqual(collaborations2);
 
             collaborationStore.destroy();
 
             jest.runOnlyPendingTimers();
-            expect(ResourceRequester.post).toBeCalledTimes(2);
+            expect(ResourceRequester.put).toBeCalledTimes(2);
 
             expect(ResourceRequester.delete).toBeCalledTimes(1);
             expect(ResourceRequester.delete).toHaveBeenLastCalledWith('collaborations', {id: 1, resourceKey: 'pages'});

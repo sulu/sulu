@@ -40,6 +40,58 @@ class CollaborationRepositoryTest extends TestCase
         ClockMock::withClockMock(false);
     }
 
+    public function testFind()
+    {
+        $cacheItem = new CacheItem();
+        $this->cache->getItem('page_8')->willReturn($cacheItem);
+        $collaborationRepository = new CollaborationRepository($this->cache->reveal(), 20);
+
+        $collaboration1 = new Collaboration(
+            'collaboration1',
+            1,
+            'max',
+            'Max Mustermann',
+            'page',
+            8
+        );
+
+        $this->cache->save($cacheItem)->shouldBeCalled();
+        $collaborationRepository->update($collaboration1);
+
+        $result = $collaborationRepository->find('page', 8, 'collaboration1');
+        $this->assertEquals($collaboration1, $result);
+    }
+
+    public function testFindWithNotExistingCollaboration()
+    {
+        $cacheItem = new CacheItem();
+        $this->cache->getItem('page_8')->willReturn($cacheItem);
+        $collaborationRepository = new CollaborationRepository($this->cache->reveal(), 20);
+
+        $collaboration1 = new Collaboration(
+            'collaboration1',
+            1,
+            'max',
+            'Max Mustermann',
+            'page',
+            8
+        );
+
+        $this->cache->save($cacheItem)->shouldBeCalled();
+        $collaborationRepository->update($collaboration1);
+
+        $result = $collaborationRepository->find('page', 8, 'collaboration2');
+        $this->assertNull($result);
+    }
+
+    public function testFindWithNotExistingCacheItem()
+    {
+        $collaborationRepository = new CollaborationRepository($this->cache->reveal(), 20);
+
+        $result = $collaborationRepository->find('page', 8, 'collaboration2');
+        $this->assertNull($result);
+    }
+
     public function provideUpdate()
     {
         return [
@@ -160,6 +212,33 @@ class CollaborationRepositoryTest extends TestCase
         $result = $collaborationRepository->update($collaboration1);
 
         $this->assertEquals([$collaboration1], $result);
+    }
+
+    public function testUpdateWithUpdatedChangedTime()
+    {
+        $cacheItem = new CacheItem();
+        $this->cache->getItem('page_8')->willReturn($cacheItem);
+        $collaborationRepository = new CollaborationRepository($this->cache->reveal(), 20);
+
+        $collaboration1 = new Collaboration(
+            'collaboration1',
+            1,
+            'max',
+            'Max Mustermann',
+            'page',
+            8
+        );
+
+        $started = $collaboration1->getStarted();
+        $this->assertEquals($started, $collaboration1->getChanged());
+
+        sleep(10);
+
+        $this->cache->save($cacheItem)->shouldBeCalled();
+        $result = $collaborationRepository->update($collaboration1);
+
+        $this->assertEquals($started, $collaboration1->getStarted());
+        $this->assertEquals($started + 10, $collaboration1->getChanged());
     }
 
     public function testDelete()

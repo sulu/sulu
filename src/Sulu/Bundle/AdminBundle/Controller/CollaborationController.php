@@ -57,10 +57,16 @@ class CollaborationController implements ClassResourceInterface
         $this->secret = $secret;
     }
 
-    public function postAction(Request $request)
+    public function cputAction(Request $request)
     {
+        $collaboration = $this->collaborationRepository->find(
+            $this->getResourceKey($request),
+            $this->getId($request),
+            $this->getConnectionId($request)
+        ) ?? $this->createCollaboration($request);
+
         $collaborations = array_values(array_filter(
-            $this->collaborationRepository->update($this->createCollaboration($request)),
+            $this->collaborationRepository->update($collaboration),
             function(Collaboration $collaboration) use ($request) {
                 return $collaboration->getConnectionId() !== $this->getConnectionId($request);
             }
@@ -89,9 +95,22 @@ class CollaborationController implements ClassResourceInterface
             $user->getId(),
             $user->getUserName(),
             $user->getFullName(),
-            $request->query->get('resourceKey'),
-            $request->query->get('id')
+            $this->getResourceKey($request),
+            $this->getId($request)
         );
+    }
+
+    /**
+     * @return string | int
+     */
+    private function getId(Request $request)
+    {
+        return $request->query->get('id');
+    }
+
+    private function getResourceKey(Request $request): string
+    {
+        return $request->query->get('resourceKey');
     }
 
     private function getConnectionId(Request $request)

@@ -25,7 +25,7 @@ export default class CollaborationStore {
             return;
         }
 
-        ResourceRequester.post('collaborations', null, {id: this.id, resourceKey: this.resourceKey})
+        ResourceRequester.put('collaborations', null, {id: this.id, resourceKey: this.resourceKey})
             .then(action((response) => {
                 this.collaborations.splice(0, this.collaborations.length);
                 this.collaborations.push(...response._embedded.collaborations);

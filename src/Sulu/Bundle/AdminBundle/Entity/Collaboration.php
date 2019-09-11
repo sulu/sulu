@@ -51,6 +51,11 @@ class Collaboration
     /**
      * @var int
      */
+    private $started;
+
+    /**
+     * @var int
+     */
     private $changed;
 
     public function __construct($connectionId, $userId, $username, $fullName, $resourceKey, $id)
@@ -61,6 +66,7 @@ class Collaboration
         $this->fullName = $fullName;
         $this->resourceKey = $resourceKey;
         $this->id = $id;
+        $this->started = time();
         $this->changed = time();
     }
 
@@ -79,8 +85,18 @@ class Collaboration
         return $this->id;
     }
 
+    public function getStarted()
+    {
+        return $this->started;
+    }
+
     public function getChanged()
     {
         return $this->changed;
+    }
+
+    public function updateTime()
+    {
+        $this->changed = time();
     }
 }

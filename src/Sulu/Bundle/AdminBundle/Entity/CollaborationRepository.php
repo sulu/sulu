@@ -31,12 +31,31 @@ class CollaborationRepository
         $this->threshold = $threshold;
     }
 
+    public function find(string $resourceKey, string $id, string $connectionId): ?Collaboration
+    {
+        $cacheItem = $this->cache->getItem($this->getCacheId($resourceKey, $id));
+
+        if (!$cacheItem) {
+            return null;
+        }
+
+        $collaborations = $cacheItem->get();
+
+        if (!$collaborations) {
+            return null;
+        }
+
+        return $collaborations[$connectionId] ?? null;
+    }
+
     /**
      * @return Collaboration[]
      */
     public function update(Collaboration $collaboration): array
     {
-        $cacheItem = $this->cache->getItem($this->getCacheId($collaboration));
+        $collaboration->updateTime();
+
+        $cacheItem = $this->cache->getItem($this->getCacheIdFromCollaboration($collaboration));
         $value = $cacheItem->get() ?? [];
         $value[$collaboration->getConnectionId()] = $collaboration;
 
@@ -56,7 +75,7 @@ class CollaborationRepository
      */
     public function delete(Collaboration $collaboration): array
     {
-        $cacheItem = $this->cache->getItem($this->getCacheId($collaboration));
+        $cacheItem = $this->cache->getItem($this->getCacheIdFromCollaboration($collaboration));
         $value = array_filter($cacheItem->get() ?? [], function(Collaboration $cachedCollaboration) use($collaboration) {
             return $collaboration->getConnectionId() !== $cachedCollaboration->getConnectionId();
         });
@@ -67,7 +86,14 @@ class CollaborationRepository
         return array_values($value);
     }
 
-    private function getCacheId(Collaboration $collaboration): string {
-        return $collaboration->getResourceKey() . '_' . $collaboration->getId();
+    private function getCacheIdFromCollaboration(Collaboration $collaboration): string {
+        return $this->getCacheId($collaboration->getResourceKey(), $collaboration->getId());
+    }
+
+    /**
+     * @param $id string | int
+     */
+    private function getCacheId(string $resourceKey, $id): string {
+        return $resourceKey . '_' . $id;
     }
 }

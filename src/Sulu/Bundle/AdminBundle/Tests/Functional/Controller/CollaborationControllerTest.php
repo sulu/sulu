@@ -26,7 +26,7 @@ class CollaborationControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $session = $client->getContainer()->get('session');
         $session->start();
-        $client->request('POST', '/admin/api/collaborations?id=4&resourceKey=page');
+        $client->request('PUT', '/admin/api/collaborations?id=4&resourceKey=page');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -55,7 +55,7 @@ class CollaborationControllerTest extends SuluTestCase
 
         $cache->save($cacheItem);
 
-        $client->request('POST', '/admin/api/collaborations?id=4&resourceKey=page');
+        $client->request('PUT', '/admin/api/collaborations?id=4&resourceKey=page');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -69,10 +69,14 @@ class CollaborationControllerTest extends SuluTestCase
         $this->assertEquals(4, $collaborations[0]->id);
         $this->assertEquals('Max Mustermann', $collaborations[0]->fullName);
         $this->assertObjectHasAttribute('connectionId', $collaborations[0]);
+        $this->assertObjectHasAttribute('started', $collaborations[0]);
+        $this->assertObjectHasAttribute('changed', $collaborations[0]);
         $this->assertEquals('page', $collaborations[1]->resourceKey);
         $this->assertEquals(4, $collaborations[1]->id);
         $this->assertEquals('Erika Mustermann', $collaborations[1]->fullName);
         $this->assertObjectHasAttribute('connectionId', $collaborations[1]);
+        $this->assertObjectHasAttribute('started', $collaborations[1]);
+        $this->assertObjectHasAttribute('changed', $collaborations[1]);
     }
 
     public function testDelete()
@@ -89,7 +93,7 @@ class CollaborationControllerTest extends SuluTestCase
 
         $cache->save($cacheItem);
 
-        $client->request('POST', '/admin/api/collaborations?id=4&resourceKey=page');
+        $client->request('PUT', '/admin/api/collaborations?id=4&resourceKey=page');
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertCount(3, $cache->getItem('page_4')->get());

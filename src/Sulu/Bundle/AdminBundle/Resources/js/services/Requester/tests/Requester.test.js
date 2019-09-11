@@ -219,6 +219,30 @@ test('Should execute PUT request and return JSON', () => {
     return requestPromise;
 });
 
+test('Should execute PUT request without data and return JSON', () => {
+    const response = {
+        json: jest.fn(),
+        ok: true,
+    };
+    response.json.mockReturnValue(Promise.resolve({test: '', value: 'test'}));
+    const promise = new Promise((resolve) => resolve(response));
+
+    window.fetch = jest.fn();
+    window.fetch.mockReturnValue(promise);
+
+    const requestPromise = Requester.put('/some-url', null).then((response) => {
+        expect(response).toEqual({test: '', value: 'test'});
+    });
+
+    expect(window.fetch).toBeCalledWith('/some-url', {
+        method: 'PUT',
+        credentials: 'same-origin',
+        headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+    });
+
+    return requestPromise;
+});
+
 test('Should execute PATCH request and return JSON', () => {
     const response = {
         json: jest.fn(),

@@ -286,7 +286,7 @@ test('Should instantiate a CollaborationStore if it is an edit form and show ', 
         },
     ];
     const collaborationsPromise = Promise.resolve({_embedded: {collaborations}});
-    ResourceRequester.post.mockReturnValue(collaborationsPromise);
+    ResourceRequester.put.mockReturnValue(collaborationsPromise);
 
     const route = {
         options: {
@@ -306,7 +306,7 @@ test('Should instantiate a CollaborationStore if it is an edit form and show ', 
     const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
     expect(form.instance().collaborationStore.resourceKey).toEqual('snippets');
     expect(form.instance().collaborationStore.id).toEqual(6);
-    expect(ResourceRequester.post).toBeCalledWith('collaborations', null, {id: 6, resourceKey: 'snippets'});
+    expect(ResourceRequester.put).toBeCalledWith('collaborations', null, {id: 6, resourceKey: 'snippets'});
 
     return collaborationsPromise.then(() => {
         const toolbarConfig = toolbarFunction.call(form.instance());
@@ -1888,7 +1888,7 @@ test('Should destroy the own resourceStore if existing on unmount', () => {
     const resourceStore = new ResourceStore('snippets', 11);
     const ResourceRequester = require('../../../services/ResourceRequester');
     resourceStore.destroy = jest.fn();
-    ResourceRequester.post.mockReturnValue(Promise.resolve({_embedded: {collaborations: []}}));
+    ResourceRequester.put.mockReturnValue(Promise.resolve({_embedded: {collaborations: []}}));
 
     const route = {
         options: {
