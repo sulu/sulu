@@ -199,6 +199,8 @@ class FormMetadataMapperTest extends TestCase
         $this->assertInstanceOf(FieldMetadata::class, $block);
         $this->assertEquals('block', $block->getType());
         $this->assertEquals('component1', $block->getDefaultType());
+        $this->assertEquals(1, $block->getMinOccurs());
+        $this->assertEquals(2, $block->getMaxOccurs());
 
         $this->assertEquals('component1', $block->getTypes()['component1']->getName());
         $this->assertEquals('First Component', $block->getTypes()['component1']->getTitle());
@@ -227,6 +229,8 @@ class FormMetadataMapperTest extends TestCase
         $this->assertInstanceOf(FieldMetadata::class, $block);
         $this->assertEquals('block', $block->getType());
         $this->assertEquals('component1', $block->getDefaultType());
+        $this->assertEquals(1, $block->getMinOccurs());
+        $this->assertEquals(2, $block->getMaxOccurs());
 
         $this->assertEquals('component1', $block->getTypes()['component1']->getName());
         $this->assertEquals('Erste Komponente', $block->getTypes()['component1']->getTitle());
@@ -396,6 +400,8 @@ class FormMetadataMapperTest extends TestCase
 
         $block->addComponent($component1);
         $block->addComponent($component2);
+        $block->setMinOccurs(1);
+        $block->setMaxOccurs(2);
         $block->defaultComponentName = 'component1';
         $block->setType('block');
 

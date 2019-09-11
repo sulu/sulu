@@ -39,6 +39,16 @@ class FieldMetadata extends ItemMetadata
     protected $spaceAfter;
 
     /**
+     * @var null|int
+     */
+    protected $minOccurs;
+
+    /**
+     * @var null|int
+     */
+    protected $maxOccurs;
+
+    /**
      * @var string
      */
     protected $onInvalid;
@@ -104,6 +114,26 @@ class FieldMetadata extends ItemMetadata
     public function setSpaceAfter(int $spaceAfter = null): void
     {
         $this->spaceAfter = $spaceAfter;
+    }
+
+    public function setMinOccurs(int $minOccurs = null): void
+    {
+        $this->minOccurs = $minOccurs;
+    }
+
+    public function getMinOccurs(): ?int
+    {
+        return $this->minOccurs;
+    }
+
+    public function setMaxOccurs(int $maxOccurs = null): void
+    {
+        $this->maxOccurs = $maxOccurs;
+    }
+
+    public function getMaxOccurs(): ?int
+    {
+        return $this->maxOccurs;
     }
 
     public function setOnInvalid(string $onInvalid = null): void
