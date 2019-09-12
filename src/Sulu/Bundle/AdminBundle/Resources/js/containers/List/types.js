@@ -27,7 +27,6 @@ export type Action = {|
     disabled?: boolean,
     icon: string,
     onClick: ?(itemId: string | number, index: number) => void,
-    visible?: boolean,
 |};
 
 export type ListAdapterProps = {|

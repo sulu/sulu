@@ -58,7 +58,7 @@ exports[`Render a MediaHistory view 1`] = `
           class="row"
         >
           <td
-            class="buttonCell visible cell"
+            class="buttonCell cell"
           >
             <div
               class="cellContent"
@@ -72,7 +72,7 @@ exports[`Render a MediaHistory view 1`] = `
             </div>
           </td>
           <td
-            class="buttonCell visible cell"
+            class="buttonCell cell"
           >
             <div
               class="cellContent"
@@ -108,7 +108,7 @@ exports[`Render a MediaHistory view 1`] = `
           class="row"
         >
           <td
-            class="buttonCell visible cell"
+            class="buttonCell cell"
           >
             <div
               class="cellContent"
@@ -122,7 +122,7 @@ exports[`Render a MediaHistory view 1`] = `
             </div>
           </td>
           <td
-            class="buttonCell visible cell"
+            class="buttonCell cell"
           >
             <div
               class="cellContent"

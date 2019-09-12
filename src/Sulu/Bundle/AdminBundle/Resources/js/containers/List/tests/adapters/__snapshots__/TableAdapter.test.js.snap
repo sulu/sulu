@@ -540,7 +540,7 @@ exports[`Render data with pencil button and given actions when onItemEdit callba
           class="row"
         >
           <td
-            class="buttonCell visible cell"
+            class="buttonCell cell"
           >
             <div
               class="cellContent"
@@ -554,7 +554,7 @@ exports[`Render data with pencil button and given actions when onItemEdit callba
             </div>
           </td>
           <td
-            class="buttonCell visible cell"
+            class="buttonCell cell"
           >
             <div
               class="cellContent"
@@ -568,7 +568,7 @@ exports[`Render data with pencil button and given actions when onItemEdit callba
             </div>
           </td>
           <td
-            class="buttonCell visible cell"
+            class="buttonCell cell"
           >
             <div
               class="cellContent"
@@ -595,7 +595,7 @@ exports[`Render data with pencil button and given actions when onItemEdit callba
           class="row"
         >
           <td
-            class="buttonCell visible cell"
+            class="buttonCell cell"
           >
             <div
               class="cellContent"
@@ -609,7 +609,7 @@ exports[`Render data with pencil button and given actions when onItemEdit callba
             </div>
           </td>
           <td
-            class="buttonCell visible cell"
+            class="buttonCell cell"
           >
             <div
               class="cellContent"
@@ -623,7 +623,7 @@ exports[`Render data with pencil button and given actions when onItemEdit callba
             </div>
           </td>
           <td
-            class="buttonCell visible cell"
+            class="buttonCell cell"
           >
             <div
               class="cellContent"
@@ -784,7 +784,7 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
           class="row"
         >
           <td
-            class="buttonCell visible cell"
+            class="buttonCell cell"
           >
             <div
               class="cellContent"
@@ -811,7 +811,7 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
           class="row"
         >
           <td
-            class="buttonCell visible cell"
+            class="buttonCell cell"
           >
             <div
               class="cellContent"

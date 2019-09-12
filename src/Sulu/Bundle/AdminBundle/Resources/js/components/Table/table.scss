@@ -125,7 +125,7 @@ $borderRadius: 3px;
             border-color: $cellBorderColorActive;
         }
 
-        .button-cell.visible {
+        .button-cell {
             font-size: 16px;
 
             button {
@@ -163,7 +163,7 @@ $borderRadius: 3px;
     color: $buttonCellColor;
     text-align: center;
 
-    &:hover.visible {
+    &:hover {
         button {
             visibility: visible;
             background-color: $buttonCellBackgroundColorHover;
@@ -172,6 +172,7 @@ $borderRadius: 3px;
 
             &:disabled {
                 background-color: $buttonCellBackgroundColorDisabled;
+                color: $buttonCellColorHover;
             }
         }
     }
