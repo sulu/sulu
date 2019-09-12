@@ -266,4 +266,16 @@ class PreviewFormRouteBuilderTest extends TestCase
             ->setFormKey('roles')
             ->getRoute();
     }
+
+    public function testBuildFormWithRedirectToItself()
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessageRegExp('"editRoute"');
+
+        $route = (new PreviewFormRouteBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setFormKey('roles')
+            ->setEditRoute('sulu_role.list')
+            ->getRoute();
+    }
 }

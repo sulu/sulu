@@ -134,7 +134,6 @@ class MediaAdmin extends Admin
                     ->setResourceKey('media')
                     ->setFormKey('media_details')
                     ->setTabTitle('sulu_media.information_taxonomy')
-                    ->setEditRoute(static::EDIT_FORM_DETAILS_ROUTE)
                     ->addToolbarActions($toolbarActions)
                     ->setParent(static::EDIT_FORM_ROUTE)
                     ->setBackRoute(static::MEDIA_OVERVIEW_ROUTE)

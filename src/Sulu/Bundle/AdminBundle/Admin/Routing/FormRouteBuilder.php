@@ -165,6 +165,12 @@ class FormRouteBuilder implements FormRouteBuilderInterface
             );
         }
 
+        if ($this->route->getOption('editRoute') === $this->route->getName()) {
+            throw new \DomainException(
+                'A route for a Form view should not redirect to itself using the "editRoute" option.'
+            );
+        }
+
         return clone $this->route;
     }
 }
