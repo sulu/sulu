@@ -111,7 +111,7 @@ class MediaHistory extends React.Component<Props> {
                                             viewButton,
                                             version.version === resourceStore.data.version
                                                 ? {...deleteButton, icon: 'su-lock', disabled: true}
-                                                : deleteButton
+                                                : deleteButton,
                                         ]}
                                         id={version.version}
                                         key={version.version}
