@@ -61,6 +61,7 @@
         "key-spacing": "error",
         "object-curly-spacing": "error",
         "no-alert": "error",
+        "no-console": "error",
         "no-prototype-builtins": "off",
         "no-unused-vars": ["error", {"ignoreRestSiblings": true}],
         "padded-blocks": [

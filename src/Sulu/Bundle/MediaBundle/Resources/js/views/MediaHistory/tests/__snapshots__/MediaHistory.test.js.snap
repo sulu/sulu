@@ -28,6 +28,16 @@ exports[`Render a MediaHistory view 1`] = `
             </span>
           </th>
           <th
+            class="headerButtonCell headerCell"
+          >
+            <span>
+              <span
+                aria-label="su-trash-alt"
+                class="su-trash-alt"
+              />
+            </span>
+          </th>
+          <th
             class="headerCell"
           >
             <span>
@@ -57,6 +67,20 @@ exports[`Render a MediaHistory view 1`] = `
                 <span
                   aria-label="su-eye"
                   class="su-eye"
+                />
+              </button>
+            </div>
+          </td>
+          <td
+            class="buttonCell cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <button>
+                <span
+                  aria-label="su-trash-alt"
+                  class="su-trash-alt"
                 />
               </button>
             </div>
@@ -93,6 +117,20 @@ exports[`Render a MediaHistory view 1`] = `
                 <span
                   aria-label="su-eye"
                   class="su-eye"
+                />
+              </button>
+            </div>
+          </td>
+          <td
+            class="buttonCell cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <button>
+                <span
+                  aria-label="su-trash-alt"
+                  class="su-trash-alt"
                 />
               </button>
             </div>

@@ -68,6 +68,16 @@ exports[`Render a table with buttons 1`] = `
           </span>
         </th>
         <th
+          class="headerButtonCell headerCell"
+        >
+          <span>
+            <span
+              aria-label="fa-lock"
+              class="fa fa-lock"
+            />
+          </span>
+        </th>
+        <th
           class="headerCell"
         >
           <span>
@@ -104,6 +114,22 @@ exports[`Render a table with buttons 1`] = `
               <span
                 aria-label="fa-pencil"
                 class="fa fa-pencil"
+              />
+            </button>
+          </div>
+        </td>
+        <td
+          class="buttonCell cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <button
+              disabled=""
+            >
+              <span
+                aria-label="fa-lock"
+                class="fa fa-lock"
               />
             </button>
           </div>

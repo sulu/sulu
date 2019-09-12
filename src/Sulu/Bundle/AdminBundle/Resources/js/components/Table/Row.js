@@ -194,13 +194,14 @@ export default class Row extends React.PureComponent<Props> {
 
         return buttons.map((button: ButtonConfig, index) => {
             const key = `control-${rowIndex}-${index}`;
-            const handleClick = button.onClick;
+            const {disabled, icon, onClick} = button;
 
             return (
                 <ButtonCell
-                    icon={button.icon}
+                    disabled={disabled}
+                    icon={icon}
                     key={key}
-                    onClick={handleClick}
+                    onClick={onClick}
                     rowId={this.getIdentifier()}
                     rowIndex={rowIndex}
                 />

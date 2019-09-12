@@ -15,7 +15,7 @@ import tableStyles from './table.scss';
 const PLACEHOLDER_ICON = 'su-battery-low';
 
 type Props<T: string | number> = {
-    buttons?: Array<ButtonConfig>,
+    buttons: Array<ButtonConfig>,
     children: ChildrenArray<?Element<typeof Header | typeof Body>>,
     onAllSelectionChange?: ?(checked: boolean) => void,
     onRowCollapse?: (rowId: T) => void,
@@ -30,6 +30,7 @@ type Props<T: string | number> = {
 @observer
 class Table<T: string | number> extends React.Component<Props<T>> {
     static defaultProps = {
+        buttons: [],
         selectMode: 'none',
         skin: 'dark',
     };
@@ -55,7 +56,7 @@ class Table<T: string | number> extends React.Component<Props<T>> {
             originalHeader,
             {
                 allSelected: allSelected,
-                buttons,
+                buttons: [...buttons, ...(originalHeader.props.buttons || [])],
                 onAllSelectionChange: onAllSelectionChange ? this.handleAllSelectionChange : undefined,
                 selectMode,
                 selectInFirstCell,

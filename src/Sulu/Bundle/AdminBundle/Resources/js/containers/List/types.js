@@ -24,6 +24,7 @@ export type Schema = {
 export type SortOrder = 'asc' | 'desc';
 
 export type Action = {|
+    disabled?: boolean,
     icon: string,
     onClick: ?(itemId: string | number, index: number) => void,
 |};

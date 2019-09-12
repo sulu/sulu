@@ -13,8 +13,10 @@ $cellBorderColor: $cellBackgroundColor;
 $cellBorderColorActive: $shakespeare;
 $buttonCellBackgroundColor: $white;
 $buttonCellBackgroundColorHover: $shakespeare;
+$buttonCellBackgroundColorDisabled: $frenchGray;
 $buttonCellBorderColor: $white;
 $buttonCellColor: $buttonCellBackgroundColorHover;
+$buttonCellColorDisabled: $buttonCellBackgroundColorDisabled;
 $buttonCellColorHover: $buttonCellBackgroundColor;
 $emptyMessageColor: $silver;
 $rowHeight: 40px;
@@ -162,7 +164,7 @@ $borderRadius: 3px;
     text-align: center;
 
     &:hover {
-        button {
+        button:not(:disabled) {
             visibility: visible;
             background-color: $buttonCellBackgroundColorHover;
             border-right: $borderWidth solid $buttonCellBorderColor;
@@ -175,9 +177,14 @@ $borderRadius: 3px;
         width: 100%;
         height: 100%;
         border: none;
-        color: $buttonCellBackgroundColorHover;
+        color: $buttonCellColor;
         cursor: pointer;
         background-color: transparent;
+
+        &:disabled {
+            color: $buttonCellColorDisabled;
+            cursor: default;
+        }
     }
 }
 
