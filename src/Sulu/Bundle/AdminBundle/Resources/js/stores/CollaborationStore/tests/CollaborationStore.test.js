@@ -9,6 +9,10 @@ jest.mock('../../../services/ResourceRequester', () => ({
     delete: jest.fn(),
 }));
 
+beforeEach(() => {
+    CollaborationStore.interval = 10000;
+});
+
 test('Load collaborators repeatedly and stop when destroyed', () => {
     const collaborations1 = [
         {

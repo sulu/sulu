@@ -4,8 +4,7 @@ import ResourceRequester from '../../services/ResourceRequester';
 import type {Collaboration} from './types';
 
 export default class CollaborationStore {
-    // TODO read this value from config
-    static interval: number = 10000;
+    static interval: number;
 
     resourceKey: string;
     id: string | number;

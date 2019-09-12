@@ -16,7 +16,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class CollaborationControllerTest extends SuluTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $collaborations = $this->getContainer()->get('cache.global_clearer')->clear('');
     }

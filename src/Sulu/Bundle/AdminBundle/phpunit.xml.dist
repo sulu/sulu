@@ -29,10 +29,10 @@
                 <array>
                     <element key="time-sensitive">
                         <array>
-                            <element>
+                            <element key="0">
                                 <string>Sulu\Bundle\AdminBundle\Entity</string>
                             </element>
-                            <element>
+                            <element key="1">
                                 <string>Sulu\Bundle\AdminBundle\Tests\Unit\Entity</string>
                             </element>
                         </array>

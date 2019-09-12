@@ -25,17 +25,17 @@ class CollaborationRepositoryTest extends TestCase
      */
     private $cache;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         ClockMock::withClockMock(true);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->cache = $this->prophesize(CacheItemPoolInterface::class);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         ClockMock::withClockMock(false);
     }
