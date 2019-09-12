@@ -208,6 +208,46 @@ test('Deleting version should happen when confirmed', () => {
     });
 });
 
+test('Deleting version should be disabled on latest version', () => {
+    const MediaHistory = require('../MediaHistory').default;
+    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    const ResourceRequester = require('sulu-admin-bundle/services').ResourceRequester;
+
+    const deletePromise = Promise.resolve({});
+    ResourceRequester.delete.mockReturnValue(deletePromise);
+
+    const locale = observable.box('de');
+
+    const router = {
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route: {
+            options: {
+                locales: [],
+            },
+        },
+    };
+    const resourceStore = new ResourceStore('media', 1, {locale});
+    resourceStore.data.version = 2;
+    resourceStore.data.versions = {
+        1: {
+            created: '2018-10-23T10:18',
+            url: '/media/1?v=1',
+            version: 1,
+        },
+        2: {
+            created: '2018-10-23T10:25',
+            url: '/media/1?v=2',
+            version: 2,
+        },
+    };
+
+    const mediaHistory = mount(<MediaHistory resourceStore={resourceStore} router={router} />);
+
+    expect(mediaHistory.find('Row').at(0).find('ButtonCell').at(1).prop('disabled')).toEqual(true);
+    expect(mediaHistory.find('Row').at(1).find('ButtonCell').at(1).prop('disabled')).toEqual(false);
+});
+
 test('Should change locale via locale chooser', () => {
     const MediaHistory = require('../MediaHistory').default;
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;

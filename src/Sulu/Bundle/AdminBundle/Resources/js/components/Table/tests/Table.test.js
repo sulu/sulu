@@ -107,10 +107,17 @@ test('Render an empty table', () => {
 });
 
 test('Render a table with buttons', () => {
-    const buttons = [{
-        icon: 'fa-pencil',
-        onClick: jest.fn(),
-    }];
+    const buttons = [
+        {
+            icon: 'fa-pencil',
+            onClick: jest.fn(),
+        },
+        {
+            disabled: true,
+            icon: 'fa-lock',
+            onClick: jest.fn(),
+        },
+    ];
 
     expect(render(
         <Table buttons={buttons}>
@@ -194,6 +201,42 @@ test('Table buttons should implement an onClick handler', () => {
     expect(clickSpy).toBeCalledWith(19, 0);
     expect(clickSpy).toBeCalledWith(25, 1);
     expect(clickSpy).toHaveBeenCalledTimes(2);
+});
+
+test('Table buttons should not call onClick handler if button is disabled', () => {
+    const clickSpy = jest.fn();
+    const buttons = [{
+        disabled: true,
+        icon: 'fa-pencil',
+        onClick: clickSpy,
+    }];
+
+    const table = mount(
+        <Table buttons={buttons}>
+            <Header>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+            </Header>
+            <Body>
+                <Row id={19}>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+                <Row id={25}>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+            </Body>
+        </Table>
+    );
+
+    expect(clickSpy).toHaveBeenCalledTimes(0);
+    table.find('.buttonCell button').at(0).simulate('click');
+    table.find('.buttonCell button').at(1).simulate('click');
+    expect(clickSpy).not.toBeCalled();
 });
 
 test('Render the Table component in single selection mode', () => {

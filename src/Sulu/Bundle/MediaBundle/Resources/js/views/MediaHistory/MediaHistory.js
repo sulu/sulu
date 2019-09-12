@@ -109,7 +109,9 @@ class MediaHistory extends React.Component<Props> {
                                     <Table.Row
                                         buttons={[
                                             viewButton,
-                                            {...deleteButton, visible: version.version !== resourceStore.data.version},
+                                            version.version === resourceStore.data.version
+                                                ? {...deleteButton, icon: 'su-lock', disabled: true}
+                                                : deleteButton
                                         ]}
                                         id={version.version}
                                         key={version.version}
