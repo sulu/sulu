@@ -76,7 +76,7 @@ class CollaborationRepository
     public function delete(Collaboration $collaboration): array
     {
         $cacheItem = $this->cache->getItem($this->getCacheIdFromCollaboration($collaboration));
-        $value = array_filter($cacheItem->get() ?? [], function(Collaboration $cachedCollaboration) use($collaboration) {
+        $value = array_filter($cacheItem->get() ?? [], function(Collaboration $cachedCollaboration) use ($collaboration) {
             return $collaboration->getConnectionId() !== $cachedCollaboration->getConnectionId();
         });
         $cacheItem->set($value);
@@ -86,14 +86,16 @@ class CollaborationRepository
         return array_values($value);
     }
 
-    private function getCacheIdFromCollaboration(Collaboration $collaboration): string {
+    private function getCacheIdFromCollaboration(Collaboration $collaboration): string
+    {
         return $this->getCacheId($collaboration->getResourceKey(), $collaboration->getId());
     }
 
     /**
      * @param $id string | int
      */
-    private function getCacheId(string $resourceKey, $id): string {
+    private function getCacheId(string $resourceKey, $id): string
+    {
         return $resourceKey . '_' . $id;
     }
 }

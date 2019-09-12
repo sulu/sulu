@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Entity;
 
-use JMS\Serializer\Annotation\Exclude;
-
 /**
  * Represents a user, which is currently editing an entity.
  */

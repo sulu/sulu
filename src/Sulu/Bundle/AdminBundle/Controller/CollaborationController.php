@@ -19,7 +19,6 @@ use Sulu\Bundle\AdminBundle\Entity\Collaboration;
 use Sulu\Bundle\AdminBundle\Entity\CollaborationRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class CollaborationController implements ClassResourceInterface
 {
