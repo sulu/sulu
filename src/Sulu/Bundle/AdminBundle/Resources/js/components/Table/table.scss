@@ -13,7 +13,7 @@ $cellBorderColor: $cellBackgroundColor;
 $cellBorderColorActive: $shakespeare;
 $buttonCellBackgroundColor: $white;
 $buttonCellBackgroundColorHover: $shakespeare;
-$buttonCellBackgroundColorDisabled: $gray;
+$buttonCellBackgroundColorDisabled: $frenchGray;
 $buttonCellBorderColor: $white;
 $buttonCellColor: $buttonCellBackgroundColorHover;
 $buttonCellColorDisabled: $buttonCellBackgroundColorDisabled;
@@ -164,16 +164,11 @@ $borderRadius: 3px;
     text-align: center;
 
     &:hover {
-        button {
+        button:not(:disabled) {
             visibility: visible;
             background-color: $buttonCellBackgroundColorHover;
             border-right: $borderWidth solid $buttonCellBorderColor;
             color: $buttonCellColorHover;
-
-            &:disabled {
-                background-color: $buttonCellBackgroundColorDisabled;
-                color: $buttonCellColorHover;
-            }
         }
     }
 
@@ -188,6 +183,7 @@ $borderRadius: 3px;
 
         &:disabled {
             color: $buttonCellColorDisabled;
+            cursor: default;
         }
     }
 }
