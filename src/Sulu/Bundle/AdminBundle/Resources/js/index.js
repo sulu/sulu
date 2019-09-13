@@ -76,6 +76,7 @@ import {textEditorRegistry} from './containers/TextEditor';
 import Form, {
     formToolbarActionRegistry,
     DeleteToolbarAction as FormDeleteToolbarAction,
+    DropdownToolbarAction as FormDropdownToolbarAction,
     SaveToolbarAction as FormSaveToolbarAction,
     SaveWithPublishingToolbarAction as FormSaveWithPublishingToolbarAction,
     TypeToolbarAction as FormTypeToolbarAction,
@@ -251,6 +252,7 @@ function registerInternalLinkTypes(internalLinkTypes) {
 
 function registerFormToolbarActions() {
     formToolbarActionRegistry.add('sulu_admin.delete', FormDeleteToolbarAction);
+    formToolbarActionRegistry.add('sulu_admin.dropdown', FormDropdownToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.save_with_publishing', FormSaveWithPublishingToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.save', FormSaveToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.type', FormTypeToolbarAction);

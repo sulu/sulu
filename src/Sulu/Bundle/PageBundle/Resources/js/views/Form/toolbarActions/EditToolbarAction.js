@@ -8,6 +8,7 @@ import {translate} from 'sulu-admin-bundle/utils';
 import {AbstractFormToolbarAction} from 'sulu-admin-bundle/views';
 import CopyLocaleDialog from './CopyLocaleDialog';
 
+// TODO remove
 export default class EditToolbarAction extends AbstractFormToolbarAction {
     @observable showCopyLocaleDialog = false;
     @observable showDeleteDraftDialog = false;

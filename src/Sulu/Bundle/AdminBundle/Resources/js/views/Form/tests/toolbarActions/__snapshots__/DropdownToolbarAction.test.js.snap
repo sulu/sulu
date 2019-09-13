@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Return JSX for all child ToolbarActions 1`] = `
+Array [
+  <div
+    class="delete"
+  />,
+  <div
+    class="copy"
+  />,
+]
+`;
