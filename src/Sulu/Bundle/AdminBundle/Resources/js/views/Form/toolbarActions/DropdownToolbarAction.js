@@ -88,7 +88,7 @@ export default class DropdownToolbarAction extends AbstractFormToolbarAction {
                     throw new Error('This ToolbarAction only supports child ToolbarActions not being a dropdown');
                 }
 
-                const {label, onClick} = toolbarItemConfig;
+                const {disabled, label, onClick} = toolbarItemConfig;
 
                 if (!label) {
                     throw new Error('Child ToolbarActions must return a "label"');
@@ -98,7 +98,7 @@ export default class DropdownToolbarAction extends AbstractFormToolbarAction {
                     throw new Error('Child ToolbarActions must return a "onClick" handler');
                 }
 
-                toolbarActions.push({label, onClick});
+                toolbarActions.push({disabled, label, onClick});
 
                 return toolbarActions;
             }, []);

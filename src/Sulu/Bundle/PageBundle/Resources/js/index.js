@@ -8,7 +8,6 @@ import {teaserProviderRegistry} from './containers/TeaserSelection';
 import PageSettingsNavigationSelect from './containers/Form/fields/PageSettingsNavigationSelect';
 import PageSettingsShadowLocaleSelect from './containers/Form/fields/PageSettingsShadowLocaleSelect';
 import PageSettingsVersions from './containers/Form/fields/PageSettingsVersions';
-import EditToolbarAction from './views/Form/toolbarActions/EditToolbarAction';
 import TemplateToolbarAction from './views/Form/toolbarActions/TemplateToolbarAction';
 import PageTabs from './views/PageTabs';
 import PageList from './views/PageList';
@@ -32,7 +31,6 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
         fieldRegistry.add('page_settings_versions', PageSettingsVersions);
     }
 
-    formToolbarActionRegistry.add('sulu_page.edit', EditToolbarAction);
     formToolbarActionRegistry.add('sulu_page.templates', TemplateToolbarAction);
 
     for (const teaserProviderKey in config.teaser) {

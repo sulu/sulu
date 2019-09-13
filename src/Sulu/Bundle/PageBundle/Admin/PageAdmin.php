@@ -23,6 +23,7 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class PageAdmin extends Admin
 {
@@ -67,6 +68,11 @@ class PageAdmin extends Admin
     private $teaserProviderPool;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @var bool
      */
     private $versioningEnabled;
@@ -77,6 +83,7 @@ class PageAdmin extends Admin
         SecurityCheckerInterface $securityChecker,
         SessionManagerInterface $sessionManager,
         TeaserProviderPoolInterface $teaserProviderPool,
+        TranslatorInterface $translator,
         bool $versioningEnabled
     ) {
         $this->routeBuilderFactory = $routeBuilderFactory;
@@ -84,6 +91,7 @@ class PageAdmin extends Admin
         $this->securityChecker = $securityChecker;
         $this->sessionManager = $sessionManager;
         $this->teaserProviderPool = $teaserProviderPool;
+        $this->translator = $translator;
         $this->versioningEnabled = $versioningEnabled;
     }
 
@@ -106,6 +114,7 @@ class PageAdmin extends Admin
     {
         /** @var Webspace $firstWebspace */
         $firstWebspace = current($this->webspaceManager->getWebspaceCollection()->getWebspaces());
+        $publishDisplayCondition = '(!_permissions || _permissions.live)';
 
         $formToolbarActionsWithType = [
             'sulu_admin.save_with_publishing' => [
@@ -116,9 +125,20 @@ class PageAdmin extends Admin
             'sulu_admin.delete' => [
                 'display_condition' => '(!_permissions || _permissions.delete) && url != "/"',
             ],
-            'sulu_page.edit' => [
-                'copy_locale_display_condition' => '(!_permissions || _permissions.edit)',
-                'publish_display_condition' => '(!_permissions || _permissions.live)',
+            'sulu_admin.dropdown' => [
+                'label' => $this->translator->trans('sulu_admin.edit', [], 'admin'),
+                'icon' => 'su-pen',
+                'actions' => [
+                    'sulu_admin.copy_locale' => [
+                        'display_condition' => '(!_permissions || _permissions.edit)',
+                    ],
+                    'sulu_admin.delete_draft' => [
+                        'display_condition' => $publishDisplayCondition,
+                    ],
+                    'sulu_admin.set_unpublished' => [
+                        'display_condition' => $publishDisplayCondition,
+                    ],
+                ]
             ],
         ];
 
