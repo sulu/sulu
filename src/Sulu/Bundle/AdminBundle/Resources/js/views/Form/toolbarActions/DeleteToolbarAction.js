@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import {action, observable} from 'mobx';
 import jexl from 'jexl';
 import Dialog from '../../../components/Dialog';
@@ -7,22 +7,41 @@ import {translate} from '../../../utils/Translator';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
 export default class DeleteToolbarAction extends AbstractFormToolbarAction {
-    @observable showDialog = false;
+    @observable showDialog: boolean = false;
+    @observable showLinkedDialog: boolean = false;
+    @observable referencingItems: Array<Object> = [];
 
     getNode() {
         return (
-            <Dialog
-                cancelText={translate('sulu_admin.cancel')}
-                confirmLoading={this.resourceFormStore.deleting}
-                confirmText={translate('sulu_admin.ok')}
-                key="sulu_admin.delete"
-                onCancel={this.handleCancel}
-                onConfirm={this.handleConfirm}
-                open={this.showDialog}
-                title={translate('sulu_admin.delete_warning_title')}
-            >
-                {translate('sulu_admin.delete_warning_text')}
-            </Dialog>
+            <Fragment key="sulu_admin.delete">
+                <Dialog
+                    cancelText={translate('sulu_admin.cancel')}
+                    confirmLoading={this.resourceFormStore.deleting}
+                    confirmText={translate('sulu_admin.ok')}
+                    onCancel={this.handleCancel}
+                    onConfirm={this.handleConfirm}
+                    open={this.showDialog}
+                    title={translate('sulu_admin.delete_warning_title')}
+                >
+                    {translate('sulu_admin.delete_warning_text')}
+                </Dialog>
+                <Dialog
+                    cancelText={translate('sulu_admin.cancel')}
+                    confirmLoading={this.resourceFormStore.deleting}
+                    confirmText={translate('sulu_admin.ok')}
+                    onCancel={this.handleLinkCancel}
+                    onConfirm={this.handleLinkConfirm}
+                    open={this.showLinkedDialog}
+                    title={translate('sulu_admin.delete_linked_warning_title')}
+                >
+                    {translate('sulu_admin.delete_linked_warning_text')}
+                    <ul>
+                        {this.referencingItems.map((referencingItem, index) => (
+                            <li key={index}>{referencingItem.name}</li>
+                        ))}
+                    </ul>
+                </Dialog>
+            </Fragment>
         );
     }
 
@@ -46,18 +65,45 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
         };
     }
 
+    navigateBack = () => {
+        const {backRoute} = this.router.route.options;
+        const {locale} = this.resourceFormStore;
+        this.router.navigate(backRoute, {locale: locale ? locale.get() : undefined});
+    };
+
     @action handleCancel = () => {
         this.showDialog = false;
     };
 
     @action handleConfirm = () => {
-        const {backRoute} = this.router.route.options;
-        const {locale} = this.resourceFormStore;
-
         this.resourceFormStore.delete()
             .then(action(() => {
                 this.showDialog = false;
-                this.router.navigate(backRoute, {locale: locale ? locale.get() : undefined});
+                this.navigateBack();
+            }))
+            .catch(action((response) => {
+                if (response.status !== 409) {
+                    throw response;
+                }
+
+                this.showDialog = false;
+                this.showLinkedDialog = true;
+                response.json().then(action((data) => {
+                    this.referencingItems.splice(0, this.referencingItems.length);
+                    this.referencingItems.push(...data.items);
+                }));
+            }));
+    };
+
+    @action handleLinkCancel = () => {
+        this.showLinkedDialog = false;
+    };
+
+    @action handleLinkConfirm = () => {
+        this.resourceFormStore.delete({force: true})
+            .then(action(() => {
+                this.showLinkedDialog = false;
+                this.navigateBack();
             }));
     };
 }

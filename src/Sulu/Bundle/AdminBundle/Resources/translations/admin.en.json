@@ -59,6 +59,8 @@
     "sulu_admin.author": "Author",
     "sulu_admin.delete_warning_title": "Delete?",
     "sulu_admin.delete_warning_text": "This operation deletes data and cannot be undone. Do you really wish to proceed?",
+    "sulu_admin.delete_linked_warning_title": "Confirm deletion",
+    "sulu_admin.delete_linked_warning_text": "This item is referenced by the following items, are you sure you want to delete it?",
     "sulu_admin.delete_selection_warning_text": "This operation deletes {count} {count, plural, =1 {item} other {items}} and cannot be undone. Do you really wish to proceed?",
     "sulu_admin.ghost_dialog_title": "Copy language?",
     "sulu_admin.ghost_dialog_description": "This page does not exist in this language. Do you want to copy content from another language?",

@@ -820,9 +820,9 @@ test('Delete should delegate the call to resourceStore with options', () => {
     resourceStore.delete.mockReturnValue(deletePromise);
 
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets', {webspace: 'sulu_io'});
-    const returnedDeletePromise = resourceFormStore.delete();
+    const returnedDeletePromise = resourceFormStore.delete({force: true});
 
-    expect(resourceStore.delete).toBeCalledWith({webspace: 'sulu_io'});
+    expect(resourceStore.delete).toBeCalledWith({force: true, webspace: 'sulu_io'});
     expect(returnedDeletePromise).toBe(deletePromise);
 });
 

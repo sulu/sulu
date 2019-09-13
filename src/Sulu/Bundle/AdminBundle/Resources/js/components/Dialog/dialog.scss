@@ -74,6 +74,10 @@ $transitionDuration: 300ms;
         overflow: auto;
         padding: 0 30px 30px;
         text-align: center;
+
+        ul {
+            text-align: left;
+        }
     }
 
     footer {

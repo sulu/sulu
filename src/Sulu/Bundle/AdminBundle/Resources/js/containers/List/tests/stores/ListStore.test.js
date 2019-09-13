@@ -1711,9 +1711,9 @@ test('Should delete the item with the given ID and options', () => {
     listStore.updateLoadingStrategy(loadingStrategy);
     listStore.updateStructureStrategy(structureStrategy);
 
-    listStore.delete(5);
+    listStore.delete(5, {force: true});
 
-    expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 5, locale: 'en', webspace: 'sulu'});
+    expect(ResourceRequester.delete).toBeCalledWith('snippets', {force: true, id: 5, locale: 'en', webspace: 'sulu'});
 
     return deletePromise.then(() => {
         expect(structureStrategy.remove).toBeCalledWith(5);

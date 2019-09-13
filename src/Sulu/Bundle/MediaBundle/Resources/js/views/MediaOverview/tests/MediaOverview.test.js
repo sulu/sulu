@@ -358,11 +358,11 @@ test('Should delete selected items when delete button is clicked', () => {
     mediaListStore.selectionIds.push(1, 4, 6);
 
     mediaOverview.update();
-    expect(mediaOverview.find('Dialog').at(4).prop('open')).toEqual(false);
+    expect(mediaOverview.find('Dialog').at(5).prop('open')).toEqual(false);
 
     getDeleteItem().onClick();
     mediaOverview.update();
-    expect(mediaOverview.find('Dialog').at(4).prop('open')).toEqual(true);
+    expect(mediaOverview.find('Dialog').at(5).prop('open')).toEqual(true);
 });
 
 test('Upload button should be disabled if nothing is selected', () => {
