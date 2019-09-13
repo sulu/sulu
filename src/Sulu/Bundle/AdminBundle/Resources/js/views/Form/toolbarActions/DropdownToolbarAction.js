@@ -103,6 +103,10 @@ export default class DropdownToolbarAction extends AbstractFormToolbarAction {
                 return toolbarActions;
             }, []);
 
+        if (options.length === 0) {
+            return undefined;
+        }
+
         return {
             type: 'dropdown',
             label,

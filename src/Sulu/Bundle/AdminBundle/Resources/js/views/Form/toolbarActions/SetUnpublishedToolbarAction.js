@@ -74,6 +74,7 @@ export default class SetUnpublishedToolbarAction extends AbstractFormToolbarActi
             options: {
                 webspace,
             },
+            resourceKey,
         } = this.resourceFormStore;
 
         if (!id) {
@@ -85,7 +86,7 @@ export default class SetUnpublishedToolbarAction extends AbstractFormToolbarActi
         this.unpublishing = true;
 
         ResourceRequester.post(
-            'pages',
+            resourceKey,
             undefined,
             {
                 action: 'unpublish',
@@ -96,6 +97,7 @@ export default class SetUnpublishedToolbarAction extends AbstractFormToolbarActi
         ).then(action((response) => {
             this.unpublishing = false;
             this.showUnpublishDialog = false;
+            this.form.showSuccessSnackbar();
             this.resourceFormStore.setMultiple(response);
             this.resourceFormStore.dirty = false;
         }));

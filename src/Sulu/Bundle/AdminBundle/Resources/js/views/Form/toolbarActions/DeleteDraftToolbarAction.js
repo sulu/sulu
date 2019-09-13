@@ -92,6 +92,7 @@ export default class DeleteDraftToolbarAction extends AbstractFormToolbarAction 
         ).then(action((response) => {
             this.deletingDraft = false;
             this.showDeleteDraftDialog = false;
+            this.form.showSuccessSnackbar();
             this.resourceFormStore.setMultiple(response);
             this.resourceFormStore.dirty = false;
         }));

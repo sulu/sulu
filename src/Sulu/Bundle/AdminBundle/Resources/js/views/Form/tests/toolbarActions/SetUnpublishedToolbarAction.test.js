@@ -59,6 +59,7 @@ jest.mock('../../../../services/Router', () => jest.fn(function() {
 
 jest.mock('../../../../views/Form', () => jest.fn(function() {
     this.submit = jest.fn();
+    this.showSuccessSnackbar = jest.fn();
 }));
 
 function createSetUnpublishedToolbarAction(options = {}) {
@@ -215,6 +216,8 @@ test('Unpublish page when dialog is confirmed', () => {
     const setUnpublishedToolbarAction = createSetUnpublishedToolbarAction();
     setUnpublishedToolbarAction.resourceFormStore.resourceStore.id = 3;
     // $FlowFixMe
+    setUnpublishedToolbarAction.resourceFormStore.resourceKey = 'pages';
+    // $FlowFixMe
     setUnpublishedToolbarAction.resourceFormStore.resourceStore.locale.get.mockReturnValue('en');
     setUnpublishedToolbarAction.resourceFormStore.options.webspace = 'sulu_io';
 
@@ -243,6 +246,7 @@ test('Unpublish page when dialog is confirmed', () => {
 
     return unpublishPromise.then(() => {
         element = mount(setUnpublishedToolbarAction.getNode());
+        expect(setUnpublishedToolbarAction.form.showSuccessSnackbar).toBeCalledWith();
         expect(element.prop('confirmLoading')).toEqual(false);
         expect(setUnpublishedToolbarAction.resourceFormStore.setMultiple).toBeCalledWith(data);
         expect(setUnpublishedToolbarAction.resourceFormStore.dirty).toEqual(false);

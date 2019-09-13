@@ -59,6 +59,7 @@ jest.mock('../../../../services/Router', () => jest.fn(function() {
 
 jest.mock('../../../../views/Form', () => jest.fn(function() {
     this.submit = jest.fn();
+    this.showSuccessSnackbar = jest.fn();
 }));
 
 function createDeleteDraftToolbarAction(options = {}) {
@@ -224,6 +225,7 @@ test('Delete draft when dialog is confirmed', () => {
 
     return deleteDraftPromise.then(() => {
         element = mount(deleteDraftToolbarAction.getNode());
+        expect(deleteDraftToolbarAction.form.showSuccessSnackbar).toBeCalledWith();
         expect(element.prop('confirmLoading')).toEqual(false);
         expect(deleteDraftToolbarAction.resourceFormStore.setMultiple).toBeCalledWith(data);
         expect(deleteDraftToolbarAction.resourceFormStore.dirty).toEqual(false);

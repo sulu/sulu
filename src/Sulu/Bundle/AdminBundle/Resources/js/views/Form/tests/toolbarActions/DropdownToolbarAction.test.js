@@ -177,6 +177,36 @@ test('Return item config with options passed to child ToolbarActions', () => {
     });
 });
 
+test('Return no item config if all child ToolbarActions return nothing', () => {
+    formToolbarActionRegistry.get.mockImplementation((key) => {
+        switch (key) {
+            case 'sulu_admin.delete':
+                return class {
+                    getToolbarItemConfig() {}
+                };
+            case 'sulu_admin.copy':
+                return class {
+                    getToolbarItemConfig() {}
+                };
+        }
+    });
+
+    const dropdownToolbarAction = createDropdownToolbarAction({
+        icon: 'su-edit',
+        label: 'edit',
+        actions: {
+            'sulu_admin.delete': {
+                label: 'Delete',
+            },
+            'sulu_admin.copy': {
+                title: 'Copy',
+            },
+        },
+    });
+
+    expect(dropdownToolbarAction.getToolbarItemConfig()).toEqual(undefined);
+});
+
 test('Throw error if child ToolbarAction is a dropdown', () => {
     formToolbarActionRegistry.get.mockImplementation((key) => {
         switch (key) {
