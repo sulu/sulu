@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\CategoryBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\CategoryBundle\Api\RootCategory;
@@ -85,9 +83,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
         return $this->handleView($this->view($list, 200));
     }
 
-    /**
-     * @Post("categories/{id}")
-     */
     public function postTriggerAction($id, Request $request)
     {
         $action = $this->getRequestParameter($request, 'action', true);

@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit bootstrap="./vendor/autoload.php" colors="true">
-    <php>
-        <env name="SYMFONY_PHPUNIT_VERSION" value="6.5"/>
-    </php>
-
     <testsuites>
         <testsuite name="components">
             <directory suffix="Test.php">./src/Sulu/Component/*/Tests</directory>
@@ -23,6 +19,7 @@
     </filter>
 
     <php>
+        <env name="SYMFONY_PHPUNIT_VERSION" value="8.0"/>
         <env name="APP_ENV" value="test"/>
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
     </php>

@@ -19,6 +19,12 @@ sulu_security.users:
     name_prefix: sulu_security.
     resource: Sulu\Bundle\SecurityBundle\Controller\UserController
 
+sulu_security.post_user_trigger:
+    path: /users/{id}
+    methods: POST
+    defaults:
+        _controller: Sulu\Bundle\SecurityBundle\Controller\UserController::postTriggerAction
+
 sulu_security.permissions:
     type: rest
     name_prefix: sulu_security.

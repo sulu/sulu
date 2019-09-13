@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
@@ -140,8 +139,6 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * @Post("/users/{id}")
-     *
      * @param int $id
      * @param Request $request
      *

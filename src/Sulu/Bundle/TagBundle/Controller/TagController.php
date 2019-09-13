@@ -12,8 +12,6 @@
 namespace Sulu\Bundle\TagBundle\Controller;
 
 use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\TagBundle\Controller\Exception\ConstraintViolationException;
@@ -232,8 +230,6 @@ class TagController extends RestController implements ClassResourceInterface, Se
 
     /**
      * POST Route annotation.
-     *
-     * @Post("/tags/merge")
      *
      * @param Request $request
      *

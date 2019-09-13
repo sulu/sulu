@@ -3,6 +3,13 @@ sulu_category.categories:
     name_prefix: sulu_category.
     resource: Sulu\Bundle\CategoryBundle\Controller\CategoryController
 
+sulu_category.post_category_trigger:
+    path: /categories/{id}.{_format}
+    methods: POST
+    defaults:
+        _controller: Sulu\Bundle\CategoryBundle\Controller\CategoryController::postTriggerAction
+        _format: json
+
 sulu_category.keywords:
     type: rest
     name_prefix: sulu_category.

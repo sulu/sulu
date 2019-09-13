@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\Delete;
-use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
@@ -29,8 +27,6 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
 {
     /**
      * Creates a new preview image and saves it to the provided media.
-     *
-     * @Post("media/{id}/preview")
      *
      * @param int $id
      * @param Request $request
@@ -82,8 +78,6 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
 
     /**
      * Removes current preview image and sets default video thumbnail.
-     *
-     * @Delete("media/{id}/preview")
      *
      * @param $id
      * @param Request $request

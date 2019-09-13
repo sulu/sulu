@@ -2,3 +2,10 @@ sulu_tag.tags:
     type: rest
     name_prefix: sulu_tag.
     resource: Sulu\Bundle\TagBundle\Controller\TagController
+
+sulu_tag.post_tag_merge:
+    path: /tags/merge.{_format}
+    methods: POST
+    defaults:
+        _controller: Sulu\Bundle\TagBundle\Controller\TagController::postMergeAction
+        _format: json

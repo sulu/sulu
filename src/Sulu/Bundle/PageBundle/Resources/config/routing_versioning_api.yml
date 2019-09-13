@@ -3,3 +3,10 @@ sulu_page.page.versions:
     name_prefix: sulu_page.
     parent: sulu_page.page
     resource: Sulu\Bundle\PageBundle\Controller\VersionController
+
+sulu_page.post_page_version_trigger:
+    path: /pages/{id}/versions/{version}.{_format}
+    methods: POST
+    defaults:
+        _controller: Sulu\Bundle\PageBundle\Controller\VersionController::postTriggerAction
+        _format: json

@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\PageBundle\Controller;
 
 use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use PHPCR\ItemNotFoundException;
@@ -580,8 +579,6 @@ class NodeController extends RestController implements ClassResourceInterface
      *   + destination: specifies the destination node
      * - copy: copy a node
      *   + destination: specifies the destination node.
-     *
-     * @Post("/nodes/{id}")
      *
      * @param string $id
      * @param Request $request
