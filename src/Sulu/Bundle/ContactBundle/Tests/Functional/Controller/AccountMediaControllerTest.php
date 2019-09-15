@@ -309,6 +309,8 @@ class AccountMediaControllerTest extends SuluTestCase
             ]
         );
 
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
         $response = json_decode($client->getResponse()->getContent());
         $this->assertNotNull($response->id);
 

@@ -13,7 +13,6 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,16 +43,16 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
             $locale = $this->getLocale($request);
 
             $media = $mediaManager->getById($id, $locale);
-            /** @var MediaInterface $mediaEntity */
-            $mediaEntity = $media->getEntity();
 
             $data = $this->getData($request, false);
 
             // Unset id to not overwrite original file
             unset($data['id']);
 
-            if (null !== $mediaEntity->getPreviewImage()) {
-                $data['id'] = $mediaEntity->getPreviewImage()->getId();
+            $previewImage = $media->getPreviewImage();
+
+            if (null !== $previewImage) {
+                $data['id'] = $previewImage->getId();
             }
             $data['collection'] = $systemCollectionManager->getSystemCollection('sulu_media.preview_image');
             $data['locale'] = $locale;
@@ -62,7 +61,7 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
             $uploadedFile = $this->getUploadedFile($request, 'previewImage');
             $previewImage = $mediaManager->save($uploadedFile, $data, $this->getUser()->getId());
 
-            $mediaEntity->setPreviewImage($previewImage->getEntity());
+            $media->setPreviewImage($previewImage->getEntity());
 
             $this->getDoctrine()->getManager()->flush();
 
@@ -92,13 +91,12 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
             $locale = $this->getLocale($request);
 
             $media = $mediaManager->getById($id, $locale);
-            /** @var MediaInterface $mediaEntity */
-            $mediaEntity = $media->getEntity();
+            $previewImage = $media->getPreviewImage();
 
-            if (null !== $mediaEntity->getPreviewImage()) {
-                $oldPreviewImageId = $mediaEntity->getPreviewImage()->getId();
+            if (null !== $previewImage) {
+                $oldPreviewImageId = $previewImage->getId();
 
-                $mediaEntity->setPreviewImage(null);
+                $media->setPreviewImage(null);
 
                 $mediaManager->delete($oldPreviewImageId);
             }

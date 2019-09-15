@@ -5,6 +5,27 @@
 When upgrading also have a look at the changes in the
 [sulu skeleton](https://github.com/sulu/skeleton/compare/2.0.0-RC3...2.0.0).
 
+### Api Entities removed
+
+To support easier extending of entities the following `ApiEntity` wrapper classes where removed
+and the methods moved to the entity classes:
+
+**`Sulu\Bundle\MediaBundle\Api\Media`**
+
+```php
+// Before
+$apiMedia = new Api\Media($entity, 'de');
+$apiMedia->getTags();
+$apiMedia->getCategories();
+$apiMedia->getTargetGroups();
+
+// After
+$entity->setLocale('de');
+$entity->getTagNames();
+$entity->getCategoryIds();
+$entity->getTargetGroupIds();
+```
+
 ### Symfony 3.4 support dropped
 
 To fix current deprecations in symfony packages we needed to drop symfony 3.4 support and go on the newest minor version of symfony (4.3).

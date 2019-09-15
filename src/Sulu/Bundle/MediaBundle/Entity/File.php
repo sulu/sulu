@@ -26,7 +26,7 @@ class File implements AuditableInterface
     /**
      * @var int
      */
-    private $version;
+    private $version = 1;
 
     /**
      * @var int

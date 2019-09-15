@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Controller;
 
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
-use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -58,6 +58,7 @@ abstract class AbstractMediaController extends RestController
         try {
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository($entityName)->find($id);
+            /** @var Media $media */
             $media = $this->container->get('sulu.repository.media')->find($mediaId);
 
             if (!$entity) {
@@ -76,11 +77,7 @@ abstract class AbstractMediaController extends RestController
             $em->flush();
 
             $view = $this->view(
-                new Media(
-                    $media,
-                    $this->getUser()->getLocale(),
-                    null
-                ),
+                $media->setLocale($this->getUser()->getLocale()),
                 200
             );
         } catch (EntityNotFoundException $enfe) {

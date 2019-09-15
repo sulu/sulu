@@ -17,12 +17,12 @@ use FFMpeg\Exception\ExecutableNotFoundException;
 use FFMpeg\FFProbe;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
-use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
@@ -217,7 +217,7 @@ class MediaManager implements MediaManagerInterface
     {
         $mediaEntity = $this->getEntityById($id);
 
-        return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
+        return $this->addFormatsAndUrl($mediaEntity->setLocale($locale));
     }
 
     /**
@@ -243,7 +243,7 @@ class MediaManager implements MediaManagerInterface
         $this->count = count($mediaEntities);
         foreach ($mediaEntities as $mediaEntity) {
             $media[array_search($mediaEntity->getId(), $ids)] = $this->addFormatsAndUrl(
-                new Media($mediaEntity, $locale, null)
+                $mediaEntity->setLocale($locale)
             );
         }
 
@@ -268,7 +268,7 @@ class MediaManager implements MediaManagerInterface
         $this->count = $this->mediaRepository->count($filter);
 
         foreach ($mediaEntities as $mediaEntity) {
-            $media[] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
+            $media[] = $this->addFormatsAndUrl($mediaEntity->setLocale($locale));
         }
 
         return $media;
@@ -343,11 +343,11 @@ class MediaManager implements MediaManagerInterface
      */
     private function modifyMedia($uploadedFile, $data, $user)
     {
-        $mediaEntity = $this->getEntityById($data['id']);
-        $mediaEntity->setChanger($user);
-        $mediaEntity->setChanged(new \DateTime());
+        $media = $this->getEntityById($data['id']);
+        $media->setChanger($user);
+        $media->setChanged(new \DateTime());
 
-        $files = $mediaEntity->getFiles();
+        $files = $media->getFiles();
         if (!isset($files[0])) {
             throw new FileNotFoundException('File was not found in media entity with the id . ' . $data['id']);
         }
@@ -363,7 +363,7 @@ class MediaManager implements MediaManagerInterface
         $currentFileVersion = $file->getFileVersion($version);
 
         if (!$currentFileVersion) {
-            throw new FileVersionNotFoundException($mediaEntity->getId(), $version);
+            throw new FileVersionNotFoundException($media->getId(), $version);
         }
 
         if ($uploadedFile) {
@@ -371,7 +371,7 @@ class MediaManager implements MediaManagerInterface
             ++$version;
             $this->validator->validate($uploadedFile);
             $type = $this->typeManager->getMediaType($uploadedFile->getMimeType());
-            if ($type !== $mediaEntity->getType()->getId()) {
+            if ($type !== $media->getType()->getId()) {
                 throw new InvalidMediaTypeException('New media version must have the same media type.');
             }
 
@@ -405,7 +405,7 @@ class MediaManager implements MediaManagerInterface
 
             // delete old fileversion from cache
             $this->formatManager->purge(
-                $mediaEntity->getId(),
+                $media->getId(),
                 $currentFileVersion->getName(),
                 $currentFileVersion->getMimeType()
             );
@@ -424,14 +424,14 @@ class MediaManager implements MediaManagerInterface
             ) {
                 $currentFileVersion->increaseSubVersion();
                 $this->formatManager->purge(
-                    $mediaEntity->getId(),
+                    $media->getId(),
                     $currentFileVersion->getName(),
                     $currentFileVersion->getMimeType()
                 );
             }
         }
 
-        $media = new Media($mediaEntity, $data['locale'], null);
+        $media->setLocale($data['locale']);
 
         $media = $this->setDataToMedia(
             $media,
@@ -439,7 +439,7 @@ class MediaManager implements MediaManagerInterface
             $user
         );
 
-        $this->em->persist($media->getEntity());
+        $this->em->persist($media);
         $this->em->flush();
 
         return $media;
@@ -490,15 +490,15 @@ class MediaManager implements MediaManagerInterface
      */
     protected function createMedia($data, $user)
     {
-        $mediaEntity = $this->mediaRepository->createNew();
-        $mediaEntity->setCreator($user);
-        $mediaEntity->setChanger($user);
+        $media = $this->mediaRepository->createNew();
+        $media->setCreator($user);
+        $media->setChanger($user);
 
         $file = new File();
         $file->setCreator($user);
         $file->setChanger($user);
         $file->setVersion(1);
-        $file->setMedia($mediaEntity);
+        $file->setMedia($media);
 
         $fileVersion = new FileVersion();
         $fileVersion->setCreator($user);
@@ -507,9 +507,9 @@ class MediaManager implements MediaManagerInterface
         $fileVersion->setFile($file);
 
         $file->addFileVersion($fileVersion);
-        $mediaEntity->addFile($file);
+        $media->addFile($file);
 
-        $media = new Media($mediaEntity, $data['locale'], null);
+        $media->setLocale($data['locale']);
 
         $media = $this->setDataToMedia(
             $media,
@@ -519,8 +519,7 @@ class MediaManager implements MediaManagerInterface
 
         $fileVersion->setDefaultMeta($fileVersion->getMeta()->first());
 
-        $mediaEntity = $media->getEntity();
-        $this->em->persist($mediaEntity);
+        $this->em->persist($media);
         $this->em->flush();
 
         return $media;
@@ -731,17 +730,17 @@ class MediaManager implements MediaManagerInterface
     public function move($id, $locale, $destCollection)
     {
         try {
-            $mediaEntity = $this->mediaRepository->findMediaById($id);
+            $media = $this->mediaRepository->findMediaById($id);
 
-            if (null === $mediaEntity) {
+            if (null === $media) {
                 throw new MediaNotFoundException($id);
             }
 
-            $mediaEntity->setCollection($this->em->getReference(self::ENTITY_NAME_COLLECTION, $destCollection));
+            $media->setCollection($this->em->getReference(self::ENTITY_NAME_COLLECTION, $destCollection));
 
             $this->em->flush();
 
-            return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
+            return $this->addFormatsAndUrl($media->setLocale($locale));
         } catch (DBALException $ex) {
             throw new CollectionNotFoundException($destCollection);
         }
@@ -769,8 +768,10 @@ class MediaManager implements MediaManagerInterface
         $mediaArray = $this->getByIds($ids, $locale);
         $formatUrls = [];
         foreach ($mediaArray as $media) {
-            if ($media->getEntity()->getPreviewImage()) {
-                $previewImage = new Media($media->getEntity()->getPreviewImage(), $locale);
+            $previewImage = $media->getPreviewImage();
+
+            if ($previewImage) {
+                $previewImage->setLocale($locale);
 
                 $formatUrls[$media->getId()] = $this->formatManager->getFormats(
                     $previewImage->getId(),
@@ -802,7 +803,7 @@ class MediaManager implements MediaManagerInterface
     {
         // Get preview image and set either preview thumbnails if set, else rendered images
         /** @var \Sulu\Bundle\MediaBundle\Entity\MediaInterface $previewImage */
-        $previewImage = $media->getEntity()->getPreviewImage();
+        $previewImage = $media->getPreviewImage();
 
         if (null !== $previewImage) {
             /** @var FileVersion $latestVersion */

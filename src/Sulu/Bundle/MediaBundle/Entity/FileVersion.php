@@ -36,7 +36,7 @@ class FileVersion implements AuditableInterface
     /**
      * @var int
      */
-    private $version;
+    private $version = 1;
 
     /**
      * @var int
@@ -120,12 +120,12 @@ class FileVersion implements AuditableInterface
     private $targetGroups;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $focusPointX;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $focusPointY;
 
@@ -710,7 +710,7 @@ class FileVersion implements AuditableInterface
     /**
      * Returns the x coordinate of the focus point.
      *
-     * @return int
+     * @return int|null
      */
     public function getFocusPointX()
     {
@@ -720,7 +720,7 @@ class FileVersion implements AuditableInterface
     /**
      * Sets the x coordinate of the focus point.
      *
-     * @param int $focusPointX
+     * @param int|null $focusPointX
      */
     public function setFocusPointX($focusPointX)
     {
@@ -730,7 +730,7 @@ class FileVersion implements AuditableInterface
     /**
      * Returns the y coordinate of the focus point.
      *
-     * @return int
+     * @return int|null
      */
     public function getFocusPointY()
     {
@@ -740,7 +740,7 @@ class FileVersion implements AuditableInterface
     /**
      * Sets the y coordinate of the focus point.
      *
-     * @param int $focusPointY
+     * @param int|null $focusPointY
      */
     public function setFocusPointY($focusPointY)
     {

@@ -35,6 +35,7 @@ use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Bundle\TestBundle\Testing\WriteObjectAttributeTrait;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Security\Authentication\UserInterface as SuluUserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
@@ -47,6 +48,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class MediaManagerTest extends TestCase
 {
+    use WriteObjectAttributeTrait;
+
     /**
      * @var MediaManager
      */
@@ -356,9 +359,9 @@ class MediaManagerTest extends TestCase
 
     public function testSaveWithChangedFocusPoint()
     {
-        $media = $this->prophesize(Media::class);
-        $media->getId()->willReturn(1);
-        $media->getPreviewImage()->willReturn(null);
+        $media = new Media();
+        $this->writeObjectAttribute($media, 'id', 1);
+
         $file = $this->prophesize(File::class);
         $fileVersion = $this->prophesize(FileVersion::class);
         $fileVersion->getName()->willReturn('test');
@@ -369,22 +372,23 @@ class MediaManagerTest extends TestCase
         $fileVersion->getProperties()->willReturn([]);
         $fileVersion->getFocusPointX()->willReturn(null);
         $fileVersion->getFocusPointY()->willReturn(null);
+
         $file->getFileVersion(1)->willReturn($fileVersion->reveal());
         $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
         $file->getVersion()->willReturn(1);
-        $media->getFiles()->willReturn([$file->reveal()]);
-        $this->mediaRepository->findMediaById(1)->willReturn($media);
-        $this->formatManager->getFormats(Argument::cetera())->willReturn([]);
 
-        $media->setChanger(Argument::any())->shouldBeCalled();
-        $media->setChanged(Argument::any())->shouldBeCalled();
         $file->setChanger(Argument::any())->shouldBeCalled();
         $file->setChanged(Argument::any())->shouldBeCalled();
+
         $fileVersion->setProperties([])->shouldBeCalled();
-        $fileVersion->setChanged(Argument::any())->shouldBeCalled();
         $fileVersion->setFocusPointX(1)->shouldBeCalled();
         $fileVersion->setFocusPointY(2)->shouldBeCalled();
         $fileVersion->increaseSubVersion()->shouldBeCalled();
+
+        $media->addFile($file->reveal());
+
+        $this->mediaRepository->findMediaById(1)->willReturn($media);
+        $this->formatManager->getFormats(Argument::cetera())->willReturn([]);
         $this->formatManager->purge(1, 'test', 'image/jpeg')->shouldBeCalled();
 
         $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
@@ -392,9 +396,8 @@ class MediaManagerTest extends TestCase
 
     public function testSaveWithSameFocusPoint()
     {
-        $media = $this->prophesize(Media::class);
-        $media->getId()->willReturn(1);
-        $media->getPreviewImage()->willReturn(null);
+        $media = new Media();
+        $this->writeObjectAttribute($media, 'id', 1);
         $file = $this->prophesize(File::class);
         $fileVersion = $this->prophesize(FileVersion::class);
         $fileVersion->getName()->willReturn('test');
@@ -408,18 +411,16 @@ class MediaManagerTest extends TestCase
         $file->getFileVersion(1)->willReturn($fileVersion->reveal());
         $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
         $file->getVersion()->willReturn(1);
-        $media->getFiles()->willReturn([$file->reveal()]);
         $this->mediaRepository->findMediaById(1)->willReturn($media);
 
-        $media->setChanger(Argument::any())->shouldBeCalled();
-        $media->setChanged(Argument::any())->shouldBeCalled();
         $file->setChanger(Argument::any())->shouldBeCalled();
         $file->setChanged(Argument::any())->shouldBeCalled();
         $fileVersion->setFocusPointX(1)->shouldBeCalled();
         $fileVersion->setFocusPointY(2)->shouldBeCalled();
         $fileVersion->setProperties([])->shouldBeCalled();
-        $fileVersion->setChanged(Argument::any())->shouldBeCalled();
         $fileVersion->increaseSubVersion()->shouldNotBeCalled();
+
+        $media->addFile($file->reveal());
 
         $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
     }

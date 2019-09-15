@@ -117,12 +117,10 @@ class MediaSearchSubscriberTest extends TestCase
         );
         $imageUrl = 'foo';
 
-        $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function($args) use ($imageUrl) {
-            $mediaApi = $args[0];
-            $mediaApi->setFormats([
-                'test_format' => $imageUrl,
-            ]);
-        });
+        $this->mediaManager->addFormatsAndUrl(Argument::any());
+        $this->media->getFormats()->willReturn([
+            'test_format' => $imageUrl,
+        ]);
 
         $this->document->setImageUrl($imageUrl)->shouldBeCalled();
         $this->document->addField($this->field1->reveal())->shouldBeCalled();
@@ -143,12 +141,10 @@ class MediaSearchSubscriberTest extends TestCase
             321
         );
 
-        $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function($args) {
-            $mediaApi = $args[0];
-            $mediaApi->setFormats([
-                'for' => '/fo',
-            ]);
-        });
+        $this->mediaManager->addFormatsAndUrl(Argument::any());
+        $this->media->getFormats()->willReturn([
+            'for' => '/fo',
+        ]);
 
         $this->document->setImageUrl(null)->shouldBeCalled();
         $this->document->addField($this->field1->reveal())->shouldBeCalled();
@@ -172,8 +168,8 @@ class MediaSearchSubscriberTest extends TestCase
         );
 
         $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function($args) {
-            $mediaApi = $args[0];
-            $mediaApi->setFormats([]);
+            $media = $args[0];
+            $media->setFormats([]);
         });
 
         $this->document->setImageUrl(Argument::any())->shouldNotBeCalled();
@@ -193,6 +189,8 @@ class MediaSearchSubscriberTest extends TestCase
         $this->event->getSubject()->willReturn($this->fileVersionMeta->reveal());
         $this->fileVersionMeta->getLocale()->willReturn('de');
         $this->media->getId()->willReturn($mediaId);
+        $this->media->setLocale('de')->willReturn($this->media->reveal());
+        $this->media->setFormats('de')->willReturn($this->media->reveal());
         $this->media->getCollection()->willReturn($this->collection->reveal());
         $this->collection->getId()->willReturn($collectionId);
         $this->fileVersion->getMimeType()->willReturn($mediaMime);

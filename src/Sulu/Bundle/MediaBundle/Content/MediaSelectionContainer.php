@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Content;
 
 use JMS\Serializer\Annotation\Exclude;
-use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Util\ArrayableInterface;
 

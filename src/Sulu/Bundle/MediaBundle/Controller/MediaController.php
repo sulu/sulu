@@ -68,7 +68,7 @@ class MediaController extends AbstractMediaController implements
                 $id,
                 function($id) use ($locale, $mediaManager) {
                     $media = $mediaManager->getById($id, $locale);
-                    $collection = $media->getEntity()->getCollection();
+                    $collection = $media->getCollection();
 
                     if (SystemCollectionManagerInterface::COLLECTION_TYPE === $collection->getType()->getKey()) {
                         $this->getSecurityChecker()->checkPermission(

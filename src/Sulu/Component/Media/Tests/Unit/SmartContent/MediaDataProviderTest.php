@@ -16,8 +16,8 @@ use JMS\Serializer\SerializerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Api\Collection;
-use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Media\SmartContent\MediaDataItem;
@@ -249,7 +249,7 @@ class MediaDataProviderTest extends TestCase
         $media = $this->prophesize(Media::class);
         $media->getId()->willReturn($id);
         $media->getTitle()->willReturn($title);
-        $media->getTags()->willReturn($tags);
+        $media->getTagNames()->willReturn($tags);
 
         return $media;
     }
@@ -269,12 +269,7 @@ class MediaDataProviderTest extends TestCase
         return [
             'id' => $media->getId(),
             'title' => $media->getTitle(),
-            'tags' => array_map(
-                function($tag) {
-                    return $tag->getName();
-                },
-                $media->getTags()
-            ),
+            'tags' => $media->getTagNames(),
         ];
     }
 }

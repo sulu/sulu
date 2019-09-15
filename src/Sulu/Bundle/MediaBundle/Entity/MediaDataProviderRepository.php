@@ -14,7 +14,6 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
-use Sulu\Bundle\MediaBundle\Api\Media as MediaApi;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
@@ -81,7 +80,7 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
 
         return array_map(
             function(Media $media) use ($locale) {
-                return $this->mediaManager->addFormatsAndUrl(new MediaApi($media, $locale));
+                return $this->mediaManager->addFormatsAndUrl($media->setLocale($locale));
             },
             $entities
         );

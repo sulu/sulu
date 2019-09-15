@@ -13,7 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Twig;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class DispositionTypeTwigExtensionTest extends TestCase

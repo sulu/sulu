@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Twig;
 
-use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;

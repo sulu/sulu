@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
-use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;

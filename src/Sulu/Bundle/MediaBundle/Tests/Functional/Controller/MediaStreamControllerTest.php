@@ -54,9 +54,10 @@ class MediaStreamControllerTest extends SuluTestCase
     {
         $filePath = $this->createMediaFile('test.jpg');
         $oldMedia = $this->createMedia($filePath, 'file-without-extension');
+        $oldMediaUrl = $oldMedia->getUrl();
         $newMedia = $this->createMediaVersion($oldMedia->getId(), $filePath, 'new-file-without-extension');
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', $oldMedia->getUrl());
+        $client->request('GET', $oldMediaUrl);
         $response = $client->getResponse();
         $this->assertHttpStatusCode(200, $response);
         $this->assertEquals(

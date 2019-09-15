@@ -11,14 +11,16 @@
 
 namespace Sulu\Bundle\TestBundle\Testing;
 
-trait ReadObjectAttributeTrait
+trait WriteObjectAttributeTrait
 {
-    protected static function readObjectAttribute(object $object, string $property)
+    protected static function writeObjectAttribute(object $object, string $property, $value)
     {
         $reflection = new \ReflectionClass($object);
         $property = $reflection->getProperty($property);
         $property->setAccessible(true);
 
-        return $property->getValue($object);
+        $property->setValue($object, $value);
+
+        return $object;
     }
 }

@@ -18,8 +18,8 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as Entity;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
-use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 
 class Category extends ApiEntityWrapper
 {
@@ -143,7 +143,7 @@ class Category extends ApiEntityWrapper
 
         $medias = [];
         foreach ($translation->getMedias() as $media) {
-            $medias[] = new Media($media, $this->locale);
+            $medias[] = $media->setLocale($this->locale);
         }
 
         return $medias;

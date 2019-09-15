@@ -16,8 +16,8 @@ use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\SearchEvents;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -139,13 +139,16 @@ class MediaSearchSubscriber implements EventSubscriberInterface
     /**
      * Return the image URL for the given media.
      *
-     * TODO: The media API needs to be improved here.
+     * @param Media $media
+     * @param string $locale
+     *
+     * TODO: The media API needs to be improved here
      */
     private function getImageUrl($media, $locale)
     {
-        $mediaApi = new Media($media, $locale);
-        $this->mediaManager->addFormatsAndUrl($mediaApi);
-        $formats = $mediaApi->getThumbnails();
+        $media->setLocale($locale);
+        $this->mediaManager->addFormatsAndUrl($media);
+        $formats = $media->getFormats();
 
         if (!isset($formats[$this->searchImageFormat])) {
             $this->logger->warning(sprintf(

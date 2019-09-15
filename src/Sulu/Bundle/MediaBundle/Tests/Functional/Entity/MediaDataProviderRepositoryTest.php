@@ -14,7 +14,6 @@ namespace Functional\Entity;
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
-use Sulu\Bundle\MediaBundle\Api\Media as MediaApi;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
@@ -575,7 +574,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         for ($i = 0; $i < $length; ++$i) {
             $this->assertEquals($expected[$i][0], $result[$i]->getTitle(), $i);
 
-            $existingTags = $result[$i]->getTags();
+            $existingTags = $result[$i]->getTagNames();
             foreach ($tags as $tag) {
                 $this->assertContains($this->tags[$tag]->getName(), $existingTags);
             }
@@ -625,7 +624,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             ->get('sulu_media_test.smart_content.data_provider.media.repository')
             ->findByFilters($filters, 1, 100, 100, 'de');
 
-        $mediaIds = array_map(function(MediaApi $media) {
+        $mediaIds = array_map(function(Media $media) {
             return $media->getId();
         }, $mediaResults);
 

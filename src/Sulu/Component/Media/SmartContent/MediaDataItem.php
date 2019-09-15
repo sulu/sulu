@@ -13,7 +13,7 @@ namespace Sulu\Component\Media\SmartContent;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\VirtualProperty;
-use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Component\SmartContent\ItemInterface;
 
 /**
