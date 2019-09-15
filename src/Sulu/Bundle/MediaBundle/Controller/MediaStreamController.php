@@ -45,7 +45,7 @@ class MediaStreamController extends Controller
     /**
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getImageAction(Request $request)
     {
@@ -57,11 +57,11 @@ class MediaStreamController extends Controller
             $url = $request->getPathInfo();
 
             list($id, $format) = $this->getCacheManager()->getMediaProperties($url);
-
-            return $this->getCacheManager()->returnImage($id, $format);
         } catch (ImageProxyException $e) {
             throw $this->createNotFoundException('Image create error. Code: ' . $e->getCode());
         }
+
+        return $this->getCacheManager()->returnImage($id, $format);
     }
 
     /**
