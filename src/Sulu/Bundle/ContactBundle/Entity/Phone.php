@@ -12,28 +12,35 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
+ * @ExclusionPolicy("all")
+ *
  * Phone.
  */
 class Phone
 {
     /**
      * @var string
+     * @Expose
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $phone;
 
     /**
      * @var int
+     * @Expose
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $id;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\PhoneType
-     * @Groups({"fullAccount", "fullContact"})
      */
     private $phoneType;
 
@@ -114,6 +121,16 @@ class Phone
     public function getPhoneType()
     {
         return $this->phoneType;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("phoneType")
+     * @Groups({"fullContact", "fullAccount"})
+     */
+    public function getPhoneTypeId(): int
+    {
+        return $this->phoneType->getId();
     }
 
     /**

@@ -12,13 +12,12 @@
 namespace Sulu\Bundle\ContactBundle\Contact;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Sulu\Bundle\ContactBundle\Api\Account as AccountApi;
-use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress as AccountAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
@@ -32,11 +31,6 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 class AccountManager extends AbstractContactManager implements DataProviderRepositoryInterface
 {
     protected $addressEntity = 'SuluContactBundle:Address';
-
-    /**
-     * @var AccountFactory
-     */
-    private $accountFactory;
 
     /**
      * @var AccountRepositoryInterface
@@ -57,7 +51,6 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      * @param ObjectManager $em
      * @param TagManagerInterface $tagManager
      * @param MediaManagerInterface $mediaManager
-     * @param AccountFactory $accountFactory
      * @param AccountRepositoryInterface $accountRepository
      * @param ContactRepository $contactRepository
      * @param MediaRepositoryInterface $mediaRepository
@@ -66,13 +59,11 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
         ObjectManager $em,
         TagManagerInterface $tagManager,
         MediaManagerInterface $mediaManager,
-        AccountFactory $accountFactory,
         AccountRepositoryInterface $accountRepository,
         ContactRepository $contactRepository,
         MediaRepositoryInterface $mediaRepository
     ) {
         parent::__construct($em, $tagManager, $mediaManager);
-        $this->accountFactory = $accountFactory;
         $this->accountRepository = $accountRepository;
         $this->contactRepository = $contactRepository;
         $this->mediaRepository = $mediaRepository;
@@ -81,7 +72,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     /**
      * Adds an address to the entity.
      *
-     * @param AccountApi $account The entity to add the address to
+     * @param Account $account The entity to add the address to
      * @param AddressEntity $address The address to be added
      * @param bool $isMain Defines if the address is the main Address of the contact
      *
@@ -215,7 +206,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      *
      * @throws EntityNotFoundException
      *
-     * @return AccountApi
+     * @return Account
      */
     public function getByIdAndInclude($id, $locale, $includes)
     {
@@ -248,8 +239,9 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
 
         if (!empty($contactsEntities)) {
             $contacts = [];
+            /** @var Contact $contact */
             foreach ($contactsEntities as $contact) {
-                $contacts[] = new Contact($contact, $locale);
+                $contacts[] = $contact->setLocale($locale);
             }
 
             return $contacts;
@@ -334,7 +326,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      * @param Account $account
      * @param string $locale
      *
-     * @return null|AccountApi
+     * @return null|Account
      */
     public function getAccount($account, $locale)
     {
@@ -388,16 +380,16 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      * @param Account $account
      * @param string $locale
      *
-     * @return AccountApi
+     * @return Account
      */
     protected function getApiObject($account, $locale)
     {
-        $apiObject = $this->accountFactory->createApiEntity($account, $locale);
+        $account->setLocale($locale);
         if ($account->getLogo()) {
-            $apiLogo = $this->mediaManager->getById($account->getLogo()->getId(), $locale);
-            $apiObject->setLogo($apiLogo);
+            $logo = $this->mediaManager->getById($account->getLogo()->getId(), $locale);
+            $account->setLogo($logo);
         }
 
-        return $apiObject;
+        return $account;
     }
 }

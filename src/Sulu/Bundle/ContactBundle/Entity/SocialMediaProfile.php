@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use JMS\Serializer\Annotation as Serializer;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
@@ -110,15 +109,21 @@ class SocialMediaProfile
     }
 
     /**
-     * @Serializer\VirtualProperty()
-     * @Serializer\SerializedName("socialMediaProfileType")
-     * @Groups({"fullAccount", "fullContact"})
-     *
      * @return SocialMediaProfileType
      */
     public function getSocialMediaProfileType()
     {
         return $this->socialMediaProfileType;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("socialMediaType")
+     * @Groups({"fullContact", "fullAccount"})
+     */
+    public function getSocialMediaProfileTypeId(): ?int
+    {
+        return $this->socialMediaProfileType->getId();
     }
 
     /**

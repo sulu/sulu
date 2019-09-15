@@ -417,7 +417,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('ExampleCompany', $response->name);
         $this->assertEquals('A small notice', $response->note);
         $this->assertEquals(1, $response->depth);
-        $this->assertEquals($account->getId(), $response->parent->id);
+        $this->assertEquals($account->getId(), $response->parent);
         $this->assertEquals('erika.mustermann@muster.at', $response->contactDetails->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->contactDetails->emails[1]->email);
         $this->assertEquals('123456789', $response->contactDetails->phones[0]->phone);
@@ -1638,7 +1638,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals('ExampleCompany', $response->name);
-        $this->assertEquals($account->getId(), $response->parent->id);
+        $this->assertEquals($account->getId(), $response->parent);
         $this->assertEquals('erika.mustermann@muster.at', $response->contactDetails->emails[0]->email);
         $this->assertEquals('123456789', $response->contactDetails->phones[0]->phone);
         $this->assertEquals('123456789-1', $response->contactDetails->faxes[0]->fax);

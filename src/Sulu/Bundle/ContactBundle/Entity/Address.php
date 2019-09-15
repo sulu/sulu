@@ -16,6 +16,8 @@ use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
  * Address.
@@ -75,8 +77,6 @@ class Address
 
     /**
      * @var AddressType
-     * @Groups({"fullAccount", "fullContact"})
-     * @Expose
      */
     private $addressType;
 
@@ -355,6 +355,20 @@ class Address
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("addressType")
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
+     */
+    public function getAddressTypeId(): ?int
+    {
+        if (!$this->addressType) {
+            return null;
+        }
+
+        return $this->addressType->getId();
+    }
+
+    /**
      * Set countryCode.
      *
      * @param string $countryCode
@@ -385,6 +399,22 @@ class Address
         }
 
         return new Country($this->countryCode);
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("country")
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
+     *
+     * @return null|int
+     */
+    public function getCountryId(): ?int
+    {
+        if (!$this->country) {
+            return null;
+        }
+
+        return $this->country->getId();
     }
 
     /**

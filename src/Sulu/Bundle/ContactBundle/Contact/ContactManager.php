@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContactBundle\Contact;
 
 use DateTime;
 use Doctrine\Common\Persistence\ObjectManager;
-use Sulu\Bundle\ContactBundle\Api\Contact as ContactApi;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address;
@@ -611,17 +610,17 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      * @param Contact $contact
      * @param string $locale
      *
-     * @return ContactApi
+     * @return Contact
      */
     protected function getApiObject($contact, $locale)
     {
-        $apiObject = new ContactApi($contact, $locale);
+        $contact->setLocale($locale);
         if ($contact->getAvatar()) {
-            $apiAvatar = $this->mediaManager->getById($contact->getAvatar()->getId(), $locale);
-            $apiObject->setAvatar($apiAvatar);
+            $avatar = $this->mediaManager->getById($contact->getAvatar()->getId(), $locale);
+            $contact->setAvatar($avatar);
         }
 
-        return $apiObject;
+        return $contact;
     }
 
     /**

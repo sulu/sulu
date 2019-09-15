@@ -13,25 +13,29 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
+/**
+ * @ExclusionPolicy("all")
+ */
 class Contact extends ApiEntity implements ContactInterface, AuditableInterface
 {
+    const TYPE = 'contact';
+
     /**
      * @var int
-     * @Expose
-     * @Groups({"frontend", "partialContact", "fullContact"})
      */
     protected $id;
 
@@ -51,7 +55,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $lastName;
 
     /**
-     * @var string
+     * @var ContactTitle|null
      */
     protected $title;
 
@@ -77,12 +81,14 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
 
     /**
      * @var UserInterface
+     * @Expose
      * @Groups({"fullContact"})
      */
     protected $changer;
 
     /**
      * @var UserInterface
+     * @Expose
      * @Groups({"fullContact"})
      */
     protected $creator;
@@ -94,7 +100,6 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
 
     /**
      * @var Collection|Note[]
-     * @Groups({"fullContact"})
      *
      * @deprecated
      */
@@ -102,25 +107,21 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
 
     /**
      * @var Collection|Email[]
-     * @Groups({"fullContact", "partialContact"})
      */
     protected $emails;
 
     /**
      * @var Collection|Phone[]
-     * @Groups({"fullContact"})
      */
     protected $phones;
 
     /**
      * @var Collection|Fax[]
-     * @Groups({"fullContact"})
      */
     protected $faxes;
 
     /**
      * @var Collection|SocialMediaProfile[]
-     * @Groups({"fullContact"})
      */
     protected $socialMediaProfiles;
 
@@ -136,8 +137,6 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
 
     /**
      * @var Collection|TagInterface[]
-     * @Accessor(getter="getTagNameArray")
-     * @Groups({"fullContact"})
      */
     protected $tags;
 
@@ -145,8 +144,6 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
      * main account.
      *
      * @var string
-     * @Accessor(getter="getMainAccount")
-     * @Groups({"fullContact"})
      */
     protected $account;
 
@@ -154,14 +151,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
      * main account.
      *
      * @var string
-     * @Accessor(getter="getAddresses")
-     * @Groups({"fullContact"})
      */
     protected $addresses;
 
     /**
      * @var Collection|AccountContact[]
-     * @Exclude
      */
     protected $accountContacts;
 
@@ -203,32 +197,33 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
 
     /**
      * @var Collection|MediaInterface[]
-     * @Groups({"fullContact"})
      */
     protected $medias;
 
     /**
      * @var Collection|CategoryInterface[]
-     * @Groups({"fullContact"})
      */
     protected $categories;
 
     /**
      * @var Collection|Url[]
-     * @Groups({"fullContact"})
      */
     protected $urls;
 
     /**
      * @var Collection|BankAccount[]
-     * @Groups({"fullContact"})
      */
     protected $bankAccounts;
 
     /**
-     * @var MediaInterface
+     * @var MediaInterface|null
      */
     protected $avatar;
+
+    /**
+     * @var string|null
+     */
+    protected $currentLocale;
 
     /**
      * Constructor.
@@ -250,7 +245,26 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         $this->medias = new ArrayCollection();
     }
 
+    public function getLocale(): ?string
+    {
+        return $this->currentLocale;
+    }
+
+    public function setLocale(?string $locale): self
+    {
+        $this->currentLocale = $locale;
+        if ($this->avatar instanceof Media) {
+            $this->avatar->setLocale($locale);
+        }
+
+        return $this;
+    }
+
     /**
+     * @VirtualProperty
+     * @SerializedName("id")
+     * @Groups({"fullContact","partialContact","select","frontend"})
+     *
      * {@inheritdoc}
      */
     public function getId()
@@ -269,6 +283,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("firstName")
+     * @Groups({"fullContact","partialContact"})
+     *
      * {@inheritdoc}
      */
     public function getFirstName()
@@ -287,6 +305,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("middleName")
+     * @Groups({"fullContact","partialContact"})
+     *
      * {@inheritdoc}
      */
     public function getMiddleName()
@@ -313,6 +335,30 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("avatar")
+     * @Groups({"fullContact","partialContact"})
+     *
+     * @return array|null
+     */
+    public function getAvatarData()
+    {
+        if (!$this->avatar) {
+            return null;
+        }
+
+        return [
+            'id' => $this->avatar->getId(),
+            'url' => $this->avatar->getUrl(),
+            'thumbnails' => $this->avatar->getFormats(),
+        ];
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("lastName")
+     * @Groups({"fullContact","partialContact"})
+     *
      * {@inheritdoc}
      */
     public function getLastName()
@@ -323,6 +369,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     /**
      * @VirtualProperty
      * @SerializedName("fullName")
+     * @Groups({"fullContact","partialContact","select"})
      *
      * @return string
      */
@@ -350,6 +397,22 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @return int
+     *
+     * @VirtualProperty
+     * @SerializedName("title")
+     * @Groups({"fullContact", "partialContact"})
+     */
+    public function getTitleId(): ?int
+    {
+        if (!$this->title) {
+            return null;
+        }
+
+        return $this->title->getId();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function setPosition($position)
@@ -360,6 +423,16 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Sets current position.
+     *
+     * @param $position
+     */
+    public function setCurrentPosition($position)
+    {
+        $this->setPosition($position);
     }
 
     /**
@@ -375,7 +448,27 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
             return $mainAccountContact->getPosition();
         }
 
-        return;
+        return null;
+    }
+
+    /**
+     * Get position.
+     *
+     * @return string
+     *
+     * @VirtualProperty
+     * @SerializedName("position")
+     * @Groups({"fullContact"})
+     */
+    public function getPositionId()
+    {
+        $position = $this->getPosition();
+
+        if (!$position) {
+            return null;
+        }
+
+        return $position->getId();
     }
 
     /**
@@ -389,6 +482,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("birthday")
+     * @Groups({"fullContact"})
+     *
      * {@inheritdoc}
      */
     public function getBirthday()
@@ -397,6 +494,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("created")
+     * @Groups({"fullContact"})
+     *
      * {@inheritdoc}
      */
     public function getCreated()
@@ -405,6 +506,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("changed")
+     * @Groups({"fullContact"})
+     *
      * {@inheritdoc}
      */
     public function getChanged()
@@ -431,11 +536,25 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("locales")
+     * @Groups({"fullContact"})
+     *
      * {@inheritdoc}
      */
     public function getLocales()
     {
         return $this->locales;
+    }
+
+    /**
+     * Get locales.
+     *
+     * @return array
+     */
+    public function getContactLocales()
+    {
+        return $this->getLocales();
     }
 
     /**
@@ -489,6 +608,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("note")
+     * @Groups({"fullContact"})
+     */
     public function getNote(): ?string
     {
         return $this->note;
@@ -513,6 +637,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("notes")
+     * @Groups({"fullContact"})
+     *
      * {@inheritdoc}
      */
     public function getNotes()
@@ -539,6 +667,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("emails")
+     * @Groups({"fullContact", "partialContact"})
+     *
      * {@inheritdoc}
      */
     public function getEmails()
@@ -565,6 +697,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("phones")
+     * @Groups({"fullContact"})
+     *
      * {@inheritdoc}
      */
     public function getPhones()
@@ -591,6 +727,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("faxes")
+     * @Groups({"fullContact"})
+     *
      * {@inheritdoc}
      */
     public function getFaxes()
@@ -617,6 +757,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("socialMediaProfiles")
+     * @Groups({"fullContact"})
+     *
      * {@inheritdoc}
      */
     public function getSocialMediaProfiles()
@@ -643,6 +787,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("urls")
+     * @Groups({"fullContact"})
+     *
      * {@inheritdoc}
      */
     public function getUrls()
@@ -661,6 +809,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("formOfAddress")
+     * @Groups({"fullContact"})
+     *
      * {@inheritdoc}
      */
     public function getFormOfAddress()
@@ -679,6 +831,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("salutation")
+     * @Groups({"fullContact"})
+     *
      * {@inheritdoc}
      */
     public function getSalutation()
@@ -713,6 +869,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("tags")
+     * @Groups({"fullContact"})
+     *
      * {@inheritdoc}
      */
     public function getTagNameArray()
@@ -765,6 +925,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("newsletter")
+     * @Groups({"fullContact"})
+     *
      * {@inheritdoc}
      */
     public function getNewsletter()
@@ -783,6 +947,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("gender")
+     * @Groups({"fullContact"})
+     *
      * {@inheritdoc}
      */
     public function getGender()
@@ -800,7 +968,19 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
             return $mainAccountContact->getAccount();
         }
 
-        return;
+        return null;
+    }
+
+    /**
+     * Returns main account.
+     *
+     * @VirtualProperty
+     * @SerializedName("account")
+     * @Groups({"fullContact"})
+     */
+    public function getAccount()
+    {
+        return $this->getMainAccount();
     }
 
     /**
@@ -819,10 +999,14 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
             }
         }
 
-        return;
+        return null;
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("addresses")
+     * @Groups({"fullContact"})
+     *
      * {@inheritdoc}
      */
     public function getAddresses()
@@ -853,6 +1037,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("mainEmail")
+     * @Groups({"fullContact","partialContact"})
+     *
      * {@inheritdoc}
      */
     public function getMainEmail()
@@ -871,6 +1059,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("mainPhone")
+     * @Groups({"fullContact","partialContact"})
+     *
      * {@inheritdoc}
      */
     public function getMainPhone()
@@ -889,6 +1081,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("mainFax")
+     * @Groups({"fullContact","partialContact"})
+     *
      * {@inheritdoc}
      */
     public function getMainFax()
@@ -907,6 +1103,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("mainUrl")
+     * @Groups({"fullContact","partialContact"})
+     *
      * {@inheritdoc}
      */
     public function getMainUrl()
@@ -941,6 +1141,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("mainAddress")
+     * @Groups({"fullContact","partialContact"})
+     *
      * {@inheritdoc}
      */
     public function getMainAddress()
@@ -956,7 +1160,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
             }
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -981,6 +1185,25 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     public function getMedias()
     {
         return $this->medias;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("medias")
+     * @Groups({"fullContact"})
+     *
+     * @return int[]
+     */
+    public function getMediaIds(): array
+    {
+        $entities = [];
+        if ($this->medias) {
+            foreach ($this->medias as $media) {
+                $entities[] = $media->getId();
+            }
+        }
+
+        return $entities;
     }
 
     /**
@@ -1018,6 +1241,26 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * Get categories.
+     *
+     * @return int[]
+     *
+     * @VirtualProperty
+     * @SerializedName("categories")
+     * @Groups({"fullContact"})
+     */
+    public function getCategoryIds(): array
+    {
+        if (!$this->categories) {
+            return [];
+        }
+
+        return array_map(function($category) {
+            return $category->getId();
+        }, $this->categories->toArray());
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function addBankAccount(BankAccount $bankAccount)
@@ -1036,11 +1279,31 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("bankAccounts")
+     * @Groups({"fullContact"})
+     *
      * {@inheritdoc}
      */
     public function getBankAccounts()
     {
         return $this->bankAccounts;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("contactDetails")
+     * @Groups({"fullContact"})
+     */
+    public function getContactDetails()
+    {
+        return [
+            'emails' => $this->getEmails(),
+            'faxes' => $this->getFaxes(),
+            'phones' => $this->getPhones(),
+            'socialMedia' => $this->getSocialMediaProfiles(),
+            'websites' => $this->getUrls(),
+        ];
     }
 
     /**
@@ -1059,5 +1322,10 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
             'created' => $this->getCreated(),
             'changed' => $this->getChanged(),
         ];
+    }
+
+    public function getType()
+    {
+        return self::TYPE;
     }
 }

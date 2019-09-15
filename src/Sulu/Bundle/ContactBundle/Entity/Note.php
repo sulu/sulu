@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 
 /**
@@ -21,12 +22,14 @@ class Note
 {
     /**
      * @var string
+     * @Expose
      * @Groups({"fullAccount", "fullContact"})
      */
     private $value;
 
     /**
      * @var int
+     * @Expose
      * @Groups({"fullAccount", "fullContact"})
      */
     private $id;

@@ -11,11 +11,12 @@
 
 namespace Sulu\Component\Contact\Tests\Unit\SmartContent;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\ContactBundle\Api\Account;
+use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Contact\SmartContent\AccountDataItem;
 use Sulu\Component\Contact\SmartContent\AccountDataProvider;
@@ -213,13 +214,13 @@ class AccountDataProviderTest extends TestCase
         $account->getId()->willReturn($id);
         $account->getNumber()->willReturn($id);
         $account->getName()->willReturn($name);
-        $account->getTags()->willReturn($tags);
+        $account->getTags()->willReturn(new ArrayCollection($tags));
         $account->getPlaceOfJurisdiction()->willReturn('');
         $account->getUid()->willReturn('');
         $account->getCorporation()->willReturn('');
         $account->getCreated()->willReturn(new \DateTime());
         $account->getChanged()->willReturn(new \DateTime());
-        $account->getMedias()->willReturn([]);
+        $account->getMedias()->willReturn(new ArrayCollection());
 
         return $account;
     }

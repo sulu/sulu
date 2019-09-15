@@ -11,7 +11,14 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
+
 /**
+ * @ExclusionPolicy("all")
+ *
  * AccountAddress.
  */
 class AccountAddress
@@ -51,6 +58,10 @@ class AccountAddress
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("main")
+     * @Groups({"fullAccount"})
+     *
      * Get main.
      *
      * @return bool
@@ -61,6 +72,10 @@ class AccountAddress
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("id")
+     * @Groups({"fullAccount"})
+     *
      * Get id.
      *
      * @return int
@@ -85,6 +100,10 @@ class AccountAddress
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("address")
+     * @Groups({"fullAccount"})
+     *
      * Get address.
      *
      * @return \Sulu\Bundle\ContactBundle\Entity\Address

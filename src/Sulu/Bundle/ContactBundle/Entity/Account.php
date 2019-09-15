@@ -15,13 +15,23 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
+/**
+ * @ExclusionPolicy("all")
+ */
 class Account implements AccountInterface
 {
+    const TYPE = 'account';
+
     /**
      * @var int
      */
@@ -216,6 +226,11 @@ class Account implements AccountInterface
     protected $categories;
 
     /**
+     * @var string|null
+     */
+    protected $currentLocale;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -235,6 +250,21 @@ class Account implements AccountInterface
         $this->bankAccounts = new ArrayCollection();
         $this->medias = new ArrayCollection();
         $this->tags = new ArrayCollection();
+    }
+
+    public function getLocale(): ?string
+    {
+        return $this->currentLocale;
+    }
+
+    public function setLocale(?string $locale): self
+    {
+        $this->currentLocale = $locale;
+        if ($this->logo instanceof Media) {
+            $this->logo->setLocale($locale);
+        }
+
+        return $this;
     }
 
     public function setLft(int $lft): AccountInterface
@@ -268,6 +298,11 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("depth")
+     * @Groups({"fullAccount", "partialAccount"})
+     */
     public function getDepth(): int
     {
         return $this->depth;
@@ -283,6 +318,20 @@ class Account implements AccountInterface
     public function getParent(): ?AccountInterface
     {
         return $this->parent;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("parent")
+     * @Groups({"fullAccount"})
+     */
+    public function getParentId(): ?int
+    {
+        if (!$this->parent) {
+            return null;
+        }
+
+        return $this->parent->getId();
     }
 
     public function addUrl(Url $url): AccountInterface
@@ -349,6 +398,11 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("note")
+     * @Groups({"fullAccount"})
+     */
     public function getNote(): ?string
     {
         return $this->note;
@@ -368,6 +422,13 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("notes")
+     * @Groups({"fullAccount"})
+     *
+     * @return Collection
+     */
     public function getNotes(): Collection
     {
         return $this->notes;
@@ -444,6 +505,11 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("bankAccounts")
+     * @Groups({"fullAccount"})
+     */
     public function getBankAccounts(): Collection
     {
         return $this->bankAccounts;
@@ -469,6 +535,10 @@ class Account implements AccountInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("tags")
+     * @Groups({"fullAccount"})
+     *
      * @return string[]
      */
     public function getTagNameArray(): array
@@ -497,6 +567,11 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("accountContacts")
+     * @Groups({"fullAccount"})
+     */
     public function getAccountContacts(): Collection
     {
         return $this->accountContacts;
@@ -516,12 +591,20 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("accountAddresses")
+     */
     public function getAccountAddresses(): Collection
     {
         return $this->accountAddresses;
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("addresses")
+     * @Groups({"fullAccount"})
+     *
      * @return Address[]
      */
     public function getAddresses(): array
@@ -541,6 +624,11 @@ class Account implements AccountInterface
         return $addresses;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("mainAddress")
+     * @Groups({"fullAccount", "partialAccount"})
+     */
     public function getMainAddress(): ?Address
     {
         $accountAddresses = $this->getAccountAddresses();
@@ -558,6 +646,10 @@ class Account implements AccountInterface
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("contacts")
+     * @Groups({"fullAccount"})
+     *
      * @return ContactInterface[]
      */
     public function getContacts(): array
@@ -594,6 +686,25 @@ class Account implements AccountInterface
         return $this->medias;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("medias")
+     * @Groups({"fullAccount"})
+     *
+     * @return int[]
+     */
+    public function getMediaIds(): array
+    {
+        $entities = [];
+        if ($this->medias) {
+            foreach ($this->medias as $media) {
+                $entities[] = $media->getId();
+            }
+        }
+
+        return $entities;
+    }
+
     public function addChild(AccountInterface $children): AccountInterface
     {
         $this->children[] = $children;
@@ -627,6 +738,22 @@ class Account implements AccountInterface
         return $this->categories;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("categories")
+     * @Groups({"fullAccount"})
+     */
+    public function getCategoryIds()
+    {
+        if (!$this->categories) {
+            return [];
+        }
+
+        return array_map(function($category) {
+            return $category->getId();
+        }, $this->categories->toArray());
+    }
+
     public function setId($id): AccountInterface
     {
         $this->id = $id;
@@ -634,6 +761,11 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("id")
+     * @Groups({"fullAccount", "partialAccount"})
+     */
     public function getId(): int
     {
         return $this->id;
@@ -646,6 +778,11 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("name")
+     * @Groups({"fullAccount", "partialAccount"})
+     */
     public function getName(): string
     {
         return $this->name;
@@ -658,6 +795,11 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("externalId")
+     * @Groups({"fullAccount"})
+     */
     public function getExternalId(): ?string
     {
         return $this->externalId;
@@ -670,6 +812,11 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("number")
+     * @Groups({"fullAccount", "partialAccount"})
+     */
     public function getNumber(): ?string
     {
         return $this->number;
@@ -682,6 +829,11 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("corporation")
+     * @Groups({"fullAccount", "partialAccount"})
+     */
     public function getCorporation(): ?string
     {
         return $this->corporation;
@@ -694,6 +846,11 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("uid")
+     * @Groups({"fullAccount"})
+     */
     public function getUid(): ?string
     {
         return $this->uid;
@@ -706,6 +863,11 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("registerNumber")
+     * @Groups({"fullAccount"})
+     */
     public function getRegisterNumber(): ?string
     {
         return $this->registerNumber;
@@ -718,6 +880,11 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("placeOfJurisdiction")
+     * @Groups({"fullAccount"})
+     */
     public function getPlaceOfJurisdiction(): ?string
     {
         return $this->placeOfJurisdiction;
@@ -730,6 +897,11 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("mainEmail")
+     * @Groups({"fullAccount", "partialAccount"})
+     */
     public function getMainEmail(): ?string
     {
         return $this->mainEmail;
@@ -742,6 +914,11 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("mainPhone")
+     * @Groups({"fullAccount", "partialAccount"})
+     */
     public function getMainPhone(): ?string
     {
         return $this->mainPhone;
@@ -766,6 +943,29 @@ class Account implements AccountInterface
         return $this->logo;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("logo")
+     * @Groups({"fullAccount"})
+     */
+    public function getLogoData()
+    {
+        if (!$this->logo) {
+            return null;
+        }
+
+        return [
+            'id' => $this->logo->getId(),
+            'url' => $this->logo->getUrl(),
+            'thumbnails' => $this->logo->getFormats(),
+        ];
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("mainFax")
+     * @Groups({"fullAccount", "partialAccount"})
+     */
     public function getMainFax(): ?string
     {
         return $this->mainFax;
@@ -778,11 +978,21 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("mainUrl")
+     * @Groups({"fullAccount", "partialAccount"})
+     */
     public function getMainUrl(): ?string
     {
         return $this->mainUrl;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("created")
+     * @Groups({"fullAccount"})
+     */
     public function getCreated(): \DateTime
     {
         return $this->created;
@@ -795,6 +1005,11 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("changed")
+     * @Groups({"fullAccount"})
+     */
     public function getChanged(): \DateTime
     {
         return $this->changed;
@@ -831,6 +1046,11 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("mainContact")
+     * @Groups({"fullAccount"})
+     */
     public function getMainContact(): ?ContactInterface
     {
         return $this->mainContact;
@@ -841,5 +1061,33 @@ class Account implements AccountInterface
         $this->mainContact = $mainContact;
 
         return $this;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("contactDetails")
+     * @Groups({"fullAccount"})
+     */
+    public function getContactDetails()
+    {
+        return [
+            'emails' => $this->getEmails(),
+            'faxes' => $this->getFaxes(),
+            'phones' => $this->getPhones(),
+            'socialMedia' => $this->getSocialMediaProfiles(),
+            'websites' => $this->getUrls(),
+        ];
+    }
+
+    /**
+     * Get type of api entity.
+     *
+     * @VirtualProperty
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return self::TYPE;
     }
 }

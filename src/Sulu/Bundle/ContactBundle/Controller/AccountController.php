@@ -478,7 +478,7 @@ class AccountController extends RestController implements ClassResourceInterface
     protected function doPost(Request $request)
     {
         $accountManager = $this->getAccountManager();
-        $account = $this->get('sulu_contact.account_factory')->createEntity();
+        $account = $this->get('sulu.repository.account')->createNew();
         $account->setName($request->get('name'));
         $account->setCorporation($request->get('corporation'));
 

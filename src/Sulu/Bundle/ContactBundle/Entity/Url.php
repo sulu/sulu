@@ -12,28 +12,33 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
+ * @ExclusionPolicy("All")
+ *
  * Url.
  */
 class Url
 {
     /**
      * @var string
-     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $url;
 
     /**
      * @var int
+     * @Expose
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $id;
 
     /**
      * @var \Sulu\Bundle\ContactBundle\Entity\UrlType
-     * @Groups({"fullAccount", "fullContact"})
      */
     private $urlType;
 
@@ -72,6 +77,10 @@ class Url
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("website")
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
+     *
      * Get url.
      *
      * @return string
@@ -113,6 +122,16 @@ class Url
     public function getUrlType()
     {
         return $this->urlType;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("websiteType")
+     * @Groups({"fullContact", "fullAccount"})
+     */
+    public function getUrlTypeId(): ?int
+    {
+        return $this->urlType->getId();
     }
 
     /**

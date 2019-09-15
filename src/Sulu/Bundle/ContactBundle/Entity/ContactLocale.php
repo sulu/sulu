@@ -11,7 +11,13 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
+
 /**
+ * @ExclusionPolicy("all")
+ *
  * ContactLocale.
  */
 class ContactLocale
@@ -46,6 +52,9 @@ class ContactLocale
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("locale")
+     *
      * Get locale.
      *
      * @return string
@@ -56,6 +65,9 @@ class ContactLocale
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("id")
+     *
      * Get id.
      *
      * @return int

@@ -24,7 +24,6 @@
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_tag.tag_manager"/>
             <argument type="service" id="sulu_media.media_manager"/>
-            <argument type="service" id="sulu_contact.account_factory"/>
             <argument type="service" id="sulu.repository.account"/>
             <argument type="service" id="sulu.repository.contact"/>
             <argument type="service" id="sulu.repository.media" />
@@ -46,10 +45,6 @@
             <argument type="service" id="sulu.repository.contact"/>
 
             <tag name="twig.extension"/>
-        </service>
-
-        <service id="sulu_contact.account_factory" class="Sulu\Bundle\ContactBundle\Contact\AccountFactory" public="true">
-            <argument type="string">%sulu.model.account.class%</argument>
         </service>
 
         <service id="sulu_contact.smart_content.data_provider.contact" class="Sulu\Component\Contact\SmartContent\ContactDataProvider">

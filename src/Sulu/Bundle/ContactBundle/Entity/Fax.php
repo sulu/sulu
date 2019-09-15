@@ -13,28 +13,35 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
+ * @ExclusionPolicy("all")
+ *
  * Fax.
  */
 class Fax
 {
     /**
      * @var string
+     * @Expose
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $fax;
 
     /**
      * @var int
+     * @Expose
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $id;
 
     /**
      * @var FaxType
-     * @Groups({"fullAccount", "fullContact"})
      */
     private $faxType;
 
@@ -115,6 +122,16 @@ class Fax
     public function getFaxType()
     {
         return $this->faxType;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("faxType")
+     * @Groups({"fullContact", "fullAccount"})
+     */
+    public function getFaxTypeId(): int
+    {
+        return $this->faxType->getId();
     }
 
     /**

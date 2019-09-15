@@ -11,7 +11,14 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
+
 /**
+ * @ExclusionPolicy("all")
+ *
  * AccountContact.
  */
 class AccountContact
@@ -56,6 +63,10 @@ class AccountContact
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("main")
+     * @Groups({"fullAccount"})
+     *
      * Get main.
      *
      * @return bool
@@ -66,6 +77,10 @@ class AccountContact
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("id")
+     * @Groups({"fullAccount"})
+     *
      * Get id.
      *
      * @return int
@@ -100,6 +115,19 @@ class AccountContact
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("contact")
+     * @Groups({"fullAccount"})
+     */
+    public function getContactData(): array
+    {
+        return [
+            'id' => $this->contact->getId(),
+            'fullName' => $this->contact->getFullName(),
+        ];
+    }
+
+    /**
      * Set account.
      *
      * @param AccountInterface $account
@@ -124,6 +152,19 @@ class AccountContact
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("account")
+     * @Groups({"fullAccount"})
+     */
+    public function getAccountData(): array
+    {
+        return [
+            'id' => $this->account->getId(),
+            'name' => $this->account->getName(),
+        ];
+    }
+
+    /**
      * Set position.
      *
      * @param Position|null $position
@@ -138,6 +179,10 @@ class AccountContact
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("position")
+     * @Groups({"fullAccount"})
+     *
      * Get position.
      *
      * @return Position|null

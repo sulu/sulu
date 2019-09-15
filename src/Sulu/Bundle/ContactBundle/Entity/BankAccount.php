@@ -13,8 +13,14 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
+ * @ExclusionPolicy("all")
+ *
  * BankAccount.
  */
 class BankAccount
@@ -79,6 +85,10 @@ class BankAccount
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("bic")
+     * @Groups({"fullAccount","fullContact"})
+     *
      * Get bic.
      *
      * @return string
@@ -103,6 +113,10 @@ class BankAccount
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("iban")
+     * @Groups({"fullAccount","fullContact"})
+     *
      * Get iban.
      *
      * @return string
@@ -127,6 +141,10 @@ class BankAccount
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("public")
+     * @Groups({"fullAccount","fullContact"})
+     *
      * Get public.
      *
      * @return bool
@@ -137,6 +155,10 @@ class BankAccount
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("id")
+     * @Groups({"fullAccount","fullContact"})
+     *
      * Get id.
      *
      * @return int
@@ -195,6 +217,10 @@ class BankAccount
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("bankName")
+     * @Groups({"fullAccount","fullContact"})
+     *
      * Get bankName.
      *
      * @return string

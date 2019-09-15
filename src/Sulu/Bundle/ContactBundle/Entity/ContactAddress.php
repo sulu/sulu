@@ -12,8 +12,13 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
+ * @ExclusionPolicy("all")
+ *
  * ContactAddress.
  */
 class ContactAddress
@@ -54,6 +59,9 @@ class ContactAddress
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("main")
+     *
      * Get main.
      *
      * @return bool
@@ -64,6 +72,9 @@ class ContactAddress
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("id")
+     *
      * Get id.
      *
      * @return int
@@ -88,6 +99,9 @@ class ContactAddress
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("address")
+     *
      * Get address.
      *
      * @return \Sulu\Bundle\ContactBundle\Entity\Address

@@ -11,22 +11,28 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use JsonSerializable;
 
 /**
+ * @ExclusionPolicy("all")
+ *
  * ContactTitle.
  */
 class ContactTitle implements JsonSerializable
 {
     /**
      * @var string
+     * @Expose
      * @Groups({"fullContact", "partialContact"})
      */
     private $title;
 
     /**
      * @var int
+     * @Expose
      * @Groups({"fullContact", "partialContact"})
      */
     private $id;

@@ -10,20 +10,36 @@ When upgrading also have a look at the changes in the
 To support easier extending of entities the following `ApiEntity` wrapper classes where removed
 and the methods moved to the entity classes:
 
-**`Sulu\Bundle\MediaBundle\Api\Media`**
+ - `Sulu\Bundle\MediaBundle\Api\Media`
+ - `Sulu\Bundle\ContactBundle\Api\Account`
+ - `Sulu\Bundle\ContactBundle\Api\Contact`
+ - `Sulu\Bundle\ContactBundle\Api\Email`
+ - `Sulu\Bundle\ContactBundle\Api\Url`
+ - `Sulu\Bundle\ContactBundle\Api\Phone`
+ - `Sulu\Bundle\ContactBundle\Api\SocialMediaProfile`
+ - `Sulu\Bundle\ContactBundle\Api\Fax`
+ - `Sulu\Bundle\ContactBundle\Api\ContactLocale`
+ - `Sulu\Bundle\ContactBundle\Api\ContactAddress`
+ - `Sulu\Bundle\ContactBundle\Api\Address`
 
 ```php
 // Before
-$apiMedia = new Api\Media($entity, 'de');
+$apiMedia = new Api\Media($media, 'de');
 $apiMedia->getTags();
 $apiMedia->getCategories();
 $apiMedia->getTargetGroups();
 
+$apiContact = new Api\Contact($contact, 'de');
+$apiAccount = new Api\Account($account, 'de');
+
 // After
-$entity->setLocale('de');
-$entity->getTagNames();
-$entity->getCategoryIds();
-$entity->getTargetGroupIds();
+$media->setLocale('de');
+$media->getTagNames();
+$media->getCategoryIds();
+$media->getTargetGroupIds();
+
+$contact->setLocale('de');
+$account->setLocale('de');
 ```
 
 ### Symfony 3.4 support dropped

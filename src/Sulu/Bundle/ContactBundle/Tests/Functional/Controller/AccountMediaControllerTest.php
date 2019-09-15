@@ -298,7 +298,10 @@ class AccountMediaControllerTest extends SuluTestCase
             '/api/accounts/' . $this->account->getId()
         );
 
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
         $response = json_decode($client->getResponse()->getContent());
+
         $this->assertEquals(1, count($response->medias));
 
         $client->request(

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
+use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use JsonSerializable;
 
@@ -21,12 +22,14 @@ class Position implements JsonSerializable
 {
     /**
      * @var string
+     * @Expose
      * @Groups({"fullContact", "partialContact"})
      */
     private $position;
 
     /**
      * @var int
+     * @Expose
      * @Groups({"fullContact", "partialContact"})
      */
     private $id;

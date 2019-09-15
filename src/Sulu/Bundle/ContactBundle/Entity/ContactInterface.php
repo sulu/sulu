@@ -79,7 +79,7 @@ interface ContactInterface
     /**
      * Set title.
      *
-     * @param object $title
+     * @param ContactTitle|null $title
      *
      * @return ContactInterface
      */
@@ -88,7 +88,7 @@ interface ContactInterface
     /**
      * Get title.
      *
-     * @return string
+     * @return ContactTitle|null
      */
     public function getTitle();
 
@@ -534,14 +534,14 @@ interface ContactInterface
     /**
      * Get the contacts avatar.
      *
-     * @return MediaInterface
+     * @return MediaInterface|null
      */
     public function getAvatar();
 
     /**
      * Sets the avatar for the contact.
      *
-     * @param MediaInterface $avatar
+     * @param MediaInterface|null $avatar
      */
     public function setAvatar($avatar);
 

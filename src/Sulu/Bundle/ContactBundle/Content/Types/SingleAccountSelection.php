@@ -11,8 +11,8 @@
 
 namespace Sulu\Bundle\ContactBundle\Content\Types;
 
-use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\ContactBundle\Contact\AccountManager;
+use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
