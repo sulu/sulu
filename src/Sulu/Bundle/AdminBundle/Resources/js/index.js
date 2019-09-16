@@ -75,9 +75,13 @@ import {
 import {textEditorRegistry} from './containers/TextEditor';
 import Form, {
     formToolbarActionRegistry,
+    CopyLocaleToolbarAction as FormCopyLocaleToolbarAction,
+    DeleteDraftToolbarAction as FormDeleteDraftToolbarAction,
     DeleteToolbarAction as FormDeleteToolbarAction,
+    DropdownToolbarAction as FormDropdownToolbarAction,
     SaveToolbarAction as FormSaveToolbarAction,
     SaveWithPublishingToolbarAction as FormSaveWithPublishingToolbarAction,
+    SetUnpublishedToolbarAction as FormSetUnpublishedToolbarAction,
     TypeToolbarAction as FormTypeToolbarAction,
     TogglerToolbarAction as FormTogglerToolbarAction,
 } from './views/Form';
@@ -250,9 +254,13 @@ function registerInternalLinkTypes(internalLinkTypes) {
 }
 
 function registerFormToolbarActions() {
+    formToolbarActionRegistry.add('sulu_admin.copy_locale', FormCopyLocaleToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.delete', FormDeleteToolbarAction);
+    formToolbarActionRegistry.add('sulu_admin.delete_draft', FormDeleteDraftToolbarAction);
+    formToolbarActionRegistry.add('sulu_admin.dropdown', FormDropdownToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.save_with_publishing', FormSaveWithPublishingToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.save', FormSaveToolbarAction);
+    formToolbarActionRegistry.add('sulu_admin.set_unpublished', FormSetUnpublishedToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.type', FormTypeToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.toggler', FormTogglerToolbarAction);
 }

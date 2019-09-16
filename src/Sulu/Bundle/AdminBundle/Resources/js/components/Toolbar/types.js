@@ -45,7 +45,7 @@ export type Toggler = {|
 export type DropdownOption = {|
     disabled?: boolean,
     label: string | number,
-    onClick?: () => void,
+    onClick?: () => mixed,
     skin?: Skin,
 |};
 

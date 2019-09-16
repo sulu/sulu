@@ -22,6 +22,7 @@ use Sulu\Component\Security\Authorization\SecurityChecker;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class PageAdminTest extends TestCase
 {
@@ -50,6 +51,11 @@ class PageAdminTest extends TestCase
      */
     private $teaserProviderPool;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     public function setUp(): void
     {
         $this->routeBuilderFactory = new RouteBuilderFactory();
@@ -57,6 +63,7 @@ class PageAdminTest extends TestCase
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->sessionManager = $this->prophesize(SessionManagerInterface::class);
         $this->teaserProviderPool = $this->prophesize(TeaserProviderPoolInterface::class);
+        $this->translator = $this->prophesize(TranslatorInterface::class);
     }
 
     public function testGetRoutes()
@@ -88,6 +95,7 @@ class PageAdminTest extends TestCase
             $this->securityChecker->reveal(),
             $this->sessionManager->reveal(),
             $this->teaserProviderPool->reveal(),
+            $this->translator->reveal(),
             false
         );
 
@@ -112,6 +120,7 @@ class PageAdminTest extends TestCase
             $this->securityChecker->reveal(),
             $this->sessionManager->reveal(),
             $this->teaserProviderPool->reveal(),
+            $this->translator->reveal(),
             true
         );
 
@@ -128,6 +137,7 @@ class PageAdminTest extends TestCase
             $this->securityChecker->reveal(),
             $this->sessionManager->reveal(),
             $this->teaserProviderPool->reveal(),
+            $this->translator->reveal(),
             false
         );
 
