@@ -138,7 +138,7 @@ class PageAdmin extends Admin
                     'sulu_admin.set_unpublished' => [
                         'display_condition' => $publishDisplayCondition,
                     ],
-                ]
+                ],
             ],
         ];
 
