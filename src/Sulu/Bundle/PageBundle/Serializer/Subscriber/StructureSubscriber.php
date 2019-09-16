@@ -21,7 +21,6 @@ use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Structure\ManagedStructure;
 use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Metadata\StructureMetadata;
-use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 
 /**
  * Normalize ManagedStructure instances to the Structure type.
@@ -97,11 +96,6 @@ class StructureSubscriber implements EventSubscriberInterface
             if (false !== array_search('defaultPage', $context->attributes->get('groups')->getOrElse([]))) {
                 $this->addStructureProperties($structureMetadata, $document, $visitor);
             }
-
-            // create bread crumbs
-            if (false !== array_search('breadcrumbPage', $context->attributes->get('groups')->getOrElse([]))) {
-                $this->addBreadcrumb($document, $visitor);
-            }
         }
     }
 
@@ -126,40 +120,5 @@ class StructureSubscriber implements EventSubscriberInterface
 
             $visitor->addData($name, $data[$name]);
         }
-    }
-
-    /**
-     * Adds the breadcrumb to the serialization.
-     *
-     * @param StructureBehavior $document
-     * @param VisitorInterface $visitor
-     */
-    private function addBreadcrumb(StructureBehavior $document, VisitorInterface $visitor)
-    {
-        $items = [];
-        $parentDocument = $this->inspector->getParent($document);
-        while ($parentDocument instanceof StructureBehavior) {
-            $item = [];
-            if ($parentDocument instanceof UuidBehavior) {
-                $item['uuid'] = $parentDocument->getUuid();
-            }
-
-            $item['title'] = $parentDocument->getStructure()->getProperty('title')->getValue();
-
-            $items[] = $item;
-
-            $parentDocument = $this->inspector->getParent($parentDocument);
-        }
-
-        $items = array_reverse($items);
-
-        array_walk(
-            $items,
-            function(&$item, $index) {
-                $item['depth'] = $index;
-            }
-        );
-
-        $visitor->addData('breadcrumb', $items);
     }
 }

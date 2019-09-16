@@ -104,21 +104,21 @@ class PageResourcelocatorControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&locale=en&action=publish',
+            '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&locale=en&action=publish',
             $data[0]
         );
         $data[0] = (array) json_decode($this->client->getResponse()->getContent(), true);
         $this->client->request(
             'POST',
-            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&locale=en&action=publish',
+            '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&locale=en&action=publish',
             $data[1]
         );
         $data[1] = (array) json_decode($this->client->getResponse()->getContent(), true);
-        $this->client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish&parentId=' . $data[1]['id'], $data[2]);
+        $this->client->request('POST', '/api/pages?webspace=sulu_io&locale=en&action=publish&parentId=' . $data[1]['id'], $data[2]);
         $data[2] = (array) json_decode($this->client->getResponse()->getContent(), true);
-        $this->client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish&parentId=' . $data[1]['id'], $data[3]);
+        $this->client->request('POST', '/api/pages?webspace=sulu_io&locale=en&action=publish&parentId=' . $data[1]['id'], $data[3]);
         $data[3] = (array) json_decode($this->client->getResponse()->getContent(), true);
-        $this->client->request('POST', '/api/nodes?webspace=sulu_io&locale=en&action=publish&parentId=' . $data[3]['id'], $data[4]);
+        $this->client->request('POST', '/api/pages?webspace=sulu_io&locale=en&action=publish&parentId=' . $data[3]['id'], $data[4]);
         $data[4] = (array) json_decode($this->client->getResponse()->getContent(), true);
 
         return $data;
@@ -225,7 +225,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
         $newsData['url'] = '/test';
         $this->client->request(
             'PUT',
-            '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&locale=en&action=publish',
+            '/api/pages/' . $newsData['id'] . '?webspace=sulu_io&locale=en&action=publish',
             $newsData
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
