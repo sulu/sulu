@@ -11,8 +11,6 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
-use Hateoas\Configuration\Annotation\Relation;
-use Hateoas\Configuration\Annotation\Route;
 use Hateoas\Representation\CollectionRepresentation;
 use Hateoas\Representation\PaginatedRepresentation;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -23,38 +21,6 @@ use JMS\Serializer\Annotation\XmlAttribute;
  * This class represents a list for our common rest services.
  *
  * @ExclusionPolicy("all")
- * @Relation(
- *      "filter",
- *      href = @Route(
- *          "expr(object.getRoute())",
- *          parameters = "expr({ fields: '{fieldsList}' } + object.getParameters())",
- *          absolute = "expr(object.isAbsolute())",
- *      )
- * )
- * @Relation(
- *      "find",
- *      href = @Route(
- *          "expr(object.getRoute())",
- *          parameters = "expr({ search: '{searchString}', searchFields: '{searchFields}', page: 1 } + object.getParameters())",
- *          absolute = "expr(object.isAbsolute())",
- *      )
- * )
- * @Relation(
- *      "pagination",
- *      href = @Route(
- *          "expr(object.getRoute())",
- *          parameters = "expr({ page: '{page}', limit: '{limit}'} + object.getParameters())",
- *          absolute = "expr(object.isAbsolute())",
- *      )
- * )
- * @Relation(
- *      "sortable",
- *      href = @Route(
- *          "expr(object.getRoute())",
- *          parameters = "expr({ sortBy: '{sortBy}', sortOrder: '{sortOrder}' } + object.getParameters())",
- *          absolute = "expr(object.isAbsolute())",
- *      )
- * )
  */
 class ListRepresentation extends PaginatedRepresentation
 {

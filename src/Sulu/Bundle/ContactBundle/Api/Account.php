@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Api;
 
-use Hateoas\Configuration\Annotation\Relation;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
@@ -37,7 +36,6 @@ use Sulu\Component\Rest\ApiWrapper;
 /**
  * The Account class which will be exported to the API.
  *
- * @Relation("self", href="expr('/api/admin/accounts/' ~ object.getId())")
  * @ExclusionPolicy("all")
  */
 class Account extends ApiWrapper
