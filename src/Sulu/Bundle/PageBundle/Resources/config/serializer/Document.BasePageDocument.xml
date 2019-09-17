@@ -2,14 +2,14 @@
 <serializer>
     <class name="Sulu\Bundle\PageBundle\Document\BasePageDocument" xmlns:h="https://github.com/willdurand/Hateoas">
         <h:relation rel="self">
-            <h:href route="sulu_page.get_node">
+            <h:href route="sulu_page.get_page">
                 <h:parameter name="id" value="expr(object.getUuid())"/>
                 <h:parameter name="language" value="expr(object.getLocale())"/>
             </h:href>
             <h:exclusion groups="defaultPage"/>
         </h:relation>
         <h:relation rel="children">
-            <h:href route="sulu_page.get_nodes">
+            <h:href route="sulu_page.get_pages">
                 <h:parameter name="parent" value="expr(object.getUuid())"/>
                 <h:parameter name="depth" value="1"/>
                 <h:parameter name="webspace" value="expr(object.getWebspaceName())"/>

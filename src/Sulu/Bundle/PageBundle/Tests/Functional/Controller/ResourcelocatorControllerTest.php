@@ -54,7 +54,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&locale=en&action=publish',
+            '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&locale=en&action=publish',
             [
                 'title' => 'Produkte',
                 'template' => 'default',
@@ -80,7 +80,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/nodes?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en&action=publish',
+            '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en&action=publish',
             [
                 'title' => 'Test',
                 'template' => 'default',
