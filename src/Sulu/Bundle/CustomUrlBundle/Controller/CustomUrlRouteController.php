@@ -12,9 +12,8 @@
 namespace Sulu\Bundle\CustomUrlBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\RouteResource;
-use Hateoas\Representation\CollectionRepresentation;
-use Hateoas\Representation\RouteAwareRepresentation;
 use Sulu\Bundle\CustomUrlBundle\Admin\CustomUrlAdmin;
+use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,11 +40,7 @@ class CustomUrlRouteController extends RestController implements SecuredControll
             ];
         }
 
-        $list = new RouteAwareRepresentation(
-            new CollectionRepresentation($result, self::$relationName),
-            'sulu_custom_url.get_webspace_custom-urls_routes',
-            array_merge($request->request->all(), ['id' => $id, 'webspace' => $webspace])
-        );
+        $list = new CollectionRepresentation($result, self::$relationName);
 
         return $this->handleView($this->view($list));
     }

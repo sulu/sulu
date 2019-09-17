@@ -12,9 +12,8 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Hateoas\Representation\CollectionRepresentation;
-use Hateoas\Representation\RouteAwareRepresentation;
 use Sulu\Bundle\WebsiteBundle\Admin\WebsiteAdmin;
+use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,11 +38,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     {
         $entities = $this->get('sulu_website.analytics.manager')->findAll($webspace);
 
-        $list = new RouteAwareRepresentation(
-            new CollectionRepresentation($entities, self::RESULT_KEY),
-            'sulu_website.cget_webspace_analytics',
-            array_merge($request->request->all(), ['webspace' => $webspace])
-        );
+        $list = new CollectionRepresentation($entities, self::RESULT_KEY);
 
         return $this->handleView($this->view($list, 200));
     }

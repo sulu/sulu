@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\SearchBundle\Rest;
 
-use Hateoas\Representation\PaginatedRepresentation;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\XmlAttribute;
 

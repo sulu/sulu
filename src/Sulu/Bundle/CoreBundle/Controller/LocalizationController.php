@@ -13,8 +13,8 @@ namespace Sulu\Bundle\CoreBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
+use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 
 /**
  * Controller which returns the localizations for the entire system.

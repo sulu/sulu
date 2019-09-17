@@ -79,7 +79,6 @@ class SuluTestKernel extends SuluKernel
         }
 
         if (self::CONTEXT_ADMIN === $this->getContext()) {
-            $bundles[] = new \Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle();
             $bundles[] = new \FOS\RestBundle\FOSRestBundle();
             $bundles[] = new \Symfony\Bundle\SecurityBundle\SecurityBundle();
             $bundles[] = new \Sulu\Bundle\AdminBundle\SuluAdminBundle();

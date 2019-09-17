@@ -11,9 +11,9 @@
 
 namespace Sulu\Component\SmartContent\Rest;
 
-use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\SmartContent\ItemInterface;
 
 /**
