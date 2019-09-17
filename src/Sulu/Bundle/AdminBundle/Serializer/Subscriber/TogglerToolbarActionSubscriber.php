@@ -14,7 +14,6 @@ namespace Sulu\Bundle\AdminBundle\Serializer\Subscriber;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
-use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\Bundle\AdminBundle\Admin\Routing\TogglerToolbarAction;
 use Symfony\Component\Translation\TranslatorInterface;
 

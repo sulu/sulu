@@ -14,10 +14,10 @@ namespace Sulu\Bundle\PageBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
+use Sulu\Bundle\AdminBundle\Admin\Routing\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
-use Sulu\Bundle\AdminBundle\Admin\Routing\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -25,7 +25,6 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class PageAdmin extends Admin
 {

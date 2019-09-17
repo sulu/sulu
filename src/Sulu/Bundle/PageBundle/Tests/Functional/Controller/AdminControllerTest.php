@@ -27,7 +27,7 @@ class AdminControllerTest extends SuluTestCase
 
         $formRoute = null;
         foreach ($routeConfig as $route) {
-            if ($route->name === 'sulu_page.page_add_form.details') {
+            if ('sulu_page.page_add_form.details' === $route->name) {
                 $formRoute = $route;
                 break;
             }

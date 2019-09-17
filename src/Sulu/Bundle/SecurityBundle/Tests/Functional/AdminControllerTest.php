@@ -27,7 +27,7 @@ class AdminControllerTest extends SuluTestCase
 
         $formRoute = null;
         foreach ($routeConfig as $route) {
-            if ($route->name === 'sulu_security.form.permissions') {
+            if ('sulu_security.form.permissions' === $route->name) {
                 $formRoute = $route;
                 break;
             }
@@ -35,6 +35,7 @@ class AdminControllerTest extends SuluTestCase
 
         $this->assertEquals('User locked', $formRoute->options->toolbarActions[2]->options->label);
     }
+
     public function testUserMetadataAction()
     {
         $client = $this->createAuthenticatedClient();

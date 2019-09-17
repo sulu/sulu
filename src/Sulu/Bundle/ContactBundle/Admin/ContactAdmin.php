@@ -256,7 +256,7 @@ class ContactAdmin extends Admin
                     ->addRouterAttributesToListStore(['id'])
                     ->addToolbarActions([
                         new ToolbarAction('sulu_contact.add_contact'),
-                        new ToolbarAction('sulu_admin.delete')
+                        new ToolbarAction('sulu_admin.delete'),
                     ])
                     ->addRouterAttributesToListStore(['id' => 'accountId'])
                     ->setTabOrder(2048)
