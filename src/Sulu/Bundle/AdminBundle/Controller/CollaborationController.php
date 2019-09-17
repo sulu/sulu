@@ -114,6 +114,6 @@ class CollaborationController implements ClassResourceInterface
 
     private function getConnectionId(Request $request)
     {
-        return crypt($request->getSession()->getId(), $this->secret);
+        return sha1($request->getSession()->getId() . $this->secret);
     }
 }
