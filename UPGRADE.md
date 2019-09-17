@@ -13,6 +13,84 @@ sulu_admin_api:
     resource: "@SuluAdminBundle/Resources/config/routing_api.yml"
     type: rest
     prefix: /admin/api
+
+### ToolbarActions
+
+The `addToolbarActions` method of different `RouteBuilder` do not accept simple arrays anymore, but arrays of the new
+`ToolbarAction` class. The `ToolbarAction` class takes the type of the `ToolbarAction` and an array of additional
+options. There are special `ToolbarAction` classes for the `sulu_admin.dropdown` (`DropdownToolbarAction`) and
+`sulu_admin.toggler` (`TogglerToolbarAction`) type, because they contain translatable values.
+
+```php
+<?php
+// before
+$formToolbarActionsWithType = [
+    'sulu_admin.save_with_publishing' => [
+        'publish_display_condition' => '(!_permissions || _permissions.live)',
+        'save_display_condition' => '(!_permissions || _permissions.edit)',
+    ],
+    'sulu_page.templates',
+    'sulu_admin.delete' => [
+        'display_condition' => '(!_permissions || _permissions.delete) && url != "/"',
+    ],
+    'sulu_admin.dropdown' => [
+        'label' => $this->translator->trans('sulu_admin.edit', [], 'admin'),
+        'icon' => 'su-pen',
+        'actions' => [
+            'sulu_admin.copy_locale' => [
+                'display_condition' => '(!_permissions || _permissions.edit)',
+            ],
+            'sulu_admin.delete_draft' => [
+                'display_condition' => $publishDisplayCondition,
+            ],
+            'sulu_admin.set_unpublished' => [
+                'display_condition' => $publishDisplayCondition,
+            ],
+        ],
+    ],
+];
+
+// after
+$formToolbarActionsWithType = [
+    new ToolbarAction(
+        'sulu_admin.save_with_publishing',
+        [
+            'publish_display_condition' => '(!_permissions || _permissions.live)',
+            'save_display_condition' => '(!_permissions || _permissions.edit)',
+        ]
+    ),
+    new ToolbarAction('sulu_page.templates'),
+    new ToolbarAction(
+        'sulu_admin.delete',
+        [
+            'display_condition' => '(!_permissions || _permissions.delete) && url != "/"',
+        ]
+    ),
+    new DropdownToolbarAction(
+        'sulu_admin.edit',
+        'su-pen',
+        [
+            new ToolbarAction(
+                'sulu_admin.copy_locale',
+                [
+                    'display_condition' => '(!_permissions || _permissions.edit)',
+                ]
+            ),
+            new ToolbarAction(
+                'sulu_admin.delete_draft',
+                [
+                    'display_condition' => $publishDisplayCondition,
+                ]
+            ),
+            new ToolbarAction(
+                'sulu_admin.set_unpublished',
+                [
+                    'display_condition' => $publishDisplayCondition,
+                ]
+            ),
+        ]
+    ),
+];
 ```
 
 ## 2.0.0-RC2
