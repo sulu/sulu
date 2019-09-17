@@ -15,6 +15,27 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminControllerTest extends SuluTestCase
 {
+    public function testRouteConfig()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/admin/config');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $routeConfig = $response->sulu_admin->routes;
+
+        $formRoute = null;
+        foreach ($routeConfig as $route) {
+            if ($route->name === 'sulu_page.page_add_form.details') {
+                $formRoute = $route;
+                break;
+            }
+        }
+
+        $this->assertEquals('Edit', $formRoute->options->toolbarActions[3]->options->label);
+    }
+
     public function testTeaserConfig()
     {
         $client = $this->createAuthenticatedClient();

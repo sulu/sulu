@@ -32,4 +32,9 @@ class ToolbarAction
         $this->type = $type;
         $this->options = $options;
     }
+
+    public function getOptions()
+    {
+        return $this->options;
+    }
 }
