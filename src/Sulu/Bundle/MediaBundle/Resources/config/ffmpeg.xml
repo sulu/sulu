@@ -8,7 +8,7 @@
             <factory class="FFMpeg\FFMpeg" method="create"/>
             <argument type="collection">
                 <argument key="ffmpeg.binaries">%sulu_media.ffmpeg.binary%</argument>
-                <argument key="ffprobe.binaries">%sulu_media.ffmpeg.binary%</argument>
+                <argument key="ffprobe.binaries">%sulu_media.ffprobe.binary%</argument>
                 <argument key="timeout">%sulu_media.ffmpeg.binary_timeout%</argument>
                 <argument key="ffmpeg.threads">%sulu_media.ffmpeg.threads_count%</argument>
             </argument>
@@ -19,7 +19,7 @@
             <factory class="FFMpeg\FFProbe" method="create"/>
             <argument type="collection">
                 <argument key="ffmpeg.binaries">%sulu_media.ffmpeg.binary%</argument>
-                <argument key="ffprobe.binaries">%sulu_media.ffmpeg.binary%</argument>
+                <argument key="ffprobe.binaries">%sulu_media.ffprobe.binary%</argument>
             </argument>
             <argument id="logger" type="service" on-invalid="null"/>
         </service>
