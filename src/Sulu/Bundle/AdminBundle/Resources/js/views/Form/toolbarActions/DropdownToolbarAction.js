@@ -27,33 +27,34 @@ export default class DropdownToolbarAction extends AbstractFormToolbarAction {
 
         const {actions} = this.options;
 
-        if (typeof actions !== 'object' || actions === null) {
+        if (!Array.isArray(actions)) {
             throw new Error('The passed "actions" option must be of type object or array');
         }
 
-        const transformedActions = Object.keys(actions).reduce((transformedActions, actionKey) => {
-            if (isNaN(actionKey)) {
-                transformedActions[actionKey] = actions[actionKey];
-                return transformedActions;
-            }
+        this.toolbarActions = actions
+            .map((action) => {
+                if (action === null || typeof action !== 'object') {
+                    throw new Error('The passed entries in the "actions" option must be objects');
+                }
 
-            if (typeof actions[actionKey] !== 'string') {
-                throw new Error('If the "actionKey" is not numeric, the value at actionKey must be a string');
-            }
+                const {type, options} = action;
 
-            transformedActions[actions[actionKey]] = {};
+                if (typeof type !== 'string') {
+                    throw new Error('The "type" of each entry in the "actions" options must be a string');
+                }
 
-            return transformedActions;
-        }, {});
+                if (options === null || typeof options !== 'object') {
+                    throw new Error('The "options" of each entry in the "actions" options must be a string');
+                }
 
-        this.toolbarActions = Object.keys(transformedActions)
-            .map((actionKey) => new (formToolbarActionRegistry.get(actionKey))(
-                this.resourceFormStore,
-                this.form,
-                router,
-                this.locales,
-                transformedActions[actionKey]
-            ));
+                return new (formToolbarActionRegistry.get(type))(
+                    this.resourceFormStore,
+                    this.form,
+                    router,
+                    this.locales,
+                    ((options: any): {[key: string]: mixed})
+                );
+            });
     }
 
     getNode() {

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\Routing;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\Routing\PreviewFormRouteBuilder;
+use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
 
 class PreviewFormRouteBuilderTest extends TestCase
 {
@@ -141,15 +142,19 @@ class PreviewFormRouteBuilderTest extends TestCase
 
     public function testBuildFormWithToolbarActions()
     {
+        $saveToolbarAction = new ToolbarAction('sulu_admin.save');
+        $typesToolbarAction = new ToolbarAction('sulu_admin.types');
+        $deleteToolbarAction = new ToolbarAction('sulu_admin.delete');
+
         $route = (new PreviewFormRouteBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey('roles')
             ->setFormKey('roles')
-            ->addToolbarActions(['sulu_admin.save', 'sulu_admin.types'])
-            ->addToolbarActions(['sulu_admin.delete'])
+            ->addToolbarActions([$saveToolbarAction, $typesToolbarAction])
+            ->addToolbarActions([$deleteToolbarAction])
             ->getRoute();
 
         $this->assertSame(
-            ['sulu_admin.save' => [], 'sulu_admin.types' => [], 'sulu_admin.delete' => []],
+            [$saveToolbarAction, $typesToolbarAction, $deleteToolbarAction],
             $route->getOption('toolbarActions')
         );
     }

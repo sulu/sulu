@@ -192,24 +192,22 @@ class List extends React.Component<Props> {
             return;
         }
 
-        Object.keys(toolbarActions).forEach((toolbarActionKey) => {
-            const toolbarActionValue = toolbarActions[toolbarActionKey];
-            if (typeof toolbarActionValue !== 'object') {
+        toolbarActions.forEach((toolbarAction) => {
+            if (typeof toolbarAction !== 'object') {
                 throw new Error(
-                    'The value of the toolbarAction entry "' + toolbarActionKey + '" must be an object, '
-                    + 'but ' + typeof toolbarActionValue + ' was given!'
+                    'The value of a toolbarAction entry must be an object, but ' + typeof toolbarAction + ' was given!'
                 );
             }
         });
 
-        this.toolbarActions = Object.keys(toolbarActions)
-            .map((toolbarActionKey): AbstractListToolbarAction => new (listToolbarActionRegistry.get(toolbarActionKey))(
+        this.toolbarActions = toolbarActions
+            .map((toolbarAction): AbstractListToolbarAction => new (listToolbarActionRegistry.get(toolbarAction.type))(
                 this.listStore,
                 this,
                 router,
                 locales,
                 resourceStore,
-                toolbarActions[toolbarActionKey]
+                toolbarAction.options
             ));
     }
 

@@ -16,6 +16,7 @@ use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
+use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -74,21 +75,21 @@ class CategoryAdmin extends Admin
         $listToolbarActions = [];
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::ADD)) {
-            $listToolbarActions[] = 'sulu_admin.add';
+            $listToolbarActions[] = new ToolbarAction('sulu_admin.add');
         }
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $formToolbarActions[] = 'sulu_admin.save';
-            $listToolbarActions[] = 'sulu_admin.move';
+            $formToolbarActions[] = new ToolbarAction('sulu_admin.save');
+            $listToolbarActions[] = new ToolbarAction('sulu_admin.move');
         }
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::DELETE)) {
-            $formToolbarActions[] = 'sulu_admin.delete';
-            $listToolbarActions[] = 'sulu_admin.delete';
+            $formToolbarActions[] = new ToolbarAction('sulu_admin.delete');
+            $listToolbarActions[] = new ToolbarAction('sulu_admin.delete');
         }
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::VIEW)) {
-            $listToolbarActions[] = 'sulu_admin.export';
+            $listToolbarActions[] = new ToolbarAction('sulu_admin.export');
         }
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
@@ -152,7 +153,7 @@ class CategoryAdmin extends Admin
                     ->setFormKey('category_keywords')
                     ->addRouterAttributesToFormStore(['id' => 'categoryId'])
                     ->setTabTitle('sulu_category.keywords')
-                    ->addToolbarActions(['sulu_admin.add', 'sulu_admin.delete'])
+                    ->addToolbarActions([new ToolbarAction('sulu_admin.add'), new ToolbarAction('sulu_admin.delete')])
                     ->setParent(static::EDIT_FORM_ROUTE)
             );
         }

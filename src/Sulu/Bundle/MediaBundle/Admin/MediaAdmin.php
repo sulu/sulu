@@ -16,6 +16,7 @@ use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
+use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
 use Sulu\Component\Localization\Manager\LocalizationManager;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -94,11 +95,11 @@ class MediaAdmin extends Admin
         $toolbarActions = [];
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $toolbarActions[] = 'sulu_admin.save';
+            $toolbarActions[] = new ToolbarAction('sulu_admin.save');
         }
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::DELETE)) {
-            $toolbarActions[] = 'sulu_admin.delete';
+            $toolbarActions[] = new ToolbarAction('sulu_admin.delete');
         }
 
         $routes = [];

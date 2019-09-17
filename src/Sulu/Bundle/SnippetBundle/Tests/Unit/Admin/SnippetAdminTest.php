@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Admin;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
+use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
 use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
 use Sulu\Component\Security\Authorization\SecurityChecker;
@@ -85,7 +86,11 @@ class SnippetAdminTest extends TestCase
         $this->assertEquals('sulu_snippet.list', $listRoute->getName());
         $this->assertEquals([
             'title' => 'sulu_snippet.snippets',
-            'toolbarActions' => ['sulu_admin.add' => [], 'sulu_admin.delete' => [], 'sulu_admin.export' => []],
+            'toolbarActions' => [
+                new ToolbarAction('sulu_admin.add'),
+                new ToolbarAction('sulu_admin.delete'),
+                new ToolbarAction('sulu_admin.export'),
+            ],
             'resourceKey' => 'snippets',
             'listKey' => 'snippets',
             'adapters' => ['table'],
@@ -107,9 +112,9 @@ class SnippetAdminTest extends TestCase
             'formKey' => 'snippet',
             'editRoute' => 'sulu_snippet.edit_form',
             'toolbarActions' => [
-                'sulu_admin.save' => [],
-                'sulu_admin.type' => [],
-                'sulu_admin.delete' => [],
+                new Toolbaraction('sulu_admin.save'),
+                new Toolbaraction('sulu_admin.type'),
+                new Toolbaraction('sulu_admin.delete'),
             ],
         ], $this->readObjectAttribute($addDetailRoute, 'options'));
         $this->assertEquals('sulu_snippet.edit_form', $editFormRoute->getName());
@@ -126,9 +131,9 @@ class SnippetAdminTest extends TestCase
             'tabTitle' => 'sulu_admin.details',
             'formKey' => 'snippet',
             'toolbarActions' => [
-                'sulu_admin.save' => [],
-                'sulu_admin.type' => [],
-                'sulu_admin.delete' => [],
+                new Toolbaraction('sulu_admin.save'),
+                new Toolbaraction('sulu_admin.type'),
+                new Toolbaraction('sulu_admin.delete'),
             ],
         ], $this->readObjectAttribute($editDetailRoute, 'options'));
     }

@@ -399,7 +399,20 @@ test('Should add items defined in ToolbarActions to Toolbar with options', () =>
     const route = {
         options: {
             formKey: 'snippets',
-            toolbarActions: {'save': {test1: 'value1'}, 'delete': {test2: 'value2'}, 'edit': {}},
+            toolbarActions: [
+                {
+                    type: 'save',
+                    options: {test1: 'value1'},
+                },
+                {
+                    type: 'delete',
+                    options: {test2: 'value2'},
+                },
+                {
+                    type: 'edit',
+                    options: {},
+                },
+            ],
         },
     };
     const router = {
@@ -602,7 +615,7 @@ test('Should set and update locales defined in ToolbarActions', () => {
     const route = {
         options: {
             formKey: 'snippets',
-            toolbarActions: {save: {}},
+            toolbarActions: [{type: 'save', options: []}],
         },
     };
     const router = {

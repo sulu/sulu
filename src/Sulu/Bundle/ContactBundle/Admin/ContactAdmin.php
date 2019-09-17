@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
+use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
@@ -102,22 +103,22 @@ class ContactAdmin extends Admin
             $contactDocumentsToolbarAction = [];
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::ADD)) {
-                $contactListToolbarActions[] = 'sulu_admin.add';
+                $contactListToolbarActions[] = new ToolbarAction('sulu_admin.add');
             }
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-                $contactFormToolbarActions[] = 'sulu_admin.save';
-                $contactDocumentsToolbarAction[] = 'sulu_contact.add_media';
-                $contactDocumentsToolbarAction[] = 'sulu_contact.delete_media';
+                $contactFormToolbarActions[] = new ToolbarAction('sulu_admin.save');
+                $contactDocumentsToolbarAction[] = new ToolbarAction('sulu_contact.add_media');
+                $contactDocumentsToolbarAction[] = new ToolbarAction('sulu_contact.delete_media');
             }
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::DELETE)) {
-                $contactFormToolbarActions[] = 'sulu_admin.delete';
-                $contactListToolbarActions[] = 'sulu_admin.delete';
+                $contactFormToolbarActions[] = new ToolbarAction('sulu_admin.delete');
+                $contactListToolbarActions[] = new ToolbarAction('sulu_admin.delete');
             }
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::VIEW)) {
-                $contactListToolbarActions[] = 'sulu_admin.export';
+                $contactListToolbarActions[] = new ToolbarAction('sulu_admin.export');
             }
 
             $routeCollection->add(
@@ -182,22 +183,22 @@ class ContactAdmin extends Admin
             $accountDocumentsToolbarAction = [];
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::ADD)) {
-                $accountListToolbarActions[] = 'sulu_admin.add';
+                $accountListToolbarActions[] = new ToolbarAction('sulu_admin.add');
             }
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-                $accountFormToolbarActions[] = 'sulu_admin.save';
-                $accountDocumentsToolbarAction[] = 'sulu_contact.add_media';
-                $accountDocumentsToolbarAction[] = 'sulu_contact.delete_media';
+                $accountFormToolbarActions[] = new ToolbarAction('sulu_admin.save');
+                $accountDocumentsToolbarAction[] = new ToolbarAction('sulu_contact.add_media');
+                $accountDocumentsToolbarAction[] = new ToolbarAction('sulu_contact.delete_media');
             }
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::DELETE)) {
-                $accountFormToolbarActions[] = 'sulu_admin.delete';
-                $accountListToolbarActions[] = 'sulu_admin.delete';
+                $accountFormToolbarActions[] = new ToolbarAction('sulu_admin.delete');
+                $accountListToolbarActions[] = new ToolbarAction('sulu_admin.delete');
             }
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::VIEW)) {
-                $accountListToolbarActions[] = 'sulu_admin.export';
+                $accountListToolbarActions[] = new ToolbarAction('sulu_admin.export');
             }
 
             $routeCollection->add(
@@ -253,7 +254,10 @@ class ContactAdmin extends Admin
                     ->addListAdapters(['table'])
                     ->setEditRoute(static::CONTACT_EDIT_FORM_ROUTE)
                     ->addRouterAttributesToListStore(['id'])
-                    ->addToolbarActions(['sulu_contact.add_contact', 'sulu_admin.delete'])
+                    ->addToolbarActions([
+                        new ToolbarAction('sulu_contact.add_contact'),
+                        new ToolbarAction('sulu_admin.delete')
+                    ])
                     ->addRouterAttributesToListStore(['id' => 'accountId'])
                     ->setTabOrder(2048)
                     ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)
