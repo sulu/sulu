@@ -120,7 +120,6 @@ class MediaController extends AbstractMediaController implements
             $format = $this->getFormatManager()->getFormats(
                 $listResponse[$i]['id'],
                 $listResponse[$i]['name'],
-                $listResponse[$i]['storageOptions'],
                 $listResponse[$i]['version'],
                 $listResponse[$i]['subVersion'],
                 $listResponse[$i]['mimeType']

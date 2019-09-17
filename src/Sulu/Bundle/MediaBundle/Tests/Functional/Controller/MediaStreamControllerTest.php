@@ -106,6 +106,21 @@ class MediaStreamControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
+    public function testGetImageAction()
+    {
+        $client = $this->createAuthenticatedClient();
+        $filePath = $this->createMediaFile('test.jpg');
+        $media = $this->createMedia($filePath, 'Test jpg');
+
+        $client->request('GET', $media->getFormats()['small-inset']);
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertSame('image/jpeg', $client->getResponse()->headers->get('Content-Type'));
+
+        $client->request('GET', $media->getFormats()['small-inset.gif']);
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertSame('image/gif', $client->getResponse()->headers->get('Content-Type'));
+    }
+
     public function testDownloadActionForNonExistingMedia()
     {
         $client = $this->createAuthenticatedClient();

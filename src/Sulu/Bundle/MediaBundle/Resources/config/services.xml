@@ -47,12 +47,11 @@
         <service id="sulu_media.file_validator" class="%sulu_media.file_validator.class%" />
 
         <service id="sulu_media.format_cache_clearer" class="%sulu_media.format_cache_clearer.class%" />
-        <service id="sulu_media.format_cache" class="%sulu_media.format_cache.class%">
+        <service id="sulu_media.format_cache" class="%sulu_media.format_cache.class%" public="true">
             <argument type="service" id="filesystem"/>
             <argument>%sulu_media.format_cache.path%</argument>
             <argument>%sulu_media.format_cache.media_proxy_path%</argument>
             <argument>%sulu_media.format_cache.segments%</argument>
-            <argument>%sulu_media.image.formats%</argument>
             <tag name="sulu_media.format_cache" alias="local" />
         </service>
 
@@ -71,6 +70,7 @@
             <argument type="service" id="sulu_media.image.scaler" />
             <argument type="service" id="sulu_media.image.cropper" />
             <argument>%sulu_media.image.formats%</argument>
+            <argument>%sulu_media.format_manager.mime_types%</argument>
         </service>
 
         <service id="sulu_media.image.media_extractor" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\MediaImageExtractor">
@@ -163,7 +163,6 @@
             <argument type="string">%sulu_media.format_cache.save_image%</argument>
             <argument type="string">%sulu_media.format_manager.response_headers%</argument>
             <argument>%sulu_media.image.formats%</argument>
-            <argument>%sulu_media.format_manager.mime_types%</argument>
             <argument type="service" id="logger" on-invalid="null"/>
         </service>
 

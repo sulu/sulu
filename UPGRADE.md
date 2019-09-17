@@ -1375,11 +1375,17 @@ sulu_media:
 To allow adding new features some interfaces where changed and needs to be updated if you did build something on top 
 of them:
 
-- FileVersion
-- MediaImageExtractor
-- MediaImageExtractorInterface
-- LocalStorage
-- StorageInterface
+ - StorageInterface
+ - LocalStorage
+ - FormatManagerInterface
+ - FormatManager
+ - FormatCacheInterface
+ - LocalFormatCache
+ - ImageConverterInterface
+ - ImagineImageConverter
+ - MediaExtractorInterface
+ - MediaImageExtractor
+ - FileVersion::getStorageOptions
 
 ### Test Setup
 

@@ -59,11 +59,6 @@ class FileVersion implements AuditableInterface
     private $storageOptions;
 
     /**
-     * @var string
-     */
-    private $storageType;
-
-    /**
      * @var int
      */
     private $downloadCounter = 0;
@@ -630,30 +625,6 @@ class FileVersion implements AuditableInterface
     public function isActive()
     {
         return $this->version === $this->file->getVersion();
-    }
-
-    /**
-     * Set storageType.
-     *
-     * @param string $storageType
-     *
-     * @return FileVersion
-     */
-    public function setStorageType($storageType)
-    {
-        $this->storageType = $storageType;
-
-        return $this;
-    }
-
-    /**
-     * Get storageType.
-     *
-     * @return string
-     */
-    public function getStorageType()
-    {
-        return $this->storageType;
     }
 
     /**

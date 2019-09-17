@@ -267,8 +267,7 @@ class MediaManagerTest extends TestCase
         $this->formatManager->purge(
             1,
             'test',
-            'image/png',
-            ['segment' => '01', 'fileName' => 'test.jpg']
+            'image/png'
         )->shouldBeCalled();
 
         $this->mediaRepository->findMediaById(1)->willReturn($media);
@@ -386,7 +385,7 @@ class MediaManagerTest extends TestCase
         $fileVersion->setFocusPointX(1)->shouldBeCalled();
         $fileVersion->setFocusPointY(2)->shouldBeCalled();
         $fileVersion->increaseSubVersion()->shouldBeCalled();
-        $this->formatManager->purge(1, 'test', 'image/jpeg', [])->shouldBeCalled();
+        $this->formatManager->purge(1, 'test', 'image/jpeg')->shouldBeCalled();
 
         $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
     }

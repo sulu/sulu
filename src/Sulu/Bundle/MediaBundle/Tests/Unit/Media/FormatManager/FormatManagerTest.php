@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
@@ -42,11 +43,6 @@ class FormatManagerTest extends TestCase
     private $formats;
 
     /**
-     * @var string[]
-     */
-    private $supportedMimeTypes;
-
-    /**
      * @var FormatManager
      */
     private $formatManager;
@@ -56,7 +52,6 @@ class FormatManagerTest extends TestCase
         $this->mediaRepository = $this->prophesize(MediaRepositoryInterface::class);
         $this->formatCache = $this->prophesize(FormatCacheInterface::class);
         $this->imageConverter = $this->prophesize(ImageConverterInterface::class);
-        $this->supportedMimeTypes = ['image/*', 'video/*'];
         $this->formats = [
             '640x480' => [
                 'internal' => false,
@@ -103,8 +98,7 @@ class FormatManagerTest extends TestCase
             $this->imageConverter->reveal(),
             true,
             [],
-            $this->formats,
-            $this->supportedMimeTypes
+            $this->formats
         );
     }
 
@@ -128,17 +122,17 @@ class FormatManagerTest extends TestCase
 
         $this->mediaRepository->findMediaByIdForRendering(1, '640x480')->willReturn($media);
 
-        $this->imageConverter->convert($fileVersion, '640x480')->willReturn("\x47\x49\x46\x38image-content");
+        $this->imageConverter->getSupportedOutputImageFormats(Argument::any())->willReturn(['jpg', 'png', 'gif'])->shouldBeCalled();
+        $this->imageConverter->convert($fileVersion, '640x480', 'gif')->willReturn("\x47\x49\x46\x38image-content");
 
         $this->formatCache->save(
             "\x47\x49\x46\x38image-content",
             1,
             'dummy.gif',
-            ['a' => 'b'],
             '640x480'
         )->willReturn(null);
 
-        $result = $this->formatManager->returnImage(1, '640x480');
+        $result = $this->formatManager->returnImage(1, '640x480', 'test.gif');
 
         $this->assertEquals("\x47\x49\x46\x38image-content", $result->getContent());
         $this->assertEquals(200, $result->getStatusCode());
@@ -164,17 +158,17 @@ class FormatManagerTest extends TestCase
 
         $this->mediaRepository->findMediaByIdForRendering(1, '640x480')->willReturn($media);
 
-        $this->imageConverter->convert($fileVersion, '640x480')->willReturn('image-content');
+        $this->imageConverter->getSupportedOutputImageFormats(Argument::any())->willReturn(['jpg', 'png', 'gif'])->shouldBeCalled();
+        $this->imageConverter->convert($fileVersion, '640x480', 'jpg')->willReturn('image-content');
 
         $this->formatCache->save(
             'image-content',
             1,
             'dummy.jpg',
-            ['a' => 'b'],
             '640x480'
         )->willReturn(null);
 
-        $result = $this->formatManager->returnImage(1, '640x480');
+        $result = $this->formatManager->returnImage(1, '640x480', 'test.jpg');
 
         $this->assertEquals('image-content', $result->getContent());
         $this->assertEquals(200, $result->getStatusCode());
@@ -182,13 +176,15 @@ class FormatManagerTest extends TestCase
 
     public function testGetFormats()
     {
-        $this->formatCache->getMediaUrl(1, 'dummy.gif', ['a' => 'b'], '50x50', 1, 2)->willReturn('/50x50/my-url.gif');
-        $this->formatCache->getMediaUrl(1, 'dummy.gif', ['a' => 'b'], '640x480', 1, 2)->willReturn('/640x480/my-url.gif');
+        $this->formatCache->getMediaUrl(1, 'dummy.gif', '50x50', 1, 2)->willReturn('/50x50/my-url.gif');
+        $this->formatCache->getMediaUrl(1, 'dummy.jpg', '50x50', 1, 2)->willReturn('/50x50/my-url.jpg');
+        $this->formatCache->getMediaUrl(1, 'dummy.gif', '640x480', 1, 2)->willReturn('/640x480/my-url.gif');
+        $this->formatCache->getMediaUrl(1, 'dummy.jpg', '640x480', 1, 2)->willReturn('/640x480/my-url.jpg');
 
+        $this->imageConverter->getSupportedOutputImageFormats(Argument::any())->willReturn(['gif', 'jpg']);
         $result = $this->formatManager->getFormats(
             1,
             'dummy.gif',
-            ['a' => 'b'],
             1,
             2,
             'image/gif'
@@ -197,7 +193,11 @@ class FormatManagerTest extends TestCase
         $this->assertEquals(
             [
                 '640x480' => '/640x480/my-url.gif',
+                '640x480.gif' => '/640x480/my-url.gif',
+                '640x480.jpg' => '/640x480/my-url.jpg',
                 '50x50' => '/50x50/my-url.gif',
+                '50x50.gif' => '/50x50/my-url.gif',
+                '50x50.jpg' => '/50x50/my-url.jpg',
             ],
             $result
         );
@@ -205,12 +205,12 @@ class FormatManagerTest extends TestCase
 
     public function testGetFormatsNotSupportedMimeType()
     {
-        $this->formatCache->getMediaUrl(1, 'dummy.mp3', ['a' => 'b'], '640x480', 1, 2)->shouldNotBeCalled();
+        $this->formatCache->getMediaUrl(1, 'dummy.mp3', '640x480', 1, 2)->shouldNotBeCalled();
 
+        $this->imageConverter->getSupportedOutputImageFormats(Argument::any())->willReturn([])->shouldBeCalled();
         $result = $this->formatManager->getFormats(
             1,
             'dummy.mp3',
-            ['a' => 'b'],
             1,
             2,
             'mp3'
@@ -276,14 +276,18 @@ class FormatManagerTest extends TestCase
 
     public function testPurge()
     {
-        $this->formatCache->purge(1, 'test.jpg', null)->shouldBeCalled();
+        $this->formatCache->purge(1, 'test.jpg', '640x480')->shouldBeCalled();
+        $this->formatCache->purge(1, 'test.jpg', '50x50')->shouldBeCalled();
+        $this->imageConverter->getSupportedOutputImageFormats(Argument::any())->willReturn(['jpg'])->shouldBeCalled();
 
         $this->formatManager->purge(1, 'test.jpg', 'image/jpeg', null);
     }
 
     public function testPurgeUppercaseExtension()
     {
-        $this->formatCache->purge(1, 'test.jpg', null)->shouldBeCalled();
+        $this->formatCache->purge(1, 'test.jpg', '640x480')->shouldBeCalled();
+        $this->formatCache->purge(1, 'test.jpg', '50x50')->shouldBeCalled();
+        $this->imageConverter->getSupportedOutputImageFormats(Argument::any())->willReturn(['jpg'])->shouldBeCalled();
 
         $this->formatManager->purge(1, 'test.JPG', 'image/jpeg', null);
     }

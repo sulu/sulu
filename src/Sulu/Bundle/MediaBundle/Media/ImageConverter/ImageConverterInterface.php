@@ -26,8 +26,19 @@ interface ImageConverterInterface
      *
      * @param FileVersion $media
      * @param string $formatKey
+     * @param string $imageFormat
      *
      * @return ImageInterface
      */
-    public function convert(FileVersion $fileVersion, $formatKey);
+    public function convert(FileVersion $fileVersion, $formatKey, $imageFormat);
+
+    /**
+     * Get supported image formats by mimeType.
+     * The first returned image format will be used as default.
+     *
+     * @param string $mimeType
+     *
+     * @return string[]
+     */
+    public function getSupportedOutputImageFormats(?string $mimeType): array;
 }
