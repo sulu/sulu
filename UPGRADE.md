@@ -13,6 +13,7 @@ sulu_admin_api:
     resource: "@SuluAdminBundle/Resources/config/routing_api.yml"
     type: rest
     prefix: /admin/api
+```
 
 ### ToolbarActions
 

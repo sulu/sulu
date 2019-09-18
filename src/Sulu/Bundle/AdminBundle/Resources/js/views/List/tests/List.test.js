@@ -1301,7 +1301,7 @@ test('Should make move overlay disappear if cancel is clicked', () => {
                 resourceKey: 'test',
                 toolbarActions: [
                     {type: 'sulu_admin.move', options: {}},
-                ]
+                ],
             },
         },
     };
@@ -1342,7 +1342,7 @@ test('Should move items after move overlay was confirmed', () => {
                 resourceKey: 'test',
                 toolbarActions: [
                     {type: 'sulu_admin.move', options: {}},
-                ]
+                ],
             },
         },
     };
