@@ -23,32 +23,23 @@ interface FormatManagerInterface
      * Return the image by a given url.
      *
      * @param int $id
-     * @param string $formatName
+     * @param string $formatKey
+     * @param string $imageFormat
      *
      * @return Response
      */
-    public function returnImage($id, $formatName);
-
-    /**
-     * Return media id and format.
-     *
-     * @param string $url
-     *
-     * @return array
-     */
-    public function getMediaProperties($url);
+    public function returnImage($id, $formatKey, $imageFormat);
 
     /**
      * @param int $id
      * @param string $fileName
-     * @param array $storageOptions
      * @param int $version
      * @param int $subVersion
      * @param string $mimeType
      *
      * @return array
      */
-    public function getFormats($id, $fileName, $storageOptions, $version, $subVersion, $mimeType);
+    public function getFormats($id, $fileName, $version, $subVersion, $mimeType);
 
     /**
      * Returns a definition of a format with a given key.
@@ -75,11 +66,10 @@ interface FormatManagerInterface
      * @param int $idMedia
      * @param string $fileName
      * @param string $mimeType
-     * @param string $options
      *
      * @return bool
      */
-    public function purge($idMedia, $fileName, $mimeType, $options);
+    public function purge($idMedia, $fileName, $mimeType);
 
     /**
      * Clears the format cache.

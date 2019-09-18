@@ -38,24 +38,18 @@ class LocalFormatCache implements FormatCacheInterface
      */
     protected $segments;
 
-    /**
-     * @var array
-     */
-    protected $formats;
-
-    public function __construct(Filesystem $filesystem, $path, $pathUrl, $segments, $formats)
+    public function __construct(Filesystem $filesystem, $path, $pathUrl, $segments)
     {
         $this->filesystem = $filesystem;
         $this->path = $path;
         $this->pathUrl = $pathUrl;
         $this->segments = intval($segments);
-        $this->formats = $formats;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function save($content, $id, $fileName, $options, $format)
+    public function save($content, $id, $fileName, $format)
     {
         $savePath = $this->getPath($this->path, $id, $fileName, $format);
         if (!is_dir(dirname($savePath))) {
@@ -74,12 +68,10 @@ class LocalFormatCache implements FormatCacheInterface
     /**
      * {@inheritdoc}
      */
-    public function purge($id, $fileName, $options)
+    public function purge($id, $fileName, $format)
     {
-        foreach ($this->formats as $format) {
-            $path = $this->getPath($this->path, $id, $fileName, $format['key']);
-            $this->filesystem->remove($path);
-        }
+        $path = $this->getPath($this->path, $id, $fileName, $format);
+        $this->filesystem->remove($path);
 
         return true;
     }
@@ -87,7 +79,7 @@ class LocalFormatCache implements FormatCacheInterface
     /**
      * {@inheritdoc}
      */
-    public function getMediaUrl($id, $fileName, $options, $format, $version, $subVersion)
+    public function getMediaUrl($id, $fileName, $format, $version, $subVersion)
     {
         return $this->getPathUrl($this->pathUrl, $id, $fileName, $format, $version, $subVersion);
     }
@@ -160,10 +152,11 @@ class LocalFormatCache implements FormatCacheInterface
             throw new ImageProxyUrlNotFoundException('The given url was empty');
         }
 
-        $id = $this->getIdFromUrl($url);
-        $format = $this->getFormatFromUrl($url);
-
-        return [$id, $format];
+        return [
+            'id' => $this->getIdFromUrl($url),
+            'format' => $this->getFormatFromUrl($url),
+            'fileName' => $this->getFileNameFromUrl($url),
+        ];
     }
 
     /**
@@ -225,5 +218,19 @@ class LocalFormatCache implements FormatCacheInterface
         $format = $formatParts[1];
 
         return $format;
+    }
+
+    /**
+     * Return the requested image format from url.
+     *
+     * @param string $url
+     *
+     * @return int
+     *
+     * @throws ImageProxyInvalidUrl
+     */
+    protected function getFileNameFromUrl($url)
+    {
+        return basename($url);
     }
 }

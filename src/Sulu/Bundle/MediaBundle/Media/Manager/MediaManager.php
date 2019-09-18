@@ -407,8 +407,7 @@ class MediaManager implements MediaManagerInterface
             $this->formatManager->purge(
                 $mediaEntity->getId(),
                 $currentFileVersion->getName(),
-                $currentFileVersion->getMimeType(),
-                $currentFileVersion->getStorageOptions()
+                $currentFileVersion->getMimeType()
             );
         } else {
             // not setable in update
@@ -427,8 +426,7 @@ class MediaManager implements MediaManagerInterface
                 $this->formatManager->purge(
                     $mediaEntity->getId(),
                     $currentFileVersion->getName(),
-                    $currentFileVersion->getMimeType(),
-                    $currentFileVersion->getStorageOptions()
+                    $currentFileVersion->getMimeType()
                 );
             }
         }
@@ -709,8 +707,7 @@ class MediaManager implements MediaManagerInterface
                 $this->formatManager->purge(
                     $mediaEntity->getId(),
                     $fileVersion->getName(),
-                    $fileVersion->getMimeType(),
-                    $fileVersion->getStorageOptions()
+                    $fileVersion->getMimeType()
                 );
 
                 $this->storage->remove($fileVersion->getStorageOptions());
@@ -778,7 +775,6 @@ class MediaManager implements MediaManagerInterface
                 $formatUrls[$media->getId()] = $this->formatManager->getFormats(
                     $previewImage->getId(),
                     $previewImage->getName(),
-                    $previewImage->getStorageOptions(),
                     $previewImage->getVersion(),
                     $previewImage->getSubVersion(),
                     $previewImage->getMimeType()
@@ -787,7 +783,6 @@ class MediaManager implements MediaManagerInterface
                 $formatUrls[$media->getId()] = $this->formatManager->getFormats(
                     $media->getId(),
                     $media->getName(),
-                    $media->getStorageOptions(),
                     $media->getVersion(),
                     $media->getSubVersion(),
                     $media->getMimeType()
@@ -826,7 +821,6 @@ class MediaManager implements MediaManagerInterface
                     $this->formatManager->getFormats(
                         $previewImage->getId(),
                         $latestVersion->getName(),
-                        $latestVersion->getStorageOptions(),
                         $latestVersion->getVersion(),
                         $latestVersion->getSubVersion(),
                         $latestVersion->getMimeType()
@@ -838,7 +832,6 @@ class MediaManager implements MediaManagerInterface
                 $this->formatManager->getFormats(
                     $media->getId(),
                     $media->getName(),
-                    $media->getStorageOptions(),
                     $media->getVersion(),
                     $media->getSubVersion(),
                     $media->getMimeType()

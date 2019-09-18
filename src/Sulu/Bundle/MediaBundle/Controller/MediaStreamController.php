@@ -16,6 +16,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
+use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
@@ -30,7 +31,12 @@ class MediaStreamController extends Controller
     /**
      * @var FormatManagerInterface
      */
-    protected $cacheManager = null;
+    protected $formatManager = null;
+
+    /**
+     * @var FormatCacheInterface
+     */
+    protected $formatCache = null;
 
     /**
      * @var MediaManagerInterface
@@ -56,9 +62,13 @@ class MediaStreamController extends Controller
 
             $url = $request->getPathInfo();
 
-            list($id, $format) = $this->getCacheManager()->getMediaProperties($url);
+            $mediaProperties = $this->getFormatCache()->analyzedMediaUrl($url);
 
-            return $this->getCacheManager()->returnImage($id, $format);
+            return $this->getFormatManager()->returnImage(
+                $mediaProperties['id'],
+                $mediaProperties['format'],
+                $mediaProperties['fileName']
+            );
         } catch (ImageProxyException $e) {
             throw $this->createNotFoundException('Image create error. Code: ' . $e->getCode());
         }
@@ -233,18 +243,22 @@ class MediaStreamController extends Controller
         return $cleanedFileName;
     }
 
-    /**
-     * getMediaManager.
-     *
-     * @return FormatManagerInterface
-     */
-    protected function getCacheManager()
+    protected function getFormatManager(): FormatManagerInterface
     {
-        if (null === $this->cacheManager) {
-            $this->cacheManager = $this->get('sulu_media.format_manager');
+        if (null === $this->formatManager) {
+            $this->formatManager = $this->get('sulu_media.format_manager');
         }
 
-        return $this->cacheManager;
+        return $this->formatManager;
+    }
+
+    protected function getFormatCache(): FormatCacheInterface
+    {
+        if (null === $this->formatCache) {
+            $this->formatCache = $this->get('sulu_media.format_cache');
+        }
+
+        return $this->formatCache;
     }
 
     /**

@@ -275,7 +275,6 @@ class MediaControllerTest extends SuluTestCase
         $fileVersion->setChanged(new \DateTime('1937-04-20'));
         $fileVersion->setCreated(new \DateTime('1937-04-20'));
         $fileVersion->setStorageOptions(['segment' => '1', 'fileName' => $name . '.' . $extension]);
-
         $storagePath = $this->getStoragePath();
 
         if (!file_exists($storagePath . '/1')) {
@@ -359,7 +358,7 @@ class MediaControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/uploads/media/sulu-50x50/01/' . $media->getId() . '-photo.jpeg'
+            '/uploads/media/sulu-50x50/1/' . $media->getId() . '-photo.jpg'
         );
 
         $response = $client->getResponse();
@@ -379,7 +378,7 @@ class MediaControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/uploads/media/50x50/01/0-photo.jpeg'
+            '/uploads/media/50x50/1/0-photo.jpg'
         );
         $this->assertFalse($client->getResponse()->isCacheable());
         $this->assertEmpty($client->getResponse()->getExpires());
@@ -395,7 +394,7 @@ class MediaControllerTest extends SuluTestCase
         ob_start();
         $client->request(
             'GET',
-            '/media/' . $media->getId() . '/download/photo.jpeg'
+            '/media/' . $media->getId() . '/download/photo.jpg'
         );
         ob_end_clean();
         $this->assertEquals(
@@ -414,7 +413,7 @@ class MediaControllerTest extends SuluTestCase
         ob_start();
         $client->request(
             'GET',
-            '/media/' . $media->getId() . '/download/photo.jpeg?inline=1'
+            '/media/' . $media->getId() . '/download/photo.jpg?inline=1'
         );
         ob_end_clean();
         $this->assertEquals(

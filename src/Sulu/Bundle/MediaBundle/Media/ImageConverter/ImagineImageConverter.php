@@ -72,6 +72,11 @@ class ImagineImageConverter implements ImageConverterInterface
     private $formats;
 
     /**
+     * @var array
+     */
+    private $supportedMimeTypes;
+
+    /**
      * @param ImagineInterface $imagine
      * @param StorageInterface $storage
      * @param MediaImageExtractorInterface $mediaImageExtractor
@@ -80,6 +85,7 @@ class ImagineImageConverter implements ImageConverterInterface
      * @param ScalerInterface $scaler
      * @param CropperInterface $cropper
      * @param array $formats
+     * @param array $supportedMimeTypes
      */
     public function __construct(
         ImagineInterface $imagine,
@@ -89,7 +95,8 @@ class ImagineImageConverter implements ImageConverterInterface
         FocusInterface $focus,
         ScalerInterface $scaler,
         CropperInterface $cropper,
-        array $formats
+        array $formats,
+        array $supportedMimeTypes
     ) {
         $this->imagine = $imagine;
         $this->storage = $storage;
@@ -99,12 +106,52 @@ class ImagineImageConverter implements ImageConverterInterface
         $this->scaler = $scaler;
         $this->cropper = $cropper;
         $this->formats = $formats;
+        $this->supportedMimeTypes = $supportedMimeTypes;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function convert(FileVersion $fileVersion, $formatKey)
+    public function getSupportedOutputImageFormats(?string $mimeType): array
+    {
+        if (!$mimeType) {
+            return [];
+        }
+
+        foreach ($this->supportedMimeTypes as $supportedMimeType) {
+            if (fnmatch($supportedMimeType, $mimeType)) {
+                $preferredExtension = 'jpg';
+
+                switch ($mimeType) {
+                    case 'image/png':
+                    case 'image/svg+xml':
+                        $preferredExtension = 'png';
+                        break;
+                    case 'image/webp':
+                        $preferredExtension = 'webp';
+                        break;
+                    case 'image/gif':
+                        $preferredExtension = 'gif';
+                        break;
+                }
+
+                return array_unique([
+                    $preferredExtension,
+                    'jpg',
+                    'gif',
+                    'png',
+                    'webp',
+                ]);
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function convert(FileVersion $fileVersion, $formatKey, $imageFormat)
     {
         $imageResource = $this->mediaImageExtractor->extract($this->storage->load($fileVersion->getStorageOptions()));
 
@@ -149,11 +196,9 @@ class ImagineImageConverter implements ImageConverterInterface
 
         $imagineOptions = $format['options'];
 
-        $imageExtension = $this->getImageExtension($fileVersion->getMimeType());
-
         return $image->get(
-            $imageExtension,
-            $this->getOptionsFromImage($image, $imageExtension, $imagineOptions)
+            $imageFormat,
+            $this->getOptionsFromImage($image, $imageFormat, $imagineOptions)
         );
     }
 
@@ -393,26 +438,5 @@ class ImagineImageConverter implements ImageConverterInterface
         }
 
         return array_merge($options, $imagineOptions);
-    }
-
-    /**
-     * Maps the image extension to a new extension.
-     *
-     * @param string $mimeType
-     *
-     * @return string
-     */
-    private function getImageExtension($mimeType)
-    {
-        switch ($mimeType) {
-            case 'image/gif':
-                return 'gif';
-            case 'image/png':
-                return 'png';
-            case 'image/svg+xml':
-                return 'png';
-            default:
-                return 'jpg';
-        }
     }
 }

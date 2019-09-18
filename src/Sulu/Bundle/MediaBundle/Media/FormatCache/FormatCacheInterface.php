@@ -23,37 +23,35 @@ interface FormatCacheInterface
      * @param string $content
      * @param int $id
      * @param string $fileName
-     * @param array $options
      * @param string $format
      *
      * @return bool
      */
-    public function save($content, $id, $fileName, $options, $format);
+    public function save($content, $id, $fileName, $format);
 
     /**
      * Delete the image by the given parameters.
      *
      * @param int $id
      * @param string $fileName
-     * @param string $options
+     * @param string $format
      *
      * @return bool
      */
-    public function purge($id, $fileName, $options);
+    public function purge($id, $fileName, $format);
 
     /**
      * Return the url to an specific format of an media.
      *
      * @param int $id
      * @param string $fileName
-     * @param array $options
      * @param string $format
      * @param int $version
      * @param int $subVersion
      *
      * @return string
      */
-    public function getMediaUrl($id, $fileName, $options, $format, $version, $subVersion);
+    public function getMediaUrl($id, $fileName, $format, $version, $subVersion);
 
     /**
      * Return the id and the format of a media.

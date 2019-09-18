@@ -92,21 +92,28 @@ class ImagineImageConverterTest extends TestCase
                 '640x480' => [
                     'options' => [],
                 ],
+            ],
+            [
+                'image/*',
+                'application/pdf',
+                'video/*',
             ]
         );
     }
 
-    public function testConvertIsBinaryString()
+    public function testConvert()
     {
         $imagineImage = $this->prophesize(ImageInterface::class);
         $palette = $this->prophesize(PaletteInterface::class);
 
         $fileVersion = new FileVersion();
-        $fileVersion->setStorageOptions([]);
+        $fileVersion->setName('test.jpg');
+        $fileVersion->setVersion(1);
+        $fileVersion->setStorageOptions(['option' => 1]);
 
-        $this->storage->load([])->willReturn('image-content');
-        $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
-        $this->imagine->read('image-content')->willReturn($imagineImage->reveal());
+        $this->storage->load(['option' => 1])->willReturn('image-resource');
+        $this->mediaImageExtractor->extract('image-resource')->willReturn('image-resource');
+        $this->imagine->read('image-resource')->willReturn($imagineImage->reveal());
 
         $imagineImage->palette()->willReturn($palette->reveal());
         $imagineImage->strip()->shouldBeCalled();
@@ -115,11 +122,11 @@ class ImagineImageConverterTest extends TestCase
 
         $imagineImage->interlace(ImageInterface::INTERLACE_PLANE)->shouldBeCalled();
 
-        $imagineImage->get('jpg', [])->willReturn('new-image-content');
+        $imagineImage->get('jpg', [])->willReturn('new-image-resource');
 
         $this->focus->focus(Argument::any())->shouldNotBeCalled();
 
-        $this->assertEquals('new-image-content', $this->imagineImageConverter->convert($fileVersion, '640x480'));
+        $this->assertEquals('new-image-resource', $this->imagineImageConverter->convert($fileVersion, '640x480', 'jpg'));
     }
 
     public function testConvertNoFocusOnInset()
@@ -130,11 +137,11 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion = new FileVersion();
         $fileVersion->setName('test.jpg');
         $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions([]);
+        $fileVersion->setStorageOptions(['option' => 1]);
 
-        $this->storage->load([])->willReturn('image-content');
-        $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
-        $this->imagine->read('image-content')->willReturn($imagineImage->reveal());
+        $this->storage->load(['option' => 1])->willReturn('image-resource');
+        $this->mediaImageExtractor->extract('image-resource')->willReturn('image-resource');
+        $this->imagine->read('image-resource')->willReturn($imagineImage->reveal());
 
         $imagineImage->metadata()->willReturn(['']);
         $imagineImage->palette()->willReturn($palette->reveal());
@@ -142,11 +149,11 @@ class ImagineImageConverterTest extends TestCase
         $imagineImage->layers()->willReturn(['']);
         $imagineImage->interlace(ImageInterface::INTERLACE_PLANE)->shouldBeCalled();
 
-        $imagineImage->get('jpg', [])->willReturn('new-image-content');
+        $imagineImage->get('jpg', [])->willReturn('new-image-resource');
 
         $this->focus->focus(Argument::any())->shouldNotBeCalled();
 
-        $this->assertEquals('new-image-content', $this->imagineImageConverter->convert($fileVersion, '640x480'));
+        $this->assertEquals('new-image-resource', $this->imagineImageConverter->convert($fileVersion, '640x480', 'jpg'));
     }
 
     public function testConvertWithImageExtension()
@@ -157,12 +164,12 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion = new FileVersion();
         $fileVersion->setName('test.svg');
         $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions([]);
+        $fileVersion->setStorageOptions(['option' => 1]);
         $fileVersion->setMimeType('image/svg+xml');
 
-        $this->storage->load([])->willReturn('image-content');
-        $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
-        $this->imagine->read('image-content')->willReturn($imagineImage->reveal());
+        $this->storage->load(['option' => 1])->willReturn('image-resource');
+        $this->mediaImageExtractor->extract('image-resource')->willReturn('image-resource');
+        $this->imagine->read('image-resource')->willReturn($imagineImage->reveal());
 
         $imagineImage->metadata()->willReturn(['']);
         $imagineImage->palette()->willReturn($palette->reveal());
@@ -170,9 +177,9 @@ class ImagineImageConverterTest extends TestCase
         $imagineImage->layers()->willReturn(['']);
         $imagineImage->interlace(ImageInterface::INTERLACE_PLANE)->shouldBeCalled();
 
-        $imagineImage->get('png', [])->willReturn('new-image-content');
+        $imagineImage->get('png', [])->willReturn('new-image-resource');
 
-        $this->assertEquals('new-image-content', $this->imagineImageConverter->convert($fileVersion, '640x480'));
+        $this->assertEquals('new-image-resource', $this->imagineImageConverter->convert($fileVersion, '640x480', 'png'));
     }
 
     public function testConvertCmykToRgb()
@@ -184,11 +191,11 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion = new FileVersion();
         $fileVersion->setName('test.jpg');
         $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions([]);
+        $fileVersion->setStorageOptions(['option' => 1]);
 
-        $this->storage->load([])->willReturn('image-content');
-        $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
-        $this->imagine->read('image-content')->willReturn($imagineImage->reveal());
+        $this->storage->load(['option' => 1])->willReturn('image-resource');
+        $this->mediaImageExtractor->extract('image-resource')->willReturn('image-resource');
+        $this->imagine->read('image-resource')->willReturn($imagineImage->reveal());
 
         $imagineImage->metadata()->willReturn(['']);
         $imagineImage->palette()->willReturn($palette->reveal());
@@ -197,9 +204,9 @@ class ImagineImageConverterTest extends TestCase
         $imagineImage->usePalette(Argument::type(RGB::class))->shouldBeCalled();
         $imagineImage->interlace(ImageInterface::INTERLACE_PLANE)->shouldBeCalled();
 
-        $imagineImage->get('jpg', [])->willReturn('new-image-content');
+        $imagineImage->get('jpg', [])->willReturn('new-image-resource');
 
-        $this->assertEquals('new-image-content', $this->imagineImageConverter->convert($fileVersion, '640x480'));
+        $this->assertEquals('new-image-resource', $this->imagineImageConverter->convert($fileVersion, '640x480', 'jpg'));
     }
 
     public function testConvertNotExistingMedia()
@@ -209,11 +216,11 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion = new FileVersion();
         $fileVersion->setName('test.jpg');
         $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions([]);
+        $fileVersion->setStorageOptions(['option' => 1]);
 
-        $this->storage->load([])->willThrow(ImageProxyMediaNotFoundException::class);
+        $this->storage->load(['option' => 1])->willThrow(ImageProxyMediaNotFoundException::class);
 
-        $this->imagineImageConverter->convert($fileVersion, '640x480');
+        $this->imagineImageConverter->convert($fileVersion, '640x480', 'jpg');
     }
 
     public function testConvertAutorotate()
@@ -240,6 +247,6 @@ class ImagineImageConverterTest extends TestCase
 
         $imagineImage->get('jpg', [])->willReturn('new-image-content');
 
-        $this->assertEquals('new-image-content', $this->imagineImageConverter->convert($fileVersion, '640x480'));
+        $this->assertEquals('new-image-content', $this->imagineImageConverter->convert($fileVersion, '640x480', 'jpg'));
     }
 }

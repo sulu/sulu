@@ -18,12 +18,15 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
+use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidUrl;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMimeTypeForPreviewException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -69,14 +72,14 @@ class FormatManager implements FormatManagerInterface
     private $formats;
 
     /**
-     * @var array
-     */
-    private $supportedMimeTypes;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
+
+    /**
+     * @var ParameterBag|null
+     */
+    private $supportedImageFormats;
 
     /**
      * @param MediaRepositoryInterface $mediaRepository
@@ -85,7 +88,6 @@ class FormatManager implements FormatManagerInterface
      * @param string $saveImage
      * @param array $responseHeaders
      * @param array $formats
-     * @param array $supportedMimeTypes
      * @param LoggerInterface $logger
      */
     public function __construct(
@@ -95,7 +97,6 @@ class FormatManager implements FormatManagerInterface
         $saveImage,
         $responseHeaders,
         $formats,
-        array $supportedMimeTypes,
         LoggerInterface $logger = null
     ) {
         $this->mediaRepository = $mediaRepository;
@@ -105,18 +106,25 @@ class FormatManager implements FormatManagerInterface
         $this->responseHeaders = $responseHeaders;
         $this->fileSystem = new Filesystem();
         $this->formats = $formats;
-        $this->supportedMimeTypes = $supportedMimeTypes;
         $this->logger = $logger ?: new NullLogger();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function returnImage($id, $formatKey)
+    public function returnImage($id, $formatKey, $fileName)
     {
         $setExpireHeaders = false;
 
         try {
+            $info = pathinfo($fileName);
+
+            if (!isset($info['extension'])) {
+                throw new ImageProxyInvalidUrl('No `extension` was found in the url');
+            }
+
+            $imageFormat = $info['extension'];
+
             $media = $this->mediaRepository->findMediaByIdForRendering($id, $formatKey);
 
             if (!$media) {
@@ -125,12 +133,22 @@ class FormatManager implements FormatManagerInterface
 
             $fileVersion = $this->getLatestFileVersion($media);
 
-            if (!$this->checkMimeTypeSupported($fileVersion->getMimeType())) {
+            $supportedImageFormats = $this->converter->getSupportedOutputImageFormats($fileVersion->getMimeType());
+            if (empty($supportedImageFormats)) {
                 throw new InvalidMimeTypeForPreviewException($fileVersion->getMimeType());
             }
 
+            if (!in_array($imageFormat, $supportedImageFormats)) {
+                throw new ImageProxyInvalidImageFormat(
+                    sprintf(
+                        'Image format "%s" not supported. Supported image formats are: %s',
+                        $imageFormat,
+                        implode(', ', $supportedImageFormats)
+                    ));
+            }
+
             // Convert Media to format.
-            $responseContent = $this->converter->convert($fileVersion, $formatKey);
+            $responseContent = $this->converter->convert($fileVersion, $formatKey, $imageFormat);
 
             // HTTP Headers
             $status = 200;
@@ -144,8 +162,7 @@ class FormatManager implements FormatManagerInterface
                 $this->formatCache->save(
                     $responseContent,
                     $media->getId(),
-                    $this->replaceExtension($fileVersion->getName(), $mimeType),
-                    $fileVersion->getStorageOptions(),
+                    $this->replaceExtension($fileVersion->getName(), $imageFormat),
                     $formatKey
                 );
             }
@@ -166,19 +183,34 @@ class FormatManager implements FormatManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getFormats($id, $fileName, $storageOptions, $version, $subVersion, $mimeType)
+    public function getFormats($id, $fileName, $version, $subVersion, $mimeType)
     {
+        $fileName = pathinfo($fileName)['filename'];
+
         $formats = [];
-        if ($this->checkMimeTypeSupported($mimeType)) {
-            foreach ($this->formats as $format) {
-                $formats[$format['key']] = $this->formatCache->getMediaUrl(
+
+        $extensions = $this->converter->getSupportedOutputImageFormats($mimeType);
+
+        if (empty($extensions)) {
+            return [];
+        }
+
+        $originalExtension = $extensions[0];
+        foreach ($this->formats as $format) {
+            foreach ($extensions as $extension) {
+                $formatUrl = $this->formatCache->getMediaUrl(
                     $id,
-                    $this->replaceExtension($fileName, $mimeType),
-                    $storageOptions,
+                    $this->replaceExtension($fileName, $extension),
                     $format['key'],
                     $version,
                     $subVersion
                 );
+
+                if ($extension === $originalExtension) {
+                    $formats[$format['key']] = $formatUrl;
+                }
+
+                $formats[$format['key'] . '.' . $extension] = $formatUrl;
             }
         }
 
@@ -188,17 +220,21 @@ class FormatManager implements FormatManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function purge($idMedia, $fileName, $mimeType, $options)
+    public function purge($idMedia, $fileName, $mimeType)
     {
-        return $this->formatCache->purge($idMedia, $this->replaceExtension($fileName, $mimeType), $options);
-    }
+        $extensions = $this->converter->getSupportedOutputImageFormats($mimeType);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getMediaProperties($url)
-    {
-        return $this->formatCache->analyzedMediaUrl($url);
+        if (empty($extensions)) {
+            return true;
+        }
+
+        foreach ($this->formats as $format) {
+            foreach ($extensions as $extension) {
+                $this->formatCache->purge($idMedia, $this->replaceExtension($fileName, $extension), $format['key']);
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -290,28 +326,18 @@ class FormatManager implements FormatManagerInterface
     }
 
     /**
+     * Replace extension.
+     *
      * @param string $filename
      * @param string $newExtension
      *
      * @return string
      */
-    protected function replaceExtension($filename, $mimeType)
+    private function replaceExtension($filename, $newExtension)
     {
         $info = pathinfo($filename);
 
-        switch ($mimeType) {
-            case 'image/png':
-            case 'image/svg+xml':
-                $extension = 'png';
-                break;
-            case 'image/gif':
-                $extension = 'gif';
-                break;
-            default:
-                $extension = 'jpg';
-        }
-
-        return $info['filename'] . '.' . $extension;
+        return $info['filename'] . '.' . $newExtension;
     }
 
     /**
@@ -334,23 +360,5 @@ class FormatManager implements FormatManagerInterface
         }
 
         throw new ImageProxyMediaNotFoundException('Media file version was not found');
-    }
-
-    /**
-     * Returns true if the given mime type is supported, otherwise false.
-     *
-     * @param $mimeType
-     *
-     * @return bool
-     */
-    private function checkMimeTypeSupported($mimeType)
-    {
-        foreach ($this->supportedMimeTypes as $supportedMimeType) {
-            if (fnmatch($supportedMimeType, $mimeType)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
