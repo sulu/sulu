@@ -69,10 +69,6 @@ class Toolbar extends React.Component<ToolbarProps> {
         this.toolbarStore.errors.pop();
     };
 
-    @action handleWarningSnackbarCloseClick = () => {
-        this.toolbarStore.warnings.pop();
-    };
-
     @computed get disableAllButtons() {
         const loadingItems = this.toolbarStore.getItemsConfig().filter((item) => item.loading);
         return this.toolbarStore.disableAll || loadingItems.length > 0;
@@ -118,7 +114,6 @@ class Toolbar extends React.Component<ToolbarProps> {
                 />
                 <Snackbar
                     message={warnings[warnings.length - 1]}
-                    onCloseClick={this.handleWarningSnackbarCloseClick}
                     type="warning"
                     visible={warnings.length > 0}
                 />

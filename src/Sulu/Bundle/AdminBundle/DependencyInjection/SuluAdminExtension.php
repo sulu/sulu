@@ -51,6 +51,13 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                             ],
                         ],
                     ],
+                    'cache' => [
+                        'pools' => [
+                            'sulu_admin.collaboration_cache' => [
+                                'adapter' => 'cache.adapter.filesystem',
+                            ],
+                        ],
+                    ],
                     'web_link' => [
                         'enabled' => true,
                     ],
@@ -100,6 +107,7 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                     'routes_to_expose' => [
                         '(.+\.)?c?get_.*',
                         'sulu_admin.metadata',
+                        'sulu_admin.put_collaborations',
                     ],
                 ]
             );
@@ -109,6 +117,11 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
             'sulu_admin',
             [
                 'resources' => [
+                    'collaborations' => [
+                        'routes' => [
+                            'detail' => 'sulu_admin.put_collaborations',
+                        ],
+                    ],
                     'localizations' => [
                         'routes' => [
                             'list' => 'sulu_core.get_localizations',
@@ -136,6 +149,8 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         $container->setParameter($this->getAlias() . '.email', $config['email']);
         $container->setParameter($this->getAlias() . '.user_data_service', $config['user_data_service']);
         $container->setParameter($this->getAlias() . '.resources', $config['resources']);
+        $container->setParameter($this->getAlias() . '.collaboration_interval', $config['collaboration']['interval']);
+        $container->setParameter($this->getAlias() . '.collaboration_threshold', $config['collaboration']['threshold']);
 
         $container->setParameter($this->getAlias() . '.forms.directories', $config['forms']['directories'] ?? []);
         $container->setParameter($this->getAlias() . '.lists.directories', $config['lists']['directories'] ?? []);

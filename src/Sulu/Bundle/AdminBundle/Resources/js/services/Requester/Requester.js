@@ -147,8 +147,10 @@ export default class Requester {
     }
 
     static put(url: string, data: Object): Promise<Object> {
-        return fetch(url, {...defaultOptions, method: 'PUT', body: JSON.stringify(transformRequestData(data))})
-            .then(handleObjectResponse);
+        return fetch(
+            url,
+            {...defaultOptions, method: 'PUT', body: data ? JSON.stringify(transformRequestData(data)) : undefined}
+        ).then(handleObjectResponse);
     }
 
     static patch(url: string, data: Array<Object> | Object): Promise<Array<Object> | Object> {

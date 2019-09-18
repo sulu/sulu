@@ -1,5 +1,20 @@
 # Upgrade
 
+## dev-develop
+
+### CollaborationBundle
+
+The `CollaborationBundle` has been integrated in the `AdminBundle`, because it was a non-optional dependency of it.
+Because of that the `CollaborationBundle` has to be removed from the `config/bundles.php` file. And there is a new
+`routing_api.yml` file in the `SuluAdminBundle`, which has to be imported in `config/routes/sulu_admin.yml`.
+
+```yaml
+sulu_admin_api:
+    resource: "@SuluAdminBundle/Resources/config/routing_api.yml"
+    type: rest
+    prefix: /admin/api
+```
+
 ## 2.0.0-RC2
 
 When upgrading also have a look at the changes in the

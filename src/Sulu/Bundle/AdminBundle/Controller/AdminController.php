@@ -142,6 +142,11 @@ class AdminController
      */
     private $fallbackLocale;
 
+    /**
+     * @var string
+     */
+    private $collaborationInterval;
+
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         TokenStorageInterface $tokenStorage,
@@ -163,7 +168,8 @@ class AdminController
         array $resources,
         array $locales,
         array $translations,
-        string $fallbackLocale
+        string $fallbackLocale,
+        string $collaborationInterval
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->tokenStorage = $tokenStorage;
@@ -186,6 +192,7 @@ class AdminController
         $this->locales = $locales;
         $this->translations = $translations;
         $this->fallbackLocale = $fallbackLocale;
+        $this->collaborationInterval = $collaborationInterval;
     }
 
     public function indexAction()
@@ -237,6 +244,7 @@ class AdminController
                 }, $this->dataProviderPool->getAll()),
                 'user' => $user,
                 'contact' => $contact,
+                'collaborationInterval' => $this->collaborationInterval * 1000,
             ],
         ];
 

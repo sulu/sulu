@@ -41,12 +41,6 @@ Array [
       </strong>
        - 
     </div>
-    <span
-      aria-label="su-times"
-      class="su-times clickable closeIcon"
-      role="button"
-      tabindex="0"
-    />
   </div>,
   <nav
     class="toolbar light"
@@ -129,12 +123,6 @@ Array [
       </strong>
        - 
     </div>
-    <span
-      aria-label="su-times"
-      class="su-times clickable closeIcon"
-      role="button"
-      tabindex="0"
-    />
   </div>,
   <nav
     class="toolbar light"
@@ -283,12 +271,6 @@ Array [
       </strong>
        - Something unimportant went wrong
     </div>
-    <span
-      aria-label="su-times"
-      class="su-times clickable closeIcon"
-      role="button"
-      tabindex="0"
-    />
   </div>,
   <nav
     class="toolbar light"
@@ -371,12 +353,6 @@ Array [
       </strong>
        - 
     </div>
-    <span
-      aria-label="su-times"
-      class="su-times clickable closeIcon"
-      role="button"
-      tabindex="0"
-    />
   </div>,
   <nav
     class="toolbar light"
@@ -448,12 +424,6 @@ Array [
       </strong>
        - 
     </div>
-    <span
-      aria-label="su-times"
-      class="su-times clickable closeIcon"
-      role="button"
-      tabindex="0"
-    />
   </div>,
   <nav
     class="toolbar light"

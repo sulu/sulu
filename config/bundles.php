@@ -52,7 +52,6 @@ return [
     // Admin
     Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true, 'admin' => true],
     Sulu\Bundle\AdminBundle\SuluAdminBundle::class => ['all' => true, 'admin' => true],
-    Sulu\Bundle\CollaborationBundle\SuluCollaborationBundle::class => ['all' => true, 'admin' => true],
     Sulu\Bundle\PreviewBundle\SuluPreviewBundle::class => ['all' => true, 'admin' => true],
     FOS\JsRoutingBundle\FOSJsRoutingBundle::class => ['all' => true, 'admin' => true],
     // Website

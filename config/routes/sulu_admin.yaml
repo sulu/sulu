@@ -6,6 +6,11 @@ sulu_admin:
     resource: "@SuluAdminBundle/Resources/config/routing.yml"
     prefix: /admin
 
+sulu_admin_api:
+    resource: "@SuluAdminBundle/Resources/config/routing_api.yml"
+    type: rest
+    prefix: /admin/api
+
 sulu_contact_api:
     type: rest
     resource: "@SuluContactBundle/Resources/config/routing_api.yml"

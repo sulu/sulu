@@ -12,7 +12,7 @@ export default class ResourceRequester {
         return Requester.post(resourceRouteRegistry.getDetailUrl(resourceKey, {...parameters}), data);
     }
 
-    static put(resourceKey: string, data: Object, parameters: ?Object) {
+    static put(resourceKey: string, data: ?Object, parameters: ?Object) {
         return Requester.put(resourceRouteRegistry.getDetailUrl(resourceKey, {...parameters}), data);
     }
 
