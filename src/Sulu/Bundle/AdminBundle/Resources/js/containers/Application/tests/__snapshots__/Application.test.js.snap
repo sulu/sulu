@@ -363,6 +363,146 @@ exports[`Render based on current route with app version 1`] = `
 </div>
 `;
 
+exports[`Render login screen to reset password 1`] = `
+Array [
+  <div
+    class="login"
+  >
+    <div
+      class="loginContainer"
+    >
+      <div
+        class="formContainer"
+      >
+        <div
+          class="logoContainer"
+        >
+          <span
+            aria-label="su-sulu"
+            class="su-sulu"
+          />
+        </div>
+        <div
+          class="header"
+        >
+          sulu_admin.reset_password
+        </div>
+        <form
+          class="form"
+        >
+          <fieldset>
+            <label
+              class="inputField"
+            >
+              <div
+                class="labelText"
+              >
+                sulu_admin.password
+              </div>
+              <label
+                class="input default left"
+              >
+                <div
+                  class="prependedContainer default"
+                >
+                  <span
+                    aria-label="su-lock"
+                    class="su-lock icon default"
+                  />
+                </div>
+                <input
+                  type="password"
+                  value=""
+                />
+              </label>
+            </label>
+            <label
+              class="inputField"
+            >
+              <div
+                class="labelText"
+              >
+                sulu_admin.repeat_password
+              </div>
+              <label
+                class="input default left"
+              >
+                <div
+                  class="prependedContainer default"
+                >
+                  <span
+                    aria-label="su-lock"
+                    class="su-lock icon default"
+                  />
+                </div>
+                <input
+                  type="password"
+                  value=""
+                />
+              </label>
+            </label>
+            <div
+              class="buttons"
+            >
+              <button
+                class="button link"
+                type="button"
+              >
+                <span
+                  class="text"
+                >
+                  sulu_admin.to_login
+                </span>
+              </button>
+              <button
+                class="button primary"
+                disabled=""
+                type="submit"
+              >
+                <span
+                  class="text"
+                >
+                  sulu_admin.reset_password
+                </span>
+              </button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+      <div
+        class="backLinkContainer"
+      >
+        <a
+          class="backLink"
+          href="/"
+        >
+          <span
+            aria-label="su-angle-left"
+            class="su-angle-left backLinkIcon"
+          />
+          sulu_admin.back_to_website
+        </a>
+      </div>
+    </div>
+  </div>,
+  <div
+    class="loader"
+  >
+    <div
+      class="spinner"
+      style="width: 40px; height: 40px;"
+    >
+      <div
+        class="doubleBounce1"
+      />
+      <div
+        class="doubleBounce2"
+      />
+    </div>
+  </div>,
+]
+`;
+
 exports[`Render login when user is not logged in 1`] = `
 Array [
   <div

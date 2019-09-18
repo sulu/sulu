@@ -5,18 +5,22 @@ import {observer} from 'mobx-react';
 import Icon from '../../components/Icon/index';
 import {translate} from '../../utils/index';
 import Loader from '../../components/Loader/Loader';
+import Router from '../../services/Router';
 import userStore from '../../stores/userStore';
+import ForgotPasswordForm from './ForgotPasswordForm';
 import LoginForm from './LoginForm';
-import ResetForm from './ResetForm';
+import ResetPasswordForm from './ResetPasswordForm';
 import loginStyles from './login.scss';
+import type {FormTypes} from './types';
 
 const BACK_LINK_ARROW_LEFT_ICON = 'su-angle-left';
 
-type Props = {
+type Props = {|
     backLink: string,
     initialized: boolean,
     onLoginSuccess: () => void,
-};
+    router: Router,
+|};
 
 @observer
 class Login extends React.Component<Props> {
@@ -25,120 +29,69 @@ class Login extends React.Component<Props> {
         initialized: false,
     };
 
-    @observable visibleForm: 'login' | 'reset' = 'login';
-    @observable user: ?string;
-    @observable password: ?string;
+    @observable visibleForm: FormTypes = this.props.router.attributes.forgotPasswordToken ? 'reset-password' : 'login';
 
     @computed get loginFormVisible(): boolean {
         return this.visibleForm === 'login';
     }
 
-    @computed get resetFormVisible(): boolean {
-        return this.visibleForm === 'reset';
+    @computed get forgotPasswordFormVisible(): boolean {
+        return this.visibleForm === 'forgot-password';
+    }
+
+    @computed get resetPasswordFormVisible(): boolean {
+        return this.visibleForm === 'reset-password';
     }
 
     @action clearState = () => {
         if (this.loginFormVisible) {
             userStore.setLoginError(false);
-        } else if (this.resetFormVisible) {
-            userStore.setResetSuccess(false);
+        } else if (this.forgotPasswordFormVisible) {
+            userStore.setForgotPasswordSuccess(false);
         }
     };
 
     @action handleChangeToLoginForm = () => {
+        this.props.router.reset();
         this.visibleForm = 'login';
     };
 
-    @action handleChangeToResetForm = () => {
-        this.visibleForm = 'reset';
+    @action handleChangeToForgotPasswordForm = () => {
+        this.visibleForm = 'forgot-password';
     };
 
-    @action handleUserChange = (user: ?string) => {
-        this.clearState();
-        this.user = user;
-    };
-
-    @action handlePasswordChange = (password: ?string) => {
-        this.clearState();
-        this.password = password;
-    };
-
-    handleLoginFormSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        if (!this.user || !this.password) {
-            return;
-        }
-
-        userStore.login(this.user, this.password).then(() => {
+    handleLoginFormSubmit = (user: string, password: string) => {
+        userStore.login(user, password).then(() => {
             this.props.onLoginSuccess();
         });
     };
 
-    handleResetFormSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        if (!this.user) {
-            return;
-        }
-
-        userStore.resetPassword(this.user);
+    handleForgotPasswordFormSubmit = (user: string) => {
+        userStore.forgotPassword(user);
     };
 
-    renderForm() {
-        if (!this.props.initialized) {
-            return (
-                <div className={loginStyles.loaderContainer}>
-                    <Loader size={20} />
-                </div>
-            );
+    handleResetPasswordFormSubmit = (password: string) => {
+        const {
+            onLoginSuccess,
+            router,
+        } = this.props;
+
+        const {forgotPasswordToken} = router.attributes;
+
+        if (!forgotPasswordToken) {
+            throw new Error('The "forgotPasswordToken" is not set. This should not happen and is likely a bug.');
         }
 
-        if (this.loginFormVisible) {
-            return (
-                <LoginForm
-                    error={userStore.loginError}
-                    loading={userStore.loading}
-                    onChangeForm={this.handleChangeToResetForm}
-                    onPasswordChange={this.handlePasswordChange}
-                    onSubmit={this.handleLoginFormSubmit}
-                    onUserChange={this.handleUserChange}
-                    password={this.password}
-                    user={this.user}
-                />
-            );
-        }
-
-        if (this.resetFormVisible) {
-            return (
-                <ResetForm
-                    loading={userStore.loading}
-                    onChangeForm={this.handleChangeToLoginForm}
-                    onSubmit={this.handleResetFormSubmit}
-                    onUserChange={this.handleUserChange}
-                    success={userStore.resetSuccess}
-                    user={this.user}
-                />
-            );
-        }
-    }
-
-    renderBackLink() {
-        const {backLink, initialized} = this.props;
-
-        if (!initialized) {
-            return null;
-        }
-
-        return (
-            <a className={loginStyles.backLink} href={backLink}>
-                <Icon className={loginStyles.backLinkIcon} name={BACK_LINK_ARROW_LEFT_ICON} />
-                {translate('sulu_admin.back_to_website')}
-            </a>
-        );
-    }
+        userStore.resetPassword(password, forgotPasswordToken)
+            .then(() => {
+                router.reset();
+                onLoginSuccess();
+            });
+    };
 
     render() {
+        const {backLink, initialized} = this.props;
+
         return (
             <div className={loginStyles.login}>
                 <div className={loginStyles.loginContainer}>
@@ -146,10 +99,42 @@ class Login extends React.Component<Props> {
                         <div className={loginStyles.logoContainer}>
                             <Icon name="su-sulu" />
                         </div>
-                        {this.renderForm()}
+                        {!initialized &&
+                            <div className={loginStyles.loaderContainer}>
+                                <Loader size={20} />
+                            </div>
+                        }
+                        {initialized && this.loginFormVisible &&
+                            <LoginForm
+                                error={userStore.loginError}
+                                loading={userStore.loading}
+                                onChangeForm={this.handleChangeToForgotPasswordForm}
+                                onSubmit={this.handleLoginFormSubmit}
+                            />
+                        }
+                        {initialized && this.forgotPasswordFormVisible &&
+                            <ForgotPasswordForm
+                                loading={userStore.loading}
+                                onChangeForm={this.handleChangeToLoginForm}
+                                onSubmit={this.handleForgotPasswordFormSubmit}
+                                success={userStore.forgotPasswordSuccess}
+                            />
+                        }
+                        {initialized && this.resetPasswordFormVisible &&
+                            <ResetPasswordForm
+                                loading={userStore.loading}
+                                onChangeForm={this.handleChangeToLoginForm}
+                                onSubmit={this.handleResetPasswordFormSubmit}
+                            />
+                        }
                     </div>
                     <div className={loginStyles.backLinkContainer}>
-                        {this.renderBackLink()}
+                        {initialized &&
+                            <a className={loginStyles.backLink} href={backLink}>
+                                <Icon className={loginStyles.backLinkIcon} name={BACK_LINK_ARROW_LEFT_ICON} />
+                                {translate('sulu_admin.back_to_website')}
+                            </a>
+                        }
                     </div>
                 </div>
             </div>

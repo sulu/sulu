@@ -123,7 +123,7 @@ exports[`Should render the Login component when initialized is true 1`] = `
 </div>
 `;
 
-exports[`Should render the Login with reset password view 1`] = `
+exports[`Should render the Login with forgot password view 1`] = `
 <div
   class="login"
 >
@@ -144,7 +144,7 @@ exports[`Should render the Login with reset password view 1`] = `
       <div
         class="header"
       >
-        sulu_admin.reset_password
+        sulu_admin.forgot_password
       </div>
       <form
         class="form"
@@ -221,7 +221,7 @@ exports[`Should render the Login with reset password view 1`] = `
 </div>
 `;
 
-exports[`Should render the Login with reset password with success 1`] = `
+exports[`Should render the Login with forgot password with success 1`] = `
 <div
   class="login"
 >
@@ -242,7 +242,7 @@ exports[`Should render the Login with reset password with success 1`] = `
       <div
         class="header small"
       >
-        sulu_admin.reset_password_success
+        sulu_admin.forgot_password_success
       </div>
       <form
         class="form"
@@ -295,6 +295,129 @@ exports[`Should render the Login with reset password with success 1`] = `
                 class="text"
               >
                 sulu_admin.reset_resend
+              </span>
+            </button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+    <div
+      class="backLinkContainer"
+    >
+      <a
+        class="backLink"
+        href="/"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="su-angle-left backLinkIcon"
+        />
+        sulu_admin.back_to_website
+      </a>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Should render the Login with reset password view 1`] = `
+<div
+  class="login"
+>
+  <div
+    class="loginContainer"
+  >
+    <div
+      class="formContainer"
+    >
+      <div
+        class="logoContainer"
+      >
+        <span
+          aria-label="su-sulu"
+          class="su-sulu"
+        />
+      </div>
+      <div
+        class="header"
+      >
+        sulu_admin.reset_password
+      </div>
+      <form
+        class="form"
+      >
+        <fieldset>
+          <label
+            class="inputField"
+          >
+            <div
+              class="labelText"
+            >
+              sulu_admin.password
+            </div>
+            <label
+              class="input default left"
+            >
+              <div
+                class="prependedContainer default"
+              >
+                <span
+                  aria-label="su-lock"
+                  class="su-lock icon default"
+                />
+              </div>
+              <input
+                type="password"
+                value=""
+              />
+            </label>
+          </label>
+          <label
+            class="inputField"
+          >
+            <div
+              class="labelText"
+            >
+              sulu_admin.repeat_password
+            </div>
+            <label
+              class="input default left"
+            >
+              <div
+                class="prependedContainer default"
+              >
+                <span
+                  aria-label="su-lock"
+                  class="su-lock icon default"
+                />
+              </div>
+              <input
+                type="password"
+                value=""
+              />
+            </label>
+          </label>
+          <div
+            class="buttons"
+          >
+            <button
+              class="button link"
+              type="button"
+            >
+              <span
+                class="text"
+              >
+                sulu_admin.to_login
+              </span>
+            </button>
+            <button
+              class="button primary"
+              disabled=""
+              type="submit"
+            >
+              <span
+                class="text"
+              >
+                sulu_admin.reset_password
               </span>
             </button>
           </div>

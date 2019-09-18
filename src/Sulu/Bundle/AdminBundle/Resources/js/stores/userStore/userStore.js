@@ -20,7 +20,7 @@ class UserStore {
     @observable loggedIn: boolean = false;
     @observable loading: boolean = false;
     @observable loginError: boolean = false;
-    @observable resetSuccess: boolean = false;
+    @observable forgotPasswordSuccess: boolean = false;
 
     @action clear() {
         this.persistentSettings = new Map();
@@ -29,7 +29,7 @@ class UserStore {
         this.user = undefined;
         this.contact = undefined;
         this.loginError = false;
-        this.resetSuccess = false;
+        this.forgotPasswordSuccess = false;
     }
 
     @computed get systemLocale() {
@@ -48,8 +48,8 @@ class UserStore {
         this.loginError = loginError;
     }
 
-    @action setResetSuccess(resetSuccess: boolean) {
-        this.resetSuccess = resetSuccess;
+    @action setForgotPasswordSuccess(forgotPasswordSuccess: boolean) {
+        this.forgotPasswordSuccess = forgotPasswordSuccess;
     }
 
     @action setUser(user: User) {
@@ -79,29 +79,31 @@ class UserStore {
         }
     }
 
+    handleLogin = (user: string) => {
+        if (this.user) {
+            // when the user was logged in already and comes again with the same user
+            // we don't need to initialize again
+            if (user === this.user.username) {
+                this.setLoggedIn(true);
+                this.setLoading(false);
+
+                return;
+            }
+
+            this.clear();
+        }
+
+        this.setLoading(true);
+        return initializer.initialize(true).then(() => {
+            this.setLoading(false);
+        });
+    };
+
     login = (user: string, password: string) => {
         this.setLoading(true);
 
         return Requester.post(Config.endpoints.loginCheck, {username: user, password: password})
-            .then(() => {
-                if (this.user) {
-                    // when the user was logged in already and comes again with the same user
-                    // we don't need to initialize again
-                    if (user === this.user.username) {
-                        this.setLoggedIn(true);
-                        this.setLoading(false);
-
-                        return;
-                    }
-
-                    this.clear();
-                }
-
-                this.setLoading(true);
-                return initializer.initialize(true).then(() => {
-                    this.setLoading(false);
-                });
-            })
+            .then(() => this.handleLogin(user))
             .catch((error) => {
                 this.setLoading(false);
                 if (error.status !== 401) {
@@ -112,12 +114,12 @@ class UserStore {
             });
     };
 
-    resetPassword(user: string) {
+    forgotPassword(user: string) {
         this.setLoading(true);
 
-        if (this.resetSuccess) {
+        if (this.forgotPasswordSuccess) {
             // if email was already sent use different api
-            return Requester.post(Config.endpoints.resetResend, {user: user})
+            return Requester.post(Config.endpoints.forgotPasswordResend, {user: user})
                 .then(() => {
                     this.setLoading(false);
                 })
@@ -129,17 +131,27 @@ class UserStore {
                 });
         }
 
-        return Requester.post(Config.endpoints.reset, {user: user})
+        return Requester.post(Config.endpoints.forgotPasswordReset, {user: user})
             .then(() => {
                 this.setLoading(false);
-                this.setResetSuccess(true);
+                this.setForgotPasswordSuccess(true);
             })
             .catch((error) => {
                 this.setLoading(false);
-                this.setResetSuccess(true);
+                this.setForgotPasswordSuccess(true);
                 if (error.status !== 400) {
                     return Promise.reject(error);
                 }
+            });
+    }
+
+    resetPassword(password: string, token: string) {
+        this.setLoading(true);
+
+        return Requester.post(Config.endpoints.resetPassword, {password, token})
+            .then(({user}) => this.handleLogin(user))
+            .catch(() => {
+                this.setLoading(false);
             });
     }
 

@@ -4,7 +4,9 @@ import {render, mount} from 'enzyme';
 import Router from '../../../services/Router';
 import Application from '../Application';
 
-jest.mock('../../../services/Router', () => jest.fn());
+jest.mock('../../../services/Router', () => jest.fn(function() {
+    this.attributes = {};
+}));
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester/ResourceRequester', () => ({
     get: jest.fn(),
@@ -103,6 +105,18 @@ test('Render login with loader', () => {
     mockUserStoreLoggedIn.mockReturnValue(false);
 
     const router = new Router({});
+    const application = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
+    expect(application.render()).toMatchSnapshot();
+});
+
+test('Render login screen to reset password', () => {
+    mockInitializerInitialized.mockReturnValue(false);
+    mockInitializerLoading.mockReturnValue(false);
+    mockInitializedTranslationsLocale.mockReturnValue('en');
+    mockUserStoreLoggedIn.mockReturnValue(false);
+
+    const router = new Router({});
+    router.attributes.forgotPasswordToken = 'some-uuid';
     const application = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
     expect(application.render()).toMatchSnapshot();
 });

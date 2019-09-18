@@ -11,26 +11,26 @@ import formStyles from './form.scss';
 import Header from './Header';
 
 type Props = {|
-    error: boolean,
     loading: boolean,
     onChangeForm: () => void,
-    onSubmit: (user: string, password: string) => void,
+    onSubmit: (password: string) => void,
 |};
 
 @observer
-class LoginForm extends React.Component<Props> {
+class ForgotPasswordForm extends React.Component<Props> {
     static defaultProps = {
-        error: false,
         loading: false,
     };
 
     @observable inputRef: ?ElementRef<*>;
 
-    @observable user: ?string;
-    @observable password: ?string;
+    @observable error: boolean;
+
+    @observable password1: ?string;
+    @observable password2: ?string;
 
     @computed get submitButtonDisabled(): boolean {
-        return !(this.user && this.password);
+        return !(this.password1 && this.password2);
     }
 
     @action setInputRef = (ref: ?ElementRef<*>) => {
@@ -43,70 +43,77 @@ class LoginForm extends React.Component<Props> {
         }
     }
 
-    @action handleUserChange = (user: ?string) => {
-        this.user = user;
+    @action handlePassword1Change = (password1: ?string) => {
+        this.password1 = password1;
     };
 
-    @action handlePasswordChange = (password: ?string) => {
-        this.password = password;
+    @action handlePassword2Change = (password2: ?string) => {
+        this.password2 = password2;
     };
 
     @action handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        if (!this.user || !this.password) {
+        if (!this.password1 || !this.password2) {
+            this.error = true;
             return;
         }
 
+        if (this.password1 !== this.password2) {
+            this.error = true;
+            return;
+        }
+
+        this.error = false;
+
         const {onSubmit} = this.props;
 
-        onSubmit(this.user, this.password);
+        onSubmit(this.password1);
     };
 
     render() {
-        const {error} = this.props;
-
         const inputFieldClass = classNames(
             formStyles.inputField,
             {
-                [formStyles.error]: error,
+                [formStyles.error]: this.error,
             }
         );
 
         return (
             <Fragment>
-                <Header small={error}>
-                    {translate(error ? 'sulu_admin.login_error' : 'sulu_admin.welcome')}
+                <Header small={this.error}>
+                    {translate(this.error ? 'sulu_admin.reset_password_error' : 'sulu_admin.reset_password')}
                 </Header>
                 <form className={formStyles.form} onSubmit={this.handleSubmit}>
                     <fieldset>
-                        <label className={inputFieldClass}>
-                            <div className={formStyles.labelText}>
-                                {translate('sulu_admin.username_or_email')}
-                            </div>
-                            <Input
-                                icon="su-user"
-                                inputRef={this.setInputRef}
-                                onChange={this.handleUserChange}
-                                valid={!this.props.error}
-                                value={this.user}
-                            />
-                        </label>
                         <label className={inputFieldClass}>
                             <div className={formStyles.labelText}>
                                 {translate('sulu_admin.password')}
                             </div>
                             <Input
                                 icon="su-lock"
-                                onChange={this.handlePasswordChange}
+                                inputRef={this.setInputRef}
+                                onChange={this.handlePassword1Change}
                                 type="password"
-                                valid={!this.props.error}
-                                value={this.password}
+                                valid={!this.error}
+                                value={this.password1}
+                            />
+                        </label>
+                        <label className={inputFieldClass}>
+                            <div className={formStyles.labelText}>
+                                {translate('sulu_admin.repeat_password')}
+                            </div>
+                            <Input
+                                icon="su-lock"
+                                onChange={this.handlePassword2Change}
+                                type="password"
+                                valid={!this.error}
+                                value={this.password2}
                             />
                         </label>
                         <div className={formStyles.buttons}>
                             <Button onClick={this.props.onChangeForm} skin="link">
-                                {translate('sulu_admin.forgot_password')}
+                                {translate('sulu_admin.to_login')}
                             </Button>
                             <Button
                                 disabled={this.submitButtonDisabled}
@@ -114,7 +121,7 @@ class LoginForm extends React.Component<Props> {
                                 skin="primary"
                                 type="submit"
                             >
-                                {translate('sulu_admin.login')}
+                                {translate('sulu_admin.reset_password')}
                             </Button>
                         </div>
                     </fieldset>
@@ -124,4 +131,4 @@ class LoginForm extends React.Component<Props> {
     }
 }
 
-export default LoginForm;
+export default ForgotPasswordForm;

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {render, shallow} from 'enzyme';
-import LoginForm from '../LoginForm';
+import ResetPasswordForm from '../ResetPasswordForm';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn(function(key) {
@@ -11,7 +11,7 @@ jest.mock('../../../utils/Translator', () => ({
 
 test('Should render the component', () => {
     expect(render(
-        <LoginForm
+        <ResetPasswordForm
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
         />)
@@ -20,18 +20,7 @@ test('Should render the component', () => {
 
 test('Should render the component loading', () => {
     expect(render(
-        <LoginForm
-            loading={true}
-            onChangeForm={jest.fn()}
-            onSubmit={jest.fn()}
-        />)
-    ).toMatchSnapshot();
-});
-
-test('Should render the component with error', () => {
-    expect(render(
-        <LoginForm
-            error={true}
+        <ResetPasswordForm
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
         />)
@@ -40,22 +29,22 @@ test('Should render the component with error', () => {
 
 test('Should trigger onChangeForm correctly', () => {
     const onChangeForm = jest.fn();
-    const loginForm = shallow(
-        <LoginForm
+    const resetForm = shallow(
+        <ResetPasswordForm
             onChangeForm={onChangeForm}
             onSubmit={jest.fn()}
         />
     );
 
-    loginForm.find('Button').at(0).simulate('click');
+    resetForm.find('Button').at(0).simulate('click');
 
     expect(onChangeForm).toBeCalled();
 });
 
-test('Should not trigger onSubmit if password or user is missing', () => {
+test('Should not trigger onSubmit if passwords are missing', () => {
     const onSubmit = jest.fn();
-    const loginForm = shallow(
-        <LoginForm
+    const resetForm = shallow(
+        <ResetPasswordForm
             onChangeForm={jest.fn()}
             onSubmit={onSubmit}
         />
@@ -65,8 +54,7 @@ test('Should not trigger onSubmit if password or user is missing', () => {
         preventDefault: jest.fn(),
     };
 
-    loginForm.find('Input[icon="su-user"]').prop('onChange')('Max');
-    loginForm.find('form').prop('onSubmit')(event);
+    resetForm.find('form').prop('onSubmit')(event);
 
     expect(event.preventDefault).toBeCalledWith();
     expect(onSubmit).not.toBeCalled();
@@ -74,8 +62,8 @@ test('Should not trigger onSubmit if password or user is missing', () => {
 
 test('Should trigger onSubmit correctly', () => {
     const onSubmit = jest.fn();
-    const loginForm = shallow(
-        <LoginForm
+    const resetForm = shallow(
+        <ResetPasswordForm
             onChangeForm={jest.fn()}
             onSubmit={onSubmit}
         />
@@ -85,10 +73,32 @@ test('Should trigger onSubmit correctly', () => {
         preventDefault: jest.fn(),
     };
 
-    loginForm.find('Input[icon="su-user"]').prop('onChange')('Max');
-    loginForm.find('Input[icon="su-lock"]').prop('onChange')('max');
-    loginForm.find('form').prop('onSubmit')(event);
+    resetForm.find('Input[icon="su-lock"]').at(0).prop('onChange')('max');
+    resetForm.find('Input[icon="su-lock"]').at(1).prop('onChange')('max');
+    resetForm.find('form').prop('onSubmit')(event);
 
     expect(event.preventDefault).toBeCalledWith();
-    expect(onSubmit).toBeCalledWith('Max', 'max');
+    expect(onSubmit).toBeCalledWith('max');
+});
+
+test('Should not trigger onSubmit if one password is missing', () => {
+    const onSubmit = jest.fn();
+    const resetForm = shallow(
+        <ResetPasswordForm
+            onChangeForm={jest.fn()}
+            onSubmit={onSubmit}
+        />
+    );
+
+    const event = {
+        preventDefault: jest.fn(),
+    };
+
+    resetForm.find('Input[icon="su-lock"]').at(0).prop('onChange')('max');
+    resetForm.find('form').prop('onSubmit')(event);
+
+    expect(event.preventDefault).toBeCalledWith();
+
+    resetForm.update();
+    expect(resetForm.find('Input[valid=false]')).toHaveLength(2);
 });

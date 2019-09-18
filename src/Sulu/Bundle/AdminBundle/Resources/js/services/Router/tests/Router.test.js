@@ -42,6 +42,27 @@ test('Navigate to route using state', () => {
     expect(history.entries.some((entry) => entry.pathname === '/pages/some-uuid')).toEqual(true);
 });
 
+test('Reset route using the reset method', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            view: 'list',
+            path: '/pages',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+    });
+
+    const history = createMemoryHistory();
+    history.replace('/pages/some-uuid');
+    const router = new Router(history);
+
+    router.reset();
+    expect(history.location.pathname).toBe('/');
+});
+
 test('Redirect to route using state', () => {
     routeRegistry.getAll.mockReturnValue({
         test: {
@@ -307,6 +328,17 @@ test('Navigate to route using URL', () => {
     expect(router.attributes.uuid).toBe('some-uuid');
     expect(router.attributes.test).toBe('value');
     expect(history.location.pathname).toBe('/pages/some-uuid/value');
+});
+
+test('Navigate to route using non-existant URL with attributes', () => {
+    routeRegistry.getAll.mockReturnValue({});
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+
+    history.push('/?token=some-uuid');
+    expect(router.route).toEqual(undefined);
+    expect(router.attributes.token).toBe('some-uuid');
 });
 
 test('Navigate to route using URL with search parameters', () => {

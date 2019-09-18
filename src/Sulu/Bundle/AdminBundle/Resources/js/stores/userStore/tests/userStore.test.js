@@ -30,7 +30,7 @@ test('Should clear the user store', () => {
     userStore.setLoggedIn(true);
     userStore.setLoading(true);
     userStore.setLoginError(true);
-    userStore.setResetSuccess(true);
+    userStore.setForgotPasswordSuccess(true);
     userStore.setUser(user);
     userStore.setContact(contact);
     userStore.setPersistentSetting('something', 'somevalue');
@@ -39,7 +39,7 @@ test('Should clear the user store', () => {
     expect(userStore.loggedIn).toBe(true);
     expect(userStore.loading).toBe(true);
     expect(userStore.loginError).toBe(true);
-    expect(userStore.resetSuccess).toBe(true);
+    expect(userStore.forgotPasswordSuccess).toBe(true);
     expect(userStore.user).toEqual(user);
     expect(userStore.contact).toEqual(contact);
     if (userStore.contact){
@@ -176,6 +176,26 @@ test('Should login', () => {
     });
 });
 
+test('Should login after the password was reset', () => {
+    const resetPromise = Promise.resolve({});
+    const initializePromise = Promise.resolve({});
+
+    Requester.post.mockReturnValue(resetPromise);
+    initializer.initialize.mockReturnValue(initializePromise);
+
+    userStore.resetPassword('test', 'some-uuid');
+    expect(userStore.loading).toBe(true);
+
+    return resetPromise.then(() => {
+        expect(Requester.post).toBeCalledWith('reset_password', {password: 'test', token: 'some-uuid'});
+        expect(initializer.initialize).toBeCalledWith(true);
+
+        return initializePromise.then(() => {
+            expect(userStore.loading).toBe(false);
+        });
+    });
+});
+
 test('Should login without initializing when it`s the same user', () => {
     const user = {id: 1, locale: 'cool_locale', settings: {}, username: 'test'};
     const loginPromise = Promise.resolve({});
@@ -213,7 +233,7 @@ test('Should login with initializing when it`s not the same user', () => {
         expect(userStore.loading).toBe(true);
         expect(userStore.loggedIn).toBe(false);
         expect(userStore.loginError).toBe(false);
-        expect(userStore.resetSuccess).toBe(false);
+        expect(userStore.forgotPasswordSuccess).toBe(false);
         expect(userStore.user).toBeUndefined();
         expect(userStore.contact).toBeUndefined();
 
@@ -239,15 +259,15 @@ test('Should show error when login is not working and error status is 401', () =
         });
 });
 
-test('Should reset password', () => {
+test('Should send an email when the password is forgotten', () => {
     Requester.post.mockReturnValue(Promise.resolve({}));
 
-    const promise = userStore.resetPassword('test');
+    const promise = userStore.forgotPassword('test');
     expect(userStore.loading).toBe(true);
 
     return promise.then(() => {
-        expect(Requester.post).toBeCalledWith('reset_url', {user: 'test'});
-        expect(userStore.resetSuccess).toBe(true);
+        expect(Requester.post).toBeCalledWith('forgot_password_reset_url', {user: 'test'});
+        expect(userStore.forgotPasswordSuccess).toBe(true);
         expect(userStore.loggedIn).toBe(false);
         expect(userStore.loading).toBe(false);
     });
@@ -255,13 +275,13 @@ test('Should reset password', () => {
 
 test('Should use different api to resend reset password', () => {
     Requester.post.mockReturnValue(Promise.resolve({}));
-    userStore.setResetSuccess(true);
+    userStore.setForgotPasswordSuccess(true);
 
-    const promise = userStore.resetPassword('test');
+    const promise = userStore.forgotPassword('test');
     expect(userStore.loading).toBe(true);
 
     return promise.then(() => {
-        expect(Requester.post).toBeCalledWith('reset_resend_url', {user: 'test'});
+        expect(Requester.post).toBeCalledWith('forgot_password_resend_url', {user: 'test'});
         expect(userStore.loading).toBe(false);
     });
 });
