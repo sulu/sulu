@@ -5,6 +5,7 @@ import {observer} from 'mobx-react';
 import Icon from '../../components/Icon/index';
 import {translate} from '../../utils/index';
 import Loader from '../../components/Loader/Loader';
+import Router from '../../services/Router';
 import userStore from '../../stores/userStore';
 import ForgotPasswordForm from './ForgotPasswordForm';
 import LoginForm from './LoginForm';
@@ -16,9 +17,9 @@ const BACK_LINK_ARROW_LEFT_ICON = 'su-angle-left';
 
 type Props = {|
     backLink: string,
-    forgotPasswordToken: ?string,
     initialized: boolean,
     onLoginSuccess: () => void,
+    router: Router,
 |};
 
 @observer
@@ -28,7 +29,7 @@ class Login extends React.Component<Props> {
         initialized: false,
     };
 
-    @observable visibleForm: FormTypes = this.props.forgotPasswordToken ? 'reset-password' : 'login';
+    @observable visibleForm: FormTypes = this.props.router.attributes.forgotPasswordToken ? 'reset-password' : 'login';
 
     @computed get loginFormVisible(): boolean {
         return this.visibleForm === 'login';
@@ -51,6 +52,7 @@ class Login extends React.Component<Props> {
     };
 
     @action handleChangeToLoginForm = () => {
+        this.props.router.reset();
         this.visibleForm = 'login';
     };
 
@@ -69,7 +71,12 @@ class Login extends React.Component<Props> {
     };
 
     handleResetPasswordFormSubmit = (password: string) => {
-        const {forgotPasswordToken, onLoginSuccess} = this.props;
+        const {
+            onLoginSuccess,
+            router,
+        } = this.props;
+
+        const {forgotPasswordToken} = router.attributes;
 
         if (!forgotPasswordToken) {
             throw new Error('The "forgotPasswordToken" is not set. This should not happen and is likely a bug.');
@@ -77,6 +84,7 @@ class Login extends React.Component<Props> {
 
         userStore.resetPassword(password, forgotPasswordToken)
             .then(() => {
+                router.reset();
                 onLoginSuccess();
             });
     };

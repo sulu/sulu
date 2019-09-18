@@ -42,6 +42,27 @@ test('Navigate to route using state', () => {
     expect(history.entries.some((entry) => entry.pathname === '/pages/some-uuid')).toEqual(true);
 });
 
+test('Reset route using the reset method', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            view: 'list',
+            path: '/pages',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+    });
+
+    const history = createMemoryHistory();
+    history.replace('/pages/some-uuid');
+    const router = new Router(history);
+
+    router.reset();
+    expect(history.location.pathname).toBe('/');
+});
+
 test('Redirect to route using state', () => {
     routeRegistry.getAll.mockReturnValue({
         test: {

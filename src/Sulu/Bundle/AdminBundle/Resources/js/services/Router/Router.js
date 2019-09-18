@@ -107,6 +107,10 @@ export default class Router {
         this.match(this.history.location.pathname, this.history.location.search);
     };
 
+    reset = () => {
+        this.history.replace('');
+    };
+
     @action match(path: string, queryString: string) {
         for (const name in routeRegistry.getAll()) {
             const route = routeRegistry.get(name);

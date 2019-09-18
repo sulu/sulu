@@ -156,9 +156,9 @@ class Application extends React.Component<Props>{
                 {!loggedIn &&
                     <Login
                         backLink="/" // TODO: Get the correct link here from the backend
-                        forgotPasswordToken={router.attributes.forgotPasswordToken}
                         initialized={!initializer.loading && !!initializer.initializedTranslationsLocale}
                         onLoginSuccess={this.handleLoginSuccess}
+                        router={router}
                     />
                 }
                 {initializer.initialized && initializer.initializedTranslationsLocale
