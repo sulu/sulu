@@ -26,7 +26,7 @@
         "friendsofsymfony/rest-bundle": "^1.6",
         "guzzlehttp/guzzle": "^6.2",
         "imagine/imagine": "~0.6.1 || ~0.7.0",
-        "massive/search-bundle": "0.16.* || 0.17.*",
+        "massive/search-bundle": "0.16.* || 0.17.* || ^1.0",
         "sensio/framework-extra-bundle": "^3.0",
         "sulu/document-manager": "~0.10.1",
         "stof/doctrine-extensions-bundle": "^1.2.2",
