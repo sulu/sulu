@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\Routing;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\Routing\FormOverlayListRouteBuilder;
+use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
 
 class FormOverlayListRouteBuilderTest extends TestCase
 {
@@ -380,17 +381,21 @@ class FormOverlayListRouteBuilderTest extends TestCase
 
     public function testBuildAddToolbarActions()
     {
+        $saveToolbarAction = new ToolbarAction('sulu_admin.save');
+        $typesToolbarAction = new ToolbarAction('sulu_admin.types');
+        $deleteToolbarAction = new ToolbarAction('sulu_admin.delete');
+
         $route = (new FormOverlayListRouteBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
-            ->addToolbarActions(['sulu_admin.add', 'sulu_admin.move'])
-            ->addToolbarActions(['sulu_admin.delete'])
+            ->addToolbarActions([$saveToolbarAction, $typesToolbarAction])
+            ->addToolbarActions([$deleteToolbarAction])
             ->getRoute();
 
         $this->assertEquals(
-            ['sulu_admin.add' => [], 'sulu_admin.move' => [], 'sulu_admin.delete' => []],
+            [$saveToolbarAction, $typesToolbarAction, $deleteToolbarAction],
             $route->getOption('toolbarActions')
         );
     }

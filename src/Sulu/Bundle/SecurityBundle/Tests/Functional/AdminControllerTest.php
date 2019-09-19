@@ -15,6 +15,27 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminControllerTest extends SuluTestCase
 {
+    public function testRouteConfigWithTranslation()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/admin/config');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $routeConfig = $response->sulu_admin->routes;
+
+        $formRoute = null;
+        foreach ($routeConfig as $route) {
+            if ('sulu_security.form.permissions' === $route->name) {
+                $formRoute = $route;
+                break;
+            }
+        }
+
+        $this->assertEquals('User locked', $formRoute->options->toolbarActions[2]->options->label);
+    }
+
     public function testUserMetadataAction()
     {
         $client = $this->createAuthenticatedClient();

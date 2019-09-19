@@ -14,6 +14,7 @@ namespace Sulu\Bundle\CustomUrlBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
+use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -65,8 +66,8 @@ class CustomUrlAdmin extends Admin
     public function configureRoutes(RouteCollection $routeCollection): void
     {
         $listToolbarActions = [
-            'sulu_admin.add',
-            'sulu_admin.delete',
+            new ToolbarAction('sulu_admin.add'),
+            new ToolbarAction('sulu_admin.delete'),
         ];
 
         $routes = [];

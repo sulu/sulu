@@ -2,7 +2,7 @@
 import type {ElementRef} from 'react';
 import React from 'react';
 import type {IObservableValue} from 'mobx';
-import {action, computed, toJS, isObservableArray, isObservableObject, observable} from 'mobx';
+import {action, computed, toJS, isObservableArray, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import Dialog from '../../components/Dialog';
@@ -197,31 +197,27 @@ class Form extends React.Component<Props> {
         if (
             !Array.isArray(rawToolbarActions)
             && !isObservableArray(rawToolbarActions)
-            && typeof rawToolbarActions !== 'object'
-            && !isObservableObject(rawToolbarActions)
         ) {
             throw new Error('The view "Form" needs some defined toolbarActions to work properly!');
         }
 
         const toolbarActions = toJS(rawToolbarActions);
 
-        Object.keys(toolbarActions).forEach((toolbarActionKey) => {
-            const toolbarActionValue = toolbarActions[toolbarActionKey];
-            if (typeof toolbarActionValue !== 'object') {
+        toolbarActions.forEach((toolbarAction) => {
+            if (typeof toolbarAction !== 'object') {
                 throw new Error(
-                    'The value of the toolbarAction entry "' + toolbarActionKey + '" must be an object, '
-                    + 'but ' + typeof toolbarActionValue + ' was given!'
+                    'The value of a toolbarAction entry must be an object, but ' + typeof toolbarAction + ' was given!'
                 );
             }
         });
 
-        this.toolbarActions = Object.keys(toolbarActions)
-            .map((toolbarActionKey): AbstractFormToolbarAction => new (formToolbarActionRegistry.get(toolbarActionKey))(
+        this.toolbarActions = toolbarActions
+            .map((toolbarAction): AbstractFormToolbarAction => new (formToolbarActionRegistry.get(toolbarAction.type))(
                 this.resourceFormStore,
                 this,
                 router,
                 this.locales,
-                toolbarActions[toolbarActionKey]
+                toolbarAction.options
             ));
     }
 

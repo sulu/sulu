@@ -11,3 +11,19 @@ sulu_security_api:
 sulu_admin:
     resource: "@SuluAdminBundle/Resources/config/routing.yml"
     prefix: /admin
+
+# The following route are necessary to get AdminController::configAction work.
+# Can be removed once its content is not hardcoded anymore.
+sulu_preview:
+    type: rest
+    resource: "@SuluPreviewBundle/Resources/config/routing.yml"
+    prefix: /admin
+
+sulu_website:
+    type: rest
+    resource: "@SuluWebsiteBundle/Resources/config/routing.yml"
+    prefix: /admin
+
+sulu_media:
+    resource: "@SuluMediaBundle/Resources/config/routing.yml"
+    prefix: /admin/media

@@ -16,6 +16,8 @@ use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
+use Sulu\Bundle\AdminBundle\Admin\Routing\TogglerToolbarAction;
+use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -119,20 +121,20 @@ class SecurityAdmin extends Admin
         $listToolbarActions = [];
 
         if ($this->securityChecker->hasPermission(static::ROLE_SECURITY_CONTEXT, PermissionTypes::ADD)) {
-            $listToolbarActions[] = 'sulu_admin.add';
+            $listToolbarActions[] = new ToolbarAction('sulu_admin.add');
         }
 
         if ($this->securityChecker->hasPermission(static::ROLE_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $formToolbarActions[] = 'sulu_admin.save';
+            $formToolbarActions[] = new ToolbarAction('sulu_admin.save');
         }
 
         if ($this->securityChecker->hasPermission(static::ROLE_SECURITY_CONTEXT, PermissionTypes::DELETE)) {
-            $formToolbarActions[] = 'sulu_admin.delete';
-            $listToolbarActions[] = 'sulu_admin.delete';
+            $formToolbarActions[] = new ToolbarAction('sulu_admin.delete');
+            $listToolbarActions[] = new ToolbarAction('sulu_admin.delete');
         }
 
         if ($this->securityChecker->hasPermission(static::ROLE_SECURITY_CONTEXT, PermissionTypes::VIEW)) {
-            $listToolbarActions[] = 'sulu_admin.export';
+            $listToolbarActions[] = new ToolbarAction('sulu_admin.export');
         }
 
         if ($this->securityChecker->hasPermission(static::ROLE_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
@@ -186,14 +188,14 @@ class SecurityAdmin extends Admin
                     ->setFormKey('user_details')
                     ->setTabTitle('sulu_security.permissions')
                     ->addToolbarActions([
-                        'sulu_admin.save',
-                        'sulu_security.enable_user',
-                        'sulu_admin.toggler' => [
-                            'label' => $this->translator->trans('sulu_security.user_locked', [], 'admin'),
-                            'property' => 'locked',
-                            'activate' => 'lock',
-                            'deactivate' => 'unlock',
-                        ],
+                        new ToolbarAction('sulu_admin.save'),
+                        new ToolbarAction('sulu_security.enable_user'),
+                        new TogglerToolbarAction(
+                            'sulu_security.user_locked',
+                            'locked',
+                            'lock',
+                            'unlock'
+                        ),
                     ])
                     ->setIdQueryParameter('contactId')
                     ->setTitleVisible(true)

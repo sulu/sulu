@@ -16,6 +16,7 @@ use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
+use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -103,22 +104,22 @@ class SnippetAdmin extends Admin
         $listToolbarActions = [];
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::ADD)) {
-            $listToolbarActions[] = 'sulu_admin.add';
+            $listToolbarActions[] = new ToolbarAction('sulu_admin.add');
         }
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $formToolbarActionsWithoutType[] = 'sulu_admin.save';
-            $formToolbarActionsWithType[] = 'sulu_admin.save';
-            $formToolbarActionsWithType[] = 'sulu_admin.type';
+            $formToolbarActionsWithoutType[] = new ToolbarAction('sulu_admin.save');
+            $formToolbarActionsWithType[] = new ToolbarAction('sulu_admin.save');
+            $formToolbarActionsWithType[] = new ToolbarAction('sulu_admin.type');
         }
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::DELETE)) {
-            $formToolbarActionsWithType[] = 'sulu_admin.delete';
-            $listToolbarActions[] = 'sulu_admin.delete';
+            $formToolbarActionsWithType[] = new ToolbarAction('sulu_admin.delete');
+            $listToolbarActions[] = new ToolbarAction('sulu_admin.delete');
         }
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::VIEW)) {
-            $listToolbarActions[] = 'sulu_admin.export';
+            $listToolbarActions[] = new ToolbarAction('sulu_admin.export');
         }
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {

@@ -14,16 +14,17 @@ namespace Sulu\Bundle\PageBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
+use Sulu\Bundle\AdminBundle\Admin\Routing\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\Routing\Route;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
+use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class PageAdmin extends Admin
 {
@@ -68,11 +69,6 @@ class PageAdmin extends Admin
     private $teaserProviderPool;
 
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @var bool
      */
     private $versioningEnabled;
@@ -83,7 +79,6 @@ class PageAdmin extends Admin
         SecurityCheckerInterface $securityChecker,
         SessionManagerInterface $sessionManager,
         TeaserProviderPoolInterface $teaserProviderPool,
-        TranslatorInterface $translator,
         bool $versioningEnabled
     ) {
         $this->routeBuilderFactory = $routeBuilderFactory;
@@ -91,7 +86,6 @@ class PageAdmin extends Admin
         $this->securityChecker = $securityChecker;
         $this->sessionManager = $sessionManager;
         $this->teaserProviderPool = $teaserProviderPool;
-        $this->translator = $translator;
         $this->versioningEnabled = $versioningEnabled;
     }
 
@@ -117,33 +111,48 @@ class PageAdmin extends Admin
         $publishDisplayCondition = '(!_permissions || _permissions.live)';
 
         $formToolbarActionsWithType = [
-            'sulu_admin.save_with_publishing' => [
-                'publish_display_condition' => '(!_permissions || _permissions.live)',
-                'save_display_condition' => '(!_permissions || _permissions.edit)',
-            ],
-            'sulu_page.templates',
-            'sulu_admin.delete' => [
-                'display_condition' => '(!_permissions || _permissions.delete) && url != "/"',
-            ],
-            'sulu_admin.dropdown' => [
-                'label' => $this->translator->trans('sulu_admin.edit', [], 'admin'),
-                'icon' => 'su-pen',
-                'actions' => [
-                    'sulu_admin.copy_locale' => [
-                        'display_condition' => '(!_permissions || _permissions.edit)',
-                    ],
-                    'sulu_admin.delete_draft' => [
-                        'display_condition' => $publishDisplayCondition,
-                    ],
-                    'sulu_admin.set_unpublished' => [
-                        'display_condition' => $publishDisplayCondition,
-                    ],
-                ],
-            ],
+            new ToolbarAction(
+                'sulu_admin.save_with_publishing',
+                [
+                    'publish_display_condition' => '(!_permissions || _permissions.live)',
+                    'save_display_condition' => '(!_permissions || _permissions.edit)',
+                ]
+            ),
+            new ToolbarAction('sulu_page.templates'),
+            new ToolbarAction(
+                'sulu_admin.delete',
+                [
+                    'display_condition' => '(!_permissions || _permissions.delete) && url != "/"',
+                ]
+            ),
+            new DropdownToolbarAction(
+                'sulu_admin.edit',
+                'su-pen',
+                [
+                    new ToolbarAction(
+                        'sulu_admin.copy_locale',
+                        [
+                            'display_condition' => '(!_permissions || _permissions.edit)',
+                        ]
+                    ),
+                    new ToolbarAction(
+                        'sulu_admin.delete_draft',
+                        [
+                            'display_condition' => $publishDisplayCondition,
+                        ]
+                    ),
+                    new ToolbarAction(
+                        'sulu_admin.set_unpublished',
+                        [
+                            'display_condition' => $publishDisplayCondition,
+                        ]
+                    ),
+                ]
+            ),
         ];
 
         $formToolbarActionsWithoutType = [
-            'sulu_admin.save_with_publishing',
+            new ToolbarAction('sulu_admin.save_with_publishing'),
         ];
 
         $routerAttributesToFormStore = ['parentId', 'webspace'];
@@ -265,7 +274,7 @@ class PageAdmin extends Admin
                     ->setApiOptions(['resourceKey' => 'pages'])
                     ->setTabCondition('_permissions.security')
                     ->setTabTitle('sulu_security.permissions')
-                    ->addToolbarActions(['sulu_admin.save'])
+                    ->addToolbarActions([new ToolbarAction('sulu_admin.save')])
                     ->addRouterAttributesToFormStore(['webspace'])
                     ->setTitleVisible(true)
                     ->setTabOrder(5120)
