@@ -9,10 +9,6 @@ import {translate} from 'sulu-admin-bundle/utils';
 import ContactAccountSelectionStore from './stores/ContactAccountSelectionStore';
 import contactAccountSelectionStyles from './contactAccountSelection.scss';
 
-// TODO extract into separate file?
-const CONTACT_PREFIX = 'c';
-const ACCOUNT_PREFIX = 'a';
-
 type Props = {|
     disabled: boolean,
     onChange: (value: Array<Object>) => void,
@@ -77,11 +73,11 @@ class ContactAccountSelection extends React.Component<Props> {
     }
 
     @action handleContactConfirm = (contacts: Array<Object>) => {
-        this.handleConfirm(contacts, CONTACT_PREFIX);
+        this.handleConfirm(contacts, ContactAccountSelectionStore.contactPrefix);
     };
 
     @action handleAccountConfirm = (accounts: Array<Object>) => {
-        this.handleConfirm(accounts, ACCOUNT_PREFIX);
+        this.handleConfirm(accounts, ContactAccountSelectionStore.accountPrefix);
     };
 
     callChange() {

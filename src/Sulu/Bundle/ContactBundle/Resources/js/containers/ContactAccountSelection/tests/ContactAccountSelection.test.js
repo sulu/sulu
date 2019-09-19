@@ -21,6 +21,9 @@ beforeEach(() => {
         this.items = [];
         this.loading = false;
     });
+
+    ContactAccountSelectionStore.accountPrefix = 'a';
+    ContactAccountSelectionStore.contactPrefix = 'c';
 });
 
 test('Render ContactAccountSelection', () => {

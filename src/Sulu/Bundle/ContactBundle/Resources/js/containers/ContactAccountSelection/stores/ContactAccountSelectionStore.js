@@ -3,24 +3,23 @@ import {action, computed, observable} from 'mobx';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import {arrayMove} from 'sulu-admin-bundle/utils';
 
-// TODO extract into separate file?
-const CONTACT_PREFIX = 'c';
-const ACCOUNT_PREFIX = 'a';
-
 export default class ContactAccountSelectionStore {
+    static contactPrefix = 'c';
+    static accountPrefix = 'a';
+
     @observable items: Array<Object> = [];
     @observable loading: boolean = false;
 
     @computed get contactItems(): Array<Object> {
         return this.items
-            .filter((item) => item.id.startsWith(CONTACT_PREFIX))
-            .map((item) => ({...item, id: parseInt(item.id.substring(CONTACT_PREFIX.length))}));
+            .filter((item) => item.id.startsWith(ContactAccountSelectionStore.contactPrefix))
+            .map((item) => ({...item, id: parseInt(item.id.substring(ContactAccountSelectionStore.contactPrefix.length))}));
     }
 
     @computed get accountItems(): Array<Object> {
         return this.items
-            .filter((item) => item.id.startsWith(ACCOUNT_PREFIX))
-            .map((item) => ({...item, id: parseInt(item.id.substring(CONTACT_PREFIX.length))}));
+            .filter((item) => item.id.startsWith(ContactAccountSelectionStore.accountPrefix))
+            .map((item) => ({...item, id: parseInt(item.id.substring(ContactAccountSelectionStore.contactPrefix.length))}));
     }
 
     loadItems(itemIds: Array<string>) {
@@ -30,12 +29,12 @@ export default class ContactAccountSelectionStore {
         const contactIds = [];
 
         itemIds.forEach((id) => {
-            if (id.startsWith(CONTACT_PREFIX)) {
-                contactIds.push(id.substring(CONTACT_PREFIX.length));
+            if (id.startsWith(ContactAccountSelectionStore.contactPrefix)) {
+                contactIds.push(id.substring(ContactAccountSelectionStore.contactPrefix.length));
             }
 
-            if (id.startsWith(ACCOUNT_PREFIX)) {
-                accountIds.push(id.substring(ACCOUNT_PREFIX.length));
+            if (id.startsWith(ContactAccountSelectionStore.accountPrefix)) {
+                accountIds.push(id.substring(ContactAccountSelectionStore.accountPrefix.length));
             }
         });
 
@@ -60,17 +59,17 @@ export default class ContactAccountSelectionStore {
             const accounts = accountsResponse._embedded.accounts;
 
             this.items = itemIds.reduce((items, id) => {
-                if (id.startsWith(CONTACT_PREFIX)) {
-                    const contact = contacts.find((contact) => contact.id == id.substring(CONTACT_PREFIX.length));
+                if (id.startsWith(ContactAccountSelectionStore.contactPrefix)) {
+                    const contact = contacts.find((contact) => contact.id == id.substring(ContactAccountSelectionStore.contactPrefix.length));
                     if (contact) {
-                        items.push({...contact, id: CONTACT_PREFIX + contact.id});
+                        items.push({...contact, id: ContactAccountSelectionStore.contactPrefix + contact.id});
                     }
                 }
 
-                if (id.startsWith(ACCOUNT_PREFIX)) {
-                    const account = accounts.find((acount) => acount.id == id.substring(ACCOUNT_PREFIX.length));
+                if (id.startsWith(ContactAccountSelectionStore.accountPrefix)) {
+                    const account = accounts.find((acount) => acount.id == id.substring(ContactAccountSelectionStore.accountPrefix.length));
                     if (account) {
-                        items.push({...account, id: ACCOUNT_PREFIX + account.id});
+                        items.push({...account, id: ContactAccountSelectionStore.accountPrefix + account.id});
                     }
                 }
 
