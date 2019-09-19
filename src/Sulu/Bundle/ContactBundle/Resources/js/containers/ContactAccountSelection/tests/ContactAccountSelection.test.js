@@ -104,7 +104,7 @@ test('Confirm contact overlay if close button is clicked', () => {
     const changeSpy = jest.fn();
 
     const contactAccountSelection = mount(
-        <ContactAccountSelection onChange={changeSpy} value={['a1', 'c1']} />
+        <ContactAccountSelection onChange={changeSpy} value={['a1', 'c1', 'c2']} />
     );
 
     expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="contacts"]').prop('open')).toEqual(false);
@@ -169,7 +169,7 @@ test('Confirm account overlay if confirm button is clicked', () => {
     const changeSpy = jest.fn();
 
     const contactAccountSelection = mount(
-        <ContactAccountSelection onChange={changeSpy} value={['a1', 'c1']} />
+        <ContactAccountSelection onChange={changeSpy} value={['a1', 'a2', 'c1']} />
     );
 
     expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="accounts"]').prop('open')).toEqual(false);

@@ -69,7 +69,7 @@ class ContactAccountSelection extends React.Component<Props> {
         const itemIds = items.map((contact) => prefix + contact.id);
 
         onChange([
-            ...value,
+            ...value.filter((id) => !id.startsWith(prefix) || itemIds.includes(id)),
             ...itemIds,
         ].filter((item, index, items) => index == items.indexOf(item)));
 
