@@ -14,6 +14,16 @@ namespace Sulu\Component\Rest\ListBuilder;
 class ListRepresentation extends PaginatedRepresentation
 {
     /**
+     * @var string
+     */
+    private $route;
+
+    /**
+     * @var array[]
+     */
+    private $parameters;
+
+    /**
      * @param mixed $data The data which will be presented
      * @param string $rel The name of the relation inside of the _embedded field
      * @param string $route The name of the route, for generating the links
@@ -24,6 +34,9 @@ class ListRepresentation extends PaginatedRepresentation
      */
     public function __construct($data, $rel, $route, $parameters, $page, $limit, $total)
     {
+        $this->route = $route;
+        $this->parameters = $parameters;
+
         parent::__construct($data, $rel, (int) $page, (int) $limit, (int) $total);
     }
 }

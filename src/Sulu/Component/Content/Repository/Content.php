@@ -422,4 +422,19 @@ class Content implements \ArrayAccess
     {
         throw new FeatureNotImplementedException();
     }
+
+    /**
+     * @internal
+     *
+     * @VirtualProperty
+     * @SerializedName("_embedded")
+     *
+     * @return array
+     */
+    public function getEmbedded(): array
+    {
+        return [
+            'pages' => $this->getChildren(),
+        ];
+    }
 }
