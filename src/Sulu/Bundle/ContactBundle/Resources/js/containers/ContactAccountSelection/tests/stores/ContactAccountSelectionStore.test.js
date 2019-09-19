@@ -122,3 +122,12 @@ test('Send only accounts request if nothing has to be loaded', (done) => {
         done();
     });
 });
+
+test('Remove an item by ID', () => {
+    const contactAccountSelectionStore = new ContactAccountSelectionStore();
+    contactAccountSelectionStore.items = [{id: 'c1'}, {id: 'c2'}, {id: 'a1'}, {id: 'c3'}];
+
+    contactAccountSelectionStore.remove('c2');
+
+    expect(contactAccountSelectionStore.items).toEqual([{id: 'c1'}, {id: 'a1'}, {id: 'c3'}]);
+});

@@ -80,6 +80,13 @@ class ContactAccountSelection extends React.Component<Props> {
         this.handleConfirm(accounts, ACCOUNT_PREFIX);
     };
 
+    handleRemove = (id: string) => {
+        const {onChange, value} = this.props;
+
+        this.store.remove(id);
+        onChange([...value.filter((itemId) => itemId !== id)]);
+    };
+
     render() {
         const {disabled} = this.props;
 
@@ -98,7 +105,12 @@ class ContactAccountSelection extends React.Component<Props> {
                     loading={this.store.loading}
                 >
                     {this.store.items.map((item, index) => (
-                        <MultiItemSelection.Item id={item.id} index={index + 1} key={item.id}>
+                        <MultiItemSelection.Item
+                            id={item.id}
+                            index={index + 1}
+                            key={item.id}
+                            onRemove={this.handleRemove}
+                        >
                             <div className={contactAccountSelectionStyles.item}>
                                 {item.fullName || item.name}
                             </div>

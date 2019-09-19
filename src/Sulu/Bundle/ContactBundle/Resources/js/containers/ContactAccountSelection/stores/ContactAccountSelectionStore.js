@@ -79,6 +79,10 @@ export default class ContactAccountSelectionStore {
         }));
     }
 
+    @action remove(id: string) {
+        this.items = this.items.filter((item) => item.id !== id);
+    }
+
     @action setLoading(loading: boolean) {
         this.loading = loading;
     }

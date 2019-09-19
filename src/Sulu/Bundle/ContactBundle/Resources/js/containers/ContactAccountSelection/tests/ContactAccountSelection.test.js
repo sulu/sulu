@@ -138,6 +138,30 @@ test('Close contact overlay if close button is clicked', () => {
     expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="contacts"]').prop('open')).toEqual(false);
 });
 
+test('Remove contact if delete button is clicked', () => {
+    // $FlowFixMe
+    ContactAccountSelectionStore.mockImplementation(function() {
+        this.loadItems = jest.fn();
+        this.remove = jest.fn();
+        this.items = [
+            {id: 'c2', fullName: 'Max Mustermann'},
+            {id: 'a3', name: 'Sulu'},
+            {id: 'c3', fullName: 'Erika Mustermann'},
+        ];
+    });
+
+    const changeSpy = jest.fn();
+
+    const contactAccountSelection = mount(
+        <ContactAccountSelection onChange={changeSpy} value={['c2', 'a3', 'c3']} />
+    );
+
+    contactAccountSelection.find('MultiItemSelection Item[index=1]').prop('onRemove')('c2');
+
+    expect(contactAccountSelection.instance().store.remove).toBeCalledWith('c2');
+    expect(changeSpy).toBeCalledWith(['a3', 'c3']);
+});
+
 test('Confirm account overlay if confirm button is clicked', () => {
     const changeSpy = jest.fn();
 
