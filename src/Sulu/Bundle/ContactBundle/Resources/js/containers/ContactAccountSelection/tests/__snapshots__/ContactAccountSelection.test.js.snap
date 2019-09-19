@@ -22,7 +22,9 @@ exports[`Render ContactAccountSelection 1`] = `
     </button>
     <div
       class="label"
-    />
+    >
+      sulu_contact.contact_account_selection_label
+    </div>
   </div>
   <ul
     class="list"
@@ -52,7 +54,9 @@ exports[`Render ContactAccountSelection with data 1`] = `
     </button>
     <div
       class="label"
-    />
+    >
+      sulu_contact.contact_account_selection_label
+    </div>
   </div>
   <ul
     class="list"
@@ -213,7 +217,9 @@ exports[`Render disabled ContactAccountSelection 1`] = `
     </button>
     <div
       class="label"
-    />
+    >
+      sulu_contact.contact_account_selection_label
+    </div>
   </div>
   <ul
     class="list"
@@ -244,6 +250,7 @@ exports[`Render loading ContactAccountSelection 1`] = `
     <div
       class="label"
     >
+      sulu_contact.contact_account_selection_label
       <div
         class="loader"
       >

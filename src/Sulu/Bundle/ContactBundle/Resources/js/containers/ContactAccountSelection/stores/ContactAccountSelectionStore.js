@@ -13,13 +13,19 @@ export default class ContactAccountSelectionStore {
     @computed get contactItems(): Array<Object> {
         return this.items
             .filter((item) => item.id.startsWith(ContactAccountSelectionStore.contactPrefix))
-            .map((item) => ({...item, id: parseInt(item.id.substring(ContactAccountSelectionStore.contactPrefix.length))}));
+            .map((item) => ({
+                ...item,
+                id: parseInt(item.id.substring(ContactAccountSelectionStore.contactPrefix.length)),
+            }));
     }
 
     @computed get accountItems(): Array<Object> {
         return this.items
             .filter((item) => item.id.startsWith(ContactAccountSelectionStore.accountPrefix))
-            .map((item) => ({...item, id: parseInt(item.id.substring(ContactAccountSelectionStore.contactPrefix.length))}));
+            .map((item) => ({
+                ...item,
+                id: parseInt(item.id.substring(ContactAccountSelectionStore.contactPrefix.length)),
+            }));
     }
 
     loadItems(itemIds: Array<string>) {
@@ -60,14 +66,18 @@ export default class ContactAccountSelectionStore {
 
             this.items = itemIds.reduce((items, id) => {
                 if (id.startsWith(ContactAccountSelectionStore.contactPrefix)) {
-                    const contact = contacts.find((contact) => contact.id == id.substring(ContactAccountSelectionStore.contactPrefix.length));
+                    const contact = contacts.find(
+                        (contact) => contact.id == id.substring(ContactAccountSelectionStore.contactPrefix.length)
+                    );
                     if (contact) {
                         items.push({...contact, id: ContactAccountSelectionStore.contactPrefix + contact.id});
                     }
                 }
 
                 if (id.startsWith(ContactAccountSelectionStore.accountPrefix)) {
-                    const account = accounts.find((acount) => acount.id == id.substring(ContactAccountSelectionStore.accountPrefix.length));
+                    const account = accounts.find(
+                        (acount) => acount.id == id.substring(ContactAccountSelectionStore.accountPrefix.length)
+                    );
                     if (account) {
                         items.push({...account, id: ContactAccountSelectionStore.accountPrefix + account.id});
                     }

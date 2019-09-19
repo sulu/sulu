@@ -97,12 +97,13 @@ class ContactAccountSelection extends React.Component<Props> {
     };
 
     render() {
-        const {disabled} = this.props;
+        const {disabled, value} = this.props;
 
         return (
             <Fragment>
                 <MultiItemSelection
                     disabled={disabled || false}
+                    label={translate('sulu_contact.contact_account_selection_label', {count: value ? value.length : 0})}
                     leftButton={{
                         icon: 'su-plus-circle',
                         onClick: this.handleAddButtonClick,
