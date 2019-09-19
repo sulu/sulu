@@ -124,6 +124,13 @@
         </service>
 
         <service
+            id="sulu_admin.serializer_handler.collection_representation"
+            class="Sulu\Bundle\AdminBundle\Serializer\Handler\CollectionRepresentationHandler"
+        >
+            <tag name="jms_serializer.subscribing_handler"/>
+        </service>
+
+        <service
             id="sulu_admin.collaboration_controller"
             class="Sulu\Bundle\AdminBundle\Controller\CollaborationController"
             public="true"
