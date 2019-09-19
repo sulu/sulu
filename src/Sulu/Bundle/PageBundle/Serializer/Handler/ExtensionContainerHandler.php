@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Serializer\Handler;
 
 use JMS\Serializer\Context;
-use JMS\Serializer\GraphNavigator;
+use JMS\Serializer\GraphNavigatorInterface;
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
 use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
@@ -27,13 +27,13 @@ class ExtensionContainerHandler implements SubscribingHandlerInterface
     {
         return [
             [
-                'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
+                'direction' => GraphNavigatorInterface::DIRECTION_SERIALIZATION,
                 'format' => 'json',
                 'type' => ExtensionContainer::class,
                 'method' => 'doSerialize',
             ],
             [
-                'direction' => GraphNavigator::DIRECTION_DESERIALIZATION,
+                'direction' => GraphNavigatorInterface::DIRECTION_DESERIALIZATION,
                 'format' => 'json',
                 'type' => ExtensionContainer::class,
                 'method' => 'doDeserialize',
@@ -55,7 +55,7 @@ class ExtensionContainerHandler implements SubscribingHandlerInterface
         array $type,
         Context $context
     ) {
-        return $context->accept($container->toArray());
+        return $context->getNavigator()->accept($container->toArray());
     }
 
     /**

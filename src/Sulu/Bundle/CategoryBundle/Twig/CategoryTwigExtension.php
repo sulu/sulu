@@ -12,10 +12,10 @@
 namespace Sulu\Bundle\CategoryBundle\Twig;
 
 use JMS\Serializer\SerializationContext;
-use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
+use Sulu\Component\Serializer\ArraySerializerInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -35,7 +35,7 @@ class CategoryTwigExtension extends AbstractExtension
     private $categoryRequestHandler;
 
     /**
-     * @var SerializerInterface
+     * @var ArraySerializerInterface
      */
     private $serializer;
 
@@ -47,7 +47,7 @@ class CategoryTwigExtension extends AbstractExtension
     public function __construct(
         CategoryManagerInterface $categoryManager,
         CategoryRequestHandlerInterface $categoryRequestHandler,
-        SerializerInterface $serializer,
+        ArraySerializerInterface $serializer,
         MemoizeInterface $memoizeCache
     ) {
         $this->categoryManager = $categoryManager;
@@ -89,7 +89,7 @@ class CategoryTwigExtension extends AbstractExtension
                 $context = SerializationContext::create();
                 $context->setSerializeNull(true);
 
-                return $this->serializer->serialize($categories, 'array', $context);
+                return $this->serializer->serialize($categories, $context);
             }
         );
     }

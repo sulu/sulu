@@ -24,6 +24,7 @@ class AdminControllerTest extends SuluTestCase
 
     public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
         $this->em = $this->getEntityManager();
         $collectionType = new LoadCollectionTypes();
@@ -32,7 +33,7 @@ class AdminControllerTest extends SuluTestCase
 
     public function testGetConfig()
     {
-        $client = $this->createAuthenticatedClient();
+        $client = $this->client;
         $client->request('GET', '/admin/config');
 
         $this->assertHttpStatusCode(200, $client->getResponse());

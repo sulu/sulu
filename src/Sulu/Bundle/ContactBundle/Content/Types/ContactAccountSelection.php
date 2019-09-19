@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\ContactBundle\Content\Types;
 
 use JMS\Serializer\SerializationContext;
-use JMS\Serializer\SerializerInterface;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\ContactBundle\Api\Contact;
@@ -25,6 +24,7 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
+use Sulu\Component\Serializer\ArraySerializerInterface;
 
 /**
  * ContentType for Contact.
@@ -46,7 +46,7 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
     private $accountManager;
 
     /**
-     * @var SerializerInterface
+     * @var ArraySerializerInterface
      */
     private $serializer;
 
@@ -73,7 +73,7 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
     public function __construct(
         ContactManagerInterface $contactManager,
         ContactManagerInterface $accountManager,
-        SerializerInterface $serializer,
+        ArraySerializerInterface $serializer,
         IdConverterInterface $converter,
         IndexComparatorInterface $comparator,
         ReferenceStoreInterface $accountReferenceStore,
@@ -179,7 +179,6 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
 
                 return $this->serializer->serialize(
                     $entity,
-                    'array',
                     SerializationContext::create()->setGroups($groups)->setSerializeNull(true)
                 );
             },

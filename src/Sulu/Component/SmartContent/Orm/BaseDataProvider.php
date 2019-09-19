@@ -12,9 +12,9 @@
 namespace Sulu\Component\SmartContent\Orm;
 
 use JMS\Serializer\SerializationContext;
-use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\Builder;
 use Sulu\Component\SmartContent\Configuration\BuilderInterface;
@@ -50,7 +50,7 @@ abstract class BaseDataProvider implements DataProviderInterface
     protected $configuration;
 
     /**
-     * @var SerializerInterface
+     * @var ArraySerializerInterface
      */
     private $serializer;
 
@@ -61,7 +61,7 @@ abstract class BaseDataProvider implements DataProviderInterface
 
     public function __construct(
         DataProviderRepositoryInterface $repository,
-        SerializerInterface $serializer,
+        ArraySerializerInterface $serializer,
         ReferenceStoreInterface $referenceStore = null
     ) {
         $this->repository = $repository;
@@ -193,7 +193,7 @@ abstract class BaseDataProvider implements DataProviderInterface
     {
         return array_map(
             function($item) {
-                $itemData = $this->serializer->serialize($item, 'array', $this->getSerializationContext());
+                $itemData = $this->serializer->serialize($item, $this->getSerializationContext());
                 $id = $this->getIdForItem($item);
 
                 if ($this->referenceStore) {

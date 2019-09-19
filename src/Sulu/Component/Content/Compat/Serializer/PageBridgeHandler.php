@@ -12,9 +12,9 @@
 namespace Sulu\Component\Content\Compat\Serializer;
 
 use JMS\Serializer\Context;
-use JMS\Serializer\GraphNavigator;
+use JMS\Serializer\GraphNavigatorInterface;
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
-use JMS\Serializer\VisitorInterface;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
@@ -54,13 +54,13 @@ class PageBridgeHandler implements SubscribingHandlerInterface
     {
         return [
             [
-                'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
+                'direction' => GraphNavigatorInterface::DIRECTION_SERIALIZATION,
                 'format' => 'json',
                 'type' => PageBridge::class,
                 'method' => 'doSerialize',
             ],
             [
-                'direction' => GraphNavigator::DIRECTION_DESERIALIZATION,
+                'direction' => GraphNavigatorInterface::DIRECTION_DESERIALIZATION,
                 'format' => 'json',
                 'type' => PageBridge::class,
                 'method' => 'doDeserialize',
@@ -69,18 +69,18 @@ class PageBridgeHandler implements SubscribingHandlerInterface
     }
 
     /**
-     * @param VisitorInterface $visitor
+     * @param SerializationVisitorInterface $visitor
      * @param PageBridge $bridge
      * @param array $type
      * @param Context $context
      */
     public function doSerialize(
-        VisitorInterface $visitor,
+        SerializationVisitorInterface $visitor,
         PageBridge $bridge,
         array $type,
         Context $context
     ) {
-        $context->accept(
+        $context->getNavigator()->accept(
             [
                 'document' => $bridge->getDocument(),
                 'documentClass' => get_class($bridge->getDocument()),
@@ -90,7 +90,7 @@ class PageBridgeHandler implements SubscribingHandlerInterface
     }
 
     /**
-     * @param VisitorInterface $visitor
+     * @param SerializationVisitorInterface $visitor
      * @param array $data
      * @param array $type
      * @param Context $context
@@ -98,12 +98,12 @@ class PageBridgeHandler implements SubscribingHandlerInterface
      * @return PageBridge
      */
     public function doDeserialize(
-        VisitorInterface $visitor,
+        SerializationVisitorInterface $visitor,
         array $data,
         array $type,
         Context $context
     ) {
-        $document = $context->accept($data['document'], ['name' => $data['documentClass']]);
+        $document = $context->getNavigator()->accept($data['document'], ['name' => $data['documentClass']]);
         $structure = $this->structureFactory->getStructureMetadata('page', $data['structure']);
         $bridge = new PageBridge($structure, $this->inspector, $this->propertyFactory, $document);
 

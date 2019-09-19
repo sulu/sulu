@@ -11,11 +11,12 @@
 
 namespace Sulu\Bundle\AdminBundle\Serializer\Handler;
 
-use JMS\Serializer\Context;
-use JMS\Serializer\GraphNavigator;
-use JMS\Serializer\Handler\SubscribingHandlerInterface;
-use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\EventDispatcher\Events;
+use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
+use JMS\Serializer\EventDispatcher\ObjectEvent;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\ListBuilder\RepresentationInterface;
 use Sulu\Component\SmartContent\Rest\ItemCollectionRepresentation;
@@ -25,40 +26,52 @@ use Sulu\Component\SmartContent\Rest\ItemCollectionRepresentation;
  *
  * This handler workaround some problems with serialize Representation in specific groups
  */
-class RepresentationHandler implements SubscribingHandlerInterface
+class RepresentationHandler implements EventSubscriberInterface
 {
-    public static function getSubscribingMethods()
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents()
     {
         return [
             [
-                'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
+                'event' => Events::POST_SERIALIZE,
                 'format' => 'json',
-                'type' => CollectionRepresentation::class,
-                'method' => 'serializeForJson',
+                'method' => 'onPostSerialize',
+                'class' => CollectionRepresentation::class,
             ],
             [
-                'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
+                'event' => Events::POST_SERIALIZE,
                 'format' => 'json',
-                'type' => PaginatedRepresentation::class,
-                'method' => 'serializeForJson',
+                'method' => 'onPostSerialize',
+                'class' => PaginatedRepresentation::class,
             ],
             [
-                'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
+                'event' => Events::POST_SERIALIZE,
                 'format' => 'json',
-                'type' => ItemCollectionRepresentation::class,
-                'method' => 'serializeForJson',
+                'method' => 'onPostSerialize',
+                'class' => ItemCollectionRepresentation::class,
+            ],
+            [
+                'event' => Events::POST_SERIALIZE,
+                'format' => 'json',
+                'method' => 'onPostSerialize',
+                'class' => ListRepresentation::class,
             ],
         ];
     }
 
-    public function serializeForJson(
-        JsonSerializationVisitor $visitor,
-        RepresentationInterface $representation,
-        array $type,
-        Context $context
-    ) {
-        $context->getNavigator()->accept($representation->toArray(), null, $context);
+    public function onPostSerialize(ObjectEvent $event)
+    {
+        /** @var RepresentationInterface $representation */
+        $representation = $event->getObject();
+        $context = $event->getContext();
+        $visitor = $event->getVisitor();
 
-        return $context;
+        $data = $representation->toArray();
+
+        foreach ($data as $key => $value) {
+            $visitor->visitProperty(new StaticPropertyMetadata(get_class($representation), $key, $value), $value);
+        }
     }
 }

@@ -13,7 +13,6 @@ namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Twig;
 
 use Doctrine\Common\Cache\ArrayCache;
 use JMS\Serializer\SerializationContext;
-use JMS\Serializer\SerializerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Api\Category as ApiCategory;
@@ -24,6 +23,7 @@ use Sulu\Component\Cache\Memoize;
 use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Category\Request\CategoryRequestHandler;
 use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
+use Sulu\Component\Serializer\ArraySerializerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -103,8 +103,8 @@ class CategoryTwigExtensionTest extends TestCase
         $manager->findChildrenByParentKey($parent)->shouldBeCalled()->willReturn($categoryEntities);
         $manager->getApiObjects($categoryEntities, $locale)->shouldBeCalled()->willReturn($categoryApis);
 
-        $serializer = $this->prophesize(SerializerInterface::class);
-        $serializer->serialize($categoryApis, 'array', Argument::type(SerializationContext::class))
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
+        $serializer->serialize($categoryApis, Argument::type(SerializationContext::class))
             ->shouldBeCalled()->willReturn($categoryData);
 
         $requestHandler = $this->prophesize(CategoryRequestHandlerInterface::class);
@@ -148,7 +148,7 @@ class CategoryTwigExtensionTest extends TestCase
         $request->get($parameter, '')->willReturn($string);
         $request->getPathInfo()->willReturn($url);
 
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $requestHandler = new CategoryRequestHandler($requestStack->reveal());
 
         $extension = new CategoryTwigExtension(
@@ -193,7 +193,7 @@ class CategoryTwigExtensionTest extends TestCase
         $request->get($parameter, '')->willReturn($string);
         $request->getPathInfo()->willReturn($url);
 
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $requestHandler = new CategoryRequestHandler($requestStack->reveal());
 
         $extension = new CategoryTwigExtension(
@@ -234,7 +234,7 @@ class CategoryTwigExtensionTest extends TestCase
         $request->get($parameter, '')->willReturn($string);
         $request->getPathInfo()->willReturn($url);
 
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $requestHandler = new CategoryRequestHandler($requestStack->reveal());
 
         $tagExtension = new CategoryTwigExtension(

@@ -98,7 +98,7 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
             $webspace->getKey()
         );
 
-        $portalInformation = $context->accept(array_values($portalInformation));
+        $portalInformation = $context->getNavigator()->accept(array_values($portalInformation));
         $visitor->addData('portalInformation', $portalInformation);
     }
 
@@ -112,7 +112,7 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
     private function appendUrls(Webspace $webspace, Context $context, JsonSerializationVisitor $visitor)
     {
         $urls = $this->webspaceUrlProvider->getUrls($webspace, $this->environment);
-        $urls = $context->accept($urls);
+        $urls = $context->getNavigator()->accept($urls);
         $visitor->addData('urls', $urls);
     }
 
@@ -133,7 +133,7 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
             );
         }
 
-        $customUrls = $context->accept($customUrls);
+        $customUrls = $context->getNavigator()->accept($customUrls);
         $visitor->addData('customUrls', $customUrls);
     }
 
@@ -150,8 +150,8 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
     {
         $customUrls = [];
         foreach ($environment->getCustomUrls() as $customUrl) {
-            $customUrl = $context->accept($customUrl);
-            $customUrl['locales'] = $context->accept($portal->getLocalizations());
+            $customUrl = $context->getNavigator()->accept($customUrl);
+            $customUrl['locales'] = $context->getNavigator()->accept($portal->getLocalizations());
             $customUrls[] = $customUrl;
         }
 
@@ -168,7 +168,7 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
             ];
         }
 
-        $navigations = $context->accept($navigations);
+        $navigations = $context->getNavigator()->accept($navigations);
         $visitor->addData('navigations', $navigations);
     }
 }

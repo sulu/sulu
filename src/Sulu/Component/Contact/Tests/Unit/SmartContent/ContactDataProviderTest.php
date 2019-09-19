@@ -19,6 +19,7 @@ use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Contact\SmartContent\ContactDataItem;
 use Sulu\Component\Contact\SmartContent\ContactDataProvider;
+use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
@@ -171,8 +172,8 @@ class ContactDataProviderTest extends TestCase
             ['fullContact', 'partialAccount', 'partialCategory']
         );
 
-        $serializer = $this->prophesize(SerializerInterface::class);
-        $serializer->serialize(Argument::type(Contact::class), 'array', $context)
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
+        $serializer->serialize(Argument::type(Contact::class), $context)
             ->will(
                 function($args) use ($serializeCallback) {
                     return $serializeCallback($args[0]);

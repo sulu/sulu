@@ -22,6 +22,7 @@ use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Media\SmartContent\MediaDataItem;
 use Sulu\Component\Media\SmartContent\MediaDataProvider;
+use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
@@ -33,7 +34,7 @@ class MediaDataProviderTest extends TestCase
 {
     public function testGetConfiguration()
     {
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $collectionManager = $this->prophesize(CollectionManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);
         $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
@@ -166,8 +167,8 @@ class MediaDataProviderTest extends TestCase
             return $this->serialize($media);
         };
 
-        $serializer = $this->prophesize(SerializerInterface::class);
-        $serializer->serialize(Argument::type(Media::class), 'array', Argument::type(SerializationContext::class))
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
+        $serializer->serialize(Argument::type(Media::class), Argument::type(SerializationContext::class))
             ->will(
                 function($args) use ($serializeCallback) {
                     return $serializeCallback($args[0]);

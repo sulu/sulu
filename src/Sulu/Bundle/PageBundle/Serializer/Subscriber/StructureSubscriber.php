@@ -15,7 +15,7 @@ use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\EventDispatcher\PreSerializeEvent;
-use JMS\Serializer\VisitorInterface;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Structure\ManagedStructure;
@@ -93,7 +93,7 @@ class StructureSubscriber implements EventSubscriberInterface
                 )
             );
 
-            if (false !== array_search('defaultPage', $context->attributes->get('groups')->getOrElse([]))) {
+            if (false !== array_search('defaultPage', $context->getAttribute('groups')->getOrElse([]))) {
                 $this->addStructureProperties($structureMetadata, $document, $visitor);
             }
         }
@@ -103,12 +103,12 @@ class StructureSubscriber implements EventSubscriberInterface
      * Adds the properties of the structure to the serialization.
      *
      * @param StructureBehavior $document
-     * @param VisitorInterface $visitor
+     * @param SerializationVisitorInterface $visitor
      */
     private function addStructureProperties(
         StructureMetadata $structureMetadata,
         StructureBehavior $document,
-        VisitorInterface $visitor
+        SerializationVisitorInterface $visitor
     ) {
         /** @var ManagedStructure $structure */
         $structure = $document->getStructure();

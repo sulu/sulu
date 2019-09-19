@@ -11,10 +11,10 @@
 
 namespace Sulu\Component\Media\SmartContent;
 
-use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\SmartContent\DatasourceItem;
 use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
@@ -38,7 +38,7 @@ class MediaDataProvider extends BaseDataProvider
     public function __construct(
         DataProviderRepositoryInterface $repository,
         CollectionManagerInterface $collectionManager,
-        SerializerInterface $serializer,
+        ArraySerializerInterface $serializer,
         RequestStack $requestStack,
         ReferenceStoreInterface $referenceStore
     ) {

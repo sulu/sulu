@@ -227,7 +227,7 @@
         <service id="sulu_media.smart_content.data_provider.media" class="Sulu\Component\Media\SmartContent\MediaDataProvider">
             <argument type="service" id="sulu_media.smart_content.data_provider.media.repository"/>
             <argument type="service" id="sulu_media.collection_manager"/>
-            <argument type="service" id="jms_serializer"/>
+            <argument type="service" id="sulu_core.array_serializer"/>
             <argument type="service" id="request_stack"/>
             <argument type="service" id="sulu_media.reference_store.media"/>
 

@@ -11,7 +11,11 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
+use JMS\Serializer\Annotation as Serializer;
+
 /**
+ * @Serializer\ExclusionPolicy("all")
+ *
  * This class represents a list for our common rest services.
  */
 class CollectionRepresentation implements RepresentationInterface
@@ -49,6 +53,9 @@ class CollectionRepresentation implements RepresentationInterface
         return $this->rel;
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return [

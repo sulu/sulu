@@ -81,7 +81,9 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
         $subject = $e->getSubject();
         $evaluator = $e->getFieldEvaluator();
 
-        if (false === $metadata->getClassMetadata()->reflection->isSubclassOf(StructureBehavior::class)) {
+        if (
+            !$e->getSubject() instanceof StructureBehavior
+            && StructureBehavior::class !== $metadata->getName()) {
             return;
         }
 

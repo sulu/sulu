@@ -126,6 +126,17 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             );
         }
 
+        if ($container->hasExtension('jms_serializer')) {
+            $container->prependExtensionConfig(
+                'jms_serializer',
+                [
+                    'property_naming' => [
+                        'id' => 'jms_serializer.identical_property_naming_strategy',
+                    ],
+                ]
+            );
+        }
+
         if ($container->hasExtension('doctrine')) {
             $container->prependExtensionConfig(
                 'doctrine',

@@ -12,9 +12,9 @@
 namespace Sulu\Bundle\TagBundle\Twig;
 
 use JMS\Serializer\SerializationContext;
-use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Cache\MemoizeInterface;
+use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -32,7 +32,7 @@ class TagTwigExtension extends AbstractExtension
     private $tagRequestHandler;
 
     /**
-     * @var SerializerInterface
+     * @var ArraySerializerInterface
      */
     private $serializer;
 
@@ -44,7 +44,7 @@ class TagTwigExtension extends AbstractExtension
     public function __construct(
         TagManagerInterface $tagManager,
         TagRequestHandlerInterface $tagRequestHandler,
-        SerializerInterface $serializer,
+        ArraySerializerInterface $serializer,
         MemoizeInterface $memoizeCache
     ) {
         $this->tagManager = $tagManager;
@@ -81,7 +81,7 @@ class TagTwigExtension extends AbstractExtension
                 $context->setSerializeNull(true);
                 $context->setGroups(['partialTag']);
 
-                return $this->serializer->serialize($tags, 'array', $context);
+                return $this->serializer->serialize($tags, $context);
             }
         );
     }

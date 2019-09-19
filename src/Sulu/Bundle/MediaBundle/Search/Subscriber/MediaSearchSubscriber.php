@@ -93,10 +93,9 @@ class MediaSearchSubscriber implements EventSubscriberInterface
     public function handlePreIndex(PreIndexEvent $event)
     {
         $metadata = $event->getMetadata();
-        $reflection = $metadata->getClassMetadata()->reflection;
 
         if (
-            false === $reflection->isSubclassOf(FileVersionMeta::class)
+            !$event->getSubject() instanceof FileVersionMeta
             && FileVersionMeta::class !== $metadata->getName()) {
             return;
         }

@@ -13,7 +13,9 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\EventListener;
 
 use JMS\Serializer\Context;
 use JMS\Serializer\EventDispatcher\Events;
+use JMS\Serializer\GraphNavigatorInterface;
 use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\PageBundle\EventListener\WebspaceSerializeEventSubscriber;
 use Sulu\Component\Localization\Localization;
@@ -63,10 +65,14 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
         ];
 
         $context = $this->prophesize(Context::class);
+        $graphNavigator = $this->prophesize(GraphNavigatorInterface::class);
         $visitor = $this->prophesize(JsonSerializationVisitor::class);
 
-        $context->accept(array_values($portalInformation))->willReturn('[{}, {}]');
-        $visitor->addData('portalInformation', '[{}, {}]')->shouldBeCalled();
+        $graphNavigator->accept(array_values($portalInformation))->willReturn('[{}, {}]');
+        $visitor->visitProperty(
+            new StaticPropertyMetadata(null, 'portalInformation', '[{}, {}]'),
+            null
+        );
 
         $webspaceManager->getPortalInformationsByWebspaceKey('prod', 'sulu_io')->willReturn($portalInformation);
 
@@ -97,7 +103,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
         $visitor = $this->prophesize(JsonSerializationVisitor::class);
 
         $serialzedData = '[{"url": "sulu.lo"}, {"url": "*.sulu.lo"}, {"url": "sulu.io"}, {"url": "*.sulu.io"}]';
-        $context->accept($urls)->willReturn($serialzedData);
+        $context->getNavigator()->accept($urls)->willReturn($serialzedData);
         $visitor->addData('urls', $serialzedData)->shouldBeCalled();
 
         $reflection = new \ReflectionClass(get_class($subscriber));
@@ -146,12 +152,12 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
         $visitor = $this->prophesize(JsonSerializationVisitor::class);
 
         $serialzedData = '[{"url": "sulu.lo", "locales": [{"localization":"de"}, {"localization":"en"}]}, {"url": "*.sulu.lo","locales": [{"localization":"de"}, {"localization":"en"}]}, {"url": "sulu.io","locales": [{"localization":"de"}, {"localization":"en"}]}, {"url": "*.sulu.io","locales": [{"localization":"de"}, {"localization":"en"}]}]';
-        $context->accept($customUrls[0])->willReturn(['url' => 'sulu.lo']);
-        $context->accept($customUrls[1])->willReturn(['url' => '*.sulu.lo']);
-        $context->accept($customUrls[2])->willReturn(['url' => 'sulu.io']);
-        $context->accept($customUrls[3])->willReturn(['url' => '*.sulu.io']);
-        $context->accept($locales)->willReturn([['localization' => 'de'], ['localization' => 'en']]);
-        $context->accept(
+        $context->getNavigator()->accept($customUrls[0])->willReturn(['url' => 'sulu.lo']);
+        $context->getNavigator()->accept($customUrls[1])->willReturn(['url' => '*.sulu.lo']);
+        $context->getNavigator()->accept($customUrls[2])->willReturn(['url' => 'sulu.io']);
+        $context->getNavigator()->accept($customUrls[3])->willReturn(['url' => '*.sulu.io']);
+        $context->getNavigator()->accept($locales)->willReturn([['localization' => 'de'], ['localization' => 'en']]);
+        $context->getNavigator()->accept(
             [
                 ['url' => 'sulu.lo', 'locales' => [['localization' => 'de'], ['localization' => 'en']]],
                 ['url' => '*.sulu.lo', 'locales' => [['localization' => 'de'], ['localization' => 'en']]],
@@ -159,7 +165,9 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
                 ['url' => '*.sulu.io', 'locales' => [['localization' => 'de'], ['localization' => 'en']]],
             ]
         )->willReturn($serialzedData);
-        $visitor->addData('customUrls', $serialzedData)->shouldBeCalled();
+        $visitor->visitProperty(
+            new StaticPropertyMetadata(null, 'customUrls', $serialzedData), null
+        )->shouldBeCalled();
 
         $reflection = new \ReflectionClass(get_class($subscriber));
         $method = $reflection->getMethod('appendCustomUrls');

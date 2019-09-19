@@ -11,6 +11,11 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
+use JMS\Serializer\Annotation as Serializer;
+
+/**
+ * @Serializer\ExclusionPolicy("all")
+ */
 class ListRepresentation extends PaginatedRepresentation implements RepresentationInterface
 {
     /**

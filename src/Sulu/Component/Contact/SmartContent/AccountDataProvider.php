@@ -11,8 +11,8 @@
 
 namespace Sulu\Component\Contact\SmartContent;
 
-use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
@@ -21,7 +21,7 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
  */
 class AccountDataProvider extends BaseDataProvider
 {
-    public function __construct(DataProviderRepositoryInterface $repository, SerializerInterface $serializer, ReferenceStoreInterface $referenceStore)
+    public function __construct(DataProviderRepositoryInterface $repository, ArraySerializerInterface $serializer, ReferenceStoreInterface $referenceStore)
     {
         parent::__construct($repository, $serializer, $referenceStore);
 
