@@ -52,7 +52,7 @@ class PaginatedRepresentation extends CollectionRepresentation
         $this->page = $page;
         $this->limit = $limit;
         $this->total = $total;
-        $this->pages = ($limit ? ceil($total / $limit) : 1);
+        $this->pages = ($limit ? ceil($total / $limit) : 1) ?: 1;
     }
 
     public function getPage(): int
