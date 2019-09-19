@@ -2,6 +2,7 @@
 import React from 'react';
 import {mount, render} from 'enzyme';
 import {MultiListOverlay} from 'sulu-admin-bundle/containers';
+import {arrayMove} from 'sulu-admin-bundle/utils';
 import ContactAccountSelectionStore from '../stores/ContactAccountSelectionStore';
 import ContactAccountSelection from '../ContactAccountSelection';
 
@@ -142,7 +143,9 @@ test('Remove contact if delete button is clicked', () => {
     // $FlowFixMe
     ContactAccountSelectionStore.mockImplementation(function() {
         this.loadItems = jest.fn();
-        this.remove = jest.fn();
+        this.remove = jest.fn((id) => {
+            this.items = this.items.filter((item) => item.id !== id);
+        });
         this.items = [
             {id: 'c2', fullName: 'Max Mustermann'},
             {id: 'a3', name: 'Sulu'},
@@ -199,4 +202,29 @@ test('Close account overlay if close button is clicked', () => {
     contactAccountSelection.find(MultiListOverlay).find('[listKey="accounts"]').prop('onClose')();
     contactAccountSelection.update();
     expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="accounts"]').prop('open')).toEqual(false);
+});
+
+test('Change order of items', () => {
+    // $FlowFixMe
+    ContactAccountSelectionStore.mockImplementation(function() {
+        this.loadItems = jest.fn();
+        this.move = jest.fn((oldItemIndex, newItemIndex) => {
+            this.items = arrayMove(this.items, oldItemIndex, newItemIndex);
+        });
+        this.items = [
+            {id: 'c2', fullName: 'Max Mustermann'},
+            {id: 'a3', name: 'Sulu'},
+            {id: 'c3', fullName: 'Erika Mustermann'},
+        ];
+    });
+
+    const changeSpy = jest.fn();
+
+    const contactAccountSelection = mount(
+        <ContactAccountSelection onChange={changeSpy} value={['c2', 'a3', 'c3']} />
+    );
+
+    contactAccountSelection.find('MultiItemSelection').prop('onItemsSorted')(2, 1);
+
+    expect(changeSpy).toBeCalledWith(['c2', 'c3', 'a3']);
 });

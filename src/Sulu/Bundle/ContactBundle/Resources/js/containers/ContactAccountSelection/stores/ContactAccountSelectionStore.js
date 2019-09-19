@@ -1,6 +1,7 @@
 // @flow
 import {action, computed, observable} from 'mobx';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
+import {arrayMove} from 'sulu-admin-bundle/utils';
 
 // TODO extract into separate file?
 const CONTACT_PREFIX = 'c';
@@ -81,6 +82,10 @@ export default class ContactAccountSelectionStore {
 
     @action remove(id: string) {
         this.items = this.items.filter((item) => item.id !== id);
+    }
+
+    @action move(oldItemIndex: number, newItemIndex: number) {
+        this.items = arrayMove(this.items, oldItemIndex, newItemIndex);
     }
 
     @action setLoading(loading: boolean) {

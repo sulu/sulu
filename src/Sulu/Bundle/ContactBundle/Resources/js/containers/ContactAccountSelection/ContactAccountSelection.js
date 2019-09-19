@@ -1,7 +1,7 @@
 // @flow
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
-import {action, observable, toJS} from 'mobx';
+import {action, computed, observable, toJS} from 'mobx';
 import equals from 'fast-deep-equal';
 import {MultiItemSelection} from 'sulu-admin-bundle/components';
 import {MultiListOverlay} from 'sulu-admin-bundle/containers';
@@ -42,13 +42,17 @@ class ContactAccountSelection extends React.Component<Props> {
         const {value} = this.props;
 
         const newIds = toJS(value);
-        const loadedIds = toJS(this.store.items.map((item) => item.id));
+        const loadedIds = this.loadedIds;
 
         newIds.sort();
         loadedIds.sort();
         if (!equals(newIds, loadedIds) && !this.store.loading) {
             this.store.loadItems(value);
         }
+    }
+
+    @computed get loadedIds(): Array<string> {
+        return toJS(this.store.items.map((item) => item.id));
     }
 
     @action handleAddButtonClick = (type: ?string) => {
@@ -80,11 +84,20 @@ class ContactAccountSelection extends React.Component<Props> {
         this.handleConfirm(accounts, ACCOUNT_PREFIX);
     };
 
-    handleRemove = (id: string) => {
-        const {onChange, value} = this.props;
+    callChange() {
+        const {onChange} = this.props;
 
+        onChange(this.loadedIds);
+    }
+
+    handleRemove = (id: string) => {
         this.store.remove(id);
-        onChange([...value.filter((itemId) => itemId !== id)]);
+        this.callChange();
+    };
+
+    handleSorted = (oldItemIndex: number, newItemIndex: number) => {
+        this.store.move(oldItemIndex, newItemIndex);
+        this.callChange();
     };
 
     render() {
@@ -103,6 +116,7 @@ class ContactAccountSelection extends React.Component<Props> {
                         ],
                     }}
                     loading={this.store.loading}
+                    onItemsSorted={this.handleSorted}
                 >
                     {this.store.items.map((item, index) => (
                         <MultiItemSelection.Item
