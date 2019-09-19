@@ -13,14 +13,17 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 class DropdownToolbarAction extends ToolbarAction
 {
-    public function __construct(string $label, string $icon, array $actions)
+    /**
+     * @param ToolbarAction[] $toolbarActions
+     */
+    public function __construct(string $label, string $icon, array $toolbarActions)
     {
         parent::__construct(
             'sulu_admin.dropdown',
             [
                 'label' => $label,
                 'icon' => $icon,
-                'actions' => $actions,
+                'toolbarActions' => $toolbarActions,
             ]
         );
     }

@@ -89,7 +89,7 @@ test('Return item config with an option for every action in array and skip undef
     const dropdownToolbarAction = createDropdownToolbarAction({
         icon: 'su-edit',
         label: 'edit',
-        actions: [
+        toolbarActions: [
             {type: 'sulu_admin.delete', options: {}},
             {type: 'sulu_admin.copy', options: {}},
             {type: 'sulu_admin.nothing', options: {}},
@@ -152,7 +152,7 @@ test('Return item config with options passed to child ToolbarActions', () => {
     const dropdownToolbarAction = createDropdownToolbarAction({
         icon: 'su-edit',
         label: 'edit',
-        actions: [
+        toolbarActions: [
             {type: 'sulu_admin.delete', options: {label: 'Delete'}},
             {type: 'sulu_admin.copy', options: {title: 'Copy'}},
         ],
@@ -190,7 +190,7 @@ test('Return no item config if all child ToolbarActions return nothing', () => {
     const dropdownToolbarAction = createDropdownToolbarAction({
         icon: 'su-edit',
         label: 'edit',
-        actions: [
+        toolbarActions: [
             {type: 'sulu_admin.delete', options: {label: 'Delete'}},
             {type: 'sulu_admin.copy', options: {title: 'Copy'}},
         ],
@@ -217,7 +217,7 @@ test('Throw error if child ToolbarAction is a dropdown', () => {
     const dropdownToolbarAction = createDropdownToolbarAction({
         icon: 'su-edit',
         label: 'edit',
-        actions: [
+        toolbarActions: [
             {type: 'sulu_admin.delete', options: {}},
         ],
     });
@@ -241,7 +241,7 @@ test('Throw error if child ToolbarAction has no onClick handler', () => {
     const dropdownToolbarAction = createDropdownToolbarAction({
         icon: 'su-edit',
         label: 'edit',
-        actions: [
+        toolbarActions: [
             {type: 'sulu_admin.delete', options: {}},
         ],
     });
@@ -264,7 +264,7 @@ test('Throw error if child Toolbaraction has no label', () => {
     const dropdownToolbarAction = createDropdownToolbarAction({
         icon: 'su-edit',
         label: 'edit',
-        actions: [
+        toolbarActions: [
             {type: 'sulu_admin.delete', options: {}},
         ],
     });
@@ -296,7 +296,7 @@ test('Return JSX for all child ToolbarActions', () => {
     const dropdownToolbarAction = createDropdownToolbarAction({
         icon: 'su-edit',
         label: 'edit',
-        actions: [
+        toolbarActions: [
             {type: 'sulu_admin.delete', options: {}},
             {type: 'sulu_admin.copy', options: {}},
             {type: 'sulu_admin.nothing', options: {}},
@@ -306,10 +306,10 @@ test('Return JSX for all child ToolbarActions', () => {
     expect(render(dropdownToolbarAction.getNode())).toMatchSnapshot();
 });
 
-test('Throw error if actions are neither an object nor an array', () => {
+test('Throw error if toolbarActions are neither an object nor an array', () => {
     expect(() => createDropdownToolbarAction({
         icon: 'su-edit',
         label: 'edit',
-        actions: false,
-    })).toThrow(/actions/);
+        toolbarActions: false,
+    })).toThrow(/toolbarActions/);
 });

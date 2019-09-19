@@ -25,13 +25,13 @@ export default class DropdownToolbarAction extends AbstractFormToolbarAction {
             options
         );
 
-        const {actions} = this.options;
+        const {toolbarActions} = this.options;
 
-        if (!Array.isArray(actions)) {
-            throw new Error('The passed "actions" option must be of type object or array');
+        if (!Array.isArray(toolbarActions)) {
+            throw new Error('The passed "toolbarActions" option must be of type object or array');
         }
 
-        this.toolbarActions = actions
+        this.toolbarActions = toolbarActions
             .map((action) => {
                 if (action === null || typeof action !== 'object') {
                     throw new Error('The passed entries in the "actions" option must be objects');
