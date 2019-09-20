@@ -11,37 +11,27 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
-use JMS\Serializer\Annotation as Serializer;
-
 /**
  * This class represents a list for our common rest services.
  */
-class PaginatedRepresentation extends CollectionRepresentation
+class PaginatedRepresentation extends CollectionRepresentation implements RepresentationInterface
 {
     /**
-     * @Serializer\Expose()
-     *
      * @var int
      */
     protected $page;
 
     /**
-     * @Serializer\Expose()
-     *
      * @var int
      */
     protected $limit;
 
     /**
-     * @Serializer\Expose()
-     *
      * @var int
      */
     protected $total;
 
     /**
-     * @Serializer\Expose()
-     *
      * @var int
      */
     protected $pages;
@@ -73,5 +63,16 @@ class PaginatedRepresentation extends CollectionRepresentation
     public function getPages(): int
     {
         return $this->pages;
+    }
+
+    public function toArray(): array
+    {
+        $data = parent::toArray();
+        $data['limit'] = $this->getLimit();
+        $data['total'] = $this->getTotal();
+        $data['page'] = $this->getPage();
+        $data['pages'] = $this->getPages();
+
+        return $data;
     }
 }

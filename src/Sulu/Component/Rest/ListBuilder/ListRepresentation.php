@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
-class ListRepresentation extends PaginatedRepresentation
+class ListRepresentation extends PaginatedRepresentation implements RepresentationInterface
 {
     /**
      * @var string

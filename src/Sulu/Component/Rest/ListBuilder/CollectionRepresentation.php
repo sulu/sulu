@@ -11,25 +11,17 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
-use JMS\Serializer\Annotation as Serializer;
-
 /**
  * This class represents a list for our common rest services.
- *
- * @Serializer\XmlRoot("collection")
  */
-class CollectionRepresentation
+class CollectionRepresentation implements RepresentationInterface
 {
     /**
-     * @Serializer\Exclude
-     *
-     * @var mixed
+     * @var mixed[]
      */
     protected $data;
 
     /**
-     * @Serializer\Exclude
-     *
      * @var string
      */
     protected $rel;
@@ -45,7 +37,7 @@ class CollectionRepresentation
     }
 
     /**
-     * @return mixed
+     * @return mixed[]
      */
     public function getData(): array
     {
@@ -57,16 +49,12 @@ class CollectionRepresentation
         return $this->rel;
     }
 
-    /**
-     * @Serializer\VirtualProperty()
-     * @Serializer\SerializedName("_embedded")
-     *
-     * @return mixed[]
-     */
-    public function _embedded(): array
+    public function toArray(): array
     {
         return [
-            $this->rel => $this->data,
+            '_embedded' => [
+                $this->getRel() => $this->getData(),
+            ],
         ];
     }
 }

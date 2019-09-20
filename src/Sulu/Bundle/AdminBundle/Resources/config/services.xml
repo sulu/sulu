@@ -124,8 +124,8 @@
         </service>
 
         <service
-            id="sulu_admin.serializer_handler.collection_representation"
-            class="Sulu\Bundle\AdminBundle\Serializer\Handler\CollectionRepresentationHandler"
+            id="sulu_admin.representation_handler"
+            class="Sulu\Bundle\AdminBundle\Serializer\Handler\RepresentationHandler"
         >
             <tag name="jms_serializer.subscribing_handler"/>
         </service>
