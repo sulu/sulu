@@ -13,8 +13,8 @@ namespace Sulu\Bundle\PageBundle\Controller;
 
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
+use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authorization\PermissionTypes;

@@ -2,6 +2,29 @@
 
 ## dev-develop
 
+When upgrading also have a look at the changes in the
+[sulu skeleton](https://github.com/sulu/sulu-minimal/compare/2.0.0-RC2...2.0.0).
+
+### Hateoas Library and Bundle Removed
+
+The Hateoas Bundle is not longer a requirement of sulu and can be removed from `bundles.php` in your project.
+
+```diff
+-    Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle::class => ['all' => true],
+```
+
+Two new classes where added to replace the Hateoas:
+
+```php
+// before
+use Hateoas\Representation\CollectionRepresentation;
+use Hateoas\Representation\PaginatedRepresentation;
+
+// after
+use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
+use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
+```
+
 ### CollaborationBundle
 
 The `CollaborationBundle` has been integrated in the `AdminBundle`, because it was a non-optional dependency of it.

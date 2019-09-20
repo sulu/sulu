@@ -11,18 +11,9 @@
 
 namespace Sulu\Bundle\CategoryBundle\Api;
 
-use Hateoas\Configuration\Annotation\Embedded;
-use Hateoas\Configuration\Annotation\Relation;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 
-/**
- * @Relation(
- *     name = "collections",
- *     embedded = @Embedded(
- *         "expr(object.getCategories())",
- *         xmlElementName = "categories"
- *     )
- * )
- */
 class RootCategory
 {
     /**
@@ -49,5 +40,20 @@ class RootCategory
     public function getCategories()
     {
         return $this->categories;
+    }
+
+    /**
+     * @internal
+     *
+     * @VirtualProperty
+     * @SerializedName("_embedded")
+     *
+     * @return array
+     */
+    public function getEmbedded(): array
+    {
+        return [
+            'collections' => $this->categories,
+        ];
     }
 }

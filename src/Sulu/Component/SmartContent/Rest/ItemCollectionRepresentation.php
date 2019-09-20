@@ -11,15 +11,11 @@
 
 namespace Sulu\Component\SmartContent\Rest;
 
-use Hateoas\Representation\CollectionRepresentation;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\SmartContent\ItemInterface;
 
 /**
  * Provides a collection of items and the datasource.
- *
- * @ExclusionPolicy("all")
  */
 class ItemCollectionRepresentation extends CollectionRepresentation
 {
@@ -45,8 +41,6 @@ class ItemCollectionRepresentation extends CollectionRepresentation
      * Returns datasource of smart content item collection.
      *
      * @return ItemInterface
-     *
-     * @VirtualProperty()
      */
     public function getDatasource()
     {
@@ -57,11 +51,18 @@ class ItemCollectionRepresentation extends CollectionRepresentation
      * Returns amount of items.
      *
      * @return int
-     *
-     * @VirtualProperty()
      */
     public function getTotal()
     {
         return $this->total;
+    }
+
+    public function toArray(): array
+    {
+        $data = parent::toArray();
+        $data['total'] = $this->getTotal();
+        $data['datasource'] = $this->getDatasource();
+
+        return $data;
     }
 }

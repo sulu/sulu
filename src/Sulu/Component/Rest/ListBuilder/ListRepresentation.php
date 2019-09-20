@@ -11,70 +11,17 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
-use Hateoas\Configuration\Annotation\Relation;
-use Hateoas\Configuration\Annotation\Route;
-use Hateoas\Representation\CollectionRepresentation;
-use Hateoas\Representation\PaginatedRepresentation;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
-use JMS\Serializer\Annotation\XmlAttribute;
-
-/**
- * This class represents a list for our common rest services.
- *
- * @ExclusionPolicy("all")
- * @Relation(
- *      "filter",
- *      href = @Route(
- *          "expr(object.getRoute())",
- *          parameters = "expr({ fields: '{fieldsList}' } + object.getParameters())",
- *          absolute = "expr(object.isAbsolute())",
- *      )
- * )
- * @Relation(
- *      "find",
- *      href = @Route(
- *          "expr(object.getRoute())",
- *          parameters = "expr({ search: '{searchString}', searchFields: '{searchFields}', page: 1 } + object.getParameters())",
- *          absolute = "expr(object.isAbsolute())",
- *      )
- * )
- * @Relation(
- *      "pagination",
- *      href = @Route(
- *          "expr(object.getRoute())",
- *          parameters = "expr({ page: '{page}', limit: '{limit}'} + object.getParameters())",
- *          absolute = "expr(object.isAbsolute())",
- *      )
- * )
- * @Relation(
- *      "sortable",
- *      href = @Route(
- *          "expr(object.getRoute())",
- *          parameters = "expr({ sortBy: '{sortBy}', sortOrder: '{sortOrder}' } + object.getParameters())",
- *          absolute = "expr(object.isAbsolute())",
- *      )
- * )
- */
-class ListRepresentation extends PaginatedRepresentation
+class ListRepresentation extends PaginatedRepresentation implements RepresentationInterface
 {
-    /**
-     * @Expose
-     * @XmlAttribute
-     *
-     * @var int
-     */
-    protected $total;
-
-    /**
-     * @var mixed[]
-     */
-    protected $data;
-
     /**
      * @var string
      */
-    protected $rel;
+    private $route;
+
+    /**
+     * @var array[]
+     */
+    private $parameters;
 
     /**
      * @param mixed $data The data which will be presented
@@ -87,47 +34,9 @@ class ListRepresentation extends PaginatedRepresentation
      */
     public function __construct($data, $rel, $route, $parameters, $page, $limit, $total)
     {
-        parent::__construct(
-            new CollectionRepresentation($data, $rel),
-            $route,
-            $parameters,
-            $page,
-            $limit,
-            ($limit ? ceil($total / $limit) : 1)
-        );
+        $this->route = $route;
+        $this->parameters = $parameters;
 
-        $this->total = $total;
-        $this->data = $data;
-        $this->rel = $rel;
-    }
-
-    /**
-     * Returns total number of elements.
-     *
-     * @return int
-     */
-    public function getTotal()
-    {
-        return $this->total;
-    }
-
-    /**
-     * Returns data.
-     *
-     * @return mixed[]
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
-     * Returns relation name.
-     *
-     * @return string
-     */
-    public function getRel()
-    {
-        return $this->rel;
+        parent::__construct($data, $rel, (int) $page, (int) $limit, (int) $total);
     }
 }

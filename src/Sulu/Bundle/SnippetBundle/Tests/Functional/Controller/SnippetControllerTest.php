@@ -67,9 +67,6 @@ class SnippetControllerTest extends SuluTestCase
 
         $result = json_decode($response->getContent(), true);
         $this->assertHttpStatusCode(200, $response);
-        $this->assertLinks([
-            'self', 'delete', 'update', 'new',
-        ], $result);
 
         $this->assertEquals($expected['title'], $result['title']);
         $this->assertEquals($expected['description'], $result['description']);
@@ -115,9 +112,6 @@ class SnippetControllerTest extends SuluTestCase
 
         $result = json_decode($response->getContent(), true);
         $this->assertHttpStatusCode(200, $response);
-        $this->assertLinks([
-            'self', 'first', 'last', 'filter', 'find', 'pagination', 'sortable',
-        ], $result);
 
         $this->assertCount(2, $result['_embedded']['snippets']);
 
@@ -275,9 +269,6 @@ class SnippetControllerTest extends SuluTestCase
 
         $result = json_decode($response->getContent(), true);
         $this->assertHttpStatusCode(200, $response);
-        $this->assertLinks([
-            'self', 'delete', 'update', 'new',
-        ], $result);
 
         $this->assertEquals($data['title'], $result['title']);
         $this->assertEquals($params['locale'], reset($result['contentLocales']));
@@ -363,9 +354,6 @@ class SnippetControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
-        $this->assertLinks([
-            'self', 'delete', 'update', 'new',
-        ], $result);
 
         foreach ($data as $key => $value) {
             $this->assertEquals($value, $result[$key]);
@@ -551,20 +539,5 @@ class SnippetControllerTest extends SuluTestCase
 
         $this->documentManager->flush();
         $this->documentManager->clear();
-    }
-
-    private function assertLinks(array $links, array $response)
-    {
-        $this->assertArrayHasKey('_links', $response);
-        $responseLinks = $response['_links'];
-
-        $diff = array_diff($links, array_keys($responseLinks));
-
-        if ($diff) {
-            $this->fail(sprintf(
-                'Failed asserting that the links "%s" were present in response. Got "%s"',
-                implode('", "', $diff), implode('", "', array_keys($responseLinks))
-            ));
-        }
     }
 }

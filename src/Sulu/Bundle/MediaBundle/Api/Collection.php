@@ -11,9 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Api;
 
-use Hateoas\Configuration\Annotation\Embedded;
-use Hateoas\Configuration\Annotation\Relation;
-use Hateoas\Configuration\Annotation\Route;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
@@ -29,64 +26,6 @@ use Sulu\Component\Security\Authentication\UserInterface;
  * The Collection RestObject is the api entity for the CollectionController.
  *
  * @ExclusionPolicy("all")
- * FIXME Remove limit = 9999 after create cget without pagination
- * @Relation(
- *      "all",
- *      href = @Route(
- *          "sulu_media.cget_media",
- *          parameters = { "collection" = "expr(object.getId())", "limit" = 9999, "locale" = "expr(object.getLocale())" }
- *      )
- * )
- * @Relation(
- *      "filterByTypes",
- *      href = @Route(
- *          "sulu_media.cget_media",
- *          parameters = {
- *              "collection" = "expr(object.getId())",
- *              "types" = "{types}",
- *              "locale" = "expr(object.getLocale())"
- *          }
- *      )
- * )
- * @Relation(
- *      "self",
- *      href = @Route(
- *          "sulu_media.get_collection",
- *          parameters = { "id" = "expr(object.getId())", "locale" = "expr(object.getLocale())" }
- *      )
- * )
- * @Relation(
- *      "admin",
- *      href ="expr('media/collections/edit:'~object.getId()~'/files')"
- * )
- * @Relation(
- *      "children",
- *      href = @Route(
- *          "sulu_media.get_collection",
- *          parameters = { "id" = "expr(object.getId())", "depth" = 1, "sortBy": "title", "locale" = "expr(object.getLocale())" }
- *      )
- * )
- * @Relation(
- *     name = "collections",
- *     embedded = @Embedded(
- *         "expr(object.getChildren())",
- *         xmlElementName = "collections"
- *     )
- * )
- * @Relation(
- *     name = "parent",
- *     embedded = @Embedded(
- *         "expr(object.getParent())",
- *         xmlElementName = "parent"
- *     )
- * )
- * @Relation(
- *     name = "breadcrumb",
- *     embedded = @Embedded(
- *         "expr(object.getBreadcrumb())",
- *         xmlElementName = "breadcrumb"
- *     )
- * )
  */
 class Collection extends ApiWrapper
 {
@@ -175,6 +114,23 @@ class Collection extends ApiWrapper
     }
 
     /**
+     * @internal
+     *
+     * @VirtualProperty
+     * @SerializedName("_embedded")
+     *
+     * @return array
+     */
+    public function getEmbedded(): array
+    {
+        return [
+            'breadcrumb' => $this->breadcrumb,
+            'parent' => $this->parent,
+            'collections' => $this->children,
+        ];
+    }
+
+    /**
      * Indicates if sub collections exists.
      *
      * @VirtualProperty
@@ -184,11 +140,7 @@ class Collection extends ApiWrapper
      */
     public function getHasChildren()
     {
-        if (null !== ($children = $this->getEntity()->getChildren())) {
-            return $children->count() > 0;
-        }
-
-        return false;
+        return $this->subCollectionCount > 0;
     }
 
     /**

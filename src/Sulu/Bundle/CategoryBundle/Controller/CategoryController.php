@@ -12,12 +12,12 @@
 namespace Sulu\Bundle\CategoryBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\CategoryBundle\Api\RootCategory;
-use Sulu\Bundle\CategoryBundle\Category\CategoryListRepresentation;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
@@ -252,7 +252,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
             ];
         }
 
-        return new CategoryListRepresentation(
+        return new ListRepresentation(
             $categories,
             self::$entityKey,
             'sulu_category.get_categories',

@@ -13,14 +13,13 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Hateoas\Configuration\Exclusion;
-use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
@@ -211,12 +210,7 @@ class ContactController extends RestController implements ClassResourceInterface
                 $apiContacts[] = $this->getContactManager()->getContact($contact, $locale);
             }
 
-            $exclusion = null;
-            if (count($serializationGroups) > 0) {
-                $exclusion = new Exclusion($serializationGroups);
-            }
-
-            $list = new CollectionRepresentation($apiContacts, self::$entityKey, null, $exclusion, $exclusion);
+            $list = new CollectionRepresentation($apiContacts, self::$entityKey);
         }
 
         $view = $this->view($list, 200);

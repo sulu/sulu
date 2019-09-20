@@ -11,30 +11,15 @@
 
 namespace Sulu\Bundle\MediaBundle\Api;
 
-use Hateoas\Configuration\Annotation\Embedded;
-use Hateoas\Configuration\Annotation\Relation;
-use Hateoas\Configuration\Annotation\Route;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
  * The Collection Root RestObject is the api entity for the CollectionController.
  *
  * @ExclusionPolicy("all")
- * @Relation(
- *      "children",
- *      href = @Route(
- *          "sulu_media.get_collections",
- *          parameters = { "include-root" = "true" }
- *      )
- * )
- * @Relation(
- *     name = "collections",
- *     embedded = @Embedded(
- *         "expr(object.getCollections())",
- *         xmlElementName = "collections"
- *     )
- * )
  */
 class RootCollection
 {
@@ -100,5 +85,20 @@ class RootCollection
     public function getCollections()
     {
         return $this->collections;
+    }
+
+    /**
+     * @internal
+     *
+     * @VirtualProperty
+     * @SerializedName("_embedded")
+     *
+     * @return array
+     */
+    public function getEmbedded(): array
+    {
+        return [
+            'collections' => $this->collections,
+        ];
     }
 }

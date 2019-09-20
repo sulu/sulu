@@ -165,10 +165,6 @@ class SearchControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
-        unset($result['_links']);
-
-        $this->assertArrayHasKey('time', $result);
-        unset($result['time']);
 
         $this->assertEquals($expectedResult, $result);
     }

@@ -13,7 +13,6 @@ namespace Sulu\Bundle\PageBundle\Controller;
 
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Hateoas\Representation\CollectionRepresentation;
 use PHPCR\ItemNotFoundException;
 use PHPCR\PropertyInterface;
 use Sulu\Bundle\PageBundle\Repository\NodeRepositoryInterface;
@@ -30,6 +29,7 @@ use Sulu\Component\Rest\Exception\MissingParameterChoiceException;
 use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\ParameterDataTypeException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authentication\UserInterface;

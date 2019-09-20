@@ -11,9 +11,6 @@
 
 namespace Sulu\Component\Content\Repository;
 
-use Hateoas\Configuration\Annotation\Embedded;
-use Hateoas\Configuration\Annotation\Relation;
-use Hateoas\Configuration\Annotation\Route;
 use Jackalope\Query\Row;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
@@ -26,17 +23,6 @@ use Sulu\Exception\FeatureNotImplementedException;
  * Container class for content data.
  *
  * @ExclusionPolicy("all")
- * @Relation(
- *      "children",
- *      href = @Route(
- *          "sulu_page.get_pages",
- *          parameters = {"parent" = "expr(object.getId())", "language" = "expr(object.getLocale())", "webspace" = "expr(object.getWebspaceKey())", "fields" = "expr(object.getMapping())"}
- *      )
- * )
- * @Relation(
- *      "pages",
- *      embedded = @Embedded("expr(object.getChildren())")
- * )
  */
 class Content implements \ArrayAccess
 {
@@ -435,5 +421,20 @@ class Content implements \ArrayAccess
     public function offsetUnset($offset)
     {
         throw new FeatureNotImplementedException();
+    }
+
+    /**
+     * @internal
+     *
+     * @VirtualProperty
+     * @SerializedName("_embedded")
+     *
+     * @return array
+     */
+    public function getEmbedded(): array
+    {
+        return [
+            'pages' => $this->getChildren(),
+        ];
     }
 }

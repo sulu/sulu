@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\PageBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\PageBundle\Teaser\TeaserManagerInterface;
+use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

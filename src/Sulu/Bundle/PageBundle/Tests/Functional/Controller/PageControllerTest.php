@@ -1648,7 +1648,6 @@ class PageControllerTest extends SuluTestCase
         $this->assertFalse($data['publishedState']);
         $this->assertEquals(['main', 'footer'], $data['navContexts']);
         $this->assertFalse($data['hasSub']);
-        $this->assertArrayHasKey('_links', $data);
 
         $this->client->request('GET', '/api/pages/' . $data['id'] . '?webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(200, $this->client->getResponse());

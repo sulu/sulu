@@ -14,15 +14,14 @@ namespace Sulu\Bundle\SearchBundle\Controller;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use Hateoas\Representation\CollectionRepresentation;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
-use Sulu\Bundle\SearchBundle\Rest\SearchResultRepresentation;
 use Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfiguration;
 use Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfigurationProviderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
+use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -122,22 +121,12 @@ class SearchController
         $pager->setMaxPerPage($limit);
         $pager->setCurrentPage($page);
 
-        $representation = new SearchResultRepresentation(
-            new CollectionRepresentation($pager->getCurrentPageResults(), 'result'),
-            'sulu_search_search',
-            [
-                'locale' => $locale,
-                'query' => $query,
-                'index' => $index,
-            ],
+        $representation = new PaginatedRepresentation(
+            $pager->getCurrentPageResults(),
+            'result',
             (int) $page,
             (int) $limit,
-            $pager->getNbPages(),
-            'page',
-            'limit',
-            false,
-            $adapter->getNbResults(),
-            number_format($time, 8)
+            $adapter->getNbResults()
         );
 
         $view = View::create($representation);

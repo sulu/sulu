@@ -13,7 +13,6 @@ namespace Sulu\Bundle\TagBundle\Controller;
 
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\TagBundle\Controller\Exception\ConstraintViolationException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
@@ -21,6 +20,7 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
