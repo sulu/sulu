@@ -18,7 +18,8 @@ class LocationAdmin extends Admin
     public function getConfig(): ?array
     {
         return [
-            'provider' => 'leaflet'
+            'provider' => 'leaflet',
+            'providerOptions' => [],
         ];
     }
 

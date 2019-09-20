@@ -6,6 +6,8 @@
     "dependencies": {
         "classnames": "^2.2.5",
         "fast-deep-equal": "^1.0.0",
+        "leaflet": "^1.5.1",
+        "react-leaflet": "^2.4.0",
         "url-search-params-polyfill": "^2.0.0"
     },
     "devDependencies": {

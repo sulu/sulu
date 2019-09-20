@@ -25,6 +25,7 @@ import Menu from './Menu';
 import MultiItemSelection from './MultiItemSelection';
 import MultiSelect from './MultiSelect';
 import Navigation from './Navigation';
+import Number from './Number';
 import Overlay from './Overlay';
 import Phone from './Phone';
 import Popover from './Popover';
@@ -62,6 +63,7 @@ export {
     MultiItemSelection,
     MultiSelect,
     Navigation,
+    Number,
     Overlay,
     Phone,
     Popover,

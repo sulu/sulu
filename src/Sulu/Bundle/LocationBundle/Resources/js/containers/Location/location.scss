@@ -1,0 +1,45 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$mapBorderColor: $alto;
+$labelTextColor: $scorpion;
+$contentBackgroundColor: $alto;
+$buttonTextColor: $scorpion;
+$buttonBackgroundColor: $alto;
+$buttonMargin: 2px;
+
+.location-header {
+    display: flex;
+    justify-content: space-between;
+    height: 40px;
+    overflow: hidden;
+    border-radius: 3px;
+    margin-bottom: 10px;
+}
+
+.location-header-button {
+    width: 40px;
+    color: $buttonTextColor;
+    background-color: $buttonBackgroundColor;
+    border: 0;
+    cursor: pointer;
+    font-size: 14px;
+    margin-right: $buttonMargin;
+}
+
+.location-header-label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+    height: 100%;
+    background-color: $contentBackgroundColor;
+    font-size: 12px;
+    color: $labelTextColor;
+    padding: 0 20px;
+}
+
+.location-map {
+    border-radius: 3px;
+    border: 1px solid $mapBorderColor;
+    height: 200px;
+}
