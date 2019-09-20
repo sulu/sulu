@@ -9,6 +9,7 @@ import 'sulu-audience-targeting-bundle';
 import 'sulu-category-bundle';
 import 'sulu-contact-bundle';
 import 'sulu-custom-url-bundle';
+import 'sulu-location-bundle';
 import 'sulu-media-bundle';
 import 'sulu-page-bundle';
 import 'sulu-preview-bundle';
