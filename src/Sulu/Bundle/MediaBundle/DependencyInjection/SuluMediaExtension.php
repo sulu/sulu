@@ -297,9 +297,22 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
     private function configureStorage(array $config, ContainerBuilder $container, LoaderInterface $loader)
     {
         $storage = $config['storage'];
+        if (method_exists($container, 'resolveEnvPlaceholders')) {
+            $storage = $container->resolveEnvPlaceholders($storage, true);
+        }
         $container->setParameter('sulu_media.media.storage', $storage);
-        foreach ($config['storages'][$storage] as $key => $value) {
-            $container->setParameter('sulu_media.media.storage.' . $storage . '.' . $key, $value);
+
+        foreach ($config['storages'] as $storageKey => $storageConfig) {
+            foreach ($storageConfig as $key => $value) {
+                if ($storageKey === $storage) {
+                    $container->setParameter('sulu_media.media.storage.' . $storageKey . '.' . $key, $value);
+                } else {
+                    if (method_exists($container, 'resolveEnvPlaceholders')) {
+                        // Resolve unused ENV Variables of other Adapter
+                        $container->resolveEnvPlaceholders($value, true);
+                    }
+                }
+            }
         }
 
         $loader->load('services_storage_' . $storage . '.xml');
