@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) Sulu GmbH
+ * (c) MASSIVE ART WebServices GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -11,23 +11,21 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Media\Storage;
 
-use Sulu\Bundle\MediaBundle\Media\Storage\S3Storage;
+use Sulu\Bundle\MediaBundle\Media\Storage\GoogleCloudStorage;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
-use Sulu\Bundle\MediaBundle\Tests\Application\S3Kernel;
+use Sulu\Bundle\MediaBundle\Tests\Application\GoogleCloudKernel;
 use Sulu\Bundle\MediaBundle\Tests\Functional\Mock\S3AdapterMock;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class S3StorageTest extends SuluTestCase
+class GoogleCloudStorageTest extends SuluTestCase
 {
-    protected static $class = S3Kernel::class;
-
     public function testSave(): void
     {
-        $kernel = self::bootKernel();
+        $kernel = $this->getKernel([], GoogleCloudKernel::class);
 
-        $adapter = $kernel->getContainer()->get('sulu_media.storage.s3.adapter');
-        $storage = $kernel->getContainer()->get('sulu_media.storage.s3');
-        $this->assertInstanceOf(S3Storage::class, $storage);
+        $adapter = $kernel->getContainer()->get('sulu_media.storage.google_cloud.adapter');
+        $storage = $kernel->getContainer()->get('sulu_media.storage.google_cloud');
+        $this->assertInstanceOf(GoogleCloudStorage::class, $storage);
 
         $result = $storage->save($this->getImagePath(), 'sulu.jpg', []);
 
@@ -39,12 +37,12 @@ class S3StorageTest extends SuluTestCase
 
     public function testLoad(): void
     {
-        $kernel = self::bootKernel();
+        $kernel = $this->getKernel([], GoogleCloudKernel::class);
 
         /** @var S3AdapterMock $adapter */
-        $adapter = $kernel->getContainer()->get('sulu_media.storage.s3.adapter');
-        $storage = $kernel->getContainer()->get('sulu_media.storage.s3');
-        $this->assertInstanceOf(S3Storage::class, $storage);
+        $adapter = $kernel->getContainer()->get('sulu_media.storage.google_cloud.adapter');
+        $storage = $kernel->getContainer()->get('sulu_media.storage.google_cloud');
+        $this->assertInstanceOf(GoogleCloudStorage::class, $storage);
 
         $file = file_get_contents($this->getImagePath());
 
@@ -58,12 +56,12 @@ class S3StorageTest extends SuluTestCase
 
     public function testRemove(): void
     {
-        $kernel = self::bootKernel();
+        $kernel = $this->getKernel([], GoogleCloudKernel::class);
 
         /** @var S3AdapterMock $adapter */
-        $adapter = $kernel->getContainer()->get('sulu_media.storage.s3.adapter');
-        $storage = $kernel->getContainer()->get('sulu_media.storage.s3');
-        $this->assertInstanceOf(S3Storage::class, $storage);
+        $adapter = $kernel->getContainer()->get('sulu_media.storage.google_cloud.adapter');
+        $storage = $kernel->getContainer()->get('sulu_media.storage.google_cloud');
+        $this->assertInstanceOf(GoogleCloudStorage::class, $storage);
 
         $file = file_get_contents($this->getImagePath());
 
@@ -77,24 +75,24 @@ class S3StorageTest extends SuluTestCase
 
     public function testGetPath(): void
     {
-        $kernel = self::bootKernel();
+        $kernel = $this->getKernel([], GoogleCloudKernel::class);
 
-        $storage = $kernel->getContainer()->get('sulu_media.storage.s3');
-        $this->assertInstanceOf(S3Storage::class, $storage);
+        $storage = $kernel->getContainer()->get('sulu_media.storage.google_cloud');
+        $this->assertInstanceOf(GoogleCloudStorage::class, $storage);
 
         $result = $storage->getPath(['segment' => '02', 'fileName' => 'sulu.jpg']);
 
-        $this->assertStringContainsString('eu-west-1', $result);
-        $this->assertStringContainsString('test-bucket', $result);
-        $this->assertStringContainsString('02/sulu.jpg', $result);
+        $this->assertContains('eu-west-1', $result);
+        $this->assertContains('test-bucket', $result);
+        $this->assertContains('02/sulu.jpg', $result);
     }
 
     public function testGetType(): void
     {
-        $kernel = self::bootKernel();
+        $kernel = $this->getKernel([], GoogleCloudKernel::class);
 
-        $storage = $kernel->getContainer()->get('sulu_media.storage.s3');
-        $this->assertInstanceOf(S3Storage::class, $storage);
+        $storage = $kernel->getContainer()->get('sulu_media.storage.google_cloud');
+        $this->assertInstanceOf(GoogleCloudStorage::class, $storage);
 
         $result = $storage->getType(['segment' => '02', 'fileName' => 'sulu.jpg']);
 

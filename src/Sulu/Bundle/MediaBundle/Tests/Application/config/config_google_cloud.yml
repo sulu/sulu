@@ -1,0 +1,6 @@
+sulu_media:
+    storage: google_cloud
+    storages:
+        google_cloud:
+            key_file_path: '%kernel.root_dir%/../Fixtures/google_key.json'
+            bucket_name: test-bucket

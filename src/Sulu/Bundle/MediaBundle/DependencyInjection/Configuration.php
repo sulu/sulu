@@ -19,6 +19,8 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
+    const STORAGE_LOCAL = 'local';
+
     const STORAGE_GOOGLE_CLOUD = 'google_cloud';
 
     const STORAGE_S3 = 's3';
@@ -188,12 +190,12 @@ class Configuration implements ConfigurationInterface
 
     private function addStorageSection(ArrayNodeDefinition $node)
     {
-        $storages = ['local'];
+        $storages = [self::STORAGE_LOCAL];
         $storagesNode = $node->children()
             ->arrayNode('storages')
                 ->addDefaultsIfNotSet()
                 ->children()
-                    ->arrayNode('local')
+                    ->arrayNode(self::STORAGE_LOCAL)
                         ->addDefaultsIfNotSet()
                         ->children()
                             ->scalarNode('path')->defaultValue('%kernel.project_dir%/var/uploads/media')->end()
@@ -236,7 +238,7 @@ class Configuration implements ConfigurationInterface
         }
 
         $node->children()
-                ->enumNode('storage')->values($storages)->defaultValue('local')->end()
+                ->enumNode('storage')->values($storages)->defaultValue(self::STORAGE_LOCAL)->end()
             ->end();
     }
 
