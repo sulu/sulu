@@ -32,10 +32,10 @@ class GeolocatorController
      */
     public function queryAction(Request $request): JsonResponse
     {
-        $query = $request->get('query', '');
+        $query = $request->get('search', '');
 
         $res = $this->geolocator->locate($query);
 
-        return new JsonResponse(['_embedded' => ['locations' => $res->toArray()]]);
+        return new JsonResponse(['_embedded' => ['geolocator_locations' => $res->toArray()]]);
     }
 }

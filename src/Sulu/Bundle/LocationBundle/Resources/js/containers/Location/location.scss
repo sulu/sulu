@@ -4,7 +4,9 @@ $mapBorderColor: $alto;
 $labelTextColor: $scorpion;
 $contentBackgroundColor: $alto;
 $buttonTextColor: $scorpion;
+$buttonTextColorActive: $white;
 $buttonBackgroundColor: $alto;
+$buttonBackgroundColorActive: $shakespeare;
 $buttonMargin: 2px;
 
 .location-header {
@@ -24,6 +26,11 @@ $buttonMargin: 2px;
     cursor: pointer;
     font-size: 14px;
     margin-right: $buttonMargin;
+
+    &:hover {
+        color: $buttonTextColorActive;
+        background-color: $buttonBackgroundColorActive;
+    }
 }
 
 .location-header-label {
@@ -42,4 +49,7 @@ $buttonMargin: 2px;
     border-radius: 3px;
     border: 1px solid $mapBorderColor;
     height: 200px;
+
+    /* unfortunately leaflet sets a z-index of 400 to its map, that would be higher than the z-index of our overlays */
+    z-index: 0;
 }

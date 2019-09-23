@@ -1,0 +1,13 @@
+{
+    "sulu_location.latitude": "Länge",
+    "sulu_location.longitude": "Breite",
+    "sulu_location.zoom": "Zoom",
+    "sulu_location.select_location": "Position auswählen",
+    "sulu_location.additional_information": "Zusätzliche Adressinformationen",
+    "sulu_location.title": "Titel",
+    "sulu_location.street": "Straße",
+    "sulu_location.number": "Nummer",
+    "sulu_location.code": "Postleitzahl",
+    "sulu_location.town": "Stadt",
+    "sulu_location.country": "Land"
+}

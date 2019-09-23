@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, observable, computed} from 'mobx';
 import {CroppedText} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
-import {Map, Marker, Popup, TileLayer} from 'react-leaflet';
+import {Map, Marker, TileLayer, Tooltip} from 'react-leaflet';
 import Icon from 'sulu-admin-bundle/components/Icon/Icon';
 import type {Location as LocationValue} from '../../types';
 import locationStyles from './location.scss';
@@ -33,15 +33,29 @@ class Location extends React.Component<Props> {
         this.overlayOpen = false;
     };
 
+    @computed get label() {
+        const {value} = this.props;
+
+        if (value) {
+            return translate('sulu_location.latitude') + ': ' + value.lat + ', '
+                + translate('sulu_location.longitude') + ': ' + value.long + ', '
+                + translate('sulu_location.zoom') + ': ' + value.zoom;
+        }
+
+        return translate('sulu_location.select_location');
+    }
+
+    @computed get hasAdditionalInformation() {
+        const {code, country, number, street, title, town} = this.props.value;
+
+        return code || country || number || street || title || town;
+    }
+
     render() {
         const {
             disabled,
             value,
         } = this.props;
-
-        const label = !value
-            ? translate('sulu_admin.select_location')
-            : Object.values(value).filter((v) => v).join(' / ');
 
         return (
             <div className={locationStyles.locationContainer}>
@@ -55,7 +69,7 @@ class Location extends React.Component<Props> {
                         <Icon name="su-map-pin" />
                     </button>
                     <div className={locationStyles.locationHeaderLabel}>
-                        <CroppedText>{label}</CroppedText>
+                        <CroppedText>{this.label}</CroppedText>
                     </div>
                 </div>
                 {value &&
@@ -71,13 +85,16 @@ class Location extends React.Component<Props> {
                         zoom={value.zoom}
                         zoomControl={false}
                     >
-                        <TileLayer
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-                        <Marker position={[value.lat, value.long]}>
-                            <Popup minWidth={90}>
-                                <span>hello</span>
-                            </Popup>
+                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                        <Marker interactive={false} position={[value.lat, value.long]}>
+                            {this.hasAdditionalInformation &&
+                                <Tooltip permanent={true}>
+                                    <div>{value.title}</div>
+                                    <div>{value.street} {value.number}</div>
+                                    <div>{value.code} {value.town}</div>
+                                    <div>{value.country}</div>
+                                </Tooltip>
+                            }
                         </Marker>
                     </Map>
                 }

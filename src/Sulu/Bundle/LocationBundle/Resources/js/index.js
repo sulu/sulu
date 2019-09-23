@@ -10,9 +10,9 @@ import {Location} from './containers/Form';
 import leafletStyles from 'leaflet/dist/leaflet.css';
 
 // fix marker image urls of leaflet to display markers on maps
-// https://stackoverflow.com/a/51222271
 // https://github.com/PaulLeCam/react-leaflet/issues/453
-L.Marker.prototype.options.icon = L.icon({
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
     iconUrl: leafletMarkerIcon,
     shadowUrl: leafletMarkerShadow,
 });

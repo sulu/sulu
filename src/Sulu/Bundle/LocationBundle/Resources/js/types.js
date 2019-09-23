@@ -10,5 +10,4 @@ export type Location = {|
     title: ?string,
     town: ?string,
     zoom: number,
-    // mapProvider: string,
 |};

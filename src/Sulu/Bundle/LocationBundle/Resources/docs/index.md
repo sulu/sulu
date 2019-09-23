@@ -39,7 +39,7 @@ Have a look at the [OpenStreeMap Wiki](http://wiki.openstreetmap.org/wiki/Nomina
 Configuration:
 
 - **endpoint**: The endpoint to use (eg. `http://open.mapquestapi.com/nominatim/v1/search.php)
-- **api_key**: Authentication key for the configured Nominatim endpoint. (Create the api-key in the [Developer portal of Mapquest](https://developer.mapquest.com/user/me/apps) if you are using the Mqpquest provider).`
+- **api_key**: Authentication key for the configured Nominatim endpoint. (Create the api-key in the [Developer portal of Mapquest](https://developer.mapquest.com/user/me/apps) if you are using the Mapquest provider).`
 
 #### Goolge Maps
 
