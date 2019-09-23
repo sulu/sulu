@@ -101,6 +101,7 @@ abstract class SuluKernel extends Kernel
         $this->import($routes, $confDir, '/{routes}/*');
         $this->import($routes, $confDir, '/{routes}/' . $this->environment . '/*');
         $this->import($routes, $confDir, '/{routes}');
+        $this->import($routes, $confDir, '/{routes}_' . $this->context);
     }
 
     protected function load(LoaderInterface $loader, $confDir, $pattern)
