@@ -14,7 +14,15 @@ import ResourceFormStore from '../../stores/ResourceFormStore';
 jest.mock('../../../List', () => jest.fn(() => null));
 
 jest.mock('../../../List/stores/ListStore',
-    () => function(resourceKey, listKey, userSettingsKey, observableOptions = {}, options, initialSelectionIds) {
+    () => function(
+        resourceKey,
+        listKey,
+        userSettingsKey,
+        observableOptions = {},
+        options,
+        metadataOptions,
+        initialSelectionIds
+    ) {
         this.resourceKey = resourceKey;
         this.listKey = listKey;
         this.userSettingsKey = userSettingsKey;
@@ -37,11 +45,13 @@ jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.resourceKey = formStore.resourceKey;
     this.locale = formStore.locale;
 }));
+
 jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.id = resourceStore.id;
     this.resourceKey = resourceStore.resourceKey;
     this.locale = resourceStore.locale;
 }));
+
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, options) {
     this.id = id;
     this.resourceKey = resourceKey;
