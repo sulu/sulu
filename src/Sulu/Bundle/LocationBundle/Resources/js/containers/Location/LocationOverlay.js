@@ -2,9 +2,8 @@
 import React from 'react';
 import {action, observable, reaction} from 'mobx';
 import {observer} from 'mobx-react';
-import {Form, Input, Number} from 'sulu-admin-bundle/components';
-import Overlay from 'sulu-admin-bundle/components/Overlay';
-import {translate} from 'sulu-admin-bundle/utils/Translator';
+import {Form, Input, Number, Overlay} from 'sulu-admin-bundle/components';
+import {translate} from 'sulu-admin-bundle/utils';
 import {Map, Marker, TileLayer} from 'react-leaflet';
 import {SingleAutoComplete} from 'sulu-admin-bundle/containers';
 import type {Location as LocationValue} from '../../types';
@@ -61,15 +60,16 @@ class LocationOverlay extends React.Component<Props> {
     }
 
     handleConfirm = () => {
+        const {onConfirm} = this.props;
         const {title, street, number, code, town, country, markerLat, markerLong, mapZoom} = this;
 
         if (!markerLat || !markerLong) {
-            this.props.onConfirm(null);
+            onConfirm(null);
 
             return;
         }
 
-        this.props.onConfirm({
+        onConfirm({
             title,
             street,
             number,

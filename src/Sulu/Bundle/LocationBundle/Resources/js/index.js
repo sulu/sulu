@@ -6,7 +6,7 @@ import leafletMarkerShadow from 'leaflet/dist/images/marker-shadow.png';
 import {Location} from './containers/Form';
 
 // leaflet requires that its stylesheet is embedded somewhere into the build
-// eslint-disable-next-line
+// eslint-disable-next-line no-unused-vars, import/order
 import leafletStyles from 'leaflet/dist/leaflet.css';
 
 // fix marker image urls of leaflet to display markers on maps

@@ -1,13 +1,13 @@
 @import 'sulu-admin-bundle/containers/Application/colors.scss';
 
-$mapBorderColor: $alto;
-$labelTextColor: $scorpion;
-$contentBackgroundColor: $alto;
-$buttonTextColor: $scorpion;
-$buttonTextColorActive: $white;
-$buttonBackgroundColor: $alto;
-$buttonBackgroundColorActive: $shakespeare;
-$buttonMargin: 2px;
+$locationMapBorderColor: $alto;
+$locationLabelTextColor: $scorpion;
+$locationContentBackgroundColor: $alto;
+$locationButtonTextColor: $scorpion;
+$locationButtonTextColorActive: $white;
+$locationButtonBackgroundColor: $alto;
+$locationButtonBackgroundColorActive: $shakespeare;
+$locationButtonMargin: 2px;
 
 .location-container {
     &.disabled {
@@ -27,16 +27,16 @@ $buttonMargin: 2px;
 
 .location-header-button {
     width: 40px;
-    color: $buttonTextColor;
-    background-color: $buttonBackgroundColor;
+    color: $locationButtonTextColor;
+    background-color: $locationButtonBackgroundColor;
     border: 0;
     cursor: pointer;
     font-size: 14px;
-    margin-right: $buttonMargin;
+    margin-right: $locationButtonMargin;
 
     &:hover {
-        color: $buttonTextColorActive;
-        background-color: $buttonBackgroundColorActive;
+        color: $locationButtonTextColorActive;
+        background-color: $locationButtonBackgroundColorActive;
     }
 }
 
@@ -46,15 +46,15 @@ $buttonMargin: 2px;
     justify-content: center;
     flex-grow: 1;
     height: 100%;
-    background-color: $contentBackgroundColor;
+    background-color: $locationContentBackgroundColor;
     font-size: 12px;
-    color: $labelTextColor;
+    color: $locationLabelTextColor;
     padding: 0 20px;
 }
 
 .location-map {
     border-radius: 3px;
-    border: 1px solid $mapBorderColor;
+    border: 1px solid $locationMapBorderColor;
     height: 200px;
 
     /* unfortunately leaflet sets a z-index of 400 to its map, that would be higher than the z-index of our overlays */

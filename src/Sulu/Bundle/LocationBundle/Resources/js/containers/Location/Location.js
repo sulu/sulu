@@ -2,10 +2,9 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import {action, observable, computed} from 'mobx';
-import {CroppedText} from 'sulu-admin-bundle/components';
-import {translate} from 'sulu-admin-bundle/utils/Translator';
+import {CroppedText, Icon} from 'sulu-admin-bundle/components';
+import {translate} from 'sulu-admin-bundle/utils';
 import {Map, Marker, TileLayer, Tooltip} from 'react-leaflet';
-import Icon from 'sulu-admin-bundle/components/Icon/Icon';
 import classNames from 'classnames';
 import type {Location as LocationValue} from '../../types';
 import locationStyles from './location.scss';
