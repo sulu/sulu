@@ -31,7 +31,7 @@ interface PreviewFormRouteBuilderInterface extends RouteBuilderInterface
     public function setTabPriority(int $tabPriority): self;
 
     /**
-     * @param string[] $toolbarActions
+     * @param ToolbarAction[] $toolbarActions
      */
     public function addToolbarActions(array $toolbarActions): self;
 
