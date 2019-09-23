@@ -51,8 +51,9 @@ class LocationOverlay extends React.Component<Props> {
                 this.number = this.props.initialValue ? this.props.initialValue.number : null;
                 this.code = this.props.initialValue ? this.props.initialValue.code : null;
                 this.town = this.props.initialValue ? this.props.initialValue.town : null;
+                this.country = this.props.initialValue ? this.props.initialValue.country : null;
             }
-        });
+        }, {fireImmediately: true});
     }
 
     componentWillUnmount() {
@@ -83,6 +84,10 @@ class LocationOverlay extends React.Component<Props> {
     };
 
     @action handleAutoCompleteChange = (data: Object) => {
+        if (!data) {
+            return;
+        }
+
         this.mapLat = data.latitude || 0;
         this.mapLong = data.longitude || 0;
 
@@ -107,8 +112,10 @@ class LocationOverlay extends React.Component<Props> {
     };
 
     @action handleMarkerDragEnd = () => {
-        this.mapLong = this.markerLong || 0;
-        this.mapLat = this.markerLat || 0;
+        if (this.markerLong && this.markerLat) {
+            this.mapLong = this.markerLong;
+            this.mapLat = this.markerLat;
+        }
     };
 
     @action handleResetLocation = () => {
@@ -124,6 +131,7 @@ class LocationOverlay extends React.Component<Props> {
         this.number = null;
         this.code = null;
         this.town = null;
+        this.country = null;
     };
 
     @action handleTitleChange = (title: ?string) => {

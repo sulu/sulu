@@ -129,6 +129,33 @@ test('Component should not render a tooltip if given value has no additional inf
     expect(location.find(Tooltip).exists()).toEqual(false);
 });
 
+test('Should pass correct props to the LocationOverlay', () => {
+    const locationData = {
+        code: 'code-123',
+        country: undefined,
+        lat: 22,
+        long: 33,
+        number: undefined,
+        street: 'street-123',
+        title: 'title-123',
+        town: 'street-123',
+        zoom: 5,
+    };
+
+    const location = mount(
+        <Location
+            disabled={true}
+            onChange={jest.fn()}
+            value={locationData}
+        />
+    );
+
+    expect(location.find(LocationOverlay).props()).toEqual(expect.objectContaining({
+        open: false,
+        initialValue: locationData,
+    }));
+});
+
 test('Should open a LocationOverlay when the edit button is clicked', () => {
     const location = mount(
         <Location
