@@ -11,6 +11,7 @@
             <argument type="service" id="router"/>
             <argument>%sulu_preview.delay%</argument>
             <argument>%sulu_preview.mode%</argument>
+            <argument>%kernel.bundles%</argument>
 
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
@@ -49,5 +50,4 @@
             <argument type="service" id="profiler" on-invalid="null"/>
         </service>
     </services>
-
 </container>

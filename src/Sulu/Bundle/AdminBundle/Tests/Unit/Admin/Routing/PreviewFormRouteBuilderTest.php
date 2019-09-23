@@ -51,6 +51,7 @@ class PreviewFormRouteBuilderTest extends TestCase
                 'sulu_category.list',
                 false,
                 ['test1' => 'value1'],
+                true,
             ],
             [
                 'sulu_tag.edit_form',
@@ -65,6 +66,7 @@ class PreviewFormRouteBuilderTest extends TestCase
                 null,
                 true,
                 null,
+                false,
             ],
         ];
     }
@@ -84,7 +86,8 @@ class PreviewFormRouteBuilderTest extends TestCase
         ?string $editRoute,
         ?string $backRoute,
         ?bool $titleVisible,
-        ?array $apiOptions
+        ?array $apiOptions,
+        bool $disablePreviewWebspaceChooser
     ) {
         $routeBuilder = (new PreviewFormRouteBuilder($name, $path))
             ->setResourceKey($resourceKey)
@@ -122,6 +125,10 @@ class PreviewFormRouteBuilderTest extends TestCase
             $routeBuilder->setApiOptions($apiOptions);
         }
 
+        if ($disablePreviewWebspaceChooser) {
+            $routeBuilder->disablePreviewWebspaceChooser();
+        }
+
         $route = $routeBuilder->getRoute();
 
         $this->assertSame($name, $route->getName());
@@ -138,6 +145,12 @@ class PreviewFormRouteBuilderTest extends TestCase
         $this->assertSame($apiOptions, $route->getOption('apiOptions'));
         $this->assertNull($route->getParent());
         $this->assertSame('sulu_admin.preview_form', $route->getView());
+
+        if ($disablePreviewWebspaceChooser) {
+            $this->assertFalse($route->getOption('previewWebspaceChooser'));
+        } else {
+            $this->assertNull($route->getOption('previewWebspaceChooser'));
+        }
     }
 
     public function testBuildFormWithToolbarActions()

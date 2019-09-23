@@ -59,6 +59,7 @@ export default class Selection extends React.Component<Props> {
                 USER_SETTINGS_KEY,
                 {locale: this.locale, page: observable.box()},
                 {},
+                undefined,
                 value
             );
 

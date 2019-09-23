@@ -66,7 +66,7 @@ class PreviewController
         $token = $this->getRequestParameter($request, 'token', true);
         $webspace = $this->getRequestParameter($request, 'webspace', true, null);
         $locale = $this->getRequestParameter($request, 'locale', true, null);
-        $targetGroup = $this->getRequestParameter($request, 'target-group', false, null);
+        $targetGroup = $this->getRequestParameter($request, 'targetGroup', false, null);
 
         $content = $this->preview->render($token, $webspace, $locale, $targetGroup);
 
@@ -80,7 +80,7 @@ class PreviewController
         $token = $this->getRequestParameter($request, 'token', true);
         $data = $this->getRequestParameter($request, 'data', true);
         $webspace = $this->getRequestParameter($request, 'webspace', true);
-        $targetGroup = $this->getRequestParameter($request, 'target-group', false, null);
+        $targetGroup = $this->getRequestParameter($request, 'targetGroup', false, null);
 
         $content = $this->preview->update($token, $webspace, $data, $targetGroup);
 
@@ -92,7 +92,7 @@ class PreviewController
         $token = $this->getRequestParameter($request, 'token', true);
         $context = $this->getRequestParameter($request, 'context', true);
         $webspace = $this->getRequestParameter($request, 'webspace', true);
-        $targetGroup = $this->getRequestParameter($request, 'target-group', false, null);
+        $targetGroup = $this->getRequestParameter($request, 'targetGroup', false, null);
 
         $content = $this->preview->updateContext($token, $webspace, $context, $targetGroup);
 

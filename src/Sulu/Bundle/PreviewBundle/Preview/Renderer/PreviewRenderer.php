@@ -159,6 +159,20 @@ class PreviewRenderer implements PreviewRendererInterface
         $attributes = $this->routeDefaultsProvider->getByEntity(get_class($object), $id, $locale, $object);
         $attributes['preview'] = true;
         $attributes['partial'] = $partial;
+        $attributes['_sulu'] = new RequestAttributes(
+            [
+                'webspace' => $webspace,
+                'locale' => $locale,
+                'localization' => $localization,
+                'portal' => $portalInformation->getPortal(),
+                'portalUrl' => $portalInformation->getUrl(),
+                'resourceLocatorPrefix' => $portalInformation->getPrefix(),
+                'getParameters' => $query,
+                'postParameters' => $request,
+                'portalInformation' => $portalInformation,
+                'scheme' => $currentRequest->getScheme(),
+            ]
+        );
 
         // get server parameters
         $server = $this->createServerAttributes($portalInformation, $currentRequest);
@@ -171,21 +185,7 @@ class PreviewRenderer implements PreviewRendererInterface
         }
 
         // TODO Remove this event in 2.0 as it is not longer needed to set the correct theme.
-        $this->eventDispatcher->dispatch(Events::PRE_RENDER, new PreRenderEvent(
-            new RequestAttributes(
-                [
-                    'webspace' => $webspace,
-                    'locale' => $locale,
-                    'localization' => $localization,
-                    'portal' => $portalInformation->getPortal(),
-                    'portalUrl' => $portalInformation->getUrl(),
-                    'resourceLocatorPrefix' => $portalInformation->getPrefix(),
-                    'getParameters' => $query,
-                    'postParameters' => $request,
-                    'portalInformation' => $portalInformation,
-                ]
-            )
-        ));
+        $this->eventDispatcher->dispatch(Events::PRE_RENDER, new PreRenderEvent($attributes['_sulu']));
 
         try {
             $response = $this->handle($request);

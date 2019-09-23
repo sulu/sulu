@@ -1,377 +1,710 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Dont react or update preview when data is changed during formstore is loading 1`] = `
-<Preview
-  formStore={
-    mockConstructor {
-      "data": Object {
-        "title": "New Test",
-      },
-      "loading": true,
-      "type": "default",
-    }
-  }
-  router={
-    mockConstructor {
-      "attributes": Object {
-        "locale": "de",
-      },
-      "history": Object {},
-    }
-  }
->
-  <button
-    onClick={[Function]}
-  >
-    Start
-  </button>
-</Preview>
-`;
-
-exports[`Dont react or update preview when data is changed during preview-store is starting 1`] = `
-<Preview
-  formStore={
-    mockConstructor {
-      "data": Object {
-        "title": "New Test",
-      },
-      "loading": false,
-      "type": "default",
-    }
-  }
-  router={
-    mockConstructor {
-      "attributes": Object {
-        "locale": "de",
-      },
-      "history": Object {},
-    }
-  }
->
-  <button
-    onClick={[Function]}
-  >
-    Start
-  </button>
-</Preview>
-`;
-
-exports[`React and update preview in external window when data is changed 1`] = `
-<Preview
-  formStore={
-    mockConstructor {
-      "data": Object {
-        "title": "New Test",
-      },
-      "loading": false,
-      "type": "default",
-    }
-  }
-  router={
-    mockConstructor {
-      "attributes": Object {
-        "locale": "de",
-      },
-      "history": Object {},
-    }
-  }
-/>
-`;
-
-exports[`React and update preview when data is changed 1`] = `
-<Preview
-  formStore={
-    mockConstructor {
-      "data": Object {
-        "title": "New Test",
-      },
-      "loading": false,
-      "type": "default",
-    }
-  }
-  router={
-    mockConstructor {
-      "attributes": Object {
-        "locale": "de",
-      },
-      "history": Object {},
-    }
-  }
->
-  <button
-    onClick={[Function]}
-  >
-    Start
-  </button>
-</Preview>
-`;
-
-exports[`Render button to start preview 1`] = `
-<button>
-  Start
-</button>
-`;
-
-exports[`Render correct preview 1`] = `
 <div
-  className="container auto"
+  class="container auto"
 >
   <div
-    className="previewContainer"
+    class="previewContainer"
   >
     <div
-      className="iframeContainer"
+      class="iframeContainer"
     >
       <iframe
-        className="iframe"
+        class="iframe"
         src="/render"
       />
     </div>
   </div>
-  <Toolbar
-    skin="dark"
+  <nav
+    class="toolbar dark"
   >
-    <Controls
-      grow={false}
-      skin="light"
+    <div
+      class="controls dark"
     >
-      <Button
-        active={false}
-        disabled={false}
-        hasOptions={false}
-        icon="su-arrow-right"
-        onClick={[Function]}
-        primary={false}
-        showText={true}
-        success={false}
-      />
-      <Select
-        icon="su-expand"
-        onChange={[Function]}
-        options={
-          Array [
-            Object {
-              "label": "sulu_preview.auto",
-              "value": "auto",
-            },
-            Object {
-              "label": "sulu_preview.desktop",
-              "value": "desktop",
-            },
-            Object {
-              "label": "sulu_preview.tablet",
-              "value": "tablet",
-            },
-            Object {
-              "label": "sulu_preview.smartphone",
-              "value": "smartphone",
-            },
-          ]
-        }
-        showText={true}
-        value="auto"
-      />
-      <Button
-        active={false}
-        disabled={false}
-        hasOptions={false}
-        icon="su-sync"
-        onClick={[Function]}
-        primary={false}
-        showText={true}
-        success={false}
+      <button
+        class="button dark"
       >
-        sulu_preview.reload
-      </Button>
-      <Button
-        active={false}
-        disabled={false}
-        hasOptions={false}
-        icon="su-link"
-        onClick={[Function]}
-        primary={false}
-        showText={true}
-        success={false}
+        <span
+          aria-label="su-arrow-right"
+          class="su-arrow-right icon"
+        />
+      </button>
+      <div
+        class="select dark"
       >
-        sulu_preview.open_in_window
-      </Button>
-    </Controls>
-  </Toolbar>
+        <button
+          class="button dark"
+        >
+          <span
+            aria-label="su-expand"
+            class="su-expand icon"
+          />
+          <span
+            class="label"
+          >
+            sulu_preview.auto
+          </span>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="select dark"
+      >
+        <button
+          class="button dark"
+        >
+          <span
+            aria-label="su-webspace"
+            class="su-webspace icon"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-sync"
+          class="su-sync icon"
+        />
+        <span
+          class="label"
+        >
+          sulu_preview.reload
+        </span>
+      </button>
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-link"
+          class="su-link icon"
+        />
+        <span
+          class="label"
+        >
+          sulu_preview.open_in_window
+        </span>
+      </button>
+    </div>
+  </nav>
+</div>
+`;
+
+exports[`Dont react or update preview when data is changed during preview-store is starting 1`] = `
+<div
+  class="container auto"
+>
+  <div
+    class="loaderContainer"
+  >
+    <div
+      class="spinner"
+      style="width: 40px; height: 40px;"
+    >
+      <div
+        class="doubleBounce1"
+      />
+      <div
+        class="doubleBounce2"
+      />
+    </div>
+  </div>
+  <nav
+    class="toolbar dark"
+  >
+    <div
+      class="controls dark"
+    >
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-arrow-right"
+          class="su-arrow-right icon"
+        />
+      </button>
+      <div
+        class="select dark"
+      >
+        <button
+          class="button dark"
+        >
+          <span
+            aria-label="su-expand"
+            class="su-expand icon"
+          />
+          <span
+            class="label"
+          >
+            sulu_preview.auto
+          </span>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="select dark"
+      >
+        <button
+          class="button dark"
+        >
+          <span
+            aria-label="su-webspace"
+            class="su-webspace icon"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-sync"
+          class="su-sync icon"
+        />
+        <span
+          class="label"
+        >
+          sulu_preview.reload
+        </span>
+      </button>
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-link"
+          class="su-link icon"
+        />
+        <span
+          class="label"
+        >
+          sulu_preview.open_in_window
+        </span>
+      </button>
+    </div>
+  </nav>
+</div>
+`;
+
+exports[`React and update preview in external window when data is changed 1`] = `null`;
+
+exports[`React and update preview when data is changed 1`] = `
+<div
+  class="container auto"
+>
+  <div
+    class="previewContainer"
+  >
+    <div
+      class="iframeContainer"
+    >
+      <iframe
+        class="iframe"
+        src="/render"
+      />
+    </div>
+  </div>
+  <nav
+    class="toolbar dark"
+  >
+    <div
+      class="controls dark"
+    >
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-arrow-right"
+          class="su-arrow-right icon"
+        />
+      </button>
+      <div
+        class="select dark"
+      >
+        <button
+          class="button dark"
+        >
+          <span
+            aria-label="su-expand"
+            class="su-expand icon"
+          />
+          <span
+            class="label"
+          >
+            sulu_preview.auto
+          </span>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="select dark"
+      >
+        <button
+          class="button dark"
+        >
+          <span
+            aria-label="su-webspace"
+            class="su-webspace icon"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-sync"
+          class="su-sync icon"
+        />
+        <span
+          class="label"
+        >
+          sulu_preview.reload
+        </span>
+      </button>
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-link"
+          class="su-link icon"
+        />
+        <span
+          class="label"
+        >
+          sulu_preview.open_in_window
+        </span>
+      </button>
+    </div>
+  </nav>
+</div>
+`;
+
+exports[`Render button to start preview 1`] = `null`;
+
+exports[`Render correct preview 1`] = `
+<div
+  class="container auto"
+>
+  <div
+    class="previewContainer"
+  >
+    <div
+      class="iframeContainer"
+    >
+      <iframe
+        class="iframe"
+        src="/render"
+      />
+    </div>
+  </div>
+  <nav
+    class="toolbar dark"
+  >
+    <div
+      class="controls dark"
+    >
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-arrow-right"
+          class="su-arrow-right icon"
+        />
+      </button>
+      <div
+        class="select dark"
+      >
+        <button
+          class="button dark"
+        >
+          <span
+            aria-label="su-expand"
+            class="su-expand icon"
+          />
+          <span
+            class="label"
+          >
+            sulu_preview.auto
+          </span>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="select dark"
+      >
+        <button
+          class="button dark"
+        >
+          <span
+            aria-label="su-webspace"
+            class="su-webspace icon"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-sync"
+          class="su-sync icon"
+        />
+        <span
+          class="label"
+        >
+          sulu_preview.reload
+        </span>
+      </button>
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-link"
+          class="su-link icon"
+        />
+        <span
+          class="label"
+        >
+          sulu_preview.open_in_window
+        </span>
+      </button>
+    </div>
+  </nav>
+</div>
+`;
+
+exports[`Render correct preview with target groups 1`] = `
+<div
+  class="container auto"
+>
+  <div
+    class="previewContainer"
+  >
+    <div
+      class="iframeContainer"
+    >
+      <iframe
+        class="iframe"
+        src="/render"
+      />
+    </div>
+  </div>
+  <nav
+    class="toolbar dark"
+  >
+    <div
+      class="controls dark"
+    >
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-arrow-right"
+          class="su-arrow-right icon"
+        />
+      </button>
+      <div
+        class="select dark"
+      >
+        <button
+          class="button dark"
+        >
+          <span
+            aria-label="su-expand"
+            class="su-expand icon"
+          />
+          <span
+            class="label"
+          >
+            sulu_preview.auto
+          </span>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="select dark"
+      >
+        <button
+          class="button dark"
+        >
+          <span
+            aria-label="su-webspace"
+            class="su-webspace icon"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="select dark"
+      >
+        <button
+          class="button dark"
+        >
+          <span
+            aria-label="su-user"
+            class="su-user icon"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-sync"
+          class="su-sync icon"
+        />
+        <span
+          class="label"
+        >
+          sulu_preview.reload
+        </span>
+      </button>
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-link"
+          class="su-link icon"
+        />
+        <span
+          class="label"
+        >
+          sulu_preview.open_in_window
+        </span>
+      </button>
+    </div>
+  </nav>
 </div>
 `;
 
 exports[`Render nothing if separate window is opened and rerender if it is closed 1`] = `
 <div
-  className="container auto"
+  class="container auto"
 >
   <div
-    className="previewContainer"
+    class="previewContainer"
   >
     <div
-      className="iframeContainer"
+      class="iframeContainer"
     >
       <iframe
-        className="iframe"
+        class="iframe"
         src="/render"
       />
     </div>
   </div>
-  <Toolbar
-    skin="dark"
+  <nav
+    class="toolbar dark"
   >
-    <Controls
-      grow={false}
-      skin="light"
+    <div
+      class="controls dark"
     >
-      <Button
-        active={false}
-        disabled={false}
-        hasOptions={false}
-        icon="su-arrow-right"
-        onClick={[Function]}
-        primary={false}
-        showText={true}
-        success={false}
-      />
-      <Select
-        icon="su-expand"
-        onChange={[Function]}
-        options={
-          Array [
-            Object {
-              "label": "sulu_preview.auto",
-              "value": "auto",
-            },
-            Object {
-              "label": "sulu_preview.desktop",
-              "value": "desktop",
-            },
-            Object {
-              "label": "sulu_preview.tablet",
-              "value": "tablet",
-            },
-            Object {
-              "label": "sulu_preview.smartphone",
-              "value": "smartphone",
-            },
-          ]
-        }
-        showText={true}
-        value="auto"
-      />
-      <Button
-        active={false}
-        disabled={false}
-        hasOptions={false}
-        icon="su-sync"
-        onClick={[Function]}
-        primary={false}
-        showText={true}
-        success={false}
+      <button
+        class="button dark"
       >
-        sulu_preview.reload
-      </Button>
-      <Button
-        active={false}
-        disabled={false}
-        hasOptions={false}
-        icon="su-link"
-        onClick={[Function]}
-        primary={false}
-        showText={true}
-        success={false}
+        <span
+          aria-label="su-arrow-right"
+          class="su-arrow-right icon"
+        />
+      </button>
+      <div
+        class="select dark"
       >
-        sulu_preview.open_in_window
-      </Button>
-    </Controls>
-  </Toolbar>
+        <button
+          class="button dark"
+        >
+          <span
+            aria-label="su-expand"
+            class="su-expand icon"
+          />
+          <span
+            class="label"
+          >
+            sulu_preview.auto
+          </span>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="select dark"
+      >
+        <button
+          class="button dark"
+        >
+          <span
+            aria-label="su-webspace"
+            class="su-webspace icon"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-sync"
+          class="su-sync icon"
+        />
+        <span
+          class="label"
+        >
+          sulu_preview.reload
+        </span>
+      </button>
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-link"
+          class="su-link icon"
+        />
+        <span
+          class="label"
+        >
+          sulu_preview.open_in_window
+        </span>
+      </button>
+    </div>
+  </nav>
 </div>
 `;
 
 exports[`Render nothing if separate window is opened and rerender if it is closed 2`] = `
 <div
-  className="container auto"
+  class="container auto"
 >
   <div
-    className="previewContainer"
+    class="previewContainer"
   >
     <div
-      className="iframeContainer"
+      class="iframeContainer"
     >
       <iframe
-        className="iframe"
+        class="iframe"
         src="/render"
       />
     </div>
   </div>
-  <Toolbar
-    skin="dark"
+  <nav
+    class="toolbar dark"
   >
-    <Controls
-      grow={false}
-      skin="light"
+    <div
+      class="controls dark"
     >
-      <Button
-        active={false}
-        disabled={false}
-        hasOptions={false}
-        icon="su-arrow-right"
-        onClick={[Function]}
-        primary={false}
-        showText={true}
-        success={false}
-      />
-      <Select
-        icon="su-expand"
-        onChange={[Function]}
-        options={
-          Array [
-            Object {
-              "label": "sulu_preview.auto",
-              "value": "auto",
-            },
-            Object {
-              "label": "sulu_preview.desktop",
-              "value": "desktop",
-            },
-            Object {
-              "label": "sulu_preview.tablet",
-              "value": "tablet",
-            },
-            Object {
-              "label": "sulu_preview.smartphone",
-              "value": "smartphone",
-            },
-          ]
-        }
-        showText={true}
-        value="auto"
-      />
-      <Button
-        active={false}
-        disabled={false}
-        hasOptions={false}
-        icon="su-sync"
-        onClick={[Function]}
-        primary={false}
-        showText={true}
-        success={false}
+      <button
+        class="button dark"
       >
-        sulu_preview.reload
-      </Button>
-      <Button
-        active={false}
-        disabled={false}
-        hasOptions={false}
-        icon="su-link"
-        onClick={[Function]}
-        primary={false}
-        showText={true}
-        success={false}
+        <span
+          aria-label="su-arrow-right"
+          class="su-arrow-right icon"
+        />
+      </button>
+      <div
+        class="select dark"
       >
-        sulu_preview.open_in_window
-      </Button>
-    </Controls>
-  </Toolbar>
+        <button
+          class="button dark"
+        >
+          <span
+            aria-label="su-expand"
+            class="su-expand icon"
+          />
+          <span
+            class="label"
+          >
+            sulu_preview.auto
+          </span>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="select dark"
+      >
+        <button
+          class="button dark"
+        >
+          <span
+            aria-label="su-webspace"
+            class="su-webspace icon"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-sync"
+          class="su-sync icon"
+        />
+        <span
+          class="label"
+        >
+          sulu_preview.reload
+        </span>
+      </button>
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-link"
+          class="su-link icon"
+        />
+        <span
+          class="label"
+        >
+          sulu_preview.open_in_window
+        </span>
+      </button>
+    </div>
+  </nav>
 </div>
 `;

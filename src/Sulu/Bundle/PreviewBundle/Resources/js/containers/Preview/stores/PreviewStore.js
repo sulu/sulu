@@ -19,7 +19,8 @@ export default class PreviewStore {
     resourceKey: string;
     id: ?string | number;
     locale: string;
-    webspace: string;
+    @observable webspace: string;
+    @observable targetGroup: number = -1;
 
     @observable token: ?string;
 
@@ -39,6 +40,7 @@ export default class PreviewStore {
             webspace: this.webspace,
             locale: this.locale,
             token: this.token,
+            targetGroup: this.targetGroup,
         });
     }
 
@@ -46,11 +48,20 @@ export default class PreviewStore {
         this.token = token;
     };
 
+    @action setWebspace = (webspace: string) => {
+        this.webspace = webspace;
+    };
+
+    @action setTargetGroup = (targetGroup: number) => {
+        this.targetGroup = targetGroup;
+    };
+
     start(): Promise<*> {
         const route = generateRoute('start', {
             provider: this.resourceKey,
             locale: this.locale,
             id: this.id,
+            targetGroup: this.targetGroup,
         });
 
         return Requester.get(route).then((response) => {
@@ -63,9 +74,10 @@ export default class PreviewStore {
             locale: this.locale,
             webspace: this.webspace,
             token: this.token,
+            targetGroup: this.targetGroup,
         });
 
-        return Requester.post(route, {data: data}).then((response) => {
+        return Requester.post(route, {data}).then((response) => {
             return response.content;
         });
     }
@@ -74,6 +86,7 @@ export default class PreviewStore {
         const route = generateRoute('update-context', {
             webspace: this.webspace,
             token: this.token,
+            targetGroup: this.targetGroup,
         });
 
         return Requester.post(route, {context: {template: type}}).then((response) => {
