@@ -42,7 +42,7 @@ interface FormOverlayListRouteBuilderInterface extends RouteBuilderInterface
     public function addLocales(array $locales): self;
 
     /**
-     * @param string[] $toolbarActions
+     * @param ToolbarAction[] $toolbarActions
      */
     public function addToolbarActions(array $toolbarActions): self;
 
