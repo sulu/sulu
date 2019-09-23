@@ -207,13 +207,6 @@
             <argument type="service" id="sulu_http_cache.cache_manager" on-invalid="null"/>
         </service>
 
-        <service id="sulu_website.translator.request_analyzer"
-                 class="Sulu\Bundle\WebsiteBundle\Translator\RequestLocaleTranslator"
-                 decorates="translator">
-            <argument type="service" id="sulu_website.translator.request_analyzer.inner"/>
-            <argument type="service" id="request_stack"/>
-        </service>
-
         <service id="sulu_website.router_listener"
                  class="Sulu\Bundle\WebsiteBundle\EventListener\RouterListener"
                  decorates="router_listener">
@@ -224,12 +217,10 @@
 
         <!-- preview -->
         <service id="sulu_website.event_listener.translator"
-                 class="Sulu\Bundle\WebsiteBundle\EventListener\TranslatorEventListener">
+                 class="Sulu\Bundle\WebsiteBundle\EventListener\TranslatorListener">
             <argument type="service" id="translator"/>
 
-            <tag name="kernel.event_listener" event="%sulu_preview.events.pre-render%"
-                 method="setLocaleOnPreviewPreRender"/>
-            <tag name="sulu.context" context="admin"/>
+            <tag name="kernel.event_subscriber"/>
         </service>
 
         <!-- reference-store -->

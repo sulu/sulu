@@ -5,6 +5,16 @@
 When upgrading also have a look at the changes in the
 [sulu skeleton](https://github.com/sulu/sulu-minimal/compare/2.0.0-RC2...2.0.0).
 
+### RequestLocaleTranslator removed
+
+The `sulu_website.event_listener.translator` will now set the correct locale for the `translator` service.
+
+In this case the following classes and services where removed:
+
+ - `Sulu\Bundle\WebsiteBundle\EventListener\TranslatorEventListener`
+ - `Sulu\Bundle\WebsiteBundle\Translator\RequestLocaleTranslator`
+ - `sulu_website.translator.request_analyzer`
+
 ### LocationBundle
 
 The configuration of the location bundle has changed.
