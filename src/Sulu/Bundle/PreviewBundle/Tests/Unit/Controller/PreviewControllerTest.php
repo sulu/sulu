@@ -77,7 +77,7 @@ class PreviewControllerTest extends TestCase
         $request->get('token', null)->willReturn('test-token');
         $request->get('webspace', null)->willReturn('sulu_io');
         $request->get('locale', null)->willReturn('de');
-        $request->get('target-group', null)->willReturn(1);
+        $request->get('targetGroup', null)->willReturn(1);
 
         $this->preview->render('test-token', 'sulu_io', 'de', 1)
             ->shouldBeCalled()
@@ -93,7 +93,7 @@ class PreviewControllerTest extends TestCase
         $request->get('token', null)->willReturn('test-token');
         $request->get('webspace', null)->willReturn('sulu_io');
         $request->get('locale', null)->willReturn('de');
-        $request->get('target-group', null)->willReturn(1);
+        $request->get('targetGroup', null)->willReturn(1);
 
         $this->preview->render('test-token', 'sulu_io', 'de', 1)
             ->shouldBeCalled()
@@ -109,7 +109,7 @@ class PreviewControllerTest extends TestCase
         $request->get('token', null)->willReturn('test-token');
         $request->get('data', null)->willReturn(['title' => 'Sulu is awesome']);
         $request->get('webspace', null)->willReturn('sulu_io');
-        $request->get('target-group', null)->willReturn(1);
+        $request->get('targetGroup', null)->willReturn(1);
 
         $this->preview->update('test-token', 'sulu_io', ['title' => 'Sulu is awesome'], 1)
             ->shouldBeCalled()
@@ -129,7 +129,7 @@ class PreviewControllerTest extends TestCase
         $request->get('token', null)->willReturn('test-token');
         $request->get('data', null)->willReturn(['title' => 'Sulu is awesome']);
         $request->get('webspace', null)->willReturn('sulu_io');
-        $request->get('target-group', null)->willReturn(1);
+        $request->get('targetGroup', null)->willReturn(1);
 
         $this->preview->update('test-token', 'sulu_io', ['title' => 'Sulu is awesome'], 1)
             ->shouldBeCalled()
@@ -151,7 +151,7 @@ class PreviewControllerTest extends TestCase
         $request->get('token', null)->willReturn('test-token');
         $request->get('context', null)->willReturn(['template' => 'default']);
         $request->get('webspace', null)->willReturn('sulu_io');
-        $request->get('target-group', null)->willReturn(1);
+        $request->get('targetGroup', null)->willReturn(1);
 
         $this->preview->updateContext('test-token', 'sulu_io', ['template' => 'default'], 1)
             ->shouldBeCalled()
@@ -170,7 +170,7 @@ class PreviewControllerTest extends TestCase
         $request->get('token', null)->willReturn('test-token');
         $request->get('context', null)->willReturn(['template' => 'default']);
         $request->get('webspace', null)->willReturn('sulu_io');
-        $request->get('target-group', null)->willReturn(1);
+        $request->get('targetGroup', null)->willReturn(1);
 
         $this->preview->updateContext('test-token', 'sulu_io', ['template' => 'default'], 1)
             ->shouldBeCalled()

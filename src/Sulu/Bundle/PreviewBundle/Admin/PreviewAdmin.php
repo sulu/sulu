@@ -31,14 +31,21 @@ class PreviewAdmin extends Admin
      */
     private $previewMode;
 
+    /**
+     * @var array
+     */
+    private $bundles;
+
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         int $previewDelay,
-        string $previewMode
+        string $previewMode,
+        array $bundles
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->previewDelay = $previewDelay;
         $this->previewMode = $previewMode;
+        $this->bundles = $bundles;
     }
 
     public function getConfigKey(): ?string
@@ -58,6 +65,7 @@ class PreviewAdmin extends Admin
             ],
             'debounceDelay' => $this->previewDelay,
             'mode' => $this->previewMode,
+            'audienceTargeting' => array_key_exists('SuluAudienceTargetingBundle', $this->bundles),
         ];
     }
 }

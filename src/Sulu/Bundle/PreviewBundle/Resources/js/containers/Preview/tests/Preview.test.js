@@ -5,6 +5,7 @@ import {mount, shallow} from 'enzyme';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/ResourceFormStore';
 import Router from 'sulu-admin-bundle/services/Router';
+import ResourceRequester from 'sulu-admin-bundle/services/ResourceRequester';
 import PreviewStore from '../stores/PreviewStore';
 import Preview from '../Preview';
 
@@ -18,6 +19,7 @@ jest.mock('../stores/PreviewStore', () => jest.fn(function() {
     this.updateContext = jest.fn().mockReturnValue(Promise.resolve());
     this.stop = jest.fn().mockReturnValue(Promise.resolve());
     this.setWebspace = jest.fn();
+    this.setTargetGroup = jest.fn();
 
     this.renderRoute = '/render';
 }));
@@ -32,6 +34,10 @@ jest.mock('sulu-admin-bundle/services/Requester', () => ({
 }));
 
 jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn());
+
+jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
+    getList: jest.fn(),
+}));
 
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn());
 
@@ -53,6 +59,7 @@ beforeEach(() => {
     jest.resetModules();
 
     Preview.mode = 'on_request';
+    Preview.audienceTargeting = false;
 });
 
 test('Render correct preview', (done) => {
@@ -60,7 +67,7 @@ test('Render correct preview', (done) => {
     const formStore = new ResourceFormStore(resourceStore, 'pages');
     const router = new Router({});
 
-    const preview = shallow(<Preview formStore={formStore} router={router} />);
+    const preview = mount(<Preview formStore={formStore} router={router} />);
 
     setTimeout(() => {
         const startPromise = Promise.resolve();
@@ -71,6 +78,34 @@ test('Render correct preview', (done) => {
         preview.instance().handleStartClick();
 
         return startPromise.then(() => {
+            preview.update();
+            expect(preview.render()).toMatchSnapshot();
+            done();
+        });
+    });
+});
+
+test('Render correct preview with target groups', (done) => {
+    const targetGroupsPromise = Promise.resolve({_embedded: {target_groups: []}});
+    ResourceRequester.getList.mockReturnValue(targetGroupsPromise);
+
+    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    const router = new Router({});
+
+    Preview.audienceTargeting = true;
+    const preview = mount(<Preview formStore={formStore} router={router} />);
+
+    setTimeout(() => {
+        const startPromise = Promise.resolve();
+        const previewStore = preview.instance().previewStore;
+        previewStore.start.mockReturnValue(startPromise);
+        previewStore.starting = false;
+
+        preview.instance().handleStartClick();
+
+        return startPromise.then(() => {
+            preview.update();
             expect(preview.render()).toMatchSnapshot();
             done();
         });
@@ -387,6 +422,35 @@ test('React and update-context when type is changed', (done) => {
 
         return startPromise.then(() => {
             expect(previewStore.updateContext).toBeCalledWith('homepage');
+            done();
+        });
+    });
+});
+
+test('Change target group in PreviewStore when selection of target group has changed', (done) => {
+    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    const router = new Router({});
+
+    Preview.audienceTargeting = true;
+
+    const preview = shallow(<Preview formStore={formStore} router={router} />);
+
+    setTimeout(() => {
+        const startPromise = Promise.resolve();
+        const previewStore = preview.instance().previewStore;
+        previewStore.start.mockReturnValue(startPromise);
+        previewStore.starting = false;
+
+        preview.instance().handleStartClick();
+
+        return startPromise.then(() => {
+            expect(PreviewStore).toBeCalledWith(undefined, undefined, 'de', 'sulu_io');
+
+            preview.find('Select').at(2).prop('onChange')(4);
+            expect(previewStore.setTargetGroup).toBeCalledWith(4);
+            expect(previewStore.update).toBeCalledWith(undefined);
+
             done();
         });
     });

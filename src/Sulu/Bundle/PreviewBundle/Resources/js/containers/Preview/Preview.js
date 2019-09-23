@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import {Loader, Toolbar} from 'sulu-admin-bundle/components';
 import {ResourceFormStore, sidebarStore} from 'sulu-admin-bundle/containers';
 import {Router} from 'sulu-admin-bundle/services';
+import {ResourceListStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import {webspaceStore} from 'sulu-page-bundle/stores';
 import type {Webspace} from 'sulu-page-bundle/types';
@@ -24,6 +25,7 @@ type Props = {|
 class Preview extends React.Component<Props> {
     static debounceDelay: number = 250;
     static mode: PreviewMode = 'auto';
+    static audienceTargeting: boolean = false;
 
     availableDeviceOptions = [
         {label: translate('sulu_preview.auto'), value: 'auto'},
@@ -35,6 +37,7 @@ class Preview extends React.Component<Props> {
     @observable iframeRef: ?HTMLIFrameElement;
     @observable started: boolean = false;
     @observable selectedDeviceOption = this.availableDeviceOptions[0].value;
+    @observable targetGroupsStore: ?ResourceListStore;
 
     @observable previewStore: ?PreviewStore;
     @observable previewWindow: any;
@@ -55,6 +58,11 @@ class Preview extends React.Component<Props> {
                 },
             },
         } = this.props;
+
+        if (Preview.audienceTargeting) {
+            const targetGroupsStore = new ResourceListStore('target_groups');
+            this.targetGroupsStore = targetGroupsStore;
+        }
 
         webspaceStore.loadWebspaces().then(action((webspaces) => {
             this.webspaceOptions = webspaces.map((webspace) => ({
@@ -93,7 +101,10 @@ class Preview extends React.Component<Props> {
         previewStore.start();
 
         when(
-            () => !formStore.loading && !previewStore.starting && this.iframeRef !== null,
+            () => !formStore.loading
+                && !previewStore.starting
+                && this.iframeRef !== null
+                && (!this.targetGroupsStore || !this.targetGroupsStore.loading),
             this.initializeReaction
         );
 
@@ -207,6 +218,18 @@ class Preview extends React.Component<Props> {
         previewStore.setWebspace(webspace);
     };
 
+    handleTargetGroupChange = (targetGroupId: number) => {
+        const {previewStore} = this;
+        const {formStore} = this.props;
+
+        if (!previewStore) {
+            throw new Error('The preview cannot be updated if the "PreviewStore has not been initialized yet."');
+        }
+
+        previewStore.setTargetGroup(targetGroupId);
+        this.updatePreview(toJS(formStore.data));
+    };
+
     @action handleRefreshClick = () => {
         const document = this.getPreviewDocument();
         if (!document) {
@@ -239,7 +262,7 @@ class Preview extends React.Component<Props> {
         const {router} = this.props;
         const {previewWebspaceChooser = true} = router.route.options;
 
-        if (this.previewWindow || !previewStore) {
+        if (this.previewWindow || !previewStore || (this.targetGroupsStore && this.targetGroupsStore.loading)) {
             return null;
         }
 
@@ -288,6 +311,26 @@ class Preview extends React.Component<Props> {
                                 onChange={this.handleWebspaceChange}
                                 options={this.webspaceOptions}
                                 value={previewStore.webspace}
+                            />
+                        }
+                        {!!this.targetGroupsStore &&
+                            <Toolbar.Select
+                                icon="su-user"
+                                loading={this.targetGroupsStore.loading}
+                                onChange={this.handleTargetGroupChange}
+                                options={
+                                    [
+                                        {label: translate('sulu_audience_targeting.no_target_group'), value: -1},
+                                        ...(this.targetGroupsStore
+                                            ? this.targetGroupsStore.data.map((targetGroup) => ({
+                                                label: targetGroup.title,
+                                                value: targetGroup.id,
+                                            }))
+                                            : []
+                                        ),
+                                    ]
+                                }
+                                value={this.previewStore && this.previewStore.targetGroup}
                             />
                         }
                         <Toolbar.Button

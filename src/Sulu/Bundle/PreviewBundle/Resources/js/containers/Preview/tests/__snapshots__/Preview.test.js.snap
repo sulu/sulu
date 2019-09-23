@@ -399,6 +399,120 @@ exports[`Render correct preview 1`] = `
 </div>
 `;
 
+exports[`Render correct preview with target groups 1`] = `
+<div
+  class="container auto"
+>
+  <div
+    class="previewContainer"
+  >
+    <div
+      class="iframeContainer"
+    >
+      <iframe
+        class="iframe"
+        src="/render"
+      />
+    </div>
+  </div>
+  <nav
+    class="toolbar dark"
+  >
+    <div
+      class="controls dark"
+    >
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-arrow-right"
+          class="su-arrow-right icon"
+        />
+      </button>
+      <div
+        class="select dark"
+      >
+        <button
+          class="button dark"
+        >
+          <span
+            aria-label="su-expand"
+            class="su-expand icon"
+          />
+          <span
+            class="label"
+          >
+            sulu_preview.auto
+          </span>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="select dark"
+      >
+        <button
+          class="button dark"
+        >
+          <span
+            aria-label="su-webspace"
+            class="su-webspace icon"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="select dark"
+      >
+        <button
+          class="button dark"
+        >
+          <span
+            aria-label="su-user"
+            class="su-user icon"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-sync"
+          class="su-sync icon"
+        />
+        <span
+          class="label"
+        >
+          sulu_preview.reload
+        </span>
+      </button>
+      <button
+        class="button dark"
+      >
+        <span
+          aria-label="su-link"
+          class="su-link icon"
+        />
+        <span
+          class="label"
+        >
+          sulu_preview.open_in_window
+        </span>
+      </button>
+    </div>
+  </nav>
+</div>
+`;
+
 exports[`Render nothing if separate window is opened and rerender if it is closed 1`] = `
 <div
   class="container auto"
