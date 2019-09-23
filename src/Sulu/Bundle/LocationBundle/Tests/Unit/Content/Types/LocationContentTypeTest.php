@@ -11,29 +11,33 @@
 
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Content\Types;
 
+use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\LocationBundle\Content\Types\LocationContentType;
-use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Content\Compat\PropertyInterface;
 
 class LocationContentTypeTest extends TestCase
 {
-    protected $nodeRepository;
+    /**
+     * @var NodeInterface
+     */
+    private $phpcrNode;
 
+    /**
+     * @var PropertyInterface
+     */
+    private $suluProperty;
+
+    /**
+     * @var LocationContentType
+     */
     protected $locationContent;
-
-    protected $mapManager;
 
     public function setUp(): void
     {
-        $this->nodeRepository = $this->getMockBuilder('Sulu\Bundle\PageBundle\Repository\NodeRepositoryInterface')->getMock();
-        $this->phpcrNode = $this->getMockBuilder('PHPCR\NodeInterface')->getMock();
-        $this->suluProperty = $this->getMockBuilder('Sulu\Component\Content\Compat\PropertyInterface')->getMock();
-        $this->mapManager = $this->getMockBuilder('Sulu\Bundle\LocationBundle\Map\MapManager')->getMock();
-        $this->locationContent = new LocationContentType(
-            $this->nodeRepository,
-            $this->mapManager,
-            'some_geolocator'
-        );
+        $this->phpcrNode = $this->getMockBuilder(NodeInterface::class)->getMock();
+        $this->suluProperty = $this->getMockBuilder(PropertyInterface::class)->getMock();
+        $this->locationContent = new LocationContentType();
     }
 
     protected function initReadTest($data)
@@ -102,51 +106,5 @@ class LocationContentTypeTest extends TestCase
             'fr',
             'segment'
         );
-    }
-
-    public function testGetParams()
-    {
-        $expected = [
-            'countries' => new PropertyParameter(
-                'countries',
-                [
-                    'at' => new PropertyParameter('at', 'Austria'),
-                    'fr' => new PropertyParameter('fr', 'France'),
-                    'ch' => new PropertyParameter('ch', 'Switzerland'),
-                    'de' => new PropertyParameter('de', 'Germany'),
-                    'gb' => new PropertyParameter('gb', 'United Kingdom'),
-                ],
-                'collection'
-            ),
-            'mapProviders' => new PropertyParameter(
-                'mapProviders',
-                [
-                    'foo' => 'Foo',
-                    'bar' => 'Bar',
-                ],
-                'collection'
-            ),
-            'defaultProvider' => new PropertyParameter('defaultProvider', 'leaflet'),
-            'geolocatorName' => new PropertyParameter('geolocatorName', 'some_geolocator'),
-        ];
-
-        $this->mapManager->expects($this->once())
-            ->method('getProvidersAsArray')
-            ->will($this->returnValue($expected['mapProviders']->getValue()));
-
-        $this->mapManager->expects($this->once())
-            ->method('getDefaultProviderName')
-            ->will($this->returnValue('leaflet'));
-
-        // will be set to locale of computer
-        \Locale::setDefault('en');
-        $params = $this->locationContent->getDefaultParams();
-
-        $this->assertEquals($expected['mapProviders'], $params['mapProviders']);
-        $this->assertEquals($expected['defaultProvider'], $params['defaultProvider']);
-        $this->assertEquals($expected['geolocatorName'], $params['geolocatorName']);
-        foreach ($expected['countries']->getValue() as $parameter) {
-            $this->assertEquals($parameter, $params['countries']->getValue()[$parameter->getName()]);
-        }
     }
 }

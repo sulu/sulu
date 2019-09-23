@@ -32,7 +32,7 @@ class NominatimGeolocatorTest extends TestCase
                     'number' => '10',
                     'code' => 'F-75011',
                     'town' => 'Paris',
-                    'country' => 'fr',
+                    'country' => 'FR',
                     'longitude' => '2.3898894',
                     'latitude' => '48.8529486',
                 ],
@@ -50,7 +50,7 @@ class NominatimGeolocatorTest extends TestCase
         $mockHandler = new MockHandler([new Response(200, [], $fixture)]);
 
         $client = new Client(['handler' => HandlerStack::create($mockHandler)]);
-        $geolocator = new NominatimGeolocator($client, '');
+        $geolocator = new NominatimGeolocator($client, '', '');
 
         $results = $geolocator->locate($query);
         $this->assertCount($expectedCount, $results);

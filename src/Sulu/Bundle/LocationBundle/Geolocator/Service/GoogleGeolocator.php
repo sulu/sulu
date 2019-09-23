@@ -36,20 +36,13 @@ class GoogleGeolocator implements GeolocatorInterface
      */
     protected $apiKey;
 
-    /**
-     * @param ClientInterface $client Guzzle HTTP client
-     * @param string $apiKey API key (can be empty string)
-     */
-    public function __construct(ClientInterface $client, $apiKey)
+    public function __construct(ClientInterface $client, string  $apiKey)
     {
         $this->client = $client;
         $this->apiKey = $apiKey;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function locate($query)
+    public function locate(string $query): GeolocatorResponse
     {
         $response = $this->client->request(
             'GET',
@@ -99,18 +92,18 @@ class GoogleGeolocator implements GeolocatorInterface
             $location->setDisplayTitle($result['formatted_address']);
 
             foreach ([
-                'route' => 'setStreet',
-                'street_number' => 'setNumber',
-                'postal_code' => 'setCode',
-                'locality' => 'setTown',
-                'country' => 'setCountry',
-            ] as $field => $method) {
+                'route' => ['method' => 'setStreet', 'field' => 'long_name'],
+                'street_number' => ['method' => 'setNumber', 'field' => 'long_name'],
+                'postal_code' => ['method' => 'setCode', 'field' => 'long_name'],
+                'locality' => ['method' => 'setTown', 'field' => 'long_name'],
+                'country' => ['method' => 'setCountry', 'field' => 'short_name'],
+            ] as $field => $property) {
                 if (isset($map[$field])) {
                     $parts = [];
                     foreach ($map[$field] as $fieldValue) {
-                        $parts[] = $fieldValue['long_name'];
+                        $parts[] = $fieldValue[$property['field']];
                     }
-                    $location->{$method}(implode(', ', $parts));
+                    $location->{$property['method']}(implode(', ', $parts));
                 }
             }
 

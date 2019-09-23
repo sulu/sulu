@@ -28,64 +28,34 @@ class SuluLocationExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
+
+        $this->configureGeolocators($config, $container, $loader);
+    }
+
+    private function configureGeolocators(array $config, ContainerBuilder $container, Loader\XmlFileLoader $loader)
+    {
+        $geolocatorName = $config['geolocator'] ?? null;
+        $geolocators = $config['geolocators'] ?? null;
+
         $loader->load('geolocator.xml');
 
-        $this->configureMapManager($config, $container);
-
-        $this->configureGeolocators($config, $container);
-    }
-
-    /**
-     * Configure the map manager - register the providers and geolocators
-     * with the map manager class.
-     *
-     * @param array $config - Resolved configuration
-     * @param ContainerBuilder
-     */
-    private function configureMapManager($config, ContainerBuilder $container)
-    {
-        $mapManager = $container->getDefinition('sulu_location.map_manager');
-
-        foreach ($config['enabled_providers'] as $enabledProviderName) {
-            $providerConfig = $config['providers'][$enabledProviderName];
-            $mapManager->addMethodCall('registerProvider', [
-                $enabledProviderName,
-                $providerConfig,
-            ]);
-        }
-
-        foreach ($config['geolocators'] as $geoLocatorName => $geoLocatorOptions) {
-            $mapManager->addMethodCall('registerGeolocator', [
-                $geoLocatorName,
-                $geoLocatorOptions,
-            ]);
-        }
-
-        $mapManager->addMethodCall('setDefaultProviderName', [$config['default_provider']]);
-    }
-
-    /**
-     * Configure the geolocator services.
-     *
-     * @param array $config - Resolved configuration
-     * @param ContainerBuilder
-     */
-    private function configureGeolocators($config, $container)
-    {
-        $geolocatorName = $config['geolocator'];
         $container->setParameter('sulu_location.geolocator.name', $geolocatorName);
+        $container->setAlias('sulu_location.geolocator', 'sulu_location.geolocator.service.' . $geolocatorName);
 
-        $nominatim = function($config, $container) {
-            $endpoint = $config['geolocators']['nominatim']['endpoint'];
+        $nominatim = function(array $geolocators, ContainerBuilder $container) {
+            $apiKey = $geolocators['nominatim']['api_key'];
+            $container->setParameter('sulu_location.geolocator.service.nominatim.api_key', $apiKey);
+
+            $endpoint = $geolocators['nominatim']['endpoint'];
             $container->setParameter('sulu_location.geolocator.service.nominatim.endpoint', $endpoint);
         };
 
-        $google = function($config, $container) {
-            $apiKey = $config['geolocators']['google']['api_key'];
+        $google = function(array $geolocators, ContainerBuilder $container) {
+            $apiKey = $geolocators['google']['api_key'];
             $container->setParameter('sulu_location.geolocator.service.google.api_key', $apiKey);
         };
 
-        $nominatim($config, $container);
-        $google($config, $container);
+        $nominatim($geolocators, $container);
+        $google($geolocators, $container);
     }
 }

@@ -11,55 +11,30 @@
 
 namespace Sulu\Bundle\LocationBundle\Controller;
 
-use Sulu\Bundle\LocationBundle\Geolocator\Exception\GeolocatorNotFoundException;
-use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorManager;
+use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- * Controller for geolocator API abstraction.
- */
 class GeolocatorController
 {
     /**
-     * @var GeolocatorManager
+     * @var GeolocatorInterface
      */
-    private $geolocatorManager;
+    private $geolocator;
 
-    /**
-     * @param GeolocatorManager $geolocatorManager
-     */
-    public function __construct(GeolocatorManager $geolocatorManager)
+    public function __construct(GeolocatorInterface $geolocator)
     {
-        $this->geolocatorManager = $geolocatorManager;
+        $this->geolocator = $geolocator;
     }
 
     /**
      * Query the configured geolocation service.
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
-    public function queryAction(Request $request)
+    public function queryAction(Request $request): JsonResponse
     {
-        $geolocatorName = $request->get('providerName');
-        $query = $request->get('query');
+        $query = $request->get('query', '');
 
-        try {
-            $geolocator = $this->geolocatorManager->get($geolocatorName);
-        } catch (GeolocatorNotFoundException $e) {
-            throw new NotFoundHttpException(
-                sprintf(
-                    'Wrapped "%s"',
-                    $e->getMessage()
-                ),
-                $e
-            );
-        }
-
-        $res = $geolocator->locate($query);
+        $res = $this->geolocator->locate($query);
 
         return new JsonResponse(['_embedded' => ['locations' => $res->toArray()]]);
     }

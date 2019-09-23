@@ -3,7 +3,6 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
         <parameter key="sulu_location.guzzle.client.class">GuzzleHttp\Client</parameter>
-        <parameter key="sulu_location.geolocator.manager.class">Sulu\Bundle\LocationBundle\Geolocator\GeolocatorManager</parameter>
         <parameter key="sulu_location.geolocator.nominatim.class">Sulu\Bundle\LocationBundle\Geolocator\Service\NominatimGeolocator</parameter>
         <parameter key="sulu_location.geolocator.google.class">Sulu\Bundle\LocationBundle\Geolocator\Service\GoogleGeolocator</parameter>
     </parameters>
@@ -14,22 +13,16 @@
 
         <!-- Geolocator services -->
         <!-- * Nominatim * -->
-        <service id="sulu_location.gelocator.service.nominatim" class="%sulu_location.geolocator.nominatim.class%">
+        <service id="sulu_location.geolocator.service.nominatim" class="%sulu_location.geolocator.nominatim.class%">
             <argument type="service" id="sulu_location.geolocator.guzzle.client" />
             <argument>%sulu_location.geolocator.service.nominatim.endpoint%</argument>
-            <tag name="sulu_location.geolocator" alias="nominatim" />
+            <argument>%sulu_location.geolocator.service.nominatim.api_key%</argument>
         </service>
 
         <!-- * Google * -->
         <service id="sulu_location.geolocator.service.google" class="%sulu_location.geolocator.google.class%">
             <argument type="service" id="sulu_location.geolocator.guzzle.client" />
             <argument>%sulu_location.geolocator.service.google.api_key%</argument>
-            <tag name="sulu_location.geolocator" alias="google" />
-        </service>
-
-        <!-- Geolocation manager -->
-        <service id="sulu_location.geolocator.manager" class="%sulu_location.geolocator.manager.class%">
-            <argument type="service" id="service_container" />
         </service>
     </services>
 </container>
