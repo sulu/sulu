@@ -9,6 +9,13 @@ $buttonBackgroundColor: $alto;
 $buttonBackgroundColorActive: $shakespeare;
 $buttonMargin: 2px;
 
+.location-container {
+    &.disabled {
+        opacity: .5;
+        pointer-events: none;
+    }
+}
+
 .location-header {
     display: flex;
     justify-content: space-between;

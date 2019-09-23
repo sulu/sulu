@@ -6,6 +6,7 @@ import {CroppedText} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
 import {Map, Marker, TileLayer, Tooltip} from 'react-leaflet';
 import Icon from 'sulu-admin-bundle/components/Icon/Icon';
+import classNames from 'classnames';
 import type {Location as LocationValue} from '../../types';
 import locationStyles from './location.scss';
 import LocationOverlay from './LocationOverlay';
@@ -46,9 +47,13 @@ class Location extends React.Component<Props> {
     }
 
     @computed get hasAdditionalInformation() {
-        const {code, country, number, street, title, town} = this.props.value;
+        const {value} = this.props;
 
-        return code || country || number || street || title || town;
+        if (!value) {
+            return false;
+        }
+
+        return value.code || value.country || value.number || value.street || value.title || value.town;
     }
 
     render() {
@@ -57,12 +62,18 @@ class Location extends React.Component<Props> {
             value,
         } = this.props;
 
+        const locationClass = classNames(
+            locationStyles.locationContainer,
+            {
+                [locationStyles.disabled]: disabled,
+            }
+        );
+
         return (
-            <div className={locationStyles.locationContainer}>
+            <div className={locationClass}>
                 <div className={locationStyles.locationHeader}>
                     <button
                         className={locationStyles.locationHeaderButton}
-                        disabled={disabled}
                         onClick={this.handleEditButtonClick}
                         type="button"
                     >

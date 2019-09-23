@@ -5,10 +5,8 @@
     "repository": "https://github.com/sulu/sulu.git",
     "dependencies": {
         "classnames": "^2.2.5",
-        "fast-deep-equal": "^1.0.0",
         "leaflet": "^1.5.1",
-        "react-leaflet": "^2.4.0",
-        "url-search-params-polyfill": "^2.0.0"
+        "react-leaflet": "^2.4.0"
     },
     "devDependencies": {
         "enzyme": "^3.3.0",
@@ -19,7 +17,6 @@
         "mobx": "^4.0.0",
         "mobx-react": "^5.0.0",
         "react": "^16.2.0",
-        "sulu-admin-bundle": "*",
-        "sulu-page-bundle": "*"
+        "sulu-admin-bundle": "*"
     }
 }

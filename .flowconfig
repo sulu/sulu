@@ -3,6 +3,9 @@ esproposal.decorators=ignore
 module.name_mapper='.+\.s?css' -> 'empty/object'
 module.name_mapper='fos-jsrouting/router' -> 'empty/object'
 
+[untyped]
+.*/node_modules/react-leaflet/.*
+
 [ignore]
 .*/node_modules/bower-json/.*
 .*/node_modules/config-chain/.*
@@ -10,7 +13,6 @@ module.name_mapper='fos-jsrouting/router' -> 'empty/object'
 .*/node_modules/jss/.*
 .*/node_modules/npmconf/.*
 .*/node_modules/stylelint/.*
-.*/node_modules/react-leaflet/.*
 .*/vendor/symfony/.*
 
 .circleci/

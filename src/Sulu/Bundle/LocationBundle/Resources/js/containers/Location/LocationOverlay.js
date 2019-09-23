@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable, reaction, toJS} from 'mobx';
+import {action, observable, reaction} from 'mobx';
 import {observer} from 'mobx-react';
 import {Form, Input, Number} from 'sulu-admin-bundle/components';
 import Overlay from 'sulu-admin-bundle/components/Overlay';
@@ -83,8 +83,6 @@ class LocationOverlay extends React.Component<Props> {
     };
 
     @action handleAutoCompleteChange = (data: Object) => {
-        console.log('select', toJS(data));
-
         this.mapLat = data.latitude || 0;
         this.mapLong = data.longitude || 0;
 
