@@ -82,3 +82,11 @@ test('Should request server on stop preview', () => {
         expect(Requester.get).toBeCalledWith('/stop');
     });
 });
+
+test('Should set webspace', () => {
+    const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
+    expect(previewStore.webspace).toEqual('sulu_io');
+
+    previewStore.setWebspace('example');
+    expect(previewStore.webspace).toEqual('example');
+});

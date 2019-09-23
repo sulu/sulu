@@ -19,7 +19,7 @@ export default class PreviewStore {
     resourceKey: string;
     id: ?string | number;
     locale: string;
-    webspace: string;
+    @observable webspace: string;
 
     @observable token: ?string;
 
@@ -44,6 +44,10 @@ export default class PreviewStore {
 
     @action setToken = (token: ?string) => {
         this.token = token;
+    };
+
+    @action setWebspace = (webspace: string) => {
+        this.webspace = webspace;
     };
 
     start(): Promise<*> {

@@ -213,6 +213,7 @@ class PageAdmin extends Admin
             $routeCollection->add(
                 $this->routeBuilderFactory
                     ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.details', '/details')
+                    ->disablePreviewWebspaceChooser()
                     ->setResourceKey('pages')
                     ->setFormKey('page')
                     ->setTabTitle('sulu_admin.details')
@@ -227,6 +228,7 @@ class PageAdmin extends Admin
             $routeCollection->add(
                 $this->routeBuilderFactory
                     ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.seo', '/seo')
+                    ->disablePreviewWebspaceChooser()
                     ->setResourceKey('pages')
                     ->setFormKey('page_seo')
                     ->setTabTitle('sulu_page.seo')
@@ -241,6 +243,7 @@ class PageAdmin extends Admin
             $routeCollection->add(
                 $this->routeBuilderFactory
                     ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.excerpt', '/excerpt')
+                    ->disablePreviewWebspaceChooser()
                     ->setResourceKey('pages')
                     ->setFormKey('page_excerpt')
                     ->setTabTitle('sulu_page.excerpt')
@@ -255,6 +258,7 @@ class PageAdmin extends Admin
             $routeCollection->add(
                 $this->routeBuilderFactory
                     ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.settings', '/settings')
+                    ->disablePreviewWebspaceChooser()
                     ->setResourceKey('pages')
                     ->setFormKey('page_settings')
                     ->setTabTitle('sulu_page.settings')

@@ -24,6 +24,13 @@ class PreviewFormRouteBuilder implements PreviewFormRouteBuilderInterface
         $this->route = new Route($name, $path, static::VIEW);
     }
 
+    public function disablePreviewWebspaceChooser(): PreviewFormRouteBuilderInterface
+    {
+        $this->route->setOption('previewWebspaceChooser', false);
+
+        return $this;
+    }
+
     public function setResourceKey(string $resourceKey): PreviewFormRouteBuilderInterface
     {
         $this->setResourceKeyToRoute($this->route, $resourceKey);
