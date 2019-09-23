@@ -1,0 +1,151 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component should render in disabled state 1`] = `
+<div
+  class="locationContainer disabled"
+>
+  <div
+    class="locationHeader"
+  >
+    <button
+      class="locationHeaderButton"
+      type="button"
+    >
+      <span
+        aria-label="su-map-pin"
+        class="su-map-pin"
+      />
+    </button>
+    <div
+      class="locationHeaderLabel"
+    >
+      <div
+        aria-label="sulu_location.select_location"
+        class="croppedText"
+        title="sulu_location.select_location"
+      >
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          sulu_location.s
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+            elect_location
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          sulu_location.select_location
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Component should render with a given value 1`] = `
+<div
+  class="locationContainer disabled"
+>
+  <div
+    class="locationHeader"
+  >
+    <button
+      class="locationHeaderButton"
+      type="button"
+    >
+      <span
+        aria-label="su-map-pin"
+        class="su-map-pin"
+      />
+    </button>
+    <div
+      class="locationHeaderLabel"
+    >
+      <div
+        aria-label="sulu_location.latitude: 22, sulu_location.longitude: 33, sulu_location.zoom: 5"
+        class="croppedText"
+        title="sulu_location.latitude: 22, sulu_location.longitude: 33, sulu_location.zoom: 5"
+      >
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          sulu_location.latitude: 22, sulu_locati
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+            on.longitude: 33, sulu_location.zoom: 5
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          sulu_location.latitude: 22, sulu_location.longitude: 33, sulu_location.zoom: 5
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="locationMap"
+  />
+</div>
+`;
+
+exports[`Component should render without a value 1`] = `
+<div
+  class="locationContainer disabled"
+>
+  <div
+    class="locationHeader"
+  >
+    <button
+      class="locationHeaderButton"
+      type="button"
+    >
+      <span
+        aria-label="su-map-pin"
+        class="su-map-pin"
+      />
+    </button>
+    <div
+      class="locationHeaderLabel"
+    >
+      <div
+        aria-label="sulu_location.select_location"
+        class="croppedText"
+        title="sulu_location.select_location"
+      >
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          sulu_location.s
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+            elect_location
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          sulu_location.select_location
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
