@@ -1,5 +1,4 @@
 // @flow
-import {initializer} from 'sulu-admin-bundle/services';
 import {fieldRegistry} from 'sulu-admin-bundle/containers';
 import L from 'leaflet';
 import leafletMarkerIcon from 'leaflet/dist/images/marker-icon.png';
@@ -18,6 +17,4 @@ L.Marker.prototype.options.icon = L.icon({
     shadowUrl: leafletMarkerShadow,
 });
 
-initializer.addUpdateConfigHook('sulu_location', (config: Object) => {
-    fieldRegistry.add('location', Location, config);
-});
+fieldRegistry.add('location', Location);

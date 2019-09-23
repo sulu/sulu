@@ -15,17 +15,13 @@ export default class Location extends React.Component<FieldTypeProps<?LocationVa
     render() {
         const {
             disabled,
-            fieldTypeOptions,
             value,
         } = this.props;
-        const {provider, providerOptions} = fieldTypeOptions;
 
         return (
             <LocationComponent
                 disabled={!!disabled}
                 onChange={this.handleChange}
-                provider={provider}
-                providerOptions={providerOptions}
                 value={value}
             />
         );

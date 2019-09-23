@@ -13,8 +13,6 @@ import LocationOverlay from './LocationOverlay';
 type Props = {|
     disabled: boolean,
     onChange: (value: ?LocationValue) => void,
-    provider: string,
-    providerOptions: Object,
     value: ?LocationValue,
 |};
 
