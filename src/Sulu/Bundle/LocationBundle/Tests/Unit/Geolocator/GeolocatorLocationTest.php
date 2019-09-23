@@ -16,7 +16,10 @@ use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation;
 
 class GeolocatorLocationTest extends TestCase
 {
-    protected $geolocatorLocation;
+    /**
+     * @var GeolocatorLocation
+     */
+    protected $location;
 
     public function setUp(): void
     {
@@ -26,21 +29,22 @@ class GeolocatorLocationTest extends TestCase
     public function testToArray()
     {
         $data = [
-            'id' => null,
+            'id' => '123-123-123',
             'displayTitle' => 'This is title',
-            'name' => 'This is title',
             'street' => 'This is street',
             'number' => 'This is number',
             'code' => 'This is code',
             'town' => 'This is town',
-            'country' => 'This is country',
-            'longitude' => '50.123',
-            'latitude' => '-1.123',
+            'country' => 'AT',
+            'longitude' => 50.123,
+            'latitude' => -1.123,
         ];
 
         foreach ($data as $propName => $value) {
             $this->location->{'set' . ucfirst($propName)}($value);
         }
+
+        $data['name'] = 'This is title';
 
         $res = $this->location->toArray();
         $this->assertEquals($data, $res);

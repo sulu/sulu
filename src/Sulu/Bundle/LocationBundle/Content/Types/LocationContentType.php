@@ -12,73 +12,18 @@
 namespace Sulu\Bundle\LocationBundle\Content\Types;
 
 use PHPCR\NodeInterface;
-use Sulu\Bundle\LocationBundle\Map\MapManager;
-use Sulu\Bundle\PageBundle\Repository\NodeRepositoryInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
-use Symfony\Component\Intl\Intl;
 
-/**
- * ContentType for TextEditor.
- */
 class LocationContentType extends ComplexContentType implements ContentTypeExportInterface
 {
-    /**
-     * @var NodeRepositoryInterface
-     */
-    private $nodeRepository;
-
-    /**
-     * @var MapManager
-     */
-    private $mapManager;
-
-    /**
-     * @var string
-     */
-    private $geolocatorName;
-
-    public function __construct(
-        NodeRepositoryInterface $nodeRepository,
-        MapManager $mapManager,
-        $geolocatorName
-    ) {
-        $this->nodeRepository = $nodeRepository;
-        $this->mapManager = $mapManager;
-        $this->geolocatorName = $geolocatorName;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultParams(PropertyInterface $property = null)
-    {
-        return [
-            'countries' => new PropertyParameter('countries', $this->getCountries(), 'collection'),
-            'mapProviders' => new PropertyParameter(
-                'mapProviders',
-                $this->mapManager->getProvidersAsArray(),
-                'collection'
-            ),
-            'defaultProvider' => new PropertyParameter('defaultProvider', $this->mapManager->getDefaultProviderName()),
-            'geolocatorName' => new PropertyParameter('geolocatorName', $this->geolocatorName),
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{}'), true);
         $property->setValue($data);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -91,9 +36,6 @@ class LocationContentType extends ComplexContentType implements ContentTypeExpor
         $node->setProperty($property->getName(), json_encode($value));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         if ($node->hasProperty($property->getName())) {
@@ -101,24 +43,6 @@ class LocationContentType extends ComplexContentType implements ContentTypeExpor
         }
     }
 
-    /**
-     * Returns array of countries with the country-code as array key.
-     *
-     * @return array
-     */
-    private function getCountries()
-    {
-        $countries = [];
-        foreach (Intl::getRegionBundle()->getCountryNames() as $countryCode => $countryName) {
-            $countries[strtolower($countryCode)] = new PropertyParameter(strtolower($countryCode), $countryName);
-        }
-
-        return $countries;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function exportData($propertyValue)
     {
         if (false === is_string($propertyValue)) {
@@ -128,9 +52,6 @@ class LocationContentType extends ComplexContentType implements ContentTypeExpor
         return $propertyValue;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,

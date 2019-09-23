@@ -5,6 +5,54 @@
 When upgrading also have a look at the changes in the
 [sulu skeleton](https://github.com/sulu/sulu-minimal/compare/2.0.0-RC2...2.0.0).
 
+### LocationBundle
+
+The configuration of the location bundle has changed.
+
+__Before:__
+
+```yaml
+sulu_location:
+    types:
+        location:
+            template:             'SuluLocationBundle:Template:content-types/location.html.twig'
+    enabled_providers:
+
+        # Defaults:
+        - leaflet
+        - google
+    default_provider:             ~ # One of "leaflet"; "google"
+    geolocator:                   ~ # One of "nominatim"; "google"
+    providers:
+        leaflet:
+            title:                'Leaflet (OSM)'
+        google:
+            title:                'Google Maps'
+            api_key:              null
+    geolocators:
+        nominatim:
+            endpoint:             'http://open.mapquestapi.com/nominatim/v1/search.php'
+        google:
+            api_key:              ''
+```
+
+__After:__
+
+```yaml
+sulu_location:
+    geolocator:                   ~ # One of "nominatim"; "google"
+    geolocators:
+        nominatim:
+            api_key:              ''
+            endpoint:             'http://open.mapquestapi.com/nominatim/v1/search.php'
+        google:
+            api_key:              ''
+```
+
+Because of a change in the geolocators you have to add the `api_key` in `google` and `nominatim`.
+
+Additionally the providers have been removed and the admin will always use openstreetmap as map.
+
 ### Hateoas Library and Bundle Removed
 
 The Hateoas Bundle is not longer a requirement of sulu and can be removed from `bundles.php` in your project.

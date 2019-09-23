@@ -35,19 +35,18 @@ class NominatimGeolocator implements GeolocatorInterface
     protected $baseUrl;
 
     /**
-     * @param ClientInterface $client
-     * @param string $baseUrl
+     * @var string
      */
-    public function __construct(ClientInterface $client, $baseUrl = '')
+    private $key;
+
+    public function __construct(ClientInterface $client, string $baseUrl, string $key)
     {
         $this->client = $client;
         $this->baseUrl = $baseUrl;
+        $this->key = $key;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function locate($query)
+    public function locate(string $query): GeolocatorResponse
     {
         $response = $this->client->request(
             'GET',
@@ -57,6 +56,7 @@ class NominatimGeolocator implements GeolocatorInterface
                     'q' => $query,
                     'format' => 'json',
                     'addressdetails' => 1,
+                    'key' => $this->key,
                 ],
             ]
         );

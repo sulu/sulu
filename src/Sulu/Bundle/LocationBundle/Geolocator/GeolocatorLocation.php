@@ -14,167 +14,175 @@ namespace Sulu\Bundle\LocationBundle\Geolocator;
 use Sulu\Component\Util\TextUtils;
 
 /**
- * Data object representing a location returned
- * by a geolocator.
+ * Data object representing a location returned by a geolocator.
  */
 class GeolocatorLocation
 {
     /**
      * ID of this location (according to the geolocation vendor).
      *
-     * @var mixed
+     * @var string
      */
     protected $id;
 
     /**
-     * Title to display.
-     *
-     * @var string
+     * @var string|null
      */
     protected $displayTitle;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $street;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $number;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $code;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $town;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $country;
 
     /**
-     * @var float
+     * @var float|null
      */
     protected $longitude;
 
     /**
-     * @var float
+     * @var float|null
      */
     protected $latitude;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $displayName;
 
-    public function getDisplayTitle()
+    public function getDisplayTitle(): ?string
     {
         return $this->displayTitle;
     }
 
-    public function setDisplayTitle($displaytitle)
+    public function setDisplayTitle(?string $displayTitle): self
     {
-        $this->displayTitle = $displaytitle;
+        $this->displayTitle = $displayTitle;
+
+        return $this;
     }
 
-    public function getStreet()
+    public function getStreet(): ?string
     {
         return $this->street;
     }
 
-    public function setStreet($street)
+    public function setStreet(?string $street): self
     {
         $this->street = $street;
+
+        return $this;
     }
 
-    public function getNumber()
+    public function getNumber(): ?string
     {
         return $this->number;
     }
 
-    public function setNumber($number)
+    public function setNumber(?string $number): self
     {
         $this->number = $number;
+
+        return $this;
     }
 
-    public function getCode()
+    public function getCode(): ?string
     {
         return $this->code;
     }
 
-    public function setCode($code)
+    public function setCode(?string $code): self
     {
         $this->code = $code;
+
+        return $this;
     }
 
-    public function getTown()
+    public function getTown(): ?string
     {
         return $this->town;
     }
 
-    public function setTown($town)
+    public function setTown(?string $town): self
     {
         $this->town = $town;
+
+        return $this;
     }
 
-    public function getCountry()
+    public function getCountry(): ?string
     {
         return $this->country;
     }
 
-    public function setCountry($country)
+    public function setCountry(?string $country): self
     {
-        $this->country = $country;
+        $this->country = mb_strtoupper($country);
+
+        return $this;
     }
 
-    public function getLongitude()
+    public function getLongitude(): ?float
     {
         return $this->longitude;
     }
 
-    public function setLongitude($longitude)
+    public function setLongitude(?float $longitude): self
     {
         $this->longitude = $longitude;
+
+        return $this;
     }
 
-    public function getLatitude()
+    public function getLatitude(): ?float
     {
         return $this->latitude;
     }
 
-    public function setLatitude($latitude)
+    public function setLatitude(?float $latitude): self
     {
         $this->latitude = $latitude;
+
+        return $this;
     }
 
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * This is a hack for the husky component which is now
-     * hard coded to use the "name" property.
-     */
-    public function setName($name)
-    {
-        $this->setDisplayName($name);
-    }
-
-    public function setDisplayName($displayName)
+    public function setDisplayName(?string $displayName): self
     {
         $this->displayName = $displayName;
+
+        return $this;
     }
 
-    public function setId($id)
+    public function setId(string $id): self
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
