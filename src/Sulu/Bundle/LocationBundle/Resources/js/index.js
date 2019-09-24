@@ -1,6 +1,6 @@
 // @flow
 import {fieldRegistry} from 'sulu-admin-bundle/containers';
-import L from 'leaflet';
+import leaflet from 'leaflet';
 import leafletMarkerIcon from 'leaflet/dist/images/marker-icon.png';
 import leafletMarkerShadow from 'leaflet/dist/images/marker-shadow.png';
 import {Location} from './containers/Form';
@@ -11,8 +11,8 @@ import leafletStyles from 'leaflet/dist/leaflet.css';
 
 // fix marker image urls of leaflet to display markers on maps
 // https://github.com/PaulLeCam/react-leaflet/issues/453
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
+delete leaflet.Icon.Default.prototype._getIconUrl;
+leaflet.Icon.Default.mergeOptions({
     iconUrl: leafletMarkerIcon,
     shadowUrl: leafletMarkerShadow,
 });
