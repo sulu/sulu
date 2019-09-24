@@ -163,36 +163,12 @@
             <joins ref="address"/>
         </property>
 
-        <property name="countryCode" visibility="always" translation="sulu_contact.country">
-            <field-name>code</field-name>
-            <entity-name>SuluContactBundle:Country</entity-name>
-
-            <joins ref="address">
-                <join>
-                    <entity-name>SuluContactBundle:Country</entity-name>
-                    <field-name>SuluContactBundle:Address.country</field-name>
-                </join>
-            </joins>
-        </property>
-
-        <identity-property
-            name="countryId"
-            visibility="never"
-            filter-type="auto-complete"
-            translation="sulu_contact.country"
-        >
-            <field-name>country</field-name>
+        <property name="countryCode" filter-type="string" translation="sulu_contact.country">
+            <field-name>countryCode</field-name>
             <entity-name>SuluContactBundle:Address</entity-name>
 
             <joins ref="address"/>
-
-            <filter-type-parameters>
-                <parameter key="singleUrl"><![CDATA[/admin/api/countries/{id}]]></parameter>
-                <parameter key="prefetchUrl"><![CDATA[/admin/api/countries]]></parameter>
-                <parameter key="resultKey">countries</parameter>
-                <parameter key="valueKey">name</parameter>
-            </filter-type-parameters>
-        </identity-property>
+        </property>
 
         <property name="mainPhone" visibility="always" filter-type="string" translation="sulu_contact.phone">
             <field-name>mainPhone</field-name>

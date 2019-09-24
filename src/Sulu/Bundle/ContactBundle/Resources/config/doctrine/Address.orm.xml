@@ -19,6 +19,7 @@
         <field name="zip" type="string" column="zip" length="60" nullable="true"/>
         <field name="city" type="string" column="city" length="60" nullable="true"/>
         <field name="state" type="string" column="state" length="60" nullable="true" />
+        <field name="countryCode" type="string" column="countryCode" length="5" nullable="true" />
 
         <field name="postboxNumber" type="string" column="postboxNumber" length="100" nullable="true" />
         <field name="postboxPostcode" type="string" column="postboxPostcode" length="100" nullable="true" />
@@ -36,12 +37,6 @@
                      inversed-by="addresses">
             <join-columns>
                 <join-column name="idAdressTypes" referenced-column-name="id" nullable="false"/>
-            </join-columns>
-        </many-to-one>
-
-        <many-to-one field="country" target-entity="Sulu\Bundle\ContactBundle\Entity\Country" inversed-by="addresses">
-            <join-columns>
-                <join-column name="idCountries" referenced-column-name="id" nullable="true"/>
             </join-columns>
         </many-to-one>
     </entity>

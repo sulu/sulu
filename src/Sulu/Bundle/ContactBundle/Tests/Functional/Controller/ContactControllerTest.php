@@ -19,7 +19,6 @@ use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
-use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
@@ -66,7 +65,6 @@ class ContactControllerTest extends SuluTestCase
         $fax = $this->createFax('max.mustermann@muster.at', $faxType);
         $phoneType = $this->createPhoneType('Private');
         $phone = $this->createPhone('123456789', $phoneType);
-        $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $address = $this->createAddress(
             $addressType,
@@ -75,7 +73,7 @@ class ContactControllerTest extends SuluTestCase
             '0000',
             'Musterstadt',
             'Musterland',
-            $country,
+            'ML',
             true,
             true,
             false,
@@ -170,7 +168,6 @@ class ContactControllerTest extends SuluTestCase
         $emailType = $this->createEmailType('Private');
         $phoneType = $this->createPhoneType('Private');
         $addressType = $this->createAddressType('Private');
-        $country = $this->createCountry('Musterland', 'ML');
         $this->em->flush();
 
         $client = $this->createTestClient();
@@ -215,7 +212,7 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -333,7 +330,6 @@ class ContactControllerTest extends SuluTestCase
         $collection = $this->createCollection($collectionType);
         $mediaType = $this->createMediaType('image', 'This is an image');
         $media = $this->createMedia('media1.jpeg', 'image/jpeg', $mediaType, $collection);
-        $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $account = $this->createAccount('Musterfirma');
         $category1 = $this->createCategory('first-category-key', 'en', 'First Category', 'Description of Category');
@@ -396,7 +392,7 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -562,7 +558,6 @@ class ContactControllerTest extends SuluTestCase
     public function testPostEmptyLatitude()
     {
         $title = $this->createTitle('MSc');
-        $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $this->em->flush();
 
@@ -583,7 +578,7 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -880,7 +875,6 @@ class ContactControllerTest extends SuluTestCase
         $fax = $this->createFax('max.mustermann@muster.at', $faxType);
         $phoneType = $this->createPhoneType('Private');
         $phone = $this->createPhone('123456789', $phoneType);
-        $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $address = $this->createAddress(
             $addressType,
@@ -889,7 +883,7 @@ class ContactControllerTest extends SuluTestCase
             '0000',
             'Musterstadt',
             'Musterland',
-            $country,
+            'ML',
             true,
             true,
             false,
@@ -988,7 +982,7 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -1033,6 +1027,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('9999', $response->addresses[0]->zip);
         $this->assertEquals('Springfield', $response->addresses[0]->city);
         $this->assertEquals('Colorado', $response->addresses[0]->state);
+        $this->assertEquals('ML', $response->addresses[0]->countryCode);
         $this->assertEquals('Note 1_1', $response->notes[0]->value);
         $this->assertEquals(1, count($response->notes));
         $this->assertEquals('note', $response->addresses[0]->note);
@@ -1266,7 +1261,6 @@ class ContactControllerTest extends SuluTestCase
         $fax = $this->createFax('max.mustermann@muster.at', $faxType);
         $phoneType = $this->createPhoneType('Private');
         $phone = $this->createPhone('123456789', $phoneType);
-        $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $address = $this->createAddress(
             $addressType,
@@ -1275,7 +1269,7 @@ class ContactControllerTest extends SuluTestCase
             '0000',
             'Musterstadt',
             'Musterland',
-            $country,
+            'ML',
             true,
             true,
             false,
@@ -1343,7 +1337,7 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -1403,7 +1397,6 @@ class ContactControllerTest extends SuluTestCase
         $email = $this->createEmail('max.mustermann@muster.at', $emailType);
         $phoneType = $this->createPhoneType('Private');
         $phone = $this->createPhone('123456789', $phoneType);
-        $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $address = $this->createAddress(
             $addressType,
@@ -1412,7 +1405,7 @@ class ContactControllerTest extends SuluTestCase
             '0000',
             'Musterstadt',
             'Musterland',
-            $country,
+            'ML',
             true,
             true,
             false,
@@ -1471,7 +1464,7 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -1514,7 +1507,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Sehr geehrter John', $response->salutation);
     }
 
-    public function testPutNewCountryOnlyId()
+    public function testPutNewCountry()
     {
         $title = $this->createTitle('MSc');
         $position = $this->createPosition('Manager');
@@ -1522,7 +1515,6 @@ class ContactControllerTest extends SuluTestCase
         $email = $this->createEmail('max.mustermann@muster.at', $emailType);
         $phoneType = $this->createPhoneType('Private');
         $phone = $this->createPhone('123456789', $phoneType);
-        $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $address = $this->createAddress(
             $addressType,
@@ -1531,7 +1523,7 @@ class ContactControllerTest extends SuluTestCase
             '0000',
             'Musterstadt',
             'Musterland',
-            $country,
+            'ML',
             true,
             true,
             false,
@@ -1589,7 +1581,7 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                     ],
                 ],
@@ -1613,7 +1605,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals($title->getId(), $response->title);
         $this->assertEquals(0, count($response->contactDetails->emails));
 
-        $this->assertNotNull($response->addresses[0]->country);
+        $this->assertEquals('ML', $response->addresses[0]->countryCode);
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
@@ -1627,7 +1619,6 @@ class ContactControllerTest extends SuluTestCase
         $email = $this->createEmail('max.mustermann@muster.at', $emailType);
         $phoneType = $this->createPhoneType('Private');
         $phone = $this->createPhone('123456789', $phoneType);
-        $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $address = $this->createAddress(
             $addressType,
@@ -1636,7 +1627,7 @@ class ContactControllerTest extends SuluTestCase
             '0000',
             'Musterstadt',
             'Musterland',
-            $country,
+            'ML',
             true,
             true,
             false,
@@ -1697,7 +1688,7 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                     ],
                 ],
@@ -1723,7 +1714,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals($account->getId(), $response->account->id);
 
-        $this->assertEquals($country->getId(), $response->addresses[0]->country);
+        $this->assertEquals('ML', $response->addresses[0]->countryCode);
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
@@ -1891,7 +1882,6 @@ class ContactControllerTest extends SuluTestCase
         $email = $this->createEmail('max.mustermann@muster.at', $emailType);
         $phoneType = $this->createPhoneType('Private');
         $phone = $this->createPhone('123456789', $phoneType);
-        $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $address = $this->createAddress(
             $addressType,
@@ -1900,7 +1890,7 @@ class ContactControllerTest extends SuluTestCase
             '0000',
             'Musterstadt',
             'Musterland',
-            $country,
+            'ML',
             true,
             true,
             false,
@@ -1967,7 +1957,7 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'note' => 'note',
                     ],
@@ -2040,7 +2030,7 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'note' => 'note1',
                     ],
@@ -2177,7 +2167,6 @@ class ContactControllerTest extends SuluTestCase
         $position = $this->createPosition('Manager');
         $emailType = $this->createEmailType('Private');
         $addressType = $this->createAddressType('Private');
-        $country = $this->createCountry('Musterland', 'ML');
         $account = $this->createAccount('Musterfirma');
         $this->em->flush();
 
@@ -2210,7 +2199,7 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -2225,7 +2214,7 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -2288,7 +2277,6 @@ class ContactControllerTest extends SuluTestCase
         $emailType = $this->createEmailType('Private');
         $email = $this->createEmail('max.mustermann@muster.at', $emailType);
         $addressType = $this->createAddressType('Private');
-        $country = $this->createCountry('Musterland', 'ML');
         $address = $this->createAddress(
             $addressType,
             'Musterstraße',
@@ -2296,7 +2284,7 @@ class ContactControllerTest extends SuluTestCase
             '0000',
             'Musterstadt',
             'Musterland',
-            $country,
+            'ML',
             true,
             true,
             false,
@@ -2351,7 +2339,7 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -2366,7 +2354,7 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -2381,7 +2369,7 @@ class ContactControllerTest extends SuluTestCase
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -2667,7 +2655,7 @@ class ContactControllerTest extends SuluTestCase
         ?string $zip,
         ?string $city,
         ?string $state,
-        ?Country $country,
+        ?string $countryCode,
         ?bool $billingAddress,
         ?bool $primaryAddress,
         ?bool $deliveryAddress,
@@ -2682,7 +2670,7 @@ class ContactControllerTest extends SuluTestCase
         $address->setZip($zip);
         $address->setCity($city);
         $address->setState($state);
-        $address->setCountry($country);
+        $address->setCountryCode($countryCode);
         $address->setAddressType($addressType);
         $address->setBillingAddress($billingAddress);
         $address->setPrimaryAddress($primaryAddress);
@@ -2695,17 +2683,6 @@ class ContactControllerTest extends SuluTestCase
         $this->em->persist($address);
 
         return $address;
-    }
-
-    private function createCountry(string $name, string $code)
-    {
-        $country = new Country();
-        $country->setName($name);
-        $country->setCode($code);
-
-        $this->em->persist($country);
-
-        return $country;
     }
 
     private function createCollection(CollectionType $collectionType)

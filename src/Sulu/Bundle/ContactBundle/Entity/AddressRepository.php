@@ -28,11 +28,9 @@ class AddressRepository extends EntityRepository
             $qb = $this->createQueryBuilder('address')
                 ->leftJoin('address.accountAddresses', 'accountAddresses')
                 ->leftJoin('address.contactAddresses', 'contactAddresses')
-                ->leftJoin('address.country', 'country')
                 ->leftJoin('address.addressType', 'addressType')
                 ->addSelect('accountAddresses')
                 ->addSelect('contactAddresses')
-                ->addSelect('country')
                 ->addSelect('addressType')
                 ->where('address.id = :id');
 
@@ -51,12 +49,10 @@ class AddressRepository extends EntityRepository
             $qb = $this->createQueryBuilder('address')
                 ->leftJoin('address.accountAddresses', 'accountAddresses')
                 ->leftJoin('address.contactAddresses', 'contactAddresses')
-                ->leftJoin('address.country', 'country')
                 ->leftJoin('address.addressType', 'addressType')
                 ->leftJoin('accountAddresses.account', 'account')
                 ->addSelect('accountAddresses')
                 ->addSelect('contactAddresses')
-                ->addSelect('country')
                 ->addSelect('addressType')
                 ->where('account.id = :id');
 

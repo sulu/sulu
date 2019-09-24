@@ -67,8 +67,6 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
     protected static $addressEntityName = 'SuluContactBundle:Address';
 
-    protected static $countryEntityName = 'SuluContactBundle:Country';
-
     protected static $emailEntityName = 'SuluContactBundle:Email';
 
     protected static $urlEntityName = 'SuluContactBundle:Url';
@@ -1252,17 +1250,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
             ->getRepository(self::$addressTypeEntityName)
             ->find($addressData['addressType']);
 
-        $country = null;
-        if (isset($addressData['country'])) {
-            $country = $this->em->getRepository(
-                self::$countryEntityName
-            )->find($addressData['country']);
-        }
-
         if (isset($addressData['id'])) {
             throw new EntityIdAlreadySetException(self::$addressEntityName, $addressData['id']);
-        } elseif (isset($addressData['country']) && !$country) {
-            throw new EntityNotFoundException(self::$countryEntityName, $addressData['country']);
         } elseif (!$addressType) {
             throw new EntityNotFoundException(self::$addressTypeEntityName, $addressData['addressType']);
         } else {
@@ -1282,6 +1271,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
             }
             if (isset($addressData['state'])) {
                 $address->setState($addressData['state']);
+            }
+            if (isset($addressData['countryCode'])) {
+                $address->setCountryCode($addressData['countryCode']);
             }
             if (isset($addressData['latitude'])) {
                 $address->setLatitude('' !== $addressData['latitude'] ? $addressData['latitude'] : null);
@@ -1316,7 +1308,6 @@ abstract class AbstractContactManager implements ContactManagerInterface
                 $address->setPostboxPostcode($addressData['postboxPostcode']);
             }
 
-            $address->setCountry($country);
             $address->setAddressType($addressType);
 
             // add additional fields
@@ -1349,78 +1340,65 @@ abstract class AbstractContactManager implements ContactManagerInterface
             ->getRepository(self::$addressTypeEntityName)
             ->find($entry['addressType']);
 
-        $country = null;
-        if (isset($entry['country'])) {
-            $country = $this->em
-                ->getRepository(self::$countryEntityName)
-                ->find($entry['country']);
-        }
-
         if (!$addressType) {
             throw new EntityNotFoundException(self::$addressTypeEntityName, $entry['addressType']);
+        }
+
+        if (isset($entry['street'])) {
+            $address->setStreet($entry['street']);
+        }
+        if (isset($entry['number'])) {
+            $address->setNumber($entry['number']);
+        }
+        if (isset($entry['zip'])) {
+            $address->setZip($entry['zip']);
+        }
+        if (isset($entry['city'])) {
+            $address->setCity($entry['city']);
+        }
+        if (isset($entry['state'])) {
+            $address->setState($entry['state']);
+        }
+        if (isset($entry['countryCode'])) {
+            $address->setCountryCode($entry['countryCode']);
+        }
+        if ($addressType) {
+            $address->setAddressType($addressType);
+        }
+        if (isset($entry['latitude'])) {
+            $address->setLatitude($entry['latitude'] ?: null);
+        }
+        if (isset($entry['longitude'])) {
+            $address->setLongitude($entry['longitude'] ?: null);
+        }
+        if (isset($entry['note'])) {
+            $address->setNote($entry['note']);
+        }
+        if (isset($entry['title'])) {
+            $address->setTitle($entry['title']);
+        }
+        if (isset($entry['primaryAddress'])) {
+            $isMain = $this->getBooleanValue($entry['primaryAddress']);
         } else {
-            if (isset($entry['country']) && !$country) {
-                throw new EntityNotFoundException(self::$countryEntityName, $entry['country']);
-            } else {
-                if (isset($entry['street'])) {
-                    $address->setStreet($entry['street']);
-                }
-                if (isset($entry['number'])) {
-                    $address->setNumber($entry['number']);
-                }
-                if (isset($entry['zip'])) {
-                    $address->setZip($entry['zip']);
-                }
-                if (isset($entry['city'])) {
-                    $address->setCity($entry['city']);
-                }
-                if (isset($entry['state'])) {
-                    $address->setState($entry['state']);
-                }
-                if ($country) {
-                    $address->setCountry($country);
-                }
-                if ($addressType) {
-                    $address->setAddressType($addressType);
-                }
-                if (isset($entry['latitude'])) {
-                    $address->setLatitude($entry['latitude'] ?: null);
-                }
-                if (isset($entry['longitude'])) {
-                    $address->setLongitude($entry['longitude'] ?: null);
-                }
-                if (isset($entry['note'])) {
-                    $address->setNote($entry['note']);
-                }
-                if (isset($entry['title'])) {
-                    $address->setTitle($entry['title']);
-                }
-
-                if (isset($entry['primaryAddress'])) {
-                    $isMain = $this->getBooleanValue($entry['primaryAddress']);
-                } else {
-                    $isMain = false;
-                }
-                if (isset($entry['billingAddress'])) {
-                    $address->setBillingAddress($this->getBooleanValue($entry['billingAddress']));
-                }
-                if (isset($entry['deliveryAddress'])) {
-                    $address->setDeliveryAddress($this->getBooleanValue($entry['deliveryAddress']));
-                }
-                if (isset($entry['postboxCity'])) {
-                    $address->setPostboxCity($entry['postboxCity']);
-                }
-                if (isset($entry['postboxNumber'])) {
-                    $address->setPostboxNumber($entry['postboxNumber']);
-                }
-                if (isset($entry['postboxPostcode'])) {
-                    $address->setPostboxPostcode($entry['postboxPostcode']);
-                }
-
-                if (isset($entry['addition'])) {
-                    $address->setAddition($entry['addition']);
-                }
-            }
+            $isMain = false;
+        }
+        if (isset($entry['billingAddress'])) {
+            $address->setBillingAddress($this->getBooleanValue($entry['billingAddress']));
+        }
+        if (isset($entry['deliveryAddress'])) {
+            $address->setDeliveryAddress($this->getBooleanValue($entry['deliveryAddress']));
+        }
+        if (isset($entry['postboxCity'])) {
+            $address->setPostboxCity($entry['postboxCity']);
+        }
+        if (isset($entry['postboxNumber'])) {
+            $address->setPostboxNumber($entry['postboxNumber']);
+        }
+        if (isset($entry['postboxPostcode'])) {
+            $address->setPostboxPostcode($entry['postboxPostcode']);
+        }
+        if (isset($entry['addition'])) {
+            $address->setAddition($entry['addition']);
         }
 
         return $success;

@@ -20,6 +20,7 @@ use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Symfony\Component\Intl\Intl;
 
 class ContactAdmin extends Admin
 {
@@ -312,7 +313,7 @@ class ContactAdmin extends Admin
     {
         return [
             'addressTypes' => $this->managerRegistry->getRepository('SuluContactBundle:AddressType')->findAll(),
-            'countries' => $this->managerRegistry->getRepository('SuluContactBundle:Country')->findAll(),
+            'countries' => Intl::getRegionBundle()->getCountryNames(),
             'emailTypes' => $this->managerRegistry->getRepository('SuluContactBundle:EmailType')->findAll(),
             'faxTypes' => $this->managerRegistry->getRepository('SuluContactBundle:FaxType')->findAll(),
             'phoneTypes' => $this->managerRegistry->getRepository('SuluContactBundle:PhoneType')->findAll(),

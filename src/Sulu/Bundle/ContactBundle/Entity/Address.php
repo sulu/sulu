@@ -81,11 +81,11 @@ class Address
     private $addressType;
 
     /**
-     * @var Country
+     * @var string
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
-    private $country;
+    private $countryCode;
 
     /**
      * @var bool
@@ -355,27 +355,36 @@ class Address
     }
 
     /**
-     * Set country.
+     * Set countryCode.
      *
-     * @param Country $country
+     * @param string $countryCode
      *
      * @return Address
      */
-    public function setCountry(Country $country = null)
+    public function setCountryCode(?string $countryCode)
     {
-        $this->country = $country;
+        $this->countryCode = $countryCode;
 
         return $this;
     }
 
     /**
-     * Get country.
+     * Get countryCode.
      *
-     * @return Country
+     * @return string|null
      */
-    public function getCountry()
+    public function getCountryCode(): ?string
     {
-        return $this->country;
+        return $this->countryCode;
+    }
+
+    public function getCountry(): ?Country
+    {
+        if (!$this->countryCode) {
+            return null;
+        }
+
+        return new Country($this->countryCode);
     }
 
     /**
