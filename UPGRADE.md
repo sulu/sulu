@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-develop
+## 2.0.0-RC3
 
 When upgrading also have a look at the changes in the
 [sulu skeleton](https://github.com/sulu/sulu-minimal/compare/2.0.0-RC2...2.0.0-RC3).
