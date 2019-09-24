@@ -63,7 +63,7 @@ class AuthenticationHandlerTest extends TestCase
         $session->get('_security.admin.target_path')->willReturn('/admin/#target/path');
         $session->set(Security::AUTHENTICATION_ERROR, $this->exception->reveal())->willReturn(null);
         $router->generate('sulu_admin')->willReturn('/admin');
-        $router->generate('sulu_admin.login')->willReturn('/admin/login');
+        $router->generate('sulu_admin')->willReturn('/admin');
 
         $this->authenticationHandler = new AuthenticationHandler($router->reveal(), $session->reveal(), 'Sulu');
     }
