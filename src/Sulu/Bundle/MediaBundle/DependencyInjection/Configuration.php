@@ -236,7 +236,7 @@ class Configuration implements ConfigurationInterface
         }
 
         $node->children()
-                ->enumNode('storage')->values($storages)->defaultValue('local')->end()
+                ->scalarNode('storage')->defaultValue('local')->end()
             ->end();
     }
 
