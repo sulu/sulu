@@ -109,10 +109,10 @@ class Location extends React.Component<Props> {
                     </Map>
                 }
                 <LocationOverlay
-                    initialValue={value}
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}
                     open={this.overlayOpen}
+                    value={value}
                 />
             </div>
         );

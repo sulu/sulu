@@ -10,10 +10,10 @@ import type {Location as LocationValue} from '../../types';
 import locationOverlayStyles from './locationOverlay.scss';
 
 type Props = {
-    initialValue: ?LocationValue,
     onClose: () => void,
     onConfirm: (?LocationValue) => void,
     open: boolean,
+    value: ?LocationValue,
 };
 
 @observer
@@ -32,32 +32,32 @@ class LocationOverlay extends React.Component<Props> {
     @observable town: ?string;
     @observable country: ?string;
 
-    updateInitialDataDisposer: () => *;
+    updateDataOnOpenDisposer: () => *;
 
     constructor(props: Props) {
         super(props);
 
-        this.updateInitialDataDisposer = reaction(() => this.props.open, (newOpenValue) => {
+        this.updateDataOnOpenDisposer = reaction(() => this.props.open, (newOpenValue) => {
             if (newOpenValue === true) {
-                this.mapLat = this.props.initialValue ? this.props.initialValue.lat : 0;
-                this.mapLong = this.props.initialValue ? this.props.initialValue.long : 0;
-                this.mapZoom = this.props.initialValue ? this.props.initialValue.zoom : 1;
+                this.mapLat = this.props.value ? this.props.value.lat : 0;
+                this.mapLong = this.props.value ? this.props.value.long : 0;
+                this.mapZoom = this.props.value ? this.props.value.zoom : 1;
 
-                this.markerLat = this.props.initialValue ? this.props.initialValue.lat : null;
-                this.markerLong = this.props.initialValue ? this.props.initialValue.long : null;
+                this.markerLat = this.props.value ? this.props.value.lat : null;
+                this.markerLong = this.props.value ? this.props.value.long : null;
 
-                this.title = this.props.initialValue ? this.props.initialValue.title : null;
-                this.street = this.props.initialValue ? this.props.initialValue.street : null;
-                this.number = this.props.initialValue ? this.props.initialValue.number : null;
-                this.code = this.props.initialValue ? this.props.initialValue.code : null;
-                this.town = this.props.initialValue ? this.props.initialValue.town : null;
-                this.country = this.props.initialValue ? this.props.initialValue.country : null;
+                this.title = this.props.value ? this.props.value.title : null;
+                this.street = this.props.value ? this.props.value.street : null;
+                this.number = this.props.value ? this.props.value.number : null;
+                this.code = this.props.value ? this.props.value.code : null;
+                this.town = this.props.value ? this.props.value.town : null;
+                this.country = this.props.value ? this.props.value.country : null;
             }
         }, {fireImmediately: true});
     }
 
     componentWillUnmount() {
-        this.updateInitialDataDisposer();
+        this.updateDataOnOpenDisposer();
     }
 
     handleConfirm = () => {

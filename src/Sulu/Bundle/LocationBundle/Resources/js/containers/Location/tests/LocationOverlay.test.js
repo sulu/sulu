@@ -13,10 +13,10 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 test('Component should render without a given initial-value', () => {
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={null}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
+            value={null}
         />
     );
 
@@ -38,10 +38,10 @@ test('Component should render with a given initial-value', () => {
 
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={locationData}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
+            value={locationData}
         />
     );
 
@@ -51,10 +51,10 @@ test('Component should render with a given initial-value', () => {
 test('Should pass correct props the the Overlay component', () => {
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={null}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
+            value={null}
         />
     );
 
@@ -70,10 +70,10 @@ test('Should pass correct props the the Overlay component', () => {
 test('Should pass correct props the the SingleAutoComplete component', () => {
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={null}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
+            value={null}
         />
     );
 
@@ -88,10 +88,10 @@ test('Should pass correct props the the SingleAutoComplete component', () => {
 test('Should pass correct props the Map component and Marker component when no initial-value is given', () => {
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={null}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
+            value={null}
         />
     );
 
@@ -122,10 +122,10 @@ test('Should pass correct props the Map component and Marker component when an i
 
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={locationData}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
+            value={locationData}
         />
     );
 
@@ -156,10 +156,10 @@ test('Should pass correct props to the input fields', () => {
 
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={locationData}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
+            value={locationData}
         />
     );
 
@@ -177,10 +177,10 @@ test('Should pass correct props to the input fields', () => {
 test('Should pass correct props to the map, marker and input fields after auto-complete was changed', () => {
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={null}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
+            value={null}
         />
     );
 
@@ -222,10 +222,10 @@ test('Should call onConfirm callback when the Overlay is confirmed after auto-co
 
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={null}
             onClose={jest.fn()}
             onConfirm={confirmSpy}
             open={true}
+            value={null}
         />
     );
 
@@ -259,10 +259,10 @@ test('Should call onConfirm callback when the Overlay is confirmed after auto-co
 test('Should pass correct props to the map and input fields after map was zoomed', () => {
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={null}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
+            value={null}
         />
     );
 
@@ -289,10 +289,10 @@ test('Should call onConfirm callback when the Overlay is confirmed after map was
 
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={locationData}
             onClose={jest.fn()}
             onConfirm={confirmSpy}
             open={true}
+            value={locationData}
         />
     );
 
@@ -315,10 +315,10 @@ test('Should call onConfirm callback when the Overlay is confirmed after map was
 test('Should pass correct props to the map, marker and input fields while marker is dragged', () => {
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={null}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
+            value={null}
         />
     );
 
@@ -336,10 +336,10 @@ test('Should pass correct props to the map, marker and input fields while marker
 test('Should pass correct props to the map, marker and input fields after marker was dragged', () => {
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={null}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
+            value={null}
         />
     );
 
@@ -369,10 +369,10 @@ test('Should call onConfirm callback when the Overlay is confirmed after marker 
 
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={locationData}
             onClose={jest.fn()}
             onConfirm={confirmSpy}
             open={true}
+            value={locationData}
         />
     );
 
@@ -408,10 +408,10 @@ test('Should pass correct props to the map, marker and input fields after reset'
 
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={locationData}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
+            value={locationData}
         />
     );
 
@@ -449,10 +449,10 @@ test('Should call onConfirm callback when the Overlay is confirmed after reset',
 
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={locationData}
             onClose={jest.fn()}
             onConfirm={confirmSpy}
             open={true}
+            value={locationData}
         />
     );
 
@@ -465,10 +465,10 @@ test('Should call onConfirm callback when the Overlay is confirmed after reset',
 test('Should pass correct props to the map, marker and input fields after input fields are changed', () => {
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={null}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
+            value={null}
         />
     );
 
@@ -503,10 +503,10 @@ test('Should call onConfirm callback when the Overlay is confirmed after input f
 
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={null}
             onClose={jest.fn()}
             onConfirm={confirmSpy}
             open={true}
+            value={null}
         />
     );
 
@@ -539,10 +539,10 @@ test('Should call given onClose callback when onClose callback of Overlay is fir
 
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={null}
             onClose={closeSpy}
             onConfirm={jest.fn()}
             open={true}
+            value={null}
         />
     );
 
@@ -556,10 +556,10 @@ test('Should enable confirm button if longitude and latitude are both not set or
 
     const locationOverlay = mount(
         <LocationOverlay
-            initialValue={null}
             onClose={closeSpy}
             onConfirm={jest.fn()}
             open={true}
+            value={null}
         />
     );
 

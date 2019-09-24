@@ -152,7 +152,7 @@ test('Should pass correct props to the LocationOverlay', () => {
 
     expect(location.find(LocationOverlay).props()).toEqual(expect.objectContaining({
         open: false,
-        initialValue: locationData,
+        value: locationData,
     }));
 });
 
