@@ -53,8 +53,9 @@ class PortalInformationRequestProcessor implements RequestProcessorInterface
         }
 
         if ($attributes['localization']) {
-            $attributes['locale'] = $attributes['localization']->getLocale();
-            $request->setLocale($attributes['locale']);
+            $localization = $attributes['localization'];
+            $attributes['locale'] = $localization->getLocale();
+            $request->setLocale($localization->getLocale());
         }
 
         $attributes['segment'] = $portalInformation->getSegment();

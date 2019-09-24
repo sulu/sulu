@@ -31,8 +31,10 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     private $requestStack;
 
-    public function __construct(RequestStack $requestStack, array $requestProcessors)
-    {
+    public function __construct(
+        RequestStack $requestStack,
+        array $requestProcessors
+    ) {
         $this->requestStack = $requestStack;
         $this->requestProcessors = $requestProcessors;
     }

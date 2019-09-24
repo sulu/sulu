@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\Tests\Unit\Analyzer;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestProcessorInterface;
 use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
@@ -147,6 +148,8 @@ class RequestAnalyzerTest extends TestCase
 
     public function provideGetter()
     {
+        $localization = new Localization('de', 'at');
+
         return [
             [['matchType' => 1], 'getMatchType', 1],
             [[], 'getMatchType', null],
@@ -156,7 +159,7 @@ class RequestAnalyzerTest extends TestCase
             [[], 'getPortal', null],
             [['segment' => 1], 'getSegment', 1],
             [[], 'getSegment', null],
-            [['localization' => 1], 'getCurrentLocalization', 1],
+            [['localization' => $localization], 'getCurrentLocalization', $localization],
             [[], 'getCurrentLocalization', null],
             [['portalUrl' => 1], 'getPortalUrl', 1],
             [[], 'getPortalUrl', null],
@@ -177,6 +180,7 @@ class RequestAnalyzerTest extends TestCase
     public function testGetter(array $attributes, $method, $expected)
     {
         $provider = $this->prophesize(RequestProcessorInterface::class);
+
         $request = new Request();
 
         $provider->process($request, Argument::type(RequestAttributes::class))
