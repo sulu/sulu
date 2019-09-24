@@ -9,7 +9,7 @@ When upgrading also have a look at the changes in the
 
 The `sulu_website.event_listener.translator` will now set the correct locale for the `translator` service.
 
-In this case the following classes and services where removed:
+Because of that the following classes and services were removed:
 
  - `Sulu\Bundle\WebsiteBundle\EventListener\TranslatorEventListener`
  - `Sulu\Bundle\WebsiteBundle\Translator\RequestLocaleTranslator`
