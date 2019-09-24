@@ -17,7 +17,6 @@ use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
@@ -98,10 +97,6 @@ class AccountMediaControllerTest extends SuluTestCase
         $fax->setFaxType($faxType);
         $this->account->addFax($fax);
 
-        $country = new Country();
-        $country->setName('Musterland');
-        $country->setCode('ML');
-
         $addressType = new AddressType();
         $addressType->setName('Private');
 
@@ -111,7 +106,7 @@ class AccountMediaControllerTest extends SuluTestCase
         $address->setZip('0000');
         $address->setCity('Musterstadt');
         $address->setState('Musterland');
-        $address->setCountry($country);
+        $address->setCountryCode('AT');
         $address->setAddressType($addressType);
         $address->setBillingAddress(true);
         $address->setPrimaryAddress(true);
@@ -153,7 +148,6 @@ class AccountMediaControllerTest extends SuluTestCase
         $this->em->persist($email);
         $this->em->persist($phoneType);
         $this->em->persist($phone);
-        $this->em->persist($country);
         $this->em->persist($addressType);
         $this->em->persist($address);
         $this->em->persist($accountAddress);

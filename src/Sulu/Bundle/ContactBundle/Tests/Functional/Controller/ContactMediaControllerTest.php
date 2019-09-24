@@ -17,7 +17,6 @@ use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
-use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
@@ -104,14 +103,6 @@ class ContactMediaControllerTest extends SuluTestCase
         $fax->setFaxType($faxType);
         $contact->addFax($fax);
 
-        $country1 = new Country();
-        $country1->setName('Musterland');
-        $country1->setCode('ML');
-
-        $country2 = new Country();
-        $country2->setName('United States');
-        $country2->setCode('US');
-
         $addressType = new AddressType();
         $addressType->setName('Private');
 
@@ -121,7 +112,7 @@ class ContactMediaControllerTest extends SuluTestCase
         $address->setZip('0000');
         $address->setCity('Musterstadt');
         $address->setState('Musterland');
-        $address->setCountry($country1);
+        $address->setCountryCode('AT');
         $address->setAddressType($addressType);
         $address->setBillingAddress(true);
         $address->setPrimaryAddress(true);
@@ -155,8 +146,6 @@ class ContactMediaControllerTest extends SuluTestCase
         $this->em->persist($fax);
         $this->em->persist($emailType);
         $this->em->persist($email);
-        $this->em->persist($country1);
-        $this->em->persist($country2);
         $this->em->persist($addressType);
         $this->em->persist($contactAddress);
         $this->em->persist($address);

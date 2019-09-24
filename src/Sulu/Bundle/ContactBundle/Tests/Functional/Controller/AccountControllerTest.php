@@ -19,7 +19,6 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
@@ -91,7 +90,6 @@ class AccountControllerTest extends SuluTestCase
         $faxType = $this->createFaxType('Private');
         $fax = $this->createFax('123456789', $faxType);
         $note = $this->createNote('Note');
-        $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $address = $this->createAddress(
             $addressType,
@@ -100,7 +98,7 @@ class AccountControllerTest extends SuluTestCase
             '0000',
             'Musterstadt',
             'Musterland',
-            $country,
+            'ML',
             true,
             true,
             false,
@@ -152,7 +150,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('0000', $response->addresses[0]->zip);
         $this->assertEquals('Musterstadt', $response->addresses[0]->city);
         $this->assertEquals('Musterland', $response->addresses[0]->state);
-        $this->assertEquals($country->getId(), $response->addresses[0]->country);
+        $this->assertEquals('ML', $response->addresses[0]->countryCode);
         $this->assertEquals($addressType->getId(), $response->addresses[0]->addressType);
         $this->assertEquals(47.4048346, $response->addresses[0]->latitude);
         $this->assertEquals(9.7602198, $response->addresses[0]->longitude);
@@ -330,7 +328,6 @@ class AccountControllerTest extends SuluTestCase
         $urlType = $this->createUrlType('Private');
         $faxType = $this->createFaxType('Private');
         $addressType = $this->createAddressType('Private');
-        $country = $this->createCountry('Musterland', 'ML');
         $category1 = $this->createCategory('first-category-key', 'en', 'First Category', 'Description of Category');
         $category2 = $this->createCategory('second-category-key', 'en', 'Second Category', 'Description of second Category');
         $this->em->flush();
@@ -390,7 +387,7 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -498,7 +495,6 @@ class AccountControllerTest extends SuluTestCase
     {
         $phoneType = $this->createPhoneType('Private');
         $urlType = $this->createUrlType('Private');
-        $country = $this->createCountry('Musterland', 'ML');
 
         $this->em->flush();
 
@@ -587,7 +583,7 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => 1,
                     ],
                 ],
@@ -715,7 +711,7 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => 1,
+                        'countryCode' => 'ML',
                         'addressType' => 2,
                     ],
                 ],
@@ -766,7 +762,7 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => 12393,
+                        'countryCode' => 'ooo',
                         'addressType' => 1,
                     ],
                 ],
@@ -829,7 +825,6 @@ class AccountControllerTest extends SuluTestCase
         $emailType = $this->createEmailType('Private');
         $phoneType = $this->createPhoneType('Private');
         $faxType = $this->createFaxType('Private');
-        $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $category1 = $this->createCategory('first-category-key', 'en', 'First Category', 'Description of Category');
         $category2 = $this->createCategory('second-category-key', 'en', 'Second Category', 'Description of second Category');
@@ -914,7 +909,7 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0022',
                         'city' => 'Dornbirn',
                         'state' => 'state1',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -932,7 +927,7 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '2222',
                         'city' => 'Dornbirn',
                         'state' => 'state1',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'note' => 'note1',
                     ],
@@ -999,7 +994,7 @@ class AccountControllerTest extends SuluTestCase
             $this->assertEquals('Dornbirn', $response->addresses[0]->city);
             $this->assertEquals('state1', $response->addresses[0]->state);
             $this->assertEquals('note', $response->addresses[0]->note);
-            $this->assertEquals($country->getId(), $response->addresses[0]->country);
+            $this->assertEquals('ML', $response->addresses[0]->countryCode);
             $this->assertEquals($addressType->getId(), $response->addresses[0]->addressType);
 
             $this->assertEquals(true, $response->addresses[0]->billingAddress);
@@ -1018,7 +1013,7 @@ class AccountControllerTest extends SuluTestCase
             $this->assertEquals('Dornbirn', $response->addresses[1]->city);
             $this->assertEquals('note1', $response->addresses[1]->note);
             $this->assertEquals('state1', $response->addresses[1]->state);
-            $this->assertEquals($country->getId(), $response->addresses[1]->country);
+            $this->assertEquals('ML', $response->addresses[1]->countryCode);
             $this->assertEquals($addressType->getId(), $response->addresses[1]->addressType);
         } else {
             $this->assertEquals(2, count($response->addresses));
@@ -1028,7 +1023,7 @@ class AccountControllerTest extends SuluTestCase
             $this->assertEquals('0022', $response->addresses[1]->zip);
             $this->assertEquals('Dornbirn', $response->addresses[1]->city);
             $this->assertEquals('state1', $response->addresses[1]->state);
-            $this->assertEquals($country->getId(), $response->addresses[1]->country);
+            $this->assertEquals('ML', $response->addresses[1]->countryCode);
             $this->assertEquals($addressType->getId(), $response->addresses[1]->addressType);
 
             $this->assertEquals(true, $response->addresses[1]->billingAddress);
@@ -1043,7 +1038,7 @@ class AccountControllerTest extends SuluTestCase
             $this->assertEquals('2222', $response->addresses[0]->zip);
             $this->assertEquals('Dornbirn', $response->addresses[0]->city);
             $this->assertEquals('state1', $response->addresses[0]->state);
-            $this->assertEquals($country->getId(), $response->addresses[0]->country);
+            $this->assertEquals('ML', $response->addresses[0]->countryCode);
             $this->assertEquals('note1', $response->addresses[0]->note);
             $this->assertEquals($addressType->getId(), $response->addresses[0]->addressType);
         }
@@ -1059,7 +1054,6 @@ class AccountControllerTest extends SuluTestCase
         $phone = $this->createPhone('123456789', $phoneType);
         $faxType = $this->createFaxType('Private');
         $fax = $this->createFax('123456789', $faxType);
-        $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $address = $this->createAddress(
             $addressType,
@@ -1068,7 +1062,7 @@ class AccountControllerTest extends SuluTestCase
             '0000',
             'Musterstadt',
             'Musterland',
-            $country,
+            'ML',
             true,
             true,
             false,
@@ -1123,7 +1117,6 @@ class AccountControllerTest extends SuluTestCase
         $phone = $this->createPhone('123456789', $phoneType);
         $faxType = $this->createFaxType('Private');
         $fax = $this->createFax('123456789', $faxType);
-        $country = $this->createCountry('Musterland', 'ML');
         $addressType = $this->createAddressType('Private');
         $address = $this->createAddress(
             $addressType,
@@ -1132,7 +1125,7 @@ class AccountControllerTest extends SuluTestCase
             '0000',
             'Musterstadt',
             'Musterland',
-            $country,
+            'ML',
             true,
             true,
             false,
@@ -1338,9 +1331,8 @@ class AccountControllerTest extends SuluTestCase
     public function testAccountAddresses()
     {
         $addressType = $this->createAddressType('Private');
-        $country = $this->createCountry('Musterland', 'ML');
 
-        $address = $this->createAddress($addressType, 'Musterstraße', '1', '0000', 'Musterstadt', 'Musterland', $country, true, true, false, 'Dornbirn', '6850', '4711', 47.4048346, 9.7602198);
+        $address = $this->createAddress($addressType, 'Musterstraße', '1', '0000', 'Musterstadt', 'Musterland', 'ML', true, true, false, 'Dornbirn', '6850', '4711', 47.4048346, 9.7602198);
         $account = $this->createAccount('Company', null, null, $address);
         $this->em->flush();
 
@@ -1361,7 +1353,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(1, $response->total);
 
         $address = $response->_embedded->addresses[0];
-        $this->assertEquals('Musterstraße 1 , 0000, Musterstadt, Musterland, Musterland, 4711', $address->address);
+        $this->assertEquals('Musterstraße 1 , 0000, Musterstadt, Musterland, ML, 4711', $address->address);
         $this->assertNotNull($address->id);
     }
 
@@ -1582,7 +1574,6 @@ class AccountControllerTest extends SuluTestCase
         $phoneType = $this->createPhoneType('Private');
         $faxType = $this->createFaxType('Private');
         $addressType = $this->createAddressType('Private');
-        $country = $this->createCountry('Musterland', 'ML');
         $account = $this->createAccount('Company', null);
         $this->em->flush();
 
@@ -1627,7 +1618,7 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -1711,7 +1702,7 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -1738,6 +1729,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('1', $response->addresses[0]->number);
         $this->assertEquals('0000', $response->addresses[0]->zip);
         $this->assertEquals('Musterstadt', $response->addresses[0]->city);
+        $this->assertEquals('ML', $response->addresses[0]->countryCode);
         $this->assertEquals('Musterstate', $response->addresses[0]->state);
         $this->assertEquals('Note 1', $response->notes[0]->value);
 
@@ -1754,7 +1746,6 @@ class AccountControllerTest extends SuluTestCase
         $urlType = $this->createUrlType('Private');
         $emailType = $this->createEmailType('Private');
         $addressType = $this->createAddressType('Private');
-        $country = $this->createCountry('Musterland', 'ML');
         $account = $this->createAccount('Company', null);
         $this->em->flush();
 
@@ -1791,7 +1782,7 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -1806,7 +1797,7 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -1843,7 +1834,6 @@ class AccountControllerTest extends SuluTestCase
         $url = $this->createUrl('http://www.company.example', $urlType);
         $emailType = $this->createEmailType('Private');
         $addressType = $this->createAddressType('Private');
-        $country = $this->createCountry('Musterland', 'ML');
         $address = $this->createAddress($addressType);
         $account = $this->createAccount('Company', null, $url, $address);
         $this->em->flush();
@@ -1881,7 +1871,7 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '0022',
                         'city' => 'Dornbirn',
                         'state' => 'state1',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -1896,7 +1886,7 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '2222',
                         'city' => 'Dornbirn',
                         'state' => 'state1',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -1911,7 +1901,7 @@ class AccountControllerTest extends SuluTestCase
                         'zip' => '2222',
                         'city' => 'Dornbirn',
                         'state' => 'state1',
-                        'country' => $country->getId(),
+                        'countryCode' => 'ML',
                         'addressType' => $addressType->getId(),
                         'billingAddress' => true,
                         'primaryAddress' => true,
@@ -2159,17 +2149,6 @@ class AccountControllerTest extends SuluTestCase
         return $emailType;
     }
 
-    private function createCountry(string $name, string $code)
-    {
-        $country = new Country();
-        $country->setName($name);
-        $country->setCode($code);
-
-        $this->em->persist($country);
-
-        return $country;
-    }
-
     private function createAddressType(string $type)
     {
         $addressType = new AddressType();
@@ -2239,7 +2218,7 @@ class AccountControllerTest extends SuluTestCase
         ?string $zip = null,
         ?string $city = null,
         ?string $state = null,
-        ?Country $country = null,
+        ?string $countryCode = null,
         ?bool $billingAddress = null,
         ?bool $primaryAddress = null,
         ?bool $deliveryAddress = null,
@@ -2256,7 +2235,7 @@ class AccountControllerTest extends SuluTestCase
         $address->setZip($zip);
         $address->setCity($city);
         $address->setState($state);
-        $address->setCountry($country);
+        $address->setCountryCode($countryCode);
         $address->setAddition('');
         $address->setAddressType($addressType);
         $address->setBillingAddress($billingAddress);

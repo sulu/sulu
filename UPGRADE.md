@@ -3,7 +3,24 @@
 ## dev-develop
 
 When upgrading also have a look at the changes in the
-[sulu skeleton](https://github.com/sulu/sulu-minimal/compare/2.0.0-RC2...2.0.0).
+[sulu skeleton](https://github.com/sulu/sulu-minimal/compare/2.0.0-RC2...2.0.0-RC3).
+
+### Country Table ('co_countries') was replace with Symfony Intl Regionbundle
+
+The country table was removed in favor of the Symfony Intl Regionbundle.
+Existing addresses need to migrate to the `countryCode` field which use the ISO-3166-1 code instead of an id:
+
+```sql
+ALTER TABLE co_addresses ADD countryCode VARCHAR(5) DEFAULT NULL;
+UPDATE co_addresses INNER JOIN co_countries ON co_addresses.idCountries = co_countries.id SET co_addresses.countryCode = co_countries.code, co_addresses.idCountries = NULL WHERE co_addresses.idCountries IS NOT NULL;
+ALTER TABLE co_addresses DROP FOREIGN KEY FK_26E9A614A18CC0FB;
+DROP INDEX IDX_26E9A614A18CC0FB ON co_addresses;
+ALTER TABLE co_addresses DROP idCountries;
+DROP TABLE co_countries;
+```
+
+The `sulu_contact.countries` route and `sulu_contact.country_repository` service was removed,
+the contacts and accounts api accept a 2 letter ISO-3166 `countryCode` instead of an ID now.
 
 ### RequestLocaleTranslator removed
 

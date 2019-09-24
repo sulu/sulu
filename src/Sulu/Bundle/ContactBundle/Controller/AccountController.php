@@ -58,8 +58,6 @@ class AccountController extends RestController implements ClassResourceInterface
 
     protected static $accountAddressEntityName = 'SuluContactBundle:AccountAddress';
 
-    protected static $countryEntityName = 'SuluContactBundle:Country';
-
     protected static $accountSerializationGroups = [
         'fullAccount',
         'partialContact',
@@ -1100,20 +1098,6 @@ class AccountController extends RestController implements ClassResourceInterface
                 self::$accountAddressEntityName . '.address'
             ),
         ];
-        $countryJoin = [
-            self::$countryEntityName => new DoctrineJoinDescriptor(
-                self::$countryEntityName,
-                self::$addressEntityName . '.country'
-            ),
-            self::$accountAddressEntityName => new DoctrineJoinDescriptor(
-                self::$accountAddressEntityName,
-                $this->getAccountEntityName() . '.accountAddresses'
-            ),
-            self::$addressEntityName => new DoctrineJoinDescriptor(
-                self::$addressEntityName,
-                self::$accountAddressEntityName . '.address'
-            ),
-        ];
 
         $this->accountAddressesFieldDescriptors['id'] = new DoctrineFieldDescriptor(
             'id',
@@ -1178,11 +1162,11 @@ class AccountController extends RestController implements ClassResourceInterface
                     $addressJoin
                 ),
                 new DoctrineFieldDescriptor(
-                    'name',
+                    'countryCode',
                     'address',
-                    self::$countryEntityName,
+                    self::$addressEntityName,
                     '',
-                    $countryJoin
+                    $addressJoin
                 ),
                 new DoctrineFieldDescriptor(
                     'postboxNumber',

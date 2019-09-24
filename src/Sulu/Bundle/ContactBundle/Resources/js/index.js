@@ -56,14 +56,11 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: bo
                         const addressType = config.addressTypes
                             .find((addressType) => card.addressType === addressType.id);
 
-                        const country = config.countries
-                            .find((country) => card.country === country.id);
-
                         return (
                             <AddressCardPreview
                                 billingAddress={card.billingAddress}
                                 city={card.city}
-                                country={country ? country.name : undefined}
+                                country={card.countryCode ? config.countries[card.countryCode] : undefined}
                                 deliveryAddress={card.deliveryAddress}
                                 number={card.number}
                                 primaryAddress={card.primaryAddress}
@@ -157,13 +154,13 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: bo
                                     label: translate('sulu_contact.state'),
                                     type: 'text_line',
                                 },
-                                country: {
+                                countryCode: {
                                     label: translate('sulu_contact.country'),
                                     options: {
                                         values: {
-                                            value: config.countries.map((country) => ({
-                                                name: country.id,
-                                                title: country.name,
+                                            value: Object.keys(config.countries).map((countryCode) => ({
+                                                name: countryCode,
+                                                title: config.countries[countryCode],
                                             })),
                                         },
                                     },

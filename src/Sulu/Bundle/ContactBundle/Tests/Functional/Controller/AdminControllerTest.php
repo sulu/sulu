@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
-use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
@@ -83,10 +82,6 @@ class AdminControllerTest extends SuluTestCase
         $faxType2 = new FaxType();
         $faxType2->setName('private fax');
 
-        $country = new Country();
-        $country->setName('Austria');
-        $country->setCode('AT');
-
         $em->persist($addressType1);
         $em->persist($addressType2);
         $em->persist($phoneType1);
@@ -99,7 +94,6 @@ class AdminControllerTest extends SuluTestCase
         $em->persist($socialMediaProfileType2);
         $em->persist($faxType1);
         $em->persist($faxType2);
-        $em->persist($country);
         $em->flush();
 
         $client = $this->createAuthenticatedClient();
@@ -139,9 +133,6 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('work fax', $contactConfig->faxTypes[0]->name);
         $this->assertEquals($faxType2->getId(), $contactConfig->faxTypes[1]->id);
         $this->assertEquals('private fax', $contactConfig->faxTypes[1]->name);
-
-        $this->assertEquals($country->getId(), $contactConfig->countries[0]->id);
-        $this->assertEquals('Austria', $contactConfig->countries[0]->name);
     }
 
     public function testContactsListMetadataAction()

@@ -8,11 +8,6 @@ sulu_contact.contacts:
     name_prefix: sulu_contact.
     resource: Sulu\Bundle\ContactBundle\Controller\ContactController
 
-sulu_contact.countries:
-    type: rest
-    name_prefix: sulu_contact.
-    resource: Sulu\Bundle\ContactBundle\Controller\CountryController
-
 sulu_contact.accounts:
     type: rest
     name_prefix: sulu_contact.
