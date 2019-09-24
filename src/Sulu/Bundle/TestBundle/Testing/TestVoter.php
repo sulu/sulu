@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\TestBundle\Testing;
 
+use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -57,6 +58,14 @@ class TestVoter implements VoterInterface
      */
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        return VoterInterface::ACCESS_GRANTED;
+        $user = $token->getUser();
+
+        if ($user instanceof UserInterface
+            && TestUserProvider::TEST_USER_USERNAME === $user->getUsername()
+        ) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        return VoterInterface::ACCESS_ABSTAIN;
     }
 }

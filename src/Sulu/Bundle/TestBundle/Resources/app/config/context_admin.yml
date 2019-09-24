@@ -33,6 +33,9 @@ sulu_document_manager:
     default_session: default
     live_session: live
 
+sulu_test:
+    enable_test_user_provider: true
+
 # Just a dirty hack to get the jms serializer bundle correctly working
 # https://github.com/schmittjoh/JMSSerializerBundle/pull/270#issuecomment-21171800
 services:

@@ -18,4 +18,3 @@ if (!$filesystem->exists($path . 'parameters.yml')) {
 }
 $loader->import('parameters.yml');
 $loader->import('context_' . $context . '.yml');
-$loader->import('services.yml');

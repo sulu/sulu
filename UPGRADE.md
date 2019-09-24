@@ -50,6 +50,25 @@ Because of that the following classes and services were removed:
  - `Sulu\Bundle\WebsiteBundle\Translator\RequestLocaleTranslator`
  - `sulu_website.translator.request_analyzer`
 
+### Test Bundle service aliases removed
+
+The following service alias were removed:
+
+ - `sulu_test.doctrine.orm.default_entity_manager`
+ - `sulu_test.doctrine_phpcr.default_session`
+ - `sulu_test.doctrine_phpcr`
+ - `sulu_test.doctrine_phpcr.live_session`
+ - `sulu_test.doctrine_phpcr.session`
+ - `sulu_test.massive_search.adapter`
+ - `sulu_test.massive_search.adapter.test`
+
+Use the services without the `sulu_test.` prefix instead.
+
+### Test Bundle Voter and User Provider changed
+
+To allow tests for security the TestBundle Voter and TestUserProvider will allow only permission and return a
+auto generated user when the username `test` is used.
+
 ### LocationBundle
 
 The configuration of the location bundle has changed.

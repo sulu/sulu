@@ -29,12 +29,12 @@ trait PhpCrInitTrait
 
     private static function getPhpcrDefaultSession(): SessionInterface
     {
-        return static::getContainer()->get('sulu_test.doctrine_phpcr.session');
+        return static::getContainer()->get('doctrine_phpcr.session');
     }
 
     private static function getPhpcrLiveSession(): SessionInterface
     {
-        return static::getContainer()->get('sulu_test.doctrine_phpcr.live_session');
+        return static::getContainer()->get('doctrine_phpcr.live_session');
     }
 
     /**

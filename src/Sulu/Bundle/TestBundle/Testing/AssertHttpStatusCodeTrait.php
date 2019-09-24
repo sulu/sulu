@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\TestBundle\Testing;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 trait AssertHttpStatusCodeTrait
@@ -31,23 +32,32 @@ trait AssertHttpStatusCodeTrait
 
         $message = '';
         if ($code !== $httpCode) {
-            $message = $response->getContent();
-
-            if ('null' !== ($json = json_encode(json_decode($message, true), JSON_PRETTY_PRINT))
-                && $json) {
-                $message = explode(PHP_EOL, $json);
+            if ($response->isRedirect()) {
+                /** @var RedirectResponse $response */
+                $message = sprintf(
+                    'Unexpected "%s" status code with redirect to "%s".',
+                    $httpCode,
+                    $response->getTargetUrl()
+                );
             } else {
-                $message = explode(PHP_EOL, $message);
-            }
+                $message = $response->getContent();
 
-            $message = implode(PHP_EOL, \array_slice($message, 0, $debugLength));
-            $message = sprintf(
-                'HTTP status code %s is not expected %s, showing %s lines of the response body: %s',
-                $httpCode,
-                $code,
-                $debugLength,
-                $message
-            );
+                if ('null' !== ($json = json_encode(json_decode($message, true), JSON_PRETTY_PRINT))
+                    && $json) {
+                    $message = explode(PHP_EOL, $json);
+                } else {
+                    $message = explode(PHP_EOL, $message);
+                }
+
+                $message = implode(PHP_EOL, \array_slice($message, 0, $debugLength));
+                $message = sprintf(
+                    'HTTP status code %s is not expected %s, showing %s lines of the response body: %s',
+                    $httpCode,
+                    $code,
+                    $debugLength,
+                    $message
+                );
+            }
         }
 
         self::assertSame($code, $httpCode, $message);

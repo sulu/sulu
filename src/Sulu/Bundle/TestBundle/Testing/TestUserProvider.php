@@ -13,8 +13,8 @@ namespace Sulu\Bundle\TestBundle\Testing;
 
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -25,6 +25,8 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class TestUserProvider implements UserProviderInterface
 {
+    const TEST_USER_USERNAME = 'test';
+
     /**
      * @var UserInterface
      */
@@ -46,18 +48,27 @@ class TestUserProvider implements UserProviderInterface
     private $userRepository;
 
     /**
-     * @param EntityManager $entityManager
-     * @param ContactRepositoryInterface $contactRepository
-     * @param UserRepositoryInterface $userRepository
+     * @var EncoderFactoryInterface
      */
+    private $userPasswordEncoderFactory;
+
+    /**
+     * @var UserProviderInterface
+     */
+    private $userProvider;
+
     public function __construct(
         EntityManager $entityManager,
         ContactRepositoryInterface $contactRepository,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
+        EncoderFactoryInterface $userPasswordEncoderFactory,
+        UserProviderInterface $userProvider
     ) {
         $this->entityManager = $entityManager;
         $this->contactRepository = $contactRepository;
         $this->userRepository = $userRepository;
+        $this->userPasswordEncoderFactory = $userPasswordEncoderFactory;
+        $this->userProvider = $userProvider;
     }
 
     /**
@@ -79,7 +90,6 @@ class TestUserProvider implements UserProviderInterface
 
             $user = $this->userRepository->createNew();
             $this->setCredentials($user);
-            $user->setSalt('');
             $user->setLocale('en');
             $user->setContact($contact);
             $this->entityManager->persist($user);
@@ -110,7 +120,11 @@ class TestUserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        return $this->getUser();
+        if (self::TEST_USER_USERNAME === $username) {
+            return $this->getUser();
+        }
+
+        return $this->userProvider->loadUserByUsername($username);
     }
 
     /**
@@ -129,7 +143,11 @@ class TestUserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        return $this->getUser();
+        if (self::TEST_USER_USERNAME === $this->getUser()->getUsername()) {
+            return $this->getUser();
+        }
+
+        return $this->userProvider->refreshUser($user);
     }
 
     /**
@@ -151,8 +169,9 @@ class TestUserProvider implements UserProviderInterface
      */
     private function setCredentials(UserInterface $user)
     {
-        $user->setUsername('test');
-        $user->setPassword('test');
+        $user->setUsername(self::TEST_USER_USERNAME);
         $user->setSalt('');
+        $encoder = $this->userPasswordEncoderFactory->getEncoder($user);
+        $user->setPassword($encoder->encodePassword('test', $user->getSalt()));
     }
 }

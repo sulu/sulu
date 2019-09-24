@@ -68,7 +68,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->initPhpcr();
         $this->loadFixtures();
 
-        $this->session = $this->getContainer()->get('sulu_test.doctrine_phpcr')->getConnection();
+        $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->property = $this->getMockBuilder('Sulu\Component\Content\Compat\PropertyInterface')->getMock();
 
         $this->defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);

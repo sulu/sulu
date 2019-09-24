@@ -40,7 +40,7 @@
         "jms/serializer-bundle": "^2.3",
         "layershifter/tld-extract": "^1.1 || ^2.0",
         "massive/build-bundle": "^0.3 || ^0.4",
-        "massive/search-bundle": "^0.16 || ^0.17 || ^1.0",
+        "massive/search-bundle": "^1.0.1",
         "mtdowling/cron-expression": "^1.1",
         "ocramius/proxy-manager": "^2.1",
         "oro/doctrine-extensions": "^1.0",

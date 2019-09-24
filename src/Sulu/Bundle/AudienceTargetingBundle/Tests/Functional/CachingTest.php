@@ -20,16 +20,22 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Tests\Application\AppCache;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\HttpFoundation\Cookie;
 
 class CachingTest extends SuluTestCase
 {
+    public static function getSuluContext(): string
+    {
+        return SuluKernel::CONTEXT_WEBSITE;
+    }
+
     public function testFirstRequestIsACacheMiss()
     {
         $this->purgeDatabase();
-        $cacheKernel = new AppCache(self::bootKernel(['sulu.context' => 'website']));
+        $cacheKernel = new AppCache(self::bootKernel());
         $cookieJar = new CookieJar();
         $client = new Client($cacheKernel, [], null, $cookieJar);
 

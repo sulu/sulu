@@ -29,7 +29,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('sulu_test');
         $rootNode->children()
-            ->booleanNode('enable_test_user_provider')
+            ->booleanNode('enable_test_user_provider')->defaultFalse()->end()
         ->end();
 
         // Here you should define the parameters that are allowed to
