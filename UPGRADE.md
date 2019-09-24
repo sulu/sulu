@@ -22,6 +22,15 @@ DROP TABLE co_countries;
 The `sulu_contact.countries` route and `sulu_contact.country_repository` service was removed,
 the contacts and accounts api accept a 2 letter ISO-3166 `countryCode` instead of an ID now.
 
+### NL and FR system languages removed
+
+At current state sulu 2.0 is only translated to EN and DE.
+Existing users need to migrate there system language to EN or DE:
+
+```sql
+UPDATE `se_users` SET `locale` = 'en' WHERE `locale` NOT IN ('en', 'de');
+```
+
 ### RequestLocaleTranslator removed
 
 The `sulu_website.event_listener.translator` will now set the correct locale for the `translator` service.

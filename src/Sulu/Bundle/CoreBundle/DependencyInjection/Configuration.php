@@ -60,11 +60,11 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('locales')
                 ->useAttributeAsKey('locale')
                 ->prototype('scalar')->end()
-                ->defaultValue(['de' => 'Deutsch', 'en' => 'English', 'fr' => 'Français', 'nl' => 'Nederlands'])
+                ->defaultValue(['de' => 'Deutsch', 'en' => 'English'])
             ->end()
             ->arrayNode('translations')
                 ->prototype('scalar')->end()
-                ->defaultValue(['de', 'en', 'fr', 'nl'])
+                ->defaultValue(['de', 'en'])
             ->end()
             ->scalarNode('fallback_locale')->defaultValue('en')->end();
     }
