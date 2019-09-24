@@ -3,7 +3,7 @@
 ## 2.0.0-RC3
 
 When upgrading also have a look at the changes in the
-[sulu skeleton](https://github.com/sulu/sulu-minimal/compare/2.0.0-RC2...2.0.0-RC3).
+[sulu skeleton](https://github.com/sulu/skeleton/compare/f08ac00c57756f38cbf5166c2a3d09782f34fcb3...2.0.0-RC3).
 
 ### Country Table ('co_countries') was replace with Symfony Intl Regionbundle
 
