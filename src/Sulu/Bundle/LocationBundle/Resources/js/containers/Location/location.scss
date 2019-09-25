@@ -61,7 +61,8 @@ $locationButtonMargin: 2px;
     z-index: 0;
 
     /* set width of leaflet containers to allow for setting a relative width to our tooltip */
-    :global(.leaflet-map-pane), :global(.leaflet-tooltip-pane) {
+    :global(.leaflet-map-pane),
+    :global(.leaflet-tooltip-pane) {
         width: 100%;
     }
 
