@@ -2,6 +2,7 @@
 import {fieldRegistry} from 'sulu-admin-bundle/containers';
 import leaflet from 'leaflet';
 import leafletMarkerIcon from 'leaflet/dist/images/marker-icon.png';
+import leafletMarkerIconRetina from 'leaflet/dist/images/marker-icon-2x.png';
 import leafletMarkerShadow from 'leaflet/dist/images/marker-shadow.png';
 import {Location} from './containers/Form';
 
@@ -14,6 +15,7 @@ import leafletStyles from 'leaflet/dist/leaflet.css';
 delete leaflet.Icon.Default.prototype._getIconUrl;
 leaflet.Icon.Default.mergeOptions({
     iconUrl: leafletMarkerIcon,
+    iconRetinaUrl: leafletMarkerIconRetina,
     shadowUrl: leafletMarkerShadow,
 });
 

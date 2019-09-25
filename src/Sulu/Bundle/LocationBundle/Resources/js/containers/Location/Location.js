@@ -98,8 +98,8 @@ class Location extends React.Component<Props> {
                         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                         <Marker interactive={false} position={[value.lat, value.long]}>
                             {this.hasAdditionalInformation &&
-                                <Tooltip permanent={true}>
-                                    <div>{value.title}</div>
+                                <Tooltip className={locationStyles.locationMapTooltip} permanent={true}>
+                                    <div><b>{value.title}</b></div>
                                     <div>{value.street} {value.number}</div>
                                     <div>{value.code} {value.town}</div>
                                     <div>{value.country}</div>

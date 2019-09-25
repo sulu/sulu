@@ -59,4 +59,14 @@ $locationButtonMargin: 2px;
 
     /* unfortunately leaflet sets a z-index of 400 to its map, that would be higher than the z-index of our overlays */
     z-index: 0;
+
+    /* set width of leaflet containers to allow for setting a relative width to our tooltip */
+    :global(.leaflet-map-pane), :global(.leaflet-tooltip-pane) {
+        width: 100%;
+    }
+
+    .location-map-tooltip {
+        max-width: 40%;
+        white-space: normal;
+    }
 }
