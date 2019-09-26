@@ -159,7 +159,7 @@ test('The ColumnList component should render in a scrolling container', () => {
     expect(columnList.render()).toMatchSnapshot();
 });
 
-test('The ColumnList component should trigger the item callback', () => {
+test('The ColumnList component should trigger the given onItemClick callback', () => {
     const onItemClick = jest.fn();
 
     const columnList = mount(
@@ -193,6 +193,43 @@ test('The ColumnList component should trigger the item callback', () => {
     expect(onItemClick.mock.calls[0][0]).toBe('1');
     expect(onItemClick.mock.calls[1][0]).toBe('3');
     expect(onItemClick.mock.calls[2][0]).toBe('1-1');
+});
+
+test('The ColumnList component should trigger the given onItemClick callback', () => {
+    const onItemDoubleClickSpy = jest.fn();
+
+    const columnList = mount(
+        <ColumnList
+            onItemClick={jest.fn()}
+            onItemDoubleClick={onItemDoubleClickSpy}
+            toolbarItemsProvider={jest.fn(() => [])}
+        >
+            <Column>
+                <Item id="1" selected={true}>Item 1</Item>
+                <Item hasChildren={true} id="2">Item 1</Item>
+                <Item id="3">Item 1</Item>
+            </Column>
+            <Column>
+                <Item id="1-1">Item 1</Item>
+                <Item hasChildren={true} id="1-2">Item 1</Item>
+            </Column>
+            <Column>
+                <Item id="1-1-1">Item 1</Item>
+                <Item id="1-1-2">Item 1</Item>
+            </Column>
+        </ColumnList>
+    );
+    const columns = columnList.find(Column);
+    expect(columns.length).toBe(3);
+
+    columns.first().find(Item).first().simulate('dblclick');
+    columns.first().find(Item).at(2).simulate('dblclick');
+    columns.at(1).find(Item).first().simulate('dblclick');
+
+    expect(onItemDoubleClickSpy.mock.calls.length).toBe(3);
+    expect(onItemDoubleClickSpy.mock.calls[0][0]).toBe('1');
+    expect(onItemDoubleClickSpy.mock.calls[1][0]).toBe('3');
+    expect(onItemDoubleClickSpy.mock.calls[2][0]).toBe('1-1');
 });
 
 test('The ColumnList component should handle which toolbar is active on mouse enter event', () => {
