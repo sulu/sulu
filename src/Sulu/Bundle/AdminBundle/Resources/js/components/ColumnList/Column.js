@@ -12,6 +12,7 @@ type Props = {|
     loading: boolean,
     onActive?: (index?: number) => void,
     onItemClick?: (id: string | number) => void,
+    onItemDoubleClick: ?(id: string | number) => void,
     /** @ignore */
     scrolling: boolean,
 |};
@@ -19,6 +20,7 @@ type Props = {|
 export default class Column extends React.Component<Props> {
     static defaultProps = {
         loading: false,
+        onItemDoubleClick: undefined,
         scrolling: false,
     };
 
@@ -27,13 +29,14 @@ export default class Column extends React.Component<Props> {
             return null;
         }
 
-        const {onItemClick} = this.props;
+        const {onItemClick, onItemDoubleClick} = this.props;
 
         return React.Children.map(originalItems, (column) => {
             return React.cloneElement(
                 column,
                 {
                     onClick: onItemClick,
+                    onDoubleClick: onItemDoubleClick,
                 }
             );
         });

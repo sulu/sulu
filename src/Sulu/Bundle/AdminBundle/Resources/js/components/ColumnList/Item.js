@@ -20,6 +20,7 @@ type Props = {|
     id: string | number,
     indicators?: Array<Node>,
     onClick?: (id: string | number) => void,
+    onDoubleClick: ?(id: string | number) => void,
     onOrderChange?: (id: string | number, order: number) => Promise<boolean>,
     order?: number,
     selected: boolean,
@@ -32,6 +33,7 @@ class Item extends React.Component<Props> {
         active: false,
         disabled: false,
         hasChildren: false,
+        onDoubleClick: undefined,
         selected: false,
         showOrderField: false,
     };
@@ -53,6 +55,12 @@ class Item extends React.Component<Props> {
     handleClick = () => {
         if (this.props.onClick) {
             this.props.onClick(this.props.id);
+        }
+    };
+
+    handleDoubleClick = () => {
+        if (this.props.onDoubleClick) {
+            this.props.onDoubleClick(this.props.id);
         }
     };
 
@@ -116,7 +124,12 @@ class Item extends React.Component<Props> {
         );
 
         return (
-            <div className={itemClass} onClick={this.handleClick} role="button">
+            <div
+                className={itemClass}
+                onClick={this.handleClick}
+                onDoubleClick={this.handleDoubleClick}
+                role="button"
+            >
                 {!showOrderField &&
                     <span className={itemStyles.buttons}>
                         {this.renderButtons()}
