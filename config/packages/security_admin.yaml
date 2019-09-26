@@ -15,7 +15,6 @@ security:
         - { path: ^/admin/security/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/_wdt, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/_profiler, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/translations, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }

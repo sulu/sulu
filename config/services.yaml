@@ -1,7 +1,7 @@
 # Learn more about services, parameters and containers at
 # http://symfony.com/doc/current/book/service_container.html
 parameters:
-#    parameter_name: value
+    default_locale: "en"
 
 services:
 #    service_name:
