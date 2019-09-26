@@ -25,7 +25,7 @@ class ProfileControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'PATCH',
-            '/security/profile/settings',
+            '/api/profile/settings',
             ['setting-key' => 'setting-value']
         );
 
@@ -44,7 +44,7 @@ class ProfileControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/security/profile');
+        $client->request('GET', '/api/profile');
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -63,7 +63,7 @@ class ProfileControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            '/security/profile',
+            '/api/profile',
             [
                 'firstName' => 'Hans',
                 'lastName' => 'Mustermann',
@@ -89,7 +89,7 @@ class ProfileControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            '/security/profile',
+            '/api/profile',
             [
                 'firstName' => 'Hans',
                 'lastName' => 'Mustermann',
@@ -114,7 +114,7 @@ class ProfileControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            '/security/profile',
+            '/api/profile',
             [
                 'firstName' => 'Hans',
                 'lastName' => 'Mustermann',
@@ -139,7 +139,7 @@ class ProfileControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            '/security/profile',
+            '/api/profile',
             [
                 'lastName' => 'Mustermann',
                 'username' => 'hansi',
@@ -163,7 +163,7 @@ class ProfileControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            '/security/profile',
+            '/api/profile',
             [
                 'firstName' => 'Hans',
                 'username' => 'hansi',
@@ -188,7 +188,7 @@ class ProfileControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            '/security/profile',
+            '/api/profile',
             [
                 'firstName' => 'Hans',
                 'lastName' => 'Mustermann',
@@ -213,7 +213,7 @@ class ProfileControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            '/security/profile',
+            '/api/profile',
             [
                 'firstName' => 'Hans',
                 'lastName' => 'Mustermann',
@@ -238,7 +238,7 @@ class ProfileControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            '/security/profile',
+            '/api/profile',
             [
                 'firstName' => 'Hans',
                 'lastName' => 'Mustermann',
@@ -263,7 +263,7 @@ class ProfileControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            '/security/profile',
+            '/api/profile',
             [
                 'firstName' => 'Hans',
                 'lastName' => 'Mustermann',
@@ -283,7 +283,7 @@ class ProfileControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'PATCH',
-            '/security/profile/settings',
+            '/api/profile/settings',
             ['setting-key' => 'setting-value']
         );
 
@@ -299,7 +299,7 @@ class ProfileControllerTest extends SuluTestCase
 
         $client->request(
             'DELETE',
-            '/security/profile/settings',
+            '/api/profile/settings',
             ['key' => 'setting-key']
         );
 
