@@ -137,7 +137,7 @@ class AppendAnalyticsListener
         foreach (array_keys(self::$positions) as $position) {
             $template = 'SuluWebsiteBundle:Analytics:' . $analytics->getType() . '/' . $position . '.html.twig';
 
-            if (!$this->engine->exists($template)) {
+            if (!$this->engine->getLoader()->exists($template)) {
                 continue;
             }
 
