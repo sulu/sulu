@@ -18,7 +18,6 @@ security:
 
     firewalls:
         test:
-            logout_on_user_change: true
             http_basic:
 
 sulu_security:
