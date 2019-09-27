@@ -21,8 +21,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('sulu_location')
+        $treeBuilder = new TreeBuilder('sulu_location');
+        $treeBuilder->getRootNode()
             ->children()
                 ->enumNode('geolocator')
                     ->values(['nominatim', 'google'])

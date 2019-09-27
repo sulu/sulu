@@ -27,8 +27,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('sulu_core');
+        $treeBuilder = new TreeBuilder('sulu_core');
+        $rootNode = $treeBuilder->getRootNode();
         $rootNode->addDefaultsIfNotSet();
 
         $children = $rootNode->children();

@@ -21,8 +21,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('sulu_search')
+        $treeBuilder = new TreeBuilder('sulu_search');
+        $treeBuilder->getRootNode()
             ->children()
                 ->arrayNode('indexes')
                     ->useAttributeAsKey('index_name')

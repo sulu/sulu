@@ -22,8 +22,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('sulu_preview');
+        $treeBuilder = new TreeBuilder('sulu_preview');
+        $rootNode = $treeBuilder->getRootNode();
 
         // add config preview interval
         $rootNode

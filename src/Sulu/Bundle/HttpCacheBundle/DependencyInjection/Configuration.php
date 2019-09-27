@@ -34,8 +34,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $root = $treeBuilder->root('sulu_http_cache');
+        $treeBuilder = new TreeBuilder('sulu_http_cache');
+        $root = $treeBuilder->getRootNode();
 
         $root
             ->children()

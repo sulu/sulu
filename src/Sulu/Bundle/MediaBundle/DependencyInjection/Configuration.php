@@ -28,8 +28,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('sulu_media');
+        $treeBuilder = new TreeBuilder('sulu_media');
+        $rootNode = $treeBuilder->getRootNode();
         $rootNode->children()
             ->scalarNode('adobe_creative_key')->defaultNull()->end()
             ->scalarNode('adapter')
