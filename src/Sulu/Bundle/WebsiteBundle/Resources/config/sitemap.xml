@@ -17,7 +17,7 @@
 
         <service id="sulu_website.sitemap.xml_renderer" class="Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapRenderer" public="true">
             <argument type="service" id="sulu_website.sitemap.pool"/>
-            <argument type="service" id="templating"/>
+            <argument type="service" id="twig"/>
         </service>
 
         <service id="sulu_website.sitemap.xml_dumper" class="Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapDumper" public="true">

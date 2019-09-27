@@ -77,7 +77,6 @@
         "symfony/security": "^4.3",
         "symfony/security-bundle": "^4.3",
         "symfony/swiftmailer-bundle": "^3.1.4",
-        "symfony/templating": "^3.4 || ^4.0",
         "symfony/translation": "^4.3",
         "symfony/twig-bundle": "^4.3",
         "symfony/validator": "^4.3",

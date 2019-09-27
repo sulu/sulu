@@ -21,7 +21,7 @@ use Sulu\Component\Export\Manager\ExportManagerInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 
 /**
  * Export Snippet by given locale to xliff file.
@@ -39,7 +39,7 @@ class SnippetExport extends Export implements SnippetExportInterface
     protected $output;
 
     public function __construct(
-        EngineInterface $templating,
+        Environment $templating,
         SnippetRepository $snippetManager,
         DocumentManager $documentManager,
         DocumentInspector $documentInspector,

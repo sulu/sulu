@@ -10,7 +10,7 @@
 
     <services>
         <service id="sulu_snippet.export.snippet" class="Sulu\Component\Snippet\Export\SnippetExport" public="true">
-            <argument type="service" id="templating" />
+            <argument type="service" id="twig" />
             <argument type="service" id="sulu_snippet.repository" />
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />

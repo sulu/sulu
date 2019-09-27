@@ -31,7 +31,7 @@
 
         <service id="sulu_website.analytics.response_listener"
                  class="Sulu\Bundle\WebsiteBundle\EventListener\AppendAnalyticsListener">
-            <argument type="service" id="templating"/>
+            <argument type="service" id="twig"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="sulu_website.analytics.repository"/>
             <argument>%kernel.environment%</argument>
