@@ -1,5 +1,14 @@
 # Upgrade
 
+## 2.0.0
+
+When upgrading also have a look at the changes in the
+[sulu skeleton](https://github.com/sulu/skeleton/compare/2.0.0-RC3...2.0.0).
+
+### Symfony 3.4 support dropped
+
+To fix current deprecations in symfony packages we needed to drop symfony 3.4 support and go on the newest minor version of symfony (4.3).
+
 ## 2.0.0-RC3
 
 When upgrading also have a look at the changes in the
