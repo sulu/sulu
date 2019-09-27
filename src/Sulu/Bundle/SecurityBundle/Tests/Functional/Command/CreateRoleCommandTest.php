@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Command;
 
-use Doctrine\Bundle\FixturesBundle\Command\LoadDataFixturesDoctrineCommand;
 use Sulu\Bundle\SecurityBundle\Command\CreateRoleCommand;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -26,12 +25,8 @@ class CreateRoleCommandTest extends SuluTestCase
 
     public function setUp(): void
     {
+        $this->purgeDatabase();
         $application = new Application($this->getContainer()->get('kernel'));
-
-        $loadFixturesCommand = new LoadDataFixturesDoctrineCommand();
-        $loadFixturesCommand->setApplication($application);
-        $loadFixturesCommandTester = new CommandTester($loadFixturesCommand);
-        $loadFixturesCommandTester->execute([], ['interactive' => false]);
 
         $createUserCommand = new CreateRoleCommand(
             $this->getContainer()->get('doctrine.orm.entity_manager'),
