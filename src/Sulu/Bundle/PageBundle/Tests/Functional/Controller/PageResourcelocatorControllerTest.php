@@ -13,7 +13,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\Controller;
 
 use PHPCR\SessionInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
  * @group webtest
@@ -26,7 +26,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
     private $session;
 
     /**
-     * @var Client
+     * @var KernelBrowser
      */
     protected $client;
 

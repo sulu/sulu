@@ -21,7 +21,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceRepositoryInte
 use Sulu\Bundle\AudienceTargetingBundle\Tests\Application\AppCache;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\HttpKernel\SuluKernel;
-use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\HttpFoundation\Cookie;
 
@@ -37,7 +37,7 @@ class CachingTest extends SuluTestCase
         $this->purgeDatabase();
         $cacheKernel = new AppCache(self::bootKernel());
         $cookieJar = new CookieJar();
-        $client = new Client($cacheKernel, [], null, $cookieJar);
+        $client = new KernelBrowser($cacheKernel, [], null, $cookieJar);
 
         $client->request('PURGE', '/');
 
@@ -112,7 +112,7 @@ class CachingTest extends SuluTestCase
      */
     public function testRequestWithoutSessionCookieTriggersNoRules($arguments)
     {
-        /** @var Client $client */
+        /** @var KernelBrowser $client */
         /** @var CookieJar $cookieJar */
         list($client, $cookieJar) = $arguments;
 
@@ -137,7 +137,7 @@ class CachingTest extends SuluTestCase
      */
     public function testRequestWithoutSessionCookieTriggersARule($arguments)
     {
-        /** @var Client $client */
+        /** @var KernelBrowser $client */
         /** @var CookieJar $cookieJar */
         list($client, $cookieJar) = $arguments;
 
