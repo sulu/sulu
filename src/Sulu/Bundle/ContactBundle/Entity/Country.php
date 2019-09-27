@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
+use Symfony\Component\Intl\Countries;
 use Symfony\Component\Intl\Intl;
 
 /**
@@ -46,6 +47,6 @@ class Country
      */
     public function getName(?string $displayLocale = null): string
     {
-        return Intl::getRegionBundle()->getCountryName($this->code, $displayLocale);
+        return Countries::getName($this->code, $displayLocale);
     }
 }

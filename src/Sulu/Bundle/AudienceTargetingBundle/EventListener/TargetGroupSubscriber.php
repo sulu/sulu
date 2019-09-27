@@ -221,7 +221,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
         $response = $event->getResponse();
 
         $response->headers->setCookie(
-            new Cookie(
+            Cookie::create(
                 $this->targetGroupCookie,
                 $this->targetGroupStore->getTargetGroupId(true),
                 AudienceTargetingCacheListener::TARGET_GROUP_COOKIE_LIFETIME
@@ -229,7 +229,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
         );
 
         $response->headers->setCookie(
-            new Cookie(
+            Cookie::create(
                 $this->visitorSessionCookie,
                 time()
             )
