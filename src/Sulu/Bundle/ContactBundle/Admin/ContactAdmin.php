@@ -21,7 +21,6 @@ use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\Intl\Countries;
-use Symfony\Component\Intl\Intl;
 
 class ContactAdmin extends Admin
 {

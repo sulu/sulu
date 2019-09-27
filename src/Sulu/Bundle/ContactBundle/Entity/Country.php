@@ -15,7 +15,6 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Symfony\Component\Intl\Countries;
-use Symfony\Component\Intl\Intl;
 
 /**
  * @ExclusionPolicy("all")
