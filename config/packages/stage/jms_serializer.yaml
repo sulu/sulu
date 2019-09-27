@@ -1,0 +1,2 @@
+imports:
+    - { resource: '../prod/jms_serializer.yaml' }

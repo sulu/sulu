@@ -1,3 +1,2 @@
 massive_search:
-    metadata:
-        prefix: test
+    adapter: test

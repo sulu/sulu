@@ -1,0 +1,3 @@
+web_profiler_admin:
+    resource: "web_profiler.yaml"
+    prefix: /admin
