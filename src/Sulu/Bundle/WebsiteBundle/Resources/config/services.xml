@@ -28,6 +28,11 @@
     </parameters>
 
     <services>
+        <service id="sulu_website.default_controller" class="Sulu\Bundle\WebsiteBundle\Controller\DefaultController">
+            <tag name="container.service_subscriber" />
+        </service>
+        <service id="Sulu\Bundle\WebsiteBundle\Controller\DefaultController" alias="sulu_website.default_controller" />
+
         <!-- website admin -->
         <service id="sulu_website.admin" class="%sulu_website.admin.class%">
             <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"/>

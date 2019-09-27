@@ -12,18 +12,20 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancer;
+use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancerInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Preview;
+use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Twig\Template;
 
 /**
  * Basic class to render Website from phpcr content.
  */
-abstract class WebsiteController extends Controller
+abstract class WebsiteController extends AbstractController
 {
     /**
      * Returns a rendered structure.
@@ -110,8 +112,7 @@ abstract class WebsiteController extends Controller
         $twig = $this->get('twig');
         $attributes = $twig->mergeGlobals($attributes);
 
-        /** @var Template $template */
-        $template = $twig->loadTemplate($template);
+        $template = $twig->load($template);
 
         $level = ob_get_level();
         ob_start();
@@ -160,5 +161,18 @@ abstract class WebsiteController extends Controller
         }
 
         return $this->get('sulu_http_cache.cache_lifetime.enhancer');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedServices()
+    {
+        $subscribedServices = parent::getSubscribedServices();
+        // $subscribedServices['sulu_website.resolver.parameter'] = ParameterResolverInterface::class;
+        // $subscribedServices['sulu_core.webspace.request_analyzer'] = RequestAnalyzerInterface::class;
+        // $subscribedServices['sulu_http_cache.cache_lifetime.enhancer'] = '?'.CacheLifetimeEnhancerInterface::class;
+
+        return $subscribedServices;
     }
 }
