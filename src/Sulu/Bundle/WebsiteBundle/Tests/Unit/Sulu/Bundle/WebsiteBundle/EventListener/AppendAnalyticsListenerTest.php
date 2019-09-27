@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Twig\Environment;
-use Twig\Loader\LoaderInterface;
+use Twig\Loader\FilesystemLoader;
 
 class AppendAnalyticsListenerTest extends TestCase
 {
@@ -126,7 +126,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
         $event->getResponse()->willReturn($response->reveal());
 
-        $loader = $this->prophesize(LoaderInterface::class);
+        $loader = $this->prophesize(FilesystemLoader::class);
         $engine->getLoader()->shouldBeCalled()->willReturn($loader->reveal());
 
         $loader->exists('SuluWebsiteBundle:Analytics:google/head-open.html.twig')->shouldBeCalled()->willReturn(false);
@@ -186,7 +186,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
         $event->getResponse()->willReturn($response->reveal());
 
-        $loader = $this->prophesize(LoaderInterface::class);
+        $loader = $this->prophesize(FilesystemLoader::class);
         $engine->getLoader()->shouldBeCalled()->willReturn($loader->reveal());
 
         $loader->exists('SuluWebsiteBundle:Analytics:google/head-open.html.twig')->shouldBeCalled()->willReturn(false);
@@ -245,7 +245,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
         $event->getResponse()->willReturn($response->reveal());
 
-        $loader = $this->prophesize(LoaderInterface::class);
+        $loader = $this->prophesize(FilesystemLoader::class);
         $engine->getLoader()->shouldBeCalled()->willReturn($loader->reveal());
 
         $loader->exists('SuluWebsiteBundle:Analytics:google_tag_manager/head-open.html.twig')->shouldBeCalled()->willReturn(true);
@@ -304,7 +304,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
         $event->getResponse()->willReturn($response->reveal());
 
-        $loader = $this->prophesize(LoaderInterface::class);
+        $loader = $this->prophesize(FilesystemLoader::class);
         $engine->getLoader()->shouldBeCalled()->willReturn($loader->reveal());
 
         $loader->exists('SuluWebsiteBundle:Analytics:piwik/head-open.html.twig')->shouldBeCalled()->willReturn(false);
@@ -363,7 +363,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
         $event->getResponse()->willReturn($response->reveal());
 
-        $loader = $this->prophesize(LoaderInterface::class);
+        $loader = $this->prophesize(FilesystemLoader::class);
         $engine->getLoader()->shouldBeCalled()->willReturn($loader->reveal());
 
         $loader->exists('SuluWebsiteBundle:Analytics:custom/head-open.html.twig')->shouldBeCalled()->willReturn(true);
