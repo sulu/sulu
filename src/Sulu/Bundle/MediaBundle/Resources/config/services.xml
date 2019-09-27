@@ -284,5 +284,13 @@
 
             <tag name="console.command"/>
         </service>
+
+        <service id="sulu_media.fixtures.collection_types" class="Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes">
+            <tag name="doctrine.fixture.orm"/>
+        </service>
+
+        <service id="sulu_media.fixtures.media_types" class="Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadMediaTypes">
+            <tag name="doctrine.fixture.orm"/>
+        </service>
     </services>
 </container>

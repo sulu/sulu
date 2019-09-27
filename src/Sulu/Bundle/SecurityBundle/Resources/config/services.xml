@@ -186,5 +186,9 @@
             <tag name="kernel.event_listener" event="kernel.request" method="copyUserLocaleToRequest"/>
             <tag name="sulu.context" context="admin"/>
         </service>
+
+        <service id="sulu_security.fixtures.security_types" class="Sulu\Bundle\SecurityBundle\DataFixtures\ORM\LoadSecurityTypes">
+            <tag name="doctrine.fixture.orm"/>
+        </service>
     </services>
 </container>

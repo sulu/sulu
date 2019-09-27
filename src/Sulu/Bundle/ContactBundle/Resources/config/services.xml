@@ -93,5 +93,8 @@
             <tag name="doctrine.event_listener" event="postUpdate"/>
             <tag name="doctrine.event_listener" event="preRemove"/>
         </service>
+        <service id="sulu_contact.fixtures.default_types" class="Sulu\Bundle\ContactBundle\DataFixtures\ORM\LoadDefaultTypes">
+            <tag name="doctrine.fixture.orm"/>
+        </service>
     </services>
 </container>
