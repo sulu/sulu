@@ -34,6 +34,11 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
     private $routeRepository;
 
     /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
+    /**
      * @var RouteDefaultsProviderInterface
      */
     private $defaultsProvider;
@@ -46,11 +51,13 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
+        $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->defaultsProvider = $this->prophesize(RouteDefaultsProviderInterface::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
 
         $this->routeProvider = new RouteProvider(
             $this->routeRepository->reveal(),
+            $this->requestAnalyzer->reveal(),
             $this->defaultsProvider->reveal(),
             $this->requestStack->reveal()
         );

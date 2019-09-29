@@ -40,6 +40,11 @@ class RouteProvider implements RouteProviderInterface
     private $routeRepository;
 
     /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
+    /**
      * @var RouteDefaultsProviderInterface
      */
     private $routeDefaultsProvider;
@@ -66,11 +71,13 @@ class RouteProvider implements RouteProviderInterface
 
     public function __construct(
         RouteRepositoryInterface $routeRepository,
+        RequestAnalyzerInterface $requestAnalyzer,
         RouteDefaultsProviderInterface $routeDefaultsProvider,
         RequestStack $requestStack,
         LazyLoadingValueHolderFactory $proxyFactory = null
     ) {
         $this->routeRepository = $routeRepository;
+        $this->requestAnalyzer = $requestAnalyzer;
         $this->routeDefaultsProvider = $routeDefaultsProvider;
         $this->requestStack = $requestStack;
 
