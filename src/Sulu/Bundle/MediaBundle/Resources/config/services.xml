@@ -37,6 +37,17 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <service id="sulu_media.media_stream_controller" class="Sulu\Bundle\MediaBundle\Controller\MediaStreamController">
+            <argument type="service" id="sulu_media.disposition_type.resolver"/>
+            <argument type="service" id="sulu.repository.media"/>
+            <argument type="service" id="sulu.content.path_cleaner"/>
+            <argument type="service" id="sulu_media.format_manager"/>
+            <argument type="service" id="sulu_media.format_cache"/>
+            <argument type="service" id="sulu_media.media_manager"/>
+            <argument type="service" id="sulu_media.storage"/>
+
+            <tag name="controller.service_arguments" />
+        </service>
         <service id="sulu_media.admin" class="%sulu_media.admin.class%">
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
