@@ -87,7 +87,7 @@ export default class SmartContentStore {
     }
 
     loadItems = () => {
-        if (!this.hasFilterCriteria || this.loading) {
+        if (this.loading) {
             this.setItems([]);
             return;
         }
@@ -135,13 +135,5 @@ export default class SmartContentStore {
             tags: this.tags && this.tags.length > 0 ? toJS(this.tags) : undefined,
             presentAs: this.presentation,
         };
-    }
-
-    @computed get hasFilterCriteria(): boolean {
-        const {dataSource, categories, tags} = this.filterCriteria;
-
-        return dataSource !== undefined
-            || (!!categories && categories.length > 0)
-            || (!!tags && tags.length > 0);
     }
 }

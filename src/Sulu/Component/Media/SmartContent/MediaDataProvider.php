@@ -15,6 +15,7 @@ use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Serializer\ArraySerializerInterface;
+use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\DatasourceItem;
 use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
@@ -63,9 +64,6 @@ class MediaDataProvider extends BaseDataProvider
         $this->collectionManager = $collectionManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultPropertyParameter()
     {
         return [
@@ -74,9 +72,21 @@ class MediaDataProvider extends BaseDataProvider
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    public function resolveDataItems(
+        array $filters,
+        array $propertyParameter,
+        array $options = [],
+        $limit = null,
+        $page = 1,
+        $pageSize = null
+    ) {
+        if (($filters['dataSource'] ?? null) === null) {
+            return new DataProviderResult([], false);
+        }
+
+        return parent::resolveDataItems($filters, $propertyParameter, $options, $limit, $page, $pageSize);
+    }
+
     public function resolveDatasource($datasource, array $propertyParameter, array $options)
     {
         if (empty($datasource)) {
@@ -94,9 +104,21 @@ class MediaDataProvider extends BaseDataProvider
         return new DatasourceItem($entity->getId(), $entity->getTitle(), $entity->getTitle());
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    public function resolveResourceItems(
+        array $filters,
+        array $propertyParameter,
+        array $options = [],
+        $limit = null,
+        $page = 1,
+        $pageSize = null
+    ) {
+        if (($filters['dataSource'] ?? null) === null) {
+            return new DataProviderResult([], false);
+        }
+
+        return parent::resolveResourceItems($filters, $propertyParameter, $options, $limit, $page, $pageSize);
+    }
+
     protected function getOptions(
         array $propertyParameter,
         array $options = []
@@ -115,9 +137,6 @@ class MediaDataProvider extends BaseDataProvider
         return array_merge($options, array_filter($queryOptions));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function decorateDataItems(array $data)
     {
         return array_map(
@@ -128,9 +147,6 @@ class MediaDataProvider extends BaseDataProvider
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getSerializationContext()
     {
         $serializationContext = parent::getSerializationContext();

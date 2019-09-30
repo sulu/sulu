@@ -74,53 +74,6 @@ test('Load categories and datasource when constructed', () => {
     });
 });
 
-test('Do not load but reset items if not FilterCriteria is given', () => {
-    const locale = observable.box('en');
-
-    const filterCriteria = {
-        dataSource: 1,
-        includeSubFolders: false,
-        categories: undefined,
-        categoryOperator: 'and',
-        tags: ['test'],
-        tagOperator: 'or',
-        audienceTargeting: true,
-        sortBy: 'changed',
-        sortMethod: 'asc',
-        presentAs: 'large',
-        limitResult: 9,
-    };
-
-    const smartContentStore = new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
-    expect(Requester.get).not.toBeCalled();
-
-    smartContentStore.setItems([{id: 1}]);
-    smartContentStore.tags = undefined;
-
-    expect(Requester.get).not.toBeCalled();
-    expect(smartContentStore.items).toHaveLength(0);
-});
-
-test('Do not load items if FilterCriteria is given without datasource, categories and tags', () => {
-    const locale = observable.box('en');
-    const filterCriteria = {
-        dataSource: undefined,
-        includeSubFolders: false,
-        categories: undefined,
-        categoryOperator: 'and',
-        tags: undefined,
-        tagOperator: 'or',
-        audienceTargeting: true,
-        sortBy: 'changed',
-        sortMethod: 'asc',
-        presentAs: 'large',
-        limitResult: 9,
-    };
-
-    new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
-    expect(Requester.get).not.toBeCalled();
-});
-
 test('Load items if FilterCriteria is given with datasource', () => {
     const locale = observable.box('en');
     const filterCriteria = {
