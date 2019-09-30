@@ -27,6 +27,13 @@
     </parameters>
 
     <services>
+        <service id="sulu_media.media_redirect_controller" class="Sulu\Bundle\MediaBundle\Controller\MediaRedirectController">
+            <argument type="service" id="sulu_media.media_manager" />
+
+            <tag name="controller.service_arguments" />
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <service id="sulu_media.admin" class="%sulu_media.admin.class%">
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
