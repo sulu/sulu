@@ -15,18 +15,14 @@ use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\Metadata\StaticPropertyMetadata;
-use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
-use Sulu\Component\Rest\ListBuilder\ListRepresentation;
-use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\ListBuilder\RepresentationInterface;
-use Sulu\Component\SmartContent\Rest\ItemCollectionRepresentation;
 
 /**
  * @internal
  *
  * This handler workaround some problems with serialize Representation in specific groups
  */
-class RepresentationHandler implements EventSubscriberInterface
+class RepresentationSubscriber implements EventSubscriberInterface
 {
     /**
      * {@inheritdoc}
@@ -38,34 +34,18 @@ class RepresentationHandler implements EventSubscriberInterface
                 'event' => Events::POST_SERIALIZE,
                 'format' => 'json',
                 'method' => 'onPostSerialize',
-                'class' => CollectionRepresentation::class,
-            ],
-            [
-                'event' => Events::POST_SERIALIZE,
-                'format' => 'json',
-                'method' => 'onPostSerialize',
-                'class' => PaginatedRepresentation::class,
-            ],
-            [
-                'event' => Events::POST_SERIALIZE,
-                'format' => 'json',
-                'method' => 'onPostSerialize',
-                'class' => ItemCollectionRepresentation::class,
-            ],
-            [
-                'event' => Events::POST_SERIALIZE,
-                'format' => 'json',
-                'method' => 'onPostSerialize',
-                'class' => ListRepresentation::class,
             ],
         ];
     }
 
     public function onPostSerialize(ObjectEvent $event)
     {
-        /** @var RepresentationInterface $representation */
         $representation = $event->getObject();
-        $context = $event->getContext();
+
+        if (!$representation instanceof RepresentationInterface) {
+            return;
+        }
+
         $visitor = $event->getVisitor();
 
         $data = $representation->toArray();

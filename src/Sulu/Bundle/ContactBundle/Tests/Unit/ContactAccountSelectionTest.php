@@ -382,20 +382,20 @@ class ContactAccountSelectionTest extends TestCase
         $this->contactManager->getByIds([1, 2, 3], $this->locale)->willReturn($data);
         $this->accountManager->getByIds([], $this->locale)->willReturn([]);
         $this->serializer->serialize($data[0], Argument::type(SerializationContext::class))->willReturn(
-            $data[0]
+            ['id' => 1]
         );
         $this->serializer->serialize($data[1], Argument::type(SerializationContext::class))->willReturn(
-            $data[1]
+            ['id' => 2]
         );
         $this->serializer->serialize($data[2], Argument::type(SerializationContext::class))->willReturn(
-            $data[2]
+            ['id' => 3]
         );
         $result = $type->getContentData($this->property->reveal());
 
         $this->assertCount(3, $result);
-        $this->assertEquals($contact1->reveal(), $result[0]);
-        $this->assertEquals($contact2->reveal(), $result[1]);
-        $this->assertEquals($contact3->reveal(), $result[2]);
+        $this->assertEquals(['id' => 1], $result[0]);
+        $this->assertEquals(['id' => 2], $result[1]);
+        $this->assertEquals(['id' => 3], $result[2]);
     }
 
     public function testGetContentDataCombined()
@@ -424,20 +424,21 @@ class ContactAccountSelectionTest extends TestCase
         $this->contactManager->getByIds([1], $this->locale)->willReturn([$entity2]);
         $this->accountManager->getByIds([1, 3], $this->locale)->willReturn([$entity1, $entity3]);
         $this->serializer->serialize($data[0], Argument::type(SerializationContext::class))->willReturn(
-            $data[0]
+            ['id' => 1]
         );
         $this->serializer->serialize($data[1], Argument::type(SerializationContext::class))->willReturn(
-            $data[1]
+            ['id' => 1]
         );
         $this->serializer->serialize($data[2], Argument::type(SerializationContext::class))->willReturn(
-            $data[2]
+            ['id' => 2]
         );
         $result = $type->getContentData($this->property->reveal());
 
         $this->assertCount(3, $result);
-        $this->assertEquals($entity1->reveal(), $result[0]);
-        $this->assertEquals($entity2->reveal(), $result[1]);
-        $this->assertEquals($entity3->reveal(), $result[2]);
+
+        $this->assertEquals(['id' => 1], $result[0]);
+        $this->assertEquals(['id' => 1], $result[1]);
+        $this->assertEquals(['id' => 2], $result[2]);
     }
 
     public function testGetContentDataOrderOnlyContact()
@@ -467,20 +468,20 @@ class ContactAccountSelectionTest extends TestCase
         $this->contactManager->getByIds([2, 1, 3], $this->locale)->willReturn($dataUnsorted);
         $this->accountManager->getByIds([], $this->locale)->willReturn([]);
         $this->serializer->serialize($data[0], Argument::type(SerializationContext::class))->willReturn(
-            $data[0]
+            ['id' => 2]
         );
         $this->serializer->serialize($data[1], Argument::type(SerializationContext::class))->willReturn(
-            $data[1]
+            ['id' => 1]
         );
         $this->serializer->serialize($data[2], Argument::type(SerializationContext::class))->willReturn(
-            $data[2]
+            ['id' => 3]
         );
         $contacts = $type->getContentData($this->property->reveal());
 
         $this->assertCount(3, $contacts);
-        $this->assertEquals($contact2->reveal(), $contacts[0]);
-        $this->assertEquals($contact1->reveal(), $contacts[1]);
-        $this->assertEquals($contact3->reveal(), $contacts[2]);
+        $this->assertEquals(['id' => 2], $contacts[0]);
+        $this->assertEquals(['id' => 1], $contacts[1]);
+        $this->assertEquals(['id' => 3], $contacts[2]);
     }
 
     public function testGetContentDataEmpty()

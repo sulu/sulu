@@ -14,6 +14,8 @@ namespace Sulu\Bundle\PageBundle\EventListener;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\PageBundle\Teaser\Teaser;
 
@@ -57,6 +59,7 @@ class TeaserSerializeEventSubscriber implements EventSubscriberInterface
     public function onPostSerialize(ObjectEvent $event)
     {
         $teaser = $event->getObject();
+        /** @var SerializationVisitorInterface $visitor */
         $visitor = $event->getVisitor();
         $context = $event->getContext();
 
@@ -64,6 +67,11 @@ class TeaserSerializeEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $visitor->addData('teaserId', $context->getNavigator()->accept(sprintf('%s;%s', $teaser->getType(), $teaser->getId())));
+        $teaserId = sprintf('%s;%s', $teaser->getType(), $teaser->getId());
+        $context->getNavigator()->accept($teaserId);
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'teaserId', $teaserId),
+            $teaserId
+        );
     }
 }

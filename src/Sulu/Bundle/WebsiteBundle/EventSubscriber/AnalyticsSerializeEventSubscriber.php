@@ -14,6 +14,8 @@ namespace Sulu\Bundle\WebsiteBundle\EventSubscriber;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
 
 /**
@@ -43,23 +45,42 @@ class AnalyticsSerializeEventSubscriber implements EventSubscriberInterface
             return;
         }
 
+        /** @var SerializationVisitorInterface $visitor */
         $visitor = $event->getVisitor();
         $content = $analytics->getContent();
 
         switch ($analytics->getType()) {
             case 'google':
-                $visitor->addData('google_key', $content);
+                $visitor->visitProperty(
+                    new StaticPropertyMetadata('', 'google_key', $content),
+                    $content
+                );
                 break;
             case 'google_tag_manager':
-                $visitor->addData('google_tag_manager_key', $content);
+                $visitor->visitProperty(
+                    new StaticPropertyMetadata('', 'google_tag_manager_key', $content),
+                    $content
+                );
                 break;
             case 'matomo':
-                $visitor->addData('matomo_id', $content['siteId']);
-                $visitor->addData('matomo_url', $content['url']);
+                $visitor->visitProperty(
+                    new StaticPropertyMetadata('', 'matomo_id', $content['siteId']),
+                    $content['siteId']
+                );
+                $visitor->visitProperty(
+                    new StaticPropertyMetadata('', 'matomo_url', $content['url']),
+                    $content['url']
+                );
                 break;
             case 'custom':
-                $visitor->addData('custom_script', $content['value']);
-                $visitor->addData('custom_position', $content['position']);
+                $visitor->visitProperty(
+                    new StaticPropertyMetadata('', 'custom_script', $content['value']),
+                    $content['value']
+                );
+                $visitor->visitProperty(
+                    new StaticPropertyMetadata('', 'custom_position', $content['position']),
+                    $content['position']
+                );
                 break;
         }
     }

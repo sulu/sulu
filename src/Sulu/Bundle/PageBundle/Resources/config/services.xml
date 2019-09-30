@@ -95,7 +95,7 @@
         <service id="sulu_page.content_repository.event_subscriber"
                  class="Sulu\Component\Content\Repository\Serializer\SerializerEventListener">
             <argument type="service" id="sulu_security.access_control_manager"/>
-            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
 
             <tag name="jms_serializer.event_subscriber" />
             <tag name="sulu.context" context="admin"/>

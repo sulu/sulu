@@ -53,9 +53,6 @@ class CollectionRepresentation implements RepresentationInterface
         return $this->rel;
     }
 
-    /**
-     * @return array
-     */
     public function toArray(): array
     {
         return [

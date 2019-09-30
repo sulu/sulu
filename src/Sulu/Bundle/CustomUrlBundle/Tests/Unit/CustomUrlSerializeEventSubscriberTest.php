@@ -13,7 +13,8 @@ namespace Sulu\Bundle\CustomUrlBundle\Tests\Unit;
 
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
-use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
@@ -52,7 +53,7 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
 
         $event = $this->prophesize(ObjectEvent::class);
         $document = $this->prophesize(CustomUrlDocument::class);
-        $visitor = $this->prophesize(JsonSerializationVisitor::class);
+        $visitor = $this->prophesize(SerializationVisitorInterface::class);
         $pageDocument = $this->prophesize(PageDocument::class);
         $pageDocument->getUuid()->willReturn('some-uuid');
         $pageDocument->getTitle()->willReturn('test');
@@ -72,11 +73,25 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
 
         $subscriber->onPostSerialize($event->reveal());
 
-        $visitor->addData('targetDocument', 'some-uuid')->shouldBeCalled();
-        $visitor->addData('targetTitle', 'test')->shouldBeCalled();
-        $visitor->addData('customUrl', 'test.sulu.io')->shouldBeCalled();
-        $visitor->addData('creatorFullName', 'test1')->shouldBeCalled();
-        $visitor->addData('changerFullName', 'test2')->shouldBeCalled();
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'targetDocument' === $metadata->name;
+        }), 'some-uuid')->shouldBeCalled();
+
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'targetTitle' === $metadata->name;
+        }), 'test')->shouldBeCalled();
+
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'customUrl' === $metadata->name;
+        }), 'test.sulu.io')->shouldBeCalled();
+
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'creatorFullName' === $metadata->name;
+        }), 'test1')->shouldBeCalled();
+
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'changerFullName' === $metadata->name;
+        }), 'test2')->shouldBeCalled();
     }
 
     public function testOnPostSerializeWrongDocument()
@@ -87,14 +102,14 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
 
         $event = $this->prophesize(ObjectEvent::class);
         $document = $this->prophesize(\stdClass::class);
-        $visitor = $this->prophesize(JsonSerializationVisitor::class);
+        $visitor = $this->prophesize(SerializationVisitorInterface::class);
 
         $event->getObject()->willReturn($document->reveal());
         $event->getVisitor()->willReturn($visitor->reveal());
 
         $subscriber->onPostSerialize($event->reveal());
 
-        $visitor->addData(Argument::any(), Argument::any())->shouldNotBeCalled();
+        $visitor->visitProperty(Argument::any(), Argument::any())->shouldNotBeCalled();
         $generator->generate(Argument::any(), Argument::any(), Argument::any())->shouldNotBeCalled();
     }
 
@@ -106,7 +121,7 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
 
         $event = $this->prophesize(ObjectEvent::class);
         $document = $this->prophesize(CustomUrlDocument::class);
-        $visitor = $this->prophesize(JsonSerializationVisitor::class);
+        $visitor = $this->prophesize(SerializationVisitorInterface::class);
         $document->getTargetDocument()->willReturn(null);
         $document->getBaseDomain()->willReturn('*.sulu.io');
         $document->getDomainParts()->willReturn(['prefix' => 'test', 'suffix' => []]);
@@ -123,9 +138,20 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
 
         $subscriber->onPostSerialize($event->reveal());
 
-        $visitor->addData('targetTitle', Argument::any())->shouldNotBeCalled();
-        $visitor->addData('customUrl', 'test.sulu.io')->shouldBeCalled();
-        $visitor->addData('creatorFullName', 'test1')->shouldBeCalled();
-        $visitor->addData('changerFullName', 'test2')->shouldBeCalled();
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'targetTitle' === $metadata->name;
+        }), Argument::any())->shouldNotBeCalled();
+
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'customUrl' === $metadata->name;
+        }), 'test.sulu.io')->shouldBeCalled();
+
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'creatorFullName' === $metadata->name;
+        }), 'test1')->shouldBeCalled();
+
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'changerFullName' === $metadata->name;
+        }), 'test2')->shouldBeCalled();
     }
 }

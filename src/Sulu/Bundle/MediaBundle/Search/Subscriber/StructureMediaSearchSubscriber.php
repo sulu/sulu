@@ -83,7 +83,8 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
 
         if (
             !$e->getSubject() instanceof StructureBehavior
-            && StructureBehavior::class !== $metadata->getName()) {
+            && StructureBehavior::class !== $metadata->getName()
+        ) {
             return;
         }
 

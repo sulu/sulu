@@ -14,8 +14,8 @@ namespace Sulu\Bundle\PageBundle\Serializer\Handler;
 use JMS\Serializer\Context;
 use JMS\Serializer\GraphNavigatorInterface;
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
-use JMS\Serializer\JsonDeserializationVisitor;
-use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\Visitor\DeserializationVisitorInterface;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Component\Content\Document\Structure\Structure;
 
 /**
@@ -44,16 +44,8 @@ class StructureHandler implements SubscribingHandlerInterface
         ];
     }
 
-    /**
-     * @param JsonSerializationVisitor $visitor
-     * @param Structure $structure
-     * @param array $type
-     * @param Context $context
-     *
-     * @return mixed
-     */
     public function doSerialize(
-        JsonSerializationVisitor $visitor,
+        SerializationVisitorInterface $visitor,
         Structure $structure,
         array $type,
         Context $context
@@ -63,16 +55,8 @@ class StructureHandler implements SubscribingHandlerInterface
         return $context->getNavigator()->accept($array);
     }
 
-    /**
-     * @param JsonDeserializationVisitor $visitor
-     * @param array $data
-     * @param array $type
-     * @param Context $context
-     *
-     * @return Structure
-     */
     public function doDeserialize(
-        JsonDeserializationVisitor $visitor,
+        DeserializationVisitorInterface $visitor,
         array $data,
         array $type,
         Context $context

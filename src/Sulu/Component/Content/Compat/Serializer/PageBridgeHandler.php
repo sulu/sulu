@@ -14,7 +14,7 @@ namespace Sulu\Component\Content\Compat\Serializer;
 use JMS\Serializer\Context;
 use JMS\Serializer\GraphNavigatorInterface;
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
-use JMS\Serializer\Visitor\SerializationVisitorInterface;
+use JMS\Serializer\Visitor\DeserializationVisitorInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
@@ -54,12 +54,6 @@ class PageBridgeHandler implements SubscribingHandlerInterface
     {
         return [
             [
-                'direction' => GraphNavigatorInterface::DIRECTION_SERIALIZATION,
-                'format' => 'json',
-                'type' => PageBridge::class,
-                'method' => 'doSerialize',
-            ],
-            [
                 'direction' => GraphNavigatorInterface::DIRECTION_DESERIALIZATION,
                 'format' => 'json',
                 'type' => PageBridge::class,
@@ -69,28 +63,7 @@ class PageBridgeHandler implements SubscribingHandlerInterface
     }
 
     /**
-     * @param SerializationVisitorInterface $visitor
-     * @param PageBridge $bridge
-     * @param array $type
-     * @param Context $context
-     */
-    public function doSerialize(
-        SerializationVisitorInterface $visitor,
-        PageBridge $bridge,
-        array $type,
-        Context $context
-    ) {
-        $context->getNavigator()->accept(
-            [
-                'document' => $bridge->getDocument(),
-                'documentClass' => get_class($bridge->getDocument()),
-                'structure' => $bridge->getStructure()->getName(),
-            ]
-        );
-    }
-
-    /**
-     * @param SerializationVisitorInterface $visitor
+     * @param DeSerializationVisitorInterface $visitor
      * @param array $data
      * @param array $type
      * @param Context $context
@@ -98,7 +71,7 @@ class PageBridgeHandler implements SubscribingHandlerInterface
      * @return PageBridge
      */
     public function doDeserialize(
-        SerializationVisitorInterface $visitor,
+        DeSerializationVisitorInterface $visitor,
         array $data,
         array $type,
         Context $context

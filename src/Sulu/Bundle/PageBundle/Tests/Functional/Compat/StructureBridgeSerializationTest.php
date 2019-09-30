@@ -61,11 +61,28 @@ class StructureBridgeSerializationTest extends SuluTestCase
 
         $this->assertInstanceOf(StructureBridge::class, $managedPage);
 
-        return $this->serializer->serialize(
+        $data = $this->serializer->serialize(
             $managedPage,
             'json',
             SerializationContext::create()->setGroups('preview')
         );
+
+        $this->assertNotSame('null', $data);
+
+        $arrayData = json_decode($data, true);
+
+        $this->assertArrayHasKey('document', $arrayData);
+        $this->assertArrayHasKey('documentClass', $arrayData);
+        $this->assertArrayHasKey('structure', $arrayData);
+
+        $this->assertArrayHasKey('id', $arrayData['document']);
+        $this->assertArrayHasKey('created', $arrayData['document']);
+        $this->assertArrayHasKey('changed', $arrayData['document']);
+        $this->assertSame('fr', $arrayData['document']['locale']);
+        $this->assertSame(PageDocument::class, $arrayData['documentClass']);
+        $this->assertSame('internallinks', $arrayData['structure']);
+
+        return $data;
     }
 
     /**

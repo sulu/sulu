@@ -14,6 +14,8 @@ namespace Sulu\Bundle\CustomUrlBundle\EventListener;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
@@ -61,6 +63,8 @@ class CustomUrlSerializeEventSubscriber implements EventSubscriberInterface
     public function onPostSerialize(ObjectEvent $event)
     {
         $customUrl = $event->getObject();
+
+        /** @var SerializationVisitorInterface $visitor */
         $visitor = $event->getVisitor();
 
         if (!$customUrl instanceof CustomUrlDocument) {
@@ -68,16 +72,33 @@ class CustomUrlSerializeEventSubscriber implements EventSubscriberInterface
         }
 
         if (null !== $customUrl->getTargetDocument()) {
-            $visitor->addData('targetTitle', $customUrl->getTargetDocument()->getTitle());
-            $visitor->addData('targetDocument', $customUrl->getTargetDocument()->getUuid());
+            $targetDocumentTitle = $customUrl->getTargetDocument()->getTitle();
+            $visitor->visitProperty(
+                new StaticPropertyMetadata('', 'targetTitle', $targetDocumentTitle),
+                $targetDocumentTitle
+            );
+            $targetDocumentUuid = $customUrl->getTargetDocument()->getUuid();
+            $visitor->visitProperty(
+                new StaticPropertyMetadata('', 'targetDocument', $targetDocumentUuid),
+                $targetDocumentUuid
+            );
         }
 
-        $visitor->addData(
-            'customUrl',
-            $this->generator->generate($customUrl->getBaseDomain(), $customUrl->getDomainParts())
+        $customUrlProperty = $this->generator->generate($customUrl->getBaseDomain(), $customUrl->getDomainParts());
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'customUrl', $customUrlProperty),
+            $customUrlProperty
         );
 
-        $visitor->addData('creatorFullName', $this->userManager->getFullNameByUserId($customUrl->getCreator()));
-        $visitor->addData('changerFullName', $this->userManager->getFullNameByUserId($customUrl->getChanger()));
+        $creatorFullName = $this->userManager->getFullNameByUserId($customUrl->getCreator());
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'creatorFullName', $creatorFullName),
+            $creatorFullName
+        );
+        $changerFullName = $this->userManager->getFullNameByUserId($customUrl->getChanger());
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'changerFullName', $changerFullName),
+            $changerFullName
+        );
     }
 }

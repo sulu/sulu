@@ -13,6 +13,8 @@ namespace Sulu\Component\Security\Serializer\Subscriber;
 
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
@@ -56,6 +58,8 @@ class SecuredEntitySubscriber implements EventSubscriberInterface
     public function onPostSerialize(ObjectEvent $event)
     {
         $object = $event->getObject();
+        /** @var SerializationVisitorInterface $visitor */
+        $visitor = $event->getVisitor();
 
         // FIXME This should be removed, once all entities are restructured not using the ApiWrapper, possible BC break
         if ($object instanceof ApiWrapper) {
@@ -66,12 +70,13 @@ class SecuredEntitySubscriber implements EventSubscriberInterface
             return;
         }
 
-        $event->getVisitor()->addData(
-            '_permissions',
-            $this->accessControlManager->getUserPermissions(
-                new SecurityCondition($object->getSecurityContext(), null, get_class($object), $object->getId()),
-                $this->tokenStorage->getToken()->getUser()
-            )
+        $permissions = $this->accessControlManager->getUserPermissions(
+            new SecurityCondition($object->getSecurityContext(), null, get_class($object), $object->getId()),
+            $this->tokenStorage->getToken()->getUser()
+        );
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', '_permissions', $permissions),
+            $permissions
         );
     }
 }

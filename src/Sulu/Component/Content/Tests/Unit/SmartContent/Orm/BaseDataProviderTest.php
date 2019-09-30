@@ -12,10 +12,10 @@
 namespace Sulu\Component\Content\Tests\Unit\SmartContent\Orm;
 
 use JMS\Serializer\SerializationContext;
-use JMS\Serializer\SerializerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\Orm\BaseDataProvider;
@@ -27,7 +27,7 @@ class BaseDataProviderTest extends TestCase
     public function testGetDefaultPropertyParameter()
     {
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
 
         /** @var BaseDataProvider $provider */
         $provider = $this->getMockForAbstractClass(
@@ -56,7 +56,7 @@ class BaseDataProviderTest extends TestCase
     public function testInitConfiguration($tags, $categories, $limit, $presentAs, $paginated, $sorting)
     {
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
 
         /** @var BaseDataProvider $provider */
         $provider = $this->getMockForAbstractClass(
@@ -95,7 +95,7 @@ class BaseDataProviderTest extends TestCase
     public function testResolveDataSource()
     {
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
 
         /** @var BaseDataProvider $provider */
         $provider = $this->getMockForAbstractClass(
@@ -210,7 +210,7 @@ class BaseDataProviderTest extends TestCase
             $repositoryResult
         );
 
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
 
         /** @var BaseDataProvider $provider */
         $provider = $this->getMockForAbstractClass(
@@ -246,7 +246,7 @@ class BaseDataProviderTest extends TestCase
             $repositoryResult
         );
 
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
 
         /** @var BaseDataProvider $provider */
         $provider = $this->getMockForAbstractClass(
@@ -297,10 +297,9 @@ class BaseDataProviderTest extends TestCase
             $mockedItems
         );
 
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $serializer->serialize(
             Argument::type(ResourceItemInterface::class),
-            'array',
             Argument::type(SerializationContext::class)
         )->will(
             function($args) {
@@ -364,10 +363,9 @@ class BaseDataProviderTest extends TestCase
             $mockedItems
         );
 
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $serializer->serialize(
             Argument::type(ResourceItemInterface::class),
-            'array',
             Argument::type(SerializationContext::class)
         )->will(
             function($args) {

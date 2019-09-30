@@ -14,6 +14,7 @@ namespace Sulu\Bundle\PageBundle\Serializer\Subscriber;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
@@ -67,6 +68,10 @@ class PathSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $visitor->addData('path', $this->documentInspector->getContentPath($document));
+        $path = $this->documentInspector->getContentPath($document);
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'path', $path),
+            $path
+        );
     }
 }

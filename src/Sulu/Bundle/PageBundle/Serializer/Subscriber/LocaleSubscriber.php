@@ -14,6 +14,8 @@ namespace Sulu\Bundle\PageBundle\Serializer\Subscriber;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
@@ -67,19 +69,38 @@ class LocaleSubscriber implements EventSubscriberInterface
             return;
         }
 
+        /** @var SerializationVisitorInterface $visitor */
         $visitor = $event->getVisitor();
 
-        $visitor->addData('availableLocales', $this->documentInspector->getLocales($document));
-        $visitor->addData('contentLocales', $this->documentInspector->getConcreteLocales($document));
+        $availableLocales = $this->documentInspector->getLocales($document);
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'availableLocales', $availableLocales),
+            $availableLocales
+        );
+
+        $contentLocales = $this->documentInspector->getConcreteLocales($document);
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'contentLocales', $contentLocales),
+            $contentLocales
+        );
 
         $localizationState = $this->documentInspector->getLocalizationState($document);
 
+        $type = null;
+
         if (LocalizationState::GHOST === $localizationState) {
-            $visitor->addData('type', ['name' => 'ghost', 'value' => $document->getLocale()]);
+            $type = ['name' => 'ghost', 'value' => $document->getLocale()];
         }
 
         if (LocalizationState::SHADOW === $localizationState) {
-            $visitor->addData('type', ['name' => 'shadow', 'value' => $document->getLocale()]);
+            $type = ['name' => 'shadow', 'value' => $document->getLocale()];
+        }
+
+        if ($type) {
+            $visitor->visitProperty(
+                new StaticPropertyMetadata('', 'type', $type),
+                $type
+            );
         }
     }
 }

@@ -14,6 +14,8 @@ namespace Sulu\Bundle\DocumentManagerBundle\Bridge\Serializer\Subscriber;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
@@ -66,7 +68,13 @@ class ChildrenSubscriber implements EventSubscriberInterface
             return;
         }
 
+        /** @var SerializationVisitorInterface $visitor */
         $visitor = $event->getVisitor();
-        $visitor->addData('hasSub', $this->documentInspector->hasChildren($document));
+
+        $hasSub = $this->documentInspector->hasChildren($document);
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'hasSub', $hasSub),
+            $hasSub
+        );
     }
 }

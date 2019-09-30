@@ -14,7 +14,8 @@ namespace Sulu\Bundle\SecurityBundle\Serializer\Subscriber;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
-use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
@@ -74,23 +75,32 @@ class SecuritySubscriber implements EventSubscriberInterface
             && $document instanceof LocaleBehavior
             && $document instanceof WebspaceBehavior
             && null !== $this->tokenStorage
-            && null !== $this->tokenStorage->getToken()
-            && $this->tokenStorage->getToken()->getUser() instanceof UserInterface)
-        ) {
+        )) {
             return;
         }
 
-        /** @var JsonSerializationVisitor $visitor */
+        $token = $this->tokenStorage->getToken();
+        if (!$token) {
+            return;
+        }
+
+        $user = $token->getUser();
+        if (!$user instanceof UserInterface) {
+            return;
+        }
+
+        /** @var SerializationVisitorInterface $visitor */
         $visitor = $event->getVisitor();
 
-        $visitor->addData(
-            '_permissions',
-            $this->accessControlManager->getUserPermissionByArray(
-                $document->getLocale(),
-                PageAdmin::SECURITY_CONTEXT_PREFIX . $document->getWebspaceName(),
-                $document->getPermissions(),
-                $this->tokenStorage->getToken()->getUser()
-            )
+        $permissions = $this->accessControlManager->getUserPermissionByArray(
+            $document->getLocale(),
+            PageAdmin::SECURITY_CONTEXT_PREFIX . $document->getWebspaceName(),
+            $document->getPermissions(),
+            $user
+        );
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', '_permissions', $permissions),
+            $permissions
         );
     }
 }

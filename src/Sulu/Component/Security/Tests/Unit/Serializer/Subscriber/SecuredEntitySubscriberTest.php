@@ -12,8 +12,10 @@
 namespace Sulu\Component\Security\Tests\Unit\Serializer\Subscriber;
 
 use JMS\Serializer\EventDispatcher\ObjectEvent;
-use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
@@ -60,7 +62,7 @@ class SecuredEntitySubscriberTest extends TestCase
     private $user;
 
     /**
-     * @var JsonSerializationVisitor
+     * @var SerializationVisitorInterface
      */
     private $visitor;
 
@@ -78,7 +80,7 @@ class SecuredEntitySubscriberTest extends TestCase
             $this->tokenStorage->reveal()
         );
 
-        $this->visitor = $this->prophesize(JsonSerializationVisitor::class);
+        $this->visitor = $this->prophesize(SerializationVisitorInterface::class);
         $this->objectEvent = $this->prophesize(ObjectEvent::class);
         $this->objectEvent->getVisitor()->willReturn($this->visitor);
     }
@@ -97,7 +99,9 @@ class SecuredEntitySubscriberTest extends TestCase
             $permission
         );
 
-        $this->visitor->addData('_permissions', $permission)->shouldBeCalled();
+        $this->visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return '_permissions' === $metadata->name;
+        }), $permission)->shouldBeCalled();
 
         $this->securedEntitySubscriber->onPostSerialize($this->objectEvent->reveal());
     }
@@ -118,7 +122,9 @@ class SecuredEntitySubscriberTest extends TestCase
             $permission
         );
 
-        $this->visitor->addData('_permissions', $permission)->shouldBeCalled();
+        $this->visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return '_permissions' === $metadata->name;
+        }), $permission)->shouldBeCalled();
 
         $this->securedEntitySubscriber->onPostSerialize($this->objectEvent->reveal());
     }

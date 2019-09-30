@@ -145,7 +145,7 @@
 
         <service
             id="sulu_admin.representation_handler"
-            class="Sulu\Bundle\AdminBundle\Serializer\Handler\RepresentationHandler"
+            class="Sulu\Bundle\AdminBundle\Serializer\Handler\RepresentationSubscriber"
         >
             <tag name="jms_serializer.event_subscriber"/>
         </service>

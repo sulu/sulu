@@ -58,6 +58,7 @@ class SnippetTwigExtensionTest extends SuluTestCase
 
     protected function setUp(): void
     {
+        $this->purgeDatabase();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
         $this->requestAnalyzer = $this->getContainer()->get('sulu_core.webspace.request_analyzer');

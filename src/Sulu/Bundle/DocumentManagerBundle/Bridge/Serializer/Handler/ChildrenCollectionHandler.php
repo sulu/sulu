@@ -14,7 +14,7 @@ namespace Sulu\Bundle\DocumentManagerBundle\Bridge\Serializer\Handler;
 use JMS\Serializer\Context;
 use JMS\Serializer\GraphNavigatorInterface;
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
-use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
 
 /**
@@ -37,16 +37,8 @@ class ChildrenCollectionHandler implements SubscribingHandlerInterface
         ];
     }
 
-    /**
-     * @param JsonSerializationVisitor $visitor
-     * @param ChildrenCollection $childrenCollection
-     * @param array $type
-     * @param Context $context
-     *
-     * @return mixed
-     */
     public function doSerialize(
-        JsonSerializationVisitor $visitor,
+        SerializationVisitorInterface $visitor,
         ChildrenCollection $childrenCollection,
         array $type,
         Context $context

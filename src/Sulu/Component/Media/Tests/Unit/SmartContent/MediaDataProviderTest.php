@@ -12,7 +12,6 @@
 namespace Sulu\Component\Media\Tests\Unit\SmartContent;
 
 use JMS\Serializer\SerializationContext;
-use JMS\Serializer\SerializerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Api\Collection;
@@ -54,7 +53,7 @@ class MediaDataProviderTest extends TestCase
 
     public function testGetDefaultParameter()
     {
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $collectionManager = $this->prophesize(CollectionManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);
         $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
@@ -103,7 +102,7 @@ class MediaDataProviderTest extends TestCase
      */
     public function testResolveDataItems($filters, $limit, $page, $pageSize, $repositoryResult, $hasNextPage, $items)
     {
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $collectionManager = $this->prophesize(CollectionManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);
         $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
@@ -203,7 +202,7 @@ class MediaDataProviderTest extends TestCase
 
     public function testResolveDataSource()
     {
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $collectionManager = $this->prophesize(CollectionManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);
         $referenceStore = $this->prophesize(ReferenceStoreInterface::class);

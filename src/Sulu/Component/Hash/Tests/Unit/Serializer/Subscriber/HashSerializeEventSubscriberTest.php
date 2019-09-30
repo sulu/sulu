@@ -12,8 +12,9 @@
 namespace Sulu\Component\Hash\Tests\Unit\Serializer\Subscriber;
 
 use JMS\Serializer\EventDispatcher\ObjectEvent;
-use JMS\Serializer\JsonSerializationVisitor;
-use JMS\Serializer\XmlSerializationVisitor;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
+use JMS\Serializer\Visitor\DeserializationVisitorInterface;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Hash\HasherInterface;
@@ -33,7 +34,7 @@ class HashSerializeEventSubscriberTest extends TestCase
     private $hashSerializeEventSubscriber;
 
     /**
-     * @var JsonSerializationVisitor
+     * @var SerializationVisitorInterface
      */
     private $visitor;
 
@@ -45,7 +46,7 @@ class HashSerializeEventSubscriberTest extends TestCase
     public function setUp(): void
     {
         $this->hasher = $this->prophesize(HasherInterface::class);
-        $this->visitor = $this->prophesize(JsonSerializationVisitor::class);
+        $this->visitor = $this->prophesize(SerializationVisitorInterface::class);
         $this->hashSerializeEventSubscriber = new HashSerializeEventSubscriber($this->hasher->reveal());
         $this->objectEvent = $this->prophesize(ObjectEvent::class);
         $this->objectEvent->getVisitor()->willReturn($this->visitor->reveal());
@@ -56,7 +57,9 @@ class HashSerializeEventSubscriberTest extends TestCase
         $object = $this->prophesize(AuditableInterface::class);
         $this->objectEvent->getObject()->willReturn($object);
 
-        $this->visitor->setData('_hash', Argument::any())->shouldBeCalled();
+        $this->visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return '_hash' === $metadata->name;
+        }), Argument::any())->shouldBeCalled();
         $this->hashSerializeEventSubscriber->onPostSerialize($this->objectEvent->reveal());
     }
 
@@ -65,18 +68,22 @@ class HashSerializeEventSubscriberTest extends TestCase
         $object = new \stdClass();
         $this->objectEvent->getObject()->willReturn($object);
 
-        $this->visitor->setData('_hash', Argument::any())->shouldNotBeCalled();
+        $this->visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return '_hash' === $metadata->name;
+        }), Argument::any())->shouldNotBeCalled();
         $this->hashSerializeEventSubscriber->onPostSerialize($this->objectEvent->reveal());
     }
 
-    public function testOnNonGenericSerialization()
+    public function testOnNonSerializationVisitor()
     {
-        $xmlVisitor = $this->prophesize(XmlSerializationVisitor::class);
+        $xmlVisitor = $this->prophesize(DeserializationVisitorInterface::class);
         $object = $this->prophesize(AuditableInterface::class);
         $this->objectEvent->getObject()->willReturn($object);
         $this->objectEvent->getVisitor()->willReturn($xmlVisitor->reveal());
 
-        $this->hasher->hash()->shouldNotBeCalled();
+        $this->visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return '_hash' === $metadata->name;
+        }), Argument::any())->shouldNotBeCalled();
 
         $this->hashSerializeEventSubscriber->onPostSerialize($this->objectEvent->reveal());
     }
