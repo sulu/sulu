@@ -375,7 +375,7 @@ class MediaControllerTest extends SuluTestCase
             '/uploads/media/50x50/01/0-photo.jpeg'
         );
         $this->assertFalse($client->getResponse()->isCacheable());
-        $this->assertEmpty($client->getResponse()->getExpires());
+        $this->assertEmpty($client->getResponse()->headers->get('Expires'));
     }
 
     /**

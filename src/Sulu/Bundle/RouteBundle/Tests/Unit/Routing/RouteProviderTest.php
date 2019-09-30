@@ -9,13 +9,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SuluBundle\Tests\Unit\Routing;
+namespace Sulu\Bundle\RouteBundle\Tests\Unit\Routing;
 
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
 use Sulu\Bundle\RouteBundle\Routing\RouteProvider;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -53,8 +55,6 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->defaultsProvider = $this->prophesize(RouteDefaultsProviderInterface::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
 
-        $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
-
         $this->routeProvider = new RouteProvider(
             $this->routeRepository->reveal(),
             $this->requestAnalyzer->reveal(),
@@ -70,7 +70,32 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $request->getLocale()->willReturn('de');
         $request->getRequestFormat()->willReturn('html');
 
+        $attributes = $this->prophesize(RequestAttributes::class);
+        $attributes->getAttribute('matchType')->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
+        $attributes->getAttribute('resourceLocatorPrefix')->willReturn('/de');
+
+        $request->reveal()->attributes = new ParameterBag(['_sulu' => $attributes->reveal()]);
+
         $this->routeRepository->findByPath('/test', 'de')->willReturn(null);
+
+        $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
+
+        $this->assertCount(0, $collection);
+    }
+
+    public function testGetRouteCollectionForRequestNoFullMatch()
+    {
+        $request = $this->prophesize(Request::class);
+        $request->getPathInfo()->willReturn('/test');
+        $request->getLocale()->willReturn('de');
+        $request->getRequestFormat()->willReturn('html');
+
+        $attributes = $this->prophesize(RequestAttributes::class);
+        $attributes->getAttribute('matchType')->willReturn(RequestAnalyzerInterface::MATCH_TYPE_PARTIAL);
+
+        $request->reveal()->attributes = new ParameterBag(['_sulu' => $attributes->reveal()]);
+
+        $this->routeRepository->findByPath('/test', 'de')->shouldNotBeCalled();
 
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
 
@@ -83,6 +108,12 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $request->getPathInfo()->willReturn('/de/test');
         $request->getLocale()->willReturn('de');
         $request->getRequestFormat()->willReturn('html');
+
+        $attributes = $this->prophesize(RequestAttributes::class);
+        $attributes->getAttribute('matchType')->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
+        $attributes->getAttribute('resourceLocatorPrefix')->willReturn('/de');
+
+        $request->reveal()->attributes = new ParameterBag(['_sulu' => $attributes->reveal()]);
 
         $routeEntity = $this->prophesize(RouteInterface::class);
         $routeEntity->getId()->willReturn(1);
@@ -103,6 +134,12 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $request->getPathInfo()->willReturn('/de/test');
         $request->getLocale()->willReturn('de');
         $request->getRequestFormat()->willReturn('html');
+
+        $attributes = $this->prophesize(RequestAttributes::class);
+        $attributes->getAttribute('matchType')->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
+        $attributes->getAttribute('resourceLocatorPrefix')->willReturn('/de');
+
+        $request->reveal()->attributes = new ParameterBag(['_sulu' => $attributes->reveal()]);
 
         $routeEntity = $this->prophesize(RouteInterface::class);
         $routeEntity->getEntityClass()->willReturn('Example');
@@ -127,6 +164,12 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $request->getPathInfo()->willReturn('/de/test');
         $request->getLocale()->willReturn('de');
         $request->getRequestFormat()->willReturn('html');
+
+        $attributes = $this->prophesize(RequestAttributes::class);
+        $attributes->getAttribute('matchType')->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
+        $attributes->getAttribute('resourceLocatorPrefix')->willReturn('/de');
+
+        $request->reveal()->attributes = new ParameterBag(['_sulu' => $attributes->reveal()]);
 
         $routeEntity = $this->prophesize(RouteInterface::class);
         $routeEntity->getEntityClass()->willReturn('Example');
@@ -157,6 +200,12 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $request->getLocale()->willReturn('de');
         $request->getRequestFormat()->willReturn('json');
 
+        $attributes = $this->prophesize(RequestAttributes::class);
+        $attributes->getAttribute('matchType')->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
+        $attributes->getAttribute('resourceLocatorPrefix')->willReturn('/de');
+
+        $request->reveal()->attributes = new ParameterBag(['_sulu' => $attributes->reveal()]);
+
         $routeEntity = $this->prophesize(RouteInterface::class);
         $routeEntity->getEntityClass()->willReturn('Example');
         $routeEntity->getEntityId()->willReturn('1');
@@ -185,6 +234,12 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $request->getPathInfo()->willReturn(rawurlencode('/de/käße'));
         $request->getLocale()->willReturn('de');
         $request->getRequestFormat()->willReturn('html');
+
+        $attributes = $this->prophesize(RequestAttributes::class);
+        $attributes->getAttribute('matchType')->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
+        $attributes->getAttribute('resourceLocatorPrefix')->willReturn('/de');
+
+        $request->reveal()->attributes = new ParameterBag(['_sulu' => $attributes->reveal()]);
 
         $routeEntity = $this->prophesize(RouteInterface::class);
         $routeEntity->getEntityClass()->willReturn('Example');
@@ -215,6 +270,12 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $request->getLocale()->willReturn('de');
         $request->getRequestFormat()->willReturn('html');
 
+        $attributes = $this->prophesize(RequestAttributes::class);
+        $attributes->getAttribute('matchType')->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
+        $attributes->getAttribute('resourceLocatorPrefix')->willReturn('/de');
+
+        $request->reveal()->attributes = new ParameterBag(['_sulu' => $attributes->reveal()]);
+
         $routeEntity = $this->prophesize(RouteInterface::class);
         $routeEntity->getEntityClass()->willReturn('Example');
         $routeEntity->getEntityId()->willReturn('1');
@@ -243,9 +304,16 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $request = $this->prophesize(Request::class);
         $request->getPathInfo()->willReturn('/de/test');
         $request->getLocale()->willReturn('de');
+        $request->getRequestFormat()->willReturn('html');
         $request->getQueryString()->willReturn('test=1');
         $request->getSchemeAndHttpHost()->willReturn('http://www.sulu.io');
         $request->getRequestFormat()->willReturn('html');
+
+        $attributes = $this->prophesize(RequestAttributes::class);
+        $attributes->getAttribute('matchType')->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
+        $attributes->getAttribute('resourceLocatorPrefix')->willReturn('/de');
+
+        $request->reveal()->attributes = new ParameterBag(['_sulu' => $attributes->reveal()]);
 
         $targetEntity = $this->prophesize(RouteInterface::class);
         $targetEntity->getPath()->willReturn('/test-2');
@@ -280,9 +348,16 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $request = $this->prophesize(Request::class);
         $request->getPathInfo()->willReturn('/de/test');
         $request->getLocale()->willReturn('de');
+        $request->getRequestFormat()->willReturn('html');
         $request->getQueryString()->willReturn(null);
         $request->getSchemeAndHttpHost()->willReturn('http://www.sulu.io');
         $request->getRequestFormat()->willReturn('html');
+
+        $attributes = $this->prophesize(RequestAttributes::class);
+        $attributes->getAttribute('matchType')->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
+        $attributes->getAttribute('resourceLocatorPrefix')->willReturn('/de');
+
+        $request->reveal()->attributes = new ParameterBag(['_sulu' => $attributes->reveal()]);
 
         $targetEntity = $this->prophesize(RouteInterface::class);
         $targetEntity->getPath()->willReturn('/test-2');
@@ -319,7 +394,11 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $request->getLocale()->willReturn('de');
         $request->getRequestFormat()->willReturn('html');
 
-        $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn(null);
+        $attributes = $this->prophesize(RequestAttributes::class);
+        $attributes->getAttribute('matchType')->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
+        $attributes->getAttribute('resourceLocatorPrefix')->willReturn(null);
+
+        $request->reveal()->attributes = new ParameterBag(['_sulu' => $attributes->reveal()]);
 
         $routeEntity = $this->prophesize(RouteInterface::class);
         $routeEntity->getEntityClass()->willReturn('Example');
@@ -350,6 +429,12 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $request->getLocale()->willReturn('de');
         $request->getRequestFormat()->willReturn('');
 
+        $attributes = $this->prophesize(RequestAttributes::class);
+        $attributes->getAttribute('matchType')->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
+        $attributes->getAttribute('resourceLocatorPrefix')->willReturn(null);
+
+        $request->reveal()->attributes = new ParameterBag(['_sulu' => $attributes->reveal()]);
+
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
 
         $this->assertCount(0, $collection);
@@ -361,6 +446,12 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $request->getPathInfo()->willReturn('/de/test');
         $request->getLocale()->willReturn('de');
         $request->getRequestFormat()->willReturn('json');
+
+        $attributes = $this->prophesize(RequestAttributes::class);
+        $attributes->getAttribute('matchType')->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
+        $attributes->getAttribute('resourceLocatorPrefix')->willReturn('/de');
+
+        $request->reveal()->attributes = new ParameterBag(['_sulu' => $attributes->reveal()]);
 
         $routeEntity = $this->prophesize(RouteInterface::class);
         $routeEntity->getEntityClass()->willReturn('Example');
