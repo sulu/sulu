@@ -30,6 +30,7 @@
     <services>
         <service id="sulu_website.default_controller" class="Sulu\Bundle\WebsiteBundle\Controller\DefaultController">
             <tag name="container.service_subscriber" />
+            <tag name="controller.service_arguments" />
         </service>
         <service id="Sulu\Bundle\WebsiteBundle\Controller\DefaultController" alias="sulu_website.default_controller" />
 

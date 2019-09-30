@@ -169,9 +169,9 @@ abstract class WebsiteController extends AbstractController
     public static function getSubscribedServices()
     {
         $subscribedServices = parent::getSubscribedServices();
-        // $subscribedServices['sulu_website.resolver.parameter'] = ParameterResolverInterface::class;
-        // $subscribedServices['sulu_core.webspace.request_analyzer'] = RequestAnalyzerInterface::class;
-        // $subscribedServices['sulu_http_cache.cache_lifetime.enhancer'] = '?'.CacheLifetimeEnhancerInterface::class;
+        $subscribedServices['sulu_website.resolver.parameter'] = ParameterResolverInterface::class;
+        $subscribedServices['sulu_core.webspace.request_analyzer'] = RequestAnalyzerInterface::class;
+        $subscribedServices['sulu_http_cache.cache_lifetime.enhancer'] = '?' . CacheLifetimeEnhancerInterface::class;
 
         return $subscribedServices;
     }
