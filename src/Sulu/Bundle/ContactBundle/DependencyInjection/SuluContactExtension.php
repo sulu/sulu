@@ -141,7 +141,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                         ],
                         'account_contacts' => [
                             'routes' => [
-                                'list' => 'sulu_contact.get_account_addresses',
+                                'list' => 'sulu_contact.get_account_contacts',
                                 'detail' => 'sulu_contact.delete_account_contacts',
                             ],
                         ],
