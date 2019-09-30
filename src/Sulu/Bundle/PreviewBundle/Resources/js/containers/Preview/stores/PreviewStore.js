@@ -38,6 +38,8 @@ export default class PreviewStore {
     @computed get renderRoute() {
         return generateRoute('render', {
             webspace: this.webspace,
+            provider: this.resourceKey,
+            id: this.id,
             locale: this.locale,
             token: this.token,
             targetGroup: this.targetGroup,
@@ -59,8 +61,8 @@ export default class PreviewStore {
     start(): Promise<*> {
         const route = generateRoute('start', {
             provider: this.resourceKey,
-            locale: this.locale,
             id: this.id,
+            locale: this.locale,
             targetGroup: this.targetGroup,
         });
 
@@ -74,6 +76,8 @@ export default class PreviewStore {
             locale: this.locale,
             webspace: this.webspace,
             token: this.token,
+            provider: this.resourceKey,
+            id: this.id,
             targetGroup: this.targetGroup,
         });
 
@@ -86,6 +90,9 @@ export default class PreviewStore {
         const route = generateRoute('update-context', {
             webspace: this.webspace,
             token: this.token,
+            locale: this.locale,
+            provider: this.resourceKey,
+            id: this.id,
             targetGroup: this.targetGroup,
         });
 
