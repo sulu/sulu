@@ -87,12 +87,10 @@ class ContactRepositoryTest extends SuluTestCase
         foreach ($this->tagData as $data) {
             $this->tags[] = $this->createTag($data);
         }
-        $this->em->flush();
 
         foreach ($this->categoryData as $key) {
             $this->categories[] = $this->createCategory($key);
         }
-        $this->em->flush();
 
         foreach ($this->contactData as $data) {
             $this->contacts[] = $this->createContact($data[0], $data[1], $data[2], $data[3]);
@@ -158,39 +156,10 @@ class ContactRepositoryTest extends SuluTestCase
             [[], 1, 3, 5, array_slice($this->contactData, 0, 4)],
             // page 2, limit 5
             [[], 2, 3, 5, array_slice($this->contactData, 3, 2)],
-            // no pagination, tag 0
-            [['tags' => [0], 'tagOperator' => 'or'], null, 0, null, array_slice($this->contactData, 0, 7), [0]],
             // no pagination, tag 0 or 1
             [['tags' => [0, 1], 'tagOperator' => 'or'], null, 0, null, array_slice($this->contactData, 0, 7)],
             // no pagination, tag 0 and 3
             [['tags' => [0, 3], 'tagOperator' => 'and'], null, 0, null, [$this->contactData[1]], [0, 3]],
-            // page 1, no limit, tag 0
-            [
-                ['tags' => [0], 'tagOperator' => 'or'],
-                1,
-                3,
-                null,
-                array_slice($this->contactData, 0, 4),
-                [0],
-            ],
-            // page 2, no limit, tag 0
-            [
-                ['tags' => [0], 'tagOperator' => 'or'],
-                2,
-                3,
-                null,
-                array_slice($this->contactData, 3, 4),
-                [0],
-            ],
-            // no pagination, website-tag 0
-            [
-                ['websiteTags' => [0], 'websiteTagsOperator' => 'or'],
-                null,
-                0,
-                null,
-                array_slice($this->contactData, 0, 7),
-                [0],
-            ],
             // no pagination, website-tag 0 or 1
             [
                 ['websiteTags' => [0, 1], 'websiteTagsOperator' => 'or'],
@@ -235,15 +204,6 @@ class ContactRepositoryTest extends SuluTestCase
                 [$this->contactData[0], $this->contactData[1], $this->contactData[3]],
                 [0, 1],
             ],
-            // no pagination, category 0
-            [
-                ['categories' => [0], 'categoryOperator' => 'or'],
-                null,
-                0,
-                null,
-                array_slice($this->contactData, 0, 7),
-                [0],
-            ],
             // no pagination, category 0 or 1
             [
                 ['categories' => [0, 1], 'categoryOperator' => 'or'],
@@ -271,15 +231,6 @@ class ContactRepositoryTest extends SuluTestCase
                 [0, 3],
                 [0, 3],
             ],
-            // page 1, no limit, category 0
-            [
-                ['categories' => [0], 'categoryOperator' => 'or'],
-                1,
-                3,
-                null,
-                array_slice($this->contactData, 0, 4),
-                [0],
-            ],
             // page 2, no limit, category 0
             [
                 ['categories' => [0], 'categoryOperator' => 'or'],
@@ -288,15 +239,6 @@ class ContactRepositoryTest extends SuluTestCase
                 null,
                 array_slice($this->contactData, 3, 4),
                 [0],
-                [0],
-            ],
-            // no pagination, website-category 0
-            [
-                ['websiteCategories' => [0], 'websiteCategoriesOperator' => 'or'],
-                null,
-                0,
-                null,
-                array_slice($this->contactData, 0, 7),
                 [0],
             ],
             // no pagination, website-category 0 or 1
