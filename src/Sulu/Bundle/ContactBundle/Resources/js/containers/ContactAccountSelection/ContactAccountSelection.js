@@ -22,7 +22,7 @@ class ContactAccountSelection extends React.Component<Props> {
         value: [],
     };
 
-    @observable openedOverlay: ?string = undefined;
+    @observable openedOverlayType: ?string = undefined;
     store: ContactAccountSelectionStore;
 
     constructor(props: Props) {
@@ -52,24 +52,24 @@ class ContactAccountSelection extends React.Component<Props> {
     }
 
     @action handleAddButtonClick = (type: ?string) => {
-        this.openedOverlay = type;
+        this.openedOverlayType = type;
     };
 
     @action handleOverlayClose = () => {
-        this.openedOverlay = undefined;
+        this.openedOverlayType = undefined;
     };
 
     @action handleConfirm(items: Array<Object>, prefix: string) {
         const {onChange, value} = this.props;
 
-        const itemIds = items.map((contact) => prefix + contact.id);
+        const itemIds = items.map((item) => prefix + item.id);
 
         onChange([
             ...value.filter((id) => !id.startsWith(prefix) || itemIds.includes(id)),
-            ...itemIds,
-        ].filter((item, index, items) => index == items.indexOf(item)));
+            ...itemIds.filter((id) => !value.includes(id)),
+        ]);
 
-        this.openedOverlay = undefined;
+        this.openedOverlayType = undefined;
     }
 
     @action handleContactConfirm = (contacts: Array<Object>) => {
@@ -133,7 +133,7 @@ class ContactAccountSelection extends React.Component<Props> {
                     listKey="contacts"
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleContactConfirm}
-                    open={this.openedOverlay === 'contacts'}
+                    open={this.openedOverlayType === 'contacts'}
                     preloadSelectedItems={false}
                     preSelectedItems={this.store.contactItems}
                     resourceKey="contacts"
@@ -144,7 +144,7 @@ class ContactAccountSelection extends React.Component<Props> {
                     listKey="accounts"
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleAccountConfirm}
-                    open={this.openedOverlay === 'accounts'}
+                    open={this.openedOverlayType === 'accounts'}
                     preloadSelectedItems={false}
                     preSelectedItems={this.store.accountItems}
                     resourceKey="accounts"
