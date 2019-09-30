@@ -148,16 +148,12 @@ class AccountRepositoryTest extends SuluTestCase
             [[], 1, 3, null, array_slice($this->accountData, 0, 4)],
             // page 2, no limit
             [[], 2, 3, null, array_slice($this->accountData, 3, 4)],
-            // page 3, no limit
-            [[], 3, 3, null, array_slice($this->accountData, 6, 2)],
             // no pagination, limit 3
             [[], null, 0, 3, array_slice($this->accountData, 0, 3)],
             // page 1, limit 5
             [[], 1, 3, 5, array_slice($this->accountData, 0, 4)],
             // page 2, limit 5
             [[], 2, 3, 5, array_slice($this->accountData, 3, 2)],
-            // page 3, limit 5
-            [[], 3, 3, 5, []],
             // no pagination, tag 0
             [['tags' => [0], 'tagOperator' => 'or'], null, 0, null, array_slice($this->accountData, 0, 7), [0]],
             // no pagination, tag 0 or 1
@@ -182,15 +178,6 @@ class AccountRepositoryTest extends SuluTestCase
                 3,
                 null,
                 array_slice($this->accountData, 3, 4),
-                [0],
-            ],
-            // page 3, no limit, tag 0
-            [
-                ['tags' => [0], 'tagOperator' => 'or'],
-                3,
-                3,
-                null,
-                array_slice($this->accountData, 6, 1),
                 [0],
             ],
             // no pagination, website-tag 0
@@ -272,16 +259,6 @@ class AccountRepositoryTest extends SuluTestCase
                 array_slice($this->accountData, 0, 4),
                 [0, 1],
             ],
-            // no pagination, category 0 and 3
-            [
-                ['categories' => [0, 3], 'categoryOperator' => 'and'],
-                null,
-                0,
-                null,
-                [$this->accountData[1]],
-                [0, 3],
-                [0, 3],
-            ],
             // page 1, no limit, category 0
             [
                 ['categories' => [0], 'categoryOperator' => 'or'],
@@ -298,16 +275,6 @@ class AccountRepositoryTest extends SuluTestCase
                 3,
                 null,
                 array_slice($this->accountData, 3, 4),
-                [0],
-                [0],
-            ],
-            // page 3, no limit, category 0
-            [
-                ['categories' => [0], 'categoryOperator' => 'or'],
-                3,
-                3,
-                null,
-                array_slice($this->accountData, 6, 1),
                 [0],
                 [0],
             ],
