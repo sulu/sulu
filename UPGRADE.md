@@ -52,7 +52,7 @@ Because of that the following classes and services were removed:
 
 ### LocationBundle
 
-The configuration of the location bundle has changed.
+The LocationBundle was cleaned up and therefor the configuration of the bundle was changed:
 
 __Before:__
 
@@ -94,9 +94,16 @@ sulu_location:
             api_key:              ''
 ```
 
-Because of a change in the geolocators you have to add the `api_key` in `google` and `nominatim`.
+Unfortunately all of the supported geolocators require an authentication key now, therefore it is required to configure 
+the `api_key` parameter for the `google` provider or the `nominatim` provider to use the geolocation functionality
+in the admin.
 
-Additionally the providers have been removed and the admin will always use openstreetmap as map.
+Furthermore, the location field-type was refactored to always use OpenStreetMap for displaying selected locations.
+Because of this the provider related configuration was removed.
+
+Finally, the `GeolocatorController` was refactored. The queryAction is now registered with the name 
+`sulu_location.geolocator_query` instead of `sulu_location_geolocator_query` and the `query` parameter was renamed
+to `search`.
 
 ### Hateoas Library and Bundle Removed
 

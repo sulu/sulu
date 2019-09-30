@@ -1,0 +1,22 @@
+{
+    "name": "sulu-location-bundle",
+    "description": "Adds support for location handling to Sulu",
+    "license": "MIT",
+    "repository": "https://github.com/sulu/sulu.git",
+    "dependencies": {
+        "classnames": "^2.2.5",
+        "leaflet": "^1.5.1",
+        "react-leaflet": "^2.4.0"
+    },
+    "devDependencies": {
+        "enzyme": "^3.3.0",
+        "pretty": "^2.0.0",
+        "sulu-admin-bundle": "file:../../../AdminBundle/Resources/js"
+    },
+    "peerDependencies": {
+        "mobx": "^4.0.0",
+        "mobx-react": "^5.0.0",
+        "react": "^16.2.0",
+        "sulu-admin-bundle": "*"
+    }
+}

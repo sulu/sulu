@@ -13,11 +13,44 @@ namespace Sulu\Bundle\LocationBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class SuluLocationExtension extends Extension
+class SuluLocationExtension extends Extension implements PrependExtensionInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function prepend(ContainerBuilder $container)
+    {
+        if ($container->hasExtension('sulu_admin')) {
+            $container->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'resources' => [
+                        'geolocator_locations' => [
+                            'routes' => [
+                                'list' => 'sulu_location.geolocator_query',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('fos_js_routing')) {
+            $container->prependExtensionConfig(
+                'fos_js_routing',
+                [
+                    'routes_to_expose' => [
+                        'sulu_location.geolocator_query',
+                    ],
+                ]
+            );
+        }
+    }
+
     /**
      * {@inheritdoc}
      */

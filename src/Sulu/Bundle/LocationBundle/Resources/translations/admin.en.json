@@ -1,0 +1,13 @@
+{
+    "sulu_location.latitude": "Latitude",
+    "sulu_location.longitude": "Longitude",
+    "sulu_location.zoom": "Zoom",
+    "sulu_location.select_location": "Select location",
+    "sulu_location.additional_information": "Additional Information",
+    "sulu_location.title": "Title",
+    "sulu_location.street": "Street",
+    "sulu_location.number": "Number",
+    "sulu_location.code": "Code",
+    "sulu_location.town": "Town",
+    "sulu_location.country": "Country"
+}

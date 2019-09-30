@@ -20,7 +20,7 @@ class LocationContentType extends ComplexContentType implements ContentTypeExpor
 {
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{}'), true);
+        $data = json_decode($node->getPropertyValueWithDefault($property->getName(), null), true);
         $property->setValue($data);
     }
 

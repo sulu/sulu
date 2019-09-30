@@ -65,7 +65,7 @@ class LocationContentTypeTest extends TestCase
 
         $this->phpcrNode->expects($this->once())
             ->method('getPropertyValueWithDefault')
-            ->with('foobar', '{}')
+            ->with('foobar', null)
             ->will($this->returnValue(json_encode($data)));
 
         $this->suluProperty->expects($this->once())

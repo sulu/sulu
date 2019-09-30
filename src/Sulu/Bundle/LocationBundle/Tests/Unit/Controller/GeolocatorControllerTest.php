@@ -30,11 +30,14 @@ class GeolocatorControllerTest extends TestCase
 
         $controller = new GeolocatorController($locator->reveal());
         $request = $this->prophesize(Request::class);
-        $request->get('query', '')->willReturn('Dornbirn Teststraße 6');
+        $request->get('search', '')->willReturn('Dornbirn Teststraße 6');
 
         $response = $controller->queryAction($request->reveal());
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(['_embedded' => ['locations' => ['test']]], json_decode($response->getContent(), true));
+        $this->assertEquals(
+            ['_embedded' => ['geolocator_locations' => ['test']]],
+            json_decode($response->getContent(), true)
+        );
     }
 }
