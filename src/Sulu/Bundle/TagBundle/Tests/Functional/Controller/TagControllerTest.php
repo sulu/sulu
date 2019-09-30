@@ -37,7 +37,7 @@ class TagControllerTest extends SuluTestCase
     {
         $this->em = $this->getEntityManager();
 
-        $this->session = $this->getContainer()->get('sulu_test.doctrine_phpcr')->getConnection();
+        $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->tagRepository = $this->getContainer()->get('sulu.repository.tag');
 
         $this->initOrm();

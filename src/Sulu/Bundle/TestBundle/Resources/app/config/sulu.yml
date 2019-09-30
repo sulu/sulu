@@ -32,9 +32,6 @@ doctrine:
             charset: '%database.charset%'
             collate: '%database.collate%'
 
-sulu_test:
-    enable_test_user_provider: true
-
 sulu_document_manager:
     sessions:
         default:

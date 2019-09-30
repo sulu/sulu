@@ -43,11 +43,5 @@ class SearchManagerTest extends BaseTestCase
         $firstHit = reset($result);
         $document = $firstHit->getDocument();
         $this->assertEquals('page_sulu_io', $document->getIndex());
-
-        if (!$this->getContainer()->get('sulu_test.massive_search.adapter') instanceof \Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter) {
-            $this->markTestSkipped('Skipping zend lucene specific test');
-
-            return;
-        }
     }
 }

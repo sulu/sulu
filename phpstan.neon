@@ -1,6 +1,8 @@
 includes:
     - vendor/phpstan/phpstan-symfony/extension.neon
 parameters:
+    paths:
+        - ./
     level: 1
     symfony:
         container_xml_path: %rootDir%/../../../var/cache/admin/dev/adminApp_KernelDevDebugContainer.xml
@@ -26,6 +28,4 @@ parameters:
         # The following should be removed at some point
         - %currentWorkingDirectory%/*/Tests/*
     ignoreErrors:
-        - '#Service "sulu_test.doctrine_phpcr.session" is not registered in the container.#'
         - '#Service "test_user_provider" is not registered in the container.#'
-        - '#Service "sulu_test.doctrine_phpcr.live_session" is not registered in the container.#'

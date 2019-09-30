@@ -134,6 +134,14 @@ class AppCache extends SuluHttpCache implements KernelInterface
     /**
      * {@inheritdoc}
      */
+    public function getProjectDir()
+    {
+        return $this->kernel->getProjectDir();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getContainer()
     {
         return $this->kernel->getContainer();

@@ -71,7 +71,7 @@ before_script:
   - composer update -o $COMPOSER_FLAGS
 
 script:
-  - if [[ $PHPSTAN = true ]]; then bin/adminconsole cache:clear --env=dev; ./vendor/bin/phpstan analyze .; fi
+  - if [[ $PHPSTAN = true ]]; then bin/adminconsole cache:clear --env=dev; ./vendor/bin/phpstan analyze; fi
   - time ./bin/runtests -i -a
 
 notifications:
