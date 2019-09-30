@@ -149,6 +149,14 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <service id="sulu_security.contexts_controller" class="Sulu\Bundle\SecurityBundle\Controller\ContextsController">
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="sulu_admin.admin_pool"/>
+
+            <tag name="controller.service_arguments" />
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <service id="sulu_security.group_repository" class="%sulu_security.group_repository.class%">
             <factory service="doctrine.orm.entity_manager" method="getRepository"/>
 

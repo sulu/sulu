@@ -12,22 +12,32 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 
 class ContextsController extends RestController implements ClassResourceInterface
 {
+    /**
+     * @var AdminPool
+     */
+    private $adminPool;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        AdminPool $adminPool
+    ) {
+        parent::__construct($viewHandler);
+
+        $this->adminPool = $adminPool;
+    }
+
     public function cgetAction(Request $request)
     {
-        $securityContexts = $this->getAdminPool()->getSecurityContextsWithPlaceholder();
+        $securityContexts = $this->adminPool->getSecurityContextsWithPlaceholder();
         $view = $this->view($securityContexts);
 
         return $this->handleView($view);
-    }
-
-    private function getAdminPool(): AdminPool
-    {
-        return $this->get('sulu_admin.admin_pool');
     }
 }
