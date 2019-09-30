@@ -31,11 +31,12 @@
         <service id="sulu_website.default_controller" class="Sulu\Bundle\WebsiteBundle\Controller\DefaultController">
             <tag name="container.service_subscriber" />
             <tag name="controller.service_arguments" />
+            <tag name="sulu.context" context="website" />
             <call method="setContainer">
                 <argument type="service" id="Psr\Container\ContainerInterface" />
             </call>
         </service>
-        <service id="Sulu\Bundle\WebsiteBundle\Controller\DefaultController" alias="sulu_website.default_controller" />
+        <service id="Sulu\Bundle\WebsiteBundle\Controller\DefaultController" alias="sulu_website.default_controller"/>
 
         <!-- website admin -->
         <service id="sulu_website.admin" class="%sulu_website.admin.class%">
