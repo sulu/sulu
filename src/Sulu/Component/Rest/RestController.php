@@ -11,8 +11,9 @@
 
 namespace Sulu\Component\Rest;
 
-use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Controller\ControllerTrait;
 use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -21,8 +22,16 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Abstract Controller for extracting some required rest functionality.
  */
-abstract class RestController extends FOSRestController
+abstract class RestController
 {
+    use ControllerTrait;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler
+    ) {
+        $this->setViewHandler($viewHandler);
+    }
+
     /**
      * The type of the entity, which is handled by the concrete controller.
      *
