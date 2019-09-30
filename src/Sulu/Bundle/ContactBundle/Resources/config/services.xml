@@ -40,13 +40,6 @@
             <argument type="service" id="sulu.repository.media" />
             <argument type="string">%sulu.model.account.class%</argument>
         </service>
-        <service id="sulu_contact.customer_manager" class="Sulu\Bundle\ContactBundle\Contact\CustomerManager" public="true">
-            <argument type="service" id="doctrine.orm.entity_manager"/>
-            <argument type="service" id="sulu_contact.util.id_converter"/>
-            <argument type="service" id="sulu_contact.util.index_comparator"/>
-            <argument type="string">%sulu.model.contact.class%</argument>
-            <argument type="string">%sulu.model.account.class%</argument>
-        </service>
         <service id="sulu_contact.twig.cache" class="Doctrine\Common\Cache\ArrayCache"/>
         <service id="sulu_contact.twig" class="Sulu\Bundle\ContactBundle\Twig\ContactTwigExtension">
             <argument type="service" id="sulu_contact.twig.cache"/>

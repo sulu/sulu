@@ -9,6 +9,7 @@ import AddressCardPreview from './components/AddressCardPreview';
 import BankCardPreview from './components/BankCardPreview';
 import ContactDetails from './containers/Form/fields/ContactDetails';
 import Bic from './containers/Form/fields/Bic';
+import ContactAccountSelection from './containers/Form/fields/ContactAccountSelection';
 import Iban from './containers/Form/fields/Iban';
 import Email from './components/ContactDetails/Email';
 import Fax from './components/ContactDetails/Fax';
@@ -22,6 +23,7 @@ import DeleteMediaToolbarAction from './views/List/toolbarActions/DeleteMediaToo
 fieldRegistry.add('contact_details', ContactDetails);
 fieldRegistry.add('iban', Iban);
 fieldRegistry.add('bic', Bic);
+fieldRegistry.add('contact_account_selection', ContactAccountSelection);
 
 listToolbarActionRegistry.add('sulu_contact.add_contact', AddContactToolbarAction);
 listToolbarActionRegistry.add('sulu_contact.add_media', AddMediaToolbarAction);

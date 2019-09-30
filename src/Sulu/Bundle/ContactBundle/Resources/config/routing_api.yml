@@ -1,8 +1,3 @@
-sulu_contact.customer:
-    type: rest
-    name_prefix: sulu_contact.
-    resource: Sulu\Bundle\ContactBundle\Controller\CustomerController
-
 sulu_contact.contacts:
     type: rest
     name_prefix: sulu_contact.

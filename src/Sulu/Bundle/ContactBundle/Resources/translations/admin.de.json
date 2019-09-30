@@ -7,6 +7,7 @@
     "sulu_contact.account_selection_overlay_title": "Organisation auswählen",
     "sulu_contact.contact_selection_label": "Kontakt(e) ausgewählt",
     "sulu_contact.account_selection_label": "Organisation(en) ausgewählt",
+    "sulu_contact.contact_account_selection_label": "{count} {count, plural, =1 {Kontakt} other {Kontakte}} ausgewählt",
     "sulu_contact.avatar": "Avatar",
     "sulu_contact.logo": "Logo",
     "sulu_contact.name": "Name",
