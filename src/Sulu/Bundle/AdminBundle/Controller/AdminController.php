@@ -211,7 +211,7 @@ class AdminController
             'routing' => $this->urlGenerator->generate('fos_js_routing_js'),
         ];
 
-        return $this->engine->renderResponse(
+        return new Response($this->engine->render(
             '@SuluAdmin\Admin\main.html.twig',
             [
                 'translations' => $this->translations,
@@ -220,7 +220,7 @@ class AdminController
                 'sulu_version' => $this->suluVersion,
                 'app_version' => $this->appVersion,
             ]
-        );
+        ));
     }
 
     /**
