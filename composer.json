@@ -77,14 +77,13 @@
         "symfony/security": "^4.3",
         "symfony/security-bundle": "^4.3",
         "symfony/swiftmailer-bundle": "^3.1.4",
-        "symfony/templating": "^3.4 || ^4.0",
         "symfony/translation": "^4.3",
         "symfony/twig-bundle": "^4.3",
         "symfony/validator": "^4.3",
         "symfony/web-link": "^4.3",
         "symfony/yaml": "^4.3",
         "toflar/psr6-symfony-http-cache-store": "^1.1 || ^2.0",
-        "twig/twig": "^1.35 || ^2.0"
+        "twig/twig": "^1.41 || ^2.0"
     },
     "require-dev": {
         "google/cloud-storage": "^1.0",

@@ -1,7 +1,7 @@
 sulu_media.website.image.proxy:
     path: "%sulu_media.format_cache.media_proxy_path%"
     defaults:
-        _controller: SuluMediaBundle:MediaStream:getImage
+        _controller: Sulu\Bundle\MediaBundle\Controller\MediaStreamController::getImageAction
         _requestAnalyzer: false
     requirements:
         slug: .*
@@ -9,7 +9,7 @@ sulu_media.website.image.proxy:
 sulu_media.website.media.download:
     path: "%sulu_media.media_manager.media_download_path%"
     defaults:
-        _controller: SuluMediaBundle:MediaStream:download
+        _controller: Sulu\Bundle\MediaBundle\Controller\MediaStreamController::downloadAction
         _requestAnalyzer: false
     requirements:
         slug: .*

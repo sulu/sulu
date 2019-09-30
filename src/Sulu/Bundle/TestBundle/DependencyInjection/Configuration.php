@@ -26,8 +26,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('sulu_test');
+        $treeBuilder = new TreeBuilder('sulu_test');
+        $rootNode = $treeBuilder->getRootNode();
         $rootNode->children()
             ->booleanNode('enable_test_user_provider')->defaultFalse()->end()
         ->end();

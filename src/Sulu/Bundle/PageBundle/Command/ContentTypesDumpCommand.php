@@ -36,7 +36,6 @@ class ContentTypesDumpCommand extends Command
         $arguments = [
             'command' => 'debug:container',
             '--tag' => 'sulu.content.type',
-            '--show-private' => true,
             '--format' => $input->getOption('format'),
         ];
 

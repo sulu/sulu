@@ -1,18 +1,18 @@
 sulu_security.reset_password.email:
     path: reset/email
     defaults:
-        _controller: SuluSecurityBundle:Resetting:sendEmail
+        _controller: Sulu\Bundle\SecurityBundle\Controller\ResettingController::sendEmailAction
 
 sulu_security.reset_password.email.resend:
     path: reset/email/resend
     defaults:
-        _controller: SuluSecurityBundle:Resetting:sendEmail
+        _controller: Sulu\Bundle\SecurityBundle\Controller\ResettingController::sendEmailAction
         generateNewKey: false
 
 sulu_security.reset_password.reset:
     path: reset
     defaults:
-        _controller: SuluSecurityBundle:Resetting:reset
+        _controller: Sulu\Bundle\SecurityBundle\Controller\ResettingController::resetAction
 
 sulu_security.contexts:
     type: rest

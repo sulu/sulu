@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
 use Sulu\Component\Webspace\Portal;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Twig\Environment;
 
 /**
  * Render sitemap in xml-format.
@@ -25,17 +25,17 @@ class XmlSitemapRenderer implements XmlSitemapRendererInterface
     private $sitemapProviderPool;
 
     /**
-     * @var EngineInterface
+     * @var Environment
      */
     private $engine;
 
     /**
      * @param SitemapProviderPoolInterface $sitemapProviderPool
-     * @param EngineInterface $engine
+     * @param Environment $engine
      */
     public function __construct(
         SitemapProviderPoolInterface $sitemapProviderPool,
-        EngineInterface $engine
+        Environment $engine
     ) {
         $this->sitemapProviderPool = $sitemapProviderPool;
         $this->engine = $engine;

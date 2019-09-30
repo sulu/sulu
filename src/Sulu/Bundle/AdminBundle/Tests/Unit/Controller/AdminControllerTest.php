@@ -32,7 +32,6 @@ use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -40,6 +39,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
+use Twig\Environment;
 
 class AdminControllerTest extends TestCase
 {
@@ -79,7 +79,7 @@ class AdminControllerTest extends TestCase
     private $viewHandler;
 
     /**
-     * @var EngineInterface
+     * @var Environment
      */
     private $engine;
 
@@ -178,7 +178,7 @@ class AdminControllerTest extends TestCase
         $this->adminPool = $this->prophesize(AdminPool::class);
         $this->serializer = $this->prophesize(SerializerInterface::class);
         $this->viewHandler = $this->prophesize(ViewHandlerInterface::class);
-        $this->engine = $this->prophesize(EngineInterface::class);
+        $this->engine = $this->prophesize(Environment::class);
         $this->translatorBag = $this->prophesize(TranslatorBagInterface::class);
         $this->metadataProviderRegistry = $this->prophesize(MetadataProviderRegistry::class);
         $this->routeRegistry = $this->prophesize(RouteRegistry::class);

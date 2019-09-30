@@ -19,7 +19,7 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Persistence\Model\AuditableTrait;
-use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
+use Symfony\Component\Mime\MimeTypes;
 
 /**
  * FileVersion.
@@ -272,7 +272,7 @@ class FileVersion implements AuditableInterface
     public function getExtension()
     {
         $pathInfo = pathinfo($this->getName());
-        $extension = ExtensionGuesser::getInstance()->guess($this->getMimeType());
+        $extension = MimeTypes::getDefault()->getExtensions($this->getMimeType())[0] ?? null;
         if ($extension) {
             return $extension;
         } elseif (isset($pathInfo['extension'])) {

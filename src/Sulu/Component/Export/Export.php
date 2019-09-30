@@ -19,7 +19,7 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\Export\Manager\ExportManagerInterface;
-use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 
 /**
  * Base export for sulu documents.
@@ -27,7 +27,7 @@ use Symfony\Component\Templating\EngineInterface;
 class Export
 {
     /**
-     * @var EngineInterface
+     * @var Environment
      */
     protected $templating;
 
@@ -62,7 +62,7 @@ class Export
     protected $format = '1.2.xliff';
 
     public function __construct(
-        EngineInterface $templating,
+        Environment $templating,
         DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
         ExportManagerInterface $exportManager,

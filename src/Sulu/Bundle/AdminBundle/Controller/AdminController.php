@@ -25,13 +25,13 @@ use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
+use Twig\Environment;
 
 class AdminController
 {
@@ -63,7 +63,7 @@ class AdminController
     private $viewHandler;
 
     /**
-     * @var EngineInterface
+     * @var Environment
      */
     private $engine;
 
@@ -153,7 +153,7 @@ class AdminController
         AdminPool $adminPool,
         SerializerInterface $serializer,
         ViewHandlerInterface $viewHandler,
-        EngineInterface $engine,
+        Environment $engine,
         TranslatorBagInterface $translatorBag,
         MetadataProviderRegistry $metadataProviderRegistry,
         RouteRegistry $routeRegistry,
@@ -211,7 +211,7 @@ class AdminController
             'routing' => $this->urlGenerator->generate('fos_js_routing_js'),
         ];
 
-        return $this->engine->renderResponse(
+        return new Response($this->engine->render(
             '@SuluAdmin\Admin\main.html.twig',
             [
                 'translations' => $this->translations,
@@ -220,7 +220,7 @@ class AdminController
                 'sulu_version' => $this->suluVersion,
                 'app_version' => $this->appVersion,
             ]
-        );
+        ));
     }
 
     /**

@@ -132,7 +132,7 @@ class MediaStreamControllerTest extends SuluTestCase
 
     private function createUploadedFile($path)
     {
-        return new UploadedFile($path, basename($path), mime_content_type($path), filesize($path));
+        return new UploadedFile($path, basename($path), mime_content_type($path));
     }
 
     private function createCollection($title = 'Test')

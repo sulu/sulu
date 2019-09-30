@@ -22,8 +22,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('sulu_preview');
+        $treeBuilder = new TreeBuilder('sulu_preview');
+        $rootNode = $treeBuilder->getRootNode();
 
         // add config preview interval
         $rootNode
@@ -69,8 +69,8 @@ class Configuration implements ConfigurationInterface
      */
     private function addBasicProviderNode($name)
     {
-        $builder = new TreeBuilder();
-        $node = $builder->root($name);
+        $builder = new TreeBuilder($name);
+        $node = $builder->getRootNode();
 
         return $node;
     }
@@ -82,8 +82,8 @@ class Configuration implements ConfigurationInterface
      */
     private function addFileSystemNode()
     {
-        $builder = new TreeBuilder();
-        $node = $builder->root('file_system');
+        $builder = new TreeBuilder('file_system');
+        $node = $builder->getRootNode();
 
         $node
             ->addDefaultsIfNotSet()
@@ -103,8 +103,8 @@ class Configuration implements ConfigurationInterface
      */
     private function addRedisNode()
     {
-        $builder = new TreeBuilder();
-        $node = $builder->root('redis');
+        $builder = new TreeBuilder('redis');
+        $node = $builder->getRootNode();
 
         $node
             ->addDefaultsIfNotSet()

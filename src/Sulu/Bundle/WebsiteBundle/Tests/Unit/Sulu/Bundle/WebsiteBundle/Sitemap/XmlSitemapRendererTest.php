@@ -20,7 +20,7 @@ use Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapRenderer;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Twig\Environment;
 
 class XmlSitemapRendererTest extends TestCase
 {
@@ -30,7 +30,7 @@ class XmlSitemapRendererTest extends TestCase
     protected $providerPoolInterface;
 
     /**
-     * @var EngineInterface
+     * @var Environment
      */
     protected $engine;
 
@@ -45,7 +45,7 @@ class XmlSitemapRendererTest extends TestCase
     public function setUp(): void
     {
         $this->providerPoolInterface = $this->prophesize(SitemapProviderPoolInterface::class);
-        $this->engine = $this->prophesize(EngineInterface::class);
+        $this->engine = $this->prophesize(Environment::class);
 
         $this->renderer = new XmlSitemapRenderer($this->providerPoolInterface->reveal(), $this->engine->reveal(), '/');
     }

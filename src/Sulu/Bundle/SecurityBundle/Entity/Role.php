@@ -18,12 +18,11 @@ use JMS\Serializer\Annotation\Groups;
 use Sulu\Component\Persistence\Model\AuditableTrait;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleSettingInterface;
-use Symfony\Component\Security\Core\Role\Role as SymfonyRole;
 
 /**
  * Role.
  */
-class Role extends SymfonyRole implements RoleInterface
+class Role implements RoleInterface
 {
     use AuditableTrait;
 
@@ -82,8 +81,6 @@ class Role extends SymfonyRole implements RoleInterface
         $this->userRoles = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->settings = new ArrayCollection();
-
-        parent::__construct('');
     }
 
     /**

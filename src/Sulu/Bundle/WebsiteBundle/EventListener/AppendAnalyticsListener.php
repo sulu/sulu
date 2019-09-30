@@ -15,7 +15,7 @@ use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 
 /**
  * Appends analytics scripts into body.
@@ -42,7 +42,7 @@ class AppendAnalyticsListener
     ];
 
     /**
-     * @var EngineInterface
+     * @var Environment
      */
     private $engine;
 
@@ -67,18 +67,18 @@ class AppendAnalyticsListener
     private $preview;
 
     /**
-     * @param EngineInterface $engine
+     * @param Environment $engine
      * @param RequestAnalyzerInterface $requestAnalyzer
      * @param AnalyticsRepository $analyticsRepository
      * @param $environment
      * @param bool $preview
      */
     public function __construct(
-        EngineInterface $engine,
+        Environment $engine,
         RequestAnalyzerInterface $requestAnalyzer,
         AnalyticsRepository $analyticsRepository,
         $environment,
-        $preview = false
+        bool $preview = false
     ) {
         $this->engine = $engine;
         $this->requestAnalyzer = $requestAnalyzer;
@@ -137,7 +137,7 @@ class AppendAnalyticsListener
         foreach (array_keys(self::$positions) as $position) {
             $template = 'SuluWebsiteBundle:Analytics:' . $analytics->getType() . '/' . $position . '.html.twig';
 
-            if (!$this->engine->exists($template)) {
+            if (!$this->engine->getLoader()->exists($template)) {
                 continue;
             }
 

@@ -26,9 +26,9 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
+        $treeBuilder = new TreeBuilder('sulu_admin');
 
-        $treeBuilder->root('sulu_admin')
+        $treeBuilder->getRootNode()
             ->children()
                 ->scalarNode('name')->defaultValue('Sulu Admin')->end()
                 ->scalarNode('email')->isRequired()->end()

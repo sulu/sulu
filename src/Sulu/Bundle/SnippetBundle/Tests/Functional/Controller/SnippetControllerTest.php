@@ -18,12 +18,12 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
-use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class SnippetControllerTest extends SuluTestCase
 {
     /**
-     * @var Client
+     * @var KernelBrowser
      */
     protected $client;
 

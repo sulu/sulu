@@ -12,7 +12,7 @@
             <argument type="service" id="sulu_admin.admin_pool"/>
             <argument type="service" id="jms_serializer"/>
             <argument type="service" id="fos_rest.view_handler"/>
-            <argument type="service" id="templating"/>
+            <argument type="service" id="twig"/>
             <argument type="service" id="translator.default"/>
             <argument type="service" id="sulu_admin.metadata_provider_registry"/>
             <argument type="service" id="sulu_admin.route_registry"/>

@@ -1016,7 +1016,7 @@ class MediaControllerTest extends SuluTestCase
 
         $filePath = $this->getFilePath();
         $this->assertTrue(file_exists($filePath));
-        $photo = new UploadedFile($filePath, 'small.txt', 'text/plain', 0);
+        $photo = new UploadedFile($filePath, 'small.txt', 'text/plain');
 
         $client->request(
             'POST',

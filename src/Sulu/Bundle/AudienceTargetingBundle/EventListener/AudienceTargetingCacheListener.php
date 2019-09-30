@@ -152,7 +152,7 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
     private function setTargetGroupCookie(Response $response, Request $request)
     {
         $response->headers->setCookie(
-            new Cookie(
+            Cookie::create(
                 static::TARGET_GROUP_COOKIE,
                 $request->headers->get(static::TARGET_GROUP_HEADER),
                 static::TARGET_GROUP_COOKIE_LIFETIME
@@ -160,7 +160,7 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
         );
 
         $response->headers->setCookie(
-            new Cookie(
+            Cookie::create(
                 static::VISITOR_SESSION_COOKIE,
                 time()
             )
