@@ -10,5 +10,8 @@
             <argument>%sulu_http_cache.cache.max_age%</argument>
             <argument>%sulu_http_cache.cache.shared_max_age%</argument>
         </service>
+
+        <service id="Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancerInterface"
+                 alias="sulu_http_cache.cache_lifetime.enhancer"/>
     </services>
 </container>
