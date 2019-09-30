@@ -12,15 +12,42 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
+use Sulu\Bundle\WebsiteBundle\Cache\CacheClearerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Handles http cache actions.
  */
-class CacheController extends Controller
+class CacheController
 {
+    /**
+     * @var CacheClearerInterface
+     */
+    private $cacheClearer;
+
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
+
+    public function __construct(
+        CacheClearerInterface $cacheClearer,
+        WebspaceManagerInterface $webspaceManager,
+        SecurityCheckerInterface $securityChecker
+    ) {
+        $this->cacheClearer = $cacheClearer;
+        $this->webspaceManager = $webspaceManager;
+        $this->securityChecker = $securityChecker;
+    }
+
     /**
      * Clear the whole http_cache for website.
      *
@@ -32,7 +59,7 @@ class CacheController extends Controller
             return new JsonResponse(null, 403);
         }
 
-        $this->get('sulu_website.http_cache.clearer')->clear();
+        $this->cacheClearer->clear();
 
         return new JsonResponse(null, 204);
     }
@@ -47,9 +74,9 @@ class CacheController extends Controller
      */
     private function checkLivePermissionForAllWebspaces()
     {
-        foreach ($this->get('sulu_core.webspace.webspace_manager')->getWebspaceCollection() as $webspace) {
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             $context = PageAdmin::SECURITY_CONTEXT_PREFIX . $webspace->getKey();
-            if (!$this->get('sulu_security.security_checker')->hasPermission($context, PermissionTypes::LIVE)) {
+            if (!$this->securityChecker->hasPermission($context, PermissionTypes::LIVE)) {
                 return false;
             }
         }

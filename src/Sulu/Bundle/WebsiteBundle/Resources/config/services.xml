@@ -28,6 +28,7 @@
     </parameters>
 
     <services>
+        <!-- controllers -->
         <service id="sulu_website.default_controller" class="Sulu\Bundle\WebsiteBundle\Controller\DefaultController">
             <tag name="container.service_subscriber" />
             <tag name="controller.service_arguments" />
@@ -37,6 +38,15 @@
             </call>
         </service>
         <service id="Sulu\Bundle\WebsiteBundle\Controller\DefaultController" alias="sulu_website.default_controller"/>
+
+        <service id="sulu_website.cache_controller" class="Sulu\Bundle\WebsiteBundle\Controller\CacheController">
+            <argument type="service" id="sulu_website.http_cache.clearer" />
+            <argument type="service" id="sulu_core.webspace.webspace_manager" />
+            <argument type="service" id="sulu_security.security_checker"/>
+
+            <tag name="controller.service_arguments" />
+            <tag name="sulu.context" context="admin"/>
+        </service>
 
         <!-- website admin -->
         <service id="sulu_website.admin" class="%sulu_website.admin.class%">

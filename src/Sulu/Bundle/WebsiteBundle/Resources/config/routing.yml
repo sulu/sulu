@@ -1,4 +1,4 @@
 sulu_website.cache.remove:
     path: /cache
-    defaults: { _controller: Sulu\Bundle\WebsiteBundle\Controller\CacheController::clearAction }
+    defaults: { _controller: sulu_website.cache_controller:clearAction }
     methods: [DELETE]
