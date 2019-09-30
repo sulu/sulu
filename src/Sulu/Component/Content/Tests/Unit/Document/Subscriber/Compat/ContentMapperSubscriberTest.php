@@ -87,12 +87,12 @@ class ContentMapperSubscriberTest extends TestCase
         $this->documentInspector->getWebspace($document)->willReturn(null);
 
         $this->eventDispatcher
-            ->dispatch(ContentEvents::NODE_PRE_DELETE, Argument::type(ContentNodeDeleteEvent::class))
+            ->dispatch(Argument::type(ContentNodeDeleteEvent::class), ContentEvents::NODE_PRE_DELETE)
             ->shouldBeCalled();
         $this->contentMapperSubscriber->handlePreRemove(new RemoveEvent($document->reveal()));
 
         $this->eventDispatcher
-            ->dispatch(ContentEvents::NODE_POST_DELETE, Argument::type(ContentNodeDeleteEvent::class))
+            ->dispatch(Argument::type(ContentNodeDeleteEvent::class, ContentEvents::NODE_POST_DELETE))
             ->shouldBeCalled();
         $this->contentMapperSubscriber->handlePostRemove(new RemoveEvent($document->reveal()));
     }
@@ -128,8 +128,8 @@ class ContentMapperSubscriberTest extends TestCase
         $this->contentMapperSubscriber->handlePersist(new PersistEvent($document1->reveal(), 'de'));
         $this->contentMapperSubscriber->handlePersist(new PersistEvent($document2->reveal(), 'de'));
 
-        $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_SAVE, Argument::any())->shouldBeCalled();
-        $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_SAVE, Argument::any())->shouldBeCalled();
+        $this->eventDispatcher->dispatch(Argument::any(), ContentEvents::NODE_POST_SAVE)->shouldBeCalled();
+        $this->eventDispatcher->dispatch(Argument::any(), ContentEvents::NODE_POST_SAVE)->shouldBeCalled();
 
         $this->contentMapperSubscriber->handleFlush(new FlushEvent());
     }

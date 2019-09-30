@@ -130,12 +130,12 @@ class ProxyFactoryTest extends TestCase
         $this->assertInstanceOf(LazyLoadingInterface::class, $proxy);
 
         $this->dispatcher->dispatch(
-            'sulu_document_manager.hydrate',
             Argument::that(
-                function($event) use ($options) {
+                function ($event) use ($options) {
                     return $event->getOptions() === $options;
                 }
-            )
+            ),
+            'sulu_document_manager.hydrate'
         )->shouldBeCalled();
 
         // hydrate
@@ -152,12 +152,12 @@ class ProxyFactoryTest extends TestCase
         list($dispatcher, $proxy) = $result;
 
         $dispatcher->dispatch(
-            Events::HYDRATE,
             Argument::that(
-                function(HydrateEvent $arg) {
+                function (HydrateEvent $arg) {
                     return 'de' === $arg->getLocale();
                 }
-            )
+            ),
+            Events::HYDRATE
         )->shouldBeCalled();
 
         $this->assertEquals('Hello', $proxy->getTitle());

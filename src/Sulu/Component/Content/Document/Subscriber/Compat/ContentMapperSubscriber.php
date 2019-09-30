@@ -114,8 +114,8 @@ class ContentMapperSubscriber implements EventSubscriberInterface
         $event = $this->getDeleteEvent($document);
         $this->deleteEvents[spl_object_hash($document)] = $event;
         $this->eventDispatcher->dispatch(
-            ContentEvents::NODE_PRE_DELETE,
-            $event
+            $event,
+            ContentEvents::NODE_PRE_DELETE
         );
     }
 
@@ -136,8 +136,8 @@ class ContentMapperSubscriber implements EventSubscriberInterface
         $event = $this->deleteEvents[$oid];
 
         $this->eventDispatcher->dispatch(
-            ContentEvents::NODE_POST_DELETE,
-            $event
+            $event,
+            ContentEvents::NODE_POST_DELETE
         );
 
         unset($this->deleteEvents[$oid]);
@@ -169,7 +169,7 @@ class ContentMapperSubscriber implements EventSubscriberInterface
             $structure = $this->documentToStructure($document);
 
             $event = new ContentNodeEvent($this->documentInspector->getNode($document), $structure);
-            $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_SAVE, $event);
+            $this->eventDispatcher->dispatch($event, ContentEvents::NODE_POST_SAVE);
         }
 
         $this->persistEvents = [];

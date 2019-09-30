@@ -288,7 +288,7 @@ class ResettingController extends Controller
 
         //now dispatch the login event
         $event = new InteractiveLoginEvent($request, $token);
-        $this->get('event_dispatcher')->dispatch('security.interactive_login', $event);
+        $this->get('event_dispatcher')->dispatch($event, 'security.interactive_login');
     }
 
     /**

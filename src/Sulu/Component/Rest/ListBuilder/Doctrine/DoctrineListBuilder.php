@@ -201,7 +201,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     {
         // emit listbuilder.create event
         $event = new ListBuilderCreateEvent($this);
-        $this->eventDispatcher->dispatch(ListBuilderEvents::LISTBUILDER_CREATE, $event);
+        $this->eventDispatcher->dispatch($event, ListBuilderEvents::LISTBUILDER_CREATE);
         $this->expressionFields = $this->getUniqueExpressionFieldDescriptors($this->expressions);
 
         if (!$this->limit && empty($this->expressions)) {

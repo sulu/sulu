@@ -209,7 +209,7 @@ class ContentMapper implements ContentMapperInterface
         $structure = $this->documentToStructure($document);
 
         $event = new ContentNodeEvent($node, $structure);
-        $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_SAVE, $event);
+        $this->eventDispatcher->dispatch($event, ContentEvents::NODE_POST_SAVE);
 
         return $structure;
     }

@@ -60,8 +60,8 @@ class AccessControlManager implements AccessControlManagerInterface
         $accessControlProvider->setPermissions($type, $identifier, $permissions);
 
         $this->eventDispatcher->dispatch(
-            SecurityEvents::PERMISSION_UPDATE,
-            new PermissionUpdateEvent($type, $identifier, $permissions)
+            new PermissionUpdateEvent($type, $identifier, $permissions),
+            SecurityEvents::PERMISSION_UPDATE
         );
     }
 

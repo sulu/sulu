@@ -87,6 +87,6 @@ class RefreshSubscriber implements EventSubscriberInterface
     {
         $hydrateEvent = new HydrateEvent($node, $locale, ['rehydrate' => true]);
         $hydrateEvent->setDocument($document);
-        $this->eventDispatcher->dispatch(Events::HYDRATE, $hydrateEvent);
+        $this->eventDispatcher->dispatch($hydrateEvent, Events::HYDRATE);
     }
 }

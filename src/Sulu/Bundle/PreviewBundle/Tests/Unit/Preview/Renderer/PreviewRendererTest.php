@@ -174,7 +174,7 @@ class PreviewRendererTest extends TestCase
         $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
-        $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
+        $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
             ->shouldBeCalled();
 
         $this->render($object, $scheme, $portalUrl);
@@ -254,7 +254,7 @@ class PreviewRendererTest extends TestCase
         $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
-        $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
+        $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
             ->shouldBeCalled();
 
         $request = new Request();
@@ -283,7 +283,7 @@ class PreviewRendererTest extends TestCase
         $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
-        $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
+        $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
             ->shouldBeCalled();
 
         $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
@@ -356,7 +356,7 @@ class PreviewRendererTest extends TestCase
         $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
             ->shouldNotBeCalled();
 
-        $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
+        $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
             ->shouldNotBeCalled();
 
         $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
@@ -390,7 +390,7 @@ class PreviewRendererTest extends TestCase
         $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
-        $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
+        $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
             ->shouldBeCalled();
 
         $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
@@ -424,7 +424,7 @@ class PreviewRendererTest extends TestCase
         $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
-        $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
+        $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
             ->shouldBeCalled();
 
         $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
@@ -458,7 +458,7 @@ class PreviewRendererTest extends TestCase
         $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
-        $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
+        $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
             ->shouldBeCalled();
 
         $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
@@ -494,7 +494,7 @@ class PreviewRendererTest extends TestCase
         $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
-        $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
+        $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
             ->shouldBeCalled();
 
         $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
@@ -528,7 +528,7 @@ class PreviewRendererTest extends TestCase
         $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
-        $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
+        $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
             ->shouldBeCalled();
 
         $server = [

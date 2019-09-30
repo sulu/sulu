@@ -67,8 +67,8 @@ class AccessControlManagerTest extends TestCase
         $this->accessControlManager->addAccessControlProvider($accessControlProvider2->reveal());
 
         $this->eventDispatcher->dispatch(
-            'sulu_security.permission_update',
-            new PermissionUpdateEvent(\stdClass::class, '1', [])
+            new PermissionUpdateEvent(\stdClass::class, '1', []),
+            'sulu_security.permission_update'
         )->shouldBeCalled();
 
         $this->accessControlManager->setPermissions(\stdClass::class, '1', []);

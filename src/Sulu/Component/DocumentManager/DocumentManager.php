@@ -42,7 +42,7 @@ class DocumentManager implements DocumentManagerInterface
         $options = $this->getOptionsResolver(Events::FIND)->resolve($options);
 
         $event = new Event\FindEvent($identifier, $locale, $options);
-        $this->eventDispatcher->dispatch(Events::FIND, $event);
+        $this->eventDispatcher->dispatch($event, Events::FIND);
 
         return $event->getDocument();
     }
@@ -53,7 +53,7 @@ class DocumentManager implements DocumentManagerInterface
     public function create($alias)
     {
         $event = new Event\CreateEvent($alias);
-        $this->eventDispatcher->dispatch(Events::CREATE, $event);
+        $this->eventDispatcher->dispatch($event, Events::CREATE);
 
         return $event->getDocument();
     }
@@ -66,7 +66,7 @@ class DocumentManager implements DocumentManagerInterface
         $options = $this->getOptionsResolver(Events::PERSIST)->resolve($options);
 
         $event = new Event\PersistEvent($document, $locale, $options);
-        $this->eventDispatcher->dispatch(Events::PERSIST, $event);
+        $this->eventDispatcher->dispatch($event, Events::PERSIST);
     }
 
     /**
@@ -75,7 +75,7 @@ class DocumentManager implements DocumentManagerInterface
     public function remove($document)
     {
         $event = new Event\RemoveEvent($document);
-        $this->eventDispatcher->dispatch(Events::REMOVE, $event);
+        $this->eventDispatcher->dispatch($event, Events::REMOVE);
     }
 
     /**
@@ -84,7 +84,7 @@ class DocumentManager implements DocumentManagerInterface
     public function move($document, $destId)
     {
         $event = new Event\MoveEvent($document, $destId);
-        $this->eventDispatcher->dispatch(Events::MOVE, $event);
+        $this->eventDispatcher->dispatch($event, Events::MOVE);
     }
 
     /**
@@ -93,7 +93,7 @@ class DocumentManager implements DocumentManagerInterface
     public function copy($document, $destPath)
     {
         $event = new Event\CopyEvent($document, $destPath);
-        $this->eventDispatcher->dispatch(Events::COPY, $event);
+        $this->eventDispatcher->dispatch($event, Events::COPY);
 
         return $event->getCopiedPath();
     }
@@ -104,7 +104,7 @@ class DocumentManager implements DocumentManagerInterface
     public function reorder($document, $destId)
     {
         $event = new Event\ReorderEvent($document, $destId);
-        $this->eventDispatcher->dispatch(Events::REORDER, $event);
+        $this->eventDispatcher->dispatch($event, Events::REORDER);
     }
 
     /**
@@ -115,7 +115,7 @@ class DocumentManager implements DocumentManagerInterface
         $options = $this->getOptionsResolver(Events::PUBLISH)->resolve($options);
 
         $event = new Event\PublishEvent($document, $locale, $options);
-        $this->eventDispatcher->dispatch(Events::PUBLISH, $event);
+        $this->eventDispatcher->dispatch($event, Events::PUBLISH);
     }
 
     /**
@@ -124,7 +124,7 @@ class DocumentManager implements DocumentManagerInterface
     public function unpublish($document, $locale)
     {
         $event = new Event\UnpublishEvent($document, $locale);
-        $this->eventDispatcher->dispatch(Events::UNPUBLISH, $event);
+        $this->eventDispatcher->dispatch($event, Events::UNPUBLISH);
     }
 
     /**
@@ -133,7 +133,7 @@ class DocumentManager implements DocumentManagerInterface
     public function removeDraft($document, $locale)
     {
         $event = new Event\RemoveDraftEvent($document, $locale);
-        $this->eventDispatcher->dispatch(Events::REMOVE_DRAFT, $event);
+        $this->eventDispatcher->dispatch($event, Events::REMOVE_DRAFT);
     }
 
     /**
@@ -144,7 +144,7 @@ class DocumentManager implements DocumentManagerInterface
         $options = $this->getOptionsResolver(Events::RESTORE)->resolve($options);
 
         $event = new Event\RestoreEvent($document, $locale, $version, $options);
-        $this->eventDispatcher->dispatch(Events::RESTORE, $event);
+        $this->eventDispatcher->dispatch($event, Events::RESTORE);
     }
 
     /**
@@ -153,7 +153,7 @@ class DocumentManager implements DocumentManagerInterface
     public function refresh($document)
     {
         $event = new Event\RefreshEvent($document);
-        $this->eventDispatcher->dispatch(Events::REFRESH, $event);
+        $this->eventDispatcher->dispatch($event, Events::REFRESH);
     }
 
     /**
@@ -162,7 +162,7 @@ class DocumentManager implements DocumentManagerInterface
     public function flush()
     {
         $event = new Event\FlushEvent();
-        $this->eventDispatcher->dispatch(Events::FLUSH, $event);
+        $this->eventDispatcher->dispatch($event, Events::FLUSH);
     }
 
     /**
@@ -171,7 +171,7 @@ class DocumentManager implements DocumentManagerInterface
     public function clear()
     {
         $event = new Event\ClearEvent();
-        $this->eventDispatcher->dispatch(Events::CLEAR, $event);
+        $this->eventDispatcher->dispatch($event, Events::CLEAR);
     }
 
     /**
@@ -180,7 +180,7 @@ class DocumentManager implements DocumentManagerInterface
     public function createQuery($query, $locale = null, array $options = [])
     {
         $event = new Event\QueryCreateEvent($query, $locale, $options);
-        $this->eventDispatcher->dispatch(Events::QUERY_CREATE, $event);
+        $this->eventDispatcher->dispatch($event, Events::QUERY_CREATE);
 
         return $event->getQuery();
     }
@@ -198,7 +198,7 @@ class DocumentManager implements DocumentManagerInterface
         $resolver->setDefault('locale', null);
 
         $event = new Event\ConfigureOptionsEvent($resolver);
-        $this->eventDispatcher->dispatch(Events::CONFIGURE_OPTIONS, $event);
+        $this->eventDispatcher->dispatch($event, Events::CONFIGURE_OPTIONS);
 
         $this->optionsResolvers[$eventName] = $resolver;
 

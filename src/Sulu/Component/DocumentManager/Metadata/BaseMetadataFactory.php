@@ -223,7 +223,7 @@ class BaseMetadataFactory implements MetadataFactoryInterface
         }
 
         $event = new MetadataLoadEvent($metadata);
-        $this->dispatcher->dispatch(Events::METADATA_LOAD, $event);
+        $this->dispatcher->dispatch($event, Events::METADATA_LOAD);
 
         $this->metadata[$mapping['alias']] = $metadata;
 
