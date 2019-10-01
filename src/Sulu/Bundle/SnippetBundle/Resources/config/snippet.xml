@@ -13,10 +13,13 @@
     </parameters>
 
     <services>
-        <service id="sulu_snippet.language_controller" class="Sulu\Bundle\SnippetBundle\Controller\LanguageController">
+        <service
+            id="sulu_snippet.language_controller"
+            class="Sulu\Bundle\SnippetBundle\Controller\LanguageController"
+            public="true"
+        >
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
 
-            <tag name="controller.service_arguments" />
             <tag name="sulu.context" context="admin"/>
         </service>
 
