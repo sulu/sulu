@@ -13,7 +13,7 @@ namespace Sulu\Component\SmartContent\Rest;
 
 use JMS\Serializer\Annotation as Serializer;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
-use Sulu\Component\SmartContent\ItemInterface;
+use Sulu\Component\SmartContent\DatasourceItemInterface;
 
 /**
  * @Serializer\ExclusionPolicy("all")
@@ -23,7 +23,7 @@ use Sulu\Component\SmartContent\ItemInterface;
 class ItemCollectionRepresentation extends CollectionRepresentation
 {
     /**
-     * @var ItemInterface
+     * @var DatasourceItemInterface|null
      */
     private $datasource;
 
@@ -32,7 +32,7 @@ class ItemCollectionRepresentation extends CollectionRepresentation
      */
     private $total;
 
-    public function __construct(array $items, $datasource)
+    public function __construct(array $items, ?DatasourceItemInterface $datasource)
     {
         parent::__construct($items, 'items');
 
@@ -43,7 +43,7 @@ class ItemCollectionRepresentation extends CollectionRepresentation
     /**
      * Returns datasource of smart content item collection.
      *
-     * @return ItemInterface
+     * @return DatasourceItemInterface|null
      */
     public function getDatasource()
     {

@@ -14,6 +14,7 @@ namespace Sulu\Bundle\PageBundle\Controller;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\Rest\ItemCollectionRepresentation;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -62,6 +63,8 @@ class SmartContentItemController extends RestController
 
         // prepare provider
         $dataProviderPool = $this->get('sulu_page.smart_content.data_provider_pool');
+
+        /** @var DataProviderInterface $provider */
         $provider = $dataProviderPool->get($providerAlias);
 
         $params = array_merge(
@@ -74,7 +77,7 @@ class SmartContentItemController extends RestController
             $filters,
             $params,
             $options,
-            (isset($filters['limitResult']) ? $filters['limitResult'] : null)
+            $filters['limitResult'] ?? null
         );
         $items = $data->getItems();
         $datasource = $provider->resolveDatasource($request->get('dataSource'), [], $options);
