@@ -1,7 +1,7 @@
 sulu_security.roles:
     type: rest
     name_prefix: sulu_security.
-    resource: Sulu\Bundle\SecurityBundle\Controller\RoleController
+    resource: sulu_security.role_controller
 
 sulu_security.role_settings:
     type: rest
@@ -12,7 +12,7 @@ sulu_security.role_settings:
 sulu_security.groups:
     type: rest
     name_prefix: sulu_security.
-    resource: Sulu\Bundle\SecurityBundle\Controller\GroupController
+    resource: sulu_security.group_controller
 
 sulu_security.users:
     type: rest

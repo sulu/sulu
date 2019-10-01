@@ -12,18 +12,24 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
+use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
+use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\ControllerTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -42,12 +48,43 @@ class GroupController extends RestController implements ClassResourceInterface, 
      */
     protected $fieldDescriptors;
 
+    /**
+     * @var RestHelperInterface
+     */
+    private $restHelper;
+
+    /**
+     * @var DoctrineListBuilderFactoryInterface
+     */
+    private $doctrineListBuilderFactory;
+
+    /**
+     * @var RoleRepositoryInterface
+     */
+    private $roleRepository;
+
+    /**
+     * @var RegistryInterface
+     */
+    private $doctrine;
+
     const ENTITY_NAME_ROLE = 'SuluSecurityBundle:Role';
 
     // TODO: move the field descriptors to a manager
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        RestHelperInterface $restHelper,
+        DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
+        RoleRepositoryInterface $roleRepository,
+        RegistryInterface $doctrine
+    ) {
+        parent::__construct($viewHandler);
 
-    public function __construct()
-    {
+        $this->restHelper = $restHelper;
+        $this->doctrineListBuilderFactory = $doctrineListBuilderFactory;
+        $this->roleRepository = $roleRepository;
+        $this->doctrine = $doctrine;
+
         $this->fieldDescriptors = [];
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', static::$entityName);
         $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor('name', 'name', static::$entityName);
@@ -65,15 +102,9 @@ class GroupController extends RestController implements ClassResourceInterface, 
     public function cgetAction(Request $request)
     {
         if ('true' == $request->get('flat')) {
-            /** @var RestHelperInterface $restHelper */
-            $restHelper = $this->get('sulu_core.doctrine_rest_helper');
+            $listBuilder = $this->doctrineListBuilderFactory->create(static::$entityName);
 
-            /** @var DoctrineListBuilderFactory $factory */
-            $factory = $this->get('sulu_core.doctrine_list_builder_factory');
-
-            $listBuilder = $factory->create(static::$entityName);
-
-            $restHelper->initializeListBuilder($listBuilder, $this->fieldDescriptors);
+            $this->restHelper->initializeListBuilder($listBuilder, $this->fieldDescriptors);
 
             $list = new ListRepresentation(
                 $listBuilder->execute(),
@@ -86,7 +117,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
             );
         } else {
             $list = new CollectionRepresentation(
-                $this->getDoctrine()->getRepository(static::$entityName)->findAllGroups(),
+                $this->doctrine->getRepository(static::$entityName)->findAllGroups(),
                 static::$entityKey
             );
         }
@@ -106,7 +137,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
     {
         $find = function($id) {
             /** @var Group $group */
-            $group = $this->getDoctrine()
+            $group = $this->doctrine
                 ->getRepository(static::$entityName)
                 ->findGroupById($id);
 
@@ -132,7 +163,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
         $name = $request->get('name');
 
         if (null != $name) {
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->doctrine->getManager();
 
             $group = new Group();
             $group->setName($name);
@@ -168,7 +199,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
     public function putAction(Request $request, $id)
     {
         /** @var Group $group */
-        $group = $this->getDoctrine()
+        $group = $this->doctrine
             ->getRepository(static::$entityName)
             ->findGroupById($id);
 
@@ -176,7 +207,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
             if (!$group) {
                 throw new EntityNotFoundException(static::$entityName, $id);
             } else {
-                $em = $this->getDoctrine()->getManager();
+                $em = $this->doctrine->getManager();
 
                 $name = $request->get('name');
 
@@ -210,16 +241,13 @@ class GroupController extends RestController implements ClassResourceInterface, 
      */
     protected function processRoles(Group $group, $roles)
     {
-        /** @var RestHelperInterface $restHelper */
-        $restHelper = $this->get('sulu_core.doctrine_rest_helper');
-
         $get = function($entity) {
             /* @var RoleInterface $entity */
             return $entity->getId();
         };
 
         $delete = function($role) {
-            $this->getDoctrine()->getManager()->remove($role);
+            $this->doctrine->getManager()->remove($role);
         };
 
         $update = function($role, $roleData) {
@@ -230,7 +258,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
             return $this->addRole($group, $role);
         };
 
-        return $restHelper->processSubEntities($group->getRoles(), $roles, $get, $add, $update, $delete);
+        return $this->restHelper->processSubEntities($group->getRoles(), $roles, $get, $add, $update, $delete);
     }
 
     /**
@@ -243,7 +271,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
     public function deleteAction($id)
     {
         $delete = function($id) {
-            $group = $this->getDoctrine()
+            $group = $this->doctrine
                 ->getRepository(static::$entityName)
                 ->findGroupById($id);
 
@@ -251,7 +279,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
                 throw new EntityNotFoundException(static::$entityName, $id);
             }
 
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->doctrine->getManager();
             $em->remove($group);
             $em->flush();
         };
@@ -274,10 +302,10 @@ class GroupController extends RestController implements ClassResourceInterface, 
     private function addRole(Group $group, $roleData)
     {
         if (isset($roleData['id'])) {
-            $role = $this->get('sulu.repository.role')->findRoleById($roleData['id']);
+            $role = $this->roleRepository->findRoleById($roleData['id']);
 
             if (!$role) {
-                throw new EntityNotFoundException($this->get('sulu.repository.role')->getClassName(), $roleData['id']);
+                throw new EntityNotFoundException($this->roleRepository->getClassName(), $roleData['id']);
             }
 
             if (!$group->getRoles()->contains($role)) {
@@ -312,7 +340,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
     {
         $parentData = $request->get('parent');
         if (null != $parentData && isset($parentData['id'])) {
-            $parent = $this->getDoctrine()
+            $parent = $this->doctrine
                 ->getRepository(static::$entityName)
                 ->findGroupById($parentData['id']);
 
