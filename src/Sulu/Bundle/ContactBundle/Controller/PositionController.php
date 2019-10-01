@@ -11,9 +11,12 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\ContactBundle\Entity\Position;
+use Sulu\Bundle\ContactBundle\Entity\PositionRepository;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
@@ -36,6 +39,26 @@ class PositionController extends RestController implements ClassResourceInterfac
     protected static $entityKey = 'contact_positions';
 
     /**
+     * @var PositionRepository
+     */
+    private $positionRepository;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        PositionRepository $positionRepository,
+        EntityManagerInterface $entityManager
+    ) {
+        parent::__construct($viewHandler);
+        $this->positionRepository = $positionRepository;
+        $this->entityManager = $entityManager;
+    }
+
+    /**
      * Shows a single position for the given id.
      *
      * @param $id
@@ -47,9 +70,7 @@ class PositionController extends RestController implements ClassResourceInterfac
         $view = $this->responseGetById(
             $id,
             function($id) {
-                return $this->getDoctrine()
-                    ->getRepository(self::$entityName)
-                    ->find($id);
+                return $this->positionRepository->find($id);
             }
         );
 
@@ -65,7 +86,7 @@ class PositionController extends RestController implements ClassResourceInterfac
     public function cgetAction()
     {
         $list = new CollectionRepresentation(
-            $this->getDoctrine()->getRepository(self::$entityName)->findBy([], ['position' => 'ASC']),
+            $this->positionRepository->findBy([], ['position' => 'ASC']),
             self::$entityKey
         );
 
@@ -92,12 +113,11 @@ class PositionController extends RestController implements ClassResourceInterfac
                 );
             }
 
-            $em = $this->getDoctrine()->getManager();
             $position = new Position();
             $position->setPosition($name);
 
-            $em->persist($position);
-            $em->flush();
+            $this->entityManager->persist($position);
+            $this->entityManager->flush();
 
             $view = $this->view($position, 200);
         } catch (EntityNotFoundException $enfe) {
@@ -121,9 +141,7 @@ class PositionController extends RestController implements ClassResourceInterfac
     {
         try {
             /** @var Position $position */
-            $position = $this->getDoctrine()
-                ->getRepository(self::$entityName)
-                ->find($id);
+            $position = $this->positionRepository->find($id);
 
             if (!$position) {
                 throw new EntityNotFoundException(self::$entityName, $id);
@@ -133,10 +151,9 @@ class PositionController extends RestController implements ClassResourceInterfac
                 if (empty($name)) {
                     throw new RestException('There is no position-name for the given name');
                 } else {
-                    $em = $this->getDoctrine()->getManager();
                     $position->setPosition($name);
 
-                    $em->flush();
+                    $this->entityManager->flush();
                     $view = $this->view($position, 200);
                 }
             }
@@ -151,24 +168,21 @@ class PositionController extends RestController implements ClassResourceInterfac
 
     public function cdeleteAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
         $ids = array_filter(explode(',', $request->get('ids', '')));
 
         try {
             foreach ($ids as $id) {
                 /* @var Position $title */
-                $title = $this->getDoctrine()
-                    ->getRepository(self::$entityName)
-                    ->find($id);
+                $title = $this->positionRepository->find($id);
 
                 if (!$title) {
                     throw new EntityNotFoundException(self::$entityName, $id);
                 }
 
-                $em->remove($title);
+                $this->entityManager->remove($title);
             }
 
-            $em->flush();
+            $this->entityManager->flush();
 
             $view = $this->view();
         } catch (EntityNotFoundException $e) {
@@ -190,17 +204,14 @@ class PositionController extends RestController implements ClassResourceInterfac
         try {
             $delete = function($id) {
                 /* @var Position $position */
-                $position = $this->getDoctrine()
-                    ->getRepository(self::$entityName)
-                    ->find($id);
+                $position = $this->positionRepository->find($id);
 
                 if (!$position) {
                     throw new EntityNotFoundException(self::$entityName, $id);
                 }
 
-                $em = $this->getDoctrine()->getManager();
-                $em->remove($position);
-                $em->flush();
+                $this->entityManager->remove($position);
+                $this->entityManager->flush();
             };
 
             $view = $this->responseDelete($id, $delete);
@@ -235,7 +246,7 @@ class PositionController extends RestController implements ClassResourceInterfac
                 ++$i;
             }
 
-            $this->getDoctrine()->getManager()->flush();
+            $this->entityManager->flush();
             $view = $this->view($data, 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -259,9 +270,7 @@ class PositionController extends RestController implements ClassResourceInterfac
     {
         if (isset($item['id']) && !empty($item['id'])) {
             /* @var Position $position */
-            $position = $this->getDoctrine()
-                ->getRepository(self::$entityName)
-                ->find($item['id']);
+            $position = $this->positionRepository->find($item['id']);
 
             if (null == $position) {
                 throw new EntityNotFoundException(self::$entityName, $item['id']);
@@ -271,7 +280,7 @@ class PositionController extends RestController implements ClassResourceInterfac
         } else {
             $position = new Position();
             $position->setPosition($item['position']);
-            $this->getDoctrine()->getManager()->persist($position);
+            $this->entityManager->persist($position);
         }
 
         return $position;

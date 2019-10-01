@@ -22,7 +22,6 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @RouteResource("contact-title")
@@ -51,11 +50,10 @@ class ContactTitleController extends RestController implements ClassResourceInte
 
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        TokenStorageInterface $tokenStorage,
         ContactTitleRepository $contactTitleRepository,
         EntityManagerInterface $entityManager
     ) {
-        parent::__construct($viewHandler, $tokenStorage);
+        parent::__construct($viewHandler);
         $this->contactTitleRepository = $contactTitleRepository;
         $this->entityManager = $entityManager;
     }

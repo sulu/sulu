@@ -16,7 +16,7 @@ sulu_contact.contacttitle:
 sulu_contact.contactposition:
     type: rest
     name_prefix: sulu_contact.
-    resource: Sulu\Bundle\ContactBundle\Controller\PositionController
+    resource: sulu_contact.position_controller
 
 sulu_contact.account_medias:
     type: rest

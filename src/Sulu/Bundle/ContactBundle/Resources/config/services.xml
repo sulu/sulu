@@ -3,6 +3,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
         <parameter key="sulu_contact.contact_title.entity">SuluContactBundle:ContactTitle</parameter>
+        <parameter key="sulu_contact.position.entity">SuluContactBundle:Position</parameter>
     </parameters>
     <services>
         <service id="sulu_contact.admin" class="Sulu\Bundle\ContactBundle\Admin\ContactAdmin">
@@ -16,6 +17,10 @@
         <service id="sulu_contact.contact_title_repository" class="Sulu\Bundle\ContactBundle\Entity\ContactTitleRepository">
             <factory method="getRepository" service="doctrine"/>
             <argument>%sulu_contact.contact_title.entity%</argument>
+        </service>
+        <service id="sulu_contact.position_repository" class="Sulu\Bundle\ContactBundle\Entity\PositionRepository">
+            <factory method="getRepository" service="doctrine"/>
+            <argument>%sulu_contact.position.entity%</argument>
         </service>
         <service id="sulu_contact.account_listener" class="Sulu\Bundle\ContactBundle\EventListener\AccountListener">
             <tag name="doctrine.event_listener" event="postPersist"/>
@@ -162,11 +167,20 @@
         </service>
 
         <service id="sulu_contact.contact_title_controller"
-                 class="Sulu\Bundle\ContactBundle\Controller\ContactTItleController"
+                 class="Sulu\Bundle\ContactBundle\Controller\ContactTitleController"
                  public="true">
             <argument type="service" id="fos_rest.view_handler"/>
-            <argument type="service" id="security.token_storage"/>
             <argument type="service" id="sulu_contact.contact_title_repository"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_contact.position_controller"
+                 class="Sulu\Bundle\ContactBundle\Controller\PositionController"
+                 public="true">
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="sulu_contact.position_repository"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
 
             <tag name="sulu.context" context="admin"/>
