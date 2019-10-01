@@ -14,6 +14,7 @@ namespace Sulu\Bundle\PageBundle\Serializer\Subscriber;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 
@@ -50,6 +51,10 @@ class ParentSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $visitor->addData('parentUuid', $document->getParent()->getUuid());
+        $parentUuid = $document->getParent()->getUuid();
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'parentUuid', $parentUuid),
+            $parentUuid
+        );
     }
 }

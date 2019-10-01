@@ -12,13 +12,13 @@
 namespace Sulu\Component\Contact\Tests\Unit\SmartContent;
 
 use JMS\Serializer\SerializationContext;
-use JMS\Serializer\SerializerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Contact\SmartContent\ContactDataItem;
 use Sulu\Component\Contact\SmartContent\ContactDataProvider;
+use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
@@ -28,7 +28,7 @@ class ContactDataProviderTest extends TestCase
 {
     public function testGetConfiguration()
     {
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $provider = new ContactDataProvider(
             $this->getRepository(),
@@ -43,7 +43,7 @@ class ContactDataProviderTest extends TestCase
 
     public function testGetDefaultParameter()
     {
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $provider = new ContactDataProvider(
             $this->getRepository(),
@@ -82,7 +82,7 @@ class ContactDataProviderTest extends TestCase
      */
     public function testResolveDataItems($filters, $limit, $page, $pageSize, $repositoryResult, $hasNextPage, $items)
     {
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $provider = new ContactDataProvider(
             $this->getRepository($filters, $page, $pageSize, $limit, $repositoryResult),
@@ -118,7 +118,7 @@ class ContactDataProviderTest extends TestCase
             $dataItems[] = $this->createDataItem($contact);
         }
 
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $provider = new ContactDataProvider(
             $this->getRepository(['sortBy' => null], 1, null, null, $contacts),
@@ -171,8 +171,8 @@ class ContactDataProviderTest extends TestCase
             ['fullContact', 'partialAccount', 'partialCategory']
         );
 
-        $serializer = $this->prophesize(SerializerInterface::class);
-        $serializer->serialize(Argument::type(Contact::class), 'array', $context)
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
+        $serializer->serialize(Argument::type(Contact::class), $context)
             ->will(
                 function($args) use ($serializeCallback) {
                     return $serializeCallback($args[0]);
@@ -203,7 +203,7 @@ class ContactDataProviderTest extends TestCase
 
     public function testResolveDataSource()
     {
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $provider = new ContactDataProvider(
             $this->getRepository(),

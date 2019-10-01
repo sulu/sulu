@@ -6,7 +6,7 @@
         <service id="sulu_contact.content.contact_account_selection" class="Sulu\Bundle\ContactBundle\Content\Types\ContactAccountSelection">
             <argument type="service" id="sulu_contact.contact_manager" />
             <argument type="service" id="sulu_contact.account_manager" />
-            <argument type="service" id="jms_serializer" />
+            <argument type="service" id="sulu_core.array_serializer" />
             <argument type="service" id="sulu_contact.util.id_converter" />
             <argument type="service" id="sulu_contact.util.index_comparator" />
             <argument type="service" id="sulu_contact.reference_store.account" />

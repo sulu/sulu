@@ -54,14 +54,14 @@
 
         <service id="sulu_contact.smart_content.data_provider.contact" class="Sulu\Component\Contact\SmartContent\ContactDataProvider">
             <argument type="service" id="sulu_contact.contact_manager"/>
-            <argument type="service" id="jms_serializer"/>
+            <argument type="service" id="sulu_core.array_serializer"/>
             <argument type="service" id="sulu_contact.reference_store.contact"/>
 
             <tag name="sulu.smart_content.data_provider" alias="contacts"/>
         </service>
         <service id="sulu_contact.smart_content.data_provider.account" class="Sulu\Component\Contact\SmartContent\AccountDataProvider">
             <argument type="service" id="sulu_contact.account_manager"/>
-            <argument type="service" id="jms_serializer"/>
+            <argument type="service" id="sulu_core.array_serializer"/>
             <argument type="service" id="sulu_contact.reference_store.account"/>
 
             <tag name="sulu.smart_content.data_provider" alias="accounts"/>

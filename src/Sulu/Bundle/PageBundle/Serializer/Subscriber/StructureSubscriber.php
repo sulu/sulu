@@ -15,7 +15,8 @@ use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\EventDispatcher\PreSerializeEvent;
-use JMS\Serializer\VisitorInterface;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Structure\ManagedStructure;
@@ -79,21 +80,41 @@ class StructureSubscriber implements EventSubscriberInterface
             return;
         }
 
+        /** @var SerializationVisitorInterface $visitor */
         $visitor = $event->getVisitor();
         $structureMetadata = $this->inspector->getStructureMetadata($document);
 
         if ($structureMetadata) {
-            $visitor->addData('template', $document->getStructureType());
-            $visitor->addData('originTemplate', $document->getStructureType());
-            $visitor->addData('internal', false);
-            $visitor->addData(
-                'localizedTemplate',
-                $structureMetadata->getTitle(
-                    $this->inspector->getLocale($document)
-                )
+            $template = $document->getStructureType();
+            $visitor->visitProperty(
+                new StaticPropertyMetadata('', 'template', $template),
+                $template
             );
 
-            if (false !== array_search('defaultPage', $context->attributes->get('groups')->getOrElse([]))) {
+            $originTemplate = $document->getStructureType();
+            $visitor->visitProperty(
+                new StaticPropertyMetadata('', 'originTemplate', $originTemplate),
+                $originTemplate
+            );
+
+            $internal = false;
+            $visitor->visitProperty(
+                new StaticPropertyMetadata('', 'internal', $internal),
+                $internal
+            );
+
+            $localizedTemplate = $structureMetadata->getTitle(
+                $this->inspector->getLocale($document)
+            );
+
+            $visitor->visitProperty(
+                new StaticPropertyMetadata('', 'localizedTemplate', $localizedTemplate),
+                $localizedTemplate
+            );
+
+            if ($context->hasAttribute('groups')
+                && in_array('defaultPage', $context->getAttribute('groups'))
+            ) {
                 $this->addStructureProperties($structureMetadata, $document, $visitor);
             }
         }
@@ -103,12 +124,12 @@ class StructureSubscriber implements EventSubscriberInterface
      * Adds the properties of the structure to the serialization.
      *
      * @param StructureBehavior $document
-     * @param VisitorInterface $visitor
+     * @param SerializationVisitorInterface $visitor
      */
     private function addStructureProperties(
         StructureMetadata $structureMetadata,
         StructureBehavior $document,
-        VisitorInterface $visitor
+        SerializationVisitorInterface $visitor
     ) {
         /** @var ManagedStructure $structure */
         $structure = $document->getStructure();
@@ -118,7 +139,10 @@ class StructureSubscriber implements EventSubscriberInterface
                 continue;
             }
 
-            $visitor->addData($name, $data[$name]);
+            $visitor->visitProperty(
+                new StaticPropertyMetadata('', $name, $data[$name]),
+                $data[$name]
+            );
         }
     }
 }

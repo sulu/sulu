@@ -15,7 +15,8 @@ use JMS\Serializer\Context;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
-use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
@@ -81,7 +82,11 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
         $this->appendCustomUrls($webspace, $context, $visitor);
         $this->appendNavigations($webspace, $context, $visitor);
 
-        $visitor->addData('allLocalizations', $webspace->getAllLocalizations());
+        $allLocalizations = $webspace->getAllLocalizations();
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'allLocalizations', $allLocalizations),
+            $allLocalizations
+        );
     }
 
     /**
@@ -89,17 +94,21 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
      *
      * @param Webspace $webspace
      * @param Context $context
-     * @param JsonSerializationVisitor $visitor
+     * @param SerializationVisitorInterface $visitor
      */
-    private function appendPortalInformation(Webspace $webspace, Context $context, JsonSerializationVisitor $visitor)
+    private function appendPortalInformation(Webspace $webspace, Context $context, SerializationVisitorInterface $visitor)
     {
         $portalInformation = $this->webspaceManager->getPortalInformationsByWebspaceKey(
             $this->environment,
             $webspace->getKey()
         );
 
-        $portalInformation = $context->accept(array_values($portalInformation));
-        $visitor->addData('portalInformation', $portalInformation);
+        $portalInformation = $context->getNavigator()->accept(array_values($portalInformation));
+
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'portalInformation', $portalInformation),
+            $portalInformation
+        );
     }
 
     /**
@@ -107,13 +116,17 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
      *
      * @param Webspace $webspace
      * @param Context $context
-     * @param JsonSerializationVisitor $visitor
+     * @param SerializationVisitorInterface $visitor
      */
-    private function appendUrls(Webspace $webspace, Context $context, JsonSerializationVisitor $visitor)
+    private function appendUrls(Webspace $webspace, Context $context, SerializationVisitorInterface $visitor)
     {
         $urls = $this->webspaceUrlProvider->getUrls($webspace, $this->environment);
-        $urls = $context->accept($urls);
-        $visitor->addData('urls', $urls);
+        $urls = $context->getNavigator()->accept($urls);
+
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'urls', $urls),
+            $urls
+        );
     }
 
     /**
@@ -121,9 +134,9 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
      *
      * @param Webspace $webspace
      * @param Context $context
-     * @param JsonSerializationVisitor $visitor
+     * @param SerializationVisitorInterface $visitor
      */
-    private function appendCustomUrls(Webspace $webspace, Context $context, JsonSerializationVisitor $visitor)
+    private function appendCustomUrls(Webspace $webspace, Context $context, SerializationVisitorInterface $visitor)
     {
         $customUrls = [];
         foreach ($webspace->getPortals() as $portal) {
@@ -133,8 +146,11 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
             );
         }
 
-        $customUrls = $context->accept($customUrls);
-        $visitor->addData('customUrls', $customUrls);
+        $customUrls = $context->getNavigator()->accept($customUrls);
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'customUrls', $customUrls),
+            $customUrls
+        );
     }
 
     /**
@@ -150,15 +166,15 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
     {
         $customUrls = [];
         foreach ($environment->getCustomUrls() as $customUrl) {
-            $customUrl = $context->accept($customUrl);
-            $customUrl['locales'] = $context->accept($portal->getLocalizations());
+            $customUrl = $context->getNavigator()->accept($customUrl);
+            $customUrl['locales'] = $context->getNavigator()->accept($portal->getLocalizations());
             $customUrls[] = $customUrl;
         }
 
         return $customUrls;
     }
 
-    private function appendNavigations(Webspace $webspace, Context $context, JsonSerializationVisitor $visitor)
+    private function appendNavigations(Webspace $webspace, Context $context, SerializationVisitorInterface $visitor)
     {
         $navigations = [];
         foreach ($webspace->getNavigation()->getContexts() as $navigationContext) {
@@ -168,7 +184,10 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
             ];
         }
 
-        $navigations = $context->accept($navigations);
-        $visitor->addData('navigations', $navigations);
+        $navigations = $context->getNavigator()->accept($navigations);
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'navigations', $navigations),
+            $navigations
+        );
     }
 }

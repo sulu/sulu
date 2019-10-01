@@ -14,6 +14,7 @@ namespace Sulu\Bundle\PageBundle\Serializer\Subscriber;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 
@@ -54,14 +55,26 @@ class RedirectTypeSubscriber implements EventSubscriberInterface
 
         $redirectType = $document->getRedirectType();
 
+        $linked = null;
         if (RedirectType::INTERNAL == $redirectType && null !== $document->getRedirectTarget()) {
-            $visitor->addData('linked', 'internal');
-            $visitor->addData('internal_link', $document->getRedirectTarget()->getUuid());
+            $linked = 'internal';
+            $internalLink = $document->getRedirectTarget()->getUuid();
+            $visitor->visitProperty(
+                new StaticPropertyMetadata('', 'internal_link', $internalLink),
+                $internalLink
+            );
         } elseif (RedirectType::EXTERNAL == $redirectType) {
-            $visitor->addData('linked', 'external');
-            $visitor->addData('external', $document->getRedirectExternal());
-        } else {
-            $visitor->addData('linked', null);
+            $linked = 'external';
+            $external = $document->getRedirectExternal();
+            $visitor->visitProperty(
+                new StaticPropertyMetadata('', 'external', $external),
+                $external
+            );
         }
+
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'linked', $linked),
+            $linked
+        );
     }
 }

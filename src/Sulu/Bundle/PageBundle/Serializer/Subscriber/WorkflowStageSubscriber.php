@@ -14,6 +14,8 @@ namespace Sulu\Bundle\PageBundle\Serializer\Subscriber;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
@@ -51,7 +53,13 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
             return;
         }
 
+        /** @var SerializationVisitorInterface $visitor */
         $visitor = $event->getVisitor();
-        $visitor->addData('publishedState', WorkflowStage::PUBLISHED === $document->getWorkflowStage());
+
+        $published = WorkflowStage::PUBLISHED === $document->getWorkflowStage();
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'publishedState', $published),
+            $published
+        );
     }
 }

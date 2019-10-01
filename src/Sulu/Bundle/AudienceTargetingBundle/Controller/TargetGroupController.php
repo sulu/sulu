@@ -14,7 +14,6 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use JMS\Serializer\DeserializationContext;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleRepositoryInterface;
@@ -236,9 +235,7 @@ class TargetGroupController extends RestController implements ClassResourceInter
         $result = $this->get('jms_serializer')->deserialize(
             $data,
             $this->getTargetGroupRepository()->getClassName(),
-            'json',
-            DeserializationContext::create()
-                ->setSerializeNull(true)
+            'json'
         );
 
         return $result;

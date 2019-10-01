@@ -1,6 +1,6 @@
 jms_serializer:
     visitors:
-        xml:
+        xml_serialization:
             format_output: '%kernel.debug%'
 #    metadata:
 #        auto_detection: false

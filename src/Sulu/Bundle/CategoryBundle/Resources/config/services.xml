@@ -32,7 +32,7 @@
         <service id="sulu_category.twig_extension" class="Sulu\Bundle\CategoryBundle\Twig\CategoryTwigExtension">
             <argument type="service" id="sulu_category.category_manager"/>
             <argument type="service" id="sulu_category.category_request_handler"/>
-            <argument type="service" id="jms_serializer"/>
+            <argument type="service" id="sulu_core.array_serializer"/>
             <argument type="service" id="sulu_core.cache.memoize"/>
 
             <tag name="twig.extension"/>

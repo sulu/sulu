@@ -93,7 +93,7 @@ class PageObjectProviderTest extends TestCase
             Argument::that(
                 function(SerializationContext $context) {
                     return $context->shouldSerializeNull()
-                           && $context->attributes->get('groups')->get() === ['preview'];
+                           && $context->getAttribute('groups') === ['preview'];
                 }
             )
         )->shouldBeCalled()->willReturn('{"title": "test"}');
@@ -111,8 +111,7 @@ class PageObjectProviderTest extends TestCase
             'json',
             Argument::that(
                 function(DeserializationContext $context) {
-                    return $context->shouldSerializeNull()
-                           && $context->attributes->get('groups')->get() === ['preview'];
+                    return $context->getAttribute('groups') === ['preview'];
                 }
             )
         )->shouldBeCalled()->willReturn($object->reveal());

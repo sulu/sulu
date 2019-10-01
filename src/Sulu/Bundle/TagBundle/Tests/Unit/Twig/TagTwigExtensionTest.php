@@ -13,7 +13,6 @@ namespace Sulu\Bundle\TagBundle\Tests\Unit\Twig;
 
 use Doctrine\Common\Cache\ArrayCache;
 use JMS\Serializer\SerializationContext;
-use JMS\Serializer\SerializerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\TagBundle\Entity\Tag;
@@ -21,6 +20,7 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TagBundle\Twig\TagTwigExtension;
 use Sulu\Component\Cache\Memoize;
 use Sulu\Component\Cache\MemoizeInterface;
+use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\Tag\Request\TagRequestHandler;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -65,8 +65,8 @@ class TagTwigExtensionTest extends TestCase
         $tagManager = $this->prophesize(TagManagerInterface::class);
         $tagManager->findAll()->shouldBeCalled()->willReturn($tags);
 
-        $serializer = $this->prophesize(SerializerInterface::class);
-        $serializer->serialize($tags, 'array', Argument::type(SerializationContext::class))
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
+        $serializer->serialize($tags, Argument::type(SerializationContext::class))
             ->shouldBeCalled()->willReturn($tagData);
         $tagRequestHandler = $this->prophesize(TagRequestHandlerInterface::class);
 
@@ -108,7 +108,7 @@ class TagTwigExtensionTest extends TestCase
         $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
 
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $tagRequestHandler = new TagRequestHandler($requestStack->reveal());
 
         $tagExtension = new TagTwigExtension(
@@ -151,7 +151,7 @@ class TagTwigExtensionTest extends TestCase
         $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
 
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $tagRequestHandler = new TagRequestHandler($requestStack->reveal());
 
         $tagExtension = new TagTwigExtension(
@@ -192,7 +192,7 @@ class TagTwigExtensionTest extends TestCase
         $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
 
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $tagRequestHandler = new TagRequestHandler($requestStack->reveal());
 
         $tagExtension = new TagTwigExtension(

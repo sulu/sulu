@@ -120,13 +120,6 @@
         />
 
         <service
-            id="sulu_admin.representation_handler"
-            class="Sulu\Bundle\AdminBundle\Serializer\Handler\RepresentationHandler"
-        >
-            <tag name="jms_serializer.subscribing_handler"/>
-        </service>
-
-        <service
             id="sulu_admin.collaboration_controller"
             class="Sulu\Bundle\AdminBundle\Controller\CollaborationController"
             public="true"
@@ -148,6 +141,13 @@
 
         <service id="sulu_admin.schema_handler" class="Sulu\Bundle\AdminBundle\Serializer\Handler\SchemaHandler">
             <tag name="jms_serializer.subscribing_handler"/>
+        </service>
+
+        <service
+            id="sulu_admin.representation_handler"
+            class="Sulu\Bundle\AdminBundle\Serializer\Handler\RepresentationSubscriber"
+        >
+            <tag name="jms_serializer.event_subscriber"/>
         </service>
 
         <service id="sulu_admin.dropdown_toolbar_action_subscriber"

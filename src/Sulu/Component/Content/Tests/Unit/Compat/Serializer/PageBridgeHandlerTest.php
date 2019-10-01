@@ -11,13 +11,9 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Compat\Serializer;
 
-use JMS\Serializer\Construction\ObjectConstructorInterface;
 use JMS\Serializer\Context;
-use JMS\Serializer\GraphNavigator;
-use JMS\Serializer\Handler\HandlerRegistryInterface;
-use JMS\Serializer\VisitorInterface;
-use Metadata\MetadataFactoryInterface;
-use PHPCR\NodeInterface;
+use JMS\Serializer\GraphNavigatorInterface;
+use JMS\Serializer\Visitor\DeserializationVisitorInterface;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
@@ -30,44 +26,6 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
 
 class PageBridgeHandlerTest extends TestCase
 {
-    public function testSerialize()
-    {
-        $documentInspector = $this->prophesize(DocumentInspector::class);
-        $propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
-        $structureFactory = $this->prophesize(StructureMetadataFactory::class);
-
-        $pageBridge = $this->prophesize(PageBridge::class);
-        $document = $this->prophesize(PageDocument::class);
-        $structure = $this->prophesize(StructureMetadata::class);
-
-        $pageBridge->getStructure()->willReturn($structure->reveal());
-        $pageBridge->getDocument()->willReturn($document->reveal());
-
-        $structure->getName()->willReturn('test');
-
-        $node = $this->prophesize(NodeInterface::class);
-        $node->getIdentifier()->willReturn('123-123-123');
-
-        $pageBridgeHandler = new PageBridgeHandler(
-            $documentInspector->reveal(),
-            $propertyFactory->reveal(),
-            $structureFactory->reveal()
-        );
-
-        $visitor = $this->prophesize(VisitorInterface::class);
-        $context = $this->prophesize(Context::class);
-
-        $pageBridgeHandler->doSerialize($visitor->reveal(), $pageBridge->reveal(), [], $context->reveal());
-
-        $context->accept(
-            [
-                'document' => $document->reveal(),
-                'documentClass' => get_class($document->reveal()),
-                'structure' => 'test',
-            ]
-        )->shouldBeCalledTimes(1);
-    }
-
     public function testDeserialize()
     {
         $documentInspector = $this->prophesize(DocumentInspector::class);
@@ -86,19 +44,15 @@ class PageBridgeHandlerTest extends TestCase
             $structureFactory->reveal()
         );
 
-        $visitor = $this->prophesize(VisitorInterface::class);
+        $visitor = $this->prophesize(DeSerializationVisitorInterface::class);
         $context = $this->prophesize(Context::class);
+        $graphNavigator = $this->prophesize(GraphNavigatorInterface::class);
 
-        $context->accept('serialized document', ['name' => PageDocument::class])->willReturn($document->reveal());
+        $graphNavigator->accept('serialized document', ['name' => PageDocument::class])->willReturn($document->reveal());
         $structureFactory->getStructureMetadata('page', 'test')->willReturn($structureMetadata->reveal());
 
-        $navigator = new GraphNavigator(
-            $this->prophesize(MetadataFactoryInterface::class)->reveal(),
-            $this->prophesize(HandlerRegistryInterface::class)->reveal(),
-            $this->prophesize(ObjectConstructorInterface::class)->reveal()
-        );
-        $context->getNavigator()->willReturn($navigator);
-        $visitor->setNavigator($navigator)->willReturn(null);
+        $graphNavigator = $this->prophesize(GraphNavigatorInterface::class);
+        $context->getNavigator()->willReturn($graphNavigator->reveal());
 
         $pageBridgeHandler->doDeserialize(
             $visitor->reveal(),
@@ -111,6 +65,6 @@ class PageBridgeHandlerTest extends TestCase
             $context->reveal()
         );
 
-        $context->accept('serialized document', ['name' => PageDocument::class])->shouldBeCalledTimes(1);
+        $graphNavigator->accept('serialized document', ['name' => PageDocument::class])->shouldBeCalledTimes(1);
     }
 }

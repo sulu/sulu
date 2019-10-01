@@ -13,8 +13,11 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\EventListener;
 
 use JMS\Serializer\Context;
 use JMS\Serializer\EventDispatcher\Events;
-use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\GraphNavigatorInterface;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Sulu\Bundle\PageBundle\EventListener\WebspaceSerializeEventSubscriber;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\CustomUrl;
@@ -63,10 +66,17 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
         ];
 
         $context = $this->prophesize(Context::class);
-        $visitor = $this->prophesize(JsonSerializationVisitor::class);
+        $graphNavigator = $this->prophesize(GraphNavigatorInterface::class);
+        $context->getNavigator()->willReturn($graphNavigator->reveal());
+        $visitor = $this->prophesize(SerializationVisitorInterface::class);
 
-        $context->accept(array_values($portalInformation))->willReturn('[{}, {}]');
-        $visitor->addData('portalInformation', '[{}, {}]')->shouldBeCalled();
+        $graphNavigator->accept(array_values($portalInformation))->willReturn('[{}, {}]')->shouldBeCalled();
+        $visitor->visitProperty(
+            Argument::that(function(StaticPropertyMetadata $metadata) {
+                return 'portalInformation' === $metadata->name;
+            }),
+            '[{}, {}]'
+        )->shouldBeCalled();
 
         $webspaceManager->getPortalInformationsByWebspaceKey('prod', 'sulu_io')->willReturn($portalInformation);
 
@@ -94,11 +104,17 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
         $webspaceUrlProvider->getUrls($webspace->reveal(), 'prod')->willReturn($urls);
 
         $context = $this->prophesize(Context::class);
-        $visitor = $this->prophesize(JsonSerializationVisitor::class);
+        $visitor = $this->prophesize(SerializationVisitorInterface::class);
+        $graphNavigator = $this->prophesize(GraphNavigatorInterface::class);
+        $context->getNavigator()->willReturn($graphNavigator->reveal());
 
         $serialzedData = '[{"url": "sulu.lo"}, {"url": "*.sulu.lo"}, {"url": "sulu.io"}, {"url": "*.sulu.io"}]';
-        $context->accept($urls)->willReturn($serialzedData);
-        $visitor->addData('urls', $serialzedData)->shouldBeCalled();
+        $graphNavigator->accept($urls)->willReturn($serialzedData);
+
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'urls', $serialzedData),
+            $serialzedData
+        )->shouldBeCalled();
 
         $reflection = new \ReflectionClass(get_class($subscriber));
         $method = $reflection->getMethod('appendUrls');
@@ -143,15 +159,17 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
         $subscriber = new WebspaceSerializeEventSubscriber($webspaceManager->reveal(), $webspaceUrlProvider->reveal(), 'prod');
 
         $context = $this->prophesize(Context::class);
-        $visitor = $this->prophesize(JsonSerializationVisitor::class);
+        $navigator = $this->prophesize(GraphNavigatorInterface::class);
+        $context->getNavigator()->willReturn($navigator->reveal());
+        $visitor = $this->prophesize(SerializationVisitorInterface::class);
 
         $serialzedData = '[{"url": "sulu.lo", "locales": [{"localization":"de"}, {"localization":"en"}]}, {"url": "*.sulu.lo","locales": [{"localization":"de"}, {"localization":"en"}]}, {"url": "sulu.io","locales": [{"localization":"de"}, {"localization":"en"}]}, {"url": "*.sulu.io","locales": [{"localization":"de"}, {"localization":"en"}]}]';
-        $context->accept($customUrls[0])->willReturn(['url' => 'sulu.lo']);
-        $context->accept($customUrls[1])->willReturn(['url' => '*.sulu.lo']);
-        $context->accept($customUrls[2])->willReturn(['url' => 'sulu.io']);
-        $context->accept($customUrls[3])->willReturn(['url' => '*.sulu.io']);
-        $context->accept($locales)->willReturn([['localization' => 'de'], ['localization' => 'en']]);
-        $context->accept(
+        $navigator->accept($customUrls[0])->willReturn(['url' => 'sulu.lo']);
+        $navigator->accept($customUrls[1])->willReturn(['url' => '*.sulu.lo']);
+        $navigator->accept($customUrls[2])->willReturn(['url' => 'sulu.io']);
+        $navigator->accept($customUrls[3])->willReturn(['url' => '*.sulu.io']);
+        $navigator->accept($locales)->willReturn([['localization' => 'de'], ['localization' => 'en']]);
+        $navigator->accept(
             [
                 ['url' => 'sulu.lo', 'locales' => [['localization' => 'de'], ['localization' => 'en']]],
                 ['url' => '*.sulu.lo', 'locales' => [['localization' => 'de'], ['localization' => 'en']]],
@@ -159,7 +177,10 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
                 ['url' => '*.sulu.io', 'locales' => [['localization' => 'de'], ['localization' => 'en']]],
             ]
         )->willReturn($serialzedData);
-        $visitor->addData('customUrls', $serialzedData)->shouldBeCalled();
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'customUrls', $serialzedData),
+            $serialzedData
+        )->shouldBeCalled();
 
         $reflection = new \ReflectionClass(get_class($subscriber));
         $method = $reflection->getMethod('appendCustomUrls');

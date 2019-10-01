@@ -76,7 +76,6 @@ class MediaSearchSubscriberTest extends TestCase
         $this->collection = $this->prophesize(Collection::class);
         $this->event = $this->prophesize(PreIndexEvent::class);
         $this->document = $this->prophesize(Document::class);
-        $this->reflection = $this->prophesize(\ReflectionClass::class);
 
         $this->field1 = $this->prophesize(Field::class);
         $this->field2 = $this->prophesize(Field::class);
@@ -89,7 +88,6 @@ class MediaSearchSubscriberTest extends TestCase
         $this->fileVersion->getFile()->willReturn($this->file->reveal());
         $this->file->getMedia()->willReturn($this->media->reveal());
         $this->indexMetadata->getClassMetadata()->willReturn($this->metadata);
-        $this->metadata->reflection = $this->reflection;
     }
 
     /**
@@ -99,7 +97,6 @@ class MediaSearchSubscriberTest extends TestCase
     {
         $this->indexMetadata->getName()->willReturn('Foo');
         $this->event->getSubject()->willReturn(new \stdClass());
-        $this->reflection->isSubclassOf(FileVersionMeta::class)->willReturn(false);
         $this->fileVersionMeta->getFileVersion()->shouldNotBeCalled();
 
         $this->subscriber->handlePreIndex($this->event->reveal());
@@ -188,7 +185,6 @@ class MediaSearchSubscriberTest extends TestCase
 
     private function setupSubscriber($mediaId, $mediaMime, $collectionId)
     {
-        $this->reflection->isSubclassOf(FileVersionMeta::class)->willReturn(true);
         $this->metadata->getName()->willReturn(FileVersionMeta::class);
         $this->event->getSubject()->willReturn($this->fileVersionMeta->reveal());
         $this->fileVersionMeta->getLocale()->willReturn('de');

@@ -12,9 +12,9 @@
 namespace Sulu\Bundle\AdminBundle\Serializer\Handler;
 
 use JMS\Serializer\Context;
-use JMS\Serializer\GraphNavigator;
+use JMS\Serializer\GraphNavigatorInterface;
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
-use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 
 class SchemaHandler implements SubscribingHandlerInterface
@@ -23,7 +23,7 @@ class SchemaHandler implements SubscribingHandlerInterface
     {
         return [
             [
-                'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
+                'direction' => GraphNavigatorInterface::DIRECTION_SERIALIZATION,
                 'format' => 'json',
                 'type' => SchemaMetadata::class,
                 'method' => 'serializeToJsonSchema',
@@ -32,11 +32,11 @@ class SchemaHandler implements SubscribingHandlerInterface
     }
 
     public function serializeToJsonSchema(
-        JsonSerializationVisitor $visitor,
+        SerializationVisitorInterface $visitor,
         SchemaMetadata $schema,
         array $type,
         Context $context
     ) {
-        return $context->accept($schema->toJsonSchema());
+        return $schema->toJsonSchema();
     }
 }

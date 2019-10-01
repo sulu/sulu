@@ -12,9 +12,9 @@
 namespace Sulu\Component\Rest\Handler;
 
 use JMS\Serializer\Context;
-use JMS\Serializer\GraphNavigator;
+use JMS\Serializer\GraphNavigatorInterface;
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
-use JMS\Serializer\VisitorInterface;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 
 /**
  * Serializes Date for array serializer.
@@ -29,37 +29,37 @@ class DateHandler implements SubscribingHandlerInterface
         return [
             [
                 'type' => 'DateTime',
-                'direction' => GraphNavigator::DIRECTION_DESERIALIZATION,
+                'direction' => GraphNavigatorInterface::DIRECTION_DESERIALIZATION,
                 'format' => 'array',
                 'method' => 'deserialize',
             ],
             [
                 'type' => 'DateTimeImmutable',
-                'direction' => GraphNavigator::DIRECTION_DESERIALIZATION,
+                'direction' => GraphNavigatorInterface::DIRECTION_DESERIALIZATION,
                 'format' => 'array',
                 'method' => 'deserialize',
             ],
             [
                 'type' => 'DateTime',
-                'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
+                'direction' => GraphNavigatorInterface::DIRECTION_SERIALIZATION,
                 'format' => 'array',
                 'method' => 'serialize',
             ],
             [
                 'type' => 'DateTimeImmutable',
-                'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
+                'direction' => GraphNavigatorInterface::DIRECTION_SERIALIZATION,
                 'format' => 'array',
                 'method' => 'serialize',
             ],
         ];
     }
 
-    public function serialize(VisitorInterface $visitor, $date, array $type, Context $context)
+    public function serialize(SerializationVisitorInterface $visitor, $date, array $type, Context $context)
     {
         return $date;
     }
 
-    public function deserialize(VisitorInterface $visitor, $date, array $type, Context $context)
+    public function deserialize(SerializationVisitorInterface $visitor, $date, array $type, Context $context)
     {
         return $date;
     }

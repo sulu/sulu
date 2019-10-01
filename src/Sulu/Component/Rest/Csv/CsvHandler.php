@@ -17,8 +17,8 @@ use Goodby\CSV\Export\Standard\Collection\CallbackCollection;
 use Goodby\CSV\Export\Standard\Exporter;
 use Goodby\CSV\Export\Standard\ExporterConfig;
 use JMS\Serializer\SerializationContext;
-use JMS\Serializer\SerializerInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Serializer\ArraySerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -50,11 +50,11 @@ class CsvHandler
     ];
 
     /**
-     * @var SerializerInterface
+     * @var ArraySerializerInterface
      */
     private $serializer;
 
-    public function __construct(SerializerInterface $serializer)
+    public function __construct(ArraySerializerInterface $serializer)
     {
         $this->serializer = $serializer;
     }
@@ -126,7 +126,7 @@ class CsvHandler
         }
 
         if (!is_array($row)) {
-            $row = $this->serializer->serialize($row, 'array', SerializationContext::create()->setSerializeNull(true));
+            $row = $this->serializer->serialize($row, SerializationContext::create()->setSerializeNull(true));
         }
 
         foreach ($row as $key => $value) {

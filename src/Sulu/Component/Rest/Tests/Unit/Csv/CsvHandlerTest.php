@@ -13,11 +13,11 @@ namespace Sulu\Component\Rest\Tests\Unit\Csv;
 
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
-use JMS\Serializer\SerializerInterface;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\Csv\CsvHandler;
 use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Serializer\ArraySerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -31,7 +31,7 @@ class CsvHandlerTest extends TestCase
         $viewHandler = $this->prophesize(ViewHandler::class);
         $view = $this->prophesize(View::class);
         $request = $this->prophesize(Request::class);
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $format = 'csv';
 
         $view->getData()->willReturn($object);
@@ -54,7 +54,7 @@ class CsvHandlerTest extends TestCase
         $viewHandler = $this->prophesize(ViewHandler::class);
         $view = $this->prophesize(View::class);
         $request = $this->prophesize(Request::class);
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $format = 'csv';
 
         $request->get('delimiter', ';')->willReturn(';');
@@ -98,7 +98,7 @@ class CsvHandlerTest extends TestCase
         $viewHandler = $this->prophesize(ViewHandler::class);
         $view = $this->prophesize(View::class);
         $request = $this->prophesize(Request::class);
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $format = 'csv';
 
         $request->get('delimiter', ';')->willReturn(',');
@@ -142,7 +142,7 @@ class CsvHandlerTest extends TestCase
         $viewHandler = $this->prophesize(ViewHandler::class);
         $view = $this->prophesize(View::class);
         $request = $this->prophesize(Request::class);
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $format = 'csv';
 
         $request->get('delimiter', ';')->willReturn(';');
@@ -181,7 +181,7 @@ class CsvHandlerTest extends TestCase
         $viewHandler = $this->prophesize(ViewHandler::class);
         $view = $this->prophesize(View::class);
         $request = $this->prophesize(Request::class);
-        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
         $format = 'csv';
 
         $request->get('delimiter', ';')->willReturn(';');

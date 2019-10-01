@@ -14,6 +14,7 @@ namespace Sulu\Bundle\PageBundle\Serializer\Subscriber;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
@@ -68,6 +69,10 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
 
         $visitor = $event->getVisitor();
 
-        $visitor->addData('shadowLocales', $this->documentInspector->getShadowLocales($document));
+        $shadowLocales = $this->documentInspector->getShadowLocales($document);
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'shadowLocales', $shadowLocales),
+            $shadowLocales
+        );
     }
 }

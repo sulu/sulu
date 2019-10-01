@@ -14,11 +14,13 @@ namespace Sulu\Component\Content\Repository\Serializer;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
-use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Repository\Content;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -33,13 +35,13 @@ class SerializerEventListener implements EventSubscriberInterface
     private $accessControlManager;
 
     /**
-     * @var TokenStorageInterface
+     * @var TokenStorageInterface|null
      */
     private $tokenStorage;
 
     public function __construct(
         AccessControlManagerInterface $accessControlManager,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage = null
     ) {
         $this->accessControlManager = $accessControlManager;
         $this->tokenStorage = $tokenStorage;
@@ -68,7 +70,7 @@ class SerializerEventListener implements EventSubscriberInterface
     {
         /** @var Content $content */
         $content = $event->getObject();
-        /** @var JsonSerializationVisitor $visitor */
+        /** @var SerializationVisitorInterface $visitor */
         $visitor = $event->getVisitor();
 
         if (!($content instanceof Content)) {
@@ -76,29 +78,63 @@ class SerializerEventListener implements EventSubscriberInterface
         }
 
         foreach ($content->getData() as $key => $value) {
-            $visitor->setData($key, $value);
+            $visitor->visitProperty(
+                new StaticPropertyMetadata('', $key, $value),
+                $value
+            );
         }
 
-        $visitor->setData('publishedState', (WorkflowStage::PUBLISHED === $content->getWorkflowStage()));
+        $publishedState = WorkflowStage::PUBLISHED === $content->getWorkflowStage();
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'publishedState', $publishedState),
+            $publishedState
+        );
 
+        $linked = null;
         if (RedirectType::EXTERNAL === $content->getNodeType()) {
-            $visitor->setData('linked', 'external');
+            $linked = 'external';
         } elseif (RedirectType::INTERNAL === $content->getNodeType()) {
-            $visitor->setData('linked', 'internal');
+            $linked = 'internal';
+        }
+
+        if (!$linked) {
+            $visitor->visitProperty(
+                new StaticPropertyMetadata('', 'linked', $linked),
+                $linked
+            );
         }
 
         if (null !== $content->getLocalizationType()) {
-            $visitor->setData('type', $content->getLocalizationType()->toArray());
+            $type = $content->getLocalizationType()->toArray();
+            $visitor->visitProperty(
+                new StaticPropertyMetadata('', 'type', $type),
+                $type
+            );
         }
 
-        $visitor->setData(
-            '_permissions',
-            $this->accessControlManager->getUserPermissionByArray(
-                $content->getLocale(),
-                PageAdmin::SECURITY_CONTEXT_PREFIX . $content->getWebspaceKey(),
-                $content->getPermissions(),
-                $this->tokenStorage->getToken()->getUser()
-            )
+        if (!$this->tokenStorage) {
+            return;
+        }
+
+        $token = $this->tokenStorage->getToken();
+        if (!$token) {
+            return;
+        }
+
+        $user = $token->getUser();
+        if (!$user instanceof UserInterface) {
+            return;
+        }
+
+        $permissions = $this->accessControlManager->getUserPermissionByArray(
+            $content->getLocale(),
+            PageAdmin::SECURITY_CONTEXT_PREFIX . $content->getWebspaceKey(),
+            $content->getPermissions(),
+            $user
+        );
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', '_permissions', $permissions),
+            $permissions
         );
     }
 }

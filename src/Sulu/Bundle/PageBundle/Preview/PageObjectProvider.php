@@ -122,7 +122,7 @@ class PageObjectProvider implements PreviewObjectProviderInterface
             $serializedObject,
             $objectClass,
             'json',
-            DeserializationContext::create()->setSerializeNull(true)->setGroups(['preview'])
+            DeserializationContext::create()->setGroups(['preview'])
         );
     }
 }

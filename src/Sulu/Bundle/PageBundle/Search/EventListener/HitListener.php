@@ -38,11 +38,12 @@ class HitListener
      */
     public function onHit(HitEvent $event)
     {
-        if (false === $event->getMetadata()->reflection->isSubclassOf(BasePageDocument::class)) {
+        $document = $event->getHit()->getDocument();
+
+        if ($document instanceof BasePageDocument) {
             return;
         }
 
-        $document = $event->getHit()->getDocument();
         if ('/' !== $document->getUrl()[0]) {
             // is absolute URL
 

@@ -5,6 +5,14 @@
 When upgrading also have a look at the changes in the
 [sulu skeleton](https://github.com/sulu/skeleton/compare/2.0.0-RC3...2.0.0).
 
+### Ugrading JMS Serializer dependency
+
+See [JMS/Serializer](https://github.com/schmittjoh/serializer/blob/master/UPGRADING.md)
+and [JMS/SerializerBundle](https://github.com/schmittjoh/JMSSerializerBundle/blob/master/UPGRADING.md)
+Upgrade files.
+
+Serialization to `array` type is not longer possible use the new `sulu_core.array_serializer` service instead.
+
 ### Refactor WebsiteController and DefaultController
 
 The WebsiteController and DefaultController were refactored to not extend the deprecated Symfony Controller class.
