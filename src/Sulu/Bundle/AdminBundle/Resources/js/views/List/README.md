@@ -16,10 +16,10 @@ of the available options:
 |                                      | of the view                                                                   |
 | toolbarActions                       | Array of toolbar-action registered in the `ToolbarActionRegistry` that should |
 |                                      | be shown in the toolbar of the view                                           |
-| backRoute                            | Route to which the user will be navigated when the back button is clicked.    |
-| addRoute                             | Route to which the user will be navigated when the add button is clicked.     |
-| editRoute                            | Route to which the user will be navigated when the edit button of an item in  |
+| backView                             | Route to which the user will be navigated when the back button is clicked.    |
+| addView                              | Route to which the user will be navigated when the add button is clicked.     |
+| editView                             | Route to which the user will be navigated when the edit button of an item in  |
 |                                      | the list is clicked.                                                          |
 | searchable                           | Boolean that defines if the list view should render a search field.           |
-| routerAttributesToListStore          | Array of attributes that are passed from the [`Router`](#router) to the       |
+| routerAttributesToListRequest        | Array of attributes that are passed from the [`Router`](#router) to the       |
 |                                      | `ListStore`. They will be appended to the requests sent from the `ListStore`. |

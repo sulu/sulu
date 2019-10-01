@@ -151,7 +151,7 @@ test('Close dialog on cancel click', () => {
 test('Call delete when dialog is confirmed', () => {
     const deleteToolbarAction = createDeleteToolbarAction();
     deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
-    deleteToolbarAction.router.route.options.backRoute = 'sulu_test.list';
+    deleteToolbarAction.router.route.options.backView = 'sulu_test.list';
 
     const deletePromise = Promise.resolve();
     deleteToolbarAction.resourceFormStore.delete.mockReturnValue(deletePromise);
@@ -182,7 +182,7 @@ test('Call delete when dialog is confirmed', () => {
 test('Call delete with force when dialog is confirmed twice', (done) => {
     const deleteToolbarAction = createDeleteToolbarAction();
     deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
-    deleteToolbarAction.router.route.options.backRoute = 'sulu_test.list';
+    deleteToolbarAction.router.route.options.backView = 'sulu_test.list';
 
     const jsonDeletePromise = Promise.resolve({items: [{name: 'Item 1'}, {name: 'Item 2'}]});
     const deletePromise = Promise.reject({

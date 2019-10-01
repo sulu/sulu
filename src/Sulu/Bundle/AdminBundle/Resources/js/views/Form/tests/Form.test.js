@@ -782,10 +782,10 @@ test('Should navigate to defined route after dialog has been confirmed', () => {
     const backView = {
         name: 'test_route',
     };
-    const backRouteAttributes = {};
+    const backViewAttributes = {};
 
     expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
-    expect(checkFormStoreDirtyStateBeforeNavigation({}, backRouteAttributes, router.navigate)).toEqual(false);
+    expect(checkFormStoreDirtyStateBeforeNavigation({}, backViewAttributes, router.navigate)).toEqual(false);
     form.update();
     expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(true);
 
@@ -794,10 +794,10 @@ test('Should navigate to defined route after dialog has been confirmed', () => {
     expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
     expect(router.navigate).not.toBeCalled();
 
-    expect(checkFormStoreDirtyStateBeforeNavigation(backView, backRouteAttributes, router.navigate)).toEqual(false);
+    expect(checkFormStoreDirtyStateBeforeNavigation(backView, backViewAttributes, router.navigate)).toEqual(false);
     form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('onConfirm')();
     form.update();
-    expect(router.navigate).toBeCalledWith('test_route', backRouteAttributes);
+    expect(router.navigate).toBeCalledWith('test_route', backViewAttributes);
 });
 
 test('Should navigate to defined route after dialog has been confirmed using restore', () => {
@@ -828,10 +828,10 @@ test('Should navigate to defined route after dialog has been confirmed using res
     const backView = {
         name: 'test_route',
     };
-    const backRouteAttributes = {};
+    const backViewAttributes = {};
 
     expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
-    expect(checkFormStoreDirtyStateBeforeNavigation({}, backRouteAttributes, router.restore)).toEqual(false);
+    expect(checkFormStoreDirtyStateBeforeNavigation({}, backViewAttributes, router.restore)).toEqual(false);
     form.update();
     expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(true);
 
@@ -840,10 +840,10 @@ test('Should navigate to defined route after dialog has been confirmed using res
     expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
     expect(router.restore).not.toBeCalled();
 
-    expect(checkFormStoreDirtyStateBeforeNavigation(backView, backRouteAttributes, router.restore)).toEqual(false);
+    expect(checkFormStoreDirtyStateBeforeNavigation(backView, backViewAttributes, router.restore)).toEqual(false);
     form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('onConfirm')();
     form.update();
-    expect(router.restore).toBeCalledWith('test_route', backRouteAttributes);
+    expect(router.restore).toBeCalledWith('test_route', backViewAttributes);
 });
 
 test('Should not close the window if formStore is still dirty', () => {

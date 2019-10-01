@@ -18,10 +18,10 @@ In contrast to the default list, the form-overlay-list utilizes an overlay to di
 |                                      | the view                                                                      |
 | toolbarActions                       | Array of toolbar-action registered in the `ToolbarActionRegistry` that should |
 |                                      | be shown in the toolbar of the view                                           |
-| backRoute                            | Route to which the user will be navigated when the back button is clicked.    |
+| backView                             | Route to which the user will be navigated when the back button is clicked.    |
 | searchable                           | Boolean that defines if the list view should render a search field.           |
-| routerAttributesToListStore          | Array of attributes that are passed from the [`Router`](#router) to the       |
+| routerAttributesToListRequest        | Array of attributes that are passed from the [`Router`](#router) to the       |
 |                                      | `ListStore`. They will be appended to the requests sent from the `ListStore`. |
-| routerAttributesToFormStore          | Array of attributes that are passed from the [`Router`](#router) to the       |
+| routerAttributesToFormRequest        | Array of attributes that are passed from the [`Router`](#router) to the       |
 |                                      | `FormStore` of the overlay. They will be appended to the requests sent from   |
 |                                      | the `ListStore`.                                                              |
