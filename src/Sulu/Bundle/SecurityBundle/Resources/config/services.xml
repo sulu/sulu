@@ -203,6 +203,20 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <service
+            id="sulu_security.user_controller"
+            class="Sulu\Bundle\SecurityBundle\Controller\UserController"
+            public="true"
+        >
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="sulu_core.doctrine_rest_helper" />
+            <argument type="service" id="sulu_core.doctrine_list_builder_factory" />
+            <argument type="service" id="sulu_security.user_manager" />
+            <argument>%sulu.model.user.class%</argument>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <service id="sulu_security.group_repository" class="%sulu_security.group_repository.class%">
             <factory service="doctrine.orm.entity_manager" method="getRepository"/>
 
