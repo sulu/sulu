@@ -28,7 +28,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -37,7 +37,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Makes the users accessible through a rest api.
  */
-class UserController extends RestController implements ClassResourceInterface, SecuredControllerInterface
+class UserController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
     use RequestParametersTrait;
 

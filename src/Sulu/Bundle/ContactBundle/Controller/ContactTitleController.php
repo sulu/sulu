@@ -20,13 +20,13 @@ use Sulu\Bundle\ContactBundle\Entity\ContactTitleRepository;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @RouteResource("contact-title")
  */
-class ContactTitleController extends RestController implements ClassResourceInterface
+class ContactTitleController extends AbstractRestController implements ClassResourceInterface
 {
     /**
      * {@inheritdoc}

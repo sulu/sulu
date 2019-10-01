@@ -24,7 +24,7 @@ use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
@@ -36,7 +36,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Makes the roles accessible through a REST-API.
  */
-class RoleController extends RestController implements ClassResourceInterface, SecuredControllerInterface
+class RoleController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
     protected static $entityKey = 'roles';
 

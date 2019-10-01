@@ -16,7 +16,7 @@ use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Security\Authentication\RoleSettingRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @RouteResource("setting")
  */
-class RoleSettingController extends RestController implements ClassResourceInterface
+class RoleSettingController extends AbstractRestController implements ClassResourceInterface
 {
     /**
      * @var RoleSettingRepositoryInterface

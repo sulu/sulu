@@ -17,7 +17,7 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Provides webspace rest-endpoint.
  */
-class WebspaceController extends RestController implements ClassResourceInterface, SecuredControllerInterface
+class WebspaceController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
     use RequestParametersTrait;
 

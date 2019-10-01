@@ -17,14 +17,14 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManagerInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @RouteResource("Format")
  */
-class MediaFormatController extends RestController implements ClassResourceInterface
+class MediaFormatController extends AbstractRestController implements ClassResourceInterface
 {
     use RequestParametersTrait;
 

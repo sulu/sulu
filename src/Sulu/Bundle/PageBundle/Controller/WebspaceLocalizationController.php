@@ -15,14 +15,14 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Controller for getting localizations.
  */
-class WebspaceLocalizationController extends RestController implements ClassResourceInterface
+class WebspaceLocalizationController extends AbstractRestController implements ClassResourceInterface
 {
     /**
      * @var WebspaceManagerInterface

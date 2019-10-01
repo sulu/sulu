@@ -21,7 +21,7 @@ use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Makes the groups accessible through a REST-API.
  */
-class GroupController extends RestController implements ClassResourceInterface, SecuredControllerInterface
+class GroupController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
     protected static $entityName = 'SuluSecurityBundle:Group';
 

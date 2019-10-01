@@ -11,14 +11,14 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * This class contains all basic functions required in the various media controller classes.
  */
-abstract class AbstractMediaController extends RestController
+abstract class AbstractMediaController extends AbstractRestController
 {
     /**
      * @param Request $request

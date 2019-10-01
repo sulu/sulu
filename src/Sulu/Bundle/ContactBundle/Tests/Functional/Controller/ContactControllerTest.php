@@ -115,6 +115,8 @@ class ContactControllerTest extends SuluTestCase
         $client = $this->createTestClient();
         $client->request('GET', '/api/contacts/' . $contact->getId());
 
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Max', $response->firstName);

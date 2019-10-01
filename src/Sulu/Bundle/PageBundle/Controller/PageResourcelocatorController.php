@@ -17,11 +17,11 @@ use Sulu\Bundle\PageBundle\Repository\ResourceLocatorRepositoryInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\RequestParametersTrait;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class PageResourcelocatorController extends RestController implements ClassResourceInterface
+class PageResourcelocatorController extends AbstractRestController implements ClassResourceInterface
 {
     use RequestParametersTrait;
 

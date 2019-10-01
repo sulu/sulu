@@ -15,7 +15,7 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Rest\RequestParametersTrait;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Sulu\Component\SmartContent\Rest\ItemCollectionRepresentation;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Provides results for smart-content filters.
  */
-class SmartContentItemController extends RestController
+class SmartContentItemController extends AbstractRestController
 {
     use RequestParametersTrait;
 

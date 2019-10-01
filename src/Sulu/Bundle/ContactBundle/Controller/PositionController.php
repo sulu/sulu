@@ -20,13 +20,13 @@ use Sulu\Bundle\ContactBundle\Entity\PositionRepository;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @RouteResource("contact-position")
  */
-class PositionController extends RestController implements ClassResourceInterface
+class PositionController extends AbstractRestController implements ClassResourceInterface
 {
     /**
      * {@inheritdoc}

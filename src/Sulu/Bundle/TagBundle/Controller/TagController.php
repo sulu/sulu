@@ -27,7 +27,7 @@ use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,7 +37,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * Makes tag available through.
  */
-class TagController extends RestController implements ClassResourceInterface, SecuredControllerInterface
+class TagController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
     protected static $entityName = 'SuluTagBundle:Tag';
 

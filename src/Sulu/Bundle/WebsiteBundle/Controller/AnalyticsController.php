@@ -18,7 +18,7 @@ use Sulu\Bundle\WebsiteBundle\Admin\WebsiteAdmin;
 use Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManagerInterface;
 use Sulu\Bundle\WebsiteBundle\Cache\CacheClearerInterface;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Provides webspace analytics rest-endpoint.
  */
-class AnalyticsController extends RestController implements ClassResourceInterface, SecuredControllerInterface
+class AnalyticsController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
     const RESULT_KEY = 'analytics';
 

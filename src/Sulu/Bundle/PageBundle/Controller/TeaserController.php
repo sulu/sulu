@@ -16,12 +16,12 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\PageBundle\Teaser\Teaser;
 use Sulu\Bundle\PageBundle\Teaser\TeaserManagerInterface;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class TeaserController extends RestController implements ClassResourceInterface
+class TeaserController extends AbstractRestController implements ClassResourceInterface
 {
     /**
      * @var TeaserManagerInterface

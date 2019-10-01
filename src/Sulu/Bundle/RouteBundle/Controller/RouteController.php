@@ -19,7 +19,7 @@ use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -27,7 +27,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Provides api to handle routes.
  */
-class RouteController extends RestController implements ClassResourceInterface
+class RouteController extends AbstractRestController implements ClassResourceInterface
 {
     use RequestParametersTrait;
 

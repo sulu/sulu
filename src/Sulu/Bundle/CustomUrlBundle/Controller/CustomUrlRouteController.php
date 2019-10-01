@@ -17,7 +17,7 @@ use Sulu\Bundle\CustomUrlBundle\Admin\CustomUrlAdmin;
 use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * @RouteResource("route")
  */
-class CustomUrlRouteController extends RestController implements SecuredControllerInterface
+class CustomUrlRouteController extends AbstractRestController implements SecuredControllerInterface
 {
     private static $relationName = 'custom_url_routes';
 

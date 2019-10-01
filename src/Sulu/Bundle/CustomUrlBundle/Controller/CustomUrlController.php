@@ -19,7 +19,7 @@ use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @RouteResource("custom-urls")
  */
-class CustomUrlController extends RestController implements SecuredControllerInterface
+class CustomUrlController extends AbstractRestController implements SecuredControllerInterface
 {
     use RequestParametersTrait;
 

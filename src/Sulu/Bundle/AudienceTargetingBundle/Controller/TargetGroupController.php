@@ -24,7 +24,7 @@ use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +35,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @RouteResource("target-group")
  */
-class TargetGroupController extends RestController implements ClassResourceInterface, SecuredControllerInterface
+class TargetGroupController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
     /**
      * {@inheritdoc}
