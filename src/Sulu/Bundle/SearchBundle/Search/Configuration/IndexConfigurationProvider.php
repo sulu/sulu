@@ -33,7 +33,7 @@ class IndexConfigurationProvider implements IndexConfigurationProviderInterface
                 $indexName,
                 $indexConfiguration['icon'],
                 $translator->trans($indexConfiguration['name'], [], 'admin'),
-                new Route($indexConfiguration['route']['name'], $indexConfiguration['route']['result_to_route']),
+                new Route($indexConfiguration['view']['name'], $indexConfiguration['view']['result_to_view']),
                 isset($indexConfiguration['security_context']) ? $indexConfiguration['security_context'] : null,
                 isset($indexConfiguration['contexts']) ? $indexConfiguration['contexts'] : []
             );

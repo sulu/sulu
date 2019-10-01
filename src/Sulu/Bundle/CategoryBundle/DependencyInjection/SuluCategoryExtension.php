@@ -132,9 +132,9 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                         'category' => [
                             'name' => 'sulu_category.categories',
                             'icon' => 'su-tag',
-                            'route' => [
-                                'name' => CategoryAdmin::EDIT_FORM_ROUTE,
-                                'result_to_route' => [
+                            'view' => [
+                                'name' => CategoryAdmin::EDIT_FORM_VIEW,
+                                'result_to_view' => [
                                     'id' => 'id',
                                     'locale' => 'locale',
                                 ],

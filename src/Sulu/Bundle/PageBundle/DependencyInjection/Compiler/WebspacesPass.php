@@ -44,18 +44,18 @@ class WebspacesPass implements CompilerPassInterface
             $indexes['page_' . $webspaceKey] = [
                 'name' => $webspaceName,
                 'icon' => 'su-document',
-                'route' => [
-                    'name' => PageAdmin::EDIT_FORM_ROUTE,
-                    'result_to_route' => ['id' => 'id', 'locale' => 'locale', 'properties/webspace_key' => 'webspace'],
+                'view' => [
+                    'name' => PageAdmin::EDIT_FORM_VIEW,
+                    'result_to_view' => ['id' => 'id', 'locale' => 'locale', 'properties/webspace_key' => 'webspace'],
                 ],
                 'security_context' => 'sulu.webspaces.' . $webspaceKey,
             ];
             $indexes['page_' . $webspaceKey . '_published'] = [
                 'name' => $webspaceName,
                 'icon' => 'su-document',
-                'route' => [
-                    'name' => PageAdmin::EDIT_FORM_ROUTE,
-                    'result_to_route' => ['id' => 'id', 'locale' => 'locale', 'properties/webspace_key' => 'webspace'],
+                'view' => [
+                    'name' => PageAdmin::EDIT_FORM_VIEW,
+                    'result_to_view' => ['id' => 'id', 'locale' => 'locale', 'properties/webspace_key' => 'webspace'],
                 ],
                 'security_context' => 'sulu.webspaces.' . $webspaceKey,
                 'contexts' => ['website'],

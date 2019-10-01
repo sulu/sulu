@@ -29,7 +29,8 @@ Furthermore, all these controllers and now use constructor injection to gather t
 
 The `Sulu\Bundle\AdminBundle\Admin\Routing` namespace was renamed to `Sulu\Bundle\AdminBundle\Admin\View`.
 
-Some of the `RouteBuilder` methods have been renamed (they are used in multiple `RouteBuilder` and are named the same):
+`RouterBuilder`s have been renamed to `ViewBuilder`s and some of the methods have been renamed (they are used in
+multiple `ViewBuilder`s and are named the same):
 
 | Old function name                     | New function name                       |
 |---------------------------------------|-----------------------------------------|
@@ -61,6 +62,13 @@ The `NavigationItem` functions have also changed:
 
 The `RouterBuilderFactory` is now renamed to `ViewBuilderFactory`, and in all method names the string `Route` is
 replaced with `View`.
+
+The Configuration of the `SuluSearchBundle` has also changed:
+
+| Old configuration key                             | New configuration key                           |
+|---------------------------------------------------|-------------------------------------------------|
+| sulu_search.indexes.<index>.route                 | sulu_search.indexes.<index>.view                |
+| sulu_search.indexes.<index>.route.result_to_route | sulu_search.indexes.<index>.view.result_to_view |
 
 ### Refactor WebsiteController and DefaultController
 
