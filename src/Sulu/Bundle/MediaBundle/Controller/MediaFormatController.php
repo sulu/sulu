@@ -11,9 +11,10 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManagerInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
@@ -28,6 +29,27 @@ class MediaFormatController extends RestController implements ClassResourceInter
     use RequestParametersTrait;
 
     /**
+     * @var FormatOptionsManagerInterface
+     */
+    private $formatOptionsManager;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        FormatOptionsManagerInterface $formatOptionsManager,
+        EntityManagerInterface $entityManager
+    ) {
+        parent::__construct($viewHandler);
+
+        $this->formatOptionsManager = $formatOptionsManager;
+        $this->entityManager = $entityManager;
+    }
+
+    /**
      * Returns all format resources.
      *
      * @param $id
@@ -37,7 +59,7 @@ class MediaFormatController extends RestController implements ClassResourceInter
      */
     public function cgetAction($id, Request $request)
     {
-        $formatOptions = $this->getFormatOptionsManager()->getAll($id);
+        $formatOptions = $this->formatOptionsManager->getAll($id);
 
         return $this->handleView($this->view(count($formatOptions) > 0 ? $formatOptions : new \stdClass()));
     }
@@ -56,13 +78,13 @@ class MediaFormatController extends RestController implements ClassResourceInter
         $options = $request->request->all();
 
         if (empty($options)) {
-            $this->getFormatOptionsManager()->delete($id, $key);
+            $this->formatOptionsManager->delete($id, $key);
         } else {
-            $this->getFormatOptionsManager()->save($id, $key, $options);
+            $this->formatOptionsManager->save($id, $key, $options);
         }
-        $this->get('doctrine.orm.entity_manager')->flush();
+        $this->entityManager->flush();
 
-        $formatOptions = $this->getFormatOptionsManager()->get($id, $key);
+        $formatOptions = $this->formatOptionsManager->get($id, $key);
 
         return $this->handleView($this->view($formatOptions));
     }
@@ -72,31 +94,15 @@ class MediaFormatController extends RestController implements ClassResourceInter
         $formatOptions = $request->request->all();
         foreach ($formatOptions as $formatKey => $formatOption) {
             if (empty($formatOption)) {
-                $this->getFormatOptionsManager()->delete($id, $formatKey);
+                $this->formatOptionsManager->delete($id, $formatKey);
                 continue;
             }
 
-            $this->getFormatOptionsManager()->save($id, $formatKey, $formatOption);
+            $this->formatOptionsManager->save($id, $formatKey, $formatOption);
         }
 
-        $this->get('doctrine.orm.entity_manager')->flush();
+        $this->entityManager->flush();
 
         return $this->handleView($this->view($formatOptions));
-    }
-
-    /**
-     * @return FormatManagerInterface
-     */
-    private function getFormatManager()
-    {
-        return $this->get('sulu_media.format_manager');
-    }
-
-    /**
-     * @return FormatOptionsManagerInterface
-     */
-    private function getFormatOptionsManager()
-    {
-        return $this->get('sulu_media.format_options_manager');
     }
 }

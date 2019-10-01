@@ -44,4 +44,4 @@ sulu_media.media_format:
     type: rest
     name_prefix: sulu_media.
     parent: sulu_media.media
-    resource: Sulu\Bundle\MediaBundle\Controller\MediaFormatController
+    resource: sulu_media.media_format_controller

@@ -57,6 +57,18 @@
         </service>
 
         <service
+            id="sulu_media.media_format_controller"
+            class="Sulu\Bundle\MediaBundle\Controller\MediaFormatController"
+            public="true"
+        >
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="sulu_media.format_options_manager" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service
             id="sulu_media.media_redirect_controller"
             class="Sulu\Bundle\MediaBundle\Controller\MediaRedirectController"
             public="true"
