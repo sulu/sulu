@@ -31,6 +31,7 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -58,6 +59,11 @@ class UserController extends RestController implements ClassResourceInterface, S
     private $userManager;
 
     /**
+     * @var RegistryInterface
+     */
+    private $doctrine;
+
+    /**
      * @var string
      */
     private $userClass;
@@ -67,6 +73,7 @@ class UserController extends RestController implements ClassResourceInterface, S
         RestHelperInterface $restHelper,
         DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
         UserManagerInterface $userManager,
+        RegistryInterface $doctrine,
         string $userClass
     ) {
         parent::__construct($viewHandler);
@@ -74,6 +81,7 @@ class UserController extends RestController implements ClassResourceInterface, S
         $this->restHelper = $restHelper;
         $this->doctrineListBuilderFactory = $doctrineListBuilderFactory;
         $this->userManager = $userManager;
+        $this->doctrine = $doctrine;
         $this->userClass = $userClass;
     }
 
@@ -340,7 +348,7 @@ class UserController extends RestController implements ClassResourceInterface, S
             $contactId = $request->get('contactId');
 
             if (null != $contactId) {
-                $user = $this->getDoctrine()->getRepository($this->userClass)->findUserByContact($contactId);
+                $user = $this->doctrine->getRepository($this->userClass)->findUserByContact($contactId);
 
                 $view = $this->view($user ?? new \stdClass(), 200);
             } else {

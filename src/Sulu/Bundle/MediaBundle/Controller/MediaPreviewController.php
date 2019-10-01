@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
@@ -39,16 +40,23 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
      */
     private $systemCollectionManager;
 
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
         MediaManagerInterface $mediaManager,
-        SystemCollectionManagerInterface $systemCollectionManager
+        SystemCollectionManagerInterface $systemCollectionManager,
+        EntityManagerInterface $entityManager
     ) {
         parent::__construct($viewHandler, $tokenStorage);
 
         $this->mediaManager = $mediaManager;
         $this->systemCollectionManager = $systemCollectionManager;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -87,7 +95,7 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
 
             $mediaEntity->setPreviewImage($previewImage->getEntity());
 
-            $this->getDoctrine()->getManager()->flush();
+            $this->entityManager->flush();
 
             $view = $this->view($previewImage, 200);
         } catch (MediaNotFoundException $e) {

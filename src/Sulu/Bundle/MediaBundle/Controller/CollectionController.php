@@ -78,13 +78,19 @@ class CollectionController extends RestController implements ClassResourceInterf
      */
     private $collectionManager;
 
+    /**
+     * @var array
+     */
+    private $defaultCollectionType;
+
     public function __construct(
         ViewHandlerInterface $viewHandler,
         ListRestHelperInterface $listRestHelper,
         SecurityCheckerInterface $securityChecker,
         TranslatorInterface $translator,
         SystemCollectionManagerInterface $systemCollectionManager,
-        CollectionManagerInterface $collectionManager
+        CollectionManagerInterface $collectionManager,
+        array $defaultCollectionType
     ) {
         parent::__construct($viewHandler);
 
@@ -93,6 +99,7 @@ class CollectionController extends RestController implements ClassResourceInterf
         $this->translator = $translator;
         $this->systemCollectionManager = $systemCollectionManager;
         $this->collectionManager = $collectionManager;
+        $this->defaultCollectionType = $defaultCollectionType;
     }
 
     /**
@@ -353,7 +360,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     {
         return [
             'style' => $request->get('style'),
-            'type' => $request->get('type', $this->container->getParameter('sulu_media.collection.type.default')),
+            'type' => $request->get('type', $this->defaultCollectionType),
             'parent' => $request->get('parent'),
             'locale' => $this->getRequestParameter($request, 'locale', true),
             'title' => $request->get('title'),

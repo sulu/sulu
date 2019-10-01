@@ -58,6 +58,7 @@
             <argument type="service" id="security.token_storage" />
             <argument type="service" id="sulu_media.media_manager" />
             <argument type="service" id="sulu_media.system_collections.manager" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
 
             <tag name="sulu.context" context="admin"/>
         </service>
@@ -95,6 +96,7 @@
             <argument type="service" id="translator" />
             <argument type="service" id="sulu_media.system_collections.manager" />
             <argument type="service" id="sulu_media.collection_manager" />
+            <argument>%sulu_media.collection.type.default%</argument>
 
             <tag name="sulu.context" context="admin"/>
         </service>
