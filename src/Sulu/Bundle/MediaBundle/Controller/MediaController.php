@@ -144,7 +144,6 @@ class MediaController extends AbstractMediaController implements
         $this->collectionClass = $collectionClass;
     }
 
-
     /**
      * Shows a single media with the given id.
      *

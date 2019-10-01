@@ -578,7 +578,6 @@ class AccountController extends RestController implements ClassResourceInterface
             if (!$account) {
                 throw new EntityNotFoundException($this->getAccountEntityName(), $id);
             } else {
-
                 $this->doPut($account, $request, $this->entityManager);
 
                 $this->entityManager->flush();

@@ -15,8 +15,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
-use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
-use Sulu\Bundle\CategoryBundle\Category\KeywordManager;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
@@ -26,7 +24,6 @@ use Sulu\Bundle\CategoryBundle\Exception\KeywordIsMultipleReferencedException;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordNotUniqueException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\RestController;
@@ -34,7 +31,6 @@ use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Provides keywords for categories.

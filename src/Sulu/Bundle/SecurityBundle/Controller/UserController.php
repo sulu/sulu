@@ -20,12 +20,10 @@ use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManagerInterface;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
-use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
@@ -33,7 +31,6 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\ControllerTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -82,7 +79,7 @@ class UserController extends RestController implements ClassResourceInterface, S
 
     /**
      * Contains the field descriptors used by the list response.
-     * TODO: move field descriptors to a manager
+     * TODO: move field descriptors to a manager.
      *
      * @var DoctrineFieldDescriptor[]
      */
@@ -325,7 +322,6 @@ class UserController extends RestController implements ClassResourceInterface, S
     {
         $view = null;
         if ('true' == $request->get('flat')) {
-
             $listBuilder = $this->doctrineListBuilderFactory->create($this->userClass);
 
             $this->restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());

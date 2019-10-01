@@ -21,7 +21,6 @@ use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
 use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authentication\UserSettingRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

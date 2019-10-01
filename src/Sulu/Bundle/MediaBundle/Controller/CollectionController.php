@@ -13,7 +13,6 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Api\RootCollection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
@@ -32,7 +31,6 @@ use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerI
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\ControllerTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -96,7 +94,6 @@ class CollectionController extends RestController implements ClassResourceInterf
         $this->systemCollectionManager = $systemCollectionManager;
         $this->collectionManager = $collectionManager;
     }
-
 
     /**
      * Shows a single collection with the given id.

@@ -50,6 +50,7 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
         $this->mediaManager = $mediaManager;
         $this->systemCollectionManager = $systemCollectionManager;
     }
+
     /**
      * Creates a new preview image and saves it to the provided media.
      *
