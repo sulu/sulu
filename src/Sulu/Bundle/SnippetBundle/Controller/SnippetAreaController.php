@@ -14,11 +14,13 @@ namespace Sulu\Bundle\SnippetBundle\Controller;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
+use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\WrongSnippetTypeException;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -27,9 +29,31 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @RouteResource("snippet-area")
  */
-class SnippetAreaController extends Controller implements ClassResourceInterface
+class SnippetAreaController implements ClassResourceInterface
 {
     use RequestParametersTrait;
+
+    /**
+     * @var DefaultSnippetManagerInterface
+     */
+    protected $defaultSnippetManager;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    protected $documentManager;
+
+    protected $securityChecker;
+
+    public function __construct(
+        DefaultSnippetManagerInterface $defaultSnippetManager,
+        DocumentManagerInterface $documentManager,
+        SecurityCheckerInterface $securityChecker
+    ) {
+        $this->defaultSnippetManager = $defaultSnippetManager;
+        $this->documentManager = $documentManager;
+        $this->securityChecker = $securityChecker;
+    }
 
     /**
      * Get snippet areas.

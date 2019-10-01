@@ -74,8 +74,7 @@ class MediaStreamController
         FormatCacheInterface $formatCache,
         MediaManagerInterface $mediaManager,
         StorageInterface $storage
-    )
-    {
+    ) {
         $this->dispositionTypeResolver = $dispositionTypeResolver;
         $this->mediaRepository = $mediaRepository;
         $this->pathCleaner = $pathCleaner;
@@ -159,7 +158,6 @@ class MediaStreamController
         string $dispositionType = ResponseHeaderBag::DISPOSITION_ATTACHMENT
     ): Response {
         $storageOptions = $fileVersion->getStorageOptions();
-
 
         $storageType = $this->storage->getType($storageOptions);
 

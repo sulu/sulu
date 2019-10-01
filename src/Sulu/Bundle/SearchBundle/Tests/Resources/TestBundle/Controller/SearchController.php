@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SearchController
 {
-
     /**
      * @var SearchManager
      */

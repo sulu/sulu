@@ -142,8 +142,7 @@ class ResettingController extends Controller
         string $mailTemplate,
         string $tokenSendLimit,
         string $adminMail
-    )
-    {
+    ) {
         $this->validator = $validator;
         $this->translator = $translator;
         $this->tokenGenerator = $tokenGenerator;
@@ -161,7 +160,6 @@ class ResettingController extends Controller
         $this->tokenSendLimit = $tokenSendLimit;
         $this->adminMail = $adminMail;
     }
-
 
     /**
      * The interval in which the token is valid.
