@@ -27,7 +27,11 @@
     </parameters>
 
     <services>
-        <service id="sulu_media.media_controller" class="Sulu\Bundle\MediaBundle\Controller\MediaController">
+        <service
+            id="sulu_media.media_controller"
+            class="Sulu\Bundle\MediaBundle\Controller\MediaController"
+            public="true"
+        >
             <argument type="service" id="fos_rest.view_handler" />
             <argument type="service" id="security.token_storage" />
             <argument type="service" id="sulu_media.media_manager" />
@@ -42,17 +46,19 @@
             <argument>%sulu.model.media.class%</argument>
             <argument>%sulu.model.collection.class%</argument>
 
-            <tag name="controller.service_arguments" />
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service id="sulu_media.media_preview_controller" class="Sulu\Bundle\MediaBundle\Controller\MediaPreviewController">
+        <service
+            id="sulu_media.media_preview_controller"
+            class="Sulu\Bundle\MediaBundle\Controller\MediaPreviewController"
+            public="true"
+        >
             <argument type="service" id="fos_rest.view_handler" />
             <argument type="service" id="security.token_storage" />
             <argument type="service" id="sulu_media.media_manager" />
             <argument type="service" id="sulu_media.system_collections.manager" />
 
-            <tag name="controller.service_arguments" />
             <tag name="sulu.context" context="admin"/>
         </service>
 
@@ -78,7 +84,11 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service id="sulu_media.collection_controller" class="Sulu\Bundle\MediaBundle\Controller\CollectionController">
+        <service
+            id="sulu_media.collection_controller"
+            class="Sulu\Bundle\MediaBundle\Controller\CollectionController"
+            public="true"
+        >
             <argument type="service" id="fos_rest.view_handler" />
             <argument type="service" id="sulu_core.list_rest_helper" />
             <argument type="service" id="sulu_security.security_checker" />
@@ -86,7 +96,6 @@
             <argument type="service" id="sulu_media.system_collections.manager" />
             <argument type="service" id="sulu_media.collection_manager" />
 
-            <tag name="controller.service_arguments" />
             <tag name="sulu.context" context="admin"/>
         </service>
 
