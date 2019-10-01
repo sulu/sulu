@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException as DoctrineUniqueConstraintViolationException;
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
@@ -75,9 +76,9 @@ class RoleController extends AbstractRestController implements ClassResourceInte
     private $roleRepository;
 
     /**
-     * @var RegistryInterface
+     * @var EntityManagerInterface
      */
-    private $doctrine;
+    private $entityManager;
 
     /**
      * @var string
@@ -91,7 +92,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
         DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
         MaskConverterInterface $maskConverter,
         RoleRepositoryInterface $roleRepository,
-        RegistryInterface $doctrine,
+        EntityManagerInterface $entityManager,
         string $roleClass
     ) {
         parent::__construct($viewHandler);
@@ -101,7 +102,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
         $this->doctrineListBuilderFactory = $doctrineListBuilderFactory;
         $this->maskConverter = $maskConverter;
         $this->roleRepository = $roleRepository;
-        $this->doctrine = $doctrine;
+        $this->entityManager = $entityManager;
         $this->roleClass = $roleClass;
     }
 
@@ -202,8 +203,6 @@ class RoleController extends AbstractRestController implements ClassResourceInte
                 throw new InvalidArgumentException('Role', 'name');
             }
 
-            $em = $this->doctrine->getManager();
-
             /** @var RoleInterface $role */
             $role = $this->roleRepository->createNew();
             $role->setName($name);
@@ -222,8 +221,8 @@ class RoleController extends AbstractRestController implements ClassResourceInte
             }
 
             try {
-                $em->persist($role);
-                $em->flush();
+                $this->entityManager->persist($role);
+                $this->entityManager->flush();
 
                 $view = $this->view($this->convertRole($role), 200);
             } catch (DoctrineUniqueConstraintViolationException $ex) {
@@ -254,8 +253,6 @@ class RoleController extends AbstractRestController implements ClassResourceInte
             if (!$role) {
                 throw new EntityNotFoundException($this->roleRepository->getClassName(), $id);
             } else {
-                $em = $this->doctrine->getManager();
-
                 $role->setName($name);
                 $role->setSystem($request->get('system'));
 
@@ -270,7 +267,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
                     $role->setSecurityType(null);
                 }
 
-                $em->flush();
+                $this->entityManager->flush();
                 $view = $this->view($this->convertRole($role), 200);
             }
         } catch (EntityNotFoundException $enfe) {
@@ -300,9 +297,8 @@ class RoleController extends AbstractRestController implements ClassResourceInte
                 throw new EntityNotFoundException($this->roleRepository->getClassName(), $id);
             }
 
-            $em = $this->doctrine->getManager();
-            $em->remove($role);
-            $em->flush();
+            $this->entityManager->remove($role);
+            $this->entityManager->flush();
         };
 
         $view = $this->responseDelete($id, $delete);
@@ -327,7 +323,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
         };
 
         $delete = function($permission) {
-            $this->doctrine->getManager()->remove($permission);
+            $this->entityManager->remove($permission);
         };
 
         $update = function($permission, $permissionData) {
@@ -355,11 +351,10 @@ class RoleController extends AbstractRestController implements ClassResourceInte
      */
     protected function addPermission(RoleInterface $role, $permissionData)
     {
-        $em = $this->doctrine->getManager();
         $alreadyContains = false;
 
         if (isset($permissionData['id'])) {
-            $permission = $em->getRepository(static::ENTITY_NAME_PERMISSION)->find($permissionData['id']);
+            $permission = $this->entityManager->getRepository(static::ENTITY_NAME_PERMISSION)->find($permissionData['id']);
             if (!$permission) {
                 throw new EntityNotFoundException(static::ENTITY_NAME_PERMISSION, $permissionData['id']);
             }
