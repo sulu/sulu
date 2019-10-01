@@ -35,6 +35,11 @@ class WebspaceControllerTest extends SuluTestCase
         $this->assertCount(2, $destinationWebspace['navigations']);
         $this->assertEquals('main', $destinationWebspace['navigations'][0]['key']);
         $this->assertEquals('footer', $destinationWebspace['navigations'][1]['key']);
+        $this->assertCount(2, $destinationWebspace['allLocalizations']);
+        $this->assertSame('de', $destinationWebspace['allLocalizations'][0]['name']);
+        $this->assertSame('de', $destinationWebspace['allLocalizations'][0]['localization']);
+        $this->assertSame('es', $destinationWebspace['allLocalizations'][1]['name']);
+        $this->assertSame('es', $destinationWebspace['allLocalizations'][1]['localization']);
         $this->assertEquals('Sulu CMF', $suluWebspace['name']);
         $this->assertCount(2, $suluWebspace['navigations']);
         $this->assertEquals('main', $suluWebspace['navigations'][0]['key']);
