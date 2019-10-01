@@ -5,6 +5,11 @@
 When upgrading also have a look at the changes in the
 [sulu skeleton](https://github.com/sulu/skeleton/compare/2.0.0-RC3...2.0.0).
 
+### WebspaceMangerInterface changed
+
+The `WebspaceManagerInterface` changed that in all methods the `$environment` variable is nullable
+and will use in the implementation the current `kernel.environment`.
+
 ### Ugrading JMS Serializer dependency
 
 See [JMS/Serializer](https://github.com/schmittjoh/serializer/blob/master/UPGRADING.md)

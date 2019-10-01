@@ -68,7 +68,8 @@ class WebspaceManagerTest extends WebspaceTestCase
                 'cache_dir' => $this->cacheDirectory,
                 'config_dir' => $this->getResourceDirectory() . '/DataFixtures/Webspace/valid',
                 'cache_class' => 'WebspaceCollectionCache' . uniqid(),
-            ]
+            ],
+            'test'
         );
     }
 
@@ -561,7 +562,8 @@ class WebspaceManagerTest extends WebspaceTestCase
                 'cache_dir' => $this->getResourceDirectory() . '/cache',
                 'config_dir' => $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple',
                 'cache_class' => 'WebspaceCollectionCache' . uniqid(),
-            ]
+            ],
+            'test'
         );
 
         $webspaces = $this->webspaceManager->getWebspaceCollection();

@@ -26,14 +26,14 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
     /**
      * Returns the portal with the given url (which has not necessarily to be the main url).
      */
-    public function findPortalInformationByUrl(string $url, string $environment): ?PortalInformation;
+    public function findPortalInformationByUrl(string $url, ?string $environment = null): ?PortalInformation;
 
     /**
      * Returns all portal which matches the given url (which has not necessarily to be the main url).
      *
      * @return PortalInformation[]
      */
-    public function findPortalInformationsByUrl(string $url, string $environment): array;
+    public function findPortalInformationsByUrl(string $url, ?string $environment = null): array;
 
     /**
      * Returns all portal which matches the given webspace-key and locale.
@@ -43,7 +43,7 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
     public function findPortalInformationsByWebspaceKeyAndLocale(
         string $webspaceKey,
         string $locale,
-        string $environment
+        ?string $environment = null
     ): array;
 
     /**
@@ -54,7 +54,7 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
     public function findPortalInformationsByPortalKeyAndLocale(
         string $portalKey,
         string $locale,
-        string $environment
+        ?string $environment = null
     ): array;
 
     /**
@@ -64,7 +64,7 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
      */
     public function findUrlsByResourceLocator(
         string $resourceLocator,
-        string $environment,
+        ?string $environment,
         string $languageCode,
         ?string $webspaceKey = null,
         ?string $domain = null,
@@ -76,7 +76,7 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
      */
     public function findUrlByResourceLocator(
         ?string $resourceLocator,
-        string $environment,
+        ?string $environment,
         string $languageCode,
         ?string $webspaceKey = null,
         ?string $domain = null,
@@ -91,17 +91,17 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
     /**
      * @return string[]
      */
-    public function getUrls(string $environment): array;
+    public function getUrls(?string $environment = null): array;
 
     /**
      * @return PortalInformation[]
      */
-    public function getPortalInformations(string $environment): array;
+    public function getPortalInformations(?string $environment = null): array;
 
     /**
      * @return PortalInformation[]
      */
-    public function getPortalInformationsByWebspaceKey(string $environment, string $webspaceKey): array;
+    public function getPortalInformationsByWebspaceKey(?string $environment, string $webspaceKey): array;
 
     public function getWebspaceCollection(): WebspaceCollection;
 
