@@ -264,7 +264,7 @@ abstract class AbstractMediaController extends RestController
      */
     private function initFieldDescriptors($entityName, $id)
     {
-        $mediaEntityName = $this->getParameter('sulu.model.media.class');
+        $mediaEntityName = $this->mediaClass;
 
         $entityJoin = new DoctrineJoinDescriptor(
             $mediaEntityName,
