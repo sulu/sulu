@@ -18,6 +18,9 @@ class VersionControllerTest extends SuluTestCase
     public function setUp(): void
     {
         if (!$this->getContainer()->getParameter('sulu_document_manager.versioning.enabled')) {
+            // If versioning is disabled controller should not be available
+            $this->assertFalse($this->getContainer()->has('sulu_page.version_controller'));
+
             $this->markTestSkipped('Versioning is not enabled');
         }
 

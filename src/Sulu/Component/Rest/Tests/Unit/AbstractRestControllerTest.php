@@ -12,13 +12,14 @@
 namespace Sulu\Component\Rest\Tests\Unit;
 
 use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\RestController;
 
-class RestControllerTest extends TestCase
+class AbstractRestControllerTest extends TestCase
 {
     /**
      * @var \Sulu\Component\Rest\RestController
@@ -27,12 +28,13 @@ class RestControllerTest extends TestCase
 
     public function setUp(): void
     {
-        $this->controller = $this->getMockForAbstractClass(RestController::class);
+        $viewHandler = $this->prophesize(ViewHandlerInterface::class);
+        $this->controller = $this->getMockForAbstractClass(AbstractRestController::class, [$viewHandler->reveal()]);
     }
 
     public function testResponseGetById()
     {
-        $method = new \ReflectionMethod(RestController::class, 'responseGetById');
+        $method = new \ReflectionMethod(AbstractRestController::class, 'responseGetById');
         $method->setAccessible(true);
 
         $id = 1;
@@ -49,7 +51,7 @@ class RestControllerTest extends TestCase
 
     public function testResponseGetByNotExistingId()
     {
-        $method = new \ReflectionMethod(RestController::class, 'responseGetById');
+        $method = new \ReflectionMethod(AbstractRestController::class, 'responseGetById');
         $method->setAccessible(true);
 
         $id = 1;
@@ -77,7 +79,7 @@ class RestControllerTest extends TestCase
             $this->fail('add should not be called');
         };
 
-        $method = new \ReflectionMethod(RestController::class, 'processPut');
+        $method = new \ReflectionMethod(AbstractRestController::class, 'processPut');
         $method->setAccessible(true);
 
         $result = $method->invoke($this->controller, [], [], $delete, $update, $add);
@@ -99,7 +101,7 @@ class RestControllerTest extends TestCase
             $this->fail('add should not be called');
         };
 
-        $method = new \ReflectionMethod(RestController::class, 'processPut');
+        $method = new \ReflectionMethod(AbstractRestController::class, 'processPut');
         $method->setAccessible(true);
 
         $object = $this->prophesize(ApiEntity::class);
@@ -134,7 +136,7 @@ class RestControllerTest extends TestCase
             $this->fail('add should not be called');
         };
 
-        $method = new \ReflectionMethod(RestController::class, 'processPut');
+        $method = new \ReflectionMethod(AbstractRestController::class, 'processPut');
         $method->setAccessible(true);
 
         $object = $this->prophesize(ApiEntity::class);
@@ -173,7 +175,7 @@ class RestControllerTest extends TestCase
             $addCalled = true;
         };
 
-        $method = new \ReflectionMethod(RestController::class, 'processPut');
+        $method = new \ReflectionMethod(AbstractRestController::class, 'processPut');
         $method->setAccessible(true);
 
         $method->invoke(
@@ -194,7 +196,7 @@ class RestControllerTest extends TestCase
 
     public function testDelete()
     {
-        $method = new \ReflectionMethod(RestController::class, 'responseDelete');
+        $method = new \ReflectionMethod(AbstractRestController::class, 'responseDelete');
         $method->setAccessible(true);
 
         $id = 1;
@@ -211,7 +213,7 @@ class RestControllerTest extends TestCase
 
     public function testDeleteWithNotExistingEntity()
     {
-        $method = new \ReflectionMethod(RestController::class, 'responseDelete');
+        $method = new \ReflectionMethod(AbstractRestController::class, 'responseDelete');
         $method->setAccessible(true);
 
         $id = 1;
@@ -227,7 +229,7 @@ class RestControllerTest extends TestCase
 
     public function testDeleteWithError()
     {
-        $method = new \ReflectionMethod(RestController::class, 'responseDelete');
+        $method = new \ReflectionMethod(AbstractRestController::class, 'responseDelete');
         $method->setAccessible(true);
 
         $id = 1;

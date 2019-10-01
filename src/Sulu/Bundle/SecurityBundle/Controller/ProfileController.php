@@ -21,7 +21,6 @@ use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
 use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authentication\UserSettingRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +29,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 /**
  * This controller handles everything a user is allowed to change on its own.
  */
-class ProfileController extends RestController implements ClassResourceInterface
+class ProfileController implements ClassResourceInterface
 {
     protected static $entityNameUserSetting = 'SuluSecurityBundle:UserSetting';
 
@@ -60,6 +59,16 @@ class ProfileController extends RestController implements ClassResourceInterface
     private $userManager;
 
     /**
+     * @var string
+     */
+    private $userClass;
+
+    /**
+     * @var string
+     */
+    private $contactClass;
+
+    /**
      * @param TokenStorageInterface $tokenStorage
      * @param ObjectManager $objectManager
      * @param ViewHandlerInterface $viewHandler
@@ -71,13 +80,17 @@ class ProfileController extends RestController implements ClassResourceInterface
         ObjectManager $objectManager,
         ViewHandlerInterface $viewHandler,
         UserSettingRepositoryInterface $userSettingRepository,
-        UserManager $userManager
+        UserManager $userManager,
+        string $userClass,
+        string $contactClass
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->objectManager = $objectManager;
         $this->viewHandler = $viewHandler;
         $this->userSettingRepository = $userSettingRepository;
         $this->userManager = $userManager;
+        $this->userClass = $userClass;
+        $this->contactClass = $contactClass;
     }
 
     /**
@@ -215,19 +228,19 @@ class ProfileController extends RestController implements ClassResourceInterface
     private function checkArguments(Request $request)
     {
         if (null === $request->get('firstName')) {
-            throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'firstName');
+            throw new MissingArgumentException($this->contactClass, 'firstName');
         }
         if (null === $request->get('lastName')) {
-            throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'lastName');
+            throw new MissingArgumentException($this->contactClass, 'lastName');
         }
         if (null === $request->get('username')) {
-            throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'username');
+            throw new MissingArgumentException($this->userClass, 'username');
         }
         if (null === $request->get('email')) {
-            throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'email');
+            throw new MissingArgumentException($this->userClass, 'email');
         }
         if (null === $request->get('locale')) {
-            throw new MissingArgumentException($this->container->getParameter('sulu.model.user.class'), 'locale');
+            throw new MissingArgumentException($this->userClass, 'locale');
         }
     }
 }

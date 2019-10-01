@@ -11,13 +11,15 @@
 
 namespace Sulu\Bundle\RouteBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
-use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -25,9 +27,36 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Provides api to handle routes.
  */
-class RouteController extends RestController implements ClassResourceInterface
+class RouteController extends AbstractRestController implements ClassResourceInterface
 {
     use RequestParametersTrait;
+
+    /**
+     * @var array
+     */
+    private $resourceKeyMappings;
+
+    /**
+     * @var RouteRepositoryInterface
+     */
+    private $routeRepository;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        RouteRepositoryInterface $routeRepository,
+        EntityManagerInterface $entityManager,
+        array $resourceKeyMappings
+    ) {
+        parent::__construct($viewHandler);
+        $this->routeRepository = $routeRepository;
+        $this->entityManager = $entityManager;
+        $this->resourceKeyMappings = $resourceKeyMappings;
+    }
 
     /**
      * Returns list of routes for given entity.
@@ -45,7 +74,7 @@ class RouteController extends RestController implements ClassResourceInterface
 
         // optional parameter
         $history = $this->getBooleanRequestParameter($request, 'history', false, false);
-        $entityClass = $this->getParameter('sulu_route.resource_key_mappings')[$resourceKey] ?? null;
+        $entityClass = $this->resourceKeyMappings[$resourceKey] ?? null;
 
         if (!$entityClass) {
             throw new NotFoundHttpException(sprintf('No route mapping configured for resourceKey "%s"', $resourceKey));
@@ -68,14 +97,11 @@ class RouteController extends RestController implements ClassResourceInterface
      */
     private function findRoutes($history, $entityClass, $entityId, $locale)
     {
-        /** @var RouteRepositoryInterface $routeRespository */
-        $routeRespository = $this->get('sulu.repository.route');
-
         if ($history) {
-            return $routeRespository->findHistoryByEntity($entityClass, $entityId, $locale);
+            return $this->routeRepository->findHistoryByEntity($entityClass, $entityId, $locale);
         }
 
-        return [$routeRespository->findByEntity($entityClass, $entityId, $locale)];
+        return [$this->routeRepository->findByEntity($entityClass, $entityId, $locale)];
     }
 
     /**
@@ -89,21 +115,18 @@ class RouteController extends RestController implements ClassResourceInterface
      */
     public function cdeleteAction(Request $request)
     {
-        /** @var RouteRepositoryInterface $routeRespository */
-        $routeRespository = $this->get('sulu.repository.route');
-        $entityManager = $this->get('doctrine.orm.entity_manager');
         $ids = explode(',', $request->get('ids'));
 
         foreach ($ids as $id) {
-            $route = $routeRespository->find($id);
+            $route = $this->routeRepository->find($id);
             if (!$route) {
                 throw new EntityNotFoundException(RouteInterface::class, $id);
             }
 
-            $entityManager->remove($route);
+            $this->entityManager->remove($route);
         }
 
-        $entityManager->flush();
+        $this->entityManager->flush();
 
         return $this->handleView($this->view());
     }

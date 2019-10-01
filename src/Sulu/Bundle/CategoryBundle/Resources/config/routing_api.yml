@@ -1,17 +1,17 @@
 sulu_category.categories:
     type: rest
     name_prefix: sulu_category.
-    resource: Sulu\Bundle\CategoryBundle\Controller\CategoryController
+    resource: sulu_category.category_controller
 
 sulu_category.post_category_trigger:
     path: /categories/{id}.{_format}
     methods: POST
     defaults:
-        _controller: Sulu\Bundle\CategoryBundle\Controller\CategoryController::postTriggerAction
+        _controller: sulu_category.category_controller::postTriggerAction
         _format: json
 
 sulu_category.keywords:
     type: rest
     name_prefix: sulu_category.
     parent: sulu_category.categories
-    resource: Sulu\Bundle\CategoryBundle\Controller\KeywordController
+    resource: sulu_category.keyword_controller

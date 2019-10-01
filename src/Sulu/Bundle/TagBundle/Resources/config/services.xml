@@ -45,5 +45,20 @@
         <service id="sulu_tag.reference_store.tag" class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">
             <tag name="sulu_website.reference_store" alias="tag"/>
         </service>
+
+        <service id="sulu_tag.tag_controller"
+                 class="Sulu\Bundle\TagBundle\Controller\TagController"
+                 public="true">
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="sulu_core.doctrine_rest_helper"/>
+            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
+            <argument type="service" id="sulu_core.doctrine_list_builder_factory"/>
+            <argument type="service" id="sulu_tag.tag_manager"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="router"/>
+            <argument>%sulu.model.tag.class%</argument>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
     </services>
 </container>

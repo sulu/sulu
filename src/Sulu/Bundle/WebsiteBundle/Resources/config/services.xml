@@ -44,6 +44,19 @@
         </service>
         <service id="Sulu\Bundle\WebsiteBundle\Controller\DefaultController" alias="sulu_website.default_controller"/>
 
+        <service id="sulu_website.sitemap_controller"
+                 class="Sulu\Bundle\WebsiteBundle\Controller\SitemapController"
+                 public="true">
+            <argument type="service" id="sulu_website.sitemap.xml_renderer"/>
+            <argument type="service" id="sulu_website.sitemap.pool"/>
+            <argument type="service" id="sulu_website.sitemap.xml_dumper"/>
+            <argument type="service" id="filesystem"/>
+            <argument type="service" id="router"/>
+            <argument>%sulu_website.sitemap.cache.lifetime%</argument>
+
+            <tag name="sulu.context" context="website" />
+        </service>
+
         <service
             id="sulu_website.cache_controller"
             class="Sulu\Bundle\WebsiteBundle\Controller\CacheController"

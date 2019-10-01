@@ -11,19 +11,22 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
+use Sulu\Bundle\ContactBundle\Entity\ContactTitleRepository;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
-use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @RouteResource("contact-title")
  */
-class ContactTitleController extends RestController implements ClassResourceInterface
+class ContactTitleController extends AbstractRestController implements ClassResourceInterface
 {
     /**
      * {@inheritdoc}
@@ -34,6 +37,26 @@ class ContactTitleController extends RestController implements ClassResourceInte
      * {@inheritdoc}
      */
     protected static $entityKey = 'contact_titles';
+
+    /**
+     * @var ContactTitleRepository
+     */
+    private $contactTitleRepository;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        ContactTitleRepository $contactTitleRepository,
+        EntityManagerInterface $entityManager
+    ) {
+        parent::__construct($viewHandler);
+        $this->contactTitleRepository = $contactTitleRepository;
+        $this->entityManager = $entityManager;
+    }
 
     /**
      * Shows a single contact title for the given id.
@@ -47,9 +70,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
         $view = $this->responseGetById(
             $id,
             function($id) {
-                return $this->getDoctrine()
-                    ->getRepository(self::$entityName)
-                    ->find($id);
+                return $this->contactTitleRepository->find($id);
             }
         );
 
@@ -65,7 +86,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
     public function cgetAction()
     {
         $list = new CollectionRepresentation(
-            $this->getDoctrine()->getRepository(self::$entityName)->findBy([], ['title' => 'ASC']),
+            $this->contactTitleRepository->findBy([], ['title' => 'ASC']),
             self::$entityKey
         );
 
@@ -92,12 +113,11 @@ class ContactTitleController extends RestController implements ClassResourceInte
                 );
             }
 
-            $em = $this->getDoctrine()->getManager();
             $title = new ContactTitle();
             $title->setTitle($name);
 
-            $em->persist($title);
-            $em->flush();
+            $this->entityManager->persist($title);
+            $this->entityManager->flush();
 
             $view = $this->view($title, 200);
         } catch (EntityNotFoundException $enfe) {
@@ -121,9 +141,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
     {
         try {
             /** @var ContactTitle $title */
-            $title = $this->getDoctrine()
-                ->getRepository(self::$entityName)
-                ->find($id);
+            $title = $this->contactTitleRepository->find($id);
 
             if (!$title) {
                 throw new EntityNotFoundException(self::$entityName, $id);
@@ -133,10 +151,9 @@ class ContactTitleController extends RestController implements ClassResourceInte
                 if (empty($name)) {
                     throw new RestException('There is no title-name for the given title');
                 } else {
-                    $em = $this->getDoctrine()->getManager();
                     $title->setTitle($name);
 
-                    $em->flush();
+                    $this->entityManager->flush();
                     $view = $this->view($title, 200);
                 }
             }
@@ -151,23 +168,20 @@ class ContactTitleController extends RestController implements ClassResourceInte
 
     public function cdeleteAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
         $ids = array_filter(explode(',', $request->get('ids', '')));
 
         try {
             foreach ($ids as $id) {
                 /* @var ContactTitle $title */
-                $title = $this->getDoctrine()
-                    ->getRepository(self::$entityName)
-                    ->find($id);
+                $title = $this->contactTitleRepository->find($id);
 
                 if (!$title) {
                     throw new EntityNotFoundException(self::$entityName, $id);
                 }
-                $em->remove($title);
+                $this->entityManager->remove($title);
             }
 
-            $em->flush();
+            $this->entityManager->flush();
 
             $view = $this->view();
         } catch (EntityNotFoundException $e) {
@@ -189,17 +203,14 @@ class ContactTitleController extends RestController implements ClassResourceInte
         try {
             $delete = function($id) {
                 /* @var ContactTitle $title */
-                $title = $this->getDoctrine()
-                    ->getRepository(self::$entityName)
-                    ->find($id);
+                $title = $this->contactTitleRepository->find($id);
 
                 if (!$title) {
                     throw new EntityNotFoundException(self::$entityName, $id);
                 }
 
-                $em = $this->getDoctrine()->getManager();
-                $em->remove($title);
-                $em->flush();
+                $this->entityManager->remove($title);
+                $this->entityManager->flush();
             };
 
             $view = $this->responseDelete($id, $delete);
@@ -234,7 +245,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
                 ++$i;
             }
 
-            $this->getDoctrine()->getManager()->flush();
+            $this->entityManager->flush();
             $view = $this->view($data, 200);
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
@@ -258,9 +269,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
     {
         if (isset($item['id']) && !empty($item['id'])) {
             /* @var ContactTitle $title */
-            $title = $this->getDoctrine()
-                ->getRepository(self::$entityName)
-                ->find($item['id']);
+            $title = $this->contactTitleRepository->find($item['id']);
 
             if (null == $title) {
                 throw new EntityNotFoundException(self::$entityName, $item['id']);
@@ -270,7 +279,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
         } else {
             $title = new ContactTitle();
             $title->setTitle($item['title']);
-            $this->getDoctrine()->getManager()->persist($title);
+            $this->entityManager->persist($title);
         }
 
         return $title;

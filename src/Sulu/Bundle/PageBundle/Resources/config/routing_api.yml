@@ -1,7 +1,7 @@
 sulu_page.rl:
     type: rest
     name_prefix: sulu_page.
-    resource: Sulu\Bundle\PageBundle\Controller\PageResourcelocatorController
+    resource: sulu_page.page_resource_locator_controller
 
 sulu_page.resource_locator:
     type: rest
@@ -11,29 +11,29 @@ sulu_page.resource_locator:
 sulu_page.page:
     type: rest
     name_prefix: sulu_page.
-    resource: Sulu\Bundle\PageBundle\Controller\PageController
+    resource: sulu_page.page_controller
 
 sulu_page.post_page_trigger:
     path: /pages/{id}.{_format}
     methods: POST
     defaults:
-        _controller: Sulu\Bundle\PageBundle\Controller\PageController::postTriggerAction
+        _controller: sulu_page.page_controller::postTriggerAction
         _format: json
 
 sulu_page.webspace.localization:
     type: rest
     name_prefix: sulu_page.
-    resource: Sulu\Bundle\PageBundle\Controller\WebspaceLocalizationController
+    resource: sulu_page.webspace_localization_controller
 
 sulu_page.smart_content:
     type: rest
     name_prefix: sulu_page.
-    resource: Sulu\Bundle\PageBundle\Controller\SmartContentItemController
+    resource: sulu_page.smart_content_item_controller
 
 sulu_page.webspace:
     type: rest
     name_prefix: sulu_page.
-    resource: Sulu\Bundle\PageBundle\Controller\WebspaceController
+    resource: sulu_page.webspace_controller
 
 sulu_page.teaser:
     type: rest

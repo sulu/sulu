@@ -46,5 +46,18 @@
             <tag name="jms_serializer.event_subscriber"/>
             <tag name="sulu.context" context="admin"/>
         </service>
+
+        <service id="sulu_website.analytics_controller"
+                 class="Sulu\Bundle\WebsiteBundle\Controller\AnalyticsController"
+                 public="true"
+        >
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="sulu_website.analytics.manager"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_website.http_cache.clearer"/>
+            <argument type="service" id="request_stack"/>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
     </services>
 </container>

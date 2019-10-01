@@ -11,20 +11,59 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\WebsiteBundle\Admin\WebsiteAdmin;
+use Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManagerInterface;
+use Sulu\Bundle\WebsiteBundle\Cache\CacheClearerInterface;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
-use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provides webspace analytics rest-endpoint.
  */
-class AnalyticsController extends RestController implements ClassResourceInterface, SecuredControllerInterface
+class AnalyticsController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
     const RESULT_KEY = 'analytics';
+
+    /**
+     * @var AnalyticsManagerInterface
+     */
+    private $analyticsManager;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var CacheClearerInterface
+     */
+    private $cacheClearer;
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        AnalyticsManagerInterface $analyticsManager,
+        EntityManagerInterface $entityManager,
+        CacheClearerInterface $cacheClearer,
+        RequestStack $requestStack
+    ) {
+        parent::__construct($viewHandler);
+        $this->analyticsManager = $analyticsManager;
+        $this->entityManager = $entityManager;
+        $this->cacheClearer = $cacheClearer;
+        $this->requestStack = $requestStack;
+    }
 
     /**
      * Returns webspace analytics by webspace key.
@@ -36,7 +75,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
      */
     public function cgetAction(Request $request, $webspace)
     {
-        $entities = $this->get('sulu_website.analytics.manager')->findAll($webspace);
+        $entities = $this->analyticsManager->findAll($webspace);
 
         $list = new CollectionRepresentation($entities, self::RESULT_KEY);
 
@@ -53,7 +92,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
      */
     public function getAction($webspace, $id)
     {
-        $entity = $this->get('sulu_website.analytics.manager')->find($id);
+        $entity = $this->analyticsManager->find($id);
 
         return $this->handleView($this->view($entity, 200));
     }
@@ -71,9 +110,9 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
         $data = $request->request->all();
         $data['content'] = $this->buildContent($data);
 
-        $entity = $this->get('sulu_website.analytics.manager')->create($webspace, $data);
-        $this->get('doctrine.orm.entity_manager')->flush();
-        $this->get('sulu_website.http_cache.clearer')->clear();
+        $entity = $this->analyticsManager->create($webspace, $data);
+        $this->entityManager->flush();
+        $this->cacheClearer->clear();
 
         return $this->handleView($this->view($entity, 200));
     }
@@ -92,9 +131,9 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
         $data = $request->request->all();
         $data['content'] = $this->buildContent($data);
 
-        $entity = $this->get('sulu_website.analytics.manager')->update($id, $data);
-        $this->get('doctrine.orm.entity_manager')->flush();
-        $this->get('sulu_website.http_cache.clearer')->clear();
+        $entity = $this->analyticsManager->update($id, $data);
+        $this->entityManager->flush();
+        $this->cacheClearer->clear();
 
         return $this->handleView($this->view($entity, 200));
     }
@@ -109,9 +148,9 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
      */
     public function deleteAction($webspace, $id)
     {
-        $this->get('sulu_website.analytics.manager')->remove($id);
-        $this->get('doctrine.orm.entity_manager')->flush();
-        $this->get('sulu_website.http_cache.clearer')->clear();
+        $this->analyticsManager->remove($id);
+        $this->entityManager->flush();
+        $this->cacheClearer->clear();
 
         return $this->handleView($this->view(null, 204));
     }
@@ -128,9 +167,9 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     {
         $ids = array_filter(explode(',', $request->get('ids', '')));
 
-        $this->get('sulu_website.analytics.manager')->removeMultiple($ids);
-        $this->get('doctrine.orm.entity_manager')->flush();
-        $this->get('sulu_website.http_cache.clearer')->clear();
+        $this->analyticsManager->removeMultiple($ids);
+        $this->entityManager->flush();
+        $this->cacheClearer->clear();
 
         return $this->handleView($this->view(null, 204));
     }
@@ -140,7 +179,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
      */
     public function getSecurityContext()
     {
-        $request = $this->container->get('request_stack')->getCurrentRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         return WebsiteAdmin::getAnalyticsSecurityContext($request->get('webspace'));
     }

@@ -28,11 +28,76 @@
 
     <services>
         <service
+            id="sulu_media.media_controller"
+            class="Sulu\Bundle\MediaBundle\Controller\MediaController"
+            public="true"
+        >
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="security.token_storage" on-invalid="null" />
+            <argument type="service" id="sulu_media.media_manager" />
+            <argument type="service" id="sulu_media.format_manager" />
+            <argument type="service" id="sulu_core.doctrine_rest_helper" />
+            <argument type="service" id="sulu_core.doctrine_list_builder_factory" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="sulu_media.storage" />
+            <argument type="service" id="sulu_media.collection_repository" />
+            <argument type="service" id="sulu_security.security_checker" />
+            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory" />
+            <argument>%sulu.model.media.class%</argument>
+            <argument>%sulu.model.collection.class%</argument>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service
+            id="sulu_media.media_preview_controller"
+            class="Sulu\Bundle\MediaBundle\Controller\MediaPreviewController"
+            public="true"
+        >
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="security.token_storage" on-invalid="null" />
+            <argument type="service" id="sulu_media.media_manager" />
+            <argument type="service" id="sulu_media.system_collections.manager" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service
+            id="sulu_media.media_format_controller"
+            class="Sulu\Bundle\MediaBundle\Controller\MediaFormatController"
+            public="true"
+        >
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="sulu_media.format_options_manager" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service
             id="sulu_media.media_redirect_controller"
             class="Sulu\Bundle\MediaBundle\Controller\MediaRedirectController"
             public="true"
         >
             <argument type="service" id="sulu_media.media_manager" />
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service
+            id="sulu_media.collection_controller"
+            class="Sulu\Bundle\MediaBundle\Controller\CollectionController"
+            public="true"
+        >
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="security.token_storage" on-invalid="null" />
+            <argument type="service" id="sulu_core.list_rest_helper" />
+            <argument type="service" id="sulu_security.security_checker" />
+            <argument type="service" id="translator" />
+            <argument type="service" id="sulu_media.system_collections.manager" />
+            <argument type="service" id="sulu_media.collection_manager" />
+            <argument>%sulu_media.collection.type.default%</argument>
 
             <tag name="sulu.context" context="admin"/>
         </service>
@@ -48,6 +113,18 @@
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="sulu_media.storage"/>
         </service>
+
+        <service
+            id="sulu_media.format_controller"
+            class="Sulu\Bundle\MediaBundle\Controller\FormatController"
+            public="true"
+        >
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="sulu_media.format_manager" />
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <service id="sulu_media.admin" class="%sulu_media.admin.class%">
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>

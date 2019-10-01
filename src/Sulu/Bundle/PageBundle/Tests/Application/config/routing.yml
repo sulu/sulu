@@ -7,11 +7,6 @@ sulu_page_api:
     resource: "@SuluPageBundle/Resources/config/routing_api.yml"
     prefix: /api
 
-sulu_page_version_api:
-    type: rest
-    resource: "@SuluPageBundle/Resources/config/routing_versioning_api.yml"
-    prefix: /api
-
 sulu_media:
     resource: "@SuluMediaBundle/Resources/config/routing.yml"
     prefix: /admin/media

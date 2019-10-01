@@ -12,15 +12,19 @@
 namespace Sulu\Bundle\PageBundle\Controller;
 
 use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Version;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
@@ -28,12 +32,46 @@ use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 /**
  * Handles the versions of pages.
  */
-class VersionController extends FOSRestController implements
+class VersionController extends AbstractRestController implements
     ClassResourceInterface,
     SecuredControllerInterface,
     SecuredObjectControllerInterface
 {
     use RequestParametersTrait;
+
+    /**
+     * @var ListRestHelperInterface
+     */
+    private $listRestHelper;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
+
+    /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
+    /**
+     * @var UserRepositoryInterface
+     */
+    private $userRepository;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        ListRestHelperInterface $listRestHelper,
+        UserRepositoryInterface $userRepository,
+        DocumentManagerInterface $documentManager,
+        RequestAnalyzerInterface $requestAnalyzer
+    ) {
+        parent::__construct($viewHandler);
+        $this->listRestHelper = $listRestHelper;
+        $this->userRepository = $userRepository;
+        $this->documentManager = $documentManager;
+        $this->requestAnalyzer = $requestAnalyzer;
+    }
 
     /**
      * Returns the versions for the page with the given UUID.
@@ -47,24 +85,23 @@ class VersionController extends FOSRestController implements
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
 
-        $document = $this->get('sulu_document_manager.document_manager')->find($id, $request->query->get('locale'));
+        $document = $this->documentManager->find($id, $request->query->get('locale'));
         $versions = array_reverse(array_filter($document->getVersions(), function($version) use ($locale) {
             /* @var Version $version */
             return $version->getLocale() === $locale;
         }));
         $total = count($versions);
 
-        $listRestHelper = $this->get('sulu_core.list_rest_helper');
-        $limit = $listRestHelper->getLimit();
+        $limit = $this->listRestHelper->getLimit();
 
-        $versions = array_slice($versions, $listRestHelper->getOffset(), $limit);
+        $versions = array_slice($versions, $this->listRestHelper->getOffset(), $limit);
 
         $userIds = array_unique(array_map(function($version) {
             /* @var Version $version */
             return $version->getAuthor();
         }, $versions));
 
-        $users = $this->get('sulu_security.user_repository')->findUsersById($userIds);
+        $users = $this->userRepository->findUsersById($userIds);
         $fullNamesByIds = [];
         foreach ($users as $user) {
             $fullNamesByIds[$user->getId()] = $user->getContact()->getFullName();
@@ -90,7 +127,7 @@ class VersionController extends FOSRestController implements
                 'locale' => $locale,
                 'webspace' => $request->get('webspace'),
             ],
-            $listRestHelper->getPage(),
+            $this->listRestHelper->getPage(),
             $limit,
             $total
         );
@@ -114,15 +151,15 @@ class VersionController extends FOSRestController implements
 
         switch ($action) {
             case 'restore':
-                $document = $this->getDocumentManager()->find($id, $locale);
-                $this->getDocumentManager()->restore(
+                $document = $this->documentManager->find($id, $locale);
+                $this->documentManager->restore(
                     $document,
                     $locale,
                     str_replace('_', '.', $version)
                 );
-                $this->getDocumentManager()->flush();
+                $this->documentManager->flush();
 
-                $data = $this->getDocumentManager()->find($id, $locale);
+                $data = $this->documentManager->find($id, $locale);
                 break;
         }
 
@@ -135,20 +172,11 @@ class VersionController extends FOSRestController implements
     }
 
     /**
-     * @return DocumentManagerInterface
-     */
-    protected function getDocumentManager()
-    {
-        return $this->get('sulu_document_manager.document_manager');
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getSecurityContext()
     {
-        $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer');
-        $webspace = $requestAnalyzer->getWebspace();
+        $webspace = $this->requestAnalyzer->getWebspace();
 
         if (!$webspace) {
             throw new MissingMandatoryParametersException('The webspace parameter is missing!');

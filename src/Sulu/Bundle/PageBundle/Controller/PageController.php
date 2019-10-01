@@ -13,17 +13,23 @@ namespace Sulu\Bundle\PageBundle\Controller;
 
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use PHPCR\ItemNotFoundException;
 use PHPCR\PropertyInterface;
 use Sulu\Bundle\PageBundle\Repository\NodeRepositoryInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Repository\Content;
+use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\Content\Repository\Mapping\MappingInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory;
+use Sulu\Component\Hash\RequestHashCheckerInterface;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingParameterChoiceException;
 use Sulu\Component\Rest\Exception\MissingParameterException;
@@ -31,14 +37,17 @@ use Sulu\Component\Rest\Exception\ParameterDataTypeException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
-use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class PageController extends RestController implements ClassResourceInterface
+class PageController extends AbstractRestController implements ClassResourceInterface
 {
     use RequestParametersTrait;
 
@@ -47,6 +56,83 @@ class PageController extends RestController implements ClassResourceInterface
     const WEBSPACE_NODES_ALL = 'all';
 
     protected static $relationName = 'pages';
+
+    /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
+
+    /**
+     * @var ContentMapperInterface
+     */
+    private $contentMapper;
+
+    /**
+     * @var ContentRepositoryInterface
+     */
+    private $contentRepository;
+
+    /**
+     * @var RequestHashCheckerInterface
+     */
+    private $requestHashChecker;
+
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
+     * @var SessionManagerInterface
+     */
+    private $sessionManager;
+
+    /**
+     * @var NodeRepositoryInterface
+     */
+    private $nodeRepository;
+
+    /**
+     * @var BaseMetadataFactory
+     */
+    private $metadataFactory;
+
+    /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        TokenStorageInterface $tokenStorage,
+        SecurityCheckerInterface $securityChecker,
+        DocumentManagerInterface $documentManager,
+        ContentMapperInterface $contentMapper,
+        ContentRepositoryInterface $contentRepository,
+        RequestHashCheckerInterface $requestHashChecker,
+        WebspaceManagerInterface $webspaceManager,
+        SessionManagerInterface $sessionManager,
+        NodeRepositoryInterface $nodeRepository,
+        BaseMetadataFactory $metadataFactory,
+        FormFactoryInterface $formFactory
+    ) {
+        parent::__construct($viewHandler, $tokenStorage);
+        $this->securityChecker = $securityChecker;
+        $this->documentManager = $documentManager;
+        $this->contentMapper = $contentMapper;
+        $this->contentRepository = $contentRepository;
+        $this->requestHashChecker = $requestHashChecker;
+        $this->webspaceManager = $webspaceManager;
+        $this->sessionManager = $sessionManager;
+        $this->nodeRepository = $nodeRepository;
+        $this->metadataFactory = $metadataFactory;
+        $this->formFactory = $formFactory;
+    }
 
     public function getAction(Request $request, string $id): Response
     {
@@ -59,7 +145,7 @@ class PageController extends RestController implements ClassResourceInterface
             $id,
             function($id) use ($locale, $ghostContent, $template, $request) {
                 try {
-                    $document = $this->getDocumentManager()->find(
+                    $document = $this->documentManager->find(
                         $id,
                         $locale,
                         [
@@ -68,7 +154,7 @@ class PageController extends RestController implements ClassResourceInterface
                         ]
                     );
 
-                    $this->get('sulu_security.security_checker')->checkPermission(
+                    $this->securityChecker->checkPermission(
                         $this->getSecurityCondition($request, $document),
                         'view'
                     );
@@ -103,80 +189,79 @@ class PageController extends RestController implements ClassResourceInterface
         $userId = $this->getUser()->getId();
 
         // prepare vars
-        $repository = $this->getRepository();
         $view = null;
         $data = null;
 
         try {
             switch ($action) {
                 case 'move':
-                    $data = $this->getDocumentManager()->find($id, $locale);
+                    $data = $this->documentManager->find($id, $locale);
 
-                    $this->get('sulu_security.security_checker')->checkPermission(
+                    $this->securityChecker->checkPermission(
                         $this->getSecurityCondition($request, $data),
                         'edit'
                     );
 
-                    $this->getDocumentManager()->move(
+                    $this->documentManager->move(
                         $data,
                         $this->getRequestParameter($request, 'destination', true)
                     );
-                    $this->getDocumentManager()->flush();
+                    $this->documentManager->flush();
                     break;
                 case 'copy':
-                    $document = $this->getDocumentManager()->find($id, $locale);
+                    $document = $this->documentManager->find($id, $locale);
 
-                    $this->get('sulu_security.security_checker')->checkPermission(
+                    $this->securityChecker->checkPermission(
                         $this->getSecurityCondition($request, $document),
                         'edit'
                     );
 
-                    $copiedPath = $this->getDocumentManager()->copy(
+                    $copiedPath = $this->documentManager->copy(
                         $document,
                         $this->getRequestParameter($request, 'destination', true)
                     );
-                    $this->getDocumentManager()->flush();
+                    $this->documentManager->flush();
 
-                    $data = $this->getDocumentManager()->find($copiedPath, $locale);
+                    $data = $this->documentManager->find($copiedPath, $locale);
                     break;
                 case 'order':
                     $position = (int) $this->getRequestParameter($request, 'position', true);
                     $webspace = $this->getWebspace($request);
 
                     // call repository method
-                    $data = $repository->orderAt($id, $position, $webspace, $locale, $userId);
+                    $data = $this->nodeRepository->orderAt($id, $position, $webspace, $locale, $userId);
                     break;
                 case 'copy-locale':
                     $destLocale = $this->getRequestParameter($request, 'dest', true);
                     $webspace = $this->getWebspace($request);
 
                     // call repository method
-                    $data = $repository->copyLocale($id, $userId, $webspace, $locale, explode(',', $destLocale));
+                    $data = $this->nodeRepository->copyLocale($id, $userId, $webspace, $locale, explode(',', $destLocale));
                     break;
                 case 'unpublish':
-                    $document = $this->getDocumentManager()->find($id, $locale);
+                    $document = $this->documentManager->find($id, $locale);
 
-                    $this->get('sulu_security.security_checker')->checkPermission(
+                    $this->securityChecker->checkPermission(
                         $this->getSecurityCondition($request, $document),
                         'live'
                     );
 
-                    $this->getDocumentManager()->unpublish($document, $locale);
-                    $this->getDocumentManager()->flush();
+                    $this->documentManager->unpublish($document, $locale);
+                    $this->documentManager->flush();
 
-                    $data = $this->getDocumentManager()->find($id, $locale);
+                    $data = $this->documentManager->find($id, $locale);
                     break;
                 case 'remove-draft':
                     $webspace = $this->getWebspace($request);
-                    $data = $this->getDocumentManager()->find($id, $locale);
+                    $data = $this->documentManager->find($id, $locale);
 
-                    $this->get('sulu_security.security_checker')->checkPermission(
+                    $this->securityChecker->checkPermission(
                         $this->getSecurityCondition($request, $data),
                         'live'
                     );
 
-                    $this->getDocumentManager()->removeDraft($data, $locale);
-                    $this->getDocumentManager()->flush();
+                    $this->documentManager->removeDraft($data, $locale);
+                    $this->documentManager->flush();
                     break;
                 default:
                     throw new RestException('Unrecognized action: ' . $action);
@@ -202,7 +287,7 @@ class PageController extends RestController implements ClassResourceInterface
         $locale = $this->getLocale($request);
         $action = $request->get('action');
 
-        $parentDocument = $this->getDocumentManager()->find(
+        $parentDocument = $this->documentManager->find(
             $this->getRequestParameter($request, 'parentId', true),
             $locale,
             [
@@ -211,19 +296,19 @@ class PageController extends RestController implements ClassResourceInterface
             ]
         );
 
-        $this->get('sulu_security.security_checker')->checkPermission(
+        $this->securityChecker->checkPermission(
             $this->getSecurityCondition($request, $parentDocument),
             'add'
         );
 
         $this->checkActionParameterSecurity($action, $request, $parentDocument);
 
-        $document = $this->getDocumentManager()->create($type);
-        $formType = $this->getMetadataFactory()->getMetadataForAlias($type)->getFormType();
+        $document = $this->documentManager->create($type);
+        $formType = $this->metadataFactory->getMetadataForAlias($type)->getFormType();
 
         $this->persistDocument($request, $formType, $document, $locale);
         $this->handleActionParameter($action, $document, $locale);
-        $this->getDocumentManager()->flush();
+        $this->documentManager->flush();
 
         $context = new Context();
         $context->setGroups(['defaultPage']);
@@ -236,7 +321,7 @@ class PageController extends RestController implements ClassResourceInterface
         $locale = $this->getLocale($request);
         $action = $request->get('action');
 
-        $document = $this->getDocumentManager()->find(
+        $document = $this->documentManager->find(
             $id,
             $locale,
             [
@@ -245,20 +330,20 @@ class PageController extends RestController implements ClassResourceInterface
             ]
         );
 
-        $this->get('sulu_security.security_checker')->checkPermission(
+        $this->securityChecker->checkPermission(
             $this->getSecurityCondition($request, $document),
             'edit'
         );
 
         $this->checkActionParameterSecurity($action, $request, $document);
 
-        $formType = $this->getMetadataFactory()->getMetadataForClass(get_class($document))->getFormType();
+        $formType = $this->metadataFactory->getMetadataForClass(get_class($document))->getFormType();
 
-        $this->get('sulu_hash.request_hash_checker')->checkHash($request, $document, $document->getUuid());
+        $this->requestHashChecker->checkHash($request, $document, $document->getUuid());
 
         $this->persistDocument($request, $formType, $document, $locale);
         $this->handleActionParameter($action, $document, $locale);
-        $this->getDocumentManager()->flush();
+        $this->documentManager->flush();
 
         $context = new Context();
         $context->setGroups(['defaultPage']);
@@ -274,7 +359,7 @@ class PageController extends RestController implements ClassResourceInterface
 
         if (!$force) {
             $references = array_filter(
-                $this->getRepository()->getReferences($id),
+                $this->nodeRepository->getReferences($id),
                 function(PropertyInterface $reference) {
                     return $reference->getParent()->isNodeType('sulu:page');
                 }
@@ -286,7 +371,7 @@ class PageController extends RestController implements ClassResourceInterface
                 ];
 
                 foreach ($references as $reference) {
-                    $content = $this->get('sulu.content.mapper')->load(
+                    $content = $this->contentMapper->load(
                         $reference->getParent()->getIdentifier(),
                         $webspace,
                         $locale,
@@ -304,15 +389,15 @@ class PageController extends RestController implements ClassResourceInterface
             $id,
             function($id) use ($request) {
                 try {
-                    $document = $this->getDocumentManager()->find($id);
+                    $document = $this->documentManager->find($id);
 
-                    $this->get('sulu_security.security_checker')->checkPermission(
+                    $this->securityChecker->checkPermission(
                             $this->getSecurityCondition($request, $document),
                             'delete'
                         );
 
-                    $this->getDocumentManager()->remove($document);
-                    $this->getDocumentManager()->flush();
+                    $this->documentManager->remove($document);
+                    $this->documentManager->flush();
                 } catch (DocumentNotFoundException $ex) {
                     throw new EntityNotFoundException('Content', $id);
                 }
@@ -377,7 +462,7 @@ class PageController extends RestController implements ClassResourceInterface
             throw new ParameterDataTypeException(get_class($this), 'webspace-nodes');
         }
 
-        $contentRepository = $this->get('sulu_page.content_repository');
+        $contentRepository = $this->contentRepository;
         $user = $this->getUser();
 
         $mapping = MappingBuilder::create()
@@ -423,7 +508,7 @@ class PageController extends RestController implements ClassResourceInterface
         $locale = $this->getLocale($request);
         $webspace = $this->getWebspace($request, false);
 
-        $result = $this->getRepository()->getNodesByIds(
+        $result = $this->nodeRepository->getNodesByIds(
             preg_split('/[,]/', $ids, -1, PREG_SPLIT_NO_EMPTY),
             $webspace,
             $locale
@@ -445,7 +530,7 @@ class PageController extends RestController implements ClassResourceInterface
         }
 
         try {
-            $contents = $this->get('sulu_page.content_repository')->findParentsWithSiblingsByUuid(
+            $contents = $this->contentRepository->findParentsWithSiblingsByUuid(
                 $id,
                 $locale,
                 $webspaceKey,
@@ -475,7 +560,7 @@ class PageController extends RestController implements ClassResourceInterface
             $data['parent'] = $request->query->get('parentId');
         }
 
-        $form = $this->createForm(
+        $form = $this->formFactory->create(
             $formType,
             $document,
             [
@@ -494,7 +579,7 @@ class PageController extends RestController implements ClassResourceInterface
             throw new InvalidFormException($form);
         }
 
-        $this->getDocumentManager()->persist(
+        $this->documentManager->persist(
             $document,
             $locale,
             [
@@ -508,7 +593,7 @@ class PageController extends RestController implements ClassResourceInterface
     {
         switch ($actionParameter) {
             case 'publish':
-                $this->getDocumentManager()->publish($document, $locale);
+                $this->documentManager->publish($document, $locale);
                 break;
         }
     }
@@ -526,7 +611,7 @@ class PageController extends RestController implements ClassResourceInterface
             return;
         }
 
-        $this->get('sulu_security.security_checker')->checkPermission(
+        $this->securityChecker->checkPermission(
             $this->getSecurityCondition($request, $document),
             $permission
         );
@@ -541,18 +626,15 @@ class PageController extends RestController implements ClassResourceInterface
         string $locale,
         UserInterface $user
     ) {
-        $webspaceManager = $this->get('sulu_core.webspace.webspace_manager');
-        $sessionManager = $this->get('sulu.phpcr.session');
-
         $paths = [];
         $webspaces = [];
         /** @var Webspace $webspace */
-        foreach ($webspaceManager->getWebspaceCollection() as $webspace) {
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             if (null === $webspace->getLocalization($locale)) {
                 continue;
             }
 
-            $paths[] = $sessionManager->getContentPath($webspace->getKey());
+            $paths[] = $this->sessionManager->getContentPath($webspace->getKey());
             $webspaces[$webspace->getKey()] = $webspace;
         }
 
@@ -569,11 +651,8 @@ class PageController extends RestController implements ClassResourceInterface
         string $locale,
         UserInterface $user
     ) {
-        $webspaceManager = $this->get('sulu_core.webspace.webspace_manager');
-        $sessionManager = $this->get('sulu.phpcr.session');
-
-        $webspace = $webspaceManager->findWebspaceByKey($webspaceKey);
-        $paths = [$sessionManager->getContentPath($webspace->getKey())];
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+        $paths = [$this->sessionManager->getContentPath($webspace->getKey())];
         $webspaces = [$webspace->getKey() => $webspace];
 
         return $this->getWebspaceNodesByPaths(
@@ -606,7 +685,7 @@ class PageController extends RestController implements ClassResourceInterface
             $webspaceKey = $firstContent->getWebspaceKey();
         }
 
-        $webspaceContents = $this->get('sulu_page.content_repository')->findByPaths(
+        $webspaceContents = $this->contentRepository->findByPaths(
             $paths,
             $locale,
             $mapping,
@@ -637,20 +716,5 @@ class PageController extends RestController implements ClassResourceInterface
             SecurityBehavior::class,
             $request->get('id')
         );
-    }
-
-    protected function getRepository(): NodeRepositoryInterface
-    {
-        return $this->get('sulu_page.node_repository');
-    }
-
-    protected function getDocumentManager(): DocumentManagerInterface
-    {
-        return $this->get('sulu_document_manager.document_manager');
-    }
-
-    protected function getMetadataFactory(): BaseMetadataFactory
-    {
-        return $this->get('sulu_document_manager.metadata_factory.base');
     }
 }

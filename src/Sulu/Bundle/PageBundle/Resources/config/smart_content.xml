@@ -59,5 +59,16 @@
             <tag name="sulu.content.type" alias="smart_content"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
+
+        <!-- controller -->
+        <service id="sulu_page.smart_content_item_controller"
+                 class="Sulu\Bundle\PageBundle\Controller\SmartContentItemController"
+                 public="true">
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="sulu_tag.tag_manager"/>
+            <argument type="service" id="sulu_page.smart_content.data_provider_pool"/>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
     </services>
 </container>

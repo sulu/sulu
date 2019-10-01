@@ -13,17 +13,20 @@ namespace Sulu\Bundle\CategoryBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Bundle\CategoryBundle\Category\KeywordManager;
+use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
+use Sulu\Bundle\CategoryBundle\Category\KeywordManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordIsMultipleReferencedException;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordNotUniqueException;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,7 +35,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Provides keywords for categories.
  */
-class KeywordController extends RestController implements ClassResourceInterface, SecuredControllerInterface
+class KeywordController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
     const FORCE_OVERWRITE = 'overwrite';
 
@@ -41,9 +44,71 @@ class KeywordController extends RestController implements ClassResourceInterface
     const FORCE_MERGE = 'merge';
 
     /**
+     * @var RestHelperInterface
+     */
+    private $restHelper;
+
+    /**
+     * @var DoctrineListBuilderFactory
+     */
+    private $listBuilderFactory;
+
+    /**
+     * @var FieldDescriptorFactoryInterface
+     */
+    private $fieldDescriptorFactory;
+
+    /**
+     * @var KeywordManagerInterface
+     */
+    private $keywordManager;
+
+    /**
+     * @var KeywordRepositoryInterface
+     */
+    private $keywordRepository;
+
+    /**
+     * @var CategoryRepositoryInterface
+     */
+    private $categoryRepository;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var string
+     */
+    private $keywordClass;
+
+    /**
      * {@inheritdoc}
      */
     protected static $entityKey = 'category_keywords';
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        RestHelperInterface $restHelper,
+        DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        KeywordManagerInterface $keywordManager,
+        KeywordRepositoryInterface $keywordRepository,
+        CategoryRepositoryInterface $categoryRepository,
+        EntityManagerInterface $entityManager,
+        string $keywordClass
+    ) {
+        parent::__construct($viewHandler);
+        $this->restHelper = $restHelper;
+        $this->listBuilderFactory = $listBuilderFactory;
+        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
+        $this->keywordManager = $keywordManager;
+        $this->keywordRepository = $keywordRepository;
+        $this->categoryRepository = $categoryRepository;
+        $this->entityManager = $entityManager;
+        $this->keywordClass = $keywordClass;
+    }
 
     /**
      * Returns list of keywords filtered by the category.
@@ -55,19 +120,13 @@ class KeywordController extends RestController implements ClassResourceInterface
      */
     public function cgetAction($categoryId, Request $request)
     {
-        /** @var RestHelperInterface $restHelper */
-        $restHelper = $this->get('sulu_core.doctrine_rest_helper');
-
-        /** @var DoctrineListBuilderFactory $factory */
-        $factory = $this->get('sulu_core.doctrine_list_builder_factory');
-
         /** @var CategoryInterface $category */
-        $category = $this->getCategoryRepository()->find($categoryId);
+        $category = $this->categoryRepository->find($categoryId);
 
-        $fieldDescriptor = $this->getFieldDescriptors();
+        $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('category_keywords');
 
-        $listBuilder = $factory->create($this->getParameter('sulu.model.keyword.class'));
-        $restHelper->initializeListBuilder($listBuilder, $fieldDescriptor);
+        $listBuilder = $this->listBuilderFactory->create($this->keywordClass);
+        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptor);
 
         $listBuilder->where($fieldDescriptor['locale'], $request->get('locale'));
         $listBuilder->where(
@@ -105,22 +164,22 @@ class KeywordController extends RestController implements ClassResourceInterface
     public function postAction($categoryId, Request $request)
     {
         /** @var KeywordInterface $keyword */
-        $keyword = $this->getKeywordRepository()->createNew();
-        $category = $this->getCategoryRepository()->findCategoryById($categoryId);
+        $keyword = $this->keywordRepository->createNew();
+        $category = $this->categoryRepository->findCategoryById($categoryId);
         $keyword->setKeyword($request->get('keyword'));
         $keyword->setLocale($request->get('locale'));
 
-        $keyword = $this->getKeywordManager()->save($keyword, $category);
+        $keyword = $this->keywordManager->save($keyword, $category);
 
-        $this->getEntityManager()->persist($keyword);
-        $this->getEntityManager()->flush();
+        $this->entityManager->persist($keyword);
+        $this->entityManager->flush();
 
         return $this->handleView($this->view($keyword));
     }
 
     public function getAction($categoryId, $id, Request $request)
     {
-        $keyword = $this->getKeywordRepository()->findById($id);
+        $keyword = $this->keywordRepository->findById($id);
 
         if (!$keyword) {
             return $this->handleView($this->view(null, 404));
@@ -135,20 +194,20 @@ class KeywordController extends RestController implements ClassResourceInterface
      */
     public function putAction($categoryId, $id, Request $request)
     {
-        $keyword = $this->getKeywordRepository()->findById($id);
+        $keyword = $this->keywordRepository->findById($id);
 
         if (!$keyword) {
             return $this->handleView($this->view(null, 404));
         }
 
         $force = $request->get('force');
-        $category = $this->getCategoryRepository()->findCategoryById($categoryId);
+        $category = $this->categoryRepository->findCategoryById($categoryId);
         $keyword->setKeyword($request->get('keyword'));
 
-        $keyword = $this->getKeywordManager()->save($keyword, $category, $force);
+        $keyword = $this->keywordManager->save($keyword, $category, $force);
 
-        $this->getEntityManager()->persist($keyword);
-        $this->getEntityManager()->flush();
+        $this->entityManager->persist($keyword);
+        $this->entityManager->flush();
 
         return $this->handleView($this->view($keyword));
     }
@@ -163,11 +222,11 @@ class KeywordController extends RestController implements ClassResourceInterface
      */
     public function deleteAction($categoryId, $id)
     {
-        $keyword = $this->getKeywordRepository()->findById($id);
-        $category = $this->getCategoryRepository()->findCategoryById($categoryId);
-        $this->getKeywordManager()->delete($keyword, $category);
+        $keyword = $this->keywordRepository->findById($id);
+        $category = $this->categoryRepository->findCategoryById($categoryId);
+        $this->keywordManager->delete($keyword, $category);
 
-        $this->getEntityManager()->flush();
+        $this->entityManager->flush();
 
         return $this->handleView($this->view());
     }
@@ -182,60 +241,17 @@ class KeywordController extends RestController implements ClassResourceInterface
      */
     public function cdeleteAction($categoryId, Request $request)
     {
-        $category = $this->getCategoryRepository()->findCategoryById($categoryId);
+        $category = $this->categoryRepository->findCategoryById($categoryId);
 
         $ids = array_filter(explode(',', $request->get('ids')));
         foreach ($ids as $id) {
-            $keyword = $this->getKeywordRepository()->findById($id);
-            $this->getKeywordManager()->delete($keyword, $category);
+            $keyword = $this->keywordRepository->findById($id);
+            $this->keywordManager->delete($keyword, $category);
         }
 
-        $this->getEntityManager()->flush();
+        $this->entityManager->flush();
 
         return $this->handleView($this->view());
-    }
-
-    /**
-     * @return KeywordManager
-     */
-    private function getKeywordManager()
-    {
-        return $this->get('sulu_category.keyword_manager');
-    }
-
-    /**
-     * @return KeywordRepositoryInterface
-     */
-    private function getKeywordRepository()
-    {
-        return $this->get('sulu.repository.keyword');
-    }
-
-    /**
-     * @return CategoryRepositoryInterface
-     */
-    private function getCategoryRepository()
-    {
-        return $this->get('sulu.repository.category');
-    }
-
-    /**
-     * @return EntityManagerInterface
-     */
-    private function getEntityManager()
-    {
-        return $this->get('doctrine.orm.entity_manager');
-    }
-
-    /**
-     * Returns field descriptor for keyword.
-     *
-     * @return FieldDescriptorInterface[]
-     */
-    public function getFieldDescriptors()
-    {
-        return $this->get('sulu_core.list_builder.field_descriptor_factory')
-        ->getFieldDescriptors('category_keywords');
     }
 
     /**
@@ -243,6 +259,6 @@ class KeywordController extends RestController implements ClassResourceInterface
      */
     public function getSecurityContext()
     {
-        return 'sulu.settings.categories';
+        return CategoryAdmin::SECURITY_CONTEXT;
     }
 }

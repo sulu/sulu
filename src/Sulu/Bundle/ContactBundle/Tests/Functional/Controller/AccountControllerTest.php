@@ -1377,6 +1377,7 @@ class AccountControllerTest extends SuluTestCase
         // check if contacts are still there
         $client->request('GET', '/api/contacts?flat=true');
         $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals(2, $response->total);
     }
 

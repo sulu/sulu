@@ -61,5 +61,27 @@
             <argument type="service" id="sulu_custom_urls.manager"/>
             <tag name="sulu.webspace.url_provider"/>
         </service>
+
+        <service id="sulu_custom_urls.custom_url_controller"
+                 class="Sulu\Bundle\CustomUrlBundle\Controller\CustomUrlController"
+                 public="true">
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="sulu_custom_urls.manager"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="request_stack"/>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_custom_urls.custom_url_route_controller"
+                 class="Sulu\Bundle\CustomUrlBundle\Controller\CustomUrlRouteController"
+                 public="true">
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="sulu_custom_urls.manager"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="request_stack"/>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
     </services>
 </container>

@@ -50,5 +50,36 @@
                  class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">
             <tag name="sulu_website.reference_store" alias="category"/>
         </service>
+
+        <service id="sulu_category.category_controller"
+                 class="Sulu\Bundle\CategoryBundle\Controller\CategoryController"
+                 public="true">
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="sulu.repository.category"/>
+            <argument type="service" id="translator"/>
+            <argument type="service" id="sulu_core.doctrine_rest_helper"/>
+            <argument type="service" id="sulu_core.doctrine_list_builder_factory"/>
+            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
+            <argument type="service" id="sulu_category.category_manager"/>
+            <argument>%sulu.model.category.class%</argument>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_category.keyword_controller"
+                 class="Sulu\Bundle\CategoryBundle\Controller\KeywordController"
+                 public="true">
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="sulu_core.doctrine_rest_helper"/>
+            <argument type="service" id="sulu_core.doctrine_list_builder_factory"/>
+            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
+            <argument type="service" id="sulu_category.keyword_manager"/>
+            <argument type="service" id="sulu.repository.keyword"/>
+            <argument type="service" id="sulu.repository.category"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument>%sulu.model.keyword.class%</argument>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
     </services>
 </container>

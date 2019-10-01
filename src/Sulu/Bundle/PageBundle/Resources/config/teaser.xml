@@ -46,7 +46,10 @@
             class="Sulu\Bundle\PageBundle\Controller\TeaserController"
             public="true"
         >
+            <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="sulu_page.teaser.manager"/>
+
+            <tag name="sulu.context" context="admin"/>
         </service>
     </services>
 </container>

@@ -12,14 +12,30 @@
 namespace Sulu\Bundle\MediaBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
-use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 
-class FormatController extends RestController implements ClassResourceInterface
+class FormatController extends AbstractRestController implements ClassResourceInterface
 {
     use RequestParametersTrait;
+
+    /**
+     * @var FormatManagerInterface
+     */
+    private $formatManager;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        FormatManagerInterface $formatManager
+    ) {
+        parent::__construct($viewHandler);
+
+        $this->formatManager = $formatManager;
+    }
 
     public function cgetAction(Request $request)
     {
@@ -27,7 +43,7 @@ class FormatController extends RestController implements ClassResourceInterface
 
         return $this->handleView($this->view(
             new CollectionRepresentation(
-                array_values($this->get('sulu_media.format_manager')->getFormatDefinitions($locale)),
+                array_values($this->formatManager->getFormatDefinitions($locale)),
                 'formats'
             )
         ));

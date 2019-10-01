@@ -14,6 +14,7 @@ namespace Sulu\Bundle\PageBundle;
 use Sulu\Bundle\PageBundle\DependencyInjection\Compiler\ContentExportCompilerPass;
 use Sulu\Bundle\PageBundle\DependencyInjection\Compiler\SmartContentDataProviderCompilerPass;
 use Sulu\Bundle\PageBundle\DependencyInjection\Compiler\StructureExtensionCompilerPass;
+use Sulu\Bundle\PageBundle\DependencyInjection\Compiler\VersioningCompilerPass;
 use Sulu\Bundle\PageBundle\DependencyInjection\Compiler\WebspacesPass;
 use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -29,6 +30,7 @@ class SuluPageBundle extends Bundle
         $container->addCompilerPass(new SmartContentDataProviderCompilerPass());
         $container->addCompilerPass(new WebspacesPass());
         $container->addCompilerPass(new StructureExtensionCompilerPass());
+        $container->addCompilerPass(new VersioningCompilerPass());
         $container->addCompilerPass(
             new TaggedServiceCollectorCompilerPass(
                 'sulu_page.teaser.provider_pool',

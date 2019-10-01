@@ -11,19 +11,41 @@
 
 namespace Sulu\Bundle\PageBundle\Controller;
 
+use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\RequestParametersTrait;
-use Sulu\Component\Rest\RestController;
-use Sulu\Component\SmartContent\DataProviderInterface;
+use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Sulu\Component\SmartContent\Rest\ItemCollectionRepresentation;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides results for smart-content filters.
  */
-class SmartContentItemController extends RestController
+class SmartContentItemController extends AbstractRestController
 {
     use RequestParametersTrait;
+
+    /**
+     * @var TagManagerInterface
+     */
+    private $tagManager;
+
+    /**
+     * @var DataProviderPoolInterface
+     */
+    private $dataProviderPool;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        TagManagerInterface $tagManager,
+        DataProviderPoolInterface $dataProviderPool
+    ) {
+        parent::__construct($viewHandler);
+        $this->tagManager = $tagManager;
+        $this->dataProviderPool = $dataProviderPool;
+    }
 
     /**
      * Resolves filter for smart-content UI.
@@ -58,14 +80,11 @@ class SmartContentItemController extends RestController
 
         // resolve tags if they exists in filters
         if (isset($filters['tags'])) {
-            $filters['tags'] = $this->get('sulu_tag.tag_manager')->resolveTagNames($filters['tags']);
+            $filters['tags'] = $this->tagManager->resolveTagNames($filters['tags']);
         }
 
         // prepare provider
-        $dataProviderPool = $this->get('sulu_page.smart_content.data_provider_pool');
-
-        /** @var DataProviderInterface $provider */
-        $provider = $dataProviderPool->get($providerAlias);
+        $provider = $this->dataProviderPool->get($providerAlias);
 
         $params = array_merge(
             $provider->getDefaultPropertyParameter(),

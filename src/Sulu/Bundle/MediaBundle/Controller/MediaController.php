@@ -11,21 +11,28 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
+use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -35,6 +42,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Makes media available through a REST API.
@@ -52,6 +60,91 @@ class MediaController extends AbstractMediaController implements
     protected static $entityKey = 'media';
 
     /**
+     * @var MediaManagerInterface
+     */
+    private $mediaManager;
+
+    /**
+     * @var FormatManagerInterface
+     */
+    private $formatManager;
+
+    /**
+     * @var RestHelperInterface
+     */
+    private $restHelper;
+
+    /**
+     * @var DoctrineListBuilderFactoryInterface
+     */
+    private $doctrineListBuilderFactory;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var StorageInterface
+     */
+    private $storage;
+
+    /**
+     * @var CollectionRepositoryInterface
+     */
+    private $collectionRepository;
+
+    /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
+
+    /**
+     * @var FieldDescriptorFactoryInterface
+     */
+    private $fieldDescriptorFactory;
+
+    /**
+     * @var string
+     */
+    private $mediaClass;
+
+    /**
+     * @var string
+     */
+    private $collectionClass;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        TokenStorageInterface $tokenStorage,
+        MediaManagerInterface $mediaManager,
+        FormatManagerInterface $formatManager,
+        RestHelperInterface $restHelper,
+        DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
+        EntityManagerInterface $entityManager,
+        StorageInterface $storage,
+        CollectionRepositoryInterface $collectionRepository,
+        SecurityCheckerInterface $securityChecker,
+        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        string $mediaClass,
+        string $collectionClass
+    ) {
+        parent::__construct($viewHandler, $tokenStorage);
+
+        $this->mediaManager = $mediaManager;
+        $this->formatManager = $formatManager;
+        $this->restHelper = $restHelper;
+        $this->doctrineListBuilderFactory = $doctrineListBuilderFactory;
+        $this->entityManager = $entityManager;
+        $this->storage = $storage;
+        $this->collectionRepository = $collectionRepository;
+        $this->securityChecker = $securityChecker;
+        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
+        $this->mediaClass = $mediaClass;
+        $this->collectionClass = $collectionClass;
+    }
+
+    /**
      * Shows a single media with the given id.
      *
      * @param $id
@@ -63,21 +156,20 @@ class MediaController extends AbstractMediaController implements
     {
         try {
             $locale = $this->getRequestParameter($request, 'locale', true);
-            $mediaManager = $this->getMediaManager();
             $view = $this->responseGetById(
                 $id,
-                function($id) use ($locale, $mediaManager) {
-                    $media = $mediaManager->getById($id, $locale);
+                function($id) use ($locale) {
+                    $media = $this->mediaManager->getById($id, $locale);
                     $collection = $media->getEntity()->getCollection();
 
                     if (SystemCollectionManagerInterface::COLLECTION_TYPE === $collection->getType()->getKey()) {
-                        $this->getSecurityChecker()->checkPermission(
+                        $this->securityChecker->checkPermission(
                             'sulu.media.system_collections',
                             PermissionTypes::VIEW
                         );
                     }
 
-                    $this->getSecurityChecker()->checkPermission(
+                    $this->securityChecker->checkPermission(
                         new SecurityCondition(
                             $this->getSecurityContext(),
                             $locale,
@@ -109,7 +201,7 @@ class MediaController extends AbstractMediaController implements
     public function cgetAction(Request $request)
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
-        $fieldDescriptors = $this->getFieldDescriptors($locale, false);
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('media');
         $types = array_filter(explode(',', $request->get('types')));
         $listBuilder = $this->getListBuilder($request, $fieldDescriptors, $types);
         $listBuilder->setParameter('locale', $locale);
@@ -117,7 +209,7 @@ class MediaController extends AbstractMediaController implements
         $count = $listBuilder->count();
 
         for ($i = 0, $length = count($listResponse); $i < $length; ++$i) {
-            $format = $this->getFormatManager()->getFormats(
+            $format = $this->formatManager->getFormats(
                 $listResponse[$i]['id'],
                 $listResponse[$i]['name'],
                 $listResponse[$i]['version'],
@@ -129,7 +221,7 @@ class MediaController extends AbstractMediaController implements
                 $listResponse[$i]['thumbnails'] = $format;
             }
 
-            $listResponse[$i]['url'] = $this->getMediaManager()->getUrl(
+            $listResponse[$i]['url'] = $this->mediaManager->getUrl(
                 $listResponse[$i]['id'],
                 $listResponse[$i]['name'],
                 $listResponse[$i]['version']
@@ -172,10 +264,8 @@ class MediaController extends AbstractMediaController implements
      */
     private function getListBuilder(Request $request, array $fieldDescriptors, $types)
     {
-        $restHelper = $this->get('sulu_core.doctrine_rest_helper');
-        $factory = $this->get('sulu_core.doctrine_list_builder_factory');
-        $listBuilder = $factory->create($this->getParameter('sulu.model.media.class'));
-        $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+        $listBuilder = $this->doctrineListBuilderFactory->create($this->mediaClass);
+        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         // default sort by created
         if (!$request->get('sortBy')) {
@@ -184,9 +274,9 @@ class MediaController extends AbstractMediaController implements
 
         $collectionId = $request->get('collection');
         if ($collectionId) {
-            $collectionType = $this->getCollectionRepository()->findCollectionTypeById($collectionId);
+            $collectionType = $this->collectionRepository->findCollectionTypeById($collectionId);
             if (SystemCollectionManagerInterface::COLLECTION_TYPE === $collectionType) {
-                $this->getSecurityChecker()->checkPermission(
+                $this->securityChecker->checkPermission(
                     'sulu.media.system_collections',
                     PermissionTypes::VIEW
                 );
@@ -198,7 +288,7 @@ class MediaController extends AbstractMediaController implements
             $listBuilder->setPermissionCheck(
                 $this->getUser(),
                 PermissionTypes::VIEW,
-                $this->getParameter('sulu.model.collection.class')
+                $this->collectionClass
             );
         }
 
@@ -207,8 +297,8 @@ class MediaController extends AbstractMediaController implements
             $listBuilder->in($fieldDescriptors['type'], $types);
         }
 
-        if (!$this->getSecurityChecker()->hasPermission('sulu.media.system_collections', PermissionTypes::VIEW)) {
-            $systemCollection = $this->getCollectionRepository()
+        if (!$this->securityChecker->hasPermission('sulu.media.system_collections', PermissionTypes::VIEW)) {
+            $systemCollection = $this->collectionRepository
                 ->findCollectionByKey(SystemCollectionManagerInterface::COLLECTION_KEY);
 
             $lftExpression = $listBuilder->createWhereExpression(
@@ -283,11 +373,9 @@ class MediaController extends AbstractMediaController implements
     {
         $delete = function($id) {
             try {
-                $this->getMediaManager()->delete($id, true);
+                $this->mediaManager->delete($id, true);
             } catch (MediaNotFoundException $e) {
-                $entityName = $this->getParameter('sulu.model.media.class');
-
-                throw new EntityNotFoundException($entityName, $id); // will throw 404 Entity not found
+                throw new EntityNotFoundException($this->mediaClass, $id); // will throw 404 Entity not found
             } catch (MediaException $e) {
                 throw new RestException($e->getMessage(), $e->getCode()); // will throw 400 Bad Request
             }
@@ -308,8 +396,7 @@ class MediaController extends AbstractMediaController implements
     public function deleteVersionAction(Request $request, $id, $version)
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
-        $mediaManager = $this->getMediaManager();
-        $media = $mediaManager->getById($id, $locale);
+        $media = $this->mediaManager->getById($id, $locale);
 
         if ($media->getVersion() === (int) $version) {
             throw new BadRequestHttpException('Can\'t delete active version of a media.');
@@ -333,11 +420,10 @@ class MediaController extends AbstractMediaController implements
             ));
         }
 
-        $entityManager = $this->get('doctrine.orm.entity_manager');
-        $entityManager->remove($currentFileVersion);
-        $entityManager->flush();
+        $this->entityManager->remove($currentFileVersion);
+        $this->entityManager->flush();
         // After successfully delete in the database remove file from storage
-        $this->get('sulu_media.storage')->remove($currentFileVersion->getStorageOptions());
+        $this->storage->remove($currentFileVersion->getStorageOptions());
 
         return new Response('', 204);
     }
@@ -385,9 +471,8 @@ class MediaController extends AbstractMediaController implements
         try {
             $locale = $this->getRequestParameter($request, 'locale', true);
             $destination = $this->getRequestParameter($request, 'destination', true);
-            $mediaManager = $this->getMediaManager();
 
-            $media = $mediaManager->move(
+            $media = $this->mediaManager->move(
                 $id,
                 $locale,
                 $destination
@@ -412,11 +497,10 @@ class MediaController extends AbstractMediaController implements
     protected function saveEntity($id, Request $request)
     {
         try {
-            $mediaManager = $this->getMediaManager();
             $data = $this->getData($request, null === $id);
             $data['id'] = $id;
             $uploadedFile = $this->getUploadedFile($request, 'fileVersion');
-            $media = $mediaManager->save($uploadedFile, $data, $this->getUser()->getId());
+            $media = $this->mediaManager->save($uploadedFile, $data, $this->getUser()->getId());
 
             $view = $this->view($media, 200);
         } catch (MediaNotFoundException $e) {
@@ -457,43 +541,5 @@ class MediaController extends AbstractMediaController implements
     public function getSecuredObjectId(Request $request)
     {
         return $request->get('collection');
-    }
-
-    /**
-     * @return CollectionManagerInterface
-     */
-    protected function getCollectionManager()
-    {
-        return $this->get('sulu_media.collection_manager');
-    }
-
-    /**
-     * @return CollectionRepositoryInterface
-     */
-    protected function getCollectionRepository()
-    {
-        return $this->get('sulu_media.collection_repository');
-    }
-
-    /**
-     * @return SecurityCheckerInterface
-     */
-    protected function getSecurityChecker()
-    {
-        return $this->get('sulu_security.security_checker');
-    }
-
-    /**
-     * Returns field-descriptors for media.
-     *
-     * @param string $locale
-     * @param bool $all
-     *
-     * @return FieldDescriptorInterface[]
-     */
-    protected function getFieldDescriptors($locale, $all = true)
-    {
-        return $this->get('sulu_core.list_builder.field_descriptor_factory')
-            ->getFieldDescriptors('media');
     }
 }

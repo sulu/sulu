@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Api\RootCollection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
@@ -19,24 +20,27 @@ use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
-use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Makes collections available through a REST API.
  */
-class CollectionController extends RestController implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
+class CollectionController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
 {
     use RequestParametersTrait;
 
@@ -51,6 +55,56 @@ class CollectionController extends RestController implements ClassResourceInterf
     protected static $entityKey = 'collections';
 
     /**
+     * @var ListRestHelperInterface
+     */
+    private $listRestHelper;
+
+    /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var SystemCollectionManagerInterface
+     */
+    private $systemCollectionManager;
+
+    /**
+     * @var CollectionManagerInterface
+     */
+    private $collectionManager;
+
+    /**
+     * @var array
+     */
+    private $defaultCollectionType;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        TokenStorageInterface $tokenStorage,
+        ListRestHelperInterface $listRestHelper,
+        SecurityCheckerInterface $securityChecker,
+        TranslatorInterface $translator,
+        SystemCollectionManagerInterface $systemCollectionManager,
+        CollectionManagerInterface $collectionManager,
+        array $defaultCollectionType
+    ) {
+        parent::__construct($viewHandler, $tokenStorage);
+
+        $this->listRestHelper = $listRestHelper;
+        $this->securityChecker = $securityChecker;
+        $this->translator = $translator;
+        $this->systemCollectionManager = $systemCollectionManager;
+        $this->collectionManager = $collectionManager;
+        $this->defaultCollectionType = $defaultCollectionType;
+    }
+
+    /**
      * Shows a single collection with the given id.
      *
      * @param $id
@@ -61,7 +115,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     public function getAction($id, Request $request)
     {
         if ($this->getBooleanRequestParameter($request, 'tree', false, false)) {
-            $collections = $this->getCollectionManager()->getTreeById(
+            $collections = $this->collectionManager->getTreeById(
                 $id,
                 $this->getRequestParameter($request, 'locale', true)
             );
@@ -78,13 +132,11 @@ class CollectionController extends RestController implements ClassResourceInterf
             $depth = intval($request->get('depth', 0));
             $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
             $children = $this->getBooleanRequestParameter($request, 'children', false, false);
-            $collectionManager = $this->getCollectionManager();
 
             // filter children
-            $listRestHelper = $this->get('sulu_core.list_rest_helper');
             $limit = $request->get('limit', null);
             $offset = $this->getOffset($request, $limit);
-            $search = $listRestHelper->getSearchPattern();
+            $search = $this->listRestHelper->getSearchPattern();
             $sortBy = $request->get('sortBy');
             $sortOrder = $request->get('sortOrder', 'ASC');
 
@@ -96,8 +148,8 @@ class CollectionController extends RestController implements ClassResourceInterf
 
             $view = $this->responseGetById(
                 $id,
-                function($id) use ($locale, $collectionManager, $depth, $breadcrumb, $filter, $sortBy, $sortOrder, $children) {
-                    $collection = $collectionManager->getById(
+                function($id) use ($locale, $depth, $breadcrumb, $filter, $sortBy, $sortOrder, $children) {
+                    $collection = $this->collectionManager->getById(
                         $id,
                         $locale,
                         $depth,
@@ -108,7 +160,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                     );
 
                     if (SystemCollectionManagerInterface::COLLECTION_TYPE === $collection->getType()->getKey()) {
-                        $this->get('sulu_security.security_checker')->checkPermission(
+                        $this->securityChecker->checkPermission(
                             'sulu.media.system_collections',
                             PermissionTypes::VIEW
                         );
@@ -136,20 +188,15 @@ class CollectionController extends RestController implements ClassResourceInterf
     public function cgetAction(Request $request)
     {
         try {
-            /** @var ListRestHelperInterface $listRestHelper */
-            $listRestHelper = $this->get('sulu_core.list_rest_helper');
-            $securityChecker = $this->get('sulu_security.security_checker');
-
             $flat = $this->getBooleanRequestParameter($request, 'flat', false);
             $depth = $request->get('depth', 0);
             $parentId = $request->get('parentId', null);
             $limit = $request->get('limit', null);
             $offset = $this->getOffset($request, $limit);
-            $search = $listRestHelper->getSearchPattern();
+            $search = $this->listRestHelper->getSearchPattern();
             $sortBy = $request->get('sortBy');
             $sortOrder = $request->get('sortOrder', 'ASC');
             $includeRoot = $this->getBooleanRequestParameter($request, 'includeRoot', false, false);
-            $collectionManager = $this->getCollectionManager();
 
             if ('root' === $parentId) {
                 $includeRoot = false;
@@ -157,7 +204,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             }
 
             if ($flat) {
-                $collections = $collectionManager->get(
+                $collections = $this->collectionManager->get(
                     $this->getRequestParameter($request, 'locale', true),
                     [
                         'depth' => $depth,
@@ -168,35 +215,35 @@ class CollectionController extends RestController implements ClassResourceInterf
                     null !== $sortBy ? [$sortBy => $sortOrder] : []
                 );
             } else {
-                $collections = $collectionManager->getTree(
+                $collections = $this->collectionManager->getTree(
                     $this->getRequestParameter($request, 'locale', true),
                     $offset,
                     $limit,
                     $search,
                     $depth,
                     null !== $sortBy ? [$sortBy => $sortOrder] : [],
-                    $securityChecker->hasPermission('sulu.media.system_collections', 'view')
+                    $this->securityChecker->hasPermission('sulu.media.system_collections', 'view')
                 );
             }
 
             if ($includeRoot && !$parentId) {
                 $collections = [
                     new RootCollection(
-                        $this->get('translator')->trans('sulu_media.all_collections', [], 'admin'),
+                        $this->translator->trans('sulu_media.all_collections', [], 'admin'),
                         $collections
                     ),
                 ];
             }
 
-            $all = $collectionManager->getCount();
+            $all = $this->collectionManager->getCount();
 
             $list = new ListRepresentation(
                 $collections,
                 self::$entityKey,
                 'sulu_media.get_collections',
                 $request->query->all(),
-                $listRestHelper->getPage(),
-                $listRestHelper->getLimit(),
+                $this->listRestHelper->getPage(),
+                $this->listRestHelper->getLimit(),
                 $all
             );
 
@@ -248,8 +295,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     {
         $delete = function($id) {
             try {
-                $collectionManager = $this->getCollectionManager();
-                $collectionManager->delete($id);
+                $this->collectionManager->delete($id);
             } catch (CollectionNotFoundException $cnf) {
                 throw new EntityNotFoundException(self::$entityName, $id); // will throw 404 Entity not found
             } catch (MediaException $me) {
@@ -301,7 +347,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     {
         $destinationId = $this->getRequestParameter($request, 'destination');
         $locale = $this->getRequestParameter($request, 'locale', true);
-        $collection = $this->getCollectionManager()->move($id, $locale, $destinationId);
+        $collection = $this->collectionManager->move($id, $locale, $destinationId);
         $view = $this->view($collection);
 
         return $this->handleView($view);
@@ -316,7 +362,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     {
         return [
             'style' => $request->get('style'),
-            'type' => $request->get('type', $this->container->getParameter('sulu_media.collection.type.default')),
+            'type' => $request->get('type', $this->defaultCollectionType),
             'parent' => $request->get('parent'),
             'locale' => $this->getRequestParameter($request, 'locale', true),
             'title' => $request->get('title'),
@@ -336,24 +382,22 @@ class CollectionController extends RestController implements ClassResourceInterf
      */
     protected function saveEntity($id, Request $request)
     {
-        $systemCollectionManager = $this->get('sulu_media.system_collections.manager');
         $parent = $request->get('parent');
         $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
 
-        if ((null !== $id && $systemCollectionManager->isSystemCollection(intval($id))) ||
-            (null !== $parent && $systemCollectionManager->isSystemCollection(intval($parent)))
+        if ((null !== $id && $this->systemCollectionManager->isSystemCollection(intval($id))) ||
+            (null !== $parent && $this->systemCollectionManager->isSystemCollection(intval($parent)))
         ) {
             throw new AccessDeniedException('Permission "update" or "create" is not granted for system collections');
         }
 
         try {
-            $collectionManager = $this->getCollectionManager();
             $data = $this->getData($request);
             $data['id'] = $id;
 
             $data['locale'] = $this->getRequestParameter($request, 'locale', true);
 
-            $collection = $collectionManager->save($data, $this->getUser()->getId(), $breadcrumb);
+            $collection = $this->collectionManager->save($data, $this->getUser()->getId(), $breadcrumb);
 
             $view = $this->view($collection, 200);
         } catch (CollectionNotFoundException $e) {
@@ -363,14 +407,6 @@ class CollectionController extends RestController implements ClassResourceInterf
         }
 
         return $this->handleView($view);
-    }
-
-    /**
-     * @return CollectionManagerInterface
-     */
-    protected function getCollectionManager()
-    {
-        return $this->get('sulu_media.collection_manager');
     }
 
     /**

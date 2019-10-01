@@ -13,29 +13,35 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Bundle\ContactBundle\Contact\ContactManager;
+use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
 use Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Makes contacts available through a REST API.
  */
-class ContactController extends RestController implements ClassResourceInterface, SecuredControllerInterface
+class ContactController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
     /**
      * {@inheritdoc}
@@ -75,11 +81,80 @@ class ContactController extends RestController implements ClassResourceInterface
     protected $accountContactFieldDescriptors;
 
     /**
-     * @return RestHelperInterface
+     * @var RestHelperInterface
      */
-    protected function getRestHelper()
-    {
-        return $this->get('sulu_core.doctrine_rest_helper');
+    private $restHelper;
+
+    /**
+     * @var FieldDescriptorFactoryInterface
+     */
+    private $fieldDescriptorFactory;
+
+    /**
+     * @var DoctrineListBuilderFactoryInterface
+     */
+    private $listBuilderFactory;
+
+    /**
+     * @var ContactManagerInterface
+     */
+    private $contactManager;
+
+    /**
+     * @var ContactRepositoryInterface
+     */
+    private $contactRepository;
+
+    /**
+     * @var IndexComparatorInterface
+     */
+    private $indexComparator;
+
+    /**
+     * @var UserRepositoryInterface
+     */
+    private $userRepository;
+
+    /**
+     * @var MediaManagerInterface
+     */
+    private $mediaManager;
+
+    /**
+     * @var string
+     */
+    private $contactClass;
+
+    /**
+     * @var string
+     */
+    private $suluSecuritySystem;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        TokenStorageInterface $tokenStorage,
+        RestHelperInterface $restHelper,
+        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        ContactManagerInterface $contactManager,
+        ContactRepositoryInterface $contactRepository,
+        MediaManagerInterface $mediaManager,
+        UserRepositoryInterface $userRepository,
+        IndexComparatorInterface $indexComparator,
+        string $contactClass,
+        string $suluSecuritySystem
+    ) {
+        parent::__construct($viewHandler, $tokenStorage);
+        $this->restHelper = $restHelper;
+        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
+        $this->listBuilderFactory = $listBuilderFactory;
+        $this->contactManager = $contactManager;
+        $this->contactRepository = $contactRepository;
+        $this->mediaManager = $mediaManager;
+        $this->userRepository = $userRepository;
+        $this->indexComparator = $indexComparator;
+        $this->contactClass = $contactClass;
+        $this->suluSecuritySystem = $suluSecuritySystem;
     }
 
     protected function getFieldDescriptors()
@@ -102,8 +177,7 @@ class ContactController extends RestController implements ClassResourceInterface
 
     private function initFieldDescriptors()
     {
-        $this->fieldDescriptors = $this->get('sulu_core.list_builder.field_descriptor_factory')
-             ->getFieldDescriptors('contacts');
+        $this->fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('contacts');
 
         // field descriptors for the account contact list
         $this->accountContactFieldDescriptors = [];
@@ -113,12 +187,12 @@ class ContactController extends RestController implements ClassResourceInterface
                 new DoctrineFieldDescriptor(
                     'firstName',
                     'firstName',
-                    $this->container->getParameter('sulu.model.contact.class')
+                    $this->contactClass
                 ),
                 new DoctrineFieldDescriptor(
                     'lastName',
                     'lastName',
-                    $this->container->getParameter('sulu.model.contact.class')
+                    $this->contactClass
                 ),
             ],
             'fullName',
@@ -137,7 +211,7 @@ class ContactController extends RestController implements ClassResourceInterface
             [
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                     self::$accountContactEntityName,
-                    $this->container->getParameter('sulu.model.contact.class') . '.accountContacts'
+                    $this->contactClass . '.accountContacts'
                 ),
                 self::$positionEntityName => new DoctrineJoinDescriptor(
                     self::$positionEntityName,
@@ -159,7 +233,7 @@ class ContactController extends RestController implements ClassResourceInterface
             [
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
                     self::$accountContactEntityName,
-                    $this->container->getParameter('sulu.model.contact.class') . '.accountContacts'
+                    $this->contactClass . '.accountContacts'
                 ),
             ],
             FieldDescriptorInterface::VISIBILITY_ALWAYS,
@@ -190,14 +264,10 @@ class ContactController extends RestController implements ClassResourceInterface
                 $contacts = $this->getContactsByUserSystem();
                 $serializationGroups[] = 'select';
             } elseif ($excludedAccountId) {
-                $contacts = $this->getDoctrine()->getRepository(
-                    $this->container->getParameter('sulu.model.contact.class')
-                )->findByExcludedAccountId($excludedAccountId, $request->get('search'));
+                $contacts = $this->contactRepository->findByExcludedAccountId($excludedAccountId, $request->get('search'));
                 $serializationGroups[] = 'select';
             } else {
-                $contacts = $this->getDoctrine()->getRepository(
-                    $this->container->getParameter('sulu.model.contact.class')
-                )->findAll();
+                $contacts = $this->contactRepository->findAll();
                 $serializationGroups = array_merge(
                     $serializationGroups,
                     static::$contactSerializationGroups
@@ -207,7 +277,7 @@ class ContactController extends RestController implements ClassResourceInterface
             // convert to api-contacts
             $apiContacts = [];
             foreach ($contacts as $contact) {
-                $apiContacts[] = $this->getContactManager()->getContact($contact, $locale);
+                $apiContacts[] = $this->contactManager->getContact($contact, $locale);
             }
 
             $list = new CollectionRepresentation($apiContacts, self::$entityKey);
@@ -235,15 +305,9 @@ class ContactController extends RestController implements ClassResourceInterface
      */
     private function getList(Request $request, $locale)
     {
-        /** @var RestHelperInterface $restHelper */
-        $restHelper = $this->getRestHelper();
-
-        /** @var DoctrineListBuilderFactory $factory */
-        $factory = $this->get('sulu_core.doctrine_list_builder_factory');
-
         $fieldDescriptors = $this->getFieldDescriptors();
-        $listBuilder = $factory->create($this->container->getParameter('sulu.model.contact.class'));
-        $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+        $listBuilder = $this->listBuilderFactory->create($this->contactClass);
+        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         $account = $request->get('accountId');
         if ($account) {
@@ -278,12 +342,11 @@ class ContactController extends RestController implements ClassResourceInterface
 
         $ids = $listBuilder->getIds();
         if (null !== $ids) {
-            $comparator = $this->getComparator();
             // the @ is necessary in case of a PHP bug https://bugs.php.net/bug.php?id=50688
             @usort(
                 $listResponse,
-                function($a, $b) use ($comparator, $ids) {
-                    return $comparator->compare($a['id'], $b['id'], $ids);
+                function($a, $b) use ($ids) {
+                    return $this->indexComparator->compare($a['id'], $b['id'], $ids);
                 }
             );
         }
@@ -301,7 +364,7 @@ class ContactController extends RestController implements ClassResourceInterface
     public function deleteAction($id)
     {
         try {
-            $deleteCallback = $this->getContactManager()->delete();
+            $deleteCallback = $this->contactManager->delete();
             $view = $this->responseDelete($id, $deleteCallback);
         } catch (EntityNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
@@ -319,14 +382,13 @@ class ContactController extends RestController implements ClassResourceInterface
      */
     public function getAction($id)
     {
-        $contactManager = $this->getContactManager();
         $locale = $this->getUser()->getLocale();
 
         try {
             $view = $this->responseGetById(
                 $id,
-                function($id) use ($contactManager, $locale) {
-                    return $contactManager->getById($id, $locale);
+                function($id) use ($locale) {
+                    return $this->contactManager->getById($id, $locale);
                 }
             );
 
@@ -351,10 +413,10 @@ class ContactController extends RestController implements ClassResourceInterface
     {
         try {
             $this->checkArguments($request);
-            $contact = $this->getContactManager()->save(
+            $contact = $this->contactManager->save(
                 $request->request->all()
             );
-            $apiContact = $this->getContactManager()->getContact(
+            $apiContact = $this->contactManager->getContact(
                 $contact,
                 $this->getLocale($request)
             );
@@ -382,9 +444,9 @@ class ContactController extends RestController implements ClassResourceInterface
     public function putAction($id, Request $request)
     {
         try {
-            $contact = $this->getContactManager()->save($request->request->all(), $id);
+            $contact = $this->contactManager->save($request->request->all(), $id);
 
-            $apiContact = $this->getContactManager()->getContact($contact, $this->getUser()->getLocale());
+            $apiContact = $this->contactManager->getContact($contact, $this->getUser()->getLocale());
             $view = $this->view($apiContact, 200);
             $context = new Context();
             $context->setGroups(static::$contactSerializationGroups);
@@ -409,13 +471,13 @@ class ContactController extends RestController implements ClassResourceInterface
     public function patchAction($id, Request $request)
     {
         try {
-            $contact = $this->getContactManager()->save(
+            $contact = $this->contactManager->save(
                 $request->request->all(),
                 $id,
                 true
             );
 
-            $apiContact = $this->getContactManager()->getContact($contact, $this->getUser()->getLocale());
+            $apiContact = $this->contactManager->getContact($contact, $this->getUser()->getLocale());
             $view = $this->view($apiContact, 200);
             $context = new Context();
             $context->setGroups(static::$contactSerializationGroups);
@@ -430,20 +492,11 @@ class ContactController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * @return ContactManager
-     */
-    protected function getContactManager()
-    {
-        return $this->get('sulu_contact.contact_manager');
-    }
-
-    /**
      * Returns a list of contacts which have a user in the sulu system.
      */
     protected function getContactsByUserSystem()
     {
-        $repo = $this->get('sulu_security.user_repository');
-        $users = $repo->findUserBySystem($this->getParameter('sulu_security.system'));
+        $users = $this->userRepository->findUserBySystem($this->suluSecuritySystem);
         $contacts = [];
 
         foreach ($users as $user) {
@@ -473,7 +526,7 @@ class ContactController extends RestController implements ClassResourceInterface
     private function addAvatars($contacts, $locale)
     {
         $ids = array_filter(array_column($contacts, 'avatar'));
-        $avatars = $this->get('sulu_media.media_manager')->getFormatUrls($ids, $locale);
+        $avatars = $this->mediaManager->getFormatUrls($ids, $locale);
         foreach ($contacts as $key => $contact) {
             if (array_key_exists('avatar', $contact)
                 && $contact['avatar']
@@ -492,21 +545,13 @@ class ContactController extends RestController implements ClassResourceInterface
     private function checkArguments(Request $request)
     {
         if (null === $request->get('firstName')) {
-            throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'firstName');
+            throw new MissingArgumentException($this->contactClass, 'firstName');
         }
         if (null === $request->get('lastName')) {
-            throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'lastName');
+            throw new MissingArgumentException($this->contactClass, 'lastName');
         }
         if (null === $request->get('formOfAddress')) {
-            throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'formOfAddress');
+            throw new MissingArgumentException($this->contactClass, 'formOfAddress');
         }
-    }
-
-    /**
-     * @return IndexComparatorInterface
-     */
-    private function getComparator()
-    {
-        return $this->get('sulu_contact.util.index_comparator');
     }
 }

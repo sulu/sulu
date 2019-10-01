@@ -22,6 +22,20 @@
         >
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
         </service>
+        <!--CONTROLLER-->
+        <service id="sulu_audience_targeting.target_group_controller"
+                 class="Sulu\Bundle\AudienceTargetingBundle\Controller\TargetGroupController"
+                 public="true">
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="sulu_core.doctrine_rest_helper"/>
+            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
+            <argument type="service" id="sulu_core.doctrine_list_builder_factory"/>
+            <argument type="service" id="jms_serializer"/>
+            <argument type="service" id="sulu.repository.target_group"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
         <!--SERIALIZER-->
         <service id="sulu_audience_targeting.serializer.target_group_subscriber"
                  class="Sulu\Bundle\AudienceTargetingBundle\Serializer\Subscriber\TargetGroupSerializeSubscriber">

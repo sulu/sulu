@@ -12,16 +12,68 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
+use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPoolInterface;
+use Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapDumperInterface;
+use Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapRendererInterface;
 use Sulu\Component\Webspace\Portal;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Renders a xml sitemap.
  */
-class SitemapController extends WebsiteController
+class SitemapController
 {
+    /**
+     * @var XmlSitemapRendererInterface
+     */
+    private $xmlSitemapRenderer;
+
+    /**
+     * @var SitemapProviderPoolInterface
+     */
+    private $sitemapProviderPool;
+
+    /**
+     * @var XmlSitemapDumperInterface
+     */
+    private $xmlSitemapDumper;
+
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
+     * @var UrlGeneratorInterface
+     */
+    private $router;
+
+    /**
+     * @var int
+     */
+    private $cacheLifeTime;
+
+    public function __construct(
+        XmlSitemapRendererInterface $xmlSitemapRenderer,
+        SitemapProviderPoolInterface $sitemapProviderPool,
+        XmlSitemapDumperInterface $xmlSitemapDumper,
+        Filesystem $filesystem,
+        UrlGeneratorInterface $router,
+        int $cacheLifeTime
+    ) {
+        $this->xmlSitemapRenderer = $xmlSitemapRenderer;
+        $this->sitemapProviderPool = $sitemapProviderPool;
+        $this->xmlSitemapDumper = $xmlSitemapDumper;
+        $this->filesystem = $filesystem;
+        $this->router = $router;
+        $this->cacheLifeTime = $cacheLifeTime;
+    }
+
     /**
      * Render sitemap-index of all available sitemap.xml files.
      * If only one provider exists this provider will be rendered directly.
@@ -36,9 +88,9 @@ class SitemapController extends WebsiteController
             return $response;
         }
 
-        $sitemap = $this->get('sulu_website.sitemap.xml_renderer')->renderIndex();
+        $sitemap = $this->xmlSitemapRenderer->renderIndex();
         if (!$sitemap) {
-            $aliases = array_keys($this->get('sulu_website.sitemap.pool')->getProviders());
+            $aliases = array_keys($this->sitemapProviderPool->getProviders());
 
             return $this->sitemapPaginatedAction($request, reset($aliases), 1);
         }
@@ -62,14 +114,14 @@ class SitemapController extends WebsiteController
             $localization = $portal->getXDefaultLocalization();
         }
 
-        $path = $this->get('sulu_website.sitemap.xml_dumper')->getIndexDumpPath(
+        $path = $this->xmlSitemapDumper->getIndexDumpPath(
             $request->getScheme(),
             $portal->getWebspace()->getKey(),
             $localization->getLocale(),
             $request->getHttpHost()
         );
 
-        if (!$this->get('filesystem')->exists($path)) {
+        if (!$this->filesystem->exists($path)) {
             return;
         }
 
@@ -85,11 +137,17 @@ class SitemapController extends WebsiteController
      */
     public function sitemapAction($alias)
     {
-        if (!$this->get('sulu_website.sitemap.pool')->hasProvider($alias)) {
+        if (!$this->sitemapProviderPool->hasProvider($alias)) {
             return new Response(null, 404);
         }
 
-        return $this->redirectToRoute('sulu_website.paginated_sitemap', ['alias' => $alias, 'page' => 1], 301);
+        return new RedirectResponse(
+            $this->router->generate(
+                'sulu_website.paginated_sitemap',
+                ['alias' => $alias, 'page' => 1]
+            ),
+            301
+        );
     }
 
     /**
@@ -113,7 +171,7 @@ class SitemapController extends WebsiteController
             $localization = $portal->getXDefaultLocalization();
         }
 
-        $sitemap = $this->get('sulu_website.sitemap.xml_renderer')->renderSitemap(
+        $sitemap = $this->xmlSitemapRenderer->renderSitemap(
             $alias,
             $page,
             $localization->getLocale(),
@@ -147,7 +205,7 @@ class SitemapController extends WebsiteController
             $localization = $portal->getXDefaultLocalization();
         }
 
-        $path = $this->get('sulu_website.sitemap.xml_dumper')->getDumpPath(
+        $path = $this->xmlSitemapDumper->getDumpPath(
             $request->getScheme(),
             $portal->getWebspace()->getKey(),
             $localization->getLocale(),
@@ -156,7 +214,7 @@ class SitemapController extends WebsiteController
             $page
         );
 
-        if (!$this->get('filesystem')->exists($path)) {
+        if (!$this->filesystem->exists($path)) {
             return;
         }
 
@@ -174,7 +232,7 @@ class SitemapController extends WebsiteController
     {
         $response->headers->set(
             SuluHttpCache::HEADER_REVERSE_PROXY_TTL,
-            $response->getAge() + $this->container->getParameter('sulu_website.sitemap.cache.lifetime')
+            $response->getAge() + $this->cacheLifeTime
         );
 
         return $response->setMaxAge(240)

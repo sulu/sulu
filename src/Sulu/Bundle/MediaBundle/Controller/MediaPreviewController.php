@@ -11,12 +11,17 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Makes medias preview images available through a REST API.
@@ -25,6 +30,35 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class MediaPreviewController extends AbstractMediaController implements ClassResourceInterface
 {
+    /**
+     * @var MediaManagerInterface
+     */
+    private $mediaManager;
+
+    /**
+     * @var SystemCollectionManagerInterface
+     */
+    private $systemCollectionManager;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        TokenStorageInterface $tokenStorage,
+        MediaManagerInterface $mediaManager,
+        SystemCollectionManagerInterface $systemCollectionManager,
+        EntityManagerInterface $entityManager
+    ) {
+        parent::__construct($viewHandler, $tokenStorage);
+
+        $this->mediaManager = $mediaManager;
+        $this->systemCollectionManager = $systemCollectionManager;
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * Creates a new preview image and saves it to the provided media.
      *
@@ -38,12 +72,9 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
     public function postAction($id, Request $request)
     {
         try {
-            $mediaManager = $this->getMediaManager();
-            $systemCollectionManager = $this->get('sulu_media.system_collections.manager');
-
             $locale = $this->getLocale($request);
 
-            $media = $mediaManager->getById($id, $locale);
+            $media = $this->mediaManager->getById($id, $locale);
             /** @var MediaInterface $mediaEntity */
             $mediaEntity = $media->getEntity();
 
@@ -55,16 +86,16 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
             if (null !== $mediaEntity->getPreviewImage()) {
                 $data['id'] = $mediaEntity->getPreviewImage()->getId();
             }
-            $data['collection'] = $systemCollectionManager->getSystemCollection('sulu_media.preview_image');
+            $data['collection'] = $this->systemCollectionManager->getSystemCollection('sulu_media.preview_image');
             $data['locale'] = $locale;
             $data['title'] = $media->getTitle();
 
             $uploadedFile = $this->getUploadedFile($request, 'previewImage');
-            $previewImage = $mediaManager->save($uploadedFile, $data, $this->getUser()->getId());
+            $previewImage = $this->mediaManager->save($uploadedFile, $data, $this->getUser()->getId());
 
             $mediaEntity->setPreviewImage($previewImage->getEntity());
 
-            $this->getDoctrine()->getManager()->flush();
+            $this->entityManager->flush();
 
             $view = $this->view($previewImage, 200);
         } catch (MediaNotFoundException $e) {
@@ -87,11 +118,9 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
     public function deleteAction($id, Request $request)
     {
         try {
-            $mediaManager = $this->getMediaManager();
-
             $locale = $this->getLocale($request);
 
-            $media = $mediaManager->getById($id, $locale);
+            $media = $this->mediaManager->getById($id, $locale);
             /** @var MediaInterface $mediaEntity */
             $mediaEntity = $media->getEntity();
 
@@ -100,7 +129,7 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
 
                 $mediaEntity->setPreviewImage(null);
 
-                $mediaManager->delete($oldPreviewImageId);
+                $this->mediaManager->delete($oldPreviewImageId);
             }
 
             $view = $this->view(null, 204);
