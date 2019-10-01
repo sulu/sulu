@@ -168,7 +168,7 @@ class ContactAdmin extends Admin
                     ->setTabTitle('sulu_contact.documents')
                     ->addListAdapters(['table'])
                     ->addToolbarActions($contactDocumentsToolbarAction)
-                    ->addRouterAttributesToListStore(['id' => 'contactId'])
+                    ->addRouterAttributesToListRequest(['id' => 'contactId'])
                     ->setTabOrder(2048)
                     ->setParent(static::CONTACT_EDIT_FORM_ROUTE)
             );
@@ -254,12 +254,12 @@ class ContactAdmin extends Admin
                     ->setTabTitle('sulu_contact.people')
                     ->addListAdapters(['table'])
                     ->setEditRoute(static::CONTACT_EDIT_FORM_ROUTE)
-                    ->addRouterAttributesToListStore(['id'])
+                    ->addRouterAttributesToListRequest(['id'])
                     ->addToolbarActions([
                         new ToolbarAction('sulu_contact.add_contact'),
                         new ToolbarAction('sulu_admin.delete'),
                     ])
-                    ->addRouterAttributesToListStore(['id' => 'accountId'])
+                    ->addRouterAttributesToListRequest(['id' => 'accountId'])
                     ->setTabOrder(2048)
                     ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)
             );
@@ -271,7 +271,7 @@ class ContactAdmin extends Admin
                     ->setUserSettingsKey('contact_media')
                     ->setTabTitle('sulu_contact.documents')
                     ->addListAdapters(['table'])
-                    ->addRouterAttributesToListStore(['id' => 'contactId'])
+                    ->addRouterAttributesToListRequest(['id' => 'contactId'])
                     ->addToolbarActions($accountDocumentsToolbarAction)
                     ->setTabOrder(3072)
                     ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)

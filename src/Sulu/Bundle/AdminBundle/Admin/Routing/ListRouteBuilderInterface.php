@@ -55,9 +55,9 @@ interface ListRouteBuilderInterface extends RouteBuilderInterface
     public function disableSearching(): self;
 
     /**
-     * @param string[] $routerAttributesToListStore
+     * @param string[] $routerAttributesToListRequest
      */
-    public function addRouterAttributesToListStore(array $routerAttributesToListStore): self;
+    public function addRouterAttributesToListRequest(array $routerAttributesToListRequest): self;
 
     /**
      * @param string[] $routerAttributesToListMetadata
@@ -65,7 +65,7 @@ interface ListRouteBuilderInterface extends RouteBuilderInterface
     public function addRouterAttributesToListMetadata(array $routerAttributesToListMetadata): self;
 
     /**
-     * @param string[] $resourceStorePropertiesToListStore
+     * @param string[] $resourceStorePropertiesToListRequest
      */
-    public function addResourceStorePropertiesToListStore(array $resourceStorePropertiesToListStore): self;
+    public function addResourceStorePropertiesToListRequest(array $resourceStorePropertiesToListRequest): self;
 }

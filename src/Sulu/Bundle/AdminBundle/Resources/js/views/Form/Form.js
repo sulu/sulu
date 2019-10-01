@@ -83,7 +83,7 @@ class Form extends React.Component<Props> {
                     formKey,
                     idQueryParameter,
                     resourceKey,
-                    routerAttributesToFormStore = {},
+                    routerAttributesToFormRequest = {},
                 },
             },
         } = router;
@@ -100,7 +100,7 @@ class Form extends React.Component<Props> {
             throw new Error('The route does not define the mandatory "formKey" option');
         }
 
-        const formStoreOptions = this.buildFormStoreOptions(apiOptions, attributes, routerAttributesToFormStore);
+        const formStoreOptions = this.buildFormStoreOptions(apiOptions, attributes, routerAttributesToFormRequest);
 
         if (this.hasOwnResourceStore) {
             let locale = resourceStore.locale;
@@ -169,14 +169,14 @@ class Form extends React.Component<Props> {
     buildFormStoreOptions(
         apiOptions: Object,
         attributes: Object,
-        routerAttributesToFormStore: {[string | number]: string}
+        routerAttributesToFormRequest: {[string | number]: string}
     ) {
         const formStoreOptions = apiOptions ? apiOptions : {};
 
-        routerAttributesToFormStore = toJS(routerAttributesToFormStore);
-        Object.keys(routerAttributesToFormStore).forEach((key) => {
-            const formOptionKey = routerAttributesToFormStore[key];
-            const attributeName = isNaN(key) ? key : routerAttributesToFormStore[key];
+        routerAttributesToFormRequest = toJS(routerAttributesToFormRequest);
+        Object.keys(routerAttributesToFormRequest).forEach((key) => {
+            const formOptionKey = routerAttributesToFormRequest[key];
+            const attributeName = isNaN(key) ? key : routerAttributesToFormRequest[key];
 
             formStoreOptions[formOptionKey] = attributes[attributeName];
         });

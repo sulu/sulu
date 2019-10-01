@@ -94,9 +94,9 @@ class PreviewFormRouteBuilder implements PreviewFormRouteBuilderInterface
         return $this;
     }
 
-    public function addRouterAttributesToFormStore(array $routerAttributesToFormStore): PreviewFormRouteBuilderInterface
+    public function addRouterAttributesToFormRequest(array $routerAttributesToFormRequest): PreviewFormRouteBuilderInterface
     {
-        $this->addRouterAttributesToFormStoreToRoute($this->route, $routerAttributesToFormStore);
+        $this->addRouterAttributesToFormRequestToRoute($this->route, $routerAttributesToFormRequest);
 
         return $this;
     }
