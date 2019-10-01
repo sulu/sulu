@@ -1,7 +1,7 @@
 sulu_page.rl:
     type: rest
     name_prefix: sulu_page.
-    resource: Sulu\Bundle\PageBundle\Controller\PageResourcelocatorController
+    resource: sulu_page.page_resource_locator_controller
 
 sulu_page.resource_locator:
     type: rest
@@ -17,7 +17,7 @@ sulu_page.post_page_trigger:
     path: /pages/{id}.{_format}
     methods: POST
     defaults:
-        _controller: Sulu\Bundle\PageBundle\Controller\PageController::postTriggerAction
+        _controller: sulu_page.page_controller::postTriggerAction
         _format: json
 
 sulu_page.webspace.localization:

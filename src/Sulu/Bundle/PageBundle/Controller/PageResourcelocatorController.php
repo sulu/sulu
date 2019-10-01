@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\PageBundle\Repository\ResourceLocatorRepositoryInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
@@ -19,10 +20,31 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class PageResourcelocatorController extends RestController implements ClassResourceInterface
 {
     use RequestParametersTrait;
+
+    /**
+     * @var ResourceLocatorRepositoryInterface
+     */
+    private $resourceLocatorRepository;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        ResourceLocatorRepositoryInterface $resourceLocatorRepository,
+        DocumentManagerInterface $documentManager
+    ) {
+        parent::__construct($viewHandler);
+        $this->resourceLocatorRepository = $resourceLocatorRepository;
+        $this->documentManager = $documentManager;
+    }
 
     /**
      * return resource-locator for sub-node.
@@ -41,7 +63,7 @@ class PageResourcelocatorController extends RestController implements ClassResou
         $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
         $locale = $this->getLocale($request);
 
-        $result = $this->getResourceLocatorRepository()->generate(
+        $result = $this->resourceLocatorRepository->generate(
             $parts,
             $parentUuid,
             $webspaceKey,
@@ -63,7 +85,7 @@ class PageResourcelocatorController extends RestController implements ClassResou
     public function cgetAction($id, Request $request)
     {
         list($webspaceKey, $locale) = $this->getWebspaceAndLanguage($request);
-        $result = $this->getResourceLocatorRepository()->getHistory($id, $webspaceKey, $locale);
+        $result = $this->resourceLocatorRepository->getHistory($id, $webspaceKey, $locale);
 
         return $this->handleView($this->view($result));
     }
@@ -81,8 +103,8 @@ class PageResourcelocatorController extends RestController implements ClassResou
         list($webspaceKey, $locale) = $this->getWebspaceAndLanguage($request);
         $path = $this->getRequestParameter($request, 'ids', true); // TODO rename path to id in all function names
 
-        $this->getResourceLocatorRepository()->delete($path, $webspaceKey, $locale);
-        $this->getDocumentManager()->flush();
+        $this->resourceLocatorRepository->delete($path, $webspaceKey, $locale);
+        $this->documentManager->flush();
 
         return $this->handleView($this->view());
     }
@@ -100,22 +122,6 @@ class PageResourcelocatorController extends RestController implements ClassResou
         $locale = $this->getRequestParameter($request, 'locale', true);
 
         return [$webspaceKey, $locale];
-    }
-
-    /**
-     * @return ResourceLocatorRepositoryInterface
-     */
-    private function getResourceLocatorRepository()
-    {
-        return $this->get('sulu_page.rl_repository');
-    }
-
-    /**
-     * @return DocumentManagerInterface
-     */
-    private function getDocumentManager()
-    {
-        return $this->get('sulu_document_manager.document_manager');
     }
 
     /**

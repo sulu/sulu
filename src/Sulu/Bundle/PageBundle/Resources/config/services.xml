@@ -86,6 +86,16 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <service id="sulu_page.page_resource_locator_controller"
+                 class="Sulu\Bundle\PageBundle\Controller\PageResourcelocatorController"
+                 public="true">
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="sulu_page.rl_repository"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <!-- webspace -->
         <service id="sulu_page.webspace_controller"
                  class="Sulu\Bundle\PageBundle\Controller\WebspaceController"
