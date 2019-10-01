@@ -68,6 +68,11 @@ class TagController extends RestController implements ClassResourceInterface, Se
     private $fieldDescriptorFactory;
 
     /**
+     * @var UrlGeneratorInterface
+     */
+    private $router;
+
+    /**
      * @var RestHelperInterface
      */
     private $restHelper;
