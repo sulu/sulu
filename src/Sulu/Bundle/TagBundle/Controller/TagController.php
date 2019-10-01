@@ -11,8 +11,11 @@
 
 namespace Sulu\Bundle\TagBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Bundle\TagBundle\Admin\TagAdmin;
 use Sulu\Bundle\TagBundle\Controller\Exception\ConstraintViolationException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
@@ -21,13 +24,15 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Makes tag available through.
@@ -43,11 +48,53 @@ class TagController extends RestController implements ClassResourceInterface, Se
     protected $bundlePrefix = 'tags.';
 
     /**
-     * @return TagManagerInterface
+     * @var TagManagerInterface
      */
-    private function getManager()
-    {
-        return $this->get('sulu_tag.tag_manager');
+    private $tagManager;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var DoctrineListBuilderFactoryInterface
+     */
+    private $listBuilderFactory;
+
+    /**
+     * @var FieldDescriptorFactoryInterface
+     */
+    private $fieldDescriptorFactory;
+
+    /**
+     * @var RestHelperInterface
+     */
+    private $restHelper;
+
+    /**
+     * @var string
+     */
+    private $tagClass;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        RestHelperInterface $restHelper,
+        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        TagManagerInterface $tagManager,
+        EntityManagerInterface $entityManager,
+        UrlGeneratorInterface $router,
+        string $tagClass
+    ) {
+        parent::__construct($viewHandler);
+        $this->restHelper = $restHelper;
+        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
+        $this->listBuilderFactory = $listBuilderFactory;
+        $this->tagManager = $tagManager;
+        $this->entityManager = $entityManager;
+        $this->router = $router;
+        $this->tagClass = $tagClass;
     }
 
     /**
@@ -62,7 +109,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
         $view = $this->responseGetById(
             $id,
             function($id) {
-                return $this->getManager()->findById($id);
+                return $this->tagManager->findById($id);
             }
         );
 
@@ -83,24 +130,15 @@ class TagController extends RestController implements ClassResourceInterface, Se
     public function cgetAction(Request $request)
     {
         if ('true' == $request->get('flat')) {
-            /** @var RestHelperInterface $restHelper */
-            $restHelper = $this->get('sulu_core.doctrine_rest_helper');
-
-            /** @var DoctrineListBuilderFactory $factory */
-            $factory = $this->get('sulu_core.doctrine_list_builder_factory');
-
-            $tagEntityName = $this->getParameter('sulu.model.tag.class');
-
-            $fieldDescriptors = $this->get('sulu_core.list_builder.field_descriptor_factory')
-                ->getFieldDescriptors('tags');
-            $listBuilder = $factory->create($tagEntityName);
+            $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('tags');
+            $listBuilder = $this->listBuilderFactory->create($this->tagClass);
 
             $names = array_filter(explode(',', $request->get('names', '')));
             if (count($names) > 0) {
                 $listBuilder->in($fieldDescriptors['name'], $names);
             }
 
-            $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+            $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
             $list = new ListRepresentation(
                 $listBuilder->execute(),
@@ -113,7 +151,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
             );
             $view = $this->view($list, 200);
         } else {
-            $list = new CollectionRepresentation($this->getManager()->findAll(), self::$entityKey);
+            $list = new CollectionRepresentation($this->tagManager->findAll(), self::$entityKey);
 
             $context = new Context();
             $context->setGroups(['partialTag']);
@@ -145,7 +183,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
                 throw new MissingArgumentException(self::$entityName, 'name');
             }
 
-            $tag = $this->getManager()->save($this->getData($request));
+            $tag = $this->tagManager->save($this->getData($request));
 
             $context = new Context();
             $context->setGroups(['partialTag']);
@@ -184,7 +222,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
                 throw new MissingArgumentException(self::$entityName, 'name');
             }
 
-            $tag = $this->getManager()->save($this->getData($request), $id);
+            $tag = $this->tagManager->save($this->getData($request), $id);
 
             $context = new Context();
             $context->setGroups(['partialTag']);
@@ -217,7 +255,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
     {
         $delete = function($id) {
             try {
-                $this->getManager()->delete($id);
+                $this->tagManager->delete($id);
             } catch (TagNotFoundException $tnfe) {
                 throw new EntityNotFoundException(self::$entityName, $id);
             }
@@ -241,13 +279,13 @@ class TagController extends RestController implements ClassResourceInterface, Se
             $srcTagIds = explode(',', $request->get('src'));
             $destTagId = $request->get('dest');
 
-            $destTag = $this->getManager()->merge($srcTagIds, $destTagId);
+            $destTag = $this->tagManager->merge($srcTagIds, $destTagId);
 
             $view = $this->view(
                 null,
                 303,
                 [
-                    'location' => $this->get('router')->generate('sulu_tag.get_tag', ['id' => $destTag->getId()]),
+                    'location' => $this->router->generate('sulu_tag.get_tag', ['id' => $destTag->getId()]),
                 ]
             );
         } catch (TagNotFoundException $exc) {
@@ -271,13 +309,13 @@ class TagController extends RestController implements ClassResourceInterface, Se
             $i = 0;
             while ($item = $request->get($i)) {
                 if (isset($item['id'])) {
-                    $tags[] = $this->getManager()->save($item, $item['id']);
+                    $tags[] = $this->tagManager->save($item, $item['id']);
                 } else {
-                    $tags[] = $this->getManager()->save($item);
+                    $tags[] = $this->tagManager->save($item);
                 }
                 ++$i;
             }
-            $this->getDoctrine()->getManager()->flush();
+            $this->entityManager->flush();
 
             $context = new Context();
             $context->setGroups(['partialTag']);
@@ -299,7 +337,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
      */
     public function getSecurityContext()
     {
-        return 'sulu.settings.tags';
+        return TagAdmin::SECURITY_CONTEXT;
     }
 
     /**
