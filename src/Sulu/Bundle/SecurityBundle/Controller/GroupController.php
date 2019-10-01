@@ -134,9 +134,7 @@ class GroupController extends AbstractRestController implements ClassResourceInt
     {
         $find = function($id) {
             /** @var Group $group */
-            $group = $this->doctrine
-                ->getRepository(static::$entityName)
-                ->findGroupById($id);
+            $group = $this->entityManager->getRepository(static::$entityName)->findGroupById($id);
 
             return $group;
         };
@@ -194,9 +192,7 @@ class GroupController extends AbstractRestController implements ClassResourceInt
     public function putAction(Request $request, $id)
     {
         /** @var Group $group */
-        $group = $this->doctrine
-            ->getRepository(static::$entityName)
-            ->findGroupById($id);
+        $group = $this->entityManager->getRepository(static::$entityName)->findGroupById($id);
 
         try {
             if (!$group) {
@@ -264,9 +260,7 @@ class GroupController extends AbstractRestController implements ClassResourceInt
     public function deleteAction($id)
     {
         $delete = function($id) {
-            $group = $this->doctrine
-                ->getRepository(static::$entityName)
-                ->findGroupById($id);
+            $group = $this->entityManager->getRepository(static::$entityName)->findGroupById($id);
 
             if (!$group) {
                 throw new EntityNotFoundException(static::$entityName, $id);
@@ -332,9 +326,7 @@ class GroupController extends AbstractRestController implements ClassResourceInt
     {
         $parentData = $request->get('parent');
         if (null != $parentData && isset($parentData['id'])) {
-            $parent = $this->doctrine
-                ->getRepository(static::$entityName)
-                ->findGroupById($parentData['id']);
+            $parent = $this->entityManager->getRepository(static::$entityName)->findGroupById($parentData['id']);
 
             if (!$parent) {
                 throw new EntityNotFoundException(static::$entityName, $parentData['id']);

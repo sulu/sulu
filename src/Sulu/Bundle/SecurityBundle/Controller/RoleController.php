@@ -455,7 +455,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
      */
     private function setSecurityType($role, $securityTypeData)
     {
-        $securityType = $this->doctrine
+        $securityType = $this->entityManager
             ->getRepository('SuluSecurityBundle:SecurityType')
             ->findSecurityTypeById($securityTypeData['id']);
 
