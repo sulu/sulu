@@ -15,9 +15,9 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\PageBundle\Repository\ResourceLocatorRepositoryInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\RequestParametersTrait;
-use Sulu\Component\Rest\AbstractRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

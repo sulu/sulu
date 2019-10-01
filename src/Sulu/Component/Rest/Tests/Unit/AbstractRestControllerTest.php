@@ -14,9 +14,9 @@ namespace Sulu\Component\Rest\Tests\Unit;
 use FOS\RestBundle\View\View;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\AbstractRestController;
 
 class AbstractRestControllerTest extends TestCase
 {

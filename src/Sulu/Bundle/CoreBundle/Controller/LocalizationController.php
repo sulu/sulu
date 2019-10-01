@@ -14,8 +14,8 @@ namespace Sulu\Bundle\CoreBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
-use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\AbstractRestController;
+use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
