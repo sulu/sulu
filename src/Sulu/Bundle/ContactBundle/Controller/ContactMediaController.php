@@ -11,9 +11,18 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
+use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
+use Sulu\Component\Rest\RestHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Class ContactMediaController.
@@ -24,14 +33,50 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
 {
     protected static $mediaEntityKey = 'contact_media';
 
+    /**
+     * @var AbstractContactManager
+     */
+    private $contactManager;
+
+    /**
+     * @var string
+     */
+    private $contactClass;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        TokenStorageInterface $tokenStorage,
+        RestHelperInterface $restHelper,
+        DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        EntityManagerInterface $entityManager,
+        MediaRepositoryInterface $mediaRepository,
+        MediaManagerInterface $mediaManager,
+        AbstractContactManager $contactManager,
+        string $contactClass,
+        string $mediaClass
+    ) {
+        parent::__construct(
+            $viewHandler,
+            $tokenStorage,
+            $restHelper,
+            $listBuilderFactory,
+            $entityManager,
+            $mediaRepository,
+            $mediaManager,
+            $mediaClass
+        );
+        $this->contactManager = $contactManager;
+        $this->contactClass = $contactClass;
+    }
+
     public function deleteAction(int $contactId, int $id)
     {
-        return $this->removeMediaFromEntity($this->getContactEntityName(), $contactId, $id);
+        return $this->removeMediaFromEntity($this->contactClass, $contactId, $id);
     }
 
     public function postAction(int $contactId, Request $request)
     {
-        return $this->addMediaToEntity($this->getContactEntityName(), $contactId, $request->get('mediaId', ''));
+        return $this->addMediaToEntity($this->contactClass, $contactId, $request->get('mediaId', ''));
     }
 
     public function cgetAction(int $contactId, Request $request)
@@ -39,14 +84,9 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
         return $this->getMultipleView(
             $this->getContactEntityName(),
             'sulu_contact.get_contact_medias',
-            $this->get('sulu_contact.contact_manager'),
+            $this->contactManager,
             $contactId,
             $request
         );
-    }
-
-    private function getContactEntityName()
-    {
-        return $this->container->getParameter('sulu.model.contact.class');
     }
 }

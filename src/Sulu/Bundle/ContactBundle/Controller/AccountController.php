@@ -167,7 +167,6 @@ class AccountController extends RestController implements ClassResourceInterface
         $this->contactClass = $contactClass;
     }
 
-
     /**
      * Lists all contacts of an account.
      * optional parameter 'flat' calls listAction.

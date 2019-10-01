@@ -11,9 +11,18 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
+use Sulu\Bundle\ContactBundle\Contact\AccountManager;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
+use Sulu\Component\Rest\RestHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Class AccountMediaController.
@@ -24,29 +33,60 @@ class AccountMediaController extends AbstractMediaController implements ClassRes
 {
     protected static $mediaEntityKey = 'account_media';
 
+    /**
+     * @var AbstractContactManager
+     */
+    private $accountManager;
+
+    /**
+     * @var string
+     */
+    private $accountClass;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        TokenStorageInterface $tokenStorage,
+        RestHelperInterface $restHelper,
+        DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        EntityManagerInterface $entityManager,
+        MediaRepositoryInterface $mediaRepository,
+        MediaManagerInterface $mediaManager,
+        AbstractContactManager $accountManager,
+        string $accountClass,
+        string $mediaClass
+    ) {
+        parent::__construct(
+            $viewHandler,
+            $tokenStorage,
+            $restHelper,
+            $listBuilderFactory,
+            $entityManager,
+            $mediaRepository,
+            $mediaManager,
+            $mediaClass
+        );
+        $this->accountManager = $accountManager;
+        $this->accountClass = $accountClass;
+    }
+
     public function deleteAction(int $contactId, int $id)
     {
-        return $this->removeMediaFromEntity($this->getAccountEntityName(), $contactId, $id);
+        return $this->removeMediaFromEntity($this->accountClass, $contactId, $id);
     }
 
     public function postAction(int $contactId, Request $request)
     {
-        return $this->addMediaToEntity($this->getAccountEntityName(), $contactId, $request->get('mediaId', ''));
+        return $this->addMediaToEntity($this->accountClass, $contactId, $request->get('mediaId', ''));
     }
 
     public function cgetAction(int $contactId, Request $request)
     {
         return $this->getMultipleView(
-            $this->getAccountEntityName(),
+            $this->accountClass,
             'sulu_contact.get_account_medias',
-            $this->get('sulu_contact.account_manager'),
+            $this->accountManager,
             $contactId,
             $request
         );
-    }
-
-    private function getAccountEntityName()
-    {
-        return $this->container->getParameter('sulu.model.account.class');
     }
 }

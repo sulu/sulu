@@ -11,13 +11,16 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
@@ -26,6 +29,7 @@ use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Makes accounts available through a REST API.
@@ -45,6 +49,55 @@ abstract class AbstractMediaController extends RestController
     protected $fieldDescriptors = null;
 
     /**
+     * @var RestHelperInterface
+     */
+    private $restHelper;
+
+    /**
+     * @var DoctrineListBuilderFactoryInterface
+     */
+    private $listBuilderFactory;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var MediaRepositoryInterface
+     */
+    private $mediaRepository;
+
+    /**
+     * @var MediaManagerInterface
+     */
+    private $mediaManager;
+
+    /**
+     * @var string
+     */
+    private $mediaClass;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        TokenStorageInterface $tokenStorage,
+        RestHelperInterface $restHelper,
+        DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        EntityManagerInterface $entityManager,
+        MediaRepositoryInterface $mediaRepository,
+        MediaManagerInterface $mediaManager,
+        string $mediaClass
+    ) {
+        parent::__construct($viewHandler, $tokenStorage);
+        $this->restHelper = $restHelper;
+        $this->listBuilderFactory = $listBuilderFactory;
+        $this->entityManager = $entityManager;
+        $this->mediaRepository = $mediaRepository;
+        $this->mediaClass = $mediaClass;
+        $this->mediaManager = $mediaManager;
+    }
+
+    /**
      * Adds a relation between a media and the entity.
      *
      * @param string $entityName
@@ -56,16 +109,16 @@ abstract class AbstractMediaController extends RestController
     protected function addMediaToEntity($entityName, $id, $mediaId)
     {
         try {
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->entityManager;
             $entity = $em->getRepository($entityName)->find($id);
-            $media = $this->container->get('sulu.repository.media')->find($mediaId);
+            $media = $this->mediaRepository->find($mediaId);
 
             if (!$entity) {
                 throw new EntityNotFoundException($entityName, $id);
             }
 
             if (!$media) {
-                throw new EntityNotFoundException($this->getParameter('sulu.model.media.class'), $mediaId);
+                throw new EntityNotFoundException($this->mediaClass, $mediaId);
             }
 
             if ($entity->getMedias()->contains($media)) {
@@ -107,29 +160,26 @@ abstract class AbstractMediaController extends RestController
     {
         try {
             $delete = function() use ($entityName, $id, $mediaId) {
-                $em = $this->getDoctrine()->getManager();
-                $entity = $em->getRepository($entityName)->find($id);
-                $media = $this->container->get('sulu.repository.media')->find($mediaId);
+                $entity = $this->entityManager->getRepository($entityName)->find($id);
+                $media = $this->mediaRepository->find($mediaId);
 
                 if (!$entity) {
                     throw new EntityNotFoundException($entityName, $id);
                 }
 
-                $mediaEntityName = $this->getParameter('sulu.model.media.class');
-
                 if (!$media) {
-                    throw new EntityNotFoundException($mediaEntityName, $mediaId);
+                    throw new EntityNotFoundException($this->mediaClass, $mediaId);
                 }
 
                 if (!$entity->getMedias()->contains($media)) {
                     throw new RestException(
                         'Relation between ' . $entityName .
-                        ' and ' . $mediaEntityName . ' with id ' . $mediaId . ' does not exists!'
+                        ' and ' . $this->mediaClass . ' with id ' . $mediaId . ' does not exists!'
                     );
                 }
 
                 $entity->removeMedia($media);
-                $em->flush();
+                $this->entityManager->flush();
             };
 
             $view = $this->responseDelete($id, $delete);
@@ -161,16 +211,10 @@ abstract class AbstractMediaController extends RestController
             $locale = $this->getUser()->getLocale();
 
             if ('true' === $request->get('flat')) {
-                /** @var RestHelperInterface $restHelper */
-                $restHelper = $this->get('sulu_core.doctrine_rest_helper');
-
-                /** @var DoctrineListBuilderFactory $factory */
-                $factory = $this->get('sulu_core.doctrine_list_builder_factory');
-
-                $listBuilder = $factory->create($entityName);
+                $listBuilder = $this->listBuilderFactory->create($entityName);
                 $fieldDescriptors = $this->getFieldDescriptors($entityName, $contactId);
                 $listBuilder->setIdField($fieldDescriptors['id']);
-                $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+                $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
                 $listResponse = $listBuilder->execute();
                 $listResponse = $this->addThumbnails($listResponse, $locale);
@@ -415,7 +459,7 @@ abstract class AbstractMediaController extends RestController
     private function addThumbnails($entities, $locale)
     {
         $ids = array_filter(array_column($entities, 'thumbnails'));
-        $thumbnails = $this->getMediaManager()->getFormatUrls($ids, $locale);
+        $thumbnails = $this->mediaManager->getFormatUrls($ids, $locale);
         foreach ($entities as $key => $entity) {
             if (array_key_exists('thumbnails', $entity)
                 && $entity['thumbnails']
@@ -439,7 +483,7 @@ abstract class AbstractMediaController extends RestController
     private function addUrls($entities, $locale)
     {
         $ids = array_filter(array_column($entities, 'id'));
-        $apiEntities = $this->getMediaManager()->getByIds($ids, $locale);
+        $apiEntities = $this->mediaManager->getByIds($ids, $locale);
         $i = 0;
         foreach ($entities as $key => $entity) {
             $entities[$key]['url'] = $apiEntities[$i]->getUrl();
@@ -447,13 +491,5 @@ abstract class AbstractMediaController extends RestController
         }
 
         return $entities;
-    }
-
-    /**
-     * @return MediaManagerInterface
-     */
-    private function getMediaManager()
-    {
-        return $this->get('sulu_media.media_manager');
     }
 }
