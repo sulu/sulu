@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
-use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
-use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,28 +18,8 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * This class contains all basic functions required in the various media controller classes.
  */
-class AbstractMediaController extends RestController
+abstract class AbstractMediaController extends RestController
 {
-    /**
-     * Returns media-manager.
-     *
-     * @return MediaManagerInterface
-     */
-    protected function getMediaManager()
-    {
-        return $this->get('sulu_media.media_manager');
-    }
-
-    /**
-     * Returns format-manager.
-     *
-     * @return FormatManagerInterface
-     */
-    protected function getFormatManager()
-    {
-        return $this->get('sulu_media.format_manager');
-    }
-
     /**
      * @param Request $request
      * @param bool $fallback

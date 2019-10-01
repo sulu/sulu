@@ -27,6 +27,35 @@
     </parameters>
 
     <services>
+        <service id="sulu_media.media_controller" class="Sulu\Bundle\MediaBundle\Controller\MediaController">
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="security.token_storage" />
+            <argument type="service" id="sulu_media.media_manager" />
+            <argument type="service" id="sulu_media.format_manager" />
+            <argument type="service" id="sulu_core.doctrine_rest_helper" />
+            <argument type="service" id="sulu_core.doctrine_list_builder_factory" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="sulu_media.storage" />
+            <argument type="service" id="sulu_media.collection_repository" />
+            <argument type="service" id="sulu_security.security_checker" />
+            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory" />
+            <argument>%sulu.model.media.class%</argument>
+            <argument>%sulu.model.collection.class%</argument>
+
+            <tag name="controller.service_arguments" />
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_media.media_preview_controller" class="Sulu\Bundle\MediaBundle\Controller\MediaPreviewController">
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="security.token_storage" />
+            <argument type="service" id="sulu_media.media_manager" />
+            <argument type="service" id="sulu_media.system_collections.manager" />
+
+            <tag name="controller.service_arguments" />
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <service
             id="sulu_media.media_redirect_controller"
             class="Sulu\Bundle\MediaBundle\Controller\MediaRedirectController"

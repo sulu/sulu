@@ -18,6 +18,7 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Abstract Controller for extracting some required rest functionality.
@@ -26,10 +27,18 @@ abstract class RestController
 {
     use ControllerTrait;
 
+    /**
+     * @var TokenStorageInterface|null
+     */
+    private $tokenStorage;
+
     public function __construct(
-        ViewHandlerInterface $viewHandler
+        ViewHandlerInterface $viewHandler,
+        ?TokenStorageInterface $tokenStorage = null
     ) {
         $this->setViewHandler($viewHandler);
+
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -264,5 +273,23 @@ abstract class RestController
                 }
             }
         }
+    }
+
+    protected function getUser()
+    {
+        if (!$this->tokenStorage) {
+            throw new \LogicException('The TokenStorage property was not set via the constructor".');
+        }
+
+        if (null === $token = $this->tokenStorage->getToken()) {
+            return null;
+        }
+
+        if (!\is_object($user = $token->getUser())) {
+            // e.g. anonymous authentication
+            return null;
+        }
+
+        return $user;
     }
 }
