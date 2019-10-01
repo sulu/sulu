@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class MediaStreamController
 {
@@ -106,7 +107,7 @@ class MediaStreamController
                 $mediaProperties['fileName']
             );
         } catch (ImageProxyException $e) {
-            throw $this->createNotFoundException('Image create error. Code: ' . $e->getCode());
+            throw new NotFoundHttpException('Image create error. Code: ' . $e->getCode());
         }
     }
 
@@ -148,7 +149,7 @@ class MediaStreamController
 
             return $response;
         } catch (MediaException $e) {
-            throw $this->createNotFoundException('File not found: ' . $e->getCode() . ' ' . $e->getMessage());
+            throw new NotFoundHttpException('File not found: ' . $e->getCode() . ' ' . $e->getMessage());
         }
     }
 

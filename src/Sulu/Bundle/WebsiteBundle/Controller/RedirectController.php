@@ -11,17 +11,27 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Contains redirect actions.
  */
-class RedirectController extends Controller
+class RedirectController
 {
+    /**
+     * @var RouterInterface
+     */
+    protected $router;
+
+    public function __construct(RouterInterface $router)
+    {
+        $this->router = $router;
+    }
+
     /**
      * Creates a redirect for configured webspaces.
      *
@@ -75,7 +85,7 @@ class RedirectController extends Controller
         unset($attributes['route'], $attributes['permanent']);
 
         return new RedirectResponse(
-            $this->container->get('router')->generate($route, $attributes, UrlGeneratorInterface::ABSOLUTE_URL),
+            $this->router->generate($route, $attributes, UrlGeneratorInterface::ABSOLUTE_URL),
             $permanent ? 301 : 302,
             ['Cache-Control' => 'private']
         );

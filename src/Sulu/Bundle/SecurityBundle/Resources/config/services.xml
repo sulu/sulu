@@ -56,6 +56,7 @@
             <argument>%sulu_security.reset_password.mail.template%</argument>
             <argument>%sulu_security.reset_password.mail.token_send_limit%</argument>
             <argument>%sulu_admin.email%</argument>
+
             <tag name="controller.service_arguments" />
             <tag name="sulu.context" context="admin"/>
         </service>

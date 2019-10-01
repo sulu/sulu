@@ -58,3 +58,7 @@ sulu_media:
     ffmpeg:
         ffmpeg_binary: '/usr/local/bin/ffmpeg'
         ffprobe_binary: '/usr/local/bin/ffmprobe'
+
+swiftmailer:
+    url: 'null://localhost'
+    spool: { type: 'memory' }
