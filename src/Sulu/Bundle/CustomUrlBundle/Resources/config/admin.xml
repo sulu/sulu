@@ -6,7 +6,7 @@
     <services>
         <service id="sulu_custom_urls.admin" class="Sulu\Bundle\CustomUrlBundle\Admin\CustomUrlAdmin">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactoryInterface"/>
+            <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface"/>
             <argument type="service" id="sulu_security.security_checker"/>
 
             <tag name="sulu.admin"/>

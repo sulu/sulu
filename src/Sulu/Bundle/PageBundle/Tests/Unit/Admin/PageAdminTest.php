@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactory;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
@@ -26,9 +26,9 @@ use Sulu\Component\Webspace\Webspace;
 class PageAdminTest extends TestCase
 {
     /**
-     * @var RouteBuilderFactory
+     * @var ViewBuilderFactory
      */
-    private $routeBuilderFactory;
+    private $viewBuilderFactory;
 
     /**
      * @var SecurityChecker
@@ -52,14 +52,14 @@ class PageAdminTest extends TestCase
 
     public function setUp(): void
     {
-        $this->routeBuilderFactory = new RouteBuilderFactory();
+        $this->viewBuilderFactory = new ViewBuilderFactory();
         $this->securityChecker = $this->prophesize(SecurityChecker::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->sessionManager = $this->prophesize(SessionManagerInterface::class);
         $this->teaserProviderPool = $this->prophesize(TeaserProviderPoolInterface::class);
     }
 
-    public function testGetRoutes()
+    public function testGetViews()
     {
         $this->securityChecker->hasPermission('sulu.webspaces.test-1', 'edit')->willReturn(true);
 
@@ -83,7 +83,7 @@ class PageAdminTest extends TestCase
         $this->webspaceManager->getWebspaceCollection()->willReturn($webspaceCollection);
 
         $admin = new PageAdmin(
-            $this->routeBuilderFactory,
+            $this->viewBuilderFactory,
             $this->webspaceManager->reveal(),
             $this->securityChecker->reveal(),
             $this->sessionManager->reveal(),
@@ -94,20 +94,20 @@ class PageAdminTest extends TestCase
         $viewCollection = new ViewCollection();
         $admin->configureViews($viewCollection);
 
-        $webspaceRoute = $viewCollection->get('sulu_page.webspaces')->getRoute();
-        $pageListRoute = $viewCollection->get('sulu_page.pages_list')->getRoute();
+        $webspaceView = $viewCollection->get('sulu_page.webspaces')->getView();
+        $pageListView = $viewCollection->get('sulu_page.pages_list')->getView();
 
-        $this->assertSame('sulu_page.webspaces', $webspaceRoute->getName());
-        $this->assertSame('test-1', $webspaceRoute->getAttributeDefault('webspace'));
+        $this->assertSame('sulu_page.webspaces', $webspaceView->getName());
+        $this->assertSame('test-1', $webspaceView->getAttributeDefault('webspace'));
 
-        $this->assertSame('sulu_page.pages_list', $pageListRoute->getName());
-        $this->assertSame('de', $pageListRoute->getAttributeDefault('locale'));
+        $this->assertSame('sulu_page.pages_list', $pageListView->getName());
+        $this->assertSame('de', $pageListView->getAttributeDefault('locale'));
     }
 
     public function testGetConfigWithVersioning()
     {
         $admin = new PageAdmin(
-            $this->routeBuilderFactory,
+            $this->viewBuilderFactory,
             $this->webspaceManager->reveal(),
             $this->securityChecker->reveal(),
             $this->sessionManager->reveal(),
@@ -123,7 +123,7 @@ class PageAdminTest extends TestCase
     public function testGetConfigWithoutVersioning()
     {
         $admin = new PageAdmin(
-            $this->routeBuilderFactory,
+            $this->viewBuilderFactory,
             $this->webspaceManager->reveal(),
             $this->securityChecker->reveal(),
             $this->sessionManager->reveal(),

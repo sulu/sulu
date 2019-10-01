@@ -14,7 +14,7 @@ namespace Sulu\Bundle\SecurityBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
-use Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactoryInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\TogglerToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
@@ -39,9 +39,9 @@ class SecurityAdmin extends Admin
     const EDIT_FORM_ROUTE = 'sulu_security.role_edit_form';
 
     /**
-     * @var RouteBuilderFactoryInterface
+     * @var ViewBuilderFactoryInterface
      */
-    private $routeBuilderFactory;
+    private $viewBuilderFactory;
 
     /**
      * @var SecurityCheckerInterface
@@ -64,13 +64,13 @@ class SecurityAdmin extends Admin
     private $resources;
 
     public function __construct(
-        RouteBuilderFactoryInterface $routeBuilderFactory,
+        ViewBuilderFactoryInterface $viewBuilderFactory,
         SecurityCheckerInterface $securityChecker,
         UrlGeneratorInterface $urlGenerator,
         TranslatorInterface $translator,
         array $resources
     ) {
-        $this->routeBuilderFactory = $routeBuilderFactory;
+        $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->urlGenerator = $urlGenerator;
         $this->translator = $translator;
@@ -82,7 +82,7 @@ class SecurityAdmin extends Admin
         if ($this->securityChecker->hasPermission(static::ROLE_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $roles = new NavigationItem('sulu_security.roles');
             $roles->setPosition(10);
-            $roles->setMainRoute(static::LIST_ROUTE);
+            $roles->setView(static::LIST_ROUTE);
 
             $navigationItemCollection->get(Admin::SETTINGS_NAVIGATION_ITEM)->addChild($roles);
         }
@@ -139,39 +139,39 @@ class SecurityAdmin extends Admin
 
         if ($this->securityChecker->hasPermission(static::ROLE_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $viewCollection->add(
-                $this->routeBuilderFactory->createListRouteBuilder(static::LIST_ROUTE, '/roles')
+                $this->viewBuilderFactory->createListViewBuilder(static::LIST_ROUTE, '/roles')
                     ->setResourceKey('roles')
                     ->setListKey('roles')
                     ->setTitle('sulu_security.roles')
                     ->addListAdapters(['table'])
-                    ->setAddRoute(static::ADD_FORM_ROUTE)
-                    ->setEditRoute(static::EDIT_FORM_ROUTE)
+                    ->setAddView(static::ADD_FORM_ROUTE)
+                    ->setEditView(static::EDIT_FORM_ROUTE)
                     ->addToolbarActions($listToolbarActions)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/roles/add')
+                $this->viewBuilderFactory->createResourceTabViewBuilder(static::ADD_FORM_ROUTE, '/roles/add')
                     ->setResourceKey('roles')
-                    ->setBackRoute(static::LIST_ROUTE)
+                    ->setBackView(static::LIST_ROUTE)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createFormRouteBuilder('sulu_security.role_add_form.details', '/details')
+                $this->viewBuilderFactory
+                    ->createFormViewBuilder('sulu_security.role_add_form.details', '/details')
                     ->setResourceKey('roles')
                     ->setFormKey('role_details')
                     ->setTabTitle('sulu_admin.details')
-                    ->setEditRoute(static::EDIT_FORM_ROUTE)
+                    ->setEditView(static::EDIT_FORM_ROUTE)
                     ->addToolbarActions($formToolbarActions)
                     ->setParent(static::ADD_FORM_ROUTE)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/roles/:id')
+                $this->viewBuilderFactory->createResourceTabViewBuilder(static::EDIT_FORM_ROUTE, '/roles/:id')
                     ->setResourceKey('roles')
-                    ->setBackRoute(static::LIST_ROUTE)
+                    ->setBackView(static::LIST_ROUTE)
                     ->setTitleProperty('name')
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createFormRouteBuilder('sulu_security.role_edit_form.details', '/details')
+                $this->viewBuilderFactory
+                    ->createFormViewBuilder('sulu_security.role_edit_form.details', '/details')
                     ->setResourceKey('roles')
                     ->setFormKey('role_details')
                     ->setTabTitle('sulu_admin.details')
@@ -182,8 +182,8 @@ class SecurityAdmin extends Admin
 
         if ($this->securityChecker->hasPermission(static::USER_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createFormRouteBuilder('sulu_security.form.permissions', '/permissions')
+                $this->viewBuilderFactory
+                    ->createFormViewBuilder('sulu_security.form.permissions', '/permissions')
                     ->setResourceKey('users')
                     ->setFormKey('user_details')
                     ->setTabTitle('sulu_security.permissions')

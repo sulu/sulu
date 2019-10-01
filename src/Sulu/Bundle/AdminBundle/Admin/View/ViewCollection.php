@@ -16,34 +16,34 @@ use Sulu\Bundle\AdminBundle\Exception\ViewNotFoundException;
 class ViewCollection
 {
     /**
-     * @var RouteBuilderInterface[]
+     * @var ViewBuilderInterface[]
      */
-    private $routes = [];
+    private $views = [];
 
-    public function add(RouteBuilderInterface $routeBuilder): void
+    public function add(ViewBuilderInterface $viewBuilder): void
     {
-        $this->routes[$routeBuilder->getName()] = $routeBuilder;
+        $this->views[$viewBuilder->getName()] = $viewBuilder;
     }
 
-    public function get(string $routeName): RouteBuilderInterface
+    public function get(string $viewName): ViewBuilderInterface
     {
-        if (!array_key_exists($routeName, $this->routes)) {
-            throw new ViewNotFoundException($routeName);
+        if (!array_key_exists($viewName, $this->views)) {
+            throw new ViewNotFoundException($viewName);
         }
 
-        return $this->routes[$routeName];
+        return $this->views[$viewName];
     }
 
-    public function has(string $routeName): bool
+    public function has(string $viewName): bool
     {
-        return array_key_exists($routeName, $this->routes);
+        return array_key_exists($viewName, $this->views);
     }
 
     /**
-     * @return RouteBuilderInterface[]
+     * @return ViewBuilderInterface[]
      */
     public function all(): array
     {
-        return $this->routes;
+        return $this->views;
     }
 }

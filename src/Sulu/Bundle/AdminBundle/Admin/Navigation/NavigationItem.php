@@ -42,12 +42,12 @@ class NavigationItem implements \Iterator
     /**
      * @var string
      */
-    protected $mainRoute;
+    protected $view;
 
     /**
      * @var string[]
      */
-    protected $childRoutes = [];
+    protected $childViews = [];
 
     /**
      * Will be used for a custom behaviour of the navigation item.
@@ -191,32 +191,32 @@ class NavigationItem implements \Iterator
         return $this->icon;
     }
 
-    public function setMainRoute(string $mainRoute = null): void
+    public function setView(string $view = null): void
     {
-        $this->mainRoute = $mainRoute;
+        $this->view = $view;
     }
 
-    public function getMainRoute(): ?string
+    public function getView(): ?string
     {
-        return $this->mainRoute;
+        return $this->view;
     }
 
-    public function setChildRoutes(array $childRoutes): void
+    public function setChildViews(array $childViews): void
     {
-        $this->childRoutes = $childRoutes;
+        $this->childViews = $childViews;
     }
 
-    public function addChildRoute(string $childRoute): void
+    public function addChildView(string $childView): void
     {
-        $this->childRoutes[] = $childRoute;
+        $this->childViews[] = $childView;
     }
 
     /**
      * @return string[]
      */
-    public function getChildRoutes(): array
+    public function getChildViews(): array
     {
-        return $this->childRoutes;
+        return $this->childViews;
     }
 
     /**
@@ -377,8 +377,8 @@ class NavigationItem implements \Iterator
     public function copyChildless()
     {
         $new = $this->copyWithName();
-        $new->setMainRoute($this->getMainRoute());
-        $new->setChildRoutes($this->getChildRoutes());
+        $new->setView($this->getView());
+        $new->setChildViews($this->getChildViews());
         $new->setEvent($this->getEvent());
         $new->setEventArguments($this->getEventArguments());
         $new->setIcon($this->getIcon());
@@ -526,7 +526,7 @@ class NavigationItem implements \Iterator
             'title' => $this->getName(),
             'label' => $this->getLabel(),
             'icon' => $this->getIcon(),
-            'mainRoute' => $this->getMainRoute(),
+            'view' => $this->getView(),
             'event' => $this->getEvent(),
             'eventArguments' => $this->getEventArguments(),
             'hasSettings' => $this->getHasSettings(),
@@ -534,8 +534,8 @@ class NavigationItem implements \Iterator
             'id' => (null != $this->getId()) ? $this->getId() : str_replace('.', '', uniqid('', true)), //FIXME don't use uniqid()
         ];
 
-        if (count($this->getChildRoutes()) > 0) {
-            $array['childRoutes'] = $this->getChildRoutes();
+        if (count($this->getChildViews()) > 0) {
+            $array['childViews'] = $this->getChildViews();
         }
 
         if (null != $this->getHeaderIcon() || null != $this->getHeaderTitle()) {

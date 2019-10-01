@@ -20,8 +20,8 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
-use Sulu\Bundle\AdminBundle\Admin\View\Route;
-use Sulu\Bundle\AdminBundle\Admin\View\RouteRegistry;
+use Sulu\Bundle\AdminBundle\Admin\View\View as SuluView;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
@@ -94,9 +94,9 @@ class AdminControllerTest extends TestCase
     private $metadataProviderRegistry;
 
     /**
-     * @var RouteRegistry
+     * @var ViewRegistry
      */
-    private $routeRegistry;
+    private $viewRegistry;
 
     /**
      * @var NavigationRegistry
@@ -181,7 +181,7 @@ class AdminControllerTest extends TestCase
         $this->engine = $this->prophesize(Environment::class);
         $this->translatorBag = $this->prophesize(TranslatorBagInterface::class);
         $this->metadataProviderRegistry = $this->prophesize(MetadataProviderRegistry::class);
-        $this->routeRegistry = $this->prophesize(RouteRegistry::class);
+        $this->viewRegistry = $this->prophesize(ViewRegistry::class);
         $this->navigationRegistry = $this->prophesize(NavigationRegistry::class);
         $this->fieldTypeOptionRegistry = $this->prophesize(FieldTypeOptionRegistryInterface::class);
         $this->contactManager = $this->prophesize(ContactManagerInterface::class);
@@ -200,7 +200,7 @@ class AdminControllerTest extends TestCase
             $this->engine->reveal(),
             $this->translatorBag->reveal(),
             $this->metadataProviderRegistry->reveal(),
-            $this->routeRegistry->reveal(),
+            $this->viewRegistry->reveal(),
             $this->navigationRegistry->reveal(),
             $this->fieldTypeOptionRegistry->reveal(),
             $this->contactManager->reveal(),
@@ -219,17 +219,17 @@ class AdminControllerTest extends TestCase
 
     public function testConfigAction()
     {
-        $routes = [
-            new Route('sulu_snippet.list', '/snippets', 'sulu_admin.list'),
+        $views = [
+            new SuluView('sulu_snippet.list', '/snippets', 'sulu_admin.list'),
         ];
-        $this->routeRegistry->getRoutes()->willReturn($routes);
+        $this->viewRegistry->getViews()->willReturn($views);
 
         $navigationItem1 = new NavigationItem('navigation_item1');
         $navigationItem2 = new NavigationItem('navigation_item2');
         $this->navigationRegistry->getNavigationItems()->willReturn([$navigationItem1, $navigationItem2]);
 
-        $this->urlGenerator->generate('route_id_1')->willReturn('/path1');
-        $this->urlGenerator->generate('route_id_2')->willReturn('/path2');
+        $this->urlGenerator->generate('view_id_1')->willReturn('/path1');
+        $this->urlGenerator->generate('view_id_2')->willReturn('/path2');
         $this->urlGenerator->generate('sulu_admin.metadata', ['type' => ':type', 'key' => ':key'])
             ->willReturn('/admin/metadata');
         $this->urlGenerator->generate('sulu_preview.start')->willReturn('/preview/start');
@@ -271,13 +271,13 @@ class AdminControllerTest extends TestCase
 
         $this->viewHandler->handle(
             Argument::that(
-                function(View $view) use ($dataProviders, $fieldTypeOptions, $routes, $admin1Config, $admin2Config) {
+                function(View $view) use ($dataProviders, $fieldTypeOptions, $views, $admin1Config, $admin2Config) {
                     $data = $view->getData();
 
                     return 'json' === $view->getFormat()
                         && $data['sulu_admin']['fieldTypeOptions'] === $fieldTypeOptions
                         && $data['sulu_admin']['smartContent'] === $dataProviders
-                        && $data['sulu_admin']['routes'] === $routes
+                        && $data['sulu_admin']['routes'] === $views
                         && 'navigation_item1' === $data['sulu_admin']['navigation'][0]['title']
                         && 'navigation_item2' === $data['sulu_admin']['navigation'][1]['title']
                         && $data['sulu_admin']['resources'] === $this->resources

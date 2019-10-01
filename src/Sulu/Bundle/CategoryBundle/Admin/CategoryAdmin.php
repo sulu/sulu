@@ -14,7 +14,7 @@ namespace Sulu\Bundle\CategoryBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
-use Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactoryInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
@@ -32,9 +32,9 @@ class CategoryAdmin extends Admin
     const EDIT_FORM_ROUTE = 'sulu_category.edit_form';
 
     /**
-     * @var RouteBuilderFactoryInterface
+     * @var ViewBuilderFactoryInterface
      */
-    private $routeBuilderFactory;
+    private $viewBuilderFactory;
 
     /**
      * @var SecurityCheckerInterface
@@ -47,11 +47,11 @@ class CategoryAdmin extends Admin
     private $localizationManager;
 
     public function __construct(
-        RouteBuilderFactoryInterface $routeBuilderFactory,
+        ViewBuilderFactoryInterface $viewBuilderFactory,
         SecurityCheckerInterface $securityChecker,
         LocalizationManagerInterface $localizationManager
     ) {
-        $this->routeBuilderFactory = $routeBuilderFactory;
+        $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->localizationManager = $localizationManager;
     }
@@ -61,7 +61,7 @@ class CategoryAdmin extends Admin
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $categoryItem = new NavigationItem('sulu_category.categories');
             $categoryItem->setPosition(20);
-            $categoryItem->setMainRoute(static::LIST_ROUTE);
+            $categoryItem->setView(static::LIST_ROUTE);
 
             $navigationItemCollection->get(Admin::SETTINGS_NAVIGATION_ITEM)->addChild($categoryItem);
         }
@@ -94,49 +94,49 @@ class CategoryAdmin extends Admin
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createListRouteBuilder(static::LIST_ROUTE, '/categories/:locale')
+                $this->viewBuilderFactory
+                    ->createListViewBuilder(static::LIST_ROUTE, '/categories/:locale')
                     ->setResourceKey('categories')
                     ->setListKey('categories')
                     ->setTitle('sulu_category.categories')
                     ->addListAdapters(['tree_table'])
                     ->addLocales($locales)
                     ->setDefaultLocale($locales[0])
-                    ->setAddRoute(static::ADD_FORM_ROUTE)
-                    ->setEditRoute(static::EDIT_FORM_ROUTE)
+                    ->setAddView(static::ADD_FORM_ROUTE)
+                    ->setEditView(static::EDIT_FORM_ROUTE)
                     ->enableSearching()
                     ->addToolbarActions($listToolbarActions)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/categories/:locale/add')
+                $this->viewBuilderFactory
+                    ->createResourceTabViewBuilder(static::ADD_FORM_ROUTE, '/categories/:locale/add')
                     ->setResourceKey('categories')
                     ->addLocales($locales)
-                    ->setBackRoute(static::LIST_ROUTE)
+                    ->setBackView(static::LIST_ROUTE)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createFormRouteBuilder('sulu_category.add_form.details', '/details')
+                $this->viewBuilderFactory
+                    ->createFormViewBuilder('sulu_category.add_form.details', '/details')
                     ->setResourceKey('categories')
                     ->setFormKey('category_details')
                     ->setTabTitle('sulu_admin.details')
                     ->addToolbarActions($formToolbarActions)
                     ->addRouterAttributesToFormRequest(['parentId'])
-                    ->setEditRoute(static::EDIT_FORM_ROUTE)
+                    ->setEditView(static::EDIT_FORM_ROUTE)
                     ->setParent(static::ADD_FORM_ROUTE)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/categories/:locale/:id')
+                $this->viewBuilderFactory
+                    ->createResourceTabViewBuilder(static::EDIT_FORM_ROUTE, '/categories/:locale/:id')
                     ->setResourceKey('categories')
                     ->addLocales($locales)
-                    ->setBackRoute(static::LIST_ROUTE)
-                    ->addRouterAttributesToBackRoute(['id' => 'active'])
+                    ->setBackView(static::LIST_ROUTE)
+                    ->addRouterAttributesToBackView(['id' => 'active'])
                     ->setTitleProperty('name')
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createFormRouteBuilder('sulu_category.edit_form.details', '/details')
+                $this->viewBuilderFactory
+                    ->createFormViewBuilder('sulu_category.edit_form.details', '/details')
                     ->setResourceKey('categories')
                     ->setFormKey('category_details')
                     ->setTabTitle('sulu_admin.details')
@@ -144,8 +144,8 @@ class CategoryAdmin extends Admin
                     ->setParent(static::EDIT_FORM_ROUTE)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createFormOverlayListRouteBuilder('sulu_category.edit_form.keywords', '/keywords')
+                $this->viewBuilderFactory
+                    ->createFormOverlayListViewBuilder('sulu_category.edit_form.keywords', '/keywords')
                     ->setResourceKey('category_keywords')
                     ->setListKey('category_keywords')
                     ->addListAdapters(['table'])

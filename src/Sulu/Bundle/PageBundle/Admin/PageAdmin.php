@@ -15,8 +15,8 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
-use Sulu\Bundle\AdminBundle\Admin\View\Route;
-use Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactoryInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\View;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
@@ -44,9 +44,9 @@ class PageAdmin extends Admin
     const EDIT_FORM_ROUTE = 'sulu_page.page_edit_form';
 
     /**
-     * @var RouteBuilderFactoryInterface
+     * @var ViewBuilderFactoryInterface
      */
-    private $routeBuilderFactory;
+    private $viewBuilderFactory;
 
     /**
      * @var WebspaceManagerInterface
@@ -74,14 +74,14 @@ class PageAdmin extends Admin
     private $versioningEnabled;
 
     public function __construct(
-        RouteBuilderFactoryInterface $routeBuilderFactory,
+        ViewBuilderFactoryInterface $viewBuilderFactory,
         WebspaceManagerInterface $webspaceManager,
         SecurityCheckerInterface $securityChecker,
         SessionManagerInterface $sessionManager,
         TeaserProviderPoolInterface $teaserProviderPool,
         bool $versioningEnabled
     ) {
-        $this->routeBuilderFactory = $routeBuilderFactory;
+        $this->viewBuilderFactory = $viewBuilderFactory;
         $this->webspaceManager = $webspaceManager;
         $this->securityChecker = $securityChecker;
         $this->sessionManager = $sessionManager;
@@ -95,7 +95,7 @@ class PageAdmin extends Admin
             $webspaceItem = new NavigationItem('sulu_page.webspaces');
             $webspaceItem->setPosition(10);
             $webspaceItem->setIcon('su-webspace');
-            $webspaceItem->setMainRoute(static::WEBSPACE_TABS_ROUTE);
+            $webspaceItem->setView(static::WEBSPACE_TABS_ROUTE);
 
             $navigationItemCollection->add($webspaceItem);
         }
@@ -159,18 +159,18 @@ class PageAdmin extends Admin
 
         $previewCondition = 'nodeType == 1';
 
-        // This route has to be registered even if permissions for pages are missing
-        // Otherwise the application breaks when other bundles try to add child routes to this one
+        // This view has to be registered even if permissions for pages are missing
+        // Otherwise the application breaks when other bundles try to add child views to this one
         $viewCollection->add(
-            $this->routeBuilderFactory
-                ->createRouteBuilder(static::WEBSPACE_TABS_ROUTE, '/webspaces/:webspace', 'sulu_page.webspace_tabs')
+            $this->viewBuilderFactory
+                ->createViewBuilder(static::WEBSPACE_TABS_ROUTE, '/webspaces/:webspace', 'sulu_page.webspace_tabs')
                 ->setAttributeDefault('webspace', $firstWebspace->getKey())
         );
 
         if ($this->hasSomeWebspacePermission()) {
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createRouteBuilder(static::PAGES_ROUTE, '/pages/:locale', 'sulu_page.page_list')
+                $this->viewBuilderFactory
+                    ->createViewBuilder(static::PAGES_ROUTE, '/pages/:locale', 'sulu_page.page_list')
                     ->setAttributeDefault('locale', $firstWebspace->getDefaultLocalization()->getLocale())
                     ->setOption('tabTitle', 'sulu_page.pages')
                     ->setOption('tabOrder', 0)
@@ -179,40 +179,40 @@ class PageAdmin extends Admin
                     ->setParent(static::WEBSPACE_TABS_ROUTE)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory->createRouteBuilder(
+                $this->viewBuilderFactory->createViewBuilder(
                     static::ADD_FORM_ROUTE,
                     '/webspaces/:webspace/pages/:locale/add/:parentId',
                     'sulu_page.page_tabs'
                 )
-                    ->setOption('backRoute', static::PAGES_ROUTE)
-                    ->setOption('routerAttributesToBackRoute', ['webspace'])
+                    ->setOption('backView', static::PAGES_ROUTE)
+                    ->setOption('routerAttributesToBackView', ['webspace'])
                     ->setOption('resourceKey', 'pages')
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createFormRouteBuilder('sulu_page.page_add_form.details', '/details')
+                $this->viewBuilderFactory
+                    ->createFormViewBuilder('sulu_page.page_add_form.details', '/details')
                     ->setResourceKey('pages')
                     ->setFormKey('page')
                     ->setTabTitle('sulu_admin.details')
-                    ->setEditRoute(static::EDIT_FORM_ROUTE)
-                    ->addRouterAttributesToEditRoute(['webspace'])
+                    ->setEditView(static::EDIT_FORM_ROUTE)
+                    ->addRouterAttributesToEditView(['webspace'])
                     ->addToolbarActions($formToolbarActionsWithType)
                     ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
                     ->setParent(static::ADD_FORM_ROUTE)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory->createRouteBuilder(
+                $this->viewBuilderFactory->createViewBuilder(
                     static::EDIT_FORM_ROUTE,
                     '/webspaces/:webspace/pages/:locale/:id',
                     'sulu_page.page_tabs'
                 )
-                    ->setOption('backRoute', static::PAGES_ROUTE)
-                    ->setOption('routerAttributesToBackRoute', ['id' => 'active', 'webspace'])
+                    ->setOption('backView', static::PAGES_ROUTE)
+                    ->setOption('routerAttributesToBackView', ['id' => 'active', 'webspace'])
                     ->setOption('resourceKey', 'pages')
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.details', '/details')
+                $this->viewBuilderFactory
+                    ->createPreviewFormViewBuilder('sulu_page.page_edit_form.details', '/details')
                     ->disablePreviewWebspaceChooser()
                     ->setResourceKey('pages')
                     ->setFormKey('page')
@@ -226,8 +226,8 @@ class PageAdmin extends Admin
                     ->setParent(static::EDIT_FORM_ROUTE)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.seo', '/seo')
+                $this->viewBuilderFactory
+                    ->createPreviewFormViewBuilder('sulu_page.page_edit_form.seo', '/seo')
                     ->disablePreviewWebspaceChooser()
                     ->setResourceKey('pages')
                     ->setFormKey('page_seo')
@@ -241,8 +241,8 @@ class PageAdmin extends Admin
                     ->setParent(static::EDIT_FORM_ROUTE)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.excerpt', '/excerpt')
+                $this->viewBuilderFactory
+                    ->createPreviewFormViewBuilder('sulu_page.page_edit_form.excerpt', '/excerpt')
                     ->disablePreviewWebspaceChooser()
                     ->setResourceKey('pages')
                     ->setFormKey('page_excerpt')
@@ -256,8 +256,8 @@ class PageAdmin extends Admin
                     ->setParent(static::EDIT_FORM_ROUTE)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createPreviewFormRouteBuilder('sulu_page.page_edit_form.settings', '/settings')
+                $this->viewBuilderFactory
+                    ->createPreviewFormViewBuilder('sulu_page.page_edit_form.settings', '/settings')
                     ->disablePreviewWebspaceChooser()
                     ->setResourceKey('pages')
                     ->setFormKey('page_settings')
@@ -271,8 +271,8 @@ class PageAdmin extends Admin
                     ->setParent(static::EDIT_FORM_ROUTE)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createFormRouteBuilder('sulu_page.page_edit_form.permissions', '/permissions')
+                $this->viewBuilderFactory
+                    ->createFormViewBuilder('sulu_page.page_edit_form.permissions', '/permissions')
                     ->setResourceKey('permissions')
                     ->setFormKey('permission_details')
                     ->setApiOptions(['resourceKey' => 'pages'])

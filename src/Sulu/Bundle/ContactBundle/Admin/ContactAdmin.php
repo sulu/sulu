@@ -15,7 +15,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
-use Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactoryInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -41,9 +41,9 @@ class ContactAdmin extends Admin
     const ACCOUNT_EDIT_FORM_ROUTE = 'sulu_contact.account_edit_form';
 
     /**
-     * @var RouteBuilderFactoryInterface
+     * @var ViewBuilderFactoryInterface
      */
-    private $routeBuilderFactory;
+    private $viewBuilderFactory;
 
     /**
      * @var SecurityCheckerInterface
@@ -56,11 +56,11 @@ class ContactAdmin extends Admin
     private $managerRegistry;
 
     public function __construct(
-        RouteBuilderFactoryInterface $routeBuilderFactory,
+        ViewBuilderFactoryInterface $viewBuilderFactory,
         SecurityCheckerInterface $securityChecker,
         ManagerRegistry $managerRegistry
     ) {
-        $this->routeBuilderFactory = $routeBuilderFactory;
+        $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->managerRegistry = $managerRegistry;
     }
@@ -74,7 +74,7 @@ class ContactAdmin extends Admin
         if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $people = new NavigationItem('sulu_contact.people');
             $people->setPosition(10);
-            $people->setMainRoute(static::CONTACT_LIST_ROUTE);
+            $people->setView(static::CONTACT_LIST_ROUTE);
 
             $contacts->addChild($people);
         }
@@ -82,7 +82,7 @@ class ContactAdmin extends Admin
         if ($this->securityChecker->hasPermission(static::ACCOUNT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $companies = new NavigationItem('sulu_contact.organizations');
             $companies->setPosition(20);
-            $companies->setMainRoute(static::ACCOUNT_LIST_ROUTE);
+            $companies->setView(static::ACCOUNT_LIST_ROUTE);
 
             $contacts->addChild($companies);
         }
@@ -92,10 +92,10 @@ class ContactAdmin extends Admin
 
     public function configureViews(ViewCollection $viewCollection): void
     {
-        $contactEditFormRoute = $this->routeBuilderFactory
-            ->createResourceTabRouteBuilder(static::CONTACT_EDIT_FORM_ROUTE, '/contacts/:id')
+        $contactEditFormView = $this->viewBuilderFactory
+            ->createResourceTabViewBuilder(static::CONTACT_EDIT_FORM_ROUTE, '/contacts/:id')
             ->setResourceKey('contacts')
-            ->setBackRoute(static::CONTACT_LIST_ROUTE)
+            ->setBackView(static::CONTACT_LIST_ROUTE)
             ->setTitleProperty('fullName');
 
         if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
@@ -123,35 +123,35 @@ class ContactAdmin extends Admin
             }
 
             $viewCollection->add(
-                $this->routeBuilderFactory->createListRouteBuilder(static::CONTACT_LIST_ROUTE, '/contacts')
+                $this->viewBuilderFactory->createListViewBuilder(static::CONTACT_LIST_ROUTE, '/contacts')
                     ->setResourceKey('contacts')
                     ->setListKey('contacts')
                     ->setTitle('sulu_contact.people')
                     ->addListAdapters(['table'])
-                    ->setAddRoute(static::CONTACT_ADD_FORM_ROUTE)
-                    ->setEditRoute(static::CONTACT_EDIT_FORM_ROUTE)
+                    ->setAddView(static::CONTACT_ADD_FORM_ROUTE)
+                    ->setEditView(static::CONTACT_EDIT_FORM_ROUTE)
                     ->addToolbarActions($contactListToolbarActions)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createResourceTabRouteBuilder(static::CONTACT_ADD_FORM_ROUTE, '/contacts/add')
+                $this->viewBuilderFactory
+                    ->createResourceTabViewBuilder(static::CONTACT_ADD_FORM_ROUTE, '/contacts/add')
                     ->setResourceKey('contacts')
-                    ->setBackRoute(static::CONTACT_LIST_ROUTE)
+                    ->setBackView(static::CONTACT_LIST_ROUTE)
             );
-            $viewCollection->add($contactEditFormRoute);
+            $viewCollection->add($contactEditFormView);
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createFormRouteBuilder('sulu_contact.contact_add_form.details', '/details')
+                $this->viewBuilderFactory
+                    ->createFormViewBuilder('sulu_contact.contact_add_form.details', '/details')
                     ->setResourceKey('contacts')
                     ->setFormKey('contact_details')
                     ->setTabTitle('sulu_admin.details')
-                    ->setEditRoute(static::CONTACT_EDIT_FORM_ROUTE)
+                    ->setEditView(static::CONTACT_EDIT_FORM_ROUTE)
                     ->addToolbarActions($contactFormToolbarActions)
                     ->setParent(static::CONTACT_ADD_FORM_ROUTE)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createFormRouteBuilder('sulu_contact.contact_edit_form.details', '/details')
+                $this->viewBuilderFactory
+                    ->createFormViewBuilder('sulu_contact.contact_edit_form.details', '/details')
                     ->setResourceKey('contacts')
                     ->setFormKey('contact_details')
                     ->setTabTitle('sulu_admin.details')
@@ -160,8 +160,8 @@ class ContactAdmin extends Admin
                     ->setParent(static::CONTACT_EDIT_FORM_ROUTE)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createListRouteBuilder('sulu_contact.contact_documents_list', '/documents')
+                $this->viewBuilderFactory
+                    ->createListViewBuilder('sulu_contact.contact_documents_list', '/documents')
                     ->setResourceKey('contact_media')
                     ->setListKey('media')
                     ->setUserSettingsKey('contact_media')
@@ -173,9 +173,9 @@ class ContactAdmin extends Admin
                     ->setParent(static::CONTACT_EDIT_FORM_ROUTE)
             );
         } else {
-            // This route has to be registered even if permissions for contacts are missing
-            // Otherwise the application breaks when other bundles try to add child routes to this one
-            $viewCollection->add($contactEditFormRoute);
+            // This view has to be registered even if permissions for contacts are missing
+            // Otherwise the application breaks when other bundles try to add child views to this one
+            $viewCollection->add($contactEditFormView);
         }
 
         if ($this->securityChecker->hasPermission(static::ACCOUNT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
@@ -203,42 +203,42 @@ class ContactAdmin extends Admin
             }
 
             $viewCollection->add(
-                $this->routeBuilderFactory->createListRouteBuilder(static::ACCOUNT_LIST_ROUTE, '/accounts')
+                $this->viewBuilderFactory->createListViewBuilder(static::ACCOUNT_LIST_ROUTE, '/accounts')
                     ->setResourceKey('accounts')
                     ->setListKey('accounts')
                     ->setTitle('sulu_contact.organizations')
                     ->addListAdapters(['table'])
-                    ->setAddRoute(static::ACCOUNT_ADD_FORM_ROUTE)
-                    ->setEditRoute(static::ACCOUNT_EDIT_FORM_ROUTE)
+                    ->setAddView(static::ACCOUNT_ADD_FORM_ROUTE)
+                    ->setEditView(static::ACCOUNT_EDIT_FORM_ROUTE)
                     ->addToolbarActions($accountListToolbarActions)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createResourceTabRouteBuilder(static::ACCOUNT_ADD_FORM_ROUTE, '/accounts/add')
+                $this->viewBuilderFactory
+                    ->createResourceTabViewBuilder(static::ACCOUNT_ADD_FORM_ROUTE, '/accounts/add')
                     ->setResourceKey('accounts')
-                    ->setBackRoute(static::ACCOUNT_LIST_ROUTE)
+                    ->setBackView(static::ACCOUNT_LIST_ROUTE)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createFormRouteBuilder('sulu_contact.account_add_form.details', '/details')
+                $this->viewBuilderFactory
+                    ->createFormViewBuilder('sulu_contact.account_add_form.details', '/details')
                     ->setResourceKey('accounts')
                     ->setFormKey('account_details')
                     ->setTabTitle('sulu_admin.details')
-                    ->setEditRoute(static::ACCOUNT_EDIT_FORM_ROUTE)
+                    ->setEditView(static::ACCOUNT_EDIT_FORM_ROUTE)
                     ->addToolbarActions($accountFormToolbarActions)
                     ->setParent(static::ACCOUNT_ADD_FORM_ROUTE)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createResourceTabRouteBuilder(static::ACCOUNT_EDIT_FORM_ROUTE, '/accounts/:id')
+                $this->viewBuilderFactory
+                    ->createResourceTabViewBuilder(static::ACCOUNT_EDIT_FORM_ROUTE, '/accounts/:id')
                     ->setResourceKey('accounts')
-                    ->setBackRoute(static::ACCOUNT_LIST_ROUTE)
+                    ->setBackView(static::ACCOUNT_LIST_ROUTE)
                     ->setTitleProperty('name')
                     ->addRouterAttributesToBlacklist(['active', 'limit', 'page', 'search', 'sortColumn', 'sortOrder'])
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createFormRouteBuilder('sulu_contact.account_edit_form.details', '/details')
+                $this->viewBuilderFactory
+                    ->createFormViewBuilder('sulu_contact.account_edit_form.details', '/details')
                     ->setResourceKey('accounts')
                     ->setFormKey('account_details')
                     ->setTabTitle('sulu_admin.details')
@@ -247,13 +247,13 @@ class ContactAdmin extends Admin
                     ->setTabOrder(1024)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createListRouteBuilder('sulu_contact.account_contacts_list', '/contacts')
+                $this->viewBuilderFactory
+                    ->createListViewBuilder('sulu_contact.account_contacts_list', '/contacts')
                     ->setResourceKey('account_contacts')
                     ->setListKey('account_contacts')
                     ->setTabTitle('sulu_contact.people')
                     ->addListAdapters(['table'])
-                    ->setEditRoute(static::CONTACT_EDIT_FORM_ROUTE)
+                    ->setEditView(static::CONTACT_EDIT_FORM_ROUTE)
                     ->addRouterAttributesToListRequest(['id'])
                     ->addToolbarActions([
                         new ToolbarAction('sulu_contact.add_contact'),
@@ -264,8 +264,8 @@ class ContactAdmin extends Admin
                     ->setParent(static::ACCOUNT_EDIT_FORM_ROUTE)
             );
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createListRouteBuilder('sulu_contact.account_documents_list', '/documents')
+                $this->viewBuilderFactory
+                    ->createListViewBuilder('sulu_contact.account_documents_list', '/documents')
                     ->setResourceKey('account_media')
                     ->setListKey('media')
                     ->setUserSettingsKey('contact_media')

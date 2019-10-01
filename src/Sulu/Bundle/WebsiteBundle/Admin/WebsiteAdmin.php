@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactoryInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
@@ -37,9 +37,9 @@ class WebsiteAdmin extends Admin
     }
 
     /**
-     * @var RouteBuilderFactoryInterface
+     * @var ViewBuilderFactoryInterface
      */
-    private $routeBuilderFactory;
+    private $viewBuilderFactory;
 
     /**
      * @var WebspaceManagerInterface
@@ -57,12 +57,12 @@ class WebsiteAdmin extends Admin
     private $urlGenerator;
 
     public function __construct(
-        RouteBuilderFactoryInterface $routeBuilderFactory,
+        ViewBuilderFactoryInterface $viewBuilderFactory,
         WebspaceManagerInterface $webspaceManager,
         SecurityCheckerInterface $securityChecker,
         UrlGeneratorInterface $urlGenerator
     ) {
-        $this->routeBuilderFactory = $routeBuilderFactory;
+        $this->viewBuilderFactory = $viewBuilderFactory;
         $this->webspaceManager = $webspaceManager;
         $this->securityChecker = $securityChecker;
         $this->urlGenerator = $urlGenerator;
@@ -77,8 +77,8 @@ class WebsiteAdmin extends Admin
 
         if ($this->hasSomeWebspaceAnalyticsPermission()) {
             $viewCollection->add(
-                $this->routeBuilderFactory
-                    ->createFormOverlayListRouteBuilder('sulu_webspace.analytics_list', '/analytics')
+                $this->viewBuilderFactory
+                    ->createFormOverlayListViewBuilder('sulu_webspace.analytics_list', '/analytics')
                     ->setResourceKey('analytics')
                     ->setListKey('analytics')
                     ->addListAdapters(['table_light'])

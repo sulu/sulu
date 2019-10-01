@@ -641,7 +641,7 @@ test('Should navigate to defined route on back button click', () => {
 
     const route = {
         options: {
-            backRoute: 'test_route',
+            backView: 'test_route',
             formKey: 'snippets',
             locales: [],
             toolbarActions: [],
@@ -670,10 +670,10 @@ test('Should navigate to defined route on back button click with routerAttribues
 
     const route = {
         options: {
-            backRoute: 'test_route',
+            backView: 'test_route',
             formKey: 'snippets',
             locales: [],
-            routerAttributesToBackRoute: ['webspace'],
+            routerAttributesToBackView: ['webspace'],
             toolbarActions: [],
         },
     };
@@ -702,10 +702,10 @@ test('Should navigate to defined route on back button click with mixed routerAtt
 
     const route = {
         options: {
-            backRoute: 'test_route',
+            backView: 'test_route',
             formKey: 'snippets',
             locales: [],
-            routerAttributesToBackRoute: {0: 'webspace', 'id': 'active'},
+            routerAttributesToBackView: {0: 'webspace', 'id': 'active'},
             toolbarActions: [],
         },
     };
@@ -735,7 +735,7 @@ test('Should navigate to defined route on back button click without locale', () 
 
     const route = {
         options: {
-            backRoute: 'test_route',
+            backView: 'test_route',
             formKey: 'snippets',
             toolbarActions: [],
         },
@@ -761,7 +761,7 @@ test('Should navigate to defined route after dialog has been confirmed', () => {
 
     const route = {
         options: {
-            backRoute: 'test_route',
+            backView: 'test_route',
             formKey: 'snippets',
             toolbarActions: [],
         },
@@ -779,7 +779,7 @@ test('Should navigate to defined route after dialog has been confirmed', () => {
 
     const checkFormStoreDirtyStateBeforeNavigation = router.addUpdateRouteHook.mock.calls[0][0];
 
-    const backRoute = {
+    const backView = {
         name: 'test_route',
     };
     const backRouteAttributes = {};
@@ -794,7 +794,7 @@ test('Should navigate to defined route after dialog has been confirmed', () => {
     expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
     expect(router.navigate).not.toBeCalled();
 
-    expect(checkFormStoreDirtyStateBeforeNavigation(backRoute, backRouteAttributes, router.navigate)).toEqual(false);
+    expect(checkFormStoreDirtyStateBeforeNavigation(backView, backRouteAttributes, router.navigate)).toEqual(false);
     form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('onConfirm')();
     form.update();
     expect(router.navigate).toBeCalledWith('test_route', backRouteAttributes);
@@ -807,7 +807,7 @@ test('Should navigate to defined route after dialog has been confirmed using res
 
     const route = {
         options: {
-            backRoute: 'test_route',
+            backView: 'test_route',
             formKey: 'snippets',
             toolbarActions: [],
         },
@@ -825,7 +825,7 @@ test('Should navigate to defined route after dialog has been confirmed using res
 
     const checkFormStoreDirtyStateBeforeNavigation = router.addUpdateRouteHook.mock.calls[0][0];
 
-    const backRoute = {
+    const backView = {
         name: 'test_route',
     };
     const backRouteAttributes = {};
@@ -840,7 +840,7 @@ test('Should navigate to defined route after dialog has been confirmed using res
     expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
     expect(router.restore).not.toBeCalled();
 
-    expect(checkFormStoreDirtyStateBeforeNavigation(backRoute, backRouteAttributes, router.restore)).toEqual(false);
+    expect(checkFormStoreDirtyStateBeforeNavigation(backView, backRouteAttributes, router.restore)).toEqual(false);
     form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('onConfirm')();
     form.update();
     expect(router.restore).toBeCalledWith('test_route', backRouteAttributes);
@@ -853,7 +853,7 @@ test('Should not close the window if formStore is still dirty', () => {
 
     const route = {
         options: {
-            backRoute: 'test_route',
+            backView: 'test_route',
             formKey: 'snippets',
             toolbarActions: [],
         },
@@ -882,7 +882,7 @@ test('Should close the window if formStore is not dirty', () => {
 
     const route = {
         options: {
-            backRoute: 'test_route',
+            backView: 'test_route',
             formKey: 'snippets',
             toolbarActions: [],
         },
@@ -940,7 +940,7 @@ test('Should change locale by route navigation via locale chooser', () => {
     const route = {
         name: 'sulu_admin.form',
         options: {
-            backRoute: 'test_route',
+            backView: 'test_route',
             formKey: 'snippets',
             locales: [],
             toolbarActions: [],
@@ -1727,7 +1727,7 @@ test('Should keep errors after form submission has failed', (done) => {
     });
 });
 
-test('Should save form when submitted and redirect to editRoute', () => {
+test('Should save form when submitted and redirect to editView', () => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve());
     ResourceRequester.post.mockReturnValue(Promise.resolve({}));
@@ -1747,10 +1747,10 @@ test('Should save form when submitted and redirect to editRoute', () => {
 
     const route = {
         options: {
-            editRoute: 'editRoute',
+            editView: 'editView',
             formKey: 'snippets',
             locales: [],
-            routerAttributesToEditRoute: ['webspace'],
+            routerAttributesToEditView: ['webspace'],
             toolbarActions: [],
         },
     };
@@ -1775,12 +1775,12 @@ test('Should save form when submitted and redirect to editRoute', () => {
             expect(resourceStore.destroy).toBeCalled();
             expect(ResourceRequester.post).toBeCalledWith('snippets', {value: 'Value'}, {});
             expect(router.navigate)
-                .toBeCalledWith('editRoute', {id: undefined, locale: undefined, webspace: 'sulu_io'});
+                .toBeCalledWith('editView', {id: undefined, locale: undefined, webspace: 'sulu_io'});
         });
     });
 });
 
-test('Should save form when submitted and redirect to editRoute', () => {
+test('Should save form when submitted and redirect to editView', () => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve());
     ResourceRequester.post.mockReturnValue(Promise.resolve({}));
@@ -1800,10 +1800,10 @@ test('Should save form when submitted and redirect to editRoute', () => {
 
     const route = {
         options: {
-            editRoute: 'editRoute',
+            editView: 'editView',
             formKey: 'snippets',
             locales: [],
-            routerAttributesToEditRoute: {0: 'webspace', 'id': 'active'},
+            routerAttributesToEditView: {0: 'webspace', 'id': 'active'},
             toolbarActions: [],
         },
     };
@@ -1828,7 +1828,7 @@ test('Should save form when submitted and redirect to editRoute', () => {
             expect(resourceStore.destroy).toBeCalled();
             expect(ResourceRequester.post).toBeCalledWith('snippets', {value: 'Value'}, {});
             expect(router.navigate)
-                .toBeCalledWith('editRoute', {active: 8, id: undefined, locale: undefined, webspace: 'sulu_io'});
+                .toBeCalledWith('editView', {active: 8, id: undefined, locale: undefined, webspace: 'sulu_io'});
         });
     });
 });

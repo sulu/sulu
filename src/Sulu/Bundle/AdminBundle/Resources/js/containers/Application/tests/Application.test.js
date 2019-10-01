@@ -74,7 +74,7 @@ jest.mock('../../ViewRenderer', () => function Test(props) {
     return (
         <div>
             <h1>Test</h1>
-            <h2>{props.router.route.view}</h2>
+            <h2>{props.router.route.type}</h2>
         </div>
     );
 });
@@ -144,7 +144,7 @@ test('Render based on current route', () => {
     const router = new Router({});
     router.route = {
         name: 'test',
-        view: 'test',
+        type: 'test',
         attributeDefaults: {},
         rerenderAttributes: [],
         path: '/webspaces',
@@ -162,7 +162,7 @@ test('Render based on current route with app version', () => {
     const router = new Router({});
     router.route = {
         name: 'test',
-        view: 'test',
+        type: 'test',
         attributeDefaults: {},
         rerenderAttributes: [],
         path: '/webspaces',
@@ -180,7 +180,7 @@ test('Render opened navigation', () => {
     const router = new Router({});
     router.route = {
         name: 'test',
-        view: 'test',
+        type: 'test',
         attributeDefaults: {},
         rerenderAttributes: [],
         path: '/webspaces',
@@ -199,7 +199,7 @@ test('Pin navigation', () => {
     const router = new Router({});
     router.route = {
         name: 'test',
-        view: 'test',
+        type: 'test',
         attributeDefaults: {},
         rerenderAttributes: [],
         path: '/webspaces',
@@ -220,7 +220,7 @@ test('Pin navigation from beginning', () => {
     const router = new Router({});
     router.route = {
         name: 'test',
-        view: 'test',
+        type: 'test',
         attributeDefaults: {},
         rerenderAttributes: [],
         path: '/webspaces',
@@ -245,7 +245,7 @@ test('Do not pin navigation from beginning', () => {
     const router = new Router({});
     router.route = {
         name: 'test',
-        view: 'test',
+        type: 'test',
         attributeDefaults: {},
         rerenderAttributes: [],
         path: '/webspaces',

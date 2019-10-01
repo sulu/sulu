@@ -21,7 +21,7 @@ test('Should render the children after the tabs', () => {
         parent: null,
         path: '/route1',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
     const childRoute2 = {
         attributeDefaults: {},
@@ -33,7 +33,7 @@ test('Should render the children after the tabs', () => {
         parent: null,
         path: '/route2',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
 
     const route = {
@@ -49,7 +49,7 @@ test('Should render the children after the tabs', () => {
         parent: null,
         path: '/parent',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
 
     const attributes = {
@@ -80,7 +80,7 @@ test('Should render the header between children and tabs', () => {
         parent: null,
         path: '/route1',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
 
     const route = {
@@ -95,7 +95,7 @@ test('Should render the header between children and tabs', () => {
         parent: null,
         path: '/parent',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
 
     const attributes = {
@@ -127,7 +127,7 @@ test('Should render the children with the passed props', () => {
         parent: null,
         path: '/route1',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
 
     const route = {
@@ -142,7 +142,7 @@ test('Should render the children with the passed props', () => {
         parent: null,
         path: '/parent',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
 
     const attributes = {
@@ -176,7 +176,7 @@ test('Should consider the tabOrder when rendering the tabs', () => {
         parent: null,
         path: '/route1',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
     const childRoute2 = {
         attributeDefaults: {},
@@ -189,7 +189,7 @@ test('Should consider the tabOrder when rendering the tabs', () => {
         parent: null,
         path: '/route2',
         rerenderAttributes: [],
-        view: 'route2',
+        type: 'route2',
     };
     const childRoute3 = {
         attributeDefaults: {},
@@ -202,7 +202,7 @@ test('Should consider the tabOrder when rendering the tabs', () => {
         parent: null,
         path: '/route3',
         rerenderAttributes: [],
-        view: 'route3',
+        type: 'route3',
     };
 
     const route = {
@@ -219,7 +219,7 @@ test('Should consider the tabOrder when rendering the tabs', () => {
         parent: null,
         path: '/parent',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
 
     const attributes = {
@@ -254,7 +254,7 @@ test('Should mark currently active tab as selected according to prop', (done) =>
         parent: null,
         path: '/route1',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
     const childRoute2 = {
         attributeDefaults: {},
@@ -266,7 +266,7 @@ test('Should mark currently active tab as selected according to prop', (done) =>
         parent: null,
         path: '/route2',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
 
     const route = {
@@ -282,7 +282,7 @@ test('Should mark currently active tab as selected according to prop', (done) =>
         parent: null,
         path: '/parent',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
 
     const attributes = {
@@ -324,7 +324,7 @@ test('Should mark currently active tab as selected', (done) => {
         parent: null,
         path: '/route1',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
     const childRoute2 = {
         attributeDefaults: {},
@@ -336,7 +336,7 @@ test('Should mark currently active tab as selected', (done) => {
         parent: null,
         path: '/route2',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
 
     const route = {
@@ -352,7 +352,7 @@ test('Should mark currently active tab as selected', (done) => {
         parent: null,
         path: '/parent',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
 
     const attributes = {
@@ -394,7 +394,7 @@ test('Should redirect to child route with highest priority if no tab is active b
         parent: null,
         path: '/route1',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
     const childRoute2 = {
         attributeDefaults: {},
@@ -407,7 +407,7 @@ test('Should redirect to child route with highest priority if no tab is active b
         parent: null,
         path: '/route2',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
 
     const route = {
@@ -423,7 +423,7 @@ test('Should redirect to child route with highest priority if no tab is active b
         parent: null,
         path: '/parent',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
 
     const attributes = {
@@ -459,7 +459,7 @@ test('Should redirect to child route from props with highest priority if no tab 
         parent: null,
         path: '/route1',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
     const childRoute2 = {
         attributeDefaults: {},
@@ -472,7 +472,7 @@ test('Should redirect to child route from props with highest priority if no tab 
         parent: null,
         path: '/route2',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
 
     const childRoutes = [childRoute1, childRoute2];
@@ -487,7 +487,7 @@ test('Should redirect to child route from props with highest priority if no tab 
         parent: null,
         path: '/parent',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
 
     const attributes = {
@@ -523,7 +523,7 @@ test('Navigate to tab if it was clicked', () => {
         parent: null,
         path: '/route1',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
     const childRoute2 = {
         attributeDefaults: {},
@@ -535,7 +535,7 @@ test('Navigate to tab if it was clicked', () => {
         parent: null,
         path: '/route2',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
 
     const route = {
@@ -551,7 +551,7 @@ test('Navigate to tab if it was clicked', () => {
         parent: null,
         path: '/parent',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
 
     const attributes = {
@@ -586,7 +586,7 @@ test('Navigate to tab if it was clicked', () => {
         parent: null,
         path: '/route1',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
     const childRoute2 = {
         attributeDefaults: {},
@@ -598,7 +598,7 @@ test('Navigate to tab if it was clicked', () => {
         parent: null,
         path: '/route2',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
 
     const route = {
@@ -615,7 +615,7 @@ test('Navigate to tab if it was clicked', () => {
         parent: null,
         path: '/parent',
         rerenderAttributes: [],
-        view: 'route1',
+        type: 'route1',
     };
 
     const attributes = {

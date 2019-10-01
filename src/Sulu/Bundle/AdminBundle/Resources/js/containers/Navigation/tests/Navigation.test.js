@@ -14,7 +14,7 @@ jest.mock('../registries/navigationRegistry', () => ({
             id: '111-111',
             title: 'Test Navigation',
             icon: 'su-options',
-            mainRoute: 'returned_main_route',
+            view: 'returned_main_route',
         }
     ),
     getAll: jest.fn().mockReturnValue([
@@ -22,14 +22,14 @@ jest.mock('../registries/navigationRegistry', () => ({
             id: '111-111',
             title: 'Test Navigation',
             icon: 'su-options',
-            mainRoute: 'sulu_admin.form_tab',
+            view: 'sulu_admin.form_tab',
         },
         {
             id: '222-222',
             title: 'Test Navigation 2',
             icon: 'su-article',
-            mainRoute: 'sulu_article.list',
-            childRoutes: ['sulu_article.form', 'sulu_article.form'],
+            view: 'sulu_article.list',
+            childViews: ['sulu_article.form', 'sulu_article.form'],
         },
         {
             id: '333-333',
@@ -40,14 +40,14 @@ jest.mock('../registries/navigationRegistry', () => ({
                     id: '333-child1',
                     title: 'Test Navigation Child 1',
                     icon: 'su-options',
-                    mainRoute: 'sulu_admin.form_tab',
+                    view: 'sulu_admin.form_tab',
                 },
                 {
                     id: '333-child2',
                     title: 'Test Navigation Child 2',
                     icon: 'su-article',
-                    mainRoute: 'sulu_article.list',
-                    childRoutes: ['sulu_article.form', 'sulu_article.form'],
+                    view: 'sulu_article.list',
+                    childViews: ['sulu_article.form', 'sulu_article.form'],
                 },
             ],
         },
@@ -58,7 +58,7 @@ test('Should render navigation', () => {
     const router = new Router({});
     router.route = {
         name: 'sulu_admin.form_tab',
-        view: 'form_tab',
+        type: 'form_tab',
         attributeDefaults: {},
         children: [],
         options: {},
@@ -87,7 +87,7 @@ test('Should render navigation without appVersion', () => {
     const router = new Router({});
     router.route = {
         name: 'sulu_admin.form_tab',
-        view: 'form_tab',
+        type: 'form_tab',
         attributeDefaults: {},
         children: [],
         options: {},
@@ -116,7 +116,7 @@ test('Should call the navigation callback, pin callback and router navigate', ()
     const router = new Router({});
     router.route = {
         name: 'sulu_admin.form_tab',
-        view: 'form_tab',
+        type: 'form_tab',
         attributeDefaults: {},
         children: [],
         options: {},

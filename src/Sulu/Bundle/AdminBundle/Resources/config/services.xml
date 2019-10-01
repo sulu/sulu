@@ -15,7 +15,7 @@
             <argument type="service" id="twig"/>
             <argument type="service" id="translator.default"/>
             <argument type="service" id="sulu_admin.metadata_provider_registry"/>
-            <argument type="service" id="sulu_admin.route_registry"/>
+            <argument type="service" id="sulu_admin.view_registry"/>
             <argument type="service" id="sulu_admin.navigation_registry"/>
             <argument type="service" id="sulu_admin.field_type_option_registry"/>
             <argument type="service" id="sulu_contact.contact_manager" />
@@ -77,10 +77,10 @@
             <tag name="sulu_admin.list_metadata_loader"/>
         </service>
 
-        <service id="sulu_admin.route_factory" class="Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactory" />
+        <service id="sulu_admin.view_builder_factory" class="Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory" />
         <service
-            id="Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactoryInterface"
-            alias="sulu_admin.route_factory"
+            id="Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface"
+            alias="sulu_admin.view_builder_factory"
         />
 
         <service id="sulu_admin.form_metadata.form_xml_loader" class="Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader">
@@ -104,14 +104,14 @@
             <tag name="kernel.cache_warmer" />
         </service>
 
-        <service id="sulu_admin.route_registry" class="Sulu\Bundle\AdminBundle\Admin\View\RouteRegistry">
+        <service id="sulu_admin.view_registry" class="Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry">
             <argument type="service" id="sulu_admin.admin_pool"/>
         </service>
 
         <service id="sulu_admin.navigation_registry" class="Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry">
             <argument type="service" id="translator"/>
             <argument type="service" id="sulu_admin.admin_pool"/>
-            <argument type="service" id="sulu_admin.route_registry"/>
+            <argument type="service" id="sulu_admin.view_registry"/>
         </service>
 
         <service

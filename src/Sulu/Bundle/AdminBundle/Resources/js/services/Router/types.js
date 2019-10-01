@@ -17,7 +17,7 @@ export type Route = {|
     parent: ?Route,
     path: string,
     rerenderAttributes: Array<string>,
-    view: string,
+    type: string,
 |};
 
 export type AttributeMap = {[string]: string};

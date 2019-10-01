@@ -10,7 +10,7 @@ test('Return just the route name if no rerender attributes are given', () => {
         parent: undefined,
         path: '/route1',
         rerenderAttributes: [],
-        view: 'view1',
+        type: 'view1',
     };
     expect(getViewKeyFromRoute(route, {})).toEqual('route1');
 });
@@ -24,7 +24,7 @@ test('Return the route name rerender attributes are not given', () => {
         parent: undefined,
         path: '/route1',
         rerenderAttributes: ['webspace', 'locale'],
-        view: 'view1',
+        type: 'view1',
     };
 
     expect(getViewKeyFromRoute(route, {})).toEqual('route1');
@@ -39,7 +39,7 @@ test('Return the route name with the value of the rerender attributes', () => {
         parent: undefined,
         path: '/route1',
         rerenderAttributes: ['webspace', 'locale'],
-        view: 'view1',
+        type: 'view1',
     };
 
     expect(getViewKeyFromRoute(route, {webspace: 'sulu', locale: 'de'})).toEqual('route1-sulu__de');

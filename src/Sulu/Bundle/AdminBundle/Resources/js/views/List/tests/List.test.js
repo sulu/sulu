@@ -364,7 +364,7 @@ test('Should pass correct props to move list overlay', () => {
     }));
 });
 
-test('Should pass the onItemClick callback when an editRoute has been passed', () => {
+test('Should pass the onItemClick callback when an editView has been passed', () => {
     const List = require('../List').default;
     const router = {
         bind: jest.fn(),
@@ -372,7 +372,7 @@ test('Should pass the onItemClick callback when an editRoute has been passed', (
             options: {
                 adapters: ['table'],
                 listKey: 'snippets',
-                editRoute: 'editRoute',
+                editView: 'editView',
                 resourceKey: 'snippets',
             },
         },
@@ -399,7 +399,7 @@ test('Should pass the onItemClick callback if onItemClick prop is set', () => {
     expect(list.find('List').prop('onItemClick')).toBeInstanceOf(Function);
 });
 
-test('Should not pass the onItemClick callback if no editRoute has been passed and no onItemClick prop is set', () => {
+test('Should not pass the onItemClick callback if no editView has been passed and no onItemClick prop is set', () => {
     const List = require('../List').default;
     const router = {
         bind: jest.fn(),
@@ -416,7 +416,7 @@ test('Should not pass the onItemClick callback if no editRoute has been passed a
     expect(list.find('List').prop('onItemClick')).not.toBeInstanceOf(Function);
 });
 
-test('Should render the list with the add icon if a addRoute has been passed', () => {
+test('Should render the list with the add icon if a addView has been passed', () => {
     const List = require('../List').default;
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const AddToolbarAction = require('../toolbarActions/AddToolbarAction').default;
@@ -427,7 +427,7 @@ test('Should render the list with the add icon if a addRoute has been passed', (
         route: {
             options: {
                 adapters: ['tree_table'],
-                addRoute: 'addRoute',
+                addView: 'addView',
                 listKey: 'snippets',
                 resourceKey: 'snippets',
                 toolbarActions: [
@@ -465,7 +465,7 @@ test('Should render the list with the add icon if onItemAdd prop is set', () => 
     expect(list.find('List').prop('onItemAdd')).toBeInstanceOf(Function);
 });
 
-test('Should render the list without add icon if no addRoute has been passed and onItemAdd prop is not set', () => {
+test('Should render the list without add icon if no addView has been passed and onItemAdd prop is not set', () => {
     const List = require('../List').default;
     const router = {
         bind: jest.fn(),
@@ -568,8 +568,8 @@ test('Should navigate to defined route on back button click', () => {
         route: {
             options: {
                 adapters: ['table'],
-                backRoute: 'backRoute',
-                addRoute: 'addRoute',
+                backView: 'backView',
+                addView: 'addView',
                 listKey: 'test',
                 resourceKey: 'test',
             },
@@ -585,7 +585,7 @@ test('Should navigate to defined route on back button click', () => {
 
     const toolbarConfig = toolbarFunction.call(list.instance());
     toolbarConfig.backButton.onClick();
-    expect(router.restore).toBeCalledWith('backRoute', {locale: 'de'});
+    expect(router.restore).toBeCalledWith('backView', {locale: 'de'});
 });
 
 test('Should propagate errors to toolbar', () => {
@@ -598,8 +598,8 @@ test('Should propagate errors to toolbar', () => {
         route: {
             options: {
                 adapters: ['table'],
-                backRoute: 'backRoute',
-                addRoute: 'addRoute',
+                backView: 'backView',
+                addView: 'addView',
                 listKey: 'test',
                 resourceKey: 'test',
             },
@@ -625,8 +625,8 @@ test('Should navigate to defined route on back button click without locale', () 
         route: {
             options: {
                 adapters: ['table'],
-                backRoute: 'backRoute',
-                addRoute: 'addRoute',
+                backView: 'backView',
+                addView: 'addView',
                 listKey: 'test',
                 resourceKey: 'test',
             },
@@ -637,10 +637,10 @@ test('Should navigate to defined route on back button click without locale', () 
 
     const toolbarConfig = toolbarFunction.call(list.instance());
     toolbarConfig.backButton.onClick();
-    expect(router.restore).toBeCalledWith('backRoute', {});
+    expect(router.restore).toBeCalledWith('backView', {});
 });
 
-test('Should not render back button when no backRoute is configured', () => {
+test('Should not render back button when no backView is configured', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
@@ -650,7 +650,7 @@ test('Should not render back button when no backRoute is configured', () => {
         route: {
             options: {
                 adapters: ['table'],
-                addRoute: 'addRoute',
+                addView: 'addView',
                 listKey: 'test',
                 resourceKey: 'test',
             },
@@ -663,7 +663,7 @@ test('Should not render back button when no backRoute is configured', () => {
     expect(toolbarConfig.backButton).toBe(undefined);
 });
 
-test('Should render the add button in the toolbar only if an addRoute has been passed in options', () => {
+test('Should render the add button in the toolbar only if an addView has been passed in options', () => {
     const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
@@ -675,7 +675,7 @@ test('Should render the add button in the toolbar only if an addRoute has been p
         route: {
             options: {
                 adapters: ['table'],
-                addRoute: 'addRoute',
+                addView: 'addView',
                 listKey: 'test',
                 resourceKey: 'test',
                 toolbarActions: [
@@ -710,7 +710,7 @@ test('Should navigate when add button is clicked and locales have been passed in
         route: {
             options: {
                 adapters: ['table'],
-                addRoute: 'addRoute',
+                addView: 'addView',
                 locales: ['de', 'en'],
                 listKey: 'test',
                 resourceKey: 'test',
@@ -731,7 +731,7 @@ test('Should navigate when add button is clicked and locales have been passed in
 
     toolbarConfig.items[0].onClick();
 
-    expect(router.navigate).toBeCalledWith('addRoute', {locale: 'de'});
+    expect(router.navigate).toBeCalledWith('addView', {locale: 'de'});
 });
 
 test('Should navigate without locale when add button is clicked', () => {
@@ -747,7 +747,7 @@ test('Should navigate without locale when add button is clicked', () => {
         route: {
             options: {
                 adapters: ['table'],
-                addRoute: 'addRoute',
+                addView: 'addView',
                 listKey: 'test',
                 resourceKey: 'test',
                 toolbarActions: [
@@ -762,7 +762,7 @@ test('Should navigate without locale when add button is clicked', () => {
 
     toolbarConfig.items[0].onClick();
 
-    expect(router.navigate).toBeCalledWith('addRoute', {});
+    expect(router.navigate).toBeCalledWith('addView', {});
 });
 
 test('Should fire callback instead of navigate when onItemAdd prop is set and add button is clicked', () => {
@@ -778,7 +778,7 @@ test('Should fire callback instead of navigate when onItemAdd prop is set and ad
         route: {
             options: {
                 adapters: ['table'],
-                addRoute: 'addRoute',
+                addView: 'addView',
                 listKey: 'test',
                 resourceKey: 'test',
                 toolbarActions: [
@@ -806,7 +806,7 @@ test('Should navigate when pencil button is clicked and locales have been passed
         route: {
             options: {
                 adapters: ['table'],
-                editRoute: 'editRoute',
+                editView: 'editView',
                 locales: ['de', 'en'],
                 listKey: 'test',
                 resourceKey: 'test',
@@ -821,7 +821,7 @@ test('Should navigate when pencil button is clicked and locales have been passed
         },
     };
     list.find('ButtonCell button').at(0).simulate('click');
-    expect(router.navigate).toBeCalledWith('editRoute', {id: 1, locale: 'de'});
+    expect(router.navigate).toBeCalledWith('editView', {id: 1, locale: 'de'});
 });
 
 test('Should navigate without locale when pencil button is clicked', () => {
@@ -832,7 +832,7 @@ test('Should navigate without locale when pencil button is clicked', () => {
         route: {
             options: {
                 adapters: ['table'],
-                editRoute: 'editRoute',
+                editView: 'editView',
                 listKey: 'test',
                 resourceKey: 'test',
             },
@@ -841,7 +841,7 @@ test('Should navigate without locale when pencil button is clicked', () => {
 
     const list = mount(<List router={router} />);
     list.find('ButtonCell button').at(0).simulate('click');
-    expect(router.navigate).toBeCalledWith('editRoute', {id: 1});
+    expect(router.navigate).toBeCalledWith('editView', {id: 1});
 });
 
 test('Should fire callback instead of navigate when onItemClick prop is set and pencil button is clicked', () => {
@@ -854,7 +854,7 @@ test('Should fire callback instead of navigate when onItemClick prop is set and 
         route: {
             options: {
                 adapters: ['table'],
-                editRoute: 'editRoute',
+                editView: 'editView',
                 listKey: 'test',
                 resourceKey: 'test',
             },
