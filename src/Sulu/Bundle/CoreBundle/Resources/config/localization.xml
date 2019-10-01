@@ -11,5 +11,14 @@
 
     <services>
         <service id="sulu.core.localization_manager" class="%sulu.core.localization_manager.class%" public="true"/>
+
+        <service id="sulu_core.localization_controller"
+                 class="Sulu\Bundle\CoreBundle\Controller\LocalizationController"
+                 public="true">
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="sulu.core.localization_manager"/>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
     </services>
 </container>

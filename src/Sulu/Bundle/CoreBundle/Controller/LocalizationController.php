@@ -11,28 +11,40 @@
 
 namespace Sulu\Bundle\CoreBundle\Controller;
 
-use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
+use Sulu\Component\Rest\RestController;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller which returns the localizations for the entire system.
  */
-class LocalizationController extends FOSRestController implements ClassResourceInterface
+class LocalizationController extends RestController implements ClassResourceInterface
 {
+    /**
+     * @var LocalizationManagerInterface
+     */
+    private $localizationManager;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        LocalizationManagerInterface $localizationManager
+    ) {
+        parent::__construct($viewHandler);
+        $this->localizationManager = $localizationManager;
+    }
+
     /**
      * Returns all the localizations available in this system.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cgetAction()
     {
-        /** @var LocalizationManagerInterface $localizationManager */
-        $localizationManager = $this->get('sulu.core.localization_manager');
-
         $representation = new CollectionRepresentation(
-            array_values($localizationManager->getLocalizations()),
+            array_values($this->localizationManager->getLocalizations()),
             'localizations'
         );
 
