@@ -86,6 +86,17 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <!-- webspace -->
+        <service id="sulu_page.webspace_localization_controller"
+                 class="Sulu\Bundle\PageBundle\Controller\WebspaceLocalizationController"
+                 public="true"
+        >
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <!-- structure extension -->
         <service id="sulu_page.extension.seo" class="%sulu_page.extension.seo.class%">
             <tag name="sulu.structure.extension"/>

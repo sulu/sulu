@@ -12,6 +12,8 @@
 namespace Sulu\Bundle\PageBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManagerInterface;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\RestController;
@@ -24,6 +26,20 @@ use Symfony\Component\HttpFoundation\Request;
 class WebspaceLocalizationController extends RestController implements ClassResourceInterface
 {
     /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        WebspaceManagerInterface $webspaceManager
+    ) {
+        parent::__construct($viewHandler);
+
+        $this->webspaceManager = $webspaceManager;
+    }
+
+    /**
      * Returns the localizations for the given webspace.
      *
      * @param Request $request
@@ -33,11 +49,7 @@ class WebspaceLocalizationController extends RestController implements ClassReso
     public function cgetAction(Request $request)
     {
         $webspaceKey = $request->get('webspace');
-
-        /** @var WebspaceManagerInterface $webspaceManager */
-        $webspaceManager = $this->get('sulu_core.webspace.webspace_manager');
-
-        $webspace = $webspaceManager->findWebspaceByKey($webspaceKey);
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
 
         if ($webspace) {
             $localizations = new CollectionRepresentation($webspace->getAllLocalizations(), 'localizations');

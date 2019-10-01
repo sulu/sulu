@@ -23,7 +23,7 @@ sulu_page.post_page_trigger:
 sulu_page.webspace.localization:
     type: rest
     name_prefix: sulu_page.
-    resource: Sulu\Bundle\PageBundle\Controller\WebspaceLocalizationController
+    resource: sulu_page.webspace_localization_controller
 
 sulu_page.smart_content:
     type: rest
