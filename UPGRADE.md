@@ -37,6 +37,30 @@ Some of the `RouteBuilder` methods have been renamed (they are used in multiple 
 | addRouterAttributesToFormStore        | addRouterAttributesToFormRequest        |
 | addResourceStorePropertiesToListStore | addResourceStorePropertiesToListRequest |
 | addResourceStorePropertiesToFormStore | addResourceStorePropertiesToFormRequest |
+| setBackRoute                          | setBackView                             |
+| setAddRoute                           | setAddView                              |
+| setEditRoute                          | setEditView                             |
+
+The most critical change is the different signature in the `Admin` class.
+
+```php
+// Before
+public function configureRoutes(RouteCollection $routeCollection): void {}
+
+// After
+public function configureViews(ViewCollection $viewCollection): void {}
+```
+
+The `NavigationItem` functions have also changed:
+
+| Old function name | New function name |
+|-------------------|-------------------|
+| setMainRoute      | setView           |
+| addChildRoute     | addChildView      |
+
+
+The `RouterBuilderFactory` is now renamed to `ViewBuilderFactory`, and in all method names the string `Route` is
+replaced with `View`.
 
 ### Refactor WebsiteController and DefaultController
 
