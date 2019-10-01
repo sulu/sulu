@@ -1,13 +1,13 @@
 sulu_media.collections:
     type: rest
     name_prefix: sulu_media.
-    resource: Sulu\Bundle\MediaBundle\Controller\CollectionController
+    resource: sulu_media.collection_controller
 
 sulu_media.post_collection_trigger:
     path: /collections/{id}.{_format}
     methods: POST
     defaults:
-        _controller: Sulu\Bundle\MediaBundle\Controller\CollectionController::postTriggerAction
+        _controller: sulu_media.collection_controller:postTriggerAction
         _format: json
 
 sulu_media.media:

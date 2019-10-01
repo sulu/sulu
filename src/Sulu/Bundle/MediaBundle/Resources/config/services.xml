@@ -37,6 +37,18 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <service id="sulu_media.collection_controller" class="Sulu\Bundle\MediaBundle\Controller\CollectionController">
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="sulu_core.list_rest_helper" />
+            <argument type="service" id="sulu_security.security_checker" />
+            <argument type="service" id="translator" />
+            <argument type="service" id="sulu_media.system_collections.manager" />
+            <argument type="service" id="sulu_media.collection_manager" />
+
+            <tag name="controller.service_arguments" />
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <service id="sulu_media.media_stream_controller"
                  class="Sulu\Bundle\MediaBundle\Controller\MediaStreamController"
                  public="true">
