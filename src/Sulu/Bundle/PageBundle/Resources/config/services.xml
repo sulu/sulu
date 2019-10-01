@@ -66,6 +66,26 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <!-- page -->
+        <service id="sulu_page.page_controller"
+                 class="Sulu\Bundle\PageBundle\Controller\PageController"
+                 public="true">
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="sulu_security.security_checker"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="sulu_page.content_repository"/>
+            <argument type="service" id="sulu_hash.request_hash_checker"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_page.node_repository"/>
+            <argument type="service" id="sulu_document_manager.metadata_factory.base"/>
+            <argument type="service" id="form.factory"/>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <!-- structure extension -->
         <service id="sulu_page.extension.seo" class="%sulu_page.extension.seo.class%">
             <tag name="sulu.structure.extension"/>
