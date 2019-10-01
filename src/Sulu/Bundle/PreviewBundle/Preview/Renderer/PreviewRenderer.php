@@ -185,7 +185,7 @@ class PreviewRenderer implements PreviewRendererInterface
         }
 
         // TODO Remove this event in 2.0 as it is not longer needed to set the correct theme.
-        $this->eventDispatcher->dispatch(Events::PRE_RENDER, new PreRenderEvent($attributes['_sulu']));
+        $this->eventDispatcher->dispatch(new PreRenderEvent($attributes['_sulu']), Events::PRE_RENDER);
 
         try {
             $response = $this->handle($request);

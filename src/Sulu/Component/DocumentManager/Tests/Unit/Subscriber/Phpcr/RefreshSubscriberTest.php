@@ -61,7 +61,7 @@ class RefreshSubscriberTest extends TestCase
         $this->documentRegistry->getLocaleForDocument($document)->willReturn('fr');
 
         $event = new HydrateEvent($node->reveal(), 'fr');
-        $this->eventDispatcher->dispatch(Events::REFRESH, $event);
+        $this->eventDispatcher->dispatch($event, Events::REFRESH);
 
         $this->refreshSubscriber->refreshDocument($refreshEvent->reveal());
     }
@@ -79,7 +79,7 @@ class RefreshSubscriberTest extends TestCase
         $hydrateEvent = new HydrateEvent($node->reveal(), 'de', ['rehydrate' => true]);
         $hydrateEvent->setDocument($document);
 
-        $this->eventDispatcher->dispatch(Events::HYDRATE, $hydrateEvent)->shouldBeCalled();
+        $this->eventDispatcher->dispatch($hydrateEvent, Events::HYDRATE)->shouldBeCalled();
 
         $this->refreshSubscriber->refreshDocumentForDeleteDraft($removeDraftEvent->reveal());
     }

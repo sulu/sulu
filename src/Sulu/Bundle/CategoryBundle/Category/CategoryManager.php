@@ -283,7 +283,7 @@ class CategoryManager implements CategoryManagerInterface
 
         // throw a category.delete event
         $event = new CategoryDeleteEvent($entity);
-        $this->eventDispatcher->dispatch(CategoryEvents::CATEGORY_DELETE, $event);
+        $this->eventDispatcher->dispatch($event, CategoryEvents::CATEGORY_DELETE);
     }
 
     /**

@@ -72,8 +72,8 @@ class QueryTest extends TestCase
     public function testExecuteDocument()
     {
         $resultCollection = $this->prophesize(QueryResultCollection::class);
-        $this->dispatcher->dispatch(Events::QUERY_EXECUTE, new QueryExecuteEvent($this->query))->will(function($args) use ($resultCollection) {
-            $args[1]->setResult($resultCollection->reveal());
+        $this->dispatcher->dispatch(new QueryExecuteEvent($this->query), Events::QUERY_EXECUTE)->will(function($args) use ($resultCollection) {
+            $args[0]->setResult($resultCollection->reveal());
         });
 
         $result = $this->query->execute();

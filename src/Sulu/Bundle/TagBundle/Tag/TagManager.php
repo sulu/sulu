@@ -154,7 +154,7 @@ class TagManager implements TagManagerInterface
 
         // throw an tag.delete event
         $event = new TagDeleteEvent($tag);
-        $this->eventDispatcher->dispatch(TagEvents::TAG_DELETE, $event);
+        $this->eventDispatcher->dispatch($event, TagEvents::TAG_DELETE);
     }
 
     /**
@@ -193,7 +193,7 @@ class TagManager implements TagManagerInterface
 
         // throw an tag.merge event
         $event = new TagMergeEvent($srcTags, $destTag);
-        $this->eventDispatcher->dispatch(TagEvents::TAG_MERGE, $event);
+        $this->eventDispatcher->dispatch($event, TagEvents::TAG_MERGE);
 
         return $destTag;
     }

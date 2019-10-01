@@ -126,7 +126,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->setMaxResults(Argument::any())->willReturn($this->queryBuilder->reveal());
 
         $event = new ListBuilderCreateEvent($this->doctrineListBuilder);
-        $this->eventDispatcher->dispatch(ListBuilderEvents::LISTBUILDER_CREATE, $event)->willReturn($event);
+        $this->eventDispatcher->dispatch($event, ListBuilderEvents::LISTBUILDER_CREATE)->willReturn($event);
 
         $doctrineListBuilderReflectionClass = new \ReflectionClass($this->doctrineListBuilder);
         $this->findIdsByGivenCriteria = $doctrineListBuilderReflectionClass->getMethod('findIdsByGivenCriteria');

@@ -121,7 +121,7 @@ class Query
         }
 
         $event = new QueryExecuteEvent($this, $this->options);
-        $this->dispatcher->dispatch(Events::QUERY_EXECUTE, $event);
+        $this->dispatcher->dispatch($event, Events::QUERY_EXECUTE);
 
         return $event->getResult();
     }
