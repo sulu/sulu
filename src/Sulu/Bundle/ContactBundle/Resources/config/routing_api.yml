@@ -6,7 +6,7 @@ sulu_contact.contacts:
 sulu_contact.accounts:
     type: rest
     name_prefix: sulu_contact.
-    resource: Sulu\Bundle\ContactBundle\Controller\AccountController
+    resource: sulu_contact.account_controller
 
 sulu_contact.contacttitle:
     type: rest
