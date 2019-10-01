@@ -24,6 +24,7 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -162,7 +163,7 @@ class MediaStreamController
         $storageType = $this->storage->getType($storageOptions);
 
         if (StorageInterface::TYPE_REMOTE === $storageType) {
-            $response = $this->redirect($this->storage->getPath($storageOptions));
+            $response = new RedirectResponse($this->storage->getPath($storageOptions), 302);
             $response->setPrivate();
 
             return $response;

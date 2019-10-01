@@ -430,7 +430,7 @@ class ResettingController extends Controller
 
         $maxNumberEmails = $this->tokenSendLimit;
 
-        if ($user->getPasswordResetTokenEmailsSent() === $maxNumberEmails) {
+        if ($user->getPasswordResetTokenEmailsSent() === intval($maxNumberEmails)) {
             throw new TokenEmailsLimitReachedException($maxNumberEmails, $user);
         }
         $mailer = $this->mailer;
