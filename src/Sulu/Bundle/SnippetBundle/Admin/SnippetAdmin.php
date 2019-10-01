@@ -95,7 +95,7 @@ class SnippetAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    public function configureRoutes(RouteCollection $routeCollection): void
+    public function configureViews(RouteCollection $routeCollection): void
     {
         $snippetLocales = $this->webspaceManager->getAllLocales();
 

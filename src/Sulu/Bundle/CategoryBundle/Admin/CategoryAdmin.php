@@ -67,7 +67,7 @@ class CategoryAdmin extends Admin
         }
     }
 
-    public function configureRoutes(RouteCollection $routeCollection): void
+    public function configureViews(RouteCollection $routeCollection): void
     {
         $locales = $this->localizationManager->getLocales();
 

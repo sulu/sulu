@@ -104,7 +104,7 @@ class PageAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    public function configureRoutes(RouteCollection $routeCollection): void
+    public function configureViews(RouteCollection $routeCollection): void
     {
         /** @var Webspace $firstWebspace */
         $firstWebspace = current($this->webspaceManager->getWebspaceCollection()->getWebspaces());

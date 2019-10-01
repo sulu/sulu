@@ -63,7 +63,7 @@ class CustomUrlAdmin extends Admin
         $this->securityChecker = $securityChecker;
     }
 
-    public function configureRoutes(RouteCollection $routeCollection): void
+    public function configureViews(RouteCollection $routeCollection): void
     {
         $listToolbarActions = [
             new ToolbarAction('sulu_admin.add'),

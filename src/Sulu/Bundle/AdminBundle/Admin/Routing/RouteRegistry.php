@@ -65,7 +65,7 @@ class RouteRegistry
                 continue;
             }
 
-            $admin->configureRoutes($routeCollection);
+            $admin->configureViews($routeCollection);
         }
 
         $routes = array_map(function(RouteBuilderInterface $routeBuilder) {

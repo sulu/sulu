@@ -59,7 +59,7 @@ class TagAdmin extends Admin
         }
     }
 
-    public function configureRoutes(RouteCollection $routeCollection): void
+    public function configureViews(RouteCollection $routeCollection): void
     {
         $formToolbarActions = [];
         $listToolbarActions = [];

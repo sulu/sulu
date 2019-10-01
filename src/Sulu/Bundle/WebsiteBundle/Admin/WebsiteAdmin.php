@@ -68,7 +68,7 @@ class WebsiteAdmin extends Admin
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function configureRoutes(RouteCollection $routeCollection): void
+    public function configureViews(RouteCollection $routeCollection): void
     {
         $listToolbarActions = [
             new ToolbarAction('sulu_admin.add'),

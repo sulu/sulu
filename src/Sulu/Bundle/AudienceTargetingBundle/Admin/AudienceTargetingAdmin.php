@@ -71,7 +71,7 @@ class AudienceTargetingAdmin extends Admin
         }
     }
 
-    public function configureRoutes(RouteCollection $routeCollection): void
+    public function configureViews(RouteCollection $routeCollection): void
     {
         $listToolbarActions = [];
         $formToolbarActions = [];

@@ -92,7 +92,7 @@ class PageAdminTest extends TestCase
         );
 
         $routeCollection = new RouteCollection();
-        $admin->configureRoutes($routeCollection);
+        $admin->configureViews($routeCollection);
 
         $webspaceRoute = $routeCollection->get('sulu_page.webspaces')->getRoute();
         $pageListRoute = $routeCollection->get('sulu_page.pages_list')->getRoute();

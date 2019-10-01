@@ -40,7 +40,7 @@ class SearchAdmin extends Admin
         $navigationItemCollection->add($search);
     }
 
-    public function configureRoutes(RouteCollection $routeCollection): void
+    public function configureViews(RouteCollection $routeCollection): void
     {
         $routeCollection->add(
             $this->routeBuilderFactory->createRouteBuilder(static::SEARCH_ROUTE, '/', 'sulu_search.search')

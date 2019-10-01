@@ -90,7 +90,7 @@ class ContactAdmin extends Admin
         $navigationItemCollection->add($contacts);
     }
 
-    public function configureRoutes(RouteCollection $routeCollection): void
+    public function configureViews(RouteCollection $routeCollection): void
     {
         $contactEditFormRoute = $this->routeBuilderFactory
             ->createResourceTabRouteBuilder(static::CONTACT_EDIT_FORM_ROUTE, '/contacts/:id')

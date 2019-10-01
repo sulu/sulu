@@ -88,7 +88,7 @@ class MediaAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    public function configureRoutes(RouteCollection $routeCollection): void
+    public function configureViews(RouteCollection $routeCollection): void
     {
         $mediaLocales = $this->localizationManager->getLocales();
 

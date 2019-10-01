@@ -75,7 +75,7 @@ class SnippetAdminTest extends TestCase
         $this->webspaceManager->getAllLocales()->willReturn(array_values($locales));
 
         $routeCollection = new RouteCollection();
-        $snippetAdmin->configureRoutes($routeCollection);
+        $snippetAdmin->configureViews($routeCollection);
 
         $listRoute = $routeCollection->get('sulu_snippet.list')->getRoute();
         $addFormRoute = $routeCollection->get('sulu_snippet.add_form')->getRoute();

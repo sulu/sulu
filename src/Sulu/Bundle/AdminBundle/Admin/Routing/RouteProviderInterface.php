@@ -13,5 +13,5 @@ namespace Sulu\Bundle\AdminBundle\Admin\Routing;
 
 interface RouteProviderInterface
 {
-    public function configureRoutes(RouteCollection $routeCollection): void;
+    public function configureViews(RouteCollection $routeCollection): void;
 }

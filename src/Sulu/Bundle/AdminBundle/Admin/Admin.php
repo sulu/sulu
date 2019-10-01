@@ -23,7 +23,7 @@ abstract class Admin implements RouteProviderInterface, NavigationProviderInterf
 {
     const SETTINGS_NAVIGATION_ITEM = 'sulu_admin.settings';
 
-    public function configureRoutes(RouteCollection $routeCollection): void
+    public function configureViews(RouteCollection $routeCollection): void
     {
     }
 
