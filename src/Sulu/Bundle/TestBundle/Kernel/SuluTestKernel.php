@@ -48,6 +48,7 @@ class SuluTestKernel extends SuluKernel
             new \DTL\Bundle\PhpcrMigrations\PhpcrMigrationsBundle(),
             new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),
+            new \Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
 
             // Massive
             new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),

@@ -19,18 +19,24 @@ use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\NoTokenFoundException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\TokenAlreadyRequestedException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\TokenEmailsLimitReachedException;
+use Sulu\Bundle\SecurityBundle\Util\TokenGeneratorInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Security\Authentication\UserInterface as SuluUserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 
 /**
  * Class ResettingController.
@@ -38,6 +44,122 @@ use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 class ResettingController extends Controller
 {
     protected static $resetRouteId = 'sulu_admin';
+
+    /**
+     * @var ValidatorInterface
+     */
+    protected $validator;
+
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
+     * @var TokenGeneratorInterface
+     */
+    protected $tokenGenerator;
+
+    /**
+     * @var Environment
+     */
+    protected $twig;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    protected $tokenStorage;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    protected $dispatcher;
+
+    /**
+     * @var \Swift_Mailer
+     */
+    protected $mailer;
+
+    /**
+     * @var EncoderFactoryInterface
+     */
+    protected $encoderFactory;
+
+    /**
+     * @var UserRepositoryInterface
+     */
+    protected $userRepository;
+
+    /**
+     * @var string
+     */
+    protected $suluSecuritySystem;
+
+    /**
+     * @var string
+     */
+    protected $sender;
+
+    /**
+     * @var string
+     */
+    protected $subject;
+
+    /**
+     * @var string
+     */
+    protected $translationDomain;
+
+    /**
+     * @var string
+     */
+    protected $mailTemplate;
+
+    /**
+     * @var string
+     */
+    protected $adminMail;
+
+    /**
+     * @var string
+     */
+    protected $tokenSendLimit;
+
+    public function __construct(
+        ValidatorInterface $validator,
+        TranslatorInterface $translator,
+        TokenGeneratorInterface $tokenGenerator,
+        Environment $templating,
+        TokenStorageInterface $tokenStorage,
+        EventDispatcherInterface $dispatcher,
+        \Swift_Mailer $mailer,
+        EncoderFactoryInterface $encoderFactory,
+        UserRepositoryInterface $userRepository,
+        string $suluSecuritySystem,
+        string $sender,
+        string $subject,
+        string $translationDomain,
+        string $mailTemplate,
+        string $tokenSendLimit,
+        string $adminMail
+    ) {
+        $this->validator = $validator;
+        $this->translator = $translator;
+        $this->tokenGenerator = $tokenGenerator;
+        $this->twig = $templating;
+        $this->tokenStorage = $tokenStorage;
+        $this->dispatcher = $dispatcher;
+        $this->mailer = $mailer;
+        $this->encoderFactory = $encoderFactory;
+        $this->userRepository = $userRepository;
+        $this->suluSecuritySystem = $suluSecuritySystem;
+        $this->sender = $sender;
+        $this->subject = $subject;
+        $this->translationDomain = $translationDomain;
+        $this->mailTemplate = $mailTemplate;
+        $this->tokenSendLimit = $tokenSendLimit;
+        $this->adminMail = $adminMail;
+    }
 
     /**
      * The interval in which the token is valid.
@@ -131,7 +253,7 @@ class ResettingController extends Controller
      */
     protected function getSenderAddress(Request $request)
     {
-        $sender = $this->getParameter('sulu_security.reset_password.mail.sender');
+        $sender = $this->sender;
 
         if (!$sender || !$this->isEmailValid($sender)) {
             $sender = 'no-reply@' . $request->getHost();
@@ -148,17 +270,9 @@ class ResettingController extends Controller
     protected function isEmailValid($email)
     {
         $constraint = new EmailConstraint();
-        $result = $this->get('validator')->validate($email, $constraint);
+        $result = $this->validator->validate($email, $constraint);
 
         return 0 === count($result);
-    }
-
-    /**
-     * @return Translator
-     */
-    protected function getTranslator()
-    {
-        return $this->get('translator');
     }
 
     /**
@@ -166,10 +280,10 @@ class ResettingController extends Controller
      */
     protected function getSubject()
     {
-        return $this->getTranslator()->trans(
-            $this->getParameter('sulu_security.reset_password.mail.subject'),
+        return $this->translator->trans(
+            $this->subject,
             [],
-            $this->getParameter('sulu_security.reset_password.mail.translation_domain')
+            $this->translationDomain
         );
     }
 
@@ -183,10 +297,10 @@ class ResettingController extends Controller
     protected function getMessage($user)
     {
         $resetUrl = $this->generateUrl(static::$resetRouteId, [], UrlGeneratorInterface::ABSOLUTE_URL);
-        $template = $this->getParameter('sulu_security.reset_password.mail.template');
-        $translationDomain = $this->getParameter('sulu_security.reset_password.mail.translation_domain');
+        $template = $this->mailTemplate;
+        $translationDomain = $this->translationDomain;
 
-        if (!$this->get('templating')->exists($template)) {
+        if (!$this->twig->getLoader()->exists($template)) {
             throw new EmailTemplateException($template);
         }
 
@@ -215,7 +329,7 @@ class ResettingController extends Controller
             return $user->getEmail();
         }
 
-        return $this->container->getParameter('sulu_admin.email');
+        return $this->adminMail;
     }
 
     /**
@@ -231,9 +345,9 @@ class ResettingController extends Controller
     private function findUser($identifier)
     {
         try {
-            $user = $this->getUserRepository()->findUserByIdentifier($identifier);
+            $user = $this->userRepository->findUserByIdentifier($identifier);
         } catch (NoResultException $exc) {
-            throw new EntityNotFoundException($this->getUserRepository()->getClassName(), $identifier);
+            throw new EntityNotFoundException($this->userRepository->getClassName(), $identifier);
         }
 
         if (!$this->hasSystem($user)) {
@@ -256,7 +370,7 @@ class ResettingController extends Controller
     {
         try {
             /** @var UserInterface $user */
-            $user = $this->getUserRepository()->findUserByToken($token);
+            $user = $this->userRepository->findUserByToken($token);
             if (new \DateTime() > $user->getPasswordResetTokenExpiresAt()) {
                 throw new InvalidTokenException($token);
             }
@@ -268,14 +382,6 @@ class ResettingController extends Controller
     }
 
     /**
-     * @return \Sulu\Bundle\SecurityBundle\Util\TokenGeneratorInterface
-     */
-    private function getTokenGenerator()
-    {
-        return $this->get('sulu_security.token_generator');
-    }
-
-    /**
      * Gives a user a token, so she's logged in.
      *
      * @param UserInterface $user
@@ -284,11 +390,11 @@ class ResettingController extends Controller
     private function loginUser(UserInterface $user, $request)
     {
         $token = new UsernamePasswordToken($user, null, 'admin', $user->getRoles());
-        $this->get('security.token_storage')->setToken($token); //now the user is logged in
+        $this->tokenStorage->setToken($token); //now the user is logged in
 
         //now dispatch the login event
         $event = new InteractiveLoginEvent($request, $token);
-        $this->get('event_dispatcher')->dispatch($event, 'security.interactive_login');
+        $this->dispatcher->dispatch($event, 'security.interactive_login');
     }
 
     /**
@@ -322,12 +428,12 @@ class ResettingController extends Controller
             throw new NoTokenFoundException($user);
         }
 
-        $maxNumberEmails = $this->getParameter('sulu_security.reset_password.mail.token_send_limit');
+        $maxNumberEmails = $this->tokenSendLimit;
 
-        if ($user->getPasswordResetTokenEmailsSent() === $maxNumberEmails) {
+        if ($user->getPasswordResetTokenEmailsSent() === intval($maxNumberEmails)) {
             throw new TokenEmailsLimitReachedException($maxNumberEmails, $user);
         }
-        $mailer = $this->get('mailer');
+        $mailer = $this->mailer;
         $em = $this->getDoctrine()->getManager();
         $message = $mailer->createMessage()
             ->setSubject($this->getSubject())
@@ -409,7 +515,7 @@ class ResettingController extends Controller
      */
     private function getToken()
     {
-        return $this->getUniqueToken($this->getTokenGenerator()->generateToken());
+        return $this->getUniqueToken($this->tokenGenerator->generateToken());
     }
 
     /**
@@ -422,12 +528,12 @@ class ResettingController extends Controller
     private function getUniqueToken($startToken)
     {
         try {
-            $this->getUserRepository()->findUserByToken($startToken);
+            $this->userRepository->findUserByToken($startToken);
         } catch (NoResultException $ex) {
             return $startToken;
         }
 
-        return $this->getUniqueToken($this->getTokenGenerator()->generateToken());
+        return $this->getUniqueToken($this->tokenGenerator->generateToken());
     }
 
     /**
@@ -441,17 +547,9 @@ class ResettingController extends Controller
      */
     private function encodePassword(UserInterface $user, $password, $salt)
     {
-        $encoder = $this->get('sulu_security.encoder_factory')->getEncoder($user);
+        $encoder = $this->encoderFactory->getEncoder($user);
 
         return $encoder->encodePassword($password, $salt);
-    }
-
-    /**
-     * @return UserRepositoryInterface
-     */
-    private function getUserRepository()
-    {
-        return $this->get('sulu.repository.user');
     }
 
     /**
@@ -480,6 +578,6 @@ class ResettingController extends Controller
      */
     private function getSystem()
     {
-        return $this->container->getParameter('sulu_security.system');
+        return $this->suluSecuritySystem;
     }
 }

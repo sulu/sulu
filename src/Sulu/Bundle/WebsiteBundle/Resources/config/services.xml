@@ -29,6 +29,11 @@
 
     <services>
         <!-- controllers -->
+        <service id="sulu_website.redirect_controller"
+                 class="Sulu\Bundle\WebsiteBundle\Controller\RedirectController"
+                 public="true">
+            <argument type="service" id="router"/>
+        </service>
         <service id="sulu_website.default_controller" class="Sulu\Bundle\WebsiteBundle\Controller\DefaultController">
             <tag name="container.service_subscriber" />
             <tag name="controller.service_arguments" />

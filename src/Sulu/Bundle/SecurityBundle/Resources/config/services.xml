@@ -39,6 +39,28 @@
     </parameters>
 
     <services>
+        <service id="sulu_security.resetting_controller"
+                 class="Sulu\Bundle\SecurityBundle\Controller\ResettingController"
+                 public="true">
+            <argument type="service" id="validator"/>
+            <argument type="service" id="translator"/>
+            <argument type="service" id="sulu_security.token_generator"/>
+            <argument type="service" id="twig"/>
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="mailer"/>
+            <argument type="service" id="sulu_security.encoder_factory"/>
+            <argument type="service" id="sulu.repository.user"/>
+            <argument>%sulu_security.system%</argument>
+            <argument>%sulu_security.reset_password.mail.sender%</argument>
+            <argument>%sulu_security.reset_password.mail.subject%</argument>
+            <argument>%sulu_security.reset_password.mail.translation_domain%</argument>
+            <argument>%sulu_security.reset_password.mail.template%</argument>
+            <argument>%sulu_security.reset_password.mail.token_send_limit%</argument>
+            <argument>%sulu_admin.email%</argument>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
         <service id="sulu_security.admin" class="%sulu_security.admin.class%">
             <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"/>
             <argument type="service" id="sulu_security.security_checker"/>

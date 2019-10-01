@@ -271,7 +271,7 @@ class RouteProviderTest extends TestCase
 
         $this->assertEquals('/de/test', $routes[0]->getPath());
         $this->assertEquals(
-            ['_controller' => 'SuluWebsiteBundle:Redirect:redirect', 'url' => 'http://www.sulu.io/de/test-2?test=1'],
+            ['_controller' => 'sulu_website.redirect_controller:redirectAction', 'url' => 'http://www.sulu.io/de/test-2?test=1'],
             $routes[0]->getDefaults()
         );
     }
@@ -308,7 +308,7 @@ class RouteProviderTest extends TestCase
 
         $this->assertEquals('/de/test', $routes[0]->getPath());
         $this->assertEquals(
-            ['_controller' => 'SuluWebsiteBundle:Redirect:redirect', 'url' => 'http://www.sulu.io/de/test-2'],
+            ['_controller' => 'sulu_website.redirect_controller:redirectAction', 'url' => 'http://www.sulu.io/de/test-2'],
             $routes[0]->getDefaults()
         );
     }

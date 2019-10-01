@@ -13,6 +13,8 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
+use Sulu\Bundle\MediaBundle\Media\DispositionType\DispositionTypeResolver;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
@@ -20,33 +22,68 @@ use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sulu\Component\PHPCR\PathCleanupInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class MediaStreamController extends Controller
+class MediaStreamController
 {
     /**
      * @var FormatManagerInterface
      */
-    protected $formatManager = null;
+    protected $formatManager;
 
     /**
      * @var FormatCacheInterface
      */
-    protected $formatCache = null;
+    protected $formatCache;
 
     /**
      * @var MediaManagerInterface
      */
-    protected $mediaManager = null;
+    protected $mediaManager;
 
     /**
      * @var StorageInterface
      */
-    protected $storage = null;
+    protected $storage;
+
+    /**
+     * @var DispositionTypeResolver
+     */
+    protected $dispositionTypeResolver;
+
+    /**
+     * @var MediaRepositoryInterface
+     */
+    protected $mediaRepository;
+
+    /**
+     * @var PathCleanupInterface
+     */
+    protected $pathCleaner;
+
+    public function __construct(
+        DispositionTypeResolver $dispositionTypeResolver,
+        MediaRepositoryInterface $mediaRepository,
+        PathCleanupInterface $pathCleaner,
+        FormatManagerInterface $formatManager,
+        FormatCacheInterface $formatCache,
+        MediaManagerInterface $mediaManager,
+        StorageInterface $storage
+    ) {
+        $this->dispositionTypeResolver = $dispositionTypeResolver;
+        $this->mediaRepository = $mediaRepository;
+        $this->pathCleaner = $pathCleaner;
+        $this->formatManager = $formatManager;
+        $this->formatCache = $formatCache;
+        $this->mediaManager = $mediaManager;
+        $this->storage = $storage;
+    }
 
     /**
      * @param Request $request
@@ -62,15 +99,15 @@ class MediaStreamController extends Controller
 
             $url = $request->getPathInfo();
 
-            $mediaProperties = $this->getFormatCache()->analyzedMediaUrl($url);
+            $mediaProperties = $this->formatCache->analyzedMediaUrl($url);
 
-            return $this->getFormatManager()->returnImage(
+            return $this->formatManager->returnImage(
                 $mediaProperties['id'],
                 $mediaProperties['format'],
                 $mediaProperties['fileName']
             );
         } catch (ImageProxyException $e) {
-            throw $this->createNotFoundException('Image create error. Code: ' . $e->getCode());
+            throw new NotFoundHttpException('Image create error. Code: ' . $e->getCode());
         }
     }
 
@@ -100,19 +137,19 @@ class MediaStreamController extends Controller
                 $forceInline = (bool) $request->get('inline', false);
                 $dispositionType = $forceInline ? ResponseHeaderBag::DISPOSITION_INLINE : ResponseHeaderBag::DISPOSITION_ATTACHMENT;
             } else {
-                $dispositionType = $this->get('sulu_media.disposition_type.resolver')
+                $dispositionType = $this->dispositionTypeResolver
                     ->getByMimeType($fileVersion->getMimeType());
             }
 
             if (!$noCount) {
-                $this->getMediaManager()->increaseDownloadCounter($fileVersion->getId());
+                $this->mediaManager->increaseDownloadCounter($fileVersion->getId());
             }
 
             $response = $this->getFileResponse($fileVersion, $request->getLocale(), $dispositionType);
 
             return $response;
         } catch (MediaException $e) {
-            throw $this->createNotFoundException('File not found: ' . $e->getCode() . ' ' . $e->getMessage());
+            throw new NotFoundHttpException('File not found: ' . $e->getCode() . ' ' . $e->getMessage());
         }
     }
 
@@ -123,16 +160,15 @@ class MediaStreamController extends Controller
     ): Response {
         $storageOptions = $fileVersion->getStorageOptions();
 
-        $storage = $this->getStorage();
-        $storageType = $storage->getType($storageOptions);
+        $storageType = $this->storage->getType($storageOptions);
 
         if (StorageInterface::TYPE_REMOTE === $storageType) {
-            $response = $this->redirect($storage->getPath($storageOptions));
+            $response = new RedirectResponse($this->storage->getPath($storageOptions), 302);
             $response->setPrivate();
 
             return $response;
         } elseif (StorageInterface::TYPE_LOCAL === $storageType) {
-            return $this->createBinaryFileResponse($fileVersion, $storage, $locale, $dispositionType);
+            return $this->createBinaryFileResponse($fileVersion, $this->storage, $locale, $dispositionType);
         }
 
         throw new \RuntimeException(sprintf('Storage type "%s" not supported.', $storageType));
@@ -168,7 +204,7 @@ class MediaStreamController extends Controller
                 'Link',
                 sprintf(
                     '<%s>; rel="canonical"',
-                    $this->getMediaManager()->getUrl(
+                    $this->mediaManager->getUrl(
                         $file->getMedia()->getId(),
                         $latestFileVersion->getName(),
                         $latestFileVersion->getVersion()
@@ -198,7 +234,7 @@ class MediaStreamController extends Controller
     protected function getFileVersion($id, $version)
     {
         /** @var MediaInterface $mediaEntity */
-        $mediaEntity = $this->container->get('sulu.repository.media')->findMediaById($id);
+        $mediaEntity = $this->mediaRepository->findMediaById($id);
 
         if (!$mediaEntity) {
             return null;
@@ -235,57 +271,11 @@ class MediaStreamController extends Controller
     private function cleanUpFileName($fileName, $locale, $extension)
     {
         $pathInfo = pathinfo($fileName);
-        $cleanedFileName = $this->get('sulu.content.path_cleaner')->cleanup($pathInfo['filename'], $locale);
+        $cleanedFileName = $this->pathCleaner->cleanup($pathInfo['filename'], $locale);
         if ($extension) {
             $cleanedFileName .= '.' . $extension;
         }
 
         return $cleanedFileName;
-    }
-
-    protected function getFormatManager(): FormatManagerInterface
-    {
-        if (null === $this->formatManager) {
-            $this->formatManager = $this->get('sulu_media.format_manager');
-        }
-
-        return $this->formatManager;
-    }
-
-    protected function getFormatCache(): FormatCacheInterface
-    {
-        if (null === $this->formatCache) {
-            $this->formatCache = $this->get('sulu_media.format_cache');
-        }
-
-        return $this->formatCache;
-    }
-
-    /**
-     * getMediaManager.
-     *
-     * @return MediaManagerInterface
-     */
-    protected function getMediaManager()
-    {
-        if (null === $this->mediaManager) {
-            $this->mediaManager = $this->get('sulu_media.media_manager');
-        }
-
-        return $this->mediaManager;
-    }
-
-    /**
-     * getStorage.
-     *
-     * @return StorageInterface
-     */
-    protected function getStorage()
-    {
-        if (null === $this->storage) {
-            $this->storage = $this->get('sulu_media.storage');
-        }
-
-        return $this->storage;
     }
 }

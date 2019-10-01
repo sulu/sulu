@@ -11,11 +11,21 @@
 
 namespace Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Symfony\Component\HttpFoundation\Request;
 
-class SearchController extends Controller
+class SearchController
 {
+    /**
+     * @var SearchManager
+     */
+    private $searchManager;
+
+    public function __construct(SearchManager $searchManager)
+    {
+        $this->searchManager = $searchManager;
+    }
+
     public function queryAction(Request $request)
     {
         $q = $request->get('query', '');
@@ -24,8 +34,7 @@ class SearchController extends Controller
             throw new \Exception('Length of query string must be greater than 3 (Zend Search)');
         }
 
-        $searchManager = $this->get('massive_search.search_manager');
-        $hits = $searchManager->createSearch($q)->locale('de')->index('content');
+        $hits = $this->searchManager->createSearch($q)->locale('de')->index('content');
 
         return $this->render('TestBundle:Search:query.html.twig', [
             'hits' => $hits,

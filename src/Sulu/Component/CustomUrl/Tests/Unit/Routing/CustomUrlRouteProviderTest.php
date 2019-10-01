@@ -129,7 +129,7 @@ class CustomUrlRouteProviderTest extends TestCase
         if ($history) {
             $this->assertEquals(
                 [
-                    '_controller' => 'SuluWebsiteBundle:Redirect:redirect',
+                    '_controller' => 'sulu_website.redirect_controller:redirectAction',
                     '_finalized' => true,
                     'url' => 'http://' . $route . '-1',
                 ],

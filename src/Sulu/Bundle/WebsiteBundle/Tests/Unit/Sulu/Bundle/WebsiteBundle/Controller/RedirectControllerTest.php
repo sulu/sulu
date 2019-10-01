@@ -14,7 +14,6 @@ namespace Sulu\Bundle\WebsiteBundle\Controller;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -30,7 +29,10 @@ class RedirectControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->controller = new RedirectController();
+        /** @var RouterInterface $router */
+        $router = $this->prophesize(RouterInterface::class);
+        $router->generate(Argument::any(), Argument::any(), Argument::any())->willReturn('/test-route');
+        $this->controller = new RedirectController($router->reveal());
     }
 
     private function getRequestMock($requestUrl, $portalUrl, $redirectUrl = null, $prefix = '')
@@ -143,14 +145,9 @@ class RedirectControllerTest extends TestCase
         $router = $this->prophesize(RouterInterface::class);
         $router->generate($route, array_merge($attributesData, $queryData), UrlGeneratorInterface::ABSOLUTE_URL)->willReturn('/test-route');
 
-        $container = $this->prophesize(ContainerInterface::class);
-        $container->get('router')->willReturn($router->reveal());
-
         $request = $this->prophesize(Request::class);
         $request->reveal()->attributes = $attributes->reveal();
         $request->reveal()->query = $query->reveal();
-
-        $this->controller->setContainer($container->reveal());
 
         $response = $this->controller->redirectToRouteAction($request->reveal(), $route, $permanent);
 

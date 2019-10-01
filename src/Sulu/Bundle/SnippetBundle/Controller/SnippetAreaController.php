@@ -14,22 +14,75 @@ namespace Sulu\Bundle\SnippetBundle\Controller;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
+use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\WrongSnippetTypeException;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Handles snippet types and defaults.
  *
  * @RouteResource("snippet-area")
  */
-class SnippetAreaController extends Controller implements ClassResourceInterface
+class SnippetAreaController implements ClassResourceInterface
 {
     use RequestParametersTrait;
+
+    /**
+     * @var DefaultSnippetManagerInterface
+     */
+    protected $defaultSnippetManager;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    protected $documentManager;
+
+    /**
+     * @var SecurityCheckerInterface
+     */
+    protected $securityChecker;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    protected $tokenStorage;
+
+    /**
+     * @var array
+     */
+    protected $sulu_snippet_areas;
+
+    public function __construct(
+        DefaultSnippetManagerInterface $defaultSnippetManager,
+        DocumentManagerInterface $documentManager,
+        SecurityCheckerInterface $securityChecker,
+        TokenStorageInterface $tokenStorage,
+        array $sulu_snippet_area
+    ) {
+        $this->defaultSnippetManager = $defaultSnippetManager;
+        $this->documentManager = $documentManager;
+        $this->securityChecker = $securityChecker;
+        $this->tokenStorage = $tokenStorage;
+        $this->sulu_snippet_areas = $sulu_snippet_area;
+    }
+
+    protected function getUser()
+    {
+        $user = null;
+        $token = $this->tokenStorage->getToken();
+        if ($token) {
+            $user = $token->getUser();
+        }
+
+        return $user;
+    }
 
     /**
      * Get snippet areas.
@@ -41,13 +94,11 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
     public function cgetAction(Request $request)
     {
         $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
-        $this->get('sulu_security.security_checker')->checkPermission(
+        $this->securityChecker->checkPermission(
             new SecurityCondition(SnippetAdmin::getDefaultSnippetsSecurityContext($webspaceKey)),
             PermissionTypes::VIEW
         );
 
-        $defaultSnippetManager = $this->get('sulu_snippet.default_snippet.manager');
-        $documentManager = $this->get('sulu_document_manager.document_manager');
         $areas = $this->getLocalizedAreas();
 
         $dataList = [];
@@ -62,15 +113,15 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
             ];
 
             try {
-                $snippet = $defaultSnippetManager->load($webspaceKey, $key, $this->getUser()->getLocale());
+                $snippet = $this->defaultSnippetManager->load($webspaceKey, $key, $this->getUser()->getLocale());
                 $areaData['defaultUuid'] = $snippet ? $snippet->getUuid() : null;
                 $areaData['defaultTitle'] = $snippet ? $snippet->getTitle() : null;
             } catch (WrongSnippetTypeException $exception) {
                 // ignore wrong snippet-type
                 $areaData['valid'] = false;
 
-                $uuid = $defaultSnippetManager->loadIdentifier($webspaceKey, $key);
-                $snippet = $documentManager->find($uuid, $this->getUser()->getLocale());
+                $uuid = $this->defaultSnippetManager->loadIdentifier($webspaceKey, $key);
+                $snippet = $this->documentManager->find($uuid, $this->getUser()->getLocale());
                 $areaData['defaultUuid'] = $snippet ? $snippet->getUuid() : null;
                 $areaData['defaultTitle'] = $snippet ? $snippet->getTitle() : null;
             }
@@ -101,7 +152,7 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
     public function putAction(Request $request, $key)
     {
         $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
-        $this->get('sulu_security.security_checker')->checkPermission(
+        $this->securityChecker->checkPermission(
             new SecurityCondition(SnippetAdmin::getDefaultSnippetsSecurityContext($webspaceKey)),
             PermissionTypes::EDIT
         );
@@ -111,7 +162,7 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
         $areas = $this->getLocalizedAreas();
         $area = $areas[$key];
 
-        $defaultSnippet = $this->get('sulu_snippet.default_snippet.manager')->save(
+        $defaultSnippet = $this->defaultSnippetManager->save(
             $webspaceKey,
             $key,
             $default,
@@ -141,7 +192,7 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
     public function deleteAction(Request $request, $key)
     {
         $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
-        $this->get('sulu_security.security_checker')->checkPermission(
+        $this->securityChecker->checkPermission(
             new SecurityCondition(SnippetAdmin::getDefaultSnippetsSecurityContext($webspaceKey)),
             PermissionTypes::EDIT
         );
@@ -149,7 +200,7 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
         $areas = $this->getLocalizedAreas();
         $area = $areas[$key];
 
-        $this->get('sulu_snippet.default_snippet.manager')->remove($webspaceKey, $key);
+        $this->defaultSnippetManager->remove($webspaceKey, $key);
 
         return new JsonResponse(
             [
@@ -170,7 +221,7 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
      */
     private function getLocalizedAreas()
     {
-        $areas = $this->getParameter('sulu_snippet.areas');
+        $areas = $this->sulu_snippet_areas;
         $locale = $this->getUser()->getLocale();
 
         $localizedAreas = [];

@@ -21,7 +21,6 @@ class Kernel extends SuluTestKernel
         return array_merge(
             parent::registerBundles(),
             [
-                new \Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
                 new \Symfony\Bundle\DebugBundle\DebugBundle(),
             ]
         );
