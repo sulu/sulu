@@ -23,7 +23,6 @@ use Sulu\Bundle\SecurityBundle\Util\TokenGeneratorInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Security\Authentication\UserInterface as SuluUserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,7 +40,7 @@ use Twig\Environment;
 /**
  * Class ResettingController.
  */
-class ResettingController extends Controller
+class ResettingController
 {
     protected static $resetRouteId = 'sulu_admin';
 
