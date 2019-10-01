@@ -9,15 +9,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Admin\Routing;
+namespace Sulu\Bundle\AdminBundle\Admin\View;
 
-class RouteBuilder implements RouteBuilderInterface
+class TabRouteBuilder implements TabRouteBuilderInterface
 {
     use RouteBuilderTrait;
 
-    public function __construct(string $name, string $path, string $view)
+    const VIEW = 'sulu_admin.tabs';
+
+    public function __construct(string $name, string $path)
     {
-        $this->route = new Route($name, $path, $view);
+        $this->route = new Route($name, $path, static::VIEW);
     }
 
     public function getRoute(): Route

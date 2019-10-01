@@ -4,7 +4,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="sulu_snippet.admin" class="Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin">
-            <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"/>
+            <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactoryInterface"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%sulu_snippet.content-type.default_enabled%</argument>

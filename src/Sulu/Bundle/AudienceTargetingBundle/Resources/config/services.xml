@@ -8,7 +8,7 @@
             id="sulu_audience_targeting.admin"
             class="Sulu\Bundle\AudienceTargetingBundle\Admin\AudienceTargetingAdmin"
         >
-            <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"/>
+            <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactoryInterface"/>
             <argument type="service" id="sulu_audience_targeting.rules_collection"/>
             <argument type="service" id="sulu_security.security_checker"/>
 

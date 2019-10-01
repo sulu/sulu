@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\Routing;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\AdminBundle\Admin\Routing\FormRouteBuilder;
-use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
+use Sulu\Bundle\AdminBundle\Admin\View\FormRouteBuilder;
+use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 
 class FormRouteBuilderTest extends TestCase
 {

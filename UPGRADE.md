@@ -27,6 +27,8 @@ Furthermore, all these controllers and now use constructor injection to gather t
 
 ### Admin Route/View renamings
 
+The `Sulu\Bundle\AdminBundle\Admin\Routing` namespace was renamed to `Sulu\Bundle\AdminBundle\Admin\View`.
+
 Some of the `RouteBuilder` methods have been renamed (they are used in multiple `RouteBuilder` and are named the same):
 
 | Old function name                     | New function name                       |

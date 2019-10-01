@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Admin\Routing;
+namespace Sulu\Bundle\AdminBundle\Admin\View;
 
 class ResourceTabRouteBuilder implements ResourceTabRouteBuilderInterface
 {

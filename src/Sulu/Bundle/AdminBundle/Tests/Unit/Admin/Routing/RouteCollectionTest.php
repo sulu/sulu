@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\Routing;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilder;
-use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
+use Sulu\Bundle\AdminBundle\Admin\View\RouteBuilder;
+use Sulu\Bundle\AdminBundle\Admin\View\RouteCollection;
 use Sulu\Bundle\AdminBundle\Exception\RouteNotFoundException;
 
 class RouteCollectionTest extends TestCase

@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Admin\Navigation;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
-use Sulu\Bundle\AdminBundle\Admin\Routing\RouteRegistry;
+use Sulu\Bundle\AdminBundle\Admin\View\RouteRegistry;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class NavigationRegistry

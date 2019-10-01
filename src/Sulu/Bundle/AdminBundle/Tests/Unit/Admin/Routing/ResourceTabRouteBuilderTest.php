@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\Routing;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\AdminBundle\Admin\Routing\ResourceTabRouteBuilder;
+use Sulu\Bundle\AdminBundle\Admin\View\ResourceTabRouteBuilder;
 
 class ResourceTabRouteBuilderTest extends TestCase
 {

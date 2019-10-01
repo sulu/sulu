@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Admin\Routing;
+namespace Sulu\Bundle\AdminBundle\Admin\View;
 
-interface PreviewFormRouteBuilderInterface extends RouteBuilderInterface
+interface FormRouteBuilderInterface extends RouteBuilderInterface
 {
     public function setResourceKey(string $resourceKey): self;
 
@@ -50,8 +50,6 @@ interface PreviewFormRouteBuilderInterface extends RouteBuilderInterface
     public function setBackRoute(string $editRoute): self;
 
     public function setIdQueryParameter(string $idQueryParameter): self;
-
-    public function setPreviewCondition(string $previewCondition): self;
 
     public function setTitleVisible(bool $titleVisible): self;
 }

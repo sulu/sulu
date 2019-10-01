@@ -77,9 +77,9 @@
             <tag name="sulu_admin.list_metadata_loader"/>
         </service>
 
-        <service id="sulu_admin.route_factory" class="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactory" />
+        <service id="sulu_admin.route_factory" class="Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactory" />
         <service
-            id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"
+            id="Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactoryInterface"
             alias="sulu_admin.route_factory"
         />
 
@@ -104,7 +104,7 @@
             <tag name="kernel.cache_warmer" />
         </service>
 
-        <service id="sulu_admin.route_registry" class="Sulu\Bundle\AdminBundle\Admin\Routing\RouteRegistry">
+        <service id="sulu_admin.route_registry" class="Sulu\Bundle\AdminBundle\Admin\View\RouteRegistry">
             <argument type="service" id="sulu_admin.admin_pool"/>
         </service>
 
