@@ -15,14 +15,24 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * handles languages for snippet ui.
  */
-class LanguageController extends Controller implements ClassResourceInterface
+class LanguageController implements ClassResourceInterface
 {
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    public function __construct(
+        WebspaceManagerInterface $webspaceManager
+    ) {
+        $this->webspaceManager = $webspaceManager;
+    }
+
     /**
      * Returns all languages in admin.
      *
@@ -30,14 +40,11 @@ class LanguageController extends Controller implements ClassResourceInterface
      */
     public function cgetAction()
     {
-        /** @var WebspaceManagerInterface $webspaceManager */
-        $webspaceManager = $this->get('sulu_core.webspace.webspace_manager');
-
         $localizations = [];
         $locales = [];
 
         /** @var Webspace $webspace */
-        foreach ($webspaceManager->getWebspaceCollection() as $webspace) {
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             $i = 0;
             foreach ($webspace->getAllLocalizations() as $localization) {
                 if (!in_array($localization->getLocale(), $locales)) {

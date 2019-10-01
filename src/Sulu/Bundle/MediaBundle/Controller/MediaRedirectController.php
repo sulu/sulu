@@ -12,17 +12,29 @@
 namespace Sulu\Bundle\MediaBundle\Controller;
 
 use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * This controller provides an easy redirect to media-formats by redirecting.
  */
-class MediaRedirectController extends Controller
+class MediaRedirectController
 {
     use RequestParametersTrait;
+
+    /**
+     * @var MediaManagerInterface
+     */
+    private $mediaManager;
+
+    public function __construct(
+        MediaManagerInterface $mediaManager
+    ) {
+        $this->mediaManager = $mediaManager;
+    }
 
     /**
      * Redirects to format or original url.
@@ -38,16 +50,16 @@ class MediaRedirectController extends Controller
         $format = $this->getRequestParameter($request, 'format');
 
         /** @var Media $media */
-        $media = $this->container->get('sulu_media.media_manager')->getById($id, $locale);
+        $media = $this->mediaManager->getById($id, $locale);
 
         if (null === $format) {
-            return $this->redirect($media->getUrl());
+            return new RedirectResponse($media->getUrl());
         }
 
         if (!array_key_exists($format, $media->getFormats())) {
-            throw $this->createNotFoundException();
+            throw new NotFoundHttpException();
         }
 
-        return $this->redirect($media->getFormats()[$format]);
+        return new RedirectResponse($media->getFormats()[$format]);
     }
 }

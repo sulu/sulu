@@ -18,4 +18,4 @@ sulu_snippet.snippet-areas:
 sulu_snippet.languages:
     type: rest
     name_prefix: sulu_snippet.
-    resource: Sulu\Bundle\SnippetBundle\Controller\LanguageController
+    resource: sulu_snippet.language_controller
