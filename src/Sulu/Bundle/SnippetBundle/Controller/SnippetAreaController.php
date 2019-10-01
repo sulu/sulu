@@ -65,8 +65,7 @@ class SnippetAreaController implements ClassResourceInterface
         SecurityCheckerInterface $securityChecker,
         TokenStorageInterface $tokenStorage,
         array $sulu_snippet_area
-    )
-    {
+    ) {
         $this->defaultSnippetManager = $defaultSnippetManager;
         $this->documentManager = $documentManager;
         $this->securityChecker = $securityChecker;
