@@ -38,7 +38,7 @@ sulu_media.post_media_preview:
 sulu_media.format:
     type: rest
     name_prefix: sulu_media.
-    resource: Sulu\Bundle\MediaBundle\Controller\FormatController
+    resource: sulu_media.format_controller
 
 sulu_media.media_format:
     type: rest

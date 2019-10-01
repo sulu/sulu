@@ -89,6 +89,18 @@
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="sulu_media.storage"/>
         </service>
+
+        <service
+            id="sulu_media.format_controller"
+            class="Sulu\Bundle\MediaBundle\Controller\FormatController"
+            public="true"
+        >
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="sulu_media.format_manager" />
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <service id="sulu_media.admin" class="%sulu_media.admin.class%">
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
