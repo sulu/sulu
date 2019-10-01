@@ -20,6 +20,7 @@ use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
 use Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -118,6 +119,11 @@ class ContactController extends RestController implements ClassResourceInterface
     private $userRepository;
 
     /**
+     * @var MediaManagerInterface
+     */
+    private $mediaManager;
+
+    /**
      * @var string
      */
     private $contactClass;
@@ -135,6 +141,7 @@ class ContactController extends RestController implements ClassResourceInterface
         DoctrineListBuilderFactoryInterface $listBuilderFactory,
         ContactManagerInterface $contactManager,
         ContactRepositoryInterface $contactRepository,
+        MediaManagerInterface $mediaManager,
         UserRepositoryInterface $userRepository,
         IndexComparatorInterface $indexComparator,
         string $contactClass,
@@ -146,6 +153,7 @@ class ContactController extends RestController implements ClassResourceInterface
         $this->listBuilderFactory = $listBuilderFactory;
         $this->contactManager = $contactManager;
         $this->contactRepository = $contactRepository;
+        $this->mediaManager = $mediaManager;
         $this->userRepository = $userRepository;
         $this->indexComparator = $indexComparator;
         $this->contactClass = $contactClass;
@@ -521,7 +529,7 @@ class ContactController extends RestController implements ClassResourceInterface
     private function addAvatars($contacts, $locale)
     {
         $ids = array_filter(array_column($contacts, 'avatar'));
-        $avatars = $this->get('sulu_media.media_manager')->getFormatUrls($ids, $locale);
+        $avatars = $this->mediaManager->getFormatUrls($ids, $locale);
         foreach ($contacts as $key => $contact) {
             if (array_key_exists('avatar', $contact)
                 && $contact['avatar']
