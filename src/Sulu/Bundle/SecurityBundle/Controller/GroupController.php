@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
@@ -61,9 +62,9 @@ class GroupController extends AbstractRestController implements ClassResourceInt
     private $roleRepository;
 
     /**
-     * @var RegistryInterface
+     * @var EntityManagerInterface
      */
-    private $doctrine;
+    private $entityManager;
 
     const ENTITY_NAME_ROLE = 'SuluSecurityBundle:Role';
 
@@ -73,14 +74,14 @@ class GroupController extends AbstractRestController implements ClassResourceInt
         RestHelperInterface $restHelper,
         DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
         RoleRepositoryInterface $roleRepository,
-        RegistryInterface $doctrine
+        EntityManagerInterface $entityManager
     ) {
         parent::__construct($viewHandler);
 
         $this->restHelper = $restHelper;
         $this->doctrineListBuilderFactory = $doctrineListBuilderFactory;
         $this->roleRepository = $roleRepository;
-        $this->doctrine = $doctrine;
+        $this->entityManager = $entityManager;
 
         $this->fieldDescriptors = [];
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', static::$entityName);
@@ -114,7 +115,7 @@ class GroupController extends AbstractRestController implements ClassResourceInt
             );
         } else {
             $list = new CollectionRepresentation(
-                $this->doctrine->getRepository(static::$entityName)->findAllGroups(),
+                $this->entityManager->getRepository(static::$entityName)->findAllGroups(),
                 static::$entityKey
             );
         }
@@ -160,8 +161,6 @@ class GroupController extends AbstractRestController implements ClassResourceInt
         $name = $request->get('name');
 
         if (null != $name) {
-            $em = $this->doctrine->getManager();
-
             $group = new Group();
             $group->setName($name);
 
@@ -174,8 +173,8 @@ class GroupController extends AbstractRestController implements ClassResourceInt
                 }
             }
 
-            $em->persist($group);
-            $em->flush();
+            $this->entityManager->persist($group);
+            $this->entityManager->flush();
 
             $view = $this->view($group, 200);
         } else {
@@ -204,8 +203,6 @@ class GroupController extends AbstractRestController implements ClassResourceInt
             if (!$group) {
                 throw new EntityNotFoundException(static::$entityName, $id);
             } else {
-                $em = $this->doctrine->getManager();
-
                 $name = $request->get('name');
 
                 $group->setName($name);
@@ -216,7 +213,7 @@ class GroupController extends AbstractRestController implements ClassResourceInt
                     throw new RestException('Could not update dependencies!');
                 }
 
-                $em->flush();
+                $this->entityManager->flush();
                 $view = $this->view($group, 200);
             }
         } catch (EntityNotFoundException $enfe) {
@@ -244,7 +241,7 @@ class GroupController extends AbstractRestController implements ClassResourceInt
         };
 
         $delete = function($role) {
-            $this->doctrine->getManager()->remove($role);
+            $this->entityManager->remove($role);
         };
 
         $update = function($role, $roleData) {
@@ -276,9 +273,8 @@ class GroupController extends AbstractRestController implements ClassResourceInt
                 throw new EntityNotFoundException(static::$entityName, $id);
             }
 
-            $em = $this->doctrine->getManager();
-            $em->remove($group);
-            $em->flush();
+            $this->entityManager->remove($group);
+            $this->entityManager->flush();
         };
 
         $view = $this->responseDelete($id, $delete);
