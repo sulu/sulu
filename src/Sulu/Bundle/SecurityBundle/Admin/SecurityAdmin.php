@@ -15,7 +15,7 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Admin\View\RouteCollection;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\TogglerToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
@@ -115,7 +115,7 @@ class SecurityAdmin extends Admin
         ];
     }
 
-    public function configureViews(RouteCollection $routeCollection): void
+    public function configureViews(ViewCollection $viewCollection): void
     {
         $formToolbarActions = [];
         $listToolbarActions = [];
@@ -138,7 +138,7 @@ class SecurityAdmin extends Admin
         }
 
         if ($this->securityChecker->hasPermission(static::ROLE_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $routeCollection->add(
+            $viewCollection->add(
                 $this->routeBuilderFactory->createListRouteBuilder(static::LIST_ROUTE, '/roles')
                     ->setResourceKey('roles')
                     ->setListKey('roles')
@@ -148,12 +148,12 @@ class SecurityAdmin extends Admin
                     ->setEditRoute(static::EDIT_FORM_ROUTE)
                     ->addToolbarActions($listToolbarActions)
             );
-            $routeCollection->add(
+            $viewCollection->add(
                 $this->routeBuilderFactory->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/roles/add')
                     ->setResourceKey('roles')
                     ->setBackRoute(static::LIST_ROUTE)
             );
-            $routeCollection->add(
+            $viewCollection->add(
                 $this->routeBuilderFactory
                     ->createFormRouteBuilder('sulu_security.role_add_form.details', '/details')
                     ->setResourceKey('roles')
@@ -163,13 +163,13 @@ class SecurityAdmin extends Admin
                     ->addToolbarActions($formToolbarActions)
                     ->setParent(static::ADD_FORM_ROUTE)
             );
-            $routeCollection->add(
+            $viewCollection->add(
                 $this->routeBuilderFactory->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/roles/:id')
                     ->setResourceKey('roles')
                     ->setBackRoute(static::LIST_ROUTE)
                     ->setTitleProperty('name')
             );
-            $routeCollection->add(
+            $viewCollection->add(
                 $this->routeBuilderFactory
                     ->createFormRouteBuilder('sulu_security.role_edit_form.details', '/details')
                     ->setResourceKey('roles')
@@ -181,7 +181,7 @@ class SecurityAdmin extends Admin
         }
 
         if ($this->securityChecker->hasPermission(static::USER_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $routeCollection->add(
+            $viewCollection->add(
                 $this->routeBuilderFactory
                     ->createFormRouteBuilder('sulu_security.form.permissions', '/permissions')
                     ->setResourceKey('users')

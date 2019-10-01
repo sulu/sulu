@@ -13,7 +13,7 @@ namespace Sulu\Bundle\CustomUrlBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Admin\View\RouteCollection;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -63,7 +63,7 @@ class CustomUrlAdmin extends Admin
         $this->securityChecker = $securityChecker;
     }
 
-    public function configureViews(RouteCollection $routeCollection): void
+    public function configureViews(ViewCollection $viewCollection): void
     {
         $listToolbarActions = [
             new ToolbarAction('sulu_admin.add'),
@@ -73,7 +73,7 @@ class CustomUrlAdmin extends Admin
         $routes = [];
 
         if ($this->hasSomeWebspaceCustomUrlPermission()) {
-            $routeCollection->add(
+            $viewCollection->add(
                 $this->routeBuilderFactory
                     ->createFormOverlayListRouteBuilder('sulu_custom_url.custom_urls_list', '/custom-urls')
                     ->setResourceKey('custom_urls')

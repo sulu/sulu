@@ -15,7 +15,7 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Admin\View\RouteCollection;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Component\Localization\Manager\LocalizationManager;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
@@ -88,7 +88,7 @@ class MediaAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    public function configureViews(RouteCollection $routeCollection): void
+    public function configureViews(ViewCollection $viewCollection): void
     {
         $mediaLocales = $this->localizationManager->getLocales();
 
@@ -105,7 +105,7 @@ class MediaAdmin extends Admin
         $routes = [];
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $routeCollection->add(
+            $viewCollection->add(
                 $this->routeBuilderFactory
                     ->createRouteBuilder(
                         static::MEDIA_OVERVIEW_ROUTE,
@@ -123,14 +123,14 @@ class MediaAdmin extends Admin
                     ])
                     ->setAttributeDefault('locale', $mediaLocales[0])
             );
-            $routeCollection->add(
+            $viewCollection->add(
                 $this->routeBuilderFactory
                     ->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/media/:locale/:id')
                     ->setResourceKey('media')
                     ->addLocales($mediaLocales)
                     ->setTitleProperty('title')
             );
-            $routeCollection->add(
+            $viewCollection->add(
                 $this->routeBuilderFactory->createFormRouteBuilder(static::EDIT_FORM_DETAILS_ROUTE, '/details')
                     ->setResourceKey('media')
                     ->setFormKey('media_details')
@@ -139,13 +139,13 @@ class MediaAdmin extends Admin
                     ->setParent(static::EDIT_FORM_ROUTE)
                     ->setBackRoute(static::MEDIA_OVERVIEW_ROUTE)
             );
-            $routeCollection->add(
+            $viewCollection->add(
                 $this->routeBuilderFactory
                     ->createRouteBuilder(static::EDIT_FORM_FORMATS_ROUTE, '/formats', 'sulu_media.formats')
                     ->setOption('tabTitle', 'sulu_media.formats')
                     ->setParent(static::EDIT_FORM_ROUTE)
             );
-            $routeCollection->add(
+            $viewCollection->add(
                 $this->routeBuilderFactory
                     ->createRouteBuilder(static::EDIT_FORM_HISTORY_ROUTE, '/history', 'sulu_media.history')
                     ->setOption('tabTitle', 'sulu_media.history')

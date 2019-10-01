@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Tests\Admin\Routing;
+namespace Sulu\Bundle\AdminBundle\Tests\Admin\View;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -17,8 +17,8 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\View\RouteBuilder;
 use Sulu\Bundle\AdminBundle\Admin\View\RouteRegistry;
-use Sulu\Bundle\AdminBundle\Exception\ParentRouteNotFoundException;
-use Sulu\Bundle\AdminBundle\Exception\RouteNotFoundException;
+use Sulu\Bundle\AdminBundle\Exception\ParentViewNotFoundException;
+use Sulu\Bundle\AdminBundle\Exception\ViewNotFoundException;
 use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
 
 class RouteRegistryTest extends TestCase
@@ -80,7 +80,7 @@ class RouteRegistryTest extends TestCase
 
     public function testFindRouteByNameException()
     {
-        $this->expectException(RouteNotFoundException::class);
+        $this->expectException(ViewNotFoundException::class);
 
         $this->routeRegistry->findRouteByName('not_existing');
     }
@@ -141,7 +141,7 @@ class RouteRegistryTest extends TestCase
 
     public function testRouteWithNonExistingParent()
     {
-        $this->expectException(ParentRouteNotFoundException::class);
+        $this->expectException(ParentViewNotFoundException::class);
 
         $routeBuilder = new RouteBuilder('test1', '/test1', 'test1');
         $routeBuilder->setParent('not-existing');

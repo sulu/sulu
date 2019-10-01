@@ -14,7 +14,7 @@ namespace Sulu\Bundle\AdminBundle\Exception;
 /**
  * An instance of this exception signals that no route with given name was found.
  */
-class ParentRouteNotFoundException extends \Exception
+class ParentViewNotFoundException extends \Exception
 {
     /**
      * @var string

@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\AdminBundle\Admin\View;
 
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
-use Sulu\Bundle\AdminBundle\Exception\ParentRouteNotFoundException;
-use Sulu\Bundle\AdminBundle\Exception\RouteNotFoundException;
+use Sulu\Bundle\AdminBundle\Exception\ParentViewNotFoundException;
+use Sulu\Bundle\AdminBundle\Exception\ViewNotFoundException;
 
 class RouteRegistry
 {
@@ -54,23 +54,23 @@ class RouteRegistry
             }
         }
 
-        throw new RouteNotFoundException($name);
+        throw new ViewNotFoundException($name);
     }
 
     private function loadRoutes(): void
     {
-        $routeCollection = new RouteCollection();
+        $viewCollection = new ViewCollection();
         foreach ($this->adminPool->getAdmins() as $admin) {
             if (!$admin instanceof RouteProviderInterface) {
                 continue;
             }
 
-            $admin->configureViews($routeCollection);
+            $admin->configureViews($viewCollection);
         }
 
         $routes = array_map(function(RouteBuilderInterface $routeBuilder) {
             return $routeBuilder->getRoute();
-        }, $routeCollection->all());
+        }, $viewCollection->all());
 
         $this->validateRoutes($routes);
 
@@ -99,7 +99,7 @@ class RouteRegistry
             }
 
             if (!in_array($routeParent, $routeNames)) {
-                throw new ParentRouteNotFoundException($routeParent, $route->getName());
+                throw new ParentViewNotFoundException($routeParent, $route->getName());
             }
         }
     }

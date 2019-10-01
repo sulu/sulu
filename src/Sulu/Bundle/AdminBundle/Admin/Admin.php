@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationProviderInterface;
-use Sulu\Bundle\AdminBundle\Admin\View\RouteCollection;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\RouteProviderInterface;
 
 /**
@@ -23,7 +23,7 @@ abstract class Admin implements RouteProviderInterface, NavigationProviderInterf
 {
     const SETTINGS_NAVIGATION_ITEM = 'sulu_admin.settings';
 
-    public function configureViews(RouteCollection $routeCollection): void
+    public function configureViews(ViewCollection $viewCollection): void
     {
     }
 

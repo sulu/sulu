@@ -13,7 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Admin\View\RouteCollection;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -68,7 +68,7 @@ class WebsiteAdmin extends Admin
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function configureViews(RouteCollection $routeCollection): void
+    public function configureViews(ViewCollection $viewCollection): void
     {
         $listToolbarActions = [
             new ToolbarAction('sulu_admin.add'),
@@ -76,7 +76,7 @@ class WebsiteAdmin extends Admin
         ];
 
         if ($this->hasSomeWebspaceAnalyticsPermission()) {
-            $routeCollection->add(
+            $viewCollection->add(
                 $this->routeBuilderFactory
                     ->createFormOverlayListRouteBuilder('sulu_webspace.analytics_list', '/analytics')
                     ->setResourceKey('analytics')

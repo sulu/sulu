@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\Routing;
+namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\View;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\View\ListRouteBuilder;

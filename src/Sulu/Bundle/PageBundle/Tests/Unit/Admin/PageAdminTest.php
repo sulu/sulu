@@ -13,7 +13,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactory;
-use Sulu\Bundle\AdminBundle\Admin\View\RouteCollection;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Component\Localization\Localization;
@@ -91,11 +91,11 @@ class PageAdminTest extends TestCase
             false
         );
 
-        $routeCollection = new RouteCollection();
-        $admin->configureViews($routeCollection);
+        $viewCollection = new ViewCollection();
+        $admin->configureViews($viewCollection);
 
-        $webspaceRoute = $routeCollection->get('sulu_page.webspaces')->getRoute();
-        $pageListRoute = $routeCollection->get('sulu_page.pages_list')->getRoute();
+        $webspaceRoute = $viewCollection->get('sulu_page.webspaces')->getRoute();
+        $pageListRoute = $viewCollection->get('sulu_page.pages_list')->getRoute();
 
         $this->assertSame('sulu_page.webspaces', $webspaceRoute->getName());
         $this->assertSame('test-1', $webspaceRoute->getAttributeDefault('webspace'));

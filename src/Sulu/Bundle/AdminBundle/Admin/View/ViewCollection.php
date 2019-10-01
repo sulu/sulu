@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\View;
 
-use Sulu\Bundle\AdminBundle\Exception\RouteNotFoundException;
+use Sulu\Bundle\AdminBundle\Exception\ViewNotFoundException;
 
-class RouteCollection
+class ViewCollection
 {
     /**
      * @var RouteBuilderInterface[]
@@ -28,7 +28,7 @@ class RouteCollection
     public function get(string $routeName): RouteBuilderInterface
     {
         if (!array_key_exists($routeName, $this->routes)) {
-            throw new RouteNotFoundException($routeName);
+            throw new ViewNotFoundException($routeName);
         }
 
         return $this->routes[$routeName];

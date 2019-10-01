@@ -13,7 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactory;
-use Sulu\Bundle\AdminBundle\Admin\View\RouteCollection;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
 use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
@@ -74,14 +74,14 @@ class SnippetAdminTest extends TestCase
 
         $this->webspaceManager->getAllLocales()->willReturn(array_values($locales));
 
-        $routeCollection = new RouteCollection();
-        $snippetAdmin->configureViews($routeCollection);
+        $viewCollection = new ViewCollection();
+        $snippetAdmin->configureViews($viewCollection);
 
-        $listRoute = $routeCollection->get('sulu_snippet.list')->getRoute();
-        $addFormRoute = $routeCollection->get('sulu_snippet.add_form')->getRoute();
-        $addDetailRoute = $routeCollection->get('sulu_snippet.add_form.details')->getRoute();
-        $editFormRoute = $routeCollection->get('sulu_snippet.edit_form')->getRoute();
-        $editDetailRoute = $routeCollection->get('sulu_snippet.edit_form.details')->getRoute();
+        $listRoute = $viewCollection->get('sulu_snippet.list')->getRoute();
+        $addFormRoute = $viewCollection->get('sulu_snippet.add_form')->getRoute();
+        $addDetailRoute = $viewCollection->get('sulu_snippet.add_form.details')->getRoute();
+        $editFormRoute = $viewCollection->get('sulu_snippet.edit_form')->getRoute();
+        $editDetailRoute = $viewCollection->get('sulu_snippet.edit_form.details')->getRoute();
 
         $this->assertEquals('sulu_snippet.list', $listRoute->getName());
         $this->assertEquals([

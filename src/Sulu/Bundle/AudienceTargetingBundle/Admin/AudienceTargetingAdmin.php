@@ -15,7 +15,7 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Admin\View\RouteCollection;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleCollectionInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleInterface;
@@ -71,7 +71,7 @@ class AudienceTargetingAdmin extends Admin
         }
     }
 
-    public function configureViews(RouteCollection $routeCollection): void
+    public function configureViews(ViewCollection $viewCollection): void
     {
         $listToolbarActions = [];
         $formToolbarActions = [];
@@ -94,7 +94,7 @@ class AudienceTargetingAdmin extends Admin
         }
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $routeCollection->add(
+            $viewCollection->add(
                 $this->routeBuilderFactory->createListRouteBuilder(static::LIST_ROUTE, '/target-groups')
                     ->setResourceKey('target_groups')
                     ->setListKey('target_groups')
@@ -104,13 +104,13 @@ class AudienceTargetingAdmin extends Admin
                     ->setEditRoute(static::EDIT_FORM_ROUTE)
                     ->addToolbarActions($listToolbarActions)
             );
-            $routeCollection->add(
+            $viewCollection->add(
                 $this->routeBuilderFactory
                     ->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/target-groups/add')
                     ->setResourceKey('target_groups')
                     ->setBackRoute(static::LIST_ROUTE)
             );
-            $routeCollection->add(
+            $viewCollection->add(
                 $this->routeBuilderFactory
                     ->createFormRouteBuilder('sulu_audience_targeting.add_form.details', '/details')
                     ->setResourceKey('target_groups')
@@ -120,14 +120,14 @@ class AudienceTargetingAdmin extends Admin
                     ->addToolbarActions($formToolbarActions)
                     ->setParent(static::ADD_FORM_ROUTE)
             );
-            $routeCollection->add(
+            $viewCollection->add(
                 $this->routeBuilderFactory
                     ->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/target-groups/:id')
                     ->setResourceKey('target_groups')
                     ->setBackRoute(static::LIST_ROUTE)
                     ->setTitleProperty('title')
             );
-            $routeCollection->add(
+            $viewCollection->add(
                 $this->routeBuilderFactory
                     ->createFormRouteBuilder('sulu_audience_targeting.edit_form.details', '/details')
                     ->setResourceKey('target_groups')
