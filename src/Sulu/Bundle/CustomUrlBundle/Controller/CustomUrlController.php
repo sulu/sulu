@@ -13,12 +13,19 @@ namespace Sulu\Bundle\CustomUrlBundle\Controller;
 
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\CustomUrlBundle\Admin\CustomUrlAdmin;
+use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -33,6 +40,33 @@ class CustomUrlController extends RestController implements SecuredControllerInt
     private static $relationName = 'custom_urls';
 
     /**
+     * @var CustomUrlManagerInterface
+     */
+    private $customUrlManager;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        CustomUrlManagerInterface $customUrlManager,
+        DocumentManagerInterface $documentManager,
+        RequestStack $requestStack
+    ) {
+        parent::__construct($viewHandler);
+        $this->customUrlManager = $customUrlManager;
+        $this->documentManager = $documentManager;
+        $this->requestStack = $requestStack;
+    }
+
+    /**
      * Returns a list of custom-urls.
      *
      * @param string $webspace
@@ -42,9 +76,7 @@ class CustomUrlController extends RestController implements SecuredControllerInt
      */
     public function cgetAction($webspace, Request $request)
     {
-        // TODO pagination
-
-        $result = $this->get('sulu_custom_urls.manager')->findList($webspace);
+        $result = $this->customUrlManager->findList($webspace);
 
         $list = new CollectionRepresentation($result, self::$relationName);
 
@@ -62,7 +94,7 @@ class CustomUrlController extends RestController implements SecuredControllerInt
      */
     public function getAction($webspace, $id, Request $request)
     {
-        $document = $this->get('sulu_custom_urls.manager')->find($id);
+        $document = $this->customUrlManager->find($id);
 
         // FIXME without this target-document will not be loaded (for serialization)
         // - issue https://github.com/sulu-io/sulu-document-manager/issues/71
@@ -89,12 +121,12 @@ class CustomUrlController extends RestController implements SecuredControllerInt
      */
     public function postAction($webspace, Request $request)
     {
-        $document = $this->get('sulu_custom_urls.manager')->create(
+        $document = $this->customUrlManager->create(
             $webspace,
             $request->request->all(),
             $this->getRequestParameter($request, 'targetLocale', true)
         );
-        $this->get('sulu_document_manager.document_manager')->flush();
+        $this->documentManager->flush();
 
         $context = new Context();
         $context->setGroups(['defaultCustomUrl', 'fullRoute']);
@@ -113,10 +145,10 @@ class CustomUrlController extends RestController implements SecuredControllerInt
      */
     public function putAction($webspace, $id, Request $request)
     {
-        $manager = $this->get('sulu_custom_urls.manager');
+        $manager = $this->customUrlManager;
 
         $document = $manager->save($id, $request->request->all());
-        $this->get('sulu_document_manager.document_manager')->flush();
+        $this->documentManager->flush();
 
         $context = new Context();
         $context->setGroups(['defaultCustomUrl', 'fullRoute']);
@@ -134,9 +166,9 @@ class CustomUrlController extends RestController implements SecuredControllerInt
      */
     public function deleteAction($webspace, $id)
     {
-        $manager = $this->get('sulu_custom_urls.manager');
+        $manager = $this->customUrlManager;
         $manager->delete($id);
-        $this->get('sulu_document_manager.document_manager')->flush();
+        $this->documentManager->flush();
 
         return $this->handleView($this->view());
     }
@@ -153,11 +185,10 @@ class CustomUrlController extends RestController implements SecuredControllerInt
     {
         $ids = array_filter(explode(',', $request->get('ids', '')));
 
-        $manager = $this->get('sulu_custom_urls.manager');
         foreach ($ids as $ids) {
-            $manager->delete($ids);
+            $this->customUrlManager->delete($ids);
         }
-        $this->get('sulu_document_manager.document_manager')->flush();
+        $this->documentManager->flush();
 
         return $this->handleView($this->view());
     }
@@ -167,7 +198,7 @@ class CustomUrlController extends RestController implements SecuredControllerInt
      */
     public function getSecurityContext()
     {
-        $request = $this->container->get('request_stack')->getCurrentRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         return CustomUrlAdmin::getCustomUrlSecurityContext($request->get('webspace'));
     }
