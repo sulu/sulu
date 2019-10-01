@@ -1,7 +1,7 @@
 sulu_contact.contacts:
     type: rest
     name_prefix: sulu_contact.
-    resource: Sulu\Bundle\ContactBundle\Controller\ContactController
+    resource: sulu_contact.contact_controller
 
 sulu_contact.accounts:
     type: rest
@@ -11,7 +11,7 @@ sulu_contact.accounts:
 sulu_contact.contacttitle:
     type: rest
     name_prefix: sulu_contact.
-    resource: Sulu\Bundle\ContactBundle\Controller\ContactTitleController
+    resource: sulu_contact.contact_title_controller
 
 sulu_contact.contactposition:
     type: rest

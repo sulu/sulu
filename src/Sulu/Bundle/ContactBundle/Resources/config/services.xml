@@ -109,10 +109,9 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service
-            id="sulu_contact.account_media_controller"
-            class="Sulu\Bundle\ContactBundle\Controller\AccountMediaController"
-            public="true">
+        <service id="sulu_contact.account_media_controller"
+                 class="Sulu\Bundle\ContactBundle\Controller\AccountMediaController"
+                 public="true">
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="security.token_storage"/>
             <argument type="service" id="sulu_core.doctrine_rest_helper"/>
@@ -127,10 +126,27 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service
-            id="sulu_contact.contact_media_controller"
-            class="Sulu\Bundle\ContactBundle\Controller\ContactMediaController"
-            public="true">
+        <service id="sulu_contact.contact_controller"
+                 class="Sulu\Bundle\ContactBundle\Controller\ContactController"
+                 public="true">
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="sulu_core.doctrine_rest_helper"/>
+            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
+            <argument type="service" id="sulu_core.doctrine_list_builder_factory"/>
+            <argument type="service" id="sulu_contact.contact_manager"/>
+            <argument type="service" id="sulu.repository.contact"/>
+            <argument type="service" id="sulu.repository.user"/>
+            <argument type="service" id="sulu_contact.util.index_comparator"/>
+            <argument>%sulu.model.contact.class%</argument>
+            <argument>%sulu_security.system%</argument>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_contact.contact_media_controller"
+                 class="Sulu\Bundle\ContactBundle\Controller\ContactMediaController"
+                 public="true">
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="security.token_storage"/>
             <argument type="service" id="sulu_core.doctrine_rest_helper"/>
@@ -141,6 +157,17 @@
             <argument type="service" id="sulu_contact.contact_manager"/>
             <argument>%sulu.model.contact.class%</argument>
             <argument>%sulu.model.media.class%</argument>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_contact.contact_title_controller"
+                 class="Sulu\Bundle\ContactBundle\Controller\ContactTItleController"
+                 public="true">
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="sulu_contact.contact_title_repository"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
 
             <tag name="sulu.context" context="admin"/>
         </service>
