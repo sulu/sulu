@@ -7,7 +7,7 @@ sulu_security.role_settings:
     type: rest
     name_prefix: sulu_security.
     parent: sulu_security.roles
-    resource: Sulu\Bundle\SecurityBundle\Controller\RoleSettingController
+    resource: sulu_security.role_setting_controller
 
 sulu_security.groups:
     type: rest

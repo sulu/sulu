@@ -191,6 +191,18 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <service
+            id="sulu_security.role_setting_controller"
+            class="Sulu\Bundle\SecurityBundle\Controller\RoleSettingController"
+            public="true"
+        >
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="sulu.repository.role_setting" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <service id="sulu_security.group_repository" class="%sulu_security.group_repository.class%">
             <factory service="doctrine.orm.entity_manager" method="getRepository"/>
 

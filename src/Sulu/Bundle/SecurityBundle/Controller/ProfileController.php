@@ -30,7 +30,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 /**
  * This controller handles everything a user is allowed to change on its own.
  */
-class ProfileController extends RestController implements ClassResourceInterface
+class ProfileController implements ClassResourceInterface
 {
     protected static $entityNameUserSetting = 'SuluSecurityBundle:UserSetting';
 
