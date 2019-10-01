@@ -368,7 +368,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
         }
         if (false === $alreadyContains) {
             $permission->setRole($role);
-            $em->persist($permission);
+            $this->entityManager->persist($permission);
             $role->addPermission($permission);
         }
 
