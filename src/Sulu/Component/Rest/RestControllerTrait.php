@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\Tests\Unit;
+namespace Sulu\Component\Rest;
 
 use FOS\RestBundle\Controller\ControllerTrait;
 use FOS\RestBundle\View\View;

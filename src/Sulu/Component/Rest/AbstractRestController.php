@@ -12,7 +12,6 @@
 namespace Sulu\Component\Rest;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
-use Sulu\Component\Rest\Tests\Unit\RestControllerTrait;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**

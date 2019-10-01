@@ -12,7 +12,6 @@
 namespace Sulu\Component\Rest;
 
 use FOS\RestBundle\Controller\FOSRestController;
-use Sulu\Component\Rest\Tests\Unit\RestControllerTrait;
 
 /**
  * Abstract Controller for extracting some required rest functionality.
