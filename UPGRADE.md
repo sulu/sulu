@@ -5,11 +5,12 @@
 When upgrading also have a look at the changes in the
 [sulu skeleton](https://github.com/sulu/skeleton/compare/2.0.0-RC3...2.0.0).
 
-### WebsiteController and DefaultController changed
+### Refactor WebsiteController and DefaultController
 
-The WebsiteController and DefaultController does not longer extend the basic Symfony Controller instead
-it extends the new Symfony [AbstractController](https://github.com/symfony/symfony/blob/4.4/src/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.php).
-If you extend from this Controllers you need to inject services you need over `getSubscribedServices` method:
+The WebsiteController and DefaultController were refactored to not extend the deprecated Symfony Controller class.
+The controllers now use the new Symfony [AbstractController](https://github.com/symfony/symfony/blob/4.4/src/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.php) class as base class.
+
+If you extend from one of these Controllers, you need to define your service dependencies in the `getSubscribedServices` method:
 
 ```php
 public static function getSubscribedServices()
