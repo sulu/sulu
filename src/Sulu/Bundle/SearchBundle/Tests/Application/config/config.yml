@@ -11,7 +11,7 @@ sulu_search:
         product:
             name: 'sulu_product.products'
             icon: 'su-product'
-            route:
+            view:
                 name: 'sulu_product.edit_form'
-                result_to_route: []
+                result_to_view: []
             security_context: 'sulu.products'

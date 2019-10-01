@@ -36,9 +36,9 @@ class IndexConfigurationProviderTest extends TestCase
                 'index1' => [
                     'name' => 'test.index',
                     'icon' => 'su-test',
-                    'route' => [
+                    'view' => [
                         'name' => 'test1',
-                        'result_to_route' => ['webspace_key' => 'webspace'],
+                        'result_to_view' => ['webspace_key' => 'webspace'],
                     ],
                     'security_context' => 'sulu.security.index1',
                     'contexts' => ['website'],
@@ -46,9 +46,9 @@ class IndexConfigurationProviderTest extends TestCase
                 'index2' => [
                     'name' => 'test.index2',
                     'icon' => 'su-icon',
-                    'route' => [
+                    'view' => [
                         'name' => 'test2',
-                        'result_to_route' => [],
+                        'result_to_view' => [],
                     ],
                     'security_context' => 'sulu.security.index2',
                 ],
@@ -80,9 +80,9 @@ class IndexConfigurationProviderTest extends TestCase
                 'index1' => [
                     'name' => 'index1',
                     'icon' => 'su-test',
-                    'route' => [
+                    'view' => [
                         'name' => 'test1',
-                        'result_to_route' => ['webspace_key' => 'webspace'],
+                        'result_to_view' => ['webspace_key' => 'webspace'],
                     ],
                     'security_context' => 'sulu.security.index1',
                     'contexts' => [],
@@ -90,9 +90,9 @@ class IndexConfigurationProviderTest extends TestCase
                 'index2' => [
                     'name' => 'index2',
                     'icon' => 'su-icon',
-                    'route' => [
+                    'view' => [
                         'name' => 'test2',
-                        'result_to_route' => [],
+                        'result_to_view' => [],
                     ],
                     'security_context' => 'sulu.security.index2',
                     'contexts' => [],
