@@ -33,7 +33,7 @@ sulu_page.smart_content:
 sulu_page.webspace:
     type: rest
     name_prefix: sulu_page.
-    resource: Sulu\Bundle\PageBundle\Controller\WebspaceController
+    resource: sulu_page.webspace_controller
 
 sulu_page.teaser:
     type: rest

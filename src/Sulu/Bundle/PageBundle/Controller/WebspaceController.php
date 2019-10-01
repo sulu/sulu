@@ -11,16 +11,22 @@
 
 namespace Sulu\Bundle\PageBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManagerInterface;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -29,6 +35,34 @@ use Symfony\Component\HttpFoundation\Response;
 class WebspaceController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
     use RequestParametersTrait;
+
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        WebspaceManagerInterface $webspaceManager,
+        SecurityCheckerInterface $securityChecker,
+        RequestStack $requestStack
+    ) {
+        parent::__construct($viewHandler);
+
+        $this->webspaceManager = $webspaceManager;
+        $this->securityChecker = $securityChecker;
+        $this->requestStack = $requestStack;
+    }
 
     /**
      * Returns webspaces.
@@ -41,11 +75,12 @@ class WebspaceController extends RestController implements ClassResourceInterfac
         $locale = $this->getRequestParameter($request, 'locale', true);
         $webspaces = [];
 
-        $securityChecker = $this->get('sulu_security.security_checker');
-        foreach ($this->get('sulu_core.webspace.webspace_manager')->getWebspaceCollection() as $webspace) {
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             if ($checkForPermissions) {
                 $securityContext = $this->getSecurityContextByWebspace($webspace->getKey());
-                if (!$securityChecker->hasPermission(new SecurityCondition($securityContext), PermissionTypes::VIEW)) {
+                $condition = new SecurityCondition($securityContext);
+
+                if (!$this->securityChecker->hasPermission($condition, PermissionTypes::VIEW)) {
                     continue;
                 }
             }
@@ -71,7 +106,7 @@ class WebspaceController extends RestController implements ClassResourceInterfac
     public function getAction($webspaceKey)
     {
         return $this->handleView(
-            $this->view($this->get('sulu_core.webspace.webspace_manager')->findWebspaceByKey($webspaceKey))
+            $this->view($this->webspaceManager->findWebspaceByKey($webspaceKey))
         );
     }
 
@@ -80,14 +115,14 @@ class WebspaceController extends RestController implements ClassResourceInterfac
      */
     public function getSecurityContext()
     {
-        $request = $this->container->get('request_stack')->getCurrentRequest();
-        $webspaceKey = $request->get('webspaceKey');
+        $request = $this->requestStack->getCurrentRequest();
+        $webspaceKey = $request ? $request->get('webspaceKey') : null;
 
         if (null !== $webspaceKey) {
             return $this->getSecurityContextByWebspace($webspaceKey);
         }
 
-        return;
+        return null;
     }
 
     /**
