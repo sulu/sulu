@@ -57,6 +57,7 @@ The `NavigationItem` functions have also changed:
 | Old function name | New function name |
 |-------------------|-------------------|
 | setMainRoute      | setView           |
+| setChildRoutes    | setChildViews     |
 | addChildRoute     | addChildView      |
 
 
