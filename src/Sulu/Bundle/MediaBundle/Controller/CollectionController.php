@@ -33,6 +33,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -85,6 +86,7 @@ class CollectionController extends AbstractRestController implements ClassResour
 
     public function __construct(
         ViewHandlerInterface $viewHandler,
+        TokenStorageInterface $tokenStorage,
         ListRestHelperInterface $listRestHelper,
         SecurityCheckerInterface $securityChecker,
         TranslatorInterface $translator,
@@ -92,7 +94,7 @@ class CollectionController extends AbstractRestController implements ClassResour
         CollectionManagerInterface $collectionManager,
         array $defaultCollectionType
     ) {
-        parent::__construct($viewHandler);
+        parent::__construct($viewHandler, $tokenStorage);
 
         $this->listRestHelper = $listRestHelper;
         $this->securityChecker = $securityChecker;

@@ -33,7 +33,7 @@
             public="true"
         >
             <argument type="service" id="fos_rest.view_handler" />
-            <argument type="service" id="security.token_storage" />
+            <argument type="service" id="security.token_storage" on-invalid="null" />
             <argument type="service" id="sulu_media.media_manager" />
             <argument type="service" id="sulu_media.format_manager" />
             <argument type="service" id="sulu_core.doctrine_rest_helper" />
@@ -55,7 +55,7 @@
             public="true"
         >
             <argument type="service" id="fos_rest.view_handler" />
-            <argument type="service" id="security.token_storage" />
+            <argument type="service" id="security.token_storage" on-invalid="null" />
             <argument type="service" id="sulu_media.media_manager" />
             <argument type="service" id="sulu_media.system_collections.manager" />
             <argument type="service" id="doctrine.orm.entity_manager" />
@@ -91,6 +91,7 @@
             public="true"
         >
             <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="security.token_storage" on-invalid="null" />
             <argument type="service" id="sulu_core.list_rest_helper" />
             <argument type="service" id="sulu_security.security_checker" />
             <argument type="service" id="translator" />
