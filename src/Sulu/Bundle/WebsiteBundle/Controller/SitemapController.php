@@ -14,7 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\Controller;
 use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPoolInterface;
 use Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapDumperInterface;
-use Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapRenderer;
+use Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapRendererInterface;
 use Sulu\Component\Webspace\Portal;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -29,7 +29,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class SitemapController
 {
     /**
-     * @var XmlSitemapRenderer
+     * @var XmlSitemapRendererInterface
      */
     private $xmlSitemapRenderer;
 
@@ -59,7 +59,7 @@ class SitemapController
     private $cacheLifeTime;
 
     public function __construct(
-        XmlSitemapRenderer $xmlSitemapRenderer,
+        XmlSitemapRendererInterface $xmlSitemapRenderer,
         SitemapProviderPoolInterface $sitemapProviderPool,
         XmlSitemapDumperInterface $xmlSitemapDumper,
         Filesystem $filesystem,
