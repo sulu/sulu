@@ -41,11 +41,13 @@ abstract class AbstractRestController
             throw new \LogicException('The TokenStorage property was not set via the constructor".');
         }
 
-        if (null === $token = $this->tokenStorage->getToken()) {
+        $token = $token = $this->tokenStorage->getToken();
+        if (null === $token) {
             return null;
         }
 
-        if (!\is_object($user = $token->getUser())) {
+        $user = $token->getUser();
+        if (!is_object($user)) {
             // e.g. anonymous authentication
             return null;
         }

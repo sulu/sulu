@@ -67,7 +67,7 @@ trait RestControllerTrait
      */
     public function getLocale(Request $request)
     {
-        return $request->get('locale', null);
+        return $request->query->get('locale', null);
     }
 
     /**
