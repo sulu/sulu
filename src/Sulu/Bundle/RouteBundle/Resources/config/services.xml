@@ -7,5 +7,16 @@
         <service id="sulu_route.content_type" class="Sulu\Bundle\RouteBundle\Content\Type\RouteContentType">
             <tag name="sulu.content.type" alias="route"/>
         </service>
+
+        <service id="sulu_route.route_controller"
+                 class="Sulu\Bundle\RouteBundle\Controller\RouteController"
+                 public="true">
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="sulu.repository.route"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument>%sulu_route.resource_key_mappings%</argument>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
     </services>
 </container>
