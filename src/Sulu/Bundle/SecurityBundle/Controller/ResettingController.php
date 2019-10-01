@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
 use Sulu\Bundle\SecurityBundle\Exception\UserNotInSystemException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailTemplateException;
@@ -90,6 +91,16 @@ class ResettingController
     protected $userRepository;
 
     /**
+     * @var UrlGeneratorInterface
+     */
+    private $router;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
      * @var string
      */
     protected $suluSecuritySystem;
@@ -134,6 +145,8 @@ class ResettingController
         \Swift_Mailer $mailer,
         EncoderFactoryInterface $encoderFactory,
         UserRepositoryInterface $userRepository,
+        UrlGeneratorInterface $router,
+        EntityManagerInterface $entityManager,
         string $suluSecuritySystem,
         string $sender,
         string $subject,
@@ -151,6 +164,9 @@ class ResettingController
         $this->mailer = $mailer;
         $this->encoderFactory = $encoderFactory;
         $this->userRepository = $userRepository;
+        $this->router = $router;
+        $this->entityManager = $entityManager;
+
         $this->suluSecuritySystem = $suluSecuritySystem;
         $this->sender = $sender;
         $this->subject = $subject;
@@ -295,7 +311,7 @@ class ResettingController
      */
     protected function getMessage($user)
     {
-        $resetUrl = $this->generateUrl(static::$resetRouteId, [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $resetUrl = $this->router->generate(static::$resetRouteId, [], UrlGeneratorInterface::ABSOLUTE_URL);
         $template = $this->mailTemplate;
         $translationDomain = $this->translationDomain;
 
@@ -304,7 +320,7 @@ class ResettingController
         }
 
         return trim(
-            $this->renderView(
+            $this->twig->render(
                 $template,
                 [
                     'user' => $user,
@@ -403,12 +419,11 @@ class ResettingController
      */
     private function deleteToken(UserInterface $user)
     {
-        $em = $this->getDoctrine()->getManager();
         $user->setPasswordResetToken(null);
         $user->setPasswordResetTokenExpiresAt(null);
         $user->setPasswordResetTokenEmailsSent(null);
-        $em->persist($user);
-        $em->flush();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
     }
 
     /**
@@ -433,7 +448,6 @@ class ResettingController
             throw new TokenEmailsLimitReachedException($maxNumberEmails, $user);
         }
         $mailer = $this->mailer;
-        $em = $this->getDoctrine()->getManager();
         $message = $mailer->createMessage()
             ->setSubject($this->getSubject())
             ->setFrom($from)
@@ -442,8 +456,8 @@ class ResettingController
 
         $mailer->send($message);
         $user->setPasswordResetTokenEmailsSent($user->getPasswordResetTokenEmailsSent() + 1);
-        $em->persist($user);
-        $em->flush();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
     }
 
     /**
@@ -459,10 +473,9 @@ class ResettingController
         if ('' === $password) {
             throw new MissingPasswordException();
         }
-        $em = $this->getDoctrine()->getManager();
         $user->setPassword($this->encodePassword($user, $password, $user->getSalt()));
-        $em->persist($user);
-        $em->flush();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
     }
 
     /**
@@ -479,15 +492,14 @@ class ResettingController
             && $this->dateIsInRequestFrame($user->getPasswordResetTokenExpiresAt())) {
             throw new TokenAlreadyRequestedException(self::getRequestInterval());
         }
-        $em = $this->getDoctrine()->getManager();
 
         $user->setPasswordResetToken($this->getToken());
         $expireDateTime = (new \DateTime())->add(self::getResetInterval());
         $user->setPasswordResetTokenExpiresAt($expireDateTime);
         $user->setPasswordResetTokenEmailsSent(0);
 
-        $em->persist($user);
-        $em->flush();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
     }
 
     /**
