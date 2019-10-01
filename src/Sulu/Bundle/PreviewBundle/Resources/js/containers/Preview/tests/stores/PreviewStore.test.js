@@ -57,7 +57,7 @@ test('Should request server on update preview', () => {
 
     return postPromise.then(() => {
         expect(Requester.post).toBeCalledWith(
-            '/update?locale=en&targetGroup=-1&webspace=sulu_io',
+            '/update?id=123-123-123&locale=en&provider=pages&targetGroup=-1&webspace=sulu_io',
             {data: {title: 'Sulu is aswesome'}}
         );
     });
@@ -79,7 +79,7 @@ test('Should request server on update preview with target group', () => {
 
     return postPromise.then(() => {
         expect(Requester.post).toBeCalledWith(
-            '/update?locale=en&targetGroup=2&webspace=sulu_io',
+            '/update?id=123-123-123&locale=en&provider=pages&targetGroup=2&webspace=sulu_io',
             {data: {title: 'Sulu is aswesome'}}
         );
     });
@@ -100,7 +100,10 @@ test('Should request server on update-context preview', () => {
 
     return postPromise.then(() => {
         expect(Requester.post)
-            .toBeCalledWith('/update-context?targetGroup=-1&webspace=sulu_io', {context: {template: 'default'}});
+            .toBeCalledWith(
+                '/update-context?id=123-123-123&locale=en&provider=pages&targetGroup=-1&webspace=sulu_io',
+                {context: {template: 'default'}}
+            );
     });
 });
 
@@ -120,7 +123,10 @@ test('Should request server on update-context preview with target group', () => 
 
     return postPromise.then(() => {
         expect(Requester.post)
-            .toBeCalledWith('/update-context?targetGroup=6&webspace=sulu_io', {context: {template: 'default'}});
+            .toBeCalledWith(
+                '/update-context?id=123-123-123&locale=en&provider=pages&targetGroup=6&webspace=sulu_io',
+                {context: {template: 'default'}}
+            );
     });
 });
 

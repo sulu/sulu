@@ -63,10 +63,16 @@ class PreviewController
 
     public function renderAction(Request $request): Response
     {
+        $provider = $this->getRequestParameter($request, 'provider', true);
+        $id = $this->getRequestParameter($request, 'id', true);
         $token = $this->getRequestParameter($request, 'token', true);
         $webspace = $this->getRequestParameter($request, 'webspace', true, null);
         $locale = $this->getRequestParameter($request, 'locale', true, null);
         $targetGroup = $this->getRequestParameter($request, 'targetGroup', false, null);
+
+        if (!$this->preview->exists($token)) {
+            $token = $this->preview->start($provider, $id, $locale, $this->getUserId());
+        }
 
         $content = $this->preview->render($token, $webspace, $locale, $targetGroup);
 
@@ -77,10 +83,17 @@ class PreviewController
 
     public function updateAction(Request $request): Response
     {
+        $provider = $this->getRequestParameter($request, 'provider', true);
+        $id = $this->getRequestParameter($request, 'id', true);
         $token = $this->getRequestParameter($request, 'token', true);
         $data = $this->getRequestParameter($request, 'data', true);
+        $locale = $this->getRequestParameter($request, 'locale', true, null);
         $webspace = $this->getRequestParameter($request, 'webspace', true);
         $targetGroup = $this->getRequestParameter($request, 'targetGroup', false, null);
+
+        if (!$this->preview->exists($token)) {
+            $token = $this->preview->start($provider, $id, $locale, $this->getUserId());
+        }
 
         $content = $this->preview->update($token, $webspace, $data, $targetGroup);
 
@@ -89,10 +102,17 @@ class PreviewController
 
     public function updateContextAction(Request $request): Response
     {
+        $id = $this->getRequestParameter($request, 'id', true);
+        $provider = $this->getRequestParameter($request, 'provider', true);
         $token = $this->getRequestParameter($request, 'token', true);
         $context = $this->getRequestParameter($request, 'context', true);
+        $locale = $this->getRequestParameter($request, 'locale', true, null);
         $webspace = $this->getRequestParameter($request, 'webspace', true);
         $targetGroup = $this->getRequestParameter($request, 'targetGroup', false, null);
+
+        if (!$this->preview->exists($token)) {
+            $token = $this->preview->start($provider, $id, $locale, $this->getUserId());
+        }
 
         $content = $this->preview->updateContext($token, $webspace, $context, $targetGroup);
 
