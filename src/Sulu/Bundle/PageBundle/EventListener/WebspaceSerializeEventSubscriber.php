@@ -82,9 +82,18 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
         $this->appendCustomUrls($webspace, $context, $visitor);
         $this->appendNavigations($webspace, $context, $visitor);
 
-        $allLocalizations = $webspace->getAllLocalizations();
+        $allLocalizations = [];
+
+        foreach ($webspace->getAllLocalizations() as $localization) {
+            $allLocalizations[] = $localization->jsonSerialize();
+        }
+
         $visitor->visitProperty(
-            new StaticPropertyMetadata('', 'allLocalizations', $allLocalizations),
+            new StaticPropertyMetadata(
+                '',
+                'allLocalizations',
+                $allLocalizations
+            ),
             $allLocalizations
         );
     }
