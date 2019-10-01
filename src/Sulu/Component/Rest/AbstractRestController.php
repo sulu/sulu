@@ -41,7 +41,7 @@ abstract class AbstractRestController
             throw new \LogicException('The TokenStorage property was not set via the constructor".');
         }
 
-        $token = $token = $this->tokenStorage->getToken();
+        $token = $this->tokenStorage->getToken();
         if (null === $token) {
             return null;
         }
