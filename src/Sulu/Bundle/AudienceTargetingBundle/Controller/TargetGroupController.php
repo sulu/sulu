@@ -14,14 +14,19 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
+use JMS\Serializer\SerializerInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Admin\AudienceTargetingAdmin;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleRepositoryInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingParameterException;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,11 +44,59 @@ class TargetGroupController extends RestController implements ClassResourceInter
     protected static $entityKey = 'target_groups';
 
     /**
+     * @var RestHelperInterface
+     */
+    private $restHelper;
+
+    /**
+     * @var FieldDescriptorFactoryInterface
+     */
+    private $fieldDescriptorFactory;
+
+    /**
+     * @var DoctrineListBuilderFactoryInterface
+     */
+    private $listBuilderFactory;
+
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    /**
+     * @var TargetGroupRepositoryInterface
+     */
+    private $targetGroupRepository;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        RestHelperInterface $restHelper,
+        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        SerializerInterface $serializer,
+        TargetGroupRepositoryInterface $targetGroupRepository,
+        EntityManagerInterface $entityManager
+    ) {
+        parent::__construct($viewHandler);
+        $this->restHelper = $restHelper;
+        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
+        $this->listBuilderFactory = $listBuilderFactory;
+        $this->serializer = $serializer;
+        $this->targetGroupRepository = $targetGroupRepository;
+        $this->entityManager = $entityManager;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getSecurityContext()
     {
-        return 'sulu.settings.target-groups';
+        return AudienceTargetingAdmin::SECURITY_CONTEXT;
     }
 
     /**
@@ -55,12 +108,10 @@ class TargetGroupController extends RestController implements ClassResourceInter
      */
     public function cgetAction(Request $request)
     {
-        $restHelper = $this->get('sulu_core.doctrine_rest_helper');
-        $factory = $this->get('sulu_core.doctrine_list_builder_factory');
-        $listBuilder = $factory->create($this->getTargetGroupRepository()->getClassName());
+        $listBuilder = $this->listBuilderFactory->create($this->targetGroupRepository->getClassName());
 
-        $fieldDescriptors = $this->getFieldDescriptors();
-        $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('target_groups');
+        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         // If webspaces are concatinated we need to group by id. This happens
         // when no fields are supplied at all OR webspaces are requested as field.
@@ -94,7 +145,7 @@ class TargetGroupController extends RestController implements ClassResourceInter
     public function getAction($id)
     {
         $findCallback = function($id) {
-            $targetGroup = $this->getTargetGroupRepository()->find($id);
+            $targetGroup = $this->targetGroupRepository->find($id);
 
             return $targetGroup;
         };
@@ -115,9 +166,9 @@ class TargetGroupController extends RestController implements ClassResourceInter
     {
         $data = $this->convertFromRequest(json_decode($request->getContent(), true));
         $targetGroup = $this->deserializeData(json_encode($data));
-        $targetGroup = $this->getTargetGroupRepository()->save($targetGroup);
+        $targetGroup = $this->targetGroupRepository->save($targetGroup);
 
-        $this->getEntityManager()->flush();
+        $this->entityManager->flush();
 
         return $this->handleView($this->view($targetGroup));
     }
@@ -141,8 +192,8 @@ class TargetGroupController extends RestController implements ClassResourceInter
         $data = $this->convertFromRequest($data);
 
         $targetGroup = $this->deserializeData(json_encode($data));
-        $targetGroup = $this->getTargetGroupRepository()->save($targetGroup);
-        $this->getEntityManager()->flush();
+        $targetGroup = $this->targetGroupRepository->save($targetGroup);
+        $this->entityManager->flush();
 
         return $this->handleView($this->view($targetGroup));
     }
@@ -158,8 +209,8 @@ class TargetGroupController extends RestController implements ClassResourceInter
     {
         $targetGroup = $this->retrieveTargetGroupById($id);
 
-        $this->getEntityManager()->remove($targetGroup);
-        $this->getEntityManager()->flush();
+        $this->entityManager->remove($targetGroup);
+        $this->entityManager->flush();
 
         return $this->handleView($this->view(null, 204));
     }
@@ -182,13 +233,13 @@ class TargetGroupController extends RestController implements ClassResourceInter
             throw new MissingParameterException('TargetGroupController', 'ids');
         }
 
-        $targetGroups = $this->getTargetGroupRepository()->findById($ids);
+        $targetGroups = $this->targetGroupRepository->findById($ids);
 
         foreach ($targetGroups as $targetGroup) {
-            $this->getEntityManager()->remove($targetGroup);
+            $this->entityManager->remove($targetGroup);
         }
 
-        $this->getEntityManager()->flush();
+        $this->entityManager->flush();
 
         return $this->handleView($this->view(null, 204));
     }
@@ -232,36 +283,13 @@ class TargetGroupController extends RestController implements ClassResourceInter
      */
     private function deserializeData($data)
     {
-        $result = $this->get('jms_serializer')->deserialize(
+        $result = $this->serializer->deserialize(
             $data,
-            $this->getTargetGroupRepository()->getClassName(),
+            $this->targetGroupRepository->getClassName(),
             'json'
         );
 
         return $result;
-    }
-
-    /**
-     * Returns array of field-descriptors.
-     *
-     * @return FieldDescriptorInterface[]
-     */
-    private function getFieldDescriptors()
-    {
-        return $this->get('sulu_core.list_builder.field_descriptor_factory')
-            ->getFieldDescriptors('target_groups');
-    }
-
-    /**
-     * Returns array of field-descriptors for rules.
-     *
-     * @return FieldDescriptorInterface[]
-     */
-    private function getRuleFieldDescriptors()
-    {
-        return $this->get('sulu_core.list_builder.field_descriptor_factory')->getFieldDescriptorForClass(
-            $this->getTargetGroupRuleRepository()->getClassName()
-        );
     }
 
     /**
@@ -276,36 +304,12 @@ class TargetGroupController extends RestController implements ClassResourceInter
     private function retrieveTargetGroupById($id)
     {
         /** @var TargetGroupInterface $targetGroup */
-        $targetGroup = $this->getTargetGroupRepository()->find($id);
+        $targetGroup = $this->targetGroupRepository->find($id);
 
         if (!$targetGroup) {
-            throw new EntityNotFoundException($this->getTargetGroupRepository()->getClassName(), $id);
+            throw new EntityNotFoundException($this->targetGroupRepository->getClassName(), $id);
         }
 
         return $targetGroup;
-    }
-
-    /**
-     * @return TargetGroupRepositoryInterface
-     */
-    private function getTargetGroupRepository()
-    {
-        return $this->get('sulu.repository.target_group');
-    }
-
-    /**
-     * @return TargetGroupRuleRepositoryInterface
-     */
-    private function getTargetGroupRuleRepository()
-    {
-        return $this->get('sulu.repository.target_group_rule');
-    }
-
-    /**
-     * @return EntityManagerInterface
-     */
-    private function getEntityManager()
-    {
-        return $this->get('doctrine.orm.entity_manager');
     }
 }
