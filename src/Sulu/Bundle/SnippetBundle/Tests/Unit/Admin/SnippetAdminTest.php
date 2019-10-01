@@ -12,9 +12,9 @@
 namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
-use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
 use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
 use Sulu\Component\Security\Authorization\SecurityChecker;
