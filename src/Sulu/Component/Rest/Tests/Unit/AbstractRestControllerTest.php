@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest\Tests\Unit;
 
 use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Rest\AbstractRestController;
@@ -27,7 +28,8 @@ class AbstractRestControllerTest extends TestCase
 
     public function setUp(): void
     {
-        $this->controller = $this->getMockForAbstractClass(AbstractRestController::class);
+        $viewHandler = $this->prophesize(ViewHandlerInterface::class);
+        $this->controller = $this->getMockForAbstractClass(AbstractRestController::class, [$viewHandler->reveal()]);
     }
 
     public function testResponseGetById()
