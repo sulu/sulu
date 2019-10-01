@@ -18,11 +18,23 @@ Upgrade files.
 
 Serialization to `array` type is not longer possible use the new `sulu_core.array_serializer` service instead.
 
+
 ### Refactor Rest Controllers
 
 The Sulu `RestController` was deprecated and replaced with the `AbstractRestController`.
 All Sulu Rest controllers were refactored to extend the new `AbstractRestController`. 
 Furthermore, all these controllers and now use constructor injection to gather their dependencies.
+
+### Admin Route/View renamings
+
+Some of the `RouteBuilder` methods have been renamed (they are used in multiple `RouteBuilder` and are named the same):
+
+| Old function name                     | New function name                       |
+|---------------------------------------|-----------------------------------------|
+| addRouterAttributesToListStore        | addRouterAttributesToListRequest        |
+| addRouterAttributesToFormStore        | addRouterAttributesToFormRequest        |
+| addResourceStorePropertiesToListStore | addResourceStorePropertiesToListRequest |
+| addResourceStorePropertiesToFormStore | addResourceStorePropertiesToFormRequest |
 
 ### Refactor WebsiteController and DefaultController
 
