@@ -8,6 +8,8 @@
             <argument type="service" id="request_stack"/>
             <argument type="collection"/>
         </service>
+        <service id="Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface" alias="sulu_core.webspace.request_analyzer" />
+
         <service id="sulu_core.request_processor.parameter"
                  class="Sulu\Component\Webspace\Analyzer\Attributes\ParameterRequestProcessor">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>

@@ -28,6 +28,16 @@
     </parameters>
 
     <services>
+        <service id="sulu_website.default_controller" class="Sulu\Bundle\WebsiteBundle\Controller\DefaultController">
+            <tag name="container.service_subscriber" />
+            <tag name="controller.service_arguments" />
+            <tag name="sulu.context" context="website" />
+            <call method="setContainer">
+                <argument type="service" id="Psr\Container\ContainerInterface" />
+            </call>
+        </service>
+        <service id="Sulu\Bundle\WebsiteBundle\Controller\DefaultController" alias="sulu_website.default_controller"/>
+
         <!-- website admin -->
         <service id="sulu_website.admin" class="%sulu_website.admin.class%">
             <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"/>
@@ -174,6 +184,9 @@
             <argument type="service" id="sulu_website.resolver.structure"/>
             <argument type="service" id="sulu_website.resolver.request_analyzer"/>
         </service>
+
+        <service id="Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface"
+                 alias="sulu_website.resolver.parameter"/>
 
         <service id="sulu_website.routing.request_listener" class="Sulu\Bundle\WebsiteBundle\Routing\RequestListener">
             <argument type="service" id="router"/>

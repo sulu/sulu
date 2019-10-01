@@ -5,6 +5,23 @@
 When upgrading also have a look at the changes in the
 [sulu skeleton](https://github.com/sulu/skeleton/compare/2.0.0-RC3...2.0.0).
 
+### Refactor WebsiteController and DefaultController
+
+The WebsiteController and DefaultController were refactored to not extend the deprecated Symfony Controller class.
+The controllers now use the new Symfony [AbstractController](https://github.com/symfony/symfony/blob/4.4/src/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.php) class as base class.
+
+If you extend from one of these Controllers, you need to define your service dependencies in the `getSubscribedServices` method:
+
+```php
+public static function getSubscribedServices()
+{
+    $subscribedServices = parent::getSubscribedServices();
+    $subscribedServices['app.custom_service'] = CustomService::class;
+
+    return $subscribedServices;
+}
+```
+
 ### Symfony 3.4 support dropped
 
 To fix current deprecations in symfony packages we needed to drop symfony 3.4 support and go on the newest minor version of symfony (4.3).
