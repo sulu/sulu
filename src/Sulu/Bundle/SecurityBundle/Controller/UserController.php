@@ -59,9 +59,9 @@ class UserController extends AbstractRestController implements ClassResourceInte
     private $userManager;
 
     /**
-     * @var RegistryInterface
+     * @var EntityManagerInterface
      */
-    private $doctrine;
+    private $entityManager;
 
     /**
      * @var string
@@ -73,7 +73,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
         RestHelperInterface $restHelper,
         DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
         UserManagerInterface $userManager,
-        RegistryInterface $doctrine,
+        EntityManagerInterface $entityManager,
         string $userClass
     ) {
         parent::__construct($viewHandler);
@@ -81,7 +81,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
         $this->restHelper = $restHelper;
         $this->doctrineListBuilderFactory = $doctrineListBuilderFactory;
         $this->userManager = $userManager;
-        $this->doctrine = $doctrine;
+        $this->entityManager = $entityManager;
         $this->userClass = $userClass;
     }
 
@@ -348,7 +348,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
             $contactId = $request->get('contactId');
 
             if (null != $contactId) {
-                $user = $this->doctrine->getRepository($this->userClass)->findUserByContact($contactId);
+                $user = $this->entityManager->getRepository($this->userClass)->findUserByContact($contactId);
 
                 $view = $this->view($user ?? new \stdClass(), 200);
             } else {

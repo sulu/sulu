@@ -216,7 +216,7 @@
             <argument type="service" id="sulu_core.doctrine_rest_helper" />
             <argument type="service" id="sulu_core.doctrine_list_builder_factory" />
             <argument type="service" id="sulu_security.user_manager" />
-            <argument type="service" id="doctrine" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
             <argument>%sulu.model.user.class%</argument>
 
             <tag name="sulu.context" context="admin"/>
