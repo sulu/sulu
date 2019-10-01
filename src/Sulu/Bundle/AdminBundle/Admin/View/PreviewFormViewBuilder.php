@@ -17,11 +17,11 @@ class PreviewFormViewBuilder implements PreviewFormViewBuilderInterface
     use FormViewBuilderTrait;
     use TabViewBuilderTrait;
 
-    const VIEW = 'sulu_admin.preview_form';
+    const TYPE = 'sulu_admin.preview_form';
 
     public function __construct(string $name, string $path)
     {
-        $this->view = new View($name, $path, static::VIEW);
+        $this->view = new View($name, $path, static::TYPE);
     }
 
     public function disablePreviewWebspaceChooser(): PreviewFormViewBuilderInterface

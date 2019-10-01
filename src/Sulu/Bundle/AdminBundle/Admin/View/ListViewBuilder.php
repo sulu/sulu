@@ -17,11 +17,11 @@ class ListViewBuilder implements ListViewBuilderInterface
     use ListViewBuilderTrait;
     use TabViewBuilderTrait;
 
-    const VIEW = 'sulu_admin.list';
+    const TYPE = 'sulu_admin.list';
 
     public function __construct(string $name, string $path)
     {
-        $this->view = new View($name, $path, static::VIEW);
+        $this->view = new View($name, $path, static::TYPE);
     }
 
     public function setResourceKey(string $resourceKey): ListViewBuilderInterface

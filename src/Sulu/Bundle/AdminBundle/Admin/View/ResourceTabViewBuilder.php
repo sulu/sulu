@@ -16,11 +16,11 @@ class ResourceTabViewBuilder implements ResourceTabViewBuilderInterface
     use ViewBuilderTrait;
     use FormViewBuilderTrait;
 
-    const VIEW = 'sulu_admin.resource_tabs';
+    const TYPE = 'sulu_admin.resource_tabs';
 
     public function __construct(string $name, string $path)
     {
-        $this->view = new View($name, $path, static::VIEW);
+        $this->view = new View($name, $path, static::TYPE);
     }
 
     public function setResourceKey(string $resourceKey): ResourceTabViewBuilderInterface

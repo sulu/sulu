@@ -23,11 +23,11 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
     }
     use TabViewBuilderTrait;
 
-    const VIEW = 'sulu_admin.form_overlay_list';
+    const TYPE = 'sulu_admin.form_overlay_list';
 
     public function __construct(string $name, string $path)
     {
-        $this->view = new View($name, $path, static::VIEW);
+        $this->view = new View($name, $path, static::TYPE);
     }
 
     public function setResourceKey(string $resourceKey): FormOverlayListViewBuilderInterface

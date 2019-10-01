@@ -17,11 +17,11 @@ class FormViewBuilder implements FormViewBuilderInterface
     use FormViewBuilderTrait;
     use TabViewBuilderTrait;
 
-    const VIEW = 'sulu_admin.form';
+    const TYPE = 'sulu_admin.form';
 
     public function __construct(string $name, string $path)
     {
-        $this->view = new View($name, $path, static::VIEW);
+        $this->view = new View($name, $path, static::TYPE);
     }
 
     public function setResourceKey(string $resourceKey): FormViewBuilderInterface

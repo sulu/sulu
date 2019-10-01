@@ -15,11 +15,11 @@ class TabViewBuilder implements TabViewBuilderInterface
 {
     use ViewBuilderTrait;
 
-    const VIEW = 'sulu_admin.tabs';
+    const TYPE = 'sulu_admin.tabs';
 
     public function __construct(string $name, string $path)
     {
-        $this->view = new View($name, $path, static::VIEW);
+        $this->view = new View($name, $path, static::TYPE);
     }
 
     public function getView(): View
