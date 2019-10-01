@@ -96,8 +96,8 @@ test('Should pass correct props to List view', () => {
                 overlaySize: 'large',
                 resourceKey: 'test-resource-key',
                 toolbarActions: ['sulu_admin.add'],
-                routerAttributesToListStore: {'0': 'category', 'id': 'parentId'},
-                routerAttributesToFormStore: {'0': 'category', 'id': 'parentId'},
+                routerAttributesToListRequest: {'0': 'category', 'id': 'parentId'},
+                routerAttributesToFormRequest: {'0': 'category', 'id': 'parentId'},
             },
         },
     }: any);
@@ -122,8 +122,8 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
             options: {
                 formKey: 'test-form-key',
                 resourceKey: 'test-resource-key',
-                routerAttributesToFormStore: {'0': 'category', 'id': 'parentId'},
-                resourceStorePropertiesToFormStore: {'0': 'webspace', 'dimension': 'dimensionId'},
+                routerAttributesToFormRequest: {'0': 'category', 'id': 'parentId'},
+                resourceStorePropertiesToFormRequest: {'0': 'webspace', 'dimension': 'dimensionId'},
             },
         },
     }: any);
@@ -162,8 +162,8 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
             options: {
                 formKey: 'test-form-key',
                 resourceKey: 'test-resource-key',
-                routerAttributesToFormStore: {'0': 'category', 'id': 'parentId'},
-                resourceStorePropertiesToFormStore: {'0': 'webspace', 'dimension': 'dimensionId'},
+                routerAttributesToFormRequest: {'0': 'category', 'id': 'parentId'},
+                resourceStorePropertiesToFormRequest: {'0': 'webspace', 'dimension': 'dimensionId'},
             },
         },
     }: any);

@@ -36,9 +36,9 @@ interface PreviewFormRouteBuilderInterface extends RouteBuilderInterface
     public function addToolbarActions(array $toolbarActions): self;
 
     /**
-     * @param string[] $routerAttributesToFormStore
+     * @param string[] $routerAttributesToFormRequest
      */
-    public function addRouterAttributesToFormStore(array $routerAttributesToFormStore): self;
+    public function addRouterAttributesToFormRequest(array $routerAttributesToFormRequest): self;
 
     /**
      * @param string[] $routerAttributesToEditRoute

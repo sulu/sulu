@@ -197,18 +197,18 @@ class FormRouteBuilderTest extends TestCase
         );
     }
 
-    public function testBuildFormWithRouterAttributesToFormStore()
+    public function testBuildFormWithRouterAttributesToFormRequest()
     {
         $route = (new FormRouteBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey('roles')
             ->setFormKey('roles')
-            ->addRouterAttributesToFormStore(['webspace' => 'webspaceId', 'parent' => 'parentId'])
-            ->addRouterAttributesToFormStore(['locale'])
+            ->addRouterAttributesToFormRequest(['webspace' => 'webspaceId', 'parent' => 'parentId'])
+            ->addRouterAttributesToFormRequest(['locale'])
             ->getRoute();
 
         $this->assertSame(
             ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale'],
-            $route->getOption('routerAttributesToFormStore')
+            $route->getOption('routerAttributesToFormRequest')
         );
     }
 

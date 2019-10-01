@@ -1067,7 +1067,7 @@ test('Should pass router attributes from router to the ListStore', () => {
                 listKey: 'test',
                 locales: ['en', 'de'],
                 resourceKey: 'test',
-                routerAttributesToListStore: {'0': 'locale', 1: 'title', 'id': 'parentId'},
+                routerAttributesToListRequest: {'0': 'locale', 1: 'title', 'id': 'parentId'},
             },
         },
     };
@@ -1092,7 +1092,7 @@ test('Should pass resourceStore properties from router to the ListStore', () => 
                 listKey: 'test',
                 locales: ['en', 'de'],
                 resourceKey: 'test',
-                resourceStorePropertiesToListStore: {'0': 'locale', 1: 'title', 'id': 'parentId'},
+                resourceStorePropertiesToListRequest: {'0': 'locale', 1: 'title', 'id': 'parentId'},
             },
         },
     };
@@ -1121,7 +1121,7 @@ test('Should pass router attributes array from router to the ListStore', () => {
                 listKey: 'test',
                 locales: ['en', 'de'],
                 resourceKey: 'test',
-                routerAttributesToListStore: observable(['locale', 'title', 'id']),
+                routerAttributesToListRequest: observable(['locale', 'title', 'id']),
             },
         },
     };

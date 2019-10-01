@@ -1160,7 +1160,7 @@ test('Should save form when submitted with mapped router attributes', () => {
         options: {
             formKey: 'snippets',
             locales: [],
-            routerAttributesToFormStore: observable(['parentId', 'webspace']),
+            routerAttributesToFormRequest: observable(['parentId', 'webspace']),
             toolbarActions: [],
         },
     };
@@ -1265,7 +1265,7 @@ test('Should save form when submitted with mapped router attributes and given ap
             formKey: 'snippets',
             locales: [],
             apiOptions: {apiKey: 'api-option-value'},
-            routerAttributesToFormStore: {'parentId': 'id', '0': 'webspace', 1: 'title'},
+            routerAttributesToFormRequest: {'parentId': 'id', '0': 'webspace', 1: 'title'},
             toolbarActions: [],
         },
     };
@@ -1321,7 +1321,7 @@ test('Should save form when submitted with mapped named router attributes and gi
             formKey: 'snippets',
             locales: [],
             apiOptions: {apiKey: 'api-option-value'},
-            routerAttributesToFormStore: {'id': 'parentId'},
+            routerAttributesToFormRequest: {'id': 'parentId'},
             toolbarActions: [],
         },
     };

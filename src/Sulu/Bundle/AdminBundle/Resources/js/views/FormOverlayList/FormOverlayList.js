@@ -83,8 +83,8 @@ class FormOverlayList extends React.Component<Props> {
                         apiOptions = {},
                         formKey,
                         resourceKey,
-                        routerAttributesToFormStore = {},
-                        resourceStorePropertiesToFormStore = {},
+                        routerAttributesToFormRequest = {},
+                        resourceStorePropertiesToFormRequest = {},
                     },
                 },
             },
@@ -102,8 +102,8 @@ class FormOverlayList extends React.Component<Props> {
         const formStoreOptions = this.buildFormStoreOptions(
             apiOptions,
             attributes,
-            routerAttributesToFormStore,
-            resourceStorePropertiesToFormStore
+            routerAttributesToFormRequest,
+            resourceStorePropertiesToFormRequest
         );
         const resourceStore = new ResourceStore(resourceKey, itemId, observableOptions, formStoreOptions);
         this.formStore = new ResourceFormStore(resourceStore, formKey, formStoreOptions);
@@ -121,24 +121,24 @@ class FormOverlayList extends React.Component<Props> {
     buildFormStoreOptions(
         apiOptions: Object,
         attributes: Object,
-        routerAttributesToFormStore: {[string | number]: string},
-        resourceStorePropertiesToFormStore: {[string | number]: string}
+        routerAttributesToFormRequest: {[string | number]: string},
+        resourceStorePropertiesToFormRequest: {[string | number]: string}
     ) {
         const formStoreOptions = apiOptions ? apiOptions : {};
 
-        routerAttributesToFormStore = toJS(routerAttributesToFormStore);
-        Object.keys(routerAttributesToFormStore).forEach((key) => {
-            const formOptionKey = routerAttributesToFormStore[key];
-            const attributeName = isNaN(key) ? key : routerAttributesToFormStore[key];
+        routerAttributesToFormRequest = toJS(routerAttributesToFormRequest);
+        Object.keys(routerAttributesToFormRequest).forEach((key) => {
+            const formOptionKey = routerAttributesToFormRequest[key];
+            const attributeName = isNaN(key) ? key : routerAttributesToFormRequest[key];
 
             formStoreOptions[formOptionKey] = attributes[attributeName];
         });
 
-        resourceStorePropertiesToFormStore = toJS(resourceStorePropertiesToFormStore);
+        resourceStorePropertiesToFormRequest = toJS(resourceStorePropertiesToFormRequest);
 
-        Object.keys(resourceStorePropertiesToFormStore).forEach((key) => {
-            const formOptionKey = resourceStorePropertiesToFormStore[key];
-            const attributeName = isNaN(key) ? key : resourceStorePropertiesToFormStore[key];
+        Object.keys(resourceStorePropertiesToFormRequest).forEach((key) => {
+            const formOptionKey = resourceStorePropertiesToFormRequest[key];
+            const attributeName = isNaN(key) ? key : resourceStorePropertiesToFormRequest[key];
 
             if (!this.props.resourceStore) {
                 return;

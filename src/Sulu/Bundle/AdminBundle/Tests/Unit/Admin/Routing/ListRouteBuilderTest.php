@@ -214,19 +214,19 @@ class ListRouteBuilderTest extends TestCase
         $this->assertFalse($route->getOption('searchable'));
     }
 
-    public function testBuildListWithRouterAttributesToListStore()
+    public function testBuildListWithRouterAttributesToListRequest()
     {
         $route = (new ListRouteBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
             ->setListKey('roles')
             ->addListAdapters(['tree'])
-            ->addRouterAttributesToListStore(['webspace' => 'webspaceId', 'parent' => 'parentId'])
-            ->addRouterAttributesToListStore(['locale'])
+            ->addRouterAttributesToListRequest(['webspace' => 'webspaceId', 'parent' => 'parentId'])
+            ->addRouterAttributesToListRequest(['locale'])
             ->getRoute();
 
         $this->assertSame(
             ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale'],
-            $route->getOption('routerAttributesToListStore')
+            $route->getOption('routerAttributesToListRequest')
         );
     }
 
@@ -246,19 +246,19 @@ class ListRouteBuilderTest extends TestCase
         );
     }
 
-    public function testBuildListWithResourceStorePropertiesToListStore()
+    public function testBuildListWithResourceStorePropertiesToListRequest()
     {
         $route = (new ListRouteBuilder('sulu_role.datagrid', '/roles'))
             ->setResourceKey('roles')
             ->setListKey('roles')
             ->addListAdapters(['tree'])
-            ->addResourceStorePropertiesToListStore(['id' => 'dimensionId', 'parent' => 'parentId'])
-            ->addResourceStorePropertiesToListStore(['locale'])
+            ->addResourceStorePropertiesToListRequest(['id' => 'dimensionId', 'parent' => 'parentId'])
+            ->addResourceStorePropertiesToListRequest(['locale'])
             ->getRoute();
 
         $this->assertSame(
             ['id' => 'dimensionId', 'parent' => 'parentId', 'locale'],
-            $route->getOption('resourceStorePropertiesToListStore')
+            $route->getOption('resourceStorePropertiesToListRequest')
         );
     }
 

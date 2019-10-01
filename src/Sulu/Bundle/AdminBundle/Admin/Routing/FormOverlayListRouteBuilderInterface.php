@@ -55,24 +55,24 @@ interface FormOverlayListRouteBuilderInterface extends RouteBuilderInterface
     public function disableSearching(): self;
 
     /**
-     * @param string[] $routerAttributesToListStore
+     * @param string[] $routerAttributesToListRequest
      */
-    public function addRouterAttributesToListStore(array $routerAttributesToListStore): self;
+    public function addRouterAttributesToListRequest(array $routerAttributesToListRequest): self;
 
     /**
-     * @param string[] $routerAttributesToFormStore
+     * @param string[] $routerAttributesToFormRequest
      */
-    public function addRouterAttributesToFormStore(array $routerAttributesToFormStore): self;
+    public function addRouterAttributesToFormRequest(array $routerAttributesToFormRequest): self;
 
     /**
-     * @param string[] $resourceStorePropertiesToListStore
+     * @param string[] $resourceStorePropertiesToListRequest
      */
-    public function addResourceStorePropertiesToListStore(array $resourceStorePropertiesToListStore): self;
+    public function addResourceStorePropertiesToListRequest(array $resourceStorePropertiesToListRequest): self;
 
     /**
-     * @param string[] $resourceStorePropertiesToFormStore
+     * @param string[] $resourceStorePropertiesToFormRequest
      */
-    public function addResourceStorePropertiesToFormStore(array $resourceStorePropertiesToFormStore): self;
+    public function addResourceStorePropertiesToFormRequest(array $resourceStorePropertiesToFormRequest): self;
 
     public function setOverlaySize(string $overlaySize): self;
 }

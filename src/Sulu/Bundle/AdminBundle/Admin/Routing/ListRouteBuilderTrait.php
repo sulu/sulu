@@ -62,14 +62,14 @@ trait ListRouteBuilderTrait
         $route->setOption('searchable', $searchable);
     }
 
-    private function addRouterAttributesToListStoreToRoute(Route $route, array $routerAttributesToListStore): void
+    private function addRouterAttributesToListRequestToRoute(Route $route, array $routerAttributesToListRequest): void
     {
-        $oldRouterAttributesToListStore = $route->getOption('routerAttributesToListStore');
-        $newRouterAttributesToListStore = $oldRouterAttributesToListStore
-            ? array_merge($oldRouterAttributesToListStore, $routerAttributesToListStore)
-            : $routerAttributesToListStore;
+        $oldRouterAttributesToListRequest = $route->getOption('routerAttributesToListRequest');
+        $newRouterAttributesToListRequest = $oldRouterAttributesToListRequest
+            ? array_merge($oldRouterAttributesToListRequest, $routerAttributesToListRequest)
+            : $routerAttributesToListRequest;
 
-        $route->setOption('routerAttributesToListStore', $newRouterAttributesToListStore);
+        $route->setOption('routerAttributesToListRequest', $newRouterAttributesToListRequest);
     }
 
     private function addRouterAttributesToListMetadataToRoute(Route $route, array $routerAttributesToListMetadata): void
@@ -94,13 +94,13 @@ trait ListRouteBuilderTrait
         $route->setAttributeDefault('locale', $locale);
     }
 
-    private function addResourceStorePropertiesToListStoreToRoute(Route $route, array $resourceStorePropertiesToListStore): void
+    private function addResourceStorePropertiesToListRequestToRoute(Route $route, array $resourceStorePropertiesToListRequest): void
     {
-        $oldResourceStorePropertiesToListStore = $route->getOption('resourceStorePropertiesToListStore');
-        $newResourceStorePropertiesToListStore = $oldResourceStorePropertiesToListStore
-            ? array_merge($oldResourceStorePropertiesToListStore, $resourceStorePropertiesToListStore)
-            : $resourceStorePropertiesToListStore;
+        $oldResourceStorePropertiesToListRequest = $route->getOption('resourceStorePropertiesToListRequest');
+        $newResourceStorePropertiesToListRequest = $oldResourceStorePropertiesToListRequest
+            ? array_merge($oldResourceStorePropertiesToListRequest, $resourceStorePropertiesToListRequest)
+            : $resourceStorePropertiesToListRequest;
 
-        $route->setOption('resourceStorePropertiesToListStore', $newResourceStorePropertiesToListStore);
+        $route->setOption('resourceStorePropertiesToListRequest', $newResourceStorePropertiesToListRequest);
     }
 }

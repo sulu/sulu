@@ -87,9 +87,9 @@ class FormRouteBuilder implements FormRouteBuilderInterface
         return $this;
     }
 
-    public function addRouterAttributesToFormStore(array $routerAttributesToFormStore): FormRouteBuilderInterface
+    public function addRouterAttributesToFormRequest(array $routerAttributesToFormRequest): FormRouteBuilderInterface
     {
-        $this->addRouterAttributesToFormStoreToRoute($this->route, $routerAttributesToFormStore);
+        $this->addRouterAttributesToFormRequestToRoute($this->route, $routerAttributesToFormRequest);
 
         return $this;
     }

@@ -155,7 +155,7 @@ class PageAdmin extends Admin
             new ToolbarAction('sulu_admin.save_with_publishing'),
         ];
 
-        $routerAttributesToFormStore = ['parentId', 'webspace'];
+        $routerAttributesToFormRequest = ['parentId', 'webspace'];
 
         $previewCondition = 'nodeType == 1';
 
@@ -197,7 +197,7 @@ class PageAdmin extends Admin
                     ->setEditRoute(static::EDIT_FORM_ROUTE)
                     ->addRouterAttributesToEditRoute(['webspace'])
                     ->addToolbarActions($formToolbarActionsWithType)
-                    ->addRouterAttributesToFormStore($routerAttributesToFormStore)
+                    ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
                     ->setParent(static::ADD_FORM_ROUTE)
             );
             $routeCollection->add(
@@ -220,7 +220,7 @@ class PageAdmin extends Admin
                     ->setTabPriority(1024)
                     ->setTabCondition('nodeType == 1 && shadowOn == false')
                     ->addToolbarActions($formToolbarActionsWithType)
-                    ->addRouterAttributesToFormStore($routerAttributesToFormStore)
+                    ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
                     ->setPreviewCondition($previewCondition)
                     ->setTabOrder(1024)
                     ->setParent(static::EDIT_FORM_ROUTE)
@@ -234,7 +234,7 @@ class PageAdmin extends Admin
                     ->setTabTitle('sulu_page.seo')
                     ->setTabCondition('nodeType == 1 && shadowOn == false')
                     ->addToolbarActions($formToolbarActionsWithoutType)
-                    ->addRouterAttributesToFormStore($routerAttributesToFormStore)
+                    ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
                     ->setPreviewCondition($previewCondition)
                     ->setTitleVisible(true)
                     ->setTabOrder(2048)
@@ -249,7 +249,7 @@ class PageAdmin extends Admin
                     ->setTabTitle('sulu_page.excerpt')
                     ->setTabCondition('(nodeType == 1 || nodeType == 4) && shadowOn == false')
                     ->addToolbarActions($formToolbarActionsWithoutType)
-                    ->addRouterAttributesToFormStore($routerAttributesToFormStore)
+                    ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
                     ->setPreviewCondition($previewCondition)
                     ->setTitleVisible(true)
                     ->setTabOrder(3072)
@@ -264,7 +264,7 @@ class PageAdmin extends Admin
                     ->setTabTitle('sulu_page.settings')
                     ->setTabPriority(512)
                     ->addToolbarActions($formToolbarActionsWithoutType)
-                    ->addRouterAttributesToFormStore($routerAttributesToFormStore)
+                    ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
                     ->setPreviewCondition($previewCondition)
                     ->setTitleVisible(true)
                     ->setTabOrder(4096)
@@ -279,7 +279,7 @@ class PageAdmin extends Admin
                     ->setTabCondition('_permissions.security')
                     ->setTabTitle('sulu_security.permissions')
                     ->addToolbarActions([new ToolbarAction('sulu_admin.save')])
-                    ->addRouterAttributesToFormStore(['webspace'])
+                    ->addRouterAttributesToFormRequest(['webspace'])
                     ->setTitleVisible(true)
                     ->setTabOrder(5120)
                     ->setParent(static::EDIT_FORM_ROUTE)

@@ -57,14 +57,14 @@ trait FormRouteBuilderTrait
         $route->setOption('locales', $newLocales);
     }
 
-    private function addRouterAttributesToFormStoreToRoute(Route $route, array $routerAttributesToFormStore): void
+    private function addRouterAttributesToFormRequestToRoute(Route $route, array $routerAttributesToFormRequest): void
     {
-        $oldRouterAttributesToFormStore = $route->getOption('routerAttributesToFormStore');
-        $newRouterAttributesToFormStore = $oldRouterAttributesToFormStore
-            ? array_merge($oldRouterAttributesToFormStore, $routerAttributesToFormStore)
-            : $routerAttributesToFormStore;
+        $oldRouterAttributesToFormRequest = $route->getOption('routerAttributesToFormRequest');
+        $newRouterAttributesToFormRequest = $oldRouterAttributesToFormRequest
+            ? array_merge($oldRouterAttributesToFormRequest, $routerAttributesToFormRequest)
+            : $routerAttributesToFormRequest;
 
-        $route->setOption('routerAttributesToFormStore', $newRouterAttributesToFormStore);
+        $route->setOption('routerAttributesToFormRequest', $newRouterAttributesToFormRequest);
     }
 
     private function addRouterAttributesToEditRouteToRoute(Route $route, array $routerAttributesToEditRoute): void

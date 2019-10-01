@@ -136,9 +136,9 @@ class ListRouteBuilder implements ListRouteBuilderInterface
         return $this;
     }
 
-    public function addRouterAttributesToListStore(array $routerAttributesToListStore): ListRouteBuilderInterface
+    public function addRouterAttributesToListRequest(array $routerAttributesToListRequest): ListRouteBuilderInterface
     {
-        $this->addRouterAttributesToListStoreToRoute($this->route, $routerAttributesToListStore);
+        $this->addRouterAttributesToListRequestToRoute($this->route, $routerAttributesToListRequest);
 
         return $this;
     }
@@ -150,9 +150,9 @@ class ListRouteBuilder implements ListRouteBuilderInterface
         return $this;
     }
 
-    public function addResourceStorePropertiesToListStore(array $resourceStorePropertiesToListStore): ListRouteBuilderInterface
+    public function addResourceStorePropertiesToListRequest(array $resourceStorePropertiesToListRequest): ListRouteBuilderInterface
     {
-        $this->addResourceStorePropertiesToListStoreToRoute($this->route, $resourceStorePropertiesToListStore);
+        $this->addResourceStorePropertiesToListRequestToRoute($this->route, $resourceStorePropertiesToListRequest);
 
         return $this;
     }

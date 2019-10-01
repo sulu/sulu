@@ -232,71 +232,71 @@ class FormOverlayListRouteBuilderTest extends TestCase
         $this->assertFalse($route->getOption('searchable'));
     }
 
-    public function testBuildListWithRouterAttributesToListStore()
+    public function testBuildListWithRouterAttributesToListRequest()
     {
         $route = (new FormOverlayListRouteBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
-            ->addRouterAttributesToListStore(['webspace' => 'webspaceId', 'parent' => 'parentId'])
-            ->addRouterAttributesToListStore(['locale'])
+            ->addRouterAttributesToListRequest(['webspace' => 'webspaceId', 'parent' => 'parentId'])
+            ->addRouterAttributesToListRequest(['locale'])
             ->getRoute();
 
         $this->assertEquals(
             ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale'],
-            $route->getOption('routerAttributesToListStore')
+            $route->getOption('routerAttributesToListRequest')
         );
     }
 
-    public function testBuildFormWithRouterAttributesToFormStore()
+    public function testBuildFormWithRouterAttributesToFormRequest()
     {
         $route = (new FormOverlayListRouteBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
-            ->addRouterAttributesToFormStore(['webspace' => 'webspaceId', 'parent' => 'parentId'])
-            ->addRouterAttributesToFormStore(['locale'])
+            ->addRouterAttributesToFormRequest(['webspace' => 'webspaceId', 'parent' => 'parentId'])
+            ->addRouterAttributesToFormRequest(['locale'])
             ->getRoute();
 
         $this->assertEquals(
             ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale'],
-            $route->getOption('routerAttributesToFormStore')
+            $route->getOption('routerAttributesToFormRequest')
         );
     }
 
-    public function testBuildWithResourceStorePropertiesToListStore()
+    public function testBuildWithResourceStorePropertiesToListRequest()
     {
         $route = (new FormOverlayListRouteBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
-            ->addResourceStorePropertiesToListStore(['webspace' => 'webspaceId', 'parent' => 'parentId'])
-            ->addResourceStorePropertiesToListStore(['locale'])
+            ->addResourceStorePropertiesToListRequest(['webspace' => 'webspaceId', 'parent' => 'parentId'])
+            ->addResourceStorePropertiesToListRequest(['locale'])
             ->getRoute();
 
         $this->assertEquals(
             ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale'],
-            $route->getOption('resourceStorePropertiesToListStore')
+            $route->getOption('resourceStorePropertiesToListRequest')
         );
     }
 
-    public function testBuildWithResourceStorePropertiesToFormStore()
+    public function testBuildWithResourceStorePropertiesToFormRequest()
     {
         $route = (new FormOverlayListRouteBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
-            ->addResourceStorePropertiesToFormStore(['webspace' => 'webspaceId', 'parent' => 'parentId'])
-            ->addResourceStorePropertiesToFormStore(['locale'])
+            ->addResourceStorePropertiesToFormRequest(['webspace' => 'webspaceId', 'parent' => 'parentId'])
+            ->addResourceStorePropertiesToFormRequest(['locale'])
             ->getRoute();
 
         $this->assertEquals(
             ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale'],
-            $route->getOption('resourceStorePropertiesToFormStore')
+            $route->getOption('resourceStorePropertiesToFormRequest')
         );
     }
 

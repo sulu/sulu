@@ -67,8 +67,8 @@ class List extends React.Component<Props> {
                     listKey,
                     locales,
                     resourceKey,
-                    routerAttributesToListStore = {},
-                    resourceStorePropertiesToListStore = {},
+                    routerAttributesToListRequest = {},
+                    resourceStorePropertiesToListRequest = {},
                     userSettingsKey = DEFAULT_USER_SETTINGS_KEY,
                     routerAttributesToListMetadata = {},
                 },
@@ -102,8 +102,8 @@ class List extends React.Component<Props> {
         const listStoreOptions = this.buildListStoreOptions(
             apiOptions,
             attributes,
-            routerAttributesToListStore,
-            resourceStorePropertiesToListStore,
+            routerAttributesToListRequest,
+            resourceStorePropertiesToListRequest,
             props.resourceStore
         );
 
@@ -147,23 +147,23 @@ class List extends React.Component<Props> {
     buildListStoreOptions(
         apiOptions: Object,
         attributes: Object,
-        routerAttributesToListStore: {[string | number]: string},
-        resourceStorePropertiesToListStore: {[string | number]: string},
+        routerAttributesToListRequest: {[string | number]: string},
+        resourceStorePropertiesToListRequest: {[string | number]: string},
         resourceStore: ?ResourceStore
     ) {
         const listStoreOptions = apiOptions ? apiOptions : {};
-        routerAttributesToListStore = toJS(routerAttributesToListStore);
-        Object.keys(routerAttributesToListStore).forEach((key) => {
-            const listOptionKey = routerAttributesToListStore[key];
-            const attributeName = isNaN(key) ? key : routerAttributesToListStore[key];
+        routerAttributesToListRequest = toJS(routerAttributesToListRequest);
+        Object.keys(routerAttributesToListRequest).forEach((key) => {
+            const listOptionKey = routerAttributesToListRequest[key];
+            const attributeName = isNaN(key) ? key : routerAttributesToListRequest[key];
 
             listStoreOptions[listOptionKey] = attributes[attributeName];
         });
 
-        resourceStorePropertiesToListStore = toJS(resourceStorePropertiesToListStore);
-        Object.keys(resourceStorePropertiesToListStore).forEach((key) => {
-            const listOptionKey = resourceStorePropertiesToListStore[key];
-            const attributeName = isNaN(key) ? key : resourceStorePropertiesToListStore[key];
+        resourceStorePropertiesToListRequest = toJS(resourceStorePropertiesToListRequest);
+        Object.keys(resourceStorePropertiesToListRequest).forEach((key) => {
+            const listOptionKey = resourceStorePropertiesToListRequest[key];
+            const attributeName = isNaN(key) ? key : resourceStorePropertiesToListRequest[key];
 
             if (!resourceStore || !resourceStore.data) {
                 return;
