@@ -13,11 +13,11 @@ Upgrade files.
 
 Serialization to `array` type is not longer possible use the new `sulu_core.array_serializer` service instead.
 
-### Refractor Rest Controllers
+### Refactor Rest Controllers
 
-The Sulu `RestController` was deprecated and replaced with `AbstractRestController`.
-All sulu rest controllers extend the new AbstractController and now use dependency injection
-to get there services.
+The Sulu `RestController` was deprecated and replaced with the `AbstractRestController`.
+All Sulu Rest controllers were refactored to extend the new `AbstractRestController`. 
+Furthermore, all these controllers and now use constructor injection to gather their dependencies.
 
 ### Refactor WebsiteController and DefaultController
 
