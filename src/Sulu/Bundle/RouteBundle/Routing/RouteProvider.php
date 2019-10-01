@@ -210,7 +210,7 @@ class RouteProvider implements RouteProviderInterface
             return new Route(
                 $routePath,
                 [
-                    '_controller' => 'SuluWebsiteBundle:Redirect:redirect',
+                    '_controller' => 'sulu_website.redirect_controller:redirectAction',
                     'url' => $request->getSchemeAndHttpHost()
                         . $this->requestAnalyzer->getResourceLocatorPrefix()
                         . $route->getTarget()->getPath()

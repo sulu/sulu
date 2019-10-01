@@ -40,7 +40,7 @@ class TrailingSlashEnhancerTest extends TestCase
                 '_custom_url' => $customUrl->reveal(),
                 '_webspace' => $webspace->reveal(),
                 '_finalized' => true,
-                '_controller' => 'SuluWebsiteBundle:Redirect:redirect',
+                '_controller' => 'sulu_website.redirect_controller:redirectAction',
                 'url' => 'sulu.io/test',
             ],
             $defaults

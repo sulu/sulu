@@ -13,6 +13,18 @@
     </parameters>
 
     <services>
+        <service id="sulu_snippet.snippet_area_controller"
+                 class="Sulu\Bundle\SnippetBundle\Controller\SnippetAreaController"
+                 public="true">
+            <argument type="service" id="sulu_snippet.default_snippet.manager"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu_security.security_checker"/>
+            <argument type="service" id="security.token_storage"/>
+            <argument>%sulu_snippet.areas%</argument>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <service
             id="sulu_snippet.language_controller"
             class="Sulu\Bundle\SnippetBundle\Controller\LanguageController"

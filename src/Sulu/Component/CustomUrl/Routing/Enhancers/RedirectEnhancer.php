@@ -59,7 +59,7 @@ class RedirectEnhancer extends AbstractEnhancer
         }
 
         return [
-            '_controller' => 'SuluWebsiteBundle:Redirect:redirect',
+            '_controller' => 'sulu_website.redirect_controller:redirectAction',
             'url' => $url,
         ];
     }

@@ -146,7 +146,7 @@ class CustomUrlRouteProvider implements RouteProviderInterface
             new Route(
                 $this->decodePathInfo($request->getPathInfo()),
                 [
-                    '_controller' => 'SuluWebsiteBundle:Redirect:redirect',
+                    '_controller' => 'sulu_website.redirect_controller:redirectAction',
                     '_finalized' => true,
                     'url' => $url,
                 ]

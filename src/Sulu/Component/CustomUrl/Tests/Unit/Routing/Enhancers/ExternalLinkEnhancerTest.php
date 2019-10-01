@@ -32,7 +32,7 @@ class ExternalLinkEnhancerTest extends TestCase
         $this->assertEquals(
             [
                 '_structure' => $structure->reveal(),
-                '_controller' => 'SuluWebsiteBundle:Redirect:redirect',
+                '_controller' => 'sulu_website.redirect_controller:redirectAction',
                 'url' => '/test',
             ],
             $defaults

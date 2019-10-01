@@ -39,7 +39,9 @@
     </parameters>
 
     <services>
-        <service id="sulu_security.resetting_controller" class="Sulu\Bundle\SecurityBundle\Controller\ResettingController">
+        <service id="sulu_security.resetting_controller"
+                 class="Sulu\Bundle\SecurityBundle\Controller\ResettingController"
+                 public="true">
             <argument type="service" id="validator"/>
             <argument type="service" id="translator"/>
             <argument type="service" id="sulu_security.token_generator"/>
@@ -57,7 +59,6 @@
             <argument>%sulu_security.reset_password.mail.token_send_limit%</argument>
             <argument>%sulu_admin.email%</argument>
 
-            <tag name="controller.service_arguments" />
             <tag name="sulu.context" context="admin"/>
         </service>
         <service id="sulu_security.admin" class="%sulu_security.admin.class%">

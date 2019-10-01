@@ -5,10 +5,11 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="sulu_search.test_search_controller" class="Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Controller\SearchController">
+        <service id="sulu_search.test_search_controller"
+                 class="Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Controller\SearchController"
+                 public="true">
             <argument type="service" id="massive_search.search_manager" />
 
-            <tag name="controller.service_arguments" />
             <tag name="sulu.context" context="admin"/>
         </service>
     </services>

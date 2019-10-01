@@ -13,7 +13,7 @@ sulu_snippet.post_snippet_trigger:
 sulu_snippet.snippet-areas:
     type: rest
     name_prefix: sulu_snippet.
-    resource: Sulu\Bundle\SnippetBundle\Controller\SnippetAreaController
+    resource: sulu_snippet.snippet_area_controller
 
 sulu_snippet.languages:
     type: rest
