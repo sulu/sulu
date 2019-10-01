@@ -27,15 +27,15 @@ class MediaAdmin extends Admin
 {
     const SECURITY_CONTEXT = 'sulu.media.collections';
 
-    const MEDIA_OVERVIEW_ROUTE = 'sulu_media.overview';
+    const MEDIA_OVERVIEW_VIEW = 'sulu_media.overview';
 
-    const EDIT_FORM_ROUTE = 'sulu_media.form';
+    const EDIT_FORM_VIEW = 'sulu_media.form';
 
-    const EDIT_FORM_DETAILS_ROUTE = 'sulu_media.form.details';
+    const EDIT_FORM_DETAILS_VIEW = 'sulu_media.form.details';
 
-    const EDIT_FORM_FORMATS_ROUTE = 'sulu_media.form.formats';
+    const EDIT_FORM_FORMATS_VIEW = 'sulu_media.form.formats';
 
-    const EDIT_FORM_HISTORY_ROUTE = 'sulu_media.form.history';
+    const EDIT_FORM_HISTORY_VIEW = 'sulu_media.form.history';
 
     /**
      * @var ViewBuilderFactoryInterface
@@ -75,11 +75,11 @@ class MediaAdmin extends Admin
             $media = new NavigationItem('sulu_media.media');
             $media->setPosition(30);
             $media->setIcon('su-image');
-            $media->setView(static::MEDIA_OVERVIEW_ROUTE);
-            $media->addChildView(static::EDIT_FORM_ROUTE);
-            $media->addChildView(static::EDIT_FORM_DETAILS_ROUTE);
-            $media->addChildView(static::EDIT_FORM_FORMATS_ROUTE);
-            $media->addChildView(static::EDIT_FORM_HISTORY_ROUTE);
+            $media->setView(static::MEDIA_OVERVIEW_VIEW);
+            $media->addChildView(static::EDIT_FORM_VIEW);
+            $media->addChildView(static::EDIT_FORM_DETAILS_VIEW);
+            $media->addChildView(static::EDIT_FORM_FORMATS_VIEW);
+            $media->addChildView(static::EDIT_FORM_HISTORY_VIEW);
 
             $navigationItemCollection->add($media);
         }
@@ -106,7 +106,7 @@ class MediaAdmin extends Admin
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createViewBuilder(
-                        static::MEDIA_OVERVIEW_ROUTE,
+                        static::MEDIA_OVERVIEW_VIEW,
                         '/collections/:locale/:id?',
                         'sulu_media.overview'
                     )
@@ -123,31 +123,31 @@ class MediaAdmin extends Admin
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
-                    ->createResourceTabViewBuilder(static::EDIT_FORM_ROUTE, '/media/:locale/:id')
+                    ->createResourceTabViewBuilder(static::EDIT_FORM_VIEW, '/media/:locale/:id')
                     ->setResourceKey('media')
                     ->addLocales($mediaLocales)
                     ->setTitleProperty('title')
             );
             $viewCollection->add(
-                $this->viewBuilderFactory->createFormViewBuilder(static::EDIT_FORM_DETAILS_ROUTE, '/details')
+                $this->viewBuilderFactory->createFormViewBuilder(static::EDIT_FORM_DETAILS_VIEW, '/details')
                     ->setResourceKey('media')
                     ->setFormKey('media_details')
                     ->setTabTitle('sulu_media.information_taxonomy')
                     ->addToolbarActions($toolbarActions)
-                    ->setParent(static::EDIT_FORM_ROUTE)
-                    ->setBackView(static::MEDIA_OVERVIEW_ROUTE)
+                    ->setParent(static::EDIT_FORM_VIEW)
+                    ->setBackView(static::MEDIA_OVERVIEW_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
-                    ->createViewBuilder(static::EDIT_FORM_FORMATS_ROUTE, '/formats', 'sulu_media.formats')
+                    ->createViewBuilder(static::EDIT_FORM_FORMATS_VIEW, '/formats', 'sulu_media.formats')
                     ->setOption('tabTitle', 'sulu_media.formats')
-                    ->setParent(static::EDIT_FORM_ROUTE)
+                    ->setParent(static::EDIT_FORM_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
-                    ->createViewBuilder(static::EDIT_FORM_HISTORY_ROUTE, '/history', 'sulu_media.history')
+                    ->createViewBuilder(static::EDIT_FORM_HISTORY_VIEW, '/history', 'sulu_media.history')
                     ->setOption('tabTitle', 'sulu_media.history')
-                    ->setParent(static::EDIT_FORM_ROUTE)
+                    ->setParent(static::EDIT_FORM_VIEW)
             );
         }
     }

@@ -25,11 +25,11 @@ class CategoryAdmin extends Admin
 {
     const SECURITY_CONTEXT = 'sulu.settings.categories';
 
-    const LIST_ROUTE = 'sulu_category.list';
+    const LIST_VIEW = 'sulu_category.list';
 
-    const ADD_FORM_ROUTE = 'sulu_category.add_form';
+    const ADD_FORM_VIEW = 'sulu_category.add_form';
 
-    const EDIT_FORM_ROUTE = 'sulu_category.edit_form';
+    const EDIT_FORM_VIEW = 'sulu_category.edit_form';
 
     /**
      * @var ViewBuilderFactoryInterface
@@ -61,7 +61,7 @@ class CategoryAdmin extends Admin
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $categoryItem = new NavigationItem('sulu_category.categories');
             $categoryItem->setPosition(20);
-            $categoryItem->setView(static::LIST_ROUTE);
+            $categoryItem->setView(static::LIST_VIEW);
 
             $navigationItemCollection->get(Admin::SETTINGS_NAVIGATION_ITEM)->addChild($categoryItem);
         }
@@ -95,24 +95,24 @@ class CategoryAdmin extends Admin
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $viewCollection->add(
                 $this->viewBuilderFactory
-                    ->createListViewBuilder(static::LIST_ROUTE, '/categories/:locale')
+                    ->createListViewBuilder(static::LIST_VIEW, '/categories/:locale')
                     ->setResourceKey('categories')
                     ->setListKey('categories')
                     ->setTitle('sulu_category.categories')
                     ->addListAdapters(['tree_table'])
                     ->addLocales($locales)
                     ->setDefaultLocale($locales[0])
-                    ->setAddView(static::ADD_FORM_ROUTE)
-                    ->setEditView(static::EDIT_FORM_ROUTE)
+                    ->setAddView(static::ADD_FORM_VIEW)
+                    ->setEditView(static::EDIT_FORM_VIEW)
                     ->enableSearching()
                     ->addToolbarActions($listToolbarActions)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
-                    ->createResourceTabViewBuilder(static::ADD_FORM_ROUTE, '/categories/:locale/add')
+                    ->createResourceTabViewBuilder(static::ADD_FORM_VIEW, '/categories/:locale/add')
                     ->setResourceKey('categories')
                     ->addLocales($locales)
-                    ->setBackView(static::LIST_ROUTE)
+                    ->setBackView(static::LIST_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
@@ -122,15 +122,15 @@ class CategoryAdmin extends Admin
                     ->setTabTitle('sulu_admin.details')
                     ->addToolbarActions($formToolbarActions)
                     ->addRouterAttributesToFormRequest(['parentId'])
-                    ->setEditView(static::EDIT_FORM_ROUTE)
-                    ->setParent(static::ADD_FORM_ROUTE)
+                    ->setEditView(static::EDIT_FORM_VIEW)
+                    ->setParent(static::ADD_FORM_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
-                    ->createResourceTabViewBuilder(static::EDIT_FORM_ROUTE, '/categories/:locale/:id')
+                    ->createResourceTabViewBuilder(static::EDIT_FORM_VIEW, '/categories/:locale/:id')
                     ->setResourceKey('categories')
                     ->addLocales($locales)
-                    ->setBackView(static::LIST_ROUTE)
+                    ->setBackView(static::LIST_VIEW)
                     ->addRouterAttributesToBackView(['id' => 'active'])
                     ->setTitleProperty('name')
             );
@@ -141,7 +141,7 @@ class CategoryAdmin extends Admin
                     ->setFormKey('category_details')
                     ->setTabTitle('sulu_admin.details')
                     ->addToolbarActions($formToolbarActions)
-                    ->setParent(static::EDIT_FORM_ROUTE)
+                    ->setParent(static::EDIT_FORM_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
@@ -154,7 +154,7 @@ class CategoryAdmin extends Admin
                     ->addRouterAttributesToFormRequest(['id' => 'categoryId'])
                     ->setTabTitle('sulu_category.keywords')
                     ->addToolbarActions([new ToolbarAction('sulu_admin.add'), new ToolbarAction('sulu_admin.delete')])
-                    ->setParent(static::EDIT_FORM_ROUTE)
+                    ->setParent(static::EDIT_FORM_VIEW)
             );
         }
     }

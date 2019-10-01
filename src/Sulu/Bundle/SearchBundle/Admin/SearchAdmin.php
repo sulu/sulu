@@ -19,7 +19,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 
 class SearchAdmin extends Admin
 {
-    const SEARCH_ROUTE = 'sulu_search.search';
+    const SEARCH_VIEW = 'sulu_search.search';
     /**
      * @var ViewBuilderFactoryInterface
      */
@@ -35,7 +35,7 @@ class SearchAdmin extends Admin
         $search = new NavigationItem('sulu_search.search');
         $search->setPosition(0);
         $search->setIcon('su-search');
-        $search->setView(static::SEARCH_ROUTE);
+        $search->setView(static::SEARCH_VIEW);
 
         $navigationItemCollection->add($search);
     }
@@ -43,7 +43,7 @@ class SearchAdmin extends Admin
     public function configureViews(ViewCollection $viewCollection): void
     {
         $viewCollection->add(
-            $this->viewBuilderFactory->createViewBuilder(static::SEARCH_ROUTE, '/', 'sulu_search.search')
+            $this->viewBuilderFactory->createViewBuilder(static::SEARCH_VIEW, '/', 'sulu_search.search')
         );
     }
 }

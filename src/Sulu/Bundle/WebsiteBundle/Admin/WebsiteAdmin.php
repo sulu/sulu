@@ -89,7 +89,7 @@ class WebsiteAdmin extends Admin
                     ->setTabTitle('sulu_website.analytics')
                     ->setTabOrder(2048)
                     ->addToolbarActions($listToolbarActions)
-                    ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
+                    ->setParent(PageAdmin::WEBSPACE_TABS_VIEW)
                     ->addRerenderAttribute('webspace')
             );
         }

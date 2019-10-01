@@ -24,11 +24,11 @@ class TagAdmin extends Admin
 {
     const SECURITY_CONTEXT = 'sulu.settings.tags';
 
-    const LIST_ROUTE = 'sulu_tag.list';
+    const LIST_VIEW = 'sulu_tag.list';
 
-    const ADD_FORM_ROUTE = 'sulu_tag.add_form';
+    const ADD_FORM_VIEW = 'sulu_tag.add_form';
 
-    const EDIT_FORM_ROUTE = 'sulu_tag.edit_form';
+    const EDIT_FORM_VIEW = 'sulu_tag.edit_form';
 
     /**
      * @var ViewBuilderFactoryInterface
@@ -53,7 +53,7 @@ class TagAdmin extends Admin
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $tags = new NavigationItem('sulu_tag.tags');
             $tags->setPosition(30);
-            $tags->setView(static::LIST_ROUTE);
+            $tags->setView(static::LIST_VIEW);
 
             $navigationItemCollection->get(Admin::SETTINGS_NAVIGATION_ITEM)->addChild($tags);
         }
@@ -83,33 +83,33 @@ class TagAdmin extends Admin
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $viewCollection->add(
-                $this->viewBuilderFactory->createListViewBuilder(static::LIST_ROUTE, '/tags')
+                $this->viewBuilderFactory->createListViewBuilder(static::LIST_VIEW, '/tags')
                     ->setResourceKey('tags')
                     ->setListKey('tags')
                     ->setTitle('sulu_tag.tags')
                     ->addListAdapters(['table'])
-                    ->setAddView(static::ADD_FORM_ROUTE)
-                    ->setEditView(static::EDIT_FORM_ROUTE)
+                    ->setAddView(static::ADD_FORM_VIEW)
+                    ->setEditView(static::EDIT_FORM_VIEW)
                     ->addToolbarActions($listToolbarActions)
             );
             $viewCollection->add(
-                $this->viewBuilderFactory->createResourceTabViewBuilder(static::ADD_FORM_ROUTE, '/tags/add')
+                $this->viewBuilderFactory->createResourceTabViewBuilder(static::ADD_FORM_VIEW, '/tags/add')
                     ->setResourceKey('tags')
-                    ->setBackView(static::LIST_ROUTE)
+                    ->setBackView(static::LIST_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory->createFormViewBuilder('sulu_tag.add_form.details', '/details')
                     ->setResourceKey('tags')
                     ->setFormKey('tag_details')
                     ->setTabTitle('sulu_admin.details')
-                    ->setEditView(static::EDIT_FORM_ROUTE)
+                    ->setEditView(static::EDIT_FORM_VIEW)
                     ->addToolbarActions($formToolbarActions)
-                    ->setParent(static::ADD_FORM_ROUTE)
+                    ->setParent(static::ADD_FORM_VIEW)
             );
             $viewCollection->add(
-                $this->viewBuilderFactory->createResourceTabViewBuilder(static::EDIT_FORM_ROUTE, '/tags/:id')
+                $this->viewBuilderFactory->createResourceTabViewBuilder(static::EDIT_FORM_VIEW, '/tags/:id')
                     ->setResourceKey('tags')
-                    ->setBackView(static::LIST_ROUTE)
+                    ->setBackView(static::LIST_VIEW)
                     ->setTitleProperty('name')
             );
             $viewCollection->add(
@@ -118,7 +118,7 @@ class TagAdmin extends Admin
                     ->setFormKey('tag_details')
                     ->setTabTitle('sulu_admin.details')
                     ->addToolbarActions($formToolbarActions)
-                    ->setParent(static::EDIT_FORM_ROUTE)
+                    ->setParent(static::EDIT_FORM_VIEW)
             );
         }
     }

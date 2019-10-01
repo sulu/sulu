@@ -35,13 +35,13 @@ class PageAdmin extends Admin
      */
     const SECURITY_CONTEXT_PREFIX = 'sulu.webspaces.';
 
-    const WEBSPACE_TABS_ROUTE = 'sulu_page.webspaces';
+    const WEBSPACE_TABS_VIEW = 'sulu_page.webspaces';
 
-    const PAGES_ROUTE = 'sulu_page.pages_list';
+    const PAGES_VIEW = 'sulu_page.pages_list';
 
-    const ADD_FORM_ROUTE = 'sulu_page.page_add_form';
+    const ADD_FORM_VIEW = 'sulu_page.page_add_form';
 
-    const EDIT_FORM_ROUTE = 'sulu_page.page_edit_form';
+    const EDIT_FORM_VIEW = 'sulu_page.page_edit_form';
 
     /**
      * @var ViewBuilderFactoryInterface
@@ -95,7 +95,7 @@ class PageAdmin extends Admin
             $webspaceItem = new NavigationItem('sulu_page.webspaces');
             $webspaceItem->setPosition(10);
             $webspaceItem->setIcon('su-webspace');
-            $webspaceItem->setView(static::WEBSPACE_TABS_ROUTE);
+            $webspaceItem->setView(static::WEBSPACE_TABS_VIEW);
 
             $navigationItemCollection->add($webspaceItem);
         }
@@ -163,28 +163,28 @@ class PageAdmin extends Admin
         // Otherwise the application breaks when other bundles try to add child views to this one
         $viewCollection->add(
             $this->viewBuilderFactory
-                ->createViewBuilder(static::WEBSPACE_TABS_ROUTE, '/webspaces/:webspace', 'sulu_page.webspace_tabs')
+                ->createViewBuilder(static::WEBSPACE_TABS_VIEW, '/webspaces/:webspace', 'sulu_page.webspace_tabs')
                 ->setAttributeDefault('webspace', $firstWebspace->getKey())
         );
 
         if ($this->hasSomeWebspacePermission()) {
             $viewCollection->add(
                 $this->viewBuilderFactory
-                    ->createViewBuilder(static::PAGES_ROUTE, '/pages/:locale', 'sulu_page.page_list')
+                    ->createViewBuilder(static::PAGES_VIEW, '/pages/:locale', 'sulu_page.page_list')
                     ->setAttributeDefault('locale', $firstWebspace->getDefaultLocalization()->getLocale())
                     ->setOption('tabTitle', 'sulu_page.pages')
                     ->setOption('tabOrder', 0)
                     ->setOption('tabPriority', 1024)
                     ->addRerenderAttribute('webspace')
-                    ->setParent(static::WEBSPACE_TABS_ROUTE)
+                    ->setParent(static::WEBSPACE_TABS_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory->createViewBuilder(
-                    static::ADD_FORM_ROUTE,
+                    static::ADD_FORM_VIEW,
                     '/webspaces/:webspace/pages/:locale/add/:parentId',
                     'sulu_page.page_tabs'
                 )
-                    ->setOption('backView', static::PAGES_ROUTE)
+                    ->setOption('backView', static::PAGES_VIEW)
                     ->setOption('routerAttributesToBackView', ['webspace'])
                     ->setOption('resourceKey', 'pages')
             );
@@ -194,19 +194,19 @@ class PageAdmin extends Admin
                     ->setResourceKey('pages')
                     ->setFormKey('page')
                     ->setTabTitle('sulu_admin.details')
-                    ->setEditView(static::EDIT_FORM_ROUTE)
+                    ->setEditView(static::EDIT_FORM_VIEW)
                     ->addRouterAttributesToEditView(['webspace'])
                     ->addToolbarActions($formToolbarActionsWithType)
                     ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
-                    ->setParent(static::ADD_FORM_ROUTE)
+                    ->setParent(static::ADD_FORM_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory->createViewBuilder(
-                    static::EDIT_FORM_ROUTE,
+                    static::EDIT_FORM_VIEW,
                     '/webspaces/:webspace/pages/:locale/:id',
                     'sulu_page.page_tabs'
                 )
-                    ->setOption('backView', static::PAGES_ROUTE)
+                    ->setOption('backView', static::PAGES_VIEW)
                     ->setOption('routerAttributesToBackView', ['id' => 'active', 'webspace'])
                     ->setOption('resourceKey', 'pages')
             );
@@ -223,7 +223,7 @@ class PageAdmin extends Admin
                     ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
                     ->setPreviewCondition($previewCondition)
                     ->setTabOrder(1024)
-                    ->setParent(static::EDIT_FORM_ROUTE)
+                    ->setParent(static::EDIT_FORM_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
@@ -238,7 +238,7 @@ class PageAdmin extends Admin
                     ->setPreviewCondition($previewCondition)
                     ->setTitleVisible(true)
                     ->setTabOrder(2048)
-                    ->setParent(static::EDIT_FORM_ROUTE)
+                    ->setParent(static::EDIT_FORM_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
@@ -253,7 +253,7 @@ class PageAdmin extends Admin
                     ->setPreviewCondition($previewCondition)
                     ->setTitleVisible(true)
                     ->setTabOrder(3072)
-                    ->setParent(static::EDIT_FORM_ROUTE)
+                    ->setParent(static::EDIT_FORM_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
@@ -268,7 +268,7 @@ class PageAdmin extends Admin
                     ->setPreviewCondition($previewCondition)
                     ->setTitleVisible(true)
                     ->setTabOrder(4096)
-                    ->setParent(static::EDIT_FORM_ROUTE)
+                    ->setParent(static::EDIT_FORM_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
@@ -282,7 +282,7 @@ class PageAdmin extends Admin
                     ->addRouterAttributesToFormRequest(['webspace'])
                     ->setTitleVisible(true)
                     ->setTabOrder(5120)
-                    ->setParent(static::EDIT_FORM_ROUTE)
+                    ->setParent(static::EDIT_FORM_VIEW)
             );
         }
     }
