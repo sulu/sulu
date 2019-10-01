@@ -14,4 +14,4 @@ sulu_category.keywords:
     type: rest
     name_prefix: sulu_category.
     parent: sulu_category.categories
-    resource: Sulu\Bundle\CategoryBundle\Controller\KeywordController
+    resource: sulu_category.keyword_controller
