@@ -92,7 +92,7 @@ class ContentMapperSubscriberTest extends TestCase
         $this->contentMapperSubscriber->handlePreRemove(new RemoveEvent($document->reveal()));
 
         $this->eventDispatcher
-            ->dispatch(Argument::type(ContentNodeDeleteEvent::class, ContentEvents::NODE_POST_DELETE))
+            ->dispatch(Argument::type(ContentNodeDeleteEvent::class), ContentEvents::NODE_POST_DELETE)
             ->shouldBeCalled();
         $this->contentMapperSubscriber->handlePostRemove(new RemoveEvent($document->reveal()));
     }

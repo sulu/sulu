@@ -49,7 +49,7 @@ class ReferrerCollectionTest extends TestCase
         $this->referrerNode->getIdentifier()->willReturn('1234');
 
         $this->dispatcher->dispatch(Argument::type('Sulu\Component\DocumentManager\Event\HydrateEvent'), Events::HYDRATE)->will(function($args) {
-            $args[1]->setDocument(new \stdClass());
+            $args[0]->setDocument(new \stdClass());
         });
 
         $results = [];

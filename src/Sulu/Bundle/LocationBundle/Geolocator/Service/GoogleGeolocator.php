@@ -36,7 +36,7 @@ class GoogleGeolocator implements GeolocatorInterface
      */
     protected $apiKey;
 
-    public function __construct(ClientInterface $client, string  $apiKey)
+    public function __construct(ClientInterface $client, string $apiKey)
     {
         $this->client = $client;
         $this->apiKey = $apiKey;

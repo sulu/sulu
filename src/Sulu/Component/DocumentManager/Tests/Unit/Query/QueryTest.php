@@ -73,7 +73,7 @@ class QueryTest extends TestCase
     {
         $resultCollection = $this->prophesize(QueryResultCollection::class);
         $this->dispatcher->dispatch(new QueryExecuteEvent($this->query), Events::QUERY_EXECUTE)->will(function($args) use ($resultCollection) {
-            $args[1]->setResult($resultCollection->reveal());
+            $args[0]->setResult($resultCollection->reveal());
         });
 
         $result = $this->query->execute();

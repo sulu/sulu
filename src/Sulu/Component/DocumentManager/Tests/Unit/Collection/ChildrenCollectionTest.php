@@ -45,7 +45,7 @@ class ChildrenCollectionTest extends TestCase
         $this->parentNode->getNodes()->willReturn($children);
 
         $this->dispatcher->dispatch(Argument::type('Sulu\Component\DocumentManager\Event\HydrateEvent'), Events::HYDRATE)->will(function($args) {
-            $args[1]->setDocument(new \stdClass());
+            $args[0]->setDocument(new \stdClass());
         });
 
         $results = [];

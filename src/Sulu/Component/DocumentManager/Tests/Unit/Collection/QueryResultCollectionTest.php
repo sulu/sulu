@@ -57,7 +57,7 @@ class QueryResultCollectionTest extends TestCase
         $this->queryResult->getRows()->willReturn($results);
 
         $this->dispatcher->dispatch(Argument::type('Sulu\Component\DocumentManager\Event\HydrateEvent'), Events::HYDRATE)->will(function($args) {
-            $args[1]->setDocument(new \stdClass());
+            $args[0]->setDocument(new \stdClass());
         });
 
         $results = [];
