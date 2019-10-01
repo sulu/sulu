@@ -12,17 +12,24 @@
 namespace Sulu\Bundle\CategoryBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Api\RootCategory;
+use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Makes categories available through a REST API.
@@ -31,15 +38,70 @@ class CategoryController extends RestController implements ClassResourceInterfac
 {
     use RequestParametersTrait;
 
+    /**
+     * @var CategoryRepositoryInterface
+     */
+    private $categoryRepository;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var RestHelperInterface
+     */
+    private $restHelper;
+
+    /**
+     * @var DoctrineListBuilderFactory
+     */
+    private $listBuilderFactory;
+
+    /**
+     * @var FieldDescriptorFactoryInterface
+     */
+    private $fieldDescriptorFactory;
+
+    /**
+     * @var CategoryManagerInterface
+     */
+    private $categoryManager;
+
+    /**
+     * @var string
+     */
+    private $categoryClass;
+
     protected static $entityKey = 'categories';
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        CategoryRepositoryInterface $categoryRepository,
+        TranslatorInterface $translator,
+        RestHelperInterface $restHelper,
+        DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        CategoryManagerInterface $categoryManager,
+        string $categoryClass
+    ) {
+        parent::__construct($viewHandler);
+        $this->categoryRepository = $categoryRepository;
+        $this->translator = $translator;
+        $this->restHelper = $restHelper;
+        $this->listBuilderFactory = $listBuilderFactory;
+        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
+        $this->categoryManager = $categoryManager;
+        $this->categoryClass = $categoryClass;
+    }
 
     public function getAction($id, Request $request)
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
         $findCallback = function($id) use ($locale) {
-            $entity = $this->getCategoryManager()->findById($id);
+            $entity = $this->categoryManager->findById($id);
 
-            return $this->getCategoryManager()->getApiObject($entity, $locale);
+            return $this->categoryManager->getApiObject($entity, $locale);
         };
 
         $view = $this->responseGetById($id, $findCallback);
@@ -60,7 +122,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
         }
 
         if ('true' == $request->get('flat')) {
-            $rootId = ($rootKey) ? $this->getCategoryManager()->findByKey($rootKey)->getId() : null;
+            $rootId = ($rootKey) ? $this->categoryManager->findByKey($rootKey)->getId() : null;
             $expandedIds = array_filter(explode(',', $request->get('expandedIds', $request->get('selectedIds'))));
             $list = $this->getListRepresentation(
                 $request,
@@ -71,12 +133,12 @@ class CategoryController extends RestController implements ClassResourceInterfac
                 $includeRoot
             );
         } elseif ($request->query->has('ids')) {
-            $entities = $this->getCategoryManager()->findByIds(explode(',', $request->query->get('ids')));
-            $categories = $this->getCategoryManager()->getApiObjects($entities, $locale);
+            $entities = $this->categoryManager->findByIds(explode(',', $request->query->get('ids')));
+            $categories = $this->categoryManager->getApiObjects($entities, $locale);
             $list = new CollectionRepresentation($categories, self::$entityKey);
         } else {
-            $entities = $this->getCategoryManager()->findChildrenByParentKey($rootKey);
-            $categories = $this->getCategoryManager()->getApiObjects($entities, $locale);
+            $entities = $this->categoryManager->findChildrenByParentKey($rootKey);
+            $categories = $this->categoryManager->getApiObjects($entities, $locale);
             $list = new CollectionRepresentation($categories, self::$entityKey);
         }
 
@@ -109,10 +171,11 @@ class CategoryController extends RestController implements ClassResourceInterfac
             $destination = null;
         }
 
-        $categoryManager = $this->getCategoryManager();
-        $category = $categoryManager->move($id, $destination);
+        $category = $this->categoryManager->move($id, $destination);
 
-        return $this->handleView($this->view($categoryManager->getApiObject($category, $request->get('locale'))));
+        return $this->handleView($this->view(
+            $this->categoryManager->getApiObject($category, $request->get('locale')))
+        );
     }
 
     public function postAction(Request $request)
@@ -133,7 +196,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
     public function deleteAction($id)
     {
         $deleteCallback = function($id) {
-            $this->getCategoryManager()->delete($id);
+            $this->categoryManager->delete($id);
         };
 
         $view = $this->responseDelete($id, $deleteCallback);
@@ -159,8 +222,8 @@ class CategoryController extends RestController implements ClassResourceInterfac
             'meta' => $request->get('meta'),
             'parent' => $request->get('parentId'),
         ];
-        $entity = $this->getCategoryManager()->save($data, null, $locale, $patch);
-        $category = $this->getCategoryManager()->getApiObject($entity, $locale);
+        $entity = $this->categoryManager->save($data, null, $locale, $patch);
+        $category = $this->categoryManager->getApiObject($entity, $locale);
 
         return $this->handleView($this->view($category, 200));
     }
@@ -181,7 +244,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
         // collect categories which children should get loaded
         $idsToExpand = [$parentId];
         if ($expandedIds) {
-            $pathIds = $this->get('sulu.repository.category')->findCategoryIdsBetween([$parentId], $expandedIds);
+            $pathIds = $this->categoryRepository->findCategoryIdsBetween([$parentId], $expandedIds);
             $idsToExpand = array_merge($idsToExpand, $pathIds);
             if ($expandSelf) {
                 $idsToExpand = array_merge($idsToExpand, $expandedIds);
@@ -246,7 +309,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
         if ($includeRoot && !$parentId) {
             $categories = [
                 new RootCategory(
-                    $this->get('translator')->trans('sulu_category.all_categories', [], 'admin'),
+                    $this->translator->trans('sulu_category.all_categories', [], 'admin'),
                     $categories
                 ),
             ];
@@ -265,19 +328,13 @@ class CategoryController extends RestController implements ClassResourceInterfac
 
     private function initializeListBuilder($locale)
     {
-        /** @var RestHelperInterface $restHelper */
-        $restHelper = $this->get('sulu_core.doctrine_rest_helper');
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(self::$entityKey);
 
-        /** @var DoctrineListBuilderFactory $factory */
-        $factory = $this->get('sulu_core.doctrine_list_builder_factory');
-
-        $fieldDescriptors = $this->getFieldDescriptors();
-
-        $listBuilder = $factory->create($this->getParameter('sulu.model.category.class'));
+        $listBuilder = $this->listBuilderFactory->create($this->categoryClass);
         $listBuilder->setParameter('locale', $locale);
         // sort by depth before initializing listbuilder with request parameter to avoid wrong sorting in frontend
         $listBuilder->sort($fieldDescriptors['depth']);
-        $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         $listBuilder->addSelectField($fieldDescriptors['depth']);
         $listBuilder->addSelectField($fieldDescriptors['parent']);
@@ -291,17 +348,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
 
     public function getSecurityContext()
     {
-        return 'sulu.settings.categories';
-    }
-
-    private function getCategoryManager()
-    {
-        return $this->get('sulu_category.category_manager');
-    }
-
-    private function getFieldDescriptors()
-    {
-        return $this->get('sulu_core.list_builder.field_descriptor_factory')
-            ->getFieldDescriptors('categories');
+        return CategoryAdmin::SECURITY_CONTEXT;
     }
 }
