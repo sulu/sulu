@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Rest;
 
-use FOS\RestBundle\Controller\ControllerTrait;
 use FOS\RestBundle\View\View;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -20,8 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 trait RestControllerTrait
 {
-    use ControllerTrait;
-
     /**
      * The type of the entity, which is handled by the concrete controller.
      *
