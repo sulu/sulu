@@ -39,6 +39,7 @@
                 <argument key="cache_class">%sulu_core.webspace.cache_class%</argument>
                 <argument key="base_class">%sulu_core.webspace.base_class%</argument>
             </argument>
+            <argument>%kernel.environment%</argument>
 
             <tag name="sulu.localization_provider"/>
         </service>
