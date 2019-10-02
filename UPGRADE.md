@@ -18,7 +18,6 @@ Upgrade files.
 
 Serialization to `array` type is not longer possible use the new `sulu_core.array_serializer` service instead.
 
-
 ### Refactor Rest Controllers
 
 The Sulu `RestController` was deprecated and replaced with the `AbstractRestController`.
