@@ -5,7 +5,7 @@ import viewRegistry from './registries/viewRegistry';
 const updateRouterAttributesFromView: UpdateAttributesHook = function(route, attributes) {
     const parentAttributes = route.parent ? updateRouterAttributesFromView(route.parent, attributes) : {};
 
-    const View = viewRegistry.get(route.view);
+    const View = viewRegistry.get(route.type);
 
     if (typeof View.getDerivedRouteAttributes === 'function') {
         const newAttributes = View.getDerivedRouteAttributes(route, {...parentAttributes, ...attributes});

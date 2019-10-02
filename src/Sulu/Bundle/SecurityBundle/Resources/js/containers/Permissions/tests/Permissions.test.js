@@ -852,7 +852,7 @@ test('Pass disabled state to MultiSelect', () => {
     });
 });
 
-test('Pass correct apiOptions to MultiSelect', () => {
+test('Pass correct requestParameters to MultiSelect', () => {
     const securityContextGroups: SecurityContextGroups = {
         'Webspaces': {
             'sulu.webspaces.#webspace#': ['view'],
@@ -871,7 +871,7 @@ test('Pass correct apiOptions to MultiSelect', () => {
 
     return promise.then(() => {
         permissions.update();
-        expect(permissions.find(ResourceMultiSelect).prop('apiOptions')).toEqual({
+        expect(permissions.find(ResourceMultiSelect).prop('requestParameters')).toEqual({
             checkForPermissions: 0,
             locale: 'en',
         });
@@ -904,7 +904,7 @@ test('Pass correct locale to MultiSelect', () => {
 
     return promise.then(() => {
         permissions.update();
-        expect(permissions.find(ResourceMultiSelect).prop('apiOptions')).toEqual({
+        expect(permissions.find(ResourceMultiSelect).prop('requestParameters')).toEqual({
             checkForPermissions: 0,
             locale: 'de',
         });

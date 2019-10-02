@@ -1,9 +1,9 @@
 // @flow
 export type NavigationItem = {
-    childRoutes?: Array<string>,
+    childViews?: Array<string>,
     icon: string,
     id: string,
     items?: Array<NavigationItem>,
     label: string,
-    mainRoute: string,
+    view: string,
 };

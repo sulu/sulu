@@ -29,10 +29,10 @@ class ViewRenderer extends React.Component<Props> {
     }
 
     getView = (route: Route): View => {
-        const View = viewRegistry.get(route.view);
+        const View = viewRegistry.get(route.type);
 
         if (!View) {
-            throw new Error('View "' + route.view + '" has not been found');
+            throw new Error('View "' + route.type + '" has not been found');
         }
 
         return View;

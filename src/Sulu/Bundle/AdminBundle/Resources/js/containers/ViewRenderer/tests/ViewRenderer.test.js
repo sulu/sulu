@@ -11,7 +11,7 @@ jest.mock('../registries/viewRegistry', () => ({
 test('Render view returned from ViewRegistry', () => {
     const router = {
         addUpdateRouteHook: jest.fn(),
-        route: {view: 'test'},
+        route: {type: 'test'},
     };
     viewRegistry.get.mockReturnValue(() => (<h1>Test</h1>));
     const view = mount(<ViewRenderer router={router} />);
@@ -22,7 +22,7 @@ test('Render view returned from ViewRegistry', () => {
 test('Render view returned from ViewRegistry with passed router', () => {
     const router = {
         route: {
-            view: 'test',
+            type: 'test',
         },
         attributes: {
             value: 'Test attribute',
@@ -37,20 +37,20 @@ test('Render view returned from ViewRegistry with passed router', () => {
 
 test('Render view should throw if view does not exist', () => {
     viewRegistry.get.mockReturnValue(undefined);
-    expect(() => render(<ViewRenderer router={{route: {view: 'not_existing'}}} />)).toThrow(/not_existing/);
+    expect(() => render(<ViewRenderer router={{route: {type: 'not_existing'}}} />)).toThrow(/not_existing/);
 });
 
 test('Render view with parents should nest rendered views', () => {
     const router = {
         route: {
             name: 'sulu_admin.form_tab',
-            view: 'form_tab',
+            type: 'form_tab',
             parent: {
                 name: 'sulu_admin.form',
-                view: 'form',
+                type: 'form',
                 parent: {
                     name: 'sulu_admin.app',
-                    view: 'app',
+                    type: 'app',
                 },
             },
         },
@@ -97,13 +97,13 @@ test('Render view with parents should nest rendered views and correctly pass chi
     const router = {
         route: {
             name: 'sulu_admin.form_tab',
-            view: 'form_tab',
+            type: 'form_tab',
             parent: {
                 name: 'sulu_admin.form',
-                view: 'form',
+                type: 'form',
                 parent: {
                     name: 'sulu_admin.app',
-                    view: 'app',
+                    type: 'app',
                 },
             },
         },
@@ -151,11 +151,11 @@ test('Render view with parents should nest rendered views and correctly pass chi
 test('Render view with not existing parent should throw', () => {
     const router = {
         route: {
-            view: 'form_tab',
+            type: 'form_tab',
             parent: {
-                view: 'form',
+                type: 'form',
                 parent: {
-                    view: 'app',
+                    type: 'app',
                 },
             },
         },
@@ -191,7 +191,7 @@ test('Render view with route that has no rerenderAttributes', () => {
         addUpdateRouteHook: jest.fn(),
         route: {
             name: 'route',
-            view: 'webspaceOverview',
+            type: 'webspaceOverview',
         },
         attributes: {
             webspace: 'test',
@@ -220,7 +220,7 @@ test('Render view with route that has rerenderAttributes', () => {
         addUpdateRouteHook: jest.fn(),
         route: {
             name: 'route',
-            view: 'webspaceOverview',
+            type: 'webspaceOverview',
             rerenderAttributes: [
                 'webspace',
             ],
@@ -252,7 +252,7 @@ test('Render view with route that has more than one rerenderAttributes', () => {
         addUpdateRouteHook: jest.fn(),
         route: {
             name: 'route',
-            view: 'webspaceOverview',
+            type: 'webspaceOverview',
             rerenderAttributes: [
                 'webspace',
                 'locale',
@@ -286,12 +286,12 @@ test('Clear bindings of router everytime a new view is rendered', () => {
 
     const route1 = {
         name: 'test1',
-        view: 'test',
+        type: 'test',
     };
 
     const route2 = {
         name: 'test2',
-        view: 'test',
+        type: 'test',
     };
 
     const router = {
@@ -317,7 +317,7 @@ test('Clear bindings of router when same view with a different rerender attribut
 
     const route = {
         name: 'test1',
-        view: 'test',
+        type: 'test',
         rerenderAttributes: ['webspace'],
     };
 

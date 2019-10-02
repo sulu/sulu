@@ -6,7 +6,7 @@
         <service id="sulu_category.admin" class="Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin">
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
-            <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"/>
+            <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu.core.localization_manager"/>
         </service>

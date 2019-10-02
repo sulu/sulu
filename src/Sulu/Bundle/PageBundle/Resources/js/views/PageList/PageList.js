@@ -90,7 +90,7 @@ class PageList extends React.Component<Props> {
         } = router;
 
         const observableOptions = {};
-        const apiOptions = {webspace};
+        const requestParameters = {webspace};
 
         router.bind('page', this.page, 1);
         observableOptions.page = this.page;
@@ -111,7 +111,7 @@ class PageList extends React.Component<Props> {
             PAGES_RESOURCE_KEY,
             getUserSettingsKeyForWebspace(webspace),
             observableOptions,
-            apiOptions
+            requestParameters
         );
         router.bind('active', this.listStore.active);
 

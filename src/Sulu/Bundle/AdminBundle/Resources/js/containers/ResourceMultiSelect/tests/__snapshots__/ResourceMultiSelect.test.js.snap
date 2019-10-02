@@ -97,7 +97,7 @@ exports[`Render with data 1`] = `
 </div>
 `;
 
-exports[`Render with data and apiOptions 1`] = `
+exports[`Render with data and requestParameters 1`] = `
 <div
   class="select"
 >

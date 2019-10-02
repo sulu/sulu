@@ -14,9 +14,9 @@ namespace Sulu\Bundle\MediaBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
-use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
-use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
+use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Component\Localization\Manager\LocalizationManager;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -27,20 +27,20 @@ class MediaAdmin extends Admin
 {
     const SECURITY_CONTEXT = 'sulu.media.collections';
 
-    const MEDIA_OVERVIEW_ROUTE = 'sulu_media.overview';
+    const MEDIA_OVERVIEW_VIEW = 'sulu_media.overview';
 
-    const EDIT_FORM_ROUTE = 'sulu_media.form';
+    const EDIT_FORM_VIEW = 'sulu_media.form';
 
-    const EDIT_FORM_DETAILS_ROUTE = 'sulu_media.form.details';
+    const EDIT_FORM_DETAILS_VIEW = 'sulu_media.form.details';
 
-    const EDIT_FORM_FORMATS_ROUTE = 'sulu_media.form.formats';
+    const EDIT_FORM_FORMATS_VIEW = 'sulu_media.form.formats';
 
-    const EDIT_FORM_HISTORY_ROUTE = 'sulu_media.form.history';
+    const EDIT_FORM_HISTORY_VIEW = 'sulu_media.form.history';
 
     /**
-     * @var RouteBuilderFactoryInterface
+     * @var ViewBuilderFactoryInterface
      */
-    private $routeBuilderFactory;
+    private $viewBuilderFactory;
 
     /**
      * @var SecurityCheckerInterface
@@ -58,12 +58,12 @@ class MediaAdmin extends Admin
     private $urlGenerator;
 
     public function __construct(
-        RouteBuilderFactoryInterface $routeBuilderFactory,
+        ViewBuilderFactoryInterface $viewBuilderFactory,
         SecurityCheckerInterface $securityChecker,
         LocalizationManager $localizationManager,
         UrlGeneratorInterface $urlGenerator
     ) {
-        $this->routeBuilderFactory = $routeBuilderFactory;
+        $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->localizationManager = $localizationManager;
         $this->urlGenerator = $urlGenerator;
@@ -75,11 +75,11 @@ class MediaAdmin extends Admin
             $media = new NavigationItem('sulu_media.media');
             $media->setPosition(30);
             $media->setIcon('su-image');
-            $media->setMainRoute(static::MEDIA_OVERVIEW_ROUTE);
-            $media->addChildRoute(static::EDIT_FORM_ROUTE);
-            $media->addChildRoute(static::EDIT_FORM_DETAILS_ROUTE);
-            $media->addChildRoute(static::EDIT_FORM_FORMATS_ROUTE);
-            $media->addChildRoute(static::EDIT_FORM_HISTORY_ROUTE);
+            $media->setView(static::MEDIA_OVERVIEW_VIEW);
+            $media->addChildView(static::EDIT_FORM_VIEW);
+            $media->addChildView(static::EDIT_FORM_DETAILS_VIEW);
+            $media->addChildView(static::EDIT_FORM_FORMATS_VIEW);
+            $media->addChildView(static::EDIT_FORM_HISTORY_VIEW);
 
             $navigationItemCollection->add($media);
         }
@@ -88,7 +88,7 @@ class MediaAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    public function configureRoutes(RouteCollection $routeCollection): void
+    public function configureViews(ViewCollection $viewCollection): void
     {
         $mediaLocales = $this->localizationManager->getLocales();
 
@@ -102,13 +102,11 @@ class MediaAdmin extends Admin
             $toolbarActions[] = new ToolbarAction('sulu_admin.delete');
         }
 
-        $routes = [];
-
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $routeCollection->add(
-                $this->routeBuilderFactory
-                    ->createRouteBuilder(
-                        static::MEDIA_OVERVIEW_ROUTE,
+            $viewCollection->add(
+                $this->viewBuilderFactory
+                    ->createViewBuilder(
+                        static::MEDIA_OVERVIEW_VIEW,
                         '/collections/:locale/:id?',
                         'sulu_media.overview'
                     )
@@ -123,33 +121,33 @@ class MediaAdmin extends Admin
                     ])
                     ->setAttributeDefault('locale', $mediaLocales[0])
             );
-            $routeCollection->add(
-                $this->routeBuilderFactory
-                    ->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/media/:locale/:id')
+            $viewCollection->add(
+                $this->viewBuilderFactory
+                    ->createResourceTabViewBuilder(static::EDIT_FORM_VIEW, '/media/:locale/:id')
                     ->setResourceKey('media')
                     ->addLocales($mediaLocales)
                     ->setTitleProperty('title')
             );
-            $routeCollection->add(
-                $this->routeBuilderFactory->createFormRouteBuilder(static::EDIT_FORM_DETAILS_ROUTE, '/details')
+            $viewCollection->add(
+                $this->viewBuilderFactory->createFormViewBuilder(static::EDIT_FORM_DETAILS_VIEW, '/details')
                     ->setResourceKey('media')
                     ->setFormKey('media_details')
                     ->setTabTitle('sulu_media.information_taxonomy')
                     ->addToolbarActions($toolbarActions)
-                    ->setParent(static::EDIT_FORM_ROUTE)
-                    ->setBackRoute(static::MEDIA_OVERVIEW_ROUTE)
+                    ->setParent(static::EDIT_FORM_VIEW)
+                    ->setBackView(static::MEDIA_OVERVIEW_VIEW)
             );
-            $routeCollection->add(
-                $this->routeBuilderFactory
-                    ->createRouteBuilder(static::EDIT_FORM_FORMATS_ROUTE, '/formats', 'sulu_media.formats')
+            $viewCollection->add(
+                $this->viewBuilderFactory
+                    ->createViewBuilder(static::EDIT_FORM_FORMATS_VIEW, '/formats', 'sulu_media.formats')
                     ->setOption('tabTitle', 'sulu_media.formats')
-                    ->setParent(static::EDIT_FORM_ROUTE)
+                    ->setParent(static::EDIT_FORM_VIEW)
             );
-            $routeCollection->add(
-                $this->routeBuilderFactory
-                    ->createRouteBuilder(static::EDIT_FORM_HISTORY_ROUTE, '/history', 'sulu_media.history')
+            $viewCollection->add(
+                $this->viewBuilderFactory
+                    ->createViewBuilder(static::EDIT_FORM_HISTORY_VIEW, '/history', 'sulu_media.history')
                     ->setOption('tabTitle', 'sulu_media.history')
-                    ->setParent(static::EDIT_FORM_ROUTE)
+                    ->setParent(static::EDIT_FORM_VIEW)
             );
         }
     }

@@ -14,9 +14,9 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
-use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
-use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
+use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleCollectionInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -29,16 +29,16 @@ class AudienceTargetingAdmin extends Admin
 {
     const SECURITY_CONTEXT = 'sulu.settings.target-groups';
 
-    const LIST_ROUTE = 'sulu_audience_targeting.list';
+    const LIST_VIEW = 'sulu_audience_targeting.list';
 
-    const ADD_FORM_ROUTE = 'sulu_audience_targeting.add_form';
+    const ADD_FORM_VIEW = 'sulu_audience_targeting.add_form';
 
-    const EDIT_FORM_ROUTE = 'sulu_audience_targeting.edit_form';
+    const EDIT_FORM_VIEW = 'sulu_audience_targeting.edit_form';
 
     /**
-     * @var RouteBuilderFactoryInterface
+     * @var ViewBuilderFactoryInterface
      */
-    private $routeBuilderFactory;
+    private $viewBuilderFactory;
 
     /**
      * @var SecurityCheckerInterface
@@ -51,11 +51,11 @@ class AudienceTargetingAdmin extends Admin
     private $ruleCollection;
 
     public function __construct(
-        RouteBuilderFactoryInterface $routeBuilderFactory,
+        ViewBuilderFactoryInterface $viewBuilderFactory,
         RuleCollectionInterface $ruleCollection,
         SecurityCheckerInterface $securityChecker
     ) {
-        $this->routeBuilderFactory = $routeBuilderFactory;
+        $this->viewBuilderFactory = $viewBuilderFactory;
         $this->ruleCollection = $ruleCollection;
         $this->securityChecker = $securityChecker;
     }
@@ -65,13 +65,13 @@ class AudienceTargetingAdmin extends Admin
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $targetGroups = new NavigationItem('sulu_audience_targeting.target_groups');
             $targetGroups->setPosition(10);
-            $targetGroups->setMainRoute(static::LIST_ROUTE);
+            $targetGroups->setView(static::LIST_VIEW);
 
             $navigationItemCollection->get(Admin::SETTINGS_NAVIGATION_ITEM)->addChild($targetGroups);
         }
     }
 
-    public function configureRoutes(RouteCollection $routeCollection): void
+    public function configureViews(ViewCollection $viewCollection): void
     {
         $listToolbarActions = [];
         $formToolbarActions = [];
@@ -94,47 +94,47 @@ class AudienceTargetingAdmin extends Admin
         }
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $routeCollection->add(
-                $this->routeBuilderFactory->createListRouteBuilder(static::LIST_ROUTE, '/target-groups')
+            $viewCollection->add(
+                $this->viewBuilderFactory->createListViewBuilder(static::LIST_VIEW, '/target-groups')
                     ->setResourceKey('target_groups')
                     ->setListKey('target_groups')
                     ->setTitle('sulu_audience_targeting.target_groups')
                     ->addListAdapters(['table'])
-                    ->setAddRoute(static::ADD_FORM_ROUTE)
-                    ->setEditRoute(static::EDIT_FORM_ROUTE)
+                    ->setAddView(static::ADD_FORM_VIEW)
+                    ->setEditView(static::EDIT_FORM_VIEW)
                     ->addToolbarActions($listToolbarActions)
             );
-            $routeCollection->add(
-                $this->routeBuilderFactory
-                    ->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/target-groups/add')
+            $viewCollection->add(
+                $this->viewBuilderFactory
+                    ->createResourceTabViewBuilder(static::ADD_FORM_VIEW, '/target-groups/add')
                     ->setResourceKey('target_groups')
-                    ->setBackRoute(static::LIST_ROUTE)
+                    ->setBackView(static::LIST_VIEW)
             );
-            $routeCollection->add(
-                $this->routeBuilderFactory
-                    ->createFormRouteBuilder('sulu_audience_targeting.add_form.details', '/details')
+            $viewCollection->add(
+                $this->viewBuilderFactory
+                    ->createFormViewBuilder('sulu_audience_targeting.add_form.details', '/details')
                     ->setResourceKey('target_groups')
                     ->setFormKey('target_group_details')
                     ->setTabTitle('sulu_admin.details')
-                    ->setEditRoute(static::EDIT_FORM_ROUTE)
+                    ->setEditView(static::EDIT_FORM_VIEW)
                     ->addToolbarActions($formToolbarActions)
-                    ->setParent(static::ADD_FORM_ROUTE)
+                    ->setParent(static::ADD_FORM_VIEW)
             );
-            $routeCollection->add(
-                $this->routeBuilderFactory
-                    ->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/target-groups/:id')
+            $viewCollection->add(
+                $this->viewBuilderFactory
+                    ->createResourceTabViewBuilder(static::EDIT_FORM_VIEW, '/target-groups/:id')
                     ->setResourceKey('target_groups')
-                    ->setBackRoute(static::LIST_ROUTE)
+                    ->setBackView(static::LIST_VIEW)
                     ->setTitleProperty('title')
             );
-            $routeCollection->add(
-                $this->routeBuilderFactory
-                    ->createFormRouteBuilder('sulu_audience_targeting.edit_form.details', '/details')
+            $viewCollection->add(
+                $this->viewBuilderFactory
+                    ->createFormViewBuilder('sulu_audience_targeting.edit_form.details', '/details')
                     ->setResourceKey('target_groups')
                     ->setFormKey('target_group_details')
                     ->setTabTitle('sulu_admin.details')
                     ->addToolbarActions($formToolbarActions)
-                    ->setParent(static::EDIT_FORM_ROUTE)
+                    ->setParent(static::EDIT_FORM_VIEW)
             );
         }
     }

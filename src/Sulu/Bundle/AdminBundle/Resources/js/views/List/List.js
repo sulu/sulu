@@ -63,7 +63,7 @@ class List extends React.Component<Props> {
             route: {
                 options: {
                     adapters,
-                    apiOptions = {},
+                    requestParameters = {},
                     listKey,
                     locales,
                     resourceKey,
@@ -100,7 +100,7 @@ class List extends React.Component<Props> {
         }
 
         const listStoreOptions = this.buildListStoreOptions(
-            apiOptions,
+            requestParameters,
             attributes,
             routerAttributesToListRequest,
             resourceStorePropertiesToListRequest,
@@ -145,13 +145,13 @@ class List extends React.Component<Props> {
     }
 
     buildListStoreOptions(
-        apiOptions: Object,
+        requestParameters: Object,
         attributes: Object,
         routerAttributesToListRequest: {[string | number]: string},
         resourceStorePropertiesToListRequest: {[string | number]: string},
         resourceStore: ?ResourceStore
     ) {
-        const listStoreOptions = apiOptions ? apiOptions : {};
+        const listStoreOptions = requestParameters ? requestParameters : {};
         routerAttributesToListRequest = toJS(routerAttributesToListRequest);
         Object.keys(routerAttributesToListRequest).forEach((key) => {
             const listOptionKey = routerAttributesToListRequest[key];
@@ -244,7 +244,7 @@ class List extends React.Component<Props> {
         const {
             route: {
                 options: {
-                    addRoute,
+                    addView,
                 },
             },
         } = router;
@@ -254,7 +254,7 @@ class List extends React.Component<Props> {
             return;
         }
 
-        router.navigate(addRoute, {locale: this.locale.get(), parentId});
+        router.navigate(addView, {locale: this.locale.get(), parentId});
     };
 
     handleItemClick = (itemId: string | number) => {
@@ -262,7 +262,7 @@ class List extends React.Component<Props> {
         const {
             route: {
                 options: {
-                    editRoute,
+                    editView,
                 },
             },
         } = router;
@@ -272,7 +272,7 @@ class List extends React.Component<Props> {
             return;
         }
 
-        router.navigate(editRoute, {id: itemId, locale: this.locale.get()});
+        router.navigate(editView, {id: itemId, locale: this.locale.get()});
     };
 
     requestSelectionDelete = () => {
@@ -299,8 +299,8 @@ class List extends React.Component<Props> {
                 route: {
                     options: {
                         adapters,
-                        addRoute,
-                        editRoute,
+                        addView,
+                        editView,
                         searchable,
                         title: routeTitle,
                     },
@@ -316,8 +316,8 @@ class List extends React.Component<Props> {
                 <ListContainer
                     adapters={adapters}
                     header={title && <h1 className={listStyles.header}>{title}</h1>}
-                    onItemAdd={onItemAdd || addRoute ? this.addItem : undefined}
-                    onItemClick={onItemClick || editRoute ? this.handleItemClick : undefined}
+                    onItemAdd={onItemAdd || addView ? this.addItem : undefined}
+                    onItemClick={onItemClick || editView ? this.handleItemClick : undefined}
                     ref={this.setListRef}
                     searchable={searchable}
                     store={this.listStore}
@@ -335,20 +335,20 @@ export default withToolbar(List, function() {
     const {
         route: {
             options: {
-                backRoute,
+                backView,
                 locales,
             },
         },
     } = router;
 
-    const backButton = backRoute
+    const backButton = backView
         ? {
             onClick: () => {
                 const options = {};
                 if (this.locale) {
                     options.locale = this.locale.get();
                 }
-                router.restore(backRoute, options);
+                router.restore(backView, options);
             },
         }
         : undefined;

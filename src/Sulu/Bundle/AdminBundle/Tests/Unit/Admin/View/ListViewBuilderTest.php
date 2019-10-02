@@ -1,0 +1,356 @@
+<?php
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\View;
+
+use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Admin\View\ListViewBuilder;
+use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
+use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
+
+class ListViewBuilderTest extends TestCase
+{
+    use ReadObjectAttributeTrait;
+
+    public function testBuildListViewWithClone()
+    {
+        $viewBuilder = (new ListViewBuilder('sulu_role.add_form', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['table']);
+
+        $this->assertNotSame($viewBuilder->getView(), $viewBuilder->getView());
+    }
+
+    public function testBuildListViewWithoutResourceKey()
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessageRegExp('/"setResourceKey"/');
+
+        $view = (new ListViewBuilder('sulu_category.list', '/category'))
+            ->getView();
+    }
+
+    public function testBuildListViewWithoutListAdapters()
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessageRegExp('/"addListAdapters"/');
+
+        $view = (new ListViewBuilder('sulu_category.list', '/category'))
+            ->setResourceKey('categories')
+            ->setListKey('roles')
+            ->getView();
+    }
+
+    public function provideBuildListView()
+    {
+        return [
+            [
+                'sulu_category.list',
+                '/categories',
+                'categories',
+                'categories',
+                null,
+                'Categories',
+                ['table', 'column_list'],
+                'sulu_category.add_form',
+                'sulu_category.edit_form',
+                'webspace',
+            ],
+            [
+                'sulu_tag.list',
+                '/tags',
+                'tags',
+                'other_tags',
+                'contact_tags',
+                'Tags',
+                ['table'],
+                'sulu_tag.add_form',
+                'sulu_tag.edit_form',
+                'locale',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideBuildListView
+     */
+    public function testBuildListView(
+        string $name,
+        string $path,
+        string $resourceKey,
+        string $listKey,
+        ?string $userSettingsKey,
+        string $title,
+        array $listAdapters,
+        string $addView,
+        string $editView,
+        string $rerenderAttribute
+    ) {
+        $viewBuilder = (new ListViewBuilder($name, $path))
+            ->setResourceKey($resourceKey)
+            ->setListKey($listKey)
+            ->setTitle($title)
+            ->addListAdapters($listAdapters)
+            ->setAddView($addView)
+            ->setEditView($editView)
+            ->addRerenderAttribute($rerenderAttribute);
+
+        if ($userSettingsKey) {
+            $viewBuilder->setUserSettingsKey($userSettingsKey);
+        }
+
+        $view = $viewBuilder->getView();
+
+        $this->assertSame($name, $view->getName());
+        $this->assertSame($path, $view->getPath());
+        $this->assertSame([$rerenderAttribute], $this->readObjectAttribute($view, 'rerenderAttributes'));
+        $this->assertSame($resourceKey, $view->getOption('resourceKey'));
+        $this->assertSame($listKey, $view->getOption('listKey'));
+        $this->assertSame($userSettingsKey, $view->getOption('userSettingsKey'));
+        $this->assertSame($title, $view->getOption('title'));
+        $this->assertSame($listAdapters, $view->getOption('adapters'));
+        $this->assertSame($addView, $view->getOption('addView'));
+        $this->assertSame($editView, $view->getOption('editView'));
+        $this->assertSame('sulu_admin.list', $view->getType());
+    }
+
+    public function testBuildListViewAddingAdaptersTwice()
+    {
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['table', 'column_list'])
+            ->addListAdapters(['tree'])
+            ->getView();
+
+        $this->assertSame(['table', 'column_list', 'tree'], $view->getOption('adapters'));
+    }
+
+    public function testBuildListWithLocales()
+    {
+        $view = (new ListViewBuilder('sulu_role.list', '/roles/:locale'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['table'])
+            ->addLocales(['de', 'en'])
+            ->addLocales(['nl', 'fr'])
+            ->setDefaultLocale('de')
+            ->getView();
+
+        $this->assertSame(['de', 'en', 'nl', 'fr'], $view->getOption('locales'));
+        $this->assertSame('de', $view->getAttributeDefault('locale'));
+    }
+
+    public function testBuildListWithLocalesWithoutLocalePlaceholder()
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessageRegExp('":locale"');
+
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['table'])
+            ->addLocales(['de', 'en'])
+            ->addLocales(['nl', 'fr'])
+            ->setDefaultLocale('de')
+            ->getView();
+    }
+
+    public function testBuildListWithoutLocalesWithLocalePlaceholder()
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessageRegExp('":locale"');
+
+        $view = (new ListViewBuilder('sulu_role.list', '/roles/:locale'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['table'])
+            ->getView();
+    }
+
+    public function testBuildListWithoutListKey()
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessageRegExp('"listKey"');
+
+        $view = (new ListViewBuilder('sulu_role.list', '/roles/:locale'))
+            ->setResourceKey('roles')
+            ->addListAdapters(['table'])
+            ->getView();
+    }
+
+    public function testBuildListViewWithSearch()
+    {
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->disableSearching()
+            ->enableSearching()
+            ->getView();
+
+        $this->assertTrue($view->getOption('searchable'));
+    }
+
+    public function testBuildListViewWithoutSearch()
+    {
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->enableSearching()
+            ->disableSearching()
+            ->getView();
+
+        $this->assertFalse($view->getOption('searchable'));
+    }
+
+    public function testBuildListWithViewrAttributesToListRequest()
+    {
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->addRouterAttributesToListRequest(['webspace' => 'webspaceId', 'parent' => 'parentId'])
+            ->addRouterAttributesToListRequest(['locale'])
+            ->getView();
+
+        $this->assertSame(
+            ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale'],
+            $view->getOption('routerAttributesToListRequest')
+        );
+    }
+
+    public function testBuildListWithRouterAttributesToListMetadata()
+    {
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->addRouterAttributesToListMetadata(['webspace' => 'webspaceId', 'parent' => 'parentId', 'id' => 1])
+            ->addRouterAttributesToListMetadata(['locale'])
+            ->getView();
+
+        $this->assertSame(
+            ['webspace' => 'webspaceId', 'parent' => 'parentId', 'id' => 1, 'locale'],
+            $view->getOption('routerAttributesToListMetadata')
+        );
+    }
+
+    public function testBuildListWithResourceStorePropertiesToListRequest()
+    {
+        $view = (new ListViewBuilder('sulu_role.datagrid', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->addResourceStorePropertiesToListRequest(['id' => 'dimensionId', 'parent' => 'parentId'])
+            ->addResourceStorePropertiesToListRequest(['locale'])
+            ->getView();
+
+        $this->assertSame(
+            ['id' => 'dimensionId', 'parent' => 'parentId', 'locale'],
+            $view->getOption('resourceStorePropertiesToListRequest')
+        );
+    }
+
+    public function testBuildListSetParent()
+    {
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->setParent('sulu_role.parent_view')
+            ->getView();
+
+        $this->assertSame('sulu_role.parent_view', $view->getParent());
+    }
+
+    public function testBuildListSetOption()
+    {
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->setOption('resourceKey', 'test')
+            ->getView();
+
+        $this->assertSame('test', $view->getOption('resourceKey'));
+    }
+
+    public function testBuildListSetTabTitle()
+    {
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->setTabTitle('sulu_role.title')
+            ->getView();
+
+        $this->assertSame('sulu_role.title', $view->getOption('tabTitle'));
+    }
+
+    public function testBuildListSetTabOrder()
+    {
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->setTabOrder(5)
+            ->getView();
+
+        $this->assertSame(5, $view->getOption('tabOrder'));
+    }
+
+    public function testBuildListSetTabCondition()
+    {
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->setTabCondition('state == 1')
+            ->getView();
+
+        $this->assertSame('state == 1', $view->getOption('tabCondition'));
+    }
+
+    public function testBuildListSetBackView()
+    {
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->setBackView('sulu_category.edit_form')
+            ->getView();
+
+        $this->assertSame('sulu_category.edit_form', $view->getOption('backView'));
+    }
+
+    public function testBuildAddToolbarActions()
+    {
+        $saveToolbarAction = new ToolbarAction('sulu_admin.save');
+        $typesToolbarAction = new ToolbarAction('sulu_admin.types');
+        $deleteToolbarAction = new ToolbarAction('sulu_admin.delete');
+
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->addToolbarActions([$saveToolbarAction, $typesToolbarAction])
+            ->addToolbarActions([$deleteToolbarAction])
+            ->getView();
+
+        $this->assertSame(
+            [$saveToolbarAction, $typesToolbarAction, $deleteToolbarAction],
+            $view->getOption('toolbarActions')
+        );
+    }
+}

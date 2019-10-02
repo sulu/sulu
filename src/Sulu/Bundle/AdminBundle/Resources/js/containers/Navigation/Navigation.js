@@ -42,12 +42,12 @@ class Navigation extends React.Component<Props> {
     handleNavigationItemClick = (value: string) => {
         const navigationItem = navigationRegistry.get(value);
 
-        if (!navigationItem.mainRoute) {
+        if (!navigationItem.view) {
             return;
         }
 
-        this.props.router.navigate(navigationItem.mainRoute);
-        this.props.onNavigate(navigationItem.mainRoute);
+        this.props.router.navigate(navigationItem.view);
+        this.props.onNavigate(navigationItem.view);
     };
 
     handleProfileEditClick = () => {
@@ -65,8 +65,8 @@ class Navigation extends React.Component<Props> {
             return false;
         }
 
-        return (navigationItem.mainRoute && router.route.name === navigationItem.mainRoute) ||
-            (navigationItem.childRoutes && navigationItem.childRoutes.includes(router.route.name));
+        return (navigationItem.view && router.route.name === navigationItem.view) ||
+            (navigationItem.childViews && navigationItem.childViews.includes(router.route.name));
     };
 
     render() {

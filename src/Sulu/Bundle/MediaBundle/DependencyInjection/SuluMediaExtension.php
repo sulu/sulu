@@ -44,9 +44,9 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                         'media' => [
                             'name' => 'sulu_media.media',
                             'icon' => 'su-image',
-                            'route' => [
-                                'name' => MediaAdmin::EDIT_FORM_ROUTE,
-                                'result_to_route' => [
+                            'view' => [
+                                'name' => MediaAdmin::EDIT_FORM_VIEW,
+                                'result_to_view' => [
                                     'id' => 'id',
                                     'locale' => 'locale',
                                 ],

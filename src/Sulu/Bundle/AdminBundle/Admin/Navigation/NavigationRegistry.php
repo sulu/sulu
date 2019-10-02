@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Admin\Navigation;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
-use Sulu\Bundle\AdminBundle\Admin\Routing\RouteRegistry;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class NavigationRegistry
@@ -34,15 +34,15 @@ class NavigationRegistry
     private $adminPool;
 
     /**
-     * @var RouteRegistry
+     * @var ViewRegistry
      */
-    private $routeRegistry;
+    private $viewRegistry;
 
-    public function __construct(TranslatorInterface $translator, AdminPool $adminPool, RouteRegistry $routeRegistry)
+    public function __construct(TranslatorInterface $translator, AdminPool $adminPool, ViewRegistry $viewRegistry)
     {
         $this->translator = $translator;
         $this->adminPool = $adminPool;
-        $this->routeRegistry = $routeRegistry;
+        $this->viewRegistry = $viewRegistry;
     }
 
     /**
@@ -76,7 +76,7 @@ class NavigationRegistry
         }
 
         $navigationItems = array_filter($navigationItemCollection->all(), function($navigationItem) {
-            return $navigationItem->getChildren() || $navigationItem->getMainRoute();
+            return $navigationItem->getChildren() || $navigationItem->getView();
         });
 
         foreach ($navigationItems as $navigationItem) {
@@ -97,7 +97,7 @@ class NavigationRegistry
     }
 
     /**
-     * Adds the translation and the child routes to the given navigation item.
+     * Adds the translation and the child views to the given navigation item.
      */
     private function processNavigationItem(NavigationItem $navigationItem): void
     {
@@ -106,14 +106,14 @@ class NavigationRegistry
             $navigationItem->setLabel($this->translator->trans($navigationItem->getName(), [], 'admin'));
         }
 
-        // add child routes
-        $mainRoute = $navigationItem->getMainRoute();
-        if ($mainRoute) {
-            $mainPath = $this->routeRegistry->findRouteByName($mainRoute)->getPath();
+        // add child views
+        $mainView = $navigationItem->getView();
+        if ($mainView) {
+            $mainPath = $this->viewRegistry->findViewByName($mainView)->getPath();
             if ('/' !== $mainPath) {
-                foreach ($this->routeRegistry->getRoutes() as $route) {
-                    if (0 === strpos($route->getPath(), $mainPath)) {
-                        $navigationItem->addChildRoute($route->getName());
+                foreach ($this->viewRegistry->getViews() as $view) {
+                    if (0 === strpos($view->getPath(), $mainPath)) {
+                        $navigationItem->addChildView($view->getName());
                     }
                 }
             }

@@ -79,7 +79,7 @@ class Form extends React.Component<Props> {
             attributes,
             route: {
                 options: {
-                    apiOptions = {},
+                    requestParameters = {},
                     formKey,
                     idQueryParameter,
                     resourceKey,
@@ -100,7 +100,11 @@ class Form extends React.Component<Props> {
             throw new Error('The route does not define the mandatory "formKey" option');
         }
 
-        const formStoreOptions = this.buildFormStoreOptions(apiOptions, attributes, routerAttributesToFormRequest);
+        const formStoreOptions = this.buildFormStoreOptions(
+            requestParameters,
+            attributes,
+            routerAttributesToFormRequest
+        );
 
         if (this.hasOwnResourceStore) {
             let locale = resourceStore.locale;
@@ -167,11 +171,11 @@ class Form extends React.Component<Props> {
     };
 
     buildFormStoreOptions(
-        apiOptions: Object,
+        requestParameters: Object,
         attributes: Object,
         routerAttributesToFormRequest: {[string | number]: string}
     ) {
-        const formStoreOptions = apiOptions ? apiOptions : {};
+        const formStoreOptions = requestParameters ? requestParameters : {};
 
         routerAttributesToFormRequest = toJS(routerAttributesToFormRequest);
         Object.keys(routerAttributesToFormRequest).forEach((key) => {
@@ -269,26 +273,26 @@ class Form extends React.Component<Props> {
             attributes,
             route: {
                 options: {
-                    editRoute,
-                    routerAttributesToEditRoute,
+                    editView,
+                    routerAttributesToEditView,
                 },
             },
         } = router;
 
-        if (editRoute) {
+        if (editView) {
             resourceStore.destroy();
         }
 
         const saveOptions = {...options};
 
-        const editRouteParameters = {};
+        const editViewParameters = {};
 
-        if (routerAttributesToEditRoute) {
-            Object.keys(toJS(routerAttributesToEditRoute)).forEach((key) => {
-                const formOptionKey = routerAttributesToEditRoute[key];
-                const attributeName = isNaN(key) ? key : routerAttributesToEditRoute[key];
+        if (routerAttributesToEditView) {
+            Object.keys(toJS(routerAttributesToEditView)).forEach((key) => {
+                const formOptionKey = routerAttributesToEditView[key];
+                const attributeName = isNaN(key) ? key : routerAttributesToEditView[key];
 
-                editRouteParameters[formOptionKey] = attributes[attributeName];
+                editViewParameters[formOptionKey] = attributes[attributeName];
             });
         }
 
@@ -297,13 +301,13 @@ class Form extends React.Component<Props> {
                 this.showSuccessSnackbar();
                 this.clearErrors();
 
-                if (editRoute) {
+                if (editView) {
                     router.navigate(
-                        editRoute,
+                        editView,
                         {
                             id: resourceStore.id,
                             locale: resourceStore.locale,
-                            ...editRouteParameters,
+                            ...editViewParameters,
                         }
                     );
                 }
@@ -417,32 +421,32 @@ export default withToolbar(Form, function() {
         attributes,
         route: {
             options: {
-                backRoute,
-                routerAttributesToBackRoute,
+                backView,
+                routerAttributesToBackView,
             },
         },
     } = router;
     const {errors, resourceStore, showSuccess} = this;
 
-    const backButton = backRoute
+    const backButton = backView
         ? {
             onClick: () => {
-                const backRouteParameters = {};
+                const backViewParameters = {};
 
-                if (routerAttributesToBackRoute) {
-                    Object.keys(toJS(routerAttributesToBackRoute)).forEach((key) => {
-                        const formOptionKey = routerAttributesToBackRoute[key];
-                        const attributeName = isNaN(key) ? key : routerAttributesToBackRoute[key];
+                if (routerAttributesToBackView) {
+                    Object.keys(toJS(routerAttributesToBackView)).forEach((key) => {
+                        const formOptionKey = routerAttributesToBackView[key];
+                        const attributeName = isNaN(key) ? key : routerAttributesToBackView[key];
 
-                        backRouteParameters[formOptionKey] = attributes[attributeName];
+                        backViewParameters[formOptionKey] = attributes[attributeName];
                     });
                 }
 
                 if (resourceStore.locale) {
-                    backRouteParameters.locale = resourceStore.locale.get();
+                    backViewParameters.locale = resourceStore.locale.get();
                 }
 
-                router.restore(backRoute, backRouteParameters);
+                router.restore(backView, backViewParameters);
             },
         }
         : undefined;

@@ -3,7 +3,7 @@ import {action, computed, observable} from 'mobx';
 import ResourceRequester from '../../services/ResourceRequester';
 
 export default class ResourceListStore {
-    apiOptions: Object;
+    requestParameters: Object;
     resourceKey: string;
     idProperty: string;
     @observable initialLoading: boolean = false;
@@ -15,13 +15,13 @@ export default class ResourceListStore {
         return this.initialLoading || this.deleting || this.patching;
     }
 
-    constructor(resourceKey: string, apiOptions: Object = {}, idProperty: string = 'id') {
+    constructor(resourceKey: string, requestParameters: Object = {}, idProperty: string = 'id') {
         this.resourceKey = resourceKey;
-        this.apiOptions = apiOptions;
+        this.requestParameters = requestParameters;
         this.idProperty = idProperty;
 
         this.initialLoading = true;
-        ResourceRequester.getList(resourceKey, apiOptions).then(action((response) => {
+        ResourceRequester.getList(resourceKey, requestParameters).then(action((response) => {
             this.data = response._embedded[resourceKey];
             this.initialLoading = false;
         })).catch(action(() => {
@@ -31,7 +31,7 @@ export default class ResourceListStore {
 
     @action deleteList(ids: Array<string | number>) {
         this.deleting = true;
-        return ResourceRequester.deleteList(this.resourceKey, {...this.apiOptions, ids}).then(action(() => {
+        return ResourceRequester.deleteList(this.resourceKey, {...this.requestParameters, ids}).then(action(() => {
             for (const id of ids) {
                 this.data.splice(this.data.findIndex((object) => object[this.idProperty] === id), 1);
             }

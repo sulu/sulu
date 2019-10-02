@@ -37,7 +37,7 @@ test('Render webspace select with children when webspaces are not loaded yet', (
         parent: undefined,
         path: '/webspace_tabs',
         rerenderAttributes: [],
-        view: 'webspace_tabs',
+        type: 'webspace_tabs',
     };
 
     const promise = Promise.resolve(
@@ -95,7 +95,7 @@ test('Should bind and unbind router attributes and updateRouteHook', () => {
         parent: undefined,
         path: '/webspace_tabs',
         rerenderAttributes: [],
-        view: 'webspace_tabs',
+        type: 'webspace_tabs',
     };
 
     const bindWebspaceToRouterDisposerSpy = jest.fn();
@@ -125,7 +125,7 @@ test('Save and update webspace when select value is changed', () => {
         parent: undefined,
         path: '/webspace_tabs',
         rerenderAttributes: [],
-        view: 'webspace_tabs',
+        type: 'webspace_tabs',
     };
 
     const webspaces = [

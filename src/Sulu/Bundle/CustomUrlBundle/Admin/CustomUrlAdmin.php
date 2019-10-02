@@ -12,9 +12,9 @@
 namespace Sulu\Bundle\CustomUrlBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
-use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
-use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
+use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -44,9 +44,9 @@ class CustomUrlAdmin extends Admin
     private $webspaceManager;
 
     /**
-     * @var RouteBuilderFactoryInterface
+     * @var ViewBuilderFactoryInterface
      */
-    private $routeBuilderFactory;
+    private $viewBuilderFactory;
 
     /**
      * @var SecurityCheckerInterface
@@ -55,27 +55,25 @@ class CustomUrlAdmin extends Admin
 
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
-        RouteBuilderFactoryInterface $routeBuilderFactory,
+        ViewBuilderFactoryInterface $viewBuilderFactory,
         SecurityCheckerInterface $securityChecker
     ) {
         $this->webspaceManager = $webspaceManager;
-        $this->routeBuilderFactory = $routeBuilderFactory;
+        $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
     }
 
-    public function configureRoutes(RouteCollection $routeCollection): void
+    public function configureViews(ViewCollection $viewCollection): void
     {
         $listToolbarActions = [
             new ToolbarAction('sulu_admin.add'),
             new ToolbarAction('sulu_admin.delete'),
         ];
 
-        $routes = [];
-
         if ($this->hasSomeWebspaceCustomUrlPermission()) {
-            $routeCollection->add(
-                $this->routeBuilderFactory
-                    ->createFormOverlayListRouteBuilder('sulu_custom_url.custom_urls_list', '/custom-urls')
+            $viewCollection->add(
+                $this->viewBuilderFactory
+                    ->createFormOverlayListViewBuilder('sulu_custom_url.custom_urls_list', '/custom-urls')
                     ->setResourceKey('custom_urls')
                     ->setListKey('custom_urls')
                     ->addListAdapters(['table_light'])
@@ -86,7 +84,7 @@ class CustomUrlAdmin extends Admin
                     ->setTabTitle('sulu_custom_url.custom_urls')
                     ->addToolbarActions($listToolbarActions)
                     ->setTabOrder(1024)
-                    ->setParent(PageAdmin::WEBSPACE_TABS_ROUTE)
+                    ->setParent(PageAdmin::WEBSPACE_TABS_VIEW)
                     ->addRerenderAttribute('webspace')
             );
         }

@@ -21,7 +21,7 @@ test('Return an empty object if the corresponding View has no getDerivedRouterAt
         path: '/test',
         parent: undefined,
         rerenderAttributes: [],
-        view: 'test',
+        type: 'test',
     }, {})).toEqual({});
 });
 
@@ -47,7 +47,7 @@ test('Return the attributes returned from the getDerivedRouterAttributes functio
         path: '/test',
         parent: undefined,
         rerenderAttributes: [],
-        view: 'test',
+        type: 'test',
     }, {value3: 'test3'})).toEqual({value1: 'test1', value2: 'test2', value3: 'test3', routeName: 'test'});
 });
 
@@ -87,7 +87,7 @@ test('Return the combined attributes from the current and parent getDerivedroute
         path: '/test',
         parent: undefined,
         rerenderAttributes: [],
-        view: 'test1',
+        type: 'test1',
     };
 
     const route2 = {
@@ -98,7 +98,7 @@ test('Return the combined attributes from the current and parent getDerivedroute
         path: '/test',
         parent: route1,
         rerenderAttributes: [],
-        view: 'test2',
+        type: 'test2',
     };
 
     const route3 = {
@@ -109,7 +109,7 @@ test('Return the combined attributes from the current and parent getDerivedroute
         path: '/test',
         parent: route2,
         rerenderAttributes: [],
-        view: 'test3',
+        type: 'test3',
     };
 
     expect(updateRouterAttributesFromView(route3, {value1: 'test1', value2: 'test2', value3: 'test3'}))

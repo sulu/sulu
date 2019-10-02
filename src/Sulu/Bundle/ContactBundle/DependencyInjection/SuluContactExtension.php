@@ -43,9 +43,9 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                         'contact' => [
                             'name' => 'sulu_contact.people',
                             'icon' => 'su-user',
-                            'route' => [
-                                'name' => ContactAdmin::CONTACT_EDIT_FORM_ROUTE,
-                                'result_to_route' => [
+                            'view' => [
+                                'name' => ContactAdmin::CONTACT_EDIT_FORM_VIEW,
+                                'result_to_view' => [
                                     'id' => 'id',
                                     'locale' => 'locale',
                                 ],
@@ -55,9 +55,9 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                         'account' => [
                             'name' => 'sulu_contact.organizations',
                             'icon' => 'su-house',
-                            'route' => [
-                                'name' => ContactAdmin::ACCOUNT_EDIT_FORM_ROUTE,
-                                'result_to_route' => [
+                            'view' => [
+                                'name' => ContactAdmin::ACCOUNT_EDIT_FORM_VIEW,
+                                'result_to_view' => [
                                     'id' => 'id',
                                     'locale' => 'locale',
                                 ],

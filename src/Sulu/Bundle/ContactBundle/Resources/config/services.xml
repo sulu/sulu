@@ -7,7 +7,7 @@
     </parameters>
     <services>
         <service id="sulu_contact.admin" class="Sulu\Bundle\ContactBundle\Admin\ContactAdmin">
-            <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface"/>
+            <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface"/>
             <argument type="service" id="sulu_security.security_checker" />
             <argument type="service" id="doctrine" />
 

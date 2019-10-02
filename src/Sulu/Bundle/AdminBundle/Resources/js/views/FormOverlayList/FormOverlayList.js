@@ -80,7 +80,7 @@ class FormOverlayList extends React.Component<Props> {
                 attributes,
                 route: {
                     options: {
-                        apiOptions = {},
+                        requestParameters = {},
                         formKey,
                         resourceKey,
                         routerAttributesToFormRequest = {},
@@ -100,7 +100,7 @@ class FormOverlayList extends React.Component<Props> {
         }
 
         const formStoreOptions = this.buildFormStoreOptions(
-            apiOptions,
+            requestParameters,
             attributes,
             routerAttributesToFormRequest,
             resourceStorePropertiesToFormRequest
@@ -119,12 +119,12 @@ class FormOverlayList extends React.Component<Props> {
     };
 
     buildFormStoreOptions(
-        apiOptions: Object,
+        requestParameters: Object,
         attributes: Object,
         routerAttributesToFormRequest: {[string | number]: string},
         resourceStorePropertiesToFormRequest: {[string | number]: string}
     ) {
-        const formStoreOptions = apiOptions ? apiOptions : {};
+        const formStoreOptions = requestParameters ? requestParameters : {};
 
         routerAttributesToFormRequest = toJS(routerAttributesToFormRequest);
         Object.keys(routerAttributesToFormRequest).forEach((key) => {

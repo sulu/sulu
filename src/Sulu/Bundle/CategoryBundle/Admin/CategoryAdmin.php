@@ -14,9 +14,9 @@ namespace Sulu\Bundle\CategoryBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
-use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
-use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
+use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -25,16 +25,16 @@ class CategoryAdmin extends Admin
 {
     const SECURITY_CONTEXT = 'sulu.settings.categories';
 
-    const LIST_ROUTE = 'sulu_category.list';
+    const LIST_VIEW = 'sulu_category.list';
 
-    const ADD_FORM_ROUTE = 'sulu_category.add_form';
+    const ADD_FORM_VIEW = 'sulu_category.add_form';
 
-    const EDIT_FORM_ROUTE = 'sulu_category.edit_form';
+    const EDIT_FORM_VIEW = 'sulu_category.edit_form';
 
     /**
-     * @var RouteBuilderFactoryInterface
+     * @var ViewBuilderFactoryInterface
      */
-    private $routeBuilderFactory;
+    private $viewBuilderFactory;
 
     /**
      * @var SecurityCheckerInterface
@@ -47,11 +47,11 @@ class CategoryAdmin extends Admin
     private $localizationManager;
 
     public function __construct(
-        RouteBuilderFactoryInterface $routeBuilderFactory,
+        ViewBuilderFactoryInterface $viewBuilderFactory,
         SecurityCheckerInterface $securityChecker,
         LocalizationManagerInterface $localizationManager
     ) {
-        $this->routeBuilderFactory = $routeBuilderFactory;
+        $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->localizationManager = $localizationManager;
     }
@@ -61,13 +61,13 @@ class CategoryAdmin extends Admin
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $categoryItem = new NavigationItem('sulu_category.categories');
             $categoryItem->setPosition(20);
-            $categoryItem->setMainRoute(static::LIST_ROUTE);
+            $categoryItem->setView(static::LIST_VIEW);
 
             $navigationItemCollection->get(Admin::SETTINGS_NAVIGATION_ITEM)->addChild($categoryItem);
         }
     }
 
-    public function configureRoutes(RouteCollection $routeCollection): void
+    public function configureViews(ViewCollection $viewCollection): void
     {
         $locales = $this->localizationManager->getLocales();
 
@@ -93,59 +93,59 @@ class CategoryAdmin extends Admin
         }
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $routeCollection->add(
-                $this->routeBuilderFactory
-                    ->createListRouteBuilder(static::LIST_ROUTE, '/categories/:locale')
+            $viewCollection->add(
+                $this->viewBuilderFactory
+                    ->createListViewBuilder(static::LIST_VIEW, '/categories/:locale')
                     ->setResourceKey('categories')
                     ->setListKey('categories')
                     ->setTitle('sulu_category.categories')
                     ->addListAdapters(['tree_table'])
                     ->addLocales($locales)
                     ->setDefaultLocale($locales[0])
-                    ->setAddRoute(static::ADD_FORM_ROUTE)
-                    ->setEditRoute(static::EDIT_FORM_ROUTE)
+                    ->setAddView(static::ADD_FORM_VIEW)
+                    ->setEditView(static::EDIT_FORM_VIEW)
                     ->enableSearching()
                     ->addToolbarActions($listToolbarActions)
             );
-            $routeCollection->add(
-                $this->routeBuilderFactory
-                    ->createResourceTabRouteBuilder(static::ADD_FORM_ROUTE, '/categories/:locale/add')
+            $viewCollection->add(
+                $this->viewBuilderFactory
+                    ->createResourceTabViewBuilder(static::ADD_FORM_VIEW, '/categories/:locale/add')
                     ->setResourceKey('categories')
                     ->addLocales($locales)
-                    ->setBackRoute(static::LIST_ROUTE)
+                    ->setBackView(static::LIST_VIEW)
             );
-            $routeCollection->add(
-                $this->routeBuilderFactory
-                    ->createFormRouteBuilder('sulu_category.add_form.details', '/details')
+            $viewCollection->add(
+                $this->viewBuilderFactory
+                    ->createFormViewBuilder('sulu_category.add_form.details', '/details')
                     ->setResourceKey('categories')
                     ->setFormKey('category_details')
                     ->setTabTitle('sulu_admin.details')
                     ->addToolbarActions($formToolbarActions)
                     ->addRouterAttributesToFormRequest(['parentId'])
-                    ->setEditRoute(static::EDIT_FORM_ROUTE)
-                    ->setParent(static::ADD_FORM_ROUTE)
+                    ->setEditView(static::EDIT_FORM_VIEW)
+                    ->setParent(static::ADD_FORM_VIEW)
             );
-            $routeCollection->add(
-                $this->routeBuilderFactory
-                    ->createResourceTabRouteBuilder(static::EDIT_FORM_ROUTE, '/categories/:locale/:id')
+            $viewCollection->add(
+                $this->viewBuilderFactory
+                    ->createResourceTabViewBuilder(static::EDIT_FORM_VIEW, '/categories/:locale/:id')
                     ->setResourceKey('categories')
                     ->addLocales($locales)
-                    ->setBackRoute(static::LIST_ROUTE)
-                    ->addRouterAttributesToBackRoute(['id' => 'active'])
+                    ->setBackView(static::LIST_VIEW)
+                    ->addRouterAttributesToBackView(['id' => 'active'])
                     ->setTitleProperty('name')
             );
-            $routeCollection->add(
-                $this->routeBuilderFactory
-                    ->createFormRouteBuilder('sulu_category.edit_form.details', '/details')
+            $viewCollection->add(
+                $this->viewBuilderFactory
+                    ->createFormViewBuilder('sulu_category.edit_form.details', '/details')
                     ->setResourceKey('categories')
                     ->setFormKey('category_details')
                     ->setTabTitle('sulu_admin.details')
                     ->addToolbarActions($formToolbarActions)
-                    ->setParent(static::EDIT_FORM_ROUTE)
+                    ->setParent(static::EDIT_FORM_VIEW)
             );
-            $routeCollection->add(
-                $this->routeBuilderFactory
-                    ->createFormOverlayListRouteBuilder('sulu_category.edit_form.keywords', '/keywords')
+            $viewCollection->add(
+                $this->viewBuilderFactory
+                    ->createFormOverlayListViewBuilder('sulu_category.edit_form.keywords', '/keywords')
                     ->setResourceKey('category_keywords')
                     ->setListKey('category_keywords')
                     ->addListAdapters(['table'])
@@ -154,7 +154,7 @@ class CategoryAdmin extends Admin
                     ->addRouterAttributesToFormRequest(['id' => 'categoryId'])
                     ->setTabTitle('sulu_category.keywords')
                     ->addToolbarActions([new ToolbarAction('sulu_admin.add'), new ToolbarAction('sulu_admin.delete')])
-                    ->setParent(static::EDIT_FORM_ROUTE)
+                    ->setParent(static::EDIT_FORM_VIEW)
             );
         }
     }

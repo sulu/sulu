@@ -18,7 +18,7 @@ use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
-use Sulu\Bundle\AdminBundle\Admin\Routing\RouteRegistry;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
@@ -78,9 +78,9 @@ class AdminController
     private $metadataProviderRegistry;
 
     /**
-     * @var RouteRegistry
+     * @var ViewRegistry
      */
-    private $routeRegistry;
+    private $viewRegistry;
 
     /**
      * @var NavigationRegistry
@@ -156,7 +156,7 @@ class AdminController
         Environment $engine,
         TranslatorBagInterface $translatorBag,
         MetadataProviderRegistry $metadataProviderRegistry,
-        RouteRegistry $routeRegistry,
+        ViewRegistry $viewRegistry,
         NavigationRegistry $navigationRegistry,
         FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
         ContactManagerInterface $contactManager,
@@ -179,7 +179,7 @@ class AdminController
         $this->engine = $engine;
         $this->translatorBag = $translatorBag;
         $this->metadataProviderRegistry = $metadataProviderRegistry;
-        $this->routeRegistry = $routeRegistry;
+        $this->viewRegistry = $viewRegistry;
         $this->navigationRegistry = $navigationRegistry;
         $this->fieldTypeOptionRegistry = $fieldTypeOptionRegistry;
         $this->contactManager = $contactManager;
@@ -238,7 +238,7 @@ class AdminController
                 'navigation' => array_map(function(NavigationItem $navigationItem) {
                     return $navigationItem->toArray();
                 }, array_values($this->navigationRegistry->getNavigationItems())),
-                'routes' => $this->routeRegistry->getRoutes(),
+                'routes' => $this->viewRegistry->getViews(),
                 'resources' => $this->resources,
                 'smartContent' => array_map(function(DataProviderInterface $dataProvider) {
                     return $dataProvider->getConfiguration();
@@ -261,7 +261,7 @@ class AdminController
         $view = View::create($config);
 
         $context = new Context();
-        $context->setGroups(['frontend', 'partialContact', 'fullRoute']);
+        $context->setGroups(['frontend', 'partialContact', 'fullView']);
 
         $view->setContext($context);
         $view->setFormat('json');
