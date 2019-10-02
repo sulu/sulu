@@ -34,6 +34,8 @@ class ArraySerializer implements ArraySerializerInterface
 
         $context->setAttribute('array_serializer', true);
 
-        return $this->serializer->toArray($data, $context);
+        $result = $this->serializer->toRawResult($data, $context);
+
+        return $result;
     }
 }
