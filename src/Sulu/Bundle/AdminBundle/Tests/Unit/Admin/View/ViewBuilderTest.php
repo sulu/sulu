@@ -47,14 +47,14 @@ class ViewBuilderTest extends TestCase
     public function testBuildTabView(
         string $name,
         string $path,
-        string $view,
+        string $type,
         array $options,
         array $attributeDefaults,
         ?string $parent,
         array $rerenderAttributes
     ) {
-        $viewBuilder = new ViewBuilder($name, $path, $view);
-        $expectedView = new View($name, $path, $view);
+        $viewBuilder = new ViewBuilder($name, $path, $type);
+        $expectedView = new View($name, $path, $type);
 
         foreach ($options as $optionKey => $optionValue) {
             $viewBuilder->setOption($optionKey, $optionValue);

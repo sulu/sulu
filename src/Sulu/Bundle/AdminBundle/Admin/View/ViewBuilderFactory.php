@@ -13,9 +13,9 @@ namespace Sulu\Bundle\AdminBundle\Admin\View;
 
 class ViewBuilderFactory implements ViewBuilderFactoryInterface
 {
-    public function createViewBuilder(string $name, string $path, string $view): ViewBuilderInterface
+    public function createViewBuilder(string $name, string $path, string $type): ViewBuilderInterface
     {
-        return new ViewBuilder($name, $path, $view);
+        return new ViewBuilder($name, $path, $type);
     }
 
     public function createListViewBuilder(string $name, string $path): ListViewBuilderInterface

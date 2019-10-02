@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Admin\View;
 
 interface ViewBuilderFactoryInterface
 {
-    public function createViewBuilder(string $name, string $path, string $view): ViewBuilderInterface;
+    public function createViewBuilder(string $name, string $path, string $type): ViewBuilderInterface;
 
     public function createListViewBuilder(string $name, string $path): ListViewBuilderInterface;
 
