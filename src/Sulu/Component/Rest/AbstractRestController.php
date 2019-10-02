@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Rest;
 
+use FOS\RestBundle\Controller\ControllerTrait;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -19,6 +20,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 abstract class AbstractRestController
 {
+    use ControllerTrait;
     use RestControllerTrait;
 
     /**
