@@ -29,3 +29,13 @@ sulu_security.permissions:
     type: rest
     name_prefix: sulu_security.
     resource: sulu_security.permission_controller
+
+sulu_security.contexts:
+    type: rest
+    name_prefix: sulu_security.
+    resource: sulu_security.contexts_controller
+
+sulu_security.profile:
+    type: rest
+    name_prefix: sulu_security.
+    resource: sulu_security.profile_controller

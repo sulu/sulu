@@ -11,12 +11,16 @@
 
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Component\Rest\AbstractRestController;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @RouteResource("security-contexts")
+ */
 class ContextsController extends AbstractRestController implements ClassResourceInterface
 {
     /**

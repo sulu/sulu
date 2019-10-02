@@ -36,6 +36,13 @@ public static function getSubscribedServices()
 }
 ```
 
+### Security Profile and Conexts routes changed
+
+The endpoints for the profile and security contexts apis changed:
+
+ - `/admin/security/contexts` -> `/admin/api/security-contexts`
+ - `/admin/security/profile` -> `/admin/api/profile`
+
 ### Symfony 3.4 support dropped
 
 To fix current deprecations in symfony packages we needed to drop symfony 3.4 support and go on the newest minor version of symfony (4.3).
