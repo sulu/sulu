@@ -1028,14 +1028,14 @@ test('Should render the locale dropdown with the options from router', () => {
     ]);
 });
 
-test('Should pass apiOptions from router to the ListStore', () => {
+test('Should pass requestParameters from router to the ListStore', () => {
     const List = require('../List').default;
     const router = {
         bind: jest.fn(),
         route: {
             options: {
                 adapters: ['table'],
-                apiOptions: {
+                requestParameters: {
                     webspace: 'example',
                 },
                 listKey: 'test',
@@ -1063,7 +1063,7 @@ test('Should pass router attributes from router to the ListStore', () => {
         route: {
             options: {
                 adapters: ['table'],
-                apiOptions: {},
+                requestParameters: {},
                 listKey: 'test',
                 locales: ['en', 'de'],
                 resourceKey: 'test',
@@ -1088,7 +1088,7 @@ test('Should pass resourceStore properties from router to the ListStore', () => 
         route: {
             options: {
                 adapters: ['table'],
-                apiOptions: {},
+                requestParameters: {},
                 listKey: 'test',
                 locales: ['en', 'de'],
                 resourceKey: 'test',
@@ -1117,7 +1117,7 @@ test('Should pass router attributes array from router to the ListStore', () => {
         route: {
             options: {
                 adapters: ['table'],
-                apiOptions: {},
+                requestParameters: {},
                 listKey: 'test',
                 locales: ['en', 'de'],
                 resourceKey: 'test',
@@ -1146,7 +1146,7 @@ test('Should pass router attributes array from router to the ListStore metadataO
         route: {
             options: {
                 adapters: ['table'],
-                apiOptions: {},
+                requestParameters: {},
                 listKey: 'test',
                 locales: ['en', 'de'],
                 resourceKey: 'test',

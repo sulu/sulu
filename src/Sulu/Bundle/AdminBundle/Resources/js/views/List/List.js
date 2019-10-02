@@ -63,7 +63,7 @@ class List extends React.Component<Props> {
             route: {
                 options: {
                     adapters,
-                    apiOptions = {},
+                    requestParameters = {},
                     listKey,
                     locales,
                     resourceKey,
@@ -100,7 +100,7 @@ class List extends React.Component<Props> {
         }
 
         const listStoreOptions = this.buildListStoreOptions(
-            apiOptions,
+            requestParameters,
             attributes,
             routerAttributesToListRequest,
             resourceStorePropertiesToListRequest,
@@ -145,13 +145,13 @@ class List extends React.Component<Props> {
     }
 
     buildListStoreOptions(
-        apiOptions: Object,
+        requestParameters: Object,
         attributes: Object,
         routerAttributesToListRequest: {[string | number]: string},
         resourceStorePropertiesToListRequest: {[string | number]: string},
         resourceStore: ?ResourceStore
     ) {
-        const listStoreOptions = apiOptions ? apiOptions : {};
+        const listStoreOptions = requestParameters ? requestParameters : {};
         routerAttributesToListRequest = toJS(routerAttributesToListRequest);
         Object.keys(routerAttributesToListRequest).forEach((key) => {
             const listOptionKey = routerAttributesToListRequest[key];

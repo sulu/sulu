@@ -91,10 +91,10 @@ class RoleAssignments extends React.Component<Props> {
             <Grid>
                 <Grid.Item colSpan={6}>
                     <ResourceMultiSelect
-                        apiOptions={{sortBy: 'name'}}
                         disabled={disabled}
                         displayProperty="name"
                         onChange={this.handleRoleChange}
+                        requestParameters={{sortBy: 'name'}}
                         resourceKey="roles"
                         values={this.selectedRoles}
                     />

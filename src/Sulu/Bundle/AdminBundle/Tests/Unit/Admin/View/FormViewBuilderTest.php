@@ -117,7 +117,7 @@ class FormViewBuilderTest extends TestCase
         ?string $backView,
         ?array $routerAttributesToBackView,
         ?bool $titleVisible,
-        ?array $apiOptions
+        ?array $requestParameters
     ) {
         $viewBuilder = (new FormViewBuilder($name, $path))
             ->setResourceKey($resourceKey)
@@ -155,8 +155,8 @@ class FormViewBuilderTest extends TestCase
             $viewBuilder->setTitleVisible($titleVisible);
         }
 
-        if ($apiOptions) {
-            $viewBuilder->setApiOptions($apiOptions);
+        if ($requestParameters) {
+            $viewBuilder->setRequestParameters($requestParameters);
         }
 
         $view = $viewBuilder->getView();
@@ -173,7 +173,7 @@ class FormViewBuilderTest extends TestCase
         $this->assertSame($backView, $view->getOption('backView'));
         $this->assertSame($routerAttributesToBackView, $view->getOption('routerAttributesToBackView'));
         $this->assertSame($titleVisible, $view->getOption('titleVisible'));
-        $this->assertSame($apiOptions, $view->getOption('apiOptions'));
+        $this->assertSame($requestParameters, $view->getOption('requestParameters'));
         $this->assertNull($view->getParent());
         $this->assertSame('sulu_admin.form', $view->getType());
     }

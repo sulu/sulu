@@ -40,6 +40,7 @@ multiple `ViewBuilder`s and are named the same):
 | setBackRoute                          | setBackView                             |
 | setAddRoute                           | setAddView                              |
 | setEditRoute                          | setEditView                             |
+| setApiOptions                         | setRequestParameters                    |
 
 The most critical change is the different signature in the `Admin` class.
 

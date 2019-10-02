@@ -138,7 +138,7 @@ test('Render in value', () => {
     )).toMatchSnapshot();
 });
 
-test('Pass apiOptions to ResourceListStore', () => {
+test('Pass requestParameters to ResourceListStore', () => {
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
         this.loading = false;
@@ -150,23 +150,23 @@ test('Pass apiOptions to ResourceListStore', () => {
         ];
     });
 
-    const apiOptions = {
+    const requestParameters = {
         flat: true,
     };
 
     mount(
         <ResourceSingleSelect
-            apiOptions={apiOptions}
             disabled={true}
             displayProperty="name"
             idProperty="id"
             onChange={jest.fn()}
+            requestParameters={requestParameters}
             resourceKey="test"
             value={1}
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', apiOptions, 'id');
+    expect(ResourceListStore).toBeCalledWith('test', requestParameters, 'id');
 });
 
 test('Trigger the change callback when the selection changes', () => {

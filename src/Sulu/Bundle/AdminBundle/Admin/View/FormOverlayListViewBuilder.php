@@ -51,9 +51,9 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
         return $this;
     }
 
-    public function setApiOptions(array $apiOptions): FormOverlayListViewBuilderInterface
+    public function setRequestParameters(array $requestParameters): FormOverlayListViewBuilderInterface
     {
-        $this->setApiOptionsToView($this->view, $apiOptions);
+        $this->setRequestParametersToView($this->view, $requestParameters);
 
         return $this;
     }

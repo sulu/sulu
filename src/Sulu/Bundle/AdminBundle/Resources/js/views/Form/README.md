@@ -4,7 +4,7 @@ should be shown in the toolbar and an instance of the `ResourceStore`, which all
 
 | Option                        | Description                                                                          |
 |-------------------------------|--------------------------------------------------------------------------------------|
-| apiOptions                    | Object that contains attributes that are passed to the `FormStore`. The attributes   |
+| requestParameters             | Object that contains attributes that are passed to the `FormStore`. The attributes   |
 |                               | will be appended to the requests sent from the `FormStore`                           |
 | backView                      | The route to which the user will be navigate when the back button is clicked.        |
 | editView                      | The optional route to which the user will be redirected after the form is saved.     |

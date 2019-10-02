@@ -169,11 +169,11 @@ class Permissions extends React.Component<Props> {
                 <h2>{this.webspaceSecurityContextGroupKey}</h2>
                 <div className={permissionsStyle.selectContainer}>
                     <ResourceMultiSelect
-                        apiOptions={{checkForPermissions: 0, locale: userStore.user.locale}}
                         disabled={this.props.disabled}
                         displayProperty="name"
                         idProperty="key"
                         onChange={this.handleWebspaceChange}
+                        requestParameters={{checkForPermissions: 0, locale: userStore.user.locale}}
                         resourceKey="webspaces"
                         values={this.selectedWebspaces}
                     />

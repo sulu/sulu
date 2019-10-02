@@ -25,9 +25,9 @@ trait FormViewBuilderTrait
         $view->setOption('formKey', $formKey);
     }
 
-    private function setApiOptionsToView(View $view, array $apiOptions): void
+    private function setRequestParametersToView(View $view, array $requestParameters): void
     {
-        $view->setOption('apiOptions', $apiOptions);
+        $view->setOption('requestParameters', $requestParameters);
     }
 
     private function setBackViewToView(View $view, string $backView): void

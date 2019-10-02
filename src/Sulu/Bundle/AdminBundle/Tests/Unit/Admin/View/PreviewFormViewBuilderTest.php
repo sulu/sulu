@@ -86,7 +86,7 @@ class PreviewFormViewBuilderTest extends TestCase
         ?string $editView,
         ?string $backView,
         ?bool $titleVisible,
-        ?array $apiOptions,
+        ?array $requestParameters,
         bool $disablePreviewWebspaceChooser
     ) {
         $viewBuilder = (new PreviewFormViewBuilder($name, $path))
@@ -121,8 +121,8 @@ class PreviewFormViewBuilderTest extends TestCase
             $viewBuilder->setTitleVisible($titleVisible);
         }
 
-        if ($apiOptions) {
-            $viewBuilder->setApiOptions($apiOptions);
+        if ($requestParameters) {
+            $viewBuilder->setRequestParameters($requestParameters);
         }
 
         if ($disablePreviewWebspaceChooser) {
@@ -142,7 +142,7 @@ class PreviewFormViewBuilderTest extends TestCase
         $this->assertSame($editView, $view->getOption('editView'));
         $this->assertSame($backView, $view->getOption('backView'));
         $this->assertSame($titleVisible, $view->getOption('titleVisible'));
-        $this->assertSame($apiOptions, $view->getOption('apiOptions'));
+        $this->assertSame($requestParameters, $view->getOption('requestParameters'));
         $this->assertNull($view->getParent());
         $this->assertSame('sulu_admin.preview_form', $view->getType());
 

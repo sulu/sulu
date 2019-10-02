@@ -10,12 +10,12 @@ import Loader from '../../components/Loader';
 
 type Props<T: string | number> = {|
     allSelectedText?: string,
-    apiOptions: Object,
     disabled: boolean,
     displayProperty: string,
     idProperty: string,
     noneSelectedText?: string,
     onChange: (values: Array<T>, valueObjects?: Array<Object>) => void,
+    requestParameters: Object,
     resourceKey: string,
     values: Array<T>,
 |};
@@ -23,9 +23,9 @@ type Props<T: string | number> = {|
 @observer
 class ResourceMultiSelect<T: string | number> extends React.Component<Props<T>> {
     static defaultProps = {
-        apiOptions: {},
         disabled: false,
         idProperty: 'id',
+        requestParameters: {},
         values: [],
     };
 
@@ -40,10 +40,10 @@ class ResourceMultiSelect<T: string | number> extends React.Component<Props<T>> 
     componentDidUpdate(prevProps: Props<T>) {
         const {
             resourceKey,
-            apiOptions,
+            requestParameters,
         } = this.props;
 
-        if (!equals(prevProps.apiOptions, apiOptions) || prevProps.resourceKey !== resourceKey) {
+        if (!equals(prevProps.requestParameters, requestParameters) || prevProps.resourceKey !== resourceKey) {
             this.createResourceListStore();
         }
     }
@@ -51,10 +51,10 @@ class ResourceMultiSelect<T: string | number> extends React.Component<Props<T>> 
     @action createResourceListStore = () => {
         const {
             resourceKey,
-            apiOptions,
+            requestParameters,
         } = this.props;
 
-        this.resourceListStore = new ResourceListStore(resourceKey, apiOptions);
+        this.resourceListStore = new ResourceListStore(resourceKey, requestParameters);
     };
 
     // TODO: Remove explicit type annotation when flow bug is fixed

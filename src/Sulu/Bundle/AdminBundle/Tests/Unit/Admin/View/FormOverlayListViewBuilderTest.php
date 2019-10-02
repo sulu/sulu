@@ -95,7 +95,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         string $addOverlayTitle,
         string $editOverlayTitle,
         string $overlaySize,
-        array $apiOptions
+        array $requestParameters
     ) {
         $route = (new FormOverlayListViewBuilder($name, $path))
             ->setResourceKey($resourceKey)
@@ -106,7 +106,7 @@ class FormOverlayListViewBuilderTest extends TestCase
             ->setAddOverlayTitle($addOverlayTitle)
             ->setEditOverlayTitle($editOverlayTitle)
             ->setOverlaySize($overlaySize)
-            ->setApiOptions($apiOptions)
+            ->setRequestParameters($requestParameters)
             ->getView();
 
         $this->assertEquals($name, $route->getName());
@@ -119,7 +119,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertEquals($addOverlayTitle, $route->getOption('addOverlayTitle'));
         $this->assertEquals($editOverlayTitle, $route->getOption('editOverlayTitle'));
         $this->assertEquals($overlaySize, $route->getOption('overlaySize'));
-        $this->assertEquals($apiOptions, $route->getOption('apiOptions'));
+        $this->assertEquals($requestParameters, $route->getOption('requestParameters'));
         $this->assertEquals('sulu_admin.form_overlay_list', $route->getType());
     }
 

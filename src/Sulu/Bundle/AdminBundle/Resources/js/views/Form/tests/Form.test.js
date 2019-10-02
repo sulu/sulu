@@ -1194,7 +1194,7 @@ test('Should save form when submitted with mapped router attributes', () => {
     });
 });
 
-test('Should save form when submitted with given apiOptions', () => {
+test('Should save form when submitted with given requestParameters', () => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve({}));
     const Form = require('../Form').default;
@@ -1215,7 +1215,7 @@ test('Should save form when submitted with given apiOptions', () => {
         options: {
             formKey: 'snippets',
             locales: [],
-            apiOptions: {apiKey: 'api-option-value'},
+            requestParameters: {apiKey: 'api-option-value'},
             toolbarActions: [],
         },
     };
@@ -1243,7 +1243,7 @@ test('Should save form when submitted with given apiOptions', () => {
     });
 });
 
-test('Should save form when submitted with mapped router attributes and given apiOptions', () => {
+test('Should save form when submitted with mapped router attributes and given requestParameters', () => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve({}));
     const Form = require('../Form').default;
@@ -1264,7 +1264,7 @@ test('Should save form when submitted with mapped router attributes and given ap
         options: {
             formKey: 'snippets',
             locales: [],
-            apiOptions: {apiKey: 'api-option-value'},
+            requestParameters: {apiKey: 'api-option-value'},
             routerAttributesToFormRequest: {'parentId': 'id', '0': 'webspace', 1: 'title'},
             toolbarActions: [],
         },
@@ -1299,7 +1299,7 @@ test('Should save form when submitted with mapped router attributes and given ap
     });
 });
 
-test('Should save form when submitted with mapped named router attributes and given apiOptions', () => {
+test('Should save form when submitted with mapped named router attributes and given requestParameters', () => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve({}));
     const Form = require('../Form').default;
@@ -1320,7 +1320,7 @@ test('Should save form when submitted with mapped named router attributes and gi
         options: {
             formKey: 'snippets',
             locales: [],
-            apiOptions: {apiKey: 'api-option-value'},
+            requestParameters: {apiKey: 'api-option-value'},
             routerAttributesToFormRequest: {'id': 'parentId'},
             toolbarActions: [],
         },

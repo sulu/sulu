@@ -38,9 +38,9 @@ class FormViewBuilder implements FormViewBuilderInterface
         return $this;
     }
 
-    public function setApiOptions(array $apiOptions): FormViewBuilderInterface
+    public function setRequestParameters(array $requestParameters): FormViewBuilderInterface
     {
-        $this->setApiOptionsToView($this->view, $apiOptions);
+        $this->setRequestParametersToView($this->view, $requestParameters);
 
         return $this;
     }

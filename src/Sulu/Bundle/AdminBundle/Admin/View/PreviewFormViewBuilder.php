@@ -45,9 +45,9 @@ class PreviewFormViewBuilder implements PreviewFormViewBuilderInterface
         return $this;
     }
 
-    public function setApiOptions(array $apiOptions): PreviewFormViewBuilderInterface
+    public function setRequestParameters(array $requestParameters): PreviewFormViewBuilderInterface
     {
-        $this->setApiOptionsToView($this->view, $apiOptions);
+        $this->setRequestParametersToView($this->view, $requestParameters);
 
         return $this;
     }

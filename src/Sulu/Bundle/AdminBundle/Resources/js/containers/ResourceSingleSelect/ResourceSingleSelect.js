@@ -10,13 +10,13 @@ import {translate} from '../../utils/Translator';
 import EditOverlay from './EditOverlay';
 
 type Props<T> = {|
-    apiOptions: Object,
     disabled: boolean,
     displayProperty: string,
     editable: boolean,
     idProperty: string,
     onChange: (value: ?T) => void,
     overlayTitle?: string,
+    requestParameters: Object,
     resourceKey: string,
     value: ?T,
 |};
@@ -24,9 +24,9 @@ type Props<T> = {|
 @observer
 class ResourceSingleSelect<T: string | number> extends React.Component<Props<T>> {
     static defaultProps = {
-        apiOptions: {},
         disabled: false,
         editable: false,
+        requestParameters: {},
     };
 
     resourceListStore: ResourceListStore;
@@ -42,12 +42,12 @@ class ResourceSingleSelect<T: string | number> extends React.Component<Props<T>>
         super(props);
 
         const {
-            apiOptions,
+            requestParameters,
             idProperty,
             resourceKey,
         } = this.props;
 
-        this.resourceListStore = new ResourceListStore(resourceKey, apiOptions, idProperty);
+        this.resourceListStore = new ResourceListStore(resourceKey, requestParameters, idProperty);
     }
 
     handleReset = () => {

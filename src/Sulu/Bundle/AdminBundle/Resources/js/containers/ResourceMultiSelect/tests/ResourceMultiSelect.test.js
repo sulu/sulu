@@ -96,7 +96,7 @@ test('Render with data', () => {
     expect(resourceMultiSelect.render()).toMatchSnapshot();
 });
 
-test('Render with data and apiOptions', () => {
+test('Render with data and requestParameters', () => {
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
         this.loading = false;
@@ -119,23 +119,23 @@ test('Render with data and apiOptions', () => {
         ];
     });
 
-    const apiOptions = {'testOption': 'testValue'};
+    const requestParameters = {'testOption': 'testValue'};
 
     const resourceMultiSelect = mount(
         <ResourceMultiSelect
-            apiOptions={apiOptions}
             displayProperty="name"
             onChange={jest.fn()}
+            requestParameters={requestParameters}
             resourceKey="test"
             values={undefined}
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', apiOptions);
+    expect(ResourceListStore).toBeCalledWith('test', requestParameters);
     expect(resourceMultiSelect.render()).toMatchSnapshot();
 });
 
-test('Render with data and apiOptions when apiOptions props changed', () => {
+test('Render with data and requestParameters when requestParameters props changed', () => {
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
         this.loading = false;
@@ -148,21 +148,21 @@ test('Render with data and apiOptions when apiOptions props changed', () => {
         ];
     });
 
-    const apiOptions1 = {};
-    const apiOptions2 = {'testOption': 'testValue'};
+    const requestParameters1 = {};
+    const requestParameters2 = {'testOption': 'testValue'};
 
     const resourceMultiSelect = mount(
         <ResourceMultiSelect
-            apiOptions={apiOptions1}
             displayProperty="name"
             onChange={jest.fn()}
+            requestParameters={requestParameters1}
             resourceKey="test"
             values={undefined}
         />
     );
 
     resourceMultiSelect.setProps({
-        apiOptions: apiOptions2,
+        requestParameters: requestParameters2,
         displayProperty: 'name',
         onChange: jest.fn(),
         resourceKey: 'test',
@@ -171,12 +171,12 @@ test('Render with data and apiOptions when apiOptions props changed', () => {
 
     // $FlowFixMe
     expect(ResourceListStore.mock.calls).toEqual([
-        ['test', apiOptions1],
-        ['test', apiOptions2],
+        ['test', requestParameters1],
+        ['test', requestParameters2],
     ]);
 });
 
-test('Render with data and apiOptions when resourceKey props changed', () => {
+test('Render with data and requestParameters when resourceKey props changed', () => {
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
         this.loading = false;
@@ -189,20 +189,20 @@ test('Render with data and apiOptions when resourceKey props changed', () => {
         ];
     });
 
-    const apiOptions = {};
+    const requestParameters = {};
 
     const resourceMultiSelect = mount(
         <ResourceMultiSelect
-            apiOptions={apiOptions}
             displayProperty="name"
             onChange={jest.fn()}
+            requestParameters={requestParameters}
             resourceKey="test1"
             values={undefined}
         />
     );
 
     resourceMultiSelect.setProps({
-        apiOptions: apiOptions,
+        requestParameters: requestParameters,
         displayProperty: 'name',
         onChange: jest.fn(),
         resourceKey: 'test2',
@@ -211,8 +211,8 @@ test('Render with data and apiOptions when resourceKey props changed', () => {
 
     // $FlowFixMe
     expect(ResourceListStore.mock.calls).toEqual([
-        ['test1', apiOptions],
-        ['test2', apiOptions],
+        ['test1', requestParameters],
+        ['test2', requestParameters],
     ]);
 });
 

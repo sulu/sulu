@@ -37,17 +37,17 @@ test('Send a request with options using the ResourceRequester', () => {
         },
     });
 
-    const apiOptions = {
+    const requestParameters = {
         page: 1,
         limit: 100,
     };
     ResourceRequester.getList.mockReturnValue(requestPromise);
 
-    const resourceListStore = new ResourceListStore('accounts', apiOptions);
+    const resourceListStore = new ResourceListStore('accounts', requestParameters);
     expect(resourceListStore.loading).toEqual(true);
 
     return requestPromise.then(() => {
-        expect(ResourceRequester.getList).toBeCalledWith('accounts', apiOptions);
+        expect(ResourceRequester.getList).toBeCalledWith('accounts', requestParameters);
         expect(resourceListStore.data).toEqual(requestResults);
         expect(resourceListStore.loading).toEqual(false);
     });

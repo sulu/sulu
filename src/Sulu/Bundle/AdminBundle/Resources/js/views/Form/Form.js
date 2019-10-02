@@ -79,7 +79,7 @@ class Form extends React.Component<Props> {
             attributes,
             route: {
                 options: {
-                    apiOptions = {},
+                    requestParameters = {},
                     formKey,
                     idQueryParameter,
                     resourceKey,
@@ -100,7 +100,11 @@ class Form extends React.Component<Props> {
             throw new Error('The route does not define the mandatory "formKey" option');
         }
 
-        const formStoreOptions = this.buildFormStoreOptions(apiOptions, attributes, routerAttributesToFormRequest);
+        const formStoreOptions = this.buildFormStoreOptions(
+            requestParameters,
+            attributes,
+            routerAttributesToFormRequest
+        );
 
         if (this.hasOwnResourceStore) {
             let locale = resourceStore.locale;
@@ -167,11 +171,11 @@ class Form extends React.Component<Props> {
     };
 
     buildFormStoreOptions(
-        apiOptions: Object,
+        requestParameters: Object,
         attributes: Object,
         routerAttributesToFormRequest: {[string | number]: string}
     ) {
-        const formStoreOptions = apiOptions ? apiOptions : {};
+        const formStoreOptions = requestParameters ? requestParameters : {};
 
         routerAttributesToFormRequest = toJS(routerAttributesToFormRequest);
         Object.keys(routerAttributesToFormRequest).forEach((key) => {
