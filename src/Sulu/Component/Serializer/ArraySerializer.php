@@ -28,6 +28,12 @@ class ArraySerializer implements ArraySerializerInterface
 
     public function serialize($data, ?SerializationContext $context = null): array
     {
+        if (!$context) {
+            $context = SerializationContext::create();
+        }
+
+        $context->setAttribute('array_serializer', true);
+
         return $this->serializer->toArray($data, $context);
     }
 }
