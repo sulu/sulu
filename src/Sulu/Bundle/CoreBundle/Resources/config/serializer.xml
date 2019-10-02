@@ -4,10 +4,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-
     <services>
-        <service id="sulu_core.array_serializer" class="Sulu\Component\Serializer\ArraySerializer">
+        <service id="sulu_core.array_serializer" class="Sulu\Component\Serializer\ArraySerializer" public="true">
             <argument type="service" id="jms_serializer"/>
         </service>
+
+        <service id="Sulu\Component\Serializer\ArraySerializerInterface" alias="sulu_core.array_serializer"/>
     </services>
 </container>
