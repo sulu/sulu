@@ -1,11 +1,16 @@
 {
     "name": "sulu/sulu",
     "type": "library",
-    "description": "Core framework that implements the functionality of the Sulu content management system",
+    "description": "Core framework that implements the functionality of the Sulu content management system.",
     "license": "MIT",
     "keywords": [
-        "core",
-        "sulu"
+        "symfony",
+        "sulu",
+        "sulucms",
+        "cms",
+        "web-application",
+        "platform",
+        "data-managment"
     ],
     "authors": [
         {
