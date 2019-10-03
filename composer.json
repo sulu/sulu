@@ -1,7 +1,7 @@
 {
     "name": "sulu/sulu",
     "type": "library",
-    "description": "Sulu core distribution",
+    "description": "Core framework that implements the functionality of the Sulu content management system",
     "license": "MIT",
     "keywords": [
         "core",
