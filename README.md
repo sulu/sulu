@@ -13,9 +13,6 @@
     <a href="https://github.com/sulu/sulu/releases" target="_blank">
         <img src="https://img.shields.io/github/tag/sulu/sulu.svg" alt="GitHub tag (latest SemVer)">
     </a>
-    <a href="https://github.com/sulu/sulu/releases" target="_blank">
-        <img src="https://img.shields.io/github/tag-pre/sulu/sulu.svg" alt="GitHub tag (latest pre-release)">
-    </a>
     <a href="https://travis-ci.org/sulu/sulu" target="_blank">
         <img src="https://img.shields.io/travis/sulu/sulu.svg?label=travis" alt="Travis build">
     </a>
