@@ -69,7 +69,7 @@ class ExternalLinkOverlay extends React.Component<Props> {
             return;
         }
 
-        if (url && url.startsWith('mailto:')) {
+        if (url.startsWith('mailto:')) {
             onTargetChange('_self');
         }
 
