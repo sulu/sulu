@@ -662,7 +662,6 @@ class CollectionManager implements CollectionManagerInterface
                     'url' => $formatUrl,
                     'title' => $title,
                 ];
-                break;
             }
         }
 
