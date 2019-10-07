@@ -70,32 +70,32 @@ class Account implements AccountInterface
     private $creator;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $externalId;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $number;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $corporation;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $uid;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $registerNumber;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $placeOfJurisdiction;
 
