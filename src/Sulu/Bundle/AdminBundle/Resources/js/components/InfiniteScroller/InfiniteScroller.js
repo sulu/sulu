@@ -120,7 +120,7 @@ export default class InfiniteScroller extends React.PureComponent<Props> {
 
         if (loading) {
             indicator = <Loader />;
-        } else if (currentPage === totalPages && !loading) {
+        } else if (currentPage === totalPages) {
             indicator = translate('sulu_admin.reached_end_of_list');
         }
 

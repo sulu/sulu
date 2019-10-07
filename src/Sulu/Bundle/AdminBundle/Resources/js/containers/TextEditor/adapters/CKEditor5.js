@@ -20,7 +20,7 @@ export default class CKEditor5 extends React.Component<TextEditorProps> {
             throw new Error('The passed "formats" must be an array of strings');
         }
 
-        const formats = formatOptionValues && formatOptionValues.length > 0
+        const formats = formatOptionValues.length
             ? formatOptionValues.map((format) => {
                 if (typeof format.name !== 'string') {
                     throw new Error('The name property of the passed "formats" must be strings!');
