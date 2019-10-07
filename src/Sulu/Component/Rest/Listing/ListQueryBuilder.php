@@ -215,7 +215,7 @@ class ListQueryBuilder
 
         $fieldsWhere = array_merge($fieldsWhere, $this->searchTextFields, $this->searchNumberFields);
 
-        if (null != $fieldsWhere && count($fieldsWhere) >= 0) {
+        if (null != $fieldsWhere && count($fieldsWhere)) {
             foreach ($fieldsWhere as $field) {
                 $this->performSelectFromField($field, $prefix);
             }
