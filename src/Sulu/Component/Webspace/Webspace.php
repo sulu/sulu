@@ -583,7 +583,7 @@ class Webspace implements ArrayableInterface
         $res['navigation'] = [];
         $res['navigation']['contexts'] = [];
         if ($navigation = $this->getNavigation()) {
-            foreach ($this->getNavigation()->getContexts() as $context) {
+            foreach ($navigation->getContexts() as $context) {
                 $res['navigation']['contexts'][] = [
                     'key' => $context->getKey(),
                     'metadata' => $context->getMetadata(),
