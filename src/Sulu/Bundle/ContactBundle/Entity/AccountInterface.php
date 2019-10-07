@@ -26,11 +26,11 @@ interface AccountInterface extends AuditableInterface
 
     public function getName(): string;
 
-    public function setExternalId(string $externalId): self;
+    public function setExternalId(?string $externalId): self;
 
     public function getExternalId(): ?string;
 
-    public function setNumber(string $number): self;
+    public function setNumber(?string $number): self;
 
     public function getNumber(): ?string;
 
@@ -38,15 +38,15 @@ interface AccountInterface extends AuditableInterface
 
     public function getCorporation(): ?string;
 
-    public function setUid(string $uid): self;
+    public function setUid(?string $uid): self;
 
     public function getUid(): ?string;
 
-    public function setRegisterNumber(string $registerNumber): self;
+    public function setRegisterNumber(?string $registerNumber): self;
 
     public function getRegisterNumber(): ?string;
 
-    public function setPlaceOfJurisdiction(string $placeOfJurisdiction): self;
+    public function setPlaceOfJurisdiction(?string $placeOfJurisdiction): self;
 
     public function getPlaceOfJurisdiction(): ?string;
 
@@ -95,6 +95,10 @@ interface AccountInterface extends AuditableInterface
     public function addUrl(Url $url): self;
 
     public function removeUrl(Url $url): self;
+
+    public function getNote(): ?string;
+
+    public function setNote(?string $note): self;
 
     /**
      * @return Collection|Url[]
