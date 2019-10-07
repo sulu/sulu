@@ -16,7 +16,7 @@ export default class RatioNormalizer implements Normalizer {
 
     normalize(data: SelectionData): SelectionData {
         let height = data.height;
-        let width = data.width;
+        let width;
         const calculatedWidth = height * (this.minWidth / this.minHeight);
 
         if (calculatedWidth > this.containerWidth) {
