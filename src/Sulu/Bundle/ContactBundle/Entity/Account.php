@@ -100,32 +100,32 @@ class Account implements AccountInterface
     private $placeOfJurisdiction;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $mainEmail;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $mainPhone;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $mainFax;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $mainUrl;
 
     /**
-     * @var ContactInterface
+     * @var ContactInterface|null
      */
     private $mainContact;
 
     /**
-     * @var MediaInterface
+     * @var MediaInterface|null
      */
     protected $logo;
 
@@ -136,7 +136,7 @@ class Account implements AccountInterface
     protected $children;
 
     /**
-     * @var AccountInterface
+     * @var AccountInterface|null
      */
     protected $parent;
 
