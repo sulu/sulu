@@ -19,6 +19,7 @@ const DEFAULT_USER_SETTINGS_KEY = 'list';
 const DEFAULT_LIMIT = 10;
 
 type Props = ViewProps & {
+    locales?: Array<string>,
     locale?: IObservableValue<string>,
     onItemAdd?: (parentId: ?string | number) => void,
     onItemClick?: (itemId: string | number) => void,
