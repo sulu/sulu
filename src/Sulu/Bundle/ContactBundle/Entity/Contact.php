@@ -176,22 +176,22 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $gender;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $mainEmail;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $mainPhone;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $mainFax;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $mainUrl;
 
@@ -226,7 +226,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $bankAccounts;
 
     /**
-     * @var MediaInterface
+     * @var MediaInterface|null
      */
     protected $avatar;
 
