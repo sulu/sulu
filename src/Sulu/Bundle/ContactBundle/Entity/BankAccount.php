@@ -20,12 +20,12 @@ use JMS\Serializer\Annotation\Exclude;
 class BankAccount
 {
     /**
-     * @var string
+     * @var string|null
      */
     private $bankName;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $bic;
 
@@ -67,7 +67,7 @@ class BankAccount
     /**
      * Set bic.
      *
-     * @param string $bic
+     * @param string|null $bic
      *
      * @return BankAccount
      */
@@ -81,7 +81,7 @@ class BankAccount
     /**
      * Get bic.
      *
-     * @return string
+     * @return string|null
      */
     public function getBic()
     {
@@ -183,7 +183,7 @@ class BankAccount
     /**
      * Set bankName.
      *
-     * @param string $bankName
+     * @param string|null $bankName
      *
      * @return BankAccount
      */
@@ -197,7 +197,7 @@ class BankAccount
     /**
      * Get bankName.
      *
-     * @return string
+     * @return string|null
      */
     public function getBankName()
     {
