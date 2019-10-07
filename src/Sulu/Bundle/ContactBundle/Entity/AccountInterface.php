@@ -123,15 +123,6 @@ interface AccountInterface extends AuditableInterface
      */
     public function getEmails(): Collection;
 
-    public function addNote(Note $note): self;
-
-    public function removeNote(Note $note): self;
-
-    /**
-     * @return Collection|Note[]
-     */
-    public function getNotes(): Collection;
-
     /**
      * @return Collection|AccountInterface[]
      */
