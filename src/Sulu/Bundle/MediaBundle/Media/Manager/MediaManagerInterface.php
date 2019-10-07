@@ -73,7 +73,7 @@ interface MediaManagerInterface
      *
      * @param UploadedFile $uploadedFile
      * @param array $data The data of the category to save
-     * @param int $userId The id of the user, who is doing this change
+     * @param int|null $userId The id of the user, who is doing this change
      *
      * @return Media
      */
