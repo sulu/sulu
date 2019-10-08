@@ -1,35 +1,75 @@
-# Sulu
+<br/>
+<p align="center">
+    <a href="https://sulu.io/" target="_blank">
+        <img width="50%" src="https://sulu.io/website/images/sulu.svg" alt="Sulu logo">
+    </a>
+</p>
 
-[![GitHub license](https://img.shields.io/github/license/sulu/sulu.svg)](https://github.com/sulu/sulu/blob/develop/LICENSE)
-[![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/sulu/sulu.svg)](https://github.com/sulu/sulu/releases)
-[![GitHub tag (latest pre-release)](https://img.shields.io/github/tag-pre/sulu/sulu.svg)](https://github.com/sulu/sulu/releases)
-[![Travis](https://travis-ci.org/sulu/sulu.png?branch=develop)](https://travis-ci.org/sulu/sulu)
-[![CircleCI](https://circleci.com/gh/sulu/sulu/tree/develop.svg?style=shield)](https://circleci.com/gh/sulu/sulu/tree/develop)
-[![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/sulu/sulu.svg)](https://github.com/sulu/sulu/graphs/contributors)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sulu/sulu/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/sulu/sulu/?branch=develop)
-[![Packagist](https://img.shields.io/packagist/dt/sulu/sulu.svg)](https://packagist.org/packages/sulu/sulu)
+<br/>
+<p align="center">
+    <a href="https://github.com/sulu/sulu/blob/master/LICENSE" target="_blank">
+        <img src="https://img.shields.io/github/license/sulu/sulu.svg" alt="GitHub license">
+    </a>
+    <a href="https://github.com/sulu/sulu/releases" target="_blank">
+        <img src="https://img.shields.io/github/tag/sulu/sulu.svg" alt="GitHub tag (latest SemVer)">
+    </a>
+    <a href="https://travis-ci.org/sulu/sulu" target="_blank">
+        <img src="https://img.shields.io/travis/sulu/sulu.svg?label=travis" alt="Travis build">
+    </a>
+    <a href="https://circleci.com/gh/sulu/sulu/tree/master" target="_blank">
+        <img src="https://circleci.com/gh/sulu/sulu/tree/master.svg?style=shield" alt="CircleCI build">
+    </a>
+    <a href="https://github.com/sulu/sulu/commits/master" target="_blank">
+        <img src="https://img.shields.io/github/commit-activity/y/sulu/sulu.svg" alt="GitHub commit activity">
+    </a>
+    <a href="https://github.com/sulu/sulu/graphs/contributors" target="_blank">
+        <img src="https://img.shields.io/github/contributors-anon/sulu/sulu.svg" alt="GitHub contributors">
+    </a>
+    <a href="https://packagist.org/packages/sulu/sulu" target="_blank">
+        <img src="https://img.shields.io/packagist/dt/sulu/sulu.svg" alt="Packagist downloads">
+    </a>
+</p>
+<br/>
 
-This package contains the main stack for the
-[Sulu Content Management Framework](https://github.com/sulu/sulu-minimal) (CMF) licensed under the [MIT License](LICENSE).
+[Sulu](https://sulu.io/) is a highly extensible open-source **PHP content management system based** on the [Symfony](https://symfony.com/) framework. Sulu is developed to deliver robust **multi-lingual and multi-portal websites** while providing an **intuitive and extensible administration interface** to manage the full content lifecycle. 
 
-**Although Sulu is stable and already used in production it is still under
-heavy development. Therefore we can not guarantee full backwards compatibility
-at the current stage.**
+Have a look at the official [Sulu website](https://sulu.io/) for a comprehensive list of Sulus features, core values and use cases. 
 
-## Installation
+<br/>
+<p align="center">
+    <img width="80%" src="https://sulu.io/uploads/media/800x@2x/07/167-ezgif.gif?v=2" alt="Sulu Slideshow">
+</p>
+<br/>
 
-Have a look at the [documentation](http://docs.sulu.io/en/latest/book/getting-started.html) for starting a new sulu based project.
+This repository contains the **core framework of the Sulu content management system**. The framework implements the functionality that is built into the Sulu content management system and therefore is a dependency of all Sulu projects. 
 
-## Features
+If you want to **start a new Sulu project**, you might be interested in the [sulu/skeleton](https://github.com/sulu/skeleton) template repository. If you are planning to **extend your existing Sulu project**, visit the [Sulu organization](https://github.com/sulu) on GitHub for a complete list of official Sulu bundles.
 
-* Multiple webspaces and portals
-* Hierarchical content management
-* Media management
-* Tags and Categorization
-* Customer Relationship Manager
-* REST API
 
-## Requirements
+## 🚀&nbsp; Installation and Documentation
 
-* Symfony: >= 2.8.*
-* See also the require section of [composer.json](https://github.com/sulu/sulu/blob/develop/composer.json)
+The [sulu/skeleton](https://github.com/sulu/skeleton) repository provides a **pre-configured project template** to quick-start your development. Visit the official [Sulu documentation](http://docs.sulu.io/en/latest/book/getting-started.html) to find out how to use the project template for starting your own Sulu project.
+
+
+## ❤️&nbsp; Community and Contributions
+
+The Sulu content management system is a **community-driven open source project** backed by various partner companies. We are committed to a fully transparent development process and **highly appreciate any contributions**. Whether you are helping us fixing bugs, proposing new feature, improving our documentation or spreading the word - **we would love to have you as part of the Sulu community**.
+
+
+## 📫&nbsp; Have a question? Want to chat? Run into a problem?
+
+We are happy to welcome you in our official [Slack channel](https://sulu.io/services-and-support)! Obviously you can always **reach out to us directly** via the [Sulu twitter account](https://twitter.com/sulu) or post your question on [StackOverflow](https://stackoverflow.com/questions/tagged/sulu) with the official `sulu` tag.
+
+
+## 🤝&nbsp; Found a bug? Missing a specific feature?
+
+Feel free to **file a new issue** with a respective title and description on the the [sulu/sulu](https://github.com/sulu/sulu/issues) repository. If you already found a solution to your problem, **we would love to review your pull request**! Have a look at our [contribution guidelines](http://docs.sulu.io/en/latest/developer/contributing/) to find out about our coding standards.
+
+
+## ✅&nbsp; Requirements
+
+Sulu requires a **PHP version higher or equal to 7.2** and is compatible with every **Symfony version starting from 4.3**. Have a look at the `require` section in the [composer.json](https://github.com/sulu/sulu/blob/master/composer.json) of the [sulu/sulu](https://github.com/sulu/sulu) core framework to find an **up-to-date list of the requirements** of Sulu content management system.
+
+
+## 📘&nbsp; License
+The Sulu content management system is released under the under terms of the [MIT License](LICENSE).

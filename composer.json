@@ -1,18 +1,29 @@
 {
     "name": "sulu/sulu",
-    "type": "library",
-    "description": "Sulu core distribution",
     "license": "MIT",
+    "type": "library",
+    "description": "Core framework that implements the functionality of the Sulu content management system.",
+    "homepage": "https://sulu.io/",
     "keywords": [
-        "core",
-        "sulu"
+        "symfony",
+        "sulu",
+        "sulucms",
+        "cms",
+        "web-application",
+        "platform",
+        "data-managment"
     ],
     "authors": [
         {
             "name": "Sulu Community",
-            "homepage": "https://github.com/sulu-io/sulu/contributors"
+            "homepage": "https://github.com/sulu/sulu/graphs/contributors"
         }
     ],
+    "support": {
+        "issues": "https://github.com/sulu/skeleton/issues",
+        "source": "https://github.com/sulu/skeleton",
+        "docs": "http://docs.sulu.io/"
+    },
     "require": {
         "php": "^7.2",
         "aferrandini/urlizer": "^1.0",
