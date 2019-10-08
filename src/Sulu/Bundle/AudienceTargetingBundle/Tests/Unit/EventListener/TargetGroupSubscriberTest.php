@@ -424,7 +424,7 @@ class TargetGroupSubscriberTest extends TestCase
         $response->headers->set('Content-Type', 'text/html');
         $event->getResponse()->willReturn($response);
 
-        $this->twig->render('SuluAudienceTargetingBundle:Template:hit-script.html.twig', [
+        $this->twig->render('@SuluAudienceTargeting/Template/hit-script.html.twig', [
             'url' => $targetGroupHitUrl,
             'urlHeader' => $forwardedUrlHeader,
             'refererHeader' => $forwardedRefererHeader,
