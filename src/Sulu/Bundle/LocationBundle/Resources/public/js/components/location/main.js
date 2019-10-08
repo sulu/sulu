@@ -280,6 +280,10 @@ define([], function() {
          * Load the data from the DOM element
          */
         loadData: function () {
+            if (this.options.mapProvider) {
+                dataDefaults.mapProvider = this.options.mapProvider;
+            }
+
             this.data = this.sandbox.util.extend(true, {}, dataDefaults, this.sandbox.dom.data(this.$el, 'location'));
             this.formData = this.data;
         },
