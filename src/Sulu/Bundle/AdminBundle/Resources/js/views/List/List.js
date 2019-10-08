@@ -58,9 +58,11 @@ class List extends React.Component<Props> {
     @computed get locales() {
         const {
             locales: propsLocales,
-            route: {
-                options: {
-                    locales: routeLocales,
+            router: {
+                route: {
+                    options: {
+                        locales: routeLocales,
+                    },
                 },
             },
         } = this.props;
