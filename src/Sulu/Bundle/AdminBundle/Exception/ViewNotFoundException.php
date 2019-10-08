@@ -12,24 +12,24 @@
 namespace Sulu\Bundle\AdminBundle\Exception;
 
 /**
- * An instance of this exception signals that no route with given name was found.
+ * An instance of this exception signals that no view with given name was found.
  */
 class ViewNotFoundException extends \Exception
 {
     /**
      * @var string
      */
-    private $route;
+    private $view;
 
-    public function __construct(string $route)
+    public function __construct(string $view)
     {
-        parent::__construct(sprintf('The route with the name "%s" does not exist.', $route));
+        parent::__construct(sprintf('The view with the name "%s" does not exist.', $view));
 
-        $this->route = $route;
+        $this->view = $view;
     }
 
-    public function getRoute(): string
+    public function getView(): string
     {
-        return $this->route;
+        return $this->view;
     }
 }
