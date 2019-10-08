@@ -13,7 +13,6 @@ namespace Sulu\Bundle\TestBundle\Testing;
 
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Component\BrowserKit\Client;
 
 trait CreateClientTrait
 {
