@@ -22,9 +22,6 @@ use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
  */
 class ChildrenCollectionHandler implements SubscribingHandlerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribingMethods()
     {
         return [
@@ -43,8 +40,12 @@ class ChildrenCollectionHandler implements SubscribingHandlerInterface
         array $type,
         Context $context
     ) {
-        $array = $childrenCollection->toArray();
+        $type['name'] = 'array';
 
-        return $context->getNavigator()->accept($array);
+        $context->stopVisiting($childrenCollection);
+        $result = $visitor->visitArray($childrenCollection->toArray(), $type);
+        $context->startVisiting($childrenCollection);
+
+        return $result;
     }
 }

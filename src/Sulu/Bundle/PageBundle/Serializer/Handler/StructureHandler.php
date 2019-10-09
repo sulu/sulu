@@ -50,9 +50,13 @@ class StructureHandler implements SubscribingHandlerInterface
         array $type,
         Context $context
     ) {
-        $array = $structure->toArray();
+        $type['name'] = 'array';
 
-        return $context->getNavigator()->accept($array);
+        $context->stopVisiting($structure);
+        $result = $visitor->visitArray($structure->toArray(), $type);
+        $context->startVisiting($structure);
+
+        return $result;
     }
 
     public function doDeserialize(

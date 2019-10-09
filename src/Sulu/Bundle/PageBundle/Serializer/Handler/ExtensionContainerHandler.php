@@ -47,7 +47,13 @@ class ExtensionContainerHandler implements SubscribingHandlerInterface
         array $type,
         Context $context
     ) {
-        return $context->getNavigator()->accept($container->toArray());
+        $type['name'] = 'array';
+
+        $context->stopVisiting($container);
+        $result = $visitor->visitArray($container->toArray(), $type);
+        $context->startVisiting($container);
+
+        return $result;
     }
 
     public function doDeserialize(
