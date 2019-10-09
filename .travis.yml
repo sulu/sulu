@@ -21,6 +21,8 @@ matrix:
     - php: 5.5
       services:
         - mysql
+      env:
+        - ENABLE_SWAP=true
     - php: 7.0
       env:
         - COMPOSER_FLAGS="--prefer-lowest --prefer-dist --no-interaction"
@@ -53,6 +55,14 @@ matrix:
 #  fast_finish: true # do not wait for allowed failures, as they do not affect the build.
 
 before_script:
+  - | # enable swap
+    if [[ $ENABLE_SWAP == 'true' ]]; then
+        sudo fallocate -l 4G /swapfile
+        sudo chmod 600 /swapfile
+        sudo mkswap /swapfile
+        sudo swapon /swapfile
+        sudo sysctl vm.swappiness=10
+    fi
   - if [ ! -d downloads ]; then mkdir downloads; fi
   - |
     if [[ $SYMFONY__PHPCR__TRANSPORT = jackrabbit ]]; then 
