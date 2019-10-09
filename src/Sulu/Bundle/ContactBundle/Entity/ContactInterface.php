@@ -412,7 +412,7 @@ interface ContactInterface
     /**
      * Set main email.
      *
-     * @param string $mainEmail
+     * @param string|null $mainEmail
      *
      * @return ContactInterface
      */
@@ -421,14 +421,14 @@ interface ContactInterface
     /**
      * Get main email.
      *
-     * @return string
+     * @return string|null
      */
     public function getMainEmail();
 
     /**
      * Set main phone.
      *
-     * @param string $mainPhone
+     * @param string|null $mainPhone
      *
      * @return ContactInterface
      */
@@ -437,14 +437,14 @@ interface ContactInterface
     /**
      * Get main phone.
      *
-     * @return string
+     * @return string|null
      */
     public function getMainPhone();
 
     /**
      * Set main fax.
      *
-     * @param string $mainFax
+     * @param string|null $mainFax
      *
      * @return ContactInterface
      */
@@ -453,14 +453,14 @@ interface ContactInterface
     /**
      * Get main fax.
      *
-     * @return string
+     * @return string|null
      */
     public function getMainFax();
 
     /**
      * Set main url.
      *
-     * @param string $mainUrl
+     * @param string|null $mainUrl
      *
      * @return ContactInterface
      */
@@ -469,7 +469,7 @@ interface ContactInterface
     /**
      * Get main url.
      *
-     * @return string
+     * @return string|null
      */
     public function getMainUrl();
 
@@ -534,14 +534,14 @@ interface ContactInterface
     /**
      * Get the contacts avatar.
      *
-     * @return MediaInterface
+     * @return MediaInterface|null
      */
     public function getAvatar();
 
     /**
      * Sets the avatar for the contact.
      *
-     * @param MediaInterface $avatar
+     * @param MediaInterface|null $avatar
      */
     public function setAvatar($avatar);
 

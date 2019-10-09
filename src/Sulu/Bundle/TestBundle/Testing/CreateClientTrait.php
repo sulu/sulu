@@ -13,12 +13,11 @@ namespace Sulu\Bundle\TestBundle\Testing;
 
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Component\BrowserKit\Client;
 
 trait CreateClientTrait
 {
     /**
-     * @return Client|KernelBrowser
+     * @return KernelBrowser
      */
     protected static function createAuthenticatedClient(array $options = [], array $server = [])
     {
@@ -35,7 +34,7 @@ trait CreateClientTrait
     }
 
     /**
-     * @return Client|KernelBrowser
+     * @return KernelBrowser
      */
     protected static function createAuthenticatedWebsiteClient(array $options = [], array $server = [])
     {
@@ -46,7 +45,7 @@ trait CreateClientTrait
     }
 
     /**
-     * @return Client|KernelBrowser
+     * @return KernelBrowser
      */
     protected static function createWebsiteClient(array $options = [], array $server = [])
     {

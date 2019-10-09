@@ -85,7 +85,7 @@ class Webspace implements ArrayableInterface
     /**
      * The security system for this webspace.
      *
-     * @var Security
+     * @var Security|null
      */
     private $security;
 
@@ -383,7 +383,7 @@ class Webspace implements ArrayableInterface
     /**
      * Sets the security system.
      *
-     * @param Security $security
+     * @param Security|null $security
      */
     public function setSecurity($security)
     {
@@ -393,7 +393,7 @@ class Webspace implements ArrayableInterface
     /**
      * Returns the security system.
      *
-     * @return Security
+     * @return Security|null
      */
     public function getSecurity()
     {
