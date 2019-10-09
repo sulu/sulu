@@ -70,62 +70,62 @@ class Account implements AccountInterface
     private $creator;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $externalId;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $number;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $corporation;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $uid;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $registerNumber;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $placeOfJurisdiction;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $mainEmail;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $mainPhone;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $mainFax;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $mainUrl;
 
     /**
-     * @var ContactInterface
+     * @var ContactInterface|null
      */
     private $mainContact;
 
     /**
-     * @var MediaInterface
+     * @var MediaInterface|null
      */
     protected $logo;
 
@@ -136,7 +136,7 @@ class Account implements AccountInterface
     protected $children;
 
     /**
-     * @var AccountInterface
+     * @var AccountInterface|null
      */
     protected $parent;
 

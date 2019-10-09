@@ -47,7 +47,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     protected $username;
 
     /**
-     * @var string
+     * @var string|null
      * @Expose
      * @Groups({"fullUser", "profile"})
      */
@@ -71,13 +71,13 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     protected $salt;
 
     /**
-     * @var string
+     * @var string|null
      * @Expose
      */
     protected $privateKey;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $apiKey;
 
@@ -94,27 +94,27 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     protected $enabled = true;
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      */
     protected $lastLogin;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $confirmationKey;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $passwordResetToken;
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      */
     private $passwordResetTokenExpiresAt;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $passwordResetTokenEmailsSent;
 
@@ -266,7 +266,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Set privateKey.
      *
-     * @param string $privateKey
+     * @param string|null $privateKey
      *
      * @return self
      */
@@ -280,7 +280,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Get privateKey.
      *
-     * @return string
+     * @return string|null
      */
     public function getPrivateKey()
     {
@@ -332,7 +332,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Set apiKey.
      *
-     * @param string $apiKey
+     * @param string|null $apiKey
      *
      * @return self
      */
@@ -346,7 +346,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Get apiKey.
      *
-     * @return string
+     * @return string|null
      */
     public function getApiKey()
     {
@@ -400,7 +400,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Set lastLogin.
      *
-     * @param \DateTime $lastLogin
+     * @param \DateTime|null $lastLogin
      *
      * @return self
      */
@@ -414,7 +414,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Get lastLogin.
      *
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getLastLogin()
     {
@@ -424,7 +424,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Set confirmationKey.
      *
-     * @param string $confirmationKey
+     * @param string|null $confirmationKey
      *
      * @return self
      */
@@ -438,7 +438,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Get confirmationKey.
      *
-     * @return string
+     * @return string|null
      */
     public function getConfirmationKey()
     {
@@ -448,7 +448,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Set passwordResetToken.
      *
-     * @param string $passwordResetToken
+     * @param string|null $passwordResetToken
      *
      * @return self
      */
@@ -462,7 +462,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Get passwordResetToken.
      *
-     * @return string
+     * @return string|null
      */
     public function getPasswordResetToken()
     {
@@ -472,7 +472,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Set email.
      *
-     * @param string $email
+     * @param string|null $email
      *
      * @return self
      */
@@ -486,7 +486,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Get email.
      *
-     * @return string
+     * @return string|null
      */
     public function getEmail()
     {
@@ -496,7 +496,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Set tokenExpiresAt.
      *
-     * @param \DateTime $passwordResetTokenExpiresAt
+     * @param \DateTime|null $passwordResetTokenExpiresAt
      *
      * @return self
      */
@@ -510,7 +510,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Get passwordResetTokenExpiresAt.
      *
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getPasswordResetTokenExpiresAt()
     {
@@ -520,7 +520,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Set passwordResetTokenEmailsSent.
      *
-     * @param int $passwordResetTokenEmailsSent
+     * @param int|null $passwordResetTokenEmailsSent
      *
      * @return self
      */
@@ -534,7 +534,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Get passwordResetTokenEmailsSent.
      *
-     * @return int
+     * @return int|null
      */
     public function getPasswordResetTokenEmailsSent()
     {

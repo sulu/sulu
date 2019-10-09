@@ -25,42 +25,42 @@ use JMS\Serializer\Annotation\Groups;
 class Address
 {
     /**
-     * @var string
+     * @var string|null
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $street;
 
     /**
-     * @var string
+     * @var string|null
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $number;
 
     /**
-     * @var string
+     * @var string|null
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $addition;
 
     /**
-     * @var string
+     * @var string|null
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $zip;
 
     /**
-     * @var string
+     * @var string|null
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $city;
 
     /**
-     * @var string
+     * @var string|null
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -81,7 +81,7 @@ class Address
     private $addressType;
 
     /**
-     * @var string
+     * @var string|null
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -109,21 +109,21 @@ class Address
     private $billingAddress;
 
     /**
-     * @var string
+     * @var string|null
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $postboxNumber;
 
     /**
-     * @var string
+     * @var string|null
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $postboxPostcode;
 
     /**
-     * @var string
+     * @var string|null
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -140,28 +140,28 @@ class Address
     private $accountAddresses;
 
     /**
-     * @var string
+     * @var string|null
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $note;
 
     /**
-     * @var string
+     * @var string|null
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $title;
 
     /**
-     * @var float
+     * @var float|null
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
     private $latitude;
 
     /**
-     * @var float
+     * @var float|null
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -179,7 +179,7 @@ class Address
     /**
      * Set street.
      *
-     * @param string $street
+     * @param string|null $street
      *
      * @return Address
      */
@@ -193,7 +193,7 @@ class Address
     /**
      * Get street.
      *
-     * @return string
+     * @return string|null
      */
     public function getStreet()
     {
@@ -203,7 +203,7 @@ class Address
     /**
      * Set number.
      *
-     * @param string $number
+     * @param string|null $number
      *
      * @return Address
      */
@@ -217,7 +217,7 @@ class Address
     /**
      * Get number.
      *
-     * @return string
+     * @return string|null
      */
     public function getNumber()
     {
@@ -227,7 +227,7 @@ class Address
     /**
      * Set addition.
      *
-     * @param string $addition
+     * @param string|null $addition
      *
      * @return Address
      */
@@ -241,7 +241,7 @@ class Address
     /**
      * Get addition.
      *
-     * @return string
+     * @return string|null
      */
     public function getAddition()
     {
@@ -251,7 +251,7 @@ class Address
     /**
      * Set zip.
      *
-     * @param string $zip
+     * @param string|null $zip
      *
      * @return Address
      */
@@ -265,7 +265,7 @@ class Address
     /**
      * Get zip.
      *
-     * @return string
+     * @return string|null
      */
     public function getZip()
     {
@@ -275,7 +275,7 @@ class Address
     /**
      * Set city.
      *
-     * @param string $city
+     * @param string|null $city
      *
      * @return Address
      */
@@ -289,7 +289,7 @@ class Address
     /**
      * Get city.
      *
-     * @return string
+     * @return string|null
      */
     public function getCity()
     {
@@ -299,7 +299,7 @@ class Address
     /**
      * Set state.
      *
-     * @param string $state
+     * @param string|null $state
      *
      * @return Address
      */
@@ -313,7 +313,7 @@ class Address
     /**
      * Get state.
      *
-     * @return string
+     * @return string|null
      */
     public function getState()
     {
@@ -462,7 +462,7 @@ class Address
     /**
      * Set postboxNumber.
      *
-     * @param string $postboxNumber
+     * @param string|null $postboxNumber
      *
      * @return Address
      */
@@ -476,7 +476,7 @@ class Address
     /**
      * Get postboxNumber.
      *
-     * @return string
+     * @return string|null
      */
     public function getPostboxNumber()
     {
@@ -486,7 +486,7 @@ class Address
     /**
      * Set postboxPostcode.
      *
-     * @param string $postboxPostcode
+     * @param string|null $postboxPostcode
      *
      * @return Address
      */
@@ -500,7 +500,7 @@ class Address
     /**
      * Get postboxPostcode.
      *
-     * @return string
+     * @return string|null
      */
     public function getPostboxPostcode()
     {
@@ -510,7 +510,7 @@ class Address
     /**
      * Set postboxCity.
      *
-     * @param string $postboxCity
+     * @param string|null $postboxCity
      *
      * @return Address
      */
@@ -524,7 +524,7 @@ class Address
     /**
      * Get postboxCity.
      *
-     * @return string
+     * @return string|null
      */
     public function getPostboxCity()
     {
@@ -618,7 +618,7 @@ class Address
     /**
      * Set note.
      *
-     * @param string $note
+     * @param string|null $note
      *
      * @return Address
      */
@@ -632,7 +632,7 @@ class Address
     /**
      * Get note.
      *
-     * @return string
+     * @return string|null
      */
     public function getNote()
     {
@@ -642,7 +642,7 @@ class Address
     /**
      * Set title.
      *
-     * @param string $title
+     * @param string|null $title
      *
      * @return Address
      */
@@ -656,7 +656,7 @@ class Address
     /**
      * Get title.
      *
-     * @return string
+     * @return string|null
      */
     public function getTitle()
     {
@@ -666,7 +666,7 @@ class Address
     /**
      * Returns latitude.
      *
-     * @return float
+     * @return float|null
      */
     public function getLatitude()
     {
@@ -676,7 +676,7 @@ class Address
     /**
      * Set latitude.
      *
-     * @param float $latitude
+     * @param float|null $latitude
      *
      * @return Address
      */
@@ -690,7 +690,7 @@ class Address
     /**
      * Returns longitude.
      *
-     * @return float
+     * @return float|null
      */
     public function getLongitude()
     {
@@ -700,7 +700,7 @@ class Address
     /**
      * Set longitude.
      *
-     * @param float $longitude
+     * @param float|null $longitude
      *
      * @return Address
      */
