@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
-use DateTime;
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
@@ -350,29 +349,6 @@ class MediaControllerTest extends SuluTestCase
     /**
      * Test Media DownloadCounter.
      */
-    public function testResponseHeader()
-    {
-        $media = $this->createMedia('photo');
-        $date = new DateTime();
-        $date->modify('+1 month');
-        $client = $this->createAuthenticatedClient();
-        $client->request(
-            'GET',
-            '/uploads/media/sulu-50x50/1/' . $media->getId() . '-photo.jpg'
-        );
-
-        $response = $client->getResponse();
-        $this->assertHttpStatusCode(200, $response);
-
-        $this->assertEquals(
-            $date->format('Y-m-d'),
-            $response->getExpires()->format('Y-m-d')
-        );
-    }
-
-    /**
-     * Test Media DownloadCounter.
-     */
     public function test404ResponseHeader()
     {
         $client = $this->createAuthenticatedClient();
@@ -381,7 +357,9 @@ class MediaControllerTest extends SuluTestCase
             '/uploads/media/50x50/1/0-photo.jpg'
         );
         $this->assertFalse($client->getResponse()->isCacheable());
-        $this->assertEmpty($client->getResponse()->getExpires());
+        $expiresDate = new \DateTime($client->getResponse()->headers->get('Expires'));
+        $expiresDate->modify('+1 second');
+        $this->assertGreaterThanOrEqual(new \DateTime(), $expiresDate);
     }
 
     /**
