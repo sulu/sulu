@@ -1328,6 +1328,23 @@ class AccountControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(204, $client->getResponse());
     }
 
+    public function testDeleteParentById()
+    {
+        $parentAccount = $this->createAccount('Parent Company');
+        $childAccount = $this->createAccount('Company', $parentAccount);
+        $this->em->flush();
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('DELETE', '/api/accounts/' . $parentAccount->getId());
+        $this->assertHttpStatusCode(409, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals($parentAccount->getId(), $response->id);
+        $this->assertEquals('Company', $response->items[0]->name);
+    }
+
     public function testAccountAddresses()
     {
         $addressType = $this->createAddressType('Private');

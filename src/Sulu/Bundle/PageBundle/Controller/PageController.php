@@ -367,6 +367,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
 
             if (count($references) > 0) {
                 $data = [
+                    'id' => $id,
                     'items' => [],
                 ];
 

@@ -165,9 +165,11 @@ class List extends React.Component<Props> {
     };
 
     @action handleSelectionDeleteDialogConfirmClick = () => {
-        this.props.store.deleteSelection().then(action(() => {
-            this.showDeleteSelectionDialog = false;
-        }));
+        this.props.store.deleteSelection()
+            .then(action(() => {
+                this.showDeleteSelectionDialog = false;
+            }))
+            .catch(this.handleDeleteResponseError);
     };
 
     @action handleSelectionDeleteDialogCancelClick = () => {
@@ -188,39 +190,41 @@ class List extends React.Component<Props> {
                 .then(action(() => {
                     this.showDeleteDialog = false;
                 }))
-                .catch(action((response) => {
-                    if (response.status !== 409) {
-                        throw response;
-                    }
-
-                    this.showDeleteDialog = false;
-                    this.showDeleteLinkedDialog = true;
-                    response.json().then(action((data) => {
-                        this.referencingItemsForDelete.splice(0, this.referencingItemsForDelete.length);
-                        this.referencingItemsForDelete.push(...data.items);
-
-                        const deleteLinkedPromise: Promise<ResolveDeleteArgument> = new Promise(
-                            (resolve) => this.resolveDelete = resolve
-                        );
-
-                        deleteLinkedPromise.then(action((response) => {
-                            if (!response.deleted) {
-                                this.showDeleteDialog = this.showDeleteLinkedDialog = false;
-                                return response;
-                            }
-
-                            this.props.store.delete(id, {force: true})
-                                .then(action(() => {
-                                    this.showDeleteLinkedDialog = false;
-                                }));
-                        }));
-                    }));
-                }));
+                .catch(this.handleDeleteResponseError);
 
             return response;
         }));
 
         return deletePromise;
+    };
+
+    @action handleDeleteResponseError = (response: Object) => {
+        if (response.status !== 409) {
+            throw response;
+        }
+
+        this.showDeleteDialog = false;
+        this.showDeleteLinkedDialog = true;
+        response.json().then(action((data) => {
+            this.referencingItemsForDelete.splice(0, this.referencingItemsForDelete.length);
+            this.referencingItemsForDelete.push(...data.items);
+
+            const deleteLinkedPromise: Promise<ResolveDeleteArgument> = new Promise(
+                (resolve) => this.resolveDelete = resolve
+            );
+
+            deleteLinkedPromise.then(action((response) => {
+                if (!response.deleted) {
+                    this.showDeleteDialog = this.showDeleteLinkedDialog = false;
+                    return response;
+                }
+
+                this.props.store.delete(data.id, {force: true})
+                    .then(action(() => {
+                        this.showDeleteLinkedDialog = false;
+                    }));
+            }));
+        }));
     };
 
     @action handleDeleteDialogConfirmClick = () => {

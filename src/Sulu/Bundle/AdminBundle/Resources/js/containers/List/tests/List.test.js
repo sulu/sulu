@@ -824,7 +824,7 @@ test('ListStore should delete item when onRequestItemDelete callback is called a
 });
 
 test('ListStore should delete linked item when onRequestItemDelete callback is is confirmed twice', (done) => {
-    const jsonDeletePromise = Promise.resolve({items: [{name: 'Item 1'}, {name: 'Item 2'}]});
+    const jsonDeletePromise = Promise.resolve({id: 5, items: [{name: 'Item 1'}, {name: 'Item 2'}]});
     const deletePromise = Promise.reject({
         json: jest.fn().mockReturnValue(jsonDeletePromise),
         status: 409,

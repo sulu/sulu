@@ -331,6 +331,24 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
     }
 
     /**
+     * @return AccountInterface[]
+     */
+    public function findChildAccounts(int $id): array
+    {
+        try {
+            $qb = $this->createQueryBuilder('account')
+                ->where('account.parent = :accountId');
+
+            $query = $qb->getQuery();
+            $query->setParameter('accountId', $id);
+
+            return $query->getResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
+    /**
      * Append joins to query builder for "findByFilters" function.
      */
     protected function appendJoins(QueryBuilder $queryBuilder, $alias, $locale)

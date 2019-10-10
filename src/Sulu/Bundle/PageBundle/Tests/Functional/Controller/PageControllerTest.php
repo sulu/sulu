@@ -1909,6 +1909,7 @@ class PageControllerTest extends SuluTestCase
         $this->client->request('DELETE', '/api/pages/' . $linkedDocument->getUuid() . '?webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(409, $this->client->getResponse());
         $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals($linkedDocument->getUuid(), $response['id']);
         $this->assertCount(1, $response['items'][0]);
         $this->assertEquals('test2', $response['items'][0]['name']);
 
