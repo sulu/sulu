@@ -61,7 +61,8 @@ class ResourceLocatorRepositoryTest extends TestCase
         $this->resourceLocatorStrategyPool = $this->prophesize(ResourceLocatorStrategyPoolInterface::class);
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
 
-        $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey(Argument::any())->willReturn($this->resourceLocatorStrategy->reveal());
+        $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey(Argument::any())
+             ->willReturn($this->resourceLocatorStrategy->reveal());
 
         $this->repository = new ResourceLocatorRepository(
             $this->resourceLocatorStrategyPool->reveal(),
@@ -87,11 +88,12 @@ class ResourceLocatorRepositoryTest extends TestCase
         ]);
         $this->structureManager->getStructure($template)->willReturn($structure->reveal());
 
-        $path = '/parent/news-football';
-        $this->resourceLocatorStrategy->generate('news-football', $parentUuid, $webspace, $locale, null)->willReturn($path);
+        $resourcelocator = '/parent/news-football';
+        $this->resourceLocatorStrategy->generate('news-football', $parentUuid, $webspace, $locale, null)
+             ->willReturn($resourcelocator);
 
         $result = $this->repository->generate($parts, $parentUuid, $webspace, $locale, $template);
-        $this->assertEquals($result['resourceLocator'], $path);
+        $this->assertEquals($result['resourceLocator'], $resourcelocator);
     }
 
     public function testGenerate()
@@ -111,11 +113,12 @@ class ResourceLocatorRepositoryTest extends TestCase
         ]);
         $this->structureManager->getStructure($template)->willReturn($structure->reveal());
 
-        $path = '/news-football';
-        $this->resourceLocatorStrategy->generate('news-football', null, $webspace, $locale, null)->willReturn($path);
+        $resourcelocator = '/news-football';
+        $this->resourceLocatorStrategy->generate('news-football', null, $webspace, $locale, null)
+             ->willReturn($resourcelocator);
 
         $result = $this->repository->generate($parts, null, $webspace, $locale, $template);
-        $this->assertEquals($result['resourceLocator'], $path);
+        $this->assertEquals($result['resourceLocator'], $resourcelocator);
     }
 
     public function testGetHistory()
@@ -133,28 +136,28 @@ class ResourceLocatorRepositoryTest extends TestCase
         $result = $this->repository->getHistory($uuid, $webspace, $locale);
         $this->assertEquals(3, $result['total']);
         $this->assertEquals(3, count($result['_embedded']['page_resourcelocators']));
-        $this->assertEquals('/test1', $result['_embedded']['page_resourcelocators'][0]['path']);
-        $this->assertEquals('/test3', $result['_embedded']['page_resourcelocators'][2]['path']);
+        $this->assertEquals('/test1', $result['_embedded']['page_resourcelocators'][0]['resourcelocator']);
+        $this->assertEquals('/test3', $result['_embedded']['page_resourcelocators'][2]['resourcelocator']);
     }
 
     public function testDelete()
     {
-        $path = '/test';
+        $resourcelocator = '/test';
         $webspace = 'sulu_io';
         $locale = 'en';
 
-        $this->resourceLocatorStrategy->deleteById($path, $locale, null)->shouldBeCalled();
-        $this->repository->delete($path, $webspace, $locale);
+        $this->resourceLocatorStrategy->deleteById($resourcelocator, $locale, null)->shouldBeCalled();
+        $this->repository->delete($resourcelocator, $webspace, $locale);
     }
 
     public function testDeleteWithSegment()
     {
-        $path = '/test';
+        $resourcelocator = '/test';
         $webspace = 'sulu_io';
         $locale = 'en';
         $segment = 'live';
 
-        $this->resourceLocatorStrategy->deleteById($path, $locale, $segment)->shouldBeCalled();
-        $this->repository->delete($path, $webspace, $locale, $segment);
+        $this->resourceLocatorStrategy->deleteById($resourcelocator, $locale, $segment)->shouldBeCalled();
+        $this->repository->delete($resourcelocator, $webspace, $locale, $segment);
     }
 }

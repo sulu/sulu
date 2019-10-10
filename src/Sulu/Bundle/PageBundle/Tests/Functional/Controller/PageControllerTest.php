@@ -1074,8 +1074,8 @@ class PageControllerTest extends SuluTestCase
         );
         $response = json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertEquals('/a2', $response['_embedded']['page_resourcelocators'][0]['path']);
-        $this->assertEquals('/a1', $response['_embedded']['page_resourcelocators'][1]['path']);
+        $this->assertEquals('/a2', $response['_embedded']['page_resourcelocators'][0]['resourcelocator']);
+        $this->assertEquals('/a1', $response['_embedded']['page_resourcelocators'][1]['resourcelocator']);
     }
 
     public function testTreeGetTillId()
