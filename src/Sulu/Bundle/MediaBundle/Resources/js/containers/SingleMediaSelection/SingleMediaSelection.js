@@ -18,6 +18,7 @@ type Props = {|
     displayOptions: Array<DisplayOption>,
     locale: IObservableValue<string>,
     onChange: (selectedId: Value, media: ?Media) => void,
+    types: Array<string>,
     valid: boolean,
     value: Value,
 |}
@@ -30,6 +31,7 @@ class SingleMediaSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         displayOptions: [],
+        types: [],
         valid: true,
         value: {displayOption: undefined, id: undefined},
     };
@@ -102,7 +104,7 @@ class SingleMediaSelection extends React.Component<Props> {
     };
 
     render() {
-        const {disabled, displayOptions, locale, valid, value} = this.props;
+        const {disabled, displayOptions, locale, types, valid, value} = this.props;
         const {loading, item: media} = this.singleMediaSelectionStore;
 
         const rightButton = displayOptions.length > 0
@@ -156,6 +158,7 @@ class SingleMediaSelection extends React.Component<Props> {
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}
                     open={this.overlayOpen}
+                    types={types}
                 />
             </Fragment>
         );

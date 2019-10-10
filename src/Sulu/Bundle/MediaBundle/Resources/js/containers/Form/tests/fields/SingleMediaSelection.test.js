@@ -73,6 +73,31 @@ test('Pass content-locale of user to SingleMediaSelection if locale is not prese
     expect(mediaSelection.find(SingleMediaSelectionComponent).props().locale.get()).toEqual('userContentLocale');
 });
 
+test('Set types on SingleMediaSelectionComponent', () => {
+    const changeSpy = jest.fn();
+    const schemaOptions = {
+        types: {value: 'image,video'},
+    };
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    const singleMediaSelection = shallow(
+        <SingleMediaSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(singleMediaSelection.find(SingleMediaSelectionComponent).props().types).toEqual(['image', 'video']);
+});
+
 test('Set default display option if no value is passed', () => {
     const changeSpy = jest.fn();
     const schemaOptions = {
@@ -186,4 +211,21 @@ test('Should throw an error if displayOptions schemaOption is given but not an a
             schemaOptions={{displayOptions: {value: [{name: 'test', value: true}]}}}
         />
     )).toThrow(/"displayOptions"/);
+});
+
+test('Should throw an error if types schemaOption is given but not an array', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    expect(() => shallow(
+        <SingleMediaSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={{types: {value: true}}}
+        />
+    )).toThrow(/"types"/);
 });
