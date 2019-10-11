@@ -777,16 +777,16 @@ class AccountController extends AbstractRestController implements ClassResourceI
     {
         $children = $this->accountRepository->findChildAccounts($id);
         if (count($children) > 0) {
-                $data = [
-                    'id' => $id,
-                    'items' => [],
-                ];
+            $data = [
+                'id' => $id,
+                'items' => [],
+            ];
 
-                foreach ($children as $child) {
-                    $data['items'][] = ['name' => $child->getName()];
-                }
+            foreach ($children as $child) {
+                $data['items'][] = ['name' => $child->getName()];
+            }
 
-                return $this->handleView($this->view($data, 409));
+            return $this->handleView($this->view($data, 409));
         }
 
         $delete = function($id) use ($request) {
