@@ -38,9 +38,10 @@ jest.mock('../../../stores/ResourceStore', () => jest.fn(
     }
 ));
 jest.mock('../../../containers/Form/stores/ResourceFormStore', () => jest.fn(
-    (resourceStore) => {
+    (resourceStore, formKey, options, metadataOptions) => {
         return {
             id: resourceStore.id,
+            metadataOptions: metadataOptions,
         };
     }
 ));
@@ -148,7 +149,7 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
         parentId: 'test-id',
         webspace: 'test-webspace',
         dimensionId: 'test-dimension',
-    });
+    }, {});
 });
 
 test('Should construct ResourceStore and ResourceFormStore with correct parameters on item-click callback', () => {
@@ -192,7 +193,38 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
         parentId: 'test-id',
         webspace: 'test-webspace',
         dimensionId: 'test-dimension',
-    });
+    }, {});
+});
+
+test('Should pass formMetadata options to Form View', () => {
+    const formMetadata = {
+        'entity-class': 'testClass',
+    };
+
+    const route: Route = ({}: any);
+    const router: Router = ({
+        attributes: {
+            id: 'test-id',
+            category: 'category-id',
+        },
+        route: {
+            options: {
+                formKey: 'test-form-key',
+                resourceKey: 'test-resource-key',
+                formMetadata: formMetadata,
+            },
+        },
+    }: any);
+
+    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
+
+    formOverlayList.instance().locale = observable.box('en');
+    formOverlayList.find(List).props().onItemAdd();
+
+    expect(ResourceFormStore).toBeCalledWith(expect.anything(), 'test-form-key', {}, formMetadata);
+
+    const formStore = formOverlayList.instance().formStore;
+    expect(formStore.metadataOptions).toEqual(formMetadata);
 });
 
 test('Should open Overlay with correct props when List fires the item-add callback', () => {
