@@ -15,6 +15,7 @@ use PHPCR\ImportUUIDBehaviorInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\NodeHelper;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
+use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -110,13 +111,21 @@ trait PhpCrInitTrait
      */
     private static function getInitializerDumpFilePath(string $workspace): string
     {
+        if (!static::$kernel instanceof SuluKernel) {
+            throw new \TypeError(
+                'Expected that Kernel is "%s" but "%s" given.',
+                SuluKernel::class,
+                get_class(static::$kernel)
+            );
+        }
+
         switch ($workspace) {
             case 'live':
-                return static::$kernel->getCacheDir() . '/initial_live.xml';
+                return static::$kernel->getCommonCacheDir() . '/initial_live.xml';
 
                 break;
             case 'default':
-                return static::$kernel->getCacheDir() . '/initial.xml';
+                return static::$kernel->getCommonCacheDir() . '/initial.xml';
 
                 break;
             default:
