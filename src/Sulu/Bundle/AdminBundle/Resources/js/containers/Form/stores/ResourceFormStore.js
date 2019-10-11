@@ -24,13 +24,15 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     schemaDisposer: ?() => void;
     typeDisposer: ?() => void;
     updateFieldPathEvaluationsDisposer: ?() => void;
+    metadataOptions: ?Object;
 
-    constructor(resourceStore: ResourceStore, formKey: string, options: Object = {}) {
+    constructor(resourceStore: ResourceStore, formKey: string, options: Object = {}, metadataOptions: ?Object) {
         super();
 
         this.resourceStore = resourceStore;
         this.formKey = formKey;
         this.options = options;
+        this.metadataOptions = metadataOptions;
 
         metadataStore.getSchemaTypes(this.formKey)
             .then(this.handleSchemaTypeResponse);
@@ -72,7 +74,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
             }
 
             Promise.all([
-                metadataStore.getSchema(this.formKey, type),
+                metadataStore.getSchema(this.formKey, type, this.metadataOptions),
                 metadataStore.getJsonSchema(this.formKey, type),
             ]).then(this.handleSchemaResponse);
         });

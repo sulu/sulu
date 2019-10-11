@@ -82,6 +82,16 @@ trait ListViewBuilderTrait
         $route->setOption('routerAttributesToListMetadata', $newRouterAttributesToListMetadata);
     }
 
+    private function addFormMetadataToView(View $route, array $routerAttributesToFormMetadata):void
+    {
+        $oldRouterAttributesToFormMetadata = $route->getOption('formMetadata');
+        $newRouterAttributesToFormMetadata = $oldRouterAttributesToFormMetadata
+            ? array_merge($oldRouterAttributesToFormMetadata, $routerAttributesToFormMetadata)
+            : $routerAttributesToFormMetadata;
+
+        $route->setOption('formMetadata', $newRouterAttributesToFormMetadata);
+    }
+
     private function addLocalesToView(View $route, array $locales): void
     {
         $oldLocales = $route->getOption('locales');

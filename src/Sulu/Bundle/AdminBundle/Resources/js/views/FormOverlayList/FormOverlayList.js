@@ -85,6 +85,7 @@ class FormOverlayList extends React.Component<Props> {
                         resourceKey,
                         routerAttributesToFormRequest = {},
                         resourceStorePropertiesToFormRequest = {},
+                        formMetadata = {},
                     },
                 },
             },
@@ -105,8 +106,11 @@ class FormOverlayList extends React.Component<Props> {
             routerAttributesToFormRequest,
             resourceStorePropertiesToFormRequest
         );
+
+        const metadataOptions = formMetadata;
+
         const resourceStore = new ResourceStore(resourceKey, itemId, observableOptions, formStoreOptions);
-        this.formStore = new ResourceFormStore(resourceStore, formKey, formStoreOptions);
+        this.formStore = new ResourceFormStore(resourceStore, formKey, formStoreOptions, metadataOptions);
     };
 
     @action destroyFormOverlay = () => {

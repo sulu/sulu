@@ -26,8 +26,8 @@ class MetadataStore {
             });
     }
 
-    getSchema(formKey: string, type: ?string): Promise<RawSchema> {
-        return metadataStore.loadMetadata(FORM_TYPE, formKey)
+    getSchema(formKey: string, type: ?string, metadataOptions: ?Object): Promise<RawSchema> {
+        return metadataStore.loadMetadata(FORM_TYPE, formKey, metadataOptions)
             .then((configuration) => {
                 const typeConfiguration = this.getTypeConfiguration(configuration, type, formKey);
 
