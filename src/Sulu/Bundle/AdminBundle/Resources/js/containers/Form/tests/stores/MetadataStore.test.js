@@ -158,7 +158,7 @@ test('Throw if a type is requested, but the given resourceKey does not have type
     const snippetFieldsPromise = metadataStore.getSchema('snippets', 'sidebar');
 
     return snippetFieldsPromise.catch((error) => {
-        expect(generalMetadataStore.loadMetadata).toBeCalledWith('form', 'snippets');
+        expect(generalMetadataStore.loadMetadata).toBeCalledWith('form', 'snippets', undefined);
         expect(error.toString()).toEqual(expect.stringContaining('does not support types'));
         expect(error.toString()).toEqual(expect.stringContaining('"snippets"'));
         done();
@@ -204,7 +204,7 @@ test('Throw if a type is omitted, but the given reosurceKey has type support', (
     const snippetSchemaPromise = metadataStore.getSchema('snippets');
 
     return snippetSchemaPromise.catch((error) => {
-        expect(generalMetadataStore.loadMetadata).toBeCalledWith('form', 'snippets');
+        expect(generalMetadataStore.loadMetadata).toBeCalledWith('form', 'snippets', undefined);
         expect(error.toString()).toEqual(expect.stringContaining('requires a type'));
         expect(error.toString()).toEqual(expect.stringContaining('"snippets"'));
         done();
@@ -229,7 +229,7 @@ test('Throw if a type is omitted when loading the JSON Schema, but the given reo
     const snippetSchemaPromise = metadataStore.getSchema('snippets');
 
     return snippetSchemaPromise.catch((error) => {
-        expect(generalMetadataStore.loadMetadata).toBeCalledWith('form', 'snippets');
+        expect(generalMetadataStore.loadMetadata).toBeCalledWith('form', 'snippets', undefined);
         expect(error.toString()).toEqual(expect.stringContaining('requires a type'));
         expect(error.toString()).toEqual(expect.stringContaining('"snippets"'));
         done();
@@ -243,7 +243,7 @@ test('Throw exception if no form fields for given resourceKey are available', ()
     generalMetadataStore.loadMetadata.mockReturnValue(contactPromise);
 
     return metadataStore.getSchema('contacts').catch((error) => {
-        expect(generalMetadataStore.loadMetadata).toBeCalledWith('form', 'contacts');
+        expect(generalMetadataStore.loadMetadata).toBeCalledWith('form', 'contacts', undefined);
         expect(error.toString()).toEqual(expect.stringContaining('"contacts"'));
     });
 });
@@ -271,7 +271,7 @@ test('Throw exception if no form fields for given resourceKey and type are avail
     generalMetadataStore.loadMetadata.mockReturnValue(snippetPromise);
 
     return metadataStore.getSchema('snippets', 'default').catch((error) => {
-        expect(generalMetadataStore.loadMetadata).toBeCalledWith('form', 'snippets');
+        expect(generalMetadataStore.loadMetadata).toBeCalledWith('form', 'snippets', undefined);
         expect(error.toString()).toEqual(expect.stringContaining('no form schema'));
         expect(error.toString()).toEqual(expect.stringContaining('"snippets"'));
         expect(error.toString()).toEqual(expect.stringContaining('"default"'));
