@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import jexl from 'jexl';
 import Dialog from '../../../components/Dialog';
 import {translate} from '../../../utils/Translator';
@@ -10,6 +10,12 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     @observable showDialog: boolean = false;
     @observable showLinkedDialog: boolean = false;
     @observable referencingItems: Array<Object> = [];
+
+    @computed get allowConflictDeletion() {
+        const {allow_conflict_deletion: allowConflictDeletion = true} = this.options;
+
+        return allowConflictDeletion;
+    }
 
     getNode() {
         return (
@@ -32,9 +38,15 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
                     onCancel={this.handleLinkCancel}
                     onConfirm={this.handleLinkConfirm}
                     open={this.showLinkedDialog}
-                    title={translate('sulu_admin.delete_linked_warning_title')}
+                    title={this.allowConflictDeletion
+                        ? translate('sulu_admin.delete_linked_warning_title')
+                        : translate('sulu_admin.item_not_deletable')
+                    }
                 >
-                    {translate('sulu_admin.delete_linked_warning_text')}
+                    {this.allowConflictDeletion
+                        ? translate('sulu_admin.delete_linked_warning_text')
+                        : translate('sulu_admin.delete_linked_abort_text')
+                    }
                     <ul>
                         {this.referencingItems.map((referencingItem, index) => (
                             <li key={index}>{referencingItem.name}</li>
@@ -100,6 +112,11 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     };
 
     @action handleLinkConfirm = () => {
+        if (!this.allowConflictDeletion) {
+            this.showLinkedDialog = false;
+            return;
+        }
+
         this.resourceFormStore.delete({force: true})
             .then(action(() => {
                 this.showLinkedDialog = false;

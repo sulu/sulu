@@ -142,6 +142,7 @@ class List extends React.Component<Props> {
         router.bind('search', this.listStore.searchTerm);
         router.bind('limit', this.listStore.limit, DEFAULT_LIMIT);
     }
+
     buildMetadataOptions(
         attributes: Object,
         routerAttributesToListMetadata: {[string | number]: string}
@@ -290,12 +291,12 @@ class List extends React.Component<Props> {
         router.navigate(editView, {id: itemId, locale: this.locale.get()});
     };
 
-    requestSelectionDelete = () => {
+    requestSelectionDelete = (allowConflictDelete: boolean = true) => {
         if (!this.list) {
             throw new Error('List not created yet.');
         }
 
-        this.list.requestSelectionDelete();
+        this.list.requestSelectionDelete(allowConflictDelete);
     };
 
     reload = () => {

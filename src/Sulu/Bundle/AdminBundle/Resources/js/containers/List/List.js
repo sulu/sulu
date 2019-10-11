@@ -73,6 +73,7 @@ class List extends React.Component<Props> {
     @observable showDeleteLinkedDialog: boolean = false;
     @observable showMoveOverlay: boolean = false;
     @observable showDeleteSelectionDialog: boolean = false;
+    @observable allowConflictDeletion: boolean = true;
     @observable showOrderDialog: boolean = false;
     @observable adapterOptionsOpen: boolean = false;
     @observable columnOptionsOpen: boolean = false;
@@ -160,8 +161,9 @@ class List extends React.Component<Props> {
     };
 
     /** @public */
-    @action requestSelectionDelete = () => {
+    @action requestSelectionDelete = (allowConflictDeletion: boolean = true) => {
         this.showDeleteSelectionDialog = true;
+        this.allowConflictDeletion = allowConflictDeletion;
     };
 
     @action handleSelectionDeleteDialogConfirmClick = () => {
@@ -204,6 +206,7 @@ class List extends React.Component<Props> {
         }
 
         this.showDeleteDialog = false;
+        this.showDeleteSelectionDialog = false;
         this.showDeleteLinkedDialog = true;
         response.json().then(action((data) => {
             this.referencingItemsForDelete.splice(0, this.referencingItemsForDelete.length);
@@ -215,12 +218,16 @@ class List extends React.Component<Props> {
 
             deleteLinkedPromise.then(action((response) => {
                 if (!response.deleted) {
-                    this.showDeleteDialog = this.showDeleteLinkedDialog = false;
+                    this.showDeleteDialog = false;
+                    this.showDeleteSelectionDialog = false;
+                    this.showDeleteLinkedDialog = false;
                     return response;
                 }
 
                 this.props.store.delete(data.id, {force: true})
                     .then(action(() => {
+                        this.showDeleteDialog = false;
+                        this.showDeleteSelectionDialog = false;
                         this.showDeleteLinkedDialog = false;
                     }));
             }));
@@ -593,11 +600,20 @@ class List extends React.Component<Props> {
                             confirmLoading={store.deleting}
                             confirmText={translate('sulu_admin.ok')}
                             onCancel={this.handleDeleteDialogCancelClick}
-                            onConfirm={this.handleDeleteDialogConfirmClick}
+                            onConfirm={this.allowConflictDeletion
+                                ? this.handleDeleteDialogConfirmClick
+                                : this.handleDeleteDialogCancelClick
+                            }
                             open={this.showDeleteLinkedDialog}
-                            title={translate('sulu_admin.delete_linked_warning_title')}
+                            title={this.allowConflictDeletion
+                                ? translate('sulu_admin.delete_linked_warning_title')
+                                : translate('sulu_admin.item_not_deletable')
+                            }
                         >
-                            {translate('sulu_admin.delete_linked_warning_text')}
+                            {this.allowConflictDeletion
+                                ? translate('sulu_admin.delete_linked_warning_text')
+                                : translate('sulu_admin.delete_linked_abort_text')
+                            }
                             <ul>
                                 {this.referencingItemsForDelete.map((referencingItem, index) => (
                                     <li key={index}>{referencingItem.name}</li>

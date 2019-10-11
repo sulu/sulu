@@ -229,3 +229,55 @@ test('Call delete with force when dialog is confirmed twice', (done) => {
         });
     });
 });
+
+test('Cancel delete conflict occured with the allowConflictDeletion option set to false', (done) => {
+    const deleteToolbarAction = createDeleteToolbarAction({allow_conflict_deletion: false});
+    deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
+    deleteToolbarAction.router.route.options.backView = 'sulu_test.list';
+
+    const jsonDeletePromise = Promise.resolve({items: [{name: 'Item 1'}, {name: 'Item 2'}]});
+    const deletePromise = Promise.reject({
+        json: jest.fn().mockReturnValue(jsonDeletePromise),
+        status: 409,
+    });
+    deleteToolbarAction.resourceFormStore.delete.mockReturnValueOnce(deletePromise);
+
+    const toolbarItemConfig = deleteToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+    toolbarItemConfig.onClick();
+
+    let element = mount(deleteToolbarAction.getNode());
+    expect(element.at(0).instance().props).toEqual(expect.objectContaining({
+        open: true,
+    }));
+
+    element.find('Button[skin="primary"]').simulate('click');
+    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith();
+
+    setTimeout(() => {
+        element = mount(deleteToolbarAction.getNode());
+        expect(deleteToolbarAction.router.navigate).toBeCalledTimes(0);
+        expect(element.at(0).prop('open')).toEqual(false);
+        expect(element.at(1).prop('open')).toEqual(true);
+        expect(element.at(1).find('li')).toHaveLength(2);
+        expect(element.at(1).find('li').at(0).prop('children')).toEqual('Item 1');
+        expect(element.at(1).find('li').at(1).prop('children')).toEqual('Item 2');
+
+        const deletePromise = Promise.resolve({});
+        deleteToolbarAction.resourceFormStore.delete.mockReturnValueOnce(deletePromise);
+
+        element.find('Button[skin="primary"]').simulate('click');
+
+        setTimeout(() => {
+            expect(deleteToolbarAction.router.navigate).not.toBeCalled();
+            expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledTimes(1);
+            expect(element.at(0).instance().props).toEqual(expect.objectContaining({
+                open: false,
+            }));
+
+            done();
+        });
+    });
+});

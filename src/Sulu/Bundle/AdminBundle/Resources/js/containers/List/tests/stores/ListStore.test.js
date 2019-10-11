@@ -1776,7 +1776,11 @@ test('Should delete all selected items', () => {
     listStore.select({id: 1});
     listStore.select({id: 2});
 
+    expect(listStore.deletingSelection).toEqual(false);
+
     const deletePromise = listStore.deleteSelection();
+
+    expect(listStore.deletingSelection).toEqual(true);
 
     return deletePromise.then(() => {
         expect(ResourceRequester.delete).toHaveBeenCalledTimes(2);
@@ -1785,6 +1789,7 @@ test('Should delete all selected items', () => {
         expect(structureStrategy.remove).toBeCalledWith(1);
         expect(structureStrategy.remove).toBeCalledWith(2);
         expect(listStore.selections).toEqual([]);
+        expect(listStore.deletingSelection).toEqual(false);
     });
 });
 
@@ -1824,9 +1829,15 @@ test('Should crash when deleting all selected items and one request fails with a
     listStore.select({id: 1});
     listStore.select({id: 2});
 
+    expect(listStore.deletingSelection).toEqual(false);
+
     const deletePromise = listStore.deleteSelection();
+
+    expect(listStore.deletingSelection).toEqual(true);
+
     deletePromise.catch((error) => {
         expect(error.status).toEqual(500);
+        expect(listStore.deletingSelection).toEqual(false);
         done();
     });
 });
