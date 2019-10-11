@@ -8,10 +8,10 @@ exports[`Should render a Dialog 1`] = `
   <div class=\\"dialogContainer open\\">
     <div class=\\"dialog\\">
       <section class=\\"content\\">
-        <header></header>
+        <header>sulu_admin.ghost_dialog_title</header>
         <article>
           <div class=\\"ghostDialog\\">
-            <p></p><label class=\\"label\\"></label>
+            <p>sulu_admin.ghost_dialog_description</p><label class=\\"label\\">sulu_admin.choose_language</label>
             <div class=\\"localeSelect\\">
               <div class=\\"select\\"><button class=\\"displayValue default\\" type=\\"button\\">
                   <div aria-label=\\"en\\" class=\\"croppedText\\" title=\\"en\\">
@@ -23,7 +23,7 @@ exports[`Should render a Dialog 1`] = `
             </div>
           </div>
         </article>
-        <footer><button class=\\"button secondary\\" type=\\"button\\"></button><button class=\\"button primary\\" type=\\"button\\"></button></footer>
+        <footer><button class=\\"button primary\\" type=\\"button\\"><span class=\\"text\\">sulu_admin.yes</span></button><button class=\\"button secondary\\" type=\\"button\\"><span class=\\"text\\">sulu_admin.no</span></button></footer>
       </section>
     </div>
   </div>

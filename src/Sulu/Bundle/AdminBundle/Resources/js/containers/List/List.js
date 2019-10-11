@@ -599,7 +599,10 @@ class List extends React.Component<Props> {
                             cancelText={translate('sulu_admin.cancel')}
                             confirmLoading={store.deleting}
                             confirmText={translate('sulu_admin.ok')}
-                            onCancel={this.handleDeleteDialogCancelClick}
+                            onCancel={this.allowConflictDeletion
+                                ? this.handleDeleteDialogCancelClick
+                                : undefined
+                            }
                             onConfirm={this.allowConflictDeletion
                                 ? this.handleDeleteDialogConfirmClick
                                 : this.handleDeleteDialogCancelClick

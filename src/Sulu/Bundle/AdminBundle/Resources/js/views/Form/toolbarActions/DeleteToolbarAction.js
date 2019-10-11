@@ -35,7 +35,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
                     cancelText={translate('sulu_admin.cancel')}
                     confirmLoading={this.resourceFormStore.deleting}
                     confirmText={translate('sulu_admin.ok')}
-                    onCancel={this.handleLinkCancel}
+                    onCancel={this.allowConflictDeletion ? this.handleLinkCancel : undefined}
                     onConfirm={this.handleLinkConfirm}
                     open={this.showLinkedDialog}
                     title={this.allowConflictDeletion

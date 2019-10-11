@@ -11,12 +11,12 @@ import Button from '../Button';
 import dialogStyles from './dialog.scss';
 
 type Props = {|
-    cancelText: string,
+    cancelText?: string,
     children: Node,
     confirmDisabled: boolean,
     confirmLoading: boolean,
     confirmText: string,
-    onCancel: () => void,
+    onCancel?: () => void,
     onConfirm: () => void,
     open: boolean,
     size?: 'small' | 'large',
@@ -41,10 +41,6 @@ class Dialog extends React.Component<Props> {
         this.open = open;
         this.visible = open;
     }
-
-    close = () => {
-        this.props.onCancel();
-    };
 
     @action componentDidUpdate(prevProps: Props) {
         const {open} = this.props;
@@ -114,9 +110,6 @@ class Dialog extends React.Component<Props> {
                                         {children}
                                     </article>
                                     <footer>
-                                        <Button onClick={onCancel} skin="secondary">
-                                            {cancelText}
-                                        </Button>
                                         <Button
                                             disabled={confirmDisabled}
                                             loading={confirmLoading}
@@ -125,6 +118,11 @@ class Dialog extends React.Component<Props> {
                                         >
                                             {confirmText}
                                         </Button>
+                                        {onCancel && cancelText &&
+                                            <Button onClick={onCancel} skin="secondary">
+                                                {cancelText}
+                                            </Button>
+                                        }
                                     </footer>
                                 </section>
                             </div>
