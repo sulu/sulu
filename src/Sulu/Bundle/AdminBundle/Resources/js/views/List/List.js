@@ -1,6 +1,6 @@
 // @flow
 import type {IObservableValue} from 'mobx';
-import {action, observable, toJS} from 'mobx';
+import {action, computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';
 import React, {Fragment} from 'react';
@@ -20,6 +20,7 @@ const DEFAULT_LIMIT = 10;
 
 type Props = ViewProps & {
     locale?: IObservableValue<string>,
+    locales?: Array<string>,
     onItemAdd?: (parentId: ?string | number) => void,
     onItemClick?: (itemId: string | number) => void,
     resourceStore?: ResourceStore,
@@ -54,6 +55,21 @@ class List extends React.Component<Props> {
         };
     }
 
+    @computed get locales() {
+        const {
+            locales: propsLocales,
+            router: {
+                route: {
+                    options: {
+                        locales: routeLocales,
+                    },
+                },
+            },
+        } = this.props;
+
+        return routeLocales ? routeLocales : propsLocales;
+    }
+
     constructor(props: Props) {
         super(props);
 
@@ -65,7 +81,6 @@ class List extends React.Component<Props> {
                     adapters,
                     requestParameters = {},
                     listKey,
-                    locales,
                     resourceKey,
                     routerAttributesToListRequest = {},
                     resourceStorePropertiesToListRequest = {},
@@ -94,7 +109,7 @@ class List extends React.Component<Props> {
         router.bind('page', this.page, 1);
         observableOptions.page = this.page;
 
-        if (locales) {
+        if (this.locales) {
             router.bind('locale', this.locale);
             observableOptions.locale = this.locale;
         }
@@ -336,7 +351,6 @@ export default withToolbar(List, function() {
         route: {
             options: {
                 backView,
-                locales,
             },
         },
     } = router;
@@ -352,13 +366,13 @@ export default withToolbar(List, function() {
             },
         }
         : undefined;
-    const locale = locales
+    const locale = this.locales
         ? {
             value: this.locale.get(),
             onChange: action((locale) => {
                 this.locale.set(locale);
             }),
-            options: locales.map((locale) => ({
+            options: this.locales.map((locale) => ({
                 value: locale,
                 label: locale,
             })),
