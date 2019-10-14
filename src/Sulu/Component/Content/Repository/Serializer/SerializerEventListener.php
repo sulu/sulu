@@ -97,7 +97,7 @@ class SerializerEventListener implements EventSubscriberInterface
             $linked = 'internal';
         }
 
-        if (!$linked) {
+        if ($linked) {
             $visitor->visitProperty(
                 new StaticPropertyMetadata('', 'linked', $linked),
                 $linked
