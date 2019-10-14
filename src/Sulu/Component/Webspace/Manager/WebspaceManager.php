@@ -98,6 +98,27 @@ class WebspaceManager implements WebspaceManagerInterface
         return null;
     }
 
+    public function findPortalInformationsByHostIncludingSubdomains(string $host, ?string $environment = null): array
+    {
+        if (null === $environment) {
+            $environment = $this->environment;
+        }
+
+        return array_filter(
+            $this->getWebspaceCollection()->getPortalInformations($environment),
+            function(PortalInformation $portalInformation) use ($host) {
+                $portalHost = $portalInformation->getHost();
+
+                if ($this->urlReplacer->hasHostReplacer($portalHost)) {
+                    $portalHost = $this->urlReplacer->replaceHost($portalHost, $host);
+                }
+
+                // add a slash to avoid problems with "example.co" and "example.com"
+                return false !== strpos($portalHost . '/', $host . '/');
+            }
+        );
+    }
+
     public function findPortalInformationsByUrl(string $url, ?string $environment = null): array
     {
         if (null === $environment) {
@@ -169,7 +190,7 @@ class WebspaceManager implements WebspaceManagerInterface
         foreach ($portals as $portalInformation) {
             $sameLocalization = $portalInformation->getLocalization()->getLocale() === $languageCode;
             $sameWebspace = null === $webspaceKey || $portalInformation->getWebspace()->getKey() === $webspaceKey;
-            $url = $this->createResourceLocatorUrl($scheme, $portalInformation->getUrl(), $resourceLocator);
+            $url = $this->createResourceLocatorUrl($scheme, $portalInformation->getUrl(), $resourceLocator, $domain);
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
                 $urls[] = $url;
             }
@@ -199,13 +220,14 @@ class WebspaceManager implements WebspaceManagerInterface
                 RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
             ]
         );
+
         foreach ($portals as $portalInformation) {
             $sameLocalization = (
                 null === $portalInformation->getLocalization()
                 || $portalInformation->getLocalization()->getLocale() === $languageCode
             );
             $sameWebspace = null === $webspaceKey || $portalInformation->getWebspace()->getKey() === $webspaceKey;
-            $url = $this->createResourceLocatorUrl($scheme, $portalInformation->getUrl(), $resourceLocator);
+            $url = $this->createResourceLocatorUrl($scheme, $portalInformation->getUrl(), $resourceLocator, $domain);
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
                 if ($portalInformation->isMain()) {
                     array_unshift($urls, $url);
@@ -412,14 +434,19 @@ class WebspaceManager implements WebspaceManagerInterface
      * @param string $scheme
      * @param string $portalUrl
      * @param string $resourceLocator
+     * @param string|null $domain
      *
      * @return string
      */
-    private function createResourceLocatorUrl($scheme, $portalUrl, $resourceLocator)
+    private function createResourceLocatorUrl($scheme, $portalUrl, $resourceLocator, $domain = null)
     {
         if (false !== strpos($portalUrl, '/')) {
             // trim slash when resourceLocator is not domain root
             $resourceLocator = rtrim($resourceLocator, '/');
+        }
+
+        if ($domain && $this->urlReplacer->hasHostReplacer($portalUrl)) {
+            $portalUrl = $this->urlReplacer->replaceHost($portalUrl, $domain);
         }
 
         return rtrim(sprintf('%s://%s', $scheme, $portalUrl), '/') . $resourceLocator;

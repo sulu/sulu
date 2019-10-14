@@ -18,8 +18,6 @@ use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPoolInterface;
 use Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapDumper;
 use Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapDumperInterface;
 use Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapRendererInterface;
-use Sulu\Component\Webspace\Portal;
-use Sulu\Component\Webspace\PortalInformation;
 use Symfony\Component\Filesystem\Filesystem;
 
 class XmlSitemapDumperTest extends TestCase
@@ -57,40 +55,32 @@ class XmlSitemapDumperTest extends TestCase
             $this->renderer->reveal(),
             $this->providerPool->reveal(),
             $this->filesystem->reveal(),
-            '/',
-            'sulu.io'
+            '/'
         );
     }
 
     public function testGetDumpPath()
     {
         $this->assertEquals(
-            '/http/sulu_io/en/sulu.lo/sitemaps/pages-1.xml',
-            $this->dumper->getDumpPath('http', 'sulu_io', 'en', 'sulu.lo', 'pages', 1)
+            '/http/sulu.lo/sitemaps/pages-1.xml',
+            $this->dumper->getDumpPath('http', 'sulu.lo', 'pages', 1)
         );
     }
 
     public function testGetIndexDumpPath()
     {
         $this->assertEquals(
-            '/http/sulu_io/en/sulu.lo/sitemap.xml',
-            $this->dumper->getIndexDumpPath('http', 'sulu_io', 'en', 'sulu.lo')
+            '/http/sulu.lo/sitemap.xml',
+            $this->dumper->getIndexDumpPath('http', 'sulu.lo')
         );
     }
 
-    public function testDumpPortalInformation()
+    public function testDumpHost()
     {
-        $portalInformation = $this->prophesize(PortalInformation::class);
-        $portalInformation->getUrl()->willReturn('sulu.io/{localization}');
-        $portalInformation->getHost()->willReturn('sulu.io');
-        $portalInformation->getWebspaceKey()->willReturn('sulu_io');
-        $portalInformation->getLocale()->willReturn('de');
-        $portalInformation->getPortal()->willReturn(new Portal());
-
         $this->renderer->renderIndex('sulu.io', 'http')->willReturn('<sitemapindex/>');
 
         $this->filesystem->dumpFile(
-            $this->dumper->getIndexDumpPath('http', 'sulu_io', 'de', 'sulu.io'),
+            $this->dumper->getIndexDumpPath('http', 'sulu.io'),
             '<sitemapindex/>'
         )->shouldBeCalled();
 
@@ -102,12 +92,12 @@ class XmlSitemapDumperTest extends TestCase
         foreach ($providers as $alias => $provider) {
             $this->providerPool->getProvider($alias)->willReturn($provider->reveal());
 
-            $provider->getMaxPage()->willReturn(1);
+            $provider->getMaxPage('http', 'sulu.io')->willReturn(1);
             $this->renderer
-                ->renderSitemap($alias, 1, 'de', Argument::type(Portal::class), 'sulu.io', 'http')
+                ->renderSitemap($alias, 1, 'http', 'sulu.io')
                 ->willReturn('<sitemap-' . $alias . '/>');
             $this->filesystem->dumpFile(
-                $this->dumper->getDumpPath('http', 'sulu_io', 'de', 'sulu.io', $alias, 1),
+                $this->dumper->getDumpPath('http', 'sulu.io', $alias, 1),
                 '<sitemap-' . $alias . '/>'
             )->shouldBeCalled();
         }
@@ -121,53 +111,38 @@ class XmlSitemapDumperTest extends TestCase
             )
         );
 
-        $this->dumper->dumpPortalInformation($portalInformation->reveal(), 'http');
+        $this->dumper->dumpHost('http', 'sulu.io');
     }
 
     public function testDumpPortalInformationNoIndex()
     {
-        $portalInformation = $this->prophesize(PortalInformation::class);
-        $portalInformation->getUrl()->willReturn('sulu.io/{localization}');
-        $portalInformation->getHost()->willReturn('sulu.io');
-        $portalInformation->getWebspaceKey()->willReturn('sulu_io');
-        $portalInformation->getLocale()->willReturn('de');
-        $portalInformation->getPortal()->willReturn(new Portal());
-
         $this->renderer->renderIndex('sulu.io', 'http')->willReturn(null);
 
         $provider = $this->prophesize(SitemapProviderInterface::class);
 
         $this->renderer
-            ->renderSitemap('test-1', 1, 'de', Argument::type(Portal::class), 'sulu.io', 'http')
+            ->renderSitemap('test-1', 1, 'http', 'sulu.io')
             ->willReturn('<sitemap/>');
         $this->filesystem->dumpFile(
-            $this->dumper->getDumpPath('http', 'sulu_io', 'de', 'sulu.io', 'test-1', 1),
+            $this->dumper->getDumpPath('http', 'sulu.io', 'test-1', 1),
             Argument::any()
         )->shouldNotBeCalled();
         $this->filesystem->dumpFile(
-            $this->dumper->getIndexDumpPath('http', 'sulu_io', 'de', 'sulu.io'),
+            $this->dumper->getIndexDumpPath('http', 'sulu.io'),
             '<sitemap/>'
         )->shouldBeCalled();
 
         $this->providerPool->getProviders()->willReturn(['test-1' => $provider->reveal()]);
 
-        $this->dumper->dumpPortalInformation($portalInformation->reveal(), 'http');
+        $this->dumper->dumpHost('http', 'sulu.io');
     }
 
-    public function testDumpPortalInformationWildcard()
+    public function testDumpHostWildcard()
     {
-        $portalInformation = $this->prophesize(PortalInformation::class);
-        $portalInformation->getUrl()->willReturn('{host}/{localization}');
-        $portalInformation->getHost()->willReturn('sulu.io');
-        $portalInformation->getWebspaceKey()->willReturn('sulu_io');
-        $portalInformation->getLocale()->willReturn('de');
-        $portalInformation->getPortal()->willReturn(new Portal());
-        $portalInformation->setUrl('sulu.io/{localization}')->shouldBeCalled();
-
         $this->renderer->renderIndex('sulu.io', 'http')->willReturn('<sitemapindex/>');
 
         $this->filesystem->dumpFile(
-            $this->dumper->getIndexDumpPath('http', 'sulu_io', 'de', 'sulu.io'),
+            $this->dumper->getIndexDumpPath('http', 'sulu.io'),
             '<sitemapindex/>'
         )->shouldBeCalled();
 
@@ -179,12 +154,12 @@ class XmlSitemapDumperTest extends TestCase
         foreach ($providers as $alias => $provider) {
             $this->providerPool->getProvider($alias)->willReturn($provider->reveal());
 
-            $provider->getMaxPage()->willReturn(1);
+            $provider->getMaxPage('http', 'sulu.io')->willReturn(1);
             $this->renderer
-                ->renderSitemap($alias, 1, 'de', Argument::type(Portal::class), 'sulu.io', 'http')
+                ->renderSitemap($alias, 1, 'http', 'sulu.io')
                 ->willReturn('<sitemap-' . $alias . '/>');
             $this->filesystem->dumpFile(
-                $this->dumper->getDumpPath('http', 'sulu_io', 'de', 'sulu.io', $alias, 1),
+                $this->dumper->getDumpPath('http', 'sulu.io', $alias, 1),
                 '<sitemap-' . $alias . '/>'
             )->shouldBeCalled();
         }
@@ -198,22 +173,15 @@ class XmlSitemapDumperTest extends TestCase
             )
         );
 
-        $this->dumper->dumpPortalInformation($portalInformation->reveal(), 'http');
+        $this->dumper->dumpHost('http', 'sulu.io');
     }
 
     public function testDumpPortalInformationMultiplePages()
     {
-        $portalInformation = $this->prophesize(PortalInformation::class);
-        $portalInformation->getUrl()->willReturn('sulu.io/{localization}');
-        $portalInformation->getHost()->willReturn('sulu.io');
-        $portalInformation->getWebspaceKey()->willReturn('sulu_io');
-        $portalInformation->getLocale()->willReturn('de');
-        $portalInformation->getPortal()->willReturn(new Portal());
-
         $this->renderer->renderIndex('sulu.io', 'http')->willReturn('<sitemapindex/>');
 
         $this->filesystem->dumpFile(
-            $this->dumper->getIndexDumpPath('http', 'sulu_io', 'de', 'sulu.io'),
+            $this->dumper->getIndexDumpPath('http', 'sulu.io'),
             '<sitemapindex/>'
         )->shouldBeCalled();
 
@@ -221,19 +189,19 @@ class XmlSitemapDumperTest extends TestCase
 
         $this->providerPool->getProvider('test-1')->willReturn($provider->reveal());
 
-        $provider->getMaxPage()->willReturn(2);
+        $provider->getMaxPage('http', 'sulu.io')->willReturn(2);
         for ($page = 1; $page <= 2; ++$page) {
             $this->renderer
-                ->renderSitemap('test-1', $page, 'de', Argument::type(Portal::class), 'sulu.io', 'http')
+                ->renderSitemap('test-1', $page, 'http', 'sulu.io')
                 ->willReturn('<sitemap-' . $page . '/>');
             $this->filesystem->dumpFile(
-                $this->dumper->getDumpPath('http', 'sulu_io', 'de', 'sulu.io', 'test-1', $page),
+                $this->dumper->getDumpPath('http', 'sulu.io', 'test-1', $page),
                 '<sitemap-' . $page . '/>'
             )->shouldBeCalled();
         }
 
         $this->providerPool->getProviders()->willReturn(['test-1' => $provider->reveal()]);
 
-        $this->dumper->dumpPortalInformation($portalInformation->reveal(), 'http');
+        $this->dumper->dumpHost('http', 'sulu.io');
     }
 }

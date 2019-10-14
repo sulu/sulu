@@ -18,7 +18,7 @@ trait ContainerTrait
     /**
      * @internal The "getContainer" function is deprecated use self::$container variable instead.
      *
-     * This function exist to keep compatibility to oldtests.
+     * This function exist to keep compatibility to old tests.
      */
     protected static function getContainer(): ContainerInterface
     {

@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
-use Sulu\Component\Webspace\PortalInformation;
-
 /**
  * Interface for sitemap-dumper.
  */
@@ -22,35 +20,31 @@ interface XmlSitemapDumperInterface
      * Returns path of sitemap-index.
      *
      * @param string $scheme
-     * @param string $webspaceKey
-     * @param string $locale
-     * @param string $url
+     * @param string $host
      *
      * @return string
      */
-    public function getIndexDumpPath($scheme, $webspaceKey, $locale, $url);
+    public function getIndexDumpPath($scheme, $host);
 
     /**
      * Returns path of sitemap.
      *
      * @param string $scheme
-     * @param string $webspaceKey
-     * @param string $locale
-     * @param string $url
+     * @param string $host
      * @param string $alias
      * @param int $page
      *
      * @return string
      */
-    public function getDumpPath($scheme, $webspaceKey, $locale, $url, $alias, $page);
+    public function getDumpPath($scheme, $host, $alias, $page);
 
     /**
-     * Dump sitemaps for given portal-information.
+     * Dump sitemaps for specific host.
      *
-     * @param PortalInformation $portalInformation
+     * @param string $host
      * @param string $scheme
      *
      * @throws \InvalidArgumentException
      */
-    public function dumpPortalInformation(PortalInformation $portalInformation, $scheme);
+    public function dumpHost($scheme, $host);
 }

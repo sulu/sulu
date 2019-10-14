@@ -58,14 +58,14 @@ class XmlSitemapRendererTest extends TestCase
         $this->providerPoolInterface->getProviders()->willReturn(['pages' => $pagesProvider->reveal()]);
         $this->providerPoolInterface->hasProvider('pages')->willReturn(true);
         $this->providerPoolInterface->getProvider('pages')->willReturn($pagesProvider);
-        $this->providerPoolInterface->getIndex()->willReturn($sitemaps);
+        $this->providerPoolInterface->getIndex('http', 'sulu.io')->willReturn($sitemaps);
 
         $this->engine->render(
             'SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig',
             ['sitemaps' => $sitemaps]
         )->willReturn('<html/>');
 
-        $this->assertEquals(null, $this->renderer->renderIndex());
+        $this->assertEquals(null, $this->renderer->renderIndex('http', 'sulu.io'));
     }
 
     public function testRenderIndexMorePages()
@@ -76,14 +76,14 @@ class XmlSitemapRendererTest extends TestCase
         $this->providerPoolInterface->getProviders()->willReturn(['pages' => $pagesProvider->reveal()]);
         $this->providerPoolInterface->hasProvider('pages')->willReturn(true);
         $this->providerPoolInterface->getProvider('pages')->willReturn($pagesProvider);
-        $this->providerPoolInterface->getIndex()->willReturn($sitemaps);
+        $this->providerPoolInterface->getIndex('http', 'sulu.io')->willReturn($sitemaps);
 
         $this->engine->render(
             'SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig',
-            ['sitemaps' => $sitemaps, 'domain' => null, 'scheme' => null]
+            ['sitemaps' => $sitemaps, 'domain' => 'sulu.io', 'scheme' => 'http']
         )->willReturn('<html/>');
 
-        $this->assertEquals('<html/>', $this->renderer->renderIndex());
+        $this->assertEquals('<html/>', $this->renderer->renderIndex('http', 'sulu.io'));
     }
 
     public function testRenderIndexMoreProviders()
@@ -97,14 +97,14 @@ class XmlSitemapRendererTest extends TestCase
         );
         $this->providerPoolInterface->hasProvider('pages')->willReturn(true);
         $this->providerPoolInterface->getProvider('pages')->willReturn($pagesProvider);
-        $this->providerPoolInterface->getIndex()->willReturn($sitemaps);
+        $this->providerPoolInterface->getIndex('http', 'sulu.io')->willReturn($sitemaps);
 
         $this->engine->render(
             'SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig',
-            ['sitemaps' => $sitemaps, 'domain' => null, 'scheme' => null]
+            ['sitemaps' => $sitemaps, 'domain' => 'sulu.io', 'scheme' => 'http']
         )->willReturn('<html/>');
 
-        $this->assertEquals('<html/>', $this->renderer->renderIndex());
+        $this->assertEquals('<html/>', $this->renderer->renderIndex('http', 'sulu.io'));
     }
 
     public function testRenderIndexWithSchemeAndDomain()
@@ -118,14 +118,14 @@ class XmlSitemapRendererTest extends TestCase
         );
         $this->providerPoolInterface->hasProvider('pages')->willReturn(true);
         $this->providerPoolInterface->getProvider('pages')->willReturn($pagesProvider);
-        $this->providerPoolInterface->getIndex()->willReturn($sitemaps);
+        $this->providerPoolInterface->getIndex('http', 'sulu.io')->willReturn($sitemaps);
 
         $this->engine->render(
             'SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig',
-            ['sitemaps' => $sitemaps, 'domain' => 'sulu.lo', 'scheme' => 'http']
+            ['sitemaps' => $sitemaps, 'domain' => 'sulu.io', 'scheme' => 'http']
         )->willReturn('<html/>');
 
-        $this->assertEquals('<html/>', $this->renderer->renderIndex('sulu.lo', 'http'));
+        $this->assertEquals('<html/>', $this->renderer->renderIndex('http', 'sulu.io'));
     }
 
     public function testRenderSitemap()
@@ -135,9 +135,9 @@ class XmlSitemapRendererTest extends TestCase
         $this->providerPoolInterface->hasProvider('pages')->willReturn(true);
         $this->providerPoolInterface->getProvider('pages')->willReturn($pagesProvider);
 
-        $entries = [new SitemapUrl('http://sulu.lo', 'en')];
-        $pagesProvider->build(1, 'sulu_io', 'en')->willReturn($entries);
-        $pagesProvider->getMaxPage()->willReturn(1);
+        $entries = [new SitemapUrl('http://sulu.io', 'en', 'en')];
+        $pagesProvider->build(1, 'http', 'sulu.io')->willReturn($entries);
+        $pagesProvider->getMaxPage('http', 'sulu.io')->willReturn(1);
 
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getKey()->willReturn('sulu');
@@ -150,10 +150,7 @@ class XmlSitemapRendererTest extends TestCase
         $this->engine->render(
             'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
             [
-                'webspaceKey' => 'sulu',
-                'locale' => 'en',
-                'defaultLocale' => 'de',
-                'domain' => 'sulu.lo',
+                'domain' => 'sulu.io',
                 'scheme' => 'http',
                 'entries' => $entries,
             ]
@@ -161,7 +158,7 @@ class XmlSitemapRendererTest extends TestCase
 
         $this->assertEquals(
             '<html/>',
-            $this->renderer->renderSitemap('pages', 1, 'en', $portal->reveal(), 'sulu.lo', 'http')
+            $this->renderer->renderSitemap('pages', 1, 'http', 'sulu.io')
         );
     }
 }

@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
-use Sulu\Component\Webspace\Portal;
 use Twig\Environment;
 
 /**
@@ -44,40 +43,37 @@ class XmlSitemapRenderer implements XmlSitemapRendererInterface
     /**
      * {@inheritdoc}
      */
-    public function renderIndex($domain = null, $scheme = null)
+    public function renderIndex($scheme, $host)
     {
-        if (!$this->needsIndex()) {
-            return;
+        if (!$this->needsIndex($scheme, $host)) {
+            return null;
         }
 
         return $this->render(
             'SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig',
-            ['sitemaps' => $this->sitemapProviderPool->getIndex(), 'domain' => $domain, 'scheme' => $scheme]
+            ['sitemaps' => $this->sitemapProviderPool->getIndex($scheme, $host), 'domain' => $host, 'scheme' => $scheme]
         );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function renderSitemap($alias, $page, $locale, Portal $portal, $host, $scheme)
+    public function renderSitemap($alias, $page, $scheme, $host)
     {
         if (!$this->sitemapProviderPool->hasProvider($alias)) {
-            return;
+            return null;
         }
 
         $provider = $this->sitemapProviderPool->getProvider($alias);
-        if ($provider->getMaxPage() < $page) {
-            return;
+        if ($provider->getMaxPage($scheme, $host) < $page) {
+            return null;
         }
 
-        $entries = $provider->build($page, $portal->getKey(), $locale);
+        $entries = $provider->build($page, $scheme, $host);
 
         return $this->render(
             'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
             [
-                'webspaceKey' => $portal->getWebspace()->getKey(),
-                'locale' => $locale,
-                'defaultLocale' => $portal->getXDefaultLocalization()->getLocale(),
                 'domain' => $host,
                 'scheme' => $scheme,
                 'entries' => $entries,
@@ -103,13 +99,13 @@ class XmlSitemapRenderer implements XmlSitemapRendererInterface
      *
      * @return bool
      */
-    private function needsIndex()
+    private function needsIndex($scheme, $host)
     {
         return 1 < count($this->sitemapProviderPool->getProviders())
         || 1 < array_reduce(
-            $this->sitemapProviderPool->getIndex(),
-            function($v1, Sitemap $v2) {
-                return $v1 + $v2->getMaxPage();
+            $this->sitemapProviderPool->getIndex($scheme, $host),
+            function($v1, Sitemap $v2) use ($scheme, $host) {
+                return $v1 + $v2->getMaxPage($scheme, $host);
             }
         );
     }
