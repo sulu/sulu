@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * release/1.6
+    * ENHANCEMENT #4812  [MediaBundle]             Optimize gif image output
     * BUGFIX      #4800  [PreviewBundle]           Fix no host in parse_url of PreviewRenderer
     * BUGFIX      #4672  [RouteBundle]             Add redirect to locale-prefix for partial match requests
     * BUGFIX      #4669  [Component]               Fix reference-options doctrine extension
