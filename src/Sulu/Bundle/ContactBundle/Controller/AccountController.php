@@ -616,13 +616,8 @@ class AccountController extends AbstractRestController implements ClassResourceI
         $account->setCorporation($request->get('corporation'));
         $accountManager = $this->accountManager;
 
-        if (null !== $request->get('uid')) {
-            $account->setUid($request->get('uid'));
-        }
-
-        if (null !== $request->get('note')) {
-            $account->setNote($request->get('note'));
-        }
+        $account->setUid($request->get('uid'));
+        $account->setNote($request->get('note'));
 
         $logo = $request->get('logo', []);
         if ($logo && array_key_exists('id', $logo)) {

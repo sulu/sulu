@@ -2,6 +2,27 @@
 
 ## dev-release/2.0
 
+### Fix AccountInterface nullable setters/getter
+
+Setters and getter of nullable fields on the Account entity were fixed.
+For some function on the AccountInterface need to be changed to the following:
+
+```php
+// Before
+public function setExternalId(string $externalId): AccountInterface;
+public function setNumber(string $number): AccountInterface;
+public function setRegisterNumber(string $registerNumber): AccountInterface;
+public function setPlaceOfJurisdiction(string $placeOfJurisdiction): AccountInterface;
+public function addNote(Note $note): AccountInterface;
+
+// After
+public function setExternalId(?string $externalId): AccountInterface;
+public function setNumber(?string $number): AccountInterface;
+public function setRegisterNumber(?string $registerNumber): AccountInterface;
+public function setPlaceOfJurisdiction(?string $placeOfJurisdiction): AccountInterface;
+public function setNote(?string $note): AccountInterface;
+```
+
 ### Sitemap Provider changed
 
 As a sitemap is always domain specific and a domain can have multiple webspaces and portal

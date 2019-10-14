@@ -1075,6 +1075,8 @@ class AccountControllerTest extends SuluTestCase
         );
         $note = $this->createNote('Note');
         $account = $this->createAccount('Company', null, $url, $address, $email, $phone, $fax, $note);
+        $account->setUid('Test Uuid');
+        $account->setNote('Test Note');
 
         $this->em->flush();
 
@@ -1099,6 +1101,8 @@ class AccountControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('ExampleCompany', $response->name);
+        $this->assertEquals(null, $response->uid);
+        $this->assertEquals(null, $response->note);
         $this->assertEquals(0, count($response->contactDetails->websites));
         $this->assertEquals(0, count($response->contactDetails->emails));
         $this->assertEquals(0, count($response->contactDetails->phones));
