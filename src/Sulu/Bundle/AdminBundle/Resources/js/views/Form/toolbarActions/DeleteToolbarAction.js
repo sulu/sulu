@@ -68,7 +68,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     navigateBack = () => {
         const {backView} = this.router.route.options;
         const {locale} = this.resourceFormStore;
-        this.router.navigate(backView, {locale: locale ? locale.get() : undefined});
+        this.router.restore(backView, {locale: locale ? locale.get() : undefined});
     };
 
     @action handleCancel = () => {

@@ -37,7 +37,7 @@ jest.mock('../../../../containers/Form', () => ({
 }));
 
 jest.mock('../../../../services/Router', () => jest.fn(function() {
-    this.navigate = jest.fn();
+    this.restore = jest.fn();
     this.route = {
         options: {},
     };
@@ -172,7 +172,7 @@ test('Call delete when dialog is confirmed', () => {
 
     return deletePromise.then(() => {
         element = mount(deleteToolbarAction.getNode());
-        expect(deleteToolbarAction.router.navigate).toBeCalledWith('sulu_test.list', {locale: 'en'});
+        expect(deleteToolbarAction.router.restore).toBeCalledWith('sulu_test.list', {locale: 'en'});
         expect(element.at(0).instance().props).toEqual(expect.objectContaining({
             open: false,
         }));
@@ -207,7 +207,7 @@ test('Call delete with force when dialog is confirmed twice', (done) => {
 
     setTimeout(() => {
         element = mount(deleteToolbarAction.getNode());
-        expect(deleteToolbarAction.router.navigate).toBeCalledTimes(0);
+        expect(deleteToolbarAction.router.restore).toBeCalledTimes(0);
         expect(element.at(0).prop('open')).toEqual(false);
         expect(element.at(1).prop('open')).toEqual(true);
         expect(element.at(1).find('li')).toHaveLength(2);
@@ -220,7 +220,7 @@ test('Call delete with force when dialog is confirmed twice', (done) => {
         element.find('Button[skin="primary"]').simulate('click');
 
         setTimeout(() => {
-            expect(deleteToolbarAction.router.navigate).toBeCalledWith('sulu_test.list', {locale: 'en'});
+            expect(deleteToolbarAction.router.restore).toBeCalledWith('sulu_test.list', {locale: 'en'});
             expect(element.at(0).instance().props).toEqual(expect.objectContaining({
                 open: false,
             }));
