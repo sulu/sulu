@@ -73,6 +73,7 @@ class List extends React.Component<Props> {
     @observable showDeleteLinkedDialog: boolean = false;
     @observable showMoveOverlay: boolean = false;
     @observable showDeleteSelectionDialog: boolean = false;
+    @observable allowConflictDeletion: boolean = true;
     @observable showOrderDialog: boolean = false;
     @observable adapterOptionsOpen: boolean = false;
     @observable columnOptionsOpen: boolean = false;
@@ -160,14 +161,17 @@ class List extends React.Component<Props> {
     };
 
     /** @public */
-    @action requestSelectionDelete = () => {
+    @action requestSelectionDelete = (allowConflictDeletion: boolean = true) => {
         this.showDeleteSelectionDialog = true;
+        this.allowConflictDeletion = allowConflictDeletion;
     };
 
     @action handleSelectionDeleteDialogConfirmClick = () => {
-        this.props.store.deleteSelection().then(action(() => {
-            this.showDeleteSelectionDialog = false;
-        }));
+        this.props.store.deleteSelection()
+            .then(action(() => {
+                this.showDeleteSelectionDialog = false;
+            }))
+            .catch(this.handleDeleteResponseError);
     };
 
     @action handleSelectionDeleteDialogCancelClick = () => {
@@ -188,39 +192,46 @@ class List extends React.Component<Props> {
                 .then(action(() => {
                     this.showDeleteDialog = false;
                 }))
-                .catch(action((response) => {
-                    if (response.status !== 409) {
-                        throw response;
-                    }
-
-                    this.showDeleteDialog = false;
-                    this.showDeleteLinkedDialog = true;
-                    response.json().then(action((data) => {
-                        this.referencingItemsForDelete.splice(0, this.referencingItemsForDelete.length);
-                        this.referencingItemsForDelete.push(...data.items);
-
-                        const deleteLinkedPromise: Promise<ResolveDeleteArgument> = new Promise(
-                            (resolve) => this.resolveDelete = resolve
-                        );
-
-                        deleteLinkedPromise.then(action((response) => {
-                            if (!response.deleted) {
-                                this.showDeleteDialog = this.showDeleteLinkedDialog = false;
-                                return response;
-                            }
-
-                            this.props.store.delete(id, {force: true})
-                                .then(action(() => {
-                                    this.showDeleteLinkedDialog = false;
-                                }));
-                        }));
-                    }));
-                }));
+                .catch(this.handleDeleteResponseError);
 
             return response;
         }));
 
         return deletePromise;
+    };
+
+    @action handleDeleteResponseError = (response: Object) => {
+        if (response.status !== 409) {
+            throw response;
+        }
+
+        this.showDeleteDialog = false;
+        this.showDeleteSelectionDialog = false;
+        this.showDeleteLinkedDialog = true;
+        response.json().then(action((data) => {
+            this.referencingItemsForDelete.splice(0, this.referencingItemsForDelete.length);
+            this.referencingItemsForDelete.push(...data.items);
+
+            const deleteLinkedPromise: Promise<ResolveDeleteArgument> = new Promise(
+                (resolve) => this.resolveDelete = resolve
+            );
+
+            deleteLinkedPromise.then(action((response) => {
+                if (!response.deleted) {
+                    this.showDeleteDialog = false;
+                    this.showDeleteSelectionDialog = false;
+                    this.showDeleteLinkedDialog = false;
+                    return response;
+                }
+
+                this.props.store.delete(data.id, {force: true})
+                    .then(action(() => {
+                        this.showDeleteDialog = false;
+                        this.showDeleteSelectionDialog = false;
+                        this.showDeleteLinkedDialog = false;
+                    }));
+            }));
+        }));
     };
 
     @action handleDeleteDialogConfirmClick = () => {
@@ -588,12 +599,24 @@ class List extends React.Component<Props> {
                             cancelText={translate('sulu_admin.cancel')}
                             confirmLoading={store.deleting}
                             confirmText={translate('sulu_admin.ok')}
-                            onCancel={this.handleDeleteDialogCancelClick}
-                            onConfirm={this.handleDeleteDialogConfirmClick}
+                            onCancel={this.allowConflictDeletion
+                                ? this.handleDeleteDialogCancelClick
+                                : undefined
+                            }
+                            onConfirm={this.allowConflictDeletion
+                                ? this.handleDeleteDialogConfirmClick
+                                : this.handleDeleteDialogCancelClick
+                            }
                             open={this.showDeleteLinkedDialog}
-                            title={translate('sulu_admin.delete_linked_warning_title')}
+                            title={this.allowConflictDeletion
+                                ? translate('sulu_admin.delete_linked_warning_title')
+                                : translate('sulu_admin.item_not_deletable')
+                            }
                         >
-                            {translate('sulu_admin.delete_linked_warning_text')}
+                            {this.allowConflictDeletion
+                                ? translate('sulu_admin.delete_linked_warning_text')
+                                : translate('sulu_admin.delete_linked_abort_text')
+                            }
                             <ul>
                                 {this.referencingItemsForDelete.map((referencingItem, index) => (
                                     <li key={index}>{referencingItem.name}</li>

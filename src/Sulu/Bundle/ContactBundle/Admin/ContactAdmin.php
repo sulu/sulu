@@ -194,8 +194,14 @@ class ContactAdmin extends Admin
             }
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::DELETE)) {
-                $accountFormToolbarActions[] = new ToolbarAction('sulu_admin.delete');
-                $accountListToolbarActions[] = new ToolbarAction('sulu_admin.delete');
+                $accountFormToolbarActions[] = new ToolbarAction(
+                    'sulu_admin.delete',
+                    ['allow_conflict_deletion' => false]
+                );
+                $accountListToolbarActions[] = new ToolbarAction(
+                    'sulu_admin.delete',
+                    ['allow_conflict_deletion' => false]
+                );
             }
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::VIEW)) {

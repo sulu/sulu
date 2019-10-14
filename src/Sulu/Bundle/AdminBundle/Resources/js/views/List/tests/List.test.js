@@ -1311,6 +1311,36 @@ test('Should delete selected items when delete button is clicked', () => {
     expect(list.find('Dialog').at(0).prop('open')).toEqual(true);
 });
 
+test('Should pass allowConflictDeletion correctly to List component', () => {
+    const List = require('../List').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
+    const DeleteToolbarAction = require('../toolbarActions/DeleteToolbarAction').default;
+    listToolbarActionRegistry.add('sulu_admin.delete', DeleteToolbarAction);
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'test',
+                resourceKey: 'test',
+                toolbarActions: [
+                    {type: 'sulu_admin.delete', options: {}},
+                ],
+            },
+        },
+    };
+
+    const list = mount(<List router={router} />);
+    const listStore = list.instance().listStore;
+    listStore.selectionIds.push(1, 4, 6);
+    list.instance().requestSelectionDelete(false);
+
+    list.update();
+    expect(list.find('Dialog').at(0).prop('open')).toEqual(true);
+
+    expect(list.find('List').at(1).instance().allowConflictDeletion).toEqual(false);
+});
+
 test('Should make move overlay disappear if cancel is clicked', () => {
     function getMoveItem() {
         return toolbarFunction.call(list.instance()).items.find((item) => item.label === 'Move selected');

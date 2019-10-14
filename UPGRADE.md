@@ -1,6 +1,6 @@
 # Upgrade
 
-## unreleased
+## dev-release/2.0
 
 ### Sitemap Provider changed
 
@@ -58,6 +58,39 @@ sulu_website:
 # after
 parameters:
     router.request_context.host: 'localhost'
+```
+
+### DeleteToolbarAction with conflict
+
+The `DeleteToolbarAction` asks for confirmation if e.g. a page that is being tried to deleted is linked on other pages.
+The delete action of the controller now also has to return the ID that was trying to be deleted, in order for the
+application to know what was tried to be deleted.
+
+```
+# Before
+{
+    "items": [
+        {
+            "name": "Test1"
+        },
+        {
+            "name": "Test2"
+        }
+    ]
+}
+
+# After
+{
+    "id": "page-uuid",
+    "items": [
+        {
+            "name": "Test1"
+        },
+        {
+            "name": "Test2"
+        }
+    ]
+}
 ```
 
 ## 2.0.0

@@ -824,7 +824,7 @@ test('ListStore should delete item when onRequestItemDelete callback is called a
 });
 
 test('ListStore should delete linked item when onRequestItemDelete callback is is confirmed twice', (done) => {
-    const jsonDeletePromise = Promise.resolve({items: [{name: 'Item 1'}, {name: 'Item 2'}]});
+    const jsonDeletePromise = Promise.resolve({id: 5, items: [{name: 'Item 1'}, {name: 'Item 2'}]});
     const deletePromise = Promise.reject({
         json: jest.fn().mockReturnValue(jsonDeletePromise),
         status: 409,
@@ -918,6 +918,97 @@ test('ListStore should not delete linked item when onRequestItemDelete callback 
                 expect(list.find('Dialog').at(2).prop('open')).toEqual(false);
                 done();
             });
+        });
+    });
+});
+
+test('ListStore should delete linked item when called with allowConflictDeletion value of true', (done) => {
+    const jsonDeletePromise = Promise.resolve({id: 5, items: [{name: 'Item 1'}, {name: 'Item 2'}]});
+    const deletePromise = Promise.reject({
+        json: jest.fn().mockReturnValue(jsonDeletePromise),
+        status: 409,
+    });
+
+    listAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    // $FlowFixMe
+    listStore.deleteSelection.mockReturnValueOnce(deletePromise);
+    listStore.selectionIds.push(5);
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const list = mount(<List adapters={['table']} store={listStore} />);
+
+    list.instance().requestSelectionDelete(true);
+    list.update();
+    expect(list.find('Dialog').at(0).prop('open')).toEqual(true);
+
+    list.find('Dialog').at(0).prop('onConfirm')();
+
+    setTimeout(() => {
+        list.update();
+        expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
+        expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
+        expect(list.find('Dialog').at(2).prop('open')).toEqual(true);
+
+        const deletePromise = Promise.resolve();
+        // $FlowFixMe
+        listStore.delete.mockReturnValueOnce(deletePromise);
+        list.find('Dialog').at(2).prop('onConfirm')();
+
+        setTimeout(() => {
+            expect(listStore.delete).toBeCalledWith(5, {force: true});
+            list.update();
+            expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
+            expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
+            expect(list.find('Dialog').at(2).prop('open')).toEqual(false);
+            done();
+        });
+    });
+});
+
+test('ListStore should not delete linked item when called with allowConflictDeletion value of false', (done) => {
+    const jsonDeletePromise = Promise.resolve({id: 5, items: [{name: 'Item 1'}, {name: 'Item 2'}]});
+    const deletePromise = Promise.reject({
+        json: jest.fn().mockReturnValue(jsonDeletePromise),
+        status: 409,
+    });
+
+    listAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    // $FlowFixMe
+    listStore.deleteSelection.mockReturnValueOnce(deletePromise);
+    listStore.selectionIds.push(5);
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const list = mount(<List adapters={['table']} store={listStore} />);
+
+    list.instance().requestSelectionDelete(false);
+    list.update();
+    expect(list.find('Dialog').at(0).prop('open')).toEqual(true);
+
+    list.find('Dialog').at(0).prop('onConfirm')();
+
+    setTimeout(() => {
+        list.update();
+        expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
+        expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
+        expect(list.find('Dialog').at(2).prop('open')).toEqual(true);
+
+        list.find('Dialog').at(2).prop('onConfirm')();
+
+        setTimeout(() => {
+            expect(listStore.delete).not.toBeCalledWith(5, {force: true});
+            list.update();
+            expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
+            expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
+            expect(list.find('Dialog').at(2).prop('open')).toEqual(false);
+            done();
         });
     });
 });

@@ -5,7 +5,7 @@ import pretty from 'pretty';
 import GhostDialog from '../GhostDialog';
 
 jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn(),
+    translate: jest.fn((key) => key),
 }));
 
 afterEach(() => {
