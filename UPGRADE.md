@@ -23,6 +23,27 @@ public function setPlaceOfJurisdiction(?string $placeOfJurisdiction): AccountInt
 public function setNote(?string $note): AccountInterface;
 ```
 
+### SnippetSelection type param
+
+Previously the `snippet_selection` field type accepted a `snippetType` param, which filtered the assignable snippets.
+This param was renamed to `types`, in order to make it consistent with e.g. the `media_selection`.
+
+```xml
+<!-- before -->
+<property name="snippets" type="snippet_selection">
+    <params>
+        <param name="snippetType" value="default" />
+    </params>
+</property>
+
+<!-- after -->
+<property name="snippets" type="snippet_selection">
+    <params>
+        <param name="types" value="default" />
+    </params>
+</property>
+```
+
 ### Sitemap Provider changed
 
 As a sitemap is always domain specific and a domain can have multiple webspaces and portal
