@@ -344,7 +344,7 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
 
             return $query->getResult();
         } catch (NoResultException $ex) {
-            return null;
+            return [];
         }
     }
 
