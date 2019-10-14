@@ -24,11 +24,6 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
     private $providers;
 
     /**
-     * @var string[]
-     */
-    private $aliases;
-
-    /**
      * @var Sitemap[]
      */
     private $index;
@@ -36,10 +31,11 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
     /**
      * @param SitemapProviderInterface[] $providers
      */
-    public function __construct(array $providers)
+    public function __construct(iterable $providers)
     {
-        $this->providers = $providers;
-        $this->aliases = array_keys($providers);
+        foreach ($providers as $provider) {
+            $this->providers[$provider->getAlias()] = $provider;
+        }
     }
 
     /**
@@ -48,7 +44,7 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
     public function getProvider($alias)
     {
         if (!$this->hasProvider($alias)) {
-            throw new SitemapProviderNotFoundException($alias, $this->aliases);
+            throw new SitemapProviderNotFoundException($alias, array_keys($this->providers));
         }
 
         return $this->providers[$alias];
@@ -73,7 +69,7 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
     /**
      * {@inheritdoc}
      */
-    public function getIndex()
+    public function getIndex($scheme, $host)
     {
         if ($this->index) {
             return $this->index;
@@ -81,7 +77,7 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
 
         $this->index = [];
         foreach ($this->providers as $alias => $provider) {
-            $this->index[] = $provider->createSitemap($alias);
+            $this->index[] = $provider->createSitemap($scheme, $host);
         }
 
         return $this->index;

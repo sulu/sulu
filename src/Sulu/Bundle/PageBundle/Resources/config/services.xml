@@ -185,5 +185,15 @@
                  class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">
             <tag name="sulu_website.reference_store" alias="content"/>
         </service>
+
+        <!-- sitemap-provider -->
+        <service id="sulu_page.pages_sitemap_provider"
+                 class="Sulu\Bundle\PageBundle\Sitemap\PagesSitemapProvider">
+            <argument type="service" id="sulu_page.content_repository"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument>%kernel.environment%</argument>
+
+            <tag name="sulu.sitemap.provider"/>
+        </service>
     </services>
 </container>

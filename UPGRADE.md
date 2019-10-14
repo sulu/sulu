@@ -1,5 +1,65 @@
 # Upgrade
 
+## unreleased
+
+### Sitemap Provider changed
+
+As a sitemap is always domain specific and a domain can have multiple webspaces and portal
+the `SitemapProviderInterface` changed. To make it possible to provide also none Sulu
+routes the `SitemapUrl` constructor introduced a `defaultLocale` as third parameter.
+
+```php
+// before
+public function build($page, $portal) {
+     return [
+          new SitemapUrl('/test-1', 'de');
+     ];
+}
+
+public function createSitemap() {
+    return new Sitemap($alias, $this->getMaxPage()/*, $lastMod */);
+}
+
+public function getMaxPage() {
+     return 1;
+}
+
+// after
+public function build($page, $scheme, $host) {
+     return [
+          new SitemapUrl('http://test.lo/test-1', 'de', 'de');
+     ];
+}
+
+public function createSitemap() {
+    return new Sitemap($this->getAlias(), $this->getMaxPage()/*, $lastMod */);
+}
+
+public function getAlias(): string {
+    return 'myalias';
+}
+
+public function getMaxPage($scheme, $host) {
+     return 1;
+}
+```
+
+The `XmlSitemapDumper` and `XmlSitemapRender` no longer need `PortalInformations`.
+
+Also the `sulu_website` configuration `default_host` was removed and will use now the
+[router context parameter](https://symfony.com/doc/current/routing.html#generating-urls-in-commands) instead.
+
+```yaml
+# before
+sulu_website:
+    sitemap:
+        default_host: 'localhost'
+
+# after
+parameters:
+    router.request_context.host: 'localhost'
+```
+
 ## 2.0.0
 
 When upgrading also have a look at the changes in the

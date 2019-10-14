@@ -20,9 +20,14 @@ use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPool;
 class SitemapProviderPoolTest extends TestCase
 {
     /**
-     * @var SitemapProviderInterface[]
+     * @var SitemapProviderInterface
      */
-    public $providers;
+    public $pagesSitemapProvider;
+
+    /**
+     * @var SitemapProviderInterface
+     */
+    public $articlesSitemapProvider;
 
     /**
      * @var SitemapProviderPool
@@ -31,24 +36,25 @@ class SitemapProviderPoolTest extends TestCase
 
     public function setUp(): void
     {
+        $this->pagesSitemapProvider = $this->prophesize(SitemapProviderInterface::class);
+        $this->pagesSitemapProvider->getAlias()->willReturn('pages');
+        $this->articlesSitemapProvider = $this->prophesize(SitemapProviderInterface::class);
+        $this->articlesSitemapProvider->getAlias()->willReturn('articles');
+
         $this->providers = [
-            'pages' => $this->prophesize(SitemapProviderInterface::class),
-            'articles' => $this->prophesize(SitemapProviderInterface::class),
+            $this->prophesize(SitemapProviderInterface::class)->getAlias(),
+            $this->prophesize(SitemapProviderInterface::class)->getAlias()->willReturn('articles'),
         ];
 
-        $this->pool = new SitemapProviderPool(
-            array_map(
-                function($prophet) {
-                    return $prophet->reveal();
-                },
-                $this->providers
-            )
-        );
+        $this->pool = new SitemapProviderPool([
+            $this->pagesSitemapProvider->reveal(),
+            $this->articlesSitemapProvider->reveal(),
+        ]);
     }
 
     public function testGetProvider()
     {
-        $this->assertEquals($this->providers['pages']->reveal(), $this->pool->getProvider('pages'));
+        $this->assertEquals($this->pagesSitemapProvider->reveal(), $this->pool->getProvider('pages'));
     }
 
     public function testGetProviderNotExists()
@@ -66,13 +72,16 @@ class SitemapProviderPoolTest extends TestCase
 
     public function testGetIndex()
     {
-        $this->providers['pages']->createSitemap('pages')->willReturn(new Sitemap('pages', 1));
-        $this->providers['articles']->createSitemap('articles')->willReturn(new Sitemap('articles', 1));
+        $lastMod = new \DateTime();
+        $this->pagesSitemapProvider->createSitemap('http', 'sulu.io')->willReturn(new Sitemap('pages', 1));
+        $this->articlesSitemapProvider->createSitemap('http', 'sulu.io')->willReturn(new Sitemap('articles', 1, $lastMod));
 
-        $result = $this->pool->getIndex();
+        $result = $this->pool->getIndex('http', 'sulu.io');
 
         $this->assertCount(2, $result);
         $this->assertEquals('pages', $result[0]->getAlias());
+        $this->assertNull($result[0]->getLastmod());
         $this->assertEquals('articles', $result[1]->getAlias());
+        $this->assertEquals($lastMod, $result[1]->getLastmod());
     }
 }

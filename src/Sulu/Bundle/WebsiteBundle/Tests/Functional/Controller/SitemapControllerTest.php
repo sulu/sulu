@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Controller;
 
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
 
-class SitemapControllerTest extends SuluTestCase
+class SitemapControllerTest extends WebsiteTestCase
 {
     public function setUp(): void
     {

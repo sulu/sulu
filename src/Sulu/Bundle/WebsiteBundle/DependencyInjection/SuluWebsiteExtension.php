@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\DependencyInjection;
 
+use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderInterface;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -105,10 +106,8 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
             'sulu_website.sitemap.dump_dir',
             $config['sitemap']['dump_dir']
         );
-        $container->setParameter(
-            'sulu_website.sitemap.default_host',
-            $config['sitemap']['default_host']
-        );
+        $container->registerForAutoconfiguration(SitemapProviderInterface::class)
+            ->setTags(['sulu.sitemap.provider']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');

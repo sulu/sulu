@@ -25,25 +25,37 @@ interface SitemapProviderInterface
      * Returns sitemap-entries.
      *
      * @param int $page
-     * @param string $portalKey
+     * @param string $scheme
+     * @param string $host
      *
      * @return SitemapUrl[]
      */
-    public function build($page, $portalKey);
+    public function build($page, $scheme, $host);
 
     /**
-     * Create sitemap.
+     * Get the sitemap of a provider.
      *
-     * @param string $alias
+     * @param string $scheme
+     * @param string $host
      *
      * @return Sitemap
      */
-    public function createSitemap($alias);
+    public function createSitemap($scheme, $host);
+
+    /**
+     * Get the alias of the sitemap provider.
+     *
+     * @return string
+     */
+    public function getAlias();
 
     /**
      * Returns max-page.
      *
+     * @param string $scheme
+     * @param string $host
+     *
      * @return int
      */
-    public function getMaxPage();
+    public function getMaxPage($scheme, $host);
 }

@@ -15,7 +15,6 @@ use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPoolInterface;
 use Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapDumperInterface;
 use Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapRendererInterface;
-use Sulu\Component\Webspace\Portal;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -84,18 +83,22 @@ class SitemapController
      */
     public function indexAction(Request $request)
     {
-        if (null !== ($response = $this->getDumpedIndexResponse($request))) {
-            return $response;
+        $response = $this->getDumpedIndexResponse($request);
+
+        if (!$response) {
+            $sitemap = $this->xmlSitemapRenderer->renderIndex($request->getScheme(), $request->getHost());
+            if (!$sitemap) {
+                $aliases = array_keys($this->sitemapProviderPool->getProviders());
+
+                return $this->sitemapPaginatedAction($request, reset($aliases), 1);
+            }
+
+            $response = new Response($sitemap);
         }
 
-        $sitemap = $this->xmlSitemapRenderer->renderIndex();
-        if (!$sitemap) {
-            $aliases = array_keys($this->sitemapProviderPool->getProviders());
+        $response->headers->set('Content-Type', 'application/xml');
 
-            return $this->sitemapPaginatedAction($request, reset($aliases), 1);
-        }
-
-        return $this->setCacheLifetime(new Response($sitemap));
+        return $this->setCacheLifetime($response);
     }
 
     /**
@@ -107,18 +110,9 @@ class SitemapController
      */
     private function getDumpedIndexResponse(Request $request)
     {
-        /** @var Portal $portal */
-        $portal = $request->get('_sulu')->getAttribute('portal');
-        $localization = $request->get('_sulu')->getAttribute('localization');
-        if (!$localization) {
-            $localization = $portal->getXDefaultLocalization();
-        }
-
         $path = $this->xmlSitemapDumper->getIndexDumpPath(
             $request->getScheme(),
-            $portal->getWebspace()->getKey(),
-            $localization->getLocale(),
-            $request->getHttpHost()
+            $request->getHost()
         );
 
         if (!$this->filesystem->exists($path)) {
@@ -161,30 +155,26 @@ class SitemapController
      */
     public function sitemapPaginatedAction(Request $request, $alias, $page)
     {
-        if (null !== ($response = $this->getDumpedSitemapResponse($request, $alias, $page))) {
-            return $response;
+        $response = $this->getDumpedSitemapResponse($request, $alias, $page);
+
+        if (!$response) {
+            $sitemap = $this->xmlSitemapRenderer->renderSitemap(
+                $alias,
+                $page,
+                $request->getScheme(),
+                $request->getHost()
+            );
+
+            if (!$sitemap) {
+                return new Response(null, 404);
+            }
+
+            $response = new Response($sitemap);
         }
 
-        $portal = $request->get('_sulu')->getAttribute('portal');
-        $localization = $request->get('_sulu')->getAttribute('localization');
-        if (!$localization) {
-            $localization = $portal->getXDefaultLocalization();
-        }
+        $response->headers->set('Content-Type', 'application/xml');
 
-        $sitemap = $this->xmlSitemapRenderer->renderSitemap(
-            $alias,
-            $page,
-            $localization->getLocale(),
-            $portal,
-            $request->getHttpHost(),
-            $request->getScheme()
-        );
-
-        if (!$sitemap) {
-            return new Response(null, 404);
-        }
-
-        return $this->setCacheLifetime(new Response($sitemap));
+        return $this->setCacheLifetime($response);
     }
 
     /**
@@ -198,17 +188,8 @@ class SitemapController
      */
     private function getDumpedSitemapResponse(Request $request, $alias, $page)
     {
-        /** @var Portal $portal */
-        $portal = $request->get('_sulu')->getAttribute('portal');
-        $localization = $request->get('_sulu')->getAttribute('localization');
-        if (!$localization) {
-            $localization = $portal->getXDefaultLocalization();
-        }
-
         $path = $this->xmlSitemapDumper->getDumpPath(
             $request->getScheme(),
-            $portal->getWebspace()->getKey(),
-            $localization->getLocale(),
             $request->getHttpHost(),
             $alias,
             $page
