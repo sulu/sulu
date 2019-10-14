@@ -168,13 +168,13 @@ class SnippetControllerTest extends SuluTestCase
             ],
             [
                 [
-                    'type' => 'car',
+                    'types' => 'car',
                 ],
                 4,
             ],
             [
                 [
-                    'type' => 'hotel',
+                    'types' => 'hotel',
                 ],
                 2,
             ],

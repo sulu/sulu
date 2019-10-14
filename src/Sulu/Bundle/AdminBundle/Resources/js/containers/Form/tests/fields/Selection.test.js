@@ -80,6 +80,12 @@ test('Should pass props correctly to selection component', () => {
         },
     };
 
+    const schemaOptions = {
+        types: {
+            value: 'test',
+        },
+    };
+
     const locale = observable.box('en');
 
     const formInspector = new FormInspector(
@@ -96,6 +102,7 @@ test('Should pass props correctly to selection component', () => {
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
             onFinish={jest.fn()}
+            schemaOptions={schemaOptions}
             value={value}
         />
     );
@@ -110,6 +117,7 @@ test('Should pass props correctly to selection component', () => {
         label: 'sulu_snippet.selection_label',
         locale,
         resourceKey: 'snippets',
+        options: {types: 'test'},
         overlayTitle: 'sulu_snippet.selection_overlay_title',
         value,
     }));
@@ -347,6 +355,26 @@ test('Should call onChange and onFinish callback when selection overlay is confi
 
     expect(changeSpy).toBeCalledWith([1, 2, 3]);
     expect(finishSpy).toBeCalledWith();
+});
+
+test('Should throw an error if "types" schema option is not a string', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'test',
+        types: {
+            list_overlay: {},
+        },
+    };
+
+    expect(() => shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={{types: {value: []}}}
+        />
+    )).toThrowError(/"types"/);
 });
 
 test('Should throw an error if no "resource_key" option is passed in fieldOptions', () => {
