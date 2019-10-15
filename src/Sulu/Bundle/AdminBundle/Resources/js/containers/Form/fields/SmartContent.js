@@ -98,6 +98,9 @@ export default class SmartContent extends React.Component<Props> {
             disabled,
             label,
             schemaOptions: {
+                category_root: {
+                    value: categoryRootKey,
+                } = {},
                 present_as: {
                     value: schemaPresentations = [],
                 } = {},
@@ -108,6 +111,10 @@ export default class SmartContent extends React.Component<Props> {
             throw new Error(
                 'The "present_as" schemaOption must be a string, but received ' + typeof schemaPresentations + '!'
             );
+        }
+
+        if (categoryRootKey !== undefined && typeof categoryRootKey !== 'string') {
+            throw new Error('The "category_root" option must a string if set!');
         }
 
         const presentations = schemaPresentations.map((presentation) => {
@@ -129,6 +136,7 @@ export default class SmartContent extends React.Component<Props> {
 
         return (
             <SmartContentComponent
+                categoryRootKey={categoryRootKey}
                 disabled={!!disabled}
                 fieldLabel={label}
                 presentations={presentations}

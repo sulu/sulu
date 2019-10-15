@@ -11,6 +11,7 @@ import SmartContentItem from './SmartContentItem';
 import type {Presentation, SmartContentConfig} from './types';
 
 type Props = {|
+    categoryRootKey?: string,
     disabled: boolean,
     fieldLabel: string,
     presentations: Array<Presentation>,
@@ -104,7 +105,7 @@ class SmartContent extends React.Component<Props> {
     };
 
     render() {
-        const {disabled, fieldLabel, store} = this.props;
+        const {categoryRootKey, disabled, fieldLabel, store} = this.props;
 
         const presentations = this.props.presentations.reduce((presentations, presentation) => {
             presentations[presentation.name] = presentation.value;
@@ -130,6 +131,7 @@ class SmartContent extends React.Component<Props> {
                     ))}
                 </MultiItemSelection>
                 <FilterOverlay
+                    categoryRootKey={categoryRootKey}
                     dataSourceAdapter={this.config.datasourceAdapter}
                     dataSourceListKey={this.config.datasourceListKey}
                     dataSourceResourceKey={this.config.datasourceResourceKey}
