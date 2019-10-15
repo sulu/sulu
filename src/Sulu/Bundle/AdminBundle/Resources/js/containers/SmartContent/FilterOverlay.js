@@ -15,7 +15,8 @@ import SmartContentStore from './stores/SmartContentStore';
 import type {Conjunction, SortOrder} from './types';
 import filterOverlayStyles from './filterOverlay.scss';
 
-type Props = {
+type Props = {|
+    categoryRootKey: ?string,
     dataSourceAdapter: ?string,
     dataSourceListKey: ?string,
     dataSourceResourceKey: ?string,
@@ -26,7 +27,7 @@ type Props = {
     smartContentStore: SmartContentStore,
     sortings: {[key: string]: string},
     title: string,
-};
+|};
 
 @observer
 class FilterOverlay extends React.Component<Props> {
@@ -199,6 +200,7 @@ class FilterOverlay extends React.Component<Props> {
 
     render() {
         const {
+            categoryRootKey,
             dataSourceAdapter,
             dataSourceListKey,
             dataSourceResourceKey,
@@ -398,6 +400,7 @@ class FilterOverlay extends React.Component<Props> {
                         onClose={this.handleCloseCategoryDialog}
                         onConfirm={this.handleConfirmCategoryDialog}
                         open={this.showCategoryDialog}
+                        options={{rootKey: categoryRootKey}}
                         overlayType="dialog"
                         preSelectedItems={this.categories || []}
                         resourceKey="categories"

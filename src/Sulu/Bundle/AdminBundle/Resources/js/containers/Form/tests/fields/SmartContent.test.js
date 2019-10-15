@@ -110,6 +110,9 @@ test('Pass correct props to SmartContent component', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const schemaOptions = {
+        category_root: {
+            value: 'test1',
+        },
         provider: {
             value: 'media',
         },
@@ -131,6 +134,7 @@ test('Pass correct props to SmartContent component', () => {
         />
     );
 
+    expect(smartContent.find('SmartContent').prop('categoryRootKey')).toEqual('test1');
     expect(smartContent.find('SmartContent').prop('presentations')).toEqual([
         {name: 'one', value: 'One column'},
         {name: 'two', value: 'Two column'},

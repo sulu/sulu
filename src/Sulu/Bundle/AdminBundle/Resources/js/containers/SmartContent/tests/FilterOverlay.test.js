@@ -21,6 +21,7 @@ test('Do not display if open is set to false', () => {
     const smartContentStore = new SmartContentStore('content');
     const filterOverlay = shallow(
         <FilterOverlay
+            categoryRootKey={undefined}
             dataSourceAdapter="table"
             dataSourceListKey="snippets"
             dataSourceResourceKey="snippets"
@@ -37,6 +38,31 @@ test('Do not display if open is set to false', () => {
     expect(filterOverlay.find('Overlay').prop('open')).toEqual(false);
 });
 
+test('Pass rootKey for categories to options for category list', () => {
+    const smartContentStore = new SmartContentStore('content');
+    // $FlowFixMe
+    smartContentStore.loading = false;
+
+    const filterOverlay = shallow(
+        <FilterOverlay
+            categoryRootKey="test1"
+            dataSourceAdapter="table"
+            dataSourceListKey="snippets"
+            dataSourceResourceKey="snippets"
+            onClose={jest.fn()}
+            open={false}
+            presentations={{}}
+            sections={['categories']}
+            smartContentStore={smartContentStore}
+            sortings={{}}
+            title="Test"
+        />
+    );
+
+    expect(filterOverlay.find(MultiListOverlay).find('[resourceKey="categories"]').prop('options'))
+        .toEqual({rootKey: 'test1'});
+});
+
 test('Render with ListOverlays if smartContentStore is loaded', () => {
     const smartContentStore = new SmartContentStore('content');
     // $FlowFixMe
@@ -44,6 +70,7 @@ test('Render with ListOverlays if smartContentStore is loaded', () => {
 
     const filterOverlay = shallow(
         <FilterOverlay
+            categoryRootKey={undefined}
             dataSourceAdapter="table"
             dataSourceListKey="snippets"
             dataSourceResourceKey="snippets"
@@ -68,6 +95,7 @@ test('Render without ListOverlays if smartContentStore is not loaded', () => {
 
     const filterOverlay = mount(
         <FilterOverlay
+            categoryRootKey={undefined}
             dataSourceAdapter={undefined}
             dataSourceListKey={undefined}
             dataSourceResourceKey={undefined}
@@ -88,6 +116,7 @@ test('Render with all fields', () => {
     const smartContentStore = new SmartContentStore('content');
     const filterOverlay = mount(
         <FilterOverlay
+            categoryRootKey={undefined}
             dataSourceAdapter={undefined}
             dataSourceListKey={undefined}
             dataSourceResourceKey={undefined}
@@ -107,6 +136,7 @@ test('Render with no fields', () => {
     const smartContentStore = new SmartContentStore('content');
     const filterOverlay = mount(
         <FilterOverlay
+            categoryRootKey={undefined}
             dataSourceAdapter={undefined}
             dataSourceListKey={undefined}
             dataSourceResourceKey={undefined}
@@ -128,6 +158,7 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
 
     const filterOverlay = mount(
         <FilterOverlay
+            categoryRootKey={undefined}
             dataSourceAdapter="table"
             dataSourceListKey="pages_list"
             dataSourceResourceKey="pages"
@@ -251,6 +282,7 @@ test('Prefill all fields with correct values', () => {
 
     const filterOverlay = mount(
         <FilterOverlay
+            categoryRootKey={undefined}
             dataSourceAdapter="table"
             dataSourceListKey="pages"
             dataSourceResourceKey="pages"
@@ -312,6 +344,7 @@ test('Reset all fields when reset action is clicked', () => {
 
     const filterOverlay = mount(
         <FilterOverlay
+            categoryRootKey={undefined}
             dataSourceAdapter="table"
             dataSourceListKey="pages"
             dataSourceResourceKey="pages"

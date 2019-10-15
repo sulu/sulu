@@ -85,9 +85,15 @@ test('Pass correct sections prop with other values', () => {
 
     const smartContentStore = new SmartContentStore('content');
     const smartContent = shallow(
-        <SmartContent fieldLabel="Test" presentations={presentations} store={smartContentStore} />
+        <SmartContent
+            categoryRootKey="test1"
+            fieldLabel="Test"
+            presentations={presentations}
+            store={smartContentStore}
+        />
     );
 
+    expect(smartContent.find('FilterOverlay').prop('categoryRootKey')).toEqual('test1');
     expect(smartContent.find('FilterOverlay').prop('dataSourceListKey')).toEqual('pages_list');
     expect(smartContent.find('FilterOverlay').prop('dataSourceResourceKey')).toEqual('pages');
     expect(smartContent.find('FilterOverlay').prop('sections'))
