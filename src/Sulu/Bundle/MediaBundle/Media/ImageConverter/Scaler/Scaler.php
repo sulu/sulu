@@ -52,7 +52,7 @@ class Scaler implements ScalerInterface
      * @param $size
      * @param $mode
      *
-     * @return array
+     * @return int[]
      */
     private function getHeightWidth($x, $y, $retina, $forceRatio, $size, $mode)
     {
@@ -96,7 +96,7 @@ class Scaler implements ScalerInterface
             }
         }
 
-        return [$newWidth, $newHeight];
+        return [(int) round($newWidth), (int) round($newHeight)];
     }
 
     /**
