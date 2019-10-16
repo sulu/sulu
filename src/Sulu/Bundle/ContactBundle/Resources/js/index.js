@@ -190,6 +190,21 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: bo
                             },
                             type: 'section',
                         },
+                        coordinates: {
+                            items: {
+                                latitude: {
+                                    label: translate('sulu_contact.latitude'),
+                                    colSpan: 6,
+                                    type: 'text_line',
+                                },
+                                longitude: {
+                                    label: translate('sulu_contact.longitude'),
+                                    colSpan: 6,
+                                    type: 'text_line',
+                                },
+                            },
+                            type: 'section',
+                        },
                         note: {
                             items: {
                                 note: {
