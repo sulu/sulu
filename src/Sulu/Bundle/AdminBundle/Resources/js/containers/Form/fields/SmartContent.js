@@ -47,7 +47,7 @@ class SmartContent extends React.Component<Props> {
             formInspector,
             schemaOptions: {
                 exclude_duplicates: {
-                    value: excludeDuplicates,
+                    value: excludeDuplicates = false,
                 } = {},
                 provider: {
                     value: provider,
@@ -60,6 +60,10 @@ class SmartContent extends React.Component<Props> {
             throw new Error('The "provider" schemaOption must be a string, but received ' + typeof provider + '!');
         }
 
+        if (typeof excludeDuplicates !== 'boolean') {
+            throw new Error('The "exclude_duplicates" schemaOption must be a boolean if set!');
+        }
+
         const datasourceResourceKey = smartContentConfigStore.getConfig(provider).datasourceResourceKey;
 
         this.smartContentStore = new SmartContentStore(
@@ -70,7 +74,7 @@ class SmartContent extends React.Component<Props> {
             formInspector.resourceKey === provider ? formInspector.id : undefined
         );
 
-        smartContentStorePool.add(this.smartContentStore);
+        smartContentStorePool.add(this.smartContentStore, excludeDuplicates);
 
         this.filterCriteriaChangeDisposer = autorun(this.handleFilterCriteriaChange);
 

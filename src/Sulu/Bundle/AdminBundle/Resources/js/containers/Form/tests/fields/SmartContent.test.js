@@ -82,12 +82,36 @@ test('Should correctly initialize SmartContentStore', () => {
 
     expect(smartContentStore.start).toBeCalledWith();
 
-    expect(smartContentStorePool.add).toBeCalledWith(smartContentStore);
+    expect(smartContentStorePool.add).toBeCalledWith(smartContentStore, false);
     expect(smartContentConfigStore.getConfig).toBeCalledWith('media');
     expect(SmartContentStore).toBeCalledWith('media', value, undefined, 'collections', undefined);
 
     smartContent.unmount();
     expect(smartContentStorePool.remove).toBeCalledWith(smartContentStore);
+});
+
+test('Should correctly initialize SmartContentStore with a negative exclude_duplicates values', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test', 1), 'test'));
+    smartContentConfigStore.getConfig.mockReturnValue({datasourceResourceKey: 'collections'});
+
+    const schemaOptions = {
+        exclude_duplicates: {
+            value: true,
+        },
+    };
+
+    const smartContent = shallow(
+        <SmartContent
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    const smartContentStore = smartContent.instance().smartContentStore;
+
+    expect(smartContentStore.start).toBeCalledWith();
+    expect(smartContentStorePool.add).toBeCalledWith(smartContentStore, true);
 });
 
 test('Defer start of smartContentStore until all previous stores have loaded their items', () => {
@@ -96,6 +120,7 @@ test('Defer start of smartContentStore until all previous stores have loaded the
     smartContentStore1.itemsLoading = true;
     const smartContentStore2 = new SmartContentStore('pages');
     smartContentStore2.itemsLoading = true;
+    // $FlowFixMe
     smartContentStorePool.stores = [smartContentStore1, smartContentStore2];
 
     const schemaOptions = {

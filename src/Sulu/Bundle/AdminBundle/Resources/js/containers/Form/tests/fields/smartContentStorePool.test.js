@@ -8,6 +8,7 @@ jest.mock('../../../SmartContent/stores/SmartContentStore', () => jest.fn(functi
     this.setExcludedIds = jest.fn((excludedIds) => {
         this.excludedIds = excludedIds;
     });
+    this.items = [];
 
     mockExtendObservable(this, {itemsLoading: false});
 }));
@@ -20,8 +21,8 @@ test('Add and remove SmartContentStores', () => {
     const smartContentStore1 = new SmartContentStore('pages');
     const smartContentStore2 = new SmartContentStore('pages');
 
-    smartContentStorePool.add(smartContentStore1);
-    smartContentStorePool.add(smartContentStore2);
+    smartContentStorePool.add(smartContentStore1, true);
+    smartContentStorePool.add(smartContentStore2, true);
 
     expect(smartContentStorePool.stores).toEqual([smartContentStore1, smartContentStore2]);
 
@@ -32,19 +33,21 @@ test('Add and remove SmartContentStores', () => {
 test('Add same SmartContentStore twice should throw an error', () => {
     const smartContentStore = new SmartContentStore('pages');
 
-    smartContentStorePool.add(smartContentStore);
+    smartContentStorePool.add(smartContentStore, true);
 
-    expect(() => smartContentStorePool.add(smartContentStore)).toThrow(/twice/);
+    expect(() => smartContentStorePool.add(smartContentStore, true)).toThrow(/twice/);
 });
 
-test('Updated excluded ids', () => {
+test('Updated excluded ids only if excludedDuplicates is set to true', () => {
     const smartContentStore1 = new SmartContentStore('pages');
     const smartContentStore2 = new SmartContentStore('pages');
     const smartContentStore3 = new SmartContentStore('pages');
+    const smartContentStore4 = new SmartContentStore('pages');
 
-    smartContentStorePool.add(smartContentStore1);
-    smartContentStorePool.add(smartContentStore2);
-    smartContentStorePool.add(smartContentStore3);
+    smartContentStorePool.add(smartContentStore1, true);
+    smartContentStorePool.add(smartContentStore2, true);
+    smartContentStorePool.add(smartContentStore3, false);
+    smartContentStorePool.add(smartContentStore4, true);
 
     smartContentStore1.items = [{id: 1}];
     smartContentStore2.items = [{id: 2}, {id: 3}];
@@ -53,7 +56,8 @@ test('Updated excluded ids', () => {
 
     expect(smartContentStore1.excludedIds).toEqual([]);
     expect(smartContentStore2.excludedIds).toEqual([1]);
-    expect(smartContentStore3.excludedIds).toEqual([1, 2, 3]);
+    expect(smartContentStore3.excludedIds).toEqual([]);
+    expect(smartContentStore4.excludedIds).toEqual([1, 2, 3]);
 });
 
 test('Updated excluded ids should wait if something is currently loading', () => {
@@ -65,9 +69,9 @@ test('Updated excluded ids should wait if something is currently loading', () =>
     smartContentStore2.itemsLoading = true;
     smartContentStore3.itemsLoading = true;
 
-    smartContentStorePool.add(smartContentStore1);
-    smartContentStorePool.add(smartContentStore2);
-    smartContentStorePool.add(smartContentStore3);
+    smartContentStorePool.add(smartContentStore1, true);
+    smartContentStorePool.add(smartContentStore2, true);
+    smartContentStorePool.add(smartContentStore3, true);
 
     smartContentStore1.items = [{id: 1}];
     smartContentStore2.items = [{id: 2}, {id: 3}];

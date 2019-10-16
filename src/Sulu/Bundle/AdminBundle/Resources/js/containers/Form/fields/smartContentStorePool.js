@@ -3,7 +3,7 @@ import {action, computed, observable, when} from 'mobx';
 import {SmartContentStore} from '../../SmartContent';
 
 class SmartContentStorePool {
-    @observable entries: Array<{store: SmartContentStore}>;
+    @observable entries: Array<{|excludeDuplicates: boolean, store: SmartContentStore|}>;
 
     @computed get stores(): Array<SmartContentStore> {
         return this.entries.map((entry) => entry.store);
@@ -17,16 +17,20 @@ class SmartContentStorePool {
         this.entries = [];
     }
 
-    @action add(store: SmartContentStore) {
+    @action add(store: SmartContentStore, excludeDuplicates: boolean) {
         if (this.stores.includes(store)) {
             throw new Error('Cannot add a SmartContentStore twice!');
         }
 
-        this.entries.push({store});
+        this.entries.push({store, excludeDuplicates});
     }
 
     @action remove(store: SmartContentStore) {
         this.entries.splice(this.stores.indexOf(store), 1);
+    }
+
+    findEntryByStore(store: SmartContentStore) {
+        return this.entries.find((entry) => entry.store === store);
     }
 
     updateExcludedIds = () => {
@@ -39,6 +43,17 @@ class SmartContentStorePool {
         }
 
         const store = stores[0];
+        const entry = this.findEntryByStore(store);
+
+        if (!entry) {
+            throw new Error('There was no entry found for the store! This should not happen and is likely a bug.');
+        }
+
+        if (!entry.excludeDuplicates) {
+            this.updateRecursiveExcludedIds(stores.slice(1));
+            return;
+        }
+
         const previousStores = [];
         for (const otherStore of this.stores) {
             if (otherStore === store) {
