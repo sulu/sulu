@@ -18,6 +18,7 @@ use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 
 class SingleAccountSelection extends ComplexContentType implements PreResolvableContentTypeInterface
 {
@@ -41,20 +42,24 @@ class SingleAccountSelection extends ComplexContentType implements PreResolvable
 
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $account = null;
+        $value = null;
         if ($node->hasProperty($property->getName())) {
-            $account = $this->accountManager->getById(
-                $node->getPropertyValue($property->getName()),
-                $property->getStructure()->getLanguageCode()
-            );
+            try {
+                $account = $this->accountManager->getById(
+                    $node->getPropertyValue($property->getName()),
+                    $property->getStructure()->getLanguageCode()
+                );
+
+                $value = [
+                    'id' => $account->getId(),
+                    'name' => $account->getName(),
+                ];
+            } catch (EntityNotFoundException $e) {
+                $value = null;
+            }
         }
 
-        $property->setValue(
-            [
-                'id' => $account->getId(),
-                'name' => $account->getName(),
-            ]
-        );
+        $property->setValue($value);
     }
 
     public function write(
