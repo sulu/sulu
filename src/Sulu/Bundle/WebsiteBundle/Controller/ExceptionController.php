@@ -69,10 +69,12 @@ class ExceptionController
 
     /**
      * {@see BaseExceptionController::showAction()}.
+     *
+     * @param FlattenException $exception
      */
     public function showAction(
         Request $request,
-        FlattenException $exception,
+        $exception,
         DebugLoggerInterface $logger = null
     ) {
         $code = $exception->getStatusCode();

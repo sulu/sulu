@@ -253,7 +253,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $script = $this->twig->render('SuluAudienceTargetingBundle:Template:hit-script.html.twig', [
+        $script = $this->twig->render('@SuluAudienceTargeting/Template/hit-script.html.twig', [
             'url' => $this->targetGroupHitUrl,
             'urlHeader' => $this->urlHeader,
             'refererHeader' => $this->referrerHeader,
