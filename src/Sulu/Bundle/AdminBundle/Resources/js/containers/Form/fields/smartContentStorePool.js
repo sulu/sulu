@@ -1,16 +1,20 @@
 // @flow
-import {action, observable, when} from 'mobx';
+import {action, computed, observable, when} from 'mobx';
 import {SmartContentStore} from '../../SmartContent';
 
 class SmartContentStorePool {
-    @observable stores: Array<SmartContentStore>;
+    @observable entries: Array<{store: SmartContentStore}>;
+
+    @computed get stores(): Array<SmartContentStore> {
+        return this.entries.map((entry) => entry.store);
+    }
 
     constructor() {
         this.clear();
     }
 
     clear() {
-        this.stores = [];
+        this.entries = [];
     }
 
     @action add(store: SmartContentStore) {
@@ -18,11 +22,11 @@ class SmartContentStorePool {
             throw new Error('Cannot add a SmartContentStore twice!');
         }
 
-        this.stores.push(store);
+        this.entries.push({store});
     }
 
     @action remove(store: SmartContentStore) {
-        this.stores.splice(this.stores.indexOf(store), 1);
+        this.entries.splice(this.stores.indexOf(store), 1);
     }
 
     updateExcludedIds = () => {
