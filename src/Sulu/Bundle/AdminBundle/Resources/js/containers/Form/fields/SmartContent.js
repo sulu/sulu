@@ -1,10 +1,11 @@
 // @flow
 import React from 'react';
-import {autorun, toJS} from 'mobx';
+import {autorun, computed, toJS, when} from 'mobx';
 import equals from 'fast-deep-equal';
 import type {FieldTypeProps} from '../../../types';
 import SmartContentComponent, {smartContentConfigStore, SmartContentStore} from '../../SmartContent';
 import type {FilterCriteria} from '../../SmartContent/types';
+import smartContentStorePool from './smartContentStorePool';
 
 type Props = FieldTypeProps<?FilterCriteria>;
 
@@ -22,8 +23,22 @@ const filterCriteriaDefaults = {
     tags: undefined,
 };
 
-export default class SmartContent extends React.Component<Props> {
+class SmartContent extends React.Component<Props> {
     smartContentStore: SmartContentStore;
+    filterCriteriaChangeDisposer: () => void;
+
+    @computed get previousSmartContentStores() {
+        const previousSmartContentStores = [];
+        for (const smartContentStore of smartContentStorePool.stores) {
+            if (smartContentStore === this.smartContentStore) {
+                break;
+            }
+
+            previousSmartContentStores.push(smartContentStore);
+        }
+
+        return previousSmartContentStores;
+    }
 
     constructor(props: Props) {
         super(props);
@@ -31,6 +46,9 @@ export default class SmartContent extends React.Component<Props> {
         const {
             formInspector,
             schemaOptions: {
+                exclude_duplicates: {
+                    value: excludeDuplicates,
+                } = {},
                 provider: {
                     value: provider,
                 } = {value: 'pages'},
@@ -52,11 +70,27 @@ export default class SmartContent extends React.Component<Props> {
             formInspector.resourceKey === provider ? formInspector.id : undefined
         );
 
-        autorun(this.handleFilterCriteriaChange);
+        smartContentStorePool.add(this.smartContentStore);
+
+        this.filterCriteriaChangeDisposer = autorun(this.handleFilterCriteriaChange);
+
+        if (!excludeDuplicates || this.previousSmartContentStores.length === 0) {
+            this.smartContentStore.start();
+        } else {
+            when(
+                () => this.previousSmartContentStores.every((store) => !store.itemsLoading),
+                (): void => {
+                    smartContentStorePool.updateExcludedIds();
+                    this.smartContentStore.start();
+                }
+            );
+        }
     }
 
     componentWillUnmount() {
+        smartContentStorePool.remove(this.smartContentStore);
         this.smartContentStore.destroy();
+        this.filterCriteriaChangeDisposer();
     }
 
     handleFilterCriteriaChange = () => {
@@ -91,6 +125,8 @@ export default class SmartContent extends React.Component<Props> {
 
         onChange(this.smartContentStore.filterCriteria);
         onFinish();
+
+        smartContentStorePool.updateExcludedIds();
     };
 
     render() {
@@ -114,7 +150,7 @@ export default class SmartContent extends React.Component<Props> {
         }
 
         if (categoryRootKey !== undefined && typeof categoryRootKey !== 'string') {
-            throw new Error('The "category_root" option must a string if set!');
+            throw new Error('The "category_root" schemaOption must a string if set!');
         }
 
         const presentations = schemaPresentations.map((presentation) => {
@@ -145,3 +181,5 @@ export default class SmartContent extends React.Component<Props> {
         );
     }
 }
+
+export default SmartContent;

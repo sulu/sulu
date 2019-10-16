@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {extendObservable as mockExtendObservable} from 'mobx';
 import {shallow} from 'enzyme';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -8,6 +9,7 @@ import ResourceFormStore from '../../stores/ResourceFormStore';
 import SmartContent from '../../fields/SmartContent';
 import SmartContentStore from '../../../SmartContent/stores/SmartContentStore';
 import smartContentConfigStore from '../../../SmartContent/stores/smartContentConfigStore';
+import smartContentStorePool from '../../fields/smartContentStorePool';
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id) {
     this.resourceKey = resourceKey;
@@ -27,9 +29,20 @@ jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
 jest.mock('../../../SmartContent/stores/SmartContentStore', () => jest.fn(function() {
     this.loading = false;
     this.destroy = jest.fn();
+    this.start = jest.fn();
+
+    mockExtendObservable(this, {itemsLoading: false});
 }));
+
 jest.mock('../../../SmartContent/stores/smartContentConfigStore', () => ({
     getConfig: jest.fn().mockReturnValue({}),
+}));
+
+jest.mock('../../fields/smartContentStorePool', () => ({
+    add: jest.fn(),
+    stores: [],
+    remove: jest.fn(),
+    updateExcludedIds: jest.fn(),
 }));
 
 test('Should correctly initialize SmartContentStore', () => {
@@ -56,7 +69,7 @@ test('Should correctly initialize SmartContentStore', () => {
         },
     };
 
-    shallow(
+    const smartContent = shallow(
         <SmartContent
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -65,8 +78,52 @@ test('Should correctly initialize SmartContentStore', () => {
         />
     );
 
+    const smartContentStore = smartContent.instance().smartContentStore;
+
+    expect(smartContentStore.start).toBeCalledWith();
+
+    expect(smartContentStorePool.add).toBeCalledWith(smartContentStore);
     expect(smartContentConfigStore.getConfig).toBeCalledWith('media');
     expect(SmartContentStore).toBeCalledWith('media', value, undefined, 'collections', undefined);
+
+    smartContent.unmount();
+    expect(smartContentStorePool.remove).toBeCalledWith(smartContentStore);
+});
+
+test('Defer start of smartContentStore until all previous stores have loaded their items', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test', 1), 'test'));
+    const smartContentStore1 = new SmartContentStore('pages');
+    smartContentStore1.itemsLoading = true;
+    const smartContentStore2 = new SmartContentStore('pages');
+    smartContentStore2.itemsLoading = true;
+    smartContentStorePool.stores = [smartContentStore1, smartContentStore2];
+
+    const schemaOptions = {
+        exclude_duplicates: {
+            value: true,
+        },
+    };
+
+    const smartContent = shallow(
+        <SmartContent
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    const smartContentStore = smartContent.instance().smartContentStore;
+
+    expect(smartContentStorePool.updateExcludedIds).not.toBeCalled();
+    expect(smartContentStore.start).not.toBeCalled();
+
+    smartContentStore1.itemsLoading = false;
+    expect(smartContentStorePool.updateExcludedIds).not.toBeCalled();
+    expect(smartContentStore.start).not.toBeCalled();
+
+    smartContentStore2.itemsLoading = false;
+    expect(smartContentStorePool.updateExcludedIds).toBeCalledWith();
+    expect(smartContentStore.start).toBeCalledWith();
 });
 
 test('Should pass id to SmartContentStore if resourceKeys match', () => {
