@@ -8,6 +8,7 @@
      data-form="true"
      data-aura-countries="{{ sulu_parameter_to_key_value(params.countries.value)|json_encode }}"
      data-aura-map-providers="{{ params.mapProviders.value|json_encode }}"
+     data-aura-map-provider="{{ params.defaultProvider.value }}"
      data-geolocator-url="{{ path('sulu_location_geolocator_query') }}"
      >
  </div>
