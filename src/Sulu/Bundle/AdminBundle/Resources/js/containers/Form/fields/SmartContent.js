@@ -28,16 +28,7 @@ class SmartContent extends React.Component<Props> {
     filterCriteriaChangeDisposer: () => void;
 
     @computed get previousSmartContentStores() {
-        const previousSmartContentStores = [];
-        for (const smartContentStore of smartContentStorePool.stores) {
-            if (smartContentStore === this.smartContentStore) {
-                break;
-            }
-
-            previousSmartContentStores.push(smartContentStore);
-        }
-
-        return previousSmartContentStores;
+        return smartContentStorePool.findPreviousStores(this.smartContentStore);
     }
 
     constructor(props: Props) {

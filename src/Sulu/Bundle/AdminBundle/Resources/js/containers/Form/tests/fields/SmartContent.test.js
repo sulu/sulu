@@ -40,6 +40,7 @@ jest.mock('../../../SmartContent/stores/smartContentConfigStore', () => ({
 
 jest.mock('../../fields/smartContentStorePool', () => ({
     add: jest.fn(),
+    findPreviousStores: jest.fn().mockReturnValue([]),
     stores: [],
     remove: jest.fn(),
     updateExcludedIds: jest.fn(),
@@ -120,8 +121,7 @@ test('Defer start of smartContentStore until all previous stores have loaded the
     smartContentStore1.itemsLoading = true;
     const smartContentStore2 = new SmartContentStore('pages');
     smartContentStore2.itemsLoading = true;
-    // $FlowFixMe
-    smartContentStorePool.stores = [smartContentStore1, smartContentStore2];
+    smartContentStorePool.findPreviousStores.mockReturnValue([smartContentStore1, smartContentStore2]);
 
     const schemaOptions = {
         exclude_duplicates: {

@@ -37,6 +37,23 @@ class SmartContentStorePool {
         this.updateRecursiveExcludedIds(this.stores);
     };
 
+    findPreviousStores(store: SmartContentStore) {
+        const previousStores = [];
+        for (const otherStore of this.stores) {
+            if (otherStore === store) {
+                break;
+            }
+
+            if (otherStore.provider !== store.provider) {
+                continue;
+            }
+
+            previousStores.push(otherStore);
+        }
+
+        return previousStores;
+    }
+
     updateRecursiveExcludedIds = (stores: Array<SmartContentStore>) => {
         if (stores.length === 0) {
             return;
@@ -54,14 +71,7 @@ class SmartContentStorePool {
             return;
         }
 
-        const previousStores = [];
-        for (const otherStore of this.stores) {
-            if (otherStore === store) {
-                break;
-            }
-
-            previousStores.push(otherStore);
-        }
+        const previousStores = this.findPreviousStores(store);
 
         if (previousStores.length === 0) {
             this.updateRecursiveExcludedIds(stores.slice(1));
