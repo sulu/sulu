@@ -100,7 +100,7 @@ export default class SingleSelection extends React.Component<Props>
             value,
         } = this.props;
 
-        if (typeof value === 'object') {
+        if (value !== null && typeof value === 'object') {
             // TODO implement object value support for overlay type
             throw new Error(
                 'The "list_overlay" type of the SingleSelection field type supports only an ID value until now.'

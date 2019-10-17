@@ -29,6 +29,32 @@ test('Should load item when being constructed', () => {
     });
 });
 
+test('Should set item to null when 404 is returned', (done) => {
+    const getPromise = Promise.reject({
+        status: 404,
+    });
+
+    ResourceRequester.get.mockReturnValue(getPromise);
+
+    const singleSelectionStore = new SingleSelectionStore('snippets', 1, observable.box('en'));
+
+    expect(ResourceRequester.get).toBeCalledWith(
+        'snippets',
+        {
+            id: 1,
+            locale: 'en',
+        }
+    );
+
+    expect(toJS(singleSelectionStore.loading)).toEqual(true);
+
+    setTimeout(() => {
+        expect(toJS(singleSelectionStore.item)).toEqual(null);
+        expect(toJS(singleSelectionStore.loading)).toEqual(false);
+        done();
+    });
+});
+
 test('Should load item when being constructed with additional options', () => {
     const getPromise = Promise.resolve({
         id: 1,
