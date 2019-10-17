@@ -650,7 +650,6 @@ class CollectionManager implements CollectionManagerInterface
         $mediaFormats = $this->formatManager->getFormats(
             $mediaId,
             $fileVersion->getName(),
-            $fileVersion->getStorageOptions(),
             $fileVersion->getVersion(),
             $fileVersion->getSubVersion(),
             $fileVersion->getMimeType()
