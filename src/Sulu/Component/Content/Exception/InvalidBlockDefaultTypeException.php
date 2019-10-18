@@ -41,7 +41,7 @@ class InvalidBlockDefaultTypeException extends \Exception
                 ', ',
                 array_map(function($availableType) {
                     return '"' . $availableType . '"';
-                }, $availableTypes),
+                }, $availableTypes)
             )
         ));
         $this->name = $name;
