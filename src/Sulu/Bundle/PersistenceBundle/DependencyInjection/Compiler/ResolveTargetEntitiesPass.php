@@ -48,14 +48,21 @@ class ResolveTargetEntitiesPass implements CompilerPassInterface
 
         $resolveTargetEntityListener = $container->findDefinition('doctrine.orm.listeners.resolve_target_entity');
 
+        $interfaceMapping = [];
         foreach ($this->interfaces as $interface => $model) {
+            $interfaceImplementation = $this->getClass($container, $model);
+            $interfaceMapping[$interface] = $interfaceImplementation;
+
             $resolveTargetEntityListener
-                ->addMethodCall('addResolveTargetEntity', [
-                        $interface,
-                        $this->getClass($container, $model),
-                        [],
-                    ]
-                );
+                ->addMethodCall('addResolveTargetEntity', [$interface, $interfaceImplementation, []]);
+        }
+
+        // update $targetEntityMapping argument of ReferencesOption service
+        // this is needed to allow for using interfaces when using a "references" option in a doctrine schema
+        if ($container->hasDefinition('sulu_core.doctrine.references')) {
+            $doctrineReference = $container->findDefinition('sulu_core.doctrine.references');
+            $oldTargetEntityMapping = $doctrineReference->getArgument(1);
+            $doctrineReference->replaceArgument(1, array_merge($oldTargetEntityMapping, $interfaceMapping));
         }
     }
 

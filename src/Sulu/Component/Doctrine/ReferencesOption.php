@@ -63,9 +63,15 @@ class ReferencesOption implements EventSubscriber
      */
     private $managerRegistry;
 
-    public function __construct(ManagerRegistry $managerRegistry)
+    /**
+     * @var array
+     */
+    private $targetEntityMapping;
+
+    public function __construct(ManagerRegistry $managerRegistry, array $targetEntityMapping)
     {
         $this->managerRegistry = $managerRegistry;
+        $this->targetEntityMapping = $targetEntityMapping;
     }
 
     /**
@@ -153,10 +159,16 @@ class ReferencesOption implements EventSubscriber
 
             $localColumnName = $classMetadata->getColumnName($fieldName);
 
+            // we need to use the actual class if the entity is an interface that is mapped by the SuluPersistenceBundle
+            $targetEntity = $referencesOptions['entity'];
+            if (array_key_exists($targetEntity, $this->targetEntityMapping)) {
+                $targetEntity = $this->targetEntityMapping[$targetEntity];
+            }
+
             /** @var ObjectManager $manager */
-            $manager = $this->managerRegistry->getManagerForClass($referencesOptions['entity']);
+            $manager = $this->managerRegistry->getManagerForClass($targetEntity);
             /** @var ClassMetadata $foreignClassMetadata */
-            $foreignClassMetadata = $manager->getClassMetadata($referencesOptions['entity']);
+            $foreignClassMetadata = $manager->getClassMetadata($targetEntity);
 
             $foreignTable = $foreignClassMetadata->getTableName();
             $foreignColumnName = $foreignClassMetadata->getColumnName($referencesOptions['field']);
