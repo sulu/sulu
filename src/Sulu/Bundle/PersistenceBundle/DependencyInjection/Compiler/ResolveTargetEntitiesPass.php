@@ -60,8 +60,8 @@ class ResolveTargetEntitiesPass implements CompilerPassInterface
         // update $targetEntityMapping argument of ReferencesOption service
         // this is needed to allow for using interfaces when using a "references" option in a doctrine schema
         $doctrineReference = $container->findDefinition('sulu_core.doctrine.references');
-        $oldTargetEntityMapping = $doctrineReference->getArgument('$targetEntityMapping');
-        $doctrineReference->setArgument('$targetEntityMapping', array_merge($oldTargetEntityMapping, $interfaceMapping));
+        $oldTargetEntityMapping = $doctrineReference->getArgument(1);
+        $doctrineReference->replaceArgument(1, array_merge($oldTargetEntityMapping, $interfaceMapping));
     }
 
     /**
