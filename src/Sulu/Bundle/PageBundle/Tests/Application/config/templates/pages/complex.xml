@@ -35,8 +35,8 @@
             <tag name="sulu.rlp"/>
         </property>
 
-        <block name="block1" 
-               default-type="editor"
+        <block name="block1"
+               default-type="default"
                minOccurs="2"
                maxOccurs="10"
                mandatory="true">
