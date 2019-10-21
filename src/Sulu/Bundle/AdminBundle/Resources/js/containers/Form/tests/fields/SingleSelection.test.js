@@ -172,6 +172,37 @@ test('Pass correct props with schema-options type to SingleAutoComplete', () => 
     }));
 });
 
+test('Pass null as value to SingleSelection for list_overlay', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const value = null;
+
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'accounts',
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                display_properties: ['name'],
+                empty_text: 'sulu_contact.nothing',
+                icon: 'su-account',
+                overlay_title: 'sulu_contact.overlay_title',
+            },
+        },
+    };
+
+    const singleSelection = shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            value={null}
+        />
+    );
+
+    expect(singleSelection.find('SingleSelection').prop('value')).toEqual(expect.objectContaining(value));
+});
+
 test('Call onChange and onFinish when SingleAutoComplete changes', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();

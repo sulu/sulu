@@ -43,13 +43,23 @@ export default class SingleSelectionStore<T, U: {id: T} = Object> {
         }
 
         this.setLoading(true);
-        return ResourceRequester.get(this.resourceKey, {
-            ...this.options,
-            id: itemId,
-            locale: this.locale ? this.locale.get() : undefined,
-        }).then(action((data) => {
-            this.item = data;
-            this.setLoading(false);
-        }));
+        return ResourceRequester
+            .get(this.resourceKey, {
+                ...this.options,
+                id: itemId,
+                locale: this.locale ? this.locale.get() : undefined,
+            })
+            .then(action((data) => {
+                this.item = data;
+                this.setLoading(false);
+            }))
+            .catch(action((error) => {
+                if (error.status !== 404) {
+                    return Promise.reject(error);
+                }
+
+                this.item = null;
+                this.setLoading(false);
+            }));
     }
 }
