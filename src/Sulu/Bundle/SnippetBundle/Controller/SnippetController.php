@@ -147,6 +147,11 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         // if the type parameter is falsy, assign NULL to $type
         $types = $request->query->get('types', null) ?: null;
 
+        if (false !== strpos($types, ',')) {
+            // TODO Implement filtering by multiple types
+            throw new \Exception('Filtering by multiple types at once is currently not supported!');
+        }
+
         $idsString = $request->get('ids');
 
         if ($idsString) {
