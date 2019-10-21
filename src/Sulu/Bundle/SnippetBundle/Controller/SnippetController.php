@@ -145,7 +145,12 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $locale = $this->getLocale($request);
 
         // if the type parameter is falsy, assign NULL to $type
-        $type = $request->query->get('type', null) ?: null;
+        $types = $request->query->get('types', null) ?: null;
+
+        if (false !== strpos($types, ',')) {
+            // TODO Implement filtering by multiple types
+            throw new \Exception('Filtering by multiple types at once is currently not supported!');
+        }
 
         $idsString = $request->get('ids');
 
@@ -156,7 +161,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         } else {
             $snippets = $this->snippetRepository->getSnippets(
                 $locale,
-                $type,
+                $types,
                 $this->listRestHelper->getOffset(),
                 $this->listRestHelper->getLimit(),
                 $this->listRestHelper->getSearchPattern(),
@@ -166,7 +171,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
 
             $total = $this->snippetRepository->getSnippetsAmount(
                 $locale,
-                $type,
+                $types,
                 $this->listRestHelper->getSearchPattern(),
                 $this->listRestHelper->getSortColumn(),
                 $this->listRestHelper->getSortOrder()

@@ -117,6 +117,22 @@ test('Pass locale to MultiListOverlay', () => {
     expect(selection.find('MultiListOverlay').prop('locale').get()).toEqual('de');
 });
 
+test('Pass options to MultiListOverlay', () => {
+    const options = {types: 'test'};
+    const selection = mount(
+        <MultiSelection
+            adapter="table"
+            listKey="snippets"
+            onChange={jest.fn()}
+            options={options}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+        />
+    );
+
+    expect(selection.find('MultiListOverlay').prop('options')).toEqual(options);
+});
+
 test('Pass disabledIds to MultiListOverlay', () => {
     const disabledIds = [1, 2, 4];
 

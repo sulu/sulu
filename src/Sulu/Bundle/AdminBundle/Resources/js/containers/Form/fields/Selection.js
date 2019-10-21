@@ -155,6 +155,23 @@ export default class Selection extends React.Component<Props> {
             value,
         } = this.props;
 
+        const {schemaOptions} = this.props;
+
+        const {
+            types: {
+                value: types,
+            } = {},
+        } = schemaOptions;
+
+        if (types !== undefined && typeof types !== 'string') {
+            throw new Error('The "types" schema option must be a string if given!');
+        }
+
+        const options = {};
+        if (types) {
+            options.types = types;
+        }
+
         if (!adapter) {
             throw new Error('The selection field needs a "adapter" option to work properly');
         }
@@ -170,6 +187,7 @@ export default class Selection extends React.Component<Props> {
                 listKey={listKey || resourceKey}
                 locale={this.locale}
                 onChange={this.handleMultiSelectionChange}
+                options={options}
                 overlayTitle={translate(overlayTitle)}
                 resourceKey={resourceKey}
                 value={value || []}
