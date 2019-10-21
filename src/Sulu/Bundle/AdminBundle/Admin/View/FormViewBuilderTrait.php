@@ -86,4 +86,12 @@ trait FormViewBuilderTrait
 
         $view->setOption('routerAttributesToBackView', $newRouterAttributesToBackView);
     }
+
+    private function addMetadataRequestParametersToView(View $route, array $formMetadata): void
+    {
+        $oldFormMetadata = $route->getOption('formMetadata');
+        $newFormMetadata = $oldFormMetadata ? array_merge($oldFormMetadata, $formMetadata) : $formMetadata;
+
+        $route->setOption('formMetadata', $newFormMetadata);
+    }
 }

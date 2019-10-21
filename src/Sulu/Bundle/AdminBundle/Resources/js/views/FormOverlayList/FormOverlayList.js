@@ -108,7 +108,7 @@ class FormOverlayList extends React.Component<Props> {
         );
 
         const resourceStore = new ResourceStore(resourceKey, itemId, observableOptions, formStoreOptions);
-        this.formStore = new ResourceFormStore(resourceStore, formKey, formStoreOptions, toJS(formMetadata));
+        this.formStore = new ResourceFormStore(resourceStore, formKey, formStoreOptions, formMetadata);
     };
 
     @action destroyFormOverlay = () => {

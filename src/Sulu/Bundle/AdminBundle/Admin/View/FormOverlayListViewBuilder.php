@@ -186,9 +186,9 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
         return $this;
     }
 
-    public function addFormMetadata(array $formMetadata): FormOverlayListViewBuilderInterface
+    public function addMetadataRequestParameters(array $formMetadata): FormOverlayListViewBuilderInterface
     {
-        $this->addFormMetadataToView($this->view, $formMetadata);
+        $this->addMetadataRequestParametersToView($this->view, $formMetadata);
 
         return $this;
     }
