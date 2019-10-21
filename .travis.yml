@@ -64,7 +64,13 @@ before_script:
     fi
   # the content tests are intensive and there are memory leaks, this is more pronounced with the Jackalope DBAL PHPCR implementation.
   - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  # Performance improvements
+  - echo "session.gc_probability = 0" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - echo "date.timezone = Europe/Vienna" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - echo "opcache.enable_cli = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - echo "apc.enable_cli = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - phpenv config-rm xdebug.ini
+  # Install dependencies
   - composer self-update
   - if [[ $PHPCR_TRANSPORT = jackrabbit ]]; then composer require jackalope/jackalope-jackrabbit:~1.2 --no-update --no-interaction ; fi
   - composer validate --strict
