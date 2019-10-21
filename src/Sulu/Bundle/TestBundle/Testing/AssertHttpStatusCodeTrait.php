@@ -26,8 +26,10 @@ trait AssertHttpStatusCodeTrait
      * The $debugLength argument limits the number of lines included from the
      * response body in case of failure.
      */
-    protected static function assertHttpStatusCode(int $code, Response $response, int $debugLength = 50): void
+    protected static function assertHttpStatusCode(int $code, $response, int $debugLength = 50): void
     {
+        self::assertInstanceOf(Response::class, $response);
+
         $httpCode = $response->getStatusCode();
 
         $message = '';
