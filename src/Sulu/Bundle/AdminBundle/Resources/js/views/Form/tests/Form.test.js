@@ -4,7 +4,6 @@ import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
 import {findWithHighOrderFunction} from '../../../utils/TestHelper';
 import AbstractFormToolbarAction from '../toolbarActions/AbstractFormToolbarAction';
-import ResourceFormStore from "../../../containers/Form/stores/ResourceFormStore";
 
 jest.mock('../../../services/initializer', () => jest.fn());
 jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
@@ -1893,7 +1892,6 @@ test('Should pass metadataRequestParameters options to Form View', () => {
     expect(formContainer.prop('store').resourceStore).toEqual(resourceStore);
     expect(formContainer.prop('store').metadataOptions).toEqual(metadataRequestParameters);
 });
-
 
 test('Should destroy the store on unmount', () => {
     const Form = require('../Form').default;

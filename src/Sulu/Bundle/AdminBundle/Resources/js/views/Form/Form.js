@@ -122,7 +122,12 @@ class Form extends React.Component<Props> {
             this.resourceStore = resourceStore;
         }
 
-        this.resourceFormStore = new ResourceFormStore(this.resourceStore, formKey, formStoreOptions, metadataRequestParameters);
+        this.resourceFormStore = new ResourceFormStore(
+            this.resourceStore,
+            formKey,
+            formStoreOptions,
+            metadataRequestParameters
+        );
 
         if (this.resourceStore.locale) {
             router.bind('locale', this.resourceStore.locale);
