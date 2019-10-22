@@ -37,7 +37,8 @@ jest.mock('../../../../containers/Form', () => ({
 }));
 
 jest.mock('../../../../services/Router', () => jest.fn(function() {
-    this.navigate = jest.fn();
+    this.attributes = {};
+    this.restore = jest.fn();
     this.route = {
         options: {},
     };
@@ -172,7 +173,73 @@ test('Call delete when dialog is confirmed', () => {
 
     return deletePromise.then(() => {
         element = mount(deleteToolbarAction.getNode());
-        expect(deleteToolbarAction.router.navigate).toBeCalledWith('sulu_test.list', {locale: 'en'});
+        expect(deleteToolbarAction.router.restore).toBeCalledWith('sulu_test.list', {locale: 'en'});
+        expect(element.at(0).instance().props).toEqual(expect.objectContaining({
+            open: false,
+        }));
+    });
+});
+
+test('Call delete when dialog is confirmed with router_attributes_to_back_view option as array', () => {
+    const deleteToolbarAction = createDeleteToolbarAction({router_attributes_to_back_view: ['webspace']});
+    deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
+    deleteToolbarAction.router.attributes.webspace = 'example';
+    deleteToolbarAction.router.route.options.backView = 'sulu_test.list';
+
+    const deletePromise = Promise.resolve();
+    deleteToolbarAction.resourceFormStore.delete.mockReturnValue(deletePromise);
+
+    const toolbarItemConfig = deleteToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+    toolbarItemConfig.onClick();
+
+    let element = mount(deleteToolbarAction.getNode());
+    expect(element.at(0).instance().props).toEqual(expect.objectContaining({
+        open: true,
+    }));
+
+    element.find('Button[skin="primary"]').simulate('click');
+    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith();
+
+    return deletePromise.then(() => {
+        element = mount(deleteToolbarAction.getNode());
+        expect(deleteToolbarAction.router.restore)
+            .toBeCalledWith('sulu_test.list', {locale: 'en', webspace: 'example'});
+        expect(element.at(0).instance().props).toEqual(expect.objectContaining({
+            open: false,
+        }));
+    });
+});
+
+test('Call delete when dialog is confirmed with router_attributes_to_back_view option as object', () => {
+    const deleteToolbarAction = createDeleteToolbarAction({router_attributes_to_back_view: {webspaceKey: 'webspace'}});
+    deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
+    deleteToolbarAction.router.attributes.webspaceKey = 'example';
+    deleteToolbarAction.router.route.options.backView = 'sulu_test.list';
+
+    const deletePromise = Promise.resolve();
+    deleteToolbarAction.resourceFormStore.delete.mockReturnValue(deletePromise);
+
+    const toolbarItemConfig = deleteToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+    toolbarItemConfig.onClick();
+
+    let element = mount(deleteToolbarAction.getNode());
+    expect(element.at(0).instance().props).toEqual(expect.objectContaining({
+        open: true,
+    }));
+
+    element.find('Button[skin="primary"]').simulate('click');
+    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith();
+
+    return deletePromise.then(() => {
+        element = mount(deleteToolbarAction.getNode());
+        expect(deleteToolbarAction.router.restore)
+            .toBeCalledWith('sulu_test.list', {locale: 'en', webspace: 'example'});
         expect(element.at(0).instance().props).toEqual(expect.objectContaining({
             open: false,
         }));
@@ -207,7 +274,7 @@ test('Call delete with force when dialog is confirmed twice', (done) => {
 
     setTimeout(() => {
         element = mount(deleteToolbarAction.getNode());
-        expect(deleteToolbarAction.router.navigate).toBeCalledTimes(0);
+        expect(deleteToolbarAction.router.restore).toBeCalledTimes(0);
         expect(element.at(0).prop('open')).toEqual(false);
         expect(element.at(1).prop('open')).toEqual(true);
         expect(element.at(1).find('li')).toHaveLength(2);
@@ -220,7 +287,7 @@ test('Call delete with force when dialog is confirmed twice', (done) => {
         element.find('Button[skin="primary"]').simulate('click');
 
         setTimeout(() => {
-            expect(deleteToolbarAction.router.navigate).toBeCalledWith('sulu_test.list', {locale: 'en'});
+            expect(deleteToolbarAction.router.restore).toBeCalledWith('sulu_test.list', {locale: 'en'});
             expect(element.at(0).instance().props).toEqual(expect.objectContaining({
                 open: false,
             }));
