@@ -5,8 +5,8 @@ import type {RawSchema, SchemaTypes} from '../types';
 const FORM_TYPE = 'form';
 
 class MetadataStore {
-    getSchemaTypes(formKey: string): Promise<SchemaTypes> {
-        return metadataStore.loadMetadata(FORM_TYPE, formKey)
+    getSchemaTypes(formKey: string, metadataOptions: ?Object): Promise<SchemaTypes> {
+        return metadataStore.loadMetadata(FORM_TYPE, formKey, metadataOptions)
             .then((configuration) => {
                 const {types} = configuration;
 
@@ -48,8 +48,8 @@ class MetadataStore {
             });
     }
 
-    getJsonSchema(formKey: string, type: ?string): Promise<Object> {
-        return metadataStore.loadMetadata(FORM_TYPE, formKey)
+    getJsonSchema(formKey: string, type: ?string, metadataOptions: ?Object): Promise<Object> {
+        return metadataStore.loadMetadata(FORM_TYPE, formKey, metadataOptions)
             .then((configuration) => {
                 const typeConfiguration = this.getTypeConfiguration(configuration, type, formKey);
 

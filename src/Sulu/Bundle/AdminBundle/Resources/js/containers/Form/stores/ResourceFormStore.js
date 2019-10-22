@@ -34,7 +34,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         this.options = options;
         this.metadataOptions = metadataOptions;
 
-        metadataStore.getSchemaTypes(this.formKey)
+        metadataStore.getSchemaTypes(this.formKey, this.metadataOptions)
             .then(this.handleSchemaTypeResponse);
     }
 
@@ -75,7 +75,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
 
             Promise.all([
                 metadataStore.getSchema(this.formKey, type, this.metadataOptions),
-                metadataStore.getJsonSchema(this.formKey, type),
+                metadataStore.getJsonSchema(this.formKey, type, this.metadataOptions),
             ]).then(this.handleSchemaResponse);
         });
     };
