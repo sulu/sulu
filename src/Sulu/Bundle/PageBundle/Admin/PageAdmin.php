@@ -123,6 +123,7 @@ class PageAdmin extends Admin
                 'sulu_admin.delete',
                 [
                     'display_condition' => '(!_permissions || _permissions.delete) && url != "/"',
+                    'router_attributes_to_back_view' => ['webspace'],
                 ]
             ),
             new DropdownToolbarAction(
