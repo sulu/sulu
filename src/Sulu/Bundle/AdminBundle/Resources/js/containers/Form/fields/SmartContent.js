@@ -9,20 +9,6 @@ import smartContentStorePool from './smartContentStorePool';
 
 type Props = FieldTypeProps<?FilterCriteria>;
 
-const filterCriteriaDefaults = {
-    audienceTargeting: undefined,
-    categories: undefined,
-    categoryOperator: undefined,
-    dataSource: undefined,
-    includeSubFolders: undefined,
-    limitResult: undefined,
-    presentAs: undefined,
-    sortBy: undefined,
-    sortMethod: undefined,
-    tagOperator: undefined,
-    tags: undefined,
-};
-
 class SmartContent extends React.Component<Props> {
     smartContentStore: SmartContentStore;
     filterCriteriaChangeDisposer: () => mixed;
@@ -42,7 +28,7 @@ class SmartContent extends React.Component<Props> {
 
         if (!Array.isArray(schemaPresentations)) {
             throw new Error(
-                'The "present_as" schemaOption must be a string, but received ' + typeof schemaPresentations + '!'
+                'The "present_as" schemaOption must be an array, but received ' + typeof schemaPresentations + '!'
             );
         }
 
@@ -158,8 +144,8 @@ class SmartContent extends React.Component<Props> {
     handleFilterCriteriaChange = (filterCriteria: ?FilterCriteria) => {
         const {onChange, onFinish, value} = this.props;
 
-        const currentValue = {...filterCriteriaDefaults, ...toJS(value)};
-        const newValue = {...filterCriteriaDefaults, ...toJS(filterCriteria)};
+        const currentValue = toJS(value);
+        const newValue = toJS(filterCriteria);
 
         if (currentValue) {
             if (currentValue.categories) {
