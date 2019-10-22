@@ -93,7 +93,8 @@ test('Load items if FilterCriteria is given with datasource', () => {
     const datasourcePromise = Promise.resolve({id: 3});
     ResourceRequester.get.mockReturnValue(datasourcePromise);
 
-    new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
+    const smartContentStore = new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
+    smartContentStore.start();
 
     return datasourcePromise.then(() => {
         expect(Requester.get).toBeCalledWith('/api/items?provider=content&excluded=4&locale=en&dataSource=3');
@@ -123,7 +124,8 @@ test('Load items if FilterCriteria is given with categories', () => {
     });
     ResourceRequester.get.mockReturnValue(categoriesPromise);
 
-    new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
+    const smartContentStore = new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
+    smartContentStore.start();
 
     return categoriesPromise.then(() => {
         expect(Requester.get).toBeCalledWith('/api/items?provider=content&excluded=4&locale=en&categories=1,5');
@@ -146,9 +148,33 @@ test('Load items if FilterCriteria is given with tags', () => {
         limitResult: undefined,
     };
 
-    new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
+    const smartContentStore = new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
+    smartContentStore.start();
 
     expect(Requester.get).toBeCalledWith('/api/items?provider=content&excluded=4&locale=en&tags=Tag2');
+});
+
+test('Load items excluding given ids', () => {
+    const locale = observable.box('en');
+    const filterCriteria = {
+        dataSource: undefined,
+        includeSubFolders: undefined,
+        categories: undefined,
+        categoryOperator: undefined,
+        tags: undefined,
+        tagOperator: undefined,
+        audienceTargeting: undefined,
+        sortBy: undefined,
+        sortMethod: undefined,
+        presentAs: undefined,
+        limitResult: undefined,
+    };
+
+    const smartContentStore = new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
+    smartContentStore.setExcludedIds([1, 2, 6]);
+    smartContentStore.start();
+
+    expect(Requester.get).toBeCalledWith('/api/items?provider=content&excluded=4,1,2,6&locale=en');
 });
 
 test('Do not load items if FilterCriteria is given with empty categories and tags arrays', () => {
@@ -200,6 +226,7 @@ test('Load items and store them in the items variable', () => {
     });
     Requester.get.mockReturnValue(itemsPromise);
     const smartContentStore = new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
+    smartContentStore.start();
 
     expect(Requester.get).toHaveBeenLastCalledWith(
         '/api/items?provider=content&excluded=4&locale=en&audienceTargeting=true&categoryOperator=and'

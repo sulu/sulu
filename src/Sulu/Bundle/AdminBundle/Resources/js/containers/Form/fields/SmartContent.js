@@ -1,10 +1,11 @@
 // @flow
 import React from 'react';
-import {autorun, toJS} from 'mobx';
+import {autorun, computed, toJS, when} from 'mobx';
 import equals from 'fast-deep-equal';
 import type {FieldTypeProps} from '../../../types';
 import SmartContentComponent, {smartContentConfigStore, SmartContentStore} from '../../SmartContent';
 import type {FilterCriteria} from '../../SmartContent/types';
+import smartContentStorePool from './smartContentStorePool';
 
 type Props = FieldTypeProps<?FilterCriteria>;
 
@@ -22,8 +23,13 @@ const filterCriteriaDefaults = {
     tags: undefined,
 };
 
-export default class SmartContent extends React.Component<Props> {
+class SmartContent extends React.Component<Props> {
     smartContentStore: SmartContentStore;
+    filterCriteriaChangeDisposer: () => void;
+
+    @computed get previousSmartContentStores() {
+        return smartContentStorePool.findPreviousStores(this.smartContentStore);
+    }
 
     constructor(props: Props) {
         super(props);
@@ -31,6 +37,9 @@ export default class SmartContent extends React.Component<Props> {
         const {
             formInspector,
             schemaOptions: {
+                exclude_duplicates: {
+                    value: excludeDuplicates = false,
+                } = {},
                 provider: {
                     value: provider,
                 } = {value: 'pages'},
@@ -40,6 +49,10 @@ export default class SmartContent extends React.Component<Props> {
 
         if (typeof provider !== 'string') {
             throw new Error('The "provider" schemaOption must be a string, but received ' + typeof provider + '!');
+        }
+
+        if (typeof excludeDuplicates !== 'boolean') {
+            throw new Error('The "exclude_duplicates" schemaOption must be a boolean if set!');
         }
 
         const datasourceResourceKey = smartContentConfigStore.getConfig(provider).datasourceResourceKey;
@@ -52,11 +65,29 @@ export default class SmartContent extends React.Component<Props> {
             formInspector.resourceKey === provider ? formInspector.id : undefined
         );
 
-        autorun(this.handleFilterCriteriaChange);
+        smartContentStorePool.add(this.smartContentStore, excludeDuplicates);
+
+        this.filterCriteriaChangeDisposer = autorun(this.handleFilterCriteriaChange);
+
+        if (!excludeDuplicates || this.previousSmartContentStores.length === 0) {
+            this.smartContentStore.start();
+        } else {
+            // If duplicates are excluded wait with loading the smart content until all previous ones have been loaded
+            // Otherwise it is not known which ids to exclude for the initial request and has to be done a second time
+            when(
+                () => this.previousSmartContentStores.every((store) => !store.itemsLoading),
+                (): void => {
+                    smartContentStorePool.updateExcludedIds();
+                    this.smartContentStore.start();
+                }
+            );
+        }
     }
 
     componentWillUnmount() {
+        smartContentStorePool.remove(this.smartContentStore);
         this.smartContentStore.destroy();
+        this.filterCriteriaChangeDisposer();
     }
 
     handleFilterCriteriaChange = () => {
@@ -91,6 +122,8 @@ export default class SmartContent extends React.Component<Props> {
 
         onChange(this.smartContentStore.filterCriteria);
         onFinish();
+
+        smartContentStorePool.updateExcludedIds();
     };
 
     render() {
@@ -114,7 +147,7 @@ export default class SmartContent extends React.Component<Props> {
         }
 
         if (categoryRootKey !== undefined && typeof categoryRootKey !== 'string') {
-            throw new Error('The "category_root" option must a string if set!');
+            throw new Error('The "category_root" schemaOption must a string if set!');
         }
 
         const presentations = schemaPresentations.map((presentation) => {
@@ -145,3 +178,5 @@ export default class SmartContent extends React.Component<Props> {
         );
     }
 }
+
+export default SmartContent;
