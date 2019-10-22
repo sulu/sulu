@@ -89,9 +89,9 @@ trait FormViewBuilderTrait
 
     private function addMetadataRequestParametersToView(View $route, array $formMetadata): void
     {
-        $oldFormMetadata = $route->getOption('formMetadata');
+        $oldFormMetadata = $route->getOption('metadataRequestParameters');
         $newFormMetadata = $oldFormMetadata ? array_merge($oldFormMetadata, $formMetadata) : $formMetadata;
 
-        $route->setOption('formMetadata', $newFormMetadata);
+        $route->setOption('metadataRequestParameters', $newFormMetadata);
     }
 }

@@ -84,6 +84,7 @@ class Form extends React.Component<Props> {
                     idQueryParameter,
                     resourceKey,
                     routerAttributesToFormRequest = {},
+                    metadataRequestParameters = {},
                 },
             },
         } = router;
@@ -121,7 +122,7 @@ class Form extends React.Component<Props> {
             this.resourceStore = resourceStore;
         }
 
-        this.resourceFormStore = new ResourceFormStore(this.resourceStore, formKey, formStoreOptions);
+        this.resourceFormStore = new ResourceFormStore(this.resourceStore, formKey, formStoreOptions, metadataRequestParameters);
 
         if (this.resourceStore.locale) {
             router.bind('locale', this.resourceStore.locale);
