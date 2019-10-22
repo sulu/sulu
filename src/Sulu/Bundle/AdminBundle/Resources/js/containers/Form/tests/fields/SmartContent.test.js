@@ -91,7 +91,7 @@ test('Should correctly initialize SmartContentStore', () => {
     expect(smartContentStorePool.remove).toBeCalledWith(smartContentStore);
 });
 
-test('Should correctly initialize SmartContentStore with a negative exclude_duplicates values', () => {
+test('Should correctly initialize SmartContentStore with a exclude_duplicates value of false', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test', 1), 'test'));
     smartContentConfigStore.getConfig.mockReturnValue({datasourceResourceKey: 'collections'});
 
