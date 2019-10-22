@@ -76,5 +76,5 @@ interface FormOverlayListViewBuilderInterface extends ViewBuilderInterface
 
     public function setOverlaySize(string $overlaySize): self;
 
-    public function addMetadataRequestParameters(array $formMetadata): self;
+    public function addMetadataRequestParameters(array $metadataRequestParameters): self;
 }

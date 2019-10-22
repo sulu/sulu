@@ -49,7 +49,7 @@ interface FormViewBuilderInterface extends ViewBuilderInterface
 
     public function setBackView(string $editView): self;
 
-    public function addMetadataRequestParameters(array $formMetadata): self;
+    public function addMetadataRequestParameters(array $metadataRequestParameters): self;
 
     public function setIdQueryParameter(string $idQueryParameter): self;
 
