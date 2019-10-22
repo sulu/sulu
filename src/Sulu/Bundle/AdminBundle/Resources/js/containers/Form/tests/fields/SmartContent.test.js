@@ -31,11 +31,12 @@ jest.mock('../../../SmartContent/stores/SmartContentStore', () => jest.fn(functi
     this.destroy = jest.fn();
     this.start = jest.fn();
 
-    mockExtendObservable(this, {itemsLoading: false});
+    mockExtendObservable(this, {itemsLoading: false, filterCriteria: {}});
 }));
 
 jest.mock('../../../SmartContent/stores/smartContentConfigStore', () => ({
     getConfig: jest.fn().mockReturnValue({}),
+    getDefaultValue: jest.fn().mockReturnValue({audienceTargeting: false}),
 }));
 
 jest.mock('../../fields/smartContentStorePool', () => ({
@@ -246,11 +247,13 @@ test('Should not call the onChange and onFinish callbacks if SmartContentStore i
         />
     );
 
+    changeSpy.mockReset();
+    finishSpy.mockReset();
+
     smartContent.instance().smartContentStore.loading = true;
     smartContent.instance().smartContentStore.filterCriteria = {
         audienceTargeting: true,
     };
-    smartContent.instance().handleFilterCriteriaChange();
 
     expect(changeSpy).not.toBeCalled();
     expect(finishSpy).not.toBeCalled();
@@ -331,7 +334,6 @@ test('Should not call the onChange and onFinish callbacks if categories only dif
         ...value,
         categories: [2, 1],
     };
-    smartContent.instance().handleFilterCriteriaChange();
 
     expect(changeSpy).not.toBeCalled();
     expect(finishSpy).not.toBeCalled();
@@ -381,7 +383,6 @@ test('Should not call the onChange and onFinish callbacks if tags only differ in
         ...value,
         tags: ['Programming', 'Design'],
     };
-    smartContent.instance().handleFilterCriteriaChange();
 
     expect(changeSpy).not.toBeCalled();
     expect(finishSpy).not.toBeCalled();

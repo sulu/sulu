@@ -12,7 +12,7 @@ import SingleListOverlay from '../../containers/SingleListOverlay';
 import MultiAutoComplete from '../../containers/MultiAutoComplete';
 import {translate} from '../../utils/Translator';
 import SmartContentStore from './stores/SmartContentStore';
-import type {Conjunction, SortOrder} from './types';
+import type {Conjunction, FilterCriteria, SortOrder} from './types';
 import filterOverlayStyles from './filterOverlay.scss';
 
 type Props = {|
@@ -20,6 +20,7 @@ type Props = {|
     dataSourceAdapter: ?string,
     dataSourceListKey: ?string,
     dataSourceResourceKey: ?string,
+    defaultValue: FilterCriteria,
     onClose: () => void,
     open: boolean,
     presentations: {[key: string]: string},
@@ -89,17 +90,19 @@ class FilterOverlay extends React.Component<Props> {
     };
 
     @action resetFilterCriteria = () => {
-        this.dataSource = undefined;
-        this.includeSubElements = undefined;
-        this.categories = undefined;
-        this.categoryOperator = undefined;
-        this.tags = undefined;
-        this.tagOperator = undefined;
-        this.audienceTargeting = undefined;
-        this.sortBy = undefined;
-        this.sortOrder = undefined;
-        this.presentation = undefined;
-        this.limit = undefined;
+        const {defaultValue} = this.props;
+
+        this.dataSource = defaultValue.dataSource;
+        this.includeSubElements = defaultValue.includeSubFolders;
+        this.categories = defaultValue.categories;
+        this.categoryOperator = defaultValue.categoryOperator;
+        this.tags = defaultValue.tags;
+        this.tagOperator = defaultValue.tagOperator;
+        this.audienceTargeting = defaultValue.audienceTargeting;
+        this.sortBy = defaultValue.sortBy;
+        this.sortOrder = defaultValue.sortMethod;
+        this.presentation = defaultValue.presentAs;
+        this.limit = defaultValue.limitResult;
     };
 
     @action handleConfirmDataSourceDialog = (dataSource: Object) => {

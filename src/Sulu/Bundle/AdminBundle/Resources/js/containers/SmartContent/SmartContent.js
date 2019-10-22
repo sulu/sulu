@@ -8,10 +8,11 @@ import smartContentConfigStore from './stores/smartContentConfigStore';
 import SmartContentStore from './stores/SmartContentStore';
 import FilterOverlay from './FilterOverlay';
 import SmartContentItem from './SmartContentItem';
-import type {Presentation, SmartContentConfig} from './types';
+import type {FilterCriteria, Presentation, SmartContentConfig} from './types';
 
 type Props = {|
     categoryRootKey?: string,
+    defaultValue: FilterCriteria,
     disabled: boolean,
     fieldLabel: string,
     presentations: Array<Presentation>,
@@ -43,47 +44,26 @@ class SmartContent extends React.Component<Props> {
 
         if (this.config.datasourceResourceKey && this.config.datasourceAdapter) {
             this.sections.push('datasource');
-            if (store.includeSubElements === undefined) {
-                store.includeSubElements = false;
-            }
         }
 
         if (this.config.categories) {
             this.sections.push('categories');
-            if (store.categories === undefined) {
-                store.categoryOperator = 'or';
-            }
         }
 
         if (this.config.tags) {
             this.sections.push('tags');
-            if (store.tags === undefined) {
-                store.tagOperator = 'or';
-            }
         }
 
         if (this.config.audienceTargeting) {
             this.sections.push('audienceTargeting');
-            if (store.audienceTargeting === undefined) {
-                store.audienceTargeting = false;
-            }
         }
 
         if (this.config.sorting.length > 0) {
             this.sections.push('sorting');
-            if (store.sortBy === undefined) {
-                store.sortBy = this.config.sorting[0].name;
-            }
-            if (store.sortOrder === undefined) {
-                store.sortOrder = 'asc';
-            }
         }
 
         if (this.config.presentAs && this.props.presentations.length > 0) {
             this.sections.push('presentation');
-            if (store.presentation === undefined) {
-                store.presentation = this.props.presentations[0].name;
-            }
         }
 
         if (this.config.limit) {
@@ -105,7 +85,7 @@ class SmartContent extends React.Component<Props> {
     };
 
     render() {
-        const {categoryRootKey, disabled, fieldLabel, store} = this.props;
+        const {categoryRootKey, defaultValue, disabled, fieldLabel, store} = this.props;
 
         const presentations = this.props.presentations.reduce((presentations, presentation) => {
             presentations[presentation.name] = presentation.value;
@@ -135,6 +115,7 @@ class SmartContent extends React.Component<Props> {
                     dataSourceAdapter={this.config.datasourceAdapter}
                     dataSourceListKey={this.config.datasourceListKey}
                     dataSourceResourceKey={this.config.datasourceResourceKey}
+                    defaultValue={defaultValue}
                     onClose={this.handleFilterOverlayClose}
                     open={this.showFilterOverlay}
                     presentations={presentations}

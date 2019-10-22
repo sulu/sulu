@@ -19,12 +19,28 @@ jest.mock('../../../containers/SingleListOverlay', () => jest.fn(() => null));
 
 test('Do not display if open is set to false', () => {
     const smartContentStore = new SmartContentStore('content');
+
+    const defaultValue = {
+        dataSource: 1,
+        includeSubFolders: true,
+        categories: [],
+        categoryOperator: 'and',
+        tags: [],
+        tagOperator: 'or',
+        audienceTargeting: true,
+        sortBy: 'title',
+        sortMethod: 'asc',
+        presentAs: 'two',
+        limitResult: 5,
+    };
+
     const filterOverlay = shallow(
         <FilterOverlay
             categoryRootKey={undefined}
             dataSourceAdapter="table"
             dataSourceListKey="snippets"
             dataSourceResourceKey="snippets"
+            defaultValue={defaultValue}
             onClose={jest.fn()}
             open={false}
             presentations={{}}
@@ -43,12 +59,27 @@ test('Pass rootKey for categories to options for category list', () => {
     // $FlowFixMe
     smartContentStore.loading = false;
 
+    const defaultValue = {
+        dataSource: 1,
+        includeSubFolders: true,
+        categories: [],
+        categoryOperator: 'and',
+        tags: [],
+        tagOperator: 'or',
+        audienceTargeting: true,
+        sortBy: 'title',
+        sortMethod: 'asc',
+        presentAs: 'two',
+        limitResult: 5,
+    };
+
     const filterOverlay = shallow(
         <FilterOverlay
             categoryRootKey="test1"
             dataSourceAdapter="table"
             dataSourceListKey="snippets"
             dataSourceResourceKey="snippets"
+            defaultValue={defaultValue}
             onClose={jest.fn()}
             open={false}
             presentations={{}}
@@ -68,12 +99,27 @@ test('Render with ListOverlays if smartContentStore is loaded', () => {
     // $FlowFixMe
     smartContentStore.loading = false;
 
+    const defaultValue = {
+        dataSource: 1,
+        includeSubFolders: true,
+        categories: [],
+        categoryOperator: 'and',
+        tags: [],
+        tagOperator: 'or',
+        audienceTargeting: true,
+        sortBy: 'title',
+        sortMethod: 'asc',
+        presentAs: 'two',
+        limitResult: 5,
+    };
+
     const filterOverlay = shallow(
         <FilterOverlay
             categoryRootKey={undefined}
             dataSourceAdapter="table"
             dataSourceListKey="snippets"
             dataSourceResourceKey="snippets"
+            defaultValue={defaultValue}
             onClose={jest.fn()}
             open={true}
             presentations={{}}
@@ -93,12 +139,27 @@ test('Render without ListOverlays if smartContentStore is not loaded', () => {
     // $FlowFixMe
     smartContentStore.loading = true;
 
+    const defaultValue = {
+        dataSource: 1,
+        includeSubFolders: true,
+        categories: [],
+        categoryOperator: 'and',
+        tags: [],
+        tagOperator: 'or',
+        audienceTargeting: true,
+        sortBy: 'title',
+        sortMethod: 'asc',
+        presentAs: 'two',
+        limitResult: 5,
+    };
+
     const filterOverlay = mount(
         <FilterOverlay
             categoryRootKey={undefined}
             dataSourceAdapter={undefined}
             dataSourceListKey={undefined}
             dataSourceResourceKey={undefined}
+            defaultValue={defaultValue}
             onClose={jest.fn()}
             open={true}
             presentations={{}}
@@ -114,12 +175,28 @@ test('Render without ListOverlays if smartContentStore is not loaded', () => {
 
 test('Render with all fields', () => {
     const smartContentStore = new SmartContentStore('content');
+
+    const defaultValue = {
+        dataSource: 1,
+        includeSubFolders: true,
+        categories: [],
+        categoryOperator: 'and',
+        tags: [],
+        tagOperator: 'or',
+        audienceTargeting: true,
+        sortBy: 'title',
+        sortMethod: 'asc',
+        presentAs: 'two',
+        limitResult: 5,
+    };
+
     const filterOverlay = mount(
         <FilterOverlay
             categoryRootKey={undefined}
             dataSourceAdapter={undefined}
             dataSourceListKey={undefined}
             dataSourceResourceKey={undefined}
+            defaultValue={defaultValue}
             onClose={jest.fn()}
             open={true}
             presentations={{}}
@@ -134,12 +211,28 @@ test('Render with all fields', () => {
 
 test('Render with no fields', () => {
     const smartContentStore = new SmartContentStore('content');
+
+    const defaultValue = {
+        dataSource: 1,
+        includeSubFolders: true,
+        categories: [],
+        categoryOperator: 'and',
+        tags: [],
+        tagOperator: 'or',
+        audienceTargeting: true,
+        sortBy: 'title',
+        sortMethod: 'asc',
+        presentAs: 'two',
+        limitResult: 5,
+    };
+
     const filterOverlay = mount(
         <FilterOverlay
             categoryRootKey={undefined}
             dataSourceAdapter={undefined}
             dataSourceListKey={undefined}
             dataSourceResourceKey={undefined}
+            defaultValue={defaultValue}
             onClose={jest.fn()}
             open={true}
             presentations={{}}
@@ -156,12 +249,27 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     const smartContentStore = new SmartContentStore('content');
     const closeSpy = jest.fn();
 
+    const defaultValue = {
+        dataSource: 1,
+        includeSubFolders: true,
+        categories: [],
+        categoryOperator: 'and',
+        tags: [],
+        tagOperator: 'or',
+        audienceTargeting: true,
+        sortBy: 'title',
+        sortMethod: 'asc',
+        presentAs: 'two',
+        limitResult: 5,
+    };
+
     const filterOverlay = mount(
         <FilterOverlay
             categoryRootKey={undefined}
             dataSourceAdapter="table"
             dataSourceListKey="pages_list"
             dataSourceResourceKey="pages"
+            defaultValue={defaultValue}
             onClose={closeSpy}
             open={true}
             presentations={{
@@ -280,12 +388,27 @@ test('Prefill all fields with correct values', () => {
     smartContentStore.presentation = 'small';
     smartContentStore.limit = 8;
 
+    const defaultValue = {
+        dataSource: 1,
+        includeSubFolders: true,
+        categories: [],
+        categoryOperator: 'and',
+        tags: [],
+        tagOperator: 'or',
+        audienceTargeting: true,
+        sortBy: 'title',
+        sortMethod: 'asc',
+        presentAs: 'two',
+        limitResult: 5,
+    };
+
     const filterOverlay = mount(
         <FilterOverlay
             categoryRootKey={undefined}
             dataSourceAdapter="table"
             dataSourceListKey="pages"
             dataSourceResourceKey="pages"
+            defaultValue={defaultValue}
             onClose={jest.fn()}
             open={true}
             presentations={{
@@ -342,12 +465,27 @@ test('Reset all fields when reset action is clicked', () => {
     smartContentStore.presentation = 'large';
     smartContentStore.limit = 5;
 
+    const defaultValue = {
+        dataSource: 1,
+        includeSubFolders: true,
+        categories: [],
+        categoryOperator: 'and',
+        tags: [],
+        tagOperator: 'or',
+        audienceTargeting: true,
+        sortBy: 'title',
+        sortMethod: 'asc',
+        presentAs: 'two',
+        limitResult: 5,
+    };
+
     const filterOverlay = mount(
         <FilterOverlay
             categoryRootKey={undefined}
             dataSourceAdapter="table"
             dataSourceListKey="pages"
             dataSourceResourceKey="pages"
+            defaultValue={defaultValue}
             onClose={jest.fn()}
             open={true}
             presentations={{
@@ -367,15 +505,15 @@ test('Reset all fields when reset action is clicked', () => {
     filterOverlay.find('Overlay').prop('actions')[0].onClick();
     filterOverlay.update();
 
-    expect(filterOverlay.instance().dataSource).toEqual(undefined);
-    expect(filterOverlay.instance().includeSubElements).toEqual(undefined);
-    expect(filterOverlay.instance().categories).toEqual(undefined);
-    expect(filterOverlay.instance().categoryOperator).toEqual(undefined);
-    expect(filterOverlay.instance().tags).toEqual(undefined);
-    expect(filterOverlay.instance().tagOperator).toEqual(undefined);
-    expect(filterOverlay.instance().audienceTargeting).toEqual(undefined);
-    expect(filterOverlay.instance().sortBy).toEqual(undefined);
-    expect(filterOverlay.instance().sortOrder).toEqual(undefined);
-    expect(filterOverlay.instance().presentation).toEqual(undefined);
-    expect(filterOverlay.instance().limit).toEqual(undefined);
+    expect(filterOverlay.instance().dataSource).toEqual(1);
+    expect(filterOverlay.instance().includeSubElements).toEqual(true);
+    expect(filterOverlay.instance().categories).toEqual([]);
+    expect(filterOverlay.instance().categoryOperator).toEqual('and');
+    expect(filterOverlay.instance().tags).toEqual([]);
+    expect(filterOverlay.instance().tagOperator).toEqual('or');
+    expect(filterOverlay.instance().audienceTargeting).toEqual(true);
+    expect(filterOverlay.instance().sortBy).toEqual('title');
+    expect(filterOverlay.instance().sortOrder).toEqual('asc');
+    expect(filterOverlay.instance().presentation).toEqual('two');
+    expect(filterOverlay.instance().limit).toEqual(5);
 });

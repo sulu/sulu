@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import {autorun, computed, toJS, when} from 'mobx';
+import {computed, toJS, reaction, when} from 'mobx';
 import equals from 'fast-deep-equal';
 import type {FieldTypeProps} from '../../../types';
 import SmartContentComponent, {smartContentConfigStore, SmartContentStore} from '../../SmartContent';
-import type {FilterCriteria} from '../../SmartContent/types';
+import type {FilterCriteria, Presentation} from '../../SmartContent/types';
 import smartContentStorePool from './smartContentStorePool';
 
 type Props = FieldTypeProps<?FilterCriteria>;
@@ -25,10 +25,74 @@ const filterCriteriaDefaults = {
 
 class SmartContent extends React.Component<Props> {
     smartContentStore: SmartContentStore;
-    filterCriteriaChangeDisposer: () => void;
+    filterCriteriaChangeDisposer: () => mixed;
 
     @computed get previousSmartContentStores() {
         return smartContentStorePool.findPreviousStores(this.smartContentStore);
+    }
+
+    @computed get presentations(): Array<Presentation> {
+        const {
+            schemaOptions: {
+                present_as: {
+                    value: schemaPresentations = [],
+                } = {},
+            } = {},
+        } = this.props;
+
+        if (!Array.isArray(schemaPresentations)) {
+            throw new Error(
+                'The "present_as" schemaOption must be a string, but received ' + typeof schemaPresentations + '!'
+            );
+        }
+
+        return schemaPresentations.map((presentation) => {
+            const {name, title} = presentation;
+
+            if (!name) {
+                throw new Error('Every presentation in the "present_as" schema Option must contain a name');
+            }
+
+            if (!title) {
+                throw new Error('Every presentation in the "present_as" schema Option must contain a title');
+            }
+
+            return {
+                name: name.toString(),
+                value: title.toString(),
+            };
+        });
+    }
+
+    @computed get provider() {
+        const {
+            schemaOptions: {
+                provider: {
+                    value: provider,
+                } = {value: 'pages'},
+            } = {},
+        } = this.props;
+
+        if (typeof provider !== 'string') {
+            throw new Error('The "provider" schemaOption must be a string, but received ' + typeof provider + '!');
+        }
+
+        return provider;
+    }
+
+    @computed get value() {
+        const {value} = this.props;
+
+        return value !== undefined
+            ? value
+            : this.defaultValue;
+    }
+
+    @computed get defaultValue() {
+        return smartContentConfigStore.getDefaultValue(
+            this.provider,
+            this.presentations
+        );
     }
 
     constructor(props: Props) {
@@ -36,38 +100,39 @@ class SmartContent extends React.Component<Props> {
 
         const {
             formInspector,
+            onChange,
             schemaOptions: {
                 exclude_duplicates: {
                     value: excludeDuplicates = false,
                 } = {},
-                provider: {
-                    value: provider,
-                } = {value: 'pages'},
             } = {},
             value,
         } = this.props;
-
-        if (typeof provider !== 'string') {
-            throw new Error('The "provider" schemaOption must be a string, but received ' + typeof provider + '!');
-        }
 
         if (typeof excludeDuplicates !== 'boolean') {
             throw new Error('The "exclude_duplicates" schemaOption must be a boolean if set!');
         }
 
-        const datasourceResourceKey = smartContentConfigStore.getConfig(provider).datasourceResourceKey;
+        const {datasourceResourceKey} = smartContentConfigStore.getConfig(this.provider);
+
+        if (value === undefined) {
+            onChange(this.value);
+        }
 
         this.smartContentStore = new SmartContentStore(
-            provider,
-            value,
+            this.provider,
+            this.value,
             formInspector.locale,
             datasourceResourceKey,
-            formInspector.resourceKey === provider ? formInspector.id : undefined
+            formInspector.resourceKey === this.provider ? formInspector.id : undefined
         );
 
         smartContentStorePool.add(this.smartContentStore, excludeDuplicates);
 
-        this.filterCriteriaChangeDisposer = autorun(this.handleFilterCriteriaChange);
+        this.filterCriteriaChangeDisposer = reaction(
+            () => toJS(this.smartContentStore.filterCriteria),
+            (value): void => this.handleFilterCriteriaChange(value)
+        );
 
         if (!excludeDuplicates || this.previousSmartContentStores.length === 0) {
             this.smartContentStore.start();
@@ -90,11 +155,11 @@ class SmartContent extends React.Component<Props> {
         this.filterCriteriaChangeDisposer();
     }
 
-    handleFilterCriteriaChange = () => {
+    handleFilterCriteriaChange = (filterCriteria: ?FilterCriteria) => {
         const {onChange, onFinish, value} = this.props;
 
         const currentValue = {...filterCriteriaDefaults, ...toJS(value)};
-        const newValue = {...filterCriteriaDefaults, ...toJS(this.smartContentStore.filterCriteria)};
+        const newValue = {...filterCriteriaDefaults, ...toJS(filterCriteria)};
 
         if (currentValue) {
             if (currentValue.categories) {
@@ -120,7 +185,7 @@ class SmartContent extends React.Component<Props> {
             return;
         }
 
-        onChange(this.smartContentStore.filterCriteria);
+        onChange(filterCriteria);
         onFinish();
 
         smartContentStorePool.updateExcludedIds();
@@ -134,45 +199,20 @@ class SmartContent extends React.Component<Props> {
                 category_root: {
                     value: categoryRootKey,
                 } = {},
-                present_as: {
-                    value: schemaPresentations = [],
-                } = {},
             } = {},
         } = this.props;
-
-        if (!Array.isArray(schemaPresentations)) {
-            throw new Error(
-                'The "present_as" schemaOption must be a string, but received ' + typeof schemaPresentations + '!'
-            );
-        }
 
         if (categoryRootKey !== undefined && typeof categoryRootKey !== 'string') {
             throw new Error('The "category_root" schemaOption must a string if set!');
         }
 
-        const presentations = schemaPresentations.map((presentation) => {
-            const {name, title} = presentation;
-
-            if (!name) {
-                throw new Error('Every presentation in the "present_as" schema Option must contain a name');
-            }
-
-            if (!title) {
-                throw new Error('Every presentation in the "present_as" schema Option must contain a title');
-            }
-
-            return {
-                name: name.toString(),
-                value: title.toString(),
-            };
-        });
-
         return (
             <SmartContentComponent
                 categoryRootKey={categoryRootKey}
+                defaultValue={this.defaultValue}
                 disabled={!!disabled}
                 fieldLabel={label}
-                presentations={presentations}
+                presentations={this.presentations}
                 store={this.smartContentStore}
             />
         );
