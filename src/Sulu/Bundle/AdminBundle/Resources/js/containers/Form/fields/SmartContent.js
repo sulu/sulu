@@ -72,6 +72,8 @@ class SmartContent extends React.Component<Props> {
         if (!excludeDuplicates || this.previousSmartContentStores.length === 0) {
             this.smartContentStore.start();
         } else {
+            // If duplicates are excluded wait with loading the smart content until all previous ones have been loaded
+            // Otherwise it is not known which ids to exclude for the initial request and has to be done a second time
             when(
                 () => this.previousSmartContentStores.every((store) => !store.itemsLoading),
                 (): void => {
