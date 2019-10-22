@@ -17,6 +17,7 @@
         <service id="sulu_media.storage.s3.adapter" class="League\Flysystem\AwsS3v3\AwsS3Adapter">
             <argument type="service" id="sulu_media.storage.s3.client"/>
             <argument type="string">%sulu_media.media.storage.s3.bucket_name%</argument>
+            <argument type="string">%sulu_media.media.storage.s3.path_prefix%</argument>
         </service>
 
         <service id="sulu_media.storage.s3.filesystem" class="League\Flysystem\Filesystem">
