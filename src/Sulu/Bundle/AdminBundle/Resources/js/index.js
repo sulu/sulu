@@ -64,7 +64,6 @@ import {
     Number,
     PasswordConfirmation,
     Phone,
-    ResourceLocator,
     Selection,
     SingleSelect,
     SingleSelection,
@@ -114,7 +113,6 @@ const FIELD_TYPE_EMAIL = 'email';
 const FIELD_TYPE_NUMBER = 'number';
 const FIELD_TYPE_PASSWORD_CONFIRMATION = 'password_confirmation';
 const FIELD_TYPE_PHONE = 'phone';
-const FIELD_TYPE_RESOURCE_LOCATOR = 'resource_locator';
 const FIELD_TYPE_SELECT = 'select';
 const FIELD_TYPE_SINGLE_SELECT = 'single_select';
 const FIELD_TYPE_SMART_CONTENT = 'smart_content';
@@ -189,11 +187,6 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add(FIELD_TYPE_NUMBER, Number);
     fieldRegistry.add(FIELD_TYPE_PASSWORD_CONFIRMATION, PasswordConfirmation);
     fieldRegistry.add(FIELD_TYPE_PHONE, Phone);
-    fieldRegistry.add(
-        FIELD_TYPE_RESOURCE_LOCATOR,
-        ResourceLocator,
-        {defaultMode: 'leaf', generationUrl: Config.endpoints.generateUrl, historyResourceKey: 'page_resourcelocators'}
-    );
     fieldRegistry.add(FIELD_TYPE_SMART_CONTENT, SmartContent);
     fieldRegistry.add(FIELD_TYPE_SINGLE_SELECT, SingleSelect);
     fieldRegistry.add(FIELD_TYPE_TEXT_AREA, TextArea);

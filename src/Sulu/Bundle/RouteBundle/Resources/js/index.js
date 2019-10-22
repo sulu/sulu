@@ -5,8 +5,10 @@ fieldRegistry.add(
     'route',
     ResourceLocator,
     {
-        defaultMode: 'full',
         historyResourceKey: 'routes',
+        modeResolver: () => {
+            return Promise.resolve('full');
+        },
         options: {history: true},
     }
 );

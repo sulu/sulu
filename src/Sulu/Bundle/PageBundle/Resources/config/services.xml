@@ -33,6 +33,7 @@
                  class="Sulu\Bundle\PageBundle\EventListener\WebspaceSerializeEventSubscriber">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_core.webspace.url_provider"/>
+            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
             <argument type="string">%kernel.environment%</argument>
 
             <tag name="jms_serializer.event_subscriber" />

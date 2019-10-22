@@ -2,6 +2,24 @@
 
 ## dev-release/2.0
 
+### mode schemaOption in ResourceLocator
+
+The `resource_locator` field had a `mode` schema option, which could e.g. be used like this:
+
+
+```xml
+<property name="url" type="resource_locator" mandatory="true">
+    <params>
+        <param name="mode" value="full" />
+    </params>
+
+    <tag name="sulu.rlp"/>
+</property>
+```
+
+This option does not exist anymore. Instead you should set the correct `resource-locator-strategy` in your webspace
+configuration.
+
 ### Fix AccountInterface nullable setters/getter
 
 Setters and getter of nullable fields on the Account entity were fixed.

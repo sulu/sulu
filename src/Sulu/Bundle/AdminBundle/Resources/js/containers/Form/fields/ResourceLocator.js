@@ -1,5 +1,7 @@
 // @flow
 import React from 'react';
+import {action, observable} from 'mobx';
+import {observer} from 'mobx-react';
 import ResourceLocatorComponent from '../../../components/ResourceLocator';
 import ResourceLocatorHistory from '../../../containers/ResourceLocatorHistory';
 import Requester from '../../../services/Requester';
@@ -10,13 +12,21 @@ const PART_TAG = 'sulu.rlp.part';
 
 const HOMEPAGE_RESOURCE_LOCATOR = '/';
 
-export default class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
+@observer
+class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
+    @observable mode: string;
+
     constructor(props: FieldTypeProps<?string>) {
         super(props);
 
         const {dataPath, onChange, fieldTypeOptions, formInspector, value} = this.props;
+        const {generationUrl, modeResolver} = fieldTypeOptions;
 
-        const {generationUrl} = fieldTypeOptions;
+        if (!modeResolver) {
+            throw new Error('The "modeResolver" must be a function returning a promise with the desired mode');
+        }
+
+        modeResolver(this.props).then(action((mode) => this.mode = mode));
 
         if (!generationUrl) {
             return;
@@ -70,9 +80,12 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<?str
     };
 
     render() {
+        if (!this.mode) {
+            return null;
+        }
+
         const {
             fieldTypeOptions: {
-                defaultMode = 'leaf',
                 historyResourceKey,
                 options = {},
             },
@@ -91,17 +104,8 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<?str
             disabled,
             formInspector,
             onChange,
-            schemaOptions: {
-                mode: {
-                    value: mode,
-                } = {value: defaultMode},
-            } = {},
             value,
         } = this.props;
-
-        if (mode !== 'leaf' && mode !== 'full') {
-            throw new Error('The "mode" schema option must be either "leaf" or "full"!');
-        }
 
         if (value === HOMEPAGE_RESOURCE_LOCATOR) {
             return '/';
@@ -113,7 +117,7 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<?str
                     <ResourceLocatorComponent
                         disabled={!!disabled}
                         id={dataPath}
-                        mode={mode}
+                        mode={this.mode}
                         onBlur={this.handleBlur}
                         onChange={onChange}
                         value={value}
@@ -137,3 +141,5 @@ export default class ResourceLocator extends React.Component<FieldTypeProps<?str
         );
     }
 }
+
+export default ResourceLocator;

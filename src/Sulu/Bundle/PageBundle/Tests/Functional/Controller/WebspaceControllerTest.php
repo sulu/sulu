@@ -48,5 +48,6 @@ class WebspaceControllerTest extends SuluTestCase
         $this->assertCount(2, $testWebspace['navigations']);
         $this->assertEquals('main', $testWebspace['navigations'][0]['key']);
         $this->assertEquals('footer', $testWebspace['navigations'][1]['key']);
+        $this->assertEquals('leaf', $testWebspace['resourceLocatorStrategy']['inputType']);
     }
 }
