@@ -186,6 +186,13 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
         return $this;
     }
 
+    public function addMetadataRequestParameters(array $metadataRequestParameters): FormOverlayListViewBuilderInterface
+    {
+        $this->addMetadataRequestParametersToView($this->view, $metadataRequestParameters);
+
+        return $this;
+    }
+
     public function getView(): View
     {
         if (!$this->view->getOption('resourceKey')) {

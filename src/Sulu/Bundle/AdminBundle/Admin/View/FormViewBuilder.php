@@ -123,6 +123,13 @@ class FormViewBuilder implements FormViewBuilderInterface
         return $this;
     }
 
+    public function addMetadataRequestParameters(array $metadataRequestParameters): FormViewBuilderInterface
+    {
+        $this->addMetadataRequestParametersToView($this->view, $metadataRequestParameters);
+
+        return $this;
+    }
+
     public function setIdQueryParameter(string $idQueryParameter): FormViewBuilderInterface
     {
         $this->setIdQueryParameterToView($this->view, $idQueryParameter);

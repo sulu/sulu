@@ -1861,6 +1861,38 @@ test('Should pass router, store and schema handler to FormContainer', () => {
     expect(formContainer.prop('onSubmit')).toBeInstanceOf(Function);
 });
 
+test('Should pass metadataRequestParameters options to Form View', () => {
+    const metadataRequestParameters = {
+        'testParam': 'testValue',
+    };
+
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 12);
+
+    const route = {
+        options: {
+            formKey: 'snippets',
+            locales: [],
+            toolbarActions: [],
+            metadataRequestParameters: metadataRequestParameters,
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route,
+        attributes: {},
+    };
+
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    const formContainer = form.find('Form').at(1);
+    expect(formContainer.prop('store').resourceStore).toEqual(resourceStore);
+    expect(formContainer.prop('store').metadataOptions).toEqual(metadataRequestParameters);
+});
+
 test('Should destroy the store on unmount', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
