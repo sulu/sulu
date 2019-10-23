@@ -81,14 +81,9 @@ $textEditorUnpublishedLinkColor: $gold;
             border: 1px solid $textEditorDarkBorderColor;
         }
 
-        /**
-         * Move the sticky-toolbar below the SULU header.
-         * Still causes issues when snackbar is visible or when users scrolls whole page to top while editor with
-         * sticky-toolbar is active/visible.
-         */
         .ck.ck-sticky-panel {
             .ck.ck-sticky-panel__content_sticky {
-                top: calc($toolbarHeight);
+                position: static;
             }
         }
     }
@@ -104,11 +99,7 @@ $textEditorUnpublishedLinkColor: $gold;
             border-color: $textEditorBackgroundColor !important;
             line-height: 20px;
             min-height: 100px;
-
-            /**
-             * Make the editor so small, that it will not trigger the sticky-header of ck-editor in most cases.
-             */
-            max-height: 40vh;
+            max-height: calc(40vh - $toolbarHeight);
         }
 
         .ck-widget.table {
@@ -146,7 +137,6 @@ $textEditorUnpublishedLinkColor: $gold;
             line-height: $textEditorFontSize;
             vertical-align: middle;
         }
-
         /* stylelint-enable */
     }
 
