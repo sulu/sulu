@@ -32,9 +32,17 @@ class ChangelogLine extends React.Component<FieldTypeProps<typeof undefined>> {
             return;
         }
 
-        ResourceRequester.get('users', {id: this.changerId}).then(action((changer) => {
-            this.setChanger(changer);
-        }));
+        ResourceRequester.get('users', {id: this.changerId})
+            .then(action((changer) => {
+                this.setChanger(changer);
+            }))
+            .catch(action((error) => {
+                if (error.status !== 404) {
+                    return Promise.reject(error);
+                }
+
+                this.setChanger(undefined);
+            }));
     };
 
     loadCreator = () => {
@@ -43,9 +51,17 @@ class ChangelogLine extends React.Component<FieldTypeProps<typeof undefined>> {
             return;
         }
 
-        ResourceRequester.get('users', {id: this.creatorId}).then(action((creator) => {
-            this.setCreator(creator);
-        }));
+        ResourceRequester.get('users', {id: this.creatorId})
+            .then(action((creator) => {
+                this.setCreator(creator);
+            }))
+            .catch(action((error) => {
+                if (error.status !== 404) {
+                    return Promise.reject(error);
+                }
+
+                this.setCreator(undefined);
+            }));
     };
 
     @action setChanger(changer: ?Object) {
