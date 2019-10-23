@@ -74,8 +74,9 @@ class DownloadBuildCommand extends Command
     {
         if (!preg_match(static::VERSION_REGEX, $this->suluVersion)) {
             throw new \Exception(
-                'This command only works for tagged sulu versions matching semantic versioning, not for branches etc.'
-                . ' Given version was "' . $this->suluVersion . '".'
+                'This command only works for tagged sulu versions matching semantic versioning, not for branches etc. '
+                . 'Given version was "' . $this->suluVersion . '".' . PHP_EOL
+                . 'You would have to run "npm install" and "npm run build" in your "assets/admin" folder on your own.'
             );
         }
 
