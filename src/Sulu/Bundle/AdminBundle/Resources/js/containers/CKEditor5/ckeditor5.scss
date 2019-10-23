@@ -1,5 +1,8 @@
 @import '../../containers/Application/colors.scss';
+@import '../../containers/Application/variables.scss';
 @import '../../components/Toolbar/variables.scss';
+@import '../../components/Snackbar/snackbar.scss';
+@import '../../components/Tabs/variables.scss';
 
 $textEditorFontSize: 12px;
 $textEditorButtonMinSize: 20px;
@@ -99,7 +102,7 @@ $textEditorUnpublishedLinkColor: $gold;
             border-color: $textEditorBackgroundColor !important;
             line-height: 20px;
             min-height: 100px;
-            max-height: calc(40vh - $toolbarHeight);
+            max-height: calc(100vh - $toolbarHeight - $snackbarHeight - $tabMenuHeight - $viewPadding - 8px);
         }
 
         .ck-widget.table {
