@@ -55,7 +55,13 @@ class TargetGroupEvaluator implements TargetGroupEvaluatorInterface
         $maxFrequency = TargetGroupRuleInterface::FREQUENCY_VISITOR,
         TargetGroupInterface $currentTargetGroup = null
     ) {
-        $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
+        $webspace = $this->requestAnalyzer->getWebspace();
+        if (!$webspace) {
+            return $currentTargetGroup;
+        }
+
+        $webspaceKey = $webspace->getKey();
+
         $considerableTargetGroups = $this->targetGroupRepository->findAllActiveForWebspaceOrderedByPriority(
             $webspaceKey,
             $maxFrequency
