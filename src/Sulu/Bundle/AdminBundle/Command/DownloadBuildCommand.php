@@ -15,7 +15,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Templating\Tests\Storage\FileStorageTest;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class DownloadBuildCommand extends Command
@@ -107,7 +106,7 @@ class DownloadBuildCommand extends Command
         $response = $this->httpClient->request('GET', $this->remoteArchive, [
             'on_progress' => function(int $downloaded, int $size) {
                 /* echo $downloaded . '/' . $size . PHP_EOL; */
-            }
+            },
         ]);
 
         $filesystem = new Filesystem();
@@ -121,7 +120,7 @@ class DownloadBuildCommand extends Command
             $zip->close();
 
             $buildDir = $this->projectDir . static::BUILD_DIR;
-            $extractedFolderName = static::REPOSITORY_NAME . '-' .  $this->suluVersion;
+            $extractedFolderName = static::REPOSITORY_NAME . '-' . $this->suluVersion;
             $tempProjectDir = $tempDirectory . DIRECTORY_SEPARATOR . $extractedFolderName;
 
             $output->writeln('<info>Delete old build folder...</info>');
