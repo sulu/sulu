@@ -52,6 +52,8 @@ class DownloadBuildCommand extends Command
 
     const REPOSITORY_NAME = 'skeleton';
 
+    const VERSION_REGEX = '/^\d+\.\d+\.\d+(-(alpha|beta|RC)\d+)?$/';
+
     public function __construct(HttpClientInterface $httpClient, string $projectDir, string $suluVersion)
     {
         parent::__construct();
@@ -70,6 +72,13 @@ class DownloadBuildCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if (!preg_match(static::VERSION_REGEX, $this->suluVersion)) {
+            throw new \Exception(
+                'This command only works for tagged sulu versions matching semantic versioning, not for branches etc.'
+                . ' Given version was "' . $this->suluVersion . '".'
+            );
+        }
+
         $output->writeln('<info>Checking for changed files...</info>');
 
         $indexJs = static::ASSETS_DIR . 'index.js';
@@ -103,11 +112,7 @@ class DownloadBuildCommand extends Command
         $tempFileZip = $tempDirectory . '.zip';
 
         $output->writeln('<info>Download remote repository...</info>');
-        $response = $this->httpClient->request('GET', $this->remoteArchive, [
-            'on_progress' => function(int $downloaded, int $size) {
-                /* echo $downloaded . '/' . $size . PHP_EOL; */
-            },
-        ]);
+        $response = $this->httpClient->request('GET', $this->remoteArchive);
 
         $filesystem = new Filesystem();
 
