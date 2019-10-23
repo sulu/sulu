@@ -325,7 +325,7 @@ test('Cancel delete conflict occured with the allowConflictDeletion option set t
 
     setTimeout(() => {
         element = mount(deleteToolbarAction.getNode());
-        expect(deleteToolbarAction.router.navigate).toBeCalledTimes(0);
+        expect(deleteToolbarAction.router.restore).toBeCalledTimes(0);
         expect(element.at(0).prop('open')).toEqual(false);
         expect(element.at(1).prop('open')).toEqual(true);
         expect(element.at(1).find('li')).toHaveLength(2);
@@ -338,7 +338,7 @@ test('Cancel delete conflict occured with the allowConflictDeletion option set t
         element.find('Button[skin="primary"]').simulate('click');
 
         setTimeout(() => {
-            expect(deleteToolbarAction.router.navigate).not.toBeCalled();
+            expect(deleteToolbarAction.router.restore).not.toBeCalled();
             expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledTimes(1);
             expect(element.at(0).instance().props).toEqual(expect.objectContaining({
                 open: false,
