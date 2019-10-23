@@ -101,8 +101,9 @@ class DownloadBuildCommand extends Command
             throw new \Exception(
                 sprintf(
                     'The files in the local "%s" folder do not match the ones in the remote repository "%s".' . PHP_EOL
-                    . 'Either the build has been modified, which means it has to be done manually with NPM or the files'
-                    . ' in your repository are outdated and have to be copied from the remote repository.',
+                    . 'Either bundles with custom JavaScript have been added, which means it has to be done manually '
+                    . 'with NPM, or the files in your repository are outdated and have to be copied from the remote '
+                    . 'repository.',
                     static::ASSETS_DIR,
                     $this->remoteRepository
                 )
