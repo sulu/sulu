@@ -288,12 +288,17 @@ class ColumnListAdapter extends AbstractAdapter {
             activeItems,
             disabledIds,
             loading,
+            onItemClick,
             selections,
         } = this.props;
 
         return (
             <div className={columnListAdapterStyles.columnListAdapter}>
-                <ColumnList onItemClick={this.handleItemClick} toolbarItemsProvider={this.getToolbarItems}>
+                <ColumnList
+                    onItemClick={this.handleItemClick}
+                    onItemDoubleClick={onItemClick}
+                    toolbarItemsProvider={this.getToolbarItems}
+                >
                     {this.props.data.map((items, index) => (
                         <ColumnList.Column
                             key={index}

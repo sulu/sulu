@@ -13,6 +13,7 @@ import columnListStyles from './columnList.scss';
 type Props = {|
     children: ChildrenArray<Element<typeof Column>>,
     onItemClick: (id: string | number) => void,
+    onItemDoubleClick?: ?(id: string | number) => void,
     toolbarItemsProvider: (index: number) => ?Array<ToolbarItemConfig>,
 |};
 
@@ -106,16 +107,17 @@ class ColumnList extends React.Component<Props> {
     };
 
     cloneColumns = (originalColumns: ChildrenArray<Element<typeof Column>>) => {
-        const {onItemClick} = this.props;
+        const {onItemClick, onItemDoubleClick} = this.props;
         const scrolling = this.containerScrolling;
 
         return React.Children.map(originalColumns, (column, index) => {
             return React.cloneElement(
                 column,
                 {
-                    index: index,
+                    index,
                     onActive: this.handleActive,
-                    onItemClick: onItemClick,
+                    onItemClick,
+                    onItemDoubleClick,
                     scrolling,
                 }
             );
