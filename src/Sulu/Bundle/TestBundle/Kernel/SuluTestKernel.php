@@ -40,7 +40,6 @@ class SuluTestKernel extends SuluKernel
             // Dependencies
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Symfony\Bundle\TwigBundle\TwigBundle(),
-            new \Symfony\Bundle\MonologBundle\MonologBundle(),
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
             new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new \Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
@@ -49,6 +48,7 @@ class SuluTestKernel extends SuluKernel
             new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),
             new \Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
+            new \FOS\RestBundle\FOSRestBundle(),
 
             // Massive
             new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
@@ -75,15 +75,31 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\AudienceTargetingBundle\SuluAudienceTargetingBundle(),
         ];
 
+        if (class_exists(\Symfony\Bundle\MonologBundle\MonologBundle::class)) {
+            $bundles[] = new \Symfony\Bundle\MonologBundle\MonologBundle();
+        }
+
+        if (class_exists(\Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class)) {
+            $bundles[] = new \Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle();
+        }
+
+        if (class_exists(\Massive\Bundle\BuildBundle\MassiveBuildBundle::class)) {
+            $bundles[] = new \Massive\Bundle\BuildBundle\MassiveBuildBundle();
+        }
+
+        if (class_exists(\FOS\HttpCacheBundle\FOSHttpCacheBundle::class)) {
+            $bundles[] = new \FOS\HttpCacheBundle\FOSHttpCacheBundle();
+        }
+
         if (self::CONTEXT_WEBSITE === $this->getContext()) {
             $bundles[] = new \Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle();
         }
 
         if (self::CONTEXT_ADMIN === $this->getContext()) {
-            $bundles[] = new \FOS\RestBundle\FOSRestBundle();
             $bundles[] = new \Symfony\Bundle\SecurityBundle\SecurityBundle();
             $bundles[] = new \Sulu\Bundle\AdminBundle\SuluAdminBundle();
             $bundles[] = new \Sulu\Bundle\PreviewBundle\SuluPreviewBundle();
+            $bundles[] = new \FOS\JsRoutingBundle\FOSJsRoutingBundle();
         }
 
         return $bundles;
