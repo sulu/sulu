@@ -114,10 +114,10 @@ class ColumnList extends React.Component<Props> {
             return React.cloneElement(
                 column,
                 {
-                    index: index,
+                    index,
                     onActive: this.handleActive,
-                    onItemClick: onItemClick,
-                    onItemDoubleClick: onItemDoubleClick,
+                    onItemClick,
+                    onItemDoubleClick,
                     scrolling,
                 }
             );

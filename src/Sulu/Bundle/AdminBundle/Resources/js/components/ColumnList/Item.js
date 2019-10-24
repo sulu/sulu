@@ -52,14 +52,18 @@ class Item extends React.Component<Props> {
     }
 
     handleClick = () => {
-        if (this.props.onClick) {
-            this.props.onClick(this.props.id);
+        const {onClick, id} = this.props;
+
+        if (onClick) {
+            onClick(id);
         }
     };
 
     handleDoubleClick = () => {
-        if (this.props.onDoubleClick) {
-            this.props.onDoubleClick(this.props.id);
+        const {onDoubleClick, id} = this.props;
+
+        if (onDoubleClick) {
+            onDoubleClick(id);
         }
     };
 

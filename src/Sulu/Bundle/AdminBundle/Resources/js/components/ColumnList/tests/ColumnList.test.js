@@ -195,7 +195,7 @@ test('The ColumnList component should trigger the given onItemClick callback', (
     expect(onItemClick.mock.calls[2][0]).toBe('1-1');
 });
 
-test('The ColumnList component should trigger the given onItemClick callback', () => {
+test('The ColumnList component should trigger the given onItemDoubleClick callback', () => {
     const onItemDoubleClickSpy = jest.fn();
 
     const columnList = mount(
