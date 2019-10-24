@@ -108,6 +108,7 @@ class WebspaceInitializer implements InitializerInterface
             $output->writeln(sprintf('  [+] <info>homepage</info>: [%s] %s (%s)', $homeType, $homePath, $webspaceLocale));
 
             $persistOptions = ['ignore_required' => true];
+            $publishOptions = ['ignore_required' => true];
             if (!$homeDocument) {
                 /** @var HomeDocument $homeDocument */
                 $homeDocument = $this->documentManager->create('home');
@@ -123,7 +124,7 @@ class WebspaceInitializer implements InitializerInterface
             $homeDocument->setStructureType($homeType);
 
             $this->documentManager->persist($homeDocument, $webspaceLocale, $persistOptions);
-            $this->documentManager->publish($homeDocument, $webspaceLocale);
+            $this->documentManager->publish($homeDocument, $webspaceLocale, $publishOptions);
         }
 
         foreach ($webspaceLocales as $webspaceLocale) {
