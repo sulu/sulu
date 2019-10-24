@@ -156,8 +156,8 @@ class WebspaceInitializerTest extends TestCase
             ]
         )->shouldBeCalled();
 
-        $this->documentManager->publish($homeDocument->reveal(), 'de')->shouldBeCalledTimes(2);
-        $this->documentManager->publish($homeDocument->reveal(), 'en')->shouldBeCalledTimes(1);
+        $this->documentManager->publish($homeDocument->reveal(), 'de', ['ignore_required' => true])->shouldBeCalledTimes(2);
+        $this->documentManager->publish($homeDocument->reveal(), 'en', ['ignore_required' => true])->shouldBeCalledTimes(1);
 
         $this->documentManager->persist(
             $routeDocument->reveal(),

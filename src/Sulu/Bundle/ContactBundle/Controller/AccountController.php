@@ -616,13 +616,8 @@ class AccountController extends AbstractRestController implements ClassResourceI
         $account->setCorporation($request->get('corporation'));
         $accountManager = $this->accountManager;
 
-        if (null !== $request->get('uid')) {
-            $account->setUid($request->get('uid'));
-        }
-
-        if (null !== $request->get('note')) {
-            $account->setNote($request->get('note'));
-        }
+        $account->setUid($request->get('uid'));
+        $account->setNote($request->get('note'));
 
         $logo = $request->get('logo', []);
         if ($logo && array_key_exists('id', $logo)) {
@@ -775,6 +770,20 @@ class AccountController extends AbstractRestController implements ClassResourceI
      */
     public function deleteAction($id, Request $request)
     {
+        $children = $this->accountRepository->findChildAccounts($id);
+        if (count($children) > 0) {
+            $data = [
+                'id' => $id,
+                'items' => [],
+            ];
+
+            foreach ($children as $child) {
+                $data['items'][] = ['name' => $child->getName()];
+            }
+
+            return $this->handleView($this->view($data, 409));
+        }
+
         $delete = function($id) use ($request) {
             $account = $this->accountRepository->findAccountByIdAndDelete($id);
 
@@ -814,6 +823,8 @@ class AccountController extends AbstractRestController implements ClassResourceI
      * @param Request $request
      *
      * @return Response
+     *
+     * TODO remove?
      */
     public function multipledeleteinfoAction(Request $request)
     {

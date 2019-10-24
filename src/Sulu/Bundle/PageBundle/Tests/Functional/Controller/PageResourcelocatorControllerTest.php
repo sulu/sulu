@@ -215,7 +215,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
 
         $this->assertEquals(1, count($result['_embedded']['page_resourcelocators']));
         $this->assertEquals(1, $result['total']);
-        $this->assertEquals('/news', $result['_embedded']['page_resourcelocators'][0]['path']);
+        $this->assertEquals('/news', $result['_embedded']['page_resourcelocators'][0]['resourcelocator']);
     }
 
     public function testDelete()

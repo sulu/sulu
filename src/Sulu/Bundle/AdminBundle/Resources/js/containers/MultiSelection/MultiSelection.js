@@ -20,6 +20,7 @@ type Props = {|
     listKey: string,
     locale?: ?IObservableValue<string>,
     onChange: (selectedIds: Array<string | number>) => void,
+    options: Object,
     overlayTitle: string,
     resourceKey: string,
     value: Array<string | number>,
@@ -32,6 +33,7 @@ class MultiSelection extends React.Component<Props> {
         disabledIds: [],
         displayProperties: [],
         icon: 'su-plus',
+        options: {},
         value: [],
     };
 
@@ -113,6 +115,7 @@ class MultiSelection extends React.Component<Props> {
             label,
             locale,
             resourceKey,
+            options,
             overlayTitle,
         } = this.props;
 
@@ -156,6 +159,7 @@ class MultiSelection extends React.Component<Props> {
                     onClose={this.handleOverlayClose}
                     onConfirm={this.handleOverlayConfirm}
                     open={this.overlayOpen}
+                    options={options}
                     preSelectedItems={items}
                     resourceKey={resourceKey}
                     title={overlayTitle}

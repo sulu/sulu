@@ -8,7 +8,7 @@ import resourceLocatorStyles from './resourceLocator.scss';
 type Props = {|
     disabled: boolean,
     id?: string,
-    mode: 'full' | 'leaf',
+    mode: string,
     onBlur?: () => void,
     onChange: (value: ?string) => void,
     value: ?string,

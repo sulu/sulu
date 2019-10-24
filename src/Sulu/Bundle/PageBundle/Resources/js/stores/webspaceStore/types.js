@@ -10,7 +10,12 @@ export type Webspace = {
     name: string,
     navigations: Array<Navigation>,
     portalInformation: Array<PortalInformation>,
+    resourceLocatorStrategy: ResourceLocatorStrategy,
     urls: Array<Url>,
+};
+
+export type ResourceLocatorStrategy = {
+    inputType: string,
 };
 
 export type Navigation = {

@@ -117,3 +117,119 @@ test('Render with no changer and creator', () => {
         {changed: '10/4/2018, 10:57:00 AM', changer: 'undefined'}
     );
 });
+
+test('Render with deleted changer and existing creator', (done) => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    formInspector.getValueByPath.mockImplementation((path) => {
+        switch (path) {
+            case '/creator':
+                return 1;
+            case '/changer':
+                return 2;
+            case '/created':
+                return '2018-09-27T08:22:00';
+            case '/changed':
+                return '2018-10-04T10:57:00';
+        }
+    });
+
+    const creatorPromise = Promise.reject({
+        status: 404,
+    });
+
+    const changerPromise = Promise.resolve({
+        fullName: 'Erika Mustermann',
+    });
+
+    ResourceRequester.get.mockImplementation((resourceKey, {id}) => {
+        switch (id) {
+            case 1:
+                return creatorPromise;
+            case 2:
+                return changerPromise;
+        }
+    });
+
+    const changelogLine = mount(<ChangelogLine {...fieldTypeDefaultProps} formInspector={formInspector} />);
+
+    expect(ResourceRequester.get).toHaveBeenCalledTimes(2);
+    expect(ResourceRequester.get).toBeCalledWith('users', {id: 1});
+    expect(ResourceRequester.get).toBeCalledWith('users', {id: 2});
+
+    setTimeout(() => {
+        changelogLine.update();
+        expect(changelogLine.find('p')).toHaveLength(2);
+        expect(changelogLine.find('p').at(0).text()).toEqual('sulu_admin.changelog_line_changer');
+        expect(changelogLine.find('p').at(1).text()).toEqual('sulu_admin.changelog_line_creator');
+
+        expect(translate).toBeCalledWith(
+            'sulu_admin.changelog_line_creator',
+            {created: '9/27/2018, 8:22:00 AM', creator: 'undefined'}
+        );
+        expect(translate).toBeCalledWith(
+            'sulu_admin.changelog_line_changer',
+            {changed: '10/4/2018, 10:57:00 AM', changer: 'Erika Mustermann'}
+        );
+
+        done();
+    });
+});
+
+test('Render with existing changer and deleted creator', (done) => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    formInspector.getValueByPath.mockImplementation((path) => {
+        switch (path) {
+            case '/creator':
+                return 1;
+            case '/changer':
+                return 2;
+            case '/created':
+                return '2018-09-27T08:22:00';
+            case '/changed':
+                return '2018-10-04T10:57:00';
+        }
+    });
+
+    const creatorPromise = Promise.resolve({
+        fullName: 'Max Mustermann',
+    });
+
+    const changerPromise = Promise.reject({
+        status: 404,
+    });
+
+    ResourceRequester.get.mockImplementation((resourceKey, {id}) => {
+        switch (id) {
+            case 1:
+                return creatorPromise;
+            case 2:
+                return changerPromise;
+        }
+    });
+
+    const changelogLine = mount(<ChangelogLine {...fieldTypeDefaultProps} formInspector={formInspector} />);
+
+    expect(ResourceRequester.get).toHaveBeenCalledTimes(2);
+    expect(ResourceRequester.get).toBeCalledWith('users', {id: 1});
+    expect(ResourceRequester.get).toBeCalledWith('users', {id: 2});
+
+    setTimeout(() => {
+        changelogLine.update();
+        expect(changelogLine.find('p')).toHaveLength(2);
+        expect(changelogLine.find('p').at(0).text()).toEqual('sulu_admin.changelog_line_changer');
+        expect(changelogLine.find('p').at(1).text()).toEqual('sulu_admin.changelog_line_creator');
+
+        expect(translate).toBeCalledWith(
+            'sulu_admin.changelog_line_creator',
+            {created: '9/27/2018, 8:22:00 AM', creator: 'Max Mustermann'}
+        );
+        expect(translate).toBeCalledWith(
+            'sulu_admin.changelog_line_changer',
+            {changed: '10/4/2018, 10:57:00 AM', changer: 'undefined'}
+        );
+
+        done();
+    });
+});

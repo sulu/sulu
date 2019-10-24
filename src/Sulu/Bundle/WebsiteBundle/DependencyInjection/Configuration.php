@@ -60,7 +60,6 @@ class Configuration implements ConfigurationInterface
                 ->addDefaultsIfNotSet()
                 ->children()
                     ->scalarNode('dump_dir')->defaultValue('%sulu.cache_dir%/sitemaps')->end()
-                    ->scalarNode('default_host')->defaultNull()->end()
                 ->end()
             ->end()
             ->arrayNode('default_locale')

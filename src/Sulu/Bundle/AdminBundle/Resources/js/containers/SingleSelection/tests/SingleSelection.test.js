@@ -226,6 +226,29 @@ test('Should not open an overlay on button-click when disabled', () => {
     expect(singleSelection.find(SingleListOverlay).prop('open')).toEqual(false);
 });
 
+test('Should call the onChange callback with null if the current item does not exist and set to null', () => {
+    const changeSpy = jest.fn();
+
+    const singleSelection = mount(
+        <SingleSelection
+            adapter="table"
+            disabledIds={[]}
+            displayProperties={[]}
+            emptyText="Nothing"
+            icon="su-test"
+            listKey="test"
+            onChange={changeSpy}
+            overlayTitle="Test"
+            resourceKey="test"
+            value={3}
+        />
+    );
+
+    singleSelection.instance().singleSelectionStore.item = null;
+
+    expect(changeSpy).toBeCalledWith(null, null);
+});
+
 test('Should call the onChange callback if a new item was selected', () => {
     const changeSpy = jest.fn();
 

@@ -435,6 +435,7 @@ class ImagineImageConverter implements ImageConverterInterface
         $options = [];
         if (count($image->layers()) > 1 && 'gif' == $imageExtension) {
             $options['animated'] = true;
+            $options['optimize'] = true;
         }
 
         return array_merge($options, $imagineOptions);

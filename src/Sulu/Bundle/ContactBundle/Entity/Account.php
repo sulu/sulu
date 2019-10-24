@@ -342,7 +342,7 @@ class Account implements AccountInterface
         return $this->emails;
     }
 
-    public function setNote(?string $note): self
+    public function setNote(?string $note): AccountInterface
     {
         $this->note = $note;
 
@@ -651,7 +651,7 @@ class Account implements AccountInterface
         return $this->name;
     }
 
-    public function setExternalId(string $externalId): AccountInterface
+    public function setExternalId(?string $externalId): AccountInterface
     {
         $this->externalId = $externalId;
 
@@ -663,7 +663,7 @@ class Account implements AccountInterface
         return $this->externalId;
     }
 
-    public function setNumber(string $number): AccountInterface
+    public function setNumber(?string $number): AccountInterface
     {
         $this->number = $number;
 
@@ -687,7 +687,7 @@ class Account implements AccountInterface
         return $this->corporation;
     }
 
-    public function setUid(string $uid): AccountInterface
+    public function setUid(?string $uid): AccountInterface
     {
         $this->uid = $uid;
 
@@ -699,7 +699,7 @@ class Account implements AccountInterface
         return $this->uid;
     }
 
-    public function setRegisterNumber(string $registerNumber): AccountInterface
+    public function setRegisterNumber(?string $registerNumber): AccountInterface
     {
         $this->registerNumber = $registerNumber;
 
@@ -711,7 +711,7 @@ class Account implements AccountInterface
         return $this->registerNumber;
     }
 
-    public function setPlaceOfJurisdiction(string $placeOfJurisdiction): AccountInterface
+    public function setPlaceOfJurisdiction(?string $placeOfJurisdiction): AccountInterface
     {
         $this->placeOfJurisdiction = $placeOfJurisdiction;
 

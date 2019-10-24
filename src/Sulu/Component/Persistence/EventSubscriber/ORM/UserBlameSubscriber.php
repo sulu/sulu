@@ -18,7 +18,7 @@ use Doctrine\ORM\Events;
 use Sulu\Component\Persistence\Model\UserBlameInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
@@ -34,7 +34,7 @@ class UserBlameSubscriber implements EventSubscriber
     const CREATOR_FIELD = 'creator';
 
     /**
-     * @var TokenStorage
+     * @var TokenStorageInterface
      */
     private $tokenStorage;
 
@@ -44,10 +44,10 @@ class UserBlameSubscriber implements EventSubscriber
     private $userClass;
 
     /**
-     * @param TokenStorage $tokenStorage
+     * @param TokenStorageInterface $tokenStorage
      * @param string $userClass
      */
-    public function __construct(TokenStorage $tokenStorage = null, $userClass)
+    public function __construct(TokenStorageInterface $tokenStorage = null, $userClass)
     {
         $this->tokenStorage = $tokenStorage;
         $this->userClass = $userClass;

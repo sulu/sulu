@@ -18,6 +18,7 @@
                  class="Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter">
             <argument type="service" id="sulu_media.storage.google_cloud.client"/>
             <argument type="service" id="sulu_media.storage.google_cloud.bucket"/>
+            <argument type="string">%sulu_media.media.storage.google_cloud.path_prefix%</argument>
         </service>
 
         <service id="sulu_media.storage.google_cloud.filesystem" class="League\Flysystem\Filesystem">

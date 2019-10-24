@@ -87,4 +87,16 @@ class ScalerTest extends SuluTestCase
         $this->assertEquals(400, $image->getSize()->getWidth());
         $this->assertEquals(400, $image->getSize()->getHeight());
     }
+
+    public function testScaleWithFloatWidth()
+    {
+        $imagine = new Imagine();
+        $imageBox = new Box(220, 442);
+        $image = $imagine->create($imageBox);
+
+        $image = $this->scaler->scale($image, 1273, null, ImageInterface::THUMBNAIL_OUTBOUND);
+
+        $this->assertEquals(220, $image->getSize()->getWidth());
+        $this->assertEquals(442, $image->getSize()->getHeight());
+    }
 }

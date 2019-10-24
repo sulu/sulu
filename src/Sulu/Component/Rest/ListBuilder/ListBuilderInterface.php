@@ -11,8 +11,11 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
+use Sulu\Component\Rest\ListBuilder\Expression\BetweenExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\Expression\ConjunctionExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Expression\InExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Expression\WhereExpressionInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
@@ -304,7 +307,7 @@ interface ListBuilderInterface
      * @param FieldDescriptorInterface $fieldDescriptor
      * @param array $values
      *
-     * @return mixed
+     * @return BetweenExpressionInterface
      */
     public function createBetweenExpression(FieldDescriptorInterface $fieldDescriptor, array $values);
 
@@ -314,7 +317,7 @@ interface ListBuilderInterface
      * @param FieldDescriptorInterface $fieldDescriptor
      * @param array $values
      *
-     * @return mixed
+     * @return InExpressionInterface
      */
     public function createInExpression(FieldDescriptorInterface $fieldDescriptor, array $values);
 
@@ -325,14 +328,14 @@ interface ListBuilderInterface
      * @param $value
      * @param string $comparator
      *
-     * @return mixed
+     * @return WhereExpressionInterface
      */
     public function createWhereExpression(FieldDescriptorInterface $fieldDescriptor, $value, $comparator);
 
     /**
      * Creates a negation of the given expression.
      *
-     * @return mixed
+     * @return ExpressionInterface
      */
     public function createNotExpression(ExpressionInterface $createInExpression);
 
@@ -341,7 +344,7 @@ interface ListBuilderInterface
      *
      * @param ExpressionInterface[] $expressions
      *
-     * @return ConjunctionExpressionInterface|null
+     * @return ConjunctionExpressionInterface
      */
     public function createAndExpression(array $expressions);
 
@@ -350,7 +353,7 @@ interface ListBuilderInterface
      *
      * @param ExpressionInterface[] $expressions
      *
-     * @return ConjunctionExpressionInterface|null
+     * @return ConjunctionExpressionInterface
      */
     public function createOrExpression(array $expressions);
 }

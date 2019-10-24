@@ -32,6 +32,25 @@ test('The component should render in body when open', () => {
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
+test('The component should render in body without cancel button', () => {
+    const body = document.body;
+    const onConfirm = jest.fn();
+    const view = mount(
+        <Dialog
+            confirmText="Confirm"
+            onConfirm={onConfirm}
+            open={true}
+            title="My dialog title"
+        >
+            <div>My dialog content</div>
+        </Dialog>
+    );
+
+    expect(view.find('Backdrop')).toHaveLength(1);
+    expect(view.find('Backdrop').prop('open')).toEqual(true);
+    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
+});
+
 test('The component should render in body with disabled confirm button', () => {
     const body = document.body;
     const onCancel = jest.fn();

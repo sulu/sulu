@@ -88,7 +88,7 @@ class ExceptionControllerTest extends TestCase
     {
         $request = new Request();
         $request->setRequestFormat($retrievedFormat);
-        $exception = FlattenException::create(new \Exception(), 400);
+        $exception = $this->createFlattenException(new \Exception(), 400);
 
         $webspace = new Webspace();
         $webspace->addTemplate('error-400', 'error400');
@@ -146,7 +146,7 @@ class ExceptionControllerTest extends TestCase
     public function testShowActionErrorTemplate($templates, $errorCode, $expectedTemplate)
     {
         $request = new Request();
-        $exception = FlattenException::create(new \Exception(), $errorCode);
+        $exception = $this->createFlattenException(new \Exception(), $errorCode);
 
         $webspace = new Webspace();
         foreach ($templates as $type => $template) {
@@ -165,5 +165,10 @@ class ExceptionControllerTest extends TestCase
         $request->headers->add(['X-Php-Ob-Level' => 1]);
 
         $this->exceptionController->showAction($request, $exception);
+    }
+
+    private function createFlattenException($exception, $statusCode)
+    {
+        return FlattenException::createFromThrowable($exception, $statusCode);
     }
 }

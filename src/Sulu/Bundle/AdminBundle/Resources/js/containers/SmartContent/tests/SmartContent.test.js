@@ -17,6 +17,20 @@ jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
+const defaultValue = {
+    dataSource: undefined,
+    includeSubFolders: false,
+    categories: undefined,
+    categoryOperator: 'or',
+    tags: undefined,
+    tagOperator: 'or',
+    audienceTargeting: false,
+    sortBy: 'title',
+    sortMethod: 'asc',
+    presentAs: undefined,
+    limitResult: undefined,
+};
+
 test('Pass correct sections prop', () => {
     smartContentConfigStore.getConfig.mockReturnValue({
         tags: true,
@@ -28,7 +42,13 @@ test('Pass correct sections prop', () => {
     });
 
     const smartContentStore = new SmartContentStore('content');
-    const smartContent = shallow(<SmartContent fieldLabel="Test" store={smartContentStore} />);
+    const smartContent = shallow(
+        <SmartContent
+            defaultValue={defaultValue}
+            fieldLabel="Test"
+            store={smartContentStore}
+        />
+    );
 
     expect(smartContent.find('FilterOverlay').prop('sections'))
         .toEqual(['tags', 'audienceTargeting', 'limit']);
@@ -45,7 +65,13 @@ test('Disable sorting on MultiItemSelection', () => {
     });
 
     const smartContentStore = new SmartContentStore('content');
-    const smartContent = shallow(<SmartContent fieldLabel="Test" store={smartContentStore} />);
+    const smartContent = shallow(
+        <SmartContent
+            defaultValue={defaultValue}
+            fieldLabel="Test"
+            store={smartContentStore}
+        />
+    );
 
     expect(smartContent.find('MultiItemSelection').prop('sortable')).toEqual(false);
 });
@@ -61,7 +87,14 @@ test('Pass correct props to MultiItemSelection component', () => {
     });
 
     const smartContentStore = new SmartContentStore('content');
-    const smartContent = shallow(<SmartContent disabled={true} fieldLabel="Test" store={smartContentStore} />);
+    const smartContent = shallow(
+        <SmartContent
+            defaultValue={defaultValue}
+            disabled={true}
+            fieldLabel="Test"
+            store={smartContentStore}
+        />
+    );
 
     expect(smartContent.find('MultiItemSelection').prop('disabled')).toEqual(true);
 });
@@ -85,9 +118,16 @@ test('Pass correct sections prop with other values', () => {
 
     const smartContentStore = new SmartContentStore('content');
     const smartContent = shallow(
-        <SmartContent fieldLabel="Test" presentations={presentations} store={smartContentStore} />
+        <SmartContent
+            categoryRootKey="test1"
+            defaultValue={defaultValue}
+            fieldLabel="Test"
+            presentations={presentations}
+            store={smartContentStore}
+        />
     );
 
+    expect(smartContent.find('FilterOverlay').prop('categoryRootKey')).toEqual('test1');
     expect(smartContent.find('FilterOverlay').prop('dataSourceListKey')).toEqual('pages_list');
     expect(smartContent.find('FilterOverlay').prop('dataSourceResourceKey')).toEqual('pages');
     expect(smartContent.find('FilterOverlay').prop('sections'))
@@ -110,7 +150,13 @@ test('Open and closes the FilterOverlay when the icon is clicked', () => {
         presentAs: true,
         limit: false,
     });
-    const smartContent = shallow(<SmartContent fieldLabel="Test" store={smartContentStore} />);
+    const smartContent = shallow(
+        <SmartContent
+            defaultValue={defaultValue}
+            fieldLabel="Test"
+            store={smartContentStore}
+        />
+    );
 
     expect(smartContent.find('FilterOverlay').prop('open')).toEqual(false);
 
@@ -131,7 +177,13 @@ test('Show items in a SmartContentItem', () => {
         {title: 'About us'},
     ];
 
-    const smartContent = shallow(<SmartContent fieldLabel="Test" store={smartContentStore} />);
+    const smartContent = shallow(
+        <SmartContent
+            defaultValue={defaultValue}
+            fieldLabel="Test"
+            store={smartContentStore}
+        />
+    );
 
     expect(smartContent.find('SmartContentItem')).toHaveLength(2);
     expect(smartContent.find('SmartContentItem').at(0).prop('item')).toEqual({title: 'Homepage'});
@@ -142,7 +194,13 @@ test('Pass the loading prop to the MultiItemSelection if items are still loading
     const smartContentStore = new SmartContentStore('content');
     smartContentStore.itemsLoading = true;
 
-    const smartContent = shallow(<SmartContent fieldLabel="Test" store={smartContentStore} />);
+    const smartContent = shallow(
+        <SmartContent
+            defaultValue={defaultValue}
+            fieldLabel="Test"
+            store={smartContentStore}
+        />
+    );
 
     expect(smartContent.find('MultiItemSelection').prop('loading')).toEqual(true);
 });
@@ -152,63 +210,13 @@ test('Pass the loading prop to the MultiItemSelection if list or categories are 
     // $FlowFixMe
     smartContentStore.loading = true;
 
-    const smartContent = shallow(<SmartContent fieldLabel="Test" store={smartContentStore} />);
+    const smartContent = shallow(
+        <SmartContent
+            defaultValue={defaultValue}
+            fieldLabel="Test"
+            store={smartContentStore}
+        />
+    );
 
     expect(smartContent.find('MultiItemSelection').prop('loading')).toEqual(true);
-});
-
-test('Set all defaults on the SmartContentStore', () => {
-    smartContentConfigStore.getConfig.mockReturnValue({
-        datasourceResourceKey: 'pages',
-        datasourceAdapter: 'table',
-        tags: true,
-        categories: true,
-        audienceTargeting: true,
-        sorting: [{name: 'title', value: 'Title'}],
-        presentAs: true,
-        limit: true,
-    });
-
-    const smartContentStore = new SmartContentStore('content');
-    shallow(<SmartContent fieldLabel="Test" store={smartContentStore} />);
-
-    expect(smartContentStore.dataSource).toEqual(undefined);
-    expect(smartContentStore.includeSubElements).toEqual(false);
-    expect(smartContentStore.categories).toEqual(undefined);
-    expect(smartContentStore.categoryOperator).toEqual('or');
-    expect(smartContentStore.tags).toEqual(undefined);
-    expect(smartContentStore.tagOperator).toEqual('or');
-    expect(smartContentStore.audienceTargeting).toEqual(false);
-    expect(smartContentStore.sortBy).toEqual('title');
-    expect(smartContentStore.sortOrder).toEqual('asc');
-    expect(smartContentStore.presentation).toEqual(undefined);
-    expect(smartContentStore.limit).toEqual(undefined);
-});
-
-test('Set no defaults on the SmartContentStore', () => {
-    smartContentConfigStore.getConfig.mockReturnValue({
-        datasourceResourceKey: undefined,
-        datasourceAdapter: undefined,
-        tags: false,
-        categories: false,
-        audienceTargeting: false,
-        sorting: [],
-        presentAs: false,
-        limit: false,
-    });
-
-    const smartContentStore = new SmartContentStore('content');
-    shallow(<SmartContent fieldLabel="Test" store={smartContentStore} />);
-
-    expect(smartContentStore.dataSource).toEqual(undefined);
-    expect(smartContentStore.includeSubElements).toEqual(undefined);
-    expect(smartContentStore.categories).toEqual(undefined);
-    expect(smartContentStore.categoryOperator).toEqual(undefined);
-    expect(smartContentStore.tags).toEqual(undefined);
-    expect(smartContentStore.tagOperator).toEqual(undefined);
-    expect(smartContentStore.audienceTargeting).toEqual(undefined);
-    expect(smartContentStore.sortBy).toEqual(undefined);
-    expect(smartContentStore.sortOrder).toEqual(undefined);
-    expect(smartContentStore.presentation).toEqual(undefined);
-    expect(smartContentStore.limit).toEqual(undefined);
 });

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle\Rule;
 
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\SingleSelection;
+use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -86,6 +87,10 @@ class PageRule implements RuleInterface
 
         $uuid = $request->headers->get($this->uuidHeader);
         if (!$uuid) {
+            if ('/' === substr($this->requestAnalyzer->getResourceLocator(), -1)) {
+                return false;
+            }
+
             $webspace = $this->requestAnalyzer->getWebspace();
             if (!$webspace) {
                 return false;
@@ -105,6 +110,8 @@ class PageRule implements RuleInterface
                     $localization->getLocale()
                 );
             } catch (ResourceLocatorNotFoundException $exception) {
+                return false;
+            } catch (ResourceLocatorMovedException $exception) {
                 return false;
             }
         }

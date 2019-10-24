@@ -1,6 +1,7 @@
 // @flow
 import {action, autorun, computed, observable, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
+import equals from 'fast-deep-equal';
 import Requester from '../../../services/Requester';
 import Config from '../../../services/Config';
 import ResourceRequester from '../../../services/ResourceRequester';
@@ -12,7 +13,7 @@ export default class SmartContentStore {
     locale: ?IObservableValue<string>;
     dataSourceResourceKey: ?string;
     @observable items: Array<Object> = [];
-    @observable itemsLoading: boolean;
+    @observable itemsLoading: boolean = true;
     @observable categoriesLoading: boolean;
     @observable dataSourceLoading: boolean;
     @observable dataSource: ?Object;
@@ -26,7 +27,8 @@ export default class SmartContentStore {
     @observable sortOrder: ?SortOrder;
     @observable presentation: ?string;
     @observable limit: ?number;
-    itemDisposer: () => void;
+    @observable excludedIds: Array<string | number> = [];
+    itemDisposer: ?() => void;
     id: ?string | number;
 
     constructor(
@@ -78,12 +80,16 @@ export default class SmartContentStore {
                 }));
             }
         }
+    }
 
+    start() {
         this.itemDisposer = autorun(this.loadItems);
     }
 
     destroy() {
-        this.itemDisposer();
+        if (this.itemDisposer) {
+            this.itemDisposer();
+        }
     }
 
     loadItems = () => {
@@ -97,7 +103,7 @@ export default class SmartContentStore {
         return Requester.get(
             Config.endpoints.items + buildQueryString({
                 provider: this.provider,
-                excluded: this.id,
+                excluded: [this.id, ...this.excludedIds],
                 locale: this.locale,
                 ...this.filterCriteria,
             })
@@ -113,6 +119,14 @@ export default class SmartContentStore {
 
     @action setItemsLoading(itemsLoading: boolean) {
         this.itemsLoading = itemsLoading;
+    }
+
+    @action setExcludedIds(excludedIds: Array<string | number>) {
+        if (equals(toJS(this.excludedIds), excludedIds)) {
+            return;
+        }
+
+        this.excludedIds = excludedIds;
     }
 
     @computed get loading() {

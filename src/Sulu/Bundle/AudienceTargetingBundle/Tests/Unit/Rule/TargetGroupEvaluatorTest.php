@@ -70,8 +70,11 @@ class TargetGroupEvaluatorTest extends TestCase
         $frequency = TargetGroupRuleInterface::FREQUENCY_SESSION,
         $currentTargetGroup = null
     ) {
-        $webspace = new Webspace();
-        $webspace->setKey($webspaceKey);
+        $webspace = null;
+        if ($webspaceKey) {
+            $webspace = new Webspace();
+            $webspace->setKey($webspaceKey);
+        }
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
 
         $rules = [];
@@ -155,6 +158,7 @@ class TargetGroupEvaluatorTest extends TestCase
 
         return [
             [[], [], 'sulu_io', null],
+            [[], [], null, null],
             [[$targetGroup1], [], 'sulu_io', null],
             [[$targetGroup2], ['rule1' => [['targetGroup2']]], 'sulu_io', $targetGroup2],
             [[$targetGroup2], ['rule1' => [['targetGroup2']]], 'test', $targetGroup2],

@@ -1,6 +1,6 @@
 {
-    "sulu_location.latitude": "Länge",
-    "sulu_location.longitude": "Breite",
+    "sulu_location.latitude": "Längengrad",
+    "sulu_location.longitude": "Breitengrad",
     "sulu_location.zoom": "Zoom",
     "sulu_location.select_location": "Position auswählen",
     "sulu_location.additional_information": "Zusätzliche Adressinformationen",

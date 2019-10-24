@@ -97,6 +97,31 @@ test('Set default display option if no value is passed', () => {
     expect(changeSpy).toBeCalledWith({displayOption: 'left', ids: []});
 });
 
+test('Set types on MultiMediaSelection', () => {
+    const changeSpy = jest.fn();
+    const schemaOptions = {
+        types: {value: 'image,video'},
+    };
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {}),
+            'test'
+        )
+    );
+
+    const mediaSelection = shallow(
+        <MediaSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(mediaSelection.find(MultiMediaSelection).props().types).toEqual(['image', 'video']);
+});
+
 test('Do not set default display option if value is passed', () => {
     const changeSpy = jest.fn();
     const schemaOptions = {
@@ -201,4 +226,21 @@ test('Should throw an error if displayOptions schemaOption is given but contains
             schemaOptions={{displayOptions: {value: [{name: 'test', value: true}]}}}
         />
     )).toThrow(/"test"/);
+});
+
+test('Should throw an error if types schemaOption is given but not an array', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    expect(() => shallow(
+        <MediaSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={{types: {value: true}}}
+        />
+    )).toThrow(/"types"/);
 });

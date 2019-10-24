@@ -79,7 +79,14 @@ class SitemapUrl
     private $attributes;
 
     /**
+     * @var string
+     */
+    private $defaultLocale;
+
+    /**
      * @param string $loc
+     * @param string $locale
+     * @param string|null $defaultLocale
      * @param \DateTime $lastmod
      * @param string $changefreq
      * @param float $priority
@@ -88,6 +95,7 @@ class SitemapUrl
     public function __construct(
         $loc,
         $locale,
+        $defaultLocale,
         \DateTime $lastmod = null,
         $changefreq = null,
         $priority = null,
@@ -95,6 +103,7 @@ class SitemapUrl
     ) {
         $this->loc = $loc;
         $this->locale = $locale;
+        $this->defaultLocale = $defaultLocale;
         $this->lastmod = $lastmod;
         $this->changefreq = $changefreq;
         $this->priority = $priority;
@@ -185,5 +194,13 @@ class SitemapUrl
     public function getAttributes()
     {
         return $this->attributes;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDefaultLocale()
+    {
+        return $this->defaultLocale;
     }
 }

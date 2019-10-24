@@ -277,7 +277,15 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $loader->load('audience_targeting.xml');
         }
 
-        if (array_key_exists('ffmpeg', $config)) {
+        $ffmpegBinary = $config['ffmpeg']['ffmpeg_binary'] ?? null;
+        $ffprobeBinary = $config['ffmpeg']['ffprobe_binary'] ?? null;
+
+        if (method_exists($container, 'resolveEnvPlaceholders')) {
+            $ffmpegBinary = $container->resolveEnvPlaceholders($ffmpegBinary, true);
+            $ffprobeBinary = $container->resolveEnvPlaceholders($ffprobeBinary, true);
+        }
+
+        if ($ffmpegBinary || $ffprobeBinary) {
             if (!class_exists(FFMpeg::class)) {
                 throw new InvalidConfigurationException(
                     'The "php-ffmpeg/php-ffmpeg" need to be installed to use ffmpeg.'

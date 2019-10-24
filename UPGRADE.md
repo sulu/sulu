@@ -1,5 +1,158 @@
 # Upgrade
 
+## 2.0.1
+
+### mode schemaOption in ResourceLocator
+
+The `resource_locator` field had a `mode` schema option, which could e.g. be used like this:
+
+
+```xml
+<property name="url" type="resource_locator" mandatory="true">
+    <params>
+        <param name="mode" value="full" />
+    </params>
+
+    <tag name="sulu.rlp"/>
+</property>
+```
+
+This option does not exist anymore. Instead you should set the correct `resource-locator-strategy` in your webspace
+configuration.
+
+### Fix AccountInterface nullable setters/getter
+
+Setters and getter of nullable fields on the Account entity were fixed.
+For some function on the AccountInterface need to be changed to the following:
+
+```php
+// Before
+public function setExternalId(string $externalId): AccountInterface;
+public function setNumber(string $number): AccountInterface;
+public function setRegisterNumber(string $registerNumber): AccountInterface;
+public function setPlaceOfJurisdiction(string $placeOfJurisdiction): AccountInterface;
+public function addNote(Note $note): AccountInterface;
+
+// After
+public function setExternalId(?string $externalId): AccountInterface;
+public function setNumber(?string $number): AccountInterface;
+public function setRegisterNumber(?string $registerNumber): AccountInterface;
+public function setPlaceOfJurisdiction(?string $placeOfJurisdiction): AccountInterface;
+public function setNote(?string $note): AccountInterface;
+```
+
+### SnippetSelection type param
+
+Previously the `snippet_selection` field type accepted a `snippetType` param, which filtered the assignable snippets.
+This param was renamed to `types`, in order to make it consistent with e.g. the `media_selection`.
+
+```xml
+<!-- before -->
+<property name="snippets" type="snippet_selection">
+    <params>
+        <param name="snippetType" value="default" />
+    </params>
+</property>
+
+<!-- after -->
+<property name="snippets" type="snippet_selection">
+    <params>
+        <param name="types" value="default" />
+    </params>
+</property>
+```
+
+### Sitemap Provider changed
+
+As a sitemap is always domain specific and a domain can have multiple webspaces and portal
+the `SitemapProviderInterface` changed. To make it possible to provide also none Sulu
+routes the `SitemapUrl` constructor introduced a `defaultLocale` as third parameter.
+
+```php
+// before
+public function build($page, $portal) {
+     return [
+          new SitemapUrl('/test-1', 'de');
+     ];
+}
+
+public function createSitemap() {
+    return new Sitemap($alias, $this->getMaxPage()/*, $lastMod */);
+}
+
+public function getMaxPage() {
+     return 1;
+}
+
+// after
+public function build($page, $scheme, $host) {
+     return [
+          new SitemapUrl('http://test.lo/test-1', 'de', 'de');
+     ];
+}
+
+public function createSitemap() {
+    return new Sitemap($this->getAlias(), $this->getMaxPage()/*, $lastMod */);
+}
+
+public function getAlias(): string {
+    return 'myalias';
+}
+
+public function getMaxPage($scheme, $host) {
+     return 1;
+}
+```
+
+The `XmlSitemapDumper` and `XmlSitemapRender` no longer need `PortalInformations`.
+
+Also the `sulu_website` configuration `default_host` was removed and will use now the
+[router context parameter](https://symfony.com/doc/current/routing.html#generating-urls-in-commands) instead.
+
+```yaml
+# before
+sulu_website:
+    sitemap:
+        default_host: 'localhost'
+
+# after
+parameters:
+    router.request_context.host: 'localhost'
+```
+
+### DeleteToolbarAction with conflict
+
+The `DeleteToolbarAction` asks for confirmation if e.g. a page that is being tried to deleted is linked on other pages.
+The delete action of the controller now also has to return the ID that was trying to be deleted, in order for the
+application to know what was tried to be deleted.
+
+```
+# Before
+{
+    "items": [
+        {
+            "name": "Test1"
+        },
+        {
+            "name": "Test2"
+        }
+    ]
+}
+
+# After
+{
+    "id": "page-uuid",
+    "items": [
+        {
+            "name": "Test1"
+        },
+        {
+            "name": "Test2"
+        }
+    ]
+}
+```
+
 ## 2.0.0
 
 When upgrading also have a look at the changes in the

@@ -11,6 +11,9 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Search;
 
+use Massive\Bundle\SearchBundle\Search\Document;
+use Massive\Bundle\SearchBundle\Search\QueryHit;
+
 class SearchManagerTest extends BaseTestCase
 {
     /**
@@ -40,8 +43,13 @@ class SearchManagerTest extends BaseTestCase
         $result = $this->getSearchManager()->createSearch('Document')->locale('de')->index('page_sulu_io')->execute();
         $this->assertCount(6, $result);
 
-        $firstHit = reset($result);
+        $result->rewind();
+        /** @var QueryHit $firstHit */
+        $firstHit = $result->current();
+        $this->assertInstanceOf(QueryHit::class, $firstHit);
+        /** @var Document $document */
         $document = $firstHit->getDocument();
+        $this->assertInstanceOf(Document::class, $document);
         $this->assertEquals('page_sulu_io', $document->getIndex());
     }
 }

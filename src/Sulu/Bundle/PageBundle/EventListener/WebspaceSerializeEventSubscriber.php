@@ -17,6 +17,7 @@ use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
@@ -39,6 +40,11 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
     private $webspaceUrlProvider;
 
     /**
+     * @var ResourceLocatorStrategyPoolInterface
+     */
+    private $resourceLocatorStrategyPool;
+
+    /**
      * @var string
      */
     private $environment;
@@ -46,10 +52,12 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
         WebspaceUrlProviderInterface $webspaceUrlProvider,
+        ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
         $environment
     ) {
         $this->webspaceManager = $webspaceManager;
         $this->webspaceUrlProvider = $webspaceUrlProvider;
+        $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
         $this->environment = $environment;
     }
 
@@ -81,6 +89,7 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
         $this->appendUrls($webspace, $context, $visitor);
         $this->appendCustomUrls($webspace, $context, $visitor);
         $this->appendNavigations($webspace, $context, $visitor);
+        $this->appendResourceLocatorStrategy($webspace, $context, $visitor);
 
         $allLocalizations = [];
 
@@ -197,6 +206,25 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
         $visitor->visitProperty(
             new StaticPropertyMetadata('', 'navigations', $navigations),
             $navigations
+        );
+    }
+
+    private function appendResourceLocatorStrategy(
+        Webspace $webspace,
+        Context $context,
+        SerializationVisitorInterface $visitor
+    ) {
+        $resourceLocatorStrategy = $this->resourceLocatorStrategyPool
+            ->getStrategy($webspace->getResourceLocatorStrategy());
+
+        $serializedResourceLocatorStrategy = [
+            'inputType' => $resourceLocatorStrategy->getInputType(),
+        ];
+
+        $resourceLocatorStrategy = $context->getNavigator()->accept($serializedResourceLocatorStrategy);
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'resourceLocatorStrategy', $serializedResourceLocatorStrategy),
+            $serializedResourceLocatorStrategy
         );
     }
 }

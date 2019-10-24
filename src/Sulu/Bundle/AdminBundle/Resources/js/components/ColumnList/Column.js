@@ -10,8 +10,9 @@ type Props = {|
     children?: ChildrenArray<Element<typeof Item>>,
     index?: number,
     loading: boolean,
-    onActive?: (index?: number) => void,
-    onItemClick?: (id: string | number) => void,
+    onActive?: ?(index?: number) => void,
+    onItemClick?: ?(id: string | number) => void,
+    onItemDoubleClick?: ?(id: string | number) => void,
     /** @ignore */
     scrolling: boolean,
 |};
@@ -27,13 +28,14 @@ export default class Column extends React.Component<Props> {
             return null;
         }
 
-        const {onItemClick} = this.props;
+        const {onItemClick, onItemDoubleClick} = this.props;
 
         return React.Children.map(originalItems, (column) => {
             return React.cloneElement(
                 column,
                 {
                     onClick: onItemClick,
+                    onDoubleClick: onItemDoubleClick,
                 }
             );
         });

@@ -21,7 +21,7 @@ use Prophecy\Argument;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Persistence\EventSubscriber\ORM\UserBlameSubscriber;
 use Sulu\Component\Security\Authentication\UserInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
@@ -73,7 +73,7 @@ class UserBlameSubscriberTest extends TestCase
     private $token;
 
     /**
-     * @var TokenStorage
+     * @var TokenStorageInterface
      */
     private $tokenStorage;
 
@@ -96,7 +96,7 @@ class UserBlameSubscriberTest extends TestCase
         $this->entityManager = $this->prophesize('Doctrine\ORM\EntityManager');
         $this->user = $this->prophesize('Sulu\Component\Security\Authentication\UserInterface');
         $this->token = $this->prophesize('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $this->tokenStorage = $this->prophesize('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage');
+        $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
 
         $this->unitOfWork = $this->getMockBuilder(UnitOfWork::class)->disableOriginalConstructor()->getMock();
 
@@ -260,7 +260,7 @@ class UserBlameSubscriberTest extends TestCase
     {
         $symfonyUser = $this->prophesize(SymfonyUserInterface::class);
         $token = $this->prophesize(TokenInterface::class);
-        $tokenStorage = $this->prophesize(TokenStorage::class);
+        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $tokenStorage->getToken()->willReturn($token->reveal());
         $token->getUser()->willReturn($symfonyUser->reveal());
         $subscriber = new UserBlameSubscriber($tokenStorage->reveal(), User::class);

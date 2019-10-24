@@ -143,13 +143,6 @@
             <tag name="jms_serializer.subscribing_handler"/>
         </service>
 
-        <service
-            id="sulu_admin.representation_handler"
-            class="Sulu\Bundle\AdminBundle\Serializer\Handler\RepresentationSubscriber"
-        >
-            <tag name="jms_serializer.event_subscriber"/>
-        </service>
-
         <service id="sulu_admin.dropdown_toolbar_action_subscriber"
             class="Sulu\Bundle\AdminBundle\Serializer\Subscriber\DropdownToolbarActionSubscriber"
         >
@@ -162,6 +155,13 @@
         >
             <argument type="service" id="translator"/>
             <tag name="jms_serializer.event_subscriber"/>
+        </service>
+
+        <service id="sulu_admin.download_build_command" class="Sulu\Bundle\AdminBundle\Command\DownloadBuildCommand">
+            <argument type="service" id="http_client" />
+            <argument>%kernel.project_dir%</argument>
+            <argument>%sulu.version%</argument>
+            <tag name="console.command"/>
         </service>
     </services>
 </container>

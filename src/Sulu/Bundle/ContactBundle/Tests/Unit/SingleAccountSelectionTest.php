@@ -23,6 +23,7 @@ use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 
 class SingleAccountSelectionTest extends TestCase
 {
@@ -74,23 +75,72 @@ class SingleAccountSelectionTest extends TestCase
         $this->node->hasProperty('account')->willReturn(true);
         $this->node->getPropertyValue('account')->willReturn(1);
 
-        $this->assertEquals(
-            1,
-            $this->singleAccountSelection->read(
-                $this->node->reveal(),
-                new Property('account', [], 'single_account_selection'),
-                'sulu',
-                'de',
-                ''
-            )
+        $structure = $this->prophesize(StructureInterface::class);
+        $structure->getLanguageCode()->willReturn('de');
+
+        $property = new Property('account', [], 'single_account_selection');
+        $property->setValue(['id' => 1]);
+        $property->setStructure($structure);
+
+        $this->account->getId()->willReturn(1);
+        $this->account->getName()->willReturn('Sulu');
+
+        $this->accountManager
+             ->getById(1, $property->getStructure()->getLanguageCode())
+             ->willReturn($this->account->reveal())->shouldBeCalled();
+
+        $this->singleAccountSelection->read(
+            $this->node->reveal(),
+            $property,
+            'sulu',
+            'de',
+            ''
         );
+
+        $this->assertEquals(
+            [
+                'id' => 1,
+                'name' => 'Sulu',
+            ],
+            $property->getValue()
+        );
+    }
+
+    public function testReadWithNonExistingAccount()
+    {
+        $this->node->hasProperty('account')->willReturn(true);
+        $this->node->getPropertyValue('account')->willReturn(1);
+
+        $structure = $this->prophesize(StructureInterface::class);
+        $structure->getLanguageCode()->willReturn('de');
+
+        $property = new Property('account', [], 'single_account_selection');
+        $property->setValue(['id' => 1]);
+        $property->setStructure($structure);
+
+        $this->account->getId()->willReturn(1);
+        $this->account->getName()->willReturn('Sulu');
+
+        $this->accountManager
+             ->getById(1, $property->getStructure()->getLanguageCode())
+             ->willThrow(EntityNotFoundException::class)->shouldBeCalled();
+
+        $this->singleAccountSelection->read(
+            $this->node->reveal(),
+            $property,
+            'sulu',
+            'de',
+            ''
+        );
+
+        $this->assertNull($property->getValue());
     }
 
     public function testWrite()
     {
         $this->node->setProperty('account', 1)->shouldBeCalled();
         $property = new Property('account', [], 'single_account_selection');
-        $property->setValue(1);
+        $property->setValue(['id' => 1]);
 
         $this->singleAccountSelection->write(
             $this->node->reveal(),
@@ -160,10 +210,12 @@ class SingleAccountSelectionTest extends TestCase
         $structure->getLanguageCode()->willReturn('de');
 
         $property = new Property('account', [], 'single_account_selection');
-        $property->setValue(1);
+        $property->setValue(['id' => 1]);
         $property->setStructure($structure);
 
-        $this->accountManager->getById(1, $property->getStructure()->getLanguageCode())->willReturn($this->account->reveal())->shouldBeCalled();
+        $this->accountManager
+             ->getById(1, $property->getStructure()->getLanguageCode())
+             ->willReturn($this->account->reveal())->shouldBeCalled();
 
         $this->assertEquals($this->account->reveal(), $this->singleAccountSelection->getContentData($property));
     }

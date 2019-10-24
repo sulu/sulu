@@ -36,6 +36,13 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
     public function findPortalInformationsByUrl(string $url, ?string $environment = null): array;
 
     /**
+     * Returns all portal which matches a given host (optional includes also subdomains).
+     *
+     * @return PortalInformation[]
+     */
+    public function findPortalInformationsByHostIncludingSubdomains(string $host, ?string $environment = null): array;
+
+    /**
      * Returns all portal which matches the given webspace-key and locale.
      *
      * @return PortalInformation[]

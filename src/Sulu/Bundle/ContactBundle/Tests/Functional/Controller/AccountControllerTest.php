@@ -1075,6 +1075,8 @@ class AccountControllerTest extends SuluTestCase
         );
         $note = $this->createNote('Note');
         $account = $this->createAccount('Company', null, $url, $address, $email, $phone, $fax, $note);
+        $account->setUid('Test Uuid');
+        $account->setNote('Test Note');
 
         $this->em->flush();
 
@@ -1099,6 +1101,8 @@ class AccountControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('ExampleCompany', $response->name);
+        $this->assertEquals(null, $response->uid);
+        $this->assertEquals(null, $response->note);
         $this->assertEquals(0, count($response->contactDetails->websites));
         $this->assertEquals(0, count($response->contactDetails->emails));
         $this->assertEquals(0, count($response->contactDetails->phones));
@@ -1326,6 +1330,23 @@ class AccountControllerTest extends SuluTestCase
 
         $client->request('DELETE', '/api/accounts/' . $account->getId());
         $this->assertHttpStatusCode(204, $client->getResponse());
+    }
+
+    public function testDeleteParentById()
+    {
+        $parentAccount = $this->createAccount('Parent Company');
+        $childAccount = $this->createAccount('Company', $parentAccount);
+        $this->em->flush();
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('DELETE', '/api/accounts/' . $parentAccount->getId());
+        $this->assertHttpStatusCode(409, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals($parentAccount->getId(), $response->id);
+        $this->assertEquals('Company', $response->items[0]->name);
     }
 
     public function testAccountAddresses()

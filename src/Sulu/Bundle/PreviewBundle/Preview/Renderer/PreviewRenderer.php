@@ -256,14 +256,24 @@ class PreviewRenderer implements PreviewRendererInterface
 
         $portalUrl = $scheme . '://' . $this->replacer->replaceHost($portalInformation->getUrl(), $host);
         $portalUrlParts = parse_url($portalUrl);
-        $prefixPath = isset($portalUrlParts['path']) ? $portalUrlParts['path'] : '';
 
-        $httpHost = $portalUrlParts['host'];
-        if (!in_array($port, [80, 443])) {
-            $httpHost .= ':' . $port;
+        $serverName = null;
+        $httpHost = null;
+        $prefixPath = '';
+
+        if (isset($portalUrlParts['path'])) {
+            $prefixPath = $portalUrlParts['path'];
         }
 
-        $server['SERVER_NAME'] = $portalUrlParts['host'];
+        if (isset($portalUrlParts['host'])) {
+            $serverName = $portalUrlParts['host'];
+            $httpHost = $serverName;
+            if (!in_array($port, [80, 443])) {
+                $httpHost .= ':' . $port;
+            }
+        }
+
+        $server['SERVER_NAME'] = $serverName;
         $server['SERVER_PORT'] = $port;
         $server['HTTP_HOST'] = $httpHost;
         $server['REQUEST_URI'] = $prefixPath . '/_sulu_preview';

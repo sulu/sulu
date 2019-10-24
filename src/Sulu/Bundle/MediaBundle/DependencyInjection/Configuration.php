@@ -210,6 +210,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('key_file_path')->isRequired()->end()
                         ->scalarNode('bucket_name')->isRequired()->end()
+                        ->scalarNode('path_prefix')->defaultNull()->end()
                         ->scalarNode('segments')->defaultValue(10)->end()
                     ->end()
                 ->end();
@@ -225,6 +226,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('secret')->isRequired()->end()
                         ->scalarNode('region')->isRequired()->end()
                         ->scalarNode('bucket_name')->isRequired()->end()
+                        ->scalarNode('path_prefix')->defaultNull()->end()
                         ->scalarNode('version')->defaultValue('latest')->end()
                         ->scalarNode('endpoint')->defaultNull()->end()
                         ->scalarNode('segments')->defaultValue(10)->end()

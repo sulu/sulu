@@ -4,7 +4,8 @@
     {% set registrableDomain = sulu_util_domain_info(domain).registrableDomain %}
 
     {% for entry in entries %}
-        {% set location = sulu_content_path(entry.loc, webspaceKey, entry.locale, null, scheme) %}
+        {% set location = entry.loc %}
+
         {% if sulu_util_domain_info(location).registrableDomain == registrableDomain %}
             <url>
                 {% block url %}
@@ -23,11 +24,11 @@
                     {% set defaultHref = null %}
                     {% if entry.alternateLinks|length > 1 %}
                         {% for alternateLink in entry.alternateLinks %}
-                            {% set href = sulu_content_path(alternateLink.href, webspaceKey, alternateLink.locale, null, scheme, false) %}
-                            {% if href is not empty and href != alternateLink.href and sulu_util_domain_info(href).registrableDomain == registrableDomain %}
+                            {% set href = alternateLink.href %}
+                            {% if href is not empty and sulu_util_domain_info(href).registrableDomain == registrableDomain %}
                                 <xhtml:link rel="alternate" hreflang="{{ alternateLink.locale|replace({'_': '-'}) }}" href="{{ href }}"/>
                                 {% set amount = amount + 1 %}
-                                {% if defaultLocale == alternateLink.locale and entry.alternateLinks|length > 1 %}
+                                {% if entry.defaultLocale == alternateLink.locale %}
                                     {% set defaultHref = href %}
                                 {% endif %}
                             {% endif %}

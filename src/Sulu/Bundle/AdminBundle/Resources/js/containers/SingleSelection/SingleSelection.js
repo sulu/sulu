@@ -45,7 +45,11 @@ class SingleSelection extends React.Component<Props> {
 
         this.singleSelectionStore = new SingleSelectionStore(resourceKey, value, locale, detailOptions);
         this.changeDisposer = reaction(
-            () => (this.singleSelectionStore.item ? this.singleSelectionStore.item.id : undefined),
+            () => this.singleSelectionStore.item === undefined
+                ? undefined // this value is returned if nothing was assigned
+                : this.singleSelectionStore.item === null
+                    ? null // this value is returned if something was assigned but was deleted
+                    : this.singleSelectionStore.item.id,
             (loadedItemId: ?string | number) => {
                 const {onChange, value} = this.props;
 

@@ -1074,8 +1074,8 @@ class PageControllerTest extends SuluTestCase
         );
         $response = json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertEquals('/a2', $response['_embedded']['page_resourcelocators'][0]['path']);
-        $this->assertEquals('/a1', $response['_embedded']['page_resourcelocators'][1]['path']);
+        $this->assertEquals('/a2', $response['_embedded']['page_resourcelocators'][0]['resourcelocator']);
+        $this->assertEquals('/a1', $response['_embedded']['page_resourcelocators'][1]['resourcelocator']);
     }
 
     public function testTreeGetTillId()
@@ -1187,6 +1187,49 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals($data[3]['path'], $node4->path);
         $this->assertTrue($node4->hasChildren);
         $this->assertNull($node4->_embedded->pages);
+    }
+
+    public function testTreeGetTillIdWithLinkedProperty()
+    {
+        $externalLinkPage = $this->createPageDocument();
+        $externalLinkPage->setTitle('page');
+        $externalLinkPage->setStructureType('default');
+        $externalLinkPage->setRedirectType(RedirectType::EXTERNAL);
+        $externalLinkPage->setRedirectExternal('http://www.sulu.io');
+        $externalLinkPage->setResourceSegment('/test');
+        $this->documentManager->persist($externalLinkPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
+
+        $internalLinkPage = $this->createPageDocument();
+        $internalLinkPage->setTitle('page');
+        $internalLinkPage->setStructureType('default');
+        $internalLinkPage->setResourceSegment('/test');
+        $this->documentManager->persist($internalLinkPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
+
+        $internalLinkPage = $this->documentManager->find($internalLinkPage->getUuid());
+        $internalLinkPage->setRedirectType(RedirectType::INTERNAL);
+        $internalLinkPage->setRedirectTarget($externalLinkPage);
+        $this->documentManager->persist($internalLinkPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
+
+        $this->client->request(
+            'GET',
+            '/api/pages?expandedIds=' . $externalLinkPage->getUuid() . '&fields=title&webspace=sulu_io&language=en&exclude-ghosts=false'
+        );
+
+        $response = $this->client->getResponse()->getContent();
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $homepage = $response->_embedded->pages[0];
+
+        // check if tree is correctly loaded till the given id
+        $node1 = $homepage->_embedded->pages[0];
+        $this->assertEquals('external', $node1->linked);
+
+        $node2 = $homepage->_embedded->pages[1];
+        $this->assertEquals('internal', $node2->linked);
     }
 
     public function testMove()
@@ -1866,6 +1909,7 @@ class PageControllerTest extends SuluTestCase
         $this->client->request('DELETE', '/api/pages/' . $linkedDocument->getUuid() . '?webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(409, $this->client->getResponse());
         $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals($linkedDocument->getUuid(), $response['id']);
         $this->assertCount(1, $response['items'][0]);
         $this->assertEquals('test2', $response['items'][0]['name']);
 

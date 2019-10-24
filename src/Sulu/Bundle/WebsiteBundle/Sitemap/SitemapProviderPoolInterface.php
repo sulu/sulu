@@ -44,7 +44,10 @@ interface SitemapProviderPoolInterface
     /**
      * Returns list of available sitemaps.
      *
+     * @param string $scheme
+     * @param string $host
+     *
      * @return Sitemap[]
      */
-    public function getIndex();
+    public function getIndex($scheme, $host);
 }

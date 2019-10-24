@@ -99,6 +99,19 @@ test('Component should render with selected media without thumbnails with MimeTy
     expect(singleMediaSelection.render()).toMatchSnapshot();
 });
 
+test('Component should pass types to SingleMediaSelectionOverlay', () => {
+    const singleMediaSelection = shallow(
+        <SingleMediaSelection
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            types={['image', 'video']}
+            value={undefined}
+        />
+    );
+
+    expect(singleMediaSelection.find(SingleMediaSelectionOverlay).prop('types')).toEqual(['image', 'video']);
+});
+
 test('Click on media-button should open an overlay', () => {
     const singleMediaSelection = mount(
         <SingleMediaSelection locale={observable.box('en')} onChange={jest.fn()} value={undefined} />

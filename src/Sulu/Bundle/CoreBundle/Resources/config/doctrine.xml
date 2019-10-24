@@ -5,6 +5,8 @@
     <services>
         <service id="sulu_core.doctrine.references" class="Sulu\Component\Doctrine\ReferencesOption">
             <argument type="service" id="doctrine"/>
+            <!-- the $targetEntityMapping argument is set by the ResolveTargetEntitiesPass -->
+            <argument type="collection" />
 
             <tag name="doctrine.event_subscriber"/>
         </service>

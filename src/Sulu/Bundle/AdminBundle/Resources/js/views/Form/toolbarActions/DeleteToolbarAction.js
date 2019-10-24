@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import jexl from 'jexl';
 import Dialog from '../../../components/Dialog';
 import {translate} from '../../../utils/Translator';
@@ -10,6 +10,12 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     @observable showDialog: boolean = false;
     @observable showLinkedDialog: boolean = false;
     @observable referencingItems: Array<Object> = [];
+
+    @computed get allowConflictDeletion() {
+        const {allow_conflict_deletion: allowConflictDeletion = true} = this.options;
+
+        return allowConflictDeletion;
+    }
 
     getNode() {
         return (
@@ -29,12 +35,18 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
                     cancelText={translate('sulu_admin.cancel')}
                     confirmLoading={this.resourceFormStore.deleting}
                     confirmText={translate('sulu_admin.ok')}
-                    onCancel={this.handleLinkCancel}
+                    onCancel={this.allowConflictDeletion ? this.handleLinkCancel : undefined}
                     onConfirm={this.handleLinkConfirm}
                     open={this.showLinkedDialog}
-                    title={translate('sulu_admin.delete_linked_warning_title')}
+                    title={this.allowConflictDeletion
+                        ? translate('sulu_admin.delete_linked_warning_title')
+                        : translate('sulu_admin.item_not_deletable')
+                    }
                 >
-                    {translate('sulu_admin.delete_linked_warning_text')}
+                    {this.allowConflictDeletion
+                        ? translate('sulu_admin.delete_linked_warning_text')
+                        : translate('sulu_admin.delete_linked_abort_text')
+                    }
                     <ul>
                         {this.referencingItems.map((referencingItem, index) => (
                             <li key={index}>{referencingItem.name}</li>
@@ -66,9 +78,33 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     }
 
     navigateBack = () => {
-        const {backView} = this.router.route.options;
+        const {attributes, route} = this.router;
+        const {backView} = route.options;
         const {locale} = this.resourceFormStore;
-        this.router.navigate(backView, {locale: locale ? locale.get() : undefined});
+
+        const {
+            router_attributes_to_back_view: routerAttributesToBackView,
+        } = this.options;
+
+        const backViewAttributes = {locale: locale ? locale.get() : undefined};
+        if (routerAttributesToBackView) {
+            if (typeof routerAttributesToBackView !== 'object') {
+                throw new Error('The "router_attributes_to_back_view" option must be an object!');
+            }
+
+            Object.keys(routerAttributesToBackView).forEach((key) => {
+                const attributeKey = routerAttributesToBackView[key];
+                const attributeName = isNaN(key) ? key : routerAttributesToBackView[key];
+
+                if (typeof attributeKey !== 'string') {
+                    throw new Error('The value of the "router_attributes_to_back_view" option must be a string!');
+                }
+
+                backViewAttributes[attributeKey] = attributes[attributeName];
+            });
+        }
+
+        this.router.restore(backView, backViewAttributes);
     };
 
     @action handleCancel = () => {
@@ -100,6 +136,11 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     };
 
     @action handleLinkConfirm = () => {
+        if (!this.allowConflictDeletion) {
+            this.showLinkedDialog = false;
+            return;
+        }
+
         this.resourceFormStore.delete({force: true})
             .then(action(() => {
                 this.showLinkedDialog = false;

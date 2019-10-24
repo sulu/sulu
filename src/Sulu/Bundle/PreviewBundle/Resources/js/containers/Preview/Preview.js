@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {action, observable, reaction, toJS, when} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
@@ -42,6 +41,7 @@ class Preview extends React.Component<Props> {
     @observable previewStore: ?PreviewStore;
     @observable previewWindow: any;
     @observable webspaceOptions: Array<Webspace> = [];
+    @observable reloadCounter: number = 0;
 
     typeDisposer: () => mixed;
     dataDisposer: () => mixed;
@@ -147,15 +147,16 @@ class Preview extends React.Component<Props> {
         previewStore.update(data).then(this.setContent);
     }, Preview.debounceDelay);
 
-    setContent = (content: string) => {
-        const document = this.getPreviewDocument();
-        if (!document) {
+    setContent = (previewContent: string) => {
+        const previewDocument = this.getPreviewDocument();
+
+        if (!previewDocument) {
             return;
         }
 
-        document.open();
-        document.write(content);
-        document.close();
+        previewDocument.open(); // This will lose in Firefox the and safari previewDocument.location
+        previewDocument.write(previewContent);
+        previewDocument.close();
     };
 
     componentWillUnmount() {
@@ -183,13 +184,11 @@ class Preview extends React.Component<Props> {
             return this.previewWindow.document;
         }
 
-        // eslint-disable-next-line react/no-find-dom-node
-        const iframe = ReactDOM.findDOMNode(this.iframeRef);
-        if (!(iframe instanceof HTMLIFrameElement)) {
+        if (!(this.iframeRef instanceof HTMLIFrameElement)) {
             return;
         }
 
-        return iframe.contentDocument;
+        return this.iframeRef.contentDocument;
     };
 
     @action setIframe = (iframeRef: ?Object) => {
@@ -231,12 +230,10 @@ class Preview extends React.Component<Props> {
     };
 
     @action handleRefreshClick = () => {
-        const document = this.getPreviewDocument();
-        if (!document) {
-            return;
-        }
-
-        document.location.reload();
+        // We can not reload the iframe here as safari and firefox
+        // resets the location.href to another url on previewDocument.open
+        // so instead of this we rerender the whole iframe.
+        ++this.reloadCounter;
     };
 
     handleStartClick = () => {
@@ -287,6 +284,7 @@ class Preview extends React.Component<Props> {
                         <div className={previewStyles.iframeContainer}>
                             <iframe
                                 className={previewStyles.iframe}
+                                key={this.reloadCounter}
                                 ref={this.setIframe}
                                 src={previewStore.renderRoute}
                             />

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Tests\Unit\Rule;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Sulu\Bundle\PageBundle\Rule\PageRule;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyInterface;
@@ -95,7 +96,9 @@ class PageRuleTest extends TestCase
 
             $resourceLocatorStrategy = $this->prophesize(ResourceLocatorStrategyInterface::class);
 
-            if (true === $urlExists) {
+            if ('/' === substr($urlValue, -1)) {
+                $resourceLocatorStrategy->loadByResourceLocator(Argument::cetera())->shouldNotBeCalled();
+            } elseif (true === $urlExists) {
                 $resourceLocatorStrategy->loadByResourceLocator(
                     $urlValue,
                     $webspaceKey,
@@ -140,6 +143,7 @@ class PageRuleTest extends TestCase
             ['X-UUID', 'some-uuid', 'X-URL', '/test', 'some-other-uuid', 'sulu_io', 'en', 'some-uuid', true, true],
             ['X-UUID', 'some-uuid', 'X-URL', '/test', 'some-other-uuid', 'sulu_io', 'en', 'some-other-uuid', true, false],
             ['X-UUID', 'some-uuid', 'X-URL', '/test', 'some-other-uuid', 'sulu_io', 'en', 'not-existing-uuid', false, false],
+            ['X-UUID', null, 'X-URL', '/test/', 'some-other-uuid', 'sulu_io', 'en', 'not-existing-uuid', false, false],
         ];
     }
 }

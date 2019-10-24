@@ -11,14 +11,16 @@
 
 namespace Sulu\Bundle\ContactBundle\Content\Types;
 
+use PHPCR\NodeInterface;
 use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\ContactBundle\Contact\AccountManager;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
-use Sulu\Component\Content\SimpleContentType;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 
-class SingleAccountSelection extends SimpleContentType implements PreResolvableContentTypeInterface
+class SingleAccountSelection extends ComplexContentType implements PreResolvableContentTypeInterface
 {
     /**
      * @var AccountManager
@@ -36,19 +38,63 @@ class SingleAccountSelection extends SimpleContentType implements PreResolvableC
     ) {
         $this->accountManager = $accountManager;
         $this->accountReferenceStore = $accountReferenceStore;
+    }
 
-        parent::__construct('SingleAccount');
+    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
+    {
+        $value = null;
+        if ($node->hasProperty($property->getName())) {
+            try {
+                $account = $this->accountManager->getById(
+                    $node->getPropertyValue($property->getName()),
+                    $property->getStructure()->getLanguageCode()
+                );
+
+                $value = [
+                    'id' => $account->getId(),
+                    'name' => $account->getName(),
+                ];
+            } catch (EntityNotFoundException $e) {
+                $value = null;
+            }
+        }
+
+        $property->setValue($value);
+    }
+
+    public function write(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    ) {
+        $account = $property->getValue();
+        if (null != $account) {
+            $node->setProperty($property->getName(), $account['id']);
+        } else {
+            $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
+        }
+    }
+
+    public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
+    {
+        // if exist remove property of node
+        if ($node->hasProperty($property->getName())) {
+            $node->getProperty($property->getName())->remove();
+        }
     }
 
     public function getContentData(PropertyInterface $property): ?Account
     {
-        $id = $property->getValue();
+        $account = $property->getValue();
 
-        if (!$id) {
+        if (!isset($account['id'])) {
             return null;
         }
 
-        return $this->accountManager->getById($id, $property->getStructure()->getLanguageCode());
+        return $this->accountManager->getById($account['id'], $property->getStructure()->getLanguageCode());
     }
 
     /**

@@ -430,11 +430,17 @@ export default class ListStore {
             );
         });
 
-        return Promise.all(deletePromises).then(action(() => {
-            this.selectionIds.forEach(this.remove);
-            this.clearSelection();
-            this.deletingSelection = false;
-        }));
+        return Promise.all(deletePromises)
+            .then(action(() => {
+                this.selectionIds.forEach(this.remove);
+                this.clearSelection();
+                this.deletingSelection = false;
+            }))
+            .catch(action((error) => {
+                this.deletingSelection = false;
+
+                return Promise.reject(error);
+            }));
     };
 
     remove = (identifier: string | number): void => {

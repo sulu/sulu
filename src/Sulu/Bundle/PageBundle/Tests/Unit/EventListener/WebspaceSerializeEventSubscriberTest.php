@@ -19,6 +19,7 @@ use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\PageBundle\EventListener\WebspaceSerializeEventSubscriber;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Environment;
@@ -35,7 +36,13 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
     {
         $webspaceUrlProvider = $this->prophesize(WebspaceUrlProviderInterface::class);
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
-        $subscriber = new WebspaceSerializeEventSubscriber($webspaceManager->reveal(), $webspaceUrlProvider->reveal(), 'prod');
+        $resourceLocatorStrategyPool = $this->prophesize(ResourceLocatorStrategyPoolInterface::class);
+        $subscriber = new WebspaceSerializeEventSubscriber(
+            $webspaceManager->reveal(),
+            $webspaceUrlProvider->reveal(),
+            $resourceLocatorStrategyPool->reveal(),
+            'prod'
+        );
 
         $events = $subscriber->getSubscribedEvents();
 
@@ -55,7 +62,13 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
     {
         $webspaceUrlProvider = $this->prophesize(WebspaceUrlProviderInterface::class);
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
-        $subscriber = new WebspaceSerializeEventSubscriber($webspaceManager->reveal(), $webspaceUrlProvider->reveal(), 'prod');
+        $resourceLocatorStrategyPool = $this->prophesize(ResourceLocatorStrategyPoolInterface::class);
+        $subscriber = new WebspaceSerializeEventSubscriber(
+            $webspaceManager->reveal(),
+            $webspaceUrlProvider->reveal(),
+            $resourceLocatorStrategyPool->reveal(),
+            'prod'
+        );
 
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getKey()->willReturn('sulu_io');
@@ -98,7 +111,13 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
 
         $webspaceUrlProvider = $this->prophesize(WebspaceUrlProviderInterface::class);
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
-        $subscriber = new WebspaceSerializeEventSubscriber($webspaceManager->reveal(), $webspaceUrlProvider->reveal(), 'prod');
+        $resourceLocatorStrategyPool = $this->prophesize(ResourceLocatorStrategyPoolInterface::class);
+        $subscriber = new WebspaceSerializeEventSubscriber(
+            $webspaceManager->reveal(),
+            $webspaceUrlProvider->reveal(),
+            $resourceLocatorStrategyPool->reveal(),
+            'prod'
+        );
 
         $webspace = $this->prophesize(Webspace::class);
         $webspaceUrlProvider->getUrls($webspace->reveal(), 'prod')->willReturn($urls);
@@ -156,7 +175,13 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
 
         $webspaceUrlProvider = $this->prophesize(WebspaceUrlProviderInterface::class);
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
-        $subscriber = new WebspaceSerializeEventSubscriber($webspaceManager->reveal(), $webspaceUrlProvider->reveal(), 'prod');
+        $resourceLocatorStrategyPool = $this->prophesize(ResourceLocatorStrategyPoolInterface::class);
+        $subscriber = new WebspaceSerializeEventSubscriber(
+            $webspaceManager->reveal(),
+            $webspaceUrlProvider->reveal(),
+            $resourceLocatorStrategyPool->reveal(),
+            'prod'
+        );
 
         $context = $this->prophesize(Context::class);
         $navigator = $this->prophesize(GraphNavigatorInterface::class);

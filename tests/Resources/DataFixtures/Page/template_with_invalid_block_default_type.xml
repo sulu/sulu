@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>template_with_invalid_block_default_type</key>
+
+    <view>page.html.twig</view>
+    <controller>SuluPageBundle:Default:index</controller>
+    <cacheLifetime>2400</cacheLifetime>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true" colspan="6"/>
+
+        <property name="url" type="text_line">
+            <tag name="sulu.rlp" />
+        </property>
+
+        <block name="blocks" default-type="test" minOccurs="0">
+            <meta>
+                <title lang="de">Inhalte</title>
+                <title lang="en">Content</title>
+            </meta>
+            <types>
+                <type name="editor">
+                    <properties>
+                        <property name="article" type="text_editor"/>
+                    </properties>
+                </type>
+                <type name="images">
+                    <properties>
+                        <property name="images" type="media_selection" colspan="3"/>
+                    </properties>
+                </type>
+            </types>
+        </block>
+    </properties>
+</template>

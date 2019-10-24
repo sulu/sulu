@@ -13,8 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Command;
 
 use Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapDumperInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\Webspace\PortalInformation;
-use Sulu\Component\Webspace\Webspace;
+use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -34,6 +33,11 @@ class DumpSitemapCommand extends Command
      * @var XmlSitemapDumperInterface
      */
     private $sitemapDumper;
+
+    /**
+     * @var ReplacerInterface
+     */
+    private $urlReplacer;
 
     /**
      * @var Filesystem
@@ -58,22 +62,33 @@ class DumpSitemapCommand extends Command
     /**
      * @var string
      */
-    private $scheme = 'http';
+    private $defaultHost;
+
+    /**
+     * @var string
+     */
+    private $scheme;
 
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
         XmlSitemapDumperInterface $sitemapDumper,
+        ReplacerInterface $urlReplacer,
         Filesystem $filesystem,
         string $baseDirectory,
-        string $environment
+        string $environment,
+        string $scheme,
+        string $defaultHost
     ) {
         parent::__construct();
 
         $this->webspaceManager = $webspaceManager;
         $this->sitemapDumper = $sitemapDumper;
+        $this->urlReplacer = $urlReplacer;
         $this->filesystem = $filesystem;
         $this->environment = $environment;
         $this->baseDirectory = $baseDirectory;
+        $this->scheme = $scheme;
+        $this->defaultHost = $defaultHost;
     }
 
     protected function configure()
@@ -96,45 +111,23 @@ class DumpSitemapCommand extends Command
 
         $output->writeln('Start dumping "sitemap.xml" files:');
 
-        foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
-            $this->dumpWebspace($webspace);
-        }
-    }
+        $portalInformations = $this->webspaceManager->getPortalInformations($this->environment);
 
-    /**
-     * Dump given webspace.
-     *
-     * @param Webspace $webspace
-     */
-    private function dumpWebspace(Webspace $webspace)
-    {
-        foreach ($webspace->getAllLocalizations() as $localization) {
-            $this->output->writeln(sprintf(' - %s (%s)', $webspace->getKey(), $localization->getLocale()));
-            $this->dumpPortalInformations(
-                $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale(
-                    $webspace->getKey(),
-                    $localization->getLocale(),
-                    $this->environment
-                )
-            );
-        }
-    }
-
-    /**
-     * Dump given portal-informations.
-     *
-     * @param PortalInformation[] $portalInformations
-     */
-    private function dumpPortalInformations(array $portalInformations)
-    {
-        try {
-            foreach ($portalInformations as $portalInformation) {
-                $this->sitemapDumper->dumpPortalInformation($portalInformation, $this->scheme);
+        $hosts = [];
+        foreach ($portalInformations as $portalInformation) {
+            $portalUrl = $portalInformation->getUrl();
+            if ($this->urlReplacer->hasHostReplacer($portalUrl)) {
+                $portalUrl = $this->urlReplacer->replaceHost($portalUrl, $this->defaultHost);
             }
-        } catch (\InvalidArgumentException $exception) {
-            $this->clear();
 
-            throw $exception;
+            $urlParts = parse_url($this->scheme . '://' . $portalUrl);
+            $hosts[] = $urlParts['host'];
+        }
+
+        $hosts = array_unique(array_filter($hosts));
+
+        foreach ($hosts as $host) {
+            $this->sitemapDumper->dumpHost($this->scheme, $host);
         }
     }
 

@@ -1,8 +1,14 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.29 (2019-10-24)
+    * BUGFIX      #4644  [LocationBundle]          Fix location content type default map provider option
+    * ENHANCEMENT #4812  [MediaBundle]             Optimize gif image output
+    * BUGFIX      #4800  [PreviewBundle]           Fix no host in parse_url of PreviewRenderer
+    * BUGFIX      #4672  [RouteBundle]             Add redirect to locale-prefix for partial match requests
+    * BUGFIX      #4669  [Component]               Fix reference-options doctrine extension
+
 * 1.6.28 (2019-08-08)
-    * BUGFIX      #4644  [CustomUrlBundle]         Fix loading custom url list if creator has been deleted
     * BUGFIX      #4627  [WebsiteBundle]           Fix Routing when no prefix is Provided.
     * BUGFIX      #4633  [AudienceTargetingBundle] Fixed conditions saving for Audience Targeting.
     * BUGFIX      #4605  [Webspace]                Fix sulu document init routes generation

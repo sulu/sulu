@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\TestBundle\Testing;
 
-use Symfony\Component\Security\Core\User\UserInterface;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 
 trait TestUserTrait
 {
@@ -19,11 +19,11 @@ trait TestUserTrait
      * Return the test user (which is provided / created
      * by the test_user_provider in this Bundle at runtime).
      *
-     * @return UserInterface
+     * @return User
      */
-    protected function getTestUser()
+    protected static function getTestUser()
     {
-        return $this->getContainer()->get('test_user_provider')->getUser();
+        return static::getContainer()->get('test_user_provider')->getUser();
     }
 
     /**
@@ -32,8 +32,8 @@ trait TestUserTrait
      *
      * @return int
      */
-    protected function getTestUserId()
+    protected static function getTestUserId()
     {
-        return $this->getTestUser()->getId();
+        return static::getTestUser()->getId();
     }
 }

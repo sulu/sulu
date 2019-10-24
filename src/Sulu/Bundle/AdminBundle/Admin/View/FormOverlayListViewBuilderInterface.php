@@ -75,4 +75,6 @@ interface FormOverlayListViewBuilderInterface extends ViewBuilderInterface
     public function addResourceStorePropertiesToFormRequest(array $resourceStorePropertiesToFormRequest): self;
 
     public function setOverlaySize(string $overlaySize): self;
+
+    public function addMetadataRequestParameters(array $metadataRequestParameters): self;
 }

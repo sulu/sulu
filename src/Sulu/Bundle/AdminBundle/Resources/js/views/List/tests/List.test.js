@@ -1028,6 +1028,36 @@ test('Should render the locale dropdown with the options from router', () => {
     ]);
 });
 
+test('Should render the locale dropdown with the options from props', () => {
+    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+    const List = require('../List').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'test',
+                resourceKey: 'test',
+            },
+        },
+    };
+
+    const list = mount(<List locales={['en', 'de']} router={router} />);
+    list.instance().locale = {
+        get: function() {
+            return 'de';
+        },
+    };
+
+    const toolbarConfig = toolbarFunction.call(list.instance());
+    expect(toolbarConfig.locale.value).toBe('de');
+    expect(toolbarConfig.locale.options).toEqual([
+        {value: 'en', label: 'en'},
+        {value: 'de', label: 'de'},
+    ]);
+});
+
 test('Should pass requestParameters from router to the ListStore', () => {
     const List = require('../List').default;
     const router = {
@@ -1279,6 +1309,36 @@ test('Should delete selected items when delete button is clicked', () => {
     getDeleteItem().onClick();
     list.update();
     expect(list.find('Dialog').at(0).prop('open')).toEqual(true);
+});
+
+test('Should pass allowConflictDeletion correctly to List component', () => {
+    const List = require('../List').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
+    const DeleteToolbarAction = require('../toolbarActions/DeleteToolbarAction').default;
+    listToolbarActionRegistry.add('sulu_admin.delete', DeleteToolbarAction);
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'test',
+                resourceKey: 'test',
+                toolbarActions: [
+                    {type: 'sulu_admin.delete', options: {}},
+                ],
+            },
+        },
+    };
+
+    const list = mount(<List router={router} />);
+    const listStore = list.instance().listStore;
+    listStore.selectionIds.push(1, 4, 6);
+    list.instance().requestSelectionDelete(false);
+
+    list.update();
+    expect(list.find('Dialog').at(0).prop('open')).toEqual(true);
+
+    expect(list.find('List').at(1).instance().allowConflictDeletion).toEqual(false);
 });
 
 test('Should make move overlay disappear if cancel is clicked', () => {
