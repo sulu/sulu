@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-release/2.0
+## 2.0.1
 
 ### mode schemaOption in ResourceLocator
 
