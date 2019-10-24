@@ -25,7 +25,7 @@ class AuthenticationEntryPointTest extends TestCase
         parent::setUp();
 
         $urlGenerator = $this->prophesize('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
-        $urlGenerator->generate('sulu_admin.login')->willReturn('/admin/login');
+        $urlGenerator->generate('sulu_admin')->willReturn('/admin');
         $this->authenticationEntryPoint = new AuthenticationEntryPoint($urlGenerator->reveal());
     }
 
