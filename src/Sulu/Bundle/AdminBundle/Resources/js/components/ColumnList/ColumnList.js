@@ -13,7 +13,7 @@ import columnListStyles from './columnList.scss';
 type Props = {|
     children: ChildrenArray<Element<typeof Column>>,
     onItemClick: (id: string | number) => void,
-    onItemDoubleClick: ?(id: string | number) => void,
+    onItemDoubleClick?: ?(id: string | number) => void,
     toolbarItemsProvider: (index: number) => ?Array<ToolbarItemConfig>,
 |};
 
@@ -22,10 +22,6 @@ class ColumnList extends React.Component<Props> {
     static Column = Column;
 
     static Item = Item;
-
-    static defaultProps = {
-        onItemDoubleClick: undefined,
-    };
 
     @observable activeColumnIndex: number = 0;
     @observable scrollPosition: number = 0;
