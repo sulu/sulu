@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* release/1.6
+* 1.6.29 (2019-10-24)
     * BUGFIX      #4644  [LocationBundle]          Fix location content type default map provider option
     * ENHANCEMENT #4812  [MediaBundle]             Optimize gif image output
     * BUGFIX      #4800  [PreviewBundle]           Fix no host in parse_url of PreviewRenderer
