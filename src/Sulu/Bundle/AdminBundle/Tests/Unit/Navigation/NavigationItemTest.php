@@ -36,8 +36,6 @@ class NavigationItemTest extends TestCase
         $this->navigationItem = new NavigationItem('NavigationItem');
 
         $this->item1 = new NavigationItem('Root');
-        $this->item1->setHeaderIcon('logo');
-        $this->item1->setHeaderTitle('title');
 
         $portalItem1 = new NavigationItem('Portals');
         $this->item1->addChild($portalItem1);
@@ -87,14 +85,6 @@ class NavigationItemTest extends TestCase
         $this->assertEquals($child, $this->navigationItem->getChildren()[0]);
     }
 
-    public function testHeader()
-    {
-        $this->navigationItem->setHeaderIcon('icon');
-        $this->navigationItem->setHeaderTitle('title');
-        $this->assertEquals('icon', $this->navigationItem->getHeaderIcon());
-        $this->assertEquals('title', $this->navigationItem->getHeaderTitle());
-    }
-
     public function testSearch()
     {
         $this->assertEquals('Globals', $this->item2->find(new NavigationItem('Globals'))->getName());
@@ -112,8 +102,6 @@ class NavigationItemTest extends TestCase
         $copy = $this->item1->copyChildless();
 
         $this->assertEquals($this->item1->getIcon(), $copy->getIcon());
-        $this->assertEquals($this->item1->getHeaderIcon(), $copy->getHeaderIcon());
-        $this->assertEquals($this->item1->getHeaderTitle(), $copy->getHeaderTitle());
         $this->assertEquals($this->item1->getId(), $copy->getId());
     }
 
@@ -134,8 +122,6 @@ class NavigationItemTest extends TestCase
         $array = $this->item1->toArray();
 
         $this->assertEquals('Root', $array['title']);
-        $this->assertEquals('logo', $array['header']['logo']);
-        $this->assertEquals('title', $array['header']['title']);
 
         $this->assertContains('Portals', [$array['items'][0]['title'], $array['items'][1]['title']]);
 
