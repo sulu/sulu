@@ -1,5 +1,19 @@
 # Upgrade
 
+## release/2.0
+
+### NavigationItem
+
+The `NavigationItem` class used in the `Admin` classes still had some properties that are not used anymore in Sulu 2.0.
+In order to avoid confusion these properties and their corresponding getters and setters have been removed. This affects
+the following properties:
+
+- event
+- eventArguments
+- headerTitle
+- headerIcon
+- hasSettings
+
 ## 2.0.1
 
 ### mode schemaOption in ResourceLocator
