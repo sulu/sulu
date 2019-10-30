@@ -58,12 +58,13 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
 
         if (this.hasTypes) {
             // this will set the correct type from the server response after it has been loaded
-            if (this.resourceStore.id) {
-                when(
-                    () => !this.resourceStore.loading,
-                    (): void => this.setType(this.resourceStore.data[TYPE])
-                );
-            }
+            when(
+                () => !this.resourceStore.loading,
+                (): void => {
+                    const defaultType = Object.keys(this.types)[0]; // TODO get correct default type if available
+                    this.setType(this.resourceStore.data[TYPE] ? this.resourceStore.data[TYPE] : defaultType);
+                }
+            );
         }
 
         this.schemaDisposer = autorun(() => {

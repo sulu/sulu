@@ -5,10 +5,6 @@ import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 export default class TypeToolbarAction extends AbstractFormToolbarAction {
     getToolbarItemConfig(): ToolbarItemConfig {
         const formTypes = this.resourceFormStore.types;
-        const formKeys = Object.keys(formTypes);
-        if (!this.resourceFormStore.id && formKeys.length > 0 && !this.resourceFormStore.type) {
-            this.resourceFormStore.setType(formKeys[0]);
-        }
 
         if (!this.resourceFormStore.typesLoading && Object.keys(formTypes).length === 0) {
             throw new Error('The ToolbarAction for types only works with entities actually supporting types!');

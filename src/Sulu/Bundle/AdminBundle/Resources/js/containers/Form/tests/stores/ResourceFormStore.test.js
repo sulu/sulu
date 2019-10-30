@@ -1179,3 +1179,66 @@ test('Set new type after copying from different locale', () => {
         });
     });
 });
+
+test('HasTypes return true when types are set', () => {
+    const schemaTypesPromise = Promise.resolve({
+        sidebar: {key: 'sidebar', title: 'Sidebar'},
+        footer: {key: 'footer', title: 'Footer'},
+    });
+
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const resourceStore = new ResourceStore('test', 5);
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+
+    return schemaTypesPromise.then(() => {
+        expect(resourceFormStore.hasTypes).toEqual(true);
+    });
+});
+
+test('HasTypes return false when types are not set', () => {
+    const schemaTypesPromise = Promise.resolve({});
+
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const resourceStore = new ResourceStore('test', 5);
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+
+    return schemaTypesPromise.then(() => {
+        expect(resourceFormStore.hasTypes).toEqual(false);
+    });
+});
+
+test('Set type to first one if data has no template set', () => {
+    const schemaTypesPromise = Promise.resolve({
+        sidebar: {key: 'sidebar', title: 'Sidebar'},
+        footer: {key: 'footer', title: 'Footer'},
+    });
+
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const resourceStore = new ResourceStore('test', 5);
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+
+    return schemaTypesPromise.then(() => {
+        expect(resourceFormStore.type).toEqual('sidebar');
+    });
+});
+
+test('Set type to the template value if set', () => {
+    const schemaTypesPromise = Promise.resolve({
+        sidebar: {key: 'sidebar', title: 'Sidebar'},
+        footer: {key: 'footer', title: 'Footer'},
+    });
+
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const resourceStore = new ResourceStore('test', 5);
+    resourceStore.data = observable({template: 'footer'});
+
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+
+    return schemaTypesPromise.then(() => {
+        expect(resourceFormStore.type).toEqual('footer');
+    });
+});
