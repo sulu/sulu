@@ -203,11 +203,12 @@ class S3StorageTest extends TestCase
         $client->getEndpoint()->willReturn('http://aws.com');
         $adapter->getClient()->willReturn($client->reveal());
         $adapter->getBucket()->willReturn('test');
+        $adapter->applyPathPrefix('1/test.jpg')->willReturn('xxx/1/test.jpg');
 
         $storage = new S3Storage($flysystem->reveal(), 1);
 
         $path = $storage->getPath(['segment' => '1', 'fileName' => 'test.jpg']);
-        $this->assertEquals('http://aws.com/test/1/test.jpg', $path);
+        $this->assertEquals('http://aws.com/test/xxx/1/test.jpg', $path);
     }
 
     public function testGetType(): void
