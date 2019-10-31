@@ -82,6 +82,7 @@ class WebspaceTest extends TestCase
             ],
             'templates' => [],
             'defaultTemplates' => [],
+            'excludedTemplates' => [],
             'portals' => [
                 ['one'],
             ],

@@ -83,6 +83,7 @@ class Form extends React.Component<Props> {
                     formKey,
                     idQueryParameter,
                     resourceKey,
+                    routerAttributesToFormMetadata = {},
                     routerAttributesToFormRequest = {},
                     metadataRequestParameters = {},
                 },
@@ -122,11 +123,17 @@ class Form extends React.Component<Props> {
             this.resourceStore = resourceStore;
         }
 
+        const metadataOptions = this.buildMetadataOptions(
+            attributes,
+            routerAttributesToFormMetadata,
+            metadataRequestParameters
+        );
+
         this.resourceFormStore = new ResourceFormStore(
             this.resourceStore,
             formKey,
             formStoreOptions,
-            metadataRequestParameters
+            metadataOptions
         );
 
         if (this.resourceStore.locale) {
@@ -192,6 +199,24 @@ class Form extends React.Component<Props> {
         });
 
         return formStoreOptions;
+    }
+
+    buildMetadataOptions(
+        attributes: Object,
+        routerAttributesToFormMetadata: {[string | number]: string},
+        metadataRequestParameters: {[string | number]: string}
+    ) {
+        const metadataOptions = {...metadataRequestParameters};
+        routerAttributesToFormMetadata = toJS(routerAttributesToFormMetadata);
+
+        Object.keys(routerAttributesToFormMetadata).forEach((key) => {
+            const listOptionKey = routerAttributesToFormMetadata[key];
+            const attributeName = isNaN(key) ? key : routerAttributesToFormMetadata[key];
+
+            metadataOptions[listOptionKey] = attributes[attributeName];
+        });
+
+        return metadataOptions;
     }
 
     @action componentDidMount() {

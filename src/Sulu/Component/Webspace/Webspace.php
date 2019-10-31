@@ -111,6 +111,11 @@ class Webspace implements ArrayableInterface
     private $defaultTemplates = [];
 
     /**
+     * @var string[]
+     */
+    private $excludedTemplates = [];
+
+    /**
      * The url generation strategy for this portal.
      *
      * @var string
@@ -523,6 +528,24 @@ class Webspace implements ArrayableInterface
     }
 
     /**
+     * Add a new template for given type.
+     *
+     * @param string $excludedTemplate
+     */
+    public function addExcludedTemplate($excludedTemplate)
+    {
+        $this->excludedTemplates[] = $excludedTemplate;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getExcludedTemplates()
+    {
+        return $this->excludedTemplates;
+    }
+
+    /**
      * Set resource-locator strategy.
      *
      * @param string $resourceLocatorStrategy
@@ -553,6 +576,7 @@ class Webspace implements ArrayableInterface
         $res['localizations'] = [];
         $res['templates'] = $this->getTemplates();
         $res['defaultTemplates'] = $this->getDefaultTemplates();
+        $res['excludedTemplates'] = $this->getExcludedTemplates();
         $res['resourceLocator']['strategy'] = $this->getResourceLocatorStrategy();
 
         foreach ($this->getLocalizations() as $localization) {

@@ -13,9 +13,10 @@ namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataInterface;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata as ContentStructureMetadata;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
@@ -23,7 +24,7 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerInterface
 {
     /**
-     * @var StructureMetadataFactory
+     * @var StructureMetadataFactoryInterface
      */
     private $structureMetadataFactory;
 
@@ -31,6 +32,11 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
      * @var FormMetadataMapper
      */
     private $formMetadataMapper;
+
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
 
     /**
      * @var string[]
@@ -48,14 +54,16 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
     private $debug;
 
     public function __construct(
-        $structureMetadataFactory,
-        $formMetadataMapper,
-        $locales,
+        StructureMetadataFactoryInterface $structureMetadataFactory,
+        FormMetadataMapper $formMetadataMapper,
+        WebspaceManagerInterface $webspaceManager,
+        array $locales,
         string $cacheDir,
         bool $debug
     ) {
         $this->structureMetadataFactory = $structureMetadataFactory;
         $this->formMetadataMapper = $formMetadataMapper;
+        $this->webspaceManager = $webspaceManager;
         $this->locales = $locales;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
@@ -74,6 +82,14 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
         }
 
         $form = unserialize(file_get_contents($configCache->getPath()));
+
+        if (isset($metadataOptions['webspace'])) {
+            $webspace = $this->webspaceManager->findWebspaceByKey($metadataOptions['webspace']);
+
+            foreach ($webspace->getExcludedTemplates() as $excludedTemplate) {
+                $form->removeForm($excludedTemplate);
+            }
+        }
 
         return $form;
     }

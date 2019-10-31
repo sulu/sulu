@@ -123,6 +123,13 @@ class FormViewBuilder implements FormViewBuilderInterface
         return $this;
     }
 
+    public function addRouterAttributesToFormMetadata(array $routerAttributesToFormMetadata): FormViewBuilderInterface
+    {
+        $this->addRouterAttributesToFormMetadataToView($this->view, $routerAttributesToFormMetadata);
+
+        return $this;
+    }
+
     public function addMetadataRequestParameters(array $metadataRequestParameters): FormViewBuilderInterface
     {
         $this->addMetadataRequestParametersToView($this->view, $metadataRequestParameters);

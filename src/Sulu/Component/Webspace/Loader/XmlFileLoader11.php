@@ -38,6 +38,8 @@ class XmlFileLoader11 extends XmlFileLoader10
             $webspace->setResourceLocatorStrategy('tree_leaf_edit');
         }
 
+        $this->generateExcludedTemplates($webspace);
+
         return $webspace;
     }
 
@@ -86,6 +88,24 @@ class XmlFileLoader11 extends XmlFileLoader10
             $template = $templateNode->nodeValue;
             $type = $templateNode->attributes->getNamedItem('type')->nodeValue;
             $webspace->addTemplate($type, $template);
+        }
+
+        return $webspace;
+    }
+
+    /**
+     * Adds the excluded-templates as described in the XML document.
+     *
+     * @param Webspace $webspace
+     *
+     * @return Webspace
+     */
+    protected function generateExcludedTemplates(Webspace $webspace)
+    {
+        foreach ($this->xpath->query('/x:webspace/x:excluded-templates/x:excluded-template') as $excludedTemplateNode) {
+            /* @var \DOMNode $excludedTemplateNode */
+            $excludedTemplate = $excludedTemplateNode->nodeValue;
+            $webspace->addExcludedTemplate($excludedTemplate);
         }
 
         return $webspace;

@@ -71,6 +71,8 @@ class {{ cache_class }} extends {{ base_class }}
 {% endfor %}
 {% for type,template in webspace.defaultTemplates %}        $webspace->addDefaultTemplate('{{ type }}', '{{ template }}');
 {% endfor %}
+{% for template in webspace.excludedTemplates %}        $webspace->addExcludedTemplate('{{ template }}');
+{% endfor %}
 
         // add navigation
         $navigation = new Navigation();
