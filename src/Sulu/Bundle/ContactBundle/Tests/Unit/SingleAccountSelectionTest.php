@@ -230,10 +230,20 @@ class SingleAccountSelectionTest extends TestCase
         $this->singleAccountSelection->preResolve($property);
     }
 
+    public function testPreResolveEmptyArray()
+    {
+        $property = new Property('account', [], 'single_account_selection');
+        $property->setValue([]);
+
+        $this->accountReferenceStore->add(Argument::any())->shouldNotBeCalled();
+
+        $this->singleAccountSelection->preResolve($property);
+    }
+
     public function testPreResolve()
     {
         $property = new Property('account', [], 'single_account_selection');
-        $property->setValue(22);
+        $property->setValue(['id' => 22]);
 
         $this->accountReferenceStore->add(22)->shouldBeCalled();
 
