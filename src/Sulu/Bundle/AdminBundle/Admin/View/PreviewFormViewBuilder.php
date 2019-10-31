@@ -108,6 +108,21 @@ class PreviewFormViewBuilder implements PreviewFormViewBuilderInterface
         return $this;
     }
 
+    public function addRouterAttributesToFormMetadata(
+        array $routerAttributesToFormMetadata
+    ): PreviewFormViewBuilderInterface {
+        $this->addRouterAttributesToFormMetadataToView($this->view, $routerAttributesToFormMetadata);
+
+        return $this;
+    }
+
+    public function addMetadataRequestParameters(array $metadataRequestParameters): PreviewFormViewBuilderInterface
+    {
+        $this->addMetadataRequestParametersToView($this->view, $metadataRequestParameters);
+
+        return $this;
+    }
+
     public function setEditView(string $editView): PreviewFormViewBuilderInterface
     {
         $this->setEditViewToView($this->view, $editView);

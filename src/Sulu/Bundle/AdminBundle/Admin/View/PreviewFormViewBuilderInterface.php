@@ -45,6 +45,8 @@ interface PreviewFormViewBuilderInterface extends ViewBuilderInterface
      */
     public function addRouterAttributesToEditView(array $routerAttributesToEditView): self;
 
+    public function addRouterAttributesToFormMetadata(array $routerAttributesToFormMetadata): self;
+
     public function setEditView(string $editView): self;
 
     public function setBackView(string $editView): self;

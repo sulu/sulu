@@ -157,6 +157,7 @@ class PageAdmin extends Admin
         ];
 
         $routerAttributesToFormRequest = ['parentId', 'webspace'];
+        $routerAttributesToFormMetdata = ['webspace'];
 
         $previewCondition = 'nodeType == 1';
 
@@ -199,6 +200,7 @@ class PageAdmin extends Admin
                     ->addRouterAttributesToEditView(['webspace'])
                     ->addToolbarActions($formToolbarActionsWithType)
                     ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
+                    ->addRouterAttributesToFormMetadata($routerAttributesToFormMetdata)
                     ->setParent(static::ADD_FORM_VIEW)
             );
             $viewCollection->add(
@@ -222,6 +224,7 @@ class PageAdmin extends Admin
                     ->setTabCondition('nodeType == 1 && shadowOn == false')
                     ->addToolbarActions($formToolbarActionsWithType)
                     ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
+                    ->addRouterAttributesToFormMetadata($routerAttributesToFormMetdata)
                     ->setPreviewCondition($previewCondition)
                     ->setTabOrder(1024)
                     ->setParent(static::EDIT_FORM_VIEW)

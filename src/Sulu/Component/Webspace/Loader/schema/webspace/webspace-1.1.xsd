@@ -19,6 +19,7 @@
             <xs:element type="xs:string" name="theme" minOccurs="0" maxOccurs="1"/>
             <xs:element type="defaultTemplatesType" name="default-templates" minOccurs="1" maxOccurs="1"/>
             <xs:element type="templatesType" name="templates" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="excludedTemplatesType" name="excluded-templates" minOccurs="0" maxOccurs="1"/>
             <xs:element type="navigationType" name="navigation"/>
             <xs:element type="resource-locatorType" name="resource-locator" maxOccurs="1" minOccurs="0"/>
             <xs:element type="portalsType" name="portals"/>
@@ -140,6 +141,16 @@
             <xs:extension base="xs:string">
                 <xs:attribute name="type" type="xs:string" use="required"/>
             </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="excludedTemplatesType">
+        <xs:sequence>
+            <xs:element type="excludedTemplateType" name="excluded-template" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="excludedTemplateType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string"/>
         </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="environmentsType">
