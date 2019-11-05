@@ -107,7 +107,7 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
             $config['sitemap']['dump_dir']
         );
         $container->registerForAutoconfiguration(SitemapProviderInterface::class)
-            ->setTags(['sulu.sitemap.provider']);
+            ->setTags(['sulu.sitemap.provider' => []]);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
