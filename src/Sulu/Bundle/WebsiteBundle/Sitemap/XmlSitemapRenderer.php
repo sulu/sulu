@@ -50,7 +50,7 @@ class XmlSitemapRenderer implements XmlSitemapRendererInterface
         }
 
         return $this->render(
-            'SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig',
+            '@SuluWebsite/Sitemap/sitemap-index.xml.twig',
             ['sitemaps' => $this->sitemapProviderPool->getIndex($scheme, $host), 'domain' => $host, 'scheme' => $scheme]
         );
     }
@@ -72,7 +72,7 @@ class XmlSitemapRenderer implements XmlSitemapRendererInterface
         $entries = $provider->build($page, $scheme, $host);
 
         return $this->render(
-            'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
+            '@SuluWebsite/Sitemap/sitemap.xml.twig',
             [
                 'domain' => $host,
                 'scheme' => $scheme,

@@ -73,7 +73,7 @@ class SeoTwigExtension extends AbstractExtension
         array $urls,
         $shadowBaseLocale
     ) {
-        $template = 'SuluWebsiteBundle:Extension:seo.html.twig';
+        $template = '@SuluWebsite/Extension/seo.html.twig';
 
         @trigger_error(sprintf(
             'This twig extension is deprecated and should not be used anymore, include the "%s".',

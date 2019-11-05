@@ -61,7 +61,7 @@ class XmlSitemapRendererTest extends TestCase
         $this->providerPoolInterface->getIndex('http', 'sulu.io')->willReturn($sitemaps);
 
         $this->engine->render(
-            'SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig',
+            '@SuluWebsite/Sitemap/sitemap-index.xml.twig',
             ['sitemaps' => $sitemaps]
         )->willReturn('<html/>');
 
@@ -79,7 +79,7 @@ class XmlSitemapRendererTest extends TestCase
         $this->providerPoolInterface->getIndex('http', 'sulu.io')->willReturn($sitemaps);
 
         $this->engine->render(
-            'SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig',
+            '@SuluWebsite/Sitemap/sitemap-index.xml.twig',
             ['sitemaps' => $sitemaps, 'domain' => 'sulu.io', 'scheme' => 'http']
         )->willReturn('<html/>');
 
@@ -100,7 +100,7 @@ class XmlSitemapRendererTest extends TestCase
         $this->providerPoolInterface->getIndex('http', 'sulu.io')->willReturn($sitemaps);
 
         $this->engine->render(
-            'SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig',
+            '@SuluWebsite/Sitemap/sitemap-index.xml.twig',
             ['sitemaps' => $sitemaps, 'domain' => 'sulu.io', 'scheme' => 'http']
         )->willReturn('<html/>');
 
@@ -121,7 +121,7 @@ class XmlSitemapRendererTest extends TestCase
         $this->providerPoolInterface->getIndex('http', 'sulu.io')->willReturn($sitemaps);
 
         $this->engine->render(
-            'SuluWebsiteBundle:Sitemap:sitemap-index.xml.twig',
+            '@SuluWebsite/Sitemap/sitemap-index.xml.twig',
             ['sitemaps' => $sitemaps, 'domain' => 'sulu.io', 'scheme' => 'http']
         )->willReturn('<html/>');
 
@@ -148,7 +148,7 @@ class XmlSitemapRendererTest extends TestCase
         $portal->getXDefaultLocalization()->willReturn(new Localization('de'));
 
         $this->engine->render(
-            'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
+            '@SuluWebsite/Sitemap/sitemap.xml.twig',
             [
                 'domain' => 'sulu.io',
                 'scheme' => 'http',

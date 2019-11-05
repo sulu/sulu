@@ -63,7 +63,7 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                                 ->scalarNode('template')
                                     ->cannotBeEmpty()
-                                    ->defaultValue('SuluSecurityBundle:mail_templates:reset_password.html.twig')
+                                    ->defaultValue('@SuluSecurity/mail_templates/reset_password.html.twig')
                                 ->end()
                                 ->scalarNode('translation_domain')
                                     ->cannotBeEmpty()

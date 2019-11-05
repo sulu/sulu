@@ -36,7 +36,7 @@ class SearchController
 
         $hits = $this->searchManager->createSearch($q)->locale('de')->index('content');
 
-        return $this->render('TestBundle:Search:query.html.twig', [
+        return $this->render('@Test/Search/query.html.twig', [
             'hits' => $hits,
         ]);
     }

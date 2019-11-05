@@ -136,7 +136,7 @@ abstract class WebsiteController extends AbstractController
         $parameters['previewParentTemplate'] = $view;
         $parameters['previewContentReplacer'] = Preview::CONTENT_REPLACER;
 
-        return parent::renderView('SuluWebsiteBundle:Preview:preview.html.twig', $parameters);
+        return parent::renderView('@SuluWebsite/Preview/preview.html.twig', $parameters);
     }
 
     /**

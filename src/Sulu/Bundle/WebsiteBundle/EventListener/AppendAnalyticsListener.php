@@ -135,7 +135,7 @@ class AppendAnalyticsListener
     protected function generateAnalyticsContent(array $analyticsContent, Analytics $analytics)
     {
         foreach (array_keys(self::$positions) as $position) {
-            $template = 'SuluWebsiteBundle:Analytics:' . $analytics->getType() . '/' . $position . '.html.twig';
+            $template = '@SuluWebsite/Analytics/' . $analytics->getType() . '/' . $position . '.html.twig';
 
             if (!$this->engine->getLoader()->exists($template)) {
                 continue;
