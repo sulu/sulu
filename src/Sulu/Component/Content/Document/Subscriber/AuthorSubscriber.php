@@ -67,7 +67,10 @@ class AuthorSubscriber implements EventSubscriberInterface
     {
         return [
             Events::HYDRATE => 'setAuthorOnDocument',
-            Events::PERSIST => 'setAuthorOnNode',
+            Events::PERSIST => [
+                'setAuthorOnNode',
+                1, // need to be before StructureSubscriber to check if its new in this localization isNew only works for unlocalized documents
+            ],
             Events::PUBLISH => 'setAuthorOnNode',
         ];
     }
@@ -118,14 +121,19 @@ class AuthorSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $node = $event->getNode();
+
         // Set default value if authored is not set.
         if (null === $document->getAuthored()) {
             $document->setAuthored(new \DateTime());
         }
 
-        $metadata = $this->metadataFactory->getMetadataForClass(get_class($document));
-        if ($metadata->getSetDefaultAuthor()) {
-            $this->setDefaultAuthor($document);
+        // Only set author when document is new.
+        if (!$node->hasProperty($this->propertyEncoder->encode('system_localized', StructureSubscriber::STRUCTURE_TYPE_FIELD, $event->getLocale()))) {
+            $metadata = $this->metadataFactory->getMetadataForClass(get_class($document));
+            if ($metadata->getSetDefaultAuthor()) {
+                $this->setDefaultAuthor($document);
+            }
         }
 
         $encoding = 'system_localized';
@@ -135,7 +143,6 @@ class AuthorSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $node = $event->getNode();
         $node->setProperty(
             $this->propertyEncoder->encode($encoding, self::AUTHORED_PROPERTY_NAME, $event->getLocale()),
             $document->getAuthored()
