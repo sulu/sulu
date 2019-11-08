@@ -165,6 +165,10 @@ class Preview implements PreviewInterface
     {
         $parts = explode(self::CONTENT_REPLACER, $html);
 
+        if (!isset($parts[2])) {
+            throw new \RuntimeException('The "{% block content %}" could not be found in the twig template.');
+        }
+
         return $parts[0] . self::CONTENT_REPLACER . $parts[2];
     }
 

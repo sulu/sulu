@@ -397,6 +397,42 @@ class PreviewTest extends TestCase
         );
     }
 
+    public function testUpdateContextNoContentReplacer()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('The "{% block content %}" could not be found in the twig template');
+
+        $data = ['title' => 'Sulu', 'template' => 'default'];
+        $dataJson = json_encode($data);
+
+        $context = ['template' => 'expert'];
+
+        $token = md5(sprintf('%s.%s.%s.%s', $this->providerKey, 1, $this->locale, 1));
+        $cacheData = [
+            'id' => '1',
+            'locale' => $this->locale,
+            'providerKey' => $this->providerKey,
+            'object' => $dataJson,
+            'objectClass' => get_class($this->object->reveal()),
+            'userId' => 1,
+            'html' => '<html><body><div id="content"></div></body></html>',
+        ];
+
+        $newObject = $this->prophesize(\stdClass::class);
+
+        $this->cache->contains($token)->willReturn(true);
+        $this->cache->fetch($token)->willReturn(json_encode($cacheData));
+
+        $this->provider->deserialize($dataJson, $cacheData['objectClass'])->willReturn($this->object->reveal());
+        $this->provider->setContext($this->object->reveal(), $this->locale, $context)->willReturn($newObject->reveal());
+
+        $this->renderer->render($newObject->reveal(), 1, $this->webspaceKey, $this->locale, false, null)->willReturn(
+            '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>'
+        );
+
+        $this->preview->updateContext($token, $this->webspaceKey, $context, null);
+    }
+
     public function testUpdateContextNoContext()
     {
         $data = ['title' => 'Sulu', 'template' => 'default'];
