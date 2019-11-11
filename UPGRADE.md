@@ -2474,6 +2474,8 @@ To support utf8mb4 we needed to change some database entities which you also nee
 Run the following SQL to migrate to the new schema:
 
 ```sql
+ALTER DATABASE <database_name> CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+USE <database_name>;
 ALTER TABLE me_format_options CHANGE format_key format_key VARCHAR(191) NOT NULL;
 ALTER TABLE me_collections CHANGE collection_key collection_key VARCHAR(191) DEFAULT NULL;
 ALTER TABLE me_collection_types CHANGE collection_type_key collection_type_key VARCHAR(191) DEFAULT NULL;
