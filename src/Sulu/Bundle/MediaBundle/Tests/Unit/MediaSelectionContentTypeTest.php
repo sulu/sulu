@@ -209,6 +209,58 @@ class MediaSelectionContentTypeTest extends TestCase
         $this->mediaSelection->read($node, $property, 'test', 'en', 's');
     }
 
+    public function testReadWithInvalidValue()
+    {
+        $config = '[]';
+
+        $node = $this->getMockForAbstractClass(
+            NodeInterface::class,
+            [],
+            '',
+            true,
+            true,
+            true,
+            ['getPropertyValueWithDefault']
+        );
+
+        $property = $this->getMockForAbstractClass(
+            PropertyInterface::class,
+            [],
+            '',
+            true,
+            true,
+            true,
+            ['setValue', 'getParams']
+        );
+
+        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
+            $this->returnValueMap(
+                [
+                    [
+                        'property',
+                        '{"ids": []}',
+                        $config,
+                    ],
+                ]
+            )
+        );
+
+        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
+
+        $property->expects($this->once())->method('setValue')->with(null)->will(
+            $this->returnValue(null)
+        );
+
+        $property->expects($this->any())->method('getParams')->will(
+            $this->returnValue(
+                [
+                ]
+            )
+        );
+
+        $this->mediaSelection->read($node, $property, 'test', 'en', 's');
+    }
+
     public function testReadWithType()
     {
         $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
