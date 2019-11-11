@@ -2474,6 +2474,8 @@ To support utf8mb4 we needed to change some database entities which you also nee
 Run the following SQL to migrate to the new schema:
 
 ```sql
+ALTER DATABASE <database_name> CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+USE <database_name>;
 ALTER TABLE me_format_options CHANGE format_key format_key VARCHAR(191) NOT NULL;
 ALTER TABLE me_collections CHANGE collection_key collection_key VARCHAR(191) DEFAULT NULL;
 ALTER TABLE me_collection_types CHANGE collection_type_key collection_type_key VARCHAR(191) DEFAULT NULL;
@@ -2492,9 +2494,87 @@ ALTER TABLE ro_routes CHANGE path path VARCHAR(191) NOT NULL, CHANGE entity_clas
 ALTER TABLE me_collection_meta CHANGE title title VARCHAR(191) NOT NULL;
 ALTER TABLE me_file_version_meta CHANGE title title VARCHAR(191) NOT NULL;
 ALTER TABLE me_file_versions CHANGE name name VARCHAR(191) NOT NULL;
+ALTER TABLE ca_categories CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE ca_category_meta CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE ca_category_translations CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE ca_category_translations_keywords CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE ca_keywords CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE category_translation_media_interface CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_account_addresses CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_account_bank_accounts CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_account_categories CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_account_contacts CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_account_emails CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_account_faxes CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_account_medias CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_account_notes CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_account_phones CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_account_social_media_profiles CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_account_tags CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_account_urls CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_accounts CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_address_types CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_addresses CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_bank_account CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_contact_addresses CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_contact_bank_accounts CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_contact_categories CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_contact_emails CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_contact_faxes CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_contact_locales CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_contact_medias CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_contact_notes CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_contact_phones CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_contact_social_media_profiles CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_contact_tags CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_contact_titles CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_contact_urls CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_contacts CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_countries CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_email_types CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_emails CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_fax_types CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_faxes CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_notes CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_phone_types CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_phones CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_positions CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_social_media_profile_types CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_social_media_profiles CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_url_types CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE co_urls CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE me_collection_meta CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE me_collection_types CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE me_collections CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE me_file_version_categories CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE me_file_version_content_languages CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE me_file_version_meta CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE me_file_version_publish_languages CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE me_file_version_tags CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE me_file_versions CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE me_files CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE me_format_options CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE me_media CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE me_media_types CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE ro_routes CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE se_access_controls CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE se_group_roles CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE se_groups CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE se_permissions CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE se_role_settings CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE se_roles CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE se_security_types CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE se_user_groups CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE se_user_roles CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE se_user_settings CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE se_users CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE ta_tags CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE we_analytics CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE we_analytics_domains CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE we_domains CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-Create new tables ca_category_translations_keywords and ca_category_translation_medias
+Create new tables `ca_category_translations_keywords` and `ca_category_translation_medias`
 
 ```sql
 CREATE TABLE ca_category_translation_keywords (idKeywords INT NOT NULL, idCategoryTranslations INT NOT NULL, INDEX IDX_D15FBE37F9FC9F05 (idKeywords), INDEX IDX_D15FBE3717CA14DA (idCategoryTranslations), PRIMARY KEY(idKeywords, idCategoryTranslations)) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB;
@@ -2504,6 +2584,63 @@ ALTER TABLE ca_category_translation_keywords ADD CONSTRAINT FK_D15FBE3717CA14DA 
 CREATE TABLE ca_category_translation_medias (idCategoryTranslations INT NOT NULL, idMedia INT NOT NULL, INDEX IDX_39FC41BA17CA14DA (idCategoryTranslations), INDEX IDX_39FC41BA7DE8E211 (idMedia), PRIMARY KEY(idCategoryTranslations, idMedia)) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB;
 ALTER TABLE ca_category_translation_medias ADD CONSTRAINT FK_39FC41BA17CA14DA FOREIGN KEY (idCategoryTranslations) REFERENCES ca_category_translations (id) ON DELETE CASCADE;
 ALTER TABLE ca_category_translation_medias ADD CONSTRAINT FK_39FC41BA7DE8E211 FOREIGN KEY (idMedia) REFERENCES me_media (id) ON DELETE CASCADE;
+```
+
+The tables `co_contacts` and `co_accounts` now also need a note field:
+
+```sql
+ALTER TABLE co_accounts ADD note LONGTEXT DEFAULT NULL;
+ALTER TABLE co_contacts ADD note LONGTEXT DEFAULT NULL;
+```
+
+In addition that also the PHPCR tables have to be changed to utf8mb4 in case jackalope-doctrine-dbal is used:
+
+```sql
+ALTER TABLE `phpcr_binarydata` CHARACTER SET = utf8mb4;
+ALTER TABLE `phpcr_internal_index_types` CHARACTER SET = utf8mb4;
+ALTER TABLE `phpcr_namespaces` CHARACTER SET = utf8mb4;
+ALTER TABLE `phpcr_nodes` CHARACTER SET = utf8mb4;
+ALTER TABLE `phpcr_nodes_references` CHARACTER SET = utf8mb4;
+ALTER TABLE `phpcr_nodes_weakreferences` CHARACTER SET = utf8mb4;
+ALTER TABLE `phpcr_type_childs` CHARACTER SET = utf8mb4;
+ALTER TABLE `phpcr_type_nodes` CHARACTER SET = utf8mb4;
+ALTER TABLE `phpcr_type_props` CHARACTER SET = utf8mb4;
+ALTER TABLE `phpcr_workspaces` CHARACTER SET = utf8mb4;
+
+ALTER TABLE `phpcr_binarydata` CHANGE `property_name` `property_name` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_binarydata` CHANGE `workspace_name` `workspace_name` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+
+ALTER TABLE `phpcr_internal_index_types` CHANGE `type` `type` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+
+ALTER TABLE `phpcr_namespaces` CHANGE `prefix` `prefix` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_namespaces` CHANGE `uri` `uri` VARCHAR(255)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+
+ALTER TABLE `phpcr_nodes` CHANGE `path` `path` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_nodes` CHANGE `parent` `parent` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_nodes` CHANGE `local_name` `local_name` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_nodes` CHANGE `namespace` `namespace` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_nodes` CHANGE `workspace_name` `workspace_name` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_nodes` CHANGE `identifier` `identifier` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_nodes` CHANGE `type` `type` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_nodes` CHANGE `props` `props` LONGTEXT  CHARACTER SET utf8mb4  NOT NULL;
+ALTER TABLE `phpcr_nodes` CHANGE `numerical_props` `numerical_props` LONGTEXT  CHARACTER SET utf8mb4  NULL;
+
+ALTER TABLE `phpcr_nodes_references` CHANGE `source_property_name` `source_property_name` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+
+ALTER TABLE `phpcr_nodes_weakreferences` CHANGE `source_property_name` `source_property_name` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+
+ALTER TABLE `phpcr_type_childs` CHANGE `name` `name` VARCHAR(255)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_type_childs` CHANGE `primary_types` `primary_types` VARCHAR(255)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_type_childs` CHANGE `default_type` `default_type` VARCHAR(255)  CHARACTER SET utf8mb4  NULL  DEFAULT NULL;
+
+ALTER TABLE `phpcr_type_nodes` CHANGE `name` `name` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_type_nodes` CHANGE `supertypes` `supertypes` VARCHAR(255)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_type_nodes` CHANGE `primary_item` `primary_item` VARCHAR(255)  CHARACTER SET utf8mb4  NULL  DEFAULT NULL;
+
+ALTER TABLE `phpcr_type_props` CHANGE `name` `name` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
+ALTER TABLE `phpcr_type_props` CHANGE `default_value` `default_value` VARCHAR(255)  CHARACTER SET utf8mb4  NULL  DEFAULT NULL;
+
+ALTER TABLE `phpcr_workspaces` CHANGE `name` `name` VARCHAR(191)  CHARACTER SET utf8mb4  NOT NULL  DEFAULT '';
 ```
 
 **Migrations**
