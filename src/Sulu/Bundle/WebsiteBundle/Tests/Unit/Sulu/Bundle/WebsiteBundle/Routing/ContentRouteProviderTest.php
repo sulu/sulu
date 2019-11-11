@@ -19,6 +19,7 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
@@ -33,6 +34,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,6 +77,11 @@ class ContentRouteProviderTest extends TestCase
      */
     private $contentRouteProvider;
 
+    /**
+     * @var ObjectProphecy
+     */
+    private $webspaceManager;
+
     public function setUp(): void
     {
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
@@ -83,6 +90,7 @@ class ContentRouteProviderTest extends TestCase
         $this->resourceLocatorStrategyPool = $this->prophesize(ResourceLocatorStrategyPoolInterface::class);
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
 
         $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey(Argument::any())->willReturn($this->resourceLocatorStrategy->reveal());
 
@@ -90,7 +98,8 @@ class ContentRouteProviderTest extends TestCase
             $this->documentManager->reveal(),
             $this->documentInspector->reveal(),
             $this->resourceLocatorStrategyPool->reveal(),
-            $this->structureManager->reveal()
+            $this->structureManager->reveal(),
+            $this->webspaceManager->reveal()
         );
     }
 
@@ -424,8 +433,10 @@ class ContentRouteProviderTest extends TestCase
 
         $this->resourceLocatorStrategy->loadByResourceLocator('/test', 'webspace', 'de')->willReturn('some-uuid');
 
-        $redirectTargetDocument = $this->prophesize(ResourceSegmentBehavior::class);
+        $redirectTargetDocument = $this->prophesize(ResourceSegmentBehavior::class)
+            ->willImplement(WebspaceBehavior::class);
         $redirectTargetDocument->getResourceSegment()->willReturn('/other-test');
+        $redirectTargetDocument->getWebspaceName()->willReturn('sulu');
 
         $document = $this->prophesize(TitleBehavior::class)
             ->willImplement(RedirectTypeBehavior::class)
@@ -436,11 +447,16 @@ class ContentRouteProviderTest extends TestCase
         $document->getRedirectTarget()->willReturn($redirectTargetDocument->reveal());
         $document->getStructureType()->willReturn('default');
         $document->getUuid()->willReturn('some-uuid');
+        $document->getLocale()->willReturn('de');
         $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
 
         $request = new Request(
             [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => rawurlencode('/de/test')]
         );
+
+        $this->webspaceManager->findUrlByResourceLocator('/other-test', null, 'de', 'sulu')
+             ->shouldBeCalled()
+             ->willReturn('sulu.io/de/other-test');
 
         // Test the route provider
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
@@ -448,7 +464,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
         $this->assertEquals('sulu_website.redirect_controller:redirectAction', $route->getDefaults()['_controller']);
-        $this->assertEquals('/de/other-test', $route->getDefaults()['url']);
+        $this->assertEquals('sulu.io/de/other-test', $route->getDefaults()['url']);
     }
 
     public function testGetRedirectForInternalLinkWithQueryString()
@@ -471,8 +487,10 @@ class ContentRouteProviderTest extends TestCase
 
         $this->resourceLocatorStrategy->loadByResourceLocator('/test', 'webspace', 'de')->willReturn('some-uuid');
 
-        $redirectTargetDocument = $this->prophesize(ResourceSegmentBehavior::class);
+        $redirectTargetDocument = $this->prophesize(ResourceSegmentBehavior::class)
+            ->willImplement(WebspaceBehavior::class);
         $redirectTargetDocument->getResourceSegment()->willReturn('/other-test');
+        $redirectTargetDocument->getWebspaceName()->willReturn('sulu');
 
         $document = $this->prophesize(TitleBehavior::class)
             ->willImplement(RedirectTypeBehavior::class)
@@ -483,7 +501,12 @@ class ContentRouteProviderTest extends TestCase
         $document->getRedirectTarget()->willReturn($redirectTargetDocument->reveal());
         $document->getStructureType()->willReturn('default');
         $document->getUuid()->willReturn('some-uuid');
+        $document->getLocale()->willReturn('de');
         $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
+
+        $this->webspaceManager->findUrlByResourceLocator('/other-test', null, 'de', 'sulu')
+             ->shouldBeCalled()
+             ->willReturn('sulu.io/de/other-test');
 
         $request = new Request(
             [],
@@ -499,7 +522,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
         $this->assertEquals('sulu_website.redirect_controller:redirectAction', $route->getDefaults()['_controller']);
-        $this->assertEquals('/de/other-test?test1=value1', $route->getDefaults()['url']);
+        $this->assertEquals('sulu.io/de/other-test?test1=value1', $route->getDefaults()['url']);
     }
 
     public function testGetRedirectForExternalLink()
