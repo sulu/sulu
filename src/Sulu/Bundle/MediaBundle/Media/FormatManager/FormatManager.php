@@ -167,7 +167,7 @@ class FormatManager implements FormatManagerInterface
                 );
             }
         } catch (MediaException $e) {
-            $this->logger->error($e->getMessage(), $e->getTrace());
+            $this->logger->error($e->getMessage(), ['exception' => $e]);
             $responseContent = null;
             $status = 404;
             $mimeType = null;
