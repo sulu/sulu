@@ -44,8 +44,13 @@ class Field extends React.Component<Props> {
 
     handleFinish = (subDataPath: ?string, subSchemaPath: ?string) => {
         const {dataPath, onFinish, schemaPath} = this.props;
-        // if the fields are nested the deepest field passes its pathes up
-        onFinish(subDataPath || dataPath, subSchemaPath || schemaPath);
+
+        // if the fields are nested the field on every path should be finished
+        if (subDataPath && subSchemaPath) {
+            onFinish(subDataPath, subSchemaPath);
+        }
+
+        onFinish(dataPath, schemaPath);
     };
 
     findErrorKeyword(error: ?Error | ErrorCollection): ?string {

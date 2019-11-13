@@ -252,8 +252,10 @@ test('Call finish handlers with dataPath and schemaPath when a block field has f
     form.find('SortableBlockList').prop('onExpand')(0);
     form.update();
     form.find('SortableBlock Field').at(0).instance().handleFinish();
-    expect(handler1).toHaveBeenLastCalledWith('/block/0/text', '/block/types/default/form/text');
-    expect(handler2).toHaveBeenLastCalledWith('/block/0/text', '/block/types/default/form/text');
+    expect(handler1).toHaveBeenCalledWith('/block/0/text', '/block/types/default/form/text');
+    expect(handler1).toHaveBeenCalledWith('/block', '/block');
+    expect(handler2).toHaveBeenCalledWith('/block/0/text', '/block/types/default/form/text');
+    expect(handler2).toHaveBeenCalledWith('/block', '/block');
 });
 
 test('Should pass data, onSuccess, router and schema to Renderer', () => {
