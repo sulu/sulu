@@ -34,8 +34,7 @@ trait AssertHttpStatusCodeTrait
 
         $message = '';
         if ($code !== $httpCode) {
-            if ($response->isRedirect()) {
-                /** @var RedirectResponse $response */
+            if ($response instanceof RedirectResponse) {
                 $message = sprintf(
                     'Unexpected "%s" status code with redirect to "%s".',
                     $httpCode,
