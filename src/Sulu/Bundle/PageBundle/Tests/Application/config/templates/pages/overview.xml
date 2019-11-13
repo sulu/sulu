@@ -26,8 +26,14 @@
             <types>
                 <type name="type1">
                     <properties>
-                        <property name="title" type="text_line"/>
+                        <property name="title" type="text_line" mandatory="true"/>
                         <property name="article" type="text_line" minOccurs="2"/>
+                    </properties>
+                </type>
+                <type name="type2">
+                    <properties>
+                        <property name="title" type="text_line"/>
+                        <property name="image" type="text_line" minOccurs="2" mandatory="true"/>
                     </properties>
                 </type>
             </types>
