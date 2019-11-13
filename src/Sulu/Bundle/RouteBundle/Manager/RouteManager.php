@@ -37,11 +37,6 @@ class RouteManager implements RouteManagerInterface
      */
     private $routeRepository;
 
-    /**
-     * @param ChainRouteGeneratorInterface $chainRouteGenerator
-     * @param ConflictResolverInterface $conflictResolver
-     * @param RouteRepositoryInterface $routeRepository
-     */
     public function __construct(
         ChainRouteGeneratorInterface $chainRouteGenerator,
         ConflictResolverInterface $conflictResolver,
@@ -52,9 +47,6 @@ class RouteManager implements RouteManagerInterface
         $this->routeRepository = $routeRepository;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function create(RoutableInterface $entity, $path = null, $resolveConflict = true)
     {
         if (null !== $entity->getRoute()) {
@@ -73,9 +65,6 @@ class RouteManager implements RouteManagerInterface
         return $route;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function update(RoutableInterface $entity, $path = null, $resolveConflict = true)
     {
         if (null === $entity->getRoute()) {
@@ -98,24 +87,47 @@ class RouteManager implements RouteManagerInterface
             return $entity->getRoute();
         }
 
-        $historyRoute = $entity->getRoute()->setHistory(true)->setTarget($route);
-        $route->addHistory($historyRoute);
+        $route = $this->handleHistoryRoutes($entity->getRoute(), $route);
+
+        $entity->setRoute($route);
+
+        return $route;
+    }
+
+    public function createOrUpdateByAttributes(string $entityClass, string $id, string $locale, string $path): RouteInterface
+    {
+        $oldRoute = $this->routeRepository->findByEntity($entityClass, $id, $locale);
+        if (!$oldRoute) {
+            return $this->createRoute($entityClass, $id, $locale, $path);
+        }
+
+        if ($oldRoute->getPath() === $path) {
+            return $oldRoute;
+        }
+
+        $route = $this->createRoute($entityClass, $id, $locale, $path);
+
+        return $this->handleHistoryRoutes($oldRoute, $route);
+    }
+
+    protected function handleHistoryRoutes(RouteInterface $oldRoute, RouteInterface $newRoute): RouteInterface
+    {
+        $historyRoute = $oldRoute->setHistory(true)->setTarget($newRoute);
+        $newRoute->addHistory($historyRoute);
 
         foreach ($historyRoute->getHistories() as $historyRoute) {
-            if ($historyRoute->getPath() === $route->getPath()) {
+            if ($historyRoute->getPath() === $newRoute->getPath()) {
                 // the history route will be restored
                 $historyRoute->removeTarget()->setHistory(false);
 
                 continue;
             }
 
-            $route->addHistory($historyRoute);
-            $historyRoute->setTarget($route);
+            $newRoute->addHistory($historyRoute);
+            $historyRoute->setTarget($newRoute);
         }
 
-        $entity->setRoute($route);
-
-        return $route;
+        return $newRoute;
     }
 
     /**
@@ -160,5 +172,18 @@ class RouteManager implements RouteManagerInterface
         }
 
         throw new RouteIsNotUniqueException($route, $entity);
+    }
+
+    private function createRoute(string $entityClass, string $id, string $locale, string $path): RouteInterface
+    {
+        $route = $this->routeRepository->createNew()
+            ->setEntityClass($entityClass)
+            ->setEntityId($id)
+            ->setLocale($locale)
+            ->setPath($path);
+
+        $this->routeRepository->persist($route);
+
+        return $route;
     }
 }
