@@ -732,7 +732,7 @@ test('Validate should return false if errors occured', (done) => {
     );
 });
 
-test('Save the store should validate the current data', (done) => {
+test('Save the store should validate the current data and an oneOf', (done) => {
     const jsonSchemaPromise = Promise.resolve({
         required: ['title', 'blocks'],
         properties: {
@@ -741,6 +741,76 @@ test('Save the store should validate the current data', (done) => {
                 items: {
                     type: 'object',
                     oneOf: [
+                        {
+                            properties: {
+                                text: {
+                                    type: 'string',
+                                    minLength: 3,
+                                },
+                            },
+                        },
+                    ],
+                },
+            },
+        },
+    });
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const resourceStore = new ResourceStore('snippets', '3');
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+
+    resourceStore.data = observable({
+        blocks: [
+            {
+                text: 'Test',
+            },
+            {
+                text: 'T',
+            },
+        ],
+    });
+
+    when(
+        () => !resourceFormStore.schemaLoading,
+        (): void => {
+            const savePromise = resourceFormStore.save();
+            savePromise.catch(() => {
+                expect(toJS(resourceFormStore.errors)).toEqual({
+                    title: {
+                        keyword: 'required',
+                        parameters: {
+                            missingProperty: 'title',
+                        },
+                    },
+                    blocks: [
+                        undefined,
+                        {
+                            text: {
+                                keyword: 'minLength',
+                                parameters: {
+                                    limit: 3,
+                                },
+                            },
+                        },
+                    ],
+                });
+            });
+
+            // $FlowFixMe
+            expect(savePromise).rejects.toEqual(expect.any(String)).then(() => done());
+        }
+    );
+});
+
+test('Save the store should validate the current data and an anyOf', (done) => {
+    const jsonSchemaPromise = Promise.resolve({
+        required: ['title', 'blocks'],
+        properties: {
+            blocks: {
+                type: 'array',
+                items: {
+                    type: 'object',
+                    anyOf: [
                         {
                             properties: {
                                 text: {

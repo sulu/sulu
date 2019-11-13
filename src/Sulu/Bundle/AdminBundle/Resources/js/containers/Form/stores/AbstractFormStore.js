@@ -189,8 +189,9 @@ export default class AbstractFormStore
             for (const error of validator.errors) {
                 switch (error.keyword) {
                     case 'oneOf':
-                        // this only happens if a block has an invalid child field
-                        // child fields already show error messages so we do not have to do it again for blocks
+                    case 'anyOf':
+                        // these errors are not shown in the leaf field, e.g. in blocks and similar constructs
+                        // these errors also have child errors, which will be shown on the correct leaf field
                         break;
                     case 'required':
                         jsonpointer.set(
