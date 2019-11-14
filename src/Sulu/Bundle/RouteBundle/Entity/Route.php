@@ -244,4 +244,12 @@ class Route implements RouteInterface, AuditableInterface
     {
         return $this->created;
     }
+
+    /**
+     * @VirtualProperty
+     */
+    public function getResourcelocator()
+    {
+        return $this->path;
+    }
 }
