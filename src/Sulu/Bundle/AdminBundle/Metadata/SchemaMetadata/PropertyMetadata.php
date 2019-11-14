@@ -23,16 +23,10 @@ class PropertyMetadata
      */
     private $mandatory;
 
-    /**
-     * @var string|number|null
-     */
-    private $value;
-
-    public function __construct(string $name, bool $mandatory, $value = null)
+    public function __construct(string $name, bool $mandatory)
     {
         $this->name = $name;
         $this->mandatory = $mandatory;
-        $this->value = $value;
     }
 
     public function getName(): string
@@ -47,13 +41,6 @@ class PropertyMetadata
 
     public function toJsonSchema(): ?array
     {
-        if (null === $this->value) {
-            return null;
-        }
-
-        return [
-            'name' => $this->name,
-            'const' => $this->value,
-        ];
+        return null;
     }
 }

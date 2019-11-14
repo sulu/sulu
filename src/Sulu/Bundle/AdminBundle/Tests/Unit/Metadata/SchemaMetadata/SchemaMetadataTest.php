@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\SchemaMetadata;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 
@@ -41,12 +42,12 @@ class SchemaMetadataTest extends TestCase
                     [
                         new SchemaMetadata(
                             [
-                                new PropertyMetadata('nodeType', false, 2),
+                                new ConstMetadata('nodeType', false, 2),
                             ]
                         ),
                         new SchemaMetadata(
                             [
-                                new PropertyMetadata('nodeType', false, 4),
+                                new ConstMetadata('nodeType', false, 4),
                             ]
                         ),
                     ]

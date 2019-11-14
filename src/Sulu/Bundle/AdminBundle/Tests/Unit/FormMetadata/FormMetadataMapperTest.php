@@ -261,6 +261,47 @@ class FormMetadataMapperTest extends TestCase
         ], $schema->toJsonSchema());
     }
 
+    public function testMapSchemaWithBlock()
+    {
+        $form = $this->createFormWithBlock();
+
+        $schema = $this->formMetadataMapper->mapSchema($form->getChildren());
+
+        $this->assertInstanceOf(SchemaMetadata::class, $schema);
+        $this->assertEquals([
+            'required' => [],
+            'properties' => [
+                'block' => [
+                    'name' => 'block',
+                    'type' => 'array',
+                    'items' => [
+                        'required' => [],
+                        'anyOf' => [
+                            [
+                                'required' => ['property2', 'type'],
+                                'properties' => [
+                                    'type' => [
+                                        'name' => 'type',
+                                        'const' => 'component1',
+                                    ],
+                                ],
+                            ],
+                            [
+                                'required' => ['property3', 'type'],
+                                'properties' => [
+                                    'type' => [
+                                        'name' => 'type',
+                                        'const' => 'component2',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], $schema->toJsonSchema());
+    }
+
     private function createFormWithBasicProperties(): ExternalFormMetadata
     {
         $form = new ExternalFormMetadata();
@@ -379,6 +420,7 @@ class FormMetadataMapperTest extends TestCase
         $property1 = new PropertyMetadata('property1');
         $property1->setType('text_line');
         $property2 = new PropertyMetadata('property2');
+        $property2->setRequired(true);
         $property2->setType('text_area');
 
         $component1->addChild($property1);
@@ -391,6 +433,7 @@ class FormMetadataMapperTest extends TestCase
         ]);
 
         $property3 = new PropertyMetadata('property3');
+        $property3->setRequired(true);
         $property3->setType('checkbox');
         $property4 = new PropertyMetadata('property4');
         $property4->setType('type');

@@ -18,7 +18,7 @@
                         <title lang="en">Editor</title>
                     </meta>
                     <properties>
-                        <property name="article" type="text_editor">
+                        <property name="article" type="text_editor" mandatory="true">
                             <meta>
                                 <title lang="de">Artikel</title>
                                 <title lang="en">Article</title>
@@ -32,7 +32,7 @@
                         <title lang="en">Editor with image</title>
                     </meta>
                     <properties>
-                        <property name="images" type="media_selection" colspan="3">
+                        <property name="images" type="media_selection" colspan="3" mandatory="true">
                             <meta>
                                 <title lang="de">Bilder</title>
                                 <title lang="en">Images</title>
