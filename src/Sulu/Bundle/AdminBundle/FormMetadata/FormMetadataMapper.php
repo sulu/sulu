@@ -224,10 +224,6 @@ class FormMetadataMapper
                 );
             }
 
-            if (!$itemMetadata->isRequired()) {
-                return;
-            }
-
             return new PropertyMetadata($itemMetadata->getName(), $itemMetadata->isRequired());
         }, $itemsMetadata));
     }
