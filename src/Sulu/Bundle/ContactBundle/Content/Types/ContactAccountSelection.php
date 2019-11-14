@@ -170,7 +170,7 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
 
         return array_map(
             function($entity) {
-                $groups = ['fullContact', 'partialAccount'];
+                $groups = ['fullContact', 'partialAccount', 'contactPosition'];
                 if ($entity instanceof Account) {
                     $groups = ['fullAccount', 'partialContact'];
                 }

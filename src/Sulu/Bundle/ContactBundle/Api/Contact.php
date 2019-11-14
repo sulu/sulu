@@ -246,6 +246,26 @@ class Contact extends ApiWrapper
     }
 
     /**
+     * Get position.
+     *
+     * @return string
+     *
+     * @VirtualProperty
+     * @SerializedName("positionName")
+     * @Groups({"contactPosition"})
+     */
+    public function getPositionName()
+    {
+        $position = $this->entity->getPosition();
+
+        if (!$position) {
+            return null;
+        }
+
+        return $position->getPosition();
+    }
+
+    /**
      * Set birthday.
      *
      * @param \DateTime $birthday
