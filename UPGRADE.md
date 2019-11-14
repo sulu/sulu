@@ -2,6 +2,11 @@
 
 ## release/2.0
 
+### RouteManagerInterface / RouteRepositoryInterface changed
+
+In the `RouteManagerInterface` a new method was introduced `createOrUpdateByAttributes`.
+In the `RouteRepositoryInterface` a new method was introduced `persist`.
+
 ### NavigationItem
 
 The `NavigationItem` class used in the `Admin` classes still had some properties that are not used anymore in Sulu 2.0.

@@ -427,6 +427,90 @@ class RouteManagerTest extends TestCase
 
         $this->assertEquals($loadedRoute->reveal(), $this->manager->update($this->entity->reveal(), '/test-2', false));
     }
+
+    public function testCreateByAttributes(): void
+    {
+        $entityClass = TestRoutable::class;
+        $entityId = '123-123-123';
+        $locale = 'en';
+        $path = '/test';
+
+        $this->routeRepository->findByEntity($entityClass, $entityId, $locale)->willReturn(null);
+
+        $route = $this->prophesize(RouteInterface::class);
+        $route->setEntityClass($entityClass)->shouldBeCalled()->willReturn($route->reveal());
+        $route->setEntityId($entityId)->shouldBeCalled()->willReturn($route->reveal());
+        $route->setLocale($locale)->shouldBeCalled()->willReturn($route->reveal());
+        $route->setPath($path)->shouldBeCalled()->willReturn($route->reveal());
+
+        $this->routeRepository->createNew()->willReturn($route->reveal())->shouldBeCalled();
+        $this->routeRepository->persist($route->reveal())->shouldBeCalled();
+
+        $result = $this->manager->createOrUpdateByAttributes($entityClass, $entityId, $locale, $path);
+
+        $this->assertEquals($route->reveal(), $result);
+    }
+
+    public function testUpdateByAttributesSamePath(): void
+    {
+        $entityClass = TestRoutable::class;
+        $entityId = '123-123-123';
+        $locale = 'en';
+        $path = '/test';
+
+        $route = $this->prophesize(RouteInterface::class);
+        $route->getPath()->shouldBeCalled()->willReturn($path);
+
+        $this->routeRepository->findByEntity($entityClass, $entityId, $locale)->willReturn($route->reveal());
+        $this->routeRepository->createNew()->shouldNotBeCalled();
+
+        $result = $this->manager->createOrUpdateByAttributes($entityClass, $entityId, $locale, $path);
+
+        $this->assertEquals($route->reveal(), $result);
+    }
+
+    public function testUpdateByAttributesNewPath(): void
+    {
+        $entityClass = TestRoutable::class;
+        $entityId = '123-123-123';
+        $locale = 'en';
+        $path = '/test';
+
+        $oldRoute = $this->prophesize(RouteInterface::class);
+        $oldRoute->getPath()->shouldBeCalled()->willReturn('/test2');
+
+        $this->routeRepository->findByEntity($entityClass, $entityId, $locale)->willReturn($oldRoute->reveal());
+
+        $route = $this->prophesize(RouteInterface::class);
+        $route->setEntityClass($entityClass)->shouldBeCalled()->willReturn($route->reveal());
+        $route->setEntityId($entityId)->shouldBeCalled()->willReturn($route->reveal());
+        $route->setLocale($locale)->shouldBeCalled()->willReturn($route->reveal());
+        $route->setPath($path)->shouldBeCalled()->willReturn($route->reveal());
+        $route->getPath()->willReturn($path);
+
+        $this->routeRepository->createNew()->willReturn($route->reveal())->shouldBeCalled();
+        $this->routeRepository->persist($route->reveal())->shouldBeCalled();
+
+        $oldRoute->setHistory(true)->shouldBeCalled()->willReturn($oldRoute->reveal());
+        $oldRoute->setTarget($route->reveal())->shouldBeCalled()->willReturn($oldRoute->reveal());
+
+        $historyRoute1 = $this->prophesize(RouteInterface::class);
+        $historyRoute1->setTarget($route->reveal())->shouldBeCalled();
+        $historyRoute1->getPath()->willReturn('/history-1');
+        $route->addHistory($historyRoute1->reveal())->shouldBeCalled()->willReturn($route->reveal());
+
+        $historyRoute2 = $this->prophesize(RouteInterface::class);
+        $historyRoute2->setTarget($route->reveal())->shouldBeCalled();
+        $historyRoute2->getPath()->willReturn('/history-2');
+        $route->addHistory($historyRoute2->reveal())->shouldBeCalled()->willReturn($route->reveal());
+
+        $route->addHistory($oldRoute->reveal())->shouldBeCalled()->willReturn($route->reveal());
+        $oldRoute->getHistories()->willReturn([$historyRoute1->reveal(), $historyRoute2->reveal()]);
+
+        $result = $this->manager->createOrUpdateByAttributes($entityClass, $entityId, $locale, $path);
+
+        $this->assertEquals($route->reveal(), $result);
+    }
 }
 
 class TestRoutable implements RoutableInterface
