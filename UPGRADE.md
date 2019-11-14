@@ -1,5 +1,12 @@
 # Upgrade
 
+## dev-release/2.0
+
+### RouteManagerInterface / RouteRepositoryInterface changed
+
+In the `RouteManagerInterface` a new method was introduced `createOrUpdateByAttributes`.
+In the `RouteRepositoryInterface` a new method was introduced `persist`.
+
 ## 2.0.1
 
 ### mode schemaOption in ResourceLocator

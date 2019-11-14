@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\RouteBundle\Entity;
 
 use Doctrine\ORM\NoResultException;
+use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
 /**
@@ -92,5 +93,10 @@ class RouteRepository extends EntityRepository implements RouteRepositoryInterfa
         }
 
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function persist(RouteInterface $route)
+    {
+        $this->getEntityManager()->persist($route);
     }
 }
