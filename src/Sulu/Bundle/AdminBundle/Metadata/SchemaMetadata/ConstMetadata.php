@@ -29,10 +29,6 @@ class ConstMetadata extends PropertyMetadata
 
     public function toJsonSchema(): ?array
     {
-        if (null === $this->value) {
-            return null;
-        }
-
         return [
             'name' => $this->getName(),
             'const' => $this->value,

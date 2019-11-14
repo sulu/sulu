@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Metadata\Parser;
 
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Component\Content\Metadata\XmlParserTrait;
 
@@ -74,10 +75,19 @@ class SchemaXmlParser
 
     private function loadProperty(\DOMXPath $xpath, \DOMNode $contextNode)
     {
-        return new ConstMetadata(
+        $value = $this->getValueFromXPath('@value', $xpath, $contextNode);
+
+        if ($value) {
+            return new ConstMetadata(
+                $this->getValueFromXPath('@name', $xpath, $contextNode),
+                $this->getValueFromXPath('@mandatory', $xpath, $contextNode, false),
+                $value
+            );
+        }
+
+        return new PropertyMetadata(
             $this->getValueFromXPath('@name', $xpath, $contextNode),
-            $this->getValueFromXPath('@mandatory', $xpath, $contextNode, false),
-            $this->getValueFromXPath('@value', $xpath, $contextNode)
+            $this->getValueFromXPath('@mandatory', $xpath, $contextNode, false)
         );
     }
 }
