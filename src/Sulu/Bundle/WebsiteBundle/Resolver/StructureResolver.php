@@ -16,6 +16,7 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedAuthorBehavior;
+use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 
@@ -66,7 +67,22 @@ class StructureResolver implements StructureResolverInterface
 
         $document = $structure->getDocument();
         if ($document instanceof ExtensionBehavior && $loadExcerpt) {
-            $data['extension'] = $structure->getExt() ? $structure->getExt()->toArray() : [];
+            $extensionData = null;
+            if (method_exists($structure, 'getExt')) {
+                // BC Layer for old behaviour
+                $extensionData = $structure->getExt();
+            }
+
+            if (!$extensionData) {
+                $extensionData = $document->getExtensionsData();
+            }
+
+            // Not in all cases you get a ExtensionContainer as setExtensionData is also called with array only
+            if ($extensionData instanceof ExtensionContainer) {
+                $extensionData = $extensionData->toArray();
+            }
+
+            $data['extension'] = $extensionData ? $extensionData : [];
             foreach ($data['extension'] as $name => $value) {
                 $extension = $this->extensionManager->getExtension($structure->getKey(), $name);
                 $data['extension'][$name] = $extension->getContentData($value);
