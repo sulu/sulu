@@ -39,7 +39,7 @@ class ConstMetadataTest extends TestCase
         return [
             ['title', 'Homepage', ['name' => 'title', 'const' => 'Homepage']],
             ['article', 'Hello World', ['name' => 'article', 'const' => 'Hello World']],
-            ['article', null, null],
+            ['article', null, ['name' => 'article', 'const' => null]],
         ];
     }
 
