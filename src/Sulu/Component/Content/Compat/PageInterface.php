@@ -14,29 +14,8 @@ namespace Sulu\Component\Content\Compat;
 /**
  * Structure for template.
  */
-interface PageInterface extends StructureInterface
+interface PageInterface extends StructureInterface, RoutableStructureInterface
 {
-    /**
-     * twig template of template definition.
-     *
-     * @return string
-     */
-    public function getView();
-
-    /**
-     * controller which renders the template definition.
-     *
-     * @return string
-     */
-    public function getController();
-
-    /**
-     * cacheLifeTime of template definition.
-     *
-     * @return array
-     */
-    public function getCacheLifeTime();
-
     /**
      * @return string
      */

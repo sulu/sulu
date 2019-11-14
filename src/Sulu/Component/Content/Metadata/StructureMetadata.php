@@ -17,6 +17,8 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
  * Represents metadata for a structure.
  *
  * @deprecated use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata instead
+ *
+ * @method string getName()
  */
 class StructureMetadata extends PropertiesMetadata
 {

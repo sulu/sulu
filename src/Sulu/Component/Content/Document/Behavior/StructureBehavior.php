@@ -45,7 +45,7 @@ interface StructureBehavior extends LocaleBehavior
     /**
      * Return the StructureInterface instance.
      *
-     * @return StructureInterface
+     * @return StructureInterface|null
      */
     public function getStructure();
 }

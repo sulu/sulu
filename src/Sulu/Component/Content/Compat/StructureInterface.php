@@ -64,28 +64,28 @@ interface StructureInterface extends \JsonSerializable
     /**
      * gets user id of creator.
      *
-     * @return int
+     * @return int|null
      */
     public function getCreator();
 
     /**
      * sets user id of creator.
      *
-     * @param $userId int id of creator
+     * @param int|null $userId id of creator
      */
     public function setCreator($userId);
 
     /**
      * returns user id of changer.
      *
-     * @return int
+     * @return int|null
      */
     public function getChanger();
 
     /**
      * sets user id of changer.
      *
-     * @param $userId int id of changer
+     * @param int|null $userId id of changer
      */
     public function setChanger($userId);
 
