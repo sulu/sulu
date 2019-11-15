@@ -26,5 +26,9 @@
         <env name="KERNEL_CLASS" value="Sulu\Bundle\DocumentManagerBundle\Tests\Application\Kernel"/>
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
     </php>
+
+    <listeners>
+        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
+    </listeners>
 </phpunit>
 
