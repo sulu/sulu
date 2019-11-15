@@ -1,6 +1,6 @@
 # Upgrade
 
-## release/2.0
+## 2.0.2
 
 ### RouteManagerInterface / RouteRepositoryInterface changed
 
