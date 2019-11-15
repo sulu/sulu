@@ -40,14 +40,15 @@ class RouteGeneratorCompilerPass implements CompilerPassInterface
         $generators = [];
         foreach ($container->findTaggedServiceIds(self::TAG_NAME) as $id => $tags) {
             foreach ($tags as $attributes) {
-                $generators[$attributes['alias']] = $id;
+                $generators[$attributes['alias'] ?? 'null'] = $id;
             }
         }
 
         $services = [];
         foreach ($config as $item) {
-            $serviceId = $generators[$item['generator']];
-            $services[$item['generator']] = new Reference($serviceId);
+            $generator = $item['generator'] ?? 'null';
+            $serviceId = $generators[$generator];
+            $services[$generator] = new Reference($serviceId);
 
             // validate options
             $generator = $container->get($serviceId);

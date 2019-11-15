@@ -16,6 +16,7 @@ use Sulu\Bundle\MediaBundle\Media\FormatLoader\XmlFormatLoader11;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
@@ -43,6 +44,7 @@ abstract class AbstractImageFormatCompilerPass implements CompilerPassInterface
         foreach ($files as $file) {
             if (file_exists($file)) {
                 $this->loadFormatsFromFile($file, $formats);
+                $container->addResource(new FileResource($file));
             }
         }
 

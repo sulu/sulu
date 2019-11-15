@@ -23,6 +23,7 @@ use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrateg
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -54,6 +55,11 @@ class ContentRouteProvider implements RouteProviderInterface
     private $structureManager;
 
     /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
      * @param DocumentManagerInterface $documentManager
      * @param DocumentInspector $documentInspector
      * @param ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool
@@ -63,12 +69,14 @@ class ContentRouteProvider implements RouteProviderInterface
         DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
         ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
-        StructureManagerInterface $structureManager
+        StructureManagerInterface $structureManager,
+        WebspaceManagerInterface $webspaceManager
     ) {
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
         $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
         $this->structureManager = $structureManager;
+        $this->webspaceManager = $webspaceManager;
     }
 
     /**
@@ -148,8 +156,12 @@ class ContentRouteProvider implements RouteProviderInterface
                 }
                 $collection->add('redirect_' . uniqid(), $this->getRedirectRoute($request, $url));
             } elseif (RedirectType::INTERNAL === $document->getRedirectType()) {
-                // redirect internal link
-                $redirectUrl = $prefix . $document->getRedirectTarget()->getResourceSegment();
+                $redirectUrl = $this->webspaceManager->findUrlByResourceLocator(
+                    $document->getRedirectTarget()->getResourceSegment(),
+                    null,
+                    $document->getLocale(),
+                    $document->getRedirectTarget()->getWebspaceName()
+                );
 
                 if ($request->getQueryString()) {
                     $redirectUrl .= '?' . $request->getQueryString();

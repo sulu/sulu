@@ -50,20 +50,6 @@ class NavigationItem implements \Iterator
     protected $childViews = [];
 
     /**
-     * Will be used for a custom behaviour of the navigation item.
-     *
-     * @var string
-     */
-    private $event;
-
-    /**
-     * The event arguments.
-     *
-     * @var string
-     */
-    private $eventArguments;
-
-    /**
      * Contains the children of this item, which are other NavigationItems.
      *
      * @var array
@@ -71,32 +57,11 @@ class NavigationItem implements \Iterator
     protected $children = [];
 
     /**
-     * The title of the head area of the NavigationItem.
-     *
-     * @var string
-     */
-    protected $headerTitle;
-
-    /**
-     * The icon of the header are of the NavigationItem.
-     *
-     * @var string
-     */
-    protected $headerIcon;
-
-    /**
      * The current position of the iterator.
      *
      * @var int
      */
     protected $position;
-
-    /**
-     * Defines if this menu item has settings.
-     *
-     * @var bool
-     */
-    protected $hasSettings;
 
     /**
      * Describes how the navigation item should be shown in husky.
@@ -220,38 +185,6 @@ class NavigationItem implements \Iterator
     }
 
     /**
-     * @return string
-     */
-    public function getEvent()
-    {
-        return $this->event;
-    }
-
-    /**
-     * @param string $event
-     */
-    public function setEvent($event)
-    {
-        $this->event = $event;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEventArguments()
-    {
-        return $this->event;
-    }
-
-    /**
-     * @param string $event
-     */
-    public function setEventArguments($eventArguments)
-    {
-        $this->eventArguments = $eventArguments;
-    }
-
-    /**
      * Adds a child to the navigation item.
      *
      * @param NavigationItem $child
@@ -269,46 +202,6 @@ class NavigationItem implements \Iterator
     public function getChildren()
     {
         return $this->children;
-    }
-
-    /**
-     * Sets the icon of the header.
-     *
-     * @param string $headerIcon
-     */
-    public function setHeaderIcon($headerIcon)
-    {
-        $this->headerIcon = $headerIcon;
-    }
-
-    /**
-     * Returns the icon of the header.
-     *
-     * @return string
-     */
-    public function getHeaderIcon()
-    {
-        return $this->headerIcon;
-    }
-
-    /**
-     * Sets the title of the header.
-     *
-     * @param string $headerTitle The title of the header
-     */
-    public function setHeaderTitle($headerTitle)
-    {
-        $this->headerTitle = $headerTitle;
-    }
-
-    /**
-     * Returns the title of the header.
-     *
-     * @return string The title of the header
-     */
-    public function getHeaderTitle()
-    {
-        return $this->headerTitle;
     }
 
     /**
@@ -338,22 +231,6 @@ class NavigationItem implements \Iterator
     }
 
     /**
-     * @param bool $hasSettings
-     */
-    public function setHasSettings($hasSettings)
-    {
-        $this->hasSettings = $hasSettings;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getHasSettings()
-    {
-        return $this->hasSettings;
-    }
-
-    /**
      * @param bool $disabled
      */
     public function setDisabled($disabled)
@@ -379,13 +256,8 @@ class NavigationItem implements \Iterator
         $new = $this->copyWithName();
         $new->setView($this->getView());
         $new->setChildViews($this->getChildViews());
-        $new->setEvent($this->getEvent());
-        $new->setEventArguments($this->getEventArguments());
         $new->setIcon($this->getIcon());
-        $new->setHeaderIcon($this->getHeaderIcon());
-        $new->setHeaderTitle($this->getHeaderTitle());
         $new->setId($this->getId());
-        $new->setHasSettings($this->getHasSettings());
         $new->setPosition($this->getPosition());
         $new->setLabel($this->getLabel());
 
@@ -527,22 +399,12 @@ class NavigationItem implements \Iterator
             'label' => $this->getLabel(),
             'icon' => $this->getIcon(),
             'view' => $this->getView(),
-            'event' => $this->getEvent(),
-            'eventArguments' => $this->getEventArguments(),
-            'hasSettings' => $this->getHasSettings(),
             'disabled' => $this->getDisabled(),
             'id' => (null != $this->getId()) ? $this->getId() : str_replace('.', '', uniqid('', true)), //FIXME don't use uniqid()
         ];
 
         if (count($this->getChildViews()) > 0) {
             $array['childViews'] = $this->getChildViews();
-        }
-
-        if (null != $this->getHeaderIcon() || null != $this->getHeaderTitle()) {
-            $array['header'] = [
-                'title' => $this->getHeaderTitle(),
-                'logo' => $this->getHeaderIcon(),
-            ];
         }
 
         $children = $this->getChildren();

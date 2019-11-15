@@ -269,6 +269,60 @@ class FormXmlLoaderTest extends TestCase
         );
     }
 
+    public function testLoadFormSchemaWithBlocks()
+    {
+        /**
+         * @var LocalizedFormMetadataCollection
+         */
+        $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form_with_blocks.xml');
+
+        $formMetadata = $formMetadataCollection->get('en');
+
+        $this->assertInstanceOf(FormMetadata::class, $formMetadata);
+
+        $this->assertEquals(
+            [
+                'required' => [],
+                'properties' => [
+                    'blocks' => [
+                        'name' => 'blocks',
+                        'type' => 'array',
+                        'items' => [
+                            'required' => [],
+                            'anyOf' => [
+                                [
+                                    'required' => [
+                                        'article',
+                                        'type',
+                                    ],
+                                    'properties' => [
+                                        'type' => [
+                                            'name' => 'type',
+                                            'const' => 'editor',
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'required' => [
+                                        'images',
+                                        'type',
+                                    ],
+                                    'properties' => [
+                                        'type' => [
+                                            'name' => 'type',
+                                            'const' => 'editor_image',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            $formMetadata->getSchema()->toJsonSchema()
+        );
+    }
+
     public function testLoadFormWithoutLabel()
     {
         /**

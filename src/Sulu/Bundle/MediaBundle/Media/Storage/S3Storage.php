@@ -18,6 +18,11 @@ use League\Flysystem\FilesystemInterface;
 class S3Storage extends FlysystemStorage
 {
     /**
+     * @var AwsS3Adapter
+     */
+    private $adapter;
+
+    /**
      * @var string
      */
     private $endpoint;
@@ -35,11 +40,10 @@ class S3Storage extends FlysystemStorage
             throw new \RuntimeException('This storage can only handle filesystems with "AwsS3Adapter".');
         }
 
-        /** @var AwsS3Adapter $adapter */
-        $adapter = $filesystem->getAdapter();
+        $this->adapter = $filesystem->getAdapter();
 
-        $this->endpoint = (string) $adapter->getClient()->getEndpoint();
-        $this->bucketName = $adapter->getBucket();
+        $this->endpoint = (string) $this->adapter->getClient()->getEndpoint();
+        $this->bucketName = $this->adapter->getBucket();
     }
 
     public function getPath(array $storageOptions): string
@@ -47,7 +51,9 @@ class S3Storage extends FlysystemStorage
         $segment = $this->getStorageOption($storageOptions, 'segment');
         $fileName = $this->getStorageOption($storageOptions, 'fileName');
 
-        return $this->endpoint . '/' . $this->bucketName . '/' . $segment . '/' . $fileName;
+        $path = $this->adapter->applyPathPrefix($segment . '/' . $fileName);
+
+        return $this->endpoint . '/' . $this->bucketName . '/' . ltrim($path, '/');
     }
 
     public function getType(array $storageOptions): string

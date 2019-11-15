@@ -87,6 +87,16 @@ trait FormViewBuilderTrait
         $view->setOption('routerAttributesToBackView', $newRouterAttributesToBackView);
     }
 
+    private function addRouterAttributesToFormMetadataToView(View $route, array $routerAttributesToFormMetadata): void
+    {
+        $oldRouterAttributesToFormMetadata = $route->getOption('routerAttributesToFormMetadata');
+        $newRouterAttributesToFormMetadata = $oldRouterAttributesToFormMetadata
+            ? array_merge($oldRouterAttributesToFormMetadata, $routerAttributesToFormMetadata)
+            : $routerAttributesToFormMetadata;
+
+        $route->setOption('routerAttributesToFormMetadata', $newRouterAttributesToFormMetadata);
+    }
+
     private function addMetadataRequestParametersToView(View $route, array $metadataRequestParameters): void
     {
         $oldMetadataRequestParameters = $route->getOption('metadataRequestParameters');

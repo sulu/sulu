@@ -11,6 +11,13 @@
             <tag name="sulu.route_generator" alias="schema"/>
         </service>
 
+        <service id="sulu_route.generator.null_route_generator" class="Sulu\Bundle\RouteBundle\Generator\NullRouteGenerator">
+            <argument type="service" id="sulu_route.generator.expression_token_provider"/>
+            <argument type="service" id="sulu_document_manager.slugifier"/>
+
+            <tag name="sulu.route_generator" alias="null"/>
+        </service>
+
         <service id="sulu_route.generator.expression_token_provider"
                  class="Sulu\Bundle\RouteBundle\Generator\SymfonyExpressionTokenProvider">
             <argument type="service" id="translator"/>

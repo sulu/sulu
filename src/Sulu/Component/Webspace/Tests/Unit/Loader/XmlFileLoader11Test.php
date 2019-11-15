@@ -71,6 +71,8 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals(null, $webspace->getLocalizations()[1]->getShadow());
         $this->assertEquals(true, $webspace->getLocalizations()[1]->isDefault());
 
+        $this->assertEquals(['template1', 'template2'], $webspace->getExcludedTemplates());
+
         $this->assertEquals('de_at', $webspace->getDefaultLocalization()->getLocale());
 
         $this->assertEquals('sulu', $webspace->getTheme());

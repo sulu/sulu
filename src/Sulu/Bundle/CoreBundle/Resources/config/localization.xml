@@ -11,6 +11,7 @@
 
     <services>
         <service id="sulu.core.localization_manager" class="%sulu.core.localization_manager.class%" public="true"/>
+        <service id="Sulu\Component\Localization\Manager\LocalizationManagerInterface" alias="sulu.core.localization_manager"/>
 
         <service id="sulu_core.localization_controller"
                  class="Sulu\Bundle\CoreBundle\Controller\LocalizationController"

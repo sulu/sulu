@@ -5,20 +5,22 @@
     <properties>
         <property
             name="id"
-            visibility="no"
             sortable="false"
             translation="sulu_admin.id"
+            visibility="no"
         />
         <property
             name="title"
-            visibility="always"
+            sortable="false"
             translation="sulu_admin.title"
+            visibility="always"
         />
         <property
             name="published"
+            sortable="false"
+            translation="sulu_admin.published"
             type="datetime"
             visibility="yes"
-            translation="sulu_admin.published"
         />
     </properties>
 </list>

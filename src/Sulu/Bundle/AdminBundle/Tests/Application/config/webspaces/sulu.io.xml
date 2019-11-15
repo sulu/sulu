@@ -22,6 +22,10 @@
         <default-template type="homepage">overview</default-template>
     </default-templates>
 
+    <excluded-templates>
+        <excluded-template>overview</excluded-template>
+    </excluded-templates>
+
     <navigation>
         <contexts>
             <context key="main">

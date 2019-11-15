@@ -732,7 +732,7 @@ test('Validate should return false if errors occured', (done) => {
     );
 });
 
-test('Save the store should validate the current data', (done) => {
+test('Save the store should validate the current data and an oneOf', (done) => {
     const jsonSchemaPromise = Promise.resolve({
         required: ['title', 'blocks'],
         properties: {
@@ -741,6 +741,76 @@ test('Save the store should validate the current data', (done) => {
                 items: {
                     type: 'object',
                     oneOf: [
+                        {
+                            properties: {
+                                text: {
+                                    type: 'string',
+                                    minLength: 3,
+                                },
+                            },
+                        },
+                    ],
+                },
+            },
+        },
+    });
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const resourceStore = new ResourceStore('snippets', '3');
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+
+    resourceStore.data = observable({
+        blocks: [
+            {
+                text: 'Test',
+            },
+            {
+                text: 'T',
+            },
+        ],
+    });
+
+    when(
+        () => !resourceFormStore.schemaLoading,
+        (): void => {
+            const savePromise = resourceFormStore.save();
+            savePromise.catch(() => {
+                expect(toJS(resourceFormStore.errors)).toEqual({
+                    title: {
+                        keyword: 'required',
+                        parameters: {
+                            missingProperty: 'title',
+                        },
+                    },
+                    blocks: [
+                        undefined,
+                        {
+                            text: {
+                                keyword: 'minLength',
+                                parameters: {
+                                    limit: 3,
+                                },
+                            },
+                        },
+                    ],
+                });
+            });
+
+            // $FlowFixMe
+            expect(savePromise).rejects.toEqual(expect.any(String)).then(() => done());
+        }
+    );
+});
+
+test('Save the store should validate the current data and an anyOf', (done) => {
+    const jsonSchemaPromise = Promise.resolve({
+        required: ['title', 'blocks'],
+        properties: {
+            blocks: {
+                type: 'array',
+                items: {
+                    type: 'object',
+                    anyOf: [
                         {
                             properties: {
                                 text: {
@@ -1177,5 +1247,68 @@ test('Set new type after copying from different locale', () => {
         return promise.then(() => {
             expect(resourceFormStore.type).toEqual('sidebar');
         });
+    });
+});
+
+test('HasTypes return true when types are set', () => {
+    const schemaTypesPromise = Promise.resolve({
+        sidebar: {key: 'sidebar', title: 'Sidebar'},
+        footer: {key: 'footer', title: 'Footer'},
+    });
+
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const resourceStore = new ResourceStore('test', 5);
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+
+    return schemaTypesPromise.then(() => {
+        expect(resourceFormStore.hasTypes).toEqual(true);
+    });
+});
+
+test('HasTypes return false when types are not set', () => {
+    const schemaTypesPromise = Promise.resolve({});
+
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const resourceStore = new ResourceStore('test', 5);
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+
+    return schemaTypesPromise.then(() => {
+        expect(resourceFormStore.hasTypes).toEqual(false);
+    });
+});
+
+test('Set type to first one if data has no template set', () => {
+    const schemaTypesPromise = Promise.resolve({
+        sidebar: {key: 'sidebar', title: 'Sidebar'},
+        footer: {key: 'footer', title: 'Footer'},
+    });
+
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const resourceStore = new ResourceStore('test', 5);
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+
+    return schemaTypesPromise.then(() => {
+        expect(resourceFormStore.type).toEqual('sidebar');
+    });
+});
+
+test('Set type to the template value if set', () => {
+    const schemaTypesPromise = Promise.resolve({
+        sidebar: {key: 'sidebar', title: 'Sidebar'},
+        footer: {key: 'footer', title: 'Footer'},
+    });
+
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const resourceStore = new ResourceStore('test', 5);
+    resourceStore.data = observable({template: 'footer'});
+
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+
+    return schemaTypesPromise.then(() => {
+        expect(resourceFormStore.type).toEqual('footer');
     });
 });

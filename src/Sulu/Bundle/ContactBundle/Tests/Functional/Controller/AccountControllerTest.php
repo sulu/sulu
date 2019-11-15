@@ -52,6 +52,72 @@ class AccountControllerTest extends SuluTestCase
         $this->em = $this->getEntityManager();
     }
 
+    /**
+     * Tests if all accounts are returned when fetching flat api by ids.
+     */
+    public function testCGetByIdsOnFlatApi()
+    {
+        $amount = 11;
+
+        $accounts = $this->createMultipleMinimalAccounts($amount);
+        $this->em->flush();
+
+        // Get ids of new accounts.
+        $ids = array_map(
+            function($account) {
+                return $account->getId();
+            },
+            $accounts
+        );
+
+        // Make get request on flat api.
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/accounts?flat=true',
+            [
+                'ids' => implode(',', $ids),
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertCount($amount, $response->_embedded->accounts);
+    }
+
+    /**
+     * Tests if all accounts are returned when fetching flat api by ids.
+     */
+    public function testCGetByIdsOnFlatApiWithLimit()
+    {
+        $accounts = $this->createMultipleMinimalAccounts(11);
+        $this->em->flush();
+
+        // Get ids of new accounts.
+        $ids = array_map(
+            function($account) {
+                return $account->getId();
+            },
+            $accounts
+        );
+
+        // Make get request on flat api.
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/accounts?flat=true',
+            [
+                'ids' => implode(',', $ids),
+                'page' => 2,
+                'limit' => 10,
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertCount(1, $response->_embedded->accounts);
+    }
+
     public function testCgetSerializationExclusions()
     {
         $account = $this->createAccount('Company');
@@ -1986,72 +2052,6 @@ class AccountControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals(2, $response->total);
-    }
-
-    /**
-     * Tests if all accounts are returned when fetching flat api by ids.
-     */
-    public function testCGetByIdsOnFlatApi()
-    {
-        $amount = 11;
-
-        $accounts = $this->createMultipleMinimalAccounts($amount);
-        $this->em->flush();
-
-        // Get ids of new accounts.
-        $ids = array_map(
-            function($account) {
-                return $account->getId();
-            },
-            $accounts
-        );
-
-        // Make get request on flat api.
-        $client = $this->createAuthenticatedClient();
-        $client->request(
-            'GET',
-            '/api/accounts?flat=true',
-            [
-                'ids' => implode(',', $ids),
-            ]
-        );
-
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertCount($amount, $response->_embedded->accounts);
-    }
-
-    /**
-     * Tests if all accounts are returned when fetching flat api by ids.
-     */
-    public function testCGetByIdsOnFlatApiWithLimit()
-    {
-        $accounts = $this->createMultipleMinimalAccounts(11);
-        $this->em->flush();
-
-        // Get ids of new accounts.
-        $ids = array_map(
-            function($account) {
-                return $account->getId();
-            },
-            $accounts
-        );
-
-        // Make get request on flat api.
-        $client = $this->createAuthenticatedClient();
-        $client->request(
-            'GET',
-            '/api/accounts?flat=true',
-            [
-                'ids' => implode(',', $ids),
-                'page' => 2,
-                'limit' => 10,
-            ]
-        );
-
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertCount(1, $response->_embedded->accounts);
     }
 
     /**

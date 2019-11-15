@@ -12,9 +12,9 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\SchemaMetadata;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
 
-class PropertyMetadataTest extends TestCase
+class ConstMetadataTest extends TestCase
 {
     public function provideGetter()
     {
@@ -29,7 +29,7 @@ class PropertyMetadataTest extends TestCase
      */
     public function testGetter($name, $mandatory)
     {
-        $property = new PropertyMetadata($name, $mandatory);
+        $property = new ConstMetadata($name, $mandatory, null);
         $this->assertEquals($name, $property->getName());
         $this->assertEquals($mandatory, $property->isMandatory());
     }
@@ -37,18 +37,18 @@ class PropertyMetadataTest extends TestCase
     public function provideToJsonSchema()
     {
         return [
-            ['title', null],
-            ['article', null],
-            ['article', null],
+            ['title', 'Homepage', ['name' => 'title', 'const' => 'Homepage']],
+            ['article', 'Hello World', ['name' => 'article', 'const' => 'Hello World']],
+            ['article', null, ['name' => 'article', 'const' => null]],
         ];
     }
 
     /**
      * @dataProvider provideToJsonSchema
      */
-    public function testToJsonSchema($name, $expectedSchema)
+    public function testToJsonSchema($name, $const, $expectedSchema)
     {
-        $property = new PropertyMetadata($name, false);
+        $property = new ConstMetadata($name, false, $const);
         $jsonSchema = $property->toJsonSchema();
 
         $this->assertEquals($jsonSchema, $expectedSchema);

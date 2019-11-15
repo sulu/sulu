@@ -52,6 +52,7 @@ class PreviewFormViewBuilderTest extends TestCase
                 false,
                 ['test1' => 'value1'],
                 true,
+                null,
             ],
             [
                 'sulu_tag.edit_form',
@@ -67,6 +68,7 @@ class PreviewFormViewBuilderTest extends TestCase
                 true,
                 null,
                 false,
+                ['webspace'],
             ],
         ];
     }
@@ -87,7 +89,8 @@ class PreviewFormViewBuilderTest extends TestCase
         ?string $backView,
         ?bool $titleVisible,
         ?array $requestParameters,
-        bool $disablePreviewWebspaceChooser
+        ?bool $disablePreviewWebspaceChooser,
+        ?array $routerAttributesToFormMetadata
     ) {
         $viewBuilder = (new PreviewFormViewBuilder($name, $path))
             ->setResourceKey($resourceKey)
@@ -129,6 +132,10 @@ class PreviewFormViewBuilderTest extends TestCase
             $viewBuilder->disablePreviewWebspaceChooser();
         }
 
+        if ($routerAttributesToFormMetadata) {
+            $viewBuilder->addRouterAttributesToFormMetadata($routerAttributesToFormMetadata);
+        }
+
         $view = $viewBuilder->getView();
 
         $this->assertSame($name, $view->getName());
@@ -145,6 +152,7 @@ class PreviewFormViewBuilderTest extends TestCase
         $this->assertSame($requestParameters, $view->getOption('requestParameters'));
         $this->assertNull($view->getParent());
         $this->assertSame('sulu_admin.preview_form', $view->getType());
+        $this->assertSame($routerAttributesToFormMetadata, $view->getOption('routerAttributesToFormMetadata'));
 
         if ($disablePreviewWebspaceChooser) {
             $this->assertFalse($view->getOption('previewWebspaceChooser'));

@@ -51,6 +51,7 @@ class FormViewBuilderTest extends TestCase
                 'sulu_category.list',
                 null,
                 null,
+                null,
                 ['test1' => 'value1'],
             ],
             [
@@ -58,6 +59,7 @@ class FormViewBuilderTest extends TestCase
                 '/tags/:id',
                 'tags',
                 'tags',
+                null,
                 null,
                 null,
                 null,
@@ -80,6 +82,7 @@ class FormViewBuilderTest extends TestCase
                 'sulu_category.edit_form',
                 'sulu_category.list',
                 ['webspace'],
+                ['webspaceKey' => 'webspace'],
                 true,
                 null,
             ],
@@ -95,6 +98,7 @@ class FormViewBuilderTest extends TestCase
                 'sulu_category.edit_form',
                 'sulu_category.list',
                 ['webspace', 'id' => 'active'],
+                ['webspace'],
                 false,
                 null,
             ],
@@ -116,6 +120,7 @@ class FormViewBuilderTest extends TestCase
         ?string $editView,
         ?string $backView,
         ?array $routerAttributesToBackView,
+        ?array $routerAttributesToFormMetadata,
         ?bool $titleVisible,
         ?array $requestParameters
     ) {
@@ -151,6 +156,10 @@ class FormViewBuilderTest extends TestCase
             $viewBuilder->addRouterAttributesToBackView($routerAttributesToBackView);
         }
 
+        if ($routerAttributesToFormMetadata) {
+            $viewBuilder->addRouterAttributesToFormMetadata($routerAttributesToFormMetadata);
+        }
+
         if (null !== $titleVisible) {
             $viewBuilder->setTitleVisible($titleVisible);
         }
@@ -172,6 +181,7 @@ class FormViewBuilderTest extends TestCase
         $this->assertSame($editView, $view->getOption('editView'));
         $this->assertSame($backView, $view->getOption('backView'));
         $this->assertSame($routerAttributesToBackView, $view->getOption('routerAttributesToBackView'));
+        $this->assertSame($routerAttributesToFormMetadata, $view->getOption('routerAttributesToFormMetadata'));
         $this->assertSame($titleVisible, $view->getOption('titleVisible'));
         $this->assertSame($requestParameters, $view->getOption('requestParameters'));
         $this->assertNull($view->getParent());

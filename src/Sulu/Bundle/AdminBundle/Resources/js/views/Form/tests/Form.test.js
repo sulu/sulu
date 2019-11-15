@@ -1893,6 +1893,64 @@ test('Should pass metadataRequestParameters options to Form View', () => {
     expect(formContainer.prop('store').metadataOptions).toEqual(metadataRequestParameters);
 });
 
+test('Should pass option to form metadata with routerAttribuesToFormMetadata', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box('de')});
+    const metadataStore = require('../../../containers/Form/stores/metadataStore');
+
+    const route = {
+        options: {
+            formKey: 'snippets',
+            locales: [],
+            routerAttributesToFormMetadata: ['webspace'],
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {
+            webspace: 'sulu_io',
+        },
+        bind: jest.fn(),
+        restore: jest.fn(),
+        route,
+    };
+    mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    expect(metadataStore.getSchemaTypes).toBeCalledWith('snippets', {webspace: 'sulu_io'});
+});
+
+test('Should pass options to Form metadata with mixed routerAttribuesToFormMetadata', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box('de')});
+    const metadataStore = require('../../../containers/Form/stores/metadataStore');
+
+    const route = {
+        options: {
+            backView: 'test_route',
+            formKey: 'snippets',
+            locales: [],
+            routerAttributesToFormMetadata: {0: 'webspace', 'id': 'active'},
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {
+            id: 4,
+            webspace: 'sulu_io',
+        },
+        bind: jest.fn(),
+        restore: jest.fn(),
+        route,
+    };
+    mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    expect(metadataStore.getSchemaTypes).toBeCalledWith('snippets', {active: 4, webspace: 'sulu_io'});
+});
+
 test('Should destroy the store on unmount', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;

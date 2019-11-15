@@ -76,7 +76,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
     ) {
         $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{"ids": []}'), true);
 
-        $property->setValue($data);
+        $property->setValue(isset($data['ids']) ? $data : null);
     }
 
     /**
