@@ -93,7 +93,6 @@
         "symfony/translation": "^4.3",
         "symfony/twig-bundle": "^4.3",
         "symfony/validator": "^4.3",
-        "symfony/web-link": "^4.3",
         "symfony/yaml": "^4.3",
         "toflar/psr6-symfony-http-cache-store": "^1.1 || ^2.0",
         "twig/twig": "^1.41 || ^2.0"

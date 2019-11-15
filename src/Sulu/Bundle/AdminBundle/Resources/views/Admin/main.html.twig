@@ -4,7 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>SULU</title>
-        <link rel="stylesheet" href="{{ preload(asset('main.css', 'sulu_admin'), {as: 'style'}) }}">
+
+        {# We do not preload the files because of problems with big files on http push in Chrome #}
+        <link rel="stylesheet" href="{{ asset('main.css', 'sulu_admin') }}">
     </head>
     <body>
         <div id="application">
@@ -21,6 +23,8 @@
             });
             {% endautoescape %}
         </script>
-        <script src="{{ preload(asset('main.js', 'sulu_admin'), {as: 'script'})}}"></script>
+
+        {# We do not preload the files because of problems with big files on http push in Chrome #}
+        <script src="{{ asset('main.js', 'sulu_admin') }}"></script>
     </body>
 </html>
