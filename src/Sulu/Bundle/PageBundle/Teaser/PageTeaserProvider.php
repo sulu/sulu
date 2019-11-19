@@ -96,9 +96,7 @@ class PageTeaserProvider implements TeaserProviderInterface
                 $document->getField('excerptMore')->getValue(),
                 $document->getField('__url')->getValue(),
                 (null !== $excerptMedia ? $excerptMedia : $teaserMedia),
-                [
-                    'structureType' => $document->getField(StructureProvider::FIELD_STRUCTURE_TYPE)->getValue(),
-                ]
+                $this->getAttributes($document)
             );
         }
 
@@ -152,5 +150,19 @@ class PageTeaserProvider implements TeaserProviderInterface
                 return preg_match('/page_(.*)_published/', $index) > 0;
             }
         );
+    }
+
+    /**
+     * Returns attributes for teaser.
+     *
+     * @param Document $document
+     *
+     * @return array
+     */
+    protected function getAttributes(Document $document)
+    {
+        return [
+            'structureType' => $document->getField(StructureProvider::FIELD_STRUCTURE_TYPE)->getValue(),
+        ];
     }
 }
