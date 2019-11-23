@@ -24,7 +24,7 @@ interface AccessControlManagerInterface
      *
      * @param string $type The type of the protected object
      * @param string $identifier The identifier of the protected object
-     * @param $permissions
+     * @param mixed[] $permissions
      */
     public function setPermissions($type, $identifier, $permissions);
 
@@ -34,7 +34,7 @@ interface AccessControlManagerInterface
      * @param string $type The type of the protected object
      * @param string $identifier The identifier of the protected object
      *
-     * @return array
+     * @return mixed[]
      */
     public function getPermissions($type, $identifier);
 
@@ -44,7 +44,7 @@ interface AccessControlManagerInterface
      * @param SecurityCondition $securityCondition The condition to check
      * @param UserInterface $user The user for which the security is returned
      *
-     * @return array
+     * @return mixed[]
      */
     public function getUserPermissions(SecurityCondition $securityCondition, $user);
 
@@ -53,10 +53,10 @@ interface AccessControlManagerInterface
      *
      * @param string $locale
      * @param string $securityContext
-     * @param $objectPermissionsByRole
+     * @param mixed[] $objectPermissionsByRole
      * @param UserInterface $user The user for which the security is returned
      *
-     * @return array
+     * @return mixed[]
      */
     public function getUserPermissionByArray($locale, $securityContext, $objectPermissionsByRole, UserInterface $user);
 }

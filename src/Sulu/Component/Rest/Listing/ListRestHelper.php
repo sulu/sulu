@@ -160,7 +160,7 @@ class ListRestHelper
     /**
      * returns all field names for a certain entity.
      *
-     * @param $entityName
+     * @param string $entityName
      *
      * @return array
      */
@@ -205,8 +205,8 @@ class ListRestHelper
     }
 
     /**
-     * @param $entityName
-     * @param $where
+     * @param string $entityName
+     * @param mixed[] $where
      * @param array $joinConditions
      *
      * @return int

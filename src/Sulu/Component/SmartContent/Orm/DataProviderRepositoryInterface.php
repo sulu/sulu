@@ -24,8 +24,8 @@ interface DataProviderRepositoryInterface
      * @param int $page
      * @param int $pageSize
      * @param int $limit
-     * @param $locale
-     * @param $options
+     * @param string $locale
+     * @param mixed[] $options
      *
      * @return object[]
      */

@@ -189,9 +189,9 @@ class Portal
     /**
      * Adds an environment to this portal.
      *
-     * @param $environment Environment The environment to add
+     * @param Environment $environment Environment The environment to add
      */
-    public function addEnvironment($environment)
+    public function addEnvironment(Environment $environment)
     {
         $this->environments[$environment->getType()] = $environment;
     }

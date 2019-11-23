@@ -168,9 +168,9 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
      * Iterates over an array of children collections, creates them.
      * This function is recursive!
      *
-     * @param $children
-     * @param $userId
-     * @param null $parent
+     * @param array $children
+     * @param string $userId
+     * @param int|null $parent
      * @param string $namespace
      *
      * @return array

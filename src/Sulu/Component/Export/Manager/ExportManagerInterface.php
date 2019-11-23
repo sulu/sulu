@@ -20,25 +20,25 @@ interface ExportManagerInterface
      * Add ContentType and the format.
      * This will be set on the Content-Type Service.
      *
-     * @param $contentTypeName
-     * @param $format
-     * @param $options
+     * @param string $contentTypeName
+     * @param string $format
+     * @param mixed[] $options
      */
     public function add($contentTypeName, $format, $options);
 
     /**
      * Export data for document by given Content-Type.
      *
-     * @param $contentTypeName
-     * @param $propertyValue
+     * @param string $contentTypeName
+     * @param mixed $propertyValue
      */
     public function export($contentTypeName, $propertyValue);
 
     /**
      * Checks the content-type if this has an export.
      *
-     * @param $contentTypeName
-     * @param $format
+     * @param string $contentTypeName
+     * @param string $format
      *
      * @return bool
      */
@@ -47,8 +47,8 @@ interface ExportManagerInterface
     /**
      * Returns the export options by the given content-type.
      *
-     * @param $contentTypeName
-     * @param $format
+     * @param string $contentTypeName
+     * @param string $format
      *
      * @return array
      */

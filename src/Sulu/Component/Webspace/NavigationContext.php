@@ -43,11 +43,11 @@ class NavigationContext
     }
 
     /**
-     * @param $locale
+     * @param string $locale
      *
      * @return null|string
      */
-    public function getTitle($locale)
+    public function getTitle(string $locale)
     {
         return $this->metadata->get('title', $locale, ucfirst($this->key));
     }

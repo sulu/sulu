@@ -136,7 +136,7 @@ class MetadataSubscriber implements EventSubscriber
     }
 
     /**
-     * @param $type
+     * @param int $type
      *
      * @return bool
      */

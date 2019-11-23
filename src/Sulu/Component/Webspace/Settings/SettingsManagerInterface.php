@@ -56,8 +56,8 @@ interface SettingsManagerInterface
     /**
      * Load webspace settings by wildcard.
      *
-     * @param $webspaceKey
-     * @param $wildcard
+     * @param string $webspaceKey
+     * @param string $wildcard
      *
      * @return mixed[]
      */
@@ -66,8 +66,8 @@ interface SettingsManagerInterface
     /**
      * Load webspace settings as strings by wildcard.
      *
-     * @param $webspaceKey
-     * @param $wildcard
+     * @param string $webspaceKey
+     * @param string $wildcard
      *
      * @return string[]
      */

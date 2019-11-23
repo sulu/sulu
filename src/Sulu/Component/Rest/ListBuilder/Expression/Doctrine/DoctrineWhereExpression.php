@@ -80,7 +80,7 @@ class DoctrineWhereExpression extends AbstractDoctrineExpression implements Wher
     }
 
     /**
-     * @param $comparator
+     * @param string $comparator
      *
      * @return string
      */

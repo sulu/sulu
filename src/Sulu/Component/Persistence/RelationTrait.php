@@ -83,7 +83,7 @@ trait RelationTrait
      * Applies a given compare function to a given set of data entries. Returns the entity itself and its key with the
      * $matchedEntry and $matchKey parameters.
      *
-     * @param $entity The entity to compare
+     * @param Traversable $entity The entity to compare
      * @param array $requestEntities The set of entities to search in
      * @param callable $compare Compare function, which defines if data matches the entity
      * @param array $matchedEntry
@@ -107,7 +107,7 @@ trait RelationTrait
     /**
      * function compares entities with data of array and makes callback.
      *
-     * @param $entities
+     * @param Traversable $entities
      * @param array $requestEntities
      * @param callable $compare
      * @param callable $add
