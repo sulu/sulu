@@ -19,7 +19,6 @@ use Sulu\Component\DocumentManager\Event\RemoveDraftEvent;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
 class RefreshSubscriber implements EventSubscriberInterface
 {
     /**

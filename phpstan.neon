@@ -29,3 +29,4 @@ parameters:
         - %currentWorkingDirectory%/*/Tests/*
     ignoreErrors:
         - '#Service "test_user_provider" is not registered in the container.#'
+        - '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required.#'

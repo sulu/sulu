@@ -29,7 +29,6 @@ use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-
 /**
  * {@inheritdoc}
  */

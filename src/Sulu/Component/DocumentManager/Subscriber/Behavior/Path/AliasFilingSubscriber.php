@@ -29,10 +29,6 @@ class AliasFilingSubscriber extends AbstractFilingSubscriber
      */
     private $metadataFactory;
 
-    /**
-     * @param NodeManager $nodeManager
-     * @param MetadataFactoryInterface $metadataFactory
-     */
     public function __construct(
         SessionInterface $defaultSession,
         SessionInterface $liveSession,
@@ -79,7 +75,7 @@ class AliasFilingSubscriber extends AbstractFilingSubscriber
     }
 
     /**
-     * @param $document
+     * @param object $document
      *
      * @return string
      */

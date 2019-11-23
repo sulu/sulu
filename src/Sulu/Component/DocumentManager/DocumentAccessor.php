@@ -27,7 +27,7 @@ class DocumentAccessor
     private $reflection;
 
     /**
-     * @param $document
+     * @param object $document
      */
     public function __construct($document)
     {
@@ -71,7 +71,7 @@ class DocumentAccessor
     }
 
     /**
-     * @param $field
+     * @param string $field
      *
      * @return bool
      */

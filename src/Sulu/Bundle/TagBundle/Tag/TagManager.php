@@ -20,7 +20,6 @@ use Sulu\Bundle\TagBundle\Event\TagMergeEvent;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-
 /**
  * Responsible for centralized Tag Management.
  */

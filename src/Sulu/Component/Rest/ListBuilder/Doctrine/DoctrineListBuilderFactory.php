@@ -13,7 +13,6 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-
 /**
  * Factory for DoctrineListBuilders.
  */

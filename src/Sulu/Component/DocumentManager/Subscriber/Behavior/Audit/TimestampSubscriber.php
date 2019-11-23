@@ -195,7 +195,7 @@ class TimestampSubscriber implements EventSubscriberInterface
     /**
      * Returns the encoding for the given document.
      *
-     * @param $document
+     * @param object $document
      *
      * @return string
      */
@@ -212,7 +212,7 @@ class TimestampSubscriber implements EventSubscriberInterface
     /**
      * Return true if document is supported by this subscriber.
      *
-     * @param $document
+     * @param object $document
      *
      * @return bool
      */

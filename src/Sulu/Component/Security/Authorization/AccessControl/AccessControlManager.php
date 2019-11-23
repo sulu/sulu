@@ -18,7 +18,6 @@ use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
 use Sulu\Component\Security\Event\SecurityEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-
 /**
  * An implementation of the AccessControlManagerInterface, which supports registering AccessControlProvider. All method
  * calls are delegated to the AccessControlProvider supporting the given type.

@@ -284,7 +284,7 @@ class StructureXmlLoader extends AbstractLoader
     /**
      * Load cache lifetime metadata.
      *
-     * @param $path
+     * @param string $path
      * @param \DOMXPath $xpath
      *
      * @return array

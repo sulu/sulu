@@ -19,7 +19,7 @@ class DocumentHelper
     /**
      * Return a debug title for the document for use in exception messages.
      *
-     * @param $document
+     * @param object $document
      *
      * @return string
      */

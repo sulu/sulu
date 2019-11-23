@@ -15,7 +15,6 @@ use PHPCR\Query\QueryResultInterface;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-
 /**
  * Lazily hydrate query results.
  */
