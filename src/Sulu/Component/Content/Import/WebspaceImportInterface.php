@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Content\Import;
 
+use Symfony\Component\Console\Output\OutputInterface;
+
 /**
  * Interface for Webspace import.
  */
@@ -22,7 +24,7 @@ interface WebspaceImportInterface
      * @param string $webspaceKey
      * @param string $locale
      * @param string $filePath
-     * @param $output
+     * @param OutputInterface $output
      * @param string $format
      * @param string $uuid
      * @param bool $overrideSettings

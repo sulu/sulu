@@ -63,7 +63,7 @@ interface MetadataFactoryInterface
      * Return true if the document has metadata for the given fully qualified
      * class name.
      *
-     * @param string
+     * @param string $class
      *
      * @return bool
      */

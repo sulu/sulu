@@ -388,7 +388,7 @@ class ContentMapper implements ContentMapperInterface
      * Shallow structures do not have content properties / extensions
      * hydrated.
      *
-     * @param NodeInterface $node
+     * @param NodeInterface $contentNode
      * @param string $localization
      * @param string $webspaceKey
      *
@@ -609,7 +609,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * Return the content document (aka the home page).
      *
-     * @param $webspaceKey
+     * @param string $webspaceKey
      *
      * @return BasePageDocument|SnippetDocument
      */
@@ -625,7 +625,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * Return the node in the content repository which contains all of the routes.
      *
-     * @param $webspaceKey
+     * @param string $webspaceKey
      * @param string $locale
      * @param string $segment
      *

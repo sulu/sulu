@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Content\Export;
 
+use Symfony\Component\Console\Output\OutputInterface;
+
 /**
  * Interface for Webspace export.
  */
@@ -21,7 +23,7 @@ interface WebspaceExportInterface
      *
      * @param string $webspaceKey
      * @param string $locale
-     * @param $output
+     * @param OutputInterface $output
      * @param string $format
      * @param string $uuid
      * @param array $nodes
@@ -43,9 +45,6 @@ interface WebspaceExportInterface
      * Load all content, extension and settings from given webspace and locale.
      *
      * @param string $webspaceKey
-     * @param string $locale
-     * @param $output
-     * @param string $format
      * @param string $uuid
      * @param array $nodes
      * @param array $ignoredNodes

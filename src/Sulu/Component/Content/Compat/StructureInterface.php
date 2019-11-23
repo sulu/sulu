@@ -57,7 +57,7 @@ interface StructureInterface extends \JsonSerializable
     /**
      * sets id of node.
      *
-     * @param $uuid
+     * @param string $uuid
      */
     public function setUuid($uuid);
 
@@ -71,7 +71,7 @@ interface StructureInterface extends \JsonSerializable
     /**
      * sets user id of creator.
      *
-     * @param $userId int id of creator
+     * @param int $userId id of creator
      */
     public function setCreator($userId);
 
@@ -85,7 +85,7 @@ interface StructureInterface extends \JsonSerializable
     /**
      * sets user id of changer.
      *
-     * @param $userId int id of changer
+     * @param int $userId id of changer
      */
     public function setChanger($userId);
 
@@ -127,7 +127,7 @@ interface StructureInterface extends \JsonSerializable
     /**
      * returns a property instance with given name.
      *
-     * @param $name string name of property
+     * @param string $name name of property
      *
      * @return PropertyInterface
      *
@@ -199,7 +199,7 @@ interface StructureInterface extends \JsonSerializable
     /**
      * return value of property with given name.
      *
-     * @param $name string name of property
+     * @param string $name string name of property
      *
      * @return mixed
      */
@@ -263,7 +263,7 @@ interface StructureInterface extends \JsonSerializable
      * returns a property instance with given tag name.
      *
      * @param string $tagName
-     * @param $highest
+     * @param bool $highest
      *
      * @return PropertyInterface
      */

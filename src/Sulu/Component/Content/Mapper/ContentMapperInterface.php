@@ -16,6 +16,7 @@ use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
 use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Localization\Localization;
 
 /**
  * Interface of ContentMapper.
@@ -84,7 +85,7 @@ interface ContentMapperInterface
      * returns the data for the given node.
      *
      * @param NodeInterface $contentNode The node for which to load the data
-     * @param string $languageCode The locale
+     * @param string $localization The locale
      * @param string $webspaceKey Key of the webspace
      * @param bool $excludeGhost Do not return Ghost structures (return null instead)
      * @param bool $loadGhostContent Load ghost content
@@ -137,9 +138,9 @@ interface ContentMapperInterface
     /**
      * load breadcrumb for given uuid in given language.
      *
-     * @param $uuid
-     * @param $languageCode
-     * @param $webspaceKey
+     * @param string $uuid
+     * @param string $languageCode
+     * @param string $webspaceKey
      *
      * @return BreadcrumbItemInterface[]
      *
@@ -159,10 +160,10 @@ interface ContentMapperInterface
      * Copies the content from one node from one localization to the other.
      *
      * @param string $uuid
-     * @param $userId
-     * @param $webspaceKey
-     * @param $srcLanguageCode
-     * @param $destLanguageCodes
+     * @param string $userId
+     * @param string $webspaceKey
+     * @param string $srcLanguageCode
+     * @param string $destLanguageCodes
      *
      * @return StructureInterface
      */

@@ -118,7 +118,7 @@ class BlockPropertyWrapper implements PropertyInterface
     /**
      * sets the value from property.
      *
-     * @param $value mixed
+     * @param mixed $value
      */
     public function setValue($value)
     {

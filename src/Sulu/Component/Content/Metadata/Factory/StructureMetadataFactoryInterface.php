@@ -31,7 +31,7 @@ interface StructureMetadataFactoryInterface
     /**
      * Return all structures of the given type.
      *
-     * @param string
+     * @param string $type
      *
      * @return StructureMetadata[]
      */

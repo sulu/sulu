@@ -28,7 +28,7 @@ interface ShadowLocaleBehavior
     /**
      * Enable or disable the shadow locale.
      *
-     * @param bool
+     * @param bool $shadowLocaleEnabled
      */
     public function setShadowLocaleEnabled($shadowLocaleEnabled);
 
@@ -42,7 +42,7 @@ interface ShadowLocaleBehavior
     /**
      * Set the shadow locale.
      *
-     * @param string
+     * @param string $shadowLocale
      */
     public function setShadowLocale($shadowLocale);
 }

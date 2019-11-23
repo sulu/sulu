@@ -21,9 +21,9 @@ interface ExtensionInterface
     /**
      * set current language code to translates properties.
      *
-     * @param $languageCode
-     * @param $languageNamespace
-     * @param $namespace
+     * @param string $languageCode
+     * @param string $languageNamespace
+     * @param string $namespace
      */
     public function setLanguageCode($languageCode, $languageNamespace, $namespace);
 

@@ -43,9 +43,9 @@ interface ContentTypeInterface
      *
      * @param NodeInterface $node
      * @param PropertyInterface $property
-     * @param $webspaceKey
-     * @param $languageCode
-     * @param $segmentKey
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
      *
      * @return mixed
      */

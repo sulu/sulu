@@ -15,6 +15,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -54,7 +55,8 @@ class WebspaceExport extends Export implements WebspaceExportInterface
         ExtensionManagerInterface $extensionManager,
         ExportManagerInterface $exportManager,
         array $formatFilePaths
-    ) {
+    )
+    {
         parent::__construct($templating, $documentManager, $documentInspector, $exportManager, $formatFilePaths);
 
         $this->structureManager = $structureManager;
@@ -73,7 +75,8 @@ class WebspaceExport extends Export implements WebspaceExportInterface
         $uuid = null,
         $nodes = null,
         $ignoredNodes = null
-    ) {
+    )
+    {
         $this->exportLocale = $locale;
         $this->output = $output;
         $this->format = $format;
@@ -147,9 +150,13 @@ class WebspaceExport extends Export implements WebspaceExportInterface
      */
     protected function getExtensionData(BasePageDocument $document)
     {
-        $extensionData = [];
+        $data = $document->getExtensionsData();
+        if ($data instanceof ExtensionContainer) {
+            $data = $data->toArray();
+        }
 
-        foreach ($document->getExtensionsData()->toArray() as $extensionName => $extensionProperties) {
+        $extensionData = [];
+        foreach ($data as $extensionName => $extensionProperties) {
             /** @var \Sulu\Bundle\PageBundle\Content\Structure\ExcerptStructureExtension $extension */
             $extension = $this->extensionManager->getExtension($document->getStructureType(), $extensionName);
 
@@ -310,7 +317,7 @@ class WebspaceExport extends Export implements WebspaceExportInterface
     /**
      * Build query to return only specific nodes.
      *
-     * @param $nodes
+     * @param array $nodes
      * @param bool|false $not
      *
      * @return string
@@ -338,7 +345,7 @@ class WebspaceExport extends Export implements WebspaceExportInterface
     /**
      * Returns node path from given uuid.
      *
-     * @param $uuids
+     * @param string[] $uuids
      *
      * @return string[]
      *
