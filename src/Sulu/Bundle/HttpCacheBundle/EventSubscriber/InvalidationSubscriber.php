@@ -217,7 +217,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
      * Invalidates all urls which are assigned to the given document in the given locale.
      *
      * @param $document
-     * @param $locale
+     * @param string $locale
      */
     private function invalidateDocumentUrls($document, $locale)
     {

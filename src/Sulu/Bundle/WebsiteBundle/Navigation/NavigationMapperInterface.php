@@ -20,8 +20,8 @@ interface NavigationMapperInterface
      * returns navigation for given parent.
      *
      * @param string $parent uuid of parent node
-     * @param $webspaceKey
-     * @param $locale
+     * @param string $webspaceKey
+     * @param string $locale
      * @param int $depth
      * @param bool $flat
      * @param string|null $context

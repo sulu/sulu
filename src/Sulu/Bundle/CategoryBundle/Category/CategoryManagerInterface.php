@@ -114,7 +114,7 @@ interface CategoryManagerInterface
      *
      * @param $data
      * @param $userId int Id of the user which is set as creator/changer. If null, the user of the request is set
-     * @param $locale
+     * @param string $locale
      * @param bool $patch
      *
      * @return CategoryInterface

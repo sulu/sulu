@@ -76,7 +76,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
     }
 
     /**
-     * @param $webspaceKey
+     * @param string $webspaceKey
      *
      * @return WebspaceSitemap
      */

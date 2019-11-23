@@ -66,7 +66,7 @@ interface MediaRepositoryInterface extends RepositoryInterface
      * the information for all medias with given ids.
      *
      * @param $ids array The ids of the medias for which the info should be found
-     * @param $locale string The locale in which the display info should be loaded
+     * @param string $locale string The locale in which the display info should be loaded
      *
      * @return array
      */
