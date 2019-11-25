@@ -11,11 +11,17 @@
 
 namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\DependencyInjection;
 
+use FOS\HttpCacheBundle\CacheManager;
+use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Psr\Log\LoggerInterface;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\HttpCacheBundle\DependencyInjection\SuluHttpCacheExtension;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -71,6 +77,12 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
         $this->container->set('sulu_core.webspace.webspace_manager.url_replacer', $this->replacer->reveal());
         $this->container->set('logger', $this->logger->reveal());
         $this->container->set('sulu_website.reference_store_pool', $this->referenceStore->reveal());
+        $this->container->set('sulu.content.structure_manager', $this->prophesize(StructureManagerInterface::class)->reveal());
+        $this->container->set('sulu_document_manager.document_inspector', $this->prophesize(DocumentInspector::class)->reveal());
+        $this->container->set('sulu.content.resource_locator.strategy_pool', $this->prophesize(ResourceLocatorStrategyPoolInterface::class)->reveal());
+        $this->container->set('sulu_tag.tag_manager', $this->prophesize(TagManagerInterface::class)->reveal());
+        $this->container->set('fos_http_cache.cache_manager', $this->prophesize(CacheManager::class)->reveal());
+        $this->container->set('fos_http_cache.http.symfony_response_tagger', $this->prophesize(SymfonyResponseTagger::class)->reveal());
     }
 
     protected function getContainerExtensions(): array
