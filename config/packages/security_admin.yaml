@@ -24,6 +24,7 @@ security:
         admin:
             pattern: ^/
             anonymous: ~
+            provider: sulu
             entry_point: sulu_security.authentication_entry_point
             json_login:
                 check_path: sulu_admin.login_check
