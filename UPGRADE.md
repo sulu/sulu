@@ -1,5 +1,23 @@
 # Upgrade
 
+## dev-release/2.0
+
+### Admin Default User Provider for Test Environment
+
+To fix compatibility to Symfony 4.4 version set the default provider for the sulu admin
+to default in `config/packages/security_admin.yaml`:
+
+```diff
+security:
+    # ...
+    firewalls:
+        admin:
+            # ...
+            anonymous: ~
++            provider: sulu
+            # ...
+```
+
 ## 2.0.2
 
 ### RouteManagerInterface / RouteRepositoryInterface changed

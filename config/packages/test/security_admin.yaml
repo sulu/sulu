@@ -7,8 +7,6 @@ security:
         admin:
             http_basic:
                 provider: testprovider
-            json_login:
-                provider: sulu
 
 sulu_test:
     enable_test_user_provider: true
