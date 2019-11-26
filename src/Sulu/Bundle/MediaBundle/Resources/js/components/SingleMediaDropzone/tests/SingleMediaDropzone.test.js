@@ -35,6 +35,17 @@ test('Render a SingleMediaDropzone without a loader if image has been loaded yet
     expect(singleMediaDropzone.render()).toMatchSnapshot();
 });
 
+test('Render a SingleMediaDropzone with a MimeTypeIndicator if an error appeared during image loading', () => {
+    const singleMediaDropzone = mount(
+        <SingleMediaDropzone emptyIcon="su-user" image="test.jpg" mimeType="video/x-m4v" onDrop={jest.fn()} />
+    );
+
+    singleMediaDropzone.instance().image.onerror();
+    singleMediaDropzone.update();
+
+    expect(singleMediaDropzone.render()).toMatchSnapshot();
+});
+
 test('Render a SingleMediaDropzone in disabled state', () => {
     expect(render(
         <SingleMediaDropzone

@@ -37,6 +37,7 @@ class SingleMediaDropzone extends React.Component<Props> {
 
     @observable uploadIndicatorVisibility: boolean;
     @observable imageLoading: boolean = false;
+    @observable imageError: boolean = false;
 
     componentDidMount() {
         this.preloadImage();
@@ -55,6 +56,7 @@ class SingleMediaDropzone extends React.Component<Props> {
             this.imageLoading = true;
 
             this.image = new Image();
+            this.image.onerror = this.handleImageError;
             this.image.onload = this.handleImageLoad;
             this.image.src = src;
         } else {
@@ -83,6 +85,10 @@ class SingleMediaDropzone extends React.Component<Props> {
 
     handleDragLeave = () => {
         this.setUploadIndicatorVisibility(false);
+    };
+
+    @action handleImageError = () => {
+        this.imageError = true;
     };
 
     render() {
@@ -116,13 +122,13 @@ class SingleMediaDropzone extends React.Component<Props> {
                 onDragLeave={this.handleDragLeave}
                 onDrop={this.handleDrop}
             >
-                {image &&
+                {image && !this.imageError &&
                     <Fragment>
                         <img className={singleMediaDropzoneStyles.thumbnail} key={image} src={image} />
                         {this.imageLoading && <Loader />}
                     </Fragment>
                 }
-                {!image && mimeType &&
+                {(!image || this.imageError) && mimeType &&
                     <div className={singleMediaDropzoneStyles.mimeTypeIndicator}>
                         <MimeTypeIndicator iconSize={100} mimeType={mimeType} />
                     </div>
