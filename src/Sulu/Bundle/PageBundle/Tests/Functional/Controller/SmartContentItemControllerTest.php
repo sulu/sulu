@@ -422,6 +422,51 @@ class SmartContentItemControllerTest extends SuluTestCase
         );
     }
 
+    public function testGetItemsWithParamsAndNoType()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
+            '&provider=pages&excluded=' . $this->johannes->getUuid() .
+            '&params={"max_per_page":{"value":"5"},' .
+            '"properties":{"value":{"title":{"value":"title","type":"string"}},"type":"collection"}}'
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $result = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(
+            [
+                'id' => $this->team->getUuid(),
+                'title' => 'Team',
+                'path' => '/team',
+                'image' => null,
+            ],
+            $result['datasource']
+        );
+        $this->assertEquals(
+            [
+                [
+                    'id' => $this->daniel->getUuid(),
+                    'title' => 'Daniel',
+                    'publishedState' => false,
+                    'url' => '/team/daniel',
+                    'published' => null,
+                ],
+                [
+                    'id' => $this->thomas->getUuid(),
+                    'title' => 'Thomas',
+                    'publishedState' => false,
+                    'url' => '/team/thomas',
+                    'published' => null,
+                ],
+            ],
+            $result['_embedded']['items']
+        );
+    }
+
     public function testGetItemsLimit()
     {
         $client = $this->createAuthenticatedClient();

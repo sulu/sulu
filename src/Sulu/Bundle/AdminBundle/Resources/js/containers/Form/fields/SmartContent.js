@@ -87,13 +87,14 @@ class SmartContent extends React.Component<Props> {
         const {
             formInspector,
             onChange,
-            schemaOptions: {
-                exclude_duplicates: {
-                    value: excludeDuplicates = false,
-                } = {},
-            } = {},
+            schemaOptions = {},
             value,
         } = this.props;
+        const {
+            exclude_duplicates: {
+                value: excludeDuplicates = false,
+            } = {},
+        } = schemaOptions;
 
         if (typeof excludeDuplicates !== 'boolean') {
             throw new Error('The "exclude_duplicates" schemaOption must be a boolean if set!');
@@ -110,7 +111,8 @@ class SmartContent extends React.Component<Props> {
             this.value,
             formInspector.locale,
             datasourceResourceKey,
-            formInspector.resourceKey === this.provider ? formInspector.id : undefined
+            formInspector.resourceKey === this.provider ? formInspector.id : undefined,
+            schemaOptions
         );
 
         smartContentStorePool.add(this.smartContentStore, excludeDuplicates);

@@ -103,6 +103,7 @@ test('Load items if FilterCriteria is given with datasource', () => {
 
 test('Load items if FilterCriteria is given with categories', () => {
     const locale = observable.box('en');
+    const params = {provider: {name: 'provider', value: 'content'}};
     const filterCriteria = {
         dataSource: undefined,
         includeSubFolders: undefined,
@@ -124,16 +125,20 @@ test('Load items if FilterCriteria is given with categories', () => {
     });
     ResourceRequester.get.mockReturnValue(categoriesPromise);
 
-    const smartContentStore = new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
+    const smartContentStore = new SmartContentStore('content', filterCriteria, locale, 'pages', 4, params);
     smartContentStore.start();
 
+    const expectedParams = '%7B%22provider%22%3A%7B%22name%22%3A%22provider%22,%22value%22%3A%22content%22%7D%7D';
     return categoriesPromise.then(() => {
-        expect(Requester.get).toBeCalledWith('/api/items?provider=content&excluded=4&locale=en&categories=1,5');
+        expect(Requester.get).toBeCalledWith(
+            '/api/items?provider=content&excluded=4&locale=en&params=' + expectedParams + '&categories=1,5'
+        );
     });
 });
 
 test('Load items if FilterCriteria is given with tags', () => {
     const locale = observable.box('en');
+    const params = {provider: {name: 'provider', value: 'content'}};
     const filterCriteria = {
         dataSource: undefined,
         includeSubFolders: undefined,
@@ -148,10 +153,13 @@ test('Load items if FilterCriteria is given with tags', () => {
         limitResult: undefined,
     };
 
-    const smartContentStore = new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
+    const smartContentStore = new SmartContentStore('content', filterCriteria, locale, 'pages', 4, params);
     smartContentStore.start();
 
-    expect(Requester.get).toBeCalledWith('/api/items?provider=content&excluded=4&locale=en&tags=Tag2');
+    const expectedParams = '%7B%22provider%22%3A%7B%22name%22%3A%22provider%22,%22value%22%3A%22content%22%7D%7D';
+    expect(Requester.get).toBeCalledWith(
+        '/api/items?provider=content&excluded=4&locale=en&params=' + expectedParams + '&tags=Tag2'
+    );
 });
 
 test('Load items excluding given ids', () => {
