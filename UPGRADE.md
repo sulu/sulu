@@ -1,5 +1,34 @@
 # Upgrade
 
+## dev-release/2.0
+
+When upgrading also have a look at the changes in the
+[sulu skeleton](https://github.com/sulu/skeleton/compare/2.0.2...2.0.3).
+
+### Symfony/templating requirement removed
+
+Sulu does not longer need the `symfony/templating` package which is deprecated.
+
+If you depend on `symfony/templating` you need to require it in your project:
+
+```bash
+composer require symfony/templating
+```
+
+If you want to remove it also from your project you need to change the include syntax:
+
+**Before**
+
+```twig
+{% include "SuluWebsiteBundle:Extension:seo.html.twig" %}
+```
+
+**After**
+
+```twig
+{% include "@SuluWebsite/Extension/seo.html.twig" %}
+```
+
 ## 2.0.2
 
 ### RouteManagerInterface / RouteRepositoryInterface changed

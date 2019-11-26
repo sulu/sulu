@@ -212,7 +212,7 @@ class AdminController
         ];
 
         return new Response($this->engine->render(
-            '@SuluAdmin\Admin\main.html.twig',
+            '@SuluAdmin/Admin/main.html.twig',
             [
                 'translations' => $this->translations,
                 'fallback_locale' => $this->fallbackLocale,
