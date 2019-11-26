@@ -37,6 +37,24 @@ test('Render a MediaCard component with loader if image has not been loaded yet'
     expect(mediaCard.render()).toMatchSnapshot();
 });
 
+test('Render a MediaCard component with MimeTypeIndicator if an error appeared while loading the image', () => {
+    const mediaCard = mount(
+        <MediaCard
+            downloadText=""
+            downloadUrl=""
+            id="test"
+            image="http://lorempixel.com/300/200"
+            meta="Test/Test"
+            mimeType="image/jpeg"
+            title="Test"
+        />
+    );
+
+    mediaCard.instance().image.onerror();
+
+    expect(mediaCard.render()).toMatchSnapshot();
+});
+
 test('Render a MediaCard component with a checkbox for selection', () => {
     const mediaCard = mount(
         <MediaCard
