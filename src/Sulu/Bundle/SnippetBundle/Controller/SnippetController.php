@@ -225,7 +225,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     }
 
     /**
-     * Saves a new existing snippet.
+     * Saves an existing snippet.
      *
      * @param Request $request
      * @param string $id
