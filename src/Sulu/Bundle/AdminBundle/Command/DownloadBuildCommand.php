@@ -154,6 +154,7 @@ class DownloadBuildCommand extends Command
 
     private function getRemoteFileHash(string $path)
     {
+        $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
         $response = $this->httpClient->request('GET', $this->remoteRepository . $path);
 
         return $this->hash($response->getContent());

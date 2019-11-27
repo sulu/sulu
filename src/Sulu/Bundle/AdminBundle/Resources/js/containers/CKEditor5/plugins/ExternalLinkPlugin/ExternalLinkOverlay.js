@@ -45,6 +45,7 @@ class ExternalLinkOverlay extends React.Component<Props> {
         const {url} = this.props;
 
         if (!url) {
+            this.url = undefined;
             return;
         }
 

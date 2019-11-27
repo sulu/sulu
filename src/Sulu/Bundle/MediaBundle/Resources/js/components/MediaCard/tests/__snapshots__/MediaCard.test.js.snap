@@ -90,6 +90,101 @@ exports[`Render a MediaCard component 1`] = `
 </div>
 `;
 
+exports[`Render a MediaCard component with MimeTypeIndicator if an error appeared while loading the image 1`] = `
+<div
+  class="mediaCard noDownloadList"
+>
+  <div
+    class="header"
+  >
+    <div
+      class="description"
+      role="button"
+    >
+      <div
+        class="title"
+      >
+        <div
+          class="titleText"
+        >
+          <div
+            aria-label="Test"
+            class="croppedText"
+            title="Test"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              Te
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                st
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              Test
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="meta"
+      >
+        <div
+          aria-label="Test/Test"
+          class="croppedText"
+          title="Test/Test"
+        >
+          <div
+            aria-hidden="true"
+            class="front"
+          >
+            Test/
+          </div>
+          <div
+            aria-hidden="true"
+            class="back"
+          >
+            <span>
+              Test
+            </span>
+          </div>
+          <div
+            class="whole"
+          >
+            Test/Test
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="media"
+    role="button"
+  >
+    <div
+      class="mimeTypeIndicator"
+      style="color: rgb(255, 255, 255); font-size: 52px; background-color: rgb(246, 126, 0); height: 200px;"
+    >
+      <span
+        aria-label="fa-file-image-o"
+        class="fa fa-file-image-o"
+      />
+    </div>
+    <div
+      class="cover"
+    />
+  </div>
+</div>
+`;
+
 exports[`Render a MediaCard component with a checkbox for selection 1`] = `
 <div
   class="mediaCard noDownloadList"

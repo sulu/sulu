@@ -418,7 +418,7 @@ class ResettingControllerTest extends SuluTestCase
             [],
             \Symfony\Component\Routing\Router::ABSOLUTE_URL
         );
-        $body = $this->getContainer()->get('templating')->render($template, [
+        $body = $this->getContainer()->get('twig')->render($template, [
             'user' => $user,
             'reset_url' => $resetUrl . '#/?forgotPasswordToken=' . $user->getPasswordResetToken(),
             'translation_domain' => $this->getContainer()->getParameter('sulu_security.reset_password.mail.translation_domain'),

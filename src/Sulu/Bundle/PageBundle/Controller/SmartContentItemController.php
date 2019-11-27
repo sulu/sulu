@@ -115,12 +115,13 @@ class SmartContentItemController extends AbstractRestController
     {
         $result = [];
         foreach ($params as $name => $item) {
+            $type = $item['type'] ?? null;
             $value = $item['value'];
-            if ('collection' === $item['type']) {
+            if ('collection' === $type) {
                 $value = $this->getParams($value);
             }
 
-            $result[$name] = new PropertyParameter($name, $value, $item['type']);
+            $result[$name] = new PropertyParameter($name, $value, $type);
         }
 
         return $result;

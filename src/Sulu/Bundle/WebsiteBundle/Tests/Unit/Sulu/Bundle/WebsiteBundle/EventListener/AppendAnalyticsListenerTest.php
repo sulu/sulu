@@ -129,20 +129,20 @@ class AppendAnalyticsListenerTest extends TestCase
         $loader = $this->prophesize(FilesystemLoader::class);
         $engine->getLoader()->shouldBeCalled()->willReturn($loader->reveal());
 
-        $loader->exists('SuluWebsiteBundle:Analytics:google/head-open.html.twig')->shouldBeCalled()->willReturn(false);
-        $engine->render('SuluWebsiteBundle:Analytics:google/head-open.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/google/head-open.html.twig')->shouldBeCalled()->willReturn(false);
+        $engine->render('@SuluWebsite/Analytics/google/head-open.html.twig', ['analytics' => $analytics])
             ->shouldNotBeCalled();
 
-        $loader->exists('SuluWebsiteBundle:Analytics:google/head-close.html.twig')->shouldBeCalled()->willReturn(true);
-        $engine->render('SuluWebsiteBundle:Analytics:google/head-close.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/google/head-close.html.twig')->shouldBeCalled()->willReturn(true);
+        $engine->render('@SuluWebsite/Analytics/google/head-close.html.twig', ['analytics' => $analytics])
             ->shouldBeCalled()->willReturn('<script>var i = 0;</script>');
 
-        $loader->exists('SuluWebsiteBundle:Analytics:google/body-open.html.twig')->shouldBeCalled()->willReturn(false);
-        $engine->render('SuluWebsiteBundle:Analytics:google/body-open.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/google/body-open.html.twig')->shouldBeCalled()->willReturn(false);
+        $engine->render('@SuluWebsite/Analytics/google/body-open.html.twig', ['analytics' => $analytics])
             ->shouldNotBeCalled();
 
-        $loader->exists('SuluWebsiteBundle:Analytics:google/body-close.html.twig')->shouldBeCalled()->willReturn(false);
-        $engine->render('SuluWebsiteBundle:Analytics:google/body-close.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/google/body-close.html.twig')->shouldBeCalled()->willReturn(false);
+        $engine->render('@SuluWebsite/Analytics/google/body-close.html.twig', ['analytics' => $analytics])
             ->shouldNotBeCalled();
 
         $response->getContent()->willReturn('<html><head><title>Test</title></head><body><h1>Title</h1></body></html>');
@@ -189,20 +189,20 @@ class AppendAnalyticsListenerTest extends TestCase
         $loader = $this->prophesize(FilesystemLoader::class);
         $engine->getLoader()->shouldBeCalled()->willReturn($loader->reveal());
 
-        $loader->exists('SuluWebsiteBundle:Analytics:google/head-open.html.twig')->shouldBeCalled()->willReturn(false);
-        $engine->render('SuluWebsiteBundle:Analytics:google/head-open.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/google/head-open.html.twig')->shouldBeCalled()->willReturn(false);
+        $engine->render('@SuluWebsite/Analytics/google/head-open.html.twig', ['analytics' => $analytics])
             ->shouldNotBeCalled();
 
-        $loader->exists('SuluWebsiteBundle:Analytics:google/head-close.html.twig')->shouldBeCalled()->willReturn(true);
-        $engine->render('SuluWebsiteBundle:Analytics:google/head-close.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/google/head-close.html.twig')->shouldBeCalled()->willReturn(true);
+        $engine->render('@SuluWebsite/Analytics/google/head-close.html.twig', ['analytics' => $analytics])
             ->shouldBeCalled()->willReturn('<script>var i = 0;</script>');
 
-        $loader->exists('SuluWebsiteBundle:Analytics:google/body-open.html.twig')->shouldBeCalled()->willReturn(false);
-        $engine->render('SuluWebsiteBundle:Analytics:google/body-open.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/google/body-open.html.twig')->shouldBeCalled()->willReturn(false);
+        $engine->render('@SuluWebsite/Analytics/google/body-open.html.twig', ['analytics' => $analytics])
             ->shouldNotBeCalled();
 
-        $loader->exists('SuluWebsiteBundle:Analytics:google/body-close.html.twig')->shouldBeCalled()->willReturn(false);
-        $engine->render('SuluWebsiteBundle:Analytics:google/body-close.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/google/body-close.html.twig')->shouldBeCalled()->willReturn(false);
+        $engine->render('@SuluWebsite/Analytics/google/body-close.html.twig', ['analytics' => $analytics])
             ->shouldNotBeCalled();
 
         $response->getContent()->willReturn('<html><head><title>Test</title></head><body><h1>Title</h1></body></html>');
@@ -248,20 +248,20 @@ class AppendAnalyticsListenerTest extends TestCase
         $loader = $this->prophesize(FilesystemLoader::class);
         $engine->getLoader()->shouldBeCalled()->willReturn($loader->reveal());
 
-        $loader->exists('SuluWebsiteBundle:Analytics:google_tag_manager/head-open.html.twig')->shouldBeCalled()->willReturn(true);
-        $engine->render('SuluWebsiteBundle:Analytics:google_tag_manager/head-open.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/google_tag_manager/head-open.html.twig')->shouldBeCalled()->willReturn(true);
+        $engine->render('@SuluWebsite/Analytics/google_tag_manager/head-open.html.twig', ['analytics' => $analytics])
             ->shouldBeCalled()->willReturn('<script>var i = 0;</script>');
 
-        $loader->exists('SuluWebsiteBundle:Analytics:google_tag_manager/head-close.html.twig')->shouldBeCalled()->willReturn(false);
-        $engine->render('SuluWebsiteBundle:Analytics:google_tag_manager/head-close.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/google_tag_manager/head-close.html.twig')->shouldBeCalled()->willReturn(false);
+        $engine->render('@SuluWebsite/Analytics/google_tag_manager/head-close.html.twig', ['analytics' => $analytics])
             ->shouldNotBeCalled();
 
-        $loader->exists('SuluWebsiteBundle:Analytics:google_tag_manager/body-open.html.twig')->shouldBeCalled()->willReturn(true);
-        $engine->render('SuluWebsiteBundle:Analytics:google_tag_manager/body-open.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/google_tag_manager/body-open.html.twig')->shouldBeCalled()->willReturn(true);
+        $engine->render('@SuluWebsite/Analytics/google_tag_manager/body-open.html.twig', ['analytics' => $analytics])
             ->shouldBeCalled()->willReturn('<noscript><div>Blabla</div></noscript>');
 
-        $loader->exists('SuluWebsiteBundle:Analytics:google_tag_manager/body-close.html.twig')->shouldBeCalled()->willReturn(false);
-        $engine->render('SuluWebsiteBundle:Analytics:google_tag_manager/body-close.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/google_tag_manager/body-close.html.twig')->shouldBeCalled()->willReturn(false);
+        $engine->render('@SuluWebsite/Analytics/google_tag_manager/body-close.html.twig', ['analytics' => $analytics])
             ->shouldNotBeCalled();
 
         $response->getContent()
@@ -307,20 +307,20 @@ class AppendAnalyticsListenerTest extends TestCase
         $loader = $this->prophesize(FilesystemLoader::class);
         $engine->getLoader()->shouldBeCalled()->willReturn($loader->reveal());
 
-        $loader->exists('SuluWebsiteBundle:Analytics:piwik/head-open.html.twig')->shouldBeCalled()->willReturn(false);
-        $engine->render('SuluWebsiteBundle:Analytics:piwik/head-open.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/piwik/head-open.html.twig')->shouldBeCalled()->willReturn(false);
+        $engine->render('@SuluWebsite/Analytics/piwik/head-open.html.twig', ['analytics' => $analytics])
             ->shouldNotBeCalled();
 
-        $loader->exists('SuluWebsiteBundle:Analytics:piwik/head-close.html.twig')->shouldBeCalled()->willReturn(true);
-        $engine->render('SuluWebsiteBundle:Analytics:piwik/head-close.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/piwik/head-close.html.twig')->shouldBeCalled()->willReturn(true);
+        $engine->render('@SuluWebsite/Analytics/piwik/head-close.html.twig', ['analytics' => $analytics])
             ->shouldBeCalled()->willReturn('<script>var i = 0;</script>');
 
-        $loader->exists('SuluWebsiteBundle:Analytics:piwik/body-open.html.twig')->shouldBeCalled()->willReturn(true);
-        $engine->render('SuluWebsiteBundle:Analytics:piwik/body-open.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/piwik/body-open.html.twig')->shouldBeCalled()->willReturn(true);
+        $engine->render('@SuluWebsite/Analytics/piwik/body-open.html.twig', ['analytics' => $analytics])
             ->shouldBeCalled()->willReturn('<noscript><div>Blabla</div></noscript>');
 
-        $loader->exists('SuluWebsiteBundle:Analytics:piwik/body-close.html.twig')->shouldBeCalled()->willReturn(false);
-        $engine->render('SuluWebsiteBundle:Analytics:piwik/body-close.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/piwik/body-close.html.twig')->shouldBeCalled()->willReturn(false);
+        $engine->render('@SuluWebsite/Analytics/piwik/body-close.html.twig', ['analytics' => $analytics])
             ->shouldNotBeCalled();
 
         $response->getContent()
@@ -366,20 +366,20 @@ class AppendAnalyticsListenerTest extends TestCase
         $loader = $this->prophesize(FilesystemLoader::class);
         $engine->getLoader()->shouldBeCalled()->willReturn($loader->reveal());
 
-        $loader->exists('SuluWebsiteBundle:Analytics:custom/head-open.html.twig')->shouldBeCalled()->willReturn(true);
-        $engine->render('SuluWebsiteBundle:Analytics:custom/head-open.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/custom/head-open.html.twig')->shouldBeCalled()->willReturn(true);
+        $engine->render('@SuluWebsite/Analytics/custom/head-open.html.twig', ['analytics' => $analytics])
             ->shouldBeCalled()->willReturn('<script>var nice_var = false;</script>');
 
-        $loader->exists('SuluWebsiteBundle:Analytics:custom/head-close.html.twig')->shouldBeCalled()->willReturn(true);
-        $engine->render('SuluWebsiteBundle:Analytics:custom/head-close.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/custom/head-close.html.twig')->shouldBeCalled()->willReturn(true);
+        $engine->render('@SuluWebsite/Analytics/custom/head-close.html.twig', ['analytics' => $analytics])
             ->shouldBeCalled()->willReturn('');
 
-        $loader->exists('SuluWebsiteBundle:Analytics:custom/body-open.html.twig')->shouldBeCalled()->willReturn(true);
-        $engine->render('SuluWebsiteBundle:Analytics:custom/body-open.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/custom/body-open.html.twig')->shouldBeCalled()->willReturn(true);
+        $engine->render('@SuluWebsite/Analytics/custom/body-open.html.twig', ['analytics' => $analytics])
             ->shouldBeCalled()->willReturn('');
 
-        $loader->exists('SuluWebsiteBundle:Analytics:custom/body-close.html.twig')->shouldBeCalled()->willReturn(true);
-        $engine->render('SuluWebsiteBundle:Analytics:custom/body-close.html.twig', ['analytics' => $analytics])
+        $loader->exists('@SuluWebsite/Analytics/custom/body-close.html.twig')->shouldBeCalled()->willReturn(true);
+        $engine->render('@SuluWebsite/Analytics/custom/body-close.html.twig', ['analytics' => $analytics])
             ->shouldBeCalled()->willReturn('');
 
         $response->getContent()

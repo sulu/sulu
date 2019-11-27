@@ -86,7 +86,7 @@ test('Should correctly initialize SmartContentStore', () => {
 
     expect(smartContentStorePool.add).toBeCalledWith(smartContentStore, false);
     expect(smartContentConfigStore.getConfig).toBeCalledWith('media');
-    expect(SmartContentStore).toBeCalledWith('media', value, undefined, 'collections', undefined);
+    expect(SmartContentStore).toBeCalledWith('media', value, undefined, 'collections', undefined, schemaOptions);
 
     smartContent.unmount();
     expect(smartContentStorePool.remove).toBeCalledWith(smartContentStore);
@@ -186,7 +186,7 @@ test('Should pass id to SmartContentStore if resourceKeys match', () => {
     );
 
     expect(smartContentConfigStore.getConfig).toBeCalledWith('pages');
-    expect(SmartContentStore).toBeCalledWith('pages', value, undefined, 'pages', 4);
+    expect(SmartContentStore).toBeCalledWith('pages', value, undefined, 'pages', 4, schemaOptions);
 });
 
 test('Pass correct props to SmartContent component', () => {

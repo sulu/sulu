@@ -129,6 +129,47 @@ exports[`Render a SingleMediaDropzone while uploading 1`] = `
 </div>
 `;
 
+exports[`Render a SingleMediaDropzone with a MimeTypeIndicator if an error appeared during image loading 1`] = `
+<div
+  aria-disabled="false"
+  class="mediaContainer default"
+  style="position: relative;"
+>
+  <div
+    class="mimeTypeIndicator"
+  >
+    <div
+      class="mimeTypeIndicator"
+      style="color: rgb(255, 255, 255); font-size: 100px; background-color: rgb(246, 126, 0);"
+    >
+      <span
+        aria-label="fa-file-video-o"
+        class="fa fa-file-video-o"
+      />
+    </div>
+  </div>
+  <div
+    class="uploadIndicatorContainer"
+  >
+    <div
+      class="uploadIndicator"
+    >
+      <div>
+        <span
+          aria-label="fa-cloud-upload"
+          class="fa fa-cloud-upload uploadIcon"
+        />
+      </div>
+    </div>
+  </div>
+  <input
+    autocomplete="off"
+    style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.00001; pointer-events: none;"
+    type="file"
+  />
+</div>
+`;
+
 exports[`Render a SingleMediaDropzone with a loader if image has not been loaded yet 1`] = `
 <div
   aria-disabled="false"
