@@ -100,7 +100,7 @@ class MediaVersionUpload extends React.Component<Props> {
                     imageSize="sulu-400x400-inset"
                     mediaUploadStore={this.mediaUploadStore}
                     onUploadComplete={this.handleUploadComplete}
-                    uploadText={translate('sulu_media.upload_or_replace')}
+                    uploadText={translate('sulu_media.upload_new_version')}
                 />
                 <div className={mediaVersionUploadStyles.buttons}>
                     <Button

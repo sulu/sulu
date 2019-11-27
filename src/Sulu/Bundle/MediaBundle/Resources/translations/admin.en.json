@@ -9,7 +9,7 @@
     "sulu_media.copy_masterfile_url": "Copy master file URL",
     "sulu_media.information_taxonomy": "Information and Taxonomy",
     "sulu_media.upload": "Upload",
-    "sulu_media.upload_or_replace": "Upload / replace image",
+    "sulu_media.upload_new_version": "Upload new version",
     "sulu_media.media_selected_singular": "media element selected",
     "sulu_media.media_selected_plural": "media elements selected",
     "sulu_media.drop_files_to_upload": "Upload files per drag`n`drop",

@@ -25,7 +25,7 @@ Array [
           <div
             class="uploadInfoText"
           >
-            sulu_media.upload_or_replace
+            sulu_media.upload_new_version
           </div>
         </div>
       </div>
