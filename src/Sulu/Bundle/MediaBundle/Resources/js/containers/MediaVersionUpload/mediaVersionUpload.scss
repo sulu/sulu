@@ -1,9 +1,6 @@
 .buttons {
-    display: flex;
-    flex-wrap: wrap;
-
     > * {
-        flex: 1;
-        margin-top: 20px;
+        display: block;
+        margin-top: 10px;
     }
 }

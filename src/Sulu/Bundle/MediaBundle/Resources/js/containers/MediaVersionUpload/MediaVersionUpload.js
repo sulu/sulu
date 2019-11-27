@@ -9,7 +9,7 @@ import MediaUploadStore from '../../stores/MediaUploadStore';
 import SingleMediaUpload from '../SingleMediaUpload';
 import CropOverlay from './CropOverlay';
 import FocusPointOverlay from './FocusPointOverlay';
-import mediaDetailsStyles from './mediaVersionUpload.scss';
+import mediaVersionUploadStyles from './mediaVersionUpload.scss';
 
 type Props = {|
     onSuccess: ?() => void,
@@ -102,7 +102,7 @@ class MediaVersionUpload extends React.Component<Props> {
                     onUploadComplete={this.handleUploadComplete}
                     uploadText={translate('sulu_media.upload_or_replace')}
                 />
-                <div className={mediaDetailsStyles.buttons}>
+                <div className={mediaVersionUploadStyles.buttons}>
                     <Button
                         icon="su-focus"
                         onClick={this.handleFocusPointButtonClick}
