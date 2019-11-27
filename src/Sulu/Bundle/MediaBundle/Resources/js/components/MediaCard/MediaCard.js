@@ -41,10 +41,9 @@ class MediaCard extends React.Component<Props> {
     image: Image;
 
     @observable downloadButtonRef: ?ElementRef<'button'>;
-
     @observable downloadListOpen: boolean = false;
-
     @observable imageLoading: boolean = true;
+    @observable imageError: boolean = false;
 
     constructor(props: Props) {
         super(props);
@@ -54,6 +53,7 @@ class MediaCard extends React.Component<Props> {
         if (src) {
             this.image = new Image();
             this.image.onload = this.handleImageLoad;
+            this.image.onerror = this.handleImageError;
             this.image.src = src;
         } else {
             this.handleImageLoad();
@@ -115,6 +115,10 @@ class MediaCard extends React.Component<Props> {
 
     @action handleImageLoad = () => {
         this.imageLoading = false;
+    };
+
+    @action handleImageError = () => {
+        this.imageError = true;
     };
 
     render() {
@@ -208,7 +212,7 @@ class MediaCard extends React.Component<Props> {
                     onClick={this.handleClick}
                     role="button"
                 >
-                    {image
+                    {image && !this.imageError
                         ? (
                             <Fragment>
                                 <img alt={title} src={this.image.src} />
