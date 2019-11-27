@@ -115,7 +115,7 @@ class MediaVersionUpload extends React.Component<Props> {
                         onClick={this.handleCropButtonClick}
                         skin="link"
                     >
-                        {translate('sulu_media.crop')}
+                        {translate('sulu_media.define_crops')}
                     </Button>
                 </div>
                 <FocusPointOverlay
