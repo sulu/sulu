@@ -287,10 +287,40 @@ test('Should call deletePreviewImage method of MediaUploadStore if the button to
     const deletePreviewPromise = Promise.resolve({name: 'test.jpg'});
     mediaVersionUpload.instance().mediaUploadStore.deletePreviewImage.mockReturnValue(deletePreviewPromise);
     mediaVersionUpload.find('Button[icon="su-trash-alt"]').prop('onClick')();
+    mediaVersionUpload.update();
+
+    mediaVersionUpload
+        .find('Dialog[children="sulu_media.delete_preview_image_warning_text"] Button[skin="primary"]')
+        .prop('onClick')();
 
     expect(mediaVersionUpload.instance().mediaUploadStore.deletePreviewImage).toHaveBeenCalledWith();
 
     return deletePreviewPromise.then(() => {
         expect(successSpy).toBeCalledWith();
     });
+});
+
+test('Should not call deletePreviewImage method of MediaUploadStore if the delete preview dialog is cancelled', () => {
+    const testId = 1;
+    const resourceStore = new ResourceStore('test', testId, {locale: observable.box()});
+    const successSpy = jest.fn();
+
+    resourceStore.set('id', testId);
+    resourceStore.loading = false;
+
+    const mediaVersionUpload = mount(<MediaVersionUpload
+        onSuccess={successSpy}
+        resourceStore={resourceStore}
+    />);
+
+    mediaVersionUpload.update();
+
+    mediaVersionUpload.find('Button[icon="su-trash-alt"]').prop('onClick')();
+    mediaVersionUpload.update();
+
+    mediaVersionUpload
+        .find('Dialog[children="sulu_media.delete_preview_image_warning_text"] Button[skin="secondary"]')
+        .prop('onClick')();
+
+    expect(mediaVersionUpload.instance().mediaUploadStore.deletePreviewImage).not.toBeCalled();
 });

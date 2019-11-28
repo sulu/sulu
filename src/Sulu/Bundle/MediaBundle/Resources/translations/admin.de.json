@@ -23,6 +23,8 @@
     "sulu_media.delete_media": "Medium löschen",
     "sulu_media.delete_media_warning_title": "Medium löschen",
     "sulu_media.delete_media_warning_text": "Diese Operation löscht ein Medium und kann nicht rückgängig gemacht werden. Wollen sie wirklich fortfahren?",
+    "sulu_media.delete_preview_image_warning_title": "Vorschaubild löschen",
+    "sulu_media.delete_preview_image_warning_text": "Diese Operation löscht das Vorschaubild und kann nicht rückgängig gemacht werden. Wollen sie wirklich fortfahren?",
     "sulu_media.thumbnail": "Vorschaubild",
     "sulu_media.type": "Typ",
     "sulu_media.version": "Version",

@@ -23,6 +23,8 @@
     "sulu_media.delete_media": "Delete media",
     "sulu_media.delete_media_warning_title": "Delete media",
     "sulu_media.delete_media_warning_text": "This operation deletes a media and cannot be undone. Do you really wish to proceed?",
+    "sulu_media.delete_preview_image_warning_title": "Delete preview image",
+    "sulu_media.delete_preview_image_warning_text": "This operation deletes the preview image and cannot be undone. Do you really wish to proceed?",
     "sulu_media.thumbnail": "Thumbnail",
     "sulu_media.type": "Type",
     "sulu_media.version": "Version",

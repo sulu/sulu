@@ -2,7 +2,7 @@
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
 import {action, observable, when} from 'mobx';
-import {Button, FileUploadButton} from 'sulu-admin-bundle/components';
+import {Button, Dialog, FileUploadButton} from 'sulu-admin-bundle/components';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import MediaUploadStore from '../../stores/MediaUploadStore';
@@ -21,6 +21,8 @@ class MediaVersionUpload extends React.Component<Props> {
     mediaUploadStore: MediaUploadStore;
     @observable showFocusPointOverlay: boolean = false;
     @observable showCropOverlay: boolean = false;
+    @observable showDeletePreviewDialog: boolean = false;
+    @observable deletingPreview: boolean = false;
 
     constructor(props: Props) {
         super(props);
@@ -44,12 +46,25 @@ class MediaVersionUpload extends React.Component<Props> {
         this.callSuccess();
     };
 
-    handlePreviewUpload = (file: File) => {
+    handlePreviewUploadClick = (file: File) => {
         this.mediaUploadStore.updatePreviewImage(file).then(this.callSuccess);
     };
 
-    handleDeletePreview = () => {
-        this.mediaUploadStore.deletePreviewImage().then(this.callSuccess);
+    @action handleDeletePreviewClick = () => {
+        this.showDeletePreviewDialog = true;
+    };
+
+    @action handleDeletePreviewConfirm = () => {
+        this.deletingPreview = true;
+        this.mediaUploadStore.deletePreviewImage().then(action(() => {
+            this.deletingPreview = false;
+            this.showDeletePreviewDialog = false;
+            this.callSuccess();
+        }));
+    };
+
+    @action handleDeletePreviewCancel = () => {
+        this.showDeletePreviewDialog = false;
     };
 
     callSuccess = () => {
@@ -141,12 +156,12 @@ class MediaVersionUpload extends React.Component<Props> {
                         <Fragment>
                             <FileUploadButton
                                 icon="su-image"
-                                onUpload={this.handlePreviewUpload}
+                                onUpload={this.handlePreviewUploadClick}
                                 skin="link"
                             >
                                 {translate('sulu_media.upload_preview_image')}
                             </FileUploadButton>
-                            <Button icon="su-trash-alt" onClick={this.handleDeletePreview} skin="link">
+                            <Button icon="su-trash-alt" onClick={this.handleDeletePreviewClick} skin="link">
                                 {translate('sulu_media.delete_preview_image')}
                             </Button>
                         </Fragment>
@@ -166,6 +181,17 @@ class MediaVersionUpload extends React.Component<Props> {
                     onConfirm={this.handleCropOverlayConfirm}
                     open={this.showCropOverlay}
                 />
+                <Dialog
+                    cancelText={translate('sulu_admin.cancel')}
+                    confirmLoading={this.deletingPreview}
+                    confirmText={translate('sulu_admin.ok')}
+                    onCancel={this.handleDeletePreviewCancel}
+                    onConfirm={this.handleDeletePreviewConfirm}
+                    open={this.showDeletePreviewDialog}
+                    title={translate('sulu_media.delete_preview_image_warning_title')}
+                >
+                    {translate('sulu_media.delete_preview_image_warning_text')}
+                </Dialog>
             </Fragment>
         );
     }
