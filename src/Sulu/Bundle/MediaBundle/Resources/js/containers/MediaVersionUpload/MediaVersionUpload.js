@@ -2,7 +2,7 @@
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
 import {action, observable, when} from 'mobx';
-import {Button} from 'sulu-admin-bundle/components';
+import {Button, FileUploadButton} from 'sulu-admin-bundle/components';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import MediaUploadStore from '../../stores/MediaUploadStore';
@@ -44,6 +44,10 @@ class MediaVersionUpload extends React.Component<Props> {
         this.callSuccess();
     };
 
+    handlePreviewUpload = (file: File) => {
+        this.mediaUploadStore.updatePreviewImage(file).then(this.callSuccess);
+    };
+
     callSuccess = () => {
         const {onSuccess} = this.props;
         if (onSuccess) {
@@ -83,7 +87,15 @@ class MediaVersionUpload extends React.Component<Props> {
         }
         const {resourceStore} = this.props;
 
-        const {id, locale} = resourceStore;
+        const {
+            data: {
+                isImage,
+                url,
+            },
+            id,
+            locale,
+        } = resourceStore;
+
         if (!id) {
             return null;
         }
@@ -103,20 +115,33 @@ class MediaVersionUpload extends React.Component<Props> {
                     uploadText={translate('sulu_media.upload_new_version')}
                 />
                 <div className={mediaVersionUploadStyles.buttons}>
-                    <Button
-                        icon="su-focus"
-                        onClick={this.handleFocusPointButtonClick}
-                        skin="link"
-                    >
-                        {translate('sulu_media.set_focus_point')}
-                    </Button>
-                    <Button
-                        icon="su-cut"
-                        onClick={this.handleCropButtonClick}
-                        skin="link"
-                    >
-                        {translate('sulu_media.define_crops')}
-                    </Button>
+                    {isImage &&
+                        <Fragment>
+                            <Button
+                                icon="su-focus"
+                                onClick={this.handleFocusPointButtonClick}
+                                skin="link"
+                            >
+                                {translate('sulu_media.set_focus_point')}
+                            </Button>
+                            <Button
+                                icon="su-cut"
+                                onClick={this.handleCropButtonClick}
+                                skin="link"
+                            >
+                                {translate('sulu_media.define_crops')}
+                            </Button>
+                        </Fragment>
+                    }
+                    {!isImage &&
+                        <FileUploadButton
+                            icon="su-image"
+                            onUpload={this.handlePreviewUpload}
+                            skin="link"
+                        >
+                            {translate('sulu_media.upload_preview_image')}
+                        </FileUploadButton>
+                    }
                 </div>
                 <FocusPointOverlay
                     onClose={this.handleFocusPointOverlayClose}
@@ -126,7 +151,7 @@ class MediaVersionUpload extends React.Component<Props> {
                 />
                 <CropOverlay
                     id={id}
-                    image={resourceStore.data.url}
+                    image={url}
                     locale={locale.get()}
                     onClose={this.handleCropOverlayClose}
                     onConfirm={this.handleCropOverlayConfirm}

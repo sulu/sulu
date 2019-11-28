@@ -37,6 +37,7 @@
     "sulu_media.move_media": "Move media",
     "sulu_media.set_focus_point": "Set focus point",
     "sulu_media.define_crops": "Define crops",
+    "sulu_media.upload_preview_image": "Vorschaubild hochladen",
     "sulu_media.cropped": "Cropped",
     "sulu_media.double_click_crop_and_maximize": "A double-click maximizes and centers the area",
     "sulu_media.min_size_notification": "Minimal size reached",
