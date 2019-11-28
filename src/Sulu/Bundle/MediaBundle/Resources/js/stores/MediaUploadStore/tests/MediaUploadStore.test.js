@@ -92,6 +92,23 @@ test('Calling "delete" method should call the "delete" method of the ResourceReq
     });
 });
 
+test('Calling "deletePreviewImage" method should call the "delete" method of the ResourceRequester', () => {
+    const mediaUploadStore = new MediaUploadStore(
+        {id: 2, mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        observable.box('en')
+    );
+
+    const media = {id: 2};
+    ResourceRequester.delete.mockReturnValue(Promise.resolve(media));
+
+    const deletePromise = mediaUploadStore.deletePreviewImage();
+    expect(ResourceRequester.delete).toBeCalledWith('media_preview', {id: 2});
+
+    return deletePromise.then(() => {
+        expect(mediaUploadStore.media).toEqual(media);
+    });
+});
+
 test('Calling the "updatePreviewImage" method should make a "POST" request to the preview media update api', () => {
     resourceRouteRegistry.getDetailUrl.mockReturnValue('/media/1/preview?locale=en');
 
@@ -184,8 +201,13 @@ test('After the "updatePreviewImage" call request was successful the progress wi
         }
     );
 
+    const response =
+        '{"id": 1, "mimeType": "image/jpeg", "title": "test", "thumbnails": {"50x50": "image.jpg"}, "url": ""}';
+
     window.XMLHttpRequest.mock.instances[0].onload({
-        target: {response: '{"id": 6, "thumbnails": {"50x50": "image.jpg"}}'},
+        target: {
+            response,
+        },
     });
 });
 

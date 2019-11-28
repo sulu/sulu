@@ -48,6 +48,10 @@ class MediaVersionUpload extends React.Component<Props> {
         this.mediaUploadStore.updatePreviewImage(file).then(this.callSuccess);
     };
 
+    handleDeletePreview = () => {
+        this.mediaUploadStore.deletePreviewImage().then(this.callSuccess);
+    };
+
     callSuccess = () => {
         const {onSuccess} = this.props;
         if (onSuccess) {
@@ -134,13 +138,18 @@ class MediaVersionUpload extends React.Component<Props> {
                         </Fragment>
                     }
                     {!isImage &&
-                        <FileUploadButton
-                            icon="su-image"
-                            onUpload={this.handlePreviewUpload}
-                            skin="link"
-                        >
-                            {translate('sulu_media.upload_preview_image')}
-                        </FileUploadButton>
+                        <Fragment>
+                            <FileUploadButton
+                                icon="su-image"
+                                onUpload={this.handlePreviewUpload}
+                                skin="link"
+                            >
+                                {translate('sulu_media.upload_preview_image')}
+                            </FileUploadButton>
+                            <Button icon="su-trash-alt" onClick={this.handleDeletePreview} skin="link">
+                                {translate('sulu_media.delete_preview_image')}
+                            </Button>
+                        </Fragment>
                     }
                 </div>
                 <FocusPointOverlay

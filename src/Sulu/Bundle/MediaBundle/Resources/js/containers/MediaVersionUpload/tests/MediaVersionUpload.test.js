@@ -19,10 +19,11 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
 }));
 
 jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function() {
+    this.deletePreviewImage = jest.fn();
     this.id = 1;
     this.media = {};
     this.update = jest.fn().mockReturnValue(Promise.resolve({name: 'test.jpg'}));
-    this.updatePreviewImage = jest.fn().mockReturnValue(Promise.resolve({name: 'test.jpg'}));
+    this.updatePreviewImage = jest.fn();
     this.upload = jest.fn();
     this.getThumbnail = jest.fn((size) => size);
 }));
@@ -245,17 +246,51 @@ test('Should call updatePreviewImage method of MediaUploadStore if a new preview
     const testId = 1;
     const testFile = {name: 'test.jpg'};
     const resourceStore = new ResourceStore('test', testId, {locale: observable.box()});
+    const successSpy = jest.fn();
 
     resourceStore.set('id', testId);
     resourceStore.loading = false;
 
     const mediaVersionUpload = mount(<MediaVersionUpload
-        onSuccess={undefined}
+        onSuccess={successSpy}
         resourceStore={resourceStore}
     />);
 
     mediaVersionUpload.update();
+
+    const updatePreviewPromise = Promise.resolve({name: 'test.jpg'});
+    mediaVersionUpload.instance().mediaUploadStore.updatePreviewImage.mockReturnValue(updatePreviewPromise);
     mediaVersionUpload.find('FileUploadButton').prop('onUpload')(testFile);
 
     expect(mediaVersionUpload.instance().mediaUploadStore.updatePreviewImage).toHaveBeenCalledWith(testFile);
+
+    return updatePreviewPromise.then(() => {
+        expect(successSpy).toBeCalledWith();
+    });
+});
+
+test('Should call deletePreviewImage method of MediaUploadStore if the button to delete a preview is clicked', () => {
+    const testId = 1;
+    const resourceStore = new ResourceStore('test', testId, {locale: observable.box()});
+    const successSpy = jest.fn();
+
+    resourceStore.set('id', testId);
+    resourceStore.loading = false;
+
+    const mediaVersionUpload = mount(<MediaVersionUpload
+        onSuccess={successSpy}
+        resourceStore={resourceStore}
+    />);
+
+    mediaVersionUpload.update();
+
+    const deletePreviewPromise = Promise.resolve({name: 'test.jpg'});
+    mediaVersionUpload.instance().mediaUploadStore.deletePreviewImage.mockReturnValue(deletePreviewPromise);
+    mediaVersionUpload.find('Button[icon="su-trash-alt"]').prop('onClick')();
+
+    expect(mediaVersionUpload.instance().mediaUploadStore.deletePreviewImage).toHaveBeenCalledWith();
+
+    return deletePreviewPromise.then(() => {
+        expect(successSpy).toBeCalledWith();
+    });
 });

@@ -142,6 +142,20 @@ Array [
         type="file"
       />
     </div>
+    <button
+      class="button link"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt buttonIcon"
+      />
+      <span
+        class="text"
+      >
+        sulu_media.delete_preview_image
+      </span>
+    </button>
   </div>,
 ]
 `;

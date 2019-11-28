@@ -143,18 +143,17 @@ export default class MediaUploadStore {
         this.setUploading(true);
 
         return this.upload(file, url, PREVIEW_MEDIA_FORM_NAME)
-            .then(action((previewMedia) => {
-                const {media} = this;
-                if (!media) {
-                    throw new Error('There is no media assigned yet! This should not happened and is likely a bug.');
-                }
+            .then(this.handleResponse);
+    }
 
-                this.setUploading(false);
-                this.setProgress(0);
+    deletePreviewImage(): Promise<*> {
+        if (!this.id) {
+            throw new Error('The "id" property must be available for deleting a preview media');
+        }
 
-                media.thumbnails = previewMedia.thumbnails;
-
-                return media;
+        return ResourceRequester.delete(PREVIEW_RESOURCE_KEY, {id: this.id})
+            .then(action((media) => {
+                this.media = media;
             }));
     }
 
