@@ -47,6 +47,11 @@
             <entity-name>%sulu.model.media.class%</entity-name>
         </property>
 
+        <identity-property name="previewImageId" visibility="never">
+            <field-name>previewImage</field-name>
+            <entity-name>%sulu.model.media.class%</entity-name>
+        </identity-property>
+
         <property name="changed" translation="sulu_admin.changed" visibility="no" type="datetime">
             <field-name>changed</field-name>
             <entity-name>%sulu.model.media.class%</entity-name>
