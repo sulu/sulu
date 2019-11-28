@@ -153,14 +153,14 @@ export default class MediaUploadStore {
 
         return ResourceRequester.delete(PREVIEW_RESOURCE_KEY, {id: this.id})
             .then(action((media) => {
-                this.media = media;
+                Object.assign(this.media, media);
             }));
     }
 
     @action handleResponse = (media: Object) => {
         this.setUploading(false);
         this.setProgress(0);
-        this.media = media;
+        Object.assign(this.media, media);
 
         return media;
     };

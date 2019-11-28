@@ -51,10 +51,24 @@ test('Render a MediaVersionUpload field for images', () => {
     )).toMatchSnapshot();
 });
 
+test('Render a MediaVersionUpload field for videos without assigned preview image', () => {
+    const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
+    resourceStore.loading = false;
+    resourceStore.data.isVideo = true;
+
+    expect(render(
+        <MediaVersionUpload
+            onSuccess={jest.fn()}
+            resourceStore={resourceStore}
+        />
+    )).toMatchSnapshot();
+});
+
 test('Render a MediaVersionUpload field for videos', () => {
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
     resourceStore.loading = false;
     resourceStore.data.isVideo = true;
+    resourceStore.data.previewImageId = 5;
 
     expect(render(
         <MediaVersionUpload

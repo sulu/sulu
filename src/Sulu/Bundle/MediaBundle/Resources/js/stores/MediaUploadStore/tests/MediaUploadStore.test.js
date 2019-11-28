@@ -98,7 +98,7 @@ test('Calling "deletePreviewImage" method should call the "delete" method of the
         observable.box('en')
     );
 
-    const media = {id: 2};
+    const media = {id: 2, mimeType: 'image/jpeg', title: 'test', thumbnails: {'50x50': 'image.jpg'}, url: ''};
     ResourceRequester.delete.mockReturnValue(Promise.resolve(media));
 
     const deletePromise = mediaUploadStore.deletePreviewImage();
@@ -159,12 +159,13 @@ test('After the "update" call request was successful the progress will be reset'
         (): void => {
             expect(mediaUploadStore.uploading).toEqual(false);
             expect(mediaUploadStore.progress).toEqual(0);
-            expect(mediaUploadStore.media).toEqual({});
+            expect(mediaUploadStore.media)
+                .toEqual({id: 1, mimeType: 'image/jpeg', title: 'test1', thumbnails: {}, url: ''});
             done();
         }
     );
 
-    window.XMLHttpRequest.mock.instances[0].onload({target: {response: '{}'}});
+    window.XMLHttpRequest.mock.instances[0].onload({target: {response: '{"title": "test1"}'}});
 });
 
 test('After the "updatePreviewImage" call request was successful the progress will be reset', (done) => {

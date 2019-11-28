@@ -108,6 +108,7 @@ class MediaVersionUpload extends React.Component<Props> {
 
         const {
             data: {
+                previewImageId,
                 isImage,
                 url,
             },
@@ -161,7 +162,12 @@ class MediaVersionUpload extends React.Component<Props> {
                             >
                                 {translate('sulu_media.upload_preview_image')}
                             </FileUploadButton>
-                            <Button icon="su-trash-alt" onClick={this.handleDeletePreviewClick} skin="link">
+                            <Button
+                                disabled={!previewImageId}
+                                icon="su-trash-alt"
+                                onClick={this.handleDeletePreviewClick}
+                                skin="link"
+                            >
                                 {translate('sulu_media.delete_preview_image')}
                             </Button>
                         </Fragment>

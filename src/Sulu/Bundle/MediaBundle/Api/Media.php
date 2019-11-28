@@ -1108,4 +1108,21 @@ class Media extends ApiWrapper
     {
         $this->getFileVersion()->setFocusPointY($focusPointY);
     }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("previewImageId")
+     *
+     * @return ?int
+     */
+    public function getPreviewImageId()
+    {
+        $previewImage = $this->entity->getPreviewImage();
+
+        if (!$previewImage) {
+            return null;
+        }
+
+        return $previewImage->getId();
+    }
 }

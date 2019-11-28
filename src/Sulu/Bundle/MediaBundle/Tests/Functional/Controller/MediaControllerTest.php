@@ -448,6 +448,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($this->mediaDefaultDescription, $response['description']);
         $this->assertNotEmpty($response['url']);
         $this->assertNotEmpty($response['thumbnails']);
+        $this->assertNull($response['previewImageId']);
 
         $this->assertContains($this->category->getId(), $response['categories']);
         $this->assertContains($this->category2->getId(), $response['categories']);
