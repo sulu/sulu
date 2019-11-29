@@ -65,6 +65,12 @@
             "severity": "error",
             "from": {"path": "Resources/js/stores"},
             "to": {"path": "views"}
+        },
+        {
+            "name": "sulu-admin-bundle-not-to-other-sulu-bundles",
+            "severity": "error",
+            "from": {"path": "src/Sulu/Bundle/AdminBundle/Resources/js"},
+            "to": {"path": "src\\/Sulu\\/Bundle\\/(?!AdminBundle)(.*)Bundle\\/Resources\\/js"}
         }
     ]
 }
