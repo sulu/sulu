@@ -24,6 +24,6 @@ export default class ThumbnailFieldTransformer implements FieldTransformer {
             return null;
         }
 
-        return <img alt={value.alt} src={value[IMAGE_FORMAT]} />;
+        return <img src={value[IMAGE_FORMAT]} />;
     }
 }
