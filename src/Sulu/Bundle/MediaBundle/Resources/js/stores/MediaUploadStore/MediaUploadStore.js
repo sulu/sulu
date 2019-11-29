@@ -160,7 +160,8 @@ export default class MediaUploadStore {
     @action handleResponse = (media: Object) => {
         this.setUploading(false);
         this.setProgress(0);
-        Object.assign(this.media, media);
+
+        this.media = Object.assign(this.media || {}, media);
 
         return media;
     };

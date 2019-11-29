@@ -70,10 +70,16 @@ test('Calling the "create" method should make a "POST" request to the media upda
     );
     const fileData = new File([''], 'fileName');
 
-    mediaUploadStore.create(1, fileData);
+    const createPromise = mediaUploadStore.create(1, fileData);
 
     expect(resourceRouteRegistry.getDetailUrl).toBeCalledWith('media', {collection: 1, locale: 'en'});
     expect(openSpy).toBeCalledWith('POST', '/media?locale=en&collection=1');
+
+    window.XMLHttpRequest.mock.instances[0].onload({target: {response: '{"title": "test1"}'}});
+
+    return createPromise.then(() => {
+        expect(mediaUploadStore.media).toEqual({title: 'test1'});
+    });
 });
 
 test('Calling "delete" method should call the "delete" method of the ResourceRequester', () => {
