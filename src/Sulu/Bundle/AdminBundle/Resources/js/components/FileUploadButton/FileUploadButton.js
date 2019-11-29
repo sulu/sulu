@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import Dropzone from 'react-dropzone';
 import Button from '../Button';
 import type {ButtonSkin} from '../Button';
@@ -20,12 +19,6 @@ export default class FileUploadButton extends React.Component<Props> {
         skin: undefined,
     };
 
-    dropzoneRef: ElementRef<typeof Dropzone>;
-
-    setDropzoneRef = (ref: ElementRef<typeof Dropzone>) => {
-        this.dropzoneRef = ref;
-    };
-
     handleDrop = (files: Array<File>) => {
         const file = files[0];
 
@@ -38,7 +31,6 @@ export default class FileUploadButton extends React.Component<Props> {
         return (
             <Dropzone
                 onDrop={this.handleDrop}
-                ref={this.setDropzoneRef}
                 style={{}}
             >
                 <Button disabled={disabled} icon={icon} skin={skin}>
