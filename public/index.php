@@ -56,7 +56,7 @@ if ('dev' !== $_SERVER['APP_ENV'] && SuluKernel::CONTEXT_WEBSITE === $suluContex
 
 // When using the HttpCache, you need to call the method in your front controller
 // instead of relying on the configuration parameter
-// https://symfony.com/doc/3.4/reference/configuration/framework.html#http-method-override
+// https://symfony.com/doc/4.3/reference/configuration/framework.html#http-method-override
 Request::enableHttpMethodParameterOverride();
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
