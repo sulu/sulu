@@ -64,10 +64,11 @@ interface CustomUrlManagerInterface
      *
      * @param string $url
      * @param string $webspaceKey
+     * @param string $locale
      *
      * @return CustomUrlDocument
      */
-    public function findByUrl($url, $webspaceKey);
+    public function findByUrl($url, $webspaceKey, $locale = null);
 
     /**
      * Returns a list of custom-url documents which targeting the given page.
