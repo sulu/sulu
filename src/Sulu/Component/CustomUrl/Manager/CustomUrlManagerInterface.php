@@ -64,7 +64,7 @@ interface CustomUrlManagerInterface
      *
      * @param string $url
      * @param string $webspaceKey
-     * @param string $locale
+     * @param string|null $locale
      *
      * @return CustomUrlDocument
      */
