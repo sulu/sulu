@@ -105,11 +105,19 @@ class Popover extends React.Component<Props> {
         }
 
         const {
-            offsetWidth,
+            clientHeight,
+            clientWidth,
             offsetHeight,
+            offsetWidth,
+            scrollHeight,
+            scrollWidth,
         } = this.popoverChildRef;
 
-        this.setPopoverSize(offsetWidth, offsetHeight);
+        // calculating real size by considering borders, margins and paddings
+        this.setPopoverSize(
+            scrollWidth + offsetWidth - clientWidth,
+            scrollHeight + offsetHeight - clientHeight
+        );
     };
 
     @action setPopoverSize(width: number, height: number) {
