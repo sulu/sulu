@@ -19,12 +19,13 @@ type Props = {
 
 export default class OptionList extends React.PureComponent<Props> {
     handleOptionClick = (option: Object) => {
-        if (this.props.onOptionClick) {
-            this.props.onOptionClick(option);
+        const {onClose, onOptionClick} = this.props;
+        if (onOptionClick) {
+            onOptionClick(option);
         }
 
-        if (this.props.onClose) {
-            this.props.onClose();
+        if (onClose) {
+            onClose();
         }
     };
 
