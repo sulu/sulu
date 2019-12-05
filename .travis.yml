@@ -60,7 +60,7 @@ before_script:
   - php -m
   - |
     if [[ $PECL_INSTALL ]]; then
-        pecl install $PECL_INSTALL
+        printf "\n" | pecl install $PECL_INSTALL
     fi
   - | # enable swap
     if [[ $ENABLE_SWAP == 'true' ]]; then
