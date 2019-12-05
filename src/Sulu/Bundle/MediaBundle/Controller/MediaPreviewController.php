@@ -94,10 +94,11 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
             $previewImage = $this->mediaManager->save($uploadedFile, $data, $this->getUser()->getId());
 
             $mediaEntity->setPreviewImage($previewImage->getEntity());
+            $this->mediaManager->addFormatsAndUrl($media);
 
             $this->entityManager->flush();
 
-            $view = $this->view($previewImage, 200);
+            $view = $this->view($media, 200);
         } catch (MediaNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
         } catch (MediaException $e) {
@@ -128,11 +129,12 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
                 $oldPreviewImageId = $mediaEntity->getPreviewImage()->getId();
 
                 $mediaEntity->setPreviewImage(null);
+                $this->mediaManager->addFormatsAndUrl($media);
 
                 $this->mediaManager->delete($oldPreviewImageId);
             }
 
-            $view = $this->view(null, 204);
+            $view = $this->view($media, 200);
         } catch (MediaNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
         } catch (MediaException $e) {

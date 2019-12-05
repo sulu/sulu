@@ -70,10 +70,16 @@ test('Calling the "create" method should make a "POST" request to the media upda
     );
     const fileData = new File([''], 'fileName');
 
-    mediaUploadStore.create(1, fileData);
+    const createPromise = mediaUploadStore.create(1, fileData);
 
     expect(resourceRouteRegistry.getDetailUrl).toBeCalledWith('media', {collection: 1, locale: 'en'});
     expect(openSpy).toBeCalledWith('POST', '/media?locale=en&collection=1');
+
+    window.XMLHttpRequest.mock.instances[0].onload({target: {response: '{"title": "test1"}'}});
+
+    return createPromise.then(() => {
+        expect(mediaUploadStore.media).toEqual({title: 'test1'});
+    });
 });
 
 test('Calling "delete" method should call the "delete" method of the ResourceRequester', () => {
@@ -92,7 +98,51 @@ test('Calling "delete" method should call the "delete" method of the ResourceReq
     });
 });
 
-test('After the request was successful the progress will be reset', (done) => {
+test('Calling "deletePreviewImage" method should call the "delete" method of the ResourceRequester', () => {
+    const mediaUploadStore = new MediaUploadStore(
+        {id: 2, mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        observable.box('en')
+    );
+
+    const media = {id: 2, mimeType: 'image/jpeg', title: 'test', thumbnails: {'50x50': 'image.jpg'}, url: ''};
+    ResourceRequester.delete.mockReturnValue(Promise.resolve(media));
+
+    const deletePromise = mediaUploadStore.deletePreviewImage();
+    expect(ResourceRequester.delete).toBeCalledWith('media_preview', {id: 2});
+
+    return deletePromise.then(() => {
+        expect(mediaUploadStore.media).toEqual(media);
+    });
+});
+
+test('Calling the "updatePreviewImage" method should make a "POST" request to the preview media update api', () => {
+    resourceRouteRegistry.getDetailUrl.mockReturnValue('/media/1/preview?locale=en');
+
+    const openSpy = jest.fn();
+
+    window.XMLHttpRequest = jest.fn(function() {
+        this.open = openSpy;
+        this.onload = jest.fn();
+        this.onerror = jest.fn();
+        this.upload = jest.fn();
+        this.send = jest.fn();
+    });
+
+    const mediaUploadStore = new MediaUploadStore(
+        {id: 1, mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        observable.box('en')
+    );
+    const fileData = new File([''], 'fileName');
+
+    mediaUploadStore.updatePreviewImage(fileData);
+    expect(resourceRouteRegistry.getDetailUrl).toBeCalledWith(
+        'media_preview',
+        {id: 1, locale: 'en'}
+    );
+    expect(openSpy).toBeCalledWith('POST', '/media/1/preview?locale=en');
+});
+
+test('After the "update" call request was successful the progress will be reset', (done) => {
     window.XMLHttpRequest = jest.fn(function() {
         this.open = jest.fn();
         this.onerror = jest.fn();
@@ -115,12 +165,57 @@ test('After the request was successful the progress will be reset', (done) => {
         (): void => {
             expect(mediaUploadStore.uploading).toEqual(false);
             expect(mediaUploadStore.progress).toEqual(0);
-            expect(mediaUploadStore.media).toEqual({});
+            expect(mediaUploadStore.media)
+                .toEqual({id: 1, mimeType: 'image/jpeg', title: 'test1', thumbnails: {}, url: ''});
             done();
         }
     );
 
-    window.XMLHttpRequest.mock.instances[0].onload({target: {response: '{}'}});
+    window.XMLHttpRequest.mock.instances[0].onload({target: {response: '{"title": "test1"}'}});
+});
+
+test('After the "updatePreviewImage" call request was successful the progress will be reset', (done) => {
+    window.XMLHttpRequest = jest.fn(function() {
+        this.open = jest.fn();
+        this.onerror = jest.fn();
+        this.upload = jest.fn();
+        this.send = jest.fn();
+    });
+
+    const mediaUploadStore = new MediaUploadStore(
+        {id: 1, mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        observable.box('en')
+    );
+    const fileData = new File([''], 'fileName');
+
+    mediaUploadStore.updatePreviewImage(fileData);
+    mediaUploadStore.progress = 4;
+    expect(mediaUploadStore.uploading).toEqual(true);
+
+    when(
+        () => !mediaUploadStore.uploading,
+        (): void => {
+            expect(mediaUploadStore.uploading).toEqual(false);
+            expect(mediaUploadStore.progress).toEqual(0);
+            expect(mediaUploadStore.media).toEqual({
+                id: 1,
+                mimeType: 'image/jpeg',
+                title: 'test',
+                thumbnails: {'50x50': 'image.jpg'},
+                url: '',
+            });
+            done();
+        }
+    );
+
+    const response =
+        '{"id": 1, "mimeType": "image/jpeg", "title": "test", "thumbnails": {"50x50": "image.jpg"}, "url": ""}';
+
+    window.XMLHttpRequest.mock.instances[0].onload({
+        target: {
+            response,
+        },
+    });
 });
 
 test('Should return thumbnail path if available', () => {

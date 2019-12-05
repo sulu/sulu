@@ -88,6 +88,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                     'routes_to_expose' => [
                         'sulu_media.put_media_format',
                         'sulu_media.delete_media_version',
+                        'sulu_media.post_media_preview',
                     ],
                 ]
             );
@@ -131,6 +132,11 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                             ],
                             'security_context' => 'sulu.media.collections',
                             'security_class' => Collection::class,
+                        ],
+                        'media_preview' => [
+                            'routes' => [
+                                'detail' => 'sulu_media.post_media_preview',
+                            ],
                         ],
                         'media_formats' => [
                             'routes' => [

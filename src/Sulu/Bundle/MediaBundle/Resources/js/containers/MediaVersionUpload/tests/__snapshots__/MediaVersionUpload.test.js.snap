@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render a MediaVersionUpload field 1`] = `
+exports[`Render a MediaVersionUpload field for images 1`] = `
 Array [
   <div
     aria-disabled="false"
@@ -25,7 +25,7 @@ Array [
           <div
             class="uploadInfoText"
           >
-            sulu_media.upload_or_replace
+            sulu_media.upload_new_version
           </div>
         </div>
       </div>
@@ -67,7 +67,180 @@ Array [
       <span
         class="text"
       >
-        sulu_media.crop
+        sulu_media.define_crops
+      </span>
+    </button>
+  </div>,
+]
+`;
+
+exports[`Render a MediaVersionUpload field for videos 1`] = `
+Array [
+  <div
+    aria-disabled="false"
+    class="mediaContainer default"
+    style="position:relative"
+  >
+    <img
+      class="thumbnail"
+      src="sulu-400x400-inset"
+    />
+    <div
+      class="uploadIndicatorContainer"
+    >
+      <div
+        class="uploadIndicator"
+      >
+        <div>
+          <span
+            aria-label="fa-cloud-upload"
+            class="fa fa-cloud-upload uploadIcon"
+          />
+          <div
+            class="uploadInfoText"
+          >
+            sulu_media.upload_new_version
+          </div>
+        </div>
+      </div>
+    </div>
+    <input
+      autocomplete="off"
+      style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+      type="file"
+    />
+  </div>,
+  <div
+    class="buttons"
+  />,
+  <div
+    class="buttons"
+  >
+    <div
+      aria-disabled="false"
+      class=""
+      style="position:relative"
+    >
+      <button
+        class="button link"
+        type="button"
+      >
+        <span
+          aria-label="su-image"
+          class="su-image buttonIcon"
+        />
+        <span
+          class="text"
+        >
+          sulu_media.upload_preview_image
+        </span>
+      </button>
+      <input
+        autocomplete="off"
+        multiple=""
+        style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+        type="file"
+      />
+    </div>
+    <button
+      class="button link"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt buttonIcon"
+      />
+      <span
+        class="text"
+      >
+        sulu_media.delete_preview_image
+      </span>
+    </button>
+  </div>,
+]
+`;
+
+exports[`Render a MediaVersionUpload field for videos without assigned preview image 1`] = `
+Array [
+  <div
+    aria-disabled="false"
+    class="mediaContainer default"
+    style="position:relative"
+  >
+    <img
+      class="thumbnail"
+      src="sulu-400x400-inset"
+    />
+    <div
+      class="uploadIndicatorContainer"
+    >
+      <div
+        class="uploadIndicator"
+      >
+        <div>
+          <span
+            aria-label="fa-cloud-upload"
+            class="fa fa-cloud-upload uploadIcon"
+          />
+          <div
+            class="uploadInfoText"
+          >
+            sulu_media.upload_new_version
+          </div>
+        </div>
+      </div>
+    </div>
+    <input
+      autocomplete="off"
+      style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+      type="file"
+    />
+  </div>,
+  <div
+    class="buttons"
+  />,
+  <div
+    class="buttons"
+  >
+    <div
+      aria-disabled="false"
+      class=""
+      style="position:relative"
+    >
+      <button
+        class="button link"
+        type="button"
+      >
+        <span
+          aria-label="su-image"
+          class="su-image buttonIcon"
+        />
+        <span
+          class="text"
+        >
+          sulu_media.upload_preview_image
+        </span>
+      </button>
+      <input
+        autocomplete="off"
+        multiple=""
+        style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+        type="file"
+      />
+    </div>
+    <button
+      class="button link"
+      disabled=""
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt buttonIcon"
+      />
+      <span
+        class="text"
+      >
+        sulu_media.delete_preview_image
       </span>
     </button>
   </div>,

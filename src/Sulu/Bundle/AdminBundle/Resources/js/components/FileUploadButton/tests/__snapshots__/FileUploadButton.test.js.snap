@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a FileUploadButton 1`] = `
+<div
+  aria-disabled="false"
+  class=""
+  style="position:relative"
+>
+  <button
+    class="button secondary"
+    type="button"
+  >
+    <span
+      class="text"
+    >
+      Upload something!
+    </span>
+  </button>
+  <input
+    autocomplete="off"
+    multiple=""
+    style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+    type="file"
+  />
+</div>
+`;
+
+exports[`Render a FileUploadButton with other skin and icon 1`] = `
+<div
+  aria-disabled="false"
+  class=""
+  style="position:relative"
+>
+  <button
+    class="button link"
+    type="button"
+  >
+    <span
+      aria-label="su-image"
+      class="su-image buttonIcon"
+    />
+    <span
+      class="text"
+    >
+      Upload something!
+    </span>
+  </button>
+  <input
+    autocomplete="off"
+    multiple=""
+    style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+    type="file"
+  />
+</div>
+`;
+
+exports[`Render a disabled FileUploadButton 1`] = `
+<div
+  aria-disabled="false"
+  class=""
+  style="position:relative"
+>
+  <button
+    class="button secondary"
+    disabled=""
+    type="button"
+  >
+    <span
+      class="text"
+    >
+      Upload something!
+    </span>
+  </button>
+  <input
+    autocomplete="off"
+    multiple=""
+    style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+    type="file"
+  />
+</div>
+`;

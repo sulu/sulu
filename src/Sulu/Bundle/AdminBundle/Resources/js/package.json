@@ -35,6 +35,7 @@
         "react-circular-progressbar": "^0.5.0",
         "react-color": "^2.14.1",
         "react-datetime": "^2.11.0",
+        "react-dropzone": "^4.2.1",
         "react-portal": "^4.1.0",
         "react-sortable-hoc": "^0.6.7",
         "resize-observer-polyfill": "^1.5.0",

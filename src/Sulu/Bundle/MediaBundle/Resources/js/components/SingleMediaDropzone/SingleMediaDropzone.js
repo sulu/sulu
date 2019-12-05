@@ -66,6 +66,7 @@ class SingleMediaDropzone extends React.Component<Props> {
 
     @action handleImageLoad = () => {
         this.imageLoading = false;
+        this.imageError = false;
     };
 
     @action setUploadIndicatorVisibility(visibility: boolean) {
