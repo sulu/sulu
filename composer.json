@@ -56,8 +56,7 @@
         "phpspec/prophecy": "^1.4",
         "symfony/phpunit-bridge": "^2.8.11 || ^3.0",
         "symfony/monolog-bundle": "^2.8.11 || ^3.0",
-        "zendframework/zend-stdlib": "~2.3",
-        "zendframework/zendsearch": "@dev",
+        "handcraftedinthealps/zendsearch": "@dev",
         "doctrine/doctrine-fixtures-bundle": "~2.3",
         "phpdocumentor/reflection-docblock": "~3.1"
     },
@@ -86,8 +85,7 @@
         "sensio/framework-extra-bundle": "~3.0",
         "doctrine/doctrine-bundle": "~1.6",
         "symfony/monolog-bundle": "~2.8 || ~3.0",
-        "zendframework/zend-stdlib": "Needed (as in require dev) in addition to zendsearch",
-        "zendframework/zendsearch": "To use the PHP based Zend Search library (based on Lucene)",
+        "handcraftedinthealps/zendsearch": "To use the PHP based Zend Search library (based on Lucene)",
         "massive/build-bundle": "^0.3"
     },
     "autoload": {
