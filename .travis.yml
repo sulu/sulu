@@ -35,6 +35,7 @@ matrix:
         - SYMFONY__DATABASE__USER=postgres
         - SYMFONY__DATABASE__PASSWORD=postgres
         - SYMFONY__PHPCR__TRANSPORT=jackrabbit
+        - PECL_INSTALL=imagick
         # restart jackrabbit after each suite see: https://github.com/sulu-io/sulu/issues/2137
         - TEST_FLAGS="--jackrabbit-restart"
       services:
@@ -55,6 +56,12 @@ matrix:
 #  fast_finish: true # do not wait for allowed failures, as they do not affect the build.
 
 before_script:
+  - php -v
+  - php -m
+  - |
+    if [[ $PECL_INSTALL ]]; then
+        pecl install $PECL_INSTALL
+    fi
   - | # enable swap
     if [[ $ENABLE_SWAP == 'true' ]]; then
         sudo fallocate -l 4G /swapfile
