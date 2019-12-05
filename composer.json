@@ -52,7 +52,7 @@
         "massive/build-bundle": "~0.3.0",
         "matthiasnoback/symfony-config-test": "^1.1",
         "matthiasnoback/symfony-dependency-injection-test": "^0.7.3",
-        "phpunit/phpunit": "^4.8.31",
+        "phpunit/phpunit": "^4.8.31 || ^5.7.27",
         "phpspec/prophecy": "^1.4",
         "symfony/phpunit-bridge": "^2.8.11 || ^3.0",
         "symfony/monolog-bundle": "^2.8.11 || ^3.0",
