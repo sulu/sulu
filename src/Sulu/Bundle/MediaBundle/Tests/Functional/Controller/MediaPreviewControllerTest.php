@@ -12,6 +12,8 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Id\AssignedGenerator;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
@@ -47,7 +49,17 @@ class MediaPreviewControllerTest extends SuluTestCase
 
     public function setUp(): void
     {
+        parent::setUp();
+        $this->purgeDatabase();
         $this->em = $this->getEntityManager();
+
+        $metadata = $this->em->getClassMetaData(CollectionType::class);
+        $metadata->setIdGenerator(new AssignedGenerator());
+        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
+        // to be sure that the system collections will rebuild after purge database
+        $systemCollectionCache = $this->getContainer()->get('sulu_media_test.system_collections.cache');
+        $systemCollectionCache->invalidate();
 
         $this->collection = new Collection();
 
@@ -56,6 +68,7 @@ class MediaPreviewControllerTest extends SuluTestCase
         $collectionType1->setName('Default Collection Type');
         $collectionType1->setDescription('Default Collection Type');
 
+        // This CollectionType just must be created because the SystemCollectionManager requires one with ID 2 to exist
         $collectionType2 = new CollectionType();
         $collectionType2->setId(2);
         $collectionType2->setName('Default Collection Type');
