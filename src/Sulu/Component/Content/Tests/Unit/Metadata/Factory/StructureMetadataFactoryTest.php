@@ -48,21 +48,6 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
     private $overriddenDefaultMappingFile;
 
     /**
-     * @var StructureMetadata
-     */
-    private $somethingStructure;
-
-    /**
-     * @var StructureMetadata
-     */
-    private $defaultStructure;
-
-    /**
-     * @var StructureMetadata
-     */
-    private $apostropheStructure;
-
-    /**
      * @var LoaderInterface
      */
     private $loader;
@@ -80,11 +65,8 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
         $this->somethingMappingFile = implode(DIRECTORY_SEPARATOR, [__DIR__, 'data', 'page', 'something.xml']);
         $this->defaultMappingFile = implode(DIRECTORY_SEPARATOR, [__DIR__, 'data', 'other', 'default.xml']);
         $this->overriddenDefaultMappingFile = implode(DIRECTORY_SEPARATOR, [__DIR__, 'data', 'page', 'default.xml']);
-
-        $this->apostropheStructure = $this->prophesize('Sulu\Component\Content\Metadata\StructureMetadata');
-        $this->somethingStructure = $this->prophesize('Sulu\Component\Content\Metadata\StructureMetadata');
-        $this->defaultStructure = $this->prophesize('Sulu\Component\Content\Metadata\StructureMetadata');
         $this->loader = $this->prophesize('Symfony\Component\Config\Loader\LoaderInterface');
+
         $this->factory = new StructureMetadataFactory(
             $this->loader->reveal(),
             [
@@ -144,7 +126,8 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetStructureDefault()
     {
-        $this->loader->load($this->somethingMappingFile, 'page')->willReturn($this->somethingStructure->reveal());
+        $somethingStructure = new StructureMetadata();
+        $this->loader->load($this->somethingMappingFile, 'page')->willReturn($somethingStructure);
         $this->loader->load($this->somethingMappingFile, 'page')->shouldBeCalledTimes(1);
 
         $this->factory->getStructureMetadata('page');
@@ -155,7 +138,8 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCacheResult()
     {
-        $this->loader->load($this->somethingMappingFile, 'page')->willReturn($this->somethingStructure->reveal());
+        $somethingStructure = new StructureMetadata();
+        $this->loader->load($this->somethingMappingFile, 'page')->willReturn($somethingStructure);
         $this->loader->load($this->somethingMappingFile, 'page')->shouldBeCalledTimes(1);
 
         $this->factory->getStructureMetadata('page');
@@ -191,12 +175,13 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetStructure()
     {
-        $this->loader->load($this->somethingMappingFile, 'page')->willReturn($this->somethingStructure->reveal());
+        $somethingStructure = new StructureMetadata();
+        $this->loader->load($this->somethingMappingFile, 'page')->willReturn($somethingStructure);
         $this->loader->load($this->somethingMappingFile, 'page')->shouldBeCalledTimes(1);
 
         $structure = $this->factory->getStructureMetadata('page', 'something');
 
-        $this->assertEquals($this->somethingStructure->reveal(), $structure);
+        $this->assertEquals($somethingStructure, $structure);
 
         $this->factory->getStructureMetadata('page', 'something');
         $this->factory->getStructureMetadata('page', 'something');
@@ -207,7 +192,10 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testDirection()
     {
-        $this->loader->load($this->defaultMappingFile, 'page')->willReturn($this->somethingStructure->reveal());
+        $somethingStructure = new StructureMetadata();
+        $this->loader->load($this->defaultMappingFile, 'page')
+            ->willReturn($somethingStructure)
+            ->shouldBeCalled();
 
         $this->factory->getStructureMetadata('page', 'default');
     }
@@ -217,16 +205,18 @@ class StructureMetadataFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetStructures()
     {
-        $this->loader->load($this->somethingMappingFile, 'page')->willReturn($this->somethingStructure->reveal());
-        $this->loader->load($this->defaultMappingFile, 'page')->willReturn($this->defaultStructure->reveal());
+        $somethingStructure = new StructureMetadata();
+        $defaultStructure = new StructureMetadata();
+        $this->loader->load($this->somethingMappingFile, 'page')->willReturn($somethingStructure);
+        $this->loader->load($this->defaultMappingFile, 'page')->willReturn($defaultStructure);
         $this->loader->load($this->somethingMappingFile, 'page')->shouldBeCalledTimes(1);
         $this->loader->load($this->defaultMappingFile, 'page')->shouldBeCalledTimes(1);
 
         $structures = $this->factory->getStructures('page');
         $this->assertCount(3, $structures);
-        $this->assertEquals($this->defaultStructure->reveal(), $structures[0]);
-        $this->assertEquals($this->somethingStructure->reveal(), $structures[1]);
-        $this->assertEquals($this->defaultStructure->reveal(), $structures[2]);
+        $this->assertEquals($defaultStructure, $structures[0]);
+        $this->assertEquals($somethingStructure, $structures[1]);
+        $this->assertEquals($defaultStructure, $structures[2]);
     }
 
     private function cleanUp()
