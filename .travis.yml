@@ -22,7 +22,7 @@ env:
 matrix:
   include:
     - language: php
-      php: 7.3
+      php: 7.4
       env:
         - COMPOSER_FLAGS="--prefer-dist --no-interaction"
         - SYMFONY_DEPRECATIONS_HELPER="weak"

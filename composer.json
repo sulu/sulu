@@ -121,8 +121,7 @@
         "symfony/var-dumper": "^4.3",
         "symfony/web-profiler-bundle": "^4.3",
         "symfony/web-server-bundle": "^4.3",
-        "zendframework/zend-stdlib": "^2.3",
-        "zendframework/zendsearch": "@dev"
+        "handcraftedinthealps/zendsearch": "^2.0@dev"
     },
     "conflict": {
         "doctrine/dbal": "2.7.0",

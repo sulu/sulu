@@ -56,11 +56,6 @@ class StructureMetadataFactoryTest extends TestCase
     /**
      * @var StructureMetadata
      */
-    private $somethingStructure;
-
-    /**
-     * @var StructureMetadata
-     */
     private $defaultStructure;
 
     /**
@@ -94,7 +89,6 @@ class StructureMetadataFactoryTest extends TestCase
 
         $this->translator = $this->prophesize(TranslatorInterface::class);
         $this->apostropheStructure = $this->prophesize(StructureMetadata::class);
-        $this->somethingStructure = $this->prophesize(StructureMetadata::class);
         $this->defaultStructure = $this->prophesize(StructureMetadata::class);
         $this->loader = $this->prophesize(LoaderInterface::class);
         $this->factory = new StructureMetadataFactory(
@@ -154,7 +148,8 @@ class StructureMetadataFactoryTest extends TestCase
      */
     public function testGetStructureDefault()
     {
-        $this->loader->load($this->somethingMappingFile, 'page')->willReturn($this->somethingStructure->reveal());
+        $somethingStructure = new StructureMetadata();
+        $this->loader->load($this->somethingMappingFile, 'page')->willReturn($somethingStructure);
         $this->loader->load($this->somethingMappingFile, 'page')->shouldBeCalledTimes(1);
 
         $this->factory->getStructureMetadata('page');
@@ -170,7 +165,8 @@ class StructureMetadataFactoryTest extends TestCase
      */
     public function testCacheResult()
     {
-        $this->loader->load($this->somethingMappingFile, 'page')->willReturn($this->somethingStructure->reveal());
+        $somethingStructure = new StructureMetadata();
+        $this->loader->load($this->somethingMappingFile, 'page')->willReturn($somethingStructure);
         $this->loader->load($this->somethingMappingFile, 'page')->shouldBeCalledTimes(1);
 
         $this->factory->getStructureMetadata('page');
@@ -220,12 +216,13 @@ class StructureMetadataFactoryTest extends TestCase
      */
     public function testGetStructure()
     {
-        $this->loader->load($this->somethingMappingFile, 'page')->willReturn($this->somethingStructure->reveal());
+        $somethingStructure = new StructureMetadata();
+        $this->loader->load($this->somethingMappingFile, 'page')->willReturn($somethingStructure);
         $this->loader->load($this->somethingMappingFile, 'page')->shouldBeCalledTimes(1);
 
         $structure = $this->factory->getStructureMetadata('page', 'something');
 
-        $this->assertEquals($this->somethingStructure->reveal(), $structure);
+        $this->assertEquals($somethingStructure, $structure);
 
         $this->factory->getStructureMetadata('page', 'something');
         $this->factory->getStructureMetadata('page', 'something');
@@ -236,7 +233,8 @@ class StructureMetadataFactoryTest extends TestCase
      */
     public function testDirection()
     {
-        $this->loader->load($this->defaultMappingFile, 'page')->willReturn($this->somethingStructure->reveal())->shouldBeCalled();
+        $somethingStructure = new StructureMetadata();
+        $this->loader->load($this->defaultMappingFile, 'page')->willReturn($somethingStructure)->shouldBeCalled();
 
         $this->factory->getStructureMetadata('page', 'default');
     }
@@ -246,8 +244,9 @@ class StructureMetadataFactoryTest extends TestCase
      */
     public function testGetStructures()
     {
-        $revealedSomethingStructure = $this->somethingStructure->reveal();
-        $revealedDefaultStructure = $this->somethingStructure->reveal();
+        $somethingStructure = new StructureMetadata();
+        $revealedSomethingStructure = $somethingStructure;
+        $revealedDefaultStructure = $somethingStructure;
         $this->loader->load($this->somethingMappingFile, 'page')->willReturn($revealedSomethingStructure);
         $this->loader->load($this->defaultMappingFile, 'page')->willReturn($revealedDefaultStructure);
         $this->loader->load($this->somethingMappingFile, 'page')->shouldBeCalledTimes(1);

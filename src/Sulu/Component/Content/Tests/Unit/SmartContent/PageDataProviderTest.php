@@ -93,24 +93,7 @@ class PageDataProviderTest extends TestCase
      */
     private function getProxyFactory()
     {
-        $mock = $this->prophesize(LazyLoadingValueHolderFactory::class);
-        $lazyLoading = $this->prophesize(LazyLoadingInterface::class);
-
-        $that = $this;
-        $mock->createProxy(PageDocument::class, Argument::any())->will(
-            function($args) use ($that, $lazyLoading) {
-                $wrappedObject = 1;
-                $initializer = 1;
-                $args[1]($wrappedObject, $lazyLoading->reveal(), null, [], $initializer);
-
-                $virtualProxy = $that->prophesize(VirtualProxyInterface::class);
-                $virtualProxy->getWrappedValueHolderValue()->willReturn($wrappedObject);
-
-                return $virtualProxy;
-            }
-        );
-
-        return $mock->reveal();
+        return new LazyLoadingValueHolderFactory();
     }
 
     private function getSession($throw = false)
