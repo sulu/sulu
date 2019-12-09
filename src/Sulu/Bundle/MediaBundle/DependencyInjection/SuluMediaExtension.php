@@ -202,7 +202,6 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             'sulu_media.format_manager.default_imagine_options',
             $config['format_manager']['default_imagine_options']
         );
-        $container->setParameter('sulu_media.format_manager.mime_types', $config['format_manager']['mime_types']);
 
         // format cache
         $container->setParameter('sulu_media.format_cache.path', $config['format_cache']['path']);
@@ -210,7 +209,8 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu_media.format_cache.segments', $config['format_cache']['segments']);
 
         // converter
-        $container->setParameter('sulu_media.ghost_script.path', $config['ghost_script']['path']);
+        $ghostScriptPath = $config['ghost_script']['path'];
+        $container->setParameter('sulu_media.ghost_script.path', $ghostScriptPath);
 
         // storage
         $container->setParameter('sulu_media.media.max_file_size', '16MB');
@@ -306,6 +306,12 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $loader->load('ffmpeg.xml');
         }
 
+        $mimeTypes = $config['format_manager']['mime_types'];
+        if (0 === count($mimeTypes)) {
+            $mimeTypes = $this->getSupportedMimeTypes($ghostScriptPath, $ffmpegBinary, $ffprobeBinary);
+        }
+        $container->setParameter('sulu_media.format_manager.mime_types', $mimeTypes);
+
         $this->configurePersistence($config['objects'], $container);
         $this->configureStorage($config, $container, $loader);
     }
@@ -334,5 +340,24 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $loader->load('services_storage_' . $storage . '.xml');
 
         $container->setAlias('sulu_media.storage', 'sulu_media.storage.' . $storage)->setPublic(true);
+    }
+
+    private function getSupportedMimeTypes($ghostScriptPath, $ffmpegBinary, $ffprobeBinary)
+    {
+        $mimeTypes = ['image/*'];
+
+        if ($ffmpegBinary
+            && $ffprobeBinary
+            && shell_exec('which ' . $ffmpegBinary . ' > /dev/null')
+            && shell_exec('which ' . $ffprobeBinary . ' > /dev/null')
+        ) {
+            $mimeTypes[] = 'video/*';
+        }
+
+        if ($ghostScriptPath && shell_exec('which ' . $ghostScriptPath . ' > /dev/null')) {
+            $mimeTypes[] = 'application/pdf';
+        }
+
+        return $mimeTypes;
     }
 }
