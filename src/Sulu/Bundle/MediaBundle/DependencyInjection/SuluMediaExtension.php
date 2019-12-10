@@ -37,9 +37,9 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
      */
     private $executableFinder;
 
-    public function __construct()
+    public function __construct(?ExecutableFinder $executableFinder = null)
     {
-        $this->executableFinder = new ExecutableFinder();
+        $this->executableFinder = $executableFinder ?: new ExecutableFinder();
     }
 
     /**

@@ -9,32 +9,36 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Symfony\Component\Process;
-
-class ExecutableFinder
-{
-    public function find()
-    {
-        return true;
-    }
-}
-
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\DependencyInjection\SuluMediaExtension;
+use Symfony\Component\Process\ExecutableFinder;
 
 class SuluMediaExtensionTest extends AbstractExtensionTestCase
 {
+    /**
+     * @var ExecutableFinder
+     */
+    private $executableFinder;
+
+    public function setUp(): void
+    {
+        $this->executableFinder = $this->prophesize(ExecutableFinder::class);
+        parent::setUp();
+    }
+
     protected function getContainerExtensions(): array
     {
         return [
-            new SuluMediaExtension(),
+            new SuluMediaExtension($this->executableFinder->reveal()),
         ];
     }
 
     public function testLoad()
     {
+        $this->executableFinder->find(Argument::any())->willReturn(true);
         $this->container->setParameter('kernel.root_dir', __DIR__);
         $this->container->setParameter('kernel.bundles', []);
 
