@@ -26,10 +26,21 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\Process\ExecutableFinder;
 
 class SuluMediaExtension extends Extension implements PrependExtensionInterface
 {
     use PersistenceExtensionTrait;
+
+    /**
+     * @var ExecutableFinder
+     */
+    private $executableFinder;
+
+    public function __construct()
+    {
+        $this->executableFinder = new ExecutableFinder();
+    }
 
     /**
      * {@inheritdoc}
@@ -363,13 +374,6 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
 
     private function checkCommandAvailability($command)
     {
-        $exitCode = 1;
-        if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
-            exec('where ' . $command . ' -q', $output, $exitCode);
-        } else {
-            exec('which ' . $command, $output, $exitCode);
-        }
-
-        return 0 === $exitCode;
+        return null !== $this->executableFinder->find($command);
     }
 }

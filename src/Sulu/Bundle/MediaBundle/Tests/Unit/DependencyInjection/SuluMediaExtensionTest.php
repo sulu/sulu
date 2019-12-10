@@ -9,11 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\DependencyInjection;
+namespace Symfony\Component\Process;
 
-function exec($command, &$output, &$exitCode)
+class ExecutableFinder
 {
-    $exitCode = 0;
+    public function find()
+    {
+        return true;
+    }
 }
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\DependencyInjection;
