@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
-function shell_exec($command)
+function exec($command, &$output, &$exitCode)
 {
-    return 1;
+    $exitCode = 0;
 }
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\DependencyInjection;

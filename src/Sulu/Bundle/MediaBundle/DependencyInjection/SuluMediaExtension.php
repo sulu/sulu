@@ -348,16 +348,28 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
 
         if ($ffmpegBinary
             && $ffprobeBinary
-            && shell_exec('which ' . $ffmpegBinary . ' > /dev/null')
-            && shell_exec('which ' . $ffprobeBinary . ' > /dev/null')
+            && $this->checkCommandAvailability($ffmpegBinary)
+            && $this->checkCommandAvailability($ffprobeBinary)
         ) {
             $mimeTypes[] = 'video/*';
         }
 
-        if ($ghostScriptPath && shell_exec('which ' . $ghostScriptPath . ' > /dev/null')) {
+        if ($ghostScriptPath && $this->checkCommandAvailability($ghostScriptPath)) {
             $mimeTypes[] = 'application/pdf';
         }
 
         return $mimeTypes;
+    }
+
+    private function checkCommandAvailability($command)
+    {
+        $exitCode = 1;
+        if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
+            exec('where ' . $command . ' -q', $output, $exitCode);
+        } else {
+            exec('which ' . $command, $output, $exitCode);
+        }
+
+        return 0 === $exitCode;
     }
 }
