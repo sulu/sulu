@@ -10,7 +10,7 @@
     <services>
         <!-- request analyzer data collector -->
         <service id="sulu_website.data_collector.sulu_collector" class="%sulu_website.data_collector.sulu_collector.class%">
-            <tag name="data_collector" template="SuluWebsiteBundle:Profiler:layout" id="sulu"/>
+            <tag name="data_collector" template="@SuluWebsite/Profiler/layout.html.twig" id="sulu"/>
             <tag name="sulu.context" context="website"/>
         </service>
 

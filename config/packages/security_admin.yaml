@@ -21,6 +21,9 @@ security:
         - { path: ^/admin, roles: ROLE_USER }
 
     firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
         admin:
             pattern: ^/
             anonymous: ~
