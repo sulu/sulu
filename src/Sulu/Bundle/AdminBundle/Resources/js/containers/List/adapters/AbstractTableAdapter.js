@@ -1,10 +1,12 @@
 // @flow
 import {computed} from 'mobx';
 import React from 'react';
+import GhostIndicator from '../../../components/GhostIndicator';
 import Table from '../../../components/Table';
 import listFieldTransformerRegistry from '../registries/listFieldTransformerRegistry';
 import type {Schema} from '../types';
 import AbstractAdapter from './AbstractAdapter';
+import abstractTableAdapterStyles from './abstractTableAdapter.scss';
 
 export default class AbstractTableAdapter extends AbstractAdapter {
     static hasColumnOptions: boolean = true;
@@ -32,12 +34,20 @@ export default class AbstractTableAdapter extends AbstractAdapter {
     renderCells(item: Object): Array<*> {
         const schemaKeys = Object.keys(this.schema);
 
-        return schemaKeys.map((schemaKey) => {
+        return schemaKeys.map((schemaKey, index) => {
             const transformer = listFieldTransformerRegistry.get(this.schema[schemaKey].type);
             const value = transformer.transform(item[schemaKey]);
 
             return (
-                <Table.Cell key={item.id + schemaKey}>{value}</Table.Cell>
+                <Table.Cell key={item.id + schemaKey}>
+                    {index === 0 && item.ghostLocale &&
+                        <GhostIndicator
+                            className={abstractTableAdapterStyles.ghostIndicator}
+                            locale={item.ghostLocale}
+                        />
+                    }
+                    {value}
+                </Table.Cell>
             );
         });
     }

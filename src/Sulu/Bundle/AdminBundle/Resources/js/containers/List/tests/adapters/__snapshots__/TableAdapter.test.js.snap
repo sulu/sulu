@@ -980,6 +980,11 @@ exports[`Render data with schema 1`] = `
             <div
               class="cellContent"
             >
+              <span
+                class="ghostIndicator ghostIndicator"
+              >
+                en
+              </span>
               Description 2
             </div>
           </td>
