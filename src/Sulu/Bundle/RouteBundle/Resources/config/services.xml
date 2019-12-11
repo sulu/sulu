@@ -8,6 +8,15 @@
             <tag name="sulu.content.type" alias="route"/>
         </service>
 
+        <service id="sulu_route.content_type.page_tree_route" class="Sulu\Bundle\RouteBundle\Content\Type\PageTreeRouteContentType">
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu_document_manager.document_registry"/>
+            <argument type="service" id="sulu_route.chain_generator"/>
+            <argument type="service" id="sulu_route.manager.conflict_resolver.auto_increment"/>
+
+            <tag name="sulu.content.type" alias="my_page_tree_route"/>
+        </service>
+
         <service id="sulu_route.route_controller"
                  class="Sulu\Bundle\RouteBundle\Controller\RouteController"
                  public="true">
