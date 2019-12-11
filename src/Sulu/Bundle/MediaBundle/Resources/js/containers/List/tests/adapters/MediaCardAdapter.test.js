@@ -30,6 +30,7 @@ test('Render a basic Masonry view with MediaCards', () => {
             thumbnails: thumbnails,
         },
         {
+            ghostLocale: 'en',
             id: 2,
             title: 'Title 1',
             mimeType: 'image/jpeg',

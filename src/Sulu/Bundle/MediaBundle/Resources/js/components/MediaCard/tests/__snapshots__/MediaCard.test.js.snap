@@ -290,6 +290,101 @@ exports[`Render a MediaCard component with a checkbox for selection 1`] = `
 </div>
 `;
 
+exports[`Render a MediaCard component with ghostLocale 1`] = `
+<div
+  class="mediaCard noDownloadList"
+>
+  <div
+    class="header"
+  >
+    <div
+      class="description"
+      role="button"
+    >
+      <div
+        class="title"
+      >
+        <div
+          class="titleText"
+        >
+          <span
+            class="ghostIndicator ghostIndicator"
+          >
+            en
+          </span>
+          <div
+            aria-label="Test"
+            class="croppedText"
+            title="Test"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              Te
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                st
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              Test
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="meta"
+      >
+        <div
+          aria-label="Test/Test"
+          class="croppedText"
+          title="Test/Test"
+        >
+          <div
+            aria-hidden="true"
+            class="front"
+          >
+            Test/
+          </div>
+          <div
+            aria-hidden="true"
+            class="back"
+          >
+            <span>
+              Test
+            </span>
+          </div>
+          <div
+            class="whole"
+          >
+            Test/Test
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="media"
+    role="button"
+  >
+    <img
+      alt="Test"
+      src="http://lorempixel.com/300/200"
+    />
+    <div
+      class="cover"
+    />
+  </div>
+</div>
+`;
+
 exports[`Render a MediaCard component with loader if image has not been loaded yet 1`] = `
 <div
   class="mediaCard noDownloadList"

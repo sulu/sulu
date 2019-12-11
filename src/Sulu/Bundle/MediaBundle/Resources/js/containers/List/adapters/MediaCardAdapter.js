@@ -88,9 +88,10 @@ class MediaCardAdapter extends React.Component<Props> {
                         const thumbnail = item.thumbnails ? item.thumbnails[THUMBNAIL_SIZE] : null;
 
                         return (
-                            // TODO: Don't access properties like "title" directly.
+                            // TODO: Don't access properties like "title" or "ghostLocale" directly.
                             <MediaCard
                                 {...downloadDropdownProps}
+                                ghostLocale={item.ghostLocale}
                                 icon={icon}
                                 id={item.id}
                                 image={thumbnail}
