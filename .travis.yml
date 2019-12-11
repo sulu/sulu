@@ -28,6 +28,7 @@ matrix:
         - SYMFONY_DEPRECATIONS_HELPER="weak"
         - PHPSTAN=true
         - PECL_INSTALL=imagick
+        - LINT_CONTAINER=true
       services:
         - mysql
 
@@ -79,6 +80,8 @@ script:
   - bin/adminconsole cache:clear --env=dev
   - bin/websiteconsole cache:clear --env=dev
   - if [[ $PHPSTAN = true ]]; then ./vendor/bin/phpstan analyze; fi
+  - if [[ $LINT_CONTAINER = true ]]; then bin/adminconsole lint:container; fi
+  - if [[ $LINT_CONTAINER = true ]]; then bin/websiteconsole lint:container; fi
   - time ./bin/runtests -i -a
 
 notifications:
