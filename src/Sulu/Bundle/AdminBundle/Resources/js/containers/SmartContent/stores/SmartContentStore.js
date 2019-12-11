@@ -80,6 +80,8 @@ export default class SmartContentStore {
                 ).then(action((response) => {
                     this.dataSource = response;
                     this.dataSourceLoading = false;
+                })).catch(action(() => {
+                    this.dataSourceLoading = false;
                 }));
             }
         }
@@ -134,7 +136,7 @@ export default class SmartContentStore {
     }
 
     @computed get loading() {
-        return this.dataSourceLoading || this.categoriesLoading;
+        return !!this.dataSourceLoading || !!this.categoriesLoading;
     }
 
     @computed get filterCriteria(): FilterCriteria {
