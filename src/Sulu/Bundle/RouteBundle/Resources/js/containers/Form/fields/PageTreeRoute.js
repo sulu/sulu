@@ -2,7 +2,8 @@
 import React from 'react';
 import type {FieldTypeProps} from 'sulu-admin-bundle/containers/Form/types';
 import type {PageTreeRouteValue} from '../../types.js';
-import {observable} from 'mobx';
+import {observer} from 'mobx-react';
+import {action, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import userStore from 'sulu-admin-bundle/stores/userStore';
 import {Grid} from 'sulu-admin-bundle/components';
@@ -14,9 +15,24 @@ import {translate} from 'sulu-admin-bundle/utils';
 
 type Props = FieldTypeProps<?PageTreeRouteValue>;
 
+@observer
 class PageTreeRoute extends React.Component<Props> {
+    @observable mode: string;
+
     constructor(props: Props): void {
         super(props);
+
+        const {
+            fieldTypeOptions: {
+                modeResolver,
+            },
+        } = props;
+
+        if (!modeResolver) {
+            throw new Error('The "modeResolver" must be a function returning a promise with the desired mode');
+        }
+
+        modeResolver(props).then(action((mode) => this.mode = mode));
     }
 
     get locale(): IObservableValue<string> {
@@ -38,19 +54,25 @@ class PageTreeRoute extends React.Component<Props> {
             },
         } = this.props;
 
-        return !!id && !!historyResourceKey && !!history;
+        return !!history && !!id && !!historyResourceKey;
     }
 
     get pageValue(): ?string {
         const {
             value: {
-                page,
+                page: {
+                    uuid,
+                } = {
+                    uuid: null,
+                },
             } = {
-                page: null,
+                page: {
+                    uuid: null,
+                },
             },
         } = this.props;
 
-        return page;
+        return uuid;
     }
 
     get suffixValue(): ?string {
@@ -65,15 +87,21 @@ class PageTreeRoute extends React.Component<Props> {
         return suffix;
     }
 
-    handlePageChange = (value: ?string, page: ?Object): void => {
+    handlePageChange = (value: ?string, page: ?Object = {
+        path: null,
+    }): void => {
         this.handleChange({
-            suffix: null, ...this.props.value, page: value, pagePath: page.path,
+            ...this.props.value,
+            page: {
+                uuid: value,
+                path: page.path,
+            },
         });
     };
 
     handleSuffixChange = (value: ?string): void => {
         this.handleChange({
-            page: null, ...this.props.value, suffix: value,
+            ...this.props.value, suffix: value,
         });
     };
 
@@ -84,6 +112,10 @@ class PageTreeRoute extends React.Component<Props> {
     };
 
     render() {
+        if (!this.mode) {
+            return null;
+        }
+
         const {
             dataPath,
             disabled,
@@ -122,7 +154,7 @@ class PageTreeRoute extends React.Component<Props> {
                                 <ResourceLocator
                                     disabled={!!disabled}
                                     id={dataPath}
-                                    mode="leaf"
+                                    mode={this.mode}
                                     onChange={this.handleSuffixChange}
                                     value={this.suffixValue}
                                 />

@@ -11,18 +11,21 @@
 
 namespace Sulu\Bundle\RouteBundle\Content\Type;
 
+use Doctrine\ORM\EntityManagerInterface;
+use PHPCR\ItemNotFoundException;
 use PHPCR\NodeInterface;
-use Sulu\Bundle\PageBundle\Document\BasePageDocument;
+use PHPCR\PropertyType;
+use Sulu\Bundle\RouteBundle\Entity\Route;
+use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Generator\ChainRouteGeneratorInterface;
 use Sulu\Bundle\RouteBundle\Manager\ConflictResolverInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\SimpleContentType;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
-use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 
 /**
- * Provides simple route edit.
+ * Provides page_tree_route content-type.
  */
 class PageTreeRouteContentType extends SimpleContentType
 {
@@ -46,18 +49,25 @@ class PageTreeRouteContentType extends SimpleContentType
      */
     private $conflictResolver;
 
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
     public function __construct(
         DocumentManagerInterface $documentManager,
         DocumentRegistry $documentRegistry,
         ChainRouteGeneratorInterface $chainRouteGenerator,
-        ConflictResolverInterface $conflictResolver
+        ConflictResolverInterface $conflictResolver,
+        EntityManagerInterface $entityManager
     ) {
-        parent::__construct('MyPapeTreeRoute');
+        parent::__construct('PageTreeRoute');
 
         $this->documentManager = $documentManager;
         $this->documentRegistry = $documentRegistry;
         $this->chainRouteGenerator = $chainRouteGenerator;
         $this->conflictResolver = $conflictResolver;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -67,8 +77,9 @@ class PageTreeRouteContentType extends SimpleContentType
     {
         $propertyName = $property->getName();
         $value = [
-            'page' => $node->getPropertyValueWithDefault($propertyName . '-page', null),
-            'suffix' => $node->getPropertyValueWithDefault($propertyName . '-suffix', null),
+            'page' => $this->readPage($propertyName, $node),
+            'path' => $node->getPropertyValueWithDefault($propertyName, ''),
+            'suffix' => $node->getPropertyValueWithDefault($propertyName . '-suffix', ''),
         ];
 
         $property->setValue($value);
@@ -89,35 +100,41 @@ class PageTreeRouteContentType extends SimpleContentType
     ) {
         $value = $property->getValue();
         if (!$value) {
-            $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
+            return $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
         }
 
-        $page = $this->getAttribute('page', $value);
+        $page = $this->getAttribute('page', $value, ['uuid' => null, 'path' => '/']);
+
         $suffix = $this->getAttribute('suffix', $value);
-
-        if (!$suffix || !trim($suffix, '/')) {
-            $pagePath = $this->getAttribute('pagePath', $value);
-
-            if (!$pagePath) {
-                $pagePath = '/';
-
-                if ($page) {
-                    try {
-                        /** @var BasePageDocument $pageDocument */
-                        $pageDocument = $this->documentManager->find($page);
-
-                        $pagePath = $pageDocument->getPath();
-                    } catch (DocumentManagerException $e) {
-                    }
-                }
-            }
-
-            $suffix = $this->generateSuffix($node, $languageCode, $pagePath);
+        if (!$suffix) {
+            $suffix = $this->generateSuffix($node, $languageCode);
+        } else {
+            $suffix = trim($suffix, '/');
         }
+
+        $path = rtrim($page['path'], '/') . '/' . $suffix;
+        $path = $this->resolveConflicts($path);
+        $suffix = '/' . $this->getSuffix($path, $page['path'] ?? '/');
 
         $propertyName = $property->getName();
-        $node->setProperty($propertyName . '-page', $page);
+        $node->setProperty($propertyName, $path);
         $node->setProperty($propertyName . '-suffix', $suffix);
+
+        $pagePropertyName = $propertyName . '-page';
+        if ($node->hasProperty($pagePropertyName)) {
+            $node->getProperty($pagePropertyName)->remove();
+        }
+
+        if (!$page['uuid']) {
+            // no parent-page given
+
+            return null;
+        }
+
+        $node->setProperty($pagePropertyName, $page['uuid'], PropertyType::WEAKREFERENCE);
+        $node->setProperty($pagePropertyName . '-path', $page['path']);
+
+        return null;
     }
 
     /**
@@ -139,29 +156,82 @@ class PageTreeRouteContentType extends SimpleContentType
     }
 
     /**
-     * Returns value of array or default.
+     * Read page-information from given node.
      *
-     * @param mixed[]|null $value
+     * @return mixed[]|null
+     */
+    private function readPage(string $propertyName, NodeInterface $node)
+    {
+        $pagePropertyName = $propertyName . '-page';
+        if (!$node->hasProperty($pagePropertyName)) {
+            return null;
+        }
+
+        try {
+            $pageUuid = $node->getPropertyValue($pagePropertyName, PropertyType::STRING);
+        } catch (ItemNotFoundException $exception) {
+            return null;
+        }
+
+        return [
+            'uuid' => $pageUuid,
+            'path' => $node->getPropertyValueWithDefault($pagePropertyName . '-path', ''),
+        ];
+    }
+
+    /**
+     * Get value of array or default.
+     *
+     * @param mixed[] $value
      * @param mixed $default
      *
      * @return mixed
      */
-    private function getAttribute(string $name, ?array $value, $default = null)
+    private function getAttribute(string $name, array $value, $default = null)
     {
-        return $value[$name] ?? $default;
+        if (!array_key_exists($name, $value)) {
+            return $default;
+        }
+
+        return $value[$name];
     }
 
     /**
      * Generate a new suffix for document.
      */
-    private function generateSuffix(NodeInterface $node, string $locale, string $pagePath): string
+    private function generateSuffix(NodeInterface $node, string $locale): string
     {
         $document = $this->documentRegistry->getDocumentForNode($node, $locale);
         $route = $this->chainRouteGenerator->generate($document);
-        $route->setPath(rtrim($pagePath, '/') . '/' . ltrim($route->getPath(), '/'));
 
+        return trim($route->getPath(), '/');
+    }
+
+    /**
+     * Get suffix of given path.
+     */
+    private function getSuffix(string $path, string $pagePath): string
+    {
+        return trim(substr($path, strlen(rtrim($pagePath, '/')) + 1), '/');
+    }
+
+    /**
+     * Resolve conflicts of given path.
+     */
+    private function resolveConflicts(string $path): string
+    {
+        $route = $this->getRouteRepository()->createNew();
+        $route->setPath($path);
         $route = $this->conflictResolver->resolve($route);
 
-        return substr($route->getPath(), strlen(rtrim($pagePath, '/')) + 1);
+        return $route->getPath();
+    }
+
+    /**
+     * Get RouteRepository
+     */
+    private function getRouteRepository(): RouteRepositoryInterface
+    {
+        return $this->entityManager->getRepository(Route::class);
     }
 }

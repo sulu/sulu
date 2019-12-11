@@ -83,6 +83,21 @@ class RouteRepository extends EntityRepository implements RouteRepositoryInterfa
         return $queryBuilder->getQuery()->getResult();
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function findAllByParent($parentUuid, $locale)
+    {
+        $query = $this->createQueryBuilder('entity')
+            ->andWhere('entity.parentUuid = :parentUuid')
+            ->andWhere('entity.locale = :locale')
+            ->andWhere('entity.history = false')
+            ->getQuery()
+            ->setParameters(['parentUuid' => $parentUuid, 'locale' => $locale]);
+
+        return $query->getResult();
+    }
+
     public function persist(RouteInterface $route)
     {
         $this->getEntityManager()->persist($route);

@@ -13,6 +13,7 @@
         <indexes>
             <index columns="path"/>
             <index columns="locale"/>
+            <index columns="parent_uuid"/>
         </indexes>
 
         <unique-constraints>
@@ -23,6 +24,7 @@
         <field name="locale" type="string" length="8"/>
         <field name="entityClass" type="string" length="191"/>
         <field name="entityId" type="string" length="191"/>
+        <field name="parentUuid" type="string" length="191" nullable="true" column="parent_uuid"/>
         <field name="history" type="boolean"/>
 
         <one-to-many field="histories" target-entity="Sulu\Bundle\RouteBundle\Model\RouteInterface" mapped-by="target">
