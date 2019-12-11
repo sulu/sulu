@@ -7,3 +7,11 @@ exports[`Should render with given locale 1`] = `
   de-at
 </span>
 `;
+
+exports[`Should render with given locale and className 1`] = `
+<span
+  class="ghostIndicator test"
+>
+  de-at
+</span>
+`;
