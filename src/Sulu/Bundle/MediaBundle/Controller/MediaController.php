@@ -226,6 +226,10 @@ class MediaController extends AbstractMediaController implements
                 $listResponse[$i]['name'],
                 $listResponse[$i]['version']
             );
+
+            if ($locale !== $listResponse[$i]['locale']) {
+                $listResponse[$i]['ghostLocale'] = $listResponse[$i]['locale'];
+            }
         }
 
         $ids = $listBuilder->getIds();
