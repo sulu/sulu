@@ -76,10 +76,11 @@ class PageTreeRouteContentType extends SimpleContentType
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $propertyName = $property->getName();
+
         $value = [
             'page' => $this->readPage($propertyName, $node),
             'path' => $node->getPropertyValueWithDefault($propertyName, ''),
-            'suffix' => $node->getPropertyValueWithDefault($propertyName . '-suffix', ''),
+            'suffix' => $node->getPropertyValueWithDefault($propertyName . '-suffix', null),
         ];
 
         $property->setValue($value);
@@ -100,7 +101,12 @@ class PageTreeRouteContentType extends SimpleContentType
     ) {
         $value = $property->getValue();
         if (!$value) {
-            return $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
+            $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
+
+            $value = [
+                'page' => null,
+                'suffix' => null,
+            ];
         }
 
         $page = $this->getAttribute('page', $value, ['uuid' => null, 'path' => '/']);
@@ -128,13 +134,11 @@ class PageTreeRouteContentType extends SimpleContentType
         if (!$page['uuid']) {
             // no parent-page given
 
-            return null;
+            return;
         }
 
-        $node->setProperty($pagePropertyName, $page['uuid'], PropertyType::WEAKREFERENCE);
+        $node->setProperty($pagePropertyName, $page['uuid']);
         $node->setProperty($pagePropertyName . '-path', $page['path']);
-
-        return null;
     }
 
     /**

@@ -154,7 +154,7 @@ class Route implements RouteInterface, AuditableInterface
         return $this->parentUuid;
     }
 
-    public function setParentUuid(string $parentUuid)
+    public function setParentUuid($parentUuid)
     {
         $this->parentUuid = $parentUuid;
 

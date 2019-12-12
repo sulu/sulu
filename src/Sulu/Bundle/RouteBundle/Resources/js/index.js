@@ -15,7 +15,7 @@ fieldRegistry.add(
 );
 
 fieldRegistry.add(
-    'my_page_tree_route',
+    'page_tree_route',
     PageTreeRoute,
     {
         historyResourceKey: 'routes',

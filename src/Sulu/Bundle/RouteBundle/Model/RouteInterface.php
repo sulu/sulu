@@ -90,18 +90,18 @@ interface RouteInterface
     /**
      * Get parent uuid.
      *
-     * @return string
+     * @return string|null
      */
     public function getParentUuid();
 
     /**
      * Set parent uuid.
      *
-     * @param string $parentUuid
+     * @param string|null $parentUuid
      *
      * @return RouteInterface
      */
-    public function setParentUuid(string $parentUuid);
+    public function setParentUuid($parentUuid);
 
     /**
      * Get history.
