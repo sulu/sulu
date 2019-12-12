@@ -9,7 +9,7 @@ environment:
     MAILER_URL: null://localhost
     SULU_ADMIN_EMAIL:
     PHPCR_TRANSPORT: doctrinedbal
-    DATABASE_URL: mysql://root:root@127.0.0.1/sulu_test
+    DATABASE_URL: mysql://root:root@127.0.0.1/sulu_test?serverVersion=5.7
     DATABASE_CHARSET: utf8mb4
     DATABASE_COLLATE: utf8mb4_unicode_ci
     SYMFONY_DEPRECATIONS_HELPER: weak
