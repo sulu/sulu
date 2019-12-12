@@ -374,6 +374,6 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
 
     private function checkCommandAvailability($command)
     {
-        return null !== $this->executableFinder->find($command);
+        return null !== $this->executableFinder->find($command) || @is_executable($command);
     }
 }
