@@ -105,11 +105,7 @@ class Configuration implements ConfigurationInterface
                         ->prototype('scalar')->end()->defaultValue(['file/exe'])
                     ->end()
                     ->arrayNode('mime_types')
-                        ->prototype('scalar')->end()->defaultValue([
-                            'image/*',
-                            'video/*',
-                            'application/pdf',
-                        ])
+                        ->prototype('scalar')->end()
                     ->end()
                     ->arrayNode('types')
                         ->prototype('array')

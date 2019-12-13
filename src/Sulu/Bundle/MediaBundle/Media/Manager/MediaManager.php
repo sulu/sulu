@@ -151,21 +151,6 @@ class MediaManager implements MediaManagerInterface
     public $count;
 
     /**
-     * @param MediaRepositoryInterface $mediaRepository
-     * @param CollectionRepositoryInterface $collectionRepository
-     * @param UserRepositoryInterface $userRepository
-     * @param CategoryRepositoryInterface $categoryRepository
-     * @param TargetGroupRepositoryInterface $targetGroupRepository
-     * @param EntityManager $em
-     * @param StorageInterface $storage
-     * @param FileValidatorInterface $validator
-     * @param FormatManagerInterface $formatManager
-     * @param TagManagerInterface $tagManager
-     * @param TypeManagerInterface $typeManager
-     * @param PathCleanupInterface $pathCleaner
-     * @param TokenStorageInterface $tokenStorage
-     * @param SecurityCheckerInterface $securityChecker
-     * @param FFProbe $ffprobe
      * @param array $permissions
      * @param string $downloadPath
      * @param string $maxFileSize

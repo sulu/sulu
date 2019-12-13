@@ -508,7 +508,7 @@ class MediaControllerTest extends SuluTestCase
     {
         $preview1 = $this->createMedia('photo');
         $preview2 = $this->createMedia('photo2');
-        $photo1 = $this->createMedia('photo', 'en-gb', 'image', $preview1);
+        $this->createMedia('photo', 'en-gb', 'image', $preview1);
         $this->createMedia('photo2', 'en-gb', 'image', $preview2);
         $client = $this->createAuthenticatedClient();
 

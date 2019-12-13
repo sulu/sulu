@@ -9,22 +9,36 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SnippetBundle\Tests\Unit\DependencyInjection;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\DependencyInjection\SuluMediaExtension;
+use Symfony\Component\Process\ExecutableFinder;
 
 class SuluMediaExtensionTest extends AbstractExtensionTestCase
 {
+    /**
+     * @var ExecutableFinder
+     */
+    private $executableFinder;
+
+    public function setUp(): void
+    {
+        $this->executableFinder = $this->prophesize(ExecutableFinder::class);
+        parent::setUp();
+    }
+
     protected function getContainerExtensions(): array
     {
         return [
-            new SuluMediaExtension(),
+            new SuluMediaExtension($this->executableFinder->reveal()),
         ];
     }
 
     public function testLoad()
     {
+        $this->executableFinder->find(Argument::any())->willReturn(true);
         $this->container->setParameter('kernel.root_dir', __DIR__);
         $this->container->setParameter('kernel.bundles', []);
 
@@ -53,11 +67,10 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasParameter('sulu_media.format_cache.path', '%kernel.project_dir%/public/uploads/media');
         $this->assertContainerBuilderHasParameter('sulu_media.media.blocked_file_types', ['file/exe']);
         $this->assertContainerBuilderHasParameter('sulu_media.ghost_script.path', 'gs');
-        $this->assertContainerBuilderHasParameter('sulu_media.format_manager.mime_types', [
-            'image/*',
-            'video/*',
-            'application/pdf',
-        ]);
+        $this->assertContainerBuilderHasParameter(
+            'sulu_media.format_manager.mime_types',
+            ['image/*', 'video/*', 'application/pdf']
+        );
         $this->assertContainerBuilderHasParameter('sulu_media.media.types', [
             [
                 'type' => 'document',
