@@ -127,6 +127,7 @@
     "conflict": {
         "doctrine/dbal": "2.7.0",
         "doctrine/lexer": "1.0.0",
+        "doctrine/persistence": "1.3.2",
         "symfony/doctrine-bridge": "< 3.4.0",
         "symfony/http-foundation": "4.3.4",
         "jackalope/jackalope": "< 1.3.4",
