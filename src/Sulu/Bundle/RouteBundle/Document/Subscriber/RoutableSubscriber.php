@@ -37,9 +37,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class RoutableSubscriber implements EventSubscriberInterface
 {
-    const ROUTE_FIELD = 'routePath';
-
-    const ROUTES_PROPERTY = 'suluRoutes';
+    const ROUTE_PROPERTY = 'routePath';
 
     const TAG_NAME = 'sulu_article.article_route';
 
@@ -338,7 +336,7 @@ class RoutableSubscriber implements EventSubscriberInterface
             return $this->getPropertyName($locale, $metadata->getPropertyByTagName(self::TAG_NAME)->getName());
         }
 
-        return $this->getPropertyName($locale, self::ROUTE_FIELD);
+        return $this->getPropertyName($locale, self::ROUTE_PROPERTY);
     }
 
     /**

@@ -44,6 +44,20 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('content_types')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('page_tree_route')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->enumNode('page_route_cascade')
+                                    ->values(['request', 'task', 'off'])
+                                    ->defaultValue('off')
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         $this->addObjectsSection($rootNode);

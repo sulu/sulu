@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="sulu_route.page_tree_route.updater.task"
+                 class="Sulu\Bundle\RouteBundle\PageTree\AutomationPageTreeUpdater">
+            <argument type="service" id="sulu_automation.tasks.manager"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="request_stack"/>
+        </service>
+
+        <service id="sulu_route.automation.route_update_handler"
+                 class="Sulu\Bundle\ArticleBundle\PageTree\PageTreeRouteUpdateHandler">
+            <argument type="service" id="sulu_article.page_tree_route.updater.request"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+
+            <tag name="task.handler"/>
+        </service>
+    </services>
+</container>
