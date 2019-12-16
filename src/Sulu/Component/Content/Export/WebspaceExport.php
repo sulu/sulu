@@ -55,8 +55,7 @@ class WebspaceExport extends Export implements WebspaceExportInterface
         ExtensionManagerInterface $extensionManager,
         ExportManagerInterface $exportManager,
         array $formatFilePaths
-    )
-    {
+    ) {
         parent::__construct($templating, $documentManager, $documentInspector, $exportManager, $formatFilePaths);
 
         $this->structureManager = $structureManager;
@@ -75,8 +74,7 @@ class WebspaceExport extends Export implements WebspaceExportInterface
         $uuid = null,
         $nodes = null,
         $ignoredNodes = null
-    )
-    {
+    ) {
         $this->exportLocale = $locale;
         $this->output = $output;
         $this->format = $format;
@@ -144,8 +142,6 @@ class WebspaceExport extends Export implements WebspaceExportInterface
     /**
      * Returns a flat array with the extensions of the given document.
      *
-     * @param BasePageDocument $document
-     *
      * @return array
      */
     protected function getExtensionData(BasePageDocument $document)
@@ -170,8 +166,6 @@ class WebspaceExport extends Export implements WebspaceExportInterface
 
     /**
      * Returns a flat array with the settings of the given document.
-     *
-     * @param BasePageDocument $document
      *
      * @return array
      */
