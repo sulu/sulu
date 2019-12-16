@@ -281,6 +281,10 @@ class CategoryController extends AbstractRestController implements ClassResource
 
         foreach ($categories as &$category) {
             $category['hasChildren'] = ($category['lft'] + 1) !== $category['rgt'];
+
+            if ($category['locale'] !== $locale) {
+                $category['ghostLocale'] = $category['locale'];
+            }
         }
 
         if (!empty($expandedIds)) {

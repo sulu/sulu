@@ -174,6 +174,8 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category3, 'en', 'Third Category');
         $category4 = $this->createCategory(null, 'en', $category3);
         $this->createCategoryTranslation($category4, 'en', 'Fourth Category');
+        $category5 = $this->createCategory(null, 'de');
+        $this->createCategoryTranslation($category5, 'de', 'Fünfte Kategorie');
 
         $this->em->flush();
 
@@ -195,7 +197,7 @@ class CategoryControllerTest extends SuluTestCase
             }
         );
 
-        $this->assertCount(2, $categories);
+        $this->assertCount(3, $categories);
         $this->assertCount(1, $categories[0]->children);
         $this->assertCount(1, $categories[0]->children[0]->children);
 
@@ -208,6 +210,9 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('en', $categories[1]->defaultLocale);
         $this->assertEquals('Third Category', $categories[0]->children[0]->name);
         $this->assertEquals('Fourth Category', $categories[0]->children[0]->children[0]->name);
+        $this->assertEquals('Fünfte Kategorie', $categories[2]->name);
+        $this->assertEquals('de', $categories[2]->locale);
+        $this->assertEquals('de', $categories[2]->ghostLocale);
     }
 
     public function testCGetByIds()
@@ -251,6 +256,8 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category2, 'de', 'Zweite Kategorie');
         $category3 = $this->createCategory(null, 'en', $category1);
         $this->createCategoryTranslation($category3, 'en', 'Third Category');
+        $category4 = $this->createCategory(null, 'de');
+        $this->createCategoryTranslation($category4, 'de', 'Vierte Kategorie');
 
         $this->em->flush();
 
@@ -272,18 +279,24 @@ class CategoryControllerTest extends SuluTestCase
             }
         );
 
-        $this->assertCount(2, $categories);
-        $this->assertEquals(2, $response->total);
+        $this->assertCount(3, $categories);
+        $this->assertEquals(3, $response->total);
 
         $this->assertEquals('First Category', $categories[0]->name);
         $this->assertEquals('en', $categories[0]->defaultLocale);
         $this->assertEquals('en', $categories[0]->locale);
         $this->assertEquals('first-category-key', $categories[0]->key);
         $this->assertTrue($categories[0]->hasChildren);
+        $this->assertObjectNotHasAttribute('ghostLocale', $categories[0]);
 
         $this->assertEquals('second-category-key', $categories[1]->key);
         $this->assertEquals('en', $categories[1]->defaultLocale);
         $this->assertFalse($categories[1]->hasChildren);
+        $this->assertObjectNotHasAttribute('ghostLocale', $categories[1]);
+
+        $this->assertEquals('Vierte Kategorie', $categories[2]->name);
+        $this->assertEquals('de', $categories[2]->locale);
+        $this->assertEquals('de', $categories[2]->ghostLocale);
     }
 
     public function testCGetFlatWithSelectedIds()

@@ -670,7 +670,13 @@ class MediaControllerTest extends SuluTestCase
 
         $medias = array_map(
             function($item) {
-                return ['id' => $item->id, 'name' => $item->name, 'title' => $item->title, 'locale' => $item->locale];
+                return [
+                    'id' => $item->id,
+                    'name' => $item->name,
+                    'title' => $item->title,
+                    'locale' => $item->locale,
+                    'ghostLocale' => $item->ghostLocale ?? null,
+                ];
             },
             $response->_embedded->media
         );
@@ -678,11 +684,23 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(2, $response->total);
         $this->assertCount(2, $medias);
         $this->assertContains(
-            ['id' => $mediaEN->getId(), 'name' => 'test-en.jpeg', 'title' => 'test-en', 'locale' => 'en'],
+            [
+                'id' => $mediaEN->getId(),
+                'name' => 'test-en.jpeg',
+                'title' => 'test-en',
+                'locale' => 'en',
+                'ghostLocale' => 'en',
+            ],
             $medias
         );
         $this->assertContains(
-            ['id' => $mediaDE->getId(), 'name' => 'test-de.jpeg', 'title' => 'test-de', 'locale' => 'de'],
+            [
+                'id' => $mediaDE->getId(),
+                'name' => 'test-de.jpeg',
+                'title' => 'test-de',
+                'locale' => 'de',
+                'ghostLocale' => null,
+            ],
             $medias
         );
     }

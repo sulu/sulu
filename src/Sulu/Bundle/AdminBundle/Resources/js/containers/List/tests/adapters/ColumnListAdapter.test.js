@@ -46,10 +46,7 @@ test('Render different kind of data with edit button', () => {
                 id: 4,
                 title: 'Page 2.1',
                 hasChildren: true,
-                type: {
-                    name: 'ghost',
-                    value: 'nl',
-                },
+                ghostLocale: 'nl',
             },
             {
                 id: 5,
@@ -57,10 +54,7 @@ test('Render different kind of data with edit button', () => {
                 hasChildren: true,
                 publishedState: false,
                 published: '2017-07-02',
-                type: {
-                    name: 'ghost',
-                    value: 'nl',
-                },
+                ghostLocale: 'nl',
             },
             {
                 id: 8,
@@ -86,9 +80,7 @@ test('Render different kind of data with edit button', () => {
                 hasChildren: false,
                 publishedState: false,
                 published: null,
-                type: {
-                    name: 'shadow',
-                },
+                shadowLocale: 'en',
             },
             {
                 id: 11,
@@ -96,9 +88,7 @@ test('Render different kind of data with edit button', () => {
                 hasChildren: false,
                 publishedState: true,
                 published: '2018-10-16',
-                type: {
-                    name: 'shadow',
-                },
+                shadowLocale: 'en',
                 _permissions: {
                     view: false,
                 },

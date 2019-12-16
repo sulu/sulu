@@ -21,6 +21,25 @@ test('Render a MediaCard component', () => {
     expect(mediaCard.render()).toMatchSnapshot();
 });
 
+test('Render a MediaCard component with ghostLocale', () => {
+    const mediaCard = mount(
+        <MediaCard
+            downloadText=""
+            downloadUrl=""
+            ghostLocale="en"
+            id="test"
+            image="http://lorempixel.com/300/200"
+            meta="Test/Test"
+            mimeType="image/jpeg"
+            title="Test"
+        />
+    );
+
+    mediaCard.instance().image.onload();
+
+    expect(mediaCard.render()).toMatchSnapshot();
+});
+
 test('Render a MediaCard component with loader if image has not been loaded yet', () => {
     const mediaCard = mount(
         <MediaCard
