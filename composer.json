@@ -56,7 +56,7 @@
         "phpspec/prophecy": "^1.4",
         "symfony/phpunit-bridge": "^2.8.11 || ^3.0",
         "symfony/monolog-bundle": "^2.8.11 || ^3.0",
-        "handcraftedinthealps/zendsearch": "@dev",
+        "handcraftedinthealps/zendsearch": "^2.0",
         "doctrine/doctrine-fixtures-bundle": "~2.3",
         "phpdocumentor/reflection-docblock": "~3.1"
     },
