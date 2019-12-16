@@ -155,7 +155,7 @@ class CropOverlay extends React.Component<Props> {
                 onConfirm={this.handleConfirm}
                 open={open}
                 size="large"
-                title={translate('sulu_media.crop')}
+                title={translate('sulu_media.define_crops')}
             >
                 {availableFormats
                     ? <div className={cropOverlayStyles.cropOverlayContainer}>

@@ -74,6 +74,43 @@ test('Load categories and datasource when constructed', () => {
     });
 });
 
+test('Reset dataSourceLoading if loading of dataSource fails', (done) => {
+    const locale = observable.box('en');
+
+    const dataSourcePromise = Promise.reject();
+    ResourceRequester.get.mockReturnValue(dataSourcePromise);
+
+    const smartContentStore = new SmartContentStore(
+        'content',
+        {
+            audienceTargeting: undefined,
+            categories: undefined,
+            categoryOperator: undefined,
+            dataSource: 4,
+            includeSubFolders: undefined,
+            limitResult: undefined,
+            sortBy: undefined,
+            sortMethod: undefined,
+            tagOperator: undefined,
+            tags: undefined,
+            presentAs: undefined,
+        },
+        locale,
+        'pages'
+    );
+
+    expect(smartContentStore.loading).toEqual(true);
+    expect(ResourceRequester.get).toBeCalledWith('pages', {id: 4, locale: 'en'});
+
+    setTimeout(() => {
+        expect(smartContentStore.loading).toEqual(false);
+        expect(smartContentStore.dataSource).toEqual(undefined);
+
+        smartContentStore.destroy();
+        done();
+    });
+});
+
 test('Load items if FilterCriteria is given with datasource', () => {
     const locale = observable.box('en');
     const filterCriteria = {

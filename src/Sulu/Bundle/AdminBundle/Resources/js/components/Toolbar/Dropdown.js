@@ -97,14 +97,14 @@ class Dropdown extends React.Component<DropdownProps> {
                 >
                     {
                         (setPopoverElementRef, popoverStyle) => (
-                            <OptionList
-                                onClose={this.handleOptionListClose}
-                                onOptionClick={this.handleOptionListClick}
-                                optionListRef={setPopoverElementRef}
-                                options={options}
-                                skin={skin}
-                                style={popoverStyle}
-                            />
+                            <div ref={setPopoverElementRef} style={popoverStyle}>
+                                <OptionList
+                                    onClose={this.handleOptionListClose}
+                                    onOptionClick={this.handleOptionListClick}
+                                    options={options}
+                                    skin={skin}
+                                />
+                            </div>
                         )
                     }
                 </Popover>

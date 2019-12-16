@@ -38,6 +38,7 @@ test('Render data with schema', () => {
             id: 2,
             title: 'Title 2',
             description: 'Description 2',
+            ghostLocale: 'en',
         },
     ];
     const schema = {

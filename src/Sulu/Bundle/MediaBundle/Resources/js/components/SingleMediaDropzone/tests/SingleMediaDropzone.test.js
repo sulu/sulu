@@ -27,6 +27,15 @@ test('Render a SingleMediaDropzone with a loader if image has not been loaded ye
     expect(singleMediaDropzone.render()).toMatchSnapshot();
 });
 
+test('Render a SingleMediaDropzone without a loader if image has been loaded after an error occured before', () => {
+    const singleMediaDropzone = mount(<SingleMediaDropzone emptyIcon="su-user" image="test.jpg" onDrop={jest.fn()} />);
+    singleMediaDropzone.instance().imageError = true;
+
+    singleMediaDropzone.instance().image.onload();
+
+    expect(singleMediaDropzone.render()).toMatchSnapshot();
+});
+
 test('Render a SingleMediaDropzone without a loader if image has been loaded yet', () => {
     const singleMediaDropzone = mount(<SingleMediaDropzone emptyIcon="su-user" image="test.jpg" onDrop={jest.fn()} />);
 

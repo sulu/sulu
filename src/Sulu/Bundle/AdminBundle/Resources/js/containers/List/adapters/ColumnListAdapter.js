@@ -80,8 +80,8 @@ class ColumnListAdapter extends AbstractAdapter {
     };
 
     getIndicators = (item: Object) => {
-        if (item.type && item.type.name === 'ghost') {
-            return [<GhostIndicator key="ghost" locale={item.type.value} />];
+        if (item.ghostLocale) {
+            return [<GhostIndicator key="ghost" locale={item.ghostLocale} />];
         }
 
         const indicators = [];
@@ -90,7 +90,7 @@ class ColumnListAdapter extends AbstractAdapter {
             indicators.push(<Icon key="internal" name="su-link2" />);
         } else if (item.linked === 'external') {
             indicators.push(<Icon key="external" name="su-link" />);
-        } else if (item.type && item.type.name === 'shadow') {
+        } else if (item.shadowLocale) {
             indicators.push(<Icon key="shadow" name="su-shadow-page" />);
         }
 
@@ -106,7 +106,7 @@ class ColumnListAdapter extends AbstractAdapter {
 
     getButtons = (item: Object) => {
         const {onItemClick, onItemSelectionChange} = this.props;
-        const isGhost = item.type && item.type.name === 'ghost';
+        const isGhost = !!item.ghostLocale;
 
         const buttons = [];
 

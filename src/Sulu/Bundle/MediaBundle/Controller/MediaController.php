@@ -210,7 +210,7 @@ class MediaController extends AbstractMediaController implements
 
         for ($i = 0, $length = count($listResponse); $i < $length; ++$i) {
             $format = $this->formatManager->getFormats(
-                $listResponse[$i]['id'],
+                $listResponse[$i]['previewImageId'] ?? $listResponse[$i]['id'],
                 $listResponse[$i]['name'],
                 $listResponse[$i]['version'],
                 $listResponse[$i]['subVersion'],
@@ -226,6 +226,10 @@ class MediaController extends AbstractMediaController implements
                 $listResponse[$i]['name'],
                 $listResponse[$i]['version']
             );
+
+            if ($locale !== $listResponse[$i]['locale']) {
+                $listResponse[$i]['ghostLocale'] = $listResponse[$i]['locale'];
+            }
         }
 
         $ids = $listBuilder->getIds();
@@ -321,6 +325,7 @@ class MediaController extends AbstractMediaController implements
         }
 
         // field which will be needed afterwards to generate route
+        $listBuilder->addSelectField($fieldDescriptors['previewImageId']);
         $listBuilder->addSelectField($fieldDescriptors['version']);
         $listBuilder->addSelectField($fieldDescriptors['subVersion']);
         $listBuilder->addSelectField($fieldDescriptors['name']);

@@ -168,6 +168,24 @@ class Category extends ApiEntityWrapper
     }
 
     /**
+     * Returns the locale of the Category dependent on the existing translations and default locale.
+     *
+     * @VirtualProperty
+     * @SerializedName("ghostLocale")
+     * @Groups({"fullCategory","partialCategory"})
+     *
+     * @return string
+     */
+    public function getGhostLocale()
+    {
+        if (null === ($translation = $this->getTranslation(true))) {
+            return;
+        }
+
+        return $translation->getLocale();
+    }
+
+    /**
      * Returns the name of the Category dependent on the locale.
      *
      * @VirtualProperty

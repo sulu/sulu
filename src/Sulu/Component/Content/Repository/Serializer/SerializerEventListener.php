@@ -17,6 +17,7 @@ use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
+use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Repository\Content;
@@ -105,11 +106,27 @@ class SerializerEventListener implements EventSubscriberInterface
         }
 
         if (null !== $content->getLocalizationType()) {
-            $type = $content->getLocalizationType()->toArray();
+            $localizationType = $content->getLocalizationType();
             $visitor->visitProperty(
-                new StaticPropertyMetadata('', 'type', $type),
-                $type
+                new StaticPropertyMetadata('', 'type', $localizationType),
+                $localizationType->toArray()
             );
+
+            if (LocalizationState::GHOST === $localizationType->getName()) {
+                $ghostLocale = $localizationType->getValue();
+                $visitor->visitProperty(
+                    new StaticPropertyMetadata('', 'ghostLocale', $ghostLocale),
+                    $ghostLocale
+                );
+            }
+
+            if (LocalizationState::SHADOW === $localizationType->getName()) {
+                $shadowLocale = $localizationType->getValue();
+                $visitor->visitProperty(
+                    new StaticPropertyMetadata('', 'shadowLocale', $shadowLocale),
+                    $shadowLocale
+                );
+            }
         }
 
         if (!$this->tokenStorage) {

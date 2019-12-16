@@ -5,6 +5,10 @@ import {ResourceRequester, resourceRouteRegistry} from 'sulu-admin-bundle/servic
 import type {Media} from '../../types';
 
 const RESOURCE_KEY = 'media';
+const PREVIEW_RESOURCE_KEY = 'media_preview';
+
+const MEDIA_FORM_NAME = 'fileVersion';
+const PREVIEW_MEDIA_FORM_NAME = 'previewImage';
 
 export default class MediaUploadStore {
     @observable uploading: boolean;
@@ -102,7 +106,7 @@ export default class MediaUploadStore {
 
         this.setUploading(true);
 
-        return this.upload(file, url)
+        return this.upload(file, url, MEDIA_FORM_NAME)
             .then(this.handleResponse);
     }
 
@@ -117,19 +121,52 @@ export default class MediaUploadStore {
 
         this.setUploading(true);
 
-        return this.upload(file, url)
+        return this.upload(file, url, MEDIA_FORM_NAME)
             .then(this.handleResponse);
+    }
+
+    updatePreviewImage(file: File): Promise<*> {
+        const id = this.media ? this.media.id : undefined;
+
+        if (!id) {
+            throw new Error('The "id" property must be available for updating a media');
+        }
+
+        const url = resourceRouteRegistry.getDetailUrl(
+            PREVIEW_RESOURCE_KEY,
+            {
+                id,
+                locale: this.locale.get(),
+            }
+        );
+
+        this.setUploading(true);
+
+        return this.upload(file, url, PREVIEW_MEDIA_FORM_NAME)
+            .then(this.handleResponse);
+    }
+
+    deletePreviewImage(): Promise<*> {
+        if (!this.id) {
+            throw new Error('The "id" property must be available for deleting a preview media');
+        }
+
+        return ResourceRequester.delete(PREVIEW_RESOURCE_KEY, {id: this.id})
+            .then(action((media) => {
+                Object.assign(this.media, media);
+            }));
     }
 
     @action handleResponse = (media: Object) => {
         this.setUploading(false);
         this.setProgress(0);
-        this.media = media;
+
+        this.media = Object.assign(this.media || {}, media);
 
         return media;
     };
 
-    upload(file: File, url: string): Promise<*> {
+    upload(file: File, url: string, formName: string): Promise<*> {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
             const form = new FormData();
@@ -143,7 +180,7 @@ export default class MediaUploadStore {
                 xhr.upload.onprogress = (event) => this.setProgress(event.loaded / event.total * 100);
             }
 
-            form.append('fileVersion', file);
+            form.append(formName, file);
             xhr.send(form);
         });
     }

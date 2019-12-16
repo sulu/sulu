@@ -105,16 +105,16 @@ class Select extends React.Component<SelectProps> {
                 >
                     {
                         (setPopoverElementRef, popoverStyle) => (
-                            <OptionList
-                                onClose={this.handleOptionListClose}
-                                onOptionClick={this.handleOptionClick}
-                                optionListRef={setPopoverElementRef}
-                                options={options}
-                                size={size}
-                                skin={skin}
-                                style={popoverStyle}
-                                value={value}
-                            />
+                            <div ref={setPopoverElementRef} style={popoverStyle}>
+                                <OptionList
+                                    onClose={this.handleOptionListClose}
+                                    onOptionClick={this.handleOptionClick}
+                                    options={options}
+                                    size={size}
+                                    skin={skin}
+                                    value={value}
+                                />
+                            </div>
                         )
                     }
                 </Popover>

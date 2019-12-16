@@ -85,7 +85,7 @@ class NavigationItemTest extends TestCase
         $this->assertEquals($child, $this->navigationItem->getChildren()[0]);
     }
 
-    public function testSearch()
+    public function testFind()
     {
         $this->assertEquals('Globals', $this->item2->find(new NavigationItem('Globals'))->getName());
         $this->assertNull($this->item1->find(new NavigationItem('Nothing')));
@@ -95,6 +95,12 @@ class NavigationItemTest extends TestCase
     {
         $this->assertTrue($this->item1->hasChildren());
         $this->assertFalse($this->navigationItem->hasChildren());
+    }
+
+    public function testFindChildren()
+    {
+        $this->assertEquals('Portals', $this->item1->findChildren(new NavigationItem('Portals'))->getName());
+        $this->assertNull($this->navigationItem->findChildren(new NavigationItem(('Nothing'))));
     }
 
     public function testCopyChildless()

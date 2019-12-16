@@ -88,3 +88,8 @@ sulu_preview:
 sulu_search:
     resource: "@SuluSearchBundle/Resources/config/routing.yml"
     prefix: /admin/search
+
+sulu_audience_targeting_api:
+    type: rest
+    resource: "@SuluAudienceTargetingBundle/Resources/config/routing_api.yml"
+    prefix: /admin/api

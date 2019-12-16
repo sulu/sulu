@@ -291,7 +291,7 @@ class NavigationItem implements \Iterator
      *
      * @param NavigationItem $navigationItem The NavigationItem to look for
      *
-     * @return NavigationItem The item if it is found, otherwise false
+     * @return NavigationItem|null The item if it is found, otherwise null
      */
     public function find($navigationItem)
     {
@@ -308,7 +308,7 @@ class NavigationItem implements \Iterator
             }
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -327,7 +327,7 @@ class NavigationItem implements \Iterator
             }
         }
 
-        return;
+        return null;
     }
 
     /**

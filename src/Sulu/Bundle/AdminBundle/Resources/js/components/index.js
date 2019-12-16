@@ -12,7 +12,9 @@ import Dialog from './Dialog';
 import Divider from './Divider';
 import DropdownButton from './DropdownButton';
 import Email from './Email';
+import FileUploadButton from './FileUploadButton';
 import Form from './Form';
+import GhostIndicator from './GhostIndicator';
 import Grid from './Grid';
 import Icon from './Icon';
 import ImageRectangleSelection from './ImageRectangleSelection';
@@ -50,7 +52,9 @@ export {
     Divider,
     DropdownButton,
     Email,
+    FileUploadButton,
     Form,
+    GhostIndicator,
     Grid,
     Icon,
     ImageRectangleSelection,
