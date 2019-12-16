@@ -15,6 +15,10 @@ use PHPCR\ItemNotFoundException;
 use PHPCR\SessionInterface;
 use Prophecy\Argument;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
+use ProxyManager\Configuration;
+use ProxyManager\FileLocator\FileLocator;
+use ProxyManager\GeneratorStrategy\FileWriterGeneratorStrategy;
+use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
@@ -89,7 +93,12 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
      */
     private function getProxyFactory()
     {
-        return new  LazyLoadingValueHolderFactory();
+        $writer = new FileWriterGeneratorStrategy(new FileLocator(sys_get_temp_dir()));
+
+        $configuration = new Configuration();
+        $configuration->setGeneratorStrategy($writer);
+
+        return new LazyLoadingValueHolderFactory($configuration);
     }
 
     private function getSession($throw = false)
@@ -207,6 +216,9 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             ['uuid' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
         ];
 
+        $document1 = $this->prophesize(BasePageDocument::class);
+        $document2 = $this->prophesize(BasePageDocument::class);
+
         $provider = new ContentDataProvider(
             $this->getContentQueryBuilder(
                 [
@@ -217,7 +229,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
                 ]
             ),
             $this->getContentQueryExecutor(2, 1, $data),
-            $this->getDocumentManager(['123-123-123' => $data[0], '123-123-456' => $data[1]]),
+            $this->getDocumentManager(['123-123-123' => $document1->reveal(), '123-123-456' => $document2->reveal()]),
             $this->getProxyFactory(),
             $this->getSession(),
             new ReferenceStore(),
@@ -236,9 +248,11 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(DataProviderResult::class, $result);
         $items = $result->getItems();
         $this->assertEquals($data[0]['uuid'], $items[0]->getId());
-        $this->assertEquals($data[0], $items[0]->getResource()->getWrappedValueHolderValue());
+        $this->assertTrue($items[0]->getResource()->initializeProxy());
+        $this->assertEquals($document1->reveal(), $items[0]->getResource()->getWrappedValueHolderValue());
         $this->assertEquals($data[1]['uuid'], $items[1]->getId());
-        $this->assertEquals($data[1], $items[1]->getResource()->getWrappedValueHolderValue());
+        $this->assertTrue($items[1]->getResource()->initializeProxy());
+        $this->assertEquals($document2->reveal(), $items[1]->getResource()->getWrappedValueHolderValue());
         $this->assertTrue($result->getHasNextPage());
     }
 
@@ -250,6 +264,9 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             ['uuid' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
         ];
 
+        $document1 = $this->prophesize(BasePageDocument::class);
+        $document2 = $this->prophesize(BasePageDocument::class);
+
         $provider = new ContentDataProvider(
             $this->getContentQueryBuilder(
                 [
@@ -260,7 +277,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
                 ]
             ),
             $this->getContentQueryExecutor(2, 1, $data),
-            $this->getDocumentManager(['123-123-123' => $data[0], '123-123-456' => $data[1]]),
+            $this->getDocumentManager(['123-123-123' => $document1->reveal(), '123-123-456' => $document2->reveal()]),
             $this->getProxyFactory(),
             $this->getSession(),
             new ReferenceStore(),
@@ -279,9 +296,11 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(DataProviderResult::class, $result);
         $items = $result->getItems();
         $this->assertEquals($data[0]['uuid'], $items[0]->getId());
-        $this->assertEquals($data[0], $items[0]->getResource()->getWrappedValueHolderValue());
+        $this->assertTrue($items[0]->getResource()->initializeProxy());
+        $this->assertEquals($document1->reveal(), $items[0]->getResource()->getWrappedValueHolderValue());
         $this->assertEquals($data[1]['uuid'], $items[1]->getId());
-        $this->assertEquals($data[1], $items[1]->getResource()->getWrappedValueHolderValue());
+        $this->assertTrue($items[1]->getResource()->initializeProxy());
+        $this->assertEquals($document2->reveal(), $items[1]->getResource()->getWrappedValueHolderValue());
         $this->assertTrue($result->getHasNextPage());
     }
 
@@ -292,6 +311,9 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             ['uuid' => '123-123-456', 'title' => 'My-Page-1', 'path' => '/my-page-1'],
             ['uuid' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
         ];
+
+        $document1 = $this->prophesize(BasePageDocument::class);
+        $document2 = $this->prophesize(BasePageDocument::class);
 
         $referenceStore = new ReferenceStore();
         $provider = new ContentDataProvider(
@@ -304,7 +326,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
                 ]
             ),
             $this->getContentQueryExecutor(2, 1, $data),
-            $this->getDocumentManager(['123-123-123' => $data[0], '123-123-456' => $data[1]]),
+            $this->getDocumentManager(['123-123-123' => $document1->reveal(), '123-123-456' => $document2->reveal()]),
             $this->getProxyFactory(),
             $this->getSession(),
             $referenceStore,
@@ -323,9 +345,11 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(DataProviderResult::class, $result);
         $items = $result->getItems();
         $this->assertEquals($data[0]['uuid'], $items[0]->getId());
-        $this->assertEquals($data[0], $items[0]->getResource()->getWrappedValueHolderValue());
+        $this->assertTrue($items[0]->getResource()->initializeProxy());
+        $this->assertEquals($document1->reveal(), $items[0]->getResource()->getWrappedValueHolderValue());
         $this->assertEquals($data[1]['uuid'], $items[1]->getId());
-        $this->assertEquals($data[1], $items[1]->getResource()->getWrappedValueHolderValue());
+        $this->assertTrue($items[1]->getResource()->initializeProxy());
+        $this->assertEquals($document2->reveal(), $items[1]->getResource()->getWrappedValueHolderValue());
         $this->assertTrue($result->getHasNextPage());
         $this->assertEquals(['123-123-123', '123-123-456'], $referenceStore->getAll());
     }
@@ -338,6 +362,10 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             ['uuid' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
         ];
 
+        $document1 = $this->prophesize(BasePageDocument::class);
+        $document2 = $this->prophesize(BasePageDocument::class);
+        $document3 = $this->prophesize(BasePageDocument::class);
+
         $provider = new ContentDataProvider(
             $this->getContentQueryBuilder(
                 [
@@ -349,7 +377,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             ),
             $this->getContentQueryExecutor(-1, null, $data),
             $this->getDocumentManager(
-                ['123-123-123' => $data[0], '123-123-456' => $data[1], '123-123-789' => $data[2]]
+                ['123-123-123' => $document1->reveal(), '123-123-456' => $document2->reveal(), '123-123-789' => $document3->reveal()]
             ),
             $this->getProxyFactory(),
             $this->getSession(),
@@ -366,15 +394,16 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(DataProviderResult::class, $result);
 
         $items = $result->getItems();
-
         $this->assertEquals($data[0]['uuid'], $items[0]->getId());
-        $this->assertEquals($data[0], $items[0]->getResource()->getWrappedValueHolderValue());
+        $this->assertTrue($items[0]->getResource()->initializeProxy());
+        $this->assertEquals($document1->reveal(), $items[0]->getResource()->getWrappedValueHolderValue());
         $this->assertEquals($data[1]['uuid'], $items[1]->getId());
-        $this->assertEquals($data[1], $items[1]->getResource()->getWrappedValueHolderValue());
+        $this->assertTrue($items[1]->getResource()->initializeProxy());
+        $this->assertEquals($document2->reveal(), $items[1]->getResource()->getWrappedValueHolderValue());
         $this->assertEquals($data[2]['uuid'], $items[2]->getId());
-        $this->assertEquals($data[2], $items[2]->getResource()->getWrappedValueHolderValue());
-        $this->assertFalse($result->getHasNextPage());
-    }
+        $this->assertTrue($items[2]->getResource()->initializeProxy());
+        $this->assertEquals($document3->reveal(), $items[2]->getResource()->getWrappedValueHolderValue());
+        $this->assertFalse($result->getHasNextPage());    }
 
     public function testResolveDataItemsWithDeletedDataSource()
     {
@@ -449,6 +478,11 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             ['uuid' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
         ];
 
+        $document1 = $this->prophesize(BasePageDocument::class);
+        $document2 = $this->prophesize(BasePageDocument::class);
+
+        $documents = [$document1->reveal(), $document2->reveal()];
+
         $referenceStore = new ReferenceStore();
         $referenceStore->add('123-456-789');
         $provider = new ContentDataProvider(
@@ -461,7 +495,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
                 ]
             ),
             $this->getContentQueryExecutor(2, 1, $data),
-            $this->getDocumentManager(['123-123-123' => $data[0], '123-123-456' => $data[1]]),
+            $this->getDocumentManager(['123-123-123' => $document1->reveal(), '123-123-456' => $document2->reveal()]),
             $this->getProxyFactory(),
             $this->getSession(),
             $referenceStore,
@@ -487,7 +521,8 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($data[$i]['uuid'], $items[$i]->getId());
             $this->assertEquals($data[$i], $items[$i]->jsonSerialize());
 
-            $this->assertEquals($data[$i], $items[$i]->getResource()->getWrappedValueHolderValue());
+            $this->assertTrue($items[$i]->getResource()->initializeProxy());
+            $this->assertEquals($documents[$i], $items[$i]->getResource()->getWrappedValueHolderValue());
         }
 
         $this->assertTrue($result->getHasNextPage());
