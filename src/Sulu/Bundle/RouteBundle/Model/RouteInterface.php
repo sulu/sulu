@@ -88,22 +88,6 @@ interface RouteInterface
     public function setEntityId($entityId);
 
     /**
-     * Get parent uuid.
-     *
-     * @return string|null
-     */
-    public function getParentUuid();
-
-    /**
-     * Set parent uuid.
-     *
-     * @param string|null $parentUuid
-     *
-     * @return RouteInterface
-     */
-    public function setParentUuid($parentUuid);
-
-    /**
      * Get history.
      *
      * @return bool

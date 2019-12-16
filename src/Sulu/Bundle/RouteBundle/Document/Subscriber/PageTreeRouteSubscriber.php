@@ -32,7 +32,7 @@ class PageTreeRouteSubscriber implements EventSubscriberInterface
 {
     const ROUTE_PROPERTY = 'routePath';
 
-    const TAG_NAME = 'sulu_article.article_route';
+    const TAG_NAME = 'sulu_route.route_path';
 
     /**
      * @var DocumentManagerInterface

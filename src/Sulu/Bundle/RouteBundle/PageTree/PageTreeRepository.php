@@ -29,7 +29,7 @@ class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInter
 {
     const ROUTE_PROPERTY = 'routePath';
 
-    const TAG_NAME = 'sulu_article.article_route';
+    const TAG_NAME = 'sulu_route.routePath';
 
     /**
      * @var DocumentManagerInterface

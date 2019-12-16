@@ -77,16 +77,5 @@ interface RouteRepositoryInterface
      */
     public function findAllByEntity($entityClass, $entityId, $locale = null);
 
-    /**
-     * Return all routes for given parent page and entity class.
-     *
-     * @param string $parentUuid
-     * @param string $entityClass
-     * @param string $locale
-     *
-     * @return RouteInterface[]
-     */
-    public function findAllByParent($parentUuid, $entityClass, $locale);
-
     public function persist(RouteInterface $route);
 }
