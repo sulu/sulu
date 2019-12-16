@@ -403,7 +403,8 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data[2]['uuid'], $items[2]->getId());
         $this->assertTrue($items[2]->getResource()->initializeProxy());
         $this->assertEquals($document3->reveal(), $items[2]->getResource()->getWrappedValueHolderValue());
-        $this->assertFalse($result->getHasNextPage());    }
+        $this->assertFalse($result->getHasNextPage());
+    }
 
     public function testResolveDataItemsWithDeletedDataSource()
     {
