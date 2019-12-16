@@ -62,6 +62,7 @@ before_script:
     if [[ $PECL_INSTALL ]]; then
         printf "\n" | pecl install $PECL_INSTALL
     fi
+  - php -m
   - | # enable swap
     if [[ $ENABLE_SWAP == 'true' ]]; then
         sudo fallocate -l 4G /swapfile
