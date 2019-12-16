@@ -11,12 +11,12 @@
 
 namespace Sulu\Bundle\RouteBundle\PageTree;
 
-use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\RouteBundle\Content\Type\PageTreeRouteContentType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;

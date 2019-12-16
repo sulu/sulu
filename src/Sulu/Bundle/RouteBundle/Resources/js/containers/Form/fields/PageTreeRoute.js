@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import type {FieldTypeProps} from 'sulu-admin-bundle/containers/Form/types';
-import type {PageTreeRouteValue} from '../../types.js';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
@@ -12,6 +11,7 @@ import ResourceLocator from 'sulu-admin-bundle/components/ResourceLocator';
 import ResourceLocatorHistory from 'sulu-admin-bundle/containers/ResourceLocatorHistory';
 import resourceLocatorStyles from 'sulu-admin-bundle/containers/Form/fields/resourceLocator.scss';
 import {translate} from 'sulu-admin-bundle/utils';
+import type {PageTreeRouteValue} from '../../types.js';
 
 type Props = FieldTypeProps<?PageTreeRouteValue>;
 
