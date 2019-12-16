@@ -45,8 +45,13 @@ class PreviewFormViewBuilder implements PreviewFormViewBuilderInterface
         return $this;
     }
 
+    /**
+     * @deprecated The usage of the "setRequestParameters" method in the PreviewFormViewBuilder is deprecated. Please use "addRequestParameters" instead.
+     */
     public function setRequestParameters(array $requestParameters): PreviewFormViewBuilderInterface
     {
+        @trigger_error('The usage of the "setRequestParameters" method in the PreviewFormViewBuilder is deprecated. Please use "addRequestParameters" instead.', E_USER_DEPRECATED);
+
         $this->setRequestParametersToView($this->view, $requestParameters);
 
         return $this;
@@ -112,6 +117,13 @@ class PreviewFormViewBuilder implements PreviewFormViewBuilderInterface
         array $routerAttributesToFormMetadata
     ): PreviewFormViewBuilderInterface {
         $this->addRouterAttributesToFormMetadataToView($this->view, $routerAttributesToFormMetadata);
+
+        return $this;
+    }
+
+    public function addRequestParameters(array $requestParameters): PreviewFormViewBuilderInterface
+    {
+        $this->addRequestParametersToView($this->view, $requestParameters);
 
         return $this;
     }

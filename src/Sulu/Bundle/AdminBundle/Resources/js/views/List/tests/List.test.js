@@ -1193,6 +1193,36 @@ test('Should pass router attributes array from router to the ListStore metadataO
     expect(listStore.metadataOptions.title).toBeUndefined();
 });
 
+test('Should pass resource-store properties array from router to the ListStore metadataOptions', () => {
+    const List = require('../List').default;
+    const router = {
+        bind: jest.fn(),
+        attributes: {
+            id: '123-123-123',
+            locale: 'en',
+            title: 'Sulu is awesome',
+        },
+        route: {
+            options: {
+                adapters: ['table'],
+                requestParameters: {},
+                listKey: 'test',
+                locales: ['en', 'de'],
+                resourceKey: 'test',
+                resourceStorePropertiesToListMetadata: {0: 'locale', 'id': 'pageId'},
+            },
+        },
+    };
+    const resourceStore = new ResourceStore('tests', '123-123-123');
+
+    const list = mount(<List resourceStore={resourceStore} router={router} />);
+    const listStore = list.instance().listStore;
+
+    expect(listStore.metadataOptions.locale).toEqual('de');
+    expect(listStore.metadataOptions.pageId).toEqual('123-123-123');
+    expect(listStore.metadataOptions.title).toBeUndefined();
+});
+
 test('Should pass locale and page observables to the ListStore', () => {
     const List = require('../List').default;
     const router = {

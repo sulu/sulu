@@ -86,6 +86,7 @@ class List extends React.Component<Props> {
                     resourceStorePropertiesToListRequest = {},
                     userSettingsKey = DEFAULT_USER_SETTINGS_KEY,
                     routerAttributesToListMetadata = {},
+                    resourceStorePropertiesToListMetadata = {},
                 },
             },
         } = router;
@@ -124,7 +125,9 @@ class List extends React.Component<Props> {
 
         const metadataOptions = this.buildMetadataOptions(
             attributes,
-            routerAttributesToListMetadata
+            routerAttributesToListMetadata,
+            resourceStorePropertiesToListMetadata,
+            props.resourceStore
         );
 
         this.listStore = new ListStore(
@@ -145,7 +148,9 @@ class List extends React.Component<Props> {
 
     buildMetadataOptions(
         attributes: Object,
-        routerAttributesToListMetadata: {[string | number]: string}
+        routerAttributesToListMetadata: {[string | number]: string},
+        resourceStorePropertiesToListMetadata: {[string | number]: string},
+        resourceStore: ?ResourceStore
     ) {
         const metadataOptions = {};
         routerAttributesToListMetadata = toJS(routerAttributesToListMetadata);
@@ -155,6 +160,18 @@ class List extends React.Component<Props> {
             const attributeName = isNaN(key) ? key : routerAttributesToListMetadata[key];
 
             metadataOptions[listOptionKey] = attributes[attributeName];
+        });
+
+        resourceStorePropertiesToListMetadata = toJS(resourceStorePropertiesToListMetadata);
+        Object.keys(resourceStorePropertiesToListMetadata).forEach((key) => {
+            const listMetadataKey = resourceStorePropertiesToListMetadata[key];
+            const attributeName = isNaN(key) ? key : resourceStorePropertiesToListMetadata[key];
+
+            if (!resourceStore || !resourceStore.data) {
+                return;
+            }
+
+            metadataOptions[listMetadataKey] = resourceStore.data[attributeName];
         });
 
         return metadataOptions;

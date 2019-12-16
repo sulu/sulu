@@ -103,4 +103,22 @@ trait ListViewBuilderTrait
 
         $route->setOption('resourceStorePropertiesToListRequest', $newResourceStorePropertiesToListRequest);
     }
+
+    private function addResourceStorePropertiesToListMetadataToView(View $route, array $resourceStorePropertiesToListMetadata): void
+    {
+        $oldResourceStorePropertiesToListMetadata = $route->getOption('resourceStorePropertiesToListMetadata');
+        $newResourceStorePropertiesToListMetadata = $oldResourceStorePropertiesToListMetadata
+            ? array_merge($oldResourceStorePropertiesToListMetadata, $resourceStorePropertiesToListMetadata)
+            : $resourceStorePropertiesToListMetadata;
+
+        $route->setOption('resourceStorePropertiesToListMetadata', $newResourceStorePropertiesToListMetadata);
+    }
+
+    private function addRequestParametersToView(View $route, array $requestParameters): void
+    {
+        $oldRequestParameters = $route->getOption('requestParameters');
+        $newRequestParameters = $oldRequestParameters ? array_merge($oldRequestParameters, $requestParameters) : $requestParameters;
+
+        $route->setOption('requestParameters', $newRequestParameters);
+    }
 }

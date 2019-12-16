@@ -5,6 +5,16 @@
 When upgrading also have a look at the changes in the
 [sulu skeleton](https://github.com/sulu/skeleton/compare/2.0.2...2.0.3).
 
+### New methods in ViewBuilderInterfaces
+
+Following methods has been added:
+
+* `ListViewBuilderInterface::addResourceStorePropertiesToListMetadata`
+* `ListViewBuilderInterface::addRequestParameters`
+* `FormViewBuilderInterface::addRequestParameters`
+* `FormOverlayListViewBuilderInterface::addRequestParameters`
+* `PreviewFormViewBuilderInterface::addRequestParameters`
+
 ### Symfony/templating requirement removed
 
 Sulu does not longer need the `symfony/templating` package which is deprecated.
