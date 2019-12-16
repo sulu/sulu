@@ -25,11 +25,6 @@ trait FormViewBuilderTrait
         $view->setOption('formKey', $formKey);
     }
 
-    private function setRequestParametersToView(View $view, array $requestParameters): void
-    {
-        $view->setOption('requestParameters', $requestParameters);
-    }
-
     private function setBackViewToView(View $view, string $backView): void
     {
         $view->setOption('backView', $backView);
@@ -103,5 +98,18 @@ trait FormViewBuilderTrait
         $newMetadataRequestParameters = $oldMetadataRequestParameters ? array_merge($oldMetadataRequestParameters, $metadataRequestParameters) : $metadataRequestParameters;
 
         $route->setOption('metadataRequestParameters', $newMetadataRequestParameters);
+    }
+
+    private function addRequestParametersToView(View $route, array $requestParameters): void
+    {
+        $oldRequestParameters = $route->getOption('requestParameters');
+        $newRequestParameters = $oldRequestParameters ? array_merge($oldRequestParameters, $requestParameters) : $requestParameters;
+
+        $route->setOption('requestParameters', $newRequestParameters);
+    }
+
+    private function setRequestParametersToView(View $view, array $requestParameters): void
+    {
+        $view->setOption('requestParameters', $requestParameters);
     }
 }

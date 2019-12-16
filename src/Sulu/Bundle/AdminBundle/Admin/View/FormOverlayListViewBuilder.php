@@ -20,6 +20,7 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
         ListViewBuilderTrait::setEditViewToView insteadof FormViewBuilderTrait;
         ListViewBuilderTrait::addLocalesToView insteadof FormViewBuilderTrait;
         ListViewBuilderTrait::addToolbarActionsToView insteadof FormViewBuilderTrait;
+        ListViewBuilderTrait::addRequestParametersToView insteadof FormViewBuilderTrait;
     }
     use TabViewBuilderTrait;
 
@@ -51,8 +52,13 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
         return $this;
     }
 
+    /**
+     * @deprecated The usage of the "setRequestParameters" method in the FormOverlayListViewBuilder is deprecated. Please use "addRequestParameters" instead.
+     */
     public function setRequestParameters(array $requestParameters): FormOverlayListViewBuilderInterface
     {
+        @trigger_error('The usage of the "setRequestParameters" method in the FormOverlayListViewBuilder is deprecated. Please use "addRequestParameters" instead.', E_USER_DEPRECATED);
+
         $this->setRequestParametersToView($this->view, $requestParameters);
 
         return $this;
@@ -175,6 +181,13 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
         $oldResourceStorePropertiesToFormRequest = $this->view->getOption('resourceStorePropertiesToFormRequest');
         $newResourceStorePropertiesToFormRequest = $oldResourceStorePropertiesToFormRequest ? array_merge($oldResourceStorePropertiesToFormRequest, $resourceStorePropertiesToFormRequest) : $resourceStorePropertiesToFormRequest;
         $this->view->setOption('resourceStorePropertiesToFormRequest', $newResourceStorePropertiesToFormRequest);
+
+        return $this;
+    }
+
+    public function addRequestParameters(array $requestParameters): FormOverlayListViewBuilderInterface
+    {
+        $this->addRequestParametersToView($this->view, $requestParameters);
 
         return $this;
     }

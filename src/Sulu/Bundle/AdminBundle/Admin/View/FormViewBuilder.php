@@ -38,8 +38,13 @@ class FormViewBuilder implements FormViewBuilderInterface
         return $this;
     }
 
+    /**
+     * @deprecated The usage of the "setRequestParameters" method in the FormViewBuilder is deprecated. Please use "addRequestParameters" instead.
+     */
     public function setRequestParameters(array $requestParameters): FormViewBuilderInterface
     {
+        @trigger_error('The usage of the "setRequestParameters" method in the FormViewBuilder is deprecated. Please use "addRequestParameters" instead.', E_USER_DEPRECATED);
+
         $this->setRequestParametersToView($this->view, $requestParameters);
 
         return $this;
@@ -133,6 +138,13 @@ class FormViewBuilder implements FormViewBuilderInterface
     public function addMetadataRequestParameters(array $metadataRequestParameters): FormViewBuilderInterface
     {
         $this->addMetadataRequestParametersToView($this->view, $metadataRequestParameters);
+
+        return $this;
+    }
+
+    public function addRequestParameters(array $requestParameters): FormViewBuilderInterface
+    {
+        $this->addRequestParametersToView($this->view, $requestParameters);
 
         return $this;
     }

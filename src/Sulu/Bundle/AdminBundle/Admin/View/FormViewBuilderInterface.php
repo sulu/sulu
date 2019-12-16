@@ -53,6 +53,8 @@ interface FormViewBuilderInterface extends ViewBuilderInterface
 
     public function addMetadataRequestParameters(array $metadataRequestParameters): self;
 
+    public function addRequestParameters(array $requestParameters): self;
+
     public function setIdQueryParameter(string $idQueryParameter): self;
 
     public function setTitleVisible(bool $titleVisible): self;
