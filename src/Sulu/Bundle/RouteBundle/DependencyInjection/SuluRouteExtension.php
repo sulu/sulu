@@ -76,7 +76,7 @@ class SuluRouteExtension extends Extension implements PrependExtensionInterface
 
         $container->setAlias(
             'sulu_route.page_tree_route.updater',
-            'sulu_route.page_tree_route.updater.' . $config['content_types']['page_tree_route']['page_route_cascade'] // TODO change to fetch value from config
+            'sulu_route.page_tree_route.updater.' . $config['content_types']['page_tree_route']['page_route_cascade']
         );
 
         $loader->load('page_tree_move.xml');

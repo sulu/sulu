@@ -30,7 +30,7 @@ class PageTreeCompilerPass implements CompilerPassInterface
                 if ($this->hasPageTree($metadata->getProperties())) {
                     $pageTreeEnabled = true;
 
-                    break;
+                    break 2;
                 }
             }
         }
