@@ -26,7 +26,7 @@ use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Handles relation between articles and pages.
+ * Handles relation between documents and pages.
  */
 class PageTreeRouteSubscriber implements EventSubscriberInterface
 {
@@ -102,7 +102,7 @@ class PageTreeRouteSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Update route-paths of articles which are linked to the given page-document.
+     * Update route-paths of documents which are linked to the given page-document.
      *
      * @param AbstractMappingEvent $event
      */
@@ -117,7 +117,7 @@ class PageTreeRouteSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Update route-paths of articles which are linked to the given page-document.
+     * Update route-paths of documents which are linked to the given page-document.
      *
      * @param MoveEvent $event
      */

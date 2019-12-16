@@ -261,7 +261,7 @@ class RoutableSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Update routes for copied article.
+     * Update routes for copied document.
      *
      * @param CopyEvent $event
      */

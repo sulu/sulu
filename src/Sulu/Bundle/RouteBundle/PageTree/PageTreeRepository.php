@@ -23,7 +23,7 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Route\Document\Behavior\RoutableBehavior;
 
 /**
- * Update the route of articles synchronously.
+ * Update the route of documents synchronously.
  */
 class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInterface
 {

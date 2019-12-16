@@ -19,7 +19,7 @@ use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 interface PageTreeUpdaterInterface
 {
     /**
-     * Updates routes of linked articles.
+     * Updates routes of linked documents.
      *
      * @param BasePageDocument $document
      */
