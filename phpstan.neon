@@ -3,7 +3,7 @@ includes:
 parameters:
     paths:
         - ./
-    level: 2
+    level: 1
     symfony:
         container_xml_path: %rootDir%/../../../var/cache/admin/dev/adminApp_KernelDevDebugContainer.xml
     excludes_analyse:
@@ -30,4 +30,3 @@ parameters:
     ignoreErrors:
         - '#Service "test_user_provider" is not registered in the container.#'
         - '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required.#'
-        - '#Call to an undefined method [a-zA-Z0-9\\_]+::[a-zA-Z0-9\\_]+\(\)#'
