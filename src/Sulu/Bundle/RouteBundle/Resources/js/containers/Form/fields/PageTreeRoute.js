@@ -58,43 +58,36 @@ class PageTreeRoute extends React.Component<Props> {
     }
 
     get pageValue(): ?string {
-        const {
-            value: {
-                page: {
-                    uuid,
-                } = {
-                    uuid: null,
-                },
-            } = {
-                page: {
-                    uuid: null,
-                },
-            },
-        } = this.props;
+        const {value} = this.props;
 
-        return uuid;
+        if (value && value.page && value.page.uuid) {
+            return value.page.uuid;
+        }
+
+        return null;
     }
 
     get suffixValue(): ?string {
-        const {
-            value: {
-                suffix,
-            } = {
-                suffix: null,
-            },
-        } = this.props;
+        const {value} = this.props;
 
-        return suffix;
+        if (value && value.suffix) {
+            return value.suffix;
+        }
+
+        return null;
     }
 
-    handlePageChange = (value: ?string, page: ?Object = {
+    handlePageChange = (value: ?string|number, page: ?Object = {
         path: null,
     }): void => {
+        const uuid = value ? (typeof value !== 'string' ? '' + value : value) : null;
+        const path = page && page.path ? page.path : null;
+
         this.handleChange({
             ...this.props.value,
             page: {
-                uuid: value,
-                path: page.path,
+                uuid,
+                path,
             },
         });
     };
@@ -160,7 +153,7 @@ class PageTreeRoute extends React.Component<Props> {
                                 />
                             </div>
 
-                            {this.showHistory &&
+                            {this.showHistory && !!id &&
                                 <div className={resourceLocatorStyles.resourceLocatorHistory}>
                                     <ResourceLocatorHistory
                                         id={id}
