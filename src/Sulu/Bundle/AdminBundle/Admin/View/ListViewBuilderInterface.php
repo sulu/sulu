@@ -68,4 +68,11 @@ interface ListViewBuilderInterface extends ViewBuilderInterface
      * @param string[] $resourceStorePropertiesToListRequest
      */
     public function addResourceStorePropertiesToListRequest(array $resourceStorePropertiesToListRequest): self;
+
+    /**
+     * @param string[] $resourceStorePropertiesToListMetadata
+     */
+    public function addResourceStorePropertiesToListMetadata(array $resourceStorePropertiesToListMetadata): self;
+
+    public function addRequestParameters(array $requestParameters): self;
 }

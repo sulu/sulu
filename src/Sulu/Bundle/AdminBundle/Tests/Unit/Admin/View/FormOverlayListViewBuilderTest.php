@@ -106,7 +106,7 @@ class FormOverlayListViewBuilderTest extends TestCase
             ->setAddOverlayTitle($addOverlayTitle)
             ->setEditOverlayTitle($editOverlayTitle)
             ->setOverlaySize($overlaySize)
-            ->setRequestParameters($requestParameters)
+            ->addRequestParameters($requestParameters)
             ->getView();
 
         $this->assertEquals($name, $route->getName());

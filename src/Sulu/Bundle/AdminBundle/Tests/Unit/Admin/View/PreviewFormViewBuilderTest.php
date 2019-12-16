@@ -125,7 +125,7 @@ class PreviewFormViewBuilderTest extends TestCase
         }
 
         if ($requestParameters) {
-            $viewBuilder->setRequestParameters($requestParameters);
+            $viewBuilder->addRequestParameters($requestParameters);
         }
 
         if ($disablePreviewWebspaceChooser) {

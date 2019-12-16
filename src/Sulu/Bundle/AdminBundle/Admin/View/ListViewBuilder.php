@@ -157,6 +157,20 @@ class ListViewBuilder implements ListViewBuilderInterface
         return $this;
     }
 
+    public function addResourceStorePropertiesToListMetadata(array $resourceStorePropertiesToListMetadata): ListViewBuilderInterface
+    {
+        $this->addResourceStorePropertiesToListMetadataToView($this->view, $resourceStorePropertiesToListMetadata);
+
+        return $this;
+    }
+
+    public function addRequestParameters(array $requestParameters): ListViewBuilderInterface
+    {
+        $this->addRequestParametersToView($this->view, $requestParameters);
+
+        return $this;
+    }
+
     public function getView(): View
     {
         if (!$this->view->getOption('resourceKey')) {
