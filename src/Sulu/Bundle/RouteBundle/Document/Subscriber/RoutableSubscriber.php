@@ -242,13 +242,6 @@ class RoutableSubscriber implements EventSubscriberInterface
             throw new ResourceLocatorAlreadyExistsException($exception->getRoute()->getPath(), $document->getPath());
         }
 
-        $parentUuid = $node->getPropertyValueWithDefault(
-            $this->getRoutePathPropertyName($document, $event->getLocale()) . '-page',
-            null
-        );
-
-        $route->setParentUuid($parentUuid);
-
         $document->setRoutePath($route->getPath());
         $this->entityManager->persist($route);
 
