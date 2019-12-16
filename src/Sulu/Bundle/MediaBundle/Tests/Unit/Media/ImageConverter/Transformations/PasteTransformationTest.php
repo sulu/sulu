@@ -11,9 +11,10 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Transformations;
 
-use Imagine\Gd\Imagine;
+use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
+use Imagine\Imagick\Imagine as ImagickImagine;
 use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\PasteTransformation;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -42,8 +43,10 @@ class PasteTransformationTest extends SuluTestCase
             __DIR__ . '/../../../../app/Resources/images/photo.jpeg'
         );
 
+        $imagine = $this->createImagine();
+
         $this->pasteTransformation = new PasteTransformation(
-            new Imagine(),
+            $imagine,
             $this->fileLocator->reveal()
         );
 
@@ -76,5 +79,14 @@ class PasteTransformationTest extends SuluTestCase
             $image->reveal(),
             []
         );
+    }
+
+    private function createImagine()
+    {
+        if (class_exists(\Imagick::class)) {
+            return new ImagickImagine();
+        }
+
+        return new GdImagine();
     }
 }
