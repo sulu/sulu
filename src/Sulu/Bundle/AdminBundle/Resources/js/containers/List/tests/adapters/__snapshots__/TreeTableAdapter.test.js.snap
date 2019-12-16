@@ -175,6 +175,11 @@ exports[`Render data with schema 1`] = `
                 tabindex="0"
               />
             </span>
+            <span
+              class="ghostIndicator ghostIndicator"
+            >
+              en
+            </span>
             Test2
           </div>
         </td>

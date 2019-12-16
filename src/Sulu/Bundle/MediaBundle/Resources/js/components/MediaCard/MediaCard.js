@@ -4,17 +4,18 @@ import type {ElementRef} from 'react';
 import classNames from 'classnames';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
-import {Loader, Icon, Checkbox, CroppedText} from 'sulu-admin-bundle/components';
+import {Checkbox, CroppedText, GhostIndicator, Icon, Loader} from 'sulu-admin-bundle/components';
 import MimeTypeIndicator from '../MimeTypeIndicator';
 import DownloadList from './DownloadList';
 import mediaCardStyles from './mediaCard.scss';
 
 const DOWNLOAD_ICON = 'fa-cloud-download';
 
-type Props = {
+type Props = {|
     downloadCopyText: string,
     downloadText: string,
     downloadUrl: string,
+    ghostLocale?: string,
     icon?: string,
     id: string | number,
     image: ?string,
@@ -27,7 +28,7 @@ type Props = {
     selected: boolean,
     showCover: boolean,
     title: string,
-};
+|};
 
 @observer
 class MediaCard extends React.Component<Props> {
@@ -126,6 +127,7 @@ class MediaCard extends React.Component<Props> {
             downloadCopyText,
             downloadText,
             downloadUrl,
+            ghostLocale,
             icon,
             id,
             image,
@@ -155,6 +157,7 @@ class MediaCard extends React.Component<Props> {
 
         const mediaTitle = (
             <div className={mediaCardStyles.titleText}>
+                {ghostLocale && <GhostIndicator className={mediaCardStyles.ghostIndicator} locale={ghostLocale} />}
                 <CroppedText>{title}</CroppedText>
             </div>
         );

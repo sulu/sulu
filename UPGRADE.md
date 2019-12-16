@@ -5,6 +5,12 @@
 When upgrading also have a look at the changes in the
 [sulu skeleton](https://github.com/sulu/skeleton/compare/2.0.2...2.0.3).
 
+### Ghost- and Shadow-Locale in ListAdapters
+
+Our `ListAdapter`s, namely `table`, `table_light`, `tree_table`, `column_list`, `media_card_overview` and
+`media_card_selection` are now always using the `ghostLocale` and `shadowLocale` properties from the resource instead of
+the `type` property.
+
 ### Symfony/templating requirement removed
 
 Sulu does not longer need the `symfony/templating` package which is deprecated.

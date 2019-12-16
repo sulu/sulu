@@ -77,17 +77,23 @@ $downloadButtonBorderColorActive: $shakespeare;
     transition: margin-left .15s linear;
 }
 
+.ghost-indicator {
+    margin-right: 5px;
+}
+
 .title {
     pointer-events: none; /* We don't want the label/title to trigger an "onClick" event */
     position: relative;
     font-size: 12px;
     font-weight: bold;
+    height: 21px;
     margin-bottom: 10px;
     overflow: hidden;
 }
 
 .meta,
 .title-text {
+    display: flex;
     width: 140px;
 }
 

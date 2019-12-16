@@ -89,14 +89,25 @@ class LocaleSubscriber implements EventSubscriberInterface
         $type = null;
 
         if (LocalizationState::GHOST === $localizationState) {
-            $type = ['name' => 'ghost', 'value' => $document->getLocale()];
+            $ghostLocale = $document->getLocale();
+            $type = ['name' => 'ghost', 'value' => $ghostLocale];
+            $visitor->visitProperty(
+                new StaticPropertyMetadata('', 'ghostLocale', $ghostLocale),
+                $ghostLocale
+            );
         }
 
         if (LocalizationState::SHADOW === $localizationState) {
-            $type = ['name' => 'shadow', 'value' => $document->getLocale()];
+            $shadowLocale = $document->getLocale();
+            $type = ['name' => 'shadow', 'value' => $shadowLocale];
+            $visitor->visitProperty(
+                new StaticPropertyMetadata('', 'shadowLocale', $shadowLocale),
+                $shadowLocale
+            );
         }
 
         if ($type) {
+            // TODO should be removed at some point, and the ghostLocale resp. shadowLocale properties should be used
             $visitor->visitProperty(
                 new StaticPropertyMetadata('', 'type', $type),
                 $type

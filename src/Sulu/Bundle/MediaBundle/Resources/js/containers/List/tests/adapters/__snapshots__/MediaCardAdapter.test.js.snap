@@ -170,6 +170,11 @@ exports[`Render a basic Masonry view with MediaCards 1`] = `
                     <div
                       class="titleText"
                     >
+                      <span
+                        class="ghostIndicator ghostIndicator"
+                      >
+                        en
+                      </span>
                       <div
                         aria-label="Title 1"
                         class="croppedText"

@@ -112,6 +112,70 @@ class PageControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('uuid', $page2);
     }
 
+    public function testGetFlatResponseWithShadowAndGhostContent()
+    {
+        $ghostDocument = $this->createPageDocument();
+        $ghostDocument->setTitle('ghost_test_en');
+        $ghostDocument->setResourceSegment('/test_en');
+        $ghostDocument->setStructureType('default');
+        $ghostDocument->getStructure()->bind([
+            'tags' => [
+                'tag1',
+                'tag2',
+            ],
+            'article' => 'Test English',
+        ]);
+
+        $this->documentManager->persist($ghostDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
+
+        $shadowDocument = $this->createPageDocument();
+        $shadowDocument->setTitle('shadow_test_en');
+        $shadowDocument->setResourceSegment('/test_en');
+        $shadowDocument->setStructureType('default');
+        $shadowDocument->getStructure()->bind([
+            'tags' => [
+                'tag1',
+                'tag2',
+            ],
+            'article' => 'Test English',
+        ]);
+        $this->documentManager->persist($shadowDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
+
+        $shadowDocument->setTitle('shadow_test_de');
+        $shadowDocument->setResourceSegment('/test_de');
+        $shadowDocument->setStructureType('default');
+        $shadowDocument->getStructure()->bind([
+            'tags' => [
+                'tag1',
+                'tag2',
+            ],
+            'article' => 'Test German',
+        ]);
+        $shadowDocument->setShadowLocaleEnabled(true);
+        $shadowDocument->setShadowLocale('en');
+        $this->documentManager->persist($shadowDocument, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
+
+        $this->client->request('GET', '/api/pages?locale=de&flat=true&webspace=sulu_io');
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $childPages = $response->_embedded->pages[0]->_embedded->pages;
+
+        $this->assertEquals('ghost_test_en', $childPages[0]->title);
+        $this->assertEquals('en', $childPages[0]->ghostLocale);
+        $this->assertObjectNotHasAttribute('shadowLocale', $childPages[0]);
+        $this->assertEquals('ghost', $childPages[0]->type->name);
+        $this->assertEquals('en', $childPages[0]->type->value);
+
+        $this->assertEquals('shadow_test_en', $childPages[1]->title);
+        $this->assertEquals('en', $childPages[1]->shadowLocale);
+        $this->assertObjectNotHasAttribute('ghostLocale', $childPages[1]);
+        $this->assertEquals('shadow', $childPages[1]->type->name);
+        $this->assertEquals('en', $childPages[1]->type->value);
+    }
+
     public function testGetWithPermissions()
     {
         $securedPage = $this->createPageDocument();
@@ -471,6 +535,7 @@ class PageControllerTest extends SuluTestCase
 
         $this->assertEquals('test_en', $response['title']);
         $this->assertEquals(['name' => 'ghost', 'value' => 'en'], $response['type']);
+        $this->assertEquals('en', $response['ghostLocale']);
 
         $this->client->request('GET', '/api/pages/' . $document->getUuid() . '?language=de');
         $response = json_decode($this->client->getResponse()->getContent(), true);
@@ -517,6 +582,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('Test English', $response['article']);
         $this->assertEquals('shadow', $response['type']['name']);
         $this->assertEquals('en', $response['type']['value']);
+        $this->assertEquals('en', $response['shadowLocale']);
         $this->assertEquals(['en', 'de'], $response['availableLocales']);
         $this->assertEquals(['en'], $response['contentLocales']);
         $this->assertEquals(['de' => 'en'], $response['shadowLocales']);
