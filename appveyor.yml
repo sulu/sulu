@@ -13,7 +13,7 @@ environment:
     DATABASE_CHARSET: utf8mb4
     DATABASE_COLLATE: utf8mb4_unicode_ci
     SYMFONY_DEPRECATIONS_HELPER: weak
-    MYSQL_VERSION: 8.0.17
+    MYSQL_VERSION: 8.0.18
     NODEJS_VERSION: "12"
     matrix:
         - PHP_VERSION: 7.2.4
