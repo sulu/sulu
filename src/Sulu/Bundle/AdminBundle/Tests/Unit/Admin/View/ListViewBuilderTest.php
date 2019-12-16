@@ -262,6 +262,38 @@ class ListViewBuilderTest extends TestCase
         );
     }
 
+    public function testBuildListWithResourceStorePropertiesToMetadataRequest()
+    {
+        $view = (new ListViewBuilder('sulu_role.datagrid', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->addResourceStorePropertiesToListMetadata(['id' => 'dimensionId', 'parent' => 'parentId'])
+            ->addResourceStorePropertiesToListMetadata(['locale'])
+            ->getView();
+
+        $this->assertSame(
+            ['id' => 'dimensionId', 'parent' => 'parentId', 'locale'],
+            $view->getOption('resourceStorePropertiesToListMetadata')
+        );
+    }
+
+    public function testBuildListWithRequestParameters()
+    {
+        $view = (new ListViewBuilder('sulu_role.datagrid', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->addRequestParameters(['resourceKey' => 'pages', 'flat' => true])
+            ->addRequestParameters(['locale' => 'de'])
+            ->getView();
+
+        $this->assertSame(
+            ['resourceKey' => 'pages', 'flat' => true, 'locale' => 'de'],
+            $view->getOption('requestParameters')
+        );
+    }
+
     public function testBuildListSetParent()
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))

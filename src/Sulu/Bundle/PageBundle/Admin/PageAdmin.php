@@ -279,7 +279,7 @@ class PageAdmin extends Admin
                     ->createFormViewBuilder('sulu_page.page_edit_form.permissions', '/permissions')
                     ->setResourceKey('permissions')
                     ->setFormKey('permission_details')
-                    ->setRequestParameters(['resourceKey' => 'pages'])
+                    ->addRequestParameters(['resourceKey' => 'pages'])
                     ->setTabCondition('_permissions.security')
                     ->setTabTitle('sulu_security.permissions')
                     ->addToolbarActions([new ToolbarAction('sulu_admin.save')])

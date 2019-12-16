@@ -165,7 +165,7 @@ class FormViewBuilderTest extends TestCase
         }
 
         if ($requestParameters) {
-            $viewBuilder->setRequestParameters($requestParameters);
+            $viewBuilder->addRequestParameters($requestParameters);
         }
 
         $view = $viewBuilder->getView();
