@@ -46,7 +46,7 @@ class PreviewFormViewBuilder implements PreviewFormViewBuilderInterface
     }
 
     /**
-     * @deprecated The usage of the "setRequestParameters" method in the FormOverlayListViewBuilder is deprecated. Please use "addRequestParameters" instead.
+     * @deprecated The usage of the "setRequestParameters" method in the PreviewFormViewBuilder is deprecated. Please use "addRequestParameters" instead.
      */
     public function setRequestParameters(array $requestParameters): PreviewFormViewBuilderInterface
     {
