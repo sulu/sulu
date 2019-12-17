@@ -1,13 +1,13 @@
 // @flow
 import React from 'react';
 import {mount} from 'enzyme';
-import PageTreeRoute from 'sulu-route-bundle/containers/Form/fields/PageTreeRoute';
 import {FormInspector, ResourceFormStore, ResourceLocatorHistory, SingleSelection} from 'sulu-admin-bundle/containers';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import ResourceLocator from 'sulu-admin-bundle/components/ResourceLocator';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
+import PageTreeRoute from '../../fields/PageTreeRoute';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
