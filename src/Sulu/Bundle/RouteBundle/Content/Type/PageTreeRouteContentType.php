@@ -9,8 +9,6 @@
  * with this source code in the file LICENSE.
  */
 
-declare(strict_types=1);
-
 namespace Sulu\Bundle\RouteBundle\Content\Type;
 
 use Doctrine\ORM\EntityManagerInterface;

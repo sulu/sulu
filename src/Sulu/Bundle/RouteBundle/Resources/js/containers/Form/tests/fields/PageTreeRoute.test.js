@@ -23,7 +23,17 @@ jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(fu
     this.select = jest.fn();
 }));
 
-jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn());
+jest.mock(
+    'sulu-admin-bundle/stores/ResourceStore',
+    () => jest.fn(function(resourceKey, id, options) {
+        this.resourceKey = resourceKey;
+        this.id = id;
+
+        if (options) {
+            this.locale = options.locale;
+        }
+    })
+);
 
 jest.mock('sulu-admin-bundle/containers/Form/stores/MemoryFormStore', () => jest.fn(function(data, schema) {
     this.data = data;
@@ -35,11 +45,27 @@ jest.mock('sulu-admin-bundle/containers/Form/stores/MemoryFormStore', () => jest
     this.destroy = jest.fn();
 }));
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn());
+jest.mock(
+    'sulu-admin-bundle/containers/Form/stores/ResourceFormStore',
+    () => jest.fn(function(resourceStore, formKey) {
+        this.resourceKey = resourceStore.resourceKey;
+        this.id = resourceStore.id;
+        this.locale = resourceStore.locale;
 
-jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(function() {
-    this.isFieldModified = jest.fn();
-}));
+        if (formKey) {
+            this.formKey = formKey;
+        }
+    })
+);
+
+jest.mock(
+    'sulu-admin-bundle/containers/Form/FormInspector',
+    () => jest.fn(function(resourceFormStore) {
+        this.id = resourceFormStore.id;
+        this.locale = resourceFormStore.locale;
+        this.isFieldModified = jest.fn();
+    })
+);
 
 jest.mock('sulu-admin-bundle/stores/SingleSelectionStore', () => jest.fn(function() {
     this.set = jest.fn((item) => {
@@ -55,8 +81,6 @@ jest.mock('sulu-admin-bundle/stores/SingleSelectionStore', () => jest.fn(functio
         loading: false,
     });
 }));
-
-const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('pages'), 'test'));
 
 const modePromiseValue = 'leaf';
 const modePromise = Promise.resolve(modePromiseValue);
@@ -77,16 +101,16 @@ const value = {
 
 test('Render a PageTreeRoute', () => {
     const locale = observable.box('de');
+    const formInspector = new FormInspector(new ResourceFormStore(
+        new ResourceStore('pages', 'diuu-diuu-diuu-diuu', {locale}),
+        'test'
+    ));
 
     const pageTreeRoute = mount(
         <PageTreeRoute
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
-            formInspector={{
-                ...formInspector,
-                locale,
-                id: 'diuu-diuu-diuu-diuu',
-            }}
+            formInspector={formInspector}
             value={value}
         />
     );
@@ -114,12 +138,16 @@ test('Render a PageTreeRoute', () => {
 });
 
 test('Render a PageTreeRoute without history', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('pages'), 'test'));
+
     const pageTreeRoute = mount(
         <PageTreeRoute
             {...fieldTypeDefaultProps}
             fieldTypeOptions={{
                 ...fieldTypeOptions,
-                history: false,
+                options: {
+                    history: false,
+                },
             }}
             formInspector={formInspector}
             value={value}
@@ -136,6 +164,8 @@ test('Render a PageTreeRoute without history', () => {
 });
 
 test('Render a PageTreeRoute without value', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('pages'), 'test'));
+
     const pageTreeRoute = mount(
         <PageTreeRoute
             {...fieldTypeDefaultProps}
