@@ -95,7 +95,7 @@ abstract class AbstractFilingSubscriber implements EventSubscriberInterface
     /**
      * Return the name of the parent document.
      *
-     * @param $document
+     * @param object $document
      *
      * @return string
      */

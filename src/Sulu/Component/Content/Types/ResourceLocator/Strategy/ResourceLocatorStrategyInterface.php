@@ -26,7 +26,7 @@ interface ResourceLocatorStrategyInterface
     /**
      * Returns the child part from the given resource segment.
      *
-     * @param $resourceSegment
+     * @param string $resourceSegment
      *
      * @return string
      */
@@ -51,7 +51,7 @@ interface ResourceLocatorStrategyInterface
      * @param ResourceSegmentBehavior $document
      * @param int $userId
      *
-     * @return
+     * @return null|bool
      */
     public function save(ResourceSegmentBehavior $document, $userId);
 

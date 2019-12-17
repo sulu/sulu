@@ -86,8 +86,8 @@ class ExportManager implements ExportManagerInterface
     }
 
     /**
-     * @param $contentTypeName
-     * @param $format
+     * @param string $contentTypeName
+     * @param string $format
      *
      * @return bool
      */

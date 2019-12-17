@@ -31,7 +31,7 @@ interface DocumentManagerInterface
     /**
      * Create a new document instance for the given alias.
      *
-     * @param string
+     * @param string $alias
      *
      * @throws Exception\MetadataNotFoundException
      *
@@ -102,8 +102,8 @@ interface DocumentManagerInterface
     /**
      * Removes the draft for the given document and reverts it to the values from the public workspace.
      *
-     * @param $document
-     * @param $locale
+     * @param object $document
+     * @param string $locale
      */
     public function removeDraft($document, $locale);
 

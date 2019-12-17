@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Snippet\Export;
 
+use Symfony\Component\Console\Output\OutputInterface;
+
 /**
  * Interface for Snippet export.
  */
@@ -20,7 +22,7 @@ interface SnippetExportInterface
      * Export all data from snippet by given locale.
      *
      * @param string $locale
-     * @param $output
+     * @param OutputInterface $output
      * @param string $format
      *
      * @return array

@@ -135,7 +135,7 @@ class ProxyFactory
     /**
      * Create a new collection of referrers from a list of referencing items.
      *
-     * @param $document
+     * @param object $document
      *
      * @return ReferrerCollection
      */

@@ -109,7 +109,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
      * Returns the url for the image.
      *
      * @param $data
-     * @param $locale
+     * @param string $locale
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException

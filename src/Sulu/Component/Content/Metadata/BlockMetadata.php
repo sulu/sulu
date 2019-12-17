@@ -51,7 +51,7 @@ class BlockMetadata extends PropertyMetadata
     }
 
     /**
-     * @param $name
+     * @param string $name
      *
      * @return ItemMetadata
      */

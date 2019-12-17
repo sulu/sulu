@@ -49,7 +49,7 @@ class DoctrineListBuilderFactory implements DoctrineListBuilderFactoryInterface
     /**
      * Creates a new DoctrineListBuilder for the given entity name and returns it.
      *
-     * @param $entityName
+     * @param string $entityName
      *
      * @return DoctrineListBuilder
      */

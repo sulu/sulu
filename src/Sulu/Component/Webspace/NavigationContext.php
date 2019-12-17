@@ -43,7 +43,7 @@ class NavigationContext
     }
 
     /**
-     * @param $locale
+     * @param string $locale
      *
      * @return null|string
      */

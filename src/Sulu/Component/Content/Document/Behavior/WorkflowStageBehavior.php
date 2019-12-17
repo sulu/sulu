@@ -27,7 +27,7 @@ interface WorkflowStageBehavior
     /**
      * Set the workflow stage.
      *
-     * @param string|int
+     * @param string|int $workflowStage
      */
     public function setWorkflowStage($workflowStage);
 

@@ -417,7 +417,7 @@ class Property implements PropertyInterface, \JsonSerializable
     /**
      * magic getter for twig templates.
      *
-     * @param $property
+     * @param string $property
      */
     public function __get($property)
     {

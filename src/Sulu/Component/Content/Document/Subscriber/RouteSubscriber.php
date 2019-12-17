@@ -220,7 +220,7 @@ class RouteSubscriber implements EventSubscriberInterface
     /**
      * Remove given Route and his history.
      *
-     * @param $document
+     * @param RouteBehavior $document
      */
     private function recursivelyRemoveRoutes(RouteBehavior $document)
     {

@@ -158,10 +158,10 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
      *
      * @param NodeInterface $node
      * @param PropertyInterface $property
-     * @param $userId
-     * @param $webspaceKey
-     * @param $languageCode
-     * @param $segmentKey
+     * @param string $userId
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
      * @param bool $isImport
      *
      * @throws UnexpectedPropertyType

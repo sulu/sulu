@@ -68,8 +68,6 @@ class LegacyPropertyFactory
     /**
      * Create a new property.
      *
-     * @param Item $item
-     *
      * @return PropertyInterface $property
      */
     public function createProperty(ItemMetadata $property, StructureInterface $structure = null)

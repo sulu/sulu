@@ -41,8 +41,8 @@ class DoctrineBetweenExpression extends AbstractDoctrineExpression implements Be
      * DoctrineInExpression constructor.
      *
      * @param DoctrineFieldDescriptorInterface $field
-     * @param $start
-     * @param $end
+     * @param mixed $start
+     * @param mixed $end
      */
     public function __construct(DoctrineFieldDescriptorInterface $field, $start, $end)
     {

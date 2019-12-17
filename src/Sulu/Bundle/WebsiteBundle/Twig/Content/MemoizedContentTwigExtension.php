@@ -25,7 +25,7 @@ class MemoizedContentTwigExtension extends AbstractExtension
     /**
      * @param ContentTwigExtensionInterface $extension
      * @param MemoizeInterface $memoizeCache
-     * @param $lifeTime
+     * @param int $lifeTime
      */
     public function __construct(ContentTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
     {

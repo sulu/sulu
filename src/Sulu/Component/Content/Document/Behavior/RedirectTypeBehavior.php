@@ -63,7 +63,7 @@ interface RedirectTypeBehavior
      *
      * Applies when the redirect type is RedirectType::EXTERNAL
      *
-     * @param string
+     * @param string $redirectExternal
      */
     public function setRedirectExternal($redirectExternal);
 }

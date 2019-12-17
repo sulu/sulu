@@ -119,7 +119,7 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param $node
+     * @param NodeInterface $node
      */
     private function removeReferencesForNode(NodeInterface $node)
     {

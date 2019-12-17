@@ -56,7 +56,7 @@ class DocumentRegistry
     private $hydrationState = [];
 
     /**
-     * @param $defaultLocale
+     * @param string $defaultLocale
      */
     public function __construct($defaultLocale)
     {
@@ -67,7 +67,6 @@ class DocumentRegistry
      * Register a document.
      *
      * @param mixed $document
-     * @param NodeInterface $node
      * @param NodeInterface $node
      * @param string $locale
      *

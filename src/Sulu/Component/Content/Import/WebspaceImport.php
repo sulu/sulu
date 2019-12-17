@@ -376,7 +376,7 @@ class WebspaceImport extends Import implements WebspaceImportInterface
      * @param BasePageDocument $document
      * @param string $format
      * @param array $data
-     * @param $overrideSettings
+     * @param string $overrideSettings
      *
      * @throws DocumentManagerException
      * @throws FormatImporterNotFoundException
@@ -410,10 +410,10 @@ class WebspaceImport extends Import implements WebspaceImportInterface
     /**
      * Prepare the settings value for the respective setter.
      *
-     * @param $key
-     * @param $value
+     * @param string $key
+     * @param mixed|object $value
      *
-     * @return mixed|object
+     * @return null|mixed|object
      *
      * @throws DocumentManagerException
      */

@@ -70,7 +70,7 @@ class InstantiatorSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param mixed $event
+     * @param CreateEvent $event
      */
     public function handleCreate(CreateEvent $event)
     {

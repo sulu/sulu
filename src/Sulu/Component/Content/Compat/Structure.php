@@ -18,7 +18,7 @@ use Sulu\Component\Content\Compat\Section\SectionPropertyInterface;
 use Sulu\Component\Content\Exception\NoSuchPropertyException;
 
 /**
- * The Structure class represenets content structure and is the super type
+ * The Structure class represents content structure and is the super type
  * for Page and Snippet classes.
  *
  * Structures are composed of properties which map to content types.
@@ -235,7 +235,8 @@ abstract class Structure implements StructureInterface
     private $path;
 
     /**
-     * @param $key string
+     * @param string $key
+     * @param mixed[] $metaData
      */
     public function __construct($key, $metaData)
     {
@@ -355,7 +356,7 @@ abstract class Structure implements StructureInterface
     /**
      * sets uuid of node.
      *
-     * @param $uuid
+     * @param string $uuid
      */
     public function setUuid($uuid)
     {
@@ -375,7 +376,7 @@ abstract class Structure implements StructureInterface
     /**
      * sets user id of creator.
      *
-     * @param $userId int id of creator
+     * @param int $userId id of creator
      */
     public function setCreator($userId)
     {
@@ -395,7 +396,7 @@ abstract class Structure implements StructureInterface
     /**
      * sets user id of changer.
      *
-     * @param $userId int id of changer
+     * @param int $userId id of changer
      */
     public function setChanger($userId)
     {
@@ -447,7 +448,7 @@ abstract class Structure implements StructureInterface
     /**
      * returns a property instance with given name.
      *
-     * @param $name string name of property
+     * @param string $name name of property
      *
      * @return PropertyInterface
      *
@@ -506,7 +507,7 @@ abstract class Structure implements StructureInterface
     /**
      * return value of property with given name.
      *
-     * @param $name string name of property
+     * @param string $name name of property
      *
      * @return mixed
      */
@@ -638,7 +639,7 @@ abstract class Structure implements StructureInterface
     /**
      * set if this node should act like a shadow.
      *
-     * @param bool
+     * @param bool $isShadow
      */
     public function setIsShadow($isShadow)
     {
@@ -794,7 +795,7 @@ abstract class Structure implements StructureInterface
     /**
      * magic getter.
      *
-     * @param $property string name of property
+     * @param string $property name of property
      *
      * @return mixed
      *
@@ -812,8 +813,8 @@ abstract class Structure implements StructureInterface
     /**
      * magic setter.
      *
-     * @param $property string name of property
-     * @param $value mixed value
+     * @param string $property name of property
+     * @param mixed $value value
      *
      * @return mixed
      *
@@ -831,7 +832,7 @@ abstract class Structure implements StructureInterface
     /**
      * magic isset.
      *
-     * @param $property
+     * @param string $property
      *
      * @return bool
      */
@@ -948,7 +949,7 @@ abstract class Structure implements StructureInterface
     /**
      * set the available enabled shadow languages.
      *
-     * @param array
+     * @param array $shadowLocales
      */
     public function setShadowLocales($shadowLocales)
     {

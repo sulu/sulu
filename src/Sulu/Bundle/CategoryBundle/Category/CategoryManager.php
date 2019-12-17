@@ -333,7 +333,7 @@ class CategoryManager implements CategoryManagerInterface
      * The returned array can contain null-values, if the given entities are not valid.
      *
      * @param $entities
-     * @param $locale
+     * @param string $locale
      *
      * @return array
      */

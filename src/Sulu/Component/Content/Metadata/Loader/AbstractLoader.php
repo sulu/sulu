@@ -82,7 +82,7 @@ abstract class AbstractLoader implements LoaderInterface
     /**
      * Loads the tags for the structure.
      *
-     * @param $path
+     * @param string $path
      * @param \DOMXPath $xpath
      *
      * @return array
@@ -121,7 +121,7 @@ abstract class AbstractLoader implements LoaderInterface
     /**
      * Loads the areas for the structure.
      *
-     * @param $path
+     * @param string $path
      * @param \DOMXPath $xpath
      *
      * @return array

@@ -143,8 +143,8 @@ class ListRepository extends EntityRepository
     /**
      * returns array index of by a specified key value.
      *
-     * @param $array
-     * @param $value
+     * @param mixed[] $array
+     * @param string $value
      * @param string $key
      *
      * @return bool|int|string

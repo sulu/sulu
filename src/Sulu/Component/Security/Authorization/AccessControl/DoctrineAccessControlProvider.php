@@ -66,7 +66,7 @@ class DoctrineAccessControlProvider implements AccessControlProviderInterface
      *
      * @param string $type The name of the class to protect
      * @param string $identifier
-     * @param $permissions
+     * @param mixed[] $permissions
      */
     public function setPermissions($type, $identifier, $permissions)
     {

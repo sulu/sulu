@@ -78,7 +78,7 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * Returns the portal with the given index.
      *
-     * @param $key string The index of the portal
+     * @param string $key The index of the portal
      *
      * @return Portal|null
      */
@@ -90,10 +90,10 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * Returns the portal informations for the given environment.
      *
-     * @param $environment string The environment to deliver
-     * @param array|null $types Defines which typr of portals are requested (null for all)
+     * @param string $environment The environment to deliver
+     * @param array|null $types Defines which type of portals are requested (null for all)
      *
-     * @return \Sulu\Component\Webspace\PortalInformation[]
+     * @return PortalInformation[]
      */
     public function getPortalInformations($environment, $types = null)
     {
@@ -117,7 +117,7 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * Returns the webspace with the given key.
      *
-     * @param $key string The key of the webspace
+     * @param string $key The key of the webspace
      *
      * @return Webspace|null
      */
