@@ -46,7 +46,7 @@
         </service>
 
         <service id="sulu_document_manager.slugifier" class="Symfony\Cmf\Api\Slugifier\CallbackSlugifier" public="false">
-            <argument>Gedmo\Sluggable\Util\Urlizer::urlize</argument>
+            <argument>%sulu_document_manager.slugifier%</argument>
         </service>
 
         <service id="sulu_document_manager.node_name_slugifier"
