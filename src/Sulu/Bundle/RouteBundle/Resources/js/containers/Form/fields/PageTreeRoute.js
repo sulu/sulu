@@ -77,7 +77,7 @@ class PageTreeRoute extends React.Component<Props> {
         return null;
     }
 
-    handlePageChange = (value: ?string|number, page: ?Object = {
+    handlePageChange = (value: ?string | number, page: ?Object = {
         path: null,
     }): void => {
         const uuid = value ? (typeof value !== 'string' ? '' + value : value) : null;
