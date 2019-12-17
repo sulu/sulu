@@ -70,6 +70,11 @@ class SuluRouteExtension extends Extension implements PrependExtensionInterface
 
         if ('off' !== $pageRouteCascade) {
             $loader->load('page_tree_update.xml');
+        } else {
+            $container->setAlias(
+                'sulu_route.page_tree_route.updater.request',
+                'sulu_route.page_tree_route.updater.off'
+            );
         }
 
         $bundles = $container->getParameter('kernel.bundles');
