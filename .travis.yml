@@ -56,13 +56,10 @@ matrix:
 #  fast_finish: true # do not wait for allowed failures, as they do not affect the build.
 
 before_script:
-  - php -v
-  - php -m
   - |
     if [[ $PECL_INSTALL ]]; then
         printf "\n" | pecl install $PECL_INSTALL
     fi
-  - php -m
   - | # enable swap
     if [[ $ENABLE_SWAP == 'true' ]]; then
         sudo fallocate -l 4G /swapfile
