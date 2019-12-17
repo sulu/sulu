@@ -64,11 +64,17 @@ class SuluRouteExtension extends Extension implements PrependExtensionInterface
         $loader->load('manager.xml');
         $loader->load('generator.xml');
         $loader->load('command.xml');
+        $loader->load('page_tree_move.xml');
+
+        $pageRouteCascade = $config['content_types']['page_tree_route']['page_route_cascade'];
+
+        if ('off' !== $pageRouteCascade) {
+            $loader->load('page_tree_update.xml');
+        }
 
         $bundles = $container->getParameter('kernel.bundles');
-        if (array_key_exists('SuluAutomationBundle', $bundles)) {
-            $loader->load('automation.xml');
-        } elseif ('task' === $config['content_types']['page_tree_route']['page_route_cascade']) {
+
+        if ('task' === $pageRouteCascade && !array_key_exists('SuluAutomationBundle', $bundles)) {
             throw new InvalidConfigurationException(
                 'You need to install the SuluAutomationBundle to use task cascading!'
             );
@@ -76,13 +82,8 @@ class SuluRouteExtension extends Extension implements PrependExtensionInterface
 
         $container->setAlias(
             'sulu_route.page_tree_route.updater',
-            'sulu_route.page_tree_route.updater.' . $config['content_types']['page_tree_route']['page_route_cascade']
+            'sulu_route.page_tree_route.updater.' . $pageRouteCascade
         );
-
-        $loader->load('page_tree_move.xml');
-        if ('off' !== $config['content_types']['page_tree_route']['page_route_cascade']) {
-            $loader->load('page_tree_update.xml');
-        }
 
         $this->configurePersistence($config['objects'], $container);
     }

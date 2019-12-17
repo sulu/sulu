@@ -23,8 +23,5 @@
             <argument type="service" id="sulu_document_manager.property_encoder"/>
             <argument type="service" id="sulu_document_manager.document_inspector"/>
         </service>
-
-        <service id="sulu_route.page_tree_route.updater.off"
-                 class="Sulu\Bundle\RouteBundle\PageTree\NullPageTreeUpdater"/>
     </services>
 </container>

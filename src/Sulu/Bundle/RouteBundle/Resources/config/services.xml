@@ -33,6 +33,9 @@
             <tag name="sulu_document_manager.event_subscriber"/>
         </service>
 
+        <service id="sulu_route.page_tree_route.updater.off"
+                 class="Sulu\Bundle\RouteBundle\PageTree\NullPageTreeUpdater"/>
+
         <service id="sulu_route.route_controller"
                  class="Sulu\Bundle\RouteBundle\Controller\RouteController"
                  public="true">
