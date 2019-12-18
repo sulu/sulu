@@ -136,16 +136,11 @@ function exec_sf_cmd($cmd, $echo = true, $checkForError = true)
         $cmd .= ' --verbose';
     }
 
-    return exec_php(
-        __DIR__ . '/console ' . $cmd,
+    return exec_cmd(
+        'php ' . __DIR__ . '/console ' . $cmd,
         $echo,
         $checkForError
     );
-}
-
-function exec_php($cmdLine, $echo = true, $checkForError = true)
-{
-    return exec_cmd(PHP_BINARY . ' ' . $cmdLine, $echo, $checkForError);
 }
 
 function exec_cmd($cmdLine, $echo = true, $checkForError = true)
@@ -387,7 +382,7 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
     write_info('Running tests');
 
     $flags = $input->getOption('flags');
-    $process = exec_php(sprintf(
+    $process = exec_cmd(sprintf(
         'vendor%sbin%sphpunit --configuration %s %s',
         DIRECTORY_SEPARATOR,
         DIRECTORY_SEPARATOR,
@@ -414,8 +409,8 @@ function init_bundle($phpunitPath)
         return;
     }
 
-    $process = exec_php(sprintf(
-        '%s %s',
+    $process = exec_cmd(sprintf(
+        'php %s %s',
         $console,
         'debug:container doctrine.orm.entity_manager'
     ), false);
@@ -427,14 +422,14 @@ function init_bundle($phpunitPath)
 
     write_info('Doctrine ORM detected, updating the schema for the bundle.');
 
-    exec_php(sprintf(
-        '%s %s',
+    exec_cmd(sprintf(
+        'php %s %s',
         $console,
         ' doctrine:schema:update --force'
     ));
 
-    exec_php(sprintf(
-        '%s %s',
+    exec_cmd(sprintf(
+        'php %s %s',
         $console,
         ' sulu:document:initialize --purge --force --ansi'
     ));
@@ -515,7 +510,7 @@ if (false === $input->getOption('no-component-tests') || $input->getOption('all'
     // https://github.com/sulu-io/sulu/issues/2187
     putenv('KERNEL_DIR=' . __DIR__ . '/../tests/app');
     exec_sf_cmd('sulu:document:initialize --purge --ansi --force', true);
-    $process = exec_php(
+    $process = exec_cmd(
         'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'phpunit ' . $input->getOption('flags'),
         true,
         false
