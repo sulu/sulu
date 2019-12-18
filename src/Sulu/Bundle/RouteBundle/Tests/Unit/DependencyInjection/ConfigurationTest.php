@@ -54,6 +54,11 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
                         'repository' => 'TestRouteRepository',
                     ],
                 ],
+                'content_types' => [
+                    'page_tree_route' => [
+                        'page_route_cascade' => 'request',
+                    ],
+                ],
             ],
             $config
         );
