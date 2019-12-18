@@ -90,7 +90,7 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
     public function dumpHost($scheme, $host)
     {
         $dumpPath = $this->getIndexDumpPath($scheme, $host);
-        $sitemap = $this->sitemapRenderer->renderIndex($host, $scheme);
+        $sitemap = $this->sitemapRenderer->renderIndex($scheme, $host);
         if (!$sitemap) {
             $aliases = array_keys($this->sitemapProviderPool->getProviders());
             $this->dumpFile(
