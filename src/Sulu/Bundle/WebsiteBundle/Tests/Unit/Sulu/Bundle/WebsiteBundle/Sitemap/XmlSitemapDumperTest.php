@@ -77,7 +77,7 @@ class XmlSitemapDumperTest extends TestCase
 
     public function testDumpHost()
     {
-        $this->renderer->renderIndex('sulu.io', 'http')->willReturn('<sitemapindex/>');
+        $this->renderer->renderIndex('http', 'sulu.io')->willReturn('<sitemapindex/>');
 
         $this->filesystem->dumpFile(
             $this->dumper->getIndexDumpPath('http', 'sulu.io'),
@@ -116,7 +116,7 @@ class XmlSitemapDumperTest extends TestCase
 
     public function testDumpPortalInformationNoIndex()
     {
-        $this->renderer->renderIndex('sulu.io', 'http')->willReturn(null);
+        $this->renderer->renderIndex('http', 'sulu.io')->willReturn(null);
 
         $provider = $this->prophesize(SitemapProviderInterface::class);
 
@@ -139,7 +139,7 @@ class XmlSitemapDumperTest extends TestCase
 
     public function testDumpHostWildcard()
     {
-        $this->renderer->renderIndex('sulu.io', 'http')->willReturn('<sitemapindex/>');
+        $this->renderer->renderIndex('http', 'sulu.io')->willReturn('<sitemapindex/>');
 
         $this->filesystem->dumpFile(
             $this->dumper->getIndexDumpPath('http', 'sulu.io'),
@@ -178,7 +178,7 @@ class XmlSitemapDumperTest extends TestCase
 
     public function testDumpPortalInformationMultiplePages()
     {
-        $this->renderer->renderIndex('sulu.io', 'http')->willReturn('<sitemapindex/>');
+        $this->renderer->renderIndex('http', 'sulu.io')->willReturn('<sitemapindex/>');
 
         $this->filesystem->dumpFile(
             $this->dumper->getIndexDumpPath('http', 'sulu.io'),
