@@ -190,7 +190,7 @@ class KeywordManager implements KeywordManagerInterface
      * Creates a new category translation for a given category and locale.
      *
      * @param CategoryInterface $category
-     * @param $locale
+     * @param string $locale
      *
      * @return CategoryTranslationInterface
      */

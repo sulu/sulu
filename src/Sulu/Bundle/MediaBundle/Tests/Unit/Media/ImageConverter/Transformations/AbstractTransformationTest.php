@@ -11,8 +11,9 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Transformations;
 
-use Imagine\Gd\Imagine;
+use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Image\Box;
+use Imagine\Imagick\Imagine as ImagickImagine;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\TransformationInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
@@ -65,7 +66,7 @@ abstract class AbstractTransformationTest extends SuluTestCase
                 $imageHeight = $data['imageHeight'];
             }
 
-            $imagine = new Imagine();
+            $imagine = $this->createImagine();
             $imageBox = new Box($imageWidth, $imageHeight);
             $image = $imagine->create($imageBox);
 
@@ -74,5 +75,14 @@ abstract class AbstractTransformationTest extends SuluTestCase
             $this->assertEquals($data['width'], $image->getSize()->getWidth());
             $this->assertEquals($data['height'], $image->getSize()->getHeight());
         }
+    }
+
+    private function createImagine()
+    {
+        if (class_exists(\Imagick::class)) {
+            return new ImagickImagine();
+        }
+
+        return new GdImagine();
     }
 }

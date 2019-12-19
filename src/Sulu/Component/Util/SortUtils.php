@@ -56,7 +56,7 @@ final class SortUtils
      * @see http://symfony.com/doc/current/components/property_access/introduction.html
      *
      * @param array $values
-     * @param string|array $path Path or paths on which to sort on
+     * @param string|array $paths Path or paths on which to sort on
      * @param string $direction Direction to sort in (either ASC or DESC)
      *
      * @return array

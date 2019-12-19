@@ -25,7 +25,7 @@ class MemoizedNavigationTwigExtension extends AbstractExtension
     /**
      * @param NavigationTwigExtensionInterface $extension
      * @param MemoizeInterface $memoizeCache
-     * @param $lifeTime
+     * @param int $lifeTime
      */
     public function __construct(NavigationTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
     {

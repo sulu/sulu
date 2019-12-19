@@ -104,7 +104,7 @@ interface ContactManagerInterface
      * Returns an api entity.
      *
      * @param $id
-     * @param $locale
+     * @param string $locale
      *
      * @return mixed
      */
@@ -114,7 +114,7 @@ interface ContactManagerInterface
      * Returns api entities.
      *
      * @param $ids
-     * @param $locale
+     * @param string $locale
      *
      * @return mixed
      */

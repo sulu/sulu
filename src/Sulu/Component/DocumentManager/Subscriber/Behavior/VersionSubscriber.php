@@ -327,7 +327,7 @@ class VersionSubscriber implements EventSubscriberInterface
     /**
      * Determines if the given document supports versioning.
      *
-     * @param $document
+     * @param object $document
      *
      * @return bool
      */

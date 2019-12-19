@@ -69,7 +69,7 @@ class WebspaceCollectionBuilder
     /**
      * @param LoaderInterface $loader The loader for the xml config files
      * @param ReplacerInterface $urlReplacer Factory for url-replacers
-     * @param $path string The path to the xml config files
+     * @param string $path The path to the xml config files
      */
     public function __construct(
         LoaderInterface $loader,
@@ -315,9 +315,9 @@ class WebspaceCollectionBuilder
      *
      * @param Portal $portal
      * @param Environment $environment
-     * @param $url
-     * @param $segments
-     * @param $urlAddress
+     * @param Url $url
+     * @param Segment[] $segments
+     * @param string $urlAddress
      */
     private function buildUrls(
         Portal $portal,
@@ -372,7 +372,7 @@ class WebspaceCollectionBuilder
     }
 
     /**
-     * @param $urlResult
+     * @param string $urlResult
      * @param Environment $environment
      *
      * @return bool

@@ -92,7 +92,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
     /**
      * Parses the entire file and returns a webspace object.
      *
-     * @param $file
+     * @param string $file
      *
      * @return Webspace
      */
@@ -168,7 +168,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
     /**
      * Sets the default localization for the given portal.
      *
-     * @param $portal Portal
+     * @param Portal $portal
      *
      * @return bool True when successful, otherwise false
      */
@@ -228,9 +228,9 @@ class XmlFileLoader10 extends BaseXmlFileLoader
     /**
      * Generates a localization from the given node.
      *
-     * @param \DOMElement|\DOMNode $localizationNode
+     * @param \DOMElement $localizationNode
      * @param bool $flat
-     * @param null $parent
+     * @param ?\DOMElement $parent
      *
      * @return Localization
      */
@@ -466,10 +466,10 @@ class XmlFileLoader10 extends BaseXmlFileLoader
     /**
      * Loads the meta information like a translatable title from the webspace.
      *
-     * @param $path
+     * @param string $path
      * @param \DOMNode|null $context
      *
-     * @return array
+     * @return mixed[]
      */
     protected function loadMeta($path, \DOMNode $context = null)
     {
@@ -679,7 +679,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
     /**
      * Returns true if there is one default localization.
      *
-     * @param $localizations
+     * @param Localization[] $localizations
      *
      * @return bool
      *

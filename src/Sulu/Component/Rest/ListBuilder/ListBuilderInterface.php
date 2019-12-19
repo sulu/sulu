@@ -87,7 +87,7 @@ interface ListBuilderInterface
     /**
      * Checks if field by name has been already added.
      *
-     * @param $name
+     * @param string $name
      *
      * @return bool
      */
@@ -258,9 +258,7 @@ interface ListBuilderInterface
      * Defines a between constraint.
      *
      * @param FieldDescriptorInterface $fieldDescriptor
-     * @param $values
-     *
-     * @return
+     * @param int[] $values
      */
     public function between(FieldDescriptorInterface $fieldDescriptor, array $values);
 
@@ -325,7 +323,7 @@ interface ListBuilderInterface
      * Creates an where expression from the given values.
      *
      * @param FieldDescriptorInterface $fieldDescriptor
-     * @param $value
+     * @param mixed $value
      * @param string $comparator
      *
      * @return WhereExpressionInterface

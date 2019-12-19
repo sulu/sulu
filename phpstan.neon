@@ -29,3 +29,4 @@ parameters:
         - %currentWorkingDirectory%/*/Tests/*
     ignoreErrors:
         - '#Service "test_user_provider" is not registered in the container.#'
+        - '#Instantiated class ZipArchive not found.#'

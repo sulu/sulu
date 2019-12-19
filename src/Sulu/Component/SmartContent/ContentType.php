@@ -442,8 +442,8 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
     }
 
     /**
-     * @param $value
-     * @param $key
+     * @param mixed[] $value
+     * @param string $key
      */
     protected function resolveTags(&$value, $key)
     {

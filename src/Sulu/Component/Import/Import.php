@@ -57,7 +57,7 @@ class Import
     /**
      * Returns the correct parser like XLIFF1.2.
      *
-     * @param $format
+     * @param string $format
      *
      * @return FormatImportInterface
      *

@@ -143,7 +143,7 @@ class DocumentInspector
     /**
      * Return the depth of the given document within the content repository.
      *
-     * @param $document
+     * @param object $document
      *
      * @return int
      */
@@ -155,7 +155,7 @@ class DocumentInspector
     /**
      * Return the name of the document.
      *
-     * @param $document
+     * @param object $document
      *
      * @return string
      */

@@ -124,7 +124,7 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
      * Returns tags of given node and locale.
      *
      * @param NodeInterface $node
-     * @param $locale
+     * @param string $locale
      *
      * @return array
      */
@@ -140,7 +140,7 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
      * Returns categories of given node and locale.
      *
      * @param NodeInterface $node
-     * @param $locale
+     * @param string $locale
      *
      * @return array
      */
@@ -156,7 +156,7 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
      * Returns navigation context of given node and locale.
      *
      * @param NodeInterface $node
-     * @param $locale
+     * @param string $locale
      *
      * @return array
      */

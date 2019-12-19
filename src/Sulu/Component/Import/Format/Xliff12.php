@@ -77,9 +77,9 @@ class Xliff12 implements FormatImportInterface
     /**
      * Prepare data for structure.
      *
-     * @param $child
+     * @param mixed[] $child
      *
-     * @return array
+     * @return mixed[]
      */
     private function getChildPropertyDatas($child)
     {
@@ -134,7 +134,7 @@ class Xliff12 implements FormatImportInterface
     }
 
     /**
-     * @param $file
+     * @param \SimpleXMLElement $file
      *
      * @return array
      */

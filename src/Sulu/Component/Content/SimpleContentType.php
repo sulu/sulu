@@ -106,7 +106,7 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
     /**
      * magic getter for twig templates.
      *
-     * @param $property string name of property
+     * @param string $property name of property
      */
     public function __get($property)
     {

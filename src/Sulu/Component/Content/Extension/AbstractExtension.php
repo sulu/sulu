@@ -46,7 +46,7 @@ abstract class AbstractExtension implements ExtensionInterface
     /**
      * returns translated property name.
      *
-     * @param $propertyName
+     * @param string $propertyName
      *
      * @return string
      */

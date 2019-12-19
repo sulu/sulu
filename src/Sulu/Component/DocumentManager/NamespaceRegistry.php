@@ -31,7 +31,7 @@ class NamespaceRegistry
     /**
      * Return the namespace alias for the given role, e.g. "localized_content" => "lcont".
      *
-     * @param $role
+     * @param string $role
      *
      * @throws DocumentManagerException
      *

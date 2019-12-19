@@ -22,11 +22,12 @@ env:
 matrix:
   include:
     - language: php
-      php: 7.3
+      php: 7.4
       env:
         - COMPOSER_FLAGS="--prefer-dist --no-interaction"
         - SYMFONY_DEPRECATIONS_HELPER="weak"
         - PHPSTAN=true
+        - PECL_INSTALL=imagick
       services:
         - mysql
 
@@ -44,6 +45,10 @@ matrix:
         - postgresql
 
 before_script:
+  - |
+    if [[ $PECL_INSTALL ]]; then
+        printf "\n" | pecl install $PECL_INSTALL
+    fi
   - | # enable swap
     if [[ $ENABLE_SWAP == 'true' ]]; then
         sudo fallocate -l 4G /swapfile

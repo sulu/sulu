@@ -101,7 +101,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      * Returns contact entities by ids.
      *
      * @param $ids
-     * @param $locale
+     * @param string $locale
      *
      * @return mixed
      */
@@ -460,7 +460,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
 
     /**
      * @param $id
-     * @param $locale
+     * @param string $locale
      *
      * @throws EntityNotFoundException
      *
@@ -480,7 +480,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      * Returns an api entity for an doctrine entity.
      *
      * @param $contact
-     * @param $locale
+     * @param string $locale
      *
      * @return null|Contact
      */

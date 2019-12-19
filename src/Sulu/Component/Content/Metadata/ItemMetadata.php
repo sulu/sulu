@@ -224,7 +224,7 @@ abstract class ItemMetadata
     /**
      * Set the children of this item.
      *
-     * @param $children
+     * @param ItemMetadata[] $children
      *
      * @return $this
      */

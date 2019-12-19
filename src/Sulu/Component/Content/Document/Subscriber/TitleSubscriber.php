@@ -113,7 +113,7 @@ class TitleSubscriber implements EventSubscriberInterface
     /**
      * Returns true if the given document is supported by this subscriber.
      *
-     * @param $document
+     * @param object $document
      *
      * @return bool
      */

@@ -120,27 +120,27 @@ class ListQueryBuilder
     /**
      * used as a storage for saving relational fields.
      *
-     * @var
+     * @var array
      */
     private $relationalFilters = [];
 
     /**
      * contains all join conditions.
      *
-     * @var
+     * @var array
      */
     private $joinConditions = [];
 
     /**
-     * @param $associationNames
-     * @param $fieldNames
-     * @param $entityName
-     * @param $fields
-     * @param $sorting
-     * @param $where
-     * @param array $searchTextFields
-     * @param array $searchNumberFields
-     * @param array $joinConditions - specify a custom join condition
+     * @param string[] $associationNames
+     * @param string[] $fieldNames
+     * @param string[] $entityName
+     * @param string[] $fields
+     * @param string[] $sorting
+     * @param string[] $where
+     * @param string[] $searchTextFields
+     * @param string[] $searchNumberFields
+     * @param string[] $joinConditions - specify a custom join condition
      */
     public function __construct(
         $associationNames,
@@ -352,7 +352,7 @@ class ListQueryBuilder
     /**
      * generates the join condition.
      *
-     * @param $field
+     * @param string $field
      *
      * @return string
      */

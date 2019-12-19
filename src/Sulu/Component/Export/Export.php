@@ -13,6 +13,7 @@ namespace Sulu\Component\Export;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
@@ -137,8 +138,8 @@ class Export
     /**
      * Returns a array with the given value (name, value and options).
      *
-     * @param $name
-     * @param $value
+     * @param string $name
+     * @param mixed $value
      * @param array $options
      * @param string $type
      * @param array $children
@@ -166,7 +167,7 @@ class Export
      * Returns the Content as a flat array.
      *
      * @param PropertyMetadata[] $properties
-     * @param $propertyValues
+     * @param mixed[] $propertyValues
      *
      * @return array
      */
@@ -198,8 +199,8 @@ class Export
     /**
      * Returns a array of the given content data of the document.
      *
-     * @param $document
-     * @param $locale
+     * @param StructureBehavior $document
+     * @param string $locale
      *
      * @return array
      *
@@ -224,7 +225,7 @@ class Export
     /**
      * Returns export template for given format like XLIFF1.2.
      *
-     * @param $format
+     * @param string $format
      *
      * @return string
      *

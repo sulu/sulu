@@ -138,18 +138,6 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should throw an exception if no locale can be determined.
-     */
-    public function testNoLocale()
-    {
-        $this->expectException(\RuntimeException::class);
-        $this->inspector->getWebspace($this->document->reveal())->willReturn(null);
-        $this->inspector->getLocales($this->document)->willReturn([]);
-        $this->node->getPath()->willReturn('/path/to');
-        $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
-    }
-
-    /**
      * It should return webspace parent localization.
      */
     public function testWebspaceParentLocalization()

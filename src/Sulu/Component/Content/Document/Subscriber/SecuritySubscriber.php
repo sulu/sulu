@@ -47,7 +47,7 @@ class SecuritySubscriber implements EventSubscriberInterface
     /**
      * Shows if the given document is supported by this subscriber.
      *
-     * @param $document
+     * @param object $document
      *
      * @return bool
      */
@@ -110,7 +110,7 @@ class SecuritySubscriber implements EventSubscriberInterface
     /**
      * Extracts the keys of the allowed permissions into an own array.
      *
-     * @param $permissions
+     * @param array $permissions
      *
      * @return array
      */

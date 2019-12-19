@@ -31,8 +31,8 @@ interface SecurityCheckerInterface
     public function checkPermission($subject, $permission);
 
     /**
-     * @param $subject
-     * @param $permission
+     * @param mixed $subject
+     * @param string $permission
      *
      * @return bool
      */

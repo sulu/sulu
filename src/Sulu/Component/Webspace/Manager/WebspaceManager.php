@@ -370,7 +370,7 @@ class WebspaceManager implements WebspaceManagerInterface
     /**
      * Sets the options for the manager.
      *
-     * @param $options
+     * @param mixed[] $options
      */
     public function setOptions($options)
     {
@@ -389,10 +389,10 @@ class WebspaceManager implements WebspaceManagerInterface
     /**
      * Url is from domain.
      *
-     * @param $url
-     * @param $domain
+     * @param string $url
+     * @param string $domain
      *
-     * @return array
+     * @return bool
      */
     protected function isFromDomain($url, $domain)
     {

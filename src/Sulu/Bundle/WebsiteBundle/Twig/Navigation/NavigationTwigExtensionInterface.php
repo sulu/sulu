@@ -70,7 +70,7 @@ interface NavigationTwigExtensionInterface extends ExtensionInterface
     /**
      * Returns breadcrumb for given node.
      *
-     * @param $uuid
+     * @param string $uuid
      *
      * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
      */

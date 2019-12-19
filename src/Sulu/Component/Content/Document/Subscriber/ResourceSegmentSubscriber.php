@@ -255,7 +255,7 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
     /**
      * Returns the property of the document's structure containing the ResourceSegment.
      *
-     * @param $document
+     * @param object $document
      *
      * @return PropertyMetadata
      */
@@ -274,8 +274,8 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
                 sprintf(
                     'Structure "%s" does not have a "sulu.rlp" tag which is required for documents implementing the ' .
                     'ResourceSegmentBehavior. In "%s"',
-                    $structure->name,
-                    $structure->resource
+                    $structure->getName(),
+                    $structure->getResource()
                 )
             );
         }

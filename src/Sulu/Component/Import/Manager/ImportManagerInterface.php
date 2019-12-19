@@ -22,7 +22,7 @@ interface ImportManagerInterface
     /**
      * Import property of a document.
      *
-     * @param $contentTypeName
+     * @param string $contentTypeName
      * @param NodeInterface $node
      * @param PropertyInterface $property
      * @param int $userId
@@ -44,8 +44,8 @@ interface ImportManagerInterface
     /**
      * Check can import type by given typename.
      *
-     * @param $contentTypeName
-     * @param $format
+     * @param string $contentTypeName
+     * @param string $format
      *
      * @return bool
      */

@@ -196,7 +196,7 @@ class BlameSubscriber implements EventSubscriberInterface
     /**
      * Returns the encoding kind for the given document.
      *
-     * @param $document
+     * @param object $document
      *
      * @return string
      */
@@ -213,7 +213,7 @@ class BlameSubscriber implements EventSubscriberInterface
     /**
      * Returns if the given document is supported by this subscriber.
      *
-     * @param $document
+     * @param object $document
      *
      * @return bool
      */

@@ -62,7 +62,7 @@ class Environment
     /**
      * Adds a new url to this environment.
      *
-     * @param $url Url The url to add
+     * @param Url $url The url to add
      */
     public function addUrl(Url $url)
     {
