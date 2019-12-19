@@ -323,7 +323,7 @@ interface ListBuilderInterface
      * Creates an where expression from the given values.
      *
      * @param FieldDescriptorInterface $fieldDescriptor
-     * @param mixed[] $value
+     * @param mixed $value
      * @param string $comparator
      *
      * @return WhereExpressionInterface
