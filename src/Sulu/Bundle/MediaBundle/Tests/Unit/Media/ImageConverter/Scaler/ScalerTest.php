@@ -11,9 +11,10 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Scaler;
 
-use Imagine\Gd\Imagine;
+use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
+use Imagine\Imagick\Imagine as ImagickImagine;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaler\Scaler;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaler\ScalerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -33,7 +34,7 @@ class ScalerTest extends SuluTestCase
 
     public function testScale()
     {
-        $imagine = new Imagine();
+        $imagine = $this->createImagine();
         $imageBox = new Box(1000, 500);
         $image = $imagine->create($imageBox);
 
@@ -45,7 +46,7 @@ class ScalerTest extends SuluTestCase
 
     public function testScaleInset()
     {
-        $imagine = new Imagine();
+        $imagine = $this->createImagine();
         $imageBox = new Box(1000, 500);
         $image = $imagine->create($imageBox);
 
@@ -57,7 +58,7 @@ class ScalerTest extends SuluTestCase
 
     public function testScaleForceRatio()
     {
-        $imagine = new Imagine();
+        $imagine = $this->createImagine();
         $imageBox = new Box(100, 50);
         $image = $imagine->create($imageBox);
 
@@ -66,7 +67,7 @@ class ScalerTest extends SuluTestCase
         $this->assertEquals(100, $image->getSize()->getWidth());
         $this->assertEquals(50, $image->getSize()->getHeight());
 
-        $imagine = new Imagine();
+        $imagine = $this->createImagine();
         $imageBox = new Box(100, 50);
         $image = $imagine->create($imageBox);
 
@@ -78,7 +79,7 @@ class ScalerTest extends SuluTestCase
 
     public function testScaleRetina()
     {
-        $imagine = new Imagine();
+        $imagine = $this->createImagine();
         $imageBox = new Box(3000, 2000);
         $image = $imagine->create($imageBox);
 
@@ -90,7 +91,7 @@ class ScalerTest extends SuluTestCase
 
     public function testScaleWithFloatWidth()
     {
-        $imagine = new Imagine();
+        $imagine = $this->createImagine();
         $imageBox = new Box(220, 442);
         $image = $imagine->create($imageBox);
 
@@ -98,5 +99,14 @@ class ScalerTest extends SuluTestCase
 
         $this->assertEquals(220, $image->getSize()->getWidth());
         $this->assertEquals(442, $image->getSize()->getHeight());
+    }
+
+    private function createImagine()
+    {
+        if (class_exists(\Imagick::class)) {
+            return new ImagickImagine();
+        }
+
+        return new GdImagine();
     }
 }

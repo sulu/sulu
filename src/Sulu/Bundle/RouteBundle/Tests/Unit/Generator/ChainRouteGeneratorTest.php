@@ -51,17 +51,11 @@ class ChainRouteGeneratorTest extends TestCase
 
     public function setUp(): void
     {
-        $this->entity = $this->prophesize(RoutableInterface::class);
+        $this->entity = new TestRoutable();
         $this->routeGenerator = $this->prophesize(RouteGeneratorInterface::class);
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
 
         $this->mappings = [
-            get_class($this->entity->reveal()) => [
-                'generator' => 'route_generator',
-                'options' => [
-                    'route_schema' => '/{title}',
-                ],
-            ],
             TestRoutable::class => [
                 'generator' => 'route_generator',
                 'options' => [
@@ -81,22 +75,22 @@ class ChainRouteGeneratorTest extends TestCase
 
     public function testGenerate()
     {
-        $this->routeGenerator->generate($this->entity->reveal(), ['route_schema' => '/{title}'])->willReturn('/test');
+        $this->routeGenerator->generate($this->entity, ['route_schema' => '/{title}'])->willReturn('/test');
 
-        $result = $this->chainRouteGenerator->generate($this->entity->reveal());
+        $result = $this->chainRouteGenerator->generate($this->entity);
         $this->assertInstanceOf(Route::class, $result);
         $this->assertEquals('/test', $result->getPath());
-        $this->assertEquals(get_class($this->entity->reveal()), $result->getEntityClass());
+        $this->assertEquals(get_class($this->entity), $result->getEntityClass());
     }
 
     public function testGenerateWithPath()
     {
         $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
 
-        $result = $this->chainRouteGenerator->generate($this->entity->reveal(), '/test');
+        $result = $this->chainRouteGenerator->generate($this->entity, '/test');
         $this->assertInstanceOf(Route::class, $result);
         $this->assertEquals('/test', $result->getPath());
-        $this->assertEquals(get_class($this->entity->reveal()), $result->getEntityClass());
+        $this->assertEquals(get_class($this->entity), $result->getEntityClass());
     }
 
     public function testGenerateInheritMapping()

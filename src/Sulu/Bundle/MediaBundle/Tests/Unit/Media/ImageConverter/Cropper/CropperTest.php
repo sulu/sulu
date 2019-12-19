@@ -11,8 +11,9 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Cropper;
 
-use Imagine\Gd\Imagine;
+use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Image\Box;
+use Imagine\Imagick\Imagine as ImagickImagine;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropper\Cropper;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropper\CropperInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -32,7 +33,7 @@ class CropperTest extends SuluTestCase
 
     public function testCrop()
     {
-        $imagine = new Imagine();
+        $imagine = $this->createImagine();
         $imageBox = new Box(1000, 500);
         $image = $imagine->create($imageBox);
 
@@ -44,7 +45,7 @@ class CropperTest extends SuluTestCase
 
     public function testValid()
     {
-        $imagine = new Imagine();
+        $imagine = $this->createImagine();
         $imageBox = new Box(1000, 500);
         $image = $imagine->create($imageBox);
 
@@ -61,7 +62,7 @@ class CropperTest extends SuluTestCase
 
     public function testValidWithOneDimension()
     {
-        $imagine = new Imagine();
+        $imagine = $this->createImagine();
         $imageBox = new Box(1000, 500);
         $image = $imagine->create($imageBox);
 
@@ -80,7 +81,7 @@ class CropperTest extends SuluTestCase
 
     public function testValidSameSize()
     {
-        $imagine = new Imagine();
+        $imagine = $this->createImagine();
         $imageBox = new Box(1000, 500);
         $image = $imagine->create($imageBox);
 
@@ -97,7 +98,7 @@ class CropperTest extends SuluTestCase
 
     public function testNotValidTooSmall()
     {
-        $imagine = new Imagine();
+        $imagine = $this->createImagine();
         $imageBox = new Box(1000, 500);
         $image = $imagine->create($imageBox);
 
@@ -114,7 +115,7 @@ class CropperTest extends SuluTestCase
 
     public function testNotValidExceedX()
     {
-        $imagine = new Imagine();
+        $imagine = $this->createImagine();
         $imageBox = new Box(1000, 500);
         $image = $imagine->create($imageBox);
 
@@ -131,7 +132,7 @@ class CropperTest extends SuluTestCase
 
     public function testNotValidExceedY()
     {
-        $imagine = new Imagine();
+        $imagine = $this->createImagine();
         $imageBox = new Box(1000, 500);
         $image = $imagine->create($imageBox);
 
@@ -144,5 +145,14 @@ class CropperTest extends SuluTestCase
         $valid = $this->cropper->isValid($image, 10, 200, 600, 400, $format);
 
         $this->assertFalse($valid);
+    }
+
+    private function createImagine()
+    {
+        if (class_exists(\Imagick::class)) {
+            return new ImagickImagine();
+        }
+
+        return new GdImagine();
     }
 }

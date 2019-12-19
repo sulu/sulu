@@ -12,6 +12,7 @@
 namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Mapping;
 
 use PHPCR\NodeInterface;
+use PHPCR\NodeType\NodeTypeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
@@ -51,6 +52,11 @@ class ParentSubscriberTest extends TestCase
     private $node;
 
     /**
+     * @var NodeTypeInterface
+     */
+    private $primaryNodeType;
+
+    /**
      * @var NodeInterface
      */
     private $parentNode;
@@ -87,6 +93,7 @@ class ParentSubscriberTest extends TestCase
         $this->document = $this->prophesize(ParentBehavior::class);
         $this->notImplementing = new \stdClass();
         $this->node = $this->prophesize(NodeInterface::class);
+        $this->primaryNodeType = $this->prophesize(NodeTypeInterface::class);
         $this->parentNode = $this->prophesize(NodeInterface::class);
         $this->parentDocument = new \stdClass();
         $this->proxyFactory = $this->prophesize(ProxyFactory::class);
@@ -98,6 +105,8 @@ class ParentSubscriberTest extends TestCase
             $this->inspector->reveal(),
             $this->documentManager->reveal()
         );
+
+        $this->node->getPrimaryNodeType()->willReturn($this->primaryNodeType->reveal());
 
         $this->hydrateEvent->getNode()->willReturn($this->node);
     }
@@ -144,6 +153,7 @@ class ParentSubscriberTest extends TestCase
 
         $this->node->getParent()->willReturn($this->parentNode->reveal());
         $this->node->getDepth()->willReturn(0);
+        $this->node->getPath()->willReturn('/');
 
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }

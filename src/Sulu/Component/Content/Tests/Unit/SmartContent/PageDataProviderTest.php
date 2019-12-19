@@ -15,10 +15,11 @@ use PHPCR\ItemNotFoundException;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use ProxyManager\Configuration;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
-use ProxyManager\Proxy\LazyLoadingInterface;
-use ProxyManager\Proxy\VirtualProxyInterface;
-use Sulu\Bundle\PageBundle\Document\PageDocument;
+use ProxyManager\FileLocator\FileLocator;
+use ProxyManager\GeneratorStrategy\FileWriterGeneratorStrategy;
+use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
@@ -93,24 +94,11 @@ class PageDataProviderTest extends TestCase
      */
     private function getProxyFactory()
     {
-        $mock = $this->prophesize(LazyLoadingValueHolderFactory::class);
-        $lazyLoading = $this->prophesize(LazyLoadingInterface::class);
+        $writer = new FileWriterGeneratorStrategy(new FileLocator(sys_get_temp_dir()));
+        $configuration = new Configuration();
+        $configuration->setGeneratorStrategy($writer);
 
-        $that = $this;
-        $mock->createProxy(PageDocument::class, Argument::any())->will(
-            function($args) use ($that, $lazyLoading) {
-                $wrappedObject = 1;
-                $initializer = 1;
-                $args[1]($wrappedObject, $lazyLoading->reveal(), null, [], $initializer);
-
-                $virtualProxy = $that->prophesize(VirtualProxyInterface::class);
-                $virtualProxy->getWrappedValueHolderValue()->willReturn($wrappedObject);
-
-                return $virtualProxy;
-            }
-        );
-
-        return $mock->reveal();
+        return new LazyLoadingValueHolderFactory($configuration);
     }
 
     private function getSession($throw = false)
@@ -228,6 +216,9 @@ class PageDataProviderTest extends TestCase
             ['id' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
         ];
 
+        $document1 = $this->prophesize(BasePageDocument::class);
+        $document2 = $this->prophesize(BasePageDocument::class);
+
         $provider = new PageDataProvider(
             $this->getContentQueryBuilder(
                 [
@@ -238,7 +229,7 @@ class PageDataProviderTest extends TestCase
                 ]
             ),
             $this->getContentQueryExecutor(2, 1, $data),
-            $this->getDocumentManager(['123-123-123' => $data[0], '123-123-456' => $data[1]]),
+            $this->getDocumentManager(['123-123-123' => $document1->reveal(), '123-123-456' => $document2->reveal()]),
             $this->getProxyFactory(),
             $this->getSession(),
             new ReferenceStore(),
@@ -257,9 +248,11 @@ class PageDataProviderTest extends TestCase
         $this->assertInstanceOf(DataProviderResult::class, $result);
         $items = $result->getItems();
         $this->assertEquals($data[0]['id'], $items[0]->getId());
-        $this->assertEquals($data[0], $items[0]->getResource()->getWrappedValueHolderValue());
+        $this->assertTrue($items[0]->getResource()->initializeProxy());
+        $this->assertEquals($document1->reveal(), $items[0]->getResource()->getWrappedValueHolderValue());
         $this->assertEquals($data[1]['id'], $items[1]->getId());
-        $this->assertEquals($data[1], $items[1]->getResource()->getWrappedValueHolderValue());
+        $this->assertTrue($items[1]->getResource()->initializeProxy());
+        $this->assertEquals($document2->reveal(), $items[1]->getResource()->getWrappedValueHolderValue());
         $this->assertTrue($result->getHasNextPage());
     }
 
@@ -271,6 +264,9 @@ class PageDataProviderTest extends TestCase
             ['id' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
         ];
 
+        $document1 = $this->prophesize(BasePageDocument::class);
+        $document2 = $this->prophesize(BasePageDocument::class);
+
         $provider = new PageDataProvider(
             $this->getContentQueryBuilder(
                 [
@@ -281,7 +277,7 @@ class PageDataProviderTest extends TestCase
                 ]
             ),
             $this->getContentQueryExecutor(2, 1, $data),
-            $this->getDocumentManager(['123-123-123' => $data[0], '123-123-456' => $data[1]]),
+            $this->getDocumentManager(['123-123-123' => $document1->reveal(), '123-123-456' => $document2->reveal()]),
             $this->getProxyFactory(),
             $this->getSession(),
             new ReferenceStore(),
@@ -300,9 +296,11 @@ class PageDataProviderTest extends TestCase
         $this->assertInstanceOf(DataProviderResult::class, $result);
         $items = $result->getItems();
         $this->assertEquals($data[0]['id'], $items[0]->getId());
-        $this->assertEquals($data[0], $items[0]->getResource()->getWrappedValueHolderValue());
+        $this->assertTrue($items[0]->getResource()->initializeProxy());
+        $this->assertEquals($document1->reveal(), $items[0]->getResource()->getWrappedValueHolderValue());
         $this->assertEquals($data[1]['id'], $items[1]->getId());
-        $this->assertEquals($data[1], $items[1]->getResource()->getWrappedValueHolderValue());
+        $this->assertTrue($items[1]->getResource()->initializeProxy());
+        $this->assertEquals($document2->reveal(), $items[1]->getResource()->getWrappedValueHolderValue());
         $this->assertTrue($result->getHasNextPage());
     }
 
@@ -313,6 +311,9 @@ class PageDataProviderTest extends TestCase
             ['id' => '123-123-456', 'title' => 'My-Page-1', 'path' => '/my-page-1'],
             ['id' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
         ];
+
+        $document1 = $this->prophesize(BasePageDocument::class);
+        $document2 = $this->prophesize(BasePageDocument::class);
 
         $referenceStore = new ReferenceStore();
         $provider = new PageDataProvider(
@@ -325,7 +326,7 @@ class PageDataProviderTest extends TestCase
                 ]
             ),
             $this->getContentQueryExecutor(2, 1, $data),
-            $this->getDocumentManager(['123-123-123' => $data[0], '123-123-456' => $data[1]]),
+            $this->getDocumentManager(['123-123-123' => $document1->reveal(), '123-123-456' => $document2->reveal()]),
             $this->getProxyFactory(),
             $this->getSession(),
             $referenceStore,
@@ -344,9 +345,11 @@ class PageDataProviderTest extends TestCase
         $this->assertInstanceOf(DataProviderResult::class, $result);
         $items = $result->getItems();
         $this->assertEquals($data[0]['id'], $items[0]->getId());
-        $this->assertEquals($data[0], $items[0]->getResource()->getWrappedValueHolderValue());
+        $this->assertTrue($items[0]->getResource()->initializeProxy());
+        $this->assertEquals($document1->reveal(), $items[0]->getResource()->getWrappedValueHolderValue());
         $this->assertEquals($data[1]['id'], $items[1]->getId());
-        $this->assertEquals($data[1], $items[1]->getResource()->getWrappedValueHolderValue());
+        $this->assertTrue($items[1]->getResource()->initializeProxy());
+        $this->assertEquals($document2->reveal(), $items[1]->getResource()->getWrappedValueHolderValue());
         $this->assertTrue($result->getHasNextPage());
         $this->assertEquals(['123-123-123', '123-123-456'], $referenceStore->getAll());
     }
@@ -359,6 +362,10 @@ class PageDataProviderTest extends TestCase
             ['id' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
         ];
 
+        $document1 = $this->prophesize(BasePageDocument::class);
+        $document2 = $this->prophesize(BasePageDocument::class);
+        $document3 = $this->prophesize(BasePageDocument::class);
+
         $provider = new PageDataProvider(
             $this->getContentQueryBuilder(
                 [
@@ -370,7 +377,7 @@ class PageDataProviderTest extends TestCase
             ),
             $this->getContentQueryExecutor(-1, null, $data),
             $this->getDocumentManager(
-                ['123-123-123' => $data[0], '123-123-456' => $data[1], '123-123-789' => $data[2]]
+                ['123-123-123' => $document1->reveal(), '123-123-456' => $document2->reveal(), '123-123-789' => $document3->reveal()]
             ),
             $this->getProxyFactory(),
             $this->getSession(),
@@ -387,13 +394,15 @@ class PageDataProviderTest extends TestCase
         $this->assertInstanceOf(DataProviderResult::class, $result);
 
         $items = $result->getItems();
-
         $this->assertEquals($data[0]['id'], $items[0]->getId());
-        $this->assertEquals($data[0], $items[0]->getResource()->getWrappedValueHolderValue());
+        $this->assertTrue($items[0]->getResource()->initializeProxy());
+        $this->assertEquals($document1->reveal(), $items[0]->getResource()->getWrappedValueHolderValue());
         $this->assertEquals($data[1]['id'], $items[1]->getId());
-        $this->assertEquals($data[1], $items[1]->getResource()->getWrappedValueHolderValue());
+        $this->assertTrue($items[1]->getResource()->initializeProxy());
+        $this->assertEquals($document2->reveal(), $items[1]->getResource()->getWrappedValueHolderValue());
         $this->assertEquals($data[2]['id'], $items[2]->getId());
-        $this->assertEquals($data[2], $items[2]->getResource()->getWrappedValueHolderValue());
+        $this->assertTrue($items[2]->getResource()->initializeProxy());
+        $this->assertEquals($document3->reveal(), $items[2]->getResource()->getWrappedValueHolderValue());
         $this->assertFalse($result->getHasNextPage());
     }
 
@@ -470,6 +479,11 @@ class PageDataProviderTest extends TestCase
             ['id' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
         ];
 
+        $document1 = $this->prophesize(BasePageDocument::class);
+        $document2 = $this->prophesize(BasePageDocument::class);
+
+        $documents = [$document1->reveal(), $document2->reveal()];
+
         $referenceStore = new ReferenceStore();
         $referenceStore->add('123-456-789');
         $provider = new PageDataProvider(
@@ -482,7 +496,7 @@ class PageDataProviderTest extends TestCase
                 ]
             ),
             $this->getContentQueryExecutor(2, 1, $data),
-            $this->getDocumentManager(['123-123-123' => $data[0], '123-123-456' => $data[1]]),
+            $this->getDocumentManager(['123-123-123' => $document1->reveal(), '123-123-456' => $document2->reveal()]),
             $this->getProxyFactory(),
             $this->getSession(),
             $referenceStore,
@@ -508,7 +522,8 @@ class PageDataProviderTest extends TestCase
             $this->assertEquals($data[$i]['id'], $items[$i]->getId());
             $this->assertEquals($data[$i], $items[$i]->jsonSerialize());
 
-            $this->assertEquals($data[$i], $items[$i]->getResource()->getWrappedValueHolderValue());
+            $this->assertTrue($items[$i]->getResource()->initializeProxy());
+            $this->assertEquals($documents[$i], $items[$i]->getResource()->getWrappedValueHolderValue());
         }
 
         $this->assertTrue($result->getHasNextPage());

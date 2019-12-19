@@ -56,11 +56,10 @@ class DataProviderRepositoryTraitTest extends TestCase
         );
         $findByFiltersIdsReflection->setAccessible(true);
 
-        $query = $this->getMockBuilder(Query::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $query->method('setMaxResults')->willReturn($query);
-        $query->method('getScalarResult')->willReturn([]);
+        $query = $this->prophesize(Query::class);
+        $query->setFirstResult(0)->willReturn($query);
+        $query->setMaxResults(Argument::any())->willReturn($query);
+        $query->getScalarResult()->willReturn([]);
         $queryBuilder = $this->prophesize(QueryBuilder::class);
         $queryBuilder->select(Argument::cetera())->willReturn($queryBuilder);
         $queryBuilder->distinct(Argument::cetera())->willReturn($queryBuilder);
