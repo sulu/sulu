@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-release/1.6
+    * HOTIFX      #4026  [Component]               Fix accidentally overwrites of unselected author
+
 * 1.6.29 (2019-10-24)
     * BUGFIX      #4644  [LocationBundle]          Fix location content type default map provider option
     * ENHANCEMENT #4812  [MediaBundle]             Optimize gif image output
