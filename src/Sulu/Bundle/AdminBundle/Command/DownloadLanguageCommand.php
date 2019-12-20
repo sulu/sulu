@@ -52,9 +52,14 @@ class DownloadLanguageCommand extends Command
     {
         $language = $input->getArgument('language');
 
+        $this->downloadLanguage($output, $language, 'sulu%2Fsulu');
+    }
+
+    private function downloadLanguage($output, $language, $project)
+    {
         $response = $this->httpClient->request(
             'GET',
-            static::TRANSLATION_BASE_URL . 'sulu%2Fsulu/' . $language
+            static::TRANSLATION_BASE_URL . $project . '/' . $language
         );
 
         $tempDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'sulu-language-' . $language . DIRECTORY_SEPARATOR;
