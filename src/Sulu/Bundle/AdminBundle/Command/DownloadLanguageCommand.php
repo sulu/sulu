@@ -52,14 +52,23 @@ class DownloadLanguageCommand extends Command
     {
         $language = $input->getArgument('language');
 
-        $this->downloadLanguage($output, $language, 'sulu%2Fsulu');
+        $composerJson = json_decode(file_get_contents($this->projectDir . DIRECTORY_SEPARATOR . 'composer.json'), true);
+        $packages = array_keys($composerJson['require']);
+        $suluPackages = array_filter($packages, function($package) {
+            return strpos($package, 'sulu/') === 0;
+        });
+
+        foreach ($suluPackages as $suluPackage) {
+            $this->downloadLanguage($output, $language, $suluPackage);
+        }
     }
 
     private function downloadLanguage($output, $language, $project)
     {
+        $output->writeln('<info>Starting download for the "' . $project . '" project in "' . $language . '"</info>');
         $response = $this->httpClient->request(
             'GET',
-            static::TRANSLATION_BASE_URL . $project . '/' . $language
+            static::TRANSLATION_BASE_URL . urlencode($project) . '/' . $language
         );
 
         $tempDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'sulu-language-' . $language . DIRECTORY_SEPARATOR;
