@@ -164,5 +164,14 @@
             <argument>%sulu.version%</argument>
             <tag name="console.command"/>
         </service>
+
+        <service
+            id="sulu_admin.download_language_command"
+            class="Sulu\Bundle\AdminBundle\Command\DownloadLanguageCommand"
+        >
+            <argument type="service" id="http_client" />
+            <argument>%kernel.project_dir%</argument>
+            <tag name="console.command"/>
+        </service>
     </services>
 </container>
