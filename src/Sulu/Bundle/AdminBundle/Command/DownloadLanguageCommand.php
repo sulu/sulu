@@ -58,12 +58,22 @@ class DownloadLanguageCommand extends Command
             return strpos($package, 'sulu/') === 0;
         });
 
+        $translationsFile = $this->projectDir
+            . DIRECTORY_SEPARATOR
+            . 'translations/sulu'
+            . DIRECTORY_SEPARATOR
+            . 'admin.' . $language . '.json';
+
+        $translations = json_decode(file_get_contents($translationsFile), true);
         foreach ($suluPackages as $suluPackage) {
-            $this->downloadLanguage($output, $language, $suluPackage);
+            $translations = array_merge($translations, $this->downloadLanguage($output, $language, $suluPackage));
         }
+
+        $output->writeln('<info>Writing language into translations folder</info>');
+        file_put_contents($translationsFile, json_encode($translations));
     }
 
-    private function downloadLanguage($output, $language, $project)
+    private function downloadLanguage($output, $language, $project): array
     {
         $output->writeln('<info>Starting download for the "' . $project . '" project in "' . $language . '"</info>');
         $response = $this->httpClient->request(
@@ -77,24 +87,27 @@ class DownloadLanguageCommand extends Command
         $filesystem = new Filesystem();
         $filesystem->mkdir($tempDirectory);
 
+        if ($response->getStatusCode() === 404) {
+            return [];
+        }
+
         file_put_contents($tempFile, $response->getContent());
 
+        $translations = [];
         $zip = new \ZipArchive();
         if ($zip->open($tempFile)) {
             $output->writeln('<info>Extract ZIP archive...</info>');
             $zip->extractTo($tempDirectory);
             $zip->close();
 
-            $output->writeln('<info>Copy language into translations folder</info>');
             $languageFile = 'admin.' . $language . '.json';
-            $filesystem->copy(
-                $tempDirectory . $languageFile,
-                $this->projectDir . DIRECTORY_SEPARATOR . 'translations/sulu' . DIRECTORY_SEPARATOR . $languageFile
-            );
+            $translations = json_decode(file_get_contents($tempDirectory . $languageFile), true);
         } else {
             $output->writeln('<error>Error when unpacking the ZIP archive</error>');
         }
 
         $filesystem->remove($tempDirectory);
+
+        return $translations;
     }
 }
