@@ -28,8 +28,8 @@
         <parameter key="sulu_security.doctrine_access_control_provider.class">Sulu\Component\Security\Authorization\AccessControl\DoctrineAccessControlProvider</parameter>
         <parameter key="sulu_security.permission_controller.class">Sulu\Bundle\SecurityBundle\Controller\PermissionController</parameter>
         <parameter key="sulu_security.group_repository.class">Sulu\Bundle\SecurityBundle\Entity\GroupRepository</parameter>
-        <parameter key="sulu_security.user_repository.class">Sulu\Component\Security\Authentication\UserRepository</parameter>
-        <parameter key="sulu_security.user_setting_repository.class">Sulu\Component\Security\Authentication\UserSettingRepository</parameter>
+        <parameter key="sulu_security.user_repository.class">Sulu\Bundle\SecurityBundle\Entity\UserRepository</parameter>
+        <parameter key="sulu_security.user_setting_repository.class">Sulu\Bundle\SecurityBundle\Entity\UserSettingRepository</parameter>
         <parameter key="sulu_security.user_repository_factory.class">Sulu\Component\Security\Authentication\UserRepositoryFactory</parameter>
         <parameter key="sulu_security.build.user.class">Sulu\Bundle\SecurityBundle\Build\UserBuilder</parameter>
         <parameter key="sulu_security.entity.role">SuluSecurityBundle:Role</parameter>
