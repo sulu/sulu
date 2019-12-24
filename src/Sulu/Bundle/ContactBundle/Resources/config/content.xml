@@ -16,6 +16,17 @@
             <tag name="sulu.content.export" format="1.2.xliff" translate="false"/>
         </service>
 
+        <service id="sulu_contact.content.contact_selection" class="Sulu\Bundle\ContactBundle\Content\Types\ContactSelection">
+            <argument type="service" id="sulu_contact.contact_manager" />
+            <argument type="service" id="sulu_core.array_serializer" />
+            <argument type="service" id="sulu_contact.util.id_converter" />
+            <argument type="service" id="sulu_contact.util.index_comparator" />
+            <argument type="service" id="sulu_contact.reference_store.contact" />
+
+            <tag name="sulu.content.type" alias="contact_selection"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false"/>
+        </service>
+
         <service id="sulu_contact.content.single_contact_selection" class="Sulu\Bundle\ContactBundle\Content\Types\SingleContactSelection">
             <argument type="service" id="sulu.repository.contact" />
             <argument type="service" id="sulu_contact.reference_store.contact" />

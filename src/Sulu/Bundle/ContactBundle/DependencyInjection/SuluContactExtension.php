@@ -96,12 +96,12 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                 [
                     'lists' => [
                         'directories' => [
-                            __DIR__ . '/../Resources/config/lists',
+                            __DIR__.'/../Resources/config/lists',
                         ],
                     ],
                     'forms' => [
                         'directories' => [
-                            __DIR__ . '/../Resources/config/forms',
+                            __DIR__.'/../Resources/config/forms',
                         ],
                     ],
                     'resources' => [
@@ -147,6 +147,26 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                         ],
                     ],
                     'field_type_options' => [
+                        'selection' => [
+                            'contact_selection' => [
+                                'default_type' => 'list_overlay',
+                                'resource_key' => 'contacts',
+                                'types' => [
+                                    'auto_complete' => [
+                                        'display_property' => 'fullName',
+                                        'search_properties' => ['fullName'],
+                                    ],
+                                    'list_overlay' => [
+                                        'adapter' => 'table',
+                                        'list_key' => 'contacts',
+                                        'display_properties' => ['fullName'],
+                                        'icon' => 'su-user',
+                                        'overlay_title' => 'sulu_contact.contact_selection_overlay_title',
+                                        'label' => 'sulu_contact.contact_selection_overlay_title',
+                                    ],
+                                ],
+                            ],
+                        ],
                         'single_selection' => [
                             'single_account_selection' => [
                                 'default_type' => 'auto_complete',
@@ -244,7 +264,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
         $loader->load('content.xml');
         $loader->load('command.xml');
