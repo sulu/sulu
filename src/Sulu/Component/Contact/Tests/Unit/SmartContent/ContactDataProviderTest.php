@@ -280,7 +280,7 @@ class ContactDataProviderTest extends TestCase
             'birthday' => $contact->getBirthday(),
             'created' => $contact->getCreated(),
             'changed' => $contact->getChanged(),
-            'medias' => $contact->getMedias(),
+            'medias' => $contact->getMedia(),
             'emails' => [],
             'phones' => [],
             'faxes' => [],

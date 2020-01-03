@@ -1036,7 +1036,7 @@ class Contact extends ApiWrapper
         if (!is_null($contactAddresses)) {
             /** @var ContactAddressEntity $contactAddress */
             foreach ($contactAddresses as $contactAddress) {
-                if ((bool) $contactAddress->getMain()) {
+                if ((bool)$contactAddress->getMain()) {
                     return $contactAddress->getAddress();
                 }
             }
@@ -1048,11 +1048,25 @@ class Contact extends ApiWrapper
     /**
      * Add media.
      *
+     * @deprecated Please use setMedia() instead.
+     *
      * @param MediaInterface $media
      *
      * @return Contact
      */
     public function addMedia(MediaInterface $media)
+    {
+        $this->setMedia($media);
+    }
+
+    /**
+     * Set media.
+     *
+     * @param MediaInterface $media
+     *
+     * @return Contact
+     */
+    public function setMedia(MediaInterface $media)
     {
         $this->entity->addMedia($media);
     }
@@ -1069,6 +1083,17 @@ class Contact extends ApiWrapper
 
     /**
      * Get medias.
+     * @deprecated Please us getMedia() instead.
+     *
+     * @return Media[]
+     */
+    public function getMedias()
+    {
+        return $this->getMedia();
+    }
+
+    /**
+     * Get medias.
      *
      * @return Media[]
      *
@@ -1076,7 +1101,7 @@ class Contact extends ApiWrapper
      * @SerializedName("medias")
      * @Groups({"fullContact"})
      */
-    public function getMedias()
+    public function getMedia()
     {
         $entities = [];
         if ($this->entity->getMedias()) {

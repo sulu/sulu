@@ -1066,9 +1066,24 @@ class Account extends ApiWrapper
      *
      * @param MediaInterface $media
      *
+     * @deprecated Please use setMedia instead.
+     *
      * @return Account
+     *
      */
     public function addMedia(MediaInterface $media)
+    {
+        return $this->setMedia($media);
+    }
+
+    /**
+     * Set media.
+     *
+     * @param MediaInterface $media
+     *
+     * @return Account
+     */
+    public function setMedia(MediaInterface $media)
     {
         $this->entity->addMedia($media);
 
@@ -1088,12 +1103,24 @@ class Account extends ApiWrapper
     /**
      * Get medias.
      *
+     * @deprecated Please use getMedia() instead.
+     *
+     * @return Media[]
+     */
+    public function getMedias()
+    {
+        return $this->getMedia();
+    }
+
+    /**
+     * Get media.
+     *
      * @return Media[]
      * @VirtualProperty
      * @SerializedName("medias")
      * @Groups({"fullAccount"})
      */
-    public function getMedias()
+    public function getMedia()
     {
         $medias = [];
         if ($this->entity->getMedias()) {

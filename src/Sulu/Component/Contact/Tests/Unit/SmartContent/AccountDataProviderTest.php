@@ -250,7 +250,7 @@ class AccountDataProviderTest extends TestCase
             'corporation' => $account->getCorporation(),
             'created' => $account->getCreated(),
             'changed' => $account->getChanged(),
-            'medias' => $account->getMedias(),
+            'medias' => $account->getMedia(),
             'emails' => [],
             'phones' => [],
             'faxes' => [],
