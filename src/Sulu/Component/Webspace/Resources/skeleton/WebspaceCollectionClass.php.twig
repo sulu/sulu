@@ -69,7 +69,7 @@ class {{ cache_class }} extends {{ base_class }}
 
 {% for type,template in webspace.templates %}        $webspace->addTemplate('{{ type|raw }}', '{{ template }}');
 {% endfor %}
-{% for type,template in webspace.defaultTemplates %}        $webspace->addDefaultTemplate('{{ type }}', '{{ template }}');
+{% for type,defaultTemplate in webspace.defaultTemplates %}        $webspace->addDefaultTemplate('{{ type }}', '{{ defaultTemplate.template }}', '{{ defaultTemplate.parentTemplate }}');
 {% endfor %}
 {% for template in webspace.excludedTemplates %}        $webspace->addExcludedTemplate('{{ template }}');
 {% endfor %}

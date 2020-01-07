@@ -495,10 +495,14 @@ class Webspace implements ArrayableInterface
      *
      * @param string $type
      * @param string $template
+     * @param string $parentTemplate
      */
-    public function addDefaultTemplate($type, $template)
+    public function addDefaultTemplate($type, $template, $parentTemplate)
     {
-        $this->defaultTemplates[$type] = $template;
+        $this->defaultTemplates[$template] = [
+            'type' => $type,
+            'parentTemplate' => $parentTemplate
+        ];
     }
 
     /**

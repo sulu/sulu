@@ -26,6 +26,22 @@ export default class TemplateToolbarAction extends AbstractFormToolbarAction {
             this.resourceFormStore.setType(this.defaultTemplate);
         }
 
+        if (this.router.attributes.parentId && this.webspace) {
+            ResourceRequester.get('pages', {
+                id: this.router.attributes.parentId,
+                language: this.router.attributes.locale
+            }).then(response => {
+                const parentTemplate = response.template;
+                for (let key in this.webspace.defaultTemplates) {
+                    let defaultTemplate = this.webspace.defaultTemplates[key];
+                    if (defaultTemplate.parentTemplate === parentTemplate) {
+                        this.resourceFormStore.setType(key);
+                        break;
+                    }
+                }
+            })
+        }
+
         if (!this.resourceFormStore.typesLoading && Object.keys(formTypes).length === 0) {
             throw new Error('The ToolbarAction for types only works with entities actually supporting types!');
         }
