@@ -4,6 +4,7 @@ import {AbstractFormToolbarAction} from 'sulu-admin-bundle/views';
 import type {ToolbarItemConfig} from 'sulu-admin-bundle/types';
 import webspaceStore from '../../../stores/webspaceStore';
 import type {Webspace} from '../../../stores/webspaceStore/types';
+import {ResourceRequester} from 'sulu-admin-bundle/services';
 
 export default class TemplateToolbarAction extends AbstractFormToolbarAction {
     @observable webspace: ?Webspace = undefined;
@@ -29,17 +30,17 @@ export default class TemplateToolbarAction extends AbstractFormToolbarAction {
         if (this.router.attributes.parentId && this.webspace) {
             ResourceRequester.get('pages', {
                 id: this.router.attributes.parentId,
-                language: this.router.attributes.locale
-            }).then(response => {
+                language: this.router.attributes.locale,
+            }).then((response) => {
                 const parentTemplate = response.template;
-                for (let key in this.webspace.defaultTemplates) {
-                    let defaultTemplate = this.webspace.defaultTemplates[key];
+                for (const key in this.webspace.defaultTemplates) {
+                    const defaultTemplate = this.webspace.defaultTemplates[key];
                     if (defaultTemplate.parentTemplate === parentTemplate) {
                         this.resourceFormStore.setType(key);
                         break;
                     }
                 }
-            })
+            });
         }
 
         if (!this.resourceFormStore.typesLoading && Object.keys(formTypes).length === 0) {
