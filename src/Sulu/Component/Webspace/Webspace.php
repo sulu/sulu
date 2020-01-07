@@ -501,7 +501,7 @@ class Webspace implements ArrayableInterface
     {
         $this->defaultTemplates[$template] = [
             'type' => $type,
-            'parentTemplate' => $parentTemplate
+            'parentTemplate' => $parentTemplate,
         ];
     }
 
