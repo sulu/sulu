@@ -38,10 +38,10 @@ interface DataProviderInterface
      *
      * @param array $filters Contains the filter configuration
      * @param PropertyParameter[] $propertyParameter Contains the parameter of resolved property
+     * @param array $options Options like webspace or locale
      * @param int|null $limit Indicates maximum size of result set
      * @param int $page Indicates page of result set
      * @param int|null $pageSize Indicates page-size of result set
-     * @param array $options Options like webspace or locale
      *
      * @return DataProviderResult
      */
@@ -59,10 +59,10 @@ interface DataProviderInterface
      *
      * @param array $filters Contains the filter configuration
      * @param PropertyParameter[] $propertyParameter Contains the parameter of resolved property
+     * @param array $options Options like webspace or locale
      * @param int|null $limit Indicates maximum size of result set
      * @param int $page Indicates page of result set
      * @param int|null $pageSize Indicates page-size of result set
-     * @param array $options Options like webspace or locale
      *
      * @return DataProviderResult
      */
