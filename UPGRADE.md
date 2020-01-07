@@ -1,5 +1,11 @@
 # Upgrade
 
+## dev-master
+
+### RouteRepositoryInterface changed
+
+In the `RouteRepositoryInterface` a new remove method was introduced.
+
 ## dev-release/2.0
 
 When upgrading also have a look at the changes in the

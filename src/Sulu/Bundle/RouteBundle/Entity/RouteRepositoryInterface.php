@@ -78,4 +78,6 @@ interface RouteRepositoryInterface
     public function findAllByEntity($entityClass, $entityId, $locale = null);
 
     public function persist(RouteInterface $route);
+
+    public function remove(RouteInterface $route);
 }
