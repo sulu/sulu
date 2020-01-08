@@ -36,6 +36,11 @@ class ImagineImageConverterTest extends TestCase
     private $imagine;
 
     /**
+     * @var ImagineInterface
+     */
+    private $svgImagine;
+
+    /**
      * @var StorageInterface
      */
     private $storage;
@@ -73,6 +78,7 @@ class ImagineImageConverterTest extends TestCase
     public function setUp(): void
     {
         $this->imagine = $this->prophesize(ImagineInterface::class);
+        $this->svgImagine = $this->prophesize(ImagineInterface::class);
         $this->storage = $this->prophesize(StorageInterface::class);
         $this->mediaImageExtractor = $this->prophesize(MediaImageExtractorInterface::class);
         $this->transformationPool = $this->prophesize(TransformationPoolInterface::class);
@@ -97,7 +103,8 @@ class ImagineImageConverterTest extends TestCase
                 'image/*',
                 'application/pdf',
                 'video/*',
-            ]
+            ],
+            $this->svgImagine->reveal()
         );
     }
 
@@ -127,6 +134,34 @@ class ImagineImageConverterTest extends TestCase
         $this->focus->focus(Argument::any())->shouldNotBeCalled();
 
         $this->assertEquals('new-image-resource', $this->imagineImageConverter->convert($fileVersion, '640x480', 'jpg'));
+    }
+
+    public function testConvertSvg()
+    {
+        $imagineImage = $this->prophesize(ImageInterface::class);
+        $palette = $this->prophesize(PaletteInterface::class);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setName('test.svg');
+        $fileVersion->setVersion(1);
+        $fileVersion->setStorageOptions(['option' => 1]);
+
+        $this->storage->load(['option' => 1])->willReturn('image-resource');
+        $this->mediaImageExtractor->extract('image-resource')->willReturn('image-resource');
+        $this->svgImagine->read('image-resource')->willReturn($imagineImage->reveal());
+
+        $imagineImage->palette()->willReturn($palette->reveal());
+        $imagineImage->strip()->shouldBeCalled();
+        $imagineImage->layers()->willReturn(['']);
+        $imagineImage->metadata()->willReturn(['']);
+
+        $imagineImage->interlace(ImageInterface::INTERLACE_PLANE)->shouldBeCalled();
+
+        $imagineImage->get('svg', [])->willReturn('new-image-resource');
+
+        $this->focus->focus(Argument::any())->shouldNotBeCalled();
+
+        $this->assertEquals('new-image-resource', $this->imagineImageConverter->convert($fileVersion, '640x480', 'svg'));
     }
 
     public function testConvertNoFocusOnInset()

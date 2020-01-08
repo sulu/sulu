@@ -37,6 +37,11 @@ class ImagineImageConverter implements ImageConverterInterface
     private $imagine;
 
     /**
+     * @var ImagineInterface
+     */
+    private $svgImagine;
+
+    /**
      * @var StorageInterface
      */
     private $storage;
@@ -76,17 +81,6 @@ class ImagineImageConverter implements ImageConverterInterface
      */
     private $supportedMimeTypes;
 
-    /**
-     * @param ImagineInterface $imagine
-     * @param StorageInterface $storage
-     * @param MediaImageExtractorInterface $mediaImageExtractor
-     * @param TransformationPoolInterface $transformationPool
-     * @param FocusInterface $focus
-     * @param ScalerInterface $scaler
-     * @param CropperInterface $cropper
-     * @param array $formats
-     * @param array $supportedMimeTypes
-     */
     public function __construct(
         ImagineInterface $imagine,
         StorageInterface $storage,
@@ -96,7 +90,8 @@ class ImagineImageConverter implements ImageConverterInterface
         ScalerInterface $scaler,
         CropperInterface $cropper,
         array $formats,
-        array $supportedMimeTypes
+        array $supportedMimeTypes,
+        ?ImagineInterface $svgImagine = null
     ) {
         $this->imagine = $imagine;
         $this->storage = $storage;
@@ -107,6 +102,7 @@ class ImagineImageConverter implements ImageConverterInterface
         $this->cropper = $cropper;
         $this->formats = $formats;
         $this->supportedMimeTypes = $supportedMimeTypes;
+        $this->svgImagine = $svgImagine;
     }
 
     /**
@@ -124,8 +120,14 @@ class ImagineImageConverter implements ImageConverterInterface
 
                 switch ($mimeType) {
                     case 'image/png':
-                    case 'image/svg+xml':
                         $preferredExtension = 'png';
+                        break;
+                    case 'image/svg+xml':
+                    case 'image/svg':
+                        $preferredExtension = 'png';
+                        if ($this->svgImagine) {
+                            $preferredExtension = 'svg';
+                        }
                         break;
                     case 'image/webp':
                         $preferredExtension = 'webp';
@@ -155,8 +157,13 @@ class ImagineImageConverter implements ImageConverterInterface
     {
         $imageResource = $this->mediaImageExtractor->extract($this->storage->load($fileVersion->getStorageOptions()));
 
+        $imagine = $this->imagine;
+        if ('svg' === $imageFormat && $this->svgImagine) {
+            $imagine = $this->svgImagine;
+        }
+
         try {
-            $image = $this->imagine->read($imageResource);
+            $image = $imagine->read($imageResource);
         } catch (RuntimeException $e) {
             throw new InvalidFileTypeException($e->getMessage());
         }
@@ -189,9 +196,13 @@ class ImagineImageConverter implements ImageConverterInterface
 
         $image->strip();
 
-        // Set Interlacing to plane for smaller image size.
-        if (1 == count($image->layers())) {
-            $image->interlace(ImageInterface::INTERLACE_PLANE);
+        try {
+            // Set Interlacing to plane for smaller image size.
+            if (1 == count($image->layers())) {
+                $image->interlace(ImageInterface::INTERLACE_PLANE);
+            }
+        } catch (RuntimeException $exception) {
+            // ignore exceptions here (some imagine adapter does not implement this)
         }
 
         $imagineOptions = $format['options'];
@@ -208,9 +219,9 @@ class ImagineImageConverter implements ImageConverterInterface
      * @param ImageInterface $image
      * @param $tansformations
      *
-     * @throws ImageProxyInvalidFormatOptionsException
-     *
      * @return ImageInterface The modified image
+     *
+     * @throws ImageProxyInvalidFormatOptionsException
      */
     private function applyTransformations(ImageInterface $image, $tansformations)
     {
@@ -341,7 +352,7 @@ class ImagineImageConverter implements ImageConverterInterface
      * the image should not be cropped.
      *
      * @param ImageInterface $image
-     * @param ?FormatOptions $formatOptions
+     * @param FormatOptions|null $formatOptions
      * @param array $format
      *
      * @return ?array
@@ -382,7 +393,13 @@ class ImagineImageConverter implements ImageConverterInterface
      */
     private function modifyAllLayers(ImageInterface $image, callable $modifier)
     {
-        if (count($image->layers())) {
+        try {
+            $layers = $image->layers();
+        } catch (RuntimeException $exception) {
+            $layers = [];
+        }
+
+        if (count($layers)) {
             $countLayer = 0;
             $image->layers()->coalesce();
 
@@ -433,7 +450,7 @@ class ImagineImageConverter implements ImageConverterInterface
     private function getOptionsFromImage(ImageInterface $image, $imageExtension, $imagineOptions)
     {
         $options = [];
-        if (count($image->layers()) > 1 && 'gif' == $imageExtension) {
+        if ('gif' == $imageExtension && count($image->layers()) > 1) {
             $options['animated'] = true;
             $options['optimize'] = true;
         }

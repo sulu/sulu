@@ -169,6 +169,7 @@
             <argument type="service" id="sulu_media.image.cropper" />
             <argument>%sulu_media.image.formats%</argument>
             <argument>%sulu_media.format_manager.mime_types%</argument>
+            <argument type="service" id="sulu_media.adapter.svg" on-invalid="null"/>
         </service>
 
         <service id="sulu_media.image.media_extractor" class="Sulu\Bundle\MediaBundle\Media\ImageConverter\MediaImageExtractor">
