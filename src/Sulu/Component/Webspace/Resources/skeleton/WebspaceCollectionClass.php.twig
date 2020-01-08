@@ -32,62 +32,66 @@ class {{ cache_class }} extends {{ base_class }}
         // new webspace
         $webspace = new Webspace();
         $webspace->setKey('{{ webspace.key }}');
-        $webspace->setName('{{ webspace.name }}');
+$webspace->setName('{{ webspace.name }}');
 {% if webspace.security != null %}
-        $security = new Security();
-        $security->setSystem('{{ webspace.security.system }}');
-        $webspace->setSecurity($security);
+    $security = new Security();
+    $security->setSystem('{{ webspace.security.system }}');
+    $webspace->setSecurity($security);
 {% endif %}
 {% for localization in webspace.localizations %}
-        // add localization to webspace
-        $localization0 = new Localization();
-        $localization0->setLanguage('{{ localization.language }}');
-        $localization0->setCountry('{{ localization.country }}');
-        $localization0->setShadow('{{ (localization.shadow) }}');
-        $localization0->setDefault('{{ localization.default }}');
-        $localization0->setXDefault('{{ localization.xDefault }}');
-{% for childLocalization in localization.children %}
-{{ self.create_localizations(childLocalization, 1, 0, webspace) }}
-{% endfor %}
-        $localizationRefs['{{ webspace.key }}_{{ localization.localization }}'] = $localization0;
-        $webspace->addLocalization($localization0);
+    // add localization to webspace
+    $localization0 = new Localization();
+    $localization0->setLanguage('{{ localization.language }}');
+    $localization0->setCountry('{{ localization.country }}');
+    $localization0->setShadow('{{ (localization.shadow) }}');
+    $localization0->setDefault('{{ localization.default }}');
+    $localization0->setXDefault('{{ localization.xDefault }}');
+    {% for childLocalization in localization.children %}
+        {{ self.create_localizations(childLocalization, 1, 0, webspace) }}
+    {% endfor %}
+    $localizationRefs['{{ webspace.key }}_{{ localization.localization }}'] = $localization0;
+    $webspace->addLocalization($localization0);
 {% endfor %}
 {% for segment in webspace.segments %}
-        // add segment to webspace
-        $segment = new Segment();
-        $segment->setName('{{ segment.name }}');
-        $segment->setKey('{{ segment.key }}');
-        $webspace->addSegment($segment);
-        $segmentRefs['{{ webspace.key }}_{{ segment.key }}'] = $segment;
+    // add segment to webspace
+    $segment = new Segment();
+    $segment->setName('{{ segment.name }}');
+    $segment->setKey('{{ segment.key }}');
+    $webspace->addSegment($segment);
+    $segmentRefs['{{ webspace.key }}_{{ segment.key }}'] = $segment;
 
 {% endfor %}
-        // add theme
+// add theme
 {% if webspace.theme != null %}
-        $webspace->setTheme('{{ webspace.theme }}');
+    $webspace->setTheme('{{ webspace.theme }}');
 {% endif %}
 
 
 {% for type,template in webspace.templates %}        $webspace->addTemplate('{{ type|raw }}', '{{ template }}');
 {% endfor %}
-{% for type,defaultTemplate in webspace.defaultTemplates %}        $webspace->addDefaultTemplate('{{ type }}', '{{ defaultTemplate.template }}', '{{ defaultTemplate.parentTemplate }}');
+
+{% for type, templates in webspace.defaultTemplates %}
+    {% for defaultTemplate in templates %}
+        $webspace->addDefaultTemplate('{{ type }}', '{{ defaultTemplate.template }}', '{{ defaultTemplate.parentTemplate }}');
+    {% endfor %}
 {% endfor %}
 {% for template in webspace.excludedTemplates %}        $webspace->addExcludedTemplate('{{ template }}');
 {% endfor %}
 
-        // add navigation
-        $navigation = new Navigation();
+// add navigation
+$navigation = new Navigation();
 {% for context in webspace.navigation.contexts %}        $navigation->addContext(new NavigationContext('{{ context.key }}', {{ self.renderArray(context.metadata) }}));
 {% endfor %}        $webspace->setNavigation($navigation);
-        $webspace->setResourceLocatorStrategy('{{ webspace.resourceLocator.strategy }}');
+$webspace->setResourceLocatorStrategy('{{ webspace.resourceLocator.strategy }}');
 
 {% for portal in webspace.portals %}
 
-        // new portal
-        $portal = new Portal();
-        $portal->setName('{{ portal.name }}');
-        $portal->setKey('{{ portal.key }}');
-        $portal->setWebspace($webspace);
-{% for localization in portal.localizations %}
+    // new portal
+    $portal = new Portal();
+    $portal->setName('{{ portal.name }}');
+    $portal->setKey('{{ portal.key }}');
+    $portal->setWebspace($webspace);
+    {% for localization in portal.localizations %}
 
         // add localization
         $localization = new Localization();
@@ -96,86 +100,86 @@ class {{ cache_class }} extends {{ base_class }}
         $localization->setDefault('{{ localization.default }}');
         $localization->setXDefault('{{ localization.xDefault }}');
         $portal->addLocalization($localization);
-{% endfor %}
+    {% endfor %}
 
-{% for environment in portal.environments %}
+    {% for environment in portal.environments %}
 
         // add environment
         $environment = new Environment();
         $environment->setType('{{ environment.type }}');
-{% for url in environment.urls %}
+        {% for url in environment.urls %}
 
-        // add environment url
-        $url = new Url();
-        $url->setUrl('{{ url.url }}');
-        $url->setLanguage('{{ url.language }}');
-        $url->setCountry('{{ url.country }}');
-        $url->setSegment('{{ url.segment }}');
-        $url->setRedirect('{{ url.redirect }}');
-        $url->setMain({{ url.main?'true':'false' }});
-        $environment->addUrl($url);
-{% endfor %}
-{% for customUrl in environment.customUrls %}
-        $environment->addCustomUrl(new CustomUrl('{{ customUrl.url }}'));
-{% endfor %}
+            // add environment url
+            $url = new Url();
+            $url->setUrl('{{ url.url }}');
+            $url->setLanguage('{{ url.language }}');
+            $url->setCountry('{{ url.country }}');
+            $url->setSegment('{{ url.segment }}');
+            $url->setRedirect('{{ url.redirect }}');
+            $url->setMain({{ url.main?'true':'false' }});
+            $environment->addUrl($url);
+        {% endfor %}
+        {% for customUrl in environment.customUrls %}
+            $environment->addCustomUrl(new CustomUrl('{{ customUrl.url }}'));
+        {% endfor %}
 
         $portal->addEnvironment($environment);
-{% endfor %}
-        $portalRefs['{{ portal.key }}'] = $portal;
-        $webspace->addPortal($portal);
+    {% endfor %}
+    $portalRefs['{{ portal.key }}'] = $portal;
+    $webspace->addPortal($portal);
 
 {% endfor %}
-        $webspaceRefs['{{ webspace.key }}'] = $webspace;
+$webspaceRefs['{{ webspace.key }}'] = $webspace;
 
 
 {% endfor %}
 
 {% for environmentKey, environment in collection.portalInformations %}
-{% for portalInformation in environment %}
+    {% for portalInformation in environment %}
         $portalInformationRefs['{{ environmentKey }}']['{{ portalInformation.url }}'] = new PortalInformation(
-            {{ portalInformation.type }},
-            $webspaceRefs['{{ portalInformation.webspace }}'],
-{% if portalInformation.portal %}
+        {{ portalInformation.type }},
+        $webspaceRefs['{{ portalInformation.webspace }}'],
+        {% if portalInformation.portal %}
             $portalRefs['{{ portalInformation.portal }}'],
-{% else %}
+        {% else %}
             null,
-{% endif %}
-{% if portalInformation.localization %}
+        {% endif %}
+        {% if portalInformation.localization %}
             $localizationRefs['{{ portalInformation.webspace }}_{{ portalInformation.localization.localization }}'],
-{% else %}
+        {% else %}
             null,
-{% endif %}
-            '{{ portalInformation.url }}',
-{% if portalInformation.segment %}
+        {% endif %}
+        '{{ portalInformation.url }}',
+        {% if portalInformation.segment %}
             $segmentRefs['{{ portalInformation.webspace }}_{{ portalInformation.segment }}'],
-{% else %}
+        {% else %}
             null,
-{% endif %}
-{% if portalInformation.redirect %}
+        {% endif %}
+        {% if portalInformation.redirect %}
             '{{ portalInformation.redirect }}',
-{% else %}
+        {% else %}
             null,
-{% endif %}
-{% if portalInformation.main %}
+        {% endif %}
+        {% if portalInformation.main %}
             true,
-{% else %}
+        {% else %}
             false,
-{% endif %}
-{% if portalInformation.urlExpression %}
+        {% endif %}
+        {% if portalInformation.urlExpression %}
             '{{ portalInformation.urlExpression }}',
-{% else %}
+        {% else %}
             null,
-{% endif %}
-            {{ portalInformation.priority }}
+        {% endif %}
+        {{ portalInformation.priority }}
         );
 
-{% endfor %}
+    {% endfor %}
 {% endfor %}
 
-        $this->setWebspaces($webspaceRefs);
-        $this->setPortals($portalRefs);
-        $this->setPortalInformations($portalInformationRefs);
-    }
+$this->setWebspaces($webspaceRefs);
+$this->setPortals($portalRefs);
+$this->setPortalInformations($portalInformationRefs);
+}
 }
 
 {% macro renderArray(array) %}{% import _self as self %}

@@ -426,11 +426,14 @@ class XmlFileLoader10 extends BaseXmlFileLoader
             /* @var \DOMNode $node */
             $template = $node->nodeValue;
             $type = $node->attributes->getNamedItem('type')->nodeValue;
-            $parentTemplate = $node->attributes->getNamedItem('parent-template')->nodeValue;
+            $parentTemplateNode = $node->attributes->getNamedItem('parent-template');
+            if ($parentTemplateNode) {
+                $parentTemplate = $parentTemplateNode->nodeValue;
+            }
 
-            $webspace->addDefaultTemplate($type, $template, $parentTemplate);
+            $webspace->addDefaultTemplate($type, $template, isset($parentTemplate) ? $parentTemplate : null);
             if ('homepage' === $type) {
-                $webspace->addDefaultTemplate('home', $template, $parentTemplate);
+                $webspace->addDefaultTemplate('home', $template, isset($parentTemplate) ? $parentTemplate : null);
             }
         }
 
