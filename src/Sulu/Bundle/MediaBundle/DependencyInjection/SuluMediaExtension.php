@@ -270,7 +270,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $loader->load('services.xml');
         $loader->load('command.xml');
 
-        if (SvgImagine::class) {
+        if (class_exists(SvgImagine::class)) {
             $loader->load('services_imagine_svg.xml');
         }
 
