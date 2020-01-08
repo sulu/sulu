@@ -31,7 +31,7 @@ export default class TemplateToolbarAction extends AbstractFormToolbarAction {
         if (parentPageId && this.webspace && !this.parentPage) {
             ResourceRequester.get('pages', {
                 id: parentPageId,
-                language: this.router.attributes.locale
+                language: this.router.attributes.locale,
             }).then((response) => {
                 this.parentPage = response;
                 const parentTemplate = response.template;
@@ -41,13 +41,12 @@ export default class TemplateToolbarAction extends AbstractFormToolbarAction {
                         break;
                     }
                 }
-            })
+            });
         }
 
         if (!this.resourceFormStore.typesLoading && Object.keys(formTypes).length === 0) {
             throw new Error('The ToolbarAction for types only works with entities actually supporting types!');
         }
-
 
         return {
             type: 'select',
