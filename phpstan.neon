@@ -30,3 +30,4 @@ parameters:
     ignoreErrors:
         - '#Service "test_user_provider" is not registered in the container.#'
         - '#Instantiated class ZipArchive not found.#'
+        - '#^Class Imagine\\Vips\\Imagine not found\.$#'
