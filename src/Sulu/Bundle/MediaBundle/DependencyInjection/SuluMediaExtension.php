@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
+use Contao\ImagineSvg\Imagine as SvgImagine;
 use FFMpeg\FFMpeg;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -268,6 +269,10 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
         $loader->load('command.xml');
+
+        if (SvgImagine::class) {
+            $loader->load('services_imagine_svg.xml');
+        }
 
         if ('auto' === $config['adapter']) {
             $container->setAlias(

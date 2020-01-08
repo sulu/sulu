@@ -121,6 +121,38 @@ class MediaStreamControllerTest extends SuluTestCase
         $this->assertSame('image/gif', $client->getResponse()->headers->get('Content-Type'));
     }
 
+    public function testGetImageActionSvg()
+    {
+        $client = $this->createAuthenticatedClient();
+        $filePath = $this->createMediaFile('test.svg', 'sulu.svg');
+        $media = $this->createMedia($filePath, 'Test svg');
+
+        $client->request('GET', $media->getFormats()['small-inset']);
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertSame('image/svg+xml', $client->getResponse()->headers->get('Content-Type'));
+
+        $client->request('GET', $media->getFormats()['small-inset.svg']);
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertSame('image/svg+xml', $client->getResponse()->headers->get('Content-Type'));
+    }
+
+    public function testGetImageActionSvgAsJpg()
+    {
+        if (!class_exists(\Imagick::class)) {
+            $this->markTestSkipped('Imagick pecl extension is not installed.');
+
+            return;
+        }
+
+        $client = $this->createAuthenticatedClient();
+        $filePath = $this->createMediaFile('test.svg', 'sulu.svg');
+        $media = $this->createMedia($filePath, 'Test svg');
+
+        $client->request('GET', $media->getFormats()['small-inset.jpg']);
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertSame('image/jpeg', $client->getResponse()->headers->get('Content-Type'));
+    }
+
     public function testDownloadActionForNonExistingMedia()
     {
         $client = $this->createAuthenticatedClient();
@@ -186,10 +218,10 @@ class MediaStreamControllerTest extends SuluTestCase
         return $this->getContainer()->get('sulu_media.collection_manager');
     }
 
-    private function createMediaFile($name)
+    private function createMediaFile(string $name, string $fileName = 'photo.jpeg')
     {
         $filePath = sys_get_temp_dir() . '/' . $name;
-        copy(__DIR__ . '/../../Fixtures/files/photo.jpeg', $filePath);
+        copy(__DIR__ . '/../../Fixtures/files/' . $fileName, $filePath);
 
         return $filePath;
     }
