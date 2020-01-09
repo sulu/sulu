@@ -342,7 +342,7 @@ class ImagineImageConverter implements ImageConverterInterface
      */
     private function modifyAllLayers(ImageInterface $image, callable $modifier)
     {
-        if (count($image->layers())) {
+        if (count($image->layers()) > 1) {
             $countLayer = 0;
             $image->layers()->coalesce();
 
