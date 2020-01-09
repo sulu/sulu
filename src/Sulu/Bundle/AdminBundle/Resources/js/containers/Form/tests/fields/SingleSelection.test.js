@@ -553,6 +553,9 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
             name: 'type',
             value: 'list_overlay',
         },
+        types: {
+            value: 'test',
+        },
     };
 
     const singleSelection = shallow(
@@ -579,6 +582,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
         listOptions: {
             segment: 'developer',
             webspace: 'sulu',
+            types: 'test',
         },
         overlayTitle: 'sulu_contact.overlay_title',
         resourceKey: 'accounts',
