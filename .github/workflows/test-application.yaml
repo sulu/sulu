@@ -1,0 +1,14 @@
+name: Test application
+
+on: pull_request
+
+jobs:
+    install:
+        name: Install application
+        runs-on: ubuntu-18.04
+        steps:
+            - uses: actions/checkout@v1
+            - name: Install dependencies
+              run: composer install
+            - name: Download language
+              run: bin/console sulu:admin:download-language nl
