@@ -54,14 +54,6 @@ class DefaultTemplate
     }
 
     /**
-     * @param string $type
-     */
-    public function setType(string $type): void
-    {
-        $this->type = $type;
-    }
-
-    /**
      * @return string
      */
     public function getTemplate(): string
@@ -70,31 +62,10 @@ class DefaultTemplate
     }
 
     /**
-     * @param string $template
-     */
-    public function setTemplate(string $template): void
-    {
-        $this->template = $template;
-    }
-
-    /**
      * @return string|null
      */
     public function getParentTemplate(): ?string
     {
         return $this->parentTemplate;
-    }
-
-    /**
-     * @param string|null $parentTemplate
-     */
-    public function setParentTemplate(?string $parentTemplate): void
-    {
-        $this->parentTemplate = $parentTemplate;
-    }
-
-    public function isValid()
-    {
-        return !empty($this->type) && !empty($this->template);
     }
 }

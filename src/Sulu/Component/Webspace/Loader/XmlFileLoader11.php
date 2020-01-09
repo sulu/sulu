@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Webspace\Loader;
 
+use Sulu\Component\Webspace\DefaultTemplate;
 use Sulu\Component\Webspace\Loader\Exception\ExpectedDefaultTemplatesNotFound;
 use Sulu\Component\Webspace\Webspace;
 
@@ -59,9 +60,9 @@ class XmlFileLoader11 extends XmlFileLoader10
                 $parentTemplate = $parentTemplateNode->nodeValue;
             }
 
-            $webspace->addDefaultTemplate($type, $template, isset($parentTemplate) ? $parentTemplate : null);
+            $webspace->addDefaultTemplate(new DefaultTemplate($type, $template, isset($parentTemplate) ? $parentTemplate : null));
             if ('homepage' === $type) {
-                $webspace->addDefaultTemplate('home', $template, isset($parentTemplate) ? $parentTemplate : null);
+                $webspace->addDefaultTemplate(new DefaultTemplate('home', $template, isset($parentTemplate) ? $parentTemplate : null));
             }
         }
 

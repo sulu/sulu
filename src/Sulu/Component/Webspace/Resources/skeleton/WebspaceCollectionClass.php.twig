@@ -71,8 +71,7 @@ $webspace->setName('{{ webspace.name }}');
 {% endfor %}
 
 {% for type, templates in webspace.defaultTemplates %}
-    {% for defaultTemplate in templates %}
-        $webspace->addDefaultTemplate('{{ type }}', '{{ defaultTemplate.template }}', '{{ defaultTemplate.parentTemplate }}');
+    {% for defaultTemplate in templates %}        $webspace->addDefaultTemplate('{{ type }}', '{{ defaultTemplate.template }}', '{{ defaultTemplate.parentTemplate }}');
     {% endfor %}
 {% endfor %}
 {% for template in webspace.excludedTemplates %}        $webspace->addExcludedTemplate('{{ template }}');

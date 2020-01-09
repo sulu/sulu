@@ -493,16 +493,11 @@ class Webspace implements ArrayableInterface
     /**
      * Add a new default template for given type.
      *
-     * @param string $type
-     * @param string $template
-     * @param string|null $parentTemplate
+     * @param DefaultTemplate $defaultTemplate
      */
-    public function addDefaultTemplate($type, $template, $parentTemplate = null)
+    public function addDefaultTemplate(DefaultTemplate $defaultTemplate)
     {
-        $defaultTemplate = new DefaultTemplate($type, $template, $parentTemplate);
-        if ($defaultTemplate->isValid()) {
-            $this->defaultTemplates[$type][] = $defaultTemplate;
-        }
+        $this->defaultTemplates[$defaultTemplate->getType()][] = $defaultTemplate;;
     }
 
     /**

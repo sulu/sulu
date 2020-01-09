@@ -35,11 +35,11 @@ export default class TemplateToolbarAction extends AbstractFormToolbarAction {
             }).then((response) => {
                 this.parentPage = response;
                 const parentTemplate = response.template;
-                for (const defaultTemplate of this.webspace.defaultTemplates['page']) {
-                    if (defaultTemplate.parentTemplate === parentTemplate) {
-                        this.resourceFormStore.setType(defaultTemplate.template);
-                        break;
-                    }
+                const defaultTemplate = this.webspace.defaultTemplates['page'].find((defaultTemplate) => {
+                    return defaultTemplate.parentTemplate === parentTemplate;
+                });
+                if (defaultTemplate) {
+                    this.resourceFormStore.setType(defaultTemplate.template);
                 }
             });
         }
