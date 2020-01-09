@@ -152,7 +152,7 @@
     },
     "suggest": {
         "contao/imagine-svg": "^0.2.2 - Rendering raw svg formats for svg uploads",
-        "rokka/imagine-vips": "^0.9.1 - Rendering formats by using the libvips",
+        "rokka/imagine-vips": "^0.9.2 - Rendering formats by using the libvips",
         "handcraftedinthealps/zendsearch": "To use the PHP based Zend Search library (based on Lucene)",
         "league/flysystem": "^1.0 - Needed for remote media-storages",
         "league/flysystem-aws-s3-v3": "^1.0.1 - Needed for AWS S3 compatible storages (aws s3 or minio)",
