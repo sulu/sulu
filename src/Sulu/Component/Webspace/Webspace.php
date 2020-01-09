@@ -497,7 +497,7 @@ class Webspace implements ArrayableInterface
      */
     public function addDefaultTemplate(DefaultTemplate $defaultTemplate)
     {
-        $this->defaultTemplates[$defaultTemplate->getType()][] = $defaultTemplate;;
+        $this->defaultTemplates[$defaultTemplate->getType()][] = $defaultTemplate;
     }
 
     /**
