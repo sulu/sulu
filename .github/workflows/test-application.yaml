@@ -4,11 +4,20 @@ on: pull_request
 
 jobs:
     install:
-        name: Install application
+        name: Download languages
         runs-on: ubuntu-18.04
         steps:
-            - uses: actions/checkout@v1
+            - name: Checkout project
+              uses: actions/checkout@v1
+            - name: Get Composer Cache Directory
+              id: composer-cache
+              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+            - name: Cache dependencies
+              uses: actions/cache@v1
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: composer-cache
             - name: Install dependencies
-              run: composer install
+              run: composer update
             - name: Download language
               run: bin/console sulu:admin:download-language nl
