@@ -152,16 +152,13 @@ export default class Selection extends React.Component<Props> {
                     },
                 },
             },
+            schemaOptions: {
+                types: {
+                    value: types,
+                } = {},
+            },
             value,
         } = this.props;
-
-        const {schemaOptions} = this.props;
-
-        const {
-            types: {
-                value: types,
-            } = {},
-        } = schemaOptions;
 
         if (types !== undefined && typeof types !== 'string') {
             throw new Error('The "types" schema option must be a string if given!');

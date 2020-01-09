@@ -553,6 +553,9 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
             name: 'type',
             value: 'list_overlay',
         },
+        types: {
+            value: 'test',
+        },
     };
 
     const singleSelection = shallow(
@@ -579,6 +582,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
         listOptions: {
             segment: 'developer',
             webspace: 'sulu',
+            types: 'test',
         },
         overlayTitle: 'sulu_contact.overlay_title',
         resourceKey: 'accounts',
@@ -753,4 +757,24 @@ test('Call onChange and onFinish when SingleSelection changes', () => {
 
     expect(changeSpy).toBeCalledWith(undefined);
     expect(finishSpy).toBeCalledWith();
+});
+
+test('Should throw an error if "types" schema option is not a string', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'test',
+        types: {
+            list_overlay: {},
+        },
+    };
+
+    expect(() => shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={{types: {value: []}}}
+        />
+    )).toThrowError(/"types"/);
 });

@@ -96,6 +96,9 @@ export default class SingleSelection extends React.Component<Props>
                 form_options_to_list_options: {
                     value: formOptionsToListOptions,
                 } = {},
+                types: {
+                    value: types,
+                } = {},
             } = {},
             value,
         } = this.props;
@@ -107,11 +110,15 @@ export default class SingleSelection extends React.Component<Props>
             );
         }
 
+        if (types !== undefined && typeof types !== 'string') {
+            throw new Error('The "types" schema option must be a string if given!');
+        }
+
         if (formOptionsToListOptions && !Array.isArray(formOptionsToListOptions)) {
             throw new Error('The "form_options_to_list_options" option has to be an array if defined!');
         }
 
-        const listOptions = formOptionsToListOptions
+        const formListOptions = formOptionsToListOptions
             ? formOptionsToListOptions.reduce((currentOptions, formOption) => {
                 if (!formOption.name) {
                     throw new Error('All options set in "form_options_to_list_options" must define name!');
@@ -120,6 +127,15 @@ export default class SingleSelection extends React.Component<Props>
 
                 return currentOptions;
             }, {})
+            : undefined;
+
+        const typeOptions = types ? {types} : undefined;
+
+        const listOptions = formListOptions || typeOptions
+            ? {
+                ...formListOptions,
+                ...typeOptions,
+            }
             : undefined;
 
         if (detailOptions && typeof detailOptions !== 'object') {
