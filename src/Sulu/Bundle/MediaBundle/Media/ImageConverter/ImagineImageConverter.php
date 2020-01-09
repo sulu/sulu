@@ -400,11 +400,11 @@ class ImagineImageConverter implements ImageConverterInterface
             $layers = [];
         }
 
-        if (count($layers)) {
+        if (count($layers) > 1) {
             $countLayer = 0;
 
             // coalesce currently not supported by the VipsAdapter:
-            // see: https://github.com/rokka-io/imagine-vips/issues/
+            // see: https://github.com/rokka-io/imagine-vips/issues/8
             if (!$image instanceof VipsImage) {
                 $image->layers()->coalesce();
             }
