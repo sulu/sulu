@@ -20,8 +20,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class DownloadLanguageCommand extends Command
 {
-    // TODO replace URL from local sulu-website to correct one
-    const TRANSLATION_BASE_URL = 'http://127.0.0.1:8001/translation/';
+    const TRANSLATION_BASE_URL = 'https://translations.sulu.io/';
 
     protected static $defaultName = 'sulu:admin:download-language';
 
@@ -64,12 +63,21 @@ class DownloadLanguageCommand extends Command
             . DIRECTORY_SEPARATOR
             . 'admin.' . $language . '.json';
 
-        $translations = json_decode(file_get_contents($translationsFile), true);
+        if (file_exists($translationsFile)) {
+            $translations = json_decode(file_get_contents($translationsFile), true);
+        } else {
+            $translations = [];
+        }
+
         foreach ($suluPackages as $suluPackage) {
             $translations = array_merge($translations, $this->downloadLanguage($output, $language, $suluPackage));
         }
 
         $output->writeln('<info>Writing language into translations folder</info>');
+
+        $filesystem = new Filesystem();
+        $filesystem->mkdir(dirname($translationsFile));
+
         file_put_contents($translationsFile, json_encode($translations));
     }
 
@@ -78,7 +86,7 @@ class DownloadLanguageCommand extends Command
         $output->writeln('<info>Starting download for the "' . $project . '" project in "' . $language . '"</info>');
         $response = $this->httpClient->request(
             'GET',
-            static::TRANSLATION_BASE_URL . urlencode($project) . '/' . $language
+            static::TRANSLATION_BASE_URL . $project . '/' . $language
         );
 
         $tempDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'sulu-language-' . $language . DIRECTORY_SEPARATOR;
