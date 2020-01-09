@@ -399,7 +399,7 @@ class ImagineImageConverter implements ImageConverterInterface
             $layers = [];
         }
 
-        if (count($layers)) {
+        if (count($layers) > 1) {
             $countLayer = 0;
             $image->layers()->coalesce();
 
@@ -409,7 +409,7 @@ class ImagineImageConverter implements ImageConverterInterface
                 ++$countLayer;
                 $layer = call_user_func($modifier, $layer);
                 if (1 === $countLayer) {
-                    $temporaryImage = $layer; // use first layer as main image
+                    $temporaryImage = clone $layer; // use first layer as main image
                 } else {
                     $temporaryImage->layers()->add($layer);
                 }

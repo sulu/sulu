@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
 use Contao\ImagineSvg\Imagine as SvgImagine;
 use FFMpeg\FFMpeg;
+use Imagine\Vips\Imagine as VipsImagine;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
@@ -212,7 +213,10 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         );
         $container->setParameter(
             'sulu_media.format_manager.default_imagine_options',
-            $config['format_manager']['default_imagine_options']
+            array_merge([
+                'jpeg_quality' => 100,
+                'webp_quality' => 100,
+            ], $config['format_manager']['default_imagine_options'])
         );
 
         // format cache
@@ -274,11 +278,19 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $loader->load('services_imagine_svg.xml');
         }
 
+        if (class_exists(VipsImagine::class)) {
+            $loader->load('services_imagine_vips.xml');
+        }
+
         if ('auto' === $config['adapter']) {
-            $container->setAlias(
-                'sulu_media.adapter',
-                'sulu_media.adapter.' . (class_exists('Imagick') ? 'imagick' : 'gd')
-            );
+            $adapter = 'gd';
+            if (class_exists(VipsImagine::class)) {
+                $adapter = 'vips';
+            } elseif (class_exists(\Imagick::class)) {
+                $adapter = 'imagick';
+            }
+
+            $container->setAlias('sulu_media.adapter', 'sulu_media.adapter.' . $adapter);
         } else {
             // set used adapter for imagine
             $container->setAlias('sulu_media.adapter', 'sulu_media.adapter.' . $config['adapter']);
