@@ -54,7 +54,7 @@ class DownloadLanguageCommand extends Command
         $composerJson = json_decode(file_get_contents($this->projectDir . DIRECTORY_SEPARATOR . 'composer.json'), true);
         $packages = array_keys($composerJson['require']);
         $suluPackages = array_filter($packages, function($package) {
-            return strpos($package, 'sulu/') === 0;
+            return 0 === strpos($package, 'sulu/');
         });
 
         $translationsFile = $this->projectDir
@@ -95,7 +95,7 @@ class DownloadLanguageCommand extends Command
         $filesystem = new Filesystem();
         $filesystem->mkdir($tempDirectory);
 
-        if ($response->getStatusCode() === 404) {
+        if (404 === $response->getStatusCode()) {
             return [];
         }
 
