@@ -30,14 +30,20 @@ class DownloadLanguageCommand extends Command
     private $httpClient;
 
     /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
      * @var string
      */
     private $projectDir;
 
-    public function __construct(HttpClientInterface $httpClient, string $projectDir)
+    public function __construct(HttpClientInterface $httpClient, Filesystem $filesystem, string $projectDir)
     {
         parent::__construct();
         $this->httpClient = $httpClient;
+        $this->filesystem = $filesystem;
         $this->projectDir = $projectDir;
     }
 
@@ -75,10 +81,9 @@ class DownloadLanguageCommand extends Command
 
         $output->writeln('<info>Writing language into translations folder</info>');
 
-        $filesystem = new Filesystem();
-        $filesystem->mkdir(dirname($translationsFile));
+        $this->filesystem->mkdir(dirname($translationsFile));
 
-        file_put_contents($translationsFile, json_encode($translations));
+        $this->filesystem->dumpFile($translationsFile, json_encode($translations));
     }
 
     private function downloadLanguage($output, $language, $project): array
@@ -92,14 +97,13 @@ class DownloadLanguageCommand extends Command
         $tempDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'sulu-language-' . $language . DIRECTORY_SEPARATOR;
         $tempFile = $tempDirectory . 'download.zip';
 
-        $filesystem = new Filesystem();
-        $filesystem->mkdir($tempDirectory);
+        $this->filesystem->mkdir($tempDirectory);
 
         if (404 === $response->getStatusCode()) {
             return [];
         }
 
-        file_put_contents($tempFile, $response->getContent());
+        $this->filesystem->dumpFile($tempFile, $response->getContent());
 
         $translations = [];
         $zip = new \ZipArchive();
@@ -114,7 +118,7 @@ class DownloadLanguageCommand extends Command
             $output->writeln('<error>Error when unpacking the ZIP archive</error>');
         }
 
-        $filesystem->remove($tempDirectory);
+        $this->filesystem->remove($tempDirectory);
 
         return $translations;
     }
