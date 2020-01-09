@@ -1,5 +1,8 @@
 name: Crowdin Upload
-on: push
+on:
+    push:
+        tags:
+            - '*'
 
 jobs:
     upload_sources:
