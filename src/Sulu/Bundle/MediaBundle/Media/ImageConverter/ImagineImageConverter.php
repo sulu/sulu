@@ -16,6 +16,7 @@ use Imagine\Filter\Basic\Autorotate;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Palette\RGB;
+use Imagine\Vips\Image as VipsImage;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidFormatOptionsException;
@@ -401,7 +402,12 @@ class ImagineImageConverter implements ImageConverterInterface
 
         if (count($layers)) {
             $countLayer = 0;
-            $image->layers()->coalesce();
+
+            // coalesce currently not supported by the VipsAdapter:
+            // see: https://github.com/rokka-io/imagine-vips/issues/
+            if (!$image instanceof VipsImage) {
+                $image->layers()->coalesce();
+            }
 
             /** @var ImageInterface $temporaryImage */
             $temporaryImage = null;
@@ -409,7 +415,7 @@ class ImagineImageConverter implements ImageConverterInterface
                 ++$countLayer;
                 $layer = call_user_func($modifier, $layer);
                 if (1 === $countLayer) {
-                    $temporaryImage = $layer; // use first layer as main image
+                    $temporaryImage = clone $layer; // use first layer as main image
                 } else {
                     $temporaryImage->layers()->add($layer);
                 }
