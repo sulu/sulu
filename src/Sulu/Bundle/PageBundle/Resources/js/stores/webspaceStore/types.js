@@ -19,9 +19,9 @@ export type ResourceLocatorStrategy = {
 };
 
 export type DefaultTemplate = {
-    type: string,
+    parentTemplate: string | null,
     template: string,
-    parentTemplate: string | null
+    type: string,
 }
 
 export type Navigation = {
