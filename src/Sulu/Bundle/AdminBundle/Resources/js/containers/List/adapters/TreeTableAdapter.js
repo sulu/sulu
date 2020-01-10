@@ -24,6 +24,43 @@ class TreeTableAdapter extends AbstractTableAdapter {
         this.props.onItemActivate(rowId);
     };
 
+    getButtons = (item: ?Object) => {
+        const {
+            onItemClick,
+            onItemAdd,
+        } = this.props;
+
+        const {
+            data: {
+                _permissions: {
+                    add: addPermission = true,
+                    edit: editPermission = true,
+                    view: viewPermission = true,
+                } = {},
+            } = {},
+        } = item || {};
+
+        const buttons = [];
+
+        if (onItemClick) {
+            buttons.push({
+                disabled: !viewPermission,
+                icon: editPermission ? 'su-pen' : 'su-eye',
+                onClick: onItemClick,
+            });
+        }
+
+        if (onItemAdd) {
+            buttons.push({
+                disabled: !addPermission,
+                icon: 'su-plus-circle',
+                onClick: onItemAdd,
+            });
+        }
+
+        return buttons;
+    };
+
     renderRows(items: Array<*>, depth: number = 0) {
         const rows = [];
         const {
@@ -35,6 +72,7 @@ class TreeTableAdapter extends AbstractTableAdapter {
 
             rows.push(
                 <Table.Row
+                    buttons={this.getButtons(item)}
                     depth={depth}
                     expanded={item.children.length > 0}
                     hasChildren={hasChildren}
@@ -58,37 +96,20 @@ class TreeTableAdapter extends AbstractTableAdapter {
             active,
             data,
             loading,
-            onItemClick,
-            onItemAdd,
             onAllSelectionChange,
             onItemSelectionChange,
             options: {
                 showHeader = true,
             },
         } = this.props;
-        const buttons = [];
 
         if (!active && loading) {
             return <Loader />;
         }
 
-        if (onItemClick) {
-            buttons.push({
-                icon: 'su-pen',
-                onClick: onItemClick,
-            });
-        }
-
-        if (onItemAdd) {
-            buttons.push({
-                icon: 'su-plus-circle',
-                onClick: onItemAdd,
-            });
-        }
-
         return (
             <Table
-                buttons={buttons}
+                buttons={this.getButtons()}
                 onAllSelectionChange={onAllSelectionChange}
                 onRowCollapse={this.handleRowCollapse}
                 onRowExpand={this.handleRowExpand}

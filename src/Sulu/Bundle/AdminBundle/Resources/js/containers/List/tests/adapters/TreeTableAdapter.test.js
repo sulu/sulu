@@ -391,6 +391,89 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
     expect(treeListAdapter).toMatchSnapshot();
 });
 
+test('Render correct buttons based on permissions when item permissions are provided', () => {
+    const data = [
+        {
+            data: {
+                id: 1,
+                title: 'Missing view permission',
+                _permissions: {
+                    view: false,
+                },
+            },
+            children: [],
+            hasChildren: false,
+        },
+        {
+            data: {
+                id: 2,
+                title: 'Missing edit permission',
+                _permissions: {
+                    edit: false,
+                },
+            },
+            children: [],
+            hasChildren: false,
+        },
+        {
+            data: {
+                id: 3,
+                title: 'Missing add permission',
+                _permissions: {
+                    add: false,
+                },
+            },
+            children: [],
+            hasChildren: false,
+        },
+        {
+            data: {
+                id: 4,
+                title: 'No missing permissions',
+            },
+            children: [],
+            hasChildren: false,
+        },
+    ];
+    const schema = {
+        title: {
+            label: 'Title',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+    };
+    const treeListAdapter = mount(
+        <TreeTableAdapter
+            {...listAdapterDefaultProps}
+            data={data}
+            onItemAdd={jest.fn()}
+            onItemClick={jest.fn()}
+            schema={schema}
+        />
+    );
+
+    expect(treeListAdapter.find('Row').at(0).find('ButtonCell').at(0).props().icon).toEqual('su-pen');
+    expect(treeListAdapter.find('Row').at(0).find('ButtonCell').at(0).props().disabled).toEqual(true);
+    expect(treeListAdapter.find('Row').at(0).find('ButtonCell').at(1).props().icon).toEqual('su-plus-circle');
+    expect(treeListAdapter.find('Row').at(0).find('ButtonCell').at(1).props().disabled).toEqual(false);
+
+    expect(treeListAdapter.find('Row').at(1).find('ButtonCell').at(0).props().icon).toEqual('su-eye');
+    expect(treeListAdapter.find('Row').at(1).find('ButtonCell').at(0).props().disabled).toEqual(false);
+    expect(treeListAdapter.find('Row').at(1).find('ButtonCell').at(1).props().icon).toEqual('su-plus-circle');
+    expect(treeListAdapter.find('Row').at(1).find('ButtonCell').at(1).props().disabled).toEqual(false);
+
+    expect(treeListAdapter.find('Row').at(2).find('ButtonCell').at(0).props().icon).toEqual('su-pen');
+    expect(treeListAdapter.find('Row').at(2).find('ButtonCell').at(0).props().disabled).toEqual(false);
+    expect(treeListAdapter.find('Row').at(2).find('ButtonCell').at(1).props().icon).toEqual('su-plus-circle');
+    expect(treeListAdapter.find('Row').at(2).find('ButtonCell').at(1).props().disabled).toEqual(true);
+
+    expect(treeListAdapter.find('Row').at(3).find('ButtonCell').at(0).props().icon).toEqual('su-pen');
+    expect(treeListAdapter.find('Row').at(3).find('ButtonCell').at(0).props().disabled).toEqual(false);
+    expect(treeListAdapter.find('Row').at(3).find('ButtonCell').at(1).props().icon).toEqual('su-plus-circle');
+    expect(treeListAdapter.find('Row').at(3).find('ButtonCell').at(1).props().disabled).toEqual(false);
+});
+
 test('Render data with plus button when onItemAdd callback is passed', () => {
     const rowAddClickSpy = jest.fn();
     const test1 = {
