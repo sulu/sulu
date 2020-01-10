@@ -31,13 +31,6 @@ class DefaultTemplate
      */
     private $parentTemplate;
 
-    /**
-     * DefaultTemplate constructor.
-     *
-     * @param string $type
-     * @param string $template
-     * @param string|null $parentTemplate
-     */
     public function __construct(string $type, string $template, ?string $parentTemplate = null)
     {
         $this->type = $type;
