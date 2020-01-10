@@ -118,12 +118,11 @@ class ColumnListAdapter extends AbstractAdapter {
         } = item;
 
         if (onItemClick) {
-            let itemIcon = 'su-eye';
-            if (isGhost) {
-                itemIcon = 'su-plus-circle';
-            } else if (editPermission) {
-                itemIcon = 'su-pen';
-            }
+            const itemIcon = isGhost
+                ? 'su-plus-circle'
+                : editPermission
+                    ? 'su-pen'
+                    : 'su-eye';
 
             buttons.push({
                 icon: itemIcon,
