@@ -4,7 +4,7 @@ import type {Localization} from 'sulu-admin-bundle/stores';
 export type Webspace = {
     allLocalizations: Array<LocalizationItem>,
     customUrls: Array<CustomUrl>,
-    defaultTemplates: {[type: string]: string},
+    defaultTemplates: {[type: string]: Array<DefaultTemplate>},
     key: string,
     localizations: Array<Localization>,
     name: string,
@@ -17,6 +17,12 @@ export type Webspace = {
 export type ResourceLocatorStrategy = {
     inputType: string,
 };
+
+export type DefaultTemplate = {
+    type: string,
+    template: string,
+    parentTemplate: string | null
+}
 
 export type Navigation = {
     key: string,
