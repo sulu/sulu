@@ -8,6 +8,7 @@ import type {Webspace} from '../../../stores/webspaceStore/types';
 
 export default class TemplateToolbarAction extends AbstractFormToolbarAction {
     @observable webspace: ?Webspace = undefined;
+    parentPage;
 
     @computed get defaultTemplate(): ?string {
         if (!this.webspace) {

@@ -11,6 +11,7 @@ use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
+use Sulu\Component\Webspace\DefaultTemplate;
 
 /**
  * {{ cache_class }}
@@ -70,8 +71,8 @@ $webspace->setName('{{ webspace.name }}');
 {% for type,template in webspace.templates %}        $webspace->addTemplate('{{ type|raw }}', '{{ template }}');
 {% endfor %}
 
-{% for type, templates in webspace.defaultTemplates %}
-    {% for defaultTemplate in templates %}        $webspace->addDefaultTemplate('{{ type }}', '{{ defaultTemplate.template }}', '{{ defaultTemplate.parentTemplate }}');
+{% for templates in webspace.defaultTemplates %}
+    {% for defaultTemplate in templates %}        $webspace->addDefaultTemplate(new DefaultTemplate('{{ defaultTemplate.type }}', '{{ defaultTemplate.template }}', '{{ defaultTemplate.parentTemplate }}'));
     {% endfor %}
 {% endfor %}
 {% for template in webspace.excludedTemplates %}        $webspace->addExcludedTemplate('{{ template }}');
