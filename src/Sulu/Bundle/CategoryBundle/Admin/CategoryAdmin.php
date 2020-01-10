@@ -93,20 +93,25 @@ class CategoryAdmin extends Admin
         }
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $viewCollection->add(
-                $this->viewBuilderFactory
-                    ->createListViewBuilder(static::LIST_VIEW, '/categories/:locale')
-                    ->setResourceKey('categories')
-                    ->setListKey('categories')
-                    ->setTitle('sulu_category.categories')
-                    ->addListAdapters(['tree_table'])
-                    ->addLocales($locales)
-                    ->setDefaultLocale($locales[0])
-                    ->setAddView(static::ADD_FORM_VIEW)
-                    ->setEditView(static::EDIT_FORM_VIEW)
-                    ->enableSearching()
-                    ->addToolbarActions($listToolbarActions)
-            );
+            $listViewBuilder = $this->viewBuilderFactory
+                ->createListViewBuilder(static::LIST_VIEW, '/categories/:locale')
+                ->setResourceKey('categories')
+                ->setListKey('categories')
+                ->setTitle('sulu_category.categories')
+                ->addListAdapters(['tree_table'])
+                ->addLocales($locales)
+                ->setDefaultLocale($locales[0])
+                ->setEditView(static::EDIT_FORM_VIEW)
+                ->enableSearching()
+                ->addToolbarActions($listToolbarActions);
+
+            // set add view of list-view only if user has add permission
+            // this will hide the add button of the tree_table adapter if the user has no add permission
+            if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::ADD)) {
+                $listViewBuilder->setAddView(static::ADD_FORM_VIEW);
+            }
+            $viewCollection->add($listViewBuilder);
+
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createResourceTabViewBuilder(static::ADD_FORM_VIEW, '/categories/:locale/add')
