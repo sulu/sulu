@@ -343,11 +343,6 @@ function init_dbal()
     );
 }
 
-function init_phpcr_dbal()
-{
-    exec_sf_cmd('doctrine:phpcr:init:dbal');
-}
-
 function run_bundle_tests(\SplFileInfo $phpunitFile)
 {
     global $failedTests, $input, $filesystem;
@@ -482,9 +477,6 @@ if ($input->getOption('initialize')) {
     }
     init_dbal();
     write_info('Initializing the content repository');
-    if (getenv('SYMFONY__PHPCR__TRANSPORT') === 'doctrine_dbal') {
-        init_phpcr_dbal();
-    }
     write(PHP_EOL);
 }
 
