@@ -16,12 +16,47 @@ class TableAdapter extends AbstractTableAdapter {
 
     static icon = 'su-align-justify';
 
+    getButtons = (item: ?Object) => {
+        const {
+            actions,
+            onItemClick,
+        } = this.props;
+
+        const {
+            _permissions: {
+                edit: editPermission = true,
+                view: viewPermission = true,
+            } = {},
+        } = item || {};
+
+        const buttons = [];
+
+        if (onItemClick) {
+            buttons.push({
+                disabled: !viewPermission,
+                icon: editPermission ? 'su-pen' : 'su-eye',
+                onClick: onItemClick,
+            });
+        }
+
+        if (actions) {
+            buttons.push(...actions);
+        }
+
+        return buttons;
+    };
+
     renderRows(): Array<Element<typeof Table.Row>> {
         const {data, selections} = this.props;
 
         return data.map((item) => {
             return (
-                <Table.Row id={item.id} key={item.id} selected={selections.includes(item.id)}>
+                <Table.Row
+                    buttons={this.getButtons(item)}
+                    id={item.id}
+                    key={item.id}
+                    selected={selections.includes(item.id)}
+                >
                     {this.renderCells(item)}
                 </Table.Row>
             );
@@ -30,12 +65,10 @@ class TableAdapter extends AbstractTableAdapter {
 
     render() {
         const {
-            actions,
             data,
             limit,
             loading,
             onAllSelectionChange,
-            onItemClick,
             onItemSelectionChange,
             onLimitChange,
             onPageChange,
@@ -45,22 +78,10 @@ class TableAdapter extends AbstractTableAdapter {
             page,
             pageCount,
         } = this.props;
-        const buttons = [];
-
-        if (onItemClick) {
-            buttons.push({
-                icon: 'su-pen',
-                onClick: (rowId) => onItemClick(rowId),
-            });
-        }
-
-        if (actions) {
-            buttons.push(...actions);
-        }
 
         const table = (
             <Table
-                buttons={buttons}
+                buttons={this.getButtons()}
                 onAllSelectionChange={onAllSelectionChange}
                 onRowSelectionChange={onItemSelectionChange}
                 selectMode={onItemSelectionChange ? 'multiple' : undefined}

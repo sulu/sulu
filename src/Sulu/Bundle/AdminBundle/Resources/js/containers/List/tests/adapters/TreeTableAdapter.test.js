@@ -406,7 +406,7 @@ test('Render correct buttons based on permissions when item permissions are prov
         },
         {
             data: {
-                id: 1,
+                id: 2,
                 title: 'Missing edit permission',
                 _permissions: {
                     edit: false,
@@ -417,11 +417,19 @@ test('Render correct buttons based on permissions when item permissions are prov
         },
         {
             data: {
-                id: 1,
+                id: 3,
                 title: 'Missing add permission',
                 _permissions: {
                     add: false,
                 },
+            },
+            children: [],
+            hasChildren: false,
+        },
+        {
+            data: {
+                id: 4,
+                title: 'No missing permissions',
             },
             children: [],
             hasChildren: false,
@@ -459,6 +467,11 @@ test('Render correct buttons based on permissions when item permissions are prov
     expect(treeListAdapter.find('Row').at(2).find('ButtonCell').at(0).props().disabled).toEqual(false);
     expect(treeListAdapter.find('Row').at(2).find('ButtonCell').at(1).props().icon).toEqual('su-plus-circle');
     expect(treeListAdapter.find('Row').at(2).find('ButtonCell').at(1).props().disabled).toEqual(true);
+
+    expect(treeListAdapter.find('Row').at(3).find('ButtonCell').at(0).props().icon).toEqual('su-pen');
+    expect(treeListAdapter.find('Row').at(3).find('ButtonCell').at(0).props().disabled).toEqual(false);
+    expect(treeListAdapter.find('Row').at(3).find('ButtonCell').at(1).props().icon).toEqual('su-plus-circle');
+    expect(treeListAdapter.find('Row').at(3).find('ButtonCell').at(1).props().disabled).toEqual(false);
 });
 
 test('Render data with plus button when onItemAdd callback is passed', () => {

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {mount, render, shallow} from 'enzyme';
 import listAdapterDefaultProps from '../../../../utils/TestHelper/listAdapterDefaultProps';
 import TableAdapter from '../../adapters/TableAdapter';
 import StringFieldTransformer from '../../fieldTransformers/StringFieldTransformer';
@@ -344,6 +344,57 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
     );
 
     expect(tableAdapter).toMatchSnapshot();
+});
+
+test('Render correct button based on permissions when item permissions are provided', () => {
+    const rowEditClickSpy = jest.fn();
+    const data = [
+        {
+            id: 1,
+            title: 'Missing view permission',
+            _permissions: {
+                view: false,
+            },
+        },
+        {
+            id: 2,
+            title: 'Missing edit permission',
+            _permissions: {
+                edit: false,
+            },
+        },
+        {
+            id: 3,
+            title: 'No missing permissions',
+        },
+    ];
+    const schema = {
+        title: {
+            label: 'Title',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+    };
+    const tableAdapter = mount(
+        <TableAdapter
+            {...listAdapterDefaultProps}
+            data={data}
+            onItemClick={rowEditClickSpy}
+            page={1}
+            pageCount={3}
+            schema={schema}
+        />
+    );
+
+    expect(tableAdapter.find('Row').at(0).find('ButtonCell').props().icon).toEqual('su-pen');
+    expect(tableAdapter.find('Row').at(0).find('ButtonCell').props().disabled).toEqual(true);
+
+    expect(tableAdapter.find('Row').at(1).find('ButtonCell').props().icon).toEqual('su-eye');
+    expect(tableAdapter.find('Row').at(1).find('ButtonCell').props().disabled).toEqual(false);
+
+    expect(tableAdapter.find('Row').at(2).find('ButtonCell').props().icon).toEqual('su-pen');
+    expect(tableAdapter.find('Row').at(2).find('ButtonCell').props().disabled).toEqual(false);
 });
 
 test('Render data with pencil button and given actions when onItemEdit callback is passed', () => {

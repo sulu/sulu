@@ -1,5 +1,5 @@
 // @flow
-import {action, toJS} from 'mobx';
+import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import Table from '../../../components/Table';
