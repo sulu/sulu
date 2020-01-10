@@ -105,8 +105,7 @@ class CategoryAdmin extends Admin
                 ->enableSearching()
                 ->addToolbarActions($listToolbarActions);
 
-            // set add view of list-view only if user has add permission
-            // this will hide the add button of the tree_table adapter if the user has no add permission
+            // hide add button of the tree_table adapter by not setting an add view if the user has no add permission
             if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::ADD)) {
                 $listViewBuilder->setAddView(static::ADD_FORM_VIEW);
             }
