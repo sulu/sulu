@@ -79,6 +79,19 @@ class PageTreeRouteContentType extends SimpleContentType
     {
         $propertyName = $property->getName();
 
+        /*
+         * TODO
+         *
+         * If path wouldn't be saved to the property, querying the routes table in getContentData() would be necessary
+         * to return the documents url, but for that query the entity class of the current document is needed, which is
+         * not available at this point.
+         *
+         * The disadvantage of saving path to the property is the updating process. If the url of a page changes, each
+         * of the child documents of that page have to be changed. Otherwise only the routes would need to be changed.
+         * But the website's performance is generally more important than the admin's performance.
+         *
+         * To change this, there needs to be a way to access the entity class from a property.
+         */
         $value = [
             'page' => $this->readPage($propertyName, $node),
             'path' => $node->getPropertyValueWithDefault($propertyName, ''),
@@ -166,7 +179,7 @@ class PageTreeRouteContentType extends SimpleContentType
      *
      * @return mixed[]|null
      */
-    private function readPage(string $propertyName, NodeInterface $node)
+    private function readPage(string $propertyName, NodeInterface $node): ?array
     {
         $pagePropertyName = $propertyName . '-page';
         if (!$node->hasProperty($pagePropertyName)) {

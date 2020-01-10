@@ -1,0 +1,13 @@
+.resource-locator-container {
+    display: flex;
+    align-items: center;
+}
+
+.resource-locator {
+    flex-grow: 1;
+}
+
+.resource-locator-history {
+    padding-left: 10px;
+    flex-shrink: 1;
+}

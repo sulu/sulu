@@ -13,7 +13,6 @@ namespace Sulu\Bundle\RouteBundle\PageTree;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
-use Sulu\Bundle\RouteBundle\Content\Type\PageTreeRouteContentType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
@@ -29,7 +28,7 @@ class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInter
 {
     const ROUTE_PROPERTY = 'routePath';
 
-    const TAG_NAME = 'sulu_route.routePath';
+    const TAG_NAME = 'sulu_route.route_path';
 
     /**
      * @var DocumentManagerInterface
@@ -51,12 +50,6 @@ class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInter
      */
     protected $documentInspector;
 
-    /**
-     * @param DocumentManagerInterface $documentManager
-     * @param StructureMetadataFactoryInterface $metadataFactory
-     * @param PropertyEncoder $propertyEncoder
-     * @param DocumentInspector $documentInspector
-     */
     public function __construct(
         DocumentManagerInterface $documentManager,
         StructureMetadataFactoryInterface $metadataFactory,
@@ -94,13 +87,9 @@ class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInter
     /**
      * Find documents linked to the given page.
      *
-     * @param string $field
-     * @param string $value
-     * @param string $locale
-     *
      * @return RoutableBehavior[]
      */
-    private function findLinkedDocuments($field, $value, $locale)
+    private function findLinkedDocuments(string $field, string $value, string $locale): array
     {
         $where = [];
 
@@ -108,7 +97,7 @@ class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInter
             foreach ($this->metadataFactory->getStructures($structureType) as $metadata) {
                 $property = $this->getRoutePathPropertyByMetadata($metadata);
 
-                if (null === $property || PageTreeRouteContentType::NAME !== $property->getType()) {
+                if (null === $property || self::NAME !== $property->getType()) {
                     continue;
                 }
 
@@ -140,11 +129,8 @@ class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInter
 
     /**
      * Update route of given document.
-     *
-     * @param RoutableBehavior $document
-     * @param BasePageDocument $parentDocument
      */
-    private function updateDocument(RoutableBehavior $document, BasePageDocument $parentDocument)
+    private function updateDocument(RoutableBehavior $document, BasePageDocument $parentDocument): void
     {
         $locale = $parentDocument->getLocale();
         $resourceSegment = $parentDocument->getResourceSegment();
@@ -179,12 +165,8 @@ class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInter
 
     /**
      * Returns encoded "routePath" property.
-     *
-     * @param RoutableBehavior $document
-     *
-     * @return PropertyMetadata
      */
-    private function getRoutePathProperty(RoutableBehavior $document)
+    private function getRoutePathProperty(RoutableBehavior $document): PropertyMetadata
     {
         $metadata = $this->documentInspector->getStructureMetadata($document);
 
@@ -197,12 +179,8 @@ class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInter
 
     /**
      * Returns encoded "routePath" property by metadata.
-     *
-     * @param StructureMetadata $metadata
-     *
-     * @return PropertyMetadata|null
      */
-    private function getRoutePathPropertyByMetadata(StructureMetadata $metadata)
+    private function getRoutePathPropertyByMetadata(StructureMetadata $metadata): ?PropertyMetadata
     {
         if ($metadata->hasTag(self::TAG_NAME)) {
             return $metadata->getPropertyByTagName(self::TAG_NAME);

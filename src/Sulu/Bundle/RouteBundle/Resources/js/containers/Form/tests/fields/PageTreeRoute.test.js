@@ -3,10 +3,9 @@ import React from 'react';
 import {mount} from 'enzyme';
 import {FormInspector, ResourceFormStore, ResourceLocatorHistory, SingleSelection} from 'sulu-admin-bundle/containers';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
-import ResourceLocator from 'sulu-admin-bundle/components/ResourceLocator';
+import {ResourceStore, SingleSelectionStore} from 'sulu-admin-bundle/stores';
+import {ResourceLocator} from 'sulu-admin-bundle/components';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
-import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
 import PageTreeRoute from '../../fields/PageTreeRoute';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
@@ -82,29 +81,31 @@ jest.mock('sulu-admin-bundle/stores/SingleSelectionStore', () => jest.fn(functio
     });
 }));
 
-const modePromiseValue = 'leaf';
-const modePromise = Promise.resolve(modePromiseValue);
-const modeResolver = jest.fn().mockImplementation(() => modePromise);
-
-const fieldTypeOptions = {
-    historyResourceKey: 'routes',
-    modeResolver: modeResolver,
-    options: {history: true},
-};
-
-const value = {
-    page: {
-        uuid: 'uuid-uuid-uuid-uuid',
-    },
-    suffix: '/hello',
-};
-
 test('Render a PageTreeRoute', () => {
+    const modePromiseValue = 'leaf';
+    const modePromise = Promise.resolve(modePromiseValue);
+    const modeResolver = jest.fn().mockImplementation(() => modePromise);
+
+    const fieldTypeOptions = {
+        historyResourceKey: 'routes',
+        modeResolver: modeResolver,
+        options: {history: true},
+    };
+
+    const value = {
+        page: {
+            uuid: 'uuid-uuid-uuid-uuid',
+        },
+        suffix: '/hello',
+    };
+
     const locale = observable.box('de');
-    const formInspector = new FormInspector(new ResourceFormStore(
-        new ResourceStore('pages', 'diuu-diuu-diuu-diuu', {locale}),
-        'test'
-    ));
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('pages', 'diuu-diuu-diuu-diuu', {locale}),
+            'test'
+        )
+    );
 
     const pageTreeRoute = mount(
         <PageTreeRoute
@@ -138,6 +139,23 @@ test('Render a PageTreeRoute', () => {
 });
 
 test('Render a PageTreeRoute without history', () => {
+    const modePromiseValue = 'leaf';
+    const modePromise = Promise.resolve(modePromiseValue);
+    const modeResolver = jest.fn().mockImplementation(() => modePromise);
+
+    const fieldTypeOptions = {
+        historyResourceKey: 'routes',
+        modeResolver: modeResolver,
+        options: {history: true},
+    };
+
+    const value = {
+        page: {
+            uuid: 'uuid-uuid-uuid-uuid',
+        },
+        suffix: '/hello',
+    };
+
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('pages'), 'test'));
 
     const pageTreeRoute = mount(
@@ -164,6 +182,16 @@ test('Render a PageTreeRoute without history', () => {
 });
 
 test('Render a PageTreeRoute without value', () => {
+    const modePromiseValue = 'leaf';
+    const modePromise = Promise.resolve(modePromiseValue);
+    const modeResolver = jest.fn().mockImplementation(() => modePromise);
+
+    const fieldTypeOptions = {
+        historyResourceKey: 'routes',
+        modeResolver: modeResolver,
+        options: {history: true},
+    };
+
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('pages'), 'test'));
 
     const pageTreeRoute = mount(

@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\RouteBundle\PageTree\PageTreeUpdaterInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
@@ -30,10 +31,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class PageTreeRouteSubscriber implements EventSubscriberInterface
 {
-    const ROUTE_PROPERTY = 'routePath';
-
-    const TAG_NAME = 'sulu_route.route_path';
-
     /**
      * @var DocumentManagerInterface
      */
@@ -64,14 +61,6 @@ class PageTreeRouteSubscriber implements EventSubscriberInterface
      */
     protected $routeUpdater;
 
-    /**
-     * @param DocumentManagerInterface $documentManager
-     * @param PropertyEncoder $propertyEncoder
-     * @param DocumentInspector $documentInspector
-     * @param StructureMetadataFactoryInterface $metadataFactory
-     * @param SessionInterface $liveSession
-     * @param PageTreeUpdaterInterface $routeUpdater
-     */
     public function __construct(
         DocumentManagerInterface $documentManager,
         PropertyEncoder $propertyEncoder,
@@ -103,10 +92,8 @@ class PageTreeRouteSubscriber implements EventSubscriberInterface
 
     /**
      * Update route-paths of documents which are linked to the given page-document.
-     *
-     * @param AbstractMappingEvent $event
      */
-    public function handlePublish(AbstractMappingEvent $event)
+    public function handlePublish(AbstractMappingEvent $event): void
     {
         $document = $event->getDocument();
         if (!$document instanceof PageDocument || !$this->hasChangedResourceSegment($document)) {
@@ -118,10 +105,8 @@ class PageTreeRouteSubscriber implements EventSubscriberInterface
 
     /**
      * Update route-paths of documents which are linked to the given page-document.
-     *
-     * @param MoveEvent $event
      */
-    public function handleMove(MoveEvent $event)
+    public function handleMove(MoveEvent $event): void
     {
         $document = $event->getDocument();
         if (!$document instanceof PageDocument) {
@@ -129,18 +114,17 @@ class PageTreeRouteSubscriber implements EventSubscriberInterface
         }
 
         foreach ($this->documentInspector->getLocales($document) as $locale) {
-            $this->routeUpdater->update($this->documentManager->find($document->getUuid(), $locale));
+            /** @var BasePageDocument $localizedDocument */
+            $localizedDocument = $this->documentManager->find($document->getUuid(), $locale);
+
+            $this->routeUpdater->update($localizedDocument);
         }
     }
 
     /**
      * Returns true if the resource-segment was changed in the draft page.
-     *
-     * @param PageDocument $document
-     *
-     * @return bool
      */
-    private function hasChangedResourceSegment(PageDocument $document)
+    private function hasChangedResourceSegment(PageDocument $document): bool
     {
         $metadata = $this->metadataFactory->getStructureMetadata('page', $document->getStructureType());
 
@@ -158,12 +142,8 @@ class PageTreeRouteSubscriber implements EventSubscriberInterface
 
     /**
      * Returns the live node for given document.
-     *
-     * @param PathBehavior $document
-     *
-     * @return NodeInterface
      */
-    private function getLiveNode(PathBehavior $document)
+    private function getLiveNode(PathBehavior $document): NodeInterface
     {
         return $this->liveSession->getNode($document->getPath());
     }

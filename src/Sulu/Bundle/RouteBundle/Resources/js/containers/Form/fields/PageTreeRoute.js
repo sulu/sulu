@@ -1,17 +1,15 @@
 // @flow
 import React from 'react';
-import type {FieldTypeProps} from 'sulu-admin-bundle/containers/Form/types';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
-import userStore from 'sulu-admin-bundle/stores/userStore';
-import {Grid} from 'sulu-admin-bundle/components';
-import SingleSelection from 'sulu-admin-bundle/containers/SingleSelection';
-import ResourceLocator from 'sulu-admin-bundle/components/ResourceLocator';
-import ResourceLocatorHistory from 'sulu-admin-bundle/containers/ResourceLocatorHistory';
-import resourceLocatorStyles from 'sulu-admin-bundle/containers/Form/fields/resourceLocator.scss';
+import {userStore} from 'sulu-admin-bundle/stores';
+import {Grid, ResourceLocator} from 'sulu-admin-bundle/components';
+import {SingleSelection, ResourceLocatorHistory} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
 import type {PageTreeRouteValue} from '../../types.js';
+import pageTreeRouteStyles from './pageTreeRoute.scss';
 
 type Props = FieldTypeProps<?PageTreeRouteValue>;
 
@@ -142,8 +140,8 @@ class PageTreeRoute extends React.Component<Props> {
                     </Grid.Item>
 
                     <Grid.Item colSpan={this.showHistory ? 7 : 6}>
-                        <div className={resourceLocatorStyles.resourceLocatorContainer}>
-                            <div className={resourceLocatorStyles.resourceLocator}>
+                        <div className={pageTreeRouteStyles.resourceLocatorContainer}>
+                            <div className={pageTreeRouteStyles.resourceLocator}>
                                 <ResourceLocator
                                     disabled={!!disabled}
                                     id={dataPath}
@@ -154,7 +152,7 @@ class PageTreeRoute extends React.Component<Props> {
                             </div>
 
                             {this.showHistory && !!id &&
-                                <div className={resourceLocatorStyles.resourceLocatorHistory}>
+                                <div className={pageTreeRouteStyles.resourceLocatorHistory}>
                                     <ResourceLocatorHistory
                                         id={id}
                                         options={{

@@ -86,17 +86,6 @@ class RoutableSubscriber implements EventSubscriberInterface
      */
     private $conflictResolver;
 
-    /**
-     * @param ChainRouteGeneratorInterface $chainRouteGenerator
-     * @param RouteManagerInterface $routeManager
-     * @param RouteRepositoryInterface $routeRepository
-     * @param EntityManagerInterface $entityManager
-     * @param DocumentManagerInterface $documentManager
-     * @param DocumentInspector $documentInspector
-     * @param PropertyEncoder $propertyEncoder
-     * @param StructureMetadataFactoryInterface $metadataFactory
-     * @param ConflictResolverInterface $conflictResolver
-     */
     public function __construct(
         ChainRouteGeneratorInterface $chainRouteGenerator,
         RouteManagerInterface $routeManager,
@@ -141,10 +130,8 @@ class RoutableSubscriber implements EventSubscriberInterface
 
     /**
      * Load route.
-     *
-     * @param AbstractMappingEvent $event
      */
-    public function handleHydrate(AbstractMappingEvent $event)
+    public function handleHydrate(AbstractMappingEvent $event): void
     {
         $document = $event->getDocument();
         if (!$document instanceof RoutableBehavior) {
@@ -168,10 +155,8 @@ class RoutableSubscriber implements EventSubscriberInterface
 
     /**
      * Generate route and save route-path.
-     *
-     * @param AbstractMappingEvent $event
      */
-    public function handlePersist(AbstractMappingEvent $event)
+    public function handlePersist(AbstractMappingEvent $event): void
     {
         $document = $event->getDocument();
         if (!$document instanceof RoutableBehavior) {
@@ -191,10 +176,8 @@ class RoutableSubscriber implements EventSubscriberInterface
 
     /**
      * Removes route.
-     *
-     * @param RemoveEvent $event
      */
-    public function handleRemove(RemoveEvent $event)
+    public function handleRemove(RemoveEvent $event): void
     {
         $document = $event->getDocument();
         if (!$document instanceof RoutableBehavior) {
@@ -223,11 +206,9 @@ class RoutableSubscriber implements EventSubscriberInterface
     /**
      * Handle publish event and generate route.
      *
-     * @param PublishEvent $event
-     *
      * @throws ResourceLocatorAlreadyExistsException
      */
-    public function handlePublish(PublishEvent $event)
+    public function handlePublish(PublishEvent $event): void
     {
         $document = $event->getDocument();
         if (!$document instanceof RoutableBehavior) {
@@ -255,10 +236,8 @@ class RoutableSubscriber implements EventSubscriberInterface
 
     /**
      * Update routes for copied document.
-     *
-     * @param CopyEvent $event
      */
-    public function handleCopy(CopyEvent $event)
+    public function handleCopy(CopyEvent $event): void
     {
         $document = $event->getDocument();
         if (!$document instanceof RoutableBehavior) {
@@ -290,13 +269,8 @@ class RoutableSubscriber implements EventSubscriberInterface
 
     /**
      * Create or update for given document.
-     *
-     * @param RoutableBehavior $document
-     * @param string $locale
-     *
-     * @return RouteInterface
      */
-    private function createOrUpdateRoute(RoutableBehavior $document, $locale)
+    private function createOrUpdateRoute(RoutableBehavior $document, string $locale): RouteInterface
     {
         $route = $document->getRoute();
 
@@ -315,18 +289,16 @@ class RoutableSubscriber implements EventSubscriberInterface
 
     /**
      * Returns encoded "routePath" property-name.
-     *
-     * @param RoutableBehavior $document
-     * @param string $locale
-     *
-     * @return string
      */
-    private function getRoutePathPropertyName(RoutableBehavior $document, $locale)
+    private function getRoutePathPropertyName(RoutableBehavior $document, string $locale): string
     {
         $metadata = $this->documentInspector->getStructureMetadata($document);
 
         if ($metadata->hasTag(self::TAG_NAME)) {
-            return $this->getPropertyName($locale, $metadata->getPropertyByTagName(self::TAG_NAME)->getName());
+            return $this->getPropertyName(
+                $locale,
+                $metadata->getPropertyByTagName(self::TAG_NAME)->getName()
+            );
         }
 
         return $this->getPropertyName($locale, self::ROUTE_PROPERTY);
@@ -334,13 +306,8 @@ class RoutableSubscriber implements EventSubscriberInterface
 
     /**
      * Returns encoded property-name.
-     *
-     * @param string $locale
-     * @param string $field
-     *
-     * @return string
      */
-    private function getPropertyName($locale, $field)
+    private function getPropertyName(string $locale, string $field): string
     {
         return $this->propertyEncoder->localizedSystemName($field, $locale);
     }
