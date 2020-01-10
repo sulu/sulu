@@ -29,7 +29,7 @@ export default class TemplateToolbarAction extends AbstractFormToolbarAction {
         }
 
         const parentPageId = this.router.attributes.parentId;
-        if (parentPageId && this.webspace && !this.parentPage) {
+        if (parentPageId && this.webspace && this.webspace.defaultTemplates && !this.parentPage) {
             ResourceRequester.get('pages', {
                 id: parentPageId,
                 language: this.router.attributes.locale,
