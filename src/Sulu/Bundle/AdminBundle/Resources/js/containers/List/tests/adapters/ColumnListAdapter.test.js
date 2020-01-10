@@ -125,7 +125,7 @@ test('Render correct icon in edit button based on permissions', () => {
             },
             {
                 // button should contain eye icon because edit permission is missing
-                id: 1,
+                id: 2,
                 title: 'Missing edit permission',
                 hasChildren: false,
                 _permissions: {
@@ -135,7 +135,7 @@ test('Render correct icon in edit button based on permissions', () => {
             },
             {
                 // button should contain pen icon because user has sufficient permissions
-                id: 1,
+                id: 3,
                 title: 'Sufficient Permissions',
                 hasChildren: false,
                 _permissions: {
@@ -145,7 +145,7 @@ test('Render correct icon in edit button based on permissions', () => {
             },
             {
                 // button should contain plus icon because item is a ghost page
-                id: 1,
+                id: 4,
                 title: 'Ghost Page',
                 hasChildren: false,
                 ghostLocale: 'en',
@@ -154,7 +154,7 @@ test('Render correct icon in edit button based on permissions', () => {
         [],
     ];
 
-    const columnListAdapter = render(
+    const columnListAdapter = mount(
         <ColumnListAdapter
             {...listAdapterDefaultProps}
             activeItems={[]}
@@ -163,7 +163,17 @@ test('Render correct icon in edit button based on permissions', () => {
         />
     );
 
-    expect(columnListAdapter).toMatchSnapshot();
+    expect(columnListAdapter.find('Item').at(0).find('ItemButton').props().icon).toEqual('su-pen');
+    expect(columnListAdapter.find('Item').at(0).find('ItemButton').props().visible).toEqual(false);
+
+    expect(columnListAdapter.find('Item').at(1).find('ItemButton').props().icon).toEqual('su-eye');
+    expect(columnListAdapter.find('Item').at(1).find('ItemButton').props().visible).toEqual(true);
+
+    expect(columnListAdapter.find('Item').at(2).find('ItemButton').props().icon).toEqual('su-pen');
+    expect(columnListAdapter.find('Item').at(2).find('ItemButton').props().visible).toEqual(true);
+
+    expect(columnListAdapter.find('Item').at(3).find('ItemButton').props().icon).toEqual('su-plus-circle');
+    expect(columnListAdapter.find('Item').at(3).find('ItemButton').props().visible).toEqual(true);
 });
 
 test('Render data without edit button', () => {
