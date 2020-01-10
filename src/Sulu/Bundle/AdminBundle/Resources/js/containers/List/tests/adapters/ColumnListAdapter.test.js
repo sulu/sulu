@@ -111,6 +111,61 @@ test('Render different kind of data with edit button', () => {
     expect(columnListAdapter).toMatchSnapshot();
 });
 
+test('Render correct icon in edit button based on permissions', () => {
+    const data = [
+        [
+            {
+                // button should not be visible because view permission is missing
+                id: 1,
+                title: 'Missing view permission',
+                hasChildren: false,
+                _permissions: {
+                    view: false,
+                },
+            },
+            {
+                // button should contain eye icon because edit permission is missing
+                id: 1,
+                title: 'Missing edit permission',
+                hasChildren: false,
+                _permissions: {
+                    edit: false,
+                    view: true,
+                },
+            },
+            {
+                // button should contain pen icon because user has sufficient permissions
+                id: 1,
+                title: 'Sufficient Permissions',
+                hasChildren: false,
+                _permissions: {
+                    edit: true,
+                    view: true,
+                },
+            },
+            {
+                // button should contain plus icon because item is a ghost page
+                id: 1,
+                title: 'Ghost Page',
+                hasChildren: false,
+                ghostLocale: 'en',
+            },
+        ],
+        [],
+    ];
+
+    const columnListAdapter = render(
+        <ColumnListAdapter
+            {...listAdapterDefaultProps}
+            activeItems={[]}
+            data={data}
+            onItemClick={jest.fn()}
+        />
+    );
+
+    expect(columnListAdapter).toMatchSnapshot();
+});
+
 test('Render data without edit button', () => {
     const data = [
         [
