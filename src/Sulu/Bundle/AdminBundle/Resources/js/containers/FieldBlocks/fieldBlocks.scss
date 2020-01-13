@@ -1,5 +1,16 @@
+@import '../../containers/Application/colors.scss';
+
+$fieldBlockTypeColor: $gray;
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
 .type {
-    margin-bottom: 10px;
+    color: $fieldBlockTypeColor;
+    margin-right: 10px;
     text-align: right;
     font-size: 10px;
 }

@@ -732,11 +732,19 @@ exports[`Render collapsed blocks with block previews 1`] = `
         class="content"
       >
         <article>
-          <div
-            class="type"
+          <header
+            class="header"
           >
-            Default
-          </div>
+            <div
+              class="type"
+            >
+              Default
+            </div>
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down"
+            />
+          </header>
           <p>
             Test 1
           </p>
@@ -758,11 +766,19 @@ exports[`Render collapsed blocks with block previews 1`] = `
         class="content"
       >
         <article>
-          <div
-            class="type"
+          <header
+            class="header"
           >
-            Default
-          </div>
+            <div
+              class="type"
+            >
+              Default
+            </div>
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down"
+            />
+          </header>
           <p>
             Test 4
           </p>
@@ -809,11 +825,19 @@ exports[`Render collapsed blocks with block previews 2`] = `
         class="content"
       >
         <article>
-          <div
-            class="type"
+          <header
+            class="header"
           >
-            Default
-          </div>
+            <div
+              class="type"
+            >
+              Default
+            </div>
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down"
+            />
+          </header>
           <p>
             Test 3
           </p>
@@ -841,11 +865,19 @@ exports[`Render collapsed blocks with block previews 2`] = `
         class="content"
       >
         <article>
-          <div
-            class="type"
+          <header
+            class="header"
           >
-            Default
-          </div>
+            <div
+              class="type"
+            >
+              Default
+            </div>
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down"
+            />
+          </header>
           <p>
             Test 6
           </p>
@@ -898,11 +930,19 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
         class="content"
       >
         <article>
-          <div
-            class="type"
+          <header
+            class="header"
           >
-            Default
-          </div>
+            <div
+              class="type"
+            >
+              Default
+            </div>
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down"
+            />
+          </header>
           <p>
             media_selection
           </p>
@@ -930,11 +970,19 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
         class="content"
       >
         <article>
-          <div
-            class="type"
+          <header
+            class="header"
           >
-            Default
-          </div>
+            <div
+              class="type"
+            >
+              Default
+            </div>
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down"
+            />
+          </header>
           <p>
             media_selection
           </p>

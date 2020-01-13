@@ -5,7 +5,6 @@ $blockBackgroundColor: $white;
 $blockBorderColor: $silver;
 $blockHandleColor: $black;
 $blockHandleBackgroundColor: $silver;
-$blockCollapsedTextColor: $silver;
 
 .block {
     display: flex;
@@ -13,12 +12,11 @@ $blockCollapsedTextColor: $silver;
     border-radius: $blockBorderRadius;
 
     &:not(.expanded) {
-        color: $blockCollapsedTextColor;
         cursor: pointer;
         border: 1px solid $blockBorderColor;
 
         .content {
-            padding: 20px 40px;
+            padding: 20px;
         }
     }
 }

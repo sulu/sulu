@@ -4,6 +4,7 @@ import React, {Fragment} from 'react';
 import {toJS} from 'mobx';
 import BlockCollection from '../../components/BlockCollection';
 import type {BlockEntry} from '../../components/BlockCollection/types';
+import Icon from '../../components/Icon';
 import type {BlockError, FieldTypeProps} from '../Form/types';
 import blockPreviewTransformerRegistry from './registries/blockPreviewTransformerRegistry';
 import FieldRenderer from './FieldRenderer';
@@ -146,9 +147,12 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
 
         return (
             <Fragment>
-                <div className={fieldBlocksStyles.type}>
-                    {blockSchemaType.title}
-                </div>
+                <header className={fieldBlocksStyles.header}>
+                    <div className={fieldBlocksStyles.type}>
+                        {blockSchemaType.title}
+                    </div>
+                    <Icon name="su-angle-down" />
+                </header>
                 {previewPropertyNames.map((previewPropertyName) =>
                     blockPreviewTransformerRegistry.has(blockSchemaTypeForm[previewPropertyName].type)
                     && value[previewPropertyName]
