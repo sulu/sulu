@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-release/1.6
+* 1.6.30 (2020-01-13)
     * ENHANCEMENT #4968  [MediaBundle]             Improve performance for one layered images
 
 * 1.6.29 (2019-10-24)
