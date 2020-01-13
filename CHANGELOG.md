@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.30 (2020-01-13)
+    * ENHANCEMENT #4968  [MediaBundle]             Improve performance for one layered images
+
 * 1.6.29 (2019-10-24)
     * BUGFIX      #4644  [LocationBundle]          Fix location content type default map provider option
     * ENHANCEMENT #4812  [MediaBundle]             Optimize gif image output

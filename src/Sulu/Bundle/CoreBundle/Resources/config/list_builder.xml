@@ -9,6 +9,7 @@
             <argument>%sulu_admin.lists.directories%</argument>
             <argument type="string">%sulu.cache_dir%/field_descriptor</argument>
             <argument>%kernel.debug%</argument>
+
             <tag name="kernel.cache_warmer" priority="1024" />
         </service>
 
@@ -22,9 +23,6 @@
             <argument type="service" id="sulu_core.list_builder.metadata.parameter_bag"/>
         </service>
 
-        <service id="sulu_core.list_builder.metadata.parameter_bag"
-                 class="Symfony\Component\DependencyInjection\ParameterBag\ParameterBag">
-            <factory service="service_container" method="getParameterBag"/>
-        </service>
+        <service id="sulu_core.list_builder.metadata.parameter_bag" alias="parameter_bag"/>
     </services>
 </container>

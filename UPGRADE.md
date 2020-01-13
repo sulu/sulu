@@ -6,7 +6,7 @@
 
 In the `RouteRepositoryInterface` a new remove method was introduced.
 
-## dev-release/2.0
+## 2.0.3
 
 When upgrading also have a look at the changes in the
 [sulu skeleton](https://github.com/sulu/skeleton/compare/2.0.2...2.0.3).
