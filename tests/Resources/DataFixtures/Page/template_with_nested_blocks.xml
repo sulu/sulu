@@ -1,0 +1,92 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>default</key>
+
+    <view>templates/pages/default</view>
+    <controller>SuluWebsiteBundle:Default:index</controller>
+    <cacheLifetime>604800</cacheLifetime>
+
+    <meta>
+        <title lang="en">Default</title>
+        <title lang="de">Standard</title>
+    </meta>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true" />
+
+        <property name="url" type="resource_locator" mandatory="true">
+            <tag name="sulu.rlp"/>
+        </property>
+
+        <block name="block1" default-type="type11">
+            <meta>
+                <title lang="de">Block 1</title>
+            </meta>
+            <types>
+                <type name="type11">
+                    <meta>
+                        <title lang="de">Type 1.1</title>
+                    </meta>
+                    <properties>
+                        <block name="block11" default-type="type111">
+                            <meta>
+                                <title lang="de">Block 1.1</title>
+                            </meta>
+                            <types>
+                                <type name="type111">
+                                    <meta>
+                                        <title lang="de">Type 1.1.1</title>
+                                    </meta>
+                                    <properties>
+                                        <property name="headline1" type="text_line" />
+                                    </properties>
+                                </type>
+                                <type name="type112">
+                                    <meta>
+                                        <title lang="de">Type 1.1.2</title>
+                                    </meta>
+                                    <properties>
+                                        <property name="headline2" type="text_line" />
+                                    </properties>
+                                </type>
+                            </types>
+                        </block>
+                    </properties>
+                </type>
+                <type name="type12">
+                    <meta>
+                        <title lang="de">Type 1.2</title>
+                    </meta>
+                    <properties>
+                        <block name="block12" default-type="type121">
+                            <meta>
+                                <title lang="de">Block 1.2</title>
+                            </meta>
+                            <types>
+                                <type name="type121">
+                                    <meta>
+                                        <title lang="de">Type 1.2.1</title>
+                                    </meta>
+                                    <properties>
+                                        <property name="headline1" type="text_line" />
+                                    </properties>
+                                </type>
+                                <type name="type122">
+                                    <meta>
+                                        <title lang="de">Type 1.2.2</title>
+                                    </meta>
+                                    <properties>
+                                        <property name="headline2" type="text_line" />
+                                    </properties>
+                                </type>
+                            </types>
+                        </block>
+                    </properties>
+                </type>
+            </types>
+        </block>
+    </properties>
+</template>

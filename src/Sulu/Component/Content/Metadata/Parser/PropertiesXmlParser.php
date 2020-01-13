@@ -448,12 +448,10 @@ class PropertiesXmlParser
                 $component->setDescriptions($data['meta']['info_text']);
             }
 
-            foreach ($type['properties'] as $propertyName => $propertyData) {
-                $property = new PropertyMetadata();
-                $property->setName($propertyName);
-                $this->mapProperty($property, $propertyData);
+            foreach ($this->mapProperties($type['properties']) as $property) {
                 $component->addChild($property);
             }
+
             $blockProperty->addComponent($component);
         }
 

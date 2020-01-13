@@ -190,6 +190,40 @@ class StructureXmlLoaderTest extends TestCase
         $this->assertEquals(['title', 'test21', 'test221'], array_keys($result->getProperties()));
     }
 
+    public function testLoadNestedBlocks()
+    {
+        $this->contentTypeManager->has('text_line')->willReturn(true);
+        $this->contentTypeManager->has('resource_locator')->willReturn(true);
+        $this->contentTypeManager->has('block')->willReturn(true);
+
+        $this->contentTypeManager->getAll()->willReturn(['text_line']);
+
+        $result = $this->load('template_with_nested_blocks.xml');
+
+        $block1Types = $result->getProperty('block1')->getComponents();
+        $block11 = $block1Types[0]->getChildren()['block11'];
+        $block11Types = $block11->getComponents();
+        $type111Children = $block11Types[0]->getChildren();
+        $type112Children = $block11Types[1]->getChildren();
+
+        $block12 = $block1Types[1]->getChildren()['block12'];
+        $block12Types = $block12->getComponents();
+        $type121Children = $block12Types[0]->getChildren();
+        $type122Children = $block12Types[1]->getChildren();
+
+        $this->assertEquals('type111', $block11->getDefaultComponentName());
+        $this->assertCount(1, $type111Children);
+        $this->assertEquals('headline1', $type111Children['headline1']->getName());
+        $this->assertCount(1, $type112Children);
+        $this->assertEquals('headline2', $type112Children['headline2']->getName());
+
+        $this->assertEquals('type121', $block12->getDefaultComponentName());
+        $this->assertCount(1, $type121Children);
+        $this->assertEquals('headline1', $type121Children['headline1']->getName());
+        $this->assertCount(1, $type122Children);
+        $this->assertEquals('headline2', $type122Children['headline2']->getName());
+    }
+
     public function testLoadInvalidIgnore()
     {
         $this->contentTypeManager->has('text_line')->willReturn(true);
