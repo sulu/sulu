@@ -34,8 +34,8 @@ exports[`Render block with schema 1`] = `
               tabindex="0"
             />
             <span
-              aria-label="su-times"
-              class="su-times clickable"
+              aria-label="su-angle-up"
+              class="su-angle-up clickable"
               role="button"
               tabindex="0"
             />
@@ -134,8 +134,8 @@ exports[`Render block with schema 1`] = `
               tabindex="0"
             />
             <span
-              aria-label="su-times"
-              class="su-times clickable"
+              aria-label="su-angle-up"
+              class="su-angle-up clickable"
               role="button"
               tabindex="0"
             />
@@ -259,8 +259,8 @@ exports[`Render block with schema and error on fields already being modified 1`]
               tabindex="0"
             />
             <span
-              aria-label="su-times"
-              class="su-times clickable"
+              aria-label="su-angle-up"
+              class="su-angle-up clickable"
               role="button"
               tabindex="0"
             />
@@ -330,8 +330,8 @@ exports[`Render block with schema and error on fields already being modified 1`]
               tabindex="0"
             />
             <span
-              aria-label="su-times"
-              class="su-times clickable"
+              aria-label="su-angle-up"
+              class="su-angle-up clickable"
               role="button"
               tabindex="0"
             />
@@ -404,8 +404,8 @@ exports[`Render block with schema and error on fields already being modified 1`]
               tabindex="0"
             />
             <span
-              aria-label="su-times"
-              class="su-times clickable"
+              aria-label="su-angle-up"
+              class="su-angle-up clickable"
               role="button"
               tabindex="0"
             />
@@ -500,8 +500,8 @@ exports[`Render block with schema and error on fields already being modified 2`]
               tabindex="0"
             />
             <span
-              aria-label="su-times"
-              class="su-times clickable"
+              aria-label="su-angle-up"
+              class="su-angle-up clickable"
               role="button"
               tabindex="0"
             />
@@ -571,8 +571,8 @@ exports[`Render block with schema and error on fields already being modified 2`]
               tabindex="0"
             />
             <span
-              aria-label="su-times"
-              class="su-times clickable"
+              aria-label="su-angle-up"
+              class="su-angle-up clickable"
               role="button"
               tabindex="0"
             />
@@ -645,8 +645,8 @@ exports[`Render block with schema and error on fields already being modified 2`]
               tabindex="0"
             />
             <span
-              aria-label="su-times"
-              class="su-times clickable"
+              aria-label="su-angle-up"
+              class="su-angle-up clickable"
               role="button"
               tabindex="0"
             />

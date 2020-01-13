@@ -84,7 +84,7 @@ export default class Block extends React.Component<Props> {
                             }
                             <div className={blockStyles.icons}>
                                 {onRemove && <Icon name="su-trash-alt" onClick={this.handleRemove} />}
-                                <Icon name="su-times" onClick={this.handleCollapse} />
+                                <Icon name="su-angle-up" onClick={this.handleCollapse} />
                             </div>
                         </header>
                     }

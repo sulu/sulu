@@ -48,8 +48,8 @@ exports[`Render expanded sortable block 1`] = `
           tabindex="0"
         />
         <span
-          aria-label="su-times"
-          class="su-times clickable"
+          aria-label="su-angle-up"
+          class="su-angle-up clickable"
           role="button"
           tabindex="0"
         />
@@ -132,8 +132,8 @@ exports[`Render expanded sortable block with types 1`] = `
           tabindex="0"
         />
         <span
-          aria-label="su-times"
-          class="su-times clickable"
+          aria-label="su-angle-up"
+          class="su-angle-up clickable"
           role="button"
           tabindex="0"
         />
@@ -168,8 +168,8 @@ exports[`Render expanded sortable block without remove icon 1`] = `
         class="icons"
       >
         <span
-          aria-label="su-times"
-          class="su-times clickable"
+          aria-label="su-angle-up"
+          class="su-angle-up clickable"
           role="button"
           tabindex="0"
         />
