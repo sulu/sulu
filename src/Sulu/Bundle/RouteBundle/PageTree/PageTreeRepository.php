@@ -13,6 +13,7 @@ namespace Sulu\Bundle\RouteBundle\PageTree;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
+use Sulu\Bundle\RouteBundle\Content\Type\PageTreeRouteContentType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
@@ -97,7 +98,7 @@ class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInter
             foreach ($this->metadataFactory->getStructures($structureType) as $metadata) {
                 $property = $this->getRoutePathPropertyByMetadata($metadata);
 
-                if (null === $property || self::NAME !== $property->getType()) {
+                if (null === $property || PageTreeRouteContentType::NAME !== $property->getType()) {
                     continue;
                 }
 
