@@ -1,6 +1,5 @@
 @import '../../containers/Application/colors.scss';
 
-$blockBorderRadius: 3px;
 $blockBackgroundColor: $white;
 $blockBorderColor: $silver;
 $blockHandleColor: $black;
@@ -9,11 +8,11 @@ $blockHandleBackgroundColor: $silver;
 .block {
     display: flex;
     background-color: $blockBackgroundColor;
-    border-radius: $blockBorderRadius;
+    border: 1px solid $blockBorderColor;
+    border-radius: 3px;
 
     &:not(.expanded) {
         cursor: pointer;
-        border: 1px solid $blockBorderColor;
 
         .content {
             padding: 20px;
@@ -28,7 +27,6 @@ $blockHandleBackgroundColor: $silver;
     justify-content: center;
     color: $blockHandleColor;
     background-color: $blockHandleBackgroundColor;
-    border-radius: $blockBorderRadius 0 0 $blockBorderRadius;
     width: 20px;
 }
 
