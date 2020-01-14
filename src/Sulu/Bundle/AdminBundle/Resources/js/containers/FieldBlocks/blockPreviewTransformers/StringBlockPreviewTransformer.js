@@ -2,7 +2,6 @@
 import React from 'react';
 import type {Node} from 'react';
 import type {BlockPreviewTransformer} from '../types';
-import stringBlockPreviewTransformerStyles from './stringBlockPreviewTransformer.scss';
 
 export default class StringBlockPreviewTransformer implements BlockPreviewTransformer {
     transform(value: *): Node {
@@ -10,6 +9,6 @@ export default class StringBlockPreviewTransformer implements BlockPreviewTransf
             return null;
         }
 
-        return <p className={stringBlockPreviewTransformerStyles.string}>{value}</p>;
+        return <p>{value}</p>;
     }
 }

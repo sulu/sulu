@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Return JSX for simple string 1`] = `
-<p
-  className="string"
->
+<p>
   Test
 </p>
 `;
