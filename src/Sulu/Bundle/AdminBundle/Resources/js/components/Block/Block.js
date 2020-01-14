@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import type {Node} from 'react';
 import classNames from 'classnames';
 import Icon from '../Icon';
@@ -69,26 +69,32 @@ export default class Block extends React.Component<Props> {
                     {dragHandle}
                 </div>
                 <div className={blockStyles.content}>
-                    {expanded &&
-                        <header className={blockStyles.header}>
-                            {types && Object.keys(types).length > 1 &&
-                                <div className={blockStyles.types}>
-                                    <SingleSelect onChange={this.handleTypeChange} value={activeType}>
-                                        {Object.keys(types).map((key) => (
-                                            <SingleSelect.Option key={key} value={key}>
-                                                {types[key]}
-                                            </SingleSelect.Option>
-                                        ))}
-                                    </SingleSelect>
+                    <header className={blockStyles.header}>
+                        {expanded
+                            ? <Fragment>
+                                {types && Object.keys(types).length > 1 &&
+                                    <div className={blockStyles.types}>
+                                        <SingleSelect onChange={this.handleTypeChange} value={activeType}>
+                                            {Object.keys(types).map((key) => (
+                                                <SingleSelect.Option key={key} value={key}>
+                                                    {types[key]}
+                                                </SingleSelect.Option>
+                                            ))}
+                                        </SingleSelect>
+                                    </div>
+                                }
+                                <div className={blockStyles.icons}>
+                                    {onRemove && <Icon name="su-trash-alt" onClick={this.handleRemove} />}
+                                    <Icon name="su-angle-up" onClick={this.handleCollapse} />
                                 </div>
-                            }
-                            <div className={blockStyles.icons}>
-                                {onRemove && <Icon name="su-trash-alt" onClick={this.handleRemove} />}
-                                <Icon name="su-angle-up" onClick={this.handleCollapse} />
-                            </div>
-                        </header>
-                    }
-                    <article>{children}</article>
+                            </Fragment>
+                            : <Fragment>
+                                {types && activeType && <div className={blockStyles.type}>{types[activeType]}</div>}
+                                <Icon name="su-angle-down" />
+                            </Fragment>
+                        }
+                    </header>
+                    <article className={blockStyles.children}>{children}</article>
                 </div>
             </section>
         );

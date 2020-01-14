@@ -4,6 +4,7 @@ $blockBackgroundColor: $white;
 $blockBorderColor: $silver;
 $blockHandleColor: $black;
 $blockHandleBackgroundColor: $silver;
+$blockTypeColor: $gray;
 
 .block {
     display: flex;
@@ -14,8 +15,17 @@ $blockHandleBackgroundColor: $silver;
     &:not(.expanded) {
         cursor: pointer;
 
-        .content {
-            padding: 20px;
+        .children {
+            padding: 10px;
+        }
+
+        .header {
+            float: right;
+            display: flex;
+            align-items: center;
+            padding: 0;
+            margin: 10px;
+            height: 18px;
         }
     }
 }
@@ -31,19 +41,29 @@ $blockHandleBackgroundColor: $silver;
 }
 
 .content {
+    flex-grow: 1;
+}
+
+.children {
     font-size: 12px;
     line-height: 18px;
-    flex-grow: 1;
     padding: 30px;
 }
 
 .header {
+    padding: 30px 30px 0 30px;
     display: flex;
-    padding-bottom: 30px;
 }
 
 .types {
     width: 120px;
+}
+
+.type {
+    color: $blockTypeColor;
+    margin-right: 10px;
+    text-align: right;
+    font-size: 10px;
 }
 
 .icons {

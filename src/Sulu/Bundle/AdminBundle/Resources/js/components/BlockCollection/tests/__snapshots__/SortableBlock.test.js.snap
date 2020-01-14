@@ -15,7 +15,17 @@ exports[`Render collapsed sortable block 1`] = `
   <div
     class="content"
   >
-    <article />
+    <header
+      class="header"
+    >
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
+    </header>
+    <article
+      class="children"
+    />
   </div>
 </section>
 `;
@@ -55,7 +65,9 @@ exports[`Render expanded sortable block 1`] = `
         />
       </div>
     </header>
-    <article>
+    <article
+      class="children"
+    >
       Test for Test Content
     </article>
   </div>
@@ -139,7 +151,9 @@ exports[`Render expanded sortable block with types 1`] = `
         />
       </div>
     </header>
-    <article>
+    <article
+      class="children"
+    >
       Test for Test Content and type type2
     </article>
   </div>
@@ -175,7 +189,9 @@ exports[`Render expanded sortable block without remove icon 1`] = `
         />
       </div>
     </header>
-    <article>
+    <article
+      class="children"
+    >
       Test for Test Content
     </article>
   </div>

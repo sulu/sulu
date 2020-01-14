@@ -4,11 +4,9 @@ import React, {Fragment} from 'react';
 import {toJS} from 'mobx';
 import BlockCollection from '../../components/BlockCollection';
 import type {BlockEntry} from '../../components/BlockCollection/types';
-import Icon from '../../components/Icon';
 import type {BlockError, FieldTypeProps} from '../Form/types';
 import blockPreviewTransformerRegistry from './registries/blockPreviewTransformerRegistry';
 import FieldRenderer from './FieldRenderer';
-import fieldBlocksStyles from './fieldBlocks.scss';
 
 const MISSING_BLOCK_ERROR_MESSAGE = 'The "block" field type needs at least one type to be configured!';
 const BLOCK_PREVIEW_TAG = 'sulu.block_preview';
@@ -147,24 +145,20 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
 
         return (
             <Fragment>
-                <header className={fieldBlocksStyles.header}>
-                    <div className={fieldBlocksStyles.type}>
-                        {blockSchemaType.title}
-                    </div>
-                    <Icon name="su-angle-down" />
-                </header>
-                {previewPropertyNames.map((previewPropertyName) =>
-                    blockPreviewTransformerRegistry.has(blockSchemaTypeForm[previewPropertyName].type)
-                    && value[previewPropertyName]
-                    && (
-                        <Fragment key={previewPropertyName}>
-                            {blockPreviewTransformerRegistry
-                                .get(blockSchemaTypeForm[previewPropertyName].type)
-                                .transform(value[previewPropertyName], blockSchemaTypeForm[previewPropertyName])
-                            }
-                        </Fragment>
-                    )
-                )}
+                <div>
+                    {previewPropertyNames.map((previewPropertyName) =>
+                        blockPreviewTransformerRegistry.has(blockSchemaTypeForm[previewPropertyName].type)
+                        && value[previewPropertyName]
+                        && (
+                            <Fragment key={previewPropertyName}>
+                                {blockPreviewTransformerRegistry
+                                    .get(blockSchemaTypeForm[previewPropertyName].type)
+                                    .transform(value[previewPropertyName], blockSchemaTypeForm[previewPropertyName])
+                                }
+                            </Fragment>
+                        )
+                    )}
+                </div>
             </Fragment>
         );
     };

@@ -21,7 +21,17 @@ exports[`Should render a block list 1`] = `
       <div
         class="content"
       >
-        <article />
+        <header
+          class="header"
+        >
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down"
+          />
+        </header>
+        <article
+          class="children"
+        />
       </div>
     </section>
     <section
@@ -38,7 +48,17 @@ exports[`Should render a block list 1`] = `
       <div
         class="content"
       >
-        <article />
+        <header
+          class="header"
+        >
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down"
+          />
+        </header>
+        <article
+          class="children"
+        />
       </div>
     </section>
   </div>
@@ -80,7 +100,17 @@ exports[`Should render a disabled block list 1`] = `
       <div
         class="content"
       >
-        <article />
+        <header
+          class="header"
+        >
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down"
+          />
+        </header>
+        <article
+          class="children"
+        />
       </div>
     </section>
     <section
@@ -97,7 +127,17 @@ exports[`Should render a disabled block list 1`] = `
       <div
         class="content"
       >
-        <article />
+        <header
+          class="header"
+        >
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down"
+          />
+        </header>
+        <article
+          class="children"
+        />
       </div>
     </section>
   </div>
@@ -140,7 +180,17 @@ exports[`Should render a fully filled block list without add button if maxOccurs
       <div
         class="content"
       >
-        <article />
+        <header
+          class="header"
+        >
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down"
+          />
+        </header>
+        <article
+          class="children"
+        />
       </div>
     </section>
     <section
@@ -157,7 +207,17 @@ exports[`Should render a fully filled block list without add button if maxOccurs
       <div
         class="content"
       >
-        <article />
+        <header
+          class="header"
+        >
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down"
+          />
+        </header>
+        <article
+          class="children"
+        />
       </div>
     </section>
   </div>
