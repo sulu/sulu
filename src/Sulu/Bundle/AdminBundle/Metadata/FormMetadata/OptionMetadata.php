@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
-use JMS\Serializer\Annotation\Exclude;
-
 class OptionMetadata
 {
     const TYPE_STRING = 'string';
@@ -28,7 +26,6 @@ class OptionMetadata
 
     /**
      * @var string
-     * @Exclude
      */
     protected $type;
 
