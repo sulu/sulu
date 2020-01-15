@@ -4,7 +4,7 @@ import type {Node} from 'react';
 import textVersion from 'textversionjs';
 import type {BlockPreviewTransformer} from '../types';
 
-const MAX_LENGTH = 500;
+const MAX_LENGTH = 50;
 
 export default class StripHtmlBlockPreviewTransformer implements BlockPreviewTransformer {
     transform(value: *): Node {

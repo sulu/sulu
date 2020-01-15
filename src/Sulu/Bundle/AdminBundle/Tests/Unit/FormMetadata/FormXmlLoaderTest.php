@@ -355,10 +355,10 @@ class FormXmlLoaderTest extends TestCase
                                             'const' => 'type11',
                                         ],
                                         'block11' => [
-                                            'name' =>'block11',
+                                            'name' => 'block11',
                                             'type' => 'array',
                                             'items' => [
-                                                'required' =>[],
+                                                'required' => [],
                                                 'anyOf' => [
                                                     [
                                                         'required' => [
@@ -397,10 +397,10 @@ class FormXmlLoaderTest extends TestCase
                                             'const' => 'type12',
                                         ],
                                         'block12' => [
-                                            'name' =>'block12',
+                                            'name' => 'block12',
                                             'type' => 'array',
                                             'items' => [
-                                                'required' =>[],
+                                                'required' => [],
                                                 'anyOf' => [
                                                     [
                                                         'required' => [
