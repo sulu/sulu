@@ -126,6 +126,22 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals(5, $blocksType->form->block->maxOccurs);
         $this->assertEquals(2, $blocksType->form->block->types->article->form->lines->minOccurs);
         $this->assertEquals(2, $blocksType->form->block->types->article->form->lines->maxOccurs);
+
+        $smartContentType = $types->smartcontent;
+        $smartContentOptions = $smartContentType->form->smart_content->options;
+        $this->assertEquals('properties', $smartContentOptions->properties->name);
+        $this->assertEquals('collection', $smartContentOptions->properties->type);
+        $this->assertCount(5, $smartContentOptions->properties->value);
+        $this->assertEquals('article', $smartContentOptions->properties->value[0]->name);
+        $this->assertEquals('article', $smartContentOptions->properties->value[0]->value);
+        $this->assertEquals('excerptTitle', $smartContentOptions->properties->value[1]->name);
+        $this->assertEquals('excerpt.title', $smartContentOptions->properties->value[1]->value);
+        $this->assertEquals('excerptTags', $smartContentOptions->properties->value[2]->name);
+        $this->assertEquals('excerpt.tags', $smartContentOptions->properties->value[2]->value);
+        $this->assertEquals('excerptImages', $smartContentOptions->properties->value[3]->name);
+        $this->assertEquals('excerpt.images', $smartContentOptions->properties->value[3]->value);
+        $this->assertEquals('excerptDescription', $smartContentOptions->properties->value[4]->name);
+        $this->assertEquals('excerpt.description', $smartContentOptions->properties->value[4]->value);
     }
 
     public function testPageSeoFormMetadataAction()
