@@ -4,7 +4,7 @@ $blockBackgroundColor: $white;
 $blockBorderColor: $silver;
 $blockHandleColor: $black;
 $blockHandleBackgroundColor: $silver;
-$blockTypeColor: $gray;
+$blockCollapsedColor: $gray;
 
 .block {
     display: flex;
@@ -16,6 +16,7 @@ $blockTypeColor: $gray;
         cursor: pointer;
 
         .children {
+            color: $blockCollapsedColor;
             margin: 10px;
         }
 
@@ -60,7 +61,7 @@ $blockTypeColor: $gray;
 }
 
 .type {
-    color: $blockTypeColor;
+    color: $blockCollapsedColor;
     margin-right: 10px;
     text-align: right;
     font-size: 10px;
