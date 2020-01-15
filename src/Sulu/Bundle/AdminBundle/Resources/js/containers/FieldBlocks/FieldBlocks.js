@@ -145,20 +145,18 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
 
         return (
             <Fragment>
-                <div>
-                    {previewPropertyNames.map((previewPropertyName) =>
-                        blockPreviewTransformerRegistry.has(blockSchemaTypeForm[previewPropertyName].type)
-                        && value[previewPropertyName]
-                        && (
-                            <Fragment key={previewPropertyName}>
-                                {blockPreviewTransformerRegistry
-                                    .get(blockSchemaTypeForm[previewPropertyName].type)
-                                    .transform(value[previewPropertyName], blockSchemaTypeForm[previewPropertyName])
-                                }
-                            </Fragment>
-                        )
-                    )}
-                </div>
+                {previewPropertyNames.map((previewPropertyName) =>
+                    blockPreviewTransformerRegistry.has(blockSchemaTypeForm[previewPropertyName].type)
+                    && value[previewPropertyName]
+                    && (
+                        <Fragment key={previewPropertyName}>
+                            {blockPreviewTransformerRegistry
+                                .get(blockSchemaTypeForm[previewPropertyName].type)
+                                .transform(value[previewPropertyName], blockSchemaTypeForm[previewPropertyName])
+                            }
+                        </Fragment>
+                    )
+                )}
             </Fragment>
         );
     };

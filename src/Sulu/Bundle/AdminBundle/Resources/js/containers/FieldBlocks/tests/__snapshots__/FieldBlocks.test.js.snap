@@ -763,11 +763,9 @@ exports[`Render collapsed blocks with block previews 1`] = `
         <article
           class="children"
         >
-          <div>
-            <p>
-              Test 1
-            </p>
-          </div>
+          <p>
+            Test 1
+          </p>
         </article>
       </div>
     </section>
@@ -801,11 +799,9 @@ exports[`Render collapsed blocks with block previews 1`] = `
         <article
           class="children"
         >
-          <div>
-            <p>
-              Test 4
-            </p>
-          </div>
+          <p>
+            Test 4
+          </p>
         </article>
       </div>
     </section>
@@ -864,17 +860,15 @@ exports[`Render collapsed blocks with block previews 2`] = `
         <article
           class="children"
         >
-          <div>
-            <p>
-              Test 3
-            </p>
-            <p>
-              Test 2
-            </p>
-            <p>
-              Test 1
-            </p>
-          </div>
+          <p>
+            Test 3
+          </p>
+          <p>
+            Test 2
+          </p>
+          <p>
+            Test 1
+          </p>
         </article>
       </div>
     </section>
@@ -908,17 +902,15 @@ exports[`Render collapsed blocks with block previews 2`] = `
         <article
           class="children"
         >
-          <div>
-            <p>
-              Test 6
-            </p>
-            <p>
-              Test 5
-            </p>
-            <p>
-              Test 4
-            </p>
-          </div>
+          <p>
+            Test 6
+          </p>
+          <p>
+            Test 5
+          </p>
+          <p>
+            Test 4
+          </p>
         </article>
       </div>
     </section>
@@ -977,17 +969,15 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
         <article
           class="children"
         >
-          <div>
-            <p>
-              media_selection
-            </p>
-            <p>
-              text_line
-            </p>
-            <p>
-              text_editor
-            </p>
-          </div>
+          <p>
+            media_selection
+          </p>
+          <p>
+            text_line
+          </p>
+          <p>
+            text_editor
+          </p>
         </article>
       </div>
     </section>
@@ -1021,17 +1011,15 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
         <article
           class="children"
         >
-          <div>
-            <p>
-              media_selection
-            </p>
-            <p>
-              text_line
-            </p>
-            <p>
-              text_editor
-            </p>
-          </div>
+          <p>
+            media_selection
+          </p>
+          <p>
+            text_line
+          </p>
+          <p>
+            text_editor
+          </p>
         </article>
       </div>
     </section>
