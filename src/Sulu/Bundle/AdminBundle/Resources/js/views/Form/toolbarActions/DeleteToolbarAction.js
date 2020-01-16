@@ -2,8 +2,12 @@
 import React, {Fragment} from 'react';
 import {action, computed, observable} from 'mobx';
 import jexl from 'jexl';
+import log from 'loglevel';
 import Dialog from '../../../components/Dialog';
 import {translate} from '../../../utils/Translator';
+import {ResourceFormStore} from '../../../containers/Form';
+import Form from '../Form';
+import Router from '../../../services/Router';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
 export default class DeleteToolbarAction extends AbstractFormToolbarAction {
@@ -15,6 +19,32 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
         const {allow_conflict_deletion: allowConflictDeletion = true} = this.options;
 
         return allowConflictDeletion;
+    }
+
+    constructor(
+        resourceFormStore: ResourceFormStore,
+        form: Form,
+        router: Router,
+        locales: ?Array<string>,
+        options: {[key: string]: mixed}
+    ) {
+        const {
+            display_condition: displayCondition,
+            visible_condition: visibleCondition,
+        } = options;
+
+        if (displayCondition) {
+            log.warn(
+                'The "display_condition" option is deprecated since version 2.0 and will be removed. ' +
+                'Use the "visible_condition" option instead.'
+            );
+
+            if (!visibleCondition) {
+                options.visible_condition = displayCondition;
+            }
+        }
+
+        super(resourceFormStore, form, router, locales, options);
     }
 
     getNode() {
@@ -59,22 +89,24 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
 
     getToolbarItemConfig() {
         const {
-            display_condition: displayCondition,
+            visible_condition: visibleCondition,
         } = this.options;
 
-        if (displayCondition && !jexl.evalSync(displayCondition, this.resourceFormStore.data)) {
-            return;
-        }
+        const {id, data} = this.resourceFormStore;
 
-        return {
-            disabled: !this.resourceFormStore.id,
-            icon: 'su-trash-alt',
-            label: translate('sulu_admin.delete'),
-            onClick: action(() => {
-                this.showDialog = true;
-            }),
-            type: 'button',
-        };
+        const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, data);
+
+        if (visibleConditionFulfilled) {
+            return {
+                disabled: !id,
+                icon: 'su-trash-alt',
+                label: translate('sulu_admin.delete'),
+                onClick: action(() => {
+                    this.showDialog = true;
+                }),
+                type: 'button',
+            };
+        }
     }
 
     navigateBack = () => {

@@ -2,14 +2,44 @@
 import React from 'react';
 import {action, observable} from 'mobx';
 import jexl from 'jexl';
+import log from 'loglevel';
 import Dialog from '../../../components/Dialog';
 import ResourceRequester from '../../../services/ResourceRequester';
 import {translate} from '../../../utils/Translator';
+import {ResourceFormStore} from '../../../containers/Form';
+import Form from '../Form';
+import Router from '../../../services/Router';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
 export default class DeleteDraftToolbarAction extends AbstractFormToolbarAction {
     @observable showDeleteDraftDialog = false;
     @observable deletingDraft = false;
+
+    constructor(
+        resourceFormStore: ResourceFormStore,
+        form: Form,
+        router: Router,
+        locales: ?Array<string>,
+        options: {[key: string]: mixed}
+    ) {
+        const {
+            display_condition: displayCondition,
+            visible_condition: visibleCondition,
+        } = options;
+
+        if (displayCondition) {
+            log.warn(
+                'The "display_condition" option is deprecated since version 2.0 and will be removed. ' +
+                'Use the "visible_condition" option instead.'
+            );
+
+            if (!visibleCondition) {
+                options.visible_condition = displayCondition;
+            }
+        }
+
+        super(resourceFormStore, form, router, locales, options);
+    }
 
     getNode() {
         const {
@@ -40,17 +70,16 @@ export default class DeleteDraftToolbarAction extends AbstractFormToolbarAction 
 
     getToolbarItemConfig() {
         const {
-            display_condition: displayCondition,
+            visible_condition: visibleCondition,
         } = this.options;
 
         const {id, data} = this.resourceFormStore;
 
         const {published, publishedState} = data;
 
-        const publishAllowed = !displayCondition
-            || jexl.evalSync(displayCondition, this.resourceFormStore.data);
+        const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, data);
 
-        if (publishAllowed) {
+        if (visibleConditionFulfilled) {
             return {
                 disabled: !id || !published || publishedState,
                 label: translate('sulu_page.delete_draft'),

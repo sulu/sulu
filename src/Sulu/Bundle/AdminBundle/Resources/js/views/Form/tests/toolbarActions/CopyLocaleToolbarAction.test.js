@@ -6,6 +6,11 @@ import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
 import Form from '../../../../views/Form';
 import CopyLocaleToolbarAction from '../../toolbarActions/CopyLocaleToolbarAction';
+import log from 'loglevel';
+
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+}));
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -85,7 +90,7 @@ test('Return enabled item config', () => {
     }));
 });
 
-test('Return no item config if condition is not met', () => {
+test('Return no item config if deprecated display_condition is not met', () => {
     const copyLocaleToolbarAction = createCopyLocaleToolbarAction(
         ['en', 'de'],
         {display_condition: '_permission.edit'}
@@ -93,12 +98,24 @@ test('Return no item config if condition is not met', () => {
 
     const toolbarItemConfig = copyLocaleToolbarAction.getToolbarItemConfig();
     expect(toolbarItemConfig).toEqual(undefined);
+    expect(log.warn).toBeCalledWith(expect.stringContaining('The "display_condition" option is deprecated'));
 });
 
-test('Return item config if condition is met', () => {
+test('Return no item config if passed visible_condition is not met', () => {
     const copyLocaleToolbarAction = createCopyLocaleToolbarAction(
         ['en', 'de'],
-        {display_condition: '_permission.edit'}
+        {visible_condition: '_permission.edit'}
+    );
+
+    const toolbarItemConfig = copyLocaleToolbarAction.getToolbarItemConfig();
+    expect(toolbarItemConfig).toEqual(undefined);
+    expect(log.warn).not.toBeCalled();
+});
+
+test('Return item config if passed visible_condition is met', () => {
+    const copyLocaleToolbarAction = createCopyLocaleToolbarAction(
+        ['en', 'de'],
+        {visible_condition: '_permission.edit'}
     );
 
     copyLocaleToolbarAction.resourceFormStore.resourceStore.data._permission = {edit: true};

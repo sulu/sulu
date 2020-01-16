@@ -6,6 +6,11 @@ import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
 import Form from '../../../../views/Form';
+import log from 'loglevel';
+
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+}));
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -98,14 +103,22 @@ test('Return item config with disabled button if an add form is opened', () => {
     }));
 });
 
-test('Return empty item config when passed condition is not met', () => {
+test('Return empty item config when deprecated display_condition is not met', () => {
     const deleteToolbarAction = createDeleteToolbarAction({display_condition: 'url == "/"'});
 
     expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(undefined);
+    expect(log.warn).toBeCalledWith(expect.stringContaining('The "display_condition" option is deprecated'));
 });
 
-test('Return item config when passed condition is met', () => {
-    const deleteToolbarAction = createDeleteToolbarAction({display_condition: 'url == "/"'});
+test('Return empty item config when passed visible_condition is not met', () => {
+    const deleteToolbarAction = createDeleteToolbarAction({visible_condition: 'url == "/"'});
+
+    expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(undefined);
+    expect(log.warn).not.toBeCalled();
+});
+
+test('Return item config when passed visible_condition is met', () => {
+    const deleteToolbarAction = createDeleteToolbarAction({visible_condition: 'url == "/"'});
     deleteToolbarAction.resourceFormStore.data.url = '/';
 
     expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({label: 'sulu_admin.delete'}));
