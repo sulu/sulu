@@ -14,7 +14,7 @@ type Props = {|
     categoryRootKey?: string,
     defaultValue: FilterCriteria,
     disabled: boolean,
-    fieldLabel: string,
+    fieldLabel: ?string,
     presentations: Array<Presentation>,
     store: SmartContentStore,
 |};
@@ -116,7 +116,7 @@ class SmartContent extends React.Component<Props> {
                     sections={this.sections}
                     smartContentStore={store}
                     sortings={this.config.sorting}
-                    title={translate('sulu_admin.filter_overlay_title', {fieldLabel})}
+                    title={translate('sulu_admin.filter_overlay_title', {fieldLabel: fieldLabel || ''})}
                 />
             </Fragment>
         );
