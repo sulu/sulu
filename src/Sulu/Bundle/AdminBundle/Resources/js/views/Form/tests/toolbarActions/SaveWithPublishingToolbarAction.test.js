@@ -1,10 +1,10 @@
 // @flow
+import log from 'loglevel';
 import SaveWithPublishingToolbarAction from '../../toolbarActions/SaveWithPublishingToolbarAction';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
 import Form from '../../../../views/Form';
-import log from 'loglevel';
 
 jest.mock('loglevel', () => ({
     warn: jest.fn(),

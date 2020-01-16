@@ -1,12 +1,12 @@
 // @flow
 import {mount} from 'enzyme';
 import {observable} from 'mobx';
+import log from 'loglevel';
 import DeleteToolbarAction from '../../toolbarActions/DeleteToolbarAction';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
 import Form from '../../../../views/Form';
-import log from 'loglevel';
 
 jest.mock('loglevel', () => ({
     warn: jest.fn(),
