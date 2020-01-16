@@ -86,7 +86,7 @@ class SingleContactSelectionTest extends TestCase
 
     public function testWrite()
     {
-        $this->node->setProperty('contact', 1)->shouldBeCalled();
+        $this->node->setProperty('contact', Argument::is(1))->shouldBeCalled();
         $property = new Property('contact', [], 'single_contact_selection');
         $property->setValue(1);
 
