@@ -21,7 +21,7 @@ interface UserBlameInterface
     /**
      * Return the user that created this object.
      *
-     * @return UserInterface
+     * @return UserInterface|null
      */
     public function getCreator();
 
@@ -29,7 +29,7 @@ interface UserBlameInterface
      * Return the user that change this object the last time.
      * this object.
      *
-     * @return UserInterface
+     * @return UserInterface|null
      */
     public function getChanger();
 }

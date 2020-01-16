@@ -19,12 +19,12 @@ use Sulu\Component\Security\Authentication\UserInterface;
 trait UserBlameTrait
 {
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      */
     protected $creator;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      */
     protected $changer;
 
@@ -39,7 +39,7 @@ trait UserBlameTrait
     /**
      * Set creator.
      *
-     * @param UserInterface $creator
+     * @param UserInterface|null $creator
      *
      * @return $this
      */
@@ -61,7 +61,7 @@ trait UserBlameTrait
     /**
      * Set changer.
      *
-     * @param UserInterface $changer
+     * @param UserInterface|null $changer
      *
      * @return $this
      */
