@@ -269,7 +269,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $references = $this->snippetRepository->getReferences($id);
 
         if (count($references) > 0) {
-            $force = $request->headers->get('SuluForceRemove', false);
+            $force = $request->query->get('force', false);
             if ($force) {
                 $this->contentMapper->delete($id, $webspaceKey, true);
             } else {
@@ -417,22 +417,21 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     private function getReferentialIntegrityResponse($webspace, $references, $id, $locale)
     {
         $data = [
-            'structures' => [],
-            'other' => [],
+            'id' => $id,
+            'items' => [],
             'isDefault' => $this->defaultSnippetManager->isDefault($id),
         ];
 
         foreach ($references as $reference) {
-            if ($reference->getParent()->isNodeType('sulu:page')) {
+            $parentReference = $reference->getParent();
+            if ($parentReference->isNodeType('sulu:page') || $parentReference->isNodeType('sulu:home')) {
                 $content = $this->contentMapper->load(
-                    $reference->getParent()->getIdentifier(),
+                    $parentReference->getIdentifier(),
                     $webspace,
                     $locale,
                     true
                 );
-                $data['structures'][] = $content->toArray();
-            } else {
-                $data['other'][] = $reference->getParent()->getPath();
+                $data['items'][] = ['name' => $content->getPropertyValue('title')];
             }
         }
 
