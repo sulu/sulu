@@ -5,5 +5,6 @@
     "sulu_snippet.snippet": "Snippet",
     "sulu_snippet.default_snippets": "Default Snippets",
     "sulu_snippet.snippet_area": "Type or area",
-    "sulu_snippet.taxonomies": "Taxonomies"
+    "sulu_snippet.taxonomies": "Taxonomies",
+    "sulu_snippet.webspace_default_snippet": "%webspaceKey% default snippet"
 }

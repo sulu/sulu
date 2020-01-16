@@ -62,9 +62,6 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         $this->areas = new FrozenParameterBag($areas);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save($webspaceKey, $type, $uuid, $locale)
     {
         /** @var SnippetDocument $document */
@@ -87,17 +84,11 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         return $document;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove($webspaceKey, $type)
     {
         $this->settingsManager->remove($webspaceKey, 'snippets-' . $type);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($webspaceKey, $type, $locale)
     {
         $snippetNode = $this->settingsManager->load($webspaceKey, 'snippets-' . $type);
@@ -117,9 +108,6 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         return $document;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isDefault($uuid)
     {
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
@@ -133,15 +121,12 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadType($uuid)
     {
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             $settings = $this->settingsManager->loadStringByWildcard($webspace->getKey(), 'snippets-*');
 
-            if (in_array(!$uuid, $settings)) {
+            if (!in_array($uuid, $settings)) {
                 continue;
             }
 
@@ -153,9 +138,23 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    public function loadWebspaces($uuid)
+    {
+        $webspaces = [];
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+            $webspaceKey = $webspace->getKey();
+            $settings = $this->settingsManager->loadStringByWildcard($webspaceKey, 'snippets-*');
+
+            if (!in_array($uuid, $settings)) {
+                continue;
+            }
+
+            $webspaces[] = $webspace;
+        }
+
+        return $webspaces;
+    }
+
     public function loadIdentifier($webspaceKey, $type)
     {
         $area = $this->areas->get($type);

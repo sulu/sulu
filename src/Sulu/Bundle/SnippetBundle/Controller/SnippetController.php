@@ -37,6 +37,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * handles snippets.
@@ -105,6 +106,11 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      */
     private $metadataFactory;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     public function __construct(
         ViewHandler $viewHandler,
         ContentMapper $contentMapper,
@@ -117,7 +123,8 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         FormFactory $formFactory,
         RequestHashChecker $requestHashChecker,
         ListRestHelper $listRestHelper,
-        MetadataFactoryInterface $metadataFactory
+        MetadataFactoryInterface $metadataFactory,
+        TranslatorInterface $translator
     ) {
         $this->viewHandler = $viewHandler;
         $this->contentMapper = $contentMapper;
@@ -131,6 +138,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $this->requestHashChecker = $requestHashChecker;
         $this->listRestHelper = $listRestHelper;
         $this->metadataFactory = $metadataFactory;
+        $this->translator = $translator;
     }
 
     /**
@@ -419,7 +427,6 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $data = [
             'id' => $id,
             'items' => [],
-            'isDefault' => $this->defaultSnippetManager->isDefault($id),
         ];
 
         foreach ($references as $reference) {
@@ -433,6 +440,16 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
                 );
                 $data['items'][] = ['name' => $content->getPropertyValue('title')];
             }
+        }
+
+        foreach ($this->defaultSnippetManager->loadWebspaces($id) as $defaultSnippetWebspace) {
+            $data['items'][] = [
+                'name' => $this->translator->trans(
+                    'sulu_snippet.webspace_default_snippet',
+                    ['%webspaceKey%' => $defaultSnippetWebspace->getName()],
+                    'admin'
+                ),
+            ];
         }
 
         return new JsonResponse($data, 409);
