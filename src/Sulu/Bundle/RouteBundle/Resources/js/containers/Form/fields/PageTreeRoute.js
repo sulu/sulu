@@ -1,20 +1,19 @@
 // @flow
-import React from 'react';
+import React, {Component, Fragment} from 'react';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {userStore} from 'sulu-admin-bundle/stores';
-import {Grid, ResourceLocator} from 'sulu-admin-bundle/components';
-import {SingleSelection, ResourceLocatorHistory} from 'sulu-admin-bundle/containers';
+import {Grid} from 'sulu-admin-bundle/components';
+import {SingleSelection, ResourceLocator} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
 import type {PageTreeRouteValue} from '../../types.js';
-import pageTreeRouteStyles from './pageTreeRoute.scss';
 
 type Props = FieldTypeProps<?PageTreeRouteValue>;
 
 @observer
-class PageTreeRoute extends React.Component<Props> {
+class PageTreeRoute extends Component<Props> {
     @observable mode: string;
 
     constructor(props: Props): void {
@@ -37,22 +36,6 @@ class PageTreeRoute extends React.Component<Props> {
         const {formInspector} = this.props;
 
         return formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
-    }
-
-    get showHistory(): boolean {
-        const {
-            formInspector: {
-                id,
-            },
-            fieldTypeOptions: {
-                historyResourceKey,
-                options: {
-                    history,
-                },
-            },
-        } = this.props;
-
-        return !!history && !!id && !!historyResourceKey;
     }
 
     get pageValue(): ?string {
@@ -78,8 +61,10 @@ class PageTreeRoute extends React.Component<Props> {
     handlePageChange = (value: ?string | number, page: ?Object = {
         path: null,
     }): void => {
-        const uuid = value ? (typeof value !== 'string' ? '' + value : value) : null;
-        const path = page && page.path ? page.path : null;
+        const {onFinish} = this.props;
+
+        const uuid = (value && value.toString()) || null;
+        const path = (page && page.path) || null;
 
         this.handleChange({
             ...this.props.value,
@@ -88,6 +73,8 @@ class PageTreeRoute extends React.Component<Props> {
                 path,
             },
         });
+
+        onFinish();
     };
 
     handleSuffixChange = (value: ?string): void => {
@@ -109,21 +96,22 @@ class PageTreeRoute extends React.Component<Props> {
 
         const {
             dataPath,
+            defaultType,
             disabled,
-            formInspector: {
-                id,
-                resourceKey,
-            },
-            fieldTypeOptions: {
-                historyResourceKey,
-                options,
-            },
+            fieldTypeOptions,
+            formInspector,
+            onFinish,
+            onSuccess,
+            router,
+            schemaOptions,
+            schemaPath,
+            types,
         } = this.props;
 
         return (
-            <>
+            <Fragment>
                 <Grid>
-                    <Grid.Item colSpan={this.showHistory ? 5 : 6}>
+                    <Grid.Item colSpan={5}>
                         <SingleSelection
                             adapter="column_list"
                             disabled={!!disabled}
@@ -139,35 +127,36 @@ class PageTreeRoute extends React.Component<Props> {
                         />
                     </Grid.Item>
 
-                    <Grid.Item colSpan={this.showHistory ? 7 : 6}>
-                        <div className={pageTreeRouteStyles.resourceLocatorContainer}>
-                            <div className={pageTreeRouteStyles.resourceLocator}>
-                                <ResourceLocator
-                                    disabled={!!disabled}
-                                    id={dataPath}
-                                    mode={this.mode}
-                                    onChange={this.handleSuffixChange}
-                                    value={this.suffixValue}
-                                />
-                            </div>
-
-                            {this.showHistory && !!id &&
-                                <div className={pageTreeRouteStyles.resourceLocatorHistory}>
-                                    <ResourceLocatorHistory
-                                        id={id}
-                                        options={{
-                                            locale: this.locale,
-                                            resourceKey: resourceKey,
-                                            ...options,
-                                        }}
-                                        resourceKey={historyResourceKey}
-                                    />
-                                </div>
-                            }
-                        </div>
+                    <Grid.Item colSpan={7}>
+                        <ResourceLocator
+                            dataPath={dataPath}
+                            defaultType={defaultType}
+                            disabled={disabled}
+                            error={undefined}
+                            fieldTypeOptions={{
+                                historyResourceKey: 'routes',
+                                options: {
+                                    history: true,
+                                },
+                                ...fieldTypeOptions,
+                            }}
+                            formInspector={formInspector}
+                            label={undefined}
+                            maxOccurs={1}
+                            minOccurs={1}
+                            onChange={this.handleSuffixChange}
+                            onFinish={onFinish}
+                            onSuccess={onSuccess}
+                            router={router}
+                            schemaOptions={schemaOptions}
+                            schemaPath={schemaPath}
+                            showAllErrors={false}
+                            types={types}
+                            value={this.suffixValue}
+                        />
                     </Grid.Item>
                 </Grid>
-            </>
+            </Fragment>
         );
     }
 }

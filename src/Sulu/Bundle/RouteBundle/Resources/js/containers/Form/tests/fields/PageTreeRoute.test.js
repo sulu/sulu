@@ -1,10 +1,9 @@
 // @flow
 import React from 'react';
 import {mount} from 'enzyme';
-import {FormInspector, ResourceFormStore, ResourceLocatorHistory, SingleSelection} from 'sulu-admin-bundle/containers';
+import {FormInspector, ResourceFormStore, SingleSelection, ResourceLocator} from 'sulu-admin-bundle/containers';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import {ResourceStore, SingleSelectionStore} from 'sulu-admin-bundle/stores';
-import {ResourceLocator} from 'sulu-admin-bundle/components';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import PageTreeRoute from '../../fields/PageTreeRoute';
 
@@ -20,6 +19,7 @@ jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(fu
     this.selections = [];
     this.clearSelection = jest.fn();
     this.select = jest.fn();
+    this.destroy = jest.fn();
 }));
 
 jest.mock(
@@ -63,6 +63,9 @@ jest.mock(
         this.id = resourceFormStore.id;
         this.locale = resourceFormStore.locale;
         this.isFieldModified = jest.fn();
+        this.options = {
+            webspace: 'webspace',
+        };
     })
 );
 
@@ -87,9 +90,7 @@ test('Render a PageTreeRoute', () => {
     const modeResolver = jest.fn().mockImplementation(() => modePromise);
 
     const fieldTypeOptions = {
-        historyResourceKey: 'routes',
         modeResolver: modeResolver,
-        options: {history: true},
     };
 
     const value = {
@@ -133,51 +134,6 @@ test('Render a PageTreeRoute', () => {
         expect(singleSelection.render()).toMatchSnapshot();
 
         expect(pageTreeRoute.find(ResourceLocator).prop('value')).toBe(value.suffix);
-        expect(pageTreeRoute.find(ResourceLocator).prop('mode')).toBe(modePromiseValue);
-        expect(pageTreeRoute.find(ResourceLocatorHistory).prop('id')).toBe('diuu-diuu-diuu-diuu');
-    });
-});
-
-test('Render a PageTreeRoute without history', () => {
-    const modePromiseValue = 'leaf';
-    const modePromise = Promise.resolve(modePromiseValue);
-    const modeResolver = jest.fn().mockImplementation(() => modePromise);
-
-    const fieldTypeOptions = {
-        historyResourceKey: 'routes',
-        modeResolver: modeResolver,
-        options: {history: true},
-    };
-
-    const value = {
-        page: {
-            uuid: 'uuid-uuid-uuid-uuid',
-        },
-        suffix: '/hello',
-    };
-
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('pages'), 'test'));
-
-    const pageTreeRoute = mount(
-        <PageTreeRoute
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={{
-                ...fieldTypeOptions,
-                options: {
-                    history: false,
-                },
-            }}
-            formInspector={formInspector}
-            value={value}
-        />
-    );
-
-    expect(modeResolver).toHaveBeenCalled();
-
-    return modePromise.then(() => {
-        pageTreeRoute.update();
-        expect(pageTreeRoute.render()).toMatchSnapshot();
-        expect(pageTreeRoute.find(ResourceLocatorHistory).length).toBe(0);
     });
 });
 
@@ -187,9 +143,7 @@ test('Render a PageTreeRoute without value', () => {
     const modeResolver = jest.fn().mockImplementation(() => modePromise);
 
     const fieldTypeOptions = {
-        historyResourceKey: 'routes',
         modeResolver: modeResolver,
-        options: {history: true},
     };
 
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('pages'), 'test'));

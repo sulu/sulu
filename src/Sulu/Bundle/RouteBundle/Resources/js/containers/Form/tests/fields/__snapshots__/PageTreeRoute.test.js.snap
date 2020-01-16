@@ -36,52 +36,7 @@ exports[`Render a PageTreeRoute 1`] = `
   </div>
   <div
     class="item colSpan colSpan-7 space-before-0 space-after-0"
-  >
-    <div
-      class="resourceLocatorContainer"
-    >
-      <div
-        class="resourceLocator"
-      >
-        <div
-          class="resourceLocator"
-        >
-          <span
-            class="fixed"
-          >
-            /
-          </span>
-          <label
-            class="input default left"
-          >
-            <input
-              id="/"
-              type="text"
-              value="hello"
-            />
-          </label>
-        </div>
-      </div>
-      <div
-        class="resourceLocatorHistory"
-      >
-        <button
-          class="button link"
-          type="button"
-        >
-          <span
-            aria-label="su-process"
-            class="su-process buttonIcon"
-          />
-          <span
-            class="text"
-          >
-            sulu_admin.show_history
-          </span>
-        </button>
-      </div>
-    </div>
-  </div>
+  />
 </div>
 `;
 
@@ -126,79 +81,12 @@ exports[`Render a PageTreeRoute 2`] = `
 </div>
 `;
 
-exports[`Render a PageTreeRoute without history 1`] = `
-<div
-  class="grid"
->
-  <div
-    class="item colSpan colSpan-6 space-before-0 space-after-0"
-  >
-    <div
-      class="singleItemSelection"
-    >
-      <button
-        class="button left"
-        type="button"
-      >
-        <span
-          aria-label="su-document"
-          class="su-document icon"
-        />
-      </button>
-      <div
-        class="itemContainer"
-      >
-        <div
-          class="item"
-        >
-          <div
-            class="empty"
-          >
-            sulu_page.no_page_selected
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div
-    class="item colSpan colSpan-6 space-before-0 space-after-0"
-  >
-    <div
-      class="resourceLocatorContainer"
-    >
-      <div
-        class="resourceLocator"
-      >
-        <div
-          class="resourceLocator"
-        >
-          <span
-            class="fixed"
-          >
-            /
-          </span>
-          <label
-            class="input default left"
-          >
-            <input
-              id="/"
-              type="text"
-              value="hello"
-            />
-          </label>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
 exports[`Render a PageTreeRoute without value 1`] = `
 <div
   class="grid"
 >
   <div
-    class="item colSpan colSpan-6 space-before-0 space-after-0"
+    class="item colSpan colSpan-5 space-before-0 space-after-0"
   >
     <div
       class="singleItemSelection"
@@ -228,34 +116,7 @@ exports[`Render a PageTreeRoute without value 1`] = `
     </div>
   </div>
   <div
-    class="item colSpan colSpan-6 space-before-0 space-after-0"
-  >
-    <div
-      class="resourceLocatorContainer"
-    >
-      <div
-        class="resourceLocator"
-      >
-        <div
-          class="resourceLocator"
-        >
-          <span
-            class="fixed"
-          >
-            /
-          </span>
-          <label
-            class="input default left"
-          >
-            <input
-              id="/"
-              type="text"
-              value=""
-            />
-          </label>
-        </div>
-      </div>
-    </div>
-  </div>
+    class="item colSpan colSpan-7 space-before-0 space-after-0"
+  />
 </div>
 `;

@@ -18,10 +18,8 @@ fieldRegistry.add(
     'page_tree_route',
     PageTreeRoute,
     {
-        historyResourceKey: 'routes',
         modeResolver: () => {
             return Promise.resolve('leaf');
         },
-        options: {history: true},
     }
 );
