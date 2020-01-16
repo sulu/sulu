@@ -323,6 +323,133 @@ class FormXmlLoaderTest extends TestCase
         );
     }
 
+    public function testLoadFormMetadataWithNestedBlocks()
+    {
+        /**
+         * @var LocalizedFormMetadataCollection
+         */
+        $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form_with_nested_blocks.xml');
+
+        $formMetadata = $formMetadataCollection->get('en');
+
+        $this->assertInstanceOf(FormMetadata::class, $formMetadata);
+
+        $this->assertEquals(
+            [
+                'required' => [],
+                'properties' => [
+                    'block1' => [
+                        'name' => 'block1',
+                        'type' => 'array',
+                        'items' => [
+                            'required' => [],
+                            'anyOf' => [
+                                [
+                                    'required' => [
+                                        'block11',
+                                        'type',
+                                    ],
+                                    'properties' => [
+                                        'type' => [
+                                            'name' => 'type',
+                                            'const' => 'type11',
+                                        ],
+                                        'block11' => [
+                                            'name' => 'block11',
+                                            'type' => 'array',
+                                            'items' => [
+                                                'required' => [],
+                                                'anyOf' => [
+                                                    [
+                                                        'required' => [
+                                                            'type',
+                                                        ],
+                                                        'properties' => [
+                                                            'type' => [
+                                                                'name' => 'type',
+                                                                'const' => 'type111',
+                                                            ],
+                                                        ],
+                                                    ],
+                                                    [
+                                                        'required' => [
+                                                            'type',
+                                                        ],
+                                                        'properties' => [
+                                                            'type' => [
+                                                                'name' => 'type',
+                                                                'const' => 'type112',
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'required' => [
+                                        'type',
+                                    ],
+                                    'properties' => [
+                                        'type' => [
+                                            'name' => 'type',
+                                            'const' => 'type12',
+                                        ],
+                                        'block12' => [
+                                            'name' => 'block12',
+                                            'type' => 'array',
+                                            'items' => [
+                                                'required' => [],
+                                                'anyOf' => [
+                                                    [
+                                                        'required' => [
+                                                            'type',
+                                                        ],
+                                                        'properties' => [
+                                                            'type' => [
+                                                                'name' => 'type',
+                                                                'const' => 'type121',
+                                                            ],
+                                                        ],
+                                                    ],
+                                                    [
+                                                        'required' => [
+                                                            'type',
+                                                        ],
+                                                        'properties' => [
+                                                            'type' => [
+                                                                'name' => 'type',
+                                                                'const' => 'type122',
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            $formMetadata->getSchema()->toJsonSchema()
+        );
+
+        $block1Types = $formMetadata->getItems()['block1']->getTypes();
+        $block11 = $block1Types['type11']->getItems()['block11'];
+        $block11Types = $block11->getTypes();
+        $type111Items = $block11Types['type111']->getItems();
+        $type112Items = $block11Types['type112']->getItems();
+
+        $this->assertEquals($block11->getDefaultType(), 'type111');
+        $this->assertCount(1, $type111Items);
+        $this->assertEquals('headline1', $type111Items['headline1']->getName());
+        $this->assertCount(1, $type112Items);
+        $this->assertEquals('headline2', $type112Items['headline2']->getName());
+    }
+
     public function testLoadFormWithoutLabel()
     {
         /**

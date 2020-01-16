@@ -34,14 +34,16 @@ exports[`Render block with schema 1`] = `
               tabindex="0"
             />
             <span
-              aria-label="su-times"
-              class="su-times clickable"
+              aria-label="su-angle-up"
+              class="su-angle-up clickable"
               role="button"
               tabindex="0"
             />
           </div>
         </header>
-        <article>
+        <article
+          class="children"
+        >
           <div
             class="grid grid"
           >
@@ -134,14 +136,16 @@ exports[`Render block with schema 1`] = `
               tabindex="0"
             />
             <span
-              aria-label="su-times"
-              class="su-times clickable"
+              aria-label="su-angle-up"
+              class="su-angle-up clickable"
               role="button"
               tabindex="0"
             />
           </div>
         </header>
-        <article>
+        <article
+          class="children"
+        >
           <div
             class="grid grid"
           >
@@ -259,14 +263,16 @@ exports[`Render block with schema and error on fields already being modified 1`]
               tabindex="0"
             />
             <span
-              aria-label="su-times"
-              class="su-times clickable"
+              aria-label="su-angle-up"
+              class="su-angle-up clickable"
               role="button"
               tabindex="0"
             />
           </div>
         </header>
-        <article>
+        <article
+          class="children"
+        >
           <div
             class="grid grid"
           >
@@ -330,14 +336,16 @@ exports[`Render block with schema and error on fields already being modified 1`]
               tabindex="0"
             />
             <span
-              aria-label="su-times"
-              class="su-times clickable"
+              aria-label="su-angle-up"
+              class="su-angle-up clickable"
               role="button"
               tabindex="0"
             />
           </div>
         </header>
-        <article>
+        <article
+          class="children"
+        >
           <div
             class="grid grid"
           >
@@ -404,14 +412,16 @@ exports[`Render block with schema and error on fields already being modified 1`]
               tabindex="0"
             />
             <span
-              aria-label="su-times"
-              class="su-times clickable"
+              aria-label="su-angle-up"
+              class="su-angle-up clickable"
               role="button"
               tabindex="0"
             />
           </div>
         </header>
-        <article>
+        <article
+          class="children"
+        >
           <div
             class="grid grid"
           >
@@ -500,14 +510,16 @@ exports[`Render block with schema and error on fields already being modified 2`]
               tabindex="0"
             />
             <span
-              aria-label="su-times"
-              class="su-times clickable"
+              aria-label="su-angle-up"
+              class="su-angle-up clickable"
               role="button"
               tabindex="0"
             />
           </div>
         </header>
-        <article>
+        <article
+          class="children"
+        >
           <div
             class="grid grid"
           >
@@ -571,14 +583,16 @@ exports[`Render block with schema and error on fields already being modified 2`]
               tabindex="0"
             />
             <span
-              aria-label="su-times"
-              class="su-times clickable"
+              aria-label="su-angle-up"
+              class="su-angle-up clickable"
               role="button"
               tabindex="0"
             />
           </div>
         </header>
-        <article>
+        <article
+          class="children"
+        >
           <div
             class="grid grid"
           >
@@ -645,14 +659,16 @@ exports[`Render block with schema and error on fields already being modified 2`]
               tabindex="0"
             />
             <span
-              aria-label="su-times"
-              class="su-times clickable"
+              aria-label="su-angle-up"
+              class="su-angle-up clickable"
               role="button"
               tabindex="0"
             />
           </div>
         </header>
-        <article>
+        <article
+          class="children"
+        >
           <div
             class="grid grid"
           >
@@ -731,12 +747,22 @@ exports[`Render collapsed blocks with block previews 1`] = `
       <div
         class="content"
       >
-        <article>
+        <header
+          class="header"
+        >
           <div
             class="type"
           >
             Default
           </div>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down"
+          />
+        </header>
+        <article
+          class="children"
+        >
           <p>
             Test 1
           </p>
@@ -757,12 +783,22 @@ exports[`Render collapsed blocks with block previews 1`] = `
       <div
         class="content"
       >
-        <article>
+        <header
+          class="header"
+        >
           <div
             class="type"
           >
             Default
           </div>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down"
+          />
+        </header>
+        <article
+          class="children"
+        >
           <p>
             Test 4
           </p>
@@ -808,12 +844,22 @@ exports[`Render collapsed blocks with block previews 2`] = `
       <div
         class="content"
       >
-        <article>
+        <header
+          class="header"
+        >
           <div
             class="type"
           >
             Default
           </div>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down"
+          />
+        </header>
+        <article
+          class="children"
+        >
           <p>
             Test 3
           </p>
@@ -840,12 +886,22 @@ exports[`Render collapsed blocks with block previews 2`] = `
       <div
         class="content"
       >
-        <article>
+        <header
+          class="header"
+        >
           <div
             class="type"
           >
             Default
           </div>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down"
+          />
+        </header>
+        <article
+          class="children"
+        >
           <p>
             Test 6
           </p>
@@ -897,12 +953,22 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
       <div
         class="content"
       >
-        <article>
+        <header
+          class="header"
+        >
           <div
             class="type"
           >
             Default
           </div>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down"
+          />
+        </header>
+        <article
+          class="children"
+        >
           <p>
             media_selection
           </p>
@@ -929,12 +995,22 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
       <div
         class="content"
       >
-        <article>
+        <header
+          class="header"
+        >
           <div
             class="type"
           >
             Default
           </div>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down"
+          />
+        </header>
+        <article
+          class="children"
+        >
           <p>
             media_selection
           </p>

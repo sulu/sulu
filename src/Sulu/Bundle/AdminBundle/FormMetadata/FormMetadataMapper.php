@@ -103,11 +103,10 @@ class FormMetadataMapper
             $blockType->setName($component->getName());
             $blockType->setTitle($component->getTitle($locale) ?? ucfirst($component->getName()));
 
-            foreach ($component->getChildren() as $componentProperty) {
-                if ($componentProperty instanceof ContentPropertyMetadata) {
-                    $blockTypeField = $this->mapProperty($componentProperty, $locale);
-                    $blockType->addItem($blockTypeField);
-                }
+            $blockTypeChildren = $this->mapChildren($component->getChildren(), $locale);
+
+            foreach ($blockTypeChildren as $blockTypeChild) {
+                $blockType->addItem($blockTypeChild);
             }
 
             $field->addType($blockType);

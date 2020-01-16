@@ -83,7 +83,7 @@ test('Clicking the close icon in an expanded block should collapse it', () => {
     const collapseSpy = jest.fn();
     const block = shallow(<Block expanded={true} onCollapse={collapseSpy} onExpand={jest.fn()}>Block content</Block>);
 
-    const closeIcon = block.find('Icon[name="su-times"]');
+    const closeIcon = block.find('Icon[name="su-angle-up"]');
     expect(closeIcon).toHaveLength(1);
 
     closeIcon.simulate('click');
