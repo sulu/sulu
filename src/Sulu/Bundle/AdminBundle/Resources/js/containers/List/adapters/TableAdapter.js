@@ -47,12 +47,13 @@ class TableAdapter extends AbstractTableAdapter {
     };
 
     renderRows(): Array<Element<typeof Table.Row>> {
-        const {data, selections} = this.props;
+        const {data, selections, disabledIds} = this.props;
 
         return data.map((item) => {
             return (
                 <Table.Row
                     buttons={this.getButtons(item)}
+                    disabled={disabledIds.includes(item.id)}
                     id={item.id}
                     key={item.id}
                     selected={selections.includes(item.id)}

@@ -100,7 +100,16 @@ test('Render data without header', () => {
             id: 6,
             title: 'Test3',
         },
-        children: [],
+        children: [
+            {
+                data: {
+                    id: 7,
+                    title: 'Test4',
+                },
+                children: [],
+                hasChildren: false,
+            },
+        ],
         hasChildren: true,
     };
 
@@ -472,6 +481,58 @@ test('Render correct buttons based on permissions when item permissions are prov
     expect(treeListAdapter.find('Row').at(3).find('ButtonCell').at(0).props().disabled).toEqual(false);
     expect(treeListAdapter.find('Row').at(3).find('ButtonCell').at(1).props().icon).toEqual('su-plus-circle');
     expect(treeListAdapter.find('Row').at(3).find('ButtonCell').at(1).props().disabled).toEqual(false);
+});
+
+test('Render correct buttons based on permissions when item permissions are provided', () => {
+    const data = [
+        {
+            data: {
+                id: 1,
+                title: 'First item',
+            },
+            children: [],
+            hasChildren: false,
+        },
+        {
+            data: {
+                id: 2,
+                title: 'Second item',
+            },
+            children: [
+                {
+                    data: {
+                        id: 3,
+                        title: 'Child item',
+                    },
+                    children: [],
+                    hasChildren: false,
+                }
+            ],
+            hasChildren: true,
+        },
+    ];
+    const schema = {
+        title: {
+            label: 'Title',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+    };
+    const treeListAdapter = mount(
+        <TreeTableAdapter
+            {...listAdapterDefaultProps}
+            data={data}
+            disabledIds={[1, 3]}
+            onItemAdd={jest.fn()}
+            onItemClick={jest.fn()}
+            schema={schema}
+        />
+    );
+
+    expect(treeListAdapter.find('Row').at(0).props().disabled).toEqual(true);
+    expect(treeListAdapter.find('Row').at(1).props().disabled).toEqual(false);
+    expect(treeListAdapter.find('Row').at(2).props().disabled).toEqual(true);
 });
 
 test('Render data with plus button when onItemAdd callback is passed', () => {

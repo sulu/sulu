@@ -133,6 +133,11 @@ $borderRadius: 3px;
             }
         }
     }
+
+    &.disabled {
+        pointer-events: none;
+        opacity: .5;
+    }
 }
 
 .button-cell,

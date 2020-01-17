@@ -64,6 +64,7 @@ class TreeTableAdapter extends AbstractTableAdapter {
     renderRows(items: Array<*>, depth: number = 0) {
         const rows = [];
         const {
+            disabledIds,
             selections,
         } = this.props;
 
@@ -74,6 +75,7 @@ class TreeTableAdapter extends AbstractTableAdapter {
                 <Table.Row
                     buttons={this.getButtons(item)}
                     depth={depth}
+                    disabled={disabledIds.includes(data.id)}
                     expanded={item.children.length > 0}
                     hasChildren={hasChildren}
                     id={data.id}
