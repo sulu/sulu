@@ -56,6 +56,7 @@ class SnippetControllerTest extends SuluTestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->purgeDatabase();
         $this->initPhpcr();
         $this->client = $this->createAuthenticatedClient();
         $this->phpcrSession = $this->getContainer()->get('doctrine_phpcr')->getConnection();
