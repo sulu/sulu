@@ -1,7 +1,13 @@
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: Bug
+assignees: ''
+---
+
 | Q | A
 | --- | ---
-| Bug? | no
-| New Feature? | no
 | Sulu Version | Specific version or SHA of a commit
 | Browser Version | Browser name and version
 
