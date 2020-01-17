@@ -94,6 +94,13 @@ class ListViewBuilder implements ListViewBuilderInterface
         return $this;
     }
 
+    public function setItemDisabledCondition(string $itemDisabledCondition): ListViewBuilderInterface
+    {
+        $this->setItemDisabledConditionToView($this->view, $itemDisabledCondition);
+
+        return $this;
+    }
+
     public function addToolbarActions(array $toolbarActions): ListViewBuilderInterface
     {
         $this->addToolbarActionsToView($this->view, $toolbarActions);

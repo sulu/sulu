@@ -366,6 +366,18 @@ class ListViewBuilderTest extends TestCase
         $this->assertSame('sulu_category.edit_form', $view->getOption('backView'));
     }
 
+    public function testBuildListSetItemDisabledCondition()
+    {
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->setItemDisabledCondition('(_permissions && !_permissions.delete)')
+            ->getView();
+
+        $this->assertSame('(_permissions && !_permissions.delete)', $view->getOption('itemDisabledCondition'));
+    }
+
     public function testBuildAddToolbarActions()
     {
         $saveToolbarAction = new ToolbarAction('sulu_admin.save');

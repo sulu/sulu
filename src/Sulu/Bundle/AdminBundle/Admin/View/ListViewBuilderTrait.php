@@ -94,6 +94,11 @@ trait ListViewBuilderTrait
         $route->setAttributeDefault('locale', $locale);
     }
 
+    private function setItemDisabledConditionToView(View $route, string $itemDisabledCondition): void
+    {
+        $route->setOption('itemDisabledCondition', $itemDisabledCondition);
+    }
+
     private function addResourceStorePropertiesToListRequestToView(View $route, array $resourceStorePropertiesToListRequest): void
     {
         $oldResourceStorePropertiesToListRequest = $route->getOption('resourceStorePropertiesToListRequest');

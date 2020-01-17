@@ -379,6 +379,19 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertEquals('sulu_category.edit_form', $route->getOption('backView'));
     }
 
+    public function testBuildListSetItemDisabledCondition()
+    {
+        $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->setFormKey('role_details')
+            ->addListAdapters(['tree'])
+            ->setItemDisabledCondition('(_permissions && !_permissions.delete)')
+            ->getView();
+
+        $this->assertSame('(_permissions && !_permissions.delete)', $route->getOption('itemDisabledCondition'));
+    }
+
     public function testBuildAddToolbarActions()
     {
         $saveToolbarAction = new ToolbarAction('sulu_admin.save');
