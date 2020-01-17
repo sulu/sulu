@@ -6,10 +6,10 @@ labels: Feature
 assignees: ''
 ---
 
-#### Problem description
+# Problem description
 
 A clear description of what the problem is.
 
-#### Proposed solution
+# Proposed solution
 
 A clear description of what you want to be implemented.
