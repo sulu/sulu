@@ -333,12 +333,38 @@ test('Render the adapter in disabled state', () => {
     ).toMatchSnapshot();
 });
 
-test('Pass the ids to be disabled to the adapter', () => {
+test('Pass the given disabledIds to the adapter', () => {
     const disabledIds = [1, 3];
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
     const list = shallow(<List adapters={['test']} disabledIds={disabledIds} store={listStore} />);
 
-    expect(list.find('TestAdapter').prop('disabledIds')).toBe(disabledIds);
+    expect(list.find('TestAdapter').prop('disabledIds')).toEqual(disabledIds);
+});
+
+test('Pass given disabledIds and ids of items that fulfill given itemDisabledCondition to the adapter', () => {
+    mockStructureStrategyData = [
+        {
+            id: 1,
+            status: 'active',
+        },
+        {
+            id: 2,
+            status: 'active',
+        },
+        {
+            id: 3,
+            status: 'active',
+        },
+        {
+            id: 4,
+            status: 'inactive',
+        },
+    ];
+
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    const list = shallow(<List adapters={['test']} disabledIds={[1, 3]} itemDisabledCondition={'status == "inactive"'} store={listStore} />);
+
+    expect(list.find('TestAdapter').prop('disabledIds')).toEqual([1, 3, 4]);
 });
 
 test('Pass adapterOptions to the adapter', () => {
@@ -377,6 +403,30 @@ test('Do not call activate if item is activated but disabled and allowActivateFo
 
     expect(listStore.activate).not.toBeCalledWith(5);
     expect(listStore.activate).toBeCalledWith(7);
+});
+
+test('Do not call activate if item is activated but fulfills itemDisabledCondition and allowActivateForDisabledItems is false', () => {
+    mockStructureStrategyData = [
+        {
+            id: 1,
+            status: 'active',
+        },
+        {
+            id: 2,
+            status: 'inactive',
+        },
+    ];
+
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    const list = shallow(
+        <List adapters={['test']} allowActivateForDisabledItems={false} itemDisabledCondition={'status == "inactive"'}  store={listStore} />
+    );
+
+    list.find('TestAdapter').prop('onItemActivate')(1);
+    list.find('TestAdapter').prop('onItemActivate')(2);
+
+    expect(listStore.activate).toBeCalledWith(1);
+    expect(listStore.activate).not.toBeCalledWith(2);
 });
 
 test('Call deactivate on store if item is deactivated', () => {

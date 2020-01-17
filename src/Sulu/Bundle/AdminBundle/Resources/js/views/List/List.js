@@ -334,6 +334,7 @@ class List extends React.Component<Props> {
                         adapters,
                         addView,
                         editView,
+                        itemDisabledCondition,
                         searchable,
                         title: routeTitle,
                     },
@@ -349,6 +350,7 @@ class List extends React.Component<Props> {
                 <ListContainer
                     adapters={adapters}
                     header={title && <h1 className={listStyles.header}>{title}</h1>}
+                    itemDisabledCondition={itemDisabledCondition}
                     onItemAdd={onItemAdd || addView ? this.addItem : undefined}
                     onItemClick={onItemClick || editView ? this.handleItemClick : undefined}
                     ref={this.setListRef}
