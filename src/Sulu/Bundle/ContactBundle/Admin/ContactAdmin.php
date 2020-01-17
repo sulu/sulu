@@ -128,6 +128,7 @@ class ContactAdmin extends Admin
                     ->setListKey('contacts')
                     ->setTitle('sulu_contact.people')
                     ->addListAdapters(['table'])
+                    ->setItemDisabledCondition('lastName == "Test"')
                     ->setAddView(static::CONTACT_ADD_FORM_VIEW)
                     ->setEditView(static::CONTACT_EDIT_FORM_VIEW)
                     ->addToolbarActions($contactListToolbarActions)

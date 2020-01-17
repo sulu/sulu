@@ -506,7 +506,7 @@ test('Render correct buttons based on permissions when item permissions are prov
                     },
                     children: [],
                     hasChildren: false,
-                }
+                },
             ],
             hasChildren: true,
         },

@@ -509,7 +509,7 @@ test('Should render the list with the passed itemDisabledCondition option', () =
                 adapters: ['tree_table'],
                 listKey: 'snippets',
                 resourceKey: 'snippets',
-                itemDisabledCondition: '(_permissions && !_permissions.view)'
+                itemDisabledCondition: '(_permissions && !_permissions.view)',
             },
         },
     };
