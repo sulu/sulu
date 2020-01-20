@@ -47,7 +47,7 @@ class TableAdapter extends AbstractTableAdapter {
     };
 
     renderRows(): Array<Element<typeof Table.Row>> {
-        const {data, selections, disabledIds} = this.props;
+        const {data, disabledIds, selections} = this.props;
 
         return data.map((item) => {
             return (

@@ -483,7 +483,7 @@ test('Render correct buttons based on permissions when item permissions are prov
     expect(treeListAdapter.find('Row').at(3).find('ButtonCell').at(1).props().disabled).toEqual(false);
 });
 
-test('Render correct buttons based on permissions when item permissions are provided', () => {
+test('Render disabled rows based on given disabledIds prop', () => {
     const data = [
         {
             data: {
