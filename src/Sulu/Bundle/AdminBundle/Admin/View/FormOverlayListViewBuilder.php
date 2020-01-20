@@ -127,6 +127,13 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
         return $this;
     }
 
+    public function setItemDisabledCondition(string $itemDisabledCondition): FormOverlayListViewBuilderInterface
+    {
+        $this->setItemDisabledConditionToView($this->view, $itemDisabledCondition);
+
+        return $this;
+    }
+
     public function addToolbarActions(array $toolbarActions): FormOverlayListViewBuilderInterface
     {
         $this->addToolbarActionsToView($this->view, $toolbarActions);

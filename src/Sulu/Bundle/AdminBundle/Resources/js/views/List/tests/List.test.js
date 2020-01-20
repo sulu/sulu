@@ -500,6 +500,24 @@ test('Should render the list non-searchable if the searchable option has been pa
     expect(list.find('List').prop('searchable')).toEqual(false);
 });
 
+test('Should render the list with the passed itemDisabledCondition option', () => {
+    const List = require('../List').default;
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['tree_table'],
+                listKey: 'snippets',
+                resourceKey: 'snippets',
+                itemDisabledCondition: '(_permissions && !_permissions.view)',
+            },
+        },
+    };
+
+    const list = shallow(<List router={router} />);
+    expect(list.find('List').prop('itemDisabledCondition')).toEqual('(_permissions && !_permissions.view)');
+});
+
 test('Should throw an error when no resourceKey is defined in the route options', () => {
     const List = require('../List').default;
     const router = {

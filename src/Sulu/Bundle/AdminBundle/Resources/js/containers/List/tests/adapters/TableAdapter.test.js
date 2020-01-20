@@ -397,6 +397,46 @@ test('Render correct button based on permissions when item permissions are provi
     expect(tableAdapter.find('Row').at(2).find('ButtonCell').props().disabled).toEqual(false);
 });
 
+test('Render disabled rows based on given disabledIds prop', () => {
+    const data = [
+        {
+            id: 1,
+            title: 'First item',
+        },
+        {
+            id: 2,
+            title: 'Second item',
+        },
+        {
+            id: 3,
+            title: 'third item',
+        },
+    ];
+    const schema = {
+        title: {
+            label: 'Title',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+    };
+    const tableAdapter = mount(
+        <TableAdapter
+            {...listAdapterDefaultProps}
+            data={data}
+            disabledIds={[1, 3]}
+            onItemClick={jest.fn()}
+            page={1}
+            pageCount={3}
+            schema={schema}
+        />
+    );
+
+    expect(tableAdapter.find('Row').at(0).props().disabled).toEqual(true);
+    expect(tableAdapter.find('Row').at(1).props().disabled).toEqual(false);
+    expect(tableAdapter.find('Row').at(2).props().disabled).toEqual(true);
+});
+
 test('Render data with pencil button and given actions when onItemEdit callback is passed', () => {
     const rowEditClickSpy = jest.fn();
     const data = [
