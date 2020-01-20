@@ -18,6 +18,7 @@ type Props = {|
     clearSelectionOnClose: boolean,
     confirmLoading?: boolean,
     disabledIds: Array<string | number>,
+    itemDisabledCondition?: ?string,
     listStore: ListStore,
     onClose: () => void,
     onConfirm: () => void,
@@ -89,6 +90,7 @@ class ListOverlay extends React.Component<Props> {
             allowActivateForDisabledItems,
             confirmLoading,
             disabledIds,
+            itemDisabledCondition,
             onClose,
             open,
             overlayType,
@@ -117,6 +119,7 @@ class ListOverlay extends React.Component<Props> {
                         copyable={false}
                         deletable={false}
                         disabledIds={disabledIds}
+                        itemDisabledCondition={itemDisabledCondition}
                         movable={false}
                         orderable={false}
                         searchable={true}
