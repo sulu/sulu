@@ -246,13 +246,79 @@ class DefaultSnippetManagerTest extends TestCase
 
         $webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([$webspace1, $webspace2]));
         $settingsManager->loadStringByWildcard('test-1', 'snippets-*')->willReturn(
-            ['test-1' => '123', 'test-2' => '456']
+            ['snippets-test-1' => '123', 'snippets-test-2' => '456']
         );
         $settingsManager->loadStringByWildcard('test-2', 'snippets-*')->willReturn(
-            ['test-1' => '123-123-123', 'test-2' => '456']
+            ['snippets-test-1' => '123-123-123', 'snippets-test-2' => '456']
         );
 
         $this->assertTrue($manager->isDefault('123-123-123'));
         $this->assertFalse($manager->isDefault('321-123-123'));
+    }
+
+    public function testLoadType()
+    {
+        $settingsManager = $this->prophesize(SettingsManagerInterface::class);
+        $documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $registry = $this->prophesize(DocumentRegistry::class);
+
+        $manager = new DefaultSnippetManager(
+            $settingsManager->reveal(),
+            $documentManager->reveal(),
+            $webspaceManager->reveal(),
+            $registry->reveal(),
+            $this->defaultTypes
+        );
+
+        $webspace1 = new Webspace();
+        $webspace1->setKey('test-1');
+        $webspace2 = new Webspace();
+        $webspace2->setKey('test-2');
+
+        $webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([$webspace1, $webspace2]));
+        $settingsManager->loadStringByWildcard('test-1', 'snippets-*')->willReturn(
+            ['snippets-test-1' => '123', 'snippets-test-2' => '456']
+        );
+        $settingsManager->loadStringByWildcard('test-2', 'snippets-*')->willReturn(
+            ['snippets-test-1' => '123-123-123', 'snippets-test-2' => '456']
+        );
+
+        $this->assertEquals('test-1', $manager->loadType('123-123-123'));
+        $this->assertEquals('test-2', $manager->loadType('456'));
+        $this->assertEquals(null, $manager->loadType('321-321-321'));
+    }
+
+    public function testLoadWebspaces()
+    {
+        $settingsManager = $this->prophesize(SettingsManagerInterface::class);
+        $documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $registry = $this->prophesize(DocumentRegistry::class);
+
+        $manager = new DefaultSnippetManager(
+            $settingsManager->reveal(),
+            $documentManager->reveal(),
+            $webspaceManager->reveal(),
+            $registry->reveal(),
+            $this->defaultTypes
+        );
+
+        $webspace1 = new Webspace();
+        $webspace1->setKey('test-1');
+        $webspace2 = new Webspace();
+        $webspace2->setKey('test-2');
+
+        $webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([$webspace1, $webspace2]));
+        $settingsManager->loadStringByWildcard('test-1', 'snippets-*')->willReturn(
+            ['snippets-test-1' => '123-123-123']
+        );
+        $settingsManager->loadStringByWildcard('test-2', 'snippets-*')->willReturn(
+            ['snippets-test-2' => '456']
+        );
+
+        $this->assertEquals([$webspace1], $manager->loadWebspaces('123-123-123'));
+        $this->assertEquals([$webspace2], $manager->loadWebspaces('456'));
+        $this->assertEquals([], $manager->loadWebspaces('321-321-321'));
     }
 }

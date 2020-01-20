@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SnippetBundle\Snippet;
 
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
+use Sulu\Component\Webspace\Webspace;
 
 /**
  * Manages default snippets.
@@ -80,4 +81,13 @@ interface DefaultSnippetManagerInterface
      * @return string
      */
     public function loadType($uuid);
+
+    /**
+     * Returns all webspaces for which the snippet with the given ID is assigned as default snippet.
+     *
+     * @param string $uuid
+     *
+     * @return Webspace[]
+     */
+    public function loadWebspaces($uuid);
 }
