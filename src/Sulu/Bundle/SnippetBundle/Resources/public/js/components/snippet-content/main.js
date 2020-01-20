@@ -104,11 +104,6 @@ define([], function() {
                         columnOptionsInstanceName: '',
                         el: getId.call(this, 'snippetList'),
                         searchInstanceName: this.options.instanceName + '-search',
-                        paginationOptions: {
-                            dropdown: {
-                                limit: 99999
-                            }
-                        },
                         viewOptions: {
                             table: {
                                 selectItem: {
