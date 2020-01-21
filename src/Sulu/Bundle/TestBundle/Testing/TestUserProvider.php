@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\TestBundle\Testing;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Contact\Model\ContactRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -141,7 +140,7 @@ class TestUserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return $class instanceof UserInterface;
+        return is_subclass_of($class, UserInterface::class);
     }
 
     /**
