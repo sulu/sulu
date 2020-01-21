@@ -96,7 +96,7 @@ export default class SingleSelection extends React.Component<Props>
                 form_options_to_list_options: {
                     value: formOptionsToListOptions,
                 } = {},
-                itemDisabledCondition: {
+                item_disabled_condition: {
                     value: itemDisabledCondition,
                 } = {},
                 types: {
@@ -118,7 +118,7 @@ export default class SingleSelection extends React.Component<Props>
         }
 
         if (itemDisabledCondition !== undefined && typeof itemDisabledCondition !== 'string') {
-            throw new Error('The "itemDisabledCondition" schema option must be a string if given!');
+            throw new Error('The "item_disabled_condition" schema option must be a string if given!');
         }
 
         if (formOptionsToListOptions && !Array.isArray(formOptionsToListOptions)) {

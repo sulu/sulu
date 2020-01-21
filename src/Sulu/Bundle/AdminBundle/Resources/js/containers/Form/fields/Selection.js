@@ -156,7 +156,7 @@ export default class Selection extends React.Component<Props> {
                 types: {
                     value: types,
                 } = {},
-                itemDisabledCondition: {
+                item_disabled_condition: {
                     value: itemDisabledCondition,
                 } = {},
             },
@@ -168,7 +168,7 @@ export default class Selection extends React.Component<Props> {
         }
 
         if (itemDisabledCondition !== undefined && typeof itemDisabledCondition !== 'string') {
-            throw new Error('The "itemDisabledCondition" schema option must be a string if given!');
+            throw new Error('The "item_disabled_condition" schema option must be a string if given!');
         }
 
         const options = {};
@@ -272,7 +272,7 @@ export default class Selection extends React.Component<Props> {
                 },
             },
             schemaOptions: {
-                itemDisabledCondition: {
+                item_disabled_condition: {
                     value: itemDisabledCondition,
                 } = {},
             },
@@ -283,7 +283,7 @@ export default class Selection extends React.Component<Props> {
         }
 
         if (itemDisabledCondition !== undefined && typeof itemDisabledCondition !== 'string') {
-            throw new Error('The "itemDisabledCondition" schema option must be a string if given!');
+            throw new Error('The "item_disabled_condition" schema option must be a string if given!');
         }
 
         return (
