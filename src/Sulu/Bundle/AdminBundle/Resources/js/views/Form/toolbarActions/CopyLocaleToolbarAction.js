@@ -31,6 +31,7 @@ export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
         } = options;
 
         if (displayCondition) {
+            // @deprecated
             log.warn(
                 'The "display_condition" option is deprecated since version 2.0 and will be removed. ' +
                 'Use the "visible_condition" option instead.'

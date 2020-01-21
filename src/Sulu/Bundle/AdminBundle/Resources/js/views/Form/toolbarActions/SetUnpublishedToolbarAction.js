@@ -28,6 +28,7 @@ export default class SetUnpublishedToolbarAction extends AbstractFormToolbarActi
         } = options;
 
         if (displayCondition) {
+            // @deprecated
             log.warn(
                 'The "display_condition" option is deprecated since version 2.0 and will be removed. ' +
                 'Use the "visible_condition" option instead.'

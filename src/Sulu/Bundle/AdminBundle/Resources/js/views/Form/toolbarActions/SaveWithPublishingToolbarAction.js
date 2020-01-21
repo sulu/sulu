@@ -23,6 +23,7 @@ export default class SaveWithPublishingToolbarAction extends AbstractFormToolbar
         } = options;
 
         if (publishDisplayCondition) {
+            // @deprecated
             log.warn(
                 'The "publish_display_condition" option is deprecated since version 2.0 and will be removed. ' +
                 'Use the "publish_visible_condition" option instead.'
@@ -34,6 +35,7 @@ export default class SaveWithPublishingToolbarAction extends AbstractFormToolbar
         }
 
         if (saveDisplayCondition) {
+            // @deprecated
             log.warn(
                 'The "save_display_condition" option is deprecated since version 2.0 and will be removed. ' +
                 'Use the "save_visible_condition" option instead.'
