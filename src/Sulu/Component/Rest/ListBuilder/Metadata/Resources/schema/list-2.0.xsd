@@ -132,6 +132,7 @@
     <xs:attributeGroup name="groupConcatPropertyAttributeGroup">
         <xs:attributeGroup ref="propertyAttributeGroup"/>
         <xs:attribute name="glue" type="xs:string"/>
+        <xs:attribute name="distinct" type="xs:boolean"/>
     </xs:attributeGroup>
 
     <xs:group name="casePropertyGroup">
