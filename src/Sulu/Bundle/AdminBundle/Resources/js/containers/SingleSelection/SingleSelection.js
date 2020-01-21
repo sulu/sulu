@@ -16,6 +16,7 @@ type Props = {|
     displayProperties: Array<string>,
     emptyText: string,
     icon: string,
+    itemDisabledCondition?: ?string,
     listKey: string,
     listOptions?: Object,
     locale?: ?IObservableValue<string>,
@@ -108,6 +109,7 @@ class SingleSelection extends React.Component<Props> {
             displayProperties,
             emptyText,
             icon,
+            itemDisabledCondition,
             locale,
             listOptions,
             overlayTitle,
@@ -146,6 +148,7 @@ class SingleSelection extends React.Component<Props> {
                     <SingleListOverlay
                         adapter={adapter}
                         disabledIds={disabledIds}
+                        itemDisabledCondition={itemDisabledCondition}
                         listKey={listKey}
                         locale={locale}
                         onClose={this.handleOverlayClose}
