@@ -1,9 +1,14 @@
 // @flow
+import log from 'loglevel';
 import SaveWithPublishingToolbarAction from '../../toolbarActions/SaveWithPublishingToolbarAction';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
 import Form from '../../../../views/Form';
+
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+}));
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -150,7 +155,7 @@ test('Return item config with all options disabled when not dirty and data was n
     }));
 });
 
-test('Return item config without publish specific options if condition is not met', () => {
+test('Return item config without publish specific options if deprecated publish_display_condition is not met', () => {
     const editToolbarAction = createSaveWithPublishingToolbarAction({publish_display_condition: '_permission.live'});
 
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
@@ -163,9 +168,26 @@ test('Return item config without publish specific options if condition is not me
             label: 'sulu_admin.save_draft',
         }),
     ]);
+    expect(log.warn).toBeCalledWith(expect.stringContaining('The "publish_display_condition" option is deprecated'));
 });
 
-test('Return item config without saving specific options if condition is not met', () => {
+test('Return item config without publish specific options if passed publish_visible_condition is not met', () => {
+    const editToolbarAction = createSaveWithPublishingToolbarAction({publish_visible_condition: '_permission.live'});
+
+    const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    expect(toolbarItemConfig.options).toEqual([
+        expect.objectContaining({
+            label: 'sulu_admin.save_draft',
+        }),
+    ]);
+    expect(log.warn).not.toBeCalled();
+});
+
+test('Return item config without saving specific options if deprecated save_display_condition is not met', () => {
     const editToolbarAction = createSaveWithPublishingToolbarAction({save_display_condition: '_permission.live'});
 
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
@@ -178,10 +200,27 @@ test('Return item config without saving specific options if condition is not met
             label: 'sulu_admin.publish',
         }),
     ]);
+    expect(log.warn).toBeCalledWith(expect.stringContaining('The "save_display_condition" option is deprecated'));
 });
 
-test('Return item config with publish specific options if condition is met', () => {
-    const editToolbarAction = createSaveWithPublishingToolbarAction({publish_display_condition: '_permission.live'});
+test('Return item config without saving specific options if passed save_visible_condition is not met', () => {
+    const editToolbarAction = createSaveWithPublishingToolbarAction({save_visible_condition: '_permission.live'});
+
+    const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    expect(toolbarItemConfig.options).toEqual([
+        expect.objectContaining({
+            label: 'sulu_admin.publish',
+        }),
+    ]);
+    expect(log.warn).not.toBeCalled();
+});
+
+test('Return item config with publish specific options if passed publish_visible_condition is met', () => {
+    const editToolbarAction = createSaveWithPublishingToolbarAction({publish_visible_condition: '_permission.live'});
     editToolbarAction.resourceFormStore.resourceStore.data._permission = {live: true};
 
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
@@ -202,8 +241,8 @@ test('Return item config with publish specific options if condition is met', () 
     ]);
 });
 
-test('Return item config with saving specific options if condition is met', () => {
-    const editToolbarAction = createSaveWithPublishingToolbarAction({save_display_condition: '_permission.edit'});
+test('Return item config with saving specific options if passed save_visible_condition is met', () => {
+    const editToolbarAction = createSaveWithPublishingToolbarAction({save_visible_condition: '_permission.edit'});
     editToolbarAction.resourceFormStore.resourceStore.data._permission = {edit: true};
 
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
@@ -226,12 +265,13 @@ test('Return item config with saving specific options if condition is met', () =
 
 test('Return empty item config if no options are returned', () => {
     const editToolbarAction = createSaveWithPublishingToolbarAction({
-        publish_display_condition: '_permisison.live',
-        save_display_condition: '_permission.edit',
+        publish_visible_condition: '_permisison.live',
+        save_visible_condition: '_permission.edit',
     });
 
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
     expect(toolbarItemConfig).toEqual(undefined);
+    expect(log.warn).not.toBeCalled();
 });
 
 test('Return item config with loading button when saving flag is set', () => {

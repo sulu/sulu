@@ -114,15 +114,15 @@ class PageAdmin extends Admin
             new ToolbarAction(
                 'sulu_admin.save_with_publishing',
                 [
-                    'publish_display_condition' => '(!_permissions || _permissions.live)',
-                    'save_display_condition' => '(!_permissions || _permissions.edit)',
+                    'publish_visible_condition' => '(!_permissions || _permissions.live)',
+                    'save_visible_condition' => '(!_permissions || _permissions.edit)',
                 ]
             ),
             new ToolbarAction('sulu_page.templates'),
             new ToolbarAction(
                 'sulu_admin.delete',
                 [
-                    'display_condition' => '(!_permissions || _permissions.delete) && url != "/"',
+                    'visible_condition' => '(!_permissions || _permissions.delete) && url != "/"',
                     'router_attributes_to_back_view' => ['webspace'],
                 ]
             ),
@@ -133,19 +133,19 @@ class PageAdmin extends Admin
                     new ToolbarAction(
                         'sulu_admin.copy_locale',
                         [
-                            'display_condition' => '(!_permissions || _permissions.edit)',
+                            'visible_condition' => '(!_permissions || _permissions.edit)',
                         ]
                     ),
                     new ToolbarAction(
                         'sulu_admin.delete_draft',
                         [
-                            'display_condition' => $publishDisplayCondition,
+                            'visible_condition' => $publishDisplayCondition,
                         ]
                     ),
                     new ToolbarAction(
                         'sulu_admin.set_unpublished',
                         [
-                            'display_condition' => $publishDisplayCondition,
+                            'visible_condition' => $publishDisplayCondition,
                         ]
                     ),
                 ]

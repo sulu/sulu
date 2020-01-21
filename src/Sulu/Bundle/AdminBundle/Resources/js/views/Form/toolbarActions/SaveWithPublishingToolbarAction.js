@@ -1,26 +1,71 @@
 // @flow
 import jexl from 'jexl';
+import log from 'loglevel';
 import {translate} from '../../../utils/Translator';
+import {ResourceFormStore} from '../../../containers/Form';
+import Form from '../Form';
+import Router from '../../../services/Router';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
 export default class SaveWithPublishingToolbarAction extends AbstractFormToolbarAction {
-    getToolbarItemConfig() {
+    constructor(
+        resourceFormStore: ResourceFormStore,
+        form: Form,
+        router: Router,
+        locales: ?Array<string>,
+        options: {[key: string]: mixed}
+    ) {
         const {
             publish_display_condition: publishDisplayCondition,
             save_display_condition: saveDisplayCondition,
+            publish_visible_condition: publishVisibleCondition,
+            save_visible_condition: saveVisibleCondition,
+        } = options;
+
+        if (publishDisplayCondition) {
+            // @deprecated
+            log.warn(
+                'The "publish_display_condition" option is deprecated since version 2.0 and will be removed. ' +
+                'Use the "publish_visible_condition" option instead.'
+            );
+
+            if (!publishVisibleCondition) {
+                options.publish_visible_condition = publishDisplayCondition;
+            }
+        }
+
+        if (saveDisplayCondition) {
+            // @deprecated
+            log.warn(
+                'The "save_display_condition" option is deprecated since version 2.0 and will be removed. ' +
+                'Use the "save_visible_condition" option instead.'
+            );
+
+            if (!saveVisibleCondition) {
+                options.save_visible_condition = saveDisplayCondition;
+            }
+        }
+
+        super(resourceFormStore, form, router, locales, options);
+    }
+
+    getToolbarItemConfig() {
+        const {
+            publish_visible_condition: publishVisibleCondition,
+            save_visible_condition: saveVisibleCondition,
         } = this.options;
 
         const {dirty, data, saving} = this.resourceFormStore;
 
-        const publishAllowed = !publishDisplayCondition
-            || jexl.evalSync(publishDisplayCondition, this.resourceFormStore.data);
+        const publishVisibleConditionFulfilled = !publishVisibleCondition
+            || jexl.evalSync(publishVisibleCondition, data);
 
-        const saveAllowed = !saveDisplayCondition
-            || jexl.evalSync(saveDisplayCondition, this.resourceFormStore.data);
+        const saveVisibleConditionFulfilled = !saveVisibleCondition
+            || jexl.evalSync(saveVisibleCondition, data);
 
         const options = [];
 
-        if (saveAllowed) {
+        if (saveVisibleConditionFulfilled) {
             options.push({
                 label: translate('sulu_admin.save_draft'),
                 disabled: !dirty,
@@ -30,7 +75,7 @@ export default class SaveWithPublishingToolbarAction extends AbstractFormToolbar
             });
         }
 
-        if (saveAllowed && publishAllowed) {
+        if (saveVisibleConditionFulfilled && publishVisibleConditionFulfilled) {
             options.push({
                 label: translate('sulu_admin.save_publish'),
                 disabled: !dirty,
@@ -40,7 +85,7 @@ export default class SaveWithPublishingToolbarAction extends AbstractFormToolbar
             });
         }
 
-        if (publishAllowed) {
+        if (publishVisibleConditionFulfilled) {
             options.push({
                 label: translate('sulu_admin.publish'),
                 // TODO do not hardcode "publishedState" but use metadata instead
