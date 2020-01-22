@@ -26,11 +26,9 @@
     },
     "require": {
         "php": "^7.2",
-        "ext-SimpleXML": "*",
         "ext-dom": "*",
-        "ext-fileinfo": "*",
         "ext-json": "*",
-        "ext-zip": "*",
+        "ext-simplexml": "*",
         "aferrandini/urlizer": "^1.0",
         "dantleech/phpcr-migrations-bundle": "^1.0",
         "doctrine/annotations": "^1.2",
@@ -154,6 +152,8 @@
         "sulu/translate-bundle": "self.version"
     },
     "suggest": {
+        "ext-fileinfo": "* - Needed to recognize file types of uploaded files",
+        "ext-zip": "* - Needed by the download commands for the admin build and its translations",
         "handcraftedinthealps/zendsearch": "To use the PHP based Zend Search library (based on Lucene)",
         "league/flysystem": "^1.0 - Needed for remote media-storages",
         "league/flysystem-aws-s3-v3": "^1.0.1 - Needed for AWS S3 compatible storages (aws s3 or minio)",
