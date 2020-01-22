@@ -90,7 +90,7 @@ class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInter
      *
      * @return RoutableBehavior[]
      */
-    private function findLinkedDocuments(string $field, string $value, string $locale): array
+    private function findLinkedDocuments(string $field, string $value, string $locale): iterable
     {
         $where = [];
 
