@@ -258,7 +258,7 @@ test('Throw an error if the auto_complete configuration was omitted', () => {
     ).toThrow(/"auto_complete"/);
 });
 
-test('Pass correct props to SingleItemSelection', () => {
+test('Pass correct props to SingleSelect', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const value = 3;
 
@@ -409,6 +409,7 @@ test('Pass correct props to SingleItemSelection', () => {
         displayProperties: ['name'],
         emptyText: 'sulu_contact.nothing',
         icon: 'su-account',
+        itemDisabledCondition: undefined,
         listOptions: undefined,
         overlayTitle: 'sulu_contact.overlay_title',
         resourceKey: 'accounts',
@@ -484,6 +485,43 @@ test('Throw an error if form_options_to_list_options has wrong value', () => {
     )).toThrow('"form_options_to_list_options"');
 });
 
+test('Throw an error if item_disabled_condition has wrong value', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const value = 3;
+
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'accounts',
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                display_properties: ['name'],
+                empty_text: 'sulu_contact.nothing',
+                icon: 'su-account',
+                overlay_title: 'sulu_contact.overlay_title',
+            },
+        },
+    };
+
+    const schemaOptions = {
+        item_disabled_condition: {
+            name: 'item_disabled_condition',
+            value: [],
+        },
+    };
+
+    expect(() => shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+            value={value}
+        />
+    )).toThrow('"item_disabled_condition"');
+});
+
 test('Throw an error if detail_options has wrong value', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
@@ -553,6 +591,10 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
             name: 'type',
             value: 'list_overlay',
         },
+        item_disabled_condition: {
+            name: 'item_disabled_condition',
+            value: 'status == "inactive"',
+        },
         types: {
             value: 'test',
         },
@@ -579,6 +621,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
         displayProperties: ['name'],
         emptyText: 'sulu_contact.nothing',
         icon: 'su-account',
+        itemDisabledCondition: 'status == "inactive"',
         listOptions: {
             segment: 'developer',
             webspace: 'sulu',
