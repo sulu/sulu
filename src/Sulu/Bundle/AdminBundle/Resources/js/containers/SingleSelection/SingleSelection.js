@@ -119,8 +119,8 @@ class SingleSelection extends React.Component<Props> {
         const {item, loading} = this.singleSelectionStore;
         const columns = displayProperties.length;
 
-        const itemDisabled = (item && disabledIds.includes(item.id)) ||
-            (item && itemDisabledCondition && jexl.evalSync(itemDisabledCondition, item));
+        const itemDisabled = (!!item && disabledIds.includes(item.id)) ||
+            (!!item && !!itemDisabledCondition && jexl.evalSync(itemDisabledCondition, item));
 
         return (
             <Fragment>
