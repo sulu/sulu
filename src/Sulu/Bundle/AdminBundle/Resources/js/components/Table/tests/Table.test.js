@@ -332,6 +332,25 @@ test('Render the Table component in multiple selection mode', () => {
     )).toMatchSnapshot();
 });
 
+test('Render the Table component in multiple selection mode with select inside first cell', () => {
+    expect(render(
+        <Table onAllSelectionChange={jest.fn()} selectInFirstCell={true} selectMode="multiple">
+            <Header>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+            </Header>
+            <Body>
+                <Row>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+            </Body>
+        </Table>
+    )).toMatchSnapshot();
+});
+
 test('Clicking a checkbox should call onRowSelectionChange with the selection state and row-id', () => {
     const onChangeSpy = jest.fn();
     const props = {
@@ -369,6 +388,59 @@ test('Clicking a checkbox should call onRowSelectionChange with the selection st
 
     checkboxOne.simulate('change');
     expect(onChangeSpy).toHaveBeenCalledWith(rowIdOne, true);
+});
+
+test('Select-all checkbox should be checked if every non-disabled line is selected', () => {
+    const allRowsSelectedTable = mount(
+        <Table selectMode="multiple">
+            <Header>
+                <HeaderCell>Column Title</HeaderCell>
+            </Header>
+            <Body>
+                <Row selected={true}>
+                    <Cell>Column Text</Cell>
+                </Row>
+                <Row selected={true}>
+                    <Cell>Column Text</Cell>
+                </Row>
+            </Body>
+        </Table>
+    );
+    expect(allRowsSelectedTable.find('Header').find('Checkbox input').props().checked).toEqual(true);
+
+    const someRowsSelectedTable = mount(
+        <Table selectMode="multiple">
+            <Header>
+                <HeaderCell>Column Title</HeaderCell>
+            </Header>
+            <Body>
+                <Row selected={true}>
+                    <Cell>Column Text</Cell>
+                </Row>
+                <Row selected={false}>
+                    <Cell>Column Text</Cell>
+                </Row>
+            </Body>
+        </Table>
+    );
+    expect(someRowsSelectedTable.find('Header').find('Checkbox input').props().checked).toEqual(false);
+
+    const allEnabledRowsSelectedTable = mount(
+        <Table selectMode="multiple">
+            <Header>
+                <HeaderCell>Column Title</HeaderCell>
+            </Header>
+            <Body>
+                <Row selected={true}>
+                    <Cell>Column Text</Cell>
+                </Row>
+                <Row disabled={true}>
+                    <Cell>Column Text</Cell>
+                </Row>
+            </Body>
+        </Table>
+    );
+    expect(allEnabledRowsSelectedTable.find('Header').find('Checkbox input').props().checked).toEqual(true);
 });
 
 test('Clicking the select-all checkbox should call the onAllSelectionChange callback', () => {

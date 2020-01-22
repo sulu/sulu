@@ -1,10 +1,16 @@
 // @flow
 import 'url-search-params-polyfill';
 import {autorun, observable, toJS, when} from 'mobx';
+import log from 'loglevel';
 import ResourceRequester from '../../../../services/ResourceRequester';
 import ListStore from '../../stores/ListStore';
 import metadataStore from '../../stores/metadataStore';
 import {userStore} from '../../../../stores';
+
+jest.mock('loglevel', () => ({
+    info: jest.fn(),
+    warn: jest.fn(),
+}));
 
 jest.mock('../../stores/metadataStore', () => ({
     getSchema: jest.fn(() => Promise.resolve()),
@@ -956,7 +962,10 @@ test('Select all visible items', () => {
         {id: 7},
     ];
     listStore.selectVisibleItems();
+
     expect(toJS(listStore.selectionIds)).toEqual([1, 7, 2, 3]);
+    expect(log.warn).toBeCalledWith(expect.stringContaining('The "selectVisibleItems" method'));
+
     listStore.destroy();
 });
 
@@ -975,7 +984,10 @@ test('Deselect all visible items', () => {
         {id: 7},
     ];
     listStore.deselectVisibleItems();
+
     expect(toJS(listStore.selectionIds)).toEqual([7]);
+    expect(log.warn).toBeCalledWith(expect.stringContaining('The "deselectVisibleItems" method'));
+
     listStore.destroy();
 });
 
