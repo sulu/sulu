@@ -150,6 +150,21 @@ test('Pass disabledIds to MultiListOverlay', () => {
     expect(selection.find('MultiListOverlay').prop('disabledIds')).toEqual(disabledIds);
 });
 
+test('Pass itemDisabledCondition to MultiListOverlay', () => {
+    const selection = mount(
+        <MultiSelection
+            adapter="table"
+            itemDisabledCondition={'status == "inactive"'}
+            listKey="snippets"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+        />
+    );
+
+    expect(selection.find('MultiListOverlay').prop('itemDisabledCondition')).toEqual('status == "inactive"');
+});
+
 test('Show with passed values as items in right locale', () => {
     const locale = observable.box('en');
 
