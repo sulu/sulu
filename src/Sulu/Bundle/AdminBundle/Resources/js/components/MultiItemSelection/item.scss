@@ -6,6 +6,15 @@ $itemBackgroundColor: $white;
     display: flex;
     justify-content: space-between;
     background-color: $itemBackgroundColor;
+
+    &.disabled {
+        opacity: .5;
+        pointer-events: none;
+
+        .buttons {
+            display: none;
+        }
+    }
 }
 
 .content {

@@ -10,6 +10,7 @@ const DRAG_ICON = 'su-more';
 
 type Props<T> = {
     children: Node,
+    disabled: boolean,
     id: T,
     index: number,
     onEdit?: (id: T) => void,
@@ -19,6 +20,7 @@ type Props<T> = {
 
 export default class Item<T> extends React.PureComponent<Props<T>> {
     static defaultProps = {
+        disabled: false,
         sortable: true,
     };
 
@@ -55,6 +57,7 @@ export default class Item<T> extends React.PureComponent<Props<T>> {
     render() {
         const {
             children,
+            disabled,
             index,
             onEdit,
             onRemove,
@@ -62,6 +65,13 @@ export default class Item<T> extends React.PureComponent<Props<T>> {
         } = this.props;
 
         const DragHandle = this.createDragHandle();
+
+        const itemClass = classNames(
+            itemStyles.item,
+            {
+                [itemStyles.disabled]: disabled,
+            }
+        );
 
         const dragHandleClass = classNames(
             itemStyles.dragHandle,
@@ -71,7 +81,7 @@ export default class Item<T> extends React.PureComponent<Props<T>> {
         );
 
         return (
-            <div className={itemStyles.item}>
+            <div className={itemClass}>
                 <DragHandle className={dragHandleClass}>
                     {sortable && <Icon name={DRAG_ICON} />}
                     <span className={itemStyles.index}>{index}</span>

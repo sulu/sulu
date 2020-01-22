@@ -4,6 +4,7 @@ import {action, observable, reaction, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
+import jexl from 'jexl';
 import CroppedText from '../../components/CroppedText';
 import MultiItemSelection from '../../components/MultiItemSelection';
 import MultiSelectionStore from '../../stores/MultiSelectionStore';
@@ -137,21 +138,31 @@ class MultiSelection extends React.Component<Props> {
                     onItemRemove={this.handleRemove}
                     onItemsSorted={this.handleSorted}
                 >
-                    {items.map((item, index) => (
-                        <MultiItemSelection.Item id={item.id} index={index + 1} key={item.id}>
-                            <div>
-                                {displayProperties.map((displayProperty) => (
-                                    <span
-                                        className={multiSelectionStyles.itemColumn}
-                                        key={displayProperty}
-                                        style={{width: 100 / columns + '%'}}
-                                    >
-                                        <CroppedText>{item[displayProperty]}</CroppedText>
-                                    </span>
-                                ))}
-                            </div>
-                        </MultiItemSelection.Item>
-                    ))}
+                    {items.map((item, index) => {
+                        const itemDisabled = disabledIds.includes(item.id) ||
+                            (!!itemDisabledCondition && jexl.evalSync(itemDisabledCondition, item));
+
+                        return (
+                            <MultiItemSelection.Item
+                                disabled={itemDisabled}
+                                id={item.id}
+                                index={index + 1}
+                                key={item.id}
+                            >
+                                <div>
+                                    {displayProperties.map((displayProperty) => (
+                                        <span
+                                            className={multiSelectionStyles.itemColumn}
+                                            key={displayProperty}
+                                            style={{width: 100 / columns + '%'}}
+                                        >
+                                            <CroppedText>{item[displayProperty]}</CroppedText>
+                                        </span>
+                                    ))}
+                                </div>
+                            </MultiItemSelection.Item>
+                        );
+                    })}
                 </MultiItemSelection>
                 <MultiListOverlay
                     adapter={adapter}

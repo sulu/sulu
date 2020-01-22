@@ -3,6 +3,7 @@ import React, {Fragment} from 'react';
 import {action, reaction, observable, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
+import jexl from 'jexl';
 import SingleItemSelection from '../../components/SingleItemSelection';
 import SingleSelectionStore from '../../stores/SingleSelectionStore';
 import SingleListOverlay from '../SingleListOverlay';
@@ -118,10 +119,13 @@ class SingleSelection extends React.Component<Props> {
         const {item, loading} = this.singleSelectionStore;
         const columns = displayProperties.length;
 
+        const itemDisabled = (item && disabledIds.includes(item.id)) ||
+            (item && itemDisabledCondition && jexl.evalSync(itemDisabledCondition, item));
+
         return (
             <Fragment>
                 <SingleItemSelection
-                    disabled={disabled}
+                    disabled={disabled || itemDisabled}
                     emptyText={emptyText}
                     leftButton={{
                         icon,
