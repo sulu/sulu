@@ -5,6 +5,7 @@ import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import pretty from 'pretty';
 import MultiSelection from '../MultiSelection';
 import MultiSelectionStore from '../../../stores/MultiSelectionStore';
+import MultiItemSelection from '../../../components/MultiItemSelection';
 
 jest.mock('../../../utils', () => ({
     translate: jest.fn((key) => key),
@@ -564,4 +565,54 @@ test('Should not call onChange callback if an unrelated observable that is acces
     // change callback should not be called when the unrelated observable changes
     unrelatedObservable.set(55);
     expect(changeSpy).toHaveBeenCalledTimes(1);
+});
+
+test('Should render selected item in disabled state if it fulfills passed itemDisabledCondition', () => {
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [
+            {id: 1, status: 'active'},
+            {id: 2, status: 'inactive'},
+        ];
+    });
+
+    const selection = mount(
+        <MultiSelection
+            adapter="table"
+            itemDisabledCondition={'status == "inactive"'}
+            listKey="snippets"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="pages"
+            value={[1, 5, 8]}
+        />
+    );
+
+    expect(selection.find(MultiItemSelection.Item).at(0).prop('disabled')).toEqual(false);
+    expect(selection.find(MultiItemSelection.Item).at(1).prop('disabled')).toEqual(true);
+});
+
+test('Should render selected item in disabled state if passed disabledIds contain id of item', () => {
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [
+            {id: 1},
+            {id: 2},
+        ];
+    });
+
+    const selection = mount(
+        <MultiSelection
+            adapter="table"
+            disabledIds={[2, 4]}
+            listKey="snippets"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="pages"
+            value={[1, 5, 8]}
+        />
+    );
+
+    expect(selection.find(MultiItemSelection.Item).at(0).prop('disabled')).toEqual(false);
+    expect(selection.find(MultiItemSelection.Item).at(1).prop('disabled')).toEqual(true);
 });

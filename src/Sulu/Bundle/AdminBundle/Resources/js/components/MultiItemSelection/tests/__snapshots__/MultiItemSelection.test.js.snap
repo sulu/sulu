@@ -677,7 +677,7 @@ exports[`Render an MultiItemSelection with children 1`] = `
       class="listElement"
     >
       <div
-        class="item"
+        class="item disabled"
       >
         <span
           class="dragHandle sortable"
@@ -695,7 +695,7 @@ exports[`Render an MultiItemSelection with children 1`] = `
         <div
           class="content"
         >
-          Child 3
+          Child 3 (disabled)
         </div>
         <div
           class="buttons"

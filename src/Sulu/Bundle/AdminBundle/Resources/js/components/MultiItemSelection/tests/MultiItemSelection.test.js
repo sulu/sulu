@@ -23,10 +23,11 @@ test('Render an MultiItemSelection with children', () => {
                 Child 2
             </MultiItemSelection.Item>
             <MultiItemSelection.Item
+                disabled={true}
                 id="3"
                 index={3}
             >
-                Child 3
+                Child 3 (disabled)
             </MultiItemSelection.Item>
         </MultiItemSelection>
     )).toMatchSnapshot();
