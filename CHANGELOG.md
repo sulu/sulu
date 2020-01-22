@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-release/1.6
+    * BUGFIX      #4998  [ContentBundle]           Fix assigning more than 10 teasers when using elasticsearch
+
 * 1.6.30 (2020-01-13)
     * ENHANCEMENT #4968  [MediaBundle]             Improve performance for one layered images
 

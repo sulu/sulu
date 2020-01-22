@@ -61,6 +61,7 @@ class ContentTeaserProvider implements TeaserProviderInterface
             ->createSearch(implode(' OR ', $statements))
             ->indexes($this->getPageIndexes())
             ->locale($locale)
+            ->setLimit(count($ids))
             ->execute();
 
         /** @var QueryHit $item */
