@@ -1,6 +1,7 @@
 // @flow
 import React, {Fragment} from 'react';
 import type {ChildrenArray, Element} from 'react';
+import classNames from 'classnames';
 import Checkbox from '../Checkbox';
 import {Radio} from '../Radio';
 import Icon from '../Icon/Icon';
@@ -15,6 +16,7 @@ type Props = {
     buttons?: Array<ButtonConfig>,
     children: ChildrenArray<Element<typeof Cell>>,
     depth?: number,
+    disabled: boolean,
     expanded: boolean,
     hasChildren: boolean,
     id?: string | number,
@@ -35,6 +37,7 @@ type Props = {
 export default class Row extends React.PureComponent<Props> {
     static defaultProps = {
         depth: 0,
+        disabled: false,
         expanded: false,
         hasChildren: false,
         isLoading: false,
@@ -240,11 +243,20 @@ export default class Row extends React.PureComponent<Props> {
     render() {
         const {
             children,
+            disabled,
         } = this.props;
+
+        const listClass = classNames(
+            tableStyles.row,
+            {
+                [tableStyles.disabled]: disabled,
+            }
+        );
+
         const cells = this.createCells(children);
 
         return (
-            <tr className={tableStyles.row}>
+            <tr className={listClass}>
                 {cells}
             </tr>
         );

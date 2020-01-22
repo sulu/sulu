@@ -2,17 +2,48 @@
 import React from 'react';
 import {action, observable} from 'mobx';
 import jexl from 'jexl';
+import log from 'loglevel';
 import Checkbox from '../../../components/Checkbox';
 import Dialog from '../../../components/Dialog';
 import ResourceRequester from '../../../services/ResourceRequester';
 import {translate} from '../../../utils/Translator';
-import AbstractFormToolbarAction from './AbstractFormToolbarAction';
+import {ResourceFormStore} from '../../../containers/Form';
+import Form from '../Form';
+import Router from '../../../services/Router';
 import copyLocaleActionStyles from './copyLocaleAction.scss';
+import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
 export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
     @observable showCopyLocaleDialog = false;
     @observable selectedLocales: Array<string> = [];
     @observable copying: boolean = false;
+
+    constructor(
+        resourceFormStore: ResourceFormStore,
+        form: Form,
+        router: Router,
+        locales: ?Array<string>,
+        options: {[key: string]: mixed}
+    ) {
+        const {
+            display_condition: displayCondition,
+            visible_condition: visibleCondition,
+        } = options;
+
+        if (displayCondition) {
+            // @deprecated
+            log.warn(
+                'The "display_condition" option is deprecated since version 2.0 and will be removed. ' +
+                'Use the "visible_condition" option instead.'
+            );
+
+            if (!visibleCondition) {
+                options.visible_condition = displayCondition;
+            }
+        }
+
+        super(resourceFormStore, form, router, locales, options);
+    }
 
     getNode() {
         const {
@@ -66,14 +97,14 @@ export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
 
     getToolbarItemConfig() {
         const {
-            display_condition: displayCondition,
+            visible_condition: visibleCondition,
         } = this.options;
 
         const {id, data} = this.resourceFormStore;
 
-        const copyLocaleAllowed = !displayCondition || jexl.evalSync(displayCondition, data);
+        const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, data);
 
-        if (copyLocaleAllowed) {
+        if (visibleConditionFulfilled) {
             return {
                 disabled: !id,
                 label: translate('sulu_admin.copy_locale'),

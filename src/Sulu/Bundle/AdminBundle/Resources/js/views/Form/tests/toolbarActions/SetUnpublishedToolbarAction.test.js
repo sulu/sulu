@@ -1,11 +1,16 @@
 // @flow
 import {mount} from 'enzyme';
+import log from 'loglevel';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceRequester from '../../../../services/ResourceRequester';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
 import Form from '../../../../views/Form';
 import SetUnpublishedToolbarAction from '../../toolbarActions/SetUnpublishedToolbarAction';
+
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+}));
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -88,8 +93,8 @@ test('Return enabled item config', () => {
     }));
 });
 
-test('Return item config if condition is met', () => {
-    const setUnpublishedToolbarAction = createSetUnpublishedToolbarAction({display_condition: '_permission.edit'});
+test('Return item config if passed visible_condition is met', () => {
+    const setUnpublishedToolbarAction = createSetUnpublishedToolbarAction({visible_condition: '_permission.edit'});
     setUnpublishedToolbarAction.resourceFormStore.resourceStore.data._permission = {edit: true};
 
     const toolbarItemConfig = setUnpublishedToolbarAction.getToolbarItemConfig();
@@ -102,12 +107,22 @@ test('Return item config if condition is met', () => {
     }));
 });
 
-test('Return empty item config if conditions are not met', () => {
+test('Return empty item config if deprecated display_condition is not met', () => {
     const setUnpublishedToolbarAction = createSetUnpublishedToolbarAction({display_condition: '_permission.live'});
 
     const toolbarItemConfig = setUnpublishedToolbarAction.getToolbarItemConfig();
 
     expect(toolbarItemConfig).toEqual(undefined);
+    expect(log.warn).toBeCalledWith(expect.stringContaining('The "display_condition" option is deprecated'));
+});
+
+test('Return empty item config if passed visible_condition is not met', () => {
+    const setUnpublishedToolbarAction = createSetUnpublishedToolbarAction({visible_condition: '_permission.live'});
+
+    const toolbarItemConfig = setUnpublishedToolbarAction.getToolbarItemConfig();
+
+    expect(toolbarItemConfig).toEqual(undefined);
+    expect(log.warn).not.toBeCalled();
 });
 
 test('Return disabled delete draft and unpublish items when page is not published', () => {

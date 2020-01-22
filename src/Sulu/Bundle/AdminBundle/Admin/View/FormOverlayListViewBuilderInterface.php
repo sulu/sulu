@@ -48,6 +48,8 @@ interface FormOverlayListViewBuilderInterface extends ViewBuilderInterface
 
     public function setDefaultLocale(string $locale): self;
 
+    public function setItemDisabledCondition(string $itemDisabledCondition): self;
+
     public function setBackView(string $editView): self;
 
     public function enableSearching(): self;

@@ -166,6 +166,32 @@ test('Render a table with different buttons for each row', () => {
     )).toMatchSnapshot();
 });
 
+test('Render a table with disabled rows', () => {
+    const buttons = [{
+        icon: 'fa-pencil',
+        onClick: jest.fn(),
+    }];
+
+    expect(render(
+        <Table buttons={buttons}>
+            <Header>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+            </Header>
+            <Body>
+                <Row>
+                    <Cell>Boring Row</Cell>
+                    <Cell>Column 2</Cell>
+                </Row>
+                <Row disabled={true}>
+                    <Cell>Disabled Row</Cell>
+                    <Cell>Column 2</Cell>
+                </Row>
+            </Body>
+        </Table>
+    )).toMatchSnapshot();
+});
+
 test('Table buttons should implement an onClick handler', () => {
     const clickSpy = jest.fn();
     const buttons = [{

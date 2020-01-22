@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Controller;
 
 use PHPCR\SessionInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
+use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
@@ -47,13 +48,20 @@ class SnippetControllerTest extends SuluTestCase
      */
     private $phpcrSession;
 
+    /**
+     * @var DefaultSnippetManagerInterface
+     */
+    private $defaultSnippetManager;
+
     public function setUp(): void
     {
         parent::setUp();
+        $this->purgeDatabase();
         $this->initPhpcr();
         $this->client = $this->createAuthenticatedClient();
         $this->phpcrSession = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $this->defaultSnippetManager = $this->getContainer()->get('sulu_snippet.default_snippet.manager');
         $this->loadFixtures();
     }
 
@@ -452,26 +460,21 @@ class SnippetControllerTest extends SuluTestCase
         $this->documentManager->persist($page, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
         $this->documentManager->flush();
 
-        $this->client->request('DELETE', '/api/snippets/' . $this->hotel1->getUuid() . '?_format=text');
+        $this->defaultSnippetManager->save('sulu_io', 'hotel', $this->hotel1->getUuid(), 'en');
+
+        $this->client->request('DELETE', '/api/snippets/' . $this->hotel1->getUuid());
         $response = $this->client->getResponse();
         $content = json_decode($response->getContent(), true);
 
         $this->assertEquals(409, $response->getStatusCode());
-        $this->assertEquals($page->getUuid(), $content['structures'][0]['id']);
-    }
+        $this->assertEquals('Hotels page', $content['items'][0]['name']);
+        $this->assertEquals('sulu.io default snippet', $content['items'][1]['name']);
 
-    public function testDeleteReferencedOther()
-    {
-        $node = $this->phpcrSession->getRootNode()->addNode('test-other');
-        $node->setProperty('test', $this->phpcrSession->getNodeByIdentifier($this->hotel1->getUuid()));
-        $this->phpcrSession->save();
-
-        $this->client->request('DELETE', '/api/snippets/' . $this->hotel1->getUuid() . '?_format=text');
+        $this->client->request('DELETE', '/api/snippets/' . $this->hotel1->getUuid() . '?force=true');
         $response = $this->client->getResponse();
         $content = json_decode($response->getContent(), true);
 
-        $this->assertHttpStatusCode(409, $response);
-        $this->assertEquals($node->getPath(), $content['other'][0]);
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testCopyLocale()

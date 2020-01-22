@@ -6,6 +6,7 @@ import React, {Fragment} from 'react';
 import type {Node} from 'react';
 import equal from 'fast-deep-equal';
 import classNames from 'classnames';
+import jexl from 'jexl';
 import ArrowMenu from '../../components/ArrowMenu';
 import Button from '../../components/Button';
 import Dialog from '../../components/Dialog';
@@ -41,6 +42,7 @@ type Props = {|
     disabled: boolean,
     disabledIds: Array<string | number>,
     header?: Node,
+    itemDisabledCondition?: ?string,
     movable: boolean,
     onItemAdd?: (id: ?string | number) => void,
     onItemClick?: (itemId: string | number) => void,
@@ -103,6 +105,21 @@ class List extends React.Component<Props> {
 
     @computed get currentAdapterOptions(): typeof AbstractAdapter {
         return listAdapterRegistry.getOptions(this.currentAdapterKey);
+    }
+
+    @computed get disabledIds(): Array<string | number> {
+        const {
+            disabledIds,
+            itemDisabledCondition,
+            store,
+        } = this.props;
+
+        const disabledItems = itemDisabledCondition
+            ? store.data.filter((item) => jexl.evalSync(itemDisabledCondition, item))
+            : [];
+
+        // TODO do not hardcode "id", but use some kind of metadata instead
+        return [...disabledIds, ...disabledItems.map((item) => item.id)];
     }
 
     constructor(props: Props) {
@@ -404,9 +421,9 @@ class List extends React.Component<Props> {
     };
 
     handleItemActivate = (id: string | number) => {
-        const {allowActivateForDisabledItems, disabledIds, store} = this.props;
+        const {allowActivateForDisabledItems, store} = this.props;
 
-        if (!allowActivateForDisabledItems && disabledIds.includes(id)) {
+        if (!allowActivateForDisabledItems && this.disabledIds.includes(id)) {
             return;
         }
 
@@ -487,7 +504,6 @@ class List extends React.Component<Props> {
             copyable,
             deletable,
             disabled,
-            disabledIds,
             header,
             movable,
             onItemClick,
@@ -545,7 +561,7 @@ class List extends React.Component<Props> {
                             activeItems={store.activeItems}
                             adapterOptions={adapterOptions ? adapterOptions[this.currentAdapterKey] : undefined}
                             data={store.data}
-                            disabledIds={disabledIds}
+                            disabledIds={this.disabledIds}
                             limit={store.limit.get()}
                             loading={store.loading}
                             onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}

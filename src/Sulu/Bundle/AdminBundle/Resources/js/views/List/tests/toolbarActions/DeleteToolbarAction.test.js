@@ -12,6 +12,7 @@ jest.mock('../../../../utils/Translator', () => ({
 
 jest.mock('../../../../containers/List/stores/ListStore', () => jest.fn(function() {
     this.selectionIds = [];
+    this.selections = [];
     this.deletingSelection = false;
 }));
 
@@ -36,6 +37,32 @@ function createDeleteToolbarAction(options = {}) {
 
 test('Return config for toolbar item', () => {
     const deleteToolbarAction = createDeleteToolbarAction();
+
+    expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        disabled: true,
+        icon: 'su-trash-alt',
+        label: 'sulu_admin.delete',
+        loading: false,
+        type: 'button',
+    }));
+});
+
+test('Return disabled config for toolbar item if one selected item fulfills the passed disabled_condition', () => {
+    const deleteToolbarAction = createDeleteToolbarAction({disabled_condition: 'url == "/"'});
+
+    deleteToolbarAction.listStore.selectionIds.push(1);
+    deleteToolbarAction.listStore.selections.push({id: 1, url: '/test1'});
+
+    expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        disabled: false,
+        icon: 'su-trash-alt',
+        label: 'sulu_admin.delete',
+        loading: false,
+        type: 'button',
+    }));
+
+    deleteToolbarAction.listStore.selectionIds.push(2);
+    deleteToolbarAction.listStore.selections.push({id: 2, url: '/'});
 
     expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         disabled: true,

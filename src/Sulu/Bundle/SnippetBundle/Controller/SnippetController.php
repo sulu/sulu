@@ -37,6 +37,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * handles snippets.
@@ -105,6 +106,11 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      */
     private $metadataFactory;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     public function __construct(
         ViewHandler $viewHandler,
         ContentMapper $contentMapper,
@@ -117,7 +123,8 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         FormFactory $formFactory,
         RequestHashChecker $requestHashChecker,
         ListRestHelper $listRestHelper,
-        MetadataFactoryInterface $metadataFactory
+        MetadataFactoryInterface $metadataFactory,
+        TranslatorInterface $translator
     ) {
         $this->viewHandler = $viewHandler;
         $this->contentMapper = $contentMapper;
@@ -131,6 +138,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $this->requestHashChecker = $requestHashChecker;
         $this->listRestHelper = $listRestHelper;
         $this->metadataFactory = $metadataFactory;
+        $this->translator = $translator;
     }
 
     /**
@@ -269,7 +277,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $references = $this->snippetRepository->getReferences($id);
 
         if (count($references) > 0) {
-            $force = $request->headers->get('SuluForceRemove', false);
+            $force = $request->query->get('force', false);
             if ($force) {
                 $this->contentMapper->delete($id, $webspaceKey, true);
             } else {
@@ -417,23 +425,31 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     private function getReferentialIntegrityResponse($webspace, $references, $id, $locale)
     {
         $data = [
-            'structures' => [],
-            'other' => [],
-            'isDefault' => $this->defaultSnippetManager->isDefault($id),
+            'id' => $id,
+            'items' => [],
         ];
 
         foreach ($references as $reference) {
-            if ($reference->getParent()->isNodeType('sulu:page')) {
+            $parentReference = $reference->getParent();
+            if ($parentReference->isNodeType('sulu:page') || $parentReference->isNodeType('sulu:home')) {
                 $content = $this->contentMapper->load(
-                    $reference->getParent()->getIdentifier(),
+                    $parentReference->getIdentifier(),
                     $webspace,
                     $locale,
                     true
                 );
-                $data['structures'][] = $content->toArray();
-            } else {
-                $data['other'][] = $reference->getParent()->getPath();
+                $data['items'][] = ['name' => $content->getPropertyValue('title')];
             }
+        }
+
+        foreach ($this->defaultSnippetManager->loadWebspaces($id) as $defaultSnippetWebspace) {
+            $data['items'][] = [
+                'name' => $this->translator->trans(
+                    'sulu_snippet.webspace_default_snippet',
+                    ['%webspaceKey%' => $defaultSnippetWebspace->getName()],
+                    'admin'
+                ),
+            ];
         }
 
         return new JsonResponse($data, 409);

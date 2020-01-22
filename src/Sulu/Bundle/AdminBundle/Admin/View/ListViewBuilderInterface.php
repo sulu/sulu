@@ -44,6 +44,8 @@ interface ListViewBuilderInterface extends ViewBuilderInterface
 
     public function setDefaultLocale(string $locale): self;
 
+    public function setItemDisabledCondition(string $itemDisabledCondition): self;
+
     public function setAddView(string $addView): self;
 
     public function setEditView(string $editView): self;

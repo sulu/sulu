@@ -307,6 +307,121 @@ exports[`Render a table with different buttons for each row 1`] = `
 </div>
 `;
 
+exports[`Render a table with disabled rows 1`] = `
+<div
+  class="tableContainer dark"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr>
+        <th
+          class="headerButtonCell headerCell"
+        >
+          <span>
+            <span
+              aria-label="fa-pencil"
+              class="fa fa-pencil"
+            />
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="buttonCell cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <button>
+              <span
+                aria-label="fa-pencil"
+                class="fa fa-pencil"
+              />
+            </button>
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Boring Row
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column 2
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row disabled"
+      >
+        <td
+          class="buttonCell cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <button>
+              <span
+                aria-label="fa-pencil"
+                class="fa fa-pencil"
+              />
+            </button>
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Disabled Row
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column 2
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
 exports[`Render an empty table 1`] = `
 <div
   class="tableContainer dark"

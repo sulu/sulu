@@ -91,6 +91,7 @@ class PageTeaserProviderTest extends TestCase
         )->willReturn($this->search->reveal())->shouldBeCalled();
         $this->search->indexes(['page_sulu_io_published'])->willReturn($this->search->reveal())->shouldBeCalled();
         $this->search->locale('de')->willReturn($this->search->reveal())->shouldBeCalled();
+        $this->search->setLimit(2)->willReturn($this->search->reveal())->shouldBeCalled();
         $this->search->execute()->willReturn(
             [$this->createQueryHit($ids[0], $data[$ids[0]]), $this->createQueryHit($ids[1], $data[$ids[1]])]
         );

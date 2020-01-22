@@ -205,13 +205,17 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
      * Remove illegal characters from content string, else PHPCR would throw an `PHPCR\ValueFormatException`
      * if an illegal characters is detected.
      *
-     * @param string $content
+     * @param string|int $content
      *
-     * @return string
+     * @return string|int
      */
     protected function removeIllegalCharacters($content)
     {
-        return preg_replace(NodeProcessor::VALIDATE_STRING, '', $content);
+        if (is_string($content)) {
+            return preg_replace(NodeProcessor::VALIDATE_STRING, '', $content);
+        }
+
+        return $content;
     }
 
     /**

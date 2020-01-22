@@ -1,11 +1,16 @@
 // @flow
 import {mount} from 'enzyme';
+import log from 'loglevel';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceRequester from '../../../../services/ResourceRequester';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
 import Form from '../../../../views/Form';
 import DeleteDraftToolbarAction from '../../toolbarActions/DeleteDraftToolbarAction';
+
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+}));
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -89,15 +94,24 @@ test('Return enabled item config', () => {
     }));
 });
 
-test('Return no item config if condition is not met', () => {
+test('Return no item config if deprecated display_condition is not met', () => {
     const deleteDraftToolbarAction = createDeleteDraftToolbarAction({display_condition: '_permission.live'});
 
     const toolbarItemConfig = deleteDraftToolbarAction.getToolbarItemConfig();
     expect(toolbarItemConfig).toEqual(undefined);
+    expect(log.warn).toBeCalledWith(expect.stringContaining('The "display_condition" option is deprecated'));
 });
 
-test('Return item config if condition is met', () => {
-    const deleteDraftToolbarAction = createDeleteDraftToolbarAction({display_condition: '_permission.edit'});
+test('Return no item config if passed visible_condition is not met', () => {
+    const deleteDraftToolbarAction = createDeleteDraftToolbarAction({visible_condition: '_permission.live'});
+
+    const toolbarItemConfig = deleteDraftToolbarAction.getToolbarItemConfig();
+    expect(toolbarItemConfig).toEqual(undefined);
+    expect(log.warn).not.toBeCalled();
+});
+
+test('Return item config if passed visible_condition is met', () => {
+    const deleteDraftToolbarAction = createDeleteDraftToolbarAction({visible_condition: '_permission.edit'});
     deleteDraftToolbarAction.resourceFormStore.resourceStore.data._permission = {edit: true};
 
     const toolbarItemConfig = deleteDraftToolbarAction.getToolbarItemConfig();
