@@ -112,6 +112,24 @@ test('Should pass allowActivateForDisabledItems to the List', () => {
     expect(listOverlay.find(List).prop('allowActivateForDisabledItems')).toEqual(false);
 });
 
+test('Should pass itemDisabledCondition to the List', () => {
+    const listStore = new ListStore('snippets', 'snippets', 'list_overlay_test', {page: observable.box(1)});
+
+    const listOverlay = shallow(
+        <ListOverlay
+            adapter="table"
+            itemDisabledCondition={'status == "inactive"'}
+            listStore={listStore}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            title="Selection"
+        />
+    );
+
+    expect(listOverlay.find(List).prop('itemDisabledCondition')).toBe('status == "inactive"');
+});
+
 test('Should pass correct flags to the List', () => {
     const listStore = new ListStore('snippets', 'snippets', 'list_overlay_test', {page: observable.box(1)});
     const disabledIds = [1, 2, 5];

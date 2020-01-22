@@ -174,7 +174,7 @@ test('Should pass clearSelectionOnClose to the ListOverlay', () => {
     expect(singleListOverlay.find(ListOverlay).prop('clearSelectionOnClose')).toEqual(true);
 });
 
-test('Should pass allowActivateForDisabledItems to the List', () => {
+test('Should pass allowActivateForDisabledItems to the ListOverlay', () => {
     const disabledIds = [1, 2, 5];
 
     const singleListOverlay = shallow(
@@ -193,6 +193,23 @@ test('Should pass allowActivateForDisabledItems to the List', () => {
 
     expect(singleListOverlay.find(ListOverlay).prop('disabledIds')).toBe(disabledIds);
     expect(singleListOverlay.find(ListOverlay).prop('allowActivateForDisabledItems')).toEqual(false);
+});
+
+test('Should pass itemDisabledCondition to the ListOverlay', () => {
+    const singleListOverlay = shallow(
+        <SingleListOverlay
+            adapter="table"
+            itemDisabledCondition={'status == "inactive"'}
+            listKey="snippets"
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            resourceKey="snippets"
+            title="Selection"
+        />
+    );
+
+    expect(singleListOverlay.find(ListOverlay).prop('itemDisabledCondition')).toBe('status == "inactive"');
 });
 
 test('Should pass confirmLoading flag to the Overlay', () => {

@@ -126,7 +126,7 @@ test('Should pass disabledIds to the ListOverlay', () => {
     expect(multiListOverlay.find(ListOverlay).prop('allowActivateForDisabledItems')).toEqual(true);
 });
 
-test('Should pass reloadOnOpen to the List', () => {
+test('Should pass reloadOnOpen to the ListOverlay', () => {
     const multiListOverlay = shallow(
         <MultiListOverlay
             adapter="table"
@@ -144,7 +144,7 @@ test('Should pass reloadOnOpen to the List', () => {
     expect(multiListOverlay.find(ListOverlay).prop('reloadOnOpen')).toEqual(true);
 });
 
-test('Should pass clearSelectionOnClose to the List', () => {
+test('Should pass clearSelectionOnClose to the ListOverlay', () => {
     const multiListOverlay = shallow(
         <MultiListOverlay
             adapter="table"
@@ -162,7 +162,7 @@ test('Should pass clearSelectionOnClose to the List', () => {
     expect(multiListOverlay.find(ListOverlay).prop('clearSelectionOnClose')).toEqual(true);
 });
 
-test('Should pass allowActivateForDisabledItems to the List', () => {
+test('Should pass allowActivateForDisabledItems to the ListOverlay', () => {
     const disabledIds = [1, 2, 5];
 
     const multiListOverlay = shallow(
@@ -183,7 +183,24 @@ test('Should pass allowActivateForDisabledItems to the List', () => {
     expect(multiListOverlay.find(ListOverlay).prop('allowActivateForDisabledItems')).toEqual(false);
 });
 
-test('Should pass confirmLoading flag to the Overlay', () => {
+test('Should pass itemDisabledCondition to the ListOverlay', () => {
+    const multiListOverlay = shallow(
+        <MultiListOverlay
+            adapter="table"
+            itemDisabledCondition={'status == "inactive"'}
+            listKey="snippets"
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            resourceKey="snippets"
+            title="Selection"
+        />
+    );
+
+    expect(multiListOverlay.find(ListOverlay).prop('itemDisabledCondition')).toBe('status == "inactive"');
+});
+
+test('Should pass confirmLoading flag to the ListOverlay', () => {
     const multiListOverlay = shallow(
         <MultiListOverlay
             adapter="table"
