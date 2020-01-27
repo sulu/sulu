@@ -13,7 +13,7 @@ export default class TypeToolbarAction extends AbstractFormToolbarAction {
 
         const {
             visible_condition: visibleCondition,
-            disable_condition: disableCondition,
+            disabled_condition: disabledCondition,
         } = this.options;
 
         if (visibleCondition && !jexl.evalSync(visibleCondition, this.resourceFormStore.data)) {
@@ -21,7 +21,7 @@ export default class TypeToolbarAction extends AbstractFormToolbarAction {
         }
 
         let isDisabled = false;
-        if (disableCondition && jexl.evalSync(disableCondition, this.resourceFormStore.data)) {
+        if (disabledCondition && jexl.evalSync(disabledCondition, this.resourceFormStore.data)) {
             isDisabled = true;
         }
 

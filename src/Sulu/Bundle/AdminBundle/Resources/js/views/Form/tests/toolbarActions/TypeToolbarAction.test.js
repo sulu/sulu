@@ -145,14 +145,14 @@ test('Return item config when passed visible condition is met', () => {
     expect(typeToolbarAction.getToolbarItemConfig()).toBeDefined();
 });
 
-test('Return disabled true when passed disable condition is not met', () => {
-    const typeToolbarAction = createTypeToolbarAction({disable_condition: 'url == "/"'});
+test('Return disabled true when passed disabled condition is not met', () => {
+    const typeToolbarAction = createTypeToolbarAction({disabled_condition: 'url == "/"'});
 
     expect(typeToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({disabled: false}));
 });
 
-test('Return disabled true when passed disable condition is met', () => {
-    const typeToolbarAction = createTypeToolbarAction({disable_condition: 'url == "/"'});
+test('Return disabled true when passed disabled condition is met', () => {
+    const typeToolbarAction = createTypeToolbarAction({disabled_condition: 'url == "/"'});
     typeToolbarAction.resourceFormStore.data.url = '/';
 
     expect(typeToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({disabled: true}));
