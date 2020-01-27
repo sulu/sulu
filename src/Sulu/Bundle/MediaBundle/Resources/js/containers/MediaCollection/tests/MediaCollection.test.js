@@ -2,8 +2,9 @@
 import React from 'react';
 import {mount, render} from 'enzyme';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
-import MediaCollection from '../MediaCollection';
+import {RequestPromise} from 'sulu-admin-bundle/services/ResourceRequester';
 import MediaCardOverviewAdapter from '../../List/adapters/MediaCardOverviewAdapter';
+import MediaCollection from '../MediaCollection';
 
 const MEDIA_RESOURCE_KEY = 'media';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
@@ -999,7 +1000,9 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
 });
 
 test('Confirming the move dialog should move the item', () => {
-    const promise = Promise.resolve({});
+    const promise = new RequestPromise(function(resolve) {
+        resolve({});
+    });
     const page = observable.box();
     const locale = observable.box();
     const SingleListOverlay = require('sulu-admin-bundle/containers').SingleListOverlay;
@@ -1066,7 +1069,9 @@ test('Confirming the move dialog should move the item', () => {
 });
 
 test('Confirming the permission overlay should save the permissions', () => {
-    const promise = Promise.resolve({});
+    const promise = new RequestPromise(function(resolve) {
+        resolve({});
+    });
     const page = observable.box();
     const locale = observable.box();
     const ListStore = require('sulu-admin-bundle/containers').ListStore;

@@ -17,6 +17,7 @@ test('Should execute GET request and reject with response when the response cont
     expect(window.fetch).toBeCalledWith('/some-url', {
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+        signal: expect.any(AbortSignal),
     });
 });
 
@@ -88,6 +89,7 @@ test('Should execute GET request and replace null with undefined', () => {
     expect(window.fetch).toBeCalledWith('/some-url', {
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+        signal: expect.any(AbortSignal),
     });
 
     return requestPromise;
@@ -151,6 +153,7 @@ test('Should execute POST request and return JSON', () => {
         }),
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+        signal: expect.any(AbortSignal),
     });
 
     return requestPromise;
@@ -180,6 +183,7 @@ test('Should execute POST request and return JSON when value is observable', () 
         }),
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+        signal: expect.any(AbortSignal),
     });
 
     return requestPromise;
@@ -214,6 +218,7 @@ test('Should execute PUT request and return JSON', () => {
         }),
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+        signal: expect.any(AbortSignal),
     });
 
     return requestPromise;
@@ -238,6 +243,7 @@ test('Should execute PUT request without data and return JSON', () => {
         method: 'PUT',
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+        signal: expect.any(AbortSignal),
     });
 
     return requestPromise;
@@ -271,6 +277,7 @@ test('Should execute PATCH request and return JSON', () => {
         body: JSON.stringify([{title: 'Titel', description: 'Description', test: null}]),
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+        signal: expect.any(AbortSignal),
     });
 
     return requestPromise;
@@ -295,6 +302,7 @@ test('Should execute DELETE request and return JSON', () => {
         method: 'DELETE',
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+        signal: expect.any(AbortSignal),
     });
 
     return requestPromise;

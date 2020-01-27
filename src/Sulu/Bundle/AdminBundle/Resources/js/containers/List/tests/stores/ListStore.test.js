@@ -2,7 +2,7 @@
 import 'url-search-params-polyfill';
 import {autorun, observable, toJS, when} from 'mobx';
 import log from 'loglevel';
-import ResourceRequester from '../../../../services/ResourceRequester';
+import ResourceRequester, {RequestPromise} from '../../../../services/ResourceRequester';
 import ListStore from '../../stores/ListStore';
 import metadataStore from '../../stores/metadataStore';
 import {userStore} from '../../../../stores';
@@ -16,10 +16,19 @@ jest.mock('../../stores/metadataStore', () => ({
     getSchema: jest.fn(() => Promise.resolve()),
 }));
 
-jest.mock('../../../../services/ResourceRequester', () => ({
+jest.mock('../../../../services/ResourceRequester/ResourceRequester', () => ({
     delete: jest.fn(),
     post: jest.fn(),
 }));
+
+jest.mock('../../../../services/Requester/RequestPromise', () => {
+    // $FlowFixMe
+    const ActualRequestPromise = require.requireActual('../../../../services/Requester/RequestPromise').default;
+
+    return class RequestPromise extends ActualRequestPromise {
+        abort = jest.fn();
+    };
+});
 
 jest.mock('../../../../stores/userStore', () => ({
     getPersistentSetting: jest.fn(),
@@ -29,7 +38,7 @@ jest.mock('../../../../stores/userStore', () => ({
 class LoadingStrategy {
     destroy = jest.fn();
     initialize = jest.fn();
-    load = jest.fn().mockReturnValue(Promise.resolve({}));
+    load = jest.fn().mockReturnValue(new RequestPromise(function() {}));
     reset = jest.fn();
     setStructureStrategy = jest.fn();
 }
@@ -37,7 +46,7 @@ class LoadingStrategy {
 class OtherLoadingStrategy {
     destroy = jest.fn();
     initialize = jest.fn();
-    load = jest.fn().mockReturnValue(Promise.resolve({}));
+    load = jest.fn().mockReturnValue(new RequestPromise(function() {}));
     reset = jest.fn();
     setStructureStrategy = jest.fn();
 }
@@ -638,7 +647,9 @@ test('The loading strategy should be called with expandedIds if some items are a
     );
     listStore.schema = {};
 
-    const promise = Promise.resolve({});
+    const promise = new RequestPromise(function(resolve) {
+        resolve({});
+    });
     loadingStrategy.load.mockReturnValue(promise);
 
     // $FlowFixMe
@@ -795,8 +806,8 @@ test('Set loading flag to false after request', (done) => {
     const page = observable.box();
     const listStore = new ListStore('tests', 'tests', 'list_test', {page});
     listStore.schema = {};
-    const promise = Promise.resolve({
-        pages: 3,
+    const promise = new RequestPromise(function(resolve) {
+        resolve({pages: 3});
     });
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
@@ -814,8 +825,9 @@ test('Set loading flag to false after request', (done) => {
 test('Set forbidden flag to true if the response returned a 403', (done) => {
     const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
     listStore.schema = {};
-    const promise = Promise.reject({
-        status: 403,
+
+    const promise = new RequestPromise(function(resolve, reject) {
+        reject({status: 403});
     });
 
     const loadingStrategy = new LoadingStrategy();
@@ -833,11 +845,49 @@ test('Set forbidden flag to true if the response returned a 403', (done) => {
     });
 });
 
+test('Cancel request when a second one is started before finishing the first one', () => {
+    const page = observable.box(1);
+    const listStore = new ListStore('tests', 'tests', 'list_test', {page});
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+
+    loadingStrategy.load.mockReturnValueOnce(new RequestPromise(function(resolve){resolve();}));
+    loadingStrategy.load.mockReturnValueOnce(new RequestPromise(function(resolve){resolve();}));
+
+    listStore.schema = {};
+
+    listStore.updateLoadingStrategy(loadingStrategy);
+    listStore.updateStructureStrategy(structureStrategy);
+
+    expect(loadingStrategy.load).toHaveBeenLastCalledWith(
+        'tests',
+        {fields: ['id'], limit: 10, page: 1, sortBy: undefined, sortOrder: undefined},
+        undefined
+    );
+
+    const requestPromise1 = listStore.pendingRequest;
+
+    listStore.sendRequest();
+
+    expect(loadingStrategy.load).toHaveBeenLastCalledWith(
+        'tests',
+        {fields: ['id'], limit: 10, page: 1, sortBy: undefined, sortOrder: undefined},
+        undefined
+    );
+
+    const requestPromise2 = listStore.pendingRequest;
+
+    // $FlowFixMe
+    expect(requestPromise1.abort).toBeCalledWith();
+    // $FlowFixMe
+    expect(requestPromise2.abort).not.toBeCalledWith();
+});
+
 test('Set active to undefined if the response returned a 404', (done) => {
     const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()}, undefined);
     listStore.schema = {};
-    const promise = Promise.reject({
-        status: 404,
+    const promise = new RequestPromise(function(resolve, reject) {
+        reject({status: 404});
     });
 
     const loadingStrategy = new LoadingStrategy();
@@ -852,7 +902,10 @@ test('Set active to undefined if the response returned a 404', (done) => {
     expect(listStore.active.get()).toEqual('some-uuid');
 
     setTimeout(() => {
-        loadingStrategy.load.mockReturnValue(Promise.resolve());
+        const promise = new RequestPromise(function(resolve) {
+            resolve({pages: 3});
+        });
+        loadingStrategy.load.mockReturnValue(promise);
         expect(listStore.active.get()).toEqual(undefined);
         expect(userStore.setPersistentSetting).toBeCalledWith(
             'sulu_admin.list_store.tests.list_test.active',
@@ -1041,7 +1094,9 @@ test('Should reload data but not change the page or the active item when the rel
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
 
-    const promise = Promise.resolve({});
+    const promise = new RequestPromise(function(resolve) {
+        resolve({});
+    });
     loadingStrategy.load.mockReturnValue(promise);
 
     const page = observable.box();
