@@ -4,7 +4,7 @@ import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
 export default class TypeToolbarAction extends AbstractFormToolbarAction {
-    getToolbarItemConfig(): ToolbarItemConfig {
+    getToolbarItemConfig(): ?ToolbarItemConfig {
         const formTypes = this.resourceFormStore.types;
 
         if (!this.resourceFormStore.typesLoading && Object.keys(formTypes).length === 0) {

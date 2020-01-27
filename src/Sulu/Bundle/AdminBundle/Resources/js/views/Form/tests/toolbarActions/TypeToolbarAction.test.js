@@ -112,6 +112,9 @@ test('Change the type of the FormStore when another type is selected', () => {
     };
 
     const toolbarItemConfig = typeToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
 
     if (toolbarItemConfig.type !== 'select') {
         throw new Error(
