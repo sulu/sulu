@@ -390,7 +390,7 @@ test('Clicking a checkbox should call onRowSelectionChange with the selection st
     expect(onChangeSpy).toHaveBeenCalledWith(rowIdOne, true);
 });
 
-test('Select-all checkbox should be checked if every non-disabled line is selected', () => {
+test('Select-all checkbox should be checked if every line is selected', () => {
     const allRowsSelectedTable = mount(
         <Table selectMode="multiple">
             <Header>
@@ -406,8 +406,11 @@ test('Select-all checkbox should be checked if every non-disabled line is select
             </Body>
         </Table>
     );
-    expect(allRowsSelectedTable.find('Header').find('Checkbox input').props().checked).toEqual(true);
 
+    expect(allRowsSelectedTable.find('Header').find('Checkbox input').props().checked).toEqual(true);
+});
+
+test('Select-all checkbox should not be checked if at least one non-disabled line is not selected', () => {
     const someRowsSelectedTable = mount(
         <Table selectMode="multiple">
             <Header>
@@ -423,8 +426,11 @@ test('Select-all checkbox should be checked if every non-disabled line is select
             </Body>
         </Table>
     );
-    expect(someRowsSelectedTable.find('Header').find('Checkbox input').props().checked).toEqual(false);
 
+    expect(someRowsSelectedTable.find('Header').find('Checkbox input').props().checked).toEqual(false);
+});
+
+test('Select-all checkbox should be checked if every non-disabled line is selected', () => {
     const allEnabledRowsSelectedTable = mount(
         <Table selectMode="multiple">
             <Header>
@@ -440,6 +446,7 @@ test('Select-all checkbox should be checked if every non-disabled line is select
             </Body>
         </Table>
     );
+
     expect(allEnabledRowsSelectedTable.find('Header').find('Checkbox input').props().checked).toEqual(true);
 });
 
