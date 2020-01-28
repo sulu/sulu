@@ -523,22 +523,51 @@ test('Selecting and deselecting items should update store', () => {
 });
 
 test('Selecting and unselecting all visible items should update store', () => {
-    listAdapterRegistry.get.mockReturnValue(TableAdapter);
-    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
-    mockStructureStrategyData = [
+    mockStructureStrategyVisibleItems = [
         {id: 1},
         {id: 2},
         {id: 3},
     ];
+
+    listAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
     const list = mount(<List adapters={['table']} store={listStore} />);
 
     const headerCheckbox = list.find('input[type="checkbox"]').at(0);
     // TODO setting checked explicitly should not be necessary, see https://github.com/airbnb/enzyme/issues/1114
     headerCheckbox.getDOMNode().checked = true;
+
     headerCheckbox.simulate('change', {currentTarget: {checked: true}});
-    expect(listStore.selectVisibleItems).toBeCalledWith();
+    expect(listStore.select).toBeCalledWith({id: 1});
+    expect(listStore.select).toBeCalledWith({id: 2});
+    expect(listStore.select).toBeCalledWith({id: 3});
+
     headerCheckbox.simulate('change', {currentTarget: {checked: false}});
-    expect(listStore.deselectVisibleItems).toBeCalledWith();
+    expect(listStore.deselect).toBeCalledWith({id: 1});
+    expect(listStore.deselect).toBeCalledWith({id: 2});
+    expect(listStore.deselect).toBeCalledWith({id: 3});
+});
+
+test('Should select and unselect all non-disabled items when adapter fires onAllSelectionChange callback', () => {
+    mockStructureStrategyVisibleItems = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+
+    listAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    const list = mount(<List adapters={['table']} disabledIds={[2]} store={listStore} />);
+
+    list.find(TableAdapter).props().onAllSelectionChange(true);
+    expect(listStore.select).toBeCalledWith({id: 1});
+    expect(listStore.select).not.toBeCalledWith({id: 2});
+    expect(listStore.select).toBeCalledWith({id: 3});
+
+    list.find(TableAdapter).props().onAllSelectionChange(false);
+    expect(listStore.deselect).toBeCalledWith({id: 1});
+    expect(listStore.deselect).not.toBeCalledWith({id: 2});
+    expect(listStore.deselect).toBeCalledWith({id: 3});
 });
 
 test('Clicking a header cell should sort the table', () => {

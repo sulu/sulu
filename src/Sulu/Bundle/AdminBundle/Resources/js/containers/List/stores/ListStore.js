@@ -605,7 +605,16 @@ export default class ListStore {
         this.selections.push(row);
     }
 
+    /**
+     * @deprecated
+     */
     @action selectVisibleItems() {
+        log.warn(
+            'The "selectVisibleItems" method will select disabled rows. ' +
+            'Therefore the method is deprecated since version 2.0. ' +
+            'Use the "visibleItems" property and the "select" method instead.'
+        );
+
         this.visibleItems.forEach((item) => {
             this.select(item);
         });
@@ -626,7 +635,16 @@ export default class ListStore {
         this.selections.splice(index, 1);
     }
 
+    /**
+     * @deprecated
+     */
     @action deselectVisibleItems() {
+        log.warn(
+            'The "deselectVisibleItems" method will deselect disabled rows. ' +
+            'Therefore the method is deprecated since version 2.0. ' +
+            'Use the "visibleItems" property and the "deselect" method instead.'
+        );
+
         this.visibleItems.forEach((item) => {
             this.deselect(item);
         });

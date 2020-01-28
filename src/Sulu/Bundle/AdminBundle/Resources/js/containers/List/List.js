@@ -413,7 +413,13 @@ class List extends React.Component<Props> {
 
     handleAllSelectionChange = (selected?: boolean) => {
         const {store} = this.props;
-        selected ? store.selectVisibleItems() : store.deselectVisibleItems();
+
+        store.visibleItems.forEach((item) => {
+            // TODO do not hardcode "id", but use some kind of metadata instead
+            if (!this.disabledIds.includes(item.id)) {
+                selected ? store.select(item) : store.deselect(item);
+            }
+        });
     };
 
     handleAdapterChange = (adapter: string) => {

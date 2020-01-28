@@ -665,6 +665,93 @@ exports[`Render the Table component in multiple selection mode 1`] = `
 </div>
 `;
 
+exports[`Render the Table component in multiple selection mode with select inside first cell 1`] = `
+<div
+  class="tableContainer dark"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr>
+        <th
+          class="headerCell"
+        >
+          <span>
+            <span
+              class="cellSelect"
+            >
+              <label
+                class="label"
+              >
+                <span
+                  class="switch checkbox light"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                  <span />
+                </span>
+              </label>
+            </span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
 exports[`Render the Table component in single selection mode 1`] = `
 <div
   class="tableContainer dark"

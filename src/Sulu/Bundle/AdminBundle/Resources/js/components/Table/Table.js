@@ -90,7 +90,7 @@ class Table<T: string | number> extends React.Component<Props<T>> {
             return false;
         }
 
-        const rowSelections = React.Children.map(rows, (row) => row.props.selected);
+        const rowSelections = React.Children.map(rows, (row) => row.props.selected || row.props.disabled);
 
         return !rowSelections.includes(false);
     };
