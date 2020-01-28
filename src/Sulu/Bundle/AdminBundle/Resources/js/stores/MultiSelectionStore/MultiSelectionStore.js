@@ -10,19 +10,21 @@ export default class MultiSelectionStore<T = string | number, U: {id: T} = Objec
     resourceKey: string;
     locale: ?IObservableValue<string>;
     idFilterParameter: string;
+    requestParameters: {[string]: any};
 
     constructor(
         resourceKey: string,
         selectedItemIds: Array<T>,
         locale: ?IObservableValue<string>,
-        idFilterParameter: string = 'ids'
+        idFilterParameter: string = 'ids',
+        requestParameters: {[string]: any} = {}
     ) {
         this.resourceKey = resourceKey;
         this.locale = locale;
         this.idFilterParameter = idFilterParameter;
-        if (selectedItemIds.length) {
-            this.loadItems(selectedItemIds);
-        }
+        this.requestParameters = requestParameters;
+
+        this.loadItems(selectedItemIds);
     }
 
     @action set(items: Array<U>) {
@@ -42,9 +44,13 @@ export default class MultiSelectionStore<T = string | number, U: {id: T} = Objec
         this.loading = loading;
     }
 
-    @action loadItems(itemIds: ?Array<T>) {
+    setRequestParameters(requestParameters: {[string]: string} ) {
+        this.requestParameters = requestParameters;
+    }
+
+    loadItems(itemIds: ?Array<T>) {
         if (!itemIds || itemIds.length === 0) {
-            this.items = [];
+            this.set([]);
             return;
         }
 
@@ -54,8 +60,9 @@ export default class MultiSelectionStore<T = string | number, U: {id: T} = Objec
             [this.idFilterParameter]: itemIds.join(','),
             limit: undefined,
             page: 1,
+            ...this.requestParameters,
         }).then(action((data) => {
-            this.items = data._embedded[this.resourceKey];
+            this.set(data._embedded[this.resourceKey]);
             this.setLoading(false);
         }));
     }

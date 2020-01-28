@@ -3,6 +3,8 @@ import React from 'react';
 import {computed, observable, intercept, toJS, reaction, autorun} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import equal from 'fast-deep-equal';
+import {observer} from 'mobx-react';
+import {FormInspector} from '../../../containers';
 import List from '../../../containers/List';
 import ListStore from '../../../containers/List/stores/ListStore';
 import MultiAutoComplete from '../../../containers/MultiAutoComplete';
@@ -11,16 +13,16 @@ import MultiSelectionComponent from '../../MultiSelection';
 import userStore from '../../../stores/userStore';
 import type {FieldTypeProps} from '../../../types';
 import selectionStyles from './selection.scss';
-import ResourceStore from "../../../stores/ResourceStore";
-import {FormInspector} from "sulu-admin-bundle/containers";
 
 type Props = FieldTypeProps<Array<string | number>>;
 
 const USER_SETTINGS_KEY = 'selection';
 
-export default class Selection extends React.Component<Props> {
+@observer
+class Selection extends React.Component<Props> {
     listStore: ?ListStore;
     changeListDisposer: ?() => *;
+    changeListOptionsDisposer: ?() => *;
     changeLocaleDisposer: ?() => *;
 
     constructor(props: Props) {
@@ -76,19 +78,19 @@ export default class Selection extends React.Component<Props> {
             );
 
             this.changeListDisposer = reaction(
+                () => (this.listStore ? this.listStore.selectionIds : []),
+                this.handleListSelectionChange
+            );
+
+            this.changeListOptionsDisposer = reaction(
                 () => this.buildRequestOptions({}, resourceStorePropertiesToRequest, formInspector),
                 (requestOptions) => {
                     // reset liststore to reload whole tree instead of children of current active item
                     this.listStore.reset();
                     // set selected items as initialSelectionIds to expand them in case of a tree
-                    this.listStore.initialSelectionIds = this.props.value;
+                    this.listStore.initialSelectionIds = this.listStore.selectionIds;
                     this.listStore.options = {...this.listStore.options, ...requestOptions};
                 }
-            );
-
-            this.changeListDisposer = reaction(
-                () => (this.listStore ? this.listStore.selectionIds : []),
-                this.handleListSelectionChange
             );
 
             this.changeLocaleDisposer = intercept(this.locale, '', (change) => {
@@ -104,6 +106,10 @@ export default class Selection extends React.Component<Props> {
     componentWillUnmount() {
         if (this.changeListDisposer) {
             this.changeListDisposer();
+        }
+
+        if (this.changeListOptionsDisposer) {
+            this.changeListOptionsDisposer();
         }
 
         if (this.changeLocaleDisposer) {
@@ -191,6 +197,9 @@ export default class Selection extends React.Component<Props> {
                 },
             },
             schemaOptions: {
+                resource_store_properties_to_request: {
+                    value: resourceStorePropertiesToRequest = [],
+                } = {},
                 types: {
                     value: types,
                 } = {},
@@ -204,6 +213,10 @@ export default class Selection extends React.Component<Props> {
             value,
         } = this.props;
 
+        if (!Array.isArray(resourceStorePropertiesToRequest)) {
+            throw new Error('The "resource_store_properties_to_request" schemaOption must be an array!');
+        }
+
         if (types !== undefined && typeof types !== 'string') {
             throw new Error('The "types" schema option must be a string if given!');
         }
@@ -216,9 +229,9 @@ export default class Selection extends React.Component<Props> {
             throw new Error('The "allow_deselect_for_disabled_items" schema option must be a boolean if given!');
         }
 
-        const options = {};
+        const requestParameters = {};
         if (types) {
-            options.types = types;
+            requestParameters.types = types;
         }
 
         if (!adapter) {
@@ -238,7 +251,7 @@ export default class Selection extends React.Component<Props> {
                 listKey={listKey || resourceKey}
                 locale={this.locale}
                 onChange={this.handleMultiSelectionChange}
-                options={options}
+                options={this.buildRequestOptions(requestParameters, resourceStorePropertiesToRequest, formInspector)}
                 overlayTitle={translate(overlayTitle)}
                 resourceKey={resourceKey}
                 value={value || []}
@@ -364,3 +377,5 @@ export default class Selection extends React.Component<Props> {
         }
     };
 }
+
+export default Selection;
