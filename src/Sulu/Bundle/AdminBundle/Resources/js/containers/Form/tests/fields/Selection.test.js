@@ -62,7 +62,7 @@ jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-test('Should pass props correctly to selection component', () => {
+test('Should pass props correctly to MultiSelection component', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
@@ -114,6 +114,7 @@ test('Should pass props correctly to selection component', () => {
         listKey: 'snippets_list',
         disabled: true,
         displayProperties: ['id', 'title'],
+        itemDisabledCondition: undefined,
         label: 'sulu_snippet.selection_label',
         locale,
         resourceKey: 'snippets',
@@ -163,7 +164,7 @@ test('Should pass resourceKey as listKey to selection component if no listKey is
     expect(selection.find('MultiSelection').prop('listKey')).toEqual('snippets');
 });
 
-test('Should pass locale from userStore to selection component if form has no locale', () => {
+test('Should pass locale from userStore to MultiSelection component if form has no locale', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
@@ -205,7 +206,7 @@ test('Should pass locale from userStore to selection component if form has no lo
     expect(toJS(selection.find('MultiSelection').prop('locale'))).toEqual('de');
 });
 
-test('Should pass props with schema-options type correctly to selection component', () => {
+test('Should pass props with schema-options type correctly to MultiSelection component', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
@@ -232,6 +233,10 @@ test('Should pass props with schema-options type correctly to selection componen
         type: {
             name: 'type',
             value: 'list_overlay',
+        },
+        item_disabled_condition: {
+            name: 'item_disabled_condition',
+            value: 'status == "inactive"',
         },
     };
 
@@ -262,6 +267,7 @@ test('Should pass props with schema-options type correctly to selection componen
         adapter: 'table',
         disabled: true,
         displayProperties: ['id', 'title'],
+        itemDisabledCondition: 'status == "inactive"',
         label: 'sulu_snippet.selection_label',
         locale,
         resourceKey: 'snippets',
@@ -270,7 +276,7 @@ test('Should pass props with schema-options type correctly to selection componen
     }));
 });
 
-test('Should pass id of form as disabledId to overlay type to avoid assigning something to itself', () => {
+test('Should pass id of form as disabledId to MultiSelection component to avoid assigning something to itself', () => {
     const fieldTypeOptions = {
         default_type: 'list_overlay',
         resource_key: 'pages',
@@ -294,7 +300,7 @@ test('Should pass id of form as disabledId to overlay type to avoid assigning so
     expect(selection.find('MultiSelection').prop('disabledIds')).toEqual([4]);
 });
 
-test('Should pass empty array if value is not given to overlay type', () => {
+test('Should pass empty array to MultiSelection component if value is not given', () => {
     const changeSpy = jest.fn();
     const fieldOptions = {
         default_type: 'list_overlay',
@@ -325,7 +331,7 @@ test('Should pass empty array if value is not given to overlay type', () => {
     }));
 });
 
-test('Should call onChange and onFinish callback when selection overlay is confirmed', () => {
+test('Should call onChange and onFinish callback when MultiSelection component fires onChange callback', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
@@ -375,6 +381,26 @@ test('Should throw an error if "types" schema option is not a string', () => {
             schemaOptions={{types: {value: []}}}
         />
     )).toThrowError(/"types"/);
+});
+
+test('Should throw an error if "item_disabled_condition" schema option is not a string', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'test',
+        types: {
+            list_overlay: {},
+        },
+    };
+
+    expect(() => shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={{item_disabled_condition: {value: []}}}
+        />
+    )).toThrowError(/"item_disabled_condition"/);
 });
 
 test('Should throw an error if no "resource_key" option is passed in fieldOptions', () => {
@@ -493,6 +519,13 @@ test('Should pass props correctly to list component', () => {
         },
     };
 
+    const schemaOptions = {
+        item_disabled_condition: {
+            name: 'item_disabled_condition',
+            value: 'status == "inactive"',
+        },
+    };
+
     const locale = observable.box('en');
 
     const formInspector = new FormInspector(
@@ -508,6 +541,7 @@ test('Should pass props correctly to list component', () => {
             disabled={true}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
+            schemaOptions={schemaOptions}
             value={value}
         />
     );
@@ -518,6 +552,7 @@ test('Should pass props correctly to list component', () => {
     expect(selection.find(List).props()).toEqual(expect.objectContaining({
         adapters: ['table'],
         disabled: true,
+        itemDisabledCondition: 'status == "inactive"',
         searchable: false,
     }));
 });

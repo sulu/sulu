@@ -16,6 +16,7 @@ type Props = {|
     disabledIds: Array<string | number>,
     displayProperties: Array<string>,
     icon: string,
+    itemDisabledCondition?: ?string,
     label?: string,
     listKey: string,
     locale?: ?IObservableValue<string>,
@@ -112,6 +113,7 @@ class MultiSelection extends React.Component<Props> {
             disabledIds,
             displayProperties,
             icon,
+            itemDisabledCondition,
             label,
             locale,
             resourceKey,
@@ -154,6 +156,7 @@ class MultiSelection extends React.Component<Props> {
                 <MultiListOverlay
                     adapter={adapter}
                     disabledIds={disabledIds}
+                    itemDisabledCondition={itemDisabledCondition}
                     listKey={listKey}
                     locale={locale}
                     onClose={this.handleOverlayClose}

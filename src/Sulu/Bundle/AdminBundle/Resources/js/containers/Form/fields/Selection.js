@@ -156,12 +156,19 @@ export default class Selection extends React.Component<Props> {
                 types: {
                     value: types,
                 } = {},
+                item_disabled_condition: {
+                    value: itemDisabledCondition,
+                } = {},
             },
             value,
         } = this.props;
 
         if (types !== undefined && typeof types !== 'string') {
             throw new Error('The "types" schema option must be a string if given!');
+        }
+
+        if (itemDisabledCondition !== undefined && typeof itemDisabledCondition !== 'string') {
+            throw new Error('The "item_disabled_condition" schema option must be a string if given!');
         }
 
         const options = {};
@@ -180,6 +187,7 @@ export default class Selection extends React.Component<Props> {
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}
                 displayProperties={displayProperties}
                 icon={icon}
+                itemDisabledCondition={itemDisabledCondition}
                 label={translate(label, {count: value ? value.length : 0})}
                 listKey={listKey || resourceKey}
                 locale={this.locale}
@@ -263,15 +271,30 @@ export default class Selection extends React.Component<Props> {
                     },
                 },
             },
+            schemaOptions: {
+                item_disabled_condition: {
+                    value: itemDisabledCondition,
+                } = {},
+            },
         } = this.props;
 
         if (!adapter) {
             throw new Error('The selection field needs a "adapter" option for the list type to work properly');
         }
 
+        if (itemDisabledCondition !== undefined && typeof itemDisabledCondition !== 'string') {
+            throw new Error('The "item_disabled_condition" schema option must be a string if given!');
+        }
+
         return (
             <div className={selectionStyles.list}>
-                <List adapters={[adapter]} disabled={!!disabled} searchable={false} store={this.listStore} />
+                <List
+                    adapters={[adapter]}
+                    disabled={!!disabled}
+                    itemDisabledCondition={itemDisabledCondition}
+                    searchable={false}
+                    store={this.listStore}
+                />
             </div>
         );
     }

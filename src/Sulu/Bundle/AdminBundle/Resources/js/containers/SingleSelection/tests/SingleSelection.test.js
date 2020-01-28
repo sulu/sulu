@@ -177,6 +177,25 @@ test('Pass disabledIds to SingleListOverlay', () => {
     expect(singleSelection.find(SingleListOverlay).prop('disabledIds')).toEqual([1, 2, 3]);
 });
 
+test('Pass itemDisabledCondition to SingleListOverlay', () => {
+    const singleSelection = shallow(
+        <SingleSelection
+            adapter="table"
+            displayProperties={['name', 'value']}
+            emptyText="Nothing"
+            icon="su-test"
+            itemDisabledCondition={'status == "inactive"'}
+            listKey="test"
+            onChange={jest.fn()}
+            overlayTitle="Test"
+            resourceKey="test"
+            value={3}
+        />
+    );
+
+    expect(singleSelection.find(SingleListOverlay).prop('itemDisabledCondition')).toEqual('status == "inactive"');
+});
+
 test('Should open and close an overlay', () => {
     const singleSelection = mount(
         <SingleSelection

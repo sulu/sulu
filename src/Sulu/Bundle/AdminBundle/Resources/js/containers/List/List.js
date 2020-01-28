@@ -115,7 +115,7 @@ class List extends React.Component<Props> {
         } = this.props;
 
         const disabledItems = itemDisabledCondition
-            ? store.data.filter((item) => jexl.evalSync(itemDisabledCondition, item))
+            ? store.visibleItems.filter((item) => jexl.evalSync(itemDisabledCondition, item))
             : [];
 
         // TODO do not hardcode "id", but use some kind of metadata instead

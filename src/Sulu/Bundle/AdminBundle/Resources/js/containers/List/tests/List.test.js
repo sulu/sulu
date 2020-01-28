@@ -15,6 +15,7 @@ import FolderAdapter from '../adapters/FolderAdapter';
 import StringFieldTransformer from '../fieldTransformers/StringFieldTransformer';
 
 let mockStructureStrategyData;
+let mockStructureStrategyVisibleItems;
 
 jest.mock('../../../stores/userStore', () => ({
     setPersistentSetting: jest.fn(),
@@ -89,8 +90,10 @@ jest.mock('../stores/ListStore', () => {
         this.updateLoadingStrategy = jest.fn();
         this.structureStrategy = {
             data: mockStructureStrategyData,
+            visibleItems: mockStructureStrategyVisibleItems,
         };
         this.data = this.structureStrategy.data;
+        this.visibleItems = this.structureStrategy.visibleItems;
         this.search = jest.fn();
         this.move = jest.fn();
         this.copy = jest.fn();
@@ -342,7 +345,7 @@ test('Pass the given disabledIds to the adapter', () => {
 });
 
 test('Pass given disabledIds and ids of items that fulfill given itemDisabledCondition to the adapter', () => {
-    mockStructureStrategyData = [
+    mockStructureStrategyVisibleItems = [
         {
             id: 1,
             status: 'active',
@@ -413,7 +416,7 @@ test('Do not call activate if item is activated but disabled and allowActivateFo
 });
 
 test('Do not call activate if item fulfills itemDisabledCondition and allowActivateForDisabledItems is false', () => {
-    mockStructureStrategyData = [
+    mockStructureStrategyVisibleItems = [
         {
             id: 1,
             status: 'active',
