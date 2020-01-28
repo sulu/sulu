@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, observable, intercept, toJS, reaction} from 'mobx';
+import {computed, observable, intercept, toJS, reaction, autorun} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import equal from 'fast-deep-equal';
 import List from '../../../containers/List';
@@ -11,6 +11,8 @@ import MultiSelectionComponent from '../../MultiSelection';
 import userStore from '../../../stores/userStore';
 import type {FieldTypeProps} from '../../../types';
 import selectionStyles from './selection.scss';
+import ResourceStore from "../../../stores/ResourceStore";
+import {FormInspector} from "sulu-admin-bundle/containers";
 
 type Props = FieldTypeProps<Array<string | number>>;
 
@@ -50,17 +52,38 @@ export default class Selection extends React.Component<Props> {
                         },
                     },
                 },
+                formInspector,
+                schemaOptions: {
+                    resource_store_properties_to_request: {
+                        value: resourceStorePropertiesToRequest = [],
+                    } = {},
+                },
                 value,
             } = this.props;
+
+            if (!Array.isArray(resourceStorePropertiesToRequest)) {
+                throw new Error('The "resource_store_properties_to_request" schemaOption must be an array!');
+            }
 
             this.listStore = new ListStore(
                 resourceKey,
                 listKey || resourceKey,
                 USER_SETTINGS_KEY,
                 {locale: this.locale, page: observable.box()},
-                {},
+                this.buildRequestOptions({}, resourceStorePropertiesToRequest, formInspector),
                 undefined,
                 value
+            );
+
+            this.changeListDisposer = reaction(
+                () => this.buildRequestOptions({}, resourceStorePropertiesToRequest, formInspector),
+                (requestOptions) => {
+                    // reset liststore to reload whole tree instead of children of current active item
+                    this.listStore.reset();
+                    // set selected items as initialSelectionIds to expand them in case of a tree
+                    this.listStore.initialSelectionIds = this.props.value;
+                    this.listStore.options = {...this.listStore.options, ...requestOptions};
+                }
             );
 
             this.changeListDisposer = reaction(
@@ -117,6 +140,21 @@ export default class Selection extends React.Component<Props> {
         }
 
         return type;
+    }
+
+    buildRequestOptions(
+        requestParameters: Object,
+        resourceStorePropertiesToRequest: Array<SchemaOption>,
+        formInspector: FormInspector
+    ) {
+        const requestOptions = requestParameters ? requestParameters : {};
+
+        resourceStorePropertiesToRequest.forEach((propertyToRequest) => {
+            const {name: parameterName, value: propertyName} = propertyToRequest;
+            requestOptions[parameterName] = formInspector.getValueByPath('/' + propertyName || parameterName);
+        });
+
+        return requestOptions;
     }
 
     render() {
