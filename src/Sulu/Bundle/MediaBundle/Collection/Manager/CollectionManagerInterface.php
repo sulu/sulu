@@ -97,7 +97,7 @@ interface CollectionManagerInterface
      *
      * @return Collection
      */
-    public function save(array $data, int $userId, bool $breadcrumb = false);
+    public function save(array $data, ?int $userId = null, bool $breadcrumb = false);
 
     /**
      * Deletes a collection with a given id.
