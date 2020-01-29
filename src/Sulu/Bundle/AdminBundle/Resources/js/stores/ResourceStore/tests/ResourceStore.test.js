@@ -19,6 +19,7 @@ test('Should be marked as initialized after loading the data', () => {
 
     return promise.then(() => {
         expect(resourceStore.initialized).toBe(true);
+        expect(resourceStore.forbidden).toBe(false);
     });
 });
 
@@ -31,6 +32,27 @@ test('Should be marked as not dirty after loading the data', () => {
 
     return promise.then(() => {
         expect(resourceStore.dirty).toBe(false);
+        expect(resourceStore.forbidden).toBe(false);
+    });
+});
+
+test('Should be marked as forbidden if loading failed with 403 and not forbidden if next request succeeds', (done) => {
+    const promise = Promise.reject({status: 403});
+    ResourceRequester.get.mockReturnValue(promise);
+    const resourceStore = new ResourceStore('snippets', '1');
+
+    setTimeout(() => {
+        expect(resourceStore.forbidden).toBe(true);
+
+        const promise = Promise.resolve({});
+        ResourceRequester.get.mockReturnValue(promise);
+
+        resourceStore.load();
+
+        setTimeout(() => {
+            expect(resourceStore.forbidden).toBe(false);
+            done();
+        });
     });
 });
 

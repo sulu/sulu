@@ -12,9 +12,7 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 }));
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
-    get: jest.fn().mockReturnValue({
-        then: jest.fn(),
-    }),
+    get: jest.fn().mockReturnValue(Promise.resolve({})),
     put: jest.fn().mockReturnValue(Promise.resolve({})),
 }));
 
