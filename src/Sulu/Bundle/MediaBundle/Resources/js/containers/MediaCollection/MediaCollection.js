@@ -76,12 +76,14 @@ class MediaCollection extends React.Component<Props> {
             uploadOverlayOpen,
         } = this.props;
 
-        const {permissions} = collectionStore;
+        const {locked, permissions} = collectionStore;
 
-        const addable = permissions.add !== undefined ? permissions.add : MediaCollection.addable;
-        const editable = permissions.edit !== undefined ? permissions.edit : MediaCollection.editable;
-        const deletable = permissions.delete !== undefined ? permissions.delete : MediaCollection.deletable;
-        const securable = permissions.security !== undefined ? permissions.security : MediaCollection.securable;
+        const addable = !locked && (permissions.add !== undefined ? permissions.add : MediaCollection.addable);
+        const editable = !locked && (permissions.edit !== undefined ? permissions.edit : MediaCollection.editable);
+        const deletable = !locked
+            && (permissions.delete !== undefined ? permissions.delete : MediaCollection.deletable);
+        const securable = !locked
+            && (permissions.security !== undefined ? permissions.security : MediaCollection.securable);
 
         return (
             <MultiMediaDropzone
