@@ -2,7 +2,6 @@
 import React from 'react';
 import type {ElementRef} from 'react';
 import classNames from 'classnames';
-import {afterElementsRendered} from '../../utils/DOM';
 import Icon from '../Icon';
 import Checkbox from '../Checkbox';
 import type {OptionSelectedVisualization} from './types';
@@ -12,7 +11,6 @@ type Props<T> = {|
     anchorWidth: number,
     children: string,
     disabled: boolean,
-    focus: boolean,
     onClick?: (value: T) => void,
     optionRef?: (optionNode: ElementRef<'li'>, selected: boolean) => void,
     selected: boolean,
@@ -26,7 +24,6 @@ export default class Option<T> extends React.PureComponent<Props<T>> {
     static defaultProps = {
         anchorWidth: 0,
         disabled: false,
-        focus: false,
         selected: false,
         selectedVisualization: 'icon',
     };
@@ -47,18 +44,6 @@ export default class Option<T> extends React.PureComponent<Props<T>> {
 
         if (optionRef && item) {
             optionRef(item, selected);
-        }
-    };
-
-    setButtonRef = (button: ?ElementRef<'button'>) => {
-        if (this.props.focus) {
-            afterElementsRendered(() => {
-                if (!button) {
-                    return;
-                }
-
-                button.focus();
-            });
         }
     };
 
@@ -98,7 +83,6 @@ export default class Option<T> extends React.PureComponent<Props<T>> {
                     className={optionClass}
                     disabled={disabled}
                     onClick={this.handleButtonClick}
-                    ref={this.setButtonRef}
                     style={{minWidth: anchorWidth + ANCHOR_WIDTH_DIFFERENCE}}
                 >
                     {this.renderSelectedVisualization()}
