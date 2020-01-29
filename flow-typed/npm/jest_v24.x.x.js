@@ -1,5 +1,5 @@
-// flow-typed signature: ec5f209a3b2ff526e13bf59605e51e87
-// flow-typed version: 6cb9e99836/jest_v24.x.x/flow_>=v0.39.x <=v0.103.x
+// flow-typed signature: e5bfb35b37d41e4c5cf768a457706b14
+// flow-typed version: fa3a988c34/jest_v24.x.x/flow_>=v0.39.x <=v0.103.x
 
 type JestMockFn<TArguments: $ReadOnlyArray<*>, TReturn> = {
   (...args: TArguments): TReturn,
@@ -330,6 +330,12 @@ type JestExtendedMatchersType = {
    * @param {Array.<*>} members
    */
   toIncludeAnyMembers(members: any[]): void,
+
+  /**
+   * Use `.toIncludeSameMembers` when checking if two arrays contain equal values, in any order.
+   * @param {Array.<*>} members
+   */
+  toIncludeSameMembers(members: any[]): void,
 
   /**
    * Use `.toSatisfyAll` when you want to use a custom matcher by supplying a predicate function that returns a `Boolean` for all values in an array.

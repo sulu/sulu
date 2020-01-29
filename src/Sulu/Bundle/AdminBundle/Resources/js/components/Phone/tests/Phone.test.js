@@ -66,7 +66,8 @@ test('Phone should set onIconClick when value is set', () => {
 });
 
 test('Phone should set onIconClick when value is valid and window should be opened', () => {
-    window.location.assign = jest.fn();
+    delete window.location;
+    window.location = {assign: jest.fn()};
 
     const onChange = jest.fn();
     const onBlur = jest.fn();
