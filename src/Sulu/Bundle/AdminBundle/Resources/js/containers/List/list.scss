@@ -2,7 +2,6 @@
 
 $listToolbarHeight: 30px;
 $listHeaderMarginBottom: 40px;
-$permissionHintColor: $gray;
 
 .list-container {
     display: flex;
@@ -46,16 +45,4 @@ $permissionHintColor: $gray;
             margin-right: 0;
         }
     }
-}
-
-.permission-hint {
-    font-size: 18px;
-    font-weight: bold;
-    color: $permissionHintColor;
-    width: 100%;
-    text-align: center;
-}
-
-.permission-icon {
-    font-size: 32px;
 }
