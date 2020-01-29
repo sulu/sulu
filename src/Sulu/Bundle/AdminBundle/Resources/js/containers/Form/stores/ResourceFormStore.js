@@ -165,6 +165,10 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         return this.resourceStore.deleting;
     }
 
+    @computed get forbidden(): boolean {
+        return this.resourceStore.forbidden;
+    }
+
     @computed get dirty(): boolean {
         return this.resourceStore.dirty;
     }

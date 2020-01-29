@@ -628,6 +628,16 @@ test('Loading flag should be set to false after data and schema have been loadin
     resourceFormStore.destroy();
 });
 
+test.each([true, false])('Forbidden flag should be set as %s', (forbidden) => {
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+
+    resourceStore.forbidden = forbidden;
+
+    expect(resourceFormStore.forbidden).toBe(forbidden);
+    resourceFormStore.destroy();
+});
+
 test('Save the store should call the resourceStore save function', () => {
     const resourceFormStore = new ResourceFormStore(
         new ResourceStore('snippets', '3', {locale: observable.box()}),

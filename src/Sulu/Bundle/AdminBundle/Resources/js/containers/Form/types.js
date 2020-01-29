@@ -97,6 +97,7 @@ export interface FormStoreInterface {
     dirty: boolean,
     errors: Object,
     +finishField: (dataPath: string) => void,
+    +forbidden: boolean,
     +getSchemaEntryByPath: (schemaPath: string) => SchemaEntry,
     +getValueByPath: (path: string) => mixed,
     +getValuesByTag: (tagName: string) => Array<mixed>,
