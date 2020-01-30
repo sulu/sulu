@@ -159,6 +159,19 @@ test('Should be empty after clear without a parent was called', () => {
     expect(columnStructureStrategy.data[0]).toEqual([]);
 });
 
+test('Should not be empty if called with a non-existing parent', () => {
+    const columnStructureStrategy = new ColumnStructureStrategy();
+    columnStructureStrategy.rawData = new Map();
+    columnStructureStrategy.rawData.set(0, []);
+    columnStructureStrategy.rawData.set(1, []);
+
+    expect(columnStructureStrategy.data).toHaveLength(2);
+    columnStructureStrategy.clear(5);
+    expect(columnStructureStrategy.data).toHaveLength(2);
+    expect(columnStructureStrategy.data[0]).toEqual([]);
+    expect(columnStructureStrategy.data[1]).toEqual([]);
+});
+
 test('Should add the items in a recursive way', () => {
     const columnStructureStrategy = new ColumnStructureStrategy();
 

@@ -1,6 +1,7 @@
 // @flow
 import type {Node} from 'react';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import {RequestPromise} from '../../services/Requester';
 
 export type DataItem = {
     id: string | number,
@@ -75,7 +76,7 @@ export type LoadOptions = {
 
 export interface LoadingStrategyInterface {
     constructor(): void,
-    load(resourceKey: string, options: LoadOptions, parentId: ?string | number): Promise<Object>,
+    load(resourceKey: string, options: LoadOptions, parentId: ?string | number): RequestPromise<Object>,
     setStructureStrategy(structureStrategy: StructureStrategyInterface): void,
 }
 
