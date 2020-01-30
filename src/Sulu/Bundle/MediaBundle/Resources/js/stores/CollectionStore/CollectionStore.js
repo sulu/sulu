@@ -39,6 +39,14 @@ export default class CollectionStore {
         return this.resourceStore.id;
     }
 
+    @computed get locked(): boolean {
+        if (this.loading) {
+            return false;
+        }
+
+        return this.resourceStore.data.locked;
+    }
+
     @computed get permissions(): {[key: string]: boolean} {
         if (this.resourceStore.loading || !this.resourceStore.id) {
             return {};
