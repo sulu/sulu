@@ -491,7 +491,7 @@ export default class ListStore {
 
         log.info('List loads "' + this.resourceKey + '" data with the following options:', options);
 
-        if (this.pendingRequest instanceof RequestPromise) {
+        if (this.pendingRequest) {
             this.pendingRequest.abort();
         }
 

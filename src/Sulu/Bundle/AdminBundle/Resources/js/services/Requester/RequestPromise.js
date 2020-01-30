@@ -22,7 +22,9 @@ export default class RequestPromise<T> extends Promise<T> {
     }
 
     catch(onReject: ?(*) => Promise<*> | *): RequestPromise<*> {
-        // $FlowFixMe
-        return super.catch(onReject);
+        const requestPromise = ((super.catch(onReject): any): RequestPromise<*>);
+        requestPromise.setAbortController(this.abortController);
+
+        return requestPromise;
     }
 }
