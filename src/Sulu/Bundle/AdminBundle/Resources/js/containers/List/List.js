@@ -10,8 +10,8 @@ import jexl from 'jexl';
 import ArrowMenu from '../../components/ArrowMenu';
 import Button from '../../components/Button';
 import Dialog from '../../components/Dialog';
-import Icon from '../../components/Icon';
 import Loader from '../../components/Loader';
+import PermissionHint from '../../components/PermissionHint';
 import userStore from '../../stores/userStore';
 import SingleListOverlay from '../SingleListOverlay';
 import {translate} from '../../utils/Translator';
@@ -530,14 +530,7 @@ class List extends React.Component<Props> {
         const searchable = this.props.searchable && Adapter.searchable;
 
         if (store.forbidden) {
-            return (
-                <div className={listStyles.permissionHint}>
-                    <div className={listStyles.permissionIcon}>
-                        <Icon name="su-lock" />
-                    </div>
-                    {translate('sulu_admin.no_permissions')}
-                </div>
-            );
+            return <PermissionHint />;
         }
 
         return (

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render permission hint if permissions are missing 1`] = `
+exports[`Render PermissionHint 1`] = `
 <div
   class="permissionHint"
 >
@@ -14,10 +14,4 @@ exports[`Render permission hint if permissions are missing 1`] = `
   </div>
   sulu_admin.no_permissions
 </div>
-`;
-
-exports[`Should render form using renderer 1`] = `
-<div
-  class="grid grid"
-/>
 `;
