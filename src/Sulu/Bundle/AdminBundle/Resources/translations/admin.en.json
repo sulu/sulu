@@ -25,6 +25,7 @@
     "sulu_admin.yes": "Yes",
     "sulu_admin.no": "No",
     "sulu_admin.type": "Type",
+    "sulu_admin.default": "Default",
     "sulu_admin.error_required": "This field must have a value",
     "sulu_admin.error_minlength": "The minimal length of this field was undershot",
     "sulu_admin.error_minitems": "This field has too few selections",

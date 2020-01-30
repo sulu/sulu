@@ -25,7 +25,7 @@ export type SortOrder = 'asc' | 'desc';
 export type Conjunction = 'or' | 'and';
 
 export type Sorting = {
-    name: string,
+    name: ?string,
     value: string,
 };
 
