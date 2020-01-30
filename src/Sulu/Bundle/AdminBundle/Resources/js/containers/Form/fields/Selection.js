@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, observable, intercept, toJS, reaction, autorun} from 'mobx';
+import {computed, observable, intercept, toJS, reaction} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import equal from 'fast-deep-equal';
 import {observer} from 'mobx-react';
@@ -12,6 +12,7 @@ import {translate} from '../../../utils/Translator';
 import MultiSelectionComponent from '../../MultiSelection';
 import userStore from '../../../stores/userStore';
 import type {FieldTypeProps} from '../../../types';
+import type {SchemaOption} from '../types';
 import selectionStyles from './selection.scss';
 
 type Props = FieldTypeProps<Array<string | number>>;
@@ -56,12 +57,19 @@ class Selection extends React.Component<Props> {
                 },
                 formInspector,
                 schemaOptions: {
+                    request_parameters: {
+                        value: requestParameters = [],
+                    } = {},
                     resource_store_properties_to_request: {
                         value: resourceStorePropertiesToRequest = [],
                     } = {},
                 },
                 value,
             } = this.props;
+
+            if (!Array.isArray(requestParameters)) {
+                throw new Error('The "request_parameters" schemaOption must be an array!');
+            }
 
             if (!Array.isArray(resourceStorePropertiesToRequest)) {
                 throw new Error('The "resource_store_properties_to_request" schemaOption must be an array!');
@@ -72,7 +80,7 @@ class Selection extends React.Component<Props> {
                 listKey || resourceKey,
                 USER_SETTINGS_KEY,
                 {locale: this.locale, page: observable.box()},
-                this.buildRequestOptions({}, resourceStorePropertiesToRequest, formInspector),
+                this.buildRequestOptions(requestParameters, resourceStorePropertiesToRequest, formInspector),
                 undefined,
                 value
             );
@@ -83,13 +91,18 @@ class Selection extends React.Component<Props> {
             );
 
             this.changeListOptionsDisposer = reaction(
-                () => this.buildRequestOptions({}, resourceStorePropertiesToRequest, formInspector),
+                () => this.buildRequestOptions(requestParameters, resourceStorePropertiesToRequest, formInspector),
                 (requestOptions) => {
+                    const listStore = this.listStore;
+                    if (!listStore) {
+                        throw new Error('The ListStore has not been initialized! This is likely a bug.');
+                    }
+
                     // reset liststore to reload whole tree instead of children of current active item
-                    this.listStore.reset();
+                    listStore.reset();
                     // set selected items as initialSelectionIds to expand them in case of a tree
-                    this.listStore.initialSelectionIds = this.listStore.selectionIds;
-                    this.listStore.options = {...this.listStore.options, ...requestOptions};
+                    listStore.initialSelectionIds = listStore.selectionIds;
+                    listStore.options = {...listStore.options, ...requestOptions};
                 }
             );
 
@@ -149,15 +162,20 @@ class Selection extends React.Component<Props> {
     }
 
     buildRequestOptions(
-        requestParameters: Object,
+        requestParameters: Array<SchemaOption>,
         resourceStorePropertiesToRequest: Array<SchemaOption>,
         formInspector: FormInspector
     ) {
-        const requestOptions = requestParameters ? requestParameters : {};
+        const requestOptions = {};
+
+        requestParameters.forEach((parameter) => {
+            requestOptions[String(parameter.name)] = parameter.value;
+        });
 
         resourceStorePropertiesToRequest.forEach((propertyToRequest) => {
             const {name: parameterName, value: propertyName} = propertyToRequest;
-            requestOptions[parameterName] = formInspector.getValueByPath('/' + propertyName || parameterName);
+            const propertyPath = String(propertyName || parameterName);
+            requestOptions[String(parameterName)] = formInspector.getValueByPath('/' + propertyPath);
         });
 
         return requestOptions;
@@ -197,6 +215,9 @@ class Selection extends React.Component<Props> {
                 },
             },
             schemaOptions: {
+                request_parameters: {
+                    value: requestParameters = [],
+                } = {},
                 resource_store_properties_to_request: {
                     value: resourceStorePropertiesToRequest = [],
                 } = {},
@@ -212,6 +233,10 @@ class Selection extends React.Component<Props> {
             },
             value,
         } = this.props;
+
+        if (!Array.isArray(requestParameters)) {
+            throw new Error('The "request_parameters" schemaOption must be an array!');
+        }
 
         if (!Array.isArray(resourceStorePropertiesToRequest)) {
             throw new Error('The "resource_store_properties_to_request" schemaOption must be an array!');
@@ -229,13 +254,13 @@ class Selection extends React.Component<Props> {
             throw new Error('The "allow_deselect_for_disabled_items" schema option must be a boolean if given!');
         }
 
-        const requestParameters = {};
-        if (types) {
-            requestParameters.types = types;
-        }
-
         if (!adapter) {
             throw new Error('The selection field needs a "adapter" option to work properly');
+        }
+
+        const options = this.buildRequestOptions(requestParameters, resourceStorePropertiesToRequest, formInspector);
+        if (types) {
+            options.types = types;
         }
 
         return (
@@ -251,7 +276,7 @@ class Selection extends React.Component<Props> {
                 listKey={listKey || resourceKey}
                 locale={this.locale}
                 onChange={this.handleMultiSelectionChange}
-                options={this.buildRequestOptions(requestParameters, resourceStorePropertiesToRequest, formInspector)}
+                options={options}
                 overlayTitle={translate(overlayTitle)}
                 resourceKey={resourceKey}
                 value={value || []}

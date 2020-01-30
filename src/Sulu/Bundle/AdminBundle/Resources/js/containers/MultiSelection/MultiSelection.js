@@ -51,9 +51,9 @@ class MultiSelection extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const {locale, resourceKey, value} = this.props;
+        const {locale, options, resourceKey, value} = this.props;
 
-        this.selectionStore = new MultiSelectionStore(resourceKey, value, locale);
+        this.selectionStore = new MultiSelectionStore(resourceKey, value, locale, 'ids', options);
 
         this.changeSelectionDisposer = reaction(
             () => (this.selectionStore.items.map((item) => item.id)),

@@ -45,6 +45,7 @@ class MultiListOverlay extends React.Component<Props> {
     listStore: ListStore;
     page: IObservableValue<number> = observable.box(1);
     excludedIdsDisposer: () => void;
+    changeOptionsDisposer: () => *;
 
     constructor(props: Props) {
         super(props);
@@ -87,6 +88,7 @@ class MultiListOverlay extends React.Component<Props> {
     componentWillUnmount() {
         this.listStore.destroy();
         this.excludedIdsDisposer();
+        this.changeOptionsDisposer();
     }
 
     handleConfirm = () => {
