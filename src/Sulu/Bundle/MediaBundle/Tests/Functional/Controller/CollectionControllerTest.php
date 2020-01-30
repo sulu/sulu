@@ -273,9 +273,6 @@ class CollectionControllerTest extends SuluTestCase
         return array_values($result);
     }
 
-    /**
-     * @description Test Collection GET by ID
-     */
     public function testGetById()
     {
         $client = $this->createAuthenticatedClient();
@@ -314,9 +311,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
     }
 
-    /**
-     * @description Test GET all Collections
-     */
     public function testCGet()
     {
         for ($i = 1; $i <= 15; ++$i) {
@@ -393,9 +387,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertCount(2, $response->_embedded->collections);
     }
 
-    /**
-     * @description Test GET Collections filtered by parent
-     */
     public function testCGetFlatWithParent()
     {
         $collection = $this->createCollection($this->collectionType1);
@@ -428,9 +419,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertCount(5, $response->_embedded->collections);
     }
 
-    /**
-     * @description Test GET all Collections with pagination and sorted by title
-     */
     public function testcGetPaginated()
     {
         $this->createCollection(
@@ -519,10 +507,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('Test Collection', $response->_embedded->collections[0]->title);
     }
 
-    /**
-     * @description Tests the cGET action with a pagination. Only the collections of the desired
-     * level should be returned and in the right amount, although they have children.
-     */
     public function testcGetPaginatedWithChildren()
     {
         $parent = $this->createCollection(
@@ -562,9 +546,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals(1, $response->_embedded->collections[1]->objectCount);
     }
 
-    /**
-     * @description Test GET for non existing Resource (404)
-     */
     public function testGetByIdNotExisting()
     {
         $client = $this->createAuthenticatedClient();
@@ -581,9 +562,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->message));
     }
 
-    /**
-     * @description Test POST to create a new Collection
-     */
     public function testPost()
     {
         $client = $this->createAuthenticatedClient();
@@ -685,9 +663,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('This Description 2 is only for testing', $responseSecondEntity->description);
     }
 
-    /**
-     * @description Test POST to create a new nested Collection
-     */
     public function testPostNested()
     {
         $client = $this->createAuthenticatedClient();
@@ -783,9 +758,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals(2 + $this->getAmountOfSystemCollections(), $response->total);
     }
 
-    /**
-     * @description Test POST to create a new Collection
-     */
     public function testPostWithoutDetails()
     {
         $client = $this->createAuthenticatedClient();
@@ -908,9 +880,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('Test Collection 2', $responseSecondEntity->title);
     }
 
-    /**
-     * @description Test POST to create a new Collection
-     */
     public function testPostWithNotExistingType()
     {
         $client = $this->createAuthenticatedClient();
@@ -943,9 +912,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->message));
     }
 
-    /**
-     * @description Test PUT Action
-     */
     public function testPut()
     {
         $client = $this->createAuthenticatedClient();
@@ -1032,9 +998,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('en-gb', $responseFirstEntity->locale);
     }
 
-    /**
-     * @description Test PUT Action
-     */
     public function testPutWithoutLocale()
     {
         $client = $this->createAuthenticatedClient();
@@ -1125,9 +1088,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNull($response['_embedded']['breadcrumb']);
     }
 
-    /**
-     * @description Test PUT action without details
-     */
     public function testPutNoDetails()
     {
         $client = $this->createAuthenticatedClient();
@@ -1176,9 +1136,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNotNull($response->type->id);
     }
 
-    /**
-     * @description Test PUT on a none existing Object
-     */
     public function testPutNotExisting()
     {
         $client = $this->createAuthenticatedClient();
@@ -1199,9 +1156,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
-    /**
-     * @description Test DELETE
-     */
     public function testDeleteById()
     {
         $client = $this->createAuthenticatedClient();
@@ -1221,9 +1175,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->message));
     }
 
-    /**
-     * @description Test DELETE on none existing Object
-     */
     public function testDeleteByIdNotExisting()
     {
         $client = $this->createAuthenticatedClient();
@@ -1233,7 +1184,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $client->request('GET', '/api/collections?locale=en&flat=true');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(2, $response->total);
     }
 
     private function prepareTree()
@@ -1503,9 +1454,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals($ids[5], $breadcrumb[1]['id']);
     }
 
-    /**
-     * @description Test Collection GET by ID with a depth
-     */
     public function testGetByIdWithDepth()
     {
         list($titles, $ids) = $this->prepareTree();
@@ -1577,9 +1525,6 @@ class CollectionControllerTest extends SuluTestCase
         );
     }
 
-    /**
-     * @description Test move a Collection
-     */
     public function testMove()
     {
         list($titles, $ids) = $this->prepareTree();
@@ -1674,5 +1619,24 @@ class CollectionControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(403, $client->getResponse());
+    }
+
+    public function testDeleteSystemCollection()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $collectionId = $client->getContainer()->get('sulu_media.system_collections.manager')->getSystemCollection(
+            'sulu_media'
+        );
+
+        $client->request('DELETE', '/api/collections/' . $collectionId);
+        $this->assertHttpStatusCode(403, $client->getResponse());
+
+        $client->request(
+            'GET',
+            '/api/collections/' . $collectionId . '?locale=en'
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
     }
 }
