@@ -73,7 +73,7 @@ class SmartContentItemController extends AbstractRestController
             $filters['sortBy'] = $this->getRequestParameter($request, 'sortBy');
         }
         if (isset($filters['includeSubFolders'])) {
-            $filters['includeSubFolders'] = $filters['includeSubFolders'] === 'true';
+            $filters['includeSubFolders'] = 'true' === $filters['includeSubFolders'];
         }
         $filters = array_filter($filters);
         $options = [

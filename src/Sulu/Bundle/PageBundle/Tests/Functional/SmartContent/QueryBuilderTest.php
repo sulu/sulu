@@ -1101,15 +1101,12 @@ class QueryBuilderTest extends SuluTestCase
                     'dataSource' => $root->getIdentifier(),
                     'orderBy' => [],
                     'includeSubFolders' => true,
-                ]
+                ],
             ]
         );
 
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
-        var_dump(array_map(function($item) {
-            return $item['path'];
-        }, $result));die();
         $this->assertEquals('/news', $result[0]['path']);
         $this->assertEquals('/news/news-0', $result[1]['path']);
         $this->assertEquals('/news/news-1', $result[2]['path']);
