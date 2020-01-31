@@ -28,11 +28,24 @@ class AddAdminPass implements CompilerPassInterface
     {
         $pool = $container->getDefinition('sulu_admin.admin_pool');
 
-        $taggedServices = $container->findTaggedServiceIds(self::ADMIN_TAG);
+        $adminServiceDefinitions = [];
+        foreach ($container->findTaggedServiceIds(self::ADMIN_TAG) as $id => $tags) {
+            $serviceDefinition = $container->getDefinition($id);
 
-        foreach ($taggedServices as $id => $attributes) {
-            $admin = $container->getDefinition($id);
-            $pool->addMethodCall('addAdmin', [$admin]);
+            $class = $container->getParameterBag()->resolveValue($serviceDefinition->getClass());
+
+            /** @var callable $callable */
+            $callable = [$class, 'getPriority'];
+            $priority = call_user_func($callable);
+
+            $adminServiceDefinitions[$priority][] = $serviceDefinition;
+        }
+
+        krsort($adminServiceDefinitions);
+        $adminServiceDefinitions = array_merge(...$adminServiceDefinitions);
+
+        foreach ($adminServiceDefinitions as $id => $serviceDefinition) {
+            $pool->addMethodCall('addAdmin', [$serviceDefinition]);
         }
     }
 }

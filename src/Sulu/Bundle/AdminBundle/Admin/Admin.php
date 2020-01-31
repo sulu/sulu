@@ -23,6 +23,11 @@ abstract class Admin implements ViewProviderInterface, NavigationProviderInterfa
 {
     const SETTINGS_NAVIGATION_ITEM = 'sulu_admin.settings';
 
+    public static function getPriority(): int
+    {
+        return 0;
+    }
+
     public function configureViews(ViewCollection $viewCollection): void
     {
     }
