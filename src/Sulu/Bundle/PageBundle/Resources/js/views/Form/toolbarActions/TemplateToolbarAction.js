@@ -32,18 +32,10 @@ export default class TemplateToolbarAction extends AbstractFormToolbarAction {
         }
 
         const {
-            visible_condition: visibleCondition,
             disabled_condition: disabledCondition,
         } = this.options;
 
-        if (visibleCondition && !jexl.evalSync(visibleCondition, this.resourceFormStore.data)) {
-            return;
-        }
-
-        let isDisabled = false;
-        if (disabledCondition && jexl.evalSync(disabledCondition, this.resourceFormStore.data)) {
-            isDisabled = true;
-        }
+        const isDisabled = disabledCondition ? jexl.evalSync(disabledCondition, this.resourceFormStore.data) : false;
 
         return {
             type: 'select',

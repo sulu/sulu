@@ -135,19 +135,6 @@ test('Throw error if no types are available in FormStore', () => {
     expect(() => typeToolbarAction.getToolbarItemConfig()).toThrow(/actually supporting types/);
 });
 
-test('Return empty item config when passed visible condition is not met', () => {
-    const typeToolbarAction = createTypeToolbarAction({visible_condition: 'url == "/"'});
-
-    expect(typeToolbarAction.getToolbarItemConfig()).toBeUndefined();
-});
-
-test('Return item config when passed visible condition is met', () => {
-    const typeToolbarAction = createTypeToolbarAction({visible_condition: 'url == "/"'});
-    typeToolbarAction.resourceFormStore.data.url = '/';
-
-    expect(typeToolbarAction.getToolbarItemConfig()).toBeDefined();
-});
-
 test('Return disabled true when passed disabled condition is not met', () => {
     const typeToolbarAction = createTypeToolbarAction({disabled_condition: 'url == "/"'});
 
