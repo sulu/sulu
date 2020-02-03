@@ -24,7 +24,6 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
-use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,11 +47,6 @@ class RequestAnalyzerTest extends TestCase
     private $contentMapper;
 
     /**
-     * @var ReplacerInterface
-     */
-    private $replacer;
-
-    /**
      * @var RequestStack
      */
     private $requestStack;
@@ -62,14 +56,13 @@ class RequestAnalyzerTest extends TestCase
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->contentMapper = $this->prophesize(ContentMapperInterface::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
-        $this->replacer = $this->prophesize(ReplacerInterface::class);
 
         $this->requestAnalyzer = new RequestAnalyzer(
             $this->requestStack->reveal(),
             [
                 new UrlRequestProcessor(),
                 new WebsiteRequestProcessor(
-                    $this->webspaceManager->reveal(), $this->contentMapper->reveal(), $this->replacer->reveal(), 'prod'
+                    $this->webspaceManager->reveal(), $this->contentMapper->reveal(), 'prod'
                 ),
                 new PortalInformationRequestProcessor(),
             ]

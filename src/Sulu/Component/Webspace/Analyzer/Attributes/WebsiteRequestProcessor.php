@@ -38,20 +38,13 @@ class WebsiteRequestProcessor implements RequestProcessorInterface
      */
     private $environment;
 
-    /**
-     * @var ReplacerInterface
-     */
-    private $replacer;
-
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
         ContentMapperInterface $contentMapper,
-        ReplacerInterface $replacer,
         $environment
     ) {
         $this->webspaceManager = $webspaceManager;
         $this->contentMapper = $contentMapper;
-        $this->replacer = $replacer;
         $this->environment = $environment;
     }
 
@@ -62,12 +55,6 @@ class WebsiteRequestProcessor implements RequestProcessorInterface
     {
         $host = $requestAttributes->getAttribute('host');
         $url = $host . $requestAttributes->getAttribute('path');
-        foreach ($this->webspaceManager->getPortalInformations($this->environment) as $portalInformation) {
-            $portalUrl = $this->replacer->replaceHost($portalInformation->getUrl(), $host);
-            $portalInformation->setUrl($portalUrl);
-            $portalRedirect = $this->replacer->replaceHost($portalInformation->getRedirect(), $host);
-            $portalInformation->setRedirect($portalRedirect);
-        }
 
         $portalInformations = $this->webspaceManager->findPortalInformationsByUrl(
             $url,
