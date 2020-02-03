@@ -9,6 +9,7 @@ import Button from './Button';
 import type {Button as ButtonConfig} from './types';
 
 type Props = {|
+    allowRemoveWhileDisabled: boolean,
     children?: Node,
     disabled: boolean,
     emptyText?: string,
@@ -21,13 +22,32 @@ type Props = {|
 
 export default class SingleItemSelection extends React.Component<Props> {
     static defaultProps = {
+        allowRemoveWhileDisabled: false,
         disabled: false,
         loading: false,
         valid: true,
     };
 
     render() {
-        const {children, disabled, emptyText, leftButton, loading, onRemove, rightButton, valid} = this.props;
+        const {
+            allowRemoveWhileDisabled,
+            children,
+            disabled,
+            emptyText,
+            leftButton,
+            loading,
+            onRemove,
+            rightButton,
+            valid,
+        } = this.props;
+
+        const singleItemSelectionClass = classNames(
+            singleItemSelectionStyles.singleItemSelection,
+            {
+                [singleItemSelectionStyles.error]: !valid,
+                [singleItemSelectionStyles.disabled]: disabled,
+            }
+        );
 
         const itemContainerClass = classNames(
             singleItemSelectionStyles.itemContainer,
@@ -36,11 +56,10 @@ export default class SingleItemSelection extends React.Component<Props> {
             }
         );
 
-        const singleItemSelectionClass = classNames(
-            singleItemSelectionStyles.singleItemSelection,
+        const removeButtonClass = classNames(
+            singleItemSelectionStyles.removeButton,
             {
-                [singleItemSelectionStyles.error]: !valid,
-                [singleItemSelectionStyles.disabled]: disabled,
+                [singleItemSelectionStyles.hidden]: disabled && !allowRemoveWhileDisabled,
             }
         );
 
@@ -62,8 +81,7 @@ export default class SingleItemSelection extends React.Component<Props> {
                     </div>
                     {onRemove && !loading &&
                         <button
-                            className={singleItemSelectionStyles.removeButton}
-                            disabled={disabled}
+                            className={removeButtonClass}
                             onClick={onRemove}
                             type="button"
                         >

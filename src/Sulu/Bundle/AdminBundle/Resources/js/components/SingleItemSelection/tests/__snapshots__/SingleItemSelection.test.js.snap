@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render in disabled state 1`] = `
+exports[`Render in disabled state with remove button 1`] = `
 <div
   class="singleItemSelection disabled"
 >
@@ -22,6 +22,50 @@ exports[`Render in disabled state 1`] = `
     >
       Test Item
     </div>
+    <button
+      class="removeButton"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Render in disabled state without remove button 1`] = `
+<div
+  class="singleItemSelection disabled"
+>
+  <button
+    class="button left"
+    disabled=""
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document icon"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+    >
+      Test Item
+    </div>
+    <button
+      class="removeButton hidden"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt"
+      />
+    </button>
   </div>
 </div>
 `;

@@ -526,3 +526,41 @@ test('Set loading prop of SingleItemSelection component if SingleSelectionStore 
     expect(singleSelection.find(SingleItemSelection).prop('loading')).toEqual(true);
     expect(singleSelection.find(SingleListOverlay)).toHaveLength(0);
 });
+
+test('Pass correct allowRemoveWhileDisabled prop to SingleItemSelection component', () => {
+    const singleSelection = shallow(
+        <SingleSelection
+            adapter="table"
+            allowDeselectForDisabledItems={true}
+            disabledIds={[1, 3, 5]}
+            displayProperties={[]}
+            emptyText="nothing"
+            listKey="snippets"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={1}
+        />
+    );
+
+    expect(singleSelection.find(SingleItemSelection).prop('allowRemoveWhileDisabled')).toEqual(true);
+});
+
+test('Pass correct allowRemoveWhileDisabled prop to SingleItemSelection when component is disabled', () => {
+    const singleSelection = shallow(
+        <SingleSelection
+            adapter="table"
+            allowDeselectForDisabledItems={true}
+            disabled={true}
+            displayProperties={[]}
+            emptyText="nothing"
+            listKey="snippets"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={1}
+        />
+    );
+
+    expect(singleSelection.find(SingleItemSelection).prop('allowRemoveWhileDisabled')).toEqual(false);
+});

@@ -402,6 +402,7 @@ test('Pass correct props to SingleItemSelection', () => {
 
     expect(singleSelection.find(SingleSelectionComponent).props()).toEqual(expect.objectContaining({
         adapter: 'table',
+        allowDeselectForDisabledItems: false,
         listKey: 'accounts_list',
         detailOptions: undefined,
         disabled: true,
@@ -580,6 +581,9 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
     };
 
     const schemaOptions = {
+        allow_deselect_for_disabled_items: {
+            value: 'true',
+        },
         form_options_to_list_options: {
             name: 'formOptionsToApi',
             value: [
@@ -588,11 +592,9 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
             ],
         },
         type: {
-            name: 'type',
             value: 'list_overlay',
         },
         item_disabled_condition: {
-            name: 'item_disabled_condition',
             value: 'status == "inactive"',
         },
         types: {
@@ -613,6 +615,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
 
     expect(singleSelection.find(SingleSelectionComponent).props()).toEqual(expect.objectContaining({
         adapter: 'table',
+        allowDeselectForDisabledItems: true,
         detailOptions: {
             'ghost-content': true,
         },

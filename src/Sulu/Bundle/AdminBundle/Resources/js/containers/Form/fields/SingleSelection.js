@@ -99,6 +99,9 @@ export default class SingleSelection extends React.Component<Props>
                 item_disabled_condition: {
                     value: itemDisabledCondition,
                 } = {},
+                allow_deselect_for_disabled_items: {
+                    value: allowDeselectForDisabledItems,
+                } = {},
                 types: {
                     value: types,
                 } = {},
@@ -152,6 +155,7 @@ export default class SingleSelection extends React.Component<Props>
         return (
             <SingleSelectionComponent
                 adapter={adapter}
+                allowDeselectForDisabledItems={!!allowDeselectForDisabledItems}
                 detailOptions={detailOptions}
                 disabled={!!disabled}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}

@@ -44,6 +44,10 @@ $singleItemSelectionDisabledColor: $gray;
         margin: 0 10px;
         cursor: pointer;
         background-color: transparent;
+
+        &.hidden {
+            display: none;
+        }
     }
 
     .loader {
@@ -64,9 +68,5 @@ $singleItemSelectionDisabledColor: $gray;
     &.disabled {
         background-color: $singleItemSelectionDisabledBackgroundColor;
         color: $singleItemSelectionDisabledColor;
-
-        .remove-button {
-            display: none;
-        }
     }
 }

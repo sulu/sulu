@@ -11,6 +11,7 @@ import singleSelectionStyles from './singleSelection.scss';
 
 type Props = {|
     adapter: string,
+    allowDeselectForDisabledItems: boolean,
     detailOptions?: Object,
     disabled: boolean,
     disabledIds: Array<string | number>,
@@ -30,6 +31,7 @@ type Props = {|
 @observer
 class SingleSelection extends React.Component<Props> {
     static defaultProps = {
+        allowDeselectForDisabledItems: false,
         disabled: false,
         disabledIds: [],
         icon: 'su-plus',
@@ -104,6 +106,7 @@ class SingleSelection extends React.Component<Props> {
     render() {
         const {
             adapter,
+            allowDeselectForDisabledItems,
             listKey,
             disabled,
             disabledIds,
@@ -125,6 +128,7 @@ class SingleSelection extends React.Component<Props> {
         return (
             <Fragment>
                 <SingleItemSelection
+                    allowRemoveWhileDisabled={!disabled && allowDeselectForDisabledItems}
                     disabled={disabled || itemDisabled}
                     emptyText={emptyText}
                     leftButton={{

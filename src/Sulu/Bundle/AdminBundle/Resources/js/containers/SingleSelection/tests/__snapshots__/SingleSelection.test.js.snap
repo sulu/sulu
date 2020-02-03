@@ -83,8 +83,7 @@ exports[`Render with selected item in disabled state 1`] = `
       </div>
     </div>
     <button
-      class="removeButton"
-      disabled=""
+      class="removeButton hidden"
       type="button"
     >
       <span
