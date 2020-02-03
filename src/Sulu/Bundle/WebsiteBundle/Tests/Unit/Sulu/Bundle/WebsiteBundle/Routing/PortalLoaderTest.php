@@ -87,8 +87,8 @@ class PortalLoaderTest extends TestCase
 
         $this->assertEquals('{prefix}/example/route1', $routeCollection->get('route1')->getPath());
         $this->assertEquals('{prefix}/route2', $routeCollection->get('route2')->getPath());
-        $this->assertEquals('{host}', $routeCollection->get('route1')->getHost());
-        $this->assertEquals('{host}', $routeCollection->get('route2')->getHost());
+        $this->assertEquals('', $routeCollection->get('route1')->getHost());
+        $this->assertEquals('', $routeCollection->get('route2')->getHost());
         $this->assertEquals($this->condition, $routeCollection->get('route1')->getCondition());
         $this->assertEquals($this->condition, $routeCollection->get('route2')->getCondition());
     }
@@ -115,8 +115,8 @@ class PortalLoaderTest extends TestCase
 
         $this->assertEquals('{prefix}/example/route1', $routeCollection->get('route1')->getPath());
         $this->assertEquals('{prefix}/route2', $routeCollection->get('route2')->getPath());
-        $this->assertEquals('{host}', $routeCollection->get('route1')->getHost());
-        $this->assertEquals('{host}', $routeCollection->get('route2')->getHost());
+        $this->assertEquals('', $routeCollection->get('route1')->getHost());
+        $this->assertEquals('', $routeCollection->get('route2')->getHost());
         $this->assertEquals($this->condition, $routeCollection->get('route1')->getCondition());
         $this->assertEquals($this->condition, $routeCollection->get('route2')->getCondition());
     }
@@ -139,7 +139,7 @@ class PortalLoaderTest extends TestCase
         $this->assertInstanceOf(PortalRoute::class, $routeCollection->get('route'));
 
         $this->assertEquals('{prefix}/route', $routeCollection->get('route')->getPath());
-        $this->assertEquals('{host}', $routeCollection->get('route')->getHost());
+        $this->assertEquals('', $routeCollection->get('route')->getHost());
         $this->assertEquals($this->condition, $routeCollection->get('route')->getCondition());
     }
 

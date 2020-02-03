@@ -47,7 +47,7 @@ class PortalLoader extends Loader
                     $importedRoute->getDefaults(),
                     array_merge(['prefix' => '.*', 'host' => '.+'], $importedRoute->getRequirements()),
                     $importedRoute->getOptions(),
-                    (!empty($importedRoute->getHost()) ? $importedRoute->getHost() : '{host}'),
+                    $importedRoute->getHost(),
                     $importedRoute->getSchemes(),
                     $importedRoute->getMethods(),
                     $condition . (!empty($importedCondition) ? ' and (' . $importedCondition . ')' : '')
