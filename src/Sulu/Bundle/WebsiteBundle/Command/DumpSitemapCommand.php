@@ -13,7 +13,6 @@ namespace Sulu\Bundle\WebsiteBundle\Command;
 
 use Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapDumperInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

@@ -15,7 +15,6 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\PortalInformation;
-use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
