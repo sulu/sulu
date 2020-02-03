@@ -30,8 +30,6 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
-use Sulu\Component\Webspace\Url\Replacer;
-use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,11 +72,6 @@ class PreviewRendererTest extends TestCase
     private $eventDispatcher;
 
     /**
-     * @var ReplacerInterface
-     */
-    private $replacer;
-
-    /**
      * @var PreviewRendererInterface
      */
     private $renderer;
@@ -110,7 +103,6 @@ class PreviewRendererTest extends TestCase
             $this->kernelFactory->reveal(),
             $this->webspaceManager->reveal(),
             $this->eventDispatcher->reveal(),
-            new Replacer(),
             $this->previewDefault,
             $this->environment,
             'X-Sulu-Target-Group'
@@ -128,14 +120,6 @@ class PreviewRendererTest extends TestCase
                 'https',
                 'sulu.lo',
             ],
-            [
-                'http',
-                Replacer::REPLACER_HOST,
-            ],
-            [
-                'https',
-                Replacer::REPLACER_HOST,
-            ],
         ];
     }
 
@@ -144,9 +128,6 @@ class PreviewRendererTest extends TestCase
         return [
             [
                 'sulu.lo',
-            ],
-            [
-                Replacer::REPLACER_HOST,
             ],
         ];
     }
@@ -202,12 +183,6 @@ class PreviewRendererTest extends TestCase
 
         if ('https' === $expectedScheme) {
             $server['HTTPS'] = true;
-        }
-
-        if (Replacer::REPLACER_HOST === $expectedHost && $hasRequest) {
-            $expectedHost = 'admin-sulu.io';
-        } elseif (Replacer::REPLACER_HOST === $expectedHost) {
-            $expectedHost = $this->defaultHost;
         }
 
         $this->httpKernel->handle(
@@ -518,7 +493,7 @@ class PreviewRendererTest extends TestCase
         $webspace->getLocalization('de')->willReturn($localization);
         $portalInformation->getWebspace()->willReturn($webspace->reveal());
         $portalInformation->getPortal()->willReturn($this->prophesize(Portal::class)->reveal());
-        $portalInformation->getUrl()->willReturn('{host}');
+        $portalInformation->getUrl()->willReturn('sulu-preview-test.io');
         $portalInformation->getPrefix()->willReturn('/de');
 
         $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
@@ -565,8 +540,12 @@ class PreviewRendererTest extends TestCase
                         );
                     }
 
+                    $requestAttributes = $request->attributes->get('_sulu');
+
                     $this->assertTrue($request->attributes->get('preview'));
                     $this->assertTrue($request->attributes->get('partial'));
+                    $this->assertEquals('sulu-preview-test.io', $requestAttributes->getAttribute('host'));
+                    $this->assertEquals(8080, $requestAttributes->getAttribute('port'));
 
                     // Assert equals will throw exception so also true can be returned.
                     return true;

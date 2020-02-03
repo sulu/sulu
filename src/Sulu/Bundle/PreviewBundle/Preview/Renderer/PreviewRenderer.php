@@ -67,11 +67,6 @@ class PreviewRenderer implements PreviewRendererInterface
     private $eventDispatcher;
 
     /**
-     * @var ReplacerInterface
-     */
-    private $replacer;
-
-    /**
      * @var array
      */
     private $previewDefaults;
@@ -92,12 +87,6 @@ class PreviewRenderer implements PreviewRendererInterface
     private $targetGroupHeader;
 
     /**
-     * @param RouteDefaultsProviderInterface $routeDefaultsProvider
-     * @param RequestStack $requestStack
-     * @param KernelFactoryInterface $kernelFactory
-     * @param WebspaceManagerInterface $webspaceManager
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param array $previewDefaults
      * @param string $environment
      * @param string $targetGroupHeader
      */
@@ -107,7 +96,6 @@ class PreviewRenderer implements PreviewRendererInterface
         KernelFactoryInterface $kernelFactory,
         WebspaceManagerInterface $webspaceManager,
         EventDispatcherInterface $eventDispatcher,
-        ReplacerInterface $replacer,
         array $previewDefaults,
         $environment,
         $targetGroupHeader = null
@@ -117,7 +105,6 @@ class PreviewRenderer implements PreviewRendererInterface
         $this->kernelFactory = $kernelFactory;
         $this->webspaceManager = $webspaceManager;
         $this->eventDispatcher = $eventDispatcher;
-        $this->replacer = $replacer;
         $this->previewDefaults = $previewDefaults;
         $this->environment = $environment;
         $this->targetGroupHeader = $targetGroupHeader;
@@ -171,6 +158,8 @@ class PreviewRenderer implements PreviewRendererInterface
                 'postParameters' => $request,
                 'portalInformation' => $portalInformation,
                 'scheme' => $currentRequest->getScheme(),
+                'host' => $currentRequest->getHost(),
+                'port' => $currentRequest->getPort(),
             ]
         );
 
@@ -242,7 +231,6 @@ class PreviewRenderer implements PreviewRendererInterface
     {
         // get server parameters
         $server = [];
-        $host = null;
         // FIXME default scheme and port should be configurable.
         $scheme = 'http';
         $port = 80;
@@ -250,11 +238,10 @@ class PreviewRenderer implements PreviewRendererInterface
         if ($currentRequest) {
             $server = $currentRequest->server->all();
             $scheme = $currentRequest->getScheme();
-            $host = $currentRequest->getHost();
             $port = $currentRequest->getPort();
         }
 
-        $portalUrl = $scheme . '://' . $this->replacer->replaceHost($portalInformation->getUrl(), $host);
+        $portalUrl = $scheme . '://' . $portalInformation->getUrl();
         $portalUrlParts = parse_url($portalUrl);
 
         $serverName = null;
