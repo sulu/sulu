@@ -124,10 +124,6 @@ class WebspaceManager implements WebspaceManagerInterface
             function(PortalInformation $portalInformation) use ($host) {
                 $portalHost = $portalInformation->getHost();
 
-                if ($this->urlReplacer->hasHostReplacer($portalHost)) {
-                    $portalHost = $this->urlReplacer->replaceHost($portalHost, $host);
-                }
-
                 // add a slash to avoid problems with "example.co" and "example.com"
                 return false !== strpos($portalHost . '/', $host . '/');
             }
@@ -471,10 +467,6 @@ class WebspaceManager implements WebspaceManagerInterface
         if (false !== strpos($portalUrl, '/')) {
             // trim slash when resourceLocator is not domain root
             $resourceLocator = rtrim($resourceLocator, '/');
-        }
-
-        if ($domain && $this->urlReplacer->hasHostReplacer($portalUrl)) {
-            $portalUrl = $this->urlReplacer->replaceHost($portalUrl, $domain);
         }
 
         return rtrim(sprintf('%s://%s', $scheme, $portalUrl), '/') . $resourceLocator;
