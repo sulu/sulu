@@ -70,9 +70,9 @@ class CacheManagerTest extends TestCase
         $this->cacheManager->invalidateTag($tag);
     }
 
-    public function testInvalidatePathWithHostReplacer()
+    public function testInvalidatePath()
     {
-        $path = 'http://{host}/test';
+        $path = 'http://sulu.lo/test';
 
         // proxy client doesn't support path invalidation
         $this->fosCacheManager->supports(FOSCacheManager::PATH)->willReturn(false);
@@ -83,11 +83,6 @@ class CacheManagerTest extends TestCase
         $this->fosCacheManager->supports(FOSCacheManager::PATH)->willReturn(true);
         $this->fosCacheManager->invalidatePath(Argument::any())->shouldNotBeCalled();
         $this->cacheManager->invalidatePath($path);
-
-        // set the host correctly
-        $request = $this->prophesize(Request::class);
-        $request->getHttpHost()->willReturn('sulu.lo');
-        $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
 
         $this->cacheManager = new CacheManager(
             $this->fosCacheManager->reveal(),
