@@ -35,11 +35,6 @@ class DumpSitemapCommand extends Command
     private $sitemapDumper;
 
     /**
-     * @var ReplacerInterface
-     */
-    private $urlReplacer;
-
-    /**
      * @var Filesystem
      */
     private $filesystem;
@@ -72,7 +67,6 @@ class DumpSitemapCommand extends Command
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
         XmlSitemapDumperInterface $sitemapDumper,
-        ReplacerInterface $urlReplacer,
         Filesystem $filesystem,
         string $baseDirectory,
         string $environment,
@@ -83,7 +77,6 @@ class DumpSitemapCommand extends Command
 
         $this->webspaceManager = $webspaceManager;
         $this->sitemapDumper = $sitemapDumper;
-        $this->urlReplacer = $urlReplacer;
         $this->filesystem = $filesystem;
         $this->environment = $environment;
         $this->baseDirectory = $baseDirectory;
@@ -116,10 +109,6 @@ class DumpSitemapCommand extends Command
         $hosts = [];
         foreach ($portalInformations as $portalInformation) {
             $portalUrl = $portalInformation->getUrl();
-            if ($this->urlReplacer->hasHostReplacer($portalUrl)) {
-                $portalUrl = $this->urlReplacer->replaceHost($portalUrl, $this->defaultHost);
-            }
-
             $urlParts = parse_url($this->scheme . '://' . $portalUrl);
             $hosts[] = $urlParts['host'];
         }

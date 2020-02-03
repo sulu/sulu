@@ -6,7 +6,6 @@
         <service id="sulu_website.command.dump_sitemap" class="Sulu\Bundle\WebsiteBundle\Command\DumpSitemapCommand">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_website.sitemap.xml_dumper"/>
-            <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer"/>
             <argument type="service" id="filesystem"/>
             <argument>%sulu_website.sitemap.dump_dir%</argument>
             <argument>%kernel.environment%</argument>
