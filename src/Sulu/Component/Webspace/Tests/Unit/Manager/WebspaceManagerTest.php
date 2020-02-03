@@ -22,6 +22,7 @@ use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class WebspaceManagerTest extends WebspaceTestCase
 {
@@ -29,6 +30,11 @@ class WebspaceManagerTest extends WebspaceTestCase
      * @var DelegatingLoader
      */
     protected $loader;
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
 
     /**
      * @var WebspaceManager
@@ -60,16 +66,19 @@ class WebspaceManagerTest extends WebspaceTestCase
         ]);
 
         $this->loader = new DelegatingLoader($resolver);
+        $this->requestStack = $this->prophesize(RequestStack::class);
 
         $this->webspaceManager = new WebspaceManager(
             $this->loader,
             new Replacer(),
+            $this->requestStack->reveal(),
             [
                 'cache_dir' => $this->cacheDirectory,
                 'config_dir' => $this->getResourceDirectory() . '/DataFixtures/Webspace/valid',
                 'cache_class' => 'WebspaceCollectionCache' . uniqid(),
             ],
-            'test'
+            'test',
+            'sulu.io'
         );
     }
 
@@ -558,12 +567,14 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->webspaceManager = new WebspaceManager(
             $this->loader,
             new Replacer(),
+            $this->requestStack->reveal(),
             [
                 'cache_dir' => $this->getResourceDirectory() . '/cache',
                 'config_dir' => $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple',
                 'cache_class' => 'WebspaceCollectionCache' . uniqid(),
             ],
-            'test'
+            'test',
+            'sulu.io'
         );
 
         $webspaces = $this->webspaceManager->getWebspaceCollection();
@@ -717,10 +728,11 @@ class WebspaceManagerTest extends WebspaceTestCase
     {
         $portals = $this->webspaceManager->getPortals();
 
-        $this->assertCount(6, $portals);
+        $this->assertCount(7, $portals);
         $this->assertEquals('massiveart_us', $portals['massiveart_us']->getKey());
         $this->assertEquals('massiveart_ca', $portals['massiveart_ca']->getKey());
         $this->assertEquals('sulucmf_at', $portals['sulucmf_at']->getKey());
+        $this->assertEquals('sulucmf_at_host_replacement', $portals['sulucmf_at_host_replacement']->getKey());
         $this->assertEquals('dancmf_at', $portals['dancmf_at']->getKey());
         $this->assertEquals('sulucmf_singlelanguage_at', $portals['sulucmf_singlelanguage_at']->getKey());
         $this->assertEquals(
@@ -872,5 +884,23 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertArrayHasKey('en_us', $webspacesLocales['dan_io']);
         $this->assertArrayHasKey('de_at', $webspacesLocales['dan_io']);
         $this->assertEquals(['country' => 'at', 'language' => 'de'], reset($webspacesLocales['dan_io']));
+    }
+
+    public function testGetWebspaceCollectionReplaceHost()
+    {
+        $portalInformations = array_values(
+            $this->webspaceManager->getPortalInformationsByWebspaceKey(
+                'test',
+                'sulu_io_host_replacement'
+            )
+        );
+
+        $this->assertCount(2, $portalInformations);
+
+        $this->assertEquals('sulu.io/de-at', $portalInformations[0]->getUrl());
+        $this->assertEquals('sulu.io/{localization}', $portalInformations[0]->getUrlExpression());
+        $this->assertEquals('sulu.io', $portalInformations[1]->getUrl());
+        $this->assertEquals('sulu.io/{localization}', $portalInformations[1]->getUrlExpression());
+        $this->assertEquals('sulu.io/{localization}', $portalInformations[1]->getRedirect());
     }
 }
