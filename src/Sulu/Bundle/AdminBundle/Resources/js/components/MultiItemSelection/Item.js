@@ -9,6 +9,7 @@ import itemStyles from './item.scss';
 const DRAG_ICON = 'su-more';
 
 type Props<T> = {
+    allowRemoveWhileDisabled: boolean,
     children: Node,
     disabled: boolean,
     id: T,
@@ -20,6 +21,7 @@ type Props<T> = {
 
 export default class Item<T> extends React.PureComponent<Props<T>> {
     static defaultProps = {
+        allowRemoveWhileDisabled: false,
         disabled: false,
         sortable: true,
     };
@@ -56,6 +58,7 @@ export default class Item<T> extends React.PureComponent<Props<T>> {
 
     render() {
         const {
+            allowRemoveWhileDisabled,
             children,
             disabled,
             index,
@@ -80,6 +83,20 @@ export default class Item<T> extends React.PureComponent<Props<T>> {
             }
         );
 
+        const editButtonClass = classNames(
+            itemStyles.button,
+            {
+                [itemStyles.hidden]: disabled,
+            }
+        );
+
+        const removeButtonClass = classNames(
+            itemStyles.button,
+            {
+                [itemStyles.hidden]: disabled && !allowRemoveWhileDisabled,
+            }
+        );
+
         return (
             <div className={itemClass}>
                 <DragHandle className={dragHandleClass}>
@@ -91,12 +108,12 @@ export default class Item<T> extends React.PureComponent<Props<T>> {
                 </div>
                 <div className={itemStyles.buttons}>
                     {onEdit &&
-                        <button className={itemStyles.button} onClick={this.handleEdit} type="button">
+                        <button className={editButtonClass} onClick={this.handleEdit} type="button">
                             <Icon name="su-pen" />
                         </button>
                     }
                     {onRemove &&
-                        <button className={itemStyles.button} onClick={this.handleRemove} type="button">
+                        <button className={removeButtonClass} onClick={this.handleRemove} type="button">
                             <Icon name="su-trash-alt" />
                         </button>
                     }

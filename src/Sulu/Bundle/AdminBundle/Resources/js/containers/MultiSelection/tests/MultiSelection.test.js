@@ -76,6 +76,28 @@ test('Render in disabled state', () => {
     )).toMatchSnapshot();
 });
 
+test('Render with disabled item', () => {
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [
+            {id: 1},
+            {id: 2},
+        ];
+    });
+
+    expect(render(
+        <MultiSelection
+            adapter="table"
+            disabledIds={[2, 4]}
+            listKey="snippets"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="pages"
+            value={[1, 5, 8]}
+        />
+    )).toMatchSnapshot();
+});
+
 test('Show with passed label', () => {
     expect(render(
         <MultiSelection
@@ -615,4 +637,27 @@ test('Should render selected item in disabled state if passed disabledIds contai
 
     expect(selection.find(MultiItemSelection.Item).at(0).prop('disabled')).toEqual(false);
     expect(selection.find(MultiItemSelection.Item).at(1).prop('disabled')).toEqual(true);
+});
+
+test('Pass correct allowRemoveWhileDisabled prop to Item of MultiItemSelection', () => {
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [
+            {id: 1},
+        ];
+    });
+
+    const selection = mount(
+        <MultiSelection
+            adapter="table"
+            allowDeselectForDisabledItems={true}
+            listKey="snippets"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="pages"
+            value={[1, 5, 8]}
+        />
+    );
+
+    expect(selection.find(MultiItemSelection.Item).at(0).prop('allowRemoveWhileDisabled')).toEqual(true);
 });

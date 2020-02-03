@@ -1,18 +1,24 @@
 @import '../../containers/Application/colors.scss';
 
 $itemBackgroundColor: $white;
+$disabledItemBackgroundColor: $wildSand;
+
+$itemColor: $black;
+$disabledItemColor: $gray;
 
 .item {
     display: flex;
     justify-content: space-between;
+    color: $itemColor;
     background-color: $itemBackgroundColor;
 
     &.disabled {
-        opacity: .5;
-        pointer-events: none;
+        color: $disabledItemColor;
+        background-color: $disabledItemBackgroundColor;
 
-        .buttons {
-            display: none;
+        .drag-handle,
+        .content {
+            pointer-events: none;
         }
     }
 }
@@ -37,6 +43,10 @@ $itemBackgroundColor: $white;
     padding: 13px 10px 0 0;
     cursor: pointer;
     background-color: transparent;
+
+    &.hidden {
+        display: none;
+    }
 }
 
 .drag-handle {

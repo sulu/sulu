@@ -159,6 +159,9 @@ export default class Selection extends React.Component<Props> {
                 item_disabled_condition: {
                     value: itemDisabledCondition,
                 } = {},
+                allow_deselect_for_disabled_items: {
+                    value: allowDeselectForDisabledItems,
+                } = {},
             },
             value,
         } = this.props;
@@ -183,6 +186,7 @@ export default class Selection extends React.Component<Props> {
         return (
             <MultiSelectionComponent
                 adapter={adapter}
+                allowDeselectForDisabledItems={!!allowDeselectForDisabledItems}
                 disabled={!!disabled}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}
                 displayProperties={displayProperties}

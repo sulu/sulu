@@ -27,6 +27,111 @@ exports[`Render in disabled state 1`] = `
 </div>
 `;
 
+exports[`Render with disabled item 1`] = `
+<div
+  class="multiItemSelectionClass"
+>
+  <div
+    class="header"
+  >
+    <button
+      class="button left"
+      type="button"
+    >
+      <span
+        aria-label="su-plus"
+        class="su-plus icon"
+      />
+    </button>
+    <div
+      class="label"
+    />
+  </div>
+  <ul
+    class="list"
+  >
+    <li
+      class="listElement"
+    >
+      <div
+        class="item"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            1
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          <div />
+        </div>
+        <div
+          class="buttons"
+        >
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item disabled"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            2
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          <div />
+        </div>
+        <div
+          class="buttons"
+        >
+          <button
+            class="button hidden"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+`;
+
 exports[`Should open an overlay 1`] = `
 "<div>
   <div class=\\"backdrop visible fixed\\" role=\\"button\\"></div>

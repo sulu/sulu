@@ -111,6 +111,7 @@ test('Should pass props correctly to MultiSelection component', () => {
 
     expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'table',
+        allowDeselectForDisabledItems: false,
         listKey: 'snippets_list',
         disabled: true,
         displayProperties: ['id', 'title'],
@@ -206,7 +207,7 @@ test('Should pass locale from userStore to MultiSelection component if form has 
     expect(toJS(selection.find('MultiSelection').prop('locale'))).toEqual('de');
 });
 
-test('Should pass props with schema-options type correctly to MultiSelection component', () => {
+test('Should pass props with schema-options correctly to MultiSelection component', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
@@ -231,11 +232,12 @@ test('Should pass props with schema-options type correctly to MultiSelection com
 
     const schemaOptions = {
         type: {
-            name: 'type',
             value: 'list_overlay',
         },
+        allow_deselect_for_disabled_items: {
+            value: 'true',
+        },
         item_disabled_condition: {
-            name: 'item_disabled_condition',
             value: 'status == "inactive"',
         },
     };
@@ -265,6 +267,7 @@ test('Should pass props with schema-options type correctly to MultiSelection com
 
     expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'table',
+        allowDeselectForDisabledItems: true,
         disabled: true,
         displayProperties: ['id', 'title'],
         itemDisabledCondition: 'status == "inactive"',
