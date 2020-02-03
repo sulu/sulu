@@ -92,12 +92,6 @@ class ContactAdmin extends Admin
 
     public function configureViews(ViewCollection $viewCollection): void
     {
-        $contactEditFormView = $this->viewBuilderFactory
-            ->createResourceTabViewBuilder(static::CONTACT_EDIT_FORM_VIEW, '/contacts/:id')
-            ->setResourceKey('contacts')
-            ->setBackView(static::CONTACT_LIST_VIEW)
-            ->setTitleProperty('fullName');
-
         if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $contactFormToolbarActions = [];
             $contactListToolbarActions = [];
@@ -138,7 +132,13 @@ class ContactAdmin extends Admin
                     ->setResourceKey('contacts')
                     ->setBackView(static::CONTACT_LIST_VIEW)
             );
-            $viewCollection->add($contactEditFormView);
+            $viewCollection->add(
+                $this->viewBuilderFactory
+                    ->createResourceTabViewBuilder(static::CONTACT_EDIT_FORM_VIEW, '/contacts/:id')
+                    ->setResourceKey('contacts')
+                    ->setBackView(static::CONTACT_LIST_VIEW)
+                    ->setTitleProperty('fullName')
+            );
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createFormViewBuilder('sulu_contact.contact_add_form.details', '/details')
@@ -172,10 +172,6 @@ class ContactAdmin extends Admin
                     ->setTabOrder(2048)
                     ->setParent(static::CONTACT_EDIT_FORM_VIEW)
             );
-        } else {
-            // This view has to be registered even if permissions for contacts are missing
-            // Otherwise the application breaks when other bundles try to add child views to this one
-            $viewCollection->add($contactEditFormView);
         }
 
         if ($this->securityChecker->hasPermission(static::ACCOUNT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {

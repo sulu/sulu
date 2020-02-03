@@ -43,7 +43,7 @@ class SecurityAdmin extends Admin
      */
     public static function getPriority(): int
     {
-        return -10;
+        return -1024;
     }
 
     /**
