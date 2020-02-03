@@ -118,7 +118,12 @@ class PageAdmin extends Admin
                     'save_visible_condition' => '(!_permissions || _permissions.edit)',
                 ]
             ),
-            new ToolbarAction('sulu_page.templates'),
+            new ToolbarAction(
+                'sulu_page.templates',
+                [
+                    'disabled_condition' => '(_permissions && !_permissions.edit)',
+                ]
+            ),
             new ToolbarAction(
                 'sulu_admin.delete',
                 [

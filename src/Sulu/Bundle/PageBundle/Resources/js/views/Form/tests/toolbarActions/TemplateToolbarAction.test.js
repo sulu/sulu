@@ -16,6 +16,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     ResourceFormStore: class {
+        data = {};
         resourceStore;
         types = {};
         typesLoading = true;
@@ -45,7 +46,7 @@ jest.mock('../../../../stores/webspaceStore', () => ({
     loadWebspace: jest.fn(),
 }));
 
-function createTemplateToolbarAction() {
+function createTemplateToolbarAction(options = {}) {
     const resourceStore = new ResourceStore('test');
     const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
     const router = new Router({});
@@ -56,7 +57,7 @@ function createTemplateToolbarAction() {
         router,
     });
 
-    return new TemplateToolbarAction(resourceFormStore, form, router, [], {});
+    return new TemplateToolbarAction(resourceFormStore, form, router, [], options);
 }
 
 test('Return item config with correct disabled, loading, options, icon, type and value ', () => {
@@ -132,6 +133,9 @@ test('Set the first value as default if nothing is given', () => {
     webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
 
     const toolbarItemConfig = templateToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
 
     if (toolbarItemConfig.type !== 'select') {
         throw new Error(
@@ -161,6 +165,9 @@ test('Change the type of the FormStore when another type is selected', () => {
     };
 
     const toolbarItemConfig = templateToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
 
     if (toolbarItemConfig.type !== 'select') {
         throw new Error(
@@ -179,4 +186,17 @@ test('Throw error if no types are available in FormStore', () => {
     templateToolbarAction.resourceFormStore.types = {};
 
     expect(() => templateToolbarAction.getToolbarItemConfig()).toThrow(/actually supporting types/);
+});
+
+test('Return disabled true when passed disabled condition is not met', () => {
+    const templateToolbarAction = createTemplateToolbarAction({disabled_condition: 'url == "/"'});
+
+    expect(templateToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({disabled: false}));
+});
+
+test('Return disabled true when passed disabled condition is met', () => {
+    const templateToolbarAction = createTemplateToolbarAction({disabled_condition: 'url == "/"'});
+    templateToolbarAction.resourceFormStore.data.url = '/';
+
+    expect(templateToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({disabled: true}));
 });

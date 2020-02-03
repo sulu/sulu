@@ -13,6 +13,7 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 
 jest.mock('../../../../containers/Form', () => ({
     ResourceFormStore: class {
+        data = {};
         resourceStore;
         types = {};
         typesLoading = true;
@@ -35,7 +36,7 @@ jest.mock('../../../../views/Form', () => jest.fn(function() {
     this.submit = jest.fn();
 }));
 
-function createTypeToolbarAction() {
+function createTypeToolbarAction(options = {}) {
     const resourceStore = new ResourceStore('test');
     const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
     const router = new Router({});
@@ -46,7 +47,7 @@ function createTypeToolbarAction() {
         router,
     });
 
-    return new TypeToolbarAction(resourceFormStore, form, router, [], {});
+    return new TypeToolbarAction(resourceFormStore, form, router, [], options);
 }
 
 test('Return item config with correct disabled, loading, options, icon, type and value ', () => {
@@ -111,6 +112,9 @@ test('Change the type of the FormStore when another type is selected', () => {
     };
 
     const toolbarItemConfig = typeToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
 
     if (toolbarItemConfig.type !== 'select') {
         throw new Error(
@@ -129,4 +133,17 @@ test('Throw error if no types are available in FormStore', () => {
     typeToolbarAction.resourceFormStore.types = {};
 
     expect(() => typeToolbarAction.getToolbarItemConfig()).toThrow(/actually supporting types/);
+});
+
+test('Return disabled true when passed disabled condition is not met', () => {
+    const typeToolbarAction = createTypeToolbarAction({disabled_condition: 'url == "/"'});
+
+    expect(typeToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({disabled: false}));
+});
+
+test('Return disabled true when passed disabled condition is met', () => {
+    const typeToolbarAction = createTypeToolbarAction({disabled_condition: 'url == "/"'});
+    typeToolbarAction.resourceFormStore.data.url = '/';
+
+    expect(typeToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({disabled: true}));
 });
