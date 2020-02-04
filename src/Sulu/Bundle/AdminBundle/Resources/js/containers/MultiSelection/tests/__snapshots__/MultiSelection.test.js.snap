@@ -173,61 +173,7 @@ exports[`Show with default plus icon 1`] = `
 </div>
 `;
 
-exports[`Show with passed icon 1`] = `
-<div
-  class="multiItemSelectionClass"
->
-  <div
-    class="header emptyList"
-  >
-    <button
-      class="button left"
-      type="button"
-    >
-      <span
-        aria-label="su-document"
-        class="su-document icon"
-      />
-    </button>
-    <div
-      class="label"
-    />
-  </div>
-  <ul
-    class="list"
-  />
-</div>
-`;
-
-exports[`Show with passed label 1`] = `
-<div
-  class="multiItemSelectionClass"
->
-  <div
-    class="header emptyList"
-  >
-    <button
-      class="button left"
-      type="button"
-    >
-      <span
-        aria-label="su-plus"
-        class="su-plus icon"
-      />
-    </button>
-    <div
-      class="label"
-    >
-      Select Snippets
-    </div>
-  </div>
-  <ul
-    class="list"
-  />
-</div>
-`;
-
-exports[`Show with passed values as items in right locale 1`] = `
+exports[`Show with items 1`] = `
 <div
   class="multiItemSelectionClass"
 >
@@ -545,5 +491,59 @@ exports[`Show with passed values as items in right locale 1`] = `
       </div>
     </li>
   </ul>
+</div>
+`;
+
+exports[`Show with passed icon 1`] = `
+<div
+  class="multiItemSelectionClass"
+>
+  <div
+    class="header emptyList"
+  >
+    <button
+      class="button left"
+      type="button"
+    >
+      <span
+        aria-label="su-document"
+        class="su-document icon"
+      />
+    </button>
+    <div
+      class="label"
+    />
+  </div>
+  <ul
+    class="list"
+  />
+</div>
+`;
+
+exports[`Show with passed label 1`] = `
+<div
+  class="multiItemSelectionClass"
+>
+  <div
+    class="header emptyList"
+  >
+    <button
+      class="button left"
+      type="button"
+    >
+      <span
+        aria-label="su-plus"
+        class="su-plus icon"
+      />
+    </button>
+    <div
+      class="label"
+    >
+      Select Snippets
+    </div>
+  </div>
+  <ul
+    class="list"
+  />
 </div>
 `;

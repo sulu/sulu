@@ -37,6 +37,7 @@ jest.mock('../../../stores/MultiSelectionStore', () => jest.fn(function() {
     this.move = jest.fn();
     this.removeById = jest.fn();
     this.loadItems = jest.fn();
+    this.setRequestParameters = jest.fn();
 
     mockExtendObservable(this, {
         items: [],
@@ -124,6 +125,28 @@ test('Show with passed icon', () => {
     )).toMatchSnapshot();
 });
 
+test('Show with items', () => {
+    const locale = observable.box('en');
+
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [{id: 1, title: 'Title 1'}, {id: 2, title: 'Title 2'}, {id: 5, title: 'Title 5'}];
+    });
+
+    expect(render(
+        <MultiSelection
+            adapter="table"
+            displayProperties={['id', 'title']}
+            listKey="snippets"
+            locale={locale}
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={[1, 2, 5]}
+        />
+    )).toMatchSnapshot();
+});
+
 test('Pass locale to MultiListOverlay', () => {
     const locale = observable.box('de');
     const selection = mount(
@@ -188,28 +211,85 @@ test('Pass itemDisabledCondition to MultiListOverlay', () => {
     expect(selection.find('MultiListOverlay').prop('itemDisabledCondition')).toEqual('status == "inactive"');
 });
 
-test('Show with passed values as items in right locale', () => {
+test('Construct MultiSelectionStore with correct parameters', () => {
     const locale = observable.box('en');
+    const options = {key: 'value-1'};
 
-    // $FlowFixMe
-    MultiSelectionStore.mockImplementationOnce(function() {
-        this.items = [{id: 1, title: 'Title 1'}, {id: 2, title: 'Title 2'}, {id: 5, title: 'Title 5'}];
-    });
-
-    expect(render(
+    shallow(
         <MultiSelection
             adapter="table"
             displayProperties={['id', 'title']}
             listKey="snippets"
             locale={locale}
             onChange={jest.fn()}
+            options={options}
             overlayTitle="Selection"
             resourceKey="snippets"
             value={[1, 2, 5]}
         />
-    )).toMatchSnapshot();
+    );
 
-    expect(MultiSelectionStore).toBeCalledWith('snippets', [1, 2, 5], locale);
+    expect(MultiSelectionStore).toBeCalledWith('snippets', [1, 2, 5], locale, 'ids', options);
+});
+
+test('Update requestParameters and reload items of MultiSelectionStore when options prop is changed', () => {
+    const locale = observable.box('en');
+    const oldOptions = {key: 'value-1'};
+
+    const selection = shallow(
+        <MultiSelection
+            adapter="table"
+            displayProperties={['id', 'title']}
+            listKey="snippets"
+            locale={locale}
+            onChange={jest.fn()}
+            options={oldOptions}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={[1, 2, 5]}
+        />
+    );
+
+    expect(selection.instance().selectionStore.setRequestParameters).not.toBeCalled();
+    expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
+
+    const newOptions = {key: 'value-2'};
+    selection.setProps({
+        options: newOptions,
+    });
+
+    expect(selection.instance().selectionStore.setRequestParameters).toBeCalledWith(newOptions);
+    expect(selection.instance().selectionStore.loadItems).toBeCalledWith([1, 2, 5]);
+});
+
+test('Not reload items of MultiSelectionStore when new value of option prop is equal to old value', () => {
+    const locale = observable.box('en');
+    const oldOptions = {key: 'value-1'};
+
+    const selection = shallow(
+        <MultiSelection
+            adapter="table"
+            displayProperties={['id', 'title']}
+            listKey="snippets"
+            locale={locale}
+            onChange={jest.fn()}
+            options={oldOptions}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={[]}
+        />
+    );
+
+    expect(selection.instance().selectionStore.setRequestParameters).not.toBeCalled();
+    expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
+
+    const newOldOptions = {key: 'value-1'};
+    selection.setProps({
+        options: newOldOptions,
+    });
+
+    expect(selection.instance().selectionStore.setRequestParameters).not.toBeCalled();
+    expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
 });
 
 test('Should open an overlay', () => {

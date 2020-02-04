@@ -23,7 +23,9 @@ jest.mock('../../../containers/List/stores/ListStore', () => jest.fn(
         this.observableOptions = observableOptions;
         this.select = jest.fn();
         this.clear = jest.fn();
+        this.reset = jest.fn();
         this.selections = [];
+        this.selectionIds = [];
     }
 ));
 
@@ -51,6 +53,66 @@ test('Should instantiate the ListStore with locale, excluded-ids and options', (
     expect(multiListOverlay.instance().listStore.observableOptions.locale.get()).toEqual('en');
     expect(multiListOverlay.instance().listStore.observableOptions.excludedIds.get()).toEqual(['id-1', 'id-2']);
     expect(multiListOverlay.instance().listStore.options).toBe(options);
+});
+
+test('Should update options of ListStore if the options prop is changed', () => {
+    const oldOptions = {key: 'value-1'};
+
+    const multiListOverlay = shallow(
+        <MultiListOverlay
+            adapter="table"
+            excludedIds={['id-1', 'id-2']}
+            listKey="snippets_list"
+            locale={observable.box('en')}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            options={oldOptions}
+            resourceKey="snippets"
+            title="Selection"
+        />
+    );
+    multiListOverlay.instance().listStore.selectionIds = [12, 14];
+
+    expect(multiListOverlay.instance().listStore.reset).not.toBeCalled();
+    expect(multiListOverlay.instance().listStore.options).toEqual(oldOptions);
+
+    const newOptions = {key: 'value-2'};
+    multiListOverlay.setProps({
+        options: newOptions,
+    });
+
+    expect(multiListOverlay.instance().listStore.reset).toBeCalled();
+    expect(multiListOverlay.instance().listStore.initialSelectionIds).toEqual([12, 14]);
+    expect(multiListOverlay.instance().listStore.options).toEqual(newOptions);
+});
+
+test('Should not update options of ListStore if new value of options prop is equal to old value', () => {
+    const oldOptions = {key: 'value-1'};
+
+    const multiListOverlay = shallow(
+        <MultiListOverlay
+            adapter="table"
+            excludedIds={['id-1', 'id-2']}
+            listKey="snippets_list"
+            locale={observable.box('en')}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            options={oldOptions}
+            resourceKey="snippets"
+            title="Selection"
+        />
+    );
+
+    expect(multiListOverlay.instance().listStore.reset).not.toBeCalled();
+
+    const newOldOptions = {key: 'value-1'};
+    multiListOverlay.setProps({
+        options: newOldOptions,
+    });
+
+    expect(multiListOverlay.instance().listStore.reset).not.toBeCalled();
 });
 
 test('Should instantiate the ListStore without locale, excluded-ids and options', () => {
@@ -262,6 +324,7 @@ test('Should select the preSelectedItems in the ListStore', () => {
         'multi_list_overlay',
         expect.anything(),
         undefined,
+        undefined,
         [1, 2, 3]
     );
 });
@@ -286,6 +349,7 @@ test('Should not add the preSelectedItems to the ListStore if preloadSelectedIte
         'snippets',
         'multi_list_overlay',
         expect.anything(),
+        undefined,
         undefined,
         undefined
     );
