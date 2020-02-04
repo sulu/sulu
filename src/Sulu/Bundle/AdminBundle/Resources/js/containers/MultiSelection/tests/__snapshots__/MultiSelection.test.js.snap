@@ -115,17 +115,7 @@ exports[`Render with disabled item 1`] = `
         </div>
         <div
           class="buttons"
-        >
-          <button
-            class="button hidden"
-            type="button"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
-        </div>
+        />
       </div>
     </li>
   </ul>

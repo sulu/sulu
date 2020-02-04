@@ -456,7 +456,7 @@ test('Correct props should be passed to SingleItemSelection component', () => {
     expect(singleSelection.find(SingleItemSelection).prop('emptyText')).toEqual('nothing');
 });
 
-test('Pass correct disabled prop to SingleItemSelection component when item fulfills itemDisabledCondition', () => {
+test('Pass correct itemDisabled prop to SingleItemSelection component when item fulfills itemDisabledCondition', () => {
     const singleSelection = shallow(
         <SingleSelection
             adapter="table"
@@ -471,17 +471,17 @@ test('Pass correct disabled prop to SingleItemSelection component when item fulf
         />
     );
 
-    expect(singleSelection.find(SingleItemSelection).prop('disabled')).toEqual(false);
+    expect(singleSelection.find(SingleItemSelection).prop('itemDisabled')).toEqual(false);
 
     singleSelection.instance().singleSelectionStore.item = {
         id: 3,
         status: 'inactive',
     };
 
-    expect(singleSelection.find(SingleItemSelection).prop('disabled')).toEqual(true);
+    expect(singleSelection.find(SingleItemSelection).prop('itemDisabled')).toEqual(true);
 });
 
-test('Pass correct disabled prop to SingleItemSelection component when disabledIds contains id of item', () => {
+test('Pass correct itemDisabled prop to SingleItemSelection component when disabledIds contains id of item', () => {
     const singleSelection = shallow(
         <SingleSelection
             adapter="table"
@@ -496,14 +496,14 @@ test('Pass correct disabled prop to SingleItemSelection component when disabledI
         />
     );
 
-    expect(singleSelection.find(SingleItemSelection).prop('disabled')).toEqual(false);
+    expect(singleSelection.find(SingleItemSelection).prop('itemDisabled')).toEqual(false);
 
     singleSelection.instance().singleSelectionStore.item = {
         id: 3,
         status: 'inactive',
     };
 
-    expect(singleSelection.find(SingleItemSelection).prop('disabled')).toEqual(true);
+    expect(singleSelection.find(SingleItemSelection).prop('itemDisabled')).toEqual(true);
 });
 
 test('Set loading prop of SingleItemSelection component if SingleSelectionStore is loading', () => {
@@ -527,7 +527,7 @@ test('Set loading prop of SingleItemSelection component if SingleSelectionStore 
     expect(singleSelection.find(SingleListOverlay)).toHaveLength(0);
 });
 
-test('Pass correct allowRemoveWhileDisabled prop to SingleItemSelection component', () => {
+test('Pass correct allowRemoveWhileItemDisabled prop to SingleItemSelection component', () => {
     const singleSelection = shallow(
         <SingleSelection
             adapter="table"
@@ -543,24 +543,5 @@ test('Pass correct allowRemoveWhileDisabled prop to SingleItemSelection componen
         />
     );
 
-    expect(singleSelection.find(SingleItemSelection).prop('allowRemoveWhileDisabled')).toEqual(true);
-});
-
-test('Pass correct allowRemoveWhileDisabled prop to SingleItemSelection when component is disabled', () => {
-    const singleSelection = shallow(
-        <SingleSelection
-            adapter="table"
-            allowDeselectForDisabledItems={true}
-            disabled={true}
-            displayProperties={[]}
-            emptyText="nothing"
-            listKey="snippets"
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-            value={1}
-        />
-    );
-
-    expect(singleSelection.find(SingleItemSelection).prop('allowRemoveWhileDisabled')).toEqual(false);
+    expect(singleSelection.find(SingleItemSelection).prop('allowRemoveWhileItemDisabled')).toEqual(true);
 });

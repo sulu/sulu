@@ -44,10 +44,6 @@ $singleItemSelectionDisabledColor: $gray;
         margin: 0 10px;
         cursor: pointer;
         background-color: transparent;
-
-        &.hidden {
-            display: none;
-        }
     }
 
     .loader {

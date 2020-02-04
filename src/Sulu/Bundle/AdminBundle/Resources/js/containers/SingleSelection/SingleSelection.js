@@ -128,9 +128,10 @@ class SingleSelection extends React.Component<Props> {
         return (
             <Fragment>
                 <SingleItemSelection
-                    allowRemoveWhileDisabled={!disabled && allowDeselectForDisabledItems}
-                    disabled={disabled || itemDisabled}
+                    allowRemoveWhileItemDisabled={allowDeselectForDisabledItems}
+                    disabled={disabled}
                     emptyText={emptyText}
+                    itemDisabled={itemDisabled}
                     leftButton={{
                         icon,
                         onClick: this.handleOverlayOpen,
