@@ -18,8 +18,8 @@ class TemplateNotFoundException extends PreviewRendererException
 {
     /**
      * @param \InvalidArgumentException $exception
-     * @param int $object
-     * @param mixed $id
+     * @param mixed $object
+     * @param int|string $id
      * @param string $webspaceKey
      * @param string $locale
      */
