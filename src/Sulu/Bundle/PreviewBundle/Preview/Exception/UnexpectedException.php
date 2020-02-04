@@ -18,8 +18,8 @@ class UnexpectedException extends PreviewRendererException
 {
     /**
      * @param \Exception $exception
-     * @param int $object
-     * @param mixed $id
+     * @param mixed $object
+     * @param int|string $id
      * @param string $webspaceKey
      * @param string $locale
      */
