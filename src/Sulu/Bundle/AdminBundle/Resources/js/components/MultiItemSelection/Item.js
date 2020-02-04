@@ -83,20 +83,6 @@ export default class Item<T> extends React.PureComponent<Props<T>> {
             }
         );
 
-        const editButtonClass = classNames(
-            itemStyles.button,
-            {
-                [itemStyles.hidden]: disabled,
-            }
-        );
-
-        const removeButtonClass = classNames(
-            itemStyles.button,
-            {
-                [itemStyles.hidden]: disabled && !allowRemoveWhileDisabled,
-            }
-        );
-
         return (
             <div className={itemClass}>
                 <DragHandle className={dragHandleClass}>
@@ -107,13 +93,13 @@ export default class Item<T> extends React.PureComponent<Props<T>> {
                     {children}
                 </div>
                 <div className={itemStyles.buttons}>
-                    {onEdit &&
-                        <button className={editButtonClass} onClick={this.handleEdit} type="button">
+                    {onEdit && !disabled &&
+                        <button className={itemStyles.button} onClick={this.handleEdit} type="button">
                             <Icon name="su-pen" />
                         </button>
                     }
-                    {onRemove &&
-                        <button className={removeButtonClass} onClick={this.handleRemove} type="button">
+                    {onRemove && (!disabled || allowRemoveWhileDisabled) &&
+                        <button className={itemStyles.button} onClick={this.handleRemove} type="button">
                             <Icon name="su-trash-alt" />
                         </button>
                     }

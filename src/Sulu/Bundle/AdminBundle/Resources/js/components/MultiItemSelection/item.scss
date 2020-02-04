@@ -43,10 +43,6 @@ $disabledItemColor: $gray;
     padding: 13px 10px 0 0;
     cursor: pointer;
     background-color: transparent;
-
-    &.hidden {
-        display: none;
-    }
 }
 
 .drag-handle {
