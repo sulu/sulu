@@ -181,7 +181,12 @@ class QueryBuilder extends ContentQueryBuilder
         $sortBy = $this->getConfig('sortBy');
 
         if ($sortBy) {
-            $sql2Order[] = 'page.[i18n:' . $locale . '-' . $sortBy . '] ' . $sortOrder;
+            $order = 'page.[i18n:' . $locale . '-' . $sortBy . '] ';
+            if (!in_array($sortBy, ['published', 'created', 'changed', 'authored'])) {
+                $order = sprintf('lower(%s)', $order);
+            }
+
+            $sql2Order[] = $order . $sortOrder;
         } elseif (!$this->getConfig('includeSubFolders', false)) {
             $sql2Order[] = 'page.[sulu:order] ' . $sortOrder;
         }

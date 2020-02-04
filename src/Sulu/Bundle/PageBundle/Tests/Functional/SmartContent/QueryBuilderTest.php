@@ -480,6 +480,7 @@ class QueryBuilderTest extends SuluTestCase
                 'dataSource' => $root->getIdentifier(),
                 'includeSubFolders' => true,
                 'audienceTargeting' => false,
+                'sortBy' => 'title',
             ],
         ]);
 
@@ -569,9 +570,16 @@ class QueryBuilderTest extends SuluTestCase
         ]);
 
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertCount(2, $result);
-        $this->assertEquals('Family', $result[0]['title']);
-        $this->assertEquals('Single', $result[1]['title']);
+        $titles = array_map(
+            function($item) {
+                return $item['title'];
+            },
+            $result
+        );
+
+        $this->assertCount(2, $titles);
+        $this->assertContains('Family', $titles);
+        $this->assertContains('Single', $titles);
     }
 
     public function tagsProvider()
@@ -1107,23 +1115,30 @@ class QueryBuilderTest extends SuluTestCase
 
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
-        $this->assertEquals('/news', $result[0]['path']);
-        $this->assertEquals('/news/news-0', $result[1]['path']);
-        $this->assertEquals('/news/news-1', $result[2]['path']);
-        $this->assertEquals('/news/news-10', $result[3]['path']);
-        $this->assertEquals('/news/news-11', $result[4]['path']);
-        $this->assertEquals('/news/news-12', $result[5]['path']);
-        $this->assertEquals('/news/news-13', $result[6]['path']);
-        $this->assertEquals('/news/news-14', $result[7]['path']);
-        $this->assertEquals('/news/news-2', $result[8]['path']);
-        $this->assertEquals('/news/news-3', $result[9]['path']);
-        $this->assertEquals('/news/news-4', $result[10]['path']);
-        $this->assertEquals('/news/news-5', $result[11]['path']);
-        $this->assertEquals('/news/news-6', $result[12]['path']);
-        $this->assertEquals('/news/news-7', $result[13]['path']);
-        $this->assertEquals('/news/news-8', $result[14]['path']);
-        $this->assertEquals('/news/news-9', $result[15]['path']);
-        $this->assertEquals('/products', $result[16]['path']);
+        $paths = array_map(
+            function($item) {
+                return $item['path'];
+            },
+            $result
+        );
+
+        $this->assertContains('/news', $paths);
+        $this->assertContains('/news/news-0', $paths);
+        $this->assertContains('/news/news-1', $paths);
+        $this->assertContains('/news/news-10', $paths);
+        $this->assertContains('/news/news-11', $paths);
+        $this->assertContains('/news/news-12', $paths);
+        $this->assertContains('/news/news-13', $paths);
+        $this->assertContains('/news/news-14', $paths);
+        $this->assertContains('/news/news-2', $paths);
+        $this->assertContains('/news/news-3', $paths);
+        $this->assertContains('/news/news-4', $paths);
+        $this->assertContains('/news/news-5', $paths);
+        $this->assertContains('/news/news-6', $paths);
+        $this->assertContains('/news/news-7', $paths);
+        $this->assertContains('/news/news-8', $paths);
+        $this->assertContains('/news/news-9', $paths);
+        $this->assertContains('/products', $paths);
     }
 
     public function testExtension()
