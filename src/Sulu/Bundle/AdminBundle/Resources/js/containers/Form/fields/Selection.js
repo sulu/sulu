@@ -4,7 +4,7 @@ import {computed, observable, intercept, toJS, reaction} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import equal from 'fast-deep-equal';
 import {observer} from 'mobx-react';
-import {FormInspector} from '../../../containers';
+import FormInspector from '../FormInspector';
 import List from '../../../containers/List';
 import ListStore from '../../../containers/List/stores/ListStore';
 import MultiAutoComplete from '../../../containers/MultiAutoComplete';
