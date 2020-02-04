@@ -179,6 +179,7 @@ class PreviewRenderer implements PreviewRendererInterface
 
         $request = new Request($query, $request, $attributes, [], [], $server);
         $request->setLocale($locale);
+        $request->attributes->set('_sulu', $request->attributes->get('_sulu')->merge(new RequestAttributes(['host' => $request->getHttpHost()])));
 
         if ($this->targetGroupHeader && $targetGroupId) {
             $request->headers->set($this->targetGroupHeader, $targetGroupId);
