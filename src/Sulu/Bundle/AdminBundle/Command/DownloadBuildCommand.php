@@ -162,6 +162,7 @@ class DownloadBuildCommand extends Command
 
     private function hash($content)
     {
-        return hash('sha256', $content);
+        // we remove all whitespaces as the developer could change the indention or/and the line breaks of this files
+        return hash('sha256', preg_replace('/\s+/', '', $content));
     }
 }
