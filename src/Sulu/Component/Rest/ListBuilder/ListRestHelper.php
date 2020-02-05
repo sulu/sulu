@@ -168,4 +168,12 @@ class ListRestHelper implements ListRestHelperInterface
 
         return (null != $searchFields) ? explode(',', $searchFields) : [];
     }
+
+    /**
+     * @return array
+     */
+    public function getFilters()
+    {
+        return $this->getRequest()->get('filter', []);
+    }
 }

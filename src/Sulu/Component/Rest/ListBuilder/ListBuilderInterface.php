@@ -109,6 +109,13 @@ interface ListBuilderInterface
     public function search($search);
 
     /**
+     * @param array $filters
+     *
+     * @return ListBuilderInterface
+     */
+    public function filter($filters);
+
+    /**
      * Adds a field by which the table is sorted.
      *
      * @param string $order

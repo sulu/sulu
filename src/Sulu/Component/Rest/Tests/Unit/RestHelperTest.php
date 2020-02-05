@@ -12,8 +12,11 @@
 namespace Sulu\Component\Rest\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
+use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
+use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use Sulu\Component\Rest\RestHelper;
 
 class RestHelperTest extends TestCase
@@ -24,182 +27,159 @@ class RestHelperTest extends TestCase
     private $restHelper;
 
     /**
-     * @var \PHPUnit\Framework\MockObject_MockObject
+     * @var ListRestHelper
      */
     private $listRestHelper;
 
+    /**
+     * @var ListBuilderInterface
+     */
+    private $listBuilder;
+
     public function setUp(): void
     {
-        $this->listRestHelper = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\ListRestHelper')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->listRestHelper = $this->prophesize(ListRestHelper::class);
+        $this->listRestHelper->getFilters()->willReturn([]);
+        $this->listRestHelper->getPage()->willReturn(1);
+        $this->listRestHelper->getIds()->willReturn([]);
+        $this->listRestHelper->getExcludedIds()->willReturn([]);
+        $this->listRestHelper->getFields()->willReturn([]);
+        $this->listRestHelper->getSearchPattern()->willReturn(null);
+        $this->listRestHelper->getSortColumn()->willReturn(null);
+        $this->listRestHelper->getLimit()->willReturn(10);
 
-        $this->restHelper = new RestHelper($this->listRestHelper);
+        $this->listBuilder = $this->prophesize(ListBuilderInterface::class);
+        $this->listBuilder->limit(Argument::any())->should(function() {});
+        $this->listBuilder->setCurrentPage(Argument::any())->should(function() {});
+        $this->listBuilder->setFieldDescriptors(Argument::any())->should(function() {});
+        $this->listBuilder->setIds(Argument::any())->should(function() {});
+        $this->listBuilder->setExcludedIds(Argument::any())->should(function() {});
+        $this->listBuilder->filter(Argument::any())->should(function() {});
+        $this->listBuilder->setSelectFields(Argument::any())->should(function() {});
+
+        $this->restHelper = new RestHelper($this->listRestHelper->reveal());
     }
 
     public function testInitializeListBuilderLimit()
     {
-        $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')
-            ->getMock();
+        $this->listRestHelper->getLimit()->willReturn(10);
+        $this->listBuilder->limit(10)->shouldBeCalled();
+        $this->listBuilder->limit(10)->shouldBeCalled();
 
-        $this->listRestHelper->expects($this->any())->method('getLimit')->willReturn(10);
-        $listBuilder->expects($this->once())->method('limit')->with(10)->willReturnSelf();
-
-        $this->restHelper->initializeListBuilder($listBuilder, []);
+        $this->restHelper->initializeListBuilder($this->listBuilder->reveal(), []);
     }
 
     public function testInitializeListBuilderPage()
     {
-        $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')
-            ->getMock();
+        $this->listRestHelper->getPage()->willReturn(2);
+        $this->listBuilder->setCurrentPage(2)->shouldBeCalled();
 
-        $listBuilder->expects($this->any())->method('limit')->willReturnSelf();
-        $this->listRestHelper->expects($this->any())->method('getPage')->willReturn(2);
-        $listBuilder->expects($this->once())->method('setCurrentPage')->with(2)->willReturnSelf();
-
-        $this->restHelper->initializeListBuilder($listBuilder, []);
+        $this->restHelper->initializeListBuilder($this->listBuilder->reveal(), []);
     }
 
     public function testInitializeListBuilderIds()
     {
-        $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')
-            ->getMock();
+        $this->listRestHelper->getIds()->willReturn([2, 4, 6]);
+        $this->listBuilder->setIds([2, 4, 6])->shouldBeCalled();
 
-        $this->listRestHelper->expects($this->any())->method('getIds')->willReturn([2, 4, 6]);
-        $listBuilder->expects($this->once())->method('setIds')->with([2, 4, 6])->willReturnSelf();
-
-        $this->restHelper->initializeListBuilder($listBuilder, []);
+        $this->restHelper->initializeListBuilder($this->listBuilder->reveal(), []);
     }
 
     public function testInitializeListBuilderExcludedIds()
     {
-        $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')
-            ->getMock();
+        $this->listRestHelper->getExcludedIds()->willReturn([11, 22]);
+        $this->listBuilder->setExcludedIds([11, 22])->shouldBeCalled();
 
-        $this->listRestHelper->expects($this->any())->method('getExcludedIds')->willReturn([11, 22]);
-        $listBuilder->expects($this->once())->method('setExcludedIds')->with([11, 22])->willReturnSelf();
-
-        $this->restHelper->initializeListBuilder($listBuilder, []);
+        $this->restHelper->initializeListBuilder($this->listBuilder->reveal(), []);
     }
 
     public function testInitializeListBuilderAddFields()
     {
-        $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')
-            ->setMethods(['addSelectField'])
-            ->getMockForAbstractClass();
+        $field1 = $this->prophesize(FieldDescriptor::class);
+        $field2 = $this->prophesize(FieldDescriptor::class);
 
-        $field1 = $this->getMockBuilder(FieldDescriptor::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->listRestHelper->getFields()->willReturn(['name', 'desc']);
+        $this->listBuilder->addSelectField($field1->reveal())->shouldBeCalled();
+        $this->listBuilder->addSelectField($field2->reveal())->shouldBeCalled();
 
-        $field2 = $this->getMockBuilder(FieldDescriptor::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->listRestHelper->expects($this->any())->method('getFields')->willReturn(['name', 'desc']);
-        $listBuilder->expects($this->at(0))->method('addSelectField')->with($field1);
-        $listBuilder->expects($this->at(1))->method('addSelectField')->with($field2);
-
-        $this->restHelper->initializeListBuilder($listBuilder, ['name' => $field1, 'desc' => $field2]);
+        $this->restHelper->initializeListBuilder(
+            $this->listBuilder->reveal(),
+            ['name' => $field1->reveal(), 'desc' => $field2->reveal()]
+        );
     }
 
     public function testInitializeListBuilderSetFields()
     {
-        $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')
-            ->setMethods(['setSelectFields'])
-            ->getMockForAbstractClass();
+        $field1 = $this->prophesize(FieldDescriptor::class);
+        $field2 = $this->prophesize(FieldDescriptor::class);
+        $fields = ['name' => $field1->reveal(), 'desc' => $field2->reveal()];
 
-        $field1 = $this->getMockBuilder(FieldDescriptor::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->listBuilder->setSelectFields($fields);
 
-        $field2 = $this->getMockBuilder(FieldDescriptor::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $fields = ['name' => $field1, 'desc' => $field2];
-
-        $listBuilder->expects($this->once())->method('setSelectFields')->with($fields);
-
-        $this->restHelper->initializeListBuilder($listBuilder, $fields);
+        $this->restHelper->initializeListBuilder($this->listBuilder->reveal(), $fields);
     }
 
     public function testInitializeListBuilderAddSearch()
     {
-        $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')
-            ->setMethods(['addSearchField', 'search'])
-            ->getMockForAbstractClass();
+        $field1 = $this->prophesize(FieldDescriptor::class);
+        $field2 = $this->prophesize(FieldDescriptor::class);
 
-        $field1 = $this->getMockBuilder(FieldDescriptor::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->listRestHelper->getSearchFields()->willReturn(['name', 'desc']);
+        $this->listRestHelper->getSearchPattern()->willReturn('searchValue');
+        $this->listBuilder->addSearchField($field1->reveal())->shouldBeCalled();
+        $this->listBuilder->addSearchField($field2->reveal())->shouldBeCalled();
+        $this->listBuilder->search('searchValue')->shouldBeCalled();
 
-        $field2 = $this->getMockBuilder(FieldDescriptor::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->listRestHelper->expects($this->any())->method('getSearchFields')->willReturn(['name', 'desc']);
-        $this->listRestHelper->expects($this->any())->method('getSearchPattern')->willReturn('searchValue');
-        $listBuilder->expects($this->at(0))->method('addSearchField')->with($field1);
-        $listBuilder->expects($this->at(1))->method('addSearchField')->with($field2);
-        $listBuilder->expects($this->once())->method('search')->with('searchValue');
-
-        $this->restHelper->initializeListBuilder($listBuilder, ['name' => $field1, 'desc' => $field2]);
+        $this->restHelper->initializeListBuilder(
+            $this->listBuilder->reveal(),
+            ['name' => $field1->reveal(), 'desc' => $field2->reveal()]
+        );
     }
 
     public function testInitializeListBuilderAddSearchWithoutSearchFields()
     {
-        $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')
-            ->setMethods(['addSearchField', 'search'])
-            ->getMockForAbstractClass();
+        $field1 = $this->prophesize(FieldDescriptor::class);
+        $field2 = $this->prophesize(FieldDescriptor::class);
+        $field3 = $this->prophesize(FieldDescriptor::class);
 
-        $field1 = $this->getMockBuilder(FieldDescriptor::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $field1->getSearchability()->willReturn(FieldDescriptorInterface::SEARCHABILITY_YES);
+        $field1->getName()->willReturn('name');
 
-        $field2 = $this->getMockBuilder(FieldDescriptor::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $field2->getSearchability()->willReturn(FieldDescriptorInterface::SEARCHABILITY_YES);
+        $field2->getName()->willReturn('desc');
 
-        $field3 = $this->getMockBuilder(FieldDescriptor::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $field3->getSearchability()->willReturn(FieldDescriptorInterface::SEARCHABILITY_NO);
 
-        $field1->method('getSearchability')->willReturn(FieldDescriptorInterface::SEARCHABILITY_YES);
-        $field1->method('getName')->willReturn('name');
+        $this->listRestHelper->getSearchFields()->willReturn([]);
+        $this->listRestHelper->getSearchPattern()->willReturn('searchValue');
 
-        $field2->method('getSearchability')->willReturn(FieldDescriptorInterface::SEARCHABILITY_YES);
-        $field2->method('getName')->willReturn('desc');
-
-        $field2->method('getSearchability')->willReturn(FieldDescriptorInterface::SEARCHABILITY_NO);
-
-        $this->listRestHelper->expects($this->any())->method('getSearchFields')->willReturn([]);
-        $this->listRestHelper->expects($this->any())->method('getSearchPattern')->willReturn('searchValue');
-        $listBuilder->expects($this->at(0))->method('addSearchField')->with($field1);
-        $listBuilder->expects($this->at(1))->method('addSearchField')->with($field2);
-        $listBuilder->expects($this->once())->method('search')->with('searchValue');
+        $this->listBuilder->addSearchField($field1->reveal())->shouldBeCalled();
+        $this->listBuilder->addSearchField($field2->reveal())->shouldBeCalled();
+        $this->listBuilder->search('searchValue')->shouldBeCalled();
 
         $this->restHelper->initializeListBuilder(
-            $listBuilder,
-            ['name' => $field1, 'desc' => $field2, 'test' => $field3]
+            $this->listBuilder->reveal(),
+            ['name' => $field1->reveal(), 'desc' => $field2->reveal(), 'test' => $field3->reveal()]
         );
+    }
+
+    public function testInitializeListBuilderAddFilter()
+    {
+        $this->listRestHelper->getFilters()->willReturn(['name' => 'Max Mustermann']);
+        $this->listBuilder->filter(['name' => 'Max Mustermann'])->shouldBeCalled();
+
+        $this->restHelper->initializeListBuilder($this->listBuilder->reveal(), []);
     }
 
     public function testInitializeListBuilderSort()
     {
-        $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')
-            ->setMethods(['sort'])
-            ->getMockForAbstractClass();
+        $field = $this->prophesize(FieldDescriptor::class);
 
-        $field = $this->getMockBuilder(FieldDescriptor::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->listRestHelper->getSortColumn()->willReturn('name');
+        $this->listRestHelper->getSortOrder()->willReturn('ASC');
+        $this->listBuilder->sort($field, 'ASC')->shouldBeCalled();
 
-        $this->listRestHelper->expects($this->any())->method('getSortColumn')->willReturn('name');
-        $this->listRestHelper->expects($this->any())->method('getSortOrder')->willReturn('ASC');
-        $listBuilder->expects($this->once())->method('sort')->with($field, 'ASC');
-
-        $this->restHelper->initializeListBuilder($listBuilder, ['name' => $field]);
+        $this->restHelper->initializeListBuilder($this->listBuilder->reveal(), ['name' => $field->reveal()]);
     }
 
     public function testprocessSubEntitiesEmpty()

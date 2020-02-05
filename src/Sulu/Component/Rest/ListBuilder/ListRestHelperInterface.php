@@ -84,4 +84,9 @@ interface ListRestHelperInterface
      * @return array|null
      */
     public function getSearchFields();
+
+    /**
+     * @return array|null
+     */
+    public function getFilters();
 }

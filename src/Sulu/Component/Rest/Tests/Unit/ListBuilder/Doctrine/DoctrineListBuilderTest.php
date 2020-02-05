@@ -89,9 +89,7 @@ class DoctrineListBuilderTest extends TestCase
     public function setUp(): void
     {
         $this->entityManager = $this->prophesize(EntityManager::class);
-
         $this->queryBuilder = $this->prophesize(QueryBuilder::class);
-
         $this->query = $this->prophesize(AbstractQuery::class);
 
         $this->entityManager->createQueryBuilder()->willReturn($this->queryBuilder->reveal());
@@ -104,10 +102,8 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->getQuery()->willReturn($this->query->reveal());
         $this->queryBuilder->getDQL()->willReturn('');
 
-        $this->queryBuilder->distinct(false)->should(function() {
-        });
-        $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->should(function() {
-        });
+        $this->queryBuilder->distinct(false)->should(function() {});
+        $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->should(function() {});
         $this->queryBuilder->addOrderBy(Argument::cetera())->shouldBeCalled();
 
         $this->query->getArrayResult()->willReturn($this->idResult);
@@ -450,6 +446,22 @@ class DoctrineListBuilderTest extends TestCase
             '(' . self::$translationEntityNameAlias . '.desc LIKE :search OR ' . self::$entityNameAlias . '.name LIKE :search)'
         )->shouldBeCalled();
         $this->queryBuilder->setParameter('search', '%val%e%')->shouldBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testFilter()
+    {
+        $this->doctrineListBuilder->setFieldDescriptors([
+            'name' => new DoctrineFieldDescriptor('name', 'name', self::$entityName),
+        ]);
+        $this->doctrineListBuilder->filter(['name' => 'value']);
+
+        $this->queryBuilder->andWhere(
+            Argument::containingString(self::$entityNameAlias . '.name = :name')
+        )->shouldBeCalled();
+
+        $this->queryBuilder->setParameter(Argument::containingString('name'), 'value')->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }

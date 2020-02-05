@@ -747,6 +747,35 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Erika Mustermann', $response->_embedded->contacts[0]->fullName);
     }
 
+    public function testGetListFilter()
+    {
+        $contact1 = new Contact();
+        $contact1->setFirstName('Erika');
+        $contact1->setLastName('Mustermann');
+        $contact1->setSalutation('Frau');
+        $this->em->persist($contact1);
+
+        $contact2 = new Contact();
+        $contact2->setFirstName('John');
+        $contact2->setLastName('Doe');
+        $contact2->setSalutation('Mann');
+        $this->em->persist($contact2);
+        $this->em->flush();
+
+        $client = $this->createTestClient();
+        $client->request(
+            'GET',
+            '/api/contacts?flat=true&fields=fullName&filter[salutation]=Mann'
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, count($response->_embedded->contacts));
+        $this->assertEquals('John Doe', $response->_embedded->contacts[0]->fullName);
+    }
+
     public function testGetListSearchWithExcludedAccountId()
     {
         $account1 = $this->createAccount('Musterfirma 1');

@@ -204,6 +204,17 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     public function search($search)
     {
         $this->search = $search;
+
+        return $this;
+    }
+
+    public function filter($filters)
+    {
+        foreach ($filters as $fieldName => $filter) {
+            $this->where($this->getFieldDescriptor($fieldName), $filter);
+        }
+
+        return $this;
     }
 
     public function sort(FieldDescriptorInterface $fieldDescriptor, $order = self::SORTORDER_ASC)

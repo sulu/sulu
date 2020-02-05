@@ -88,7 +88,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected $expressionFields = [];
 
     /**
-     * @var \Doctrine\ORM\QueryBuilder
+     * @var QueryBuilder
      */
     protected $queryBuilder;
 
@@ -268,6 +268,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         $this->assignSortFields($subQueryBuilder);
         $this->assignParameters($this->queryBuilder);
+
         $ids = $subQueryBuilder->getQuery()->getArrayResult();
 
         // if no results are found - return
