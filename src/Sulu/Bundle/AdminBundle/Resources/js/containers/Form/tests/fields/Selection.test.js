@@ -275,7 +275,9 @@ test('Should pass props with schema-options correctly to MultiSelection componen
             'pages'
         )
     );
-    formInspector.getValueByPath.mockReturnValue('value-returned-by-form-inspector');
+
+    const formInspectorValues = {'/otherPropertyName': 'value-returned-by-form-inspector'};
+    formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
 
     const selection = shallow(
         <Selection
@@ -693,7 +695,9 @@ test('Should pass correct parameters to listStore', () => {
             'pages'
         )
     );
-    formInspector.getValueByPath.mockReturnValue('value-returned-by-form-inspector');
+
+    const formInspectorValues = {'/otherPropertyName': 'value-returned-by-form-inspector'};
+    formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
 
     const selection = shallow(
         <Selection
@@ -899,8 +903,8 @@ test('Should update listStore when the value of a "resource_store_properties_to_
         )
     );
 
-    const resourceStoreData = observable({'/otherPropertyName': 'first-value'});
-    formInspector.getValueByPath.mockImplementation((path) => resourceStoreData[path]);
+    const formInspectorValues = observable({'/otherPropertyName': 'first-value'});
+    formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
 
     const selection = shallow(
         <Selection
@@ -918,7 +922,7 @@ test('Should update listStore when the value of a "resource_store_properties_to_
     });
 
     selection.instance().listStore.selectionIds = [12, 14];
-    resourceStoreData['/otherPropertyName'] = 'second-value';
+    formInspectorValues['/otherPropertyName'] = 'second-value';
 
     expect(selection.instance().listStore.options).toEqual({
         dynamicKey: 'second-value',
