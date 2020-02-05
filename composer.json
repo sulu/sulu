@@ -45,7 +45,7 @@
         "friendsofsymfony/http-cache": "^2.5",
         "friendsofsymfony/http-cache-bundle": "^2.6",
         "friendsofsymfony/jsrouting-bundle": "^2.3",
-        "friendsofsymfony/rest-bundle": "^2.7",
+        "friendsofsymfony/rest-bundle": "dev-master#1e41345222b8c10ca25b6c57705f6da363368685 as 3.0",
         "gedmo/doctrine-extensions": "^2.4",
         "goodby/csv": "^1.3",
         "guzzlehttp/guzzle": "^6.2",
