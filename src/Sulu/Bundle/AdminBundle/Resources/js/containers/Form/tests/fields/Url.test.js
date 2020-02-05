@@ -15,6 +15,7 @@ jest.mock('../../FormInspector', () => jest.fn());
 test('Pass error prop correctly to Url component', () => {
     const schemaOptions = {
         schemes: {
+            name: 'schemes',
             value: [
                 {name: 'http://'},
                 {name: 'https://'},
@@ -40,6 +41,7 @@ test('Pass error prop correctly to Url component', () => {
 test('Pass props correctly to Url component', () => {
     const schemaOptions = {
         schemes: {
+            name: 'schemes',
             value: [
                 {name: 'http://'},
                 {name: 'https://'},
@@ -66,6 +68,7 @@ test('Pass props correctly to Url component', () => {
 test('Not call changed when only protocol is given', () => {
     const schemaOptions = {
         defaults: {
+            name: 'defaults',
             value: [
                 {name: 'scheme', value: 'http://'},
             ],
@@ -92,6 +95,7 @@ test('Not call changed when only protocol is given', () => {
 test('Pass correct default props to Url component', () => {
     const schemaOptions = {
         defaults: {
+            name: 'defaults',
             value: [
                 {name: 'scheme', value: 'http://'},
                 {name: 'specific_part', value: 'github.com'},
@@ -117,12 +121,14 @@ test('Pass correct default props to Url component', () => {
 test('Throw error if only specific_part default is set', () => {
     const schemaOptions = {
         schemes: {
+            name: 'schemes',
             value: [
                 {name: 'http://'},
                 {name: 'https://'},
             ],
         },
         defaults: {
+            name: 'defaults',
             value: [
                 {name: 'specific_part', value: 'sulu.io'},
             ],
@@ -144,12 +150,14 @@ test('Do not build URL from defaults if value is already given', () => {
 
     const schemaOptions = {
         schemes: {
+            name: 'schemes',
             value: [
                 {name: 'http://'},
                 {name: 'https://'},
             ],
         },
         defaults: {
+            name: 'defaults',
             value: [
                 {name: 'scheme', value: 'https://'},
                 {name: 'specific_part', value: 'sulu.io'},
@@ -176,12 +184,14 @@ test('Build URL from defaults to pass as value to URL component', () => {
 
     const schemaOptions = {
         schemes: {
+            name: 'schemes',
             value: [
                 {name: 'http://'},
                 {name: 'https://'},
             ],
         },
         defaults: {
+            name: 'defaults',
             value: [
                 {name: 'scheme', value: 'https://'},
                 {name: 'specific_part', value: 'sulu.io'},
@@ -205,6 +215,7 @@ test('Build URL from defaults to pass as value to URL component', () => {
 test('Should not pass any arguments to onFinish callback', () => {
     const schemaOptions = {
         schemes: {
+            name: 'schemes',
             value: [
                 {name: 'http://'},
                 {name: 'https://'},

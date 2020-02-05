@@ -46,6 +46,7 @@ test('Pass props correctly to TextArea component', () => {
 test('Pass props correctly including max_characters to TextArea component', () => {
     const schemaOptions = {
         max_characters: {
+            name: 'max_characters',
             value: '70',
         },
     };

@@ -280,7 +280,7 @@ test('Pass correct props to SingleSelect', () => {
             disabled={true}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            schemaOptions={{editable: {value: true}}}
+            schemaOptions={{editable: {name: 'editable', value: true}}}
             value={value}
         />
     );
@@ -635,6 +635,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
             value: 'status == "inactive"',
         },
         types: {
+            name: 'types',
             value: 'test',
         },
     };
@@ -857,7 +858,7 @@ test('Should throw an error if "types" schema option is not a string', () => {
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            schemaOptions={{types: {value: []}}}
+            schemaOptions={{types: {name: 'types', value: []}}}
         />
     )).toThrowError(/"types"/);
 });

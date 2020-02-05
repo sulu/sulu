@@ -67,6 +67,7 @@ test('Should correctly initialize SmartContentStore', () => {
 
     const schemaOptions = {
         provider: {
+            name: 'provider',
             value: 'media',
         },
     };
@@ -98,6 +99,7 @@ test('Should correctly initialize SmartContentStore with a exclude_duplicates va
 
     const schemaOptions = {
         exclude_duplicates: {
+            name: 'exclude_duplicates',
             value: true,
         },
     };
@@ -126,6 +128,7 @@ test('Defer start of smartContentStore until all previous stores have loaded the
 
     const schemaOptions = {
         exclude_duplicates: {
+            name: 'exclude_duplicates',
             value: true,
         },
     };
@@ -172,6 +175,7 @@ test('Should pass id to SmartContentStore if resourceKeys match', () => {
 
     const schemaOptions = {
         provider: {
+            name: 'provider',
             value: 'pages',
         },
     };
@@ -194,12 +198,15 @@ test('Pass correct props to SmartContent component', () => {
 
     const schemaOptions = {
         category_root: {
+            name: 'category_root',
             value: 'test1',
         },
         provider: {
+            name: 'provider',
             value: 'media',
         },
         present_as: {
+            name: 'present_as',
             value: [
                 {name: 'one', title: 'One column'},
                 {name: 'two', title: 'Two column'},
@@ -233,6 +240,7 @@ test('Should not call the onChange and onFinish callbacks if SmartContentStore i
 
     const schemaOptions = {
         provider: {
+            name: 'provider',
             value: 'media',
         },
     };
@@ -266,6 +274,7 @@ test('Should call the onChange and onFinish callbacks if SmartContentStore chang
 
     const schemaOptions = {
         provider: {
+            name: 'provider',
             value: 'media',
         },
     };
@@ -311,6 +320,7 @@ test('Should not call the onChange and onFinish callbacks if categories only dif
 
     const schemaOptions = {
         provider: {
+            name: 'provider',
             value: 'media',
         },
     };
@@ -360,6 +370,7 @@ test('Should not call the onChange and onFinish callbacks if tags only differ in
 
     const schemaOptions = {
         provider: {
+            name: 'provider',
             value: 'media',
         },
     };
@@ -393,6 +404,7 @@ test('Should call destroy on SmartContentStore when unmounted', () => {
 
     const schemaOptions = {
         provider: {
+            name: 'provider',
             value: 'media',
         },
     };

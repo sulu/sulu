@@ -45,12 +45,15 @@ test('Pass props correctly to component inclusive schemaOptions', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
     const schemaOptions = {
         min: {
+            name: 'min',
             value: 50,
         },
         max: {
+            name: 'max',
             value: 100,
         },
         step: {
+            name: 'step',
             value: 10,
         },
     };

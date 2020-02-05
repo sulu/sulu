@@ -76,7 +76,7 @@ test('Pass content-locale of user to SingleMediaSelection if locale is not prese
 test('Set types on SingleMediaSelectionComponent', () => {
     const changeSpy = jest.fn();
     const schemaOptions = {
-        types: {value: 'image,video'},
+        types: {name: 'types', value: 'image,video'},
     };
 
     const formInspector = new FormInspector(
@@ -101,8 +101,14 @@ test('Set types on SingleMediaSelectionComponent', () => {
 test('Set default display option if no value is passed', () => {
     const changeSpy = jest.fn();
     const schemaOptions = {
-        defaultDisplayOption: {value: 'left'},
-        displayOptions: {value: [{name: 'left', value: 'true'}]},
+        defaultDisplayOption: {
+            name: 'defaultDisplayOption',
+            value: 'left',
+        },
+        displayOptions: {
+            name: 'displayOptions',
+            value: [{name: 'left', value: 'true'}],
+        },
     };
 
     const formInspector = new FormInspector(
@@ -127,8 +133,14 @@ test('Set default display option if no value is passed', () => {
 test('Do not set default display option if value is passed', () => {
     const changeSpy = jest.fn();
     const schemaOptions = {
-        defaultDisplayOption: {value: 'left'},
-        displayOptions: {value: [{name: 'left', value: 'true'}]},
+        defaultDisplayOption: {
+            name: 'defaultDisplayOption',
+            value: 'left',
+        },
+        displayOptions: {
+            name: 'displayOptions',
+            value: [{name: 'left', value: 'true'}],
+        },
     };
 
     const formInspector = new FormInspector(
@@ -191,7 +203,7 @@ test('Should throw an error if displayOptions schemaOption is given but not an a
         <SingleMediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            schemaOptions={{displayOptions: {value: true}}}
+            schemaOptions={{displayOptions: {name: 'displayOptions', value: true}}}
         />
     )).toThrow(/"displayOptions"/);
 });
@@ -208,7 +220,7 @@ test('Should throw an error if displayOptions schemaOption is given but not an a
         <SingleMediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            schemaOptions={{displayOptions: {value: [{name: 'test', value: true}]}}}
+            schemaOptions={{displayOptions: {name: 'displayOptions', value: [{name: 'test', value: true}]}}}
         />
     )).toThrow(/"displayOptions"/);
 });
@@ -225,7 +237,7 @@ test('Should throw an error if types schemaOption is given but not an array', ()
         <SingleMediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            schemaOptions={{types: {value: true}}}
+            schemaOptions={{types: {name: 'types', value: true}}}
         />
     )).toThrow(/"types"/);
 });

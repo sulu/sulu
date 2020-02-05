@@ -86,6 +86,7 @@ test('Should pass props correctly to MultiSelection component', () => {
 
     const schemaOptions = {
         types: {
+            name: 'types',
             value: 'test',
         },
     };
@@ -240,6 +241,7 @@ test('Should pass props with schema-options correctly to MultiSelection componen
             value: 'list_overlay',
         },
         types: {
+            name: 'types',
             value: 'image,video',
         },
         allow_deselect_for_disabled_items: {
@@ -250,6 +252,7 @@ test('Should pass props with schema-options correctly to MultiSelection componen
             value: 'status == "inactive"',
         },
         request_parameters: {
+            name: 'request_parameters',
             value: [
                 {
                     name: 'staticKey',
@@ -258,6 +261,7 @@ test('Should pass props with schema-options correctly to MultiSelection componen
             ],
         },
         resource_store_properties_to_request: {
+            name: 'resource_store_properties_to_request',
             value: [
                 {
                     name: 'dynamicKey',
@@ -415,7 +419,7 @@ test('Should throw an error if "types" schema option is not a string', () => {
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            schemaOptions={{types: {value: []}}}
+            schemaOptions={{types: {name: 'type', value: []}}}
         />
     )).toThrowError(/"types"/);
 });
@@ -435,7 +439,7 @@ test('Should throw an error if "item_disabled_condition" schema option is not a 
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            schemaOptions={{item_disabled_condition: {value: []}}}
+            schemaOptions={{item_disabled_condition: {name: 'item_disabled_condition', value: []}}}
         />
     )).toThrowError(/"item_disabled_condition"/);
 });
@@ -475,7 +479,7 @@ test('Should throw an error if "request_parameters" schema option is not an arra
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            schemaOptions={{request_parameters: {value: 'not-an-array'}}}
+            schemaOptions={{request_parameters: {name: 'request_parameters', value: 'not-an-array'}}}
         />
     )).toThrowError(/"request_parameters"/);
 });
@@ -489,13 +493,16 @@ test('Should throw an error if "resource_store_properties_to_request" schema opt
             list_overlay: {},
         },
     };
+    const schemaOptions = {
+        resource_store_properties_to_request: {name: 'resource_store_properties_to_request', value: 'not-an-array'},
+    };
 
     expect(() => shallow(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            schemaOptions={{resource_store_properties_to_request: {value: 'not-an-array'}}}
+            schemaOptions={schemaOptions}
         />
     )).toThrowError(/"resource_store_properties_to_request"/);
 });
@@ -670,6 +677,7 @@ test('Should pass correct parameters to listStore', () => {
 
     const schemaOptions = {
         request_parameters: {
+            name: 'request_parameters',
             value: [
                 {
                     name: 'staticKey',
@@ -678,6 +686,7 @@ test('Should pass correct parameters to listStore', () => {
             ],
         },
         resource_store_properties_to_request: {
+            name: 'resource_store_properties_to_request',
             value: [
                 {
                     name: 'dynamicKey',
@@ -885,6 +894,7 @@ test('Should update listStore when the value of a "resource_store_properties_to_
 
     const schemaOptions = {
         resource_store_properties_to_request: {
+            name: 'resource_store_properties_to_request',
             value: [
                 {
                     name: 'dynamicKey',

@@ -174,7 +174,7 @@ class Selection extends React.Component<Props> {
 
         resourceStorePropertiesToRequest.forEach((propertyToRequest) => {
             const {name: parameterName, value: propertyName} = propertyToRequest;
-            const propertyPath = propertyName || parameterName;
+            const propertyPath = typeof propertyName === 'string' ? propertyName : parameterName;
             requestOptions[parameterName] = formInspector.getValueByPath('/' + propertyPath);
         });
 

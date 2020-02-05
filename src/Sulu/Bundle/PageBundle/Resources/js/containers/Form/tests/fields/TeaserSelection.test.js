@@ -80,6 +80,7 @@ test('Pass presentations prop correctly to component', () => {
 
     const schemaOptions = {
         present_as: {
+            name: 'present_as',
             value: [
                 {name: 'test-1', title: 'Test 1'},
                 {name: 'test-2', title: 'Test 2'},
@@ -107,6 +108,7 @@ test('Throw error if present_as schemaOption is from wrong type', () => {
 
     const schemaOptions = {
         present_as: {
+            name: 'present_as',
             value: 'test',
         },
     };
