@@ -164,19 +164,18 @@ test('Pass locale to MultiListOverlay', () => {
 });
 
 test('Pass options to MultiListOverlay', () => {
-    const options = {types: 'test'};
     const selection = mount(
         <MultiSelection
             adapter="table"
             listKey="snippets"
             onChange={jest.fn()}
-            options={options}
+            options={{types: 'test'}}
             overlayTitle="Selection"
             resourceKey="snippets"
         />
     );
 
-    expect(selection.find('MultiListOverlay').prop('options')).toEqual(options);
+    expect(selection.find('MultiListOverlay').prop('options')).toEqual({types: 'test'});
 });
 
 test('Pass disabledIds to MultiListOverlay', () => {
@@ -213,7 +212,6 @@ test('Pass itemDisabledCondition to MultiListOverlay', () => {
 
 test('Construct MultiSelectionStore with correct parameters', () => {
     const locale = observable.box('en');
-    const options = {key: 'value-1'};
 
     shallow(
         <MultiSelection
@@ -222,19 +220,18 @@ test('Construct MultiSelectionStore with correct parameters', () => {
             listKey="snippets"
             locale={locale}
             onChange={jest.fn()}
-            options={options}
+            options={{key: 'value-1'}}
             overlayTitle="Selection"
             resourceKey="snippets"
             value={[1, 2, 5]}
         />
     );
 
-    expect(MultiSelectionStore).toBeCalledWith('snippets', [1, 2, 5], locale, 'ids', options);
+    expect(MultiSelectionStore).toBeCalledWith('snippets', [1, 2, 5], locale, 'ids', {key: 'value-1'});
 });
 
 test('Update requestParameters and reload items of MultiSelectionStore when options prop is changed', () => {
     const locale = observable.box('en');
-    const oldOptions = {key: 'value-1'};
 
     const selection = shallow(
         <MultiSelection
@@ -243,7 +240,7 @@ test('Update requestParameters and reload items of MultiSelectionStore when opti
             listKey="snippets"
             locale={locale}
             onChange={jest.fn()}
-            options={oldOptions}
+            options={{key: 'value-1'}}
             overlayTitle="Selection"
             resourceKey="snippets"
             value={[1, 2, 5]}
@@ -253,18 +250,16 @@ test('Update requestParameters and reload items of MultiSelectionStore when opti
     expect(selection.instance().selectionStore.setRequestParameters).not.toBeCalled();
     expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
 
-    const newOptions = {key: 'value-2'};
     selection.setProps({
-        options: newOptions,
+        options: {key: 'value-2'},
     });
 
-    expect(selection.instance().selectionStore.setRequestParameters).toBeCalledWith(newOptions);
+    expect(selection.instance().selectionStore.setRequestParameters).toBeCalledWith({key: 'value-2'});
     expect(selection.instance().selectionStore.loadItems).toBeCalledWith([1, 2, 5]);
 });
 
 test('Not reload items of MultiSelectionStore when new value of option prop is equal to old value', () => {
     const locale = observable.box('en');
-    const oldOptions = {key: 'value-1'};
 
     const selection = shallow(
         <MultiSelection
@@ -273,7 +268,7 @@ test('Not reload items of MultiSelectionStore when new value of option prop is e
             listKey="snippets"
             locale={locale}
             onChange={jest.fn()}
-            options={oldOptions}
+            options={{key: 'value-1'}}
             overlayTitle="Selection"
             resourceKey="snippets"
             value={[]}
@@ -283,9 +278,8 @@ test('Not reload items of MultiSelectionStore when new value of option prop is e
     expect(selection.instance().selectionStore.setRequestParameters).not.toBeCalled();
     expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
 
-    const newOldOptions = {key: 'value-1'};
     selection.setProps({
-        options: newOldOptions,
+        options: {key: 'value-1'},
     });
 
     expect(selection.instance().selectionStore.setRequestParameters).not.toBeCalled();
