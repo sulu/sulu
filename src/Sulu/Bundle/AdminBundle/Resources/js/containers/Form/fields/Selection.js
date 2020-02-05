@@ -160,7 +160,7 @@ export default class Selection extends React.Component<Props> {
                     value: itemDisabledCondition,
                 } = {},
                 allow_deselect_for_disabled_items: {
-                    value: allowDeselectForDisabledItems,
+                    value: allowDeselectForDisabledItems = true,
                 } = {},
             },
             value,
@@ -172,6 +172,10 @@ export default class Selection extends React.Component<Props> {
 
         if (itemDisabledCondition !== undefined && typeof itemDisabledCondition !== 'string') {
             throw new Error('The "item_disabled_condition" schema option must be a string if given!');
+        }
+
+        if (allowDeselectForDisabledItems !== undefined && typeof allowDeselectForDisabledItems !== 'boolean') {
+            throw new Error('The "allow_deselect_for_disabled_items" schema option must be a boolean if given!');
         }
 
         const options = {};

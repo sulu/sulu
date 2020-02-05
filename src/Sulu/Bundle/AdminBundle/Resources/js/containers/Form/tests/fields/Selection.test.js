@@ -111,7 +111,7 @@ test('Should pass props correctly to MultiSelection component', () => {
 
     expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'table',
-        allowDeselectForDisabledItems: false,
+        allowDeselectForDisabledItems: true,
         listKey: 'snippets_list',
         disabled: true,
         displayProperties: ['id', 'title'],
@@ -235,7 +235,7 @@ test('Should pass props with schema-options correctly to MultiSelection componen
             value: 'list_overlay',
         },
         allow_deselect_for_disabled_items: {
-            value: 'true',
+            value: false,
         },
         item_disabled_condition: {
             value: 'status == "inactive"',
@@ -267,7 +267,7 @@ test('Should pass props with schema-options correctly to MultiSelection componen
 
     expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'table',
-        allowDeselectForDisabledItems: true,
+        allowDeselectForDisabledItems: false,
         disabled: true,
         displayProperties: ['id', 'title'],
         itemDisabledCondition: 'status == "inactive"',
@@ -402,6 +402,26 @@ test('Should throw an error if "item_disabled_condition" schema option is not a 
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
             schemaOptions={{item_disabled_condition: {value: []}}}
+        />
+    )).toThrowError(/"item_disabled_condition"/);
+});
+
+test('Should throw an error if "allow_deselect_for_disabled_items" schema option is not a boolean', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'test',
+        types: {
+            list_overlay: {},
+        },
+    };
+
+    expect(() => shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={{allow_deselect_for_disabled_items: {value: 'not-boolean'}}}
         />
     )).toThrowError(/"item_disabled_condition"/);
 });

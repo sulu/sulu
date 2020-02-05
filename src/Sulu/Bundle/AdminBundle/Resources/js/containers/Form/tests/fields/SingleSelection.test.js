@@ -402,7 +402,7 @@ test('Pass correct props to SingleItemSelection', () => {
 
     expect(singleSelection.find(SingleSelectionComponent).props()).toEqual(expect.objectContaining({
         adapter: 'table',
-        allowDeselectForDisabledItems: false,
+        allowDeselectForDisabledItems: true,
         listKey: 'accounts_list',
         detailOptions: undefined,
         disabled: true,
@@ -449,7 +449,7 @@ test('Pass resourceKey as listKey to SingleItemSelection if no listKey is given'
     expect(singleSelection.find(SingleSelectionComponent).prop('listKey')).toEqual('accounts');
 });
 
-test('Throw an error if form_options_to_list_options has wrong value', () => {
+test('Throw an error if form_options_to_list_options schema option is not an array', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const value = 3;
@@ -486,7 +486,7 @@ test('Throw an error if form_options_to_list_options has wrong value', () => {
     )).toThrow('"form_options_to_list_options"');
 });
 
-test('Throw an error if item_disabled_condition has wrong value', () => {
+test('Throw an error if item_disabled_condition schema option is not a string', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const value = 3;
@@ -521,6 +521,43 @@ test('Throw an error if item_disabled_condition has wrong value', () => {
             value={value}
         />
     )).toThrow('"item_disabled_condition"');
+});
+
+test('Throw an error if allow_deselect_for_disabled_items schema option is not a boolean', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const value = 3;
+
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'accounts',
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                display_properties: ['name'],
+                empty_text: 'sulu_contact.nothing',
+                icon: 'su-account',
+                overlay_title: 'sulu_contact.overlay_title',
+            },
+        },
+    };
+
+    const schemaOptions = {
+        allow_deselect_for_disabled_items: {
+            name: 'allow_deselect_for_disabled_items',
+            value: 'not-boolean',
+        },
+    };
+
+    expect(() => shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+            value={value}
+        />
+    )).toThrow('"allow_deselect_for_disabled_items"');
 });
 
 test('Throw an error if detail_options has wrong value', () => {
@@ -582,7 +619,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
 
     const schemaOptions = {
         allow_deselect_for_disabled_items: {
-            value: 'true',
+            value: false,
         },
         form_options_to_list_options: {
             name: 'formOptionsToApi',
@@ -615,7 +652,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
 
     expect(singleSelection.find(SingleSelectionComponent).props()).toEqual(expect.objectContaining({
         adapter: 'table',
-        allowDeselectForDisabledItems: true,
+        allowDeselectForDisabledItems: false,
         detailOptions: {
             'ghost-content': true,
         },
