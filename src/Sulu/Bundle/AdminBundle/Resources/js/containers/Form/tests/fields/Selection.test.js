@@ -423,7 +423,7 @@ test('Should throw an error if "allow_deselect_for_disabled_items" schema option
             formInspector={formInspector}
             schemaOptions={{allow_deselect_for_disabled_items: {value: 'not-boolean'}}}
         />
-    )).toThrowError(/"item_disabled_condition"/);
+    )).toThrowError(/"allow_deselect_for_disabled_items"/);
 });
 
 test('Should throw an error if no "resource_key" option is passed in fieldOptions', () => {
