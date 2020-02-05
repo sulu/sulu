@@ -17,6 +17,7 @@ use Prophecy\Argument;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
+use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderPool;
 use Sulu\Bundle\PreviewBundle\Preview\Preview;
 use Sulu\Bundle\PreviewBundle\Preview\PreviewInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
@@ -76,8 +77,9 @@ class PreviewTest extends TestCase
         $this->object = $this->prophesize(\stdClass::class);
 
         $providers = [$this->providerKey => $this->provider->reveal()];
+        $providerPool = new PreviewObjectProviderPool($providers);
 
-        $this->preview = new Preview($providers, $this->cache->reveal(), $this->renderer->reveal());
+        $this->preview = new Preview($providerPool, $this->cache->reveal(), $this->renderer->reveal());
     }
 
     public function testStart()
