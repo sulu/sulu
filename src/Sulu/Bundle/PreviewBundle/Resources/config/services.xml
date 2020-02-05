@@ -37,9 +37,13 @@
         </service>
 
         <service id="sulu_preview.preview" class="Sulu\Bundle\PreviewBundle\Preview\Preview">
-            <argument type="collection"/>
+            <argument type="service" id="sulu_preview.object_provider_pool"/>
             <argument type="service" id="sulu_preview.preview.cache"/>
             <argument type="service" id="sulu_preview.preview.renderer"/>
+        </service>
+
+        <service id="sulu_preview.object_provider_pool" class="Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderPool">
+            <argument type="collection"/>
         </service>
 
         <!-- controller -->
