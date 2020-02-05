@@ -1,5 +1,13 @@
 # Upgrade
 
+## 2.0.4
+
+### Replace {host} placeholder right after loading webspaces
+
+Previously a `host` parameter had to be passed when a route of type `portal` was generated on a webspace containing a
+`{host}` placeholder in its URL. This is not necessary anymore, and if you still do it, it will cause a `host` query
+parameter to be added to the generated URL.
+
 ## 2.0.3
 
 When upgrading also have a look at the changes in the

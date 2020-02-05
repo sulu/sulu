@@ -21,6 +21,7 @@ use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * This class is responsible for loading, reading and caching the portal configuration files.
@@ -33,11 +34,6 @@ class WebspaceManager implements WebspaceManagerInterface
     private $webspaceCollection;
 
     /**
-     * @var array
-     */
-    private $options;
-
-    /**
      * @var LoaderInterface
      */
     private $loader;
@@ -48,20 +44,39 @@ class WebspaceManager implements WebspaceManagerInterface
     private $urlReplacer;
 
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @var array
+     */
+    private $options;
+
+    /**
      * @var string
      */
     private $environment;
 
+    /**
+     * @var string
+     */
+    private $defaultHost;
+
     public function __construct(
         LoaderInterface $loader,
         ReplacerInterface $urlReplacer,
+        RequestStack $requestStack,
         array $options,
-        string $environment
+        string $environment,
+        string $defaultHost
     ) {
         $this->loader = $loader;
         $this->urlReplacer = $urlReplacer;
+        $this->requestStack = $requestStack;
         $this->setOptions($options);
         $this->environment = $environment;
+        $this->defaultHost = $defaultHost;
     }
 
     public function findWebspaceByKey(?string $key): ?Webspace
@@ -108,10 +123,6 @@ class WebspaceManager implements WebspaceManagerInterface
             $this->getWebspaceCollection()->getPortalInformations($environment),
             function(PortalInformation $portalInformation) use ($host) {
                 $portalHost = $portalInformation->getHost();
-
-                if ($this->urlReplacer->hasHostReplacer($portalHost)) {
-                    $portalHost = $this->urlReplacer->replaceHost($portalHost, $host);
-                }
 
                 // add a slash to avoid problems with "example.co" and "example.com"
                 return false !== strpos($portalHost . '/', $host . '/');
@@ -362,6 +373,19 @@ class WebspaceManager implements WebspaceManagerInterface
             require_once $cache->getPath();
 
             $this->webspaceCollection = new $class();
+
+            $currentRequest = $this->requestStack->getCurrentRequest();
+
+            $host = $currentRequest ? $currentRequest->getHost() : $this->defaultHost;
+            foreach ($this->getPortalInformations() as $portalInformation) {
+                $portalInformation->setUrl($this->urlReplacer->replaceHost($portalInformation->getUrl(), $host));
+                $portalInformation->setUrlExpression(
+                    $this->urlReplacer->replaceHost($portalInformation->getUrlExpression(), $host)
+                );
+                $portalInformation->setRedirect(
+                    $this->urlReplacer->replaceHost($portalInformation->getRedirect(), $host)
+                );
+            }
         }
 
         return $this->webspaceCollection;
@@ -443,10 +467,6 @@ class WebspaceManager implements WebspaceManagerInterface
         if (false !== strpos($portalUrl, '/')) {
             // trim slash when resourceLocator is not domain root
             $resourceLocator = rtrim($resourceLocator, '/');
-        }
-
-        if ($domain && $this->urlReplacer->hasHostReplacer($portalUrl)) {
-            $portalUrl = $this->urlReplacer->replaceHost($portalUrl, $domain);
         }
 
         return rtrim(sprintf('%s://%s', $scheme, $portalUrl), '/') . $resourceLocator;

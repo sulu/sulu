@@ -14,12 +14,10 @@ namespace Sulu\Bundle\HttpCacheBundle\Cache;
 use FOS\HttpCache\ProxyClient\Invalidation\BanCapable;
 use FOS\HttpCacheBundle\CacheManager as FOSCacheManager;
 use Ramsey\Uuid\Uuid;
-use Sulu\Component\Webspace\Url\ReplacerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Sulu cache manager wraps the FOSCacheManager to check if a host replacer is in the path
- * and also checks for every operation if the current proxy client supports the method otherwise just return.
+ * Sulu cache manager wraps the FOSCacheManager to check for every operation if the current proxy client supports the
+ * method otherwise just return.
  */
 class CacheManager implements CacheManagerInterface
 {
@@ -28,25 +26,9 @@ class CacheManager implements CacheManagerInterface
      */
     private $fosCacheManager;
 
-    /**
-     * @var ReplacerInterface
-     */
-    private $replacer;
-
-    /**
-     * @var null|string
-     */
-    private $requestHost;
-
-    public function __construct(
-        FOSCacheManager $fosCacheManager,
-        RequestStack $requestStack,
-        ReplacerInterface $replacer
-    ) {
+    public function __construct(FOSCacheManager $fosCacheManager)
+    {
         $this->fosCacheManager = $fosCacheManager;
-        $this->replacer = $replacer;
-        $this->requestHost =
-            $requestStack->getCurrentRequest() ? $requestStack->getCurrentRequest()->getHttpHost() : null;
     }
 
     /**
@@ -56,15 +38,6 @@ class CacheManager implements CacheManagerInterface
     {
         if (!$this->fosCacheManager->supports(FOSCacheManager::PATH)) {
             return;
-        }
-
-        // replacer host replacer if available
-        if ($this->replacer->hasHostReplacer($path)) {
-            if (!$this->requestHost) {
-                return;
-            }
-
-            $path = $this->replacer->replaceHost($path, $this->requestHost);
         }
 
         $this->fosCacheManager->invalidatePath($path, $headers);

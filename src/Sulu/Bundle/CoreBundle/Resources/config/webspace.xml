@@ -32,6 +32,7 @@
         <service id="sulu_core.webspace.webspace_manager" class="Sulu\Component\Webspace\Manager\WebspaceManager" public="true">
             <argument type="service" id="sulu_core.webspace.loader.delegator"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer"/>
+            <argument type="service" id="request_stack"/>
             <argument type="collection">
                 <argument key="config_dir">%sulu_core.webspace.config_dir%</argument>
                 <argument key="cache_dir">%sulu.cache_dir%</argument>
@@ -40,6 +41,7 @@
                 <argument key="base_class">%sulu_core.webspace.base_class%</argument>
             </argument>
             <argument>%kernel.environment%</argument>
+            <argument>%router.request_context.host%</argument>
 
             <tag name="sulu.localization_provider"/>
         </service>

@@ -5,8 +5,6 @@
     <services>
         <service id="sulu_http_cache.cache_manager" class="Sulu\Bundle\HttpCacheBundle\Cache\CacheManager">
             <argument type="service" id="fos_http_cache.cache_manager"/>
-            <argument type="service" id="request_stack"/>
-            <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer"/>
         </service>
     </services>
 </container>
