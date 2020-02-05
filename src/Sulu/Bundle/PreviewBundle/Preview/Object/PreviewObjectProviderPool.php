@@ -20,22 +20,28 @@ class PreviewObjectProviderPool implements PreviewObjectProviderPoolInterface
     }
 
     /**
-     * @return PreviewObjectProviderInterface[]
+     * {@inheritdoc}
      */
     public function getObjectProviders(): array
     {
         return $this->objectProviders;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getObjectProvider(string $providerKey): PreviewObjectProviderInterface
     {
         if (!$this->hasObjectProvider($providerKey)) {
             throw new ProviderNotFoundException($providerKey);
         }
-        
+
         return $this->objectProviders[$providerKey];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function hasObjectProvider(string $providerKey): bool
     {
         return array_key_exists($providerKey, $this->objectProviders);
