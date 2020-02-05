@@ -361,7 +361,7 @@ test('Merge with options from fieldRegistry before passing props to FieldType', 
         maxOccurs: 4,
         minOccurs: 2,
         schemaOptions: {
-            anotherOption: {value: 'anotherValue'},
+            anotherOption: {name: 'anotherOption', value: 'anotherValue'},
         },
         showAllErrors: true,
         types: {},
