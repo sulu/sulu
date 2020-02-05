@@ -8,6 +8,11 @@ Previously a `host` parameter had to be passed when a route of type `portal` was
 `{host}` placeholder in its URL. This is not necessary anymore, and if you still do it, it will cause a `host` query
 parameter to be added to the generated URL.
 
+### Preview constructor changed
+
+The constructor of `Preview` has changed. The first argument isn't an array of ObjectProviders anymore, instead it's a
+PreviewObjectProviderPool.
+
 ## 2.0.3
 
 When upgrading also have a look at the changes in the
