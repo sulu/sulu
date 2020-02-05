@@ -45,7 +45,7 @@ export type ErrorCollection = {[key: string]: Error};
 
 export type SchemaOption = {
     infoText?: string,
-    name?: string | number,
+    name: string | number,
     title?: string,
     value?: ?string | number | boolean | Array<SchemaOption>,
 };

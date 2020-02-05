@@ -169,13 +169,13 @@ class Selection extends React.Component<Props> {
         const requestOptions = {};
 
         requestParameters.forEach((parameter) => {
-            requestOptions[String(parameter.name)] = parameter.value;
+            requestOptions[parameter.name] = parameter.value;
         });
 
         resourceStorePropertiesToRequest.forEach((propertyToRequest) => {
             const {name: parameterName, value: propertyName} = propertyToRequest;
-            const propertyPath = String(propertyName || parameterName);
-            requestOptions[String(parameterName)] = formInspector.getValueByPath('/' + propertyPath);
+            const propertyPath = propertyName || parameterName;
+            requestOptions[parameterName] = formInspector.getValueByPath('/' + propertyPath);
         });
 
         return requestOptions;
