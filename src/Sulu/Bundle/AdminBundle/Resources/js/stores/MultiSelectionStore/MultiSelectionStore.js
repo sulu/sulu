@@ -10,14 +10,14 @@ export default class MultiSelectionStore<T = string | number, U: {id: T} = Objec
     resourceKey: string;
     locale: ?IObservableValue<string>;
     idFilterParameter: string;
-    requestParameters: {[string]: any};
+    requestParameters: {[string]: mixed};
 
     constructor(
         resourceKey: string,
         selectedItemIds: Array<T>,
         locale: ?IObservableValue<string>,
         idFilterParameter: string = 'ids',
-        requestParameters: {[string]: any} = {}
+        requestParameters: {[string]: mixed} = {}
     ) {
         this.resourceKey = resourceKey;
         this.locale = locale;
@@ -44,7 +44,7 @@ export default class MultiSelectionStore<T = string | number, U: {id: T} = Objec
         this.loading = loading;
     }
 
-    setRequestParameters(requestParameters: {[string]: string} ) {
+    setRequestParameters(requestParameters: {[string]: mixed} ) {
         this.requestParameters = requestParameters;
     }
 
