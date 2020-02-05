@@ -38,6 +38,16 @@ class FieldMetadata
      */
     protected $sortable;
 
+    /**
+     * @var ?string
+     */
+    protected $filterType;
+
+    /**
+     * @var array
+     */
+    protected $filterTypeParameters;
+
     public function __construct(string $name)
     {
         $this->name = $name;
@@ -86,5 +96,25 @@ class FieldMetadata
     public function setSortable(bool $sortable): void
     {
         $this->sortable = $sortable;
+    }
+
+    public function setFilterType(?string $filterType): void
+    {
+        $this->filterType = $filterType;
+    }
+
+    public function getFilterType(): ?string
+    {
+        return $this->filterType;
+    }
+
+    public function setFilterTypeParameters(array $filterTypeParameters): void
+    {
+        $this->filterTypeParameters = $filterTypeParameters;
+    }
+
+    public function getFilterTypeParameters(): array
+    {
+        return $this->filterTypeParameters;
     }
 }

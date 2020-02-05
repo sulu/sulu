@@ -13,9 +13,11 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\ListMetadata;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\XmlListMetadataLoader;
+use Sulu\Component\DocumentManager\Subscriber\Phpcr\GeneralSubscriber;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
+use Sulu\Component\Rest\ListBuilder\Metadata\SinglePropertyMetadata;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class XmlListMetadataLoaderTest extends TestCase
@@ -50,38 +52,54 @@ class XmlListMetadataLoaderTest extends TestCase
         $this->translator->trans('sulu_contact.firstname', [], 'admin', 'de')->willReturn('First name');
         $this->translator->trans('sulu_contact.lastname', [], 'admin', 'de')->willReturn('Last name');
         $this->translator->trans('sulu_contact.name', [], 'admin', 'en')->willReturn('Name');
+
+        $firstNameFieldDescriptor = new FieldDescriptor(
+            'firstName',
+            'sulu_contact.firstname',
+            FieldDescriptorInterface::VISIBILITY_YES,
+            FieldDescriptorInterface::SEARCHABILITY_NEVER,
+            'string',
+            true
+        );
+
+        $firstNameMetadata = new SinglePropertyMetadata('firstName');
+        $firstNameMetadata->setFilterType('string');
+        $firstNameFieldDescriptor->setMetadata($firstNameMetadata);
+
+        $lastNameFieldDescriptor = new FieldDescriptor(
+            'lastName',
+            'sulu_contact.lastname',
+            FieldDescriptorInterface::VISIBILITY_NO,
+            FieldDescriptorInterface::SEARCHABILITY_NEVER,
+            'string',
+            false
+        );
+
+        $lastNameMetadata = new SinglePropertyMetadata('lastName');
+        $lastNameMetadata->setFilterType('integer');
+        $lastNameFieldDescriptor->setMetadata($lastNameMetadata);
+
+        $accountFieldDescriptor = new FieldDescriptor(
+            'name',
+            'sulu_contact.name',
+            FieldDescriptorInterface::VISIBILITY_YES,
+            FieldDescriptorInterface::SEARCHABILITY_NEVER,
+            'string',
+            true
+        );
+
+        $accountMetadata = new SinglePropertyMetadata('name');
+        $accountMetadata->setFilterType('single_selection');
+        $accountMetadata->setFilterTypeParameters(['resource_key' => 'accounts']);
+        $accountFieldDescriptor->setMetadata($accountMetadata);
+
         $this->fieldDescriptorFactory->getFieldDescriptors('contact')->willReturn(
             [
-                new FieldDescriptor(
-                    'firstName',
-                    'sulu_contact.firstname',
-                    FieldDescriptorInterface::VISIBILITY_YES,
-                    FieldDescriptorInterface::SEARCHABILITY_NEVER,
-                    'string',
-                    true
-                ),
-                new FieldDescriptor(
-                    'lastName',
-                    'sulu_contact.lastname',
-                    FieldDescriptorInterface::VISIBILITY_NO,
-                    FieldDescriptorInterface::SEARCHABILITY_NEVER,
-                    'string',
-                    false
-                ),
+                $firstNameFieldDescriptor,
+                $lastNameFieldDescriptor,
             ]
         );
-        $this->fieldDescriptorFactory->getFieldDescriptors('account')->willReturn(
-            [
-                new FieldDescriptor(
-                    'name',
-                    'sulu_contact.name',
-                    FieldDescriptorInterface::VISIBILITY_YES,
-                    FieldDescriptorInterface::SEARCHABILITY_NEVER,
-                    'string',
-                    true
-                ),
-            ]
-        );
+        $this->fieldDescriptorFactory->getFieldDescriptors('account')->willReturn([$accountFieldDescriptor]);
 
         $contactListMetadata = $this->xmlListMetadataLoader->getMetadata('contact', 'de');
         $contactListFields = $contactListMetadata->getFields();
@@ -94,6 +112,9 @@ class XmlListMetadataLoaderTest extends TestCase
             FieldDescriptorInterface::VISIBILITY_YES,
             $contactListFields['firstName']->getVisibility()
         );
+        $this->assertEquals('string', $contactListFields['firstName']->getFilterType());
+        $this->assertEquals([], $contactListFields['firstName']->getFilterTypeParameters());
+
         $this->assertEquals('lastName', $contactListFields['lastName']->getName());
         $this->assertEquals('Last name', $contactListFields['lastName']->getLabel());
         $this->assertEquals('string', $contactListFields['lastName']->getType());
@@ -102,6 +123,8 @@ class XmlListMetadataLoaderTest extends TestCase
             FieldDescriptorInterface::VISIBILITY_NO,
             $contactListFields['lastName']->getVisibility()
         );
+        $this->assertEquals('integer', $contactListFields['lastName']->getFilterType());
+        $this->assertEquals([], $contactListFields['lastName']->getFilterTypeParameters());
 
         $accountListMetadata = $this->xmlListMetadataLoader->getMetadata('account', 'en');
         $accountListFields = $accountListMetadata->getFields();
@@ -114,6 +137,8 @@ class XmlListMetadataLoaderTest extends TestCase
             FieldDescriptorInterface::VISIBILITY_YES,
             $accountListFields['name']->getVisibility()
         );
+        $this->assertEquals('single_selection', $accountListFields['name']->getFilterType());
+        $this->assertEquals(['resource_key' => 'accounts'], $accountListFields['name']->getFilterTypeParameters());
     }
 
     public function testGetMetadataNotExisting()
