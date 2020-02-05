@@ -55,7 +55,7 @@ class PreviewObjectProviderPoolTest extends TestCase
     {
         $this->assertEquals($this->provider->reveal(), $this->objectProviderPool->getObjectProvider($this->providerKey));
 
-        $this->expectExceptionObject(ProviderNotFoundException::class);
+        $this->expectException(ProviderNotFoundException::class);
         $this->objectProviderPool->getObjectProvider('wrong-key');
     }
 
