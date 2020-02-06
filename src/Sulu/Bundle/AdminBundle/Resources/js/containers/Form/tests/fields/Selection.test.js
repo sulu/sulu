@@ -245,6 +245,7 @@ test('Should pass props with schema-options correctly to MultiSelection componen
             value: 'image,video',
         },
         allow_deselect_for_disabled_items: {
+            name: 'allow_deselect_for_disabled_items',
             value: false,
         },
         item_disabled_condition: {
@@ -453,13 +454,19 @@ test('Should throw an error if "allow_deselect_for_disabled_items" schema option
             list_overlay: {},
         },
     };
+    const schemaOptions = {
+        allow_deselect_for_disabled_items: {
+            name: 'allow_deselect_for_disabled_items',
+            value: 'not-boolean',
+        },
+    };
 
     expect(() => shallow(
         <Selection
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            schemaOptions={{allow_deselect_for_disabled_items: {value: 'not-boolean'}}}
+            schemaOptions={schemaOptions}
         />
     )).toThrowError(/"allow_deselect_for_disabled_items"/);
 });

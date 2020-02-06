@@ -619,19 +619,22 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
 
     const schemaOptions = {
         allow_deselect_for_disabled_items: {
+            name: 'allow_deselect_for_disabled_items',
             value: false,
         },
         form_options_to_list_options: {
-            name: 'formOptionsToApi',
+            name: 'form_options_to_list_options',
             value: [
                 {name: 'segment'},
                 {name: 'webspace'},
             ],
         },
         type: {
+            name: 'type',
             value: 'list_overlay',
         },
         item_disabled_condition: {
+            name: 'item_disabled_condition',
             value: 'status == "inactive"',
         },
         types: {
