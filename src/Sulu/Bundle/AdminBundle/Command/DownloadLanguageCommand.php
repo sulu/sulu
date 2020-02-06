@@ -14,14 +14,14 @@ namespace Sulu\Bundle\AdminBundle\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class DownloadLanguageCommand extends Command
 {
-    const TRANSLATION_BASE_URL = 'https://translations.sulu.io/';
-
     protected static $defaultName = 'sulu:admin:download-language';
 
     /**
@@ -50,12 +50,42 @@ class DownloadLanguageCommand extends Command
     protected function configure()
     {
         $this->setDescription('Downloads the currently approved translations for the given language.')
-            ->addArgument('language', InputArgument::REQUIRED, 'The language to download');
+            ->addArgument('languages', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The language to download')
+            ->addOption(
+                'base-url',
+                'b',
+                InputOption::VALUE_REQUIRED,
+                'The endpoint where the translation should be downloaded.',
+                'https://translations.sulu.io/'
+            );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $language = $input->getArgument('language');
+        $languages = $input->getArgument('languages');
+
+        foreach ($languages as $language) {
+            $this->executeLanguage($input, $output, $language);
+        }
+
+        return 0;
+    }
+
+    protected function executeLanguage(InputInterface $input, OutputInterface $output, string $language): void
+    {
+        $translationBaseUrl = $input->getOption('base-url');
+
+        $ui = new SymfonyStyle($input, $output);
+        $ui->section('Language: ' . $language);
+
+        if (in_array($language, ['en', 'de'])) {
+            $ui->note(sprintf(
+                'The language "%s" is core languages and don\'t need to be downloaded.',
+                $language
+            ));
+
+            return;
+        }
 
         $composerJson = json_decode(file_get_contents($this->projectDir . DIRECTORY_SEPARATOR . 'composer.json'), true);
         $packages = array_keys($composerJson['require']);
@@ -75,23 +105,38 @@ class DownloadLanguageCommand extends Command
             $translations = [];
         }
 
+        $packages = [];
         foreach ($suluPackages as $suluPackage) {
-            $translations = array_merge($translations, $this->downloadLanguage($output, $language, $suluPackage));
+            $packageTranslations = $this->downloadLanguage($output, $language, $suluPackage, $translationBaseUrl);
+            $packages[$suluPackage] = [
+                'Package' => $suluPackage,
+                'Translations' => count($packageTranslations),
+            ];
+            $translations = array_merge($translations, $packageTranslations);
         }
 
-        $output->writeln('<info>Writing language into translations folder</info>');
+        if (empty($translations)) {
+            $ui->warning(sprintf('No translations found for language %s.', $language));
+
+            return;
+        }
+
+        $ui->newLine();
+        $ui->table(['Package', 'Translations', 'Error'], $packages);
+
+        $output->writeln(sprintf('<info>Writing language %s into translations folder</info>', $language));
 
         $this->filesystem->mkdir(dirname($translationsFile));
 
         $this->filesystem->dumpFile($translationsFile, json_encode($translations));
     }
 
-    private function downloadLanguage($output, $language, $project): array
+    private function downloadLanguage($output, $language, $project, $translationBaseUrl): array
     {
         $output->writeln('<info>Starting download for the "' . $project . '" project in "' . $language . '"</info>');
         $response = $this->httpClient->request(
             'GET',
-            static::TRANSLATION_BASE_URL . $project . '/' . $language
+            $translationBaseUrl . $project . '/' . $language
         );
 
         $tempDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'sulu-language-' . $language . DIRECTORY_SEPARATOR;
@@ -99,7 +144,7 @@ class DownloadLanguageCommand extends Command
 
         $this->filesystem->mkdir($tempDirectory);
 
-        if (404 === $response->getStatusCode()) {
+        if (!200 === $response->getStatusCode()) {
             return [];
         }
 
