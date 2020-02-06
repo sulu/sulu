@@ -75,7 +75,7 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
         string $languageCode,
         ?string $webspaceKey = null,
         ?string $domain = null,
-        string $scheme = 'http'
+        ?string $scheme = null
     ): array;
 
     /**
@@ -87,7 +87,7 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
         string $languageCode,
         ?string $webspaceKey = null,
         ?string $domain = null,
-        string $scheme = 'http'
+        ?string $scheme = null
     ): ?string;
 
     /**
