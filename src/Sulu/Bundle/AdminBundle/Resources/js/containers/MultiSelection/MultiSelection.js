@@ -4,6 +4,8 @@ import {action, observable, reaction, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
+import jexl from 'jexl';
+import classNames from 'classnames';
 import CroppedText from '../../components/CroppedText';
 import MultiItemSelection from '../../components/MultiItemSelection';
 import MultiSelectionStore from '../../stores/MultiSelectionStore';
@@ -12,6 +14,7 @@ import multiSelectionStyles from './multiSelection.scss';
 
 type Props = {|
     adapter: string,
+    allowDeselectForDisabledItems: boolean,
     disabled: boolean,
     disabledIds: Array<string | number>,
     displayProperties: Array<string>,
@@ -30,6 +33,7 @@ type Props = {|
 @observer
 class MultiSelection extends React.Component<Props> {
     static defaultProps = {
+        allowDeselectForDisabledItems: false,
         disabled: false,
         disabledIds: [],
         displayProperties: [],
@@ -108,6 +112,7 @@ class MultiSelection extends React.Component<Props> {
     render() {
         const {
             adapter,
+            allowDeselectForDisabledItems,
             listKey,
             disabled,
             disabledIds,
@@ -137,21 +142,39 @@ class MultiSelection extends React.Component<Props> {
                     onItemRemove={this.handleRemove}
                     onItemsSorted={this.handleSorted}
                 >
-                    {items.map((item, index) => (
-                        <MultiItemSelection.Item id={item.id} index={index + 1} key={item.id}>
-                            <div>
-                                {displayProperties.map((displayProperty) => (
-                                    <span
-                                        className={multiSelectionStyles.itemColumn}
-                                        key={displayProperty}
-                                        style={{width: 100 / columns + '%'}}
-                                    >
-                                        <CroppedText>{item[displayProperty]}</CroppedText>
-                                    </span>
-                                ))}
-                            </div>
-                        </MultiItemSelection.Item>
-                    ))}
+                    {items.map((item, index) => {
+                        const itemDisabled = disabledIds.includes(item.id) ||
+                            (!!itemDisabledCondition && jexl.evalSync(itemDisabledCondition, item));
+
+                        const itemColumnClass = classNames(
+                            multiSelectionStyles.itemColumn,
+                            {
+                                [multiSelectionStyles.disabled]: itemDisabled,
+                            }
+                        );
+
+                        return (
+                            <MultiItemSelection.Item
+                                allowRemoveWhileDisabled={allowDeselectForDisabledItems}
+                                disabled={itemDisabled}
+                                id={item.id}
+                                index={index + 1}
+                                key={item.id}
+                            >
+                                <div>
+                                    {displayProperties.map((displayProperty) => (
+                                        <span
+                                            className={itemColumnClass}
+                                            key={displayProperty}
+                                            style={{width: 100 / columns + '%'}}
+                                        >
+                                            <CroppedText>{item[displayProperty]}</CroppedText>
+                                        </span>
+                                    ))}
+                                </div>
+                            </MultiItemSelection.Item>
+                        );
+                    })}
                 </MultiItemSelection>
                 <MultiListOverlay
                     adapter={adapter}

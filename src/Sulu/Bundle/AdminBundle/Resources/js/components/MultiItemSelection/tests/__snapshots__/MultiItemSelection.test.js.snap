@@ -670,14 +670,33 @@ exports[`Render an MultiItemSelection with children 1`] = `
         </div>
         <div
           class="buttons"
-        />
+        >
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </button>
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
       </div>
     </li>
     <li
       class="listElement"
     >
       <div
-        class="item"
+        class="item disabled"
       >
         <span
           class="dragHandle sortable"
@@ -695,11 +714,50 @@ exports[`Render an MultiItemSelection with children 1`] = `
         <div
           class="content"
         >
-          Child 3
+          Child 3 (disabled)
         </div>
         <div
           class="buttons"
         />
+      </div>
+    </li>
+    <li
+      class="listElement"
+    >
+      <div
+        class="item disabled"
+      >
+        <span
+          class="dragHandle sortable"
+        >
+          <span
+            aria-label="su-more"
+            class="su-more"
+          />
+          <span
+            class="index"
+          >
+            4
+          </span>
+        </span>
+        <div
+          class="content"
+        >
+          Child 4 (disabled with remove button)
+        </div>
+        <div
+          class="buttons"
+        >
+          <button
+            class="button"
+            type="button"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </button>
+        </div>
       </div>
     </li>
   </ul>

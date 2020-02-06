@@ -9,9 +9,11 @@ import Button from './Button';
 import type {Button as ButtonConfig} from './types';
 
 type Props = {|
+    allowRemoveWhileItemDisabled: boolean,
     children?: Node,
     disabled: boolean,
     emptyText?: string,
+    itemDisabled: boolean,
     leftButton: ButtonConfig<*>,
     loading: boolean,
     onRemove?: () => void,
@@ -21,13 +23,34 @@ type Props = {|
 
 export default class SingleItemSelection extends React.Component<Props> {
     static defaultProps = {
+        allowRemoveWhileItemDisabled: false,
         disabled: false,
+        itemDisabled: false,
         loading: false,
         valid: true,
     };
 
     render() {
-        const {children, disabled, emptyText, leftButton, loading, onRemove, rightButton, valid} = this.props;
+        const {
+            allowRemoveWhileItemDisabled,
+            children,
+            disabled,
+            itemDisabled,
+            emptyText,
+            leftButton,
+            loading,
+            onRemove,
+            rightButton,
+            valid,
+        } = this.props;
+
+        const singleItemSelectionClass = classNames(
+            singleItemSelectionStyles.singleItemSelection,
+            {
+                [singleItemSelectionStyles.error]: !valid,
+                [singleItemSelectionStyles.disabled]: disabled || itemDisabled,
+            }
+        );
 
         const itemContainerClass = classNames(
             singleItemSelectionStyles.itemContainer,
@@ -36,19 +59,11 @@ export default class SingleItemSelection extends React.Component<Props> {
             }
         );
 
-        const singleItemSelectionClass = classNames(
-            singleItemSelectionStyles.singleItemSelection,
-            {
-                [singleItemSelectionStyles.error]: !valid,
-                [singleItemSelectionStyles.disabled]: disabled,
-            }
-        );
-
         return (
             <div className={singleItemSelectionClass}>
                 <Button
                     {...leftButton}
-                    disabled={disabled}
+                    disabled={disabled || itemDisabled}
                     location="left"
                 />
                 <div className={itemContainerClass}>
@@ -60,10 +75,9 @@ export default class SingleItemSelection extends React.Component<Props> {
                             </div>
                         }
                     </div>
-                    {onRemove && !loading &&
+                    {onRemove && !loading && !disabled && (!itemDisabled || allowRemoveWhileItemDisabled) &&
                         <button
                             className={singleItemSelectionStyles.removeButton}
-                            disabled={disabled}
                             onClick={onRemove}
                             type="button"
                         >
@@ -77,7 +91,7 @@ export default class SingleItemSelection extends React.Component<Props> {
                 {rightButton &&
                     <Button
                         {...rightButton}
-                        disabled={disabled}
+                        disabled={disabled || itemDisabled}
                         location="right"
                     />
                 }

@@ -3,6 +3,7 @@ import React, {Fragment} from 'react';
 import {action, reaction, observable, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
+import jexl from 'jexl';
 import SingleItemSelection from '../../components/SingleItemSelection';
 import SingleSelectionStore from '../../stores/SingleSelectionStore';
 import SingleListOverlay from '../SingleListOverlay';
@@ -10,6 +11,7 @@ import singleSelectionStyles from './singleSelection.scss';
 
 type Props = {|
     adapter: string,
+    allowDeselectForDisabledItems: boolean,
     detailOptions?: Object,
     disabled: boolean,
     disabledIds: Array<string | number>,
@@ -29,6 +31,7 @@ type Props = {|
 @observer
 class SingleSelection extends React.Component<Props> {
     static defaultProps = {
+        allowDeselectForDisabledItems: false,
         disabled: false,
         disabledIds: [],
         icon: 'su-plus',
@@ -103,6 +106,7 @@ class SingleSelection extends React.Component<Props> {
     render() {
         const {
             adapter,
+            allowDeselectForDisabledItems,
             listKey,
             disabled,
             disabledIds,
@@ -118,11 +122,16 @@ class SingleSelection extends React.Component<Props> {
         const {item, loading} = this.singleSelectionStore;
         const columns = displayProperties.length;
 
+        const itemDisabled = (!!item && disabledIds.includes(item.id)) ||
+            (!!item && !!itemDisabledCondition && jexl.evalSync(itemDisabledCondition, item));
+
         return (
             <Fragment>
                 <SingleItemSelection
+                    allowRemoveWhileItemDisabled={allowDeselectForDisabledItems}
                     disabled={disabled}
                     emptyText={emptyText}
+                    itemDisabled={itemDisabled}
                     leftButton={{
                         icon,
                         onClick: this.handleOverlayOpen,

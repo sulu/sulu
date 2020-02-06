@@ -111,6 +111,7 @@ test('Should pass props correctly to MultiSelection component', () => {
 
     expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'table',
+        allowDeselectForDisabledItems: true,
         listKey: 'snippets_list',
         disabled: true,
         displayProperties: ['id', 'title'],
@@ -206,7 +207,7 @@ test('Should pass locale from userStore to MultiSelection component if form has 
     expect(toJS(selection.find('MultiSelection').prop('locale'))).toEqual('de');
 });
 
-test('Should pass props with schema-options type correctly to MultiSelection component', () => {
+test('Should pass props with schema-options correctly to MultiSelection component', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
@@ -231,11 +232,12 @@ test('Should pass props with schema-options type correctly to MultiSelection com
 
     const schemaOptions = {
         type: {
-            name: 'type',
             value: 'list_overlay',
         },
+        allow_deselect_for_disabled_items: {
+            value: false,
+        },
         item_disabled_condition: {
-            name: 'item_disabled_condition',
             value: 'status == "inactive"',
         },
     };
@@ -265,6 +267,7 @@ test('Should pass props with schema-options type correctly to MultiSelection com
 
     expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'table',
+        allowDeselectForDisabledItems: false,
         disabled: true,
         displayProperties: ['id', 'title'],
         itemDisabledCondition: 'status == "inactive"',
@@ -401,6 +404,26 @@ test('Should throw an error if "item_disabled_condition" schema option is not a 
             schemaOptions={{item_disabled_condition: {value: []}}}
         />
     )).toThrowError(/"item_disabled_condition"/);
+});
+
+test('Should throw an error if "allow_deselect_for_disabled_items" schema option is not a boolean', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'test',
+        types: {
+            list_overlay: {},
+        },
+    };
+
+    expect(() => shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={{allow_deselect_for_disabled_items: {value: 'not-boolean'}}}
+        />
+    )).toThrowError(/"allow_deselect_for_disabled_items"/);
 });
 
 test('Should throw an error if no "resource_key" option is passed in fieldOptions', () => {

@@ -99,6 +99,9 @@ export default class SingleSelection extends React.Component<Props>
                 item_disabled_condition: {
                     value: itemDisabledCondition,
                 } = {},
+                allow_deselect_for_disabled_items: {
+                    value: allowDeselectForDisabledItems = true,
+                } = {},
                 types: {
                     value: types,
                 } = {},
@@ -119,6 +122,10 @@ export default class SingleSelection extends React.Component<Props>
 
         if (itemDisabledCondition !== undefined && typeof itemDisabledCondition !== 'string') {
             throw new Error('The "item_disabled_condition" schema option must be a string if given!');
+        }
+
+        if (allowDeselectForDisabledItems !== undefined && typeof allowDeselectForDisabledItems !== 'boolean') {
+            throw new Error('The "allow_deselect_for_disabled_items" schema option must be a boolean if given!');
         }
 
         if (formOptionsToListOptions && !Array.isArray(formOptionsToListOptions)) {
@@ -152,6 +159,7 @@ export default class SingleSelection extends React.Component<Props>
         return (
             <SingleSelectionComponent
                 adapter={adapter}
+                allowDeselectForDisabledItems={!!allowDeselectForDisabledItems}
                 detailOptions={detailOptions}
                 disabled={!!disabled}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}
