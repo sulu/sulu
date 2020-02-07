@@ -29,7 +29,10 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescrip
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderCreateEvent;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderEvents;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Filter\FilterTypeInterface;
+use Sulu\Component\Rest\ListBuilder\Filter\FilterTypeRegistry;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
+use Sulu\Component\Rest\ListBuilder\Metadata\SinglePropertyMetadata;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -40,7 +43,12 @@ class DoctrineListBuilderTest extends TestCase
     /**
      * @var EventDispatcherInterface
      */
-    protected $eventDispatcher;
+    private $eventDispatcher;
+
+    /**
+     * @var FilterTypeRegistry
+     */
+    private $filterTypeRegistry;
 
     /**
      * @var DoctrineListBuilder
@@ -89,6 +97,7 @@ class DoctrineListBuilderTest extends TestCase
     public function setUp(): void
     {
         $this->entityManager = $this->prophesize(EntityManager::class);
+        $this->filterTypeRegistry = $this->prophesize(FilterTypeRegistry::class);
         $this->queryBuilder = $this->prophesize(QueryBuilder::class);
         $this->query = $this->prophesize(AbstractQuery::class);
 
@@ -114,6 +123,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder = new DoctrineListBuilder(
             $this->entityManager->reveal(),
             self::$entityName,
+            $this->filterTypeRegistry->reveal(),
             $this->eventDispatcher->reveal(),
             [PermissionTypes::VIEW => 64]
         );
@@ -452,16 +462,20 @@ class DoctrineListBuilderTest extends TestCase
 
     public function testFilter()
     {
+        $filterType = $this->prophesize(FilterTypeInterface::class);
+        $this->filterTypeRegistry->getFilterType('text')->willReturn($filterType->reveal());
+
+        $nameFieldDescriptor = new DoctrineFieldDescriptor('name', 'name', self::$entityName);
+        $nameMetadata = new SinglePropertyMetadata('name');
+        $nameMetadata->setFilterType('text');
+        $nameFieldDescriptor->setMetadata($nameMetadata);
+
         $this->doctrineListBuilder->setFieldDescriptors([
-            'name' => new DoctrineFieldDescriptor('name', 'name', self::$entityName),
+            'name' => $nameFieldDescriptor,
         ]);
         $this->doctrineListBuilder->filter(['name' => 'value']);
 
-        $this->queryBuilder->andWhere(
-            Argument::containingString(self::$entityNameAlias . '.name = :name')
-        )->shouldBeCalled();
-
-        $this->queryBuilder->setParameter(Argument::containingString('name'), 'value')->shouldBeCalled();
+        $filterType->filter($this->doctrineListBuilder, $nameFieldDescriptor, 'value')->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }

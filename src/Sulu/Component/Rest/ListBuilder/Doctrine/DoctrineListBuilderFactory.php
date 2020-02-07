@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
 use Doctrine\ORM\EntityManager;
+use Sulu\Component\Rest\ListBuilder\Filter\FilterTypeRegistry;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -20,23 +21,33 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class DoctrineListBuilderFactory implements DoctrineListBuilderFactoryInterface
 {
     /**
+     * @var EntityManager
+     */
+    private $em;
+
+    /**
+     * @var FilterTypeRegistry
+     */
+    private $filterTypeRegistry;
+
+    /**
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
-
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $em;
 
     /**
      * @var array
      */
     private $permissions;
 
-    public function __construct(EntityManager $em, EventDispatcherInterface $eventDispatcher, array $permissions)
-    {
+    public function __construct(
+        EntityManager $em,
+        FilterTypeRegistry $filterTypeRegistry,
+        EventDispatcherInterface $eventDispatcher,
+        array $permissions
+    ) {
         $this->em = $em;
+        $this->filterTypeRegistry = $filterTypeRegistry;
         $this->eventDispatcher = $eventDispatcher;
         $this->permissions = $permissions;
     }
@@ -50,6 +61,12 @@ class DoctrineListBuilderFactory implements DoctrineListBuilderFactoryInterface
      */
     public function create($entityName)
     {
-        return new DoctrineListBuilder($this->em, $entityName, $this->eventDispatcher, $this->permissions);
+        return new DoctrineListBuilder(
+            $this->em,
+            $entityName,
+            $this->filterTypeRegistry,
+            $this->eventDispatcher,
+            $this->permissions
+        );
     }
 }

@@ -12,11 +12,17 @@
 namespace Sulu\Component\Rest\ListBuilder;
 
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Filter\FilterTypeRegistry;
 use Sulu\Component\Rest\ListBuilder\Metadata\AbstractPropertyMetadata;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 abstract class AbstractListBuilder implements ListBuilderInterface
 {
+    /**
+     * @var FilterTypeRegistry
+     */
+    private $filterTypeRegistry;
+
     /**
      * The field descriptors for the current list.
      *
@@ -116,6 +122,11 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      */
     protected $permission;
 
+    public function __construct(FilterTypeRegistry $filterTypeRegistry)
+    {
+        $this->filterTypeRegistry = $filterTypeRegistry;
+    }
+
     public function setSelectFields($fieldDescriptors)
     {
         $this->selectFields = array_filter(
@@ -210,8 +221,10 @@ abstract class AbstractListBuilder implements ListBuilderInterface
 
     public function filter($filters)
     {
-        foreach ($filters as $fieldName => $filter) {
-            $this->where($this->getFieldDescriptor($fieldName), $filter);
+        foreach ($filters as $fieldName => $options) {
+            $fieldDescriptor = $this->fieldDescriptors[$fieldName];
+            $this->filterTypeRegistry->getFilterType($fieldDescriptor->getMetadata()->getFilterType())
+                ->filter($this, $fieldDescriptor, $options);
         }
 
         return $this;

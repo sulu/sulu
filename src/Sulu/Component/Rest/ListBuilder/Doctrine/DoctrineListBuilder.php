@@ -31,6 +31,7 @@ use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineWhereExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Exception\InvalidExpressionArgumentException;
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
+use Sulu\Component\Rest\ListBuilder\Filter\FilterTypeRegistry;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -117,9 +118,11 @@ class DoctrineListBuilder extends AbstractListBuilder
     public function __construct(
         EntityManager $em,
         $entityName,
+        FilterTypeRegistry $filterTypeRegistry,
         EventDispatcherInterface $eventDispatcher,
         array $permissions
     ) {
+        parent::__construct($filterTypeRegistry);
         $this->em = $em;
         $this->entityName = $entityName;
         $this->eventDispatcher = $eventDispatcher;
