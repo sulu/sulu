@@ -121,6 +121,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             ->enableDatasource('pages', 'pages', 'column_list')
             ->enableSorting(
                 [
+                    ['column' => null, 'title' => 'sulu_admin.default'],
                     ['column' => 'title', 'title' => 'sulu_admin.title'],
                     ['column' => 'published', 'title' => 'sulu_admin.published'],
                     ['column' => 'created', 'title' => 'sulu_admin.created'],

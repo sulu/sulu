@@ -178,17 +178,16 @@ class QueryBuilder extends ContentQueryBuilder
             ? 'DESC' : 'ASC';
 
         $sql2Order = [];
-        $sortBy = $this->getConfig('sortBy', []);
+        $sortBy = $this->getConfig('sortBy');
 
-        if (!empty($sortBy)) {
-            // TODO implement more generic
+        if ($sortBy) {
             $order = 'page.[i18n:' . $locale . '-' . $sortBy . '] ';
             if (!in_array($sortBy, ['published', 'created', 'changed', 'authored'])) {
                 $order = sprintf('lower(%s)', $order);
             }
 
-            $sql2Order[] = $order . ' ' . $sortOrder;
-        } else {
+            $sql2Order[] = $order . $sortOrder;
+        } elseif (!$this->getConfig('includeSubFolders', false)) {
             $sql2Order[] = 'page.[sulu:order] ' . $sortOrder;
         }
 

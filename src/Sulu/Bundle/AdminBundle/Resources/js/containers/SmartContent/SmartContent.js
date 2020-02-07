@@ -28,7 +28,6 @@ class SmartContent extends React.Component<Props> {
 
     config: SmartContentConfig;
     sections: Array<string> = [];
-    sortings: {[key: string]: string};
 
     @observable showFilterOverlay = false;
 
@@ -69,11 +68,6 @@ class SmartContent extends React.Component<Props> {
         if (this.config.limit) {
             this.sections.push('limit');
         }
-
-        this.sortings = this.config.sorting.reduce((sortings, sorting) => {
-            sortings[sorting.name] = translate(sorting.value);
-            return sortings;
-        }, {});
     }
 
     @action handleFilterClick = () => {
@@ -121,7 +115,7 @@ class SmartContent extends React.Component<Props> {
                     presentations={presentations}
                     sections={this.sections}
                     smartContentStore={store}
-                    sortings={this.sortings}
+                    sortings={this.config.sorting}
                     title={translate('sulu_admin.filter_overlay_title', {fieldLabel})}
                 />
             </Fragment>

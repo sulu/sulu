@@ -25,6 +25,7 @@
     "sulu_admin.yes": "Ja",
     "sulu_admin.no": "Nein",
     "sulu_admin.type": "Typ",
+    "sulu_admin.default": "Standard",
     "sulu_admin.error_required": "Dieses Feld muss ausgefüllt werden",
     "sulu_admin.error_minlength": "Die minimale Länge dieses Feldes wurde unterschritten",
     "sulu_admin.error_minitems": "Dieses Feld hat zu wenig Zuweisungen",
