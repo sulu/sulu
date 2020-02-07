@@ -26,6 +26,8 @@ class Selection extends React.Component<Props> {
     changeListOptionsDisposer: ?() => *;
     changeLocaleDisposer: ?() => *;
 
+    @observable requestOptions: {[string]: mixed};
+
     constructor(props: Props) {
         super(props);
 
@@ -40,11 +42,44 @@ class Selection extends React.Component<Props> {
             fieldTypeOptions: {
                 resource_key: resourceKey,
             },
+            formInspector,
+            schemaOptions: {
+                request_parameters: {
+                    value: requestParameters = [],
+                } = {},
+                resource_store_properties_to_request: {
+                    value: resourceStorePropertiesToRequest = [],
+                } = {},
+            },
         } = this.props;
 
         if (!resourceKey) {
             throw new Error('The selection field needs a "resource_key" option to work properly');
         }
+
+        this.requestOptions = this.buildRequestOptions(
+            requestParameters,
+            resourceStorePropertiesToRequest,
+            formInspector
+        );
+
+        // update requestOptions observable if one of the "resource_store_properties_to_request" properties is changed
+        const observedDataPaths = resourceStorePropertiesToRequest.map((property) => {
+            return typeof property.value === 'string' ? '/' + property.value : '/' + property.name;
+        });
+        formInspector.addFinishFieldHandler((dataPath) => {
+            if (observedDataPaths.includes(dataPath)) {
+                const newRequestOptions = this.buildRequestOptions(
+                    requestParameters,
+                    resourceStorePropertiesToRequest,
+                    formInspector
+                );
+
+                if (!equal(this.requestOptions, newRequestOptions)) {
+                    this.requestOptions = newRequestOptions;
+                }
+            }
+        });
 
         if (this.type === 'list') {
             const {
@@ -55,15 +90,6 @@ class Selection extends React.Component<Props> {
                         },
                     },
                 },
-                formInspector,
-                schemaOptions: {
-                    request_parameters: {
-                        value: requestParameters = [],
-                    } = {},
-                    resource_store_properties_to_request: {
-                        value: resourceStorePropertiesToRequest = [],
-                    } = {},
-                },
                 value,
             } = this.props;
 
@@ -72,7 +98,7 @@ class Selection extends React.Component<Props> {
                 listKey || resourceKey,
                 USER_SETTINGS_KEY,
                 {locale: this.locale, page: observable.box()},
-                this.buildRequestOptions(requestParameters, resourceStorePropertiesToRequest, formInspector),
+                this.requestOptions,
                 undefined,
                 value
             );
@@ -83,7 +109,7 @@ class Selection extends React.Component<Props> {
             );
 
             this.changeListOptionsDisposer = reaction(
-                () => this.buildRequestOptions(requestParameters, resourceStorePropertiesToRequest, formInspector),
+                () => this.requestOptions,
                 (requestOptions) => {
                     const listStore = this.listStore;
                     if (!listStore) {
@@ -215,12 +241,6 @@ class Selection extends React.Component<Props> {
                 },
             },
             schemaOptions: {
-                request_parameters: {
-                    value: requestParameters = [],
-                } = {},
-                resource_store_properties_to_request: {
-                    value: resourceStorePropertiesToRequest = [],
-                } = {},
                 types: {
                     value: types,
                 } = {},
@@ -250,7 +270,7 @@ class Selection extends React.Component<Props> {
             throw new Error('The selection field needs a "adapter" option to work properly');
         }
 
-        const options = this.buildRequestOptions(requestParameters, resourceStorePropertiesToRequest, formInspector);
+        const options = {...this.requestOptions};
         if (types) {
             options.types = types;
         }
