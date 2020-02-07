@@ -27,6 +27,3 @@ parameters:
         - %currentWorkingDirectory%/src/Sulu/Bundle/TestBundle/Resources/app/config/config.php
         # The following should be removed at some point
         - %currentWorkingDirectory%/*/Tests/*
-    ignoreErrors:
-        - '#Service "test_user_provider" is not registered in the container.#'
-        - '#Instantiated class ZipArchive not found.#'

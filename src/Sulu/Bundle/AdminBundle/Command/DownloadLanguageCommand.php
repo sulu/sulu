@@ -39,21 +39,27 @@ class DownloadLanguageCommand extends Command
      */
     private $projectDir;
 
-    public function __construct(HttpClientInterface $httpClient, Filesystem $filesystem, string $projectDir)
+    /**
+     * @var string[]
+     */
+    private $defaultLanguages;
+
+    public function __construct(HttpClientInterface $httpClient, Filesystem $filesystem, string $projectDir, array $defaultLanguages)
     {
-        parent::__construct();
         $this->httpClient = $httpClient;
         $this->filesystem = $filesystem;
         $this->projectDir = $projectDir;
+        $this->defaultLanguages = $defaultLanguages;
+        parent::__construct();
     }
 
     protected function configure()
     {
         $this->setDescription('Downloads the currently approved translations for the given language.')
-            ->addArgument('languages', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'The language to download')
+            ->addArgument('languages', InputArgument::IS_ARRAY, 'The languages to download', $this->defaultLanguages)
             ->addOption(
-                'base-url',
-                'b',
+                'translation-endpoint',
+                null,
                 InputOption::VALUE_REQUIRED,
                 'The endpoint where the translation should be downloaded.',
                 'https://translations.sulu.io/'
@@ -62,6 +68,13 @@ class DownloadLanguageCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        if (!class_exists(\ZipArchive::class)) {
+            $ui = new SymfonyStyle($input, $output);
+            $ui->error('The "sulu:admin:download-language" command requires the "zip" php extension.');
+
+            return 1;
+        }
+
         $languages = $input->getArgument('languages');
 
         foreach ($languages as $language) {
@@ -73,14 +86,14 @@ class DownloadLanguageCommand extends Command
 
     protected function executeLanguage(InputInterface $input, OutputInterface $output, string $language): void
     {
-        $translationBaseUrl = $input->getOption('base-url');
+        $translationBaseUrl = $input->getOption('translation-endpoint');
 
         $ui = new SymfonyStyle($input, $output);
         $ui->section('Language: ' . $language);
 
         if (in_array($language, ['en', 'de'])) {
             $ui->note(sprintf(
-                'The language "%s" is core languages and don\'t need to be downloaded.',
+                'Download skipped because Sulu includes a translation for the language "%s" per default.',
                 $language
             ));
 
@@ -115,14 +128,15 @@ class DownloadLanguageCommand extends Command
             $translations = array_merge($translations, $packageTranslations);
         }
 
+        $ui->newLine();
+
         if (empty($translations)) {
-            $ui->warning(sprintf('No translations found for language %s.', $language));
+            $ui->warning(sprintf('Translation for language "%s" does not exist yet. Reach out to the Sulu team via https://sulu.io/contact-us if you are interested in creating it. Your contribution is highly appreciated!', $language));
 
             return;
         }
 
-        $ui->newLine();
-        $ui->table(['Package', 'Translations', 'Error'], $packages);
+        $ui->table(['Package', 'Translations'], $packages);
 
         $output->writeln(sprintf('<info>Writing language %s into translations folder</info>', $language));
 
@@ -144,7 +158,7 @@ class DownloadLanguageCommand extends Command
 
         $this->filesystem->mkdir($tempDirectory);
 
-        if (!200 === $response->getStatusCode()) {
+        if (404 === $response->getStatusCode()) {
             return [];
         }
 
