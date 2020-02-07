@@ -67,14 +67,6 @@ class Selection extends React.Component<Props> {
                 value,
             } = this.props;
 
-            if (!Array.isArray(requestParameters)) {
-                throw new Error('The "request_parameters" schemaOption must be an array!');
-            }
-
-            if (!Array.isArray(resourceStorePropertiesToRequest)) {
-                throw new Error('The "resource_store_properties_to_request" schemaOption must be an array!');
-            }
-
             this.listStore = new ListStore(
                 resourceKey,
                 listKey || resourceKey,
@@ -166,6 +158,14 @@ class Selection extends React.Component<Props> {
         resourceStorePropertiesToRequest: Array<SchemaOption>,
         formInspector: FormInspector
     ) {
+        if (!Array.isArray(requestParameters)) {
+            throw new Error('The "request_parameters" schemaOption must be an array!');
+        }
+
+        if (!Array.isArray(resourceStorePropertiesToRequest)) {
+            throw new Error('The "resource_store_properties_to_request" schemaOption must be an array!');
+        }
+
         const requestOptions = {};
 
         requestParameters.forEach((parameter) => {
@@ -233,14 +233,6 @@ class Selection extends React.Component<Props> {
             },
             value,
         } = this.props;
-
-        if (!Array.isArray(requestParameters)) {
-            throw new Error('The "request_parameters" schemaOption must be an array!');
-        }
-
-        if (!Array.isArray(resourceStorePropertiesToRequest)) {
-            throw new Error('The "resource_store_properties_to_request" schemaOption must be an array!');
-        }
 
         if (types !== undefined && typeof types !== 'string') {
             throw new Error('The "types" schema option must be a string if given!');
