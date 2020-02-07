@@ -33,7 +33,7 @@
 
 [Sulu](https://sulu.io/) is a highly extensible open-source **PHP content management system based** on the [Symfony](https://symfony.com/) framework. Sulu is developed to deliver robust **multi-lingual and multi-portal websites** while providing an **intuitive and extensible administration interface** to manage the full content lifecycle. 
 
-Have a look at the official [Sulu website](https://sulu.io/) for a comprehensive list of Sulus features, core values and use cases. 
+Have a look at the official [Sulu website](https://sulu.io/) for a comprehensive list of Sulu's features, core values and use cases. 
 
 <br/>
 <p align="center">
@@ -56,7 +56,7 @@ The [sulu/skeleton](https://github.com/sulu/skeleton) repository provides a **pr
 The Sulu content management system is a **community-driven open source project** backed by various partner companies. We are committed to a fully transparent development process and **highly appreciate any contributions**. Whether you are helping us fixing bugs, proposing new feature, improving our documentation or spreading the word - **we would love to have you as part of the Sulu community**.
 
 
-## 📫&nbsp; Have a question? Want to chat? Run into a problem?
+## 📫&nbsp; Have a question? Want to chat? Ran into a problem?
 
 We are happy to welcome you in our official [Slack channel](https://sulu.io/services-and-support)! Obviously you can always **reach out to us directly** via the [Sulu twitter account](https://twitter.com/sulu) or post your question on [StackOverflow](https://stackoverflow.com/questions/tagged/sulu) with the official `sulu` tag.
 
