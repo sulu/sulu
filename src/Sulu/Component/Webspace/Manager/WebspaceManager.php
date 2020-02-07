@@ -63,13 +63,19 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     private $defaultHost;
 
+    /**
+     * @var string
+     */
+    private $defaultScheme;
+
     public function __construct(
         LoaderInterface $loader,
         ReplacerInterface $urlReplacer,
         RequestStack $requestStack,
         array $options,
         string $environment,
-        string $defaultHost
+        string $defaultHost,
+        string $defaultScheme
     ) {
         $this->loader = $loader;
         $this->urlReplacer = $urlReplacer;
@@ -77,6 +83,7 @@ class WebspaceManager implements WebspaceManagerInterface
         $this->setOptions($options);
         $this->environment = $environment;
         $this->defaultHost = $defaultHost;
+        $this->defaultScheme = $defaultScheme;
     }
 
     public function findWebspaceByKey(?string $key): ?Webspace
@@ -187,7 +194,7 @@ class WebspaceManager implements WebspaceManagerInterface
         string $languageCode,
         ?string $webspaceKey = null,
         ?string $domain = null,
-        string $scheme = 'http'
+        ?string $scheme = null
     ): array {
         if (null === $environment) {
             $environment = $this->environment;
@@ -201,7 +208,7 @@ class WebspaceManager implements WebspaceManagerInterface
         foreach ($portals as $portalInformation) {
             $sameLocalization = $portalInformation->getLocalization()->getLocale() === $languageCode;
             $sameWebspace = null === $webspaceKey || $portalInformation->getWebspace()->getKey() === $webspaceKey;
-            $url = $this->createResourceLocatorUrl($scheme, $portalInformation->getUrl(), $resourceLocator, $domain);
+            $url = $this->createResourceLocatorUrl($portalInformation->getUrl(), $resourceLocator, $domain, $scheme);
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
                 $urls[] = $url;
             }
@@ -216,7 +223,7 @@ class WebspaceManager implements WebspaceManagerInterface
         string $languageCode,
         ?string $webspaceKey = null,
         ?string $domain = null,
-        string $scheme = 'http'
+        ?string $scheme = null
     ): ?string {
         if (null === $environment) {
             $environment = $this->environment;
@@ -238,7 +245,7 @@ class WebspaceManager implements WebspaceManagerInterface
                 || $portalInformation->getLocalization()->getLocale() === $languageCode
             );
             $sameWebspace = null === $webspaceKey || $portalInformation->getWebspace()->getKey() === $webspaceKey;
-            $url = $this->createResourceLocatorUrl($scheme, $portalInformation->getUrl(), $resourceLocator, $domain);
+            $url = $this->createResourceLocatorUrl($portalInformation->getUrl(), $resourceLocator, $domain, $scheme);
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
                 if ($portalInformation->isMain()) {
                     array_unshift($urls, $url);
@@ -455,15 +462,19 @@ class WebspaceManager implements WebspaceManagerInterface
     /**
      * Return a valid resource locator url.
      *
-     * @param string $scheme
      * @param string $portalUrl
      * @param string $resourceLocator
      * @param string|null $domain
+     * @param string|null $scheme
      *
      * @return string
      */
-    private function createResourceLocatorUrl($scheme, $portalUrl, $resourceLocator, $domain = null)
+    private function createResourceLocatorUrl($portalUrl, $resourceLocator, $domain = null, $scheme = null)
     {
+        if (!$scheme) {
+            $scheme = $this->defaultScheme;
+        }
+
         if (false !== strpos($portalUrl, '/')) {
             // trim slash when resourceLocator is not domain root
             $resourceLocator = rtrim($resourceLocator, '/');

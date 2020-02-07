@@ -78,7 +78,8 @@ class WebspaceManagerTest extends WebspaceTestCase
                 'cache_class' => 'WebspaceCollectionCache' . uniqid(),
             ],
             'test',
-            'sulu.io'
+            'sulu.io',
+            'http'
         );
     }
 
@@ -574,7 +575,8 @@ class WebspaceManagerTest extends WebspaceTestCase
                 'cache_class' => 'WebspaceCollectionCache' . uniqid(),
             ],
             'test',
-            'sulu.io'
+            'sulu.io',
+            'http'
         );
 
         $webspaces = $this->webspaceManager->getWebspaceCollection();
@@ -676,6 +678,25 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io', null, 'https');
         $this->assertEquals(['https://sulu.lo/test'], $result);
+    }
+
+    public function testFindUrlsByResourceLocatorWithSchemeNull()
+    {
+        $result = $this->webspaceManager->findUrlsByResourceLocator(
+            '/test',
+            'dev',
+            'en_us',
+            'massiveart',
+            null,
+            null
+        );
+
+        $this->assertCount(2, $result);
+        $this->assertContains('http://massiveart.lo/en-us/w/test', $result);
+        $this->assertContains('http://massiveart.lo/en-us/s/test', $result);
+
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io', null, null);
+        $this->assertEquals(['http://sulu.lo/test'], $result);
     }
 
     public function testFindUrlsByResourceLocatorRoot()
