@@ -172,6 +172,7 @@
             <argument type="service" id="http_client" />
             <argument type="service" id="filesystem" />
             <argument>%kernel.project_dir%</argument>
+            <argument>%sulu_core.locales%</argument>
             <tag name="console.command"/>
         </service>
     </services>
