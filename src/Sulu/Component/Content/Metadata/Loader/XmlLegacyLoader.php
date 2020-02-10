@@ -72,6 +72,8 @@ class XmlLegacyLoader implements LoaderInterface
         'shadow-base',
         'author',
         'authored',
+        'type',
+        'id',
     ];
 
     /**
