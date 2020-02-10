@@ -34,15 +34,19 @@ test('Pass correct props', () => {
     );
     const schemaOptions = {
         collection_id: {
+            name: 'collection_id',
             value: 3,
         },
         empty_icon: {
+            name: 'empty_icon',
             value: 'su-icon',
         },
         image_size: {
+            name: 'image_size',
             value: 'sulu-400x400-inset',
         },
         upload_text: {
+            name: 'upload_text',
             infoText: 'Drag and drop',
         },
     };
@@ -72,9 +76,11 @@ test('Pass correct skin to props', () => {
     );
     const schemaOptions = {
         collection_id: {
+            name: 'collection_id',
             value: 2,
         },
         skin: {
+            name: 'skin',
             value: 'round',
         },
     };
@@ -99,9 +105,11 @@ test('Throw if emptyIcon is set but not a valid value', () => {
     );
     const schemaOptions = {
         collection_id: {
+            name: 'collection_id',
             value: 2,
         },
         empty_icon: {
+            name: 'empty_icon',
             value: [],
         },
     };
@@ -126,9 +134,11 @@ test('Throw if skin is set but not a valid value', () => {
     );
     const schemaOptions = {
         collection_id: {
+            name: 'collection_id',
             value: 2,
         },
         skin: {
+            name: 'skin',
             value: 'test',
         },
     };
@@ -153,9 +163,11 @@ test('Throw if image_size is set but not a valid value', () => {
     );
     const schemaOptions = {
         collection_id: {
+            name: 'collection_id',
             value: 2,
         },
         image_size: {
+            name: 'image_size',
             value: 3,
         },
     };
@@ -203,6 +215,7 @@ test('Call onChange and onFinish when upload has completed', () => {
     const media = {name: 'test.jpg'};
     const schemaOptions = {
         collection_id: {
+            name: 'collection_id',
             value: 2,
         },
     };
@@ -232,6 +245,7 @@ test('Create a MediaUploadStore when constructed', () => {
     );
     const schemaOptions = {
         collection_id: {
+            name: 'collection_id',
             value: 2,
         },
     };
@@ -257,6 +271,7 @@ test('Create MediaUploadStore with content-locale of user if locale is not prese
     );
     const schemaOptions = {
         collection_id: {
+            name: 'collection_id',
             value: 2,
         },
     };
@@ -288,6 +303,7 @@ test('Create a MediaUploadStore when constructed with data', () => {
     };
     const schemaOptions = {
         collection_id: {
+            name: 'collection_id',
             value: 2,
         },
     };

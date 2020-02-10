@@ -498,7 +498,7 @@ export default class ListStore {
         this.pendingRequest = this.loadingStrategy.load(
             this.resourceKey,
             options,
-            options.expandedIds ? undefined : active
+            (options.selectedIds || options.expandedIds) ? undefined : active
         ).then(action((response) => {
             this.pendingRequest = undefined;
             this.pageCount = response.pages;

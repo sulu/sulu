@@ -16,6 +16,7 @@ test('Pass props correctly to SingleSelect', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = observable({
         values: {
+            name: 'values',
             value: [
                 {
                     name: 'mr',
@@ -54,6 +55,7 @@ test('Pass value if no title is given to SingleSelect', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = observable({
         values: {
+            name: 'values',
             value: [
                 {
                     name: 'mr',
@@ -86,9 +88,11 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = {
         default_value: {
+            name: 'default_value',
             value: [],
         },
         values: {
+            name: 'values',
             value: [
                 {
                     name: 'mr',
@@ -115,6 +119,7 @@ test('Should throw an exception if value is of wrong type', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = {
         values: {
+            name: 'values',
             value: [
                 {
                     name: [],
@@ -142,6 +147,7 @@ test('Should call onFinish callback on every onChange', () => {
     const finishSpy = jest.fn();
     const schemaOptions = {
         values: {
+            name: 'values',
             value: [
                 {
                     name: 'mr',
@@ -174,9 +180,11 @@ test('Set default value of null should not call onChange', () => {
     const changeSpy = jest.fn();
     const schemaOptions = {
         default_value: {
+            name: 'default_value',
             value: null,
         },
         values: {
+            name: 'values',
             value: [
                 {
                     name: 'mr',
@@ -206,9 +214,11 @@ test('Set default value if no value is passed', () => {
     const changeSpy = jest.fn();
     const schemaOptions = {
         default_value: {
+            name: 'default_value',
             value: 'mr',
         },
         values: {
+            name: 'values',
             value: [
                 {
                     name: 'mr',
@@ -238,9 +248,11 @@ test('Set default value to a number of 0 should work', () => {
     const changeSpy = jest.fn();
     const schemaOptions = {
         default_value: {
+            name: 'default_value',
             value: 0,
         },
         values: {
+            name: 'values',
             value: [
                 {
                     name: 0,
@@ -281,7 +293,7 @@ test('Throw error if value option with wrong is passed', () => {
         <SingleSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            schemaOptions={{values: {value: true}}}
+            schemaOptions={{values: {name: 'values', value: true}}}
         />)
     ).toThrow(/"values"/);
 });

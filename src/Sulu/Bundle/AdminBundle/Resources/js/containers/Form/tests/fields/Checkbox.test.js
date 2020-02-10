@@ -20,7 +20,7 @@ test('Pass the label correctly to Checkbox component', () => {
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
             label="Test"
-            schemaOptions={{label: {title: 'Checkbox Title'}}}
+            schemaOptions={{label: {name: 'label', title: 'Checkbox Title'}}}
         />
     );
     expect(checkbox.find(CheckboxComponent).prop('children')).toEqual('Checkbox Title');
@@ -34,7 +34,7 @@ test('Pass disabled correctly to Checkbox component', () => {
             disabled={true}
             formInspector={formInspector}
             label="Test"
-            schemaOptions={{label: {title: 'Checkbox Title'}}}
+            schemaOptions={{label: {name: 'label', title: 'Checkbox Title'}}}
         />
     );
     expect(checkbox.find(CheckboxComponent).props().disabled).toEqual(true);
@@ -44,7 +44,8 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = {
         default_value: {
-            value: {},
+            name: 'default_value',
+            value: 'not-boolean',
         },
     };
 
@@ -52,7 +53,7 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
         <Checkbox
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            schemaOptions={(schemaOptions: any)}
+            schemaOptions={schemaOptions}
         />
     )).toThrow(/"default_value"/);
 });
@@ -63,6 +64,7 @@ test('Set default value of null should not call onChange', () => {
 
     const schemaOptions = {
         default_value: {
+            name: 'default_value',
             value: null,
         },
     };
@@ -72,7 +74,7 @@ test('Set default value of null should not call onChange', () => {
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
             onChange={changeSpy}
-            schemaOptions={(schemaOptions: any)}
+            schemaOptions={schemaOptions}
         />
     );
 
@@ -85,6 +87,7 @@ test('Set default value if no value is passed', () => {
 
     const schemaOptions = {
         default_value: {
+            name: 'default_value',
             value: false,
         },
     };
@@ -94,7 +97,7 @@ test('Set default value if no value is passed', () => {
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
             onChange={changeSpy}
-            schemaOptions={(schemaOptions: any)}
+            schemaOptions={schemaOptions}
         />
     );
 
@@ -107,6 +110,7 @@ test('Do not set default value if a value is passed', () => {
 
     const schemaOptions = {
         default_value: {
+            name: 'default_value',
             value: false,
         },
     };
@@ -116,7 +120,7 @@ test('Do not set default value if a value is passed', () => {
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
             onChange={changeSpy}
-            schemaOptions={(schemaOptions: any)}
+            schemaOptions={schemaOptions}
             value={false}
         />
     );
@@ -169,12 +173,17 @@ test('Call onChange and onFinish on the changed callback of the Checkbox', () =>
 
 test('Pass the label correctly to Toggler component', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    const schemaOptions = {
+        label: {name: 'label', title: 'Toggler Title'},
+        type: {name: 'type', value: 'toggler'},
+    };
+
     const checkbox = shallow(
         <Checkbox
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
             label="Test"
-            schemaOptions={{label: {title: 'Toggler Title'}, type: {value: 'toggler'}}}
+            schemaOptions={schemaOptions}
         />
     );
     expect(checkbox.find(Toggler).prop('children')).toEqual('Toggler Title');
@@ -182,13 +191,18 @@ test('Pass the label correctly to Toggler component', () => {
 
 test('Pass disabled correctly to Toggler component', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    const schemaOptions = {
+        label: {name: 'label', title: 'Toggler Title'},
+        type: {name: 'type', value: 'toggler'},
+    };
+
     const checkbox = shallow(
         <Checkbox
             {...fieldTypeDefaultProps}
             disabled={true}
             formInspector={formInspector}
             label="Test"
-            schemaOptions={{label: {title: 'Toggler Title'}, type: {value: 'toggler'}}}
+            schemaOptions={schemaOptions}
         />
     );
     expect(checkbox.find(Toggler).props().disabled).toEqual(true);
@@ -201,7 +215,7 @@ test('Pass the value of true correctly to Toggler component', () => {
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
             label="Test"
-            schemaOptions={{type: {value: 'toggler'}}}
+            schemaOptions={{type: {name: 'type', value: 'toggler'}}}
             value={true}
         />
     );
@@ -214,7 +228,7 @@ test('Pass the value of false correctly to Toggler component', () => {
         <Checkbox
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            schemaOptions={{type: {value: 'toggler'}}}
+            schemaOptions={{type: {name: 'type', value: 'toggler'}}}
             value={false}
         />
     );
@@ -232,7 +246,7 @@ test('Call onChange and onFinish on the changed callback of the Toggler', () => 
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}
-            schemaOptions={{type: {value: 'toggler'}}}
+            schemaOptions={{type: {name: 'type', value: 'toggler'}}}
         />
     );
     checkbox.find(Toggler).simulate('change', true);

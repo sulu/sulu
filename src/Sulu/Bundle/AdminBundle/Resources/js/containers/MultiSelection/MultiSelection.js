@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, observable, reaction, toJS} from 'mobx';
+import {action, comparer, observable, reaction, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
@@ -43,17 +43,19 @@ class MultiSelection extends React.Component<Props> {
     };
 
     selectionStore: MultiSelectionStore<string | number>;
-    changeDisposer: () => *;
+    changeSelectionDisposer: () => *;
+    changeOptionsDisposer: () => *;
 
     @observable overlayOpen: boolean = false;
 
     constructor(props: Props) {
         super(props);
 
-        const {locale, resourceKey, value} = this.props;
+        const {locale, options, resourceKey, value} = this.props;
 
-        this.selectionStore = new MultiSelectionStore(resourceKey, value, locale);
-        this.changeDisposer = reaction(
+        this.selectionStore = new MultiSelectionStore(resourceKey, value, locale, 'ids', options);
+
+        this.changeSelectionDisposer = reaction(
             () => (this.selectionStore.items.map((item) => item.id)),
             (loadedItemIds: Array<string | number>) => {
                 const {onChange, value} = this.props;
@@ -62,6 +64,15 @@ class MultiSelection extends React.Component<Props> {
                     onChange(loadedItemIds);
                 }
             }
+        );
+
+        this.changeOptionsDisposer = reaction(
+            () => this.props.options,
+            (options) => {
+                this.selectionStore.setRequestParameters(options);
+                this.selectionStore.loadItems(this.props.value);
+            },
+            {equals: comparer.structural}
         );
     }
 
@@ -77,7 +88,8 @@ class MultiSelection extends React.Component<Props> {
     }
 
     componentWillUnmount() {
-        this.changeDisposer();
+        this.changeSelectionDisposer();
+        this.changeOptionsDisposer();
     }
 
     @action closeOverlay() {

@@ -43,11 +43,13 @@ export default class Header<T: string | number, U: string | number> extends Reac
                     <Button {...leftButton} location="left" />
                 }
                 <div className={headerStyles.label}>
-                    {label}
                     {loading &&
                         <div className={headerStyles.loader}>
                             <Loader size={LOADER_SIZE} />
                         </div>
+                    }
+                    {!loading &&
+                        label
                     }
                 </div>
                 {rightButton &&

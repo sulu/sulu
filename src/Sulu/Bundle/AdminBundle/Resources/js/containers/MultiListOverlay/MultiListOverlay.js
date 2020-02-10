@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, observable} from 'mobx';
+import {comparer, computed, observable, reaction} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import ListStore from '../../containers/List/stores/ListStore';
@@ -45,6 +45,7 @@ class MultiListOverlay extends React.Component<Props> {
     listStore: ListStore;
     page: IObservableValue<number> = observable.box(1);
     excludedIdsDisposer: () => void;
+    changeOptionsDisposer: () => *;
 
     constructor(props: Props) {
         super(props);
@@ -67,13 +68,27 @@ class MultiListOverlay extends React.Component<Props> {
             USER_SETTINGS_KEY,
             observableOptions,
             options,
+            undefined,
             preloadSelectedItems ? preSelectedItems.map((preSelectedItem) => preSelectedItem.id) : undefined
+        );
+
+        this.changeOptionsDisposer = reaction(
+            () => this.props.options,
+            (options) => {
+                // reset liststore to reload whole tree instead of children of current active item
+                this.listStore.reset();
+                // set selected items as initialSelectionIds to expand them in case of a tree
+                this.listStore.initialSelectionIds = this.listStore.selectionIds;
+                this.listStore.options = {...this.listStore.options, ...options};
+            },
+            {equals: comparer.structural}
         );
     }
 
     componentWillUnmount() {
         this.listStore.destroy();
         this.excludedIdsDisposer();
+        this.changeOptionsDisposer();
     }
 
     handleConfirm = () => {

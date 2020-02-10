@@ -46,6 +46,7 @@ test('Pass props correctly to Input component', () => {
 test('Pass headline prop correctly', () => {
     const schemaOptions = {
         headline: {
+            name: 'headline',
             value: true,
         },
     };
@@ -64,12 +65,15 @@ test('Pass headline prop correctly', () => {
 test('Pass props correctly including maxCharacters to Input component', () => {
     const schemaOptions = {
         max_characters: {
+            name: 'max_characters',
             value: '70',
         },
         max_segments: {
+            name: 'max_segments',
             value: '6',
         },
         segment_delimiter: {
+            name: 'segment_delimiter',
             value: ',',
         },
     };
