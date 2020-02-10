@@ -575,7 +575,6 @@ exports[`Render an MultiItemSelection while loading 1`] = `
     <div
       class="label"
     >
-      I am loading
       <div
         class="loader"
       >
