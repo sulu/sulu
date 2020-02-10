@@ -43,7 +43,7 @@ class PreviewObjectProviderRegistryTest extends TestCase
         $this->objectProviderRegistry = new PreviewObjectProviderRegistry($providers);
     }
 
-    public function testGetObjectProviders(): void
+    public function testGetPreviewObjectProviders(): void
     {
         $objectProviders = $this->objectProviderRegistry->getPreviewObjectProviders();
 
@@ -52,7 +52,7 @@ class PreviewObjectProviderRegistryTest extends TestCase
         $this->assertArrayNotHasKey('wrong-key', $objectProviders);
     }
 
-    public function testGetObjectProvider(): void
+    public function testGetPreviewObjectProvider(): void
     {
         $this->assertEquals($this->provider->reveal(), $this->objectProviderRegistry->getPreviewObjectProvider($this->providerKey));
 
@@ -60,7 +60,7 @@ class PreviewObjectProviderRegistryTest extends TestCase
         $this->objectProviderRegistry->getPreviewObjectProvider('wrong-key');
     }
 
-    public function testHasObjectProvider(): void
+    public function testHasPreviewObjectProvider(): void
     {
         $this->assertTrue($this->objectProviderRegistry->hasPreviewObjectProvider($this->providerKey));
         $this->assertFalse($this->objectProviderRegistry->hasPreviewObjectProvider('wrong-key'));
