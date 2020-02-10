@@ -14,14 +14,15 @@ namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Preview\Object;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
-use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderPool;
+use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistry;
+use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
 
-class PreviewObjectProviderPoolTest extends TestCase
+class PreviewObjectProviderRegistryTest extends TestCase
 {
     /**
-     * @var PreviewObjectProviderPoolInterface
+     * @var PreviewObjectProviderRegistryInterface
      */
-    private $objectProviderPool;
+    private $objectProviderRegistry;
 
     /**
      * @var PreviewObjectProviderInterface
@@ -39,12 +40,12 @@ class PreviewObjectProviderPoolTest extends TestCase
 
         $providers = [$this->providerKey => $this->provider->reveal()];
 
-        $this->objectProviderPool = new PreviewObjectProviderPool($providers);
+        $this->objectProviderRegistry = new PreviewObjectProviderRegistry($providers);
     }
 
     public function testGetObjectProviders(): void
     {
-        $objectProviders = $this->objectProviderPool->getObjectProviders();
+        $objectProviders = $this->objectProviderRegistry->getPreviewObjectProviders();
 
         $this->assertCount(1, $objectProviders);
         $this->assertArrayHasKey($this->providerKey, $objectProviders);
@@ -53,15 +54,15 @@ class PreviewObjectProviderPoolTest extends TestCase
 
     public function testGetObjectProvider(): void
     {
-        $this->assertEquals($this->provider->reveal(), $this->objectProviderPool->getObjectProvider($this->providerKey));
+        $this->assertEquals($this->provider->reveal(), $this->objectProviderRegistry->getPreviewObjectProvider($this->providerKey));
 
         $this->expectException(ProviderNotFoundException::class);
-        $this->objectProviderPool->getObjectProvider('wrong-key');
+        $this->objectProviderRegistry->getPreviewObjectProvider('wrong-key');
     }
 
     public function testHasObjectProvider(): void
     {
-        $this->assertTrue($this->objectProviderPool->hasObjectProvider($this->providerKey));
-        $this->assertFalse($this->objectProviderPool->hasObjectProvider('wrong-key'));
+        $this->assertTrue($this->objectProviderRegistry->hasPreviewObjectProvider($this->providerKey));
+        $this->assertFalse($this->objectProviderRegistry->hasPreviewObjectProvider('wrong-key'));
     }
 }

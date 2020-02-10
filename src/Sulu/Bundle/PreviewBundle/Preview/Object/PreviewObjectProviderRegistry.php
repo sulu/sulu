@@ -13,7 +13,7 @@ namespace Sulu\Bundle\PreviewBundle\Preview\Object;
 
 use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 
-class PreviewObjectProviderPool implements PreviewObjectProviderPoolInterface
+class PreviewObjectProviderRegistry implements PreviewObjectProviderRegistryInterface
 {
     /**
      * @var PreviewObjectProviderInterface[]
@@ -31,7 +31,7 @@ class PreviewObjectProviderPool implements PreviewObjectProviderPoolInterface
     /**
      * {@inheritdoc}
      */
-    public function getObjectProviders(): array
+    public function getPreviewObjectProviders(): array
     {
         return $this->objectProviders;
     }
@@ -39,9 +39,9 @@ class PreviewObjectProviderPool implements PreviewObjectProviderPoolInterface
     /**
      * {@inheritdoc}
      */
-    public function getObjectProvider(string $providerKey): PreviewObjectProviderInterface
+    public function getPreviewObjectProvider(string $providerKey): PreviewObjectProviderInterface
     {
-        if (!$this->hasObjectProvider($providerKey)) {
+        if (!$this->hasPreviewObjectProvider($providerKey)) {
             throw new ProviderNotFoundException($providerKey);
         }
 
@@ -51,7 +51,7 @@ class PreviewObjectProviderPool implements PreviewObjectProviderPoolInterface
     /**
      * {@inheritdoc}
      */
-    public function hasObjectProvider(string $providerKey): bool
+    public function hasPreviewObjectProvider(string $providerKey): bool
     {
         return array_key_exists($providerKey, $this->objectProviders);
     }

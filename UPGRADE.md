@@ -11,7 +11,7 @@ parameter to be added to the generated URL.
 ### Preview constructor changed
 
 The constructor of `Preview` has changed. The first argument isn't an array of ObjectProviders anymore, instead it's a
-PreviewObjectProviderPool.
+PreviewObjectProviderRegistry.
 
 ## 2.0.3
 

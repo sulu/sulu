@@ -11,22 +11,22 @@
 
 namespace Sulu\Bundle\PreviewBundle\Preview\Object;
 
-interface PreviewObjectProviderPoolInterface
+interface PreviewObjectProviderRegistryInterface
 {
     /**
      * Returns all PreviewObjectProviders.
      *
      * @return PreviewObjectProviderInterface[]
      */
-    public function getObjectProviders(): array;
+    public function getPreviewObjectProviders(): array;
 
     /**
      * Returns the PreviewObjectProvider for given $providerKey.
      */
-    public function getObjectProvider(string $providerKey): PreviewObjectProviderInterface;
+    public function getPreviewObjectProvider(string $providerKey): PreviewObjectProviderInterface;
 
     /**
      * Returns true if a PreviewObjectProvider for given $providerKey exists.
      */
-    public function hasObjectProvider(string $providerKey): bool;
+    public function hasPreviewObjectProvider(string $providerKey): bool;
 }
