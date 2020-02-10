@@ -72,10 +72,11 @@ class Selection extends React.Component<Props> {
         );
 
         // update requestOptions observable if one of the "resource_store_properties_to_request" properties is changed
-        const observedDataPaths = resourceStorePropertiesToRequest.map((property) => {
-            return typeof property.value === 'string' ? '/' + property.value : '/' + property.name;
-        });
         formInspector.addFinishFieldHandler((dataPath) => {
+            const observedDataPaths = resourceStorePropertiesToRequest.map((property) => {
+                return typeof property.value === 'string' ? '/' + property.value : '/' + property.name;
+            });
+
             if (observedDataPaths.includes(dataPath)) {
                 const newRequestOptions = this.buildRequestOptions(
                     requestParameters,
@@ -201,7 +202,7 @@ class Selection extends React.Component<Props> {
         resourceStorePropertiesToRequest.forEach((propertyToRequest) => {
             const {name: parameterName, value: propertyName} = propertyToRequest;
             const propertyPath = typeof propertyName === 'string' ? propertyName : parameterName;
-            requestOptions[parameterName] = formInspector.getValueByPath('/' + propertyPath);
+            requestOptions[parameterName] = toJS(formInspector.getValueByPath('/' + propertyPath));
         });
 
         return requestOptions;
