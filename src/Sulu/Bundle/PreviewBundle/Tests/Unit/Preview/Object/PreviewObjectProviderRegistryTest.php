@@ -15,54 +15,47 @@ use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistry;
-use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
 
 class PreviewObjectProviderRegistryTest extends TestCase
 {
-    /**
-     * @var PreviewObjectProviderRegistryInterface
-     */
-    private $objectProviderRegistry;
-
-    /**
-     * @var PreviewObjectProviderInterface
-     */
-    private $provider;
-
-    /**
-     * @var string
-     */
-    private $providerKey = 'test-provider';
-
-    public function setUp(): void
-    {
-        $this->provider = $this->prophesize(PreviewObjectProviderInterface::class);
-
-        $providers = [$this->providerKey => $this->provider->reveal()];
-
-        $this->objectProviderRegistry = new PreviewObjectProviderRegistry($providers);
-    }
-
     public function testGetPreviewObjectProviders(): void
     {
-        $objectProviders = $this->objectProviderRegistry->getPreviewObjectProviders();
+        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
+        $providerKey = 'test-provider';
+        $providers = [$providerKey => $provider->reveal()];
+        $previewObjectProviderRegistry = new PreviewObjectProviderRegistry($providers);
 
-        $this->assertCount(1, $objectProviders);
-        $this->assertArrayHasKey($this->providerKey, $objectProviders);
-        $this->assertArrayNotHasKey('wrong-key', $objectProviders);
+        $previewObjectProviders = $previewObjectProviderRegistry->getPreviewObjectProviders();
+
+        $this->assertCount(1, $previewObjectProviders);
+        $this->assertArrayHasKey($providerKey, $previewObjectProviders);
+        $this->assertArrayNotHasKey('wrong-key', $previewObjectProviders);
     }
 
     public function testGetPreviewObjectProvider(): void
     {
-        $this->assertEquals($this->provider->reveal(), $this->objectProviderRegistry->getPreviewObjectProvider($this->providerKey));
+        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
+        $providerKey = 'test-provider';
+        $providers = [$providerKey => $provider->reveal()];
+        $previewObjectProviderRegistry = new PreviewObjectProviderRegistry($providers);
+
+        $this->assertEquals(
+            $provider->reveal(),
+            $previewObjectProviderRegistry->getPreviewObjectProvider($providerKey)
+        );
 
         $this->expectException(ProviderNotFoundException::class);
-        $this->objectProviderRegistry->getPreviewObjectProvider('wrong-key');
+        $previewObjectProviderRegistry->getPreviewObjectProvider('wrong-key');
     }
 
     public function testHasPreviewObjectProvider(): void
     {
-        $this->assertTrue($this->objectProviderRegistry->hasPreviewObjectProvider($this->providerKey));
-        $this->assertFalse($this->objectProviderRegistry->hasPreviewObjectProvider('wrong-key'));
+        $provider = $this->prophesize(PreviewObjectProviderInterface::class);
+        $providerKey = 'test-provider';
+        $providers = [$providerKey => $provider->reveal()];
+        $previewObjectProviderRegistry = new PreviewObjectProviderRegistry($providers);
+
+        $this->assertTrue($previewObjectProviderRegistry->hasPreviewObjectProvider($providerKey));
+        $this->assertFalse($previewObjectProviderRegistry->hasPreviewObjectProvider('wrong-key'));
     }
 }

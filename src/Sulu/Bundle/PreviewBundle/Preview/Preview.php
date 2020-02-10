@@ -24,7 +24,7 @@ class Preview implements PreviewInterface
     /**
      * @var PreviewObjectProviderRegistryInterface
      */
-    private $objectProviderRegistry;
+    private $previewObjectProviderRegistry;
 
     /**
      * @var PreviewRendererInterface
@@ -42,12 +42,12 @@ class Preview implements PreviewInterface
     private $cacheLifeTime;
 
     public function __construct(
-        PreviewObjectProviderRegistryInterface $objectProviderRegistry,
+        PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry,
         Cache $cache,
         PreviewRendererInterface $renderer,
         int $cacheLifeTime = 3600
     ) {
-        $this->objectProviderRegistry = $objectProviderRegistry;
+        $this->previewObjectProviderRegistry = $previewObjectProviderRegistry;
         $this->renderer = $renderer;
         $this->cache = $cache;
         $this->cacheLifeTime = $cacheLifeTime;
@@ -174,7 +174,7 @@ class Preview implements PreviewInterface
 
     protected function getProvider(string $providerKey): PreviewObjectProviderInterface
     {
-        return $this->objectProviderRegistry->getPreviewObjectProvider($providerKey);
+        return $this->previewObjectProviderRegistry->getPreviewObjectProvider($providerKey);
     }
 
     protected function save(PreviewCacheItem $item): void

@@ -18,41 +18,32 @@ class PreviewObjectProviderRegistry implements PreviewObjectProviderRegistryInte
     /**
      * @var PreviewObjectProviderInterface[]
      */
-    private $objectProviders;
+    private $previewObjectProviders;
 
     /**
-     * @param PreviewObjectProviderInterface[] $objectProviders
+     * @param PreviewObjectProviderInterface[] $previewObjectProviders
      */
-    public function __construct(array $objectProviders)
+    public function __construct(array $previewObjectProviders)
     {
-        $this->objectProviders = $objectProviders;
+        $this->previewObjectProviders = $previewObjectProviders;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPreviewObjectProviders(): array
     {
-        return $this->objectProviders;
+        return $this->previewObjectProviders;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPreviewObjectProvider(string $providerKey): PreviewObjectProviderInterface
     {
         if (!$this->hasPreviewObjectProvider($providerKey)) {
             throw new ProviderNotFoundException($providerKey);
         }
 
-        return $this->objectProviders[$providerKey];
+        return $this->previewObjectProviders[$providerKey];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasPreviewObjectProvider(string $providerKey): bool
     {
-        return array_key_exists($providerKey, $this->objectProviders);
+        return array_key_exists($providerKey, $this->previewObjectProviders);
     }
 }

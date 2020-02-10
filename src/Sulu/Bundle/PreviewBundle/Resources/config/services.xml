@@ -37,12 +37,12 @@
         </service>
 
         <service id="sulu_preview.preview" class="Sulu\Bundle\PreviewBundle\Preview\Preview">
-            <argument type="service" id="sulu_preview.object_provider_registry"/>
+            <argument type="service" id="sulu_preview.preview_object_provider_registry"/>
             <argument type="service" id="sulu_preview.preview.cache"/>
             <argument type="service" id="sulu_preview.preview.renderer"/>
         </service>
 
-        <service id="sulu_preview.object_provider_registry" class="Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistry">
+        <service id="sulu_preview.preview_object_provider_registry" class="Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistry">
             <argument type="collection"/>
         </service>
 

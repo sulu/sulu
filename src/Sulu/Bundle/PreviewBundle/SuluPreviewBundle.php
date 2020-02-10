@@ -29,7 +29,7 @@ class SuluPreviewBundle extends Bundle
 
         $container->addCompilerPass(
             new TaggedServiceCollectorCompilerPass(
-                'sulu_preview.object_provider_registry',
+                'sulu_preview.preview_object_provider_registry',
                 'sulu_preview.object_provider',
                 0,
                 'provider-key'
