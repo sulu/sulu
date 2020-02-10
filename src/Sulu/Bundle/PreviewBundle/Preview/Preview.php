@@ -12,9 +12,9 @@
 namespace Sulu\Bundle\PreviewBundle\Preview;
 
 use Doctrine\Common\Cache\Cache;
-use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
+use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
 
 class Preview implements PreviewInterface
@@ -22,9 +22,9 @@ class Preview implements PreviewInterface
     const CONTENT_REPLACER = '<!-- CONTENT-REPLACER -->';
 
     /**
-     * @var PreviewObjectProviderInterface[]
+     * @var PreviewObjectProviderRegistryInterface
      */
-    private $objectProviders;
+    private $previewObjectProviderRegistry;
 
     /**
      * @var PreviewRendererInterface
@@ -42,12 +42,12 @@ class Preview implements PreviewInterface
     private $cacheLifeTime;
 
     public function __construct(
-        array $objectProviders,
+        PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry,
         Cache $cache,
         PreviewRendererInterface $renderer,
         int $cacheLifeTime = 3600
     ) {
-        $this->objectProviders = $objectProviders;
+        $this->previewObjectProviderRegistry = $previewObjectProviderRegistry;
         $this->renderer = $renderer;
         $this->cache = $cache;
         $this->cacheLifeTime = $cacheLifeTime;
@@ -174,11 +174,7 @@ class Preview implements PreviewInterface
 
     protected function getProvider(string $providerKey): PreviewObjectProviderInterface
     {
-        if (!array_key_exists($providerKey, $this->objectProviders)) {
-            throw new ProviderNotFoundException($providerKey);
-        }
-
-        return $this->objectProviders[$providerKey];
+        return $this->previewObjectProviderRegistry->getPreviewObjectProvider($providerKey);
     }
 
     protected function save(PreviewCacheItem $item): void
