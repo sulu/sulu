@@ -2,7 +2,7 @@
 
 $color: $silver;
 $backgroundColor: $ebonyClay;
-$activeColor: $java;
+$activeColor: $shakespeare;
 $activeBackgroundColor: $ebonyClayDark;
 
 .item {
@@ -16,7 +16,7 @@ $activeBackgroundColor: $ebonyClayDark;
     position: relative;
 
     &:hover {
-        color: $java;
+        color: $shakespeare;
     }
 
     &.active {
