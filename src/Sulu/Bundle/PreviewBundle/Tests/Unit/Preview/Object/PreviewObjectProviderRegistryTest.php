@@ -43,6 +43,11 @@ class PreviewObjectProviderRegistryTest extends TestCase
             $provider->reveal(),
             $previewObjectProviderRegistry->getPreviewObjectProvider($providerKey)
         );
+    }
+
+    public function testGetNonExistingPreviewObjectProvider(): void
+    {
+        $previewObjectProviderRegistry = new PreviewObjectProviderRegistry([]);
 
         $this->expectException(ProviderNotFoundException::class);
         $previewObjectProviderRegistry->getPreviewObjectProvider('wrong-key');
