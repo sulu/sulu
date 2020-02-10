@@ -48,6 +48,7 @@ jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.resourceKey = formStore.resourceKey;
     this.locale = formStore.locale;
     this.getValueByPath = jest.fn();
+    this.addFinishFieldHandler = jest.fn();
 }));
 
 jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
@@ -316,6 +317,74 @@ test('Should pass props with schema-options correctly to MultiSelection componen
             dynamicKey: 'value-returned-by-form-inspector',
         },
     }));
+});
+
+// eslint-disable-next-line max-len
+test('Should update props of MultiSelection component when value of "resource_store_properties_to_request" property is changed', () => {
+    const value = [1, 6, 8];
+
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'snippets',
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                display_properties: ['id', 'title'],
+                icon: '',
+                label: 'sulu_snippet.selection_label',
+                overlay_title: 'sulu_snippet.selection_overlay_title',
+            },
+        },
+    };
+
+    const schemaOptions = {
+        resource_store_properties_to_request: {
+            name: 'resource_store_properties_to_request',
+            value: [
+                {
+                    name: 'dynamicKey',
+                    value: 'otherPropertyName',
+                },
+            ],
+        },
+    };
+
+    const locale = observable.box('en');
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('pages', 1, {locale}),
+            'pages'
+        )
+    );
+
+    const formInspectorValues = {'/otherPropertyName': 'first-value'};
+    formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
+
+    const selection = shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            onFinish={jest.fn()}
+            schemaOptions={schemaOptions}
+            value={value}
+        />
+    );
+
+    expect(formInspector.addFinishFieldHandler).toHaveBeenCalled();
+    expect(selection.find('MultiSelection').props().options).toEqual({
+        dynamicKey: 'first-value',
+    });
+
+    formInspectorValues['/otherPropertyName'] = 'second-value';
+    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
+    finishFieldHandler('/otherPropertyName');
+
+    expect(selection.find('MultiSelection').props().options).toEqual({
+        dynamicKey: 'second-value',
+    });
 });
 
 test('Should pass id of form as disabledId to MultiSelection component to avoid assigning something to itself', () => {
@@ -920,7 +989,7 @@ test('Should update listStore when the value of a "resource_store_properties_to_
         )
     );
 
-    const formInspectorValues = observable({'/otherPropertyName': 'first-value'});
+    const formInspectorValues = {'/otherPropertyName': 'first-value'};
     formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
 
     const selection = shallow(
@@ -934,12 +1003,15 @@ test('Should update listStore when the value of a "resource_store_properties_to_
         />
     );
 
+    expect(formInspector.addFinishFieldHandler).toHaveBeenCalled();
     expect(selection.instance().listStore.options).toEqual({
         dynamicKey: 'first-value',
     });
 
     selection.instance().listStore.selectionIds = [12, 14];
     formInspectorValues['/otherPropertyName'] = 'second-value';
+    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
+    finishFieldHandler('/otherPropertyName');
 
     expect(selection.instance().listStore.options).toEqual({
         dynamicKey: 'second-value',

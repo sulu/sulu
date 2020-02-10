@@ -57,6 +57,14 @@ class Selection extends React.Component<Props> {
             throw new Error('The selection field needs a "resource_key" option to work properly');
         }
 
+        if (!Array.isArray(requestParameters)) {
+            throw new Error('The "request_parameters" schemaOption must be an array!');
+        }
+
+        if (!Array.isArray(resourceStorePropertiesToRequest)) {
+            throw new Error('The "resource_store_properties_to_request" schemaOption must be an array!');
+        }
+
         this.requestOptions = this.buildRequestOptions(
             requestParameters,
             resourceStorePropertiesToRequest,
@@ -184,14 +192,6 @@ class Selection extends React.Component<Props> {
         resourceStorePropertiesToRequest: Array<SchemaOption>,
         formInspector: FormInspector
     ) {
-        if (!Array.isArray(requestParameters)) {
-            throw new Error('The "request_parameters" schemaOption must be an array!');
-        }
-
-        if (!Array.isArray(resourceStorePropertiesToRequest)) {
-            throw new Error('The "resource_store_properties_to_request" schemaOption must be an array!');
-        }
-
         const requestOptions = {};
 
         requestParameters.forEach((parameter) => {
