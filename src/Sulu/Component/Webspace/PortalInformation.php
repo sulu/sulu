@@ -268,7 +268,7 @@ class PortalInformation implements ArrayableInterface
      */
     public function getPrefix()
     {
-        return substr($this->url, $this->getHostLength());
+        return substr($this->url, $this->getHostLength() + 1) . '/';
     }
 
     /**

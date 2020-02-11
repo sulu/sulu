@@ -15,6 +15,7 @@ sulu_media_website:
     resource: "@SuluMediaBundle/Resources/config/routing_website.yml"
     prefix:
 
+# Including a portal route to test if media download is still working
 sulu_search:
     type: portal
     resource: "@SuluSearchBundle/Resources/config/routing_website.yml"
