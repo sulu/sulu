@@ -1,4 +1,5 @@
 // @flow
+import jexl from 'jexl';
 import {action, computed, observable} from 'mobx';
 import {AbstractFormToolbarAction} from 'sulu-admin-bundle/views';
 import type {ToolbarItemConfig} from 'sulu-admin-bundle/types';
@@ -19,7 +20,7 @@ export default class TemplateToolbarAction extends AbstractFormToolbarAction {
         return this.webspace.defaultTemplates.page;
     }
 
-    getToolbarItemConfig(): ToolbarItemConfig {
+    getToolbarItemConfig(): ?ToolbarItemConfig {
         const formTypes = this.resourceFormStore.types;
         const formKeys = Object.keys(formTypes);
         if (formKeys.length > 0 && !this.resourceFormStore.type && this.defaultTemplate) {
@@ -29,6 +30,12 @@ export default class TemplateToolbarAction extends AbstractFormToolbarAction {
         if (!this.resourceFormStore.typesLoading && Object.keys(formTypes).length === 0) {
             throw new Error('The ToolbarAction for types only works with entities actually supporting types!');
         }
+
+        const {
+            disabled_condition: disabledCondition,
+        } = this.options;
+
+        const isDisabled = disabledCondition ? jexl.evalSync(disabledCondition, this.resourceFormStore.data) : false;
 
         return {
             type: 'select',
@@ -42,6 +49,7 @@ export default class TemplateToolbarAction extends AbstractFormToolbarAction {
             },
             loading: this.resourceFormStore.typesLoading,
             value: this.resourceFormStore.type,
+            disabled: isDisabled,
             options: Object.keys(formTypes).map((key: string) => ({
                 value: formTypes[key].key,
                 label: formTypes[key].title,

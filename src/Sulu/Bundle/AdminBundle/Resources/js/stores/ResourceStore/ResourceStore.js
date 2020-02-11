@@ -18,6 +18,7 @@ export default class ResourceStore {
     @observable moving: boolean = false;
     @observable data: Object = {};
     @observable dirty: boolean = false;
+    @observable forbidden: boolean;
     loadOptions: Object = {};
     idQueryParameter: ?string;
     preventLoadingOnce: boolean;
@@ -69,6 +70,7 @@ export default class ResourceStore {
         log.info('ResourceStore loads "' + this.resourceKey + '" data with the ID "' + id + '"');
 
         this.setLoading(true);
+        this.setForbidden(false);
         const promise = this.idQueryParameter
             ? ResourceRequester.get(
                 this.resourceKey,
@@ -76,18 +78,24 @@ export default class ResourceStore {
             )
             : ResourceRequester.get(this.resourceKey, {...options, ...this.loadOptions, id});
 
-        promise.then(action((response: Object) => {
-            if (this.idQueryParameter) {
-                this.handleIdQueryParameterResponse(response);
-                this.setMultiple(response);
-            } else {
-                this.setMultiple(response);
-            }
+        promise
+            .then(action((response: Object) => {
+                if (this.idQueryParameter) {
+                    this.handleIdQueryParameterResponse(response);
+                    this.setMultiple(response);
+                } else {
+                    this.setMultiple(response);
+                }
 
-            this.initialized = true;
-            this.setLoading(false);
-            this.dirty = false;
-        }));
+                this.initialized = true;
+                this.setLoading(false);
+                this.dirty = false;
+            }))
+            .catch(action((response: Object) => {
+                if (response.status === 403) {
+                    this.setForbidden(true);
+                }
+            }));
     };
 
     @action reload = () => {
@@ -96,6 +104,10 @@ export default class ResourceStore {
 
     @action setLoading(loading: boolean) {
         this.loading = loading;
+    }
+
+    @action setForbidden(forbidden: boolean) {
+        this.forbidden = forbidden;
     }
 
     @action save(options: Object = {}): Promise<*> {

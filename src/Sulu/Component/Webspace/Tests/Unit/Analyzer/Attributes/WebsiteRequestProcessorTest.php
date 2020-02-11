@@ -22,7 +22,6 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
-use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -43,26 +42,19 @@ class WebsiteRequestProcessorTest extends TestCase
      */
     private $contentMapper;
 
-    /**
-     * @var ReplacerInterface
-     */
-    private $replacer;
-
     public function setUp(): void
     {
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->contentMapper = $this->prophesize(ContentMapperInterface::class);
-        $this->replacer = $this->prophesize(ReplacerInterface::class);
 
         $this->provider = new WebsiteRequestProcessor(
             $this->webspaceManager->reveal(),
             $this->contentMapper->reveal(),
-            $this->replacer->reveal(),
             'prod'
         );
     }
 
-    public function testProcessHostReplacer()
+    public function testProcess()
     {
         $webspace = new Webspace();
         $webspace->setKey('sulu');
@@ -79,9 +71,9 @@ class WebsiteRequestProcessorTest extends TestCase
             $webspace,
             $portal,
             $localization,
-            '{host}',
+            'sulu.lo',
             null,
-            '{host}/de'
+            'sulu.lo/de'
         );
 
         $portalInformation2 = new PortalInformation(
@@ -89,7 +81,7 @@ class WebsiteRequestProcessorTest extends TestCase
             $webspace,
             $portal,
             $localization,
-            '{host}/de'
+            'sulu.lo/de'
         );
 
         $portalInformation3 = new PortalInformation(
@@ -107,11 +99,6 @@ class WebsiteRequestProcessorTest extends TestCase
 
         $request = new Request();
 
-        $this->replacer->replaceHost(null, 'sulu.lo')->willReturn(null);
-        $this->replacer->replaceHost('{host}', 'sulu.lo')->willReturn('sulu.lo');
-        $this->replacer->replaceHost('{host}/de', 'sulu.lo')->willReturn('sulu.lo/de');
-        $this->replacer->replaceHost('sulu.io/de', 'sulu.lo')->willReturn('sulu.io/de');
-
         $attributes = $this->provider->process($request, new RequestAttributes(['host' => 'sulu.lo', 'path' => '/test']));
 
         $this->assertEquals('sulu.lo', $attributes->getAttribute('portalInformation')->getUrl());
@@ -120,7 +107,7 @@ class WebsiteRequestProcessorTest extends TestCase
         $this->assertEquals('sulu.io/de', $portalInformation3->getUrl());
     }
 
-    public function testProcessHostPriority()
+    public function testProcessPriority()
     {
         $webspace = new Webspace();
         $webspace->setKey('sulu');
@@ -137,11 +124,11 @@ class WebsiteRequestProcessorTest extends TestCase
             $webspace,
             $portal,
             $localization,
-            '{host}',
+            'sulu.lo',
             null,
-            '{host}',
+            'sulu.lo',
             false,
-            '{host}',
+            'sulu.lo',
             -5
         );
 
@@ -164,10 +151,6 @@ class WebsiteRequestProcessorTest extends TestCase
             ->willReturn([$portalInformation1, $portalInformation2]);
 
         $request = new Request();
-
-        $this->replacer->replaceHost(null, 'sulu.lo')->willReturn(null);
-        $this->replacer->replaceHost('{host}', 'sulu.lo')->willReturn('sulu.lo');
-        $this->replacer->replaceHost('sulu.lo', 'sulu.lo')->willReturn('sulu.lo');
 
         $attributes = $this->provider->process($request, new RequestAttributes(['host' => 'sulu.lo', 'path' => '/test']));
 
@@ -220,10 +203,6 @@ class WebsiteRequestProcessorTest extends TestCase
             ->willReturn([$portalInformation1, $portalInformation2]);
 
         $request = new Request();
-
-        $this->replacer->replaceHost(null, 'sulu.lo')->willReturn('sulu.lo');
-        $this->replacer->replaceHost('sulu.lo', 'sulu.lo')->willReturn('sulu.lo');
-        $this->replacer->replaceHost('sulu.lo/de', 'sulu.lo')->willReturn('sulu.lo/de');
 
         $attributes = $this->provider->process($request, new RequestAttributes(['host' => 'sulu.lo', 'path' => 'de']));
 

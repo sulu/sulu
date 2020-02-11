@@ -2,8 +2,10 @@
 import React from 'react';
 import {mount, render} from 'enzyme';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
-import MediaCollection from '../MediaCollection';
+import {RequestPromise} from 'sulu-admin-bundle/services/ResourceRequester';
 import MediaCardOverviewAdapter from '../../List/adapters/MediaCardOverviewAdapter';
+import MediaCollection from '../MediaCollection';
+
 const MEDIA_RESOURCE_KEY = 'media';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 const SETTINGS_KEY = 'media_collection_test';
@@ -249,6 +251,56 @@ test('Render the MediaCollection', () => {
         />
     );
     expect(mediaCollection).toMatchSnapshot();
+});
+
+test('Render the MediaCollection without dropdown button when collection is a system collection', () => {
+    const page = observable.box();
+    const locale = observable.box();
+    const collectionNavigateSpy = jest.fn();
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const mediaListStore = new ListStore(
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionListStore = new ListStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const CollectionStore = require('../../../stores/CollectionStore').default;
+    const collectionStore = new CollectionStore(1, locale);
+
+    collectionStore.resourceStore.data = {
+        title: 'Title',
+        locked: true,
+        _permissions: {},
+    };
+
+    const mediaCollection = mount(
+        <MediaCollection
+            collectionListStore={collectionListStore}
+            collectionStore={collectionStore}
+            locale={locale}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
+            onCollectionNavigate={collectionNavigateSpy}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
+        />
+    );
+
+    expect(mediaCollection.find('Button[icon="su-plus"]')).toHaveLength(0);
+    expect(mediaCollection.find('DropdownButton')).toHaveLength(0);
 });
 
 test('Render the MediaCollection without dropdown button when permissions are missing', () => {
@@ -948,7 +1000,9 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
 });
 
 test('Confirming the move dialog should move the item', () => {
-    const promise = Promise.resolve({});
+    const promise = new RequestPromise(function(resolve) {
+        resolve({});
+    });
     const page = observable.box();
     const locale = observable.box();
     const SingleListOverlay = require('sulu-admin-bundle/containers').SingleListOverlay;
@@ -1015,7 +1069,9 @@ test('Confirming the move dialog should move the item', () => {
 });
 
 test('Confirming the permission overlay should save the permissions', () => {
-    const promise = Promise.resolve({});
+    const promise = new RequestPromise(function(resolve) {
+        resolve({});
+    });
     const page = observable.box();
     const locale = observable.box();
     const ListStore = require('sulu-admin-bundle/containers').ListStore;

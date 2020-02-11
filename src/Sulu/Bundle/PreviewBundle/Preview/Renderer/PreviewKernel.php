@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PreviewBundle\Preview\Renderer;
 
 use App\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Extends website-kernel from sulu-installation and override configuration.
@@ -33,11 +34,14 @@ class PreviewKernel extends Kernel
     {
         parent::registerContainerConfiguration($loader);
 
-        if (in_array($this->getEnvironment(), ['dev', 'test'])) {
-            $loader->load(
-                implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'Resources', 'config', 'config_preview_dev.yml'])
-            );
-        }
+        $loader->load(function(ContainerBuilder $container) use ($loader) {
+            // disable web_profiler toolbar in preview if the web_profiler extension exist
+            if ($container->hasExtension('web_profiler')) {
+                $loader->load(
+                    implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'Resources', 'config', 'config_preview_dev.yml'])
+                );
+            }
+        });
 
         $loader->load(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'Resources', 'config', 'config_preview.yml']));
     }

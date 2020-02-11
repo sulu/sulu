@@ -5,6 +5,7 @@ $blockBorderColor: $silver;
 $blockHandleColor: $black;
 $blockHandleBackgroundColor: $silver;
 $blockCollapsedColor: $gray;
+$blockHandleWidth: 20px;
 
 .block {
     display: flex;
@@ -33,16 +34,17 @@ $blockCollapsedColor: $gray;
 
 .handle {
     display: flex;
-    flex-shrink: 0;
     align-items: center;
     justify-content: center;
     color: $blockHandleColor;
     background-color: $blockHandleBackgroundColor;
-    width: 20px;
+    width: $blockHandleWidth;
 }
 
 .content {
-    flex-grow: 1;
+    width: calc(100% - $blockHandleWidth);
+    font-size: 12px;
+    line-height: 18px;
 }
 
 .children {

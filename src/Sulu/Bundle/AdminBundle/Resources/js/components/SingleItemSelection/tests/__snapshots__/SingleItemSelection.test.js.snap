@@ -51,6 +51,67 @@ exports[`Render in invalid state 1`] = `
 </div>
 `;
 
+exports[`Render in item-disabled state with remove button 1`] = `
+<div
+  class="singleItemSelection disabled"
+>
+  <button
+    class="button left"
+    disabled=""
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document icon"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+    >
+      Test Item
+    </div>
+    <button
+      class="removeButton"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Render in item-disabled state without remove button 1`] = `
+<div
+  class="singleItemSelection disabled"
+>
+  <button
+    class="button left"
+    disabled=""
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document icon"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+    >
+      Test Item
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render in loading state 1`] = `
 <div
   class="singleItemSelection"

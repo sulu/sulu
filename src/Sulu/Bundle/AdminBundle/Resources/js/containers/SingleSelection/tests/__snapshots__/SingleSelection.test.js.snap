@@ -82,16 +82,6 @@ exports[`Render with selected item in disabled state 1`] = `
         </span>
       </div>
     </div>
-    <button
-      class="removeButton"
-      disabled=""
-      type="button"
-    >
-      <span
-        aria-label="su-trash-alt"
-        class="su-trash-alt"
-      />
-    </button>
   </div>
 </div>
 `;

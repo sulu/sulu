@@ -168,6 +168,10 @@ export default class AbstractFormStore
         return toJS(this.evaluatedSchema);
     }
 
+    get forbidden(): boolean {
+        return false;
+    }
+
     isFieldModified(dataPath: string): boolean {
         return this.modifiedFields.includes(dataPath);
     }

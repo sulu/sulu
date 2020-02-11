@@ -63,6 +63,13 @@
                         <url>sulu.lo/{localization}</url>
                     </urls>
                 </environment>
+                <environment type="test">
+                    <urls>
+                        <url language="en">sulu.us</url>
+                        <url language="de">www.sulu.io</url>
+                        <url>sulu.lo/{localization}</url>
+                    </urls>
+                </environment>
                 <environment type="stage">
                     <urls>
                         <url>stage.sulu.lo/{localization}</url>

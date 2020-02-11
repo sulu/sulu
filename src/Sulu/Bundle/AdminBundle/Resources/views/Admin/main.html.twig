@@ -11,7 +11,7 @@
     <body>
         <div id="application">
         </div>
-        <script type="text/javascript">
+        <script>
             {% autoescape false %}
             const SULU_CONFIG = Object.freeze({
                 initialLoginState: {{ is_granted('IS_AUTHENTICATED_REMEMBERED') ? 'true' : 'false' }},

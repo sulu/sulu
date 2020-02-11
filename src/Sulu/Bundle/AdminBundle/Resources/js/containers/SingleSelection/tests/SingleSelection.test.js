@@ -177,6 +177,25 @@ test('Pass disabledIds to SingleListOverlay', () => {
     expect(singleSelection.find(SingleListOverlay).prop('disabledIds')).toEqual([1, 2, 3]);
 });
 
+test('Pass itemDisabledCondition to SingleListOverlay', () => {
+    const singleSelection = shallow(
+        <SingleSelection
+            adapter="table"
+            displayProperties={['name', 'value']}
+            emptyText="Nothing"
+            icon="su-test"
+            itemDisabledCondition={'status == "inactive"'}
+            listKey="test"
+            onChange={jest.fn()}
+            overlayTitle="Test"
+            resourceKey="test"
+            value={3}
+        />
+    );
+
+    expect(singleSelection.find(SingleListOverlay).prop('itemDisabledCondition')).toEqual('status == "inactive"');
+});
+
 test('Should open and close an overlay', () => {
     const singleSelection = mount(
         <SingleSelection
@@ -437,6 +456,56 @@ test('Correct props should be passed to SingleItemSelection component', () => {
     expect(singleSelection.find(SingleItemSelection).prop('emptyText')).toEqual('nothing');
 });
 
+test('Pass correct itemDisabled prop to SingleItemSelection component when item fulfills itemDisabledCondition', () => {
+    const singleSelection = shallow(
+        <SingleSelection
+            adapter="table"
+            displayProperties={[]}
+            emptyText="nothing"
+            itemDisabledCondition={'status == "inactive"'}
+            listKey="snippets"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={1}
+        />
+    );
+
+    expect(singleSelection.find(SingleItemSelection).prop('itemDisabled')).toEqual(false);
+
+    singleSelection.instance().singleSelectionStore.item = {
+        id: 3,
+        status: 'inactive',
+    };
+
+    expect(singleSelection.find(SingleItemSelection).prop('itemDisabled')).toEqual(true);
+});
+
+test('Pass correct itemDisabled prop to SingleItemSelection component when disabledIds contains id of item', () => {
+    const singleSelection = shallow(
+        <SingleSelection
+            adapter="table"
+            disabledIds={[1, 3, 5]}
+            displayProperties={[]}
+            emptyText="nothing"
+            listKey="snippets"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={1}
+        />
+    );
+
+    expect(singleSelection.find(SingleItemSelection).prop('itemDisabled')).toEqual(false);
+
+    singleSelection.instance().singleSelectionStore.item = {
+        id: 3,
+        status: 'inactive',
+    };
+
+    expect(singleSelection.find(SingleItemSelection).prop('itemDisabled')).toEqual(true);
+});
+
 test('Set loading prop of SingleItemSelection component if SingleSelectionStore is loading', () => {
     const singleSelection = shallow(
         <SingleSelection
@@ -456,4 +525,23 @@ test('Set loading prop of SingleItemSelection component if SingleSelectionStore 
     singleSelection.instance().singleSelectionStore.loading = true;
     expect(singleSelection.find(SingleItemSelection).prop('loading')).toEqual(true);
     expect(singleSelection.find(SingleListOverlay)).toHaveLength(0);
+});
+
+test('Pass correct allowRemoveWhileItemDisabled prop to SingleItemSelection component', () => {
+    const singleSelection = shallow(
+        <SingleSelection
+            adapter="table"
+            allowDeselectForDisabledItems={true}
+            disabledIds={[1, 3, 5]}
+            displayProperties={[]}
+            emptyText="nothing"
+            listKey="snippets"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={1}
+        />
+    );
+
+    expect(singleSelection.find(SingleItemSelection).prop('allowRemoveWhileItemDisabled')).toEqual(true);
 });

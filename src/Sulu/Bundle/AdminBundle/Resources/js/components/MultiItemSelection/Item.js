@@ -9,7 +9,9 @@ import itemStyles from './item.scss';
 const DRAG_ICON = 'su-more';
 
 type Props<T> = {
+    allowRemoveWhileDisabled: boolean,
     children: Node,
+    disabled: boolean,
     id: T,
     index: number,
     onEdit?: (id: T) => void,
@@ -19,6 +21,8 @@ type Props<T> = {
 
 export default class Item<T> extends React.PureComponent<Props<T>> {
     static defaultProps = {
+        allowRemoveWhileDisabled: false,
+        disabled: false,
         sortable: true,
     };
 
@@ -54,7 +58,9 @@ export default class Item<T> extends React.PureComponent<Props<T>> {
 
     render() {
         const {
+            allowRemoveWhileDisabled,
             children,
+            disabled,
             index,
             onEdit,
             onRemove,
@@ -62,6 +68,13 @@ export default class Item<T> extends React.PureComponent<Props<T>> {
         } = this.props;
 
         const DragHandle = this.createDragHandle();
+
+        const itemClass = classNames(
+            itemStyles.item,
+            {
+                [itemStyles.disabled]: disabled,
+            }
+        );
 
         const dragHandleClass = classNames(
             itemStyles.dragHandle,
@@ -71,7 +84,7 @@ export default class Item<T> extends React.PureComponent<Props<T>> {
         );
 
         return (
-            <div className={itemStyles.item}>
+            <div className={itemClass}>
                 <DragHandle className={dragHandleClass}>
                     {sortable && <Icon name={DRAG_ICON} />}
                     <span className={itemStyles.index}>{index}</span>
@@ -80,12 +93,12 @@ export default class Item<T> extends React.PureComponent<Props<T>> {
                     {children}
                 </div>
                 <div className={itemStyles.buttons}>
-                    {onEdit &&
+                    {onEdit && !disabled &&
                         <button className={itemStyles.button} onClick={this.handleEdit} type="button">
                             <Icon name="su-pen" />
                         </button>
                     }
-                    {onRemove &&
+                    {onRemove && (!disabled || allowRemoveWhileDisabled) &&
                         <button className={itemStyles.button} onClick={this.handleRemove} type="button">
                             <Icon name="su-trash-alt" />
                         </button>

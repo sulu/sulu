@@ -107,9 +107,6 @@ class CollectionController extends AbstractRestController implements ClassResour
     /**
      * Shows a single collection with the given id.
      *
-     * @param $id
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getAction($id, Request $request)
@@ -180,8 +177,6 @@ class CollectionController extends AbstractRestController implements ClassResour
 
     /**
      * lists all collections.
-     *
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -260,8 +255,6 @@ class CollectionController extends AbstractRestController implements ClassResour
     /**
      * Creates a new collection.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
@@ -271,9 +264,6 @@ class CollectionController extends AbstractRestController implements ClassResour
 
     /**
      * Edits the existing collection with the given id.
-     *
-     * @param int $id The id of the collection to update
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
@@ -287,12 +277,14 @@ class CollectionController extends AbstractRestController implements ClassResour
     /**
      * Delete a collection with the given id.
      *
-     * @param $id
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction($id)
+    public function deleteAction($id, Request $request)
     {
+        $parent = $request->get('parent');
+
+        $this->checkSystemCollection($id, $parent);
+
         $delete = function($id) {
             try {
                 $this->collectionManager->delete($id);
@@ -312,7 +304,6 @@ class CollectionController extends AbstractRestController implements ClassResour
      * Trigger an action for given media. Action is specified over get-action parameter.
      *
      * @param int $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -339,7 +330,6 @@ class CollectionController extends AbstractRestController implements ClassResour
      * Moves an entity into another one.
      *
      * @param int $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -375,9 +365,6 @@ class CollectionController extends AbstractRestController implements ClassResour
     }
 
     /**
-     * @param $id
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function saveEntity($id, Request $request)
@@ -385,11 +372,7 @@ class CollectionController extends AbstractRestController implements ClassResour
         $parent = $request->get('parent');
         $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
 
-        if ((null !== $id && $this->systemCollectionManager->isSystemCollection(intval($id))) ||
-            (null !== $parent && $this->systemCollectionManager->isSystemCollection(intval($parent)))
-        ) {
-            throw new AccessDeniedException('Permission "update" or "create" is not granted for system collections');
-        }
+        $this->checkSystemCollection($id, $parent);
 
         try {
             $data = $this->getData($request);
@@ -409,10 +392,16 @@ class CollectionController extends AbstractRestController implements ClassResour
         return $this->handleView($view);
     }
 
+    private function checkSystemCollection($id, $parent)
+    {
+        if ((null !== $id && $this->systemCollectionManager->isSystemCollection(intval($id))) ||
+            (null !== $parent && $this->systemCollectionManager->isSystemCollection(intval($parent)))
+        ) {
+            throw new AccessDeniedException('Permission "update" or "create" is not granted for system collections');
+        }
+    }
+
     /**
-     * @param Request $request
-     * @param $limit
-     *
      * @return int
      */
     private function getOffset(Request $request, $limit)

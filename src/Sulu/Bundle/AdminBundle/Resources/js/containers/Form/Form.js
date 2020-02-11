@@ -4,6 +4,7 @@ import {observer} from 'mobx-react';
 import React, {Fragment} from 'react';
 import log from 'loglevel';
 import Loader from '../../components/Loader';
+import PermissionHint from '../../components/PermissionHint';
 import Router from '../../services/Router';
 import Renderer from './Renderer';
 import type {FormStoreInterface} from './types';
@@ -131,6 +132,10 @@ class Form extends React.Component<Props> {
                 availableLocales,
             },
         } = store;
+
+        if (store.forbidden) {
+            return <PermissionHint />;
+        }
 
         return store.loading
             ? <Loader />

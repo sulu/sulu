@@ -27,7 +27,6 @@
             <argument type="service" id="sulu_preview.preview.kernel_factory"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer"/>
             <argument type="collection" />
             <argument type="string">%kernel.environment%</argument>
             <argument type="expression">
@@ -38,9 +37,13 @@
         </service>
 
         <service id="sulu_preview.preview" class="Sulu\Bundle\PreviewBundle\Preview\Preview">
-            <argument type="collection"/>
+            <argument type="service" id="sulu_preview.preview_object_provider_registry"/>
             <argument type="service" id="sulu_preview.preview.cache"/>
             <argument type="service" id="sulu_preview.preview.renderer"/>
+        </service>
+
+        <service id="sulu_preview.preview_object_provider_registry" class="Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistry">
+            <argument type="collection"/>
         </service>
 
         <!-- controller -->

@@ -1,5 +1,6 @@
 // @flow
 import {isObservableArray} from 'mobx';
+import RequestPromise from './RequestPromise';
 import type {HandleResponseHook} from './types';
 
 const defaultOptions = {
@@ -131,35 +132,50 @@ function handleObjectResponse(response: Response): Promise<Object> {
     });
 }
 
+function createFetchCall(url, options): RequestPromise<*> {
+    let promiseResolve, promiseReject;
+    const requestPromise = new RequestPromise(function(resolve, reject) {
+        promiseResolve = resolve;
+        promiseReject = reject;
+    });
+
+    const abortController = new AbortController();
+    requestPromise.setAbortController(abortController);
+
+    fetch(url, {...defaultOptions, ...options, signal: abortController.signal})
+        .then(promiseResolve)
+        .catch(promiseReject);
+
+    return requestPromise;
+}
+
 export default class Requester {
     static handleResponseHooks: Array<HandleResponseHook> = [];
 
-    static get(url: string): Promise<Object> {
-        return fetch(url, defaultOptions)
-            .then(handleObjectResponse);
+    static get(url: string): RequestPromise<Object> {
+        return createFetchCall(url).then(handleObjectResponse);
     }
 
-    static post(url: string, data: ?Object): Promise<Object> {
-        return fetch(
+    static post(url: string, data: ?Object): RequestPromise<Object> {
+        return createFetchCall(
             url,
             {...defaultOptions, method: 'POST', body: data ? JSON.stringify(transformRequestData(data)) : undefined}
         ).then(handleObjectResponse);
     }
 
-    static put(url: string, data: Object): Promise<Object> {
-        return fetch(
+    static put(url: string, data: Object): RequestPromise<Object> {
+        return createFetchCall(
             url,
             {...defaultOptions, method: 'PUT', body: data ? JSON.stringify(transformRequestData(data)) : undefined}
         ).then(handleObjectResponse);
     }
 
-    static patch(url: string, data: Array<Object> | Object): Promise<Array<Object> | Object> {
-        return fetch(url, {...defaultOptions, method: 'PATCH', body: JSON.stringify(transformRequestData(data))})
+    static patch(url: string, data: Array<Object> | Object): RequestPromise<Array<Object> | Object> {
+        return createFetchCall(url, {method: 'PATCH', body: JSON.stringify(transformRequestData(data))})
             .then(handleResponse);
     }
 
-    static delete(url: string): Promise<Object> {
-        return fetch(url, {...defaultOptions, method: 'DELETE'})
-            .then(handleObjectResponse);
+    static delete(url: string): RequestPromise<Object> {
+        return createFetchCall(url, {method: 'DELETE'}).then(handleObjectResponse);
     }
 }

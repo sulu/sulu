@@ -28,9 +28,7 @@ jest.mock('../registries/formToolbarActionRegistry', () => ({
 }));
 
 jest.mock('../../../services/ResourceRequester', () => ({
-    get: jest.fn().mockReturnValue({
-        then: jest.fn(),
-    }),
+    get: jest.fn().mockReturnValue(Promise.resolve({})),
     put: jest.fn(),
     post: jest.fn(),
     delete: jest.fn(),

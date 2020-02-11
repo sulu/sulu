@@ -5,6 +5,7 @@ import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import pretty from 'pretty';
 import MultiSelection from '../MultiSelection';
 import MultiSelectionStore from '../../../stores/MultiSelectionStore';
+import MultiItemSelection from '../../../components/MultiItemSelection';
 
 jest.mock('../../../utils', () => ({
     translate: jest.fn((key) => key),
@@ -36,6 +37,7 @@ jest.mock('../../../stores/MultiSelectionStore', () => jest.fn(function() {
     this.move = jest.fn();
     this.removeById = jest.fn();
     this.loadItems = jest.fn();
+    this.setRequestParameters = jest.fn();
 
     mockExtendObservable(this, {
         items: [],
@@ -75,6 +77,28 @@ test('Render in disabled state', () => {
     )).toMatchSnapshot();
 });
 
+test('Render with disabled item', () => {
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [
+            {id: 1},
+            {id: 2},
+        ];
+    });
+
+    expect(render(
+        <MultiSelection
+            adapter="table"
+            disabledIds={[2, 4]}
+            listKey="snippets"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="pages"
+            value={[1, 5, 8]}
+        />
+    )).toMatchSnapshot();
+});
+
 test('Show with passed label', () => {
     expect(render(
         <MultiSelection
@@ -101,56 +125,7 @@ test('Show with passed icon', () => {
     )).toMatchSnapshot();
 });
 
-test('Pass locale to MultiListOverlay', () => {
-    const locale = observable.box('de');
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            listKey="snippets"
-            locale={locale}
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-        />
-    );
-
-    expect(selection.find('MultiListOverlay').prop('locale').get()).toEqual('de');
-});
-
-test('Pass options to MultiListOverlay', () => {
-    const options = {types: 'test'};
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            listKey="snippets"
-            onChange={jest.fn()}
-            options={options}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-        />
-    );
-
-    expect(selection.find('MultiListOverlay').prop('options')).toEqual(options);
-});
-
-test('Pass disabledIds to MultiListOverlay', () => {
-    const disabledIds = [1, 2, 4];
-
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            disabledIds={disabledIds}
-            listKey="snippets"
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-        />
-    );
-
-    expect(selection.find('MultiListOverlay').prop('disabledIds')).toEqual(disabledIds);
-});
-
-test('Show with passed values as items in right locale', () => {
+test('Show with items', () => {
     const locale = observable.box('en');
 
     // $FlowFixMe
@@ -170,8 +145,145 @@ test('Show with passed values as items in right locale', () => {
             value={[1, 2, 5]}
         />
     )).toMatchSnapshot();
+});
 
-    expect(MultiSelectionStore).toBeCalledWith('snippets', [1, 2, 5], locale);
+test('Pass locale to MultiListOverlay', () => {
+    const locale = observable.box('de');
+    const selection = mount(
+        <MultiSelection
+            adapter="table"
+            listKey="snippets"
+            locale={locale}
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+        />
+    );
+
+    expect(selection.find('MultiListOverlay').prop('locale').get()).toEqual('de');
+});
+
+test('Pass options to MultiListOverlay', () => {
+    const selection = mount(
+        <MultiSelection
+            adapter="table"
+            listKey="snippets"
+            onChange={jest.fn()}
+            options={{types: 'test'}}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+        />
+    );
+
+    expect(selection.find('MultiListOverlay').prop('options')).toEqual({types: 'test'});
+});
+
+test('Pass disabledIds to MultiListOverlay', () => {
+    const disabledIds = [1, 2, 4];
+
+    const selection = mount(
+        <MultiSelection
+            adapter="table"
+            disabledIds={disabledIds}
+            listKey="snippets"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+        />
+    );
+
+    expect(selection.find('MultiListOverlay').prop('disabledIds')).toEqual(disabledIds);
+});
+
+test('Pass itemDisabledCondition to MultiListOverlay', () => {
+    const selection = mount(
+        <MultiSelection
+            adapter="table"
+            itemDisabledCondition={'status == "inactive"'}
+            listKey="snippets"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+        />
+    );
+
+    expect(selection.find('MultiListOverlay').prop('itemDisabledCondition')).toEqual('status == "inactive"');
+});
+
+test('Construct MultiSelectionStore with correct parameters', () => {
+    const locale = observable.box('en');
+
+    shallow(
+        <MultiSelection
+            adapter="table"
+            displayProperties={['id', 'title']}
+            listKey="snippets"
+            locale={locale}
+            onChange={jest.fn()}
+            options={{key: 'value-1'}}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={[1, 2, 5]}
+        />
+    );
+
+    expect(MultiSelectionStore).toBeCalledWith('snippets', [1, 2, 5], locale, 'ids', {key: 'value-1'});
+});
+
+test('Update requestParameters and reload items of MultiSelectionStore when options prop is changed', () => {
+    const locale = observable.box('en');
+
+    const selection = shallow(
+        <MultiSelection
+            adapter="table"
+            displayProperties={['id', 'title']}
+            listKey="snippets"
+            locale={locale}
+            onChange={jest.fn()}
+            options={{key: 'value-1'}}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={[1, 2, 5]}
+        />
+    );
+
+    expect(selection.instance().selectionStore.setRequestParameters).not.toBeCalled();
+    expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
+
+    selection.setProps({
+        options: {key: 'value-2'},
+    });
+
+    expect(selection.instance().selectionStore.setRequestParameters).toBeCalledWith({key: 'value-2'});
+    expect(selection.instance().selectionStore.loadItems).toBeCalledWith([1, 2, 5]);
+});
+
+test('Not reload items of MultiSelectionStore when new value of option prop is equal to old value', () => {
+    const locale = observable.box('en');
+
+    const selection = shallow(
+        <MultiSelection
+            adapter="table"
+            displayProperties={['id', 'title']}
+            listKey="snippets"
+            locale={locale}
+            onChange={jest.fn()}
+            options={{key: 'value-1'}}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={[]}
+        />
+    );
+
+    expect(selection.instance().selectionStore.setRequestParameters).not.toBeCalled();
+    expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
+
+    selection.setProps({
+        options: {key: 'value-1'},
+    });
+
+    expect(selection.instance().selectionStore.setRequestParameters).not.toBeCalled();
+    expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
 });
 
 test('Should open an overlay', () => {
@@ -549,4 +661,77 @@ test('Should not call onChange callback if an unrelated observable that is acces
     // change callback should not be called when the unrelated observable changes
     unrelatedObservable.set(55);
     expect(changeSpy).toHaveBeenCalledTimes(1);
+});
+
+test('Should render selected item in disabled state if it fulfills passed itemDisabledCondition', () => {
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [
+            {id: 1, status: 'active'},
+            {id: 2, status: 'inactive'},
+        ];
+    });
+
+    const selection = mount(
+        <MultiSelection
+            adapter="table"
+            itemDisabledCondition={'status == "inactive"'}
+            listKey="snippets"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="pages"
+            value={[1, 5, 8]}
+        />
+    );
+
+    expect(selection.find(MultiItemSelection.Item).at(0).prop('disabled')).toEqual(false);
+    expect(selection.find(MultiItemSelection.Item).at(1).prop('disabled')).toEqual(true);
+});
+
+test('Should render selected item in disabled state if passed disabledIds contain id of item', () => {
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [
+            {id: 1},
+            {id: 2},
+        ];
+    });
+
+    const selection = mount(
+        <MultiSelection
+            adapter="table"
+            disabledIds={[2, 4]}
+            listKey="snippets"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="pages"
+            value={[1, 5, 8]}
+        />
+    );
+
+    expect(selection.find(MultiItemSelection.Item).at(0).prop('disabled')).toEqual(false);
+    expect(selection.find(MultiItemSelection.Item).at(1).prop('disabled')).toEqual(true);
+});
+
+test('Pass correct allowRemoveWhileDisabled prop to Item of MultiItemSelection', () => {
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [
+            {id: 1},
+        ];
+    });
+
+    const selection = mount(
+        <MultiSelection
+            adapter="table"
+            allowDeselectForDisabledItems={true}
+            listKey="snippets"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="pages"
+            value={[1, 5, 8]}
+        />
+    );
+
+    expect(selection.find(MultiItemSelection.Item).at(0).prop('allowRemoveWhileDisabled')).toEqual(true);
 });

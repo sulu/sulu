@@ -236,6 +236,8 @@
             <argument type="service" id="sulu.repository.target_group" on-invalid="null"/>
         </service>
 
+        <service id="Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface" alias="sulu_media.media_manager"/>
+
         <service id="sulu_media.type_manager" class="%sulu_media.type_manager.class%">
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument>%sulu_media.media.types%</argument>

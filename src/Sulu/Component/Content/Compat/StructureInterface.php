@@ -50,7 +50,7 @@ interface StructureInterface extends \JsonSerializable
     /**
      * id of node.
      *
-     * @return int
+     * @return string
      */
     public function getUuid();
 

@@ -1,9 +1,11 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, observable, reaction, toJS} from 'mobx';
+import {action, comparer, observable, reaction, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
+import jexl from 'jexl';
+import classNames from 'classnames';
 import CroppedText from '../../components/CroppedText';
 import MultiItemSelection from '../../components/MultiItemSelection';
 import MultiSelectionStore from '../../stores/MultiSelectionStore';
@@ -12,10 +14,12 @@ import multiSelectionStyles from './multiSelection.scss';
 
 type Props = {|
     adapter: string,
+    allowDeselectForDisabledItems: boolean,
     disabled: boolean,
     disabledIds: Array<string | number>,
     displayProperties: Array<string>,
     icon: string,
+    itemDisabledCondition?: ?string,
     label?: string,
     listKey: string,
     locale?: ?IObservableValue<string>,
@@ -29,6 +33,7 @@ type Props = {|
 @observer
 class MultiSelection extends React.Component<Props> {
     static defaultProps = {
+        allowDeselectForDisabledItems: false,
         disabled: false,
         disabledIds: [],
         displayProperties: [],
@@ -38,17 +43,19 @@ class MultiSelection extends React.Component<Props> {
     };
 
     selectionStore: MultiSelectionStore<string | number>;
-    changeDisposer: () => *;
+    changeSelectionDisposer: () => *;
+    changeOptionsDisposer: () => *;
 
     @observable overlayOpen: boolean = false;
 
     constructor(props: Props) {
         super(props);
 
-        const {locale, resourceKey, value} = this.props;
+        const {locale, options, resourceKey, value} = this.props;
 
-        this.selectionStore = new MultiSelectionStore(resourceKey, value, locale);
-        this.changeDisposer = reaction(
+        this.selectionStore = new MultiSelectionStore(resourceKey, value, locale, 'ids', options);
+
+        this.changeSelectionDisposer = reaction(
             () => (this.selectionStore.items.map((item) => item.id)),
             (loadedItemIds: Array<string | number>) => {
                 const {onChange, value} = this.props;
@@ -57,6 +64,15 @@ class MultiSelection extends React.Component<Props> {
                     onChange(loadedItemIds);
                 }
             }
+        );
+
+        this.changeOptionsDisposer = reaction(
+            () => this.props.options,
+            (options) => {
+                this.selectionStore.setRequestParameters(options);
+                this.selectionStore.loadItems(this.props.value);
+            },
+            {equals: comparer.structural}
         );
     }
 
@@ -72,7 +88,8 @@ class MultiSelection extends React.Component<Props> {
     }
 
     componentWillUnmount() {
-        this.changeDisposer();
+        this.changeSelectionDisposer();
+        this.changeOptionsDisposer();
     }
 
     @action closeOverlay() {
@@ -107,11 +124,13 @@ class MultiSelection extends React.Component<Props> {
     render() {
         const {
             adapter,
+            allowDeselectForDisabledItems,
             listKey,
             disabled,
             disabledIds,
             displayProperties,
             icon,
+            itemDisabledCondition,
             label,
             locale,
             resourceKey,
@@ -135,25 +154,44 @@ class MultiSelection extends React.Component<Props> {
                     onItemRemove={this.handleRemove}
                     onItemsSorted={this.handleSorted}
                 >
-                    {items.map((item, index) => (
-                        <MultiItemSelection.Item id={item.id} index={index + 1} key={item.id}>
-                            <div>
-                                {displayProperties.map((displayProperty) => (
-                                    <span
-                                        className={multiSelectionStyles.itemColumn}
-                                        key={displayProperty}
-                                        style={{width: 100 / columns + '%'}}
-                                    >
-                                        <CroppedText>{item[displayProperty]}</CroppedText>
-                                    </span>
-                                ))}
-                            </div>
-                        </MultiItemSelection.Item>
-                    ))}
+                    {items.map((item, index) => {
+                        const itemDisabled = disabledIds.includes(item.id) ||
+                            (!!itemDisabledCondition && jexl.evalSync(itemDisabledCondition, item));
+
+                        const itemColumnClass = classNames(
+                            multiSelectionStyles.itemColumn,
+                            {
+                                [multiSelectionStyles.disabled]: itemDisabled,
+                            }
+                        );
+
+                        return (
+                            <MultiItemSelection.Item
+                                allowRemoveWhileDisabled={allowDeselectForDisabledItems}
+                                disabled={itemDisabled}
+                                id={item.id}
+                                index={index + 1}
+                                key={item.id}
+                            >
+                                <div>
+                                    {displayProperties.map((displayProperty) => (
+                                        <span
+                                            className={itemColumnClass}
+                                            key={displayProperty}
+                                            style={{width: 100 / columns + '%'}}
+                                        >
+                                            <CroppedText>{item[displayProperty]}</CroppedText>
+                                        </span>
+                                    ))}
+                                </div>
+                            </MultiItemSelection.Item>
+                        );
+                    })}
                 </MultiItemSelection>
                 <MultiListOverlay
                     adapter={adapter}
                     disabledIds={disabledIds}
+                    itemDisabledCondition={itemDisabledCondition}
                     listKey={listKey}
                     locale={locale}
                     onClose={this.handleOverlayClose}

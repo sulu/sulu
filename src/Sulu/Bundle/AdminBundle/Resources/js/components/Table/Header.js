@@ -96,7 +96,7 @@ export default class Header extends React.PureComponent<Props> {
                     <Checkbox
                         checked={allSelected}
                         onChange={this.handleAllSelectionChange}
-                        skin={skin}
+                        skin={skin === 'dark' ? 'light' : 'dark'}
                     />
                 </span>
                 {children}

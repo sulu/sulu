@@ -137,6 +137,14 @@ $borderRadius: 3px;
     &.disabled {
         pointer-events: none;
         opacity: .5;
+
+        .cell {
+            border: $cellBorderColor;
+        }
+
+        .toggle-icon {
+            pointer-events: auto;
+        }
     }
 }
 

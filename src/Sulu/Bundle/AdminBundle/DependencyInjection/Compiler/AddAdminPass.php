@@ -19,6 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class AddAdminPass implements CompilerPassInterface
 {
+    const ADMIN_POOL_DEFINITION_ID = 'sulu_admin.admin_pool';
     const ADMIN_TAG = 'sulu.admin';
 
     /**
@@ -26,13 +27,26 @@ class AddAdminPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $pool = $container->getDefinition('sulu_admin.admin_pool');
+        $pool = $container->getDefinition(self::ADMIN_POOL_DEFINITION_ID);
 
-        $taggedServices = $container->findTaggedServiceIds(self::ADMIN_TAG);
+        $adminServiceDefinitions = [];
+        foreach ($container->findTaggedServiceIds(self::ADMIN_TAG) as $id => $tags) {
+            $serviceDefinition = $container->getDefinition($id);
 
-        foreach ($taggedServices as $id => $attributes) {
-            $admin = $container->getDefinition($id);
-            $pool->addMethodCall('addAdmin', [$admin]);
+            $class = $container->getParameterBag()->resolveValue($serviceDefinition->getClass());
+
+            /** @var callable $callable */
+            $callable = [$class, 'getPriority'];
+            $priority = call_user_func($callable);
+
+            $adminServiceDefinitions[$priority][] = $serviceDefinition;
+        }
+
+        krsort($adminServiceDefinitions);
+        $adminServiceDefinitions = array_merge(...$adminServiceDefinitions);
+
+        foreach ($adminServiceDefinitions as $id => $serviceDefinition) {
+            $pool->addMethodCall('addAdmin', [$serviceDefinition]);
         }
     }
 }

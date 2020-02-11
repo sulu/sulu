@@ -139,6 +139,19 @@ test('The component should select the correct option', () => {
     expect(isOptionSelected({props: {value: 'option-3', disabled: false}})).toBe(false);
 });
 
+test('The component should select the correct option if value is undefined', () => {
+    const select = shallow(
+        <SingleSelect value={undefined}>
+            <Option value={undefined}>undefined</Option>
+            <Divider />
+            <Option value="value">Value</Option>
+        </SingleSelect>
+    );
+    const isOptionSelected = select.find(Select).props().isOptionSelected;
+    expect(isOptionSelected({props: {value: undefined, disabled: false}})).toBe(true);
+    expect(isOptionSelected({props: {value: 'value', disabled: false}})).toBe(false);
+});
+
 test('The component should also select the option with the value 0', () => {
     const select = shallow(
         <SingleSelect value={0}>

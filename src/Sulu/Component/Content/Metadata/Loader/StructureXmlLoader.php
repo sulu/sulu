@@ -63,6 +63,8 @@ class StructureXmlLoader extends AbstractLoader
         'shadow-base',
         'author',
         'authored',
+        'type',
+        'id',
     ];
 
     /**

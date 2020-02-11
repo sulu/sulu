@@ -7,7 +7,7 @@ jest.mock('../../../services/ResourceRequester', () => ({
     getList: jest.fn().mockReturnValue(Promise.resolve({})),
 }));
 
-test('Should load items when being constructed', () => {
+test('Should load items with correct paramters when being constructed', () => {
     const listPromise = Promise.resolve({
         _embedded: {
             snippets: [
@@ -18,7 +18,13 @@ test('Should load items when being constructed', () => {
 
     ResourceRequester.getList.mockReturnValue(listPromise);
 
-    const selectionStore = new MultiSelectionStore('snippets', [1, 3, 4], observable.box('en'));
+    const selectionStore = new MultiSelectionStore(
+        'snippets',
+        [1, 3, 4],
+        observable.box('en'),
+        'ids',
+        {additionalKey: 'some-value'}
+    );
 
     expect(ResourceRequester.getList).toBeCalledWith(
         'snippets',
@@ -27,6 +33,7 @@ test('Should load items when being constructed', () => {
             limit: undefined,
             locale: 'en',
             page: 1,
+            additionalKey: 'some-value',
         }
     );
 
@@ -128,6 +135,57 @@ test('Should load items when being constructed without a locale', () => {
             limit: undefined,
             locale: undefined,
             page: 1,
+        }
+    );
+
+    return listPromise.then(() => {
+        expect(toJS(selectionStore.items)).toEqual([
+            {id: 1},
+        ]);
+    });
+});
+
+test('Should load items with requestParameters that are set via setRequestParameters method', () => {
+    const listPromise = Promise.resolve({
+        _embedded: {
+            snippets: [
+                {id: 1},
+            ],
+        },
+    });
+
+    ResourceRequester.getList.mockReturnValue(listPromise);
+
+    const selectionStore = new MultiSelectionStore(
+        'snippets',
+        [1, 3, 4],
+        undefined,
+        'ids',
+        {oldKey: 'old-value'}
+    );
+
+    expect(ResourceRequester.getList).toBeCalledWith(
+        'snippets',
+        {
+            ids: '1,3,4',
+            limit: undefined,
+            locale: undefined,
+            page: 1,
+            oldKey: 'old-value',
+        }
+    );
+
+    selectionStore.setRequestParameters({newKey: 'new-value'});
+    selectionStore.loadItems([1, 3, 4]);
+
+    expect(ResourceRequester.getList).toBeCalledWith(
+        'snippets',
+        {
+            ids: '1,3,4',
+            limit: undefined,
+            locale: undefined,
+            page: 1,
+            newKey: 'new-value',
         }
     );
 

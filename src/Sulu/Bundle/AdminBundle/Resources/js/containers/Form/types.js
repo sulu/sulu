@@ -45,7 +45,7 @@ export type ErrorCollection = {[key: string]: Error};
 
 export type SchemaOption = {
     infoText?: string,
-    name?: string | number,
+    name: string | number,
     title?: string,
     value?: ?string | number | boolean | Array<SchemaOption>,
 };
@@ -97,6 +97,7 @@ export interface FormStoreInterface {
     dirty: boolean,
     errors: Object,
     +finishField: (dataPath: string) => void,
+    +forbidden: boolean,
     +getSchemaEntryByPath: (schemaPath: string) => SchemaEntry,
     +getValueByPath: (path: string) => mixed,
     +getValuesByTag: (tagName: string) => Array<mixed>,

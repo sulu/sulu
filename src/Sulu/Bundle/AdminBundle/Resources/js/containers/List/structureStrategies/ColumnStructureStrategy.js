@@ -100,7 +100,13 @@ export default class ColumnStructureStrategy implements StructureStrategyInterfa
             this.rawData.set(parentId, []);
         }
 
-        removeColumnsAfterIndex(this.activeItems, this.activeItems.indexOf(parentId), this.rawData);
+        const parentIndex = this.activeItems.indexOf(parentId);
+
+        if (parentIndex === -1) {
+            return;
+        }
+
+        removeColumnsAfterIndex(this.activeItems, parentIndex, this.rawData);
         const column = this.rawData.get(parentId);
         if (column && column.length > 0) {
             column.splice(0, column.length);

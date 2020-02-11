@@ -63,6 +63,16 @@ test('Should render form using renderer', () => {
     expect(form).toMatchSnapshot();
 });
 
+test('Render permission hint if permissions are missing', () => {
+    const submitSpy = jest.fn();
+    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
+    // $FlowFixMe
+    store.forbidden = true;
+
+    const form = render(<Form onSubmit={submitSpy} store={store} />);
+    expect(form).toMatchSnapshot();
+});
+
 test('Should call onSubmit callback', () => {
     const errorSpy = jest.fn();
     const submitSpy = jest.fn();

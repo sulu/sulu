@@ -629,3 +629,9 @@ test('Validate should return false if errors occured', () => {
 
     expect(memoryFormStore.validate()).toEqual(false);
 });
+
+test('Forbidden flag should always be set to false', () => {
+    const memoryFormStore = new MemoryFormStore({}, {}, {required: ['title']});
+
+    expect(memoryFormStore.forbidden).toEqual(false);
+});

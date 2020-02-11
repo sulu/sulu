@@ -16,6 +16,7 @@ type Props = {|
     confirmLoading?: boolean,
     disabledIds: Array<string | number>,
     excludedIds: Array<string | number>,
+    itemDisabledCondition?: ?string,
     listKey: string,
     locale?: ?IObservableValue<string>,
     metadataOptions?: ?Object,
@@ -115,6 +116,7 @@ class SingleListOverlay extends React.Component<Props> {
             clearSelectionOnClose,
             confirmLoading,
             disabledIds,
+            itemDisabledCondition,
             onClose,
             open,
             overlayType,
@@ -130,6 +132,7 @@ class SingleListOverlay extends React.Component<Props> {
                 clearSelectionOnClose={clearSelectionOnClose}
                 confirmLoading={confirmLoading}
                 disabledIds={disabledIds}
+                itemDisabledCondition={itemDisabledCondition}
                 listStore={this.listStore}
                 onClose={onClose}
                 onConfirm={this.handleConfirm}

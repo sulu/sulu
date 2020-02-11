@@ -2,7 +2,7 @@
 import {action, autorun, computed, intercept, observable, untracked} from 'mobx';
 import type {IObservableValue, IValueWillChange} from 'mobx';
 import log from 'loglevel';
-import ResourceRequester from '../../../services/ResourceRequester';
+import ResourceRequester, {RequestPromise} from '../../../services/ResourceRequester';
 import type {
     LoadingStrategyInterface,
     ObservableOptions,
@@ -55,6 +55,7 @@ export default class ListStore {
     activeSettingDisposer: () => void;
     sendRequestDisposer: () => void;
     initialSelectionIds: ?Array<string | number>;
+    pendingRequest: ?RequestPromise<*>;
     metadataOptions: ?Object;
 
     static getActiveSetting(listKey: string, userSettingsKey: string): string {
@@ -490,11 +491,16 @@ export default class ListStore {
 
         log.info('List loads "' + this.resourceKey + '" data with the following options:', options);
 
-        this.loadingStrategy.load(
+        if (this.pendingRequest) {
+            this.pendingRequest.abort();
+        }
+
+        this.pendingRequest = this.loadingStrategy.load(
             this.resourceKey,
             options,
-            options.expandedIds ? undefined : active
+            (options.selectedIds || options.expandedIds) ? undefined : active
         ).then(action((response) => {
+            this.pendingRequest = undefined;
             this.pageCount = response.pages;
             this.setDataLoading(false);
 
@@ -511,6 +517,11 @@ export default class ListStore {
                 this.initialSelectionIds = undefined;
             }
         })).catch((response) => {
+            if (response.name === 'AbortError') {
+                return;
+            }
+
+            this.pendingRequest = undefined;
             if (this.active.get() && response.status === 404) {
                 // need to set the user setting to null manually, because the autorun runs too late
                 ListStore.setActiveSetting(this.listKey, this.userSettingsKey, undefined);
@@ -605,7 +616,16 @@ export default class ListStore {
         this.selections.push(row);
     }
 
+    /**
+     * @deprecated
+     */
     @action selectVisibleItems() {
+        log.warn(
+            'The "selectVisibleItems" method will select disabled rows. ' +
+            'Therefore the method is deprecated since version 2.0. ' +
+            'Use the "visibleItems" property and the "select" method instead.'
+        );
+
         this.visibleItems.forEach((item) => {
             this.select(item);
         });
@@ -626,7 +646,16 @@ export default class ListStore {
         this.selections.splice(index, 1);
     }
 
+    /**
+     * @deprecated
+     */
     @action deselectVisibleItems() {
+        log.warn(
+            'The "deselectVisibleItems" method will deselect disabled rows. ' +
+            'Therefore the method is deprecated since version 2.0. ' +
+            'Use the "visibleItems" property and the "deselect" method instead.'
+        );
+
         this.visibleItems.forEach((item) => {
             this.deselect(item);
         });

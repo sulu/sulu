@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, observable} from 'mobx';
+import {comparer, computed, observable, reaction} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import ListStore from '../../containers/List/stores/ListStore';
@@ -16,6 +16,7 @@ type Props = {|
     confirmLoading?: boolean,
     disabledIds: Array<string | number>,
     excludedIds: Array<string | number>,
+    itemDisabledCondition?: ?string,
     listKey: string,
     locale?: ?IObservableValue<string>,
     onClose: () => void,
@@ -44,6 +45,7 @@ class MultiListOverlay extends React.Component<Props> {
     listStore: ListStore;
     page: IObservableValue<number> = observable.box(1);
     excludedIdsDisposer: () => void;
+    changeOptionsDisposer: () => *;
 
     constructor(props: Props) {
         super(props);
@@ -66,13 +68,27 @@ class MultiListOverlay extends React.Component<Props> {
             USER_SETTINGS_KEY,
             observableOptions,
             options,
+            undefined,
             preloadSelectedItems ? preSelectedItems.map((preSelectedItem) => preSelectedItem.id) : undefined
+        );
+
+        this.changeOptionsDisposer = reaction(
+            () => this.props.options,
+            (options) => {
+                // reset liststore to reload whole tree instead of children of current active item
+                this.listStore.reset();
+                // set selected items as initialSelectionIds to expand them in case of a tree
+                this.listStore.initialSelectionIds = this.listStore.selectionIds;
+                this.listStore.options = {...this.listStore.options, ...options};
+            },
+            {equals: comparer.structural}
         );
     }
 
     componentWillUnmount() {
         this.listStore.destroy();
         this.excludedIdsDisposer();
+        this.changeOptionsDisposer();
     }
 
     handleConfirm = () => {
@@ -86,6 +102,7 @@ class MultiListOverlay extends React.Component<Props> {
             clearSelectionOnClose,
             confirmLoading,
             disabledIds,
+            itemDisabledCondition,
             onClose,
             open,
             overlayType,
@@ -101,6 +118,7 @@ class MultiListOverlay extends React.Component<Props> {
                 clearSelectionOnClose={clearSelectionOnClose}
                 confirmLoading={confirmLoading}
                 disabledIds={disabledIds}
+                itemDisabledCondition={itemDisabledCondition}
                 listStore={this.listStore}
                 onClose={onClose}
                 onConfirm={this.handleConfirm}

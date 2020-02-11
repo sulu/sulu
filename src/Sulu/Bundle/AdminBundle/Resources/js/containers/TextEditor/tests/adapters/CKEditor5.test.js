@@ -37,6 +37,7 @@ test('Pass formats to CKEditor5 component', () => {
 
     const options = {
         formats: {
+            name: 'formats',
             value: [
                 {
                     name: 'h2',
@@ -71,6 +72,7 @@ test('Pass formats to CKEditor5 component', () => {
 test('Throw error if passed formats is not an array', () => {
     const options = {
         formats: {
+            name: 'formats',
             value: 'Test',
         },
     };
@@ -92,6 +94,7 @@ test('Throw error if passed formats is not an array', () => {
 test('Throw error if passed formats is not an array', () => {
     const options = {
         formats: {
+            name: 'formats',
             value: [
                 {
                     name: 'h2',

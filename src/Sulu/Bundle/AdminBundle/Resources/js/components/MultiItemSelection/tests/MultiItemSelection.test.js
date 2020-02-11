@@ -19,14 +19,29 @@ test('Render an MultiItemSelection with children', () => {
             <MultiItemSelection.Item
                 id="2"
                 index={2}
+                onEdit={jest.fn()}
+                onRemove={jest.fn()}
             >
                 Child 2
             </MultiItemSelection.Item>
             <MultiItemSelection.Item
+                disabled={true}
                 id="3"
                 index={3}
+                onEdit={jest.fn()}
+                onRemove={jest.fn()}
             >
-                Child 3
+                Child 3 (disabled)
+            </MultiItemSelection.Item>
+            <MultiItemSelection.Item
+                allowRemoveWhileDisabled={true}
+                disabled={true}
+                id="4"
+                index={4}
+                onEdit={jest.fn()}
+                onRemove={jest.fn()}
+            >
+                Child 4 (disabled with remove button)
             </MultiItemSelection.Item>
         </MultiItemSelection>
     )).toMatchSnapshot();

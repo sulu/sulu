@@ -21,7 +21,7 @@ export default class Checkbox extends React.Component<FieldTypeProps<boolean>> {
         }
 
         if (typeof defaultValue !== 'boolean') {
-            throw new Error('The "default_value" schema option must be a string or a number!');
+            throw new Error('The "default_value" schema option must be a boolean if given!');
         }
 
         if (value === undefined) {

@@ -25,6 +25,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
+use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
@@ -259,6 +260,9 @@ class MediaManagerTest extends TestCase
         $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
         $fileVersion->getMeta()->willReturn([$fileVersionMeta->reveal()]);
 
+        $formatOptions = $this->prophesize(FormatOptions::class);
+        $fileVersion->getFormatOptions()->willReturn([$formatOptions->reveal()]);
+
         $media = $this->prophesize(Media::class);
         $media->getCollection()->willReturn($collection);
         $media->getFiles()->willReturn([$file->reveal()]);
@@ -279,8 +283,9 @@ class MediaManagerTest extends TestCase
         $this->storage->remove(['segment' => '01', 'fileName' => 'test.jpg'])->shouldBeCalled();
         $this->em->detach($fileVersion->reveal())->shouldBeCalled();
         $this->em->detach($file->reveal())->shouldBeCalled();
-        $this->em->remove($media->reveal())->shouldBeCalled();
         $this->em->remove($fileVersionMeta->reveal())->shouldBeCalled();
+        $this->em->detach($formatOptions->reveal())->shouldBeCalled();
+        $this->em->remove($media->reveal())->shouldBeCalled();
         $this->em->flush()->shouldBeCalled();
 
         $this->mediaManager->delete(1, true);

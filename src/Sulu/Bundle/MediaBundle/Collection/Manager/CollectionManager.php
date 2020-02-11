@@ -387,7 +387,7 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function save(array $data, ?int $userId, bool $breadcrumb = false)
+    public function save(array $data, ?int $userId = null, bool $breadcrumb = false)
     {
         if (isset($data['id'])) {
             $collection = $this->modifyCollection($data, $this->getUser($userId), $breadcrumb);

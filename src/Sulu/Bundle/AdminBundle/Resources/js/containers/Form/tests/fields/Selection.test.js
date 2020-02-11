@@ -26,11 +26,14 @@ jest.mock('../../../List/stores/ListStore',
         this.resourceKey = resourceKey;
         this.listKey = listKey;
         this.userSettingsKey = userSettingsKey;
+        this.options = options;
+        this.observableOptions = observableOptions;
         this.locale = observableOptions.locale;
         this.initialSelectionIds = initialSelectionIds;
         this.dataLoading = true;
         this.destroy = jest.fn();
         this.sendRequestDisposer = jest.fn();
+        this.reset = jest.fn();
 
         mockExtendObservable(this, {
             selectionIds: [],
@@ -44,6 +47,8 @@ jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.id = formStore.id;
     this.resourceKey = formStore.resourceKey;
     this.locale = formStore.locale;
+    this.getValueByPath = jest.fn();
+    this.addFinishFieldHandler = jest.fn();
 }));
 
 jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
@@ -62,7 +67,7 @@ jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-test('Should pass props correctly to selection component', () => {
+test('Should pass props correctly to MultiSelection component', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
@@ -82,6 +87,7 @@ test('Should pass props correctly to selection component', () => {
 
     const schemaOptions = {
         types: {
+            name: 'types',
             value: 'test',
         },
     };
@@ -111,9 +117,11 @@ test('Should pass props correctly to selection component', () => {
 
     expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'table',
+        allowDeselectForDisabledItems: true,
         listKey: 'snippets_list',
         disabled: true,
         displayProperties: ['id', 'title'],
+        itemDisabledCondition: undefined,
         label: 'sulu_snippet.selection_label',
         locale,
         resourceKey: 'snippets',
@@ -163,7 +171,7 @@ test('Should pass resourceKey as listKey to selection component if no listKey is
     expect(selection.find('MultiSelection').prop('listKey')).toEqual('snippets');
 });
 
-test('Should pass locale from userStore to selection component if form has no locale', () => {
+test('Should pass locale from userStore to MultiSelection component if form has no locale', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
@@ -205,7 +213,7 @@ test('Should pass locale from userStore to selection component if form has no lo
     expect(toJS(selection.find('MultiSelection').prop('locale'))).toEqual('de');
 });
 
-test('Should pass props with schema-options type correctly to selection component', () => {
+test('Should pass props with schema-options correctly to MultiSelection component', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
@@ -233,6 +241,36 @@ test('Should pass props with schema-options type correctly to selection componen
             name: 'type',
             value: 'list_overlay',
         },
+        types: {
+            name: 'types',
+            value: 'image,video',
+        },
+        allow_deselect_for_disabled_items: {
+            name: 'allow_deselect_for_disabled_items',
+            value: false,
+        },
+        item_disabled_condition: {
+            name: 'item_disabled_condition',
+            value: 'status == "inactive"',
+        },
+        request_parameters: {
+            name: 'request_parameters',
+            value: [
+                {
+                    name: 'staticKey',
+                    value: 'some-static-value',
+                },
+            ],
+        },
+        resource_store_properties_to_request: {
+            name: 'resource_store_properties_to_request',
+            value: [
+                {
+                    name: 'dynamicKey',
+                    value: 'otherPropertyName',
+                },
+            ],
+        },
     };
 
     const locale = observable.box('en');
@@ -243,6 +281,9 @@ test('Should pass props with schema-options type correctly to selection componen
             'pages'
         )
     );
+
+    const formInspectorValues = {'/otherPropertyName': 'value-returned-by-form-inspector'};
+    formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
 
     const selection = shallow(
         <Selection
@@ -257,20 +298,96 @@ test('Should pass props with schema-options type correctly to selection componen
     );
 
     expect(translate).toBeCalledWith('sulu_snippet.selection_label', {count: 3});
+    expect(formInspector.getValueByPath).toBeCalledWith('/otherPropertyName');
 
     expect(selection.find('MultiSelection').props()).toEqual(expect.objectContaining({
         adapter: 'table',
+        allowDeselectForDisabledItems: false,
         disabled: true,
         displayProperties: ['id', 'title'],
+        itemDisabledCondition: 'status == "inactive"',
         label: 'sulu_snippet.selection_label',
         locale,
         resourceKey: 'snippets',
         overlayTitle: 'sulu_snippet.selection_overlay_title',
         value,
+        options: {
+            types: 'image,video',
+            staticKey: 'some-static-value',
+            dynamicKey: 'value-returned-by-form-inspector',
+        },
     }));
 });
 
-test('Should pass id of form as disabledId to overlay type to avoid assigning something to itself', () => {
+// eslint-disable-next-line max-len
+test('Should update props of MultiSelection component when value of "resource_store_properties_to_request" property is changed', () => {
+    const value = [1, 6, 8];
+
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'snippets',
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                display_properties: ['id', 'title'],
+                icon: '',
+                label: 'sulu_snippet.selection_label',
+                overlay_title: 'sulu_snippet.selection_overlay_title',
+            },
+        },
+    };
+
+    const schemaOptions = {
+        resource_store_properties_to_request: {
+            name: 'resource_store_properties_to_request',
+            value: [
+                {
+                    name: 'dynamicKey',
+                    value: 'otherPropertyName',
+                },
+            ],
+        },
+    };
+
+    const locale = observable.box('en');
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('pages', 1, {locale}),
+            'pages'
+        )
+    );
+
+    const formInspectorValues = {'/otherPropertyName': 'first-value'};
+    formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
+
+    const selection = shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            onFinish={jest.fn()}
+            schemaOptions={schemaOptions}
+            value={value}
+        />
+    );
+
+    expect(formInspector.addFinishFieldHandler).toHaveBeenCalled();
+    expect(selection.find('MultiSelection').props().options).toEqual({
+        dynamicKey: 'first-value',
+    });
+
+    formInspectorValues['/otherPropertyName'] = 'second-value';
+    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
+    finishFieldHandler('/otherPropertyName');
+
+    expect(selection.find('MultiSelection').props().options).toEqual({
+        dynamicKey: 'second-value',
+    });
+});
+
+test('Should pass id of form as disabledId to MultiSelection component to avoid assigning something to itself', () => {
     const fieldTypeOptions = {
         default_type: 'list_overlay',
         resource_key: 'pages',
@@ -294,7 +411,7 @@ test('Should pass id of form as disabledId to overlay type to avoid assigning so
     expect(selection.find('MultiSelection').prop('disabledIds')).toEqual([4]);
 });
 
-test('Should pass empty array if value is not given to overlay type', () => {
+test('Should pass empty array to MultiSelection component if value is not given', () => {
     const changeSpy = jest.fn();
     const fieldOptions = {
         default_type: 'list_overlay',
@@ -325,7 +442,7 @@ test('Should pass empty array if value is not given to overlay type', () => {
     }));
 });
 
-test('Should call onChange and onFinish callback when selection overlay is confirmed', () => {
+test('Should call onChange and onFinish callback when MultiSelection component fires onChange callback', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
@@ -372,9 +489,98 @@ test('Should throw an error if "types" schema option is not a string', () => {
             {...fieldTypeDefaultProps}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            schemaOptions={{types: {value: []}}}
+            schemaOptions={{types: {name: 'type', value: []}}}
         />
     )).toThrowError(/"types"/);
+});
+
+test('Should throw an error if "item_disabled_condition" schema option is not a string', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'test',
+        types: {
+            list_overlay: {},
+        },
+    };
+
+    expect(() => shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={{item_disabled_condition: {name: 'item_disabled_condition', value: []}}}
+        />
+    )).toThrowError(/"item_disabled_condition"/);
+});
+
+test('Should throw an error if "allow_deselect_for_disabled_items" schema option is not a boolean', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'test',
+        types: {
+            list_overlay: {},
+        },
+    };
+    const schemaOptions = {
+        allow_deselect_for_disabled_items: {
+            name: 'allow_deselect_for_disabled_items',
+            value: 'not-boolean',
+        },
+    };
+
+    expect(() => shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    )).toThrowError(/"allow_deselect_for_disabled_items"/);
+});
+
+test('Should throw an error if "request_parameters" schema option is not an array', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'test',
+        types: {
+            list_overlay: {},
+        },
+    };
+
+    expect(() => shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={{request_parameters: {name: 'request_parameters', value: 'not-an-array'}}}
+        />
+    )).toThrowError(/"request_parameters"/);
+});
+
+test('Should throw an error if "resource_store_properties_to_request" schema option is not an array', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'test',
+        types: {
+            list_overlay: {},
+        },
+    };
+    const schemaOptions = {
+        resource_store_properties_to_request: {name: 'resource_store_properties_to_request', value: 'not-an-array'},
+    };
+
+    expect(() => shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    )).toThrowError(/"resource_store_properties_to_request"/);
 });
 
 test('Should throw an error if no "resource_key" option is passed in fieldOptions', () => {
@@ -430,14 +636,17 @@ test('Should call the disposers for list selections and locale and ListStore if 
 
     const changeListDisposerSpy = jest.fn();
     const changeLocaleDisposerSpy = jest.fn();
+    const changeListOptionsDisposerSpy = jest.fn();
     selection.instance().changeListDisposer = changeListDisposerSpy;
     selection.instance().changeLocaleDisposer = changeLocaleDisposerSpy;
+    selection.instance().changeListOptionsDisposer = changeListOptionsDisposerSpy;
     const listStoreDestroy = selection.instance().listStore.destroy;
 
     selection.unmount();
 
     expect(changeListDisposerSpy).toBeCalledWith();
     expect(changeLocaleDisposerSpy).toBeCalledWith();
+    expect(changeListOptionsDisposerSpy).toBeCalledWith();
     expect(listStoreDestroy).toBeCalledWith();
 });
 
@@ -479,7 +688,7 @@ test('Should call sendRequestDisposer to avoid extra request when locale is chan
     expect(selection.instance().listStore.sendRequestDisposer).toBeCalledWith();
 });
 
-test('Should pass props correctly to list component', () => {
+test('Should pass correct props to list component', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
@@ -490,6 +699,13 @@ test('Should pass props correctly to list component', () => {
                 adapter: 'table',
                 list_key: 'snippets_list',
             },
+        },
+    };
+
+    const schemaOptions = {
+        item_disabled_condition: {
+            name: 'item_disabled_condition',
+            value: 'status == "inactive"',
         },
     };
 
@@ -508,21 +724,88 @@ test('Should pass props correctly to list component', () => {
             disabled={true}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
+            schemaOptions={schemaOptions}
             value={value}
         />
     );
 
-    expect(selection.instance().listStore.listKey).toEqual('snippets_list');
-    expect(selection.instance().listStore.resourceKey).toEqual('snippets');
-    expect(selection.instance().listStore.initialSelectionIds).toEqual(value);
     expect(selection.find(List).props()).toEqual(expect.objectContaining({
         adapters: ['table'],
         disabled: true,
+        itemDisabledCondition: 'status == "inactive"',
         searchable: false,
     }));
 });
 
-test('Should pass resourceKey as listKey to list component if no listKey is given', () => {
+test('Should pass correct parameters to listStore', () => {
+    const value = [1, 6, 8];
+
+    const fieldTypeOptions = {
+        default_type: 'list',
+        resource_key: 'snippets',
+        types: {
+            list: {
+                adapter: 'table',
+                list_key: 'snippets_list',
+            },
+        },
+    };
+
+    const schemaOptions = {
+        request_parameters: {
+            name: 'request_parameters',
+            value: [
+                {
+                    name: 'staticKey',
+                    value: 'some-static-value',
+                },
+            ],
+        },
+        resource_store_properties_to_request: {
+            name: 'resource_store_properties_to_request',
+            value: [
+                {
+                    name: 'dynamicKey',
+                    value: 'otherPropertyName',
+                },
+            ],
+        },
+    };
+
+    const locale = observable.box('en');
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('pages', 1, {locale}),
+            'pages'
+        )
+    );
+
+    const formInspectorValues = {'/otherPropertyName': 'value-returned-by-form-inspector'};
+    formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
+
+    const selection = shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+            value={value}
+        />
+    );
+
+    expect(selection.instance().listStore.resourceKey).toEqual('snippets');
+    expect(selection.instance().listStore.listKey).toEqual('snippets_list');
+    expect(selection.instance().listStore.userSettingsKey).toEqual('selection');
+    expect(selection.instance().listStore.initialSelectionIds).toEqual(value);
+    expect(selection.instance().listStore.options).toEqual({
+        staticKey: 'some-static-value',
+        dynamicKey: 'value-returned-by-form-inspector',
+    });
+});
+
+test('Should pass resourceKey as listKey to listStore if no listKey is given', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
@@ -669,6 +952,72 @@ test('Should not call onChange and onFinish prop while list is still loading', (
 
     expect(changeSpy).not.toBeCalled();
     expect(finishSpy).not.toBeCalled();
+});
+
+test('Should update listStore when the value of a "resource_store_properties_to_request" property is changed', () => {
+    const value = [1, 6, 8];
+
+    const fieldTypeOptions = {
+        default_type: 'list',
+        resource_key: 'snippets',
+        types: {
+            list: {
+                adapter: 'table',
+                list_key: 'snippets_list',
+            },
+        },
+    };
+
+    const schemaOptions = {
+        resource_store_properties_to_request: {
+            name: 'resource_store_properties_to_request',
+            value: [
+                {
+                    name: 'dynamicKey',
+                    value: 'otherPropertyName',
+                },
+            ],
+        },
+    };
+
+    const locale = observable.box('en');
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('pages', 1, {locale}),
+            'pages'
+        )
+    );
+
+    const formInspectorValues = {'/otherPropertyName': 'first-value'};
+    formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
+
+    const selection = shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+            value={value}
+        />
+    );
+
+    expect(formInspector.addFinishFieldHandler).toHaveBeenCalled();
+    expect(selection.instance().listStore.options).toEqual({
+        dynamicKey: 'first-value',
+    });
+
+    selection.instance().listStore.selectionIds = [12, 14];
+    formInspectorValues['/otherPropertyName'] = 'second-value';
+    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
+    finishFieldHandler('/otherPropertyName');
+
+    expect(selection.instance().listStore.options).toEqual({
+        dynamicKey: 'second-value',
+    });
+    expect(selection.instance().listStore.reset).toBeCalled();
+    expect(selection.instance().listStore.initialSelectionIds).toEqual([12, 14]);
 });
 
 test('Should not call onChange and onFinish if an observable that is accessed in one of the callbacks changes', () => {

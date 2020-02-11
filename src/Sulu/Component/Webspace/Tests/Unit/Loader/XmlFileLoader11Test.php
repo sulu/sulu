@@ -91,7 +91,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
         $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocale());
 
-        $this->assertEquals(3, count($webspace->getPortals()[0]->getEnvironments()));
+        $this->assertEquals(4, count($webspace->getPortals()[0]->getEnvironments()));
 
         $environmentProd = $webspace->getPortals()[0]->getEnvironment('prod');
         $this->assertEquals('prod', $environmentProd->getType());
@@ -108,6 +108,22 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals(null, $environmentProd->getUrls()[1]->getSegment());
         $this->assertEquals(null, $environmentProd->getUrls()[1]->getCountry());
         $this->assertEquals('sulu.at', $environmentProd->getUrls()[1]->getRedirect());
+
+        $environmentTest = $webspace->getPortals()[0]->getEnvironment('test');
+        $this->assertEquals('test', $environmentTest->getType());
+        $this->assertEquals(2, count($environmentTest->getUrls()));
+        $this->assertEquals('sulu.at', $environmentTest->getUrls()[0]->getUrl());
+        $this->assertTrue($environmentTest->getUrls()[0]->isMain());
+        $this->assertEquals('de', $environmentTest->getUrls()[0]->getLanguage());
+        $this->assertEquals(null, $environmentTest->getUrls()[0]->getSegment());
+        $this->assertEquals('at', $environmentTest->getUrls()[0]->getCountry());
+        $this->assertEquals(null, $environmentTest->getUrls()[0]->getRedirect());
+        $this->assertEquals('www.sulu.at', $environmentTest->getUrls()[1]->getUrl());
+        $this->assertFalse($environmentTest->getUrls()[1]->isMain());
+        $this->assertEquals(null, $environmentTest->getUrls()[1]->getLanguage());
+        $this->assertEquals(null, $environmentTest->getUrls()[1]->getSegment());
+        $this->assertEquals(null, $environmentTest->getUrls()[1]->getCountry());
+        $this->assertEquals('sulu.at', $environmentTest->getUrls()[1]->getRedirect());
 
         $environmentDev = $webspace->getPortals()[0]->getEnvironment('dev');
         $this->assertEquals('dev', $environmentDev->getType());

@@ -264,7 +264,6 @@ class InvalidationSubscriber implements EventSubscriberInterface
     /**
      * Returns all urls of the given locale which are associated with the given document.
      * The returned array contains all current urls and all history urls.
-     * The returned urls can contain placeholders (eg {host}).
      *
      * @param ResourceSegmentBehavior $document
      * @param string $locale

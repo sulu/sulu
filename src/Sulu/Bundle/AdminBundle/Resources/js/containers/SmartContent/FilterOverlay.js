@@ -26,7 +26,7 @@ type Props = {|
     presentations: {[key: string]: string},
     sections: Array<string>,
     smartContentStore: SmartContentStore,
-    sortings: {[key: string]: string},
+    sortings: Array<{name: ?string, value: string}>,
     title: string,
 |};
 
@@ -166,9 +166,9 @@ class FilterOverlay extends React.Component<Props> {
     };
 
     @action handleSortByChange = (sortBy: string | number) => {
-        if (typeof sortBy !== 'string') {
+        if (sortBy !== undefined && typeof sortBy !== 'string') {
             throw new Error(
-                'The field for sorting must be a string, but "' + sortBy + '" was given.'
+                'The field for sorting must be a string or undefined, but "' + sortBy + '" was given.'
                 + ' This should not happen and is likely a bug.'
             );
         }
@@ -333,9 +333,9 @@ class FilterOverlay extends React.Component<Props> {
                                 <div className={filterOverlayStyles.sorting}>
                                     <div className={filterOverlayStyles.sortColumn}>
                                         <SingleSelect onChange={this.handleSortByChange} value={this.sortBy}>
-                                            {Object.keys(sortings).map((sortKey) => (
-                                                <SingleSelect.Option key={sortKey} value={sortKey}>
-                                                    {sortings[sortKey]}
+                                            {sortings.map((sorting, index) => (
+                                                <SingleSelect.Option key={index} value={sorting.name}>
+                                                    {translate(sorting.value)}
                                                 </SingleSelect.Option>
                                             ))}
                                         </SingleSelect>

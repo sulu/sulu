@@ -142,9 +142,9 @@ class InvalidationSubscriberTest extends TestCase
         $resourceLocator1 = '/path/to/1';
         $resourceLocator2 = '/path/to/2';
 
-        $url1 = '{host}/path/to/1';
-        $url2 = '{host}/path/to/2';
-        $url3 = '{host}/other/to/2';
+        $url1 = 'sulu.lo/path/to/1';
+        $url2 = 'sulu.lo/path/to/2';
+        $url3 = 'sulu.lo/other/to/2';
 
         $document = $this->prophesize(BasePageDocument::class);
         $document->getPublished()->willReturn(true);
@@ -293,8 +293,8 @@ class InvalidationSubscriberTest extends TestCase
         $resourceLocator1 = '/path/to/1';
         $resourceLocator2 = '/path/to/2';
 
-        $url1 = '{host}/path/to/1';
-        $url2 = '{host}/path/to/2';
+        $url1 = 'sulu.lo/path/to/1';
+        $url2 = 'sulu.lo/path/to/2';
 
         $document = $this->prophesize(BasePageDocument::class);
         $document->getPublished()->willReturn(true);
@@ -404,9 +404,9 @@ class InvalidationSubscriberTest extends TestCase
         $resourceLocatorDe1 = '/pfad/zu/1';
         $resourceLocatorEn2 = '/path/to/2';
 
-        $urlEn1 = '{host}/path/to/1';
-        $urlDe1 = '{host}/other/to/2';
-        $urlEn2 = '{host}/path/to/2';
+        $urlEn1 = 'sulu.lo/path/to/1';
+        $urlDe1 = 'sulu.lo/other/to/2';
+        $urlEn2 = 'sulu.lo/path/to/2';
 
         $document = $this->prophesize(BasePageDocument::class);
         $document->getPublished()->willReturn(true);

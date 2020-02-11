@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<webspace xmlns="http://schemas.sulu.io/webspace/webspace"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
+
+    <name>Sulu CMF</name>
+    <key>sulu_io_host_replacement</key>
+
+    <navigation>
+        <contexts>
+            <context key="main">
+                <meta>
+                    <title lang="de">Hauptnavigation</title>
+                    <title lang="en">Mainnavigation</title>
+                </meta>
+            </context>
+        </contexts>
+    </navigation>
+
+    <localizations>
+        <localization language="de" country="at" default="true"/>
+    </localizations>
+
+    <default-templates>
+        <default-template type="page">default</default-template>
+        <default-template type="homepage">overview</default-template>
+    </default-templates>
+
+    <portals>
+        <portal>
+            <name>Sulu CMF AT</name>
+            <key>sulucmf_at_host_replacement</key>
+
+            <environments>
+                <environment type="test">
+                    <urls>
+                        <url>{host}/{localization}</url>
+                    </urls>
+                </environment>
+            </environments>
+        </portal>
+    </portals>
+</webspace>

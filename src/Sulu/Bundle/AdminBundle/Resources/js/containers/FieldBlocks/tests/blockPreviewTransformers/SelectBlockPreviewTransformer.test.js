@@ -10,6 +10,7 @@ test('Return JSX for multiple selected items', () => {
             {
                 options: {
                     values: {
+                        name: 'values',
                         value: [
                             {
                                 name: 'value1',
@@ -40,6 +41,7 @@ test('Return null if no array is passed', () => {
             {
                 options: {
                     values: {
+                        name: 'values',
                         value: [
                             {
                                 name: 'value1',
@@ -76,7 +78,10 @@ test('Throw an error if values schema option is not an array', () => {
             ['value1', 'value3'],
             {
                 options: {
-                    values: {},
+                    values: {
+                        name: 'values',
+                        value: 'not-array',
+                    },
                 },
                 type: 'single_select',
             }

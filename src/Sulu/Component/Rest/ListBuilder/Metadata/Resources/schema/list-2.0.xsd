@@ -147,7 +147,7 @@
         <xs:attribute type="xs:string" name="type" default="string"/>
         <xs:attribute type="xs:boolean" name="sortable" default="true"/>
         <xs:attribute name="filter-type" type="xs:string"/>
-        <xs:attribute name="visibility">
+        <xs:attribute name="visibility" default="no">
             <xs:simpleType>
                 <xs:restriction base="xs:string">
                     <xs:enumeration value="yes" />
@@ -157,7 +157,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="searchability">
+        <xs:attribute name="searchability" default="never">
             <xs:simpleType>
                 <xs:restriction base="xs:string">
                     <xs:enumeration value="yes" />

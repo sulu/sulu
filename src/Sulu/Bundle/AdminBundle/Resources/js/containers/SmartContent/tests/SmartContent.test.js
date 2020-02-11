@@ -146,7 +146,9 @@ test('Open and closes the FilterOverlay when the icon is clicked', () => {
         tags: false,
         categories: true,
         audienceTargeting: false,
-        sorting: [{name: 'title', value: 'Title'}],
+        sorting: [
+            {name: 'title', value: 'Title'},
+        ],
         presentAs: true,
         limit: false,
     });
@@ -166,7 +168,7 @@ test('Open and closes the FilterOverlay when the icon is clicked', () => {
     smartContent.find('FilterOverlay').prop('onClose')();
     expect(smartContent.find('FilterOverlay').prop('open')).toEqual(false);
     expect(smartContent.find('FilterOverlay').prop('title')).toEqual('sulu_admin.filter_overlay_title');
-    expect(smartContent.find('FilterOverlay').prop('sortings')).toEqual({title: 'Title'});
+    expect(smartContent.find('FilterOverlay').prop('sortings')).toEqual([{name: 'title', value: 'Title'}]);
     expect(translate).toBeCalledWith('sulu_admin.filter_overlay_title', {fieldLabel: 'Test'});
 });
 

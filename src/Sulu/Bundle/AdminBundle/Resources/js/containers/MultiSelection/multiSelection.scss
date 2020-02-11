@@ -2,6 +2,7 @@
 
 $multiSelectionMainColumnColor: $black;
 $multiSelectionColumnColor: $scorpion;
+$multiSelectionDisabledColumnColor: $gray;
 
 .item-column {
     color: $multiSelectionColumnColor;
@@ -15,5 +16,9 @@ $multiSelectionColumnColor: $scorpion;
     &:first-child {
         color: $multiSelectionMainColumnColor;
         padding-left: 0;
+    }
+
+    &.disabled {
+        color: $multiSelectionDisabledColumnColor;
     }
 }

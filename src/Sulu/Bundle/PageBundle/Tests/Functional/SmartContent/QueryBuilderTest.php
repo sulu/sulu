@@ -28,7 +28,7 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
-use Sulu\Component\Content\SmartContent\QueryBuilder as SmartContentQueryBuilder;
+use Sulu\Component\Content\SmartContent\QueryBuilder;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -36,11 +36,7 @@ use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @group functional
- * @group content
- */
-class SmartContentQueryBuilderTest extends SuluTestCase
+class QueryBuilderTest extends SuluTestCase
 {
     /**
      * @var ContentQueryExecutor
@@ -197,7 +193,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     {
         $documents = $this->propertiesProvider();
 
-        $builder = new SmartContentQueryBuilder(
+        $builder = new QueryBuilder(
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
@@ -286,7 +282,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     {
         list($news, $products, $nodes) = $this->datasourceProvider();
 
-        $builder = new SmartContentQueryBuilder(
+        $builder = new QueryBuilder(
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
@@ -320,7 +316,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
         list($news, $products, $nodes) = $this->datasourceProvider();
-        $builder = new SmartContentQueryBuilder(
+        $builder = new QueryBuilder(
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
@@ -388,7 +384,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
         $this->documentManager->flush();
 
-        $builder = new SmartContentQueryBuilder(
+        $builder = new QueryBuilder(
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
@@ -472,7 +468,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
         $this->documentManager->flush();
 
-        $builder = new SmartContentQueryBuilder(
+        $builder = new QueryBuilder(
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
@@ -484,6 +480,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 'dataSource' => $root->getIdentifier(),
                 'includeSubFolders' => true,
                 'audienceTargeting' => false,
+                'sortBy' => 'title',
             ],
         ]);
 
@@ -556,7 +553,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
         $this->documentManager->flush();
 
-        $builder = new SmartContentQueryBuilder(
+        $builder = new QueryBuilder(
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
@@ -573,9 +570,16 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         ]);
 
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertCount(2, $result);
-        $this->assertEquals('Family', $result[0]['title']);
-        $this->assertEquals('Single', $result[1]['title']);
+        $titles = array_map(
+            function($item) {
+                return $item['title'];
+            },
+            $result
+        );
+
+        $this->assertCount(2, $titles);
+        $this->assertContains('Family', $titles);
+        $this->assertContains('Single', $titles);
     }
 
     public function tagsProvider()
@@ -624,7 +628,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
         list($nodes, $t1, $t2, $t1t2) = $this->tagsProvider();
-        $builder = new SmartContentQueryBuilder(
+        $builder = new QueryBuilder(
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
@@ -670,7 +674,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
         list($nodes, $t1, $t2, $t1t2) = $this->tagsProvider();
-        $builder = new SmartContentQueryBuilder(
+        $builder = new QueryBuilder(
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
@@ -760,7 +764,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
         list($nodes, $t1, $t2, $t1t2) = $this->tagsProvider();
-        $builder = new SmartContentQueryBuilder(
+        $builder = new QueryBuilder(
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
@@ -860,7 +864,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
         $this->categoriesProvider();
-        $builder = new SmartContentQueryBuilder(
+        $builder = new QueryBuilder(
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
@@ -994,7 +998,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $root = $this->sessionManager->getContentNode('sulu_io');
         list($nodes) = $this->orderByProvider();
 
-        $builder = new SmartContentQueryBuilder(
+        $builder = new QueryBuilder(
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
@@ -1047,7 +1051,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $session->save();
         $session->refresh(false);
 
-        $builder = new SmartContentQueryBuilder(
+        $builder = new QueryBuilder(
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
@@ -1089,12 +1093,60 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->assertEquals('y', $result[3]['title']);
     }
 
+    public function testOrderByOrderWithIncludeSubFolders()
+    {
+        $root = $this->sessionManager->getContentNode('sulu_io');
+        list($news, $products, $nodes) = $this->datasourceProvider();
+        $builder = new QueryBuilder(
+            $this->structureManager,
+            $this->extensionManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
+        $builder->init(
+            [
+                'config' => [
+                    'dataSource' => $root->getIdentifier(),
+                    'orderBy' => [],
+                    'includeSubFolders' => true,
+                ],
+            ]
+        );
+
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+
+        $paths = array_map(
+            function($item) {
+                return $item['path'];
+            },
+            $result
+        );
+
+        $this->assertContains('/news', $paths);
+        $this->assertContains('/news/news-0', $paths);
+        $this->assertContains('/news/news-1', $paths);
+        $this->assertContains('/news/news-10', $paths);
+        $this->assertContains('/news/news-11', $paths);
+        $this->assertContains('/news/news-12', $paths);
+        $this->assertContains('/news/news-13', $paths);
+        $this->assertContains('/news/news-14', $paths);
+        $this->assertContains('/news/news-2', $paths);
+        $this->assertContains('/news/news-3', $paths);
+        $this->assertContains('/news/news-4', $paths);
+        $this->assertContains('/news/news-5', $paths);
+        $this->assertContains('/news/news-6', $paths);
+        $this->assertContains('/news/news-7', $paths);
+        $this->assertContains('/news/news-8', $paths);
+        $this->assertContains('/news/news-9', $paths);
+        $this->assertContains('/products', $paths);
+    }
+
     public function testExtension()
     {
         /** @var PageDocument[] $documents */
         $documents = $this->propertiesProvider();
 
-        $builder = new SmartContentQueryBuilder(
+        $builder = new QueryBuilder(
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
@@ -1125,7 +1177,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     {
         $nodes = $this->propertiesProvider();
 
-        $builder = new SmartContentQueryBuilder(
+        $builder = new QueryBuilder(
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
@@ -1147,7 +1199,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $nodes = $this->propertiesProvider();
         $uuids = array_keys($nodes);
 
-        $builder = new SmartContentQueryBuilder(
+        $builder = new QueryBuilder(
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,
@@ -1328,7 +1380,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     {
         $data = $this->shadowProvider();
 
-        $builder = new SmartContentQueryBuilder(
+        $builder = new QueryBuilder(
             $this->structureManager,
             $this->extensionManager,
             $this->sessionManager,

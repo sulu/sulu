@@ -3,6 +3,8 @@ import React from 'react';
 import {computed, observable, intercept, toJS, reaction} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import equal from 'fast-deep-equal';
+import {observer} from 'mobx-react';
+import FormInspector from '../FormInspector';
 import List from '../../../containers/List';
 import ListStore from '../../../containers/List/stores/ListStore';
 import MultiAutoComplete from '../../../containers/MultiAutoComplete';
@@ -10,16 +12,21 @@ import {translate} from '../../../utils/Translator';
 import MultiSelectionComponent from '../../MultiSelection';
 import userStore from '../../../stores/userStore';
 import type {FieldTypeProps} from '../../../types';
+import type {SchemaOption} from '../types';
 import selectionStyles from './selection.scss';
 
 type Props = FieldTypeProps<Array<string | number>>;
 
 const USER_SETTINGS_KEY = 'selection';
 
-export default class Selection extends React.Component<Props> {
+@observer
+class Selection extends React.Component<Props> {
     listStore: ?ListStore;
     changeListDisposer: ?() => *;
+    changeListOptionsDisposer: ?() => *;
     changeLocaleDisposer: ?() => *;
+
+    @observable requestOptions: {[string]: mixed};
 
     constructor(props: Props) {
         super(props);
@@ -35,11 +42,53 @@ export default class Selection extends React.Component<Props> {
             fieldTypeOptions: {
                 resource_key: resourceKey,
             },
+            formInspector,
+            schemaOptions: {
+                request_parameters: {
+                    value: requestParameters = [],
+                } = {},
+                resource_store_properties_to_request: {
+                    value: resourceStorePropertiesToRequest = [],
+                } = {},
+            },
         } = this.props;
 
         if (!resourceKey) {
             throw new Error('The selection field needs a "resource_key" option to work properly');
         }
+
+        if (!Array.isArray(requestParameters)) {
+            throw new Error('The "request_parameters" schemaOption must be an array!');
+        }
+
+        if (!Array.isArray(resourceStorePropertiesToRequest)) {
+            throw new Error('The "resource_store_properties_to_request" schemaOption must be an array!');
+        }
+
+        this.requestOptions = this.buildRequestOptions(
+            requestParameters,
+            resourceStorePropertiesToRequest,
+            formInspector
+        );
+
+        // update requestOptions observable if one of the "resource_store_properties_to_request" properties is changed
+        formInspector.addFinishFieldHandler((dataPath) => {
+            const observedDataPaths = resourceStorePropertiesToRequest.map((property) => {
+                return typeof property.value === 'string' ? '/' + property.value : '/' + property.name;
+            });
+
+            if (observedDataPaths.includes(dataPath)) {
+                const newRequestOptions = this.buildRequestOptions(
+                    requestParameters,
+                    resourceStorePropertiesToRequest,
+                    formInspector
+                );
+
+                if (!equal(this.requestOptions, newRequestOptions)) {
+                    this.requestOptions = newRequestOptions;
+                }
+            }
+        });
 
         if (this.type === 'list') {
             const {
@@ -58,7 +107,7 @@ export default class Selection extends React.Component<Props> {
                 listKey || resourceKey,
                 USER_SETTINGS_KEY,
                 {locale: this.locale, page: observable.box()},
-                {},
+                this.requestOptions,
                 undefined,
                 value
             );
@@ -66,6 +115,22 @@ export default class Selection extends React.Component<Props> {
             this.changeListDisposer = reaction(
                 () => (this.listStore ? this.listStore.selectionIds : []),
                 this.handleListSelectionChange
+            );
+
+            this.changeListOptionsDisposer = reaction(
+                () => this.requestOptions,
+                (requestOptions) => {
+                    const listStore = this.listStore;
+                    if (!listStore) {
+                        throw new Error('The ListStore has not been initialized! This is likely a bug.');
+                    }
+
+                    // reset liststore to reload whole tree instead of children of current active item
+                    listStore.reset();
+                    // set selected items as initialSelectionIds to expand them in case of a tree
+                    listStore.initialSelectionIds = listStore.selectionIds;
+                    listStore.options = {...listStore.options, ...requestOptions};
+                }
             );
 
             this.changeLocaleDisposer = intercept(this.locale, '', (change) => {
@@ -81,6 +146,10 @@ export default class Selection extends React.Component<Props> {
     componentWillUnmount() {
         if (this.changeListDisposer) {
             this.changeListDisposer();
+        }
+
+        if (this.changeListOptionsDisposer) {
+            this.changeListOptionsDisposer();
         }
 
         if (this.changeLocaleDisposer) {
@@ -117,6 +186,26 @@ export default class Selection extends React.Component<Props> {
         }
 
         return type;
+    }
+
+    buildRequestOptions(
+        requestParameters: Array<SchemaOption>,
+        resourceStorePropertiesToRequest: Array<SchemaOption>,
+        formInspector: FormInspector
+    ) {
+        const requestOptions = {};
+
+        requestParameters.forEach((parameter) => {
+            requestOptions[parameter.name] = parameter.value;
+        });
+
+        resourceStorePropertiesToRequest.forEach((propertyToRequest) => {
+            const {name: parameterName, value: propertyName} = propertyToRequest;
+            const propertyPath = typeof propertyName === 'string' ? propertyName : parameterName;
+            requestOptions[parameterName] = toJS(formInspector.getValueByPath('/' + propertyPath));
+        });
+
+        return requestOptions;
     }
 
     render() {
@@ -156,6 +245,12 @@ export default class Selection extends React.Component<Props> {
                 types: {
                     value: types,
                 } = {},
+                item_disabled_condition: {
+                    value: itemDisabledCondition,
+                } = {},
+                allow_deselect_for_disabled_items: {
+                    value: allowDeselectForDisabledItems = true,
+                } = {},
             },
             value,
         } = this.props;
@@ -164,22 +259,32 @@ export default class Selection extends React.Component<Props> {
             throw new Error('The "types" schema option must be a string if given!');
         }
 
-        const options = {};
-        if (types) {
-            options.types = types;
+        if (itemDisabledCondition !== undefined && typeof itemDisabledCondition !== 'string') {
+            throw new Error('The "item_disabled_condition" schema option must be a string if given!');
+        }
+
+        if (allowDeselectForDisabledItems !== undefined && typeof allowDeselectForDisabledItems !== 'boolean') {
+            throw new Error('The "allow_deselect_for_disabled_items" schema option must be a boolean if given!');
         }
 
         if (!adapter) {
             throw new Error('The selection field needs a "adapter" option to work properly');
         }
 
+        const options = {...this.requestOptions};
+        if (types) {
+            options.types = types;
+        }
+
         return (
             <MultiSelectionComponent
                 adapter={adapter}
+                allowDeselectForDisabledItems={!!allowDeselectForDisabledItems}
                 disabled={!!disabled}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}
                 displayProperties={displayProperties}
                 icon={icon}
+                itemDisabledCondition={itemDisabledCondition}
                 label={translate(label, {count: value ? value.length : 0})}
                 listKey={listKey || resourceKey}
                 locale={this.locale}
@@ -263,15 +368,30 @@ export default class Selection extends React.Component<Props> {
                     },
                 },
             },
+            schemaOptions: {
+                item_disabled_condition: {
+                    value: itemDisabledCondition,
+                } = {},
+            },
         } = this.props;
 
         if (!adapter) {
             throw new Error('The selection field needs a "adapter" option for the list type to work properly');
         }
 
+        if (itemDisabledCondition !== undefined && typeof itemDisabledCondition !== 'string') {
+            throw new Error('The "item_disabled_condition" schema option must be a string if given!');
+        }
+
         return (
             <div className={selectionStyles.list}>
-                <List adapters={[adapter]} disabled={!!disabled} searchable={false} store={this.listStore} />
+                <List
+                    adapters={[adapter]}
+                    disabled={!!disabled}
+                    itemDisabledCondition={itemDisabledCondition}
+                    searchable={false}
+                    store={this.listStore}
+                />
             </div>
         );
     }
@@ -295,3 +415,5 @@ export default class Selection extends React.Component<Props> {
         }
     };
 }
+
+export default Selection;

@@ -44,6 +44,28 @@ test('After loading the collection info should be set', (done) => {
     );
 });
 
+test.each([true, false])('Should have a locked value of %s', (locked, done) => {
+    ResourceRequester.get.mockReturnValue(Promise.resolve({
+        id: 2,
+        title: 'test',
+        locked,
+    }));
+
+    const locale = observable.box('en');
+    const collectionStore = new CollectionStore(1, locale);
+
+    expect(collectionStore.locked).toEqual(false);
+
+    when(
+        () => !collectionStore.loading,
+        () => {
+            expect(collectionStore.locked).toEqual(locked);
+            collectionStore.destroy();
+            done();
+        }
+    );
+});
+
 test('Should return an empty permission object if still loading', () => {
     const collectionStore = new CollectionStore(1, observable.box('en'));
 

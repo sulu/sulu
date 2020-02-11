@@ -17,6 +17,7 @@ use Prophecy\Argument;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
+use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistry;
 use Sulu\Bundle\PreviewBundle\Preview\Preview;
 use Sulu\Bundle\PreviewBundle\Preview\PreviewInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
@@ -76,8 +77,9 @@ class PreviewTest extends TestCase
         $this->object = $this->prophesize(\stdClass::class);
 
         $providers = [$this->providerKey => $this->provider->reveal()];
+        $objectProviderRegistry = new PreviewObjectProviderRegistry($providers);
 
-        $this->preview = new Preview($providers, $this->cache->reveal(), $this->renderer->reveal());
+        $this->preview = new Preview($objectProviderRegistry, $this->cache->reveal(), $this->renderer->reveal());
     }
 
     public function testStart()
@@ -395,6 +397,42 @@ class PreviewTest extends TestCase
             '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
             $result
         );
+    }
+
+    public function testUpdateContextNoContentReplacer()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('The "{% block content %}" could not be found in the twig template');
+
+        $data = ['title' => 'Sulu', 'template' => 'default'];
+        $dataJson = json_encode($data);
+
+        $context = ['template' => 'expert'];
+
+        $token = md5(sprintf('%s.%s.%s.%s', $this->providerKey, 1, $this->locale, 1));
+        $cacheData = [
+            'id' => '1',
+            'locale' => $this->locale,
+            'providerKey' => $this->providerKey,
+            'object' => $dataJson,
+            'objectClass' => get_class($this->object->reveal()),
+            'userId' => 1,
+            'html' => '<html><body><div id="content"></div></body></html>',
+        ];
+
+        $newObject = $this->prophesize(\stdClass::class);
+
+        $this->cache->contains($token)->willReturn(true);
+        $this->cache->fetch($token)->willReturn(json_encode($cacheData));
+
+        $this->provider->deserialize($dataJson, $cacheData['objectClass'])->willReturn($this->object->reveal());
+        $this->provider->setContext($this->object->reveal(), $this->locale, $context)->willReturn($newObject->reveal());
+
+        $this->renderer->render($newObject->reveal(), 1, $this->webspaceKey, $this->locale, false, null)->willReturn(
+            '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>'
+        );
+
+        $this->preview->updateContext($token, $this->webspaceKey, $context, null);
     }
 
     public function testUpdateContextNoContext()

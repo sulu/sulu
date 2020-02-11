@@ -21,6 +21,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
+use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TagBundle\Entity\Tag;
@@ -99,6 +100,16 @@ class MediaControllerTest extends SuluTestCase
      * @var string
      */
     protected $mediaDefaultDescription = 'description';
+
+    /**
+     * @var string
+     */
+    protected $mediaDefaultCopyright = 'copyright';
+
+    /**
+     * @var string
+     */
+    protected $mediaDefaultCredits = 'credits';
 
     protected function setUp(): void
     {
@@ -287,10 +298,23 @@ class MediaControllerTest extends SuluTestCase
         $fileVersionMeta->setLocale($locale);
         $fileVersionMeta->setTitle($name);
         $fileVersionMeta->setDescription($this->mediaDefaultDescription);
+        $fileVersionMeta->setCredits($this->mediaDefaultCredits);
+        $fileVersionMeta->setCopyright($this->mediaDefaultCopyright);
         $fileVersionMeta->setFileVersion($fileVersion);
 
         $fileVersion->addMeta($fileVersionMeta);
         $fileVersion->setDefaultMeta($fileVersionMeta);
+
+        // create format options
+        $formatOptions = new FormatOptions();
+        $formatOptions->setFileVersion($fileVersion);
+        $formatOptions->setFormatKey('format-key-1');
+        $formatOptions->setCropX(50);
+        $formatOptions->setCropY(50);
+        $formatOptions->setCropWidth(100);
+        $formatOptions->setCropHeight(100);
+
+        $fileVersion->addFormatOptions($formatOptions);
 
         $file->addFileVersion($fileVersion);
 
@@ -1190,6 +1214,27 @@ class MediaControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(400, $client->getResponse());
+    }
+
+    public function testPutRemovingMetadata()
+    {
+        $media = $this->createMedia('image', 'de');
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'PUT',
+            '/api/media/' . $media->getId() . '?locale=de',
+            [
+                'description' => null,
+                'copyright' => null,
+                'credits' => null,
+            ]
+        );
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertSame(null, $response['description']);
+        $this->assertSame(null, $response['copyright']);
+        $this->assertSame(null, $response['credits']);
     }
 
     public function testPutRemovingTargetGroups()

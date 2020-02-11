@@ -46,7 +46,7 @@ test('Do not display if open is set to false', () => {
             presentations={{}}
             sections={[]}
             smartContentStore={smartContentStore}
-            sortings={{}}
+            sortings={[]}
             title="Test"
         />
     );
@@ -85,7 +85,7 @@ test('Pass rootKey for categories to options for category list', () => {
             presentations={{}}
             sections={['categories']}
             smartContentStore={smartContentStore}
-            sortings={{}}
+            sortings={[]}
             title="Test"
         />
     );
@@ -125,7 +125,7 @@ test('Render with ListOverlays if smartContentStore is loaded', () => {
             presentations={{}}
             sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
             smartContentStore={smartContentStore}
-            sortings={{}}
+            sortings={[]}
             title="Test"
         />
     );
@@ -165,7 +165,7 @@ test('Render without ListOverlays if smartContentStore is not loaded', () => {
             presentations={{}}
             sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
             smartContentStore={smartContentStore}
-            sortings={{}}
+            sortings={[]}
             title="Test"
         />
     );
@@ -202,7 +202,7 @@ test('Render with all fields', () => {
             presentations={{}}
             sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
             smartContentStore={smartContentStore}
-            sortings={{}}
+            sortings={[]}
             title="Test"
         />
     );
@@ -238,7 +238,7 @@ test('Render with no fields', () => {
             presentations={{}}
             sections={[]}
             smartContentStore={smartContentStore}
-            sortings={{}}
+            sortings={[]}
             title="Test"
         />
     );
@@ -278,10 +278,10 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
             }}
             sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
             smartContentStore={smartContentStore}
-            sortings={{
-                title: 'Title',
-                changed: 'Changed',
-            }}
+            sortings={[
+                {name: 'title', value: 'Title'},
+                {name: 'changed', value: 'Changed'},
+            ]}
             title="Test"
         />
     );
@@ -417,10 +417,10 @@ test('Prefill all fields with correct values', () => {
             }}
             sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
             smartContentStore={smartContentStore}
-            sortings={{
-                title: 'Title',
-                created: 'Created',
-            }}
+            sortings={[
+                {name: 'title', value: 'Title'},
+                {name: 'created', value: 'Created'},
+            ]}
             title="Test"
         />
     );
@@ -494,10 +494,10 @@ test('Reset all fields when reset action is clicked', () => {
             }}
             sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
             smartContentStore={smartContentStore}
-            sortings={{
-                title: 'Title',
-                created: 'Created',
-            }}
+            sortings={[
+                {name: 'title', value: 'Title'},
+                {name: 'created', value: 'Created'},
+            ]}
             title="Test"
         />
     );

@@ -15,9 +15,7 @@ jest.mock('sulu-admin-bundle/containers/Form/stores/metadataStore', () => ({
 }));
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
-    get: jest.fn().mockReturnValue({
-        then: jest.fn(),
-    }),
+    get: jest.fn().mockReturnValue(Promise.resolve({})),
 }));
 
 test('Pass ResourceStore from FormInspector to MediaVersionUpload component', () => {

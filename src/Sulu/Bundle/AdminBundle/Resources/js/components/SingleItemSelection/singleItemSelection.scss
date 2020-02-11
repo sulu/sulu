@@ -64,9 +64,5 @@ $singleItemSelectionDisabledColor: $gray;
     &.disabled {
         background-color: $singleItemSelectionDisabledBackgroundColor;
         color: $singleItemSelectionDisabledColor;
-
-        .remove-button {
-            display: none;
-        }
     }
 }

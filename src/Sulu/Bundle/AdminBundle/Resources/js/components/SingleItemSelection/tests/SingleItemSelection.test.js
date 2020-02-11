@@ -54,7 +54,49 @@ test('Render in disabled state', () => {
     };
 
     expect(render(
-        <SingleItemSelection disabled={true} leftButton={leftButton}>Test Item</SingleItemSelection>
+        <SingleItemSelection
+            disabled={true}
+            leftButton={leftButton}
+            onRemove={jest.fn()}
+        >
+            Test Item
+        </SingleItemSelection>
+    )).toMatchSnapshot();
+});
+
+test('Render in item-disabled state without remove button', () => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
+
+    expect(render(
+        <SingleItemSelection
+            allowRemoveWhileItemDisabled={false}
+            itemDisabled={true}
+            leftButton={leftButton}
+            onRemove={jest.fn()}
+        >
+            Test Item
+        </SingleItemSelection>
+    )).toMatchSnapshot();
+});
+
+test('Render in item-disabled state with remove button', () => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
+
+    expect(render(
+        <SingleItemSelection
+            allowRemoveWhileItemDisabled={true}
+            itemDisabled={true}
+            leftButton={leftButton}
+            onRemove={jest.fn()}
+        >
+            Test Item
+        </SingleItemSelection>
     )).toMatchSnapshot();
 });
 

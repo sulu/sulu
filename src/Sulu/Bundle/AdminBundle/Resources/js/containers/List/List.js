@@ -10,8 +10,8 @@ import jexl from 'jexl';
 import ArrowMenu from '../../components/ArrowMenu';
 import Button from '../../components/Button';
 import Dialog from '../../components/Dialog';
-import Icon from '../../components/Icon';
 import Loader from '../../components/Loader';
+import PermissionHint from '../../components/PermissionHint';
 import userStore from '../../stores/userStore';
 import SingleListOverlay from '../SingleListOverlay';
 import {translate} from '../../utils/Translator';
@@ -115,7 +115,7 @@ class List extends React.Component<Props> {
         } = this.props;
 
         const disabledItems = itemDisabledCondition
-            ? store.data.filter((item) => jexl.evalSync(itemDisabledCondition, item))
+            ? store.visibleItems.filter((item) => jexl.evalSync(itemDisabledCondition, item))
             : [];
 
         // TODO do not hardcode "id", but use some kind of metadata instead
@@ -413,7 +413,13 @@ class List extends React.Component<Props> {
 
     handleAllSelectionChange = (selected?: boolean) => {
         const {store} = this.props;
-        selected ? store.selectVisibleItems() : store.deselectVisibleItems();
+
+        store.visibleItems.forEach((item) => {
+            // TODO do not hardcode "id", but use some kind of metadata instead
+            if (!this.disabledIds.includes(item.id)) {
+                selected ? store.select(item) : store.deselect(item);
+            }
+        });
     };
 
     handleAdapterChange = (adapter: string) => {
@@ -524,14 +530,7 @@ class List extends React.Component<Props> {
         const searchable = this.props.searchable && Adapter.searchable;
 
         if (store.forbidden) {
-            return (
-                <div className={listStyles.permissionHint}>
-                    <div className={listStyles.permissionIcon}>
-                        <Icon name="su-lock" />
-                    </div>
-                    {translate('sulu_admin.no_permissions')}
-                </div>
-            );
+            return <PermissionHint />;
         }
 
         return (

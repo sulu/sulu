@@ -13,7 +13,6 @@ namespace Sulu\Bundle\WebsiteBundle\Command;
 
 use Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapDumperInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -33,11 +32,6 @@ class DumpSitemapCommand extends Command
      * @var XmlSitemapDumperInterface
      */
     private $sitemapDumper;
-
-    /**
-     * @var ReplacerInterface
-     */
-    private $urlReplacer;
 
     /**
      * @var Filesystem
@@ -72,7 +66,6 @@ class DumpSitemapCommand extends Command
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
         XmlSitemapDumperInterface $sitemapDumper,
-        ReplacerInterface $urlReplacer,
         Filesystem $filesystem,
         string $baseDirectory,
         string $environment,
@@ -83,7 +76,6 @@ class DumpSitemapCommand extends Command
 
         $this->webspaceManager = $webspaceManager;
         $this->sitemapDumper = $sitemapDumper;
-        $this->urlReplacer = $urlReplacer;
         $this->filesystem = $filesystem;
         $this->environment = $environment;
         $this->baseDirectory = $baseDirectory;
@@ -116,10 +108,6 @@ class DumpSitemapCommand extends Command
         $hosts = [];
         foreach ($portalInformations as $portalInformation) {
             $portalUrl = $portalInformation->getUrl();
-            if ($this->urlReplacer->hasHostReplacer($portalUrl)) {
-                $portalUrl = $this->urlReplacer->replaceHost($portalUrl, $this->defaultHost);
-            }
-
             $urlParts = parse_url($this->scheme . '://' . $portalUrl);
             $hosts[] = $urlParts['host'];
         }

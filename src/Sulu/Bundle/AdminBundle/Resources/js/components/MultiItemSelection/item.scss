@@ -1,11 +1,26 @@
 @import '../../containers/Application/colors.scss';
 
 $itemBackgroundColor: $white;
+$disabledItemBackgroundColor: $wildSand;
+
+$itemColor: $black;
+$disabledItemColor: $gray;
 
 .item {
     display: flex;
     justify-content: space-between;
+    color: $itemColor;
     background-color: $itemBackgroundColor;
+
+    &.disabled {
+        color: $disabledItemColor;
+        background-color: $disabledItemBackgroundColor;
+
+        .drag-handle,
+        .content {
+            pointer-events: none;
+        }
+    }
 }
 
 .content {

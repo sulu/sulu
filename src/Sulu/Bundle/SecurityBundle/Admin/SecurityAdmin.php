@@ -39,6 +39,14 @@ class SecurityAdmin extends Admin
     const EDIT_FORM_VIEW = 'sulu_security.role_edit_form';
 
     /**
+     * Should be called after ContactAdmin.
+     */
+    public static function getPriority(): int
+    {
+        return -1024;
+    }
+
+    /**
      * @var ViewBuilderFactoryInterface
      */
     private $viewBuilderFactory;
@@ -180,7 +188,9 @@ class SecurityAdmin extends Admin
             );
         }
 
-        if ($this->securityChecker->hasPermission(static::USER_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
+        if ($viewCollection->has(ContactAdmin::CONTACT_EDIT_FORM_VIEW)
+            && $this->securityChecker->hasPermission(static::USER_SECURITY_CONTEXT, PermissionTypes::EDIT)
+        ) {
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createFormViewBuilder('sulu_security.form.permissions', '/permissions')

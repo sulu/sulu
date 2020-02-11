@@ -96,6 +96,12 @@ export default class SingleSelection extends React.Component<Props>
                 form_options_to_list_options: {
                     value: formOptionsToListOptions,
                 } = {},
+                item_disabled_condition: {
+                    value: itemDisabledCondition,
+                } = {},
+                allow_deselect_for_disabled_items: {
+                    value: allowDeselectForDisabledItems = true,
+                } = {},
                 types: {
                     value: types,
                 } = {},
@@ -112,6 +118,14 @@ export default class SingleSelection extends React.Component<Props>
 
         if (types !== undefined && typeof types !== 'string') {
             throw new Error('The "types" schema option must be a string if given!');
+        }
+
+        if (itemDisabledCondition !== undefined && typeof itemDisabledCondition !== 'string') {
+            throw new Error('The "item_disabled_condition" schema option must be a string if given!');
+        }
+
+        if (allowDeselectForDisabledItems !== undefined && typeof allowDeselectForDisabledItems !== 'boolean') {
+            throw new Error('The "allow_deselect_for_disabled_items" schema option must be a boolean if given!');
         }
 
         if (formOptionsToListOptions && !Array.isArray(formOptionsToListOptions)) {
@@ -145,12 +159,14 @@ export default class SingleSelection extends React.Component<Props>
         return (
             <SingleSelectionComponent
                 adapter={adapter}
+                allowDeselectForDisabledItems={!!allowDeselectForDisabledItems}
                 detailOptions={detailOptions}
                 disabled={!!disabled}
                 disabledIds={resourceKey === formInspector.resourceKey && formInspector.id ? [formInspector.id] : []}
                 displayProperties={displayProperties}
                 emptyText={translate(emptyText)}
                 icon={icon}
+                itemDisabledCondition={itemDisabledCondition}
                 listKey={listKey || resourceKey}
                 listOptions={listOptions}
                 locale={this.locale}

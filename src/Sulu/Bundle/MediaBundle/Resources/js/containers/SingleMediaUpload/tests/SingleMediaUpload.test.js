@@ -163,7 +163,8 @@ test('Call create with passed collectionId if id is not given and drop event occ
 });
 
 test('Download the image when the download button is clicked', () => {
-    window.location.assign = jest.fn();
+    delete window.location;
+    window.location = {assign: jest.fn()};
 
     const mediaUploadStore = new MediaUploadStore(
         {id: 1, mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: 'test.jpg'},

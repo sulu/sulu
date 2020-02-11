@@ -24,7 +24,7 @@ abstract class PreviewRendererException extends PreviewException
     private $object;
 
     /**
-     * @var string
+     * @var int|string
      */
     private $id;
 
@@ -42,7 +42,7 @@ abstract class PreviewRendererException extends PreviewException
      * @param string $message
      * @param int $code
      * @param mixed $object
-     * @param string $id
+     * @param int|string $id
      * @param string $webspaceKey
      * @param string $locale
      * @param \Exception $previous
