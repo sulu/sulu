@@ -524,15 +524,15 @@ class MediaManager implements MediaManagerInterface
     {
         foreach ($data as $attribute => $value) {
             if ($value ||
-                ('tags' === $attribute && null !== $value) ||
-                ('size' === $attribute && null !== $value) ||
+                ('tags' === $attribute) ||
+                ('size' === $attribute) ||
                 ('description' === $attribute) ||
                 ('copyright' === $attribute) ||
                 ('credits' === $attribute) ||
-                ('categories' === $attribute && null !== $value) ||
-                ('targetGroups' === $attribute && null !== $value) ||
-                ('focusPointX' === $attribute && null !== $value) ||
-                ('focusPointY' === $attribute && null !== $value)
+                ('categories' === $attribute) ||
+                ('targetGroups' === $attribute) ||
+                ('focusPointX' === $attribute) ||
+                ('focusPointY' === $attribute)
             ) {
                 switch ($attribute) {
                     case 'size':
