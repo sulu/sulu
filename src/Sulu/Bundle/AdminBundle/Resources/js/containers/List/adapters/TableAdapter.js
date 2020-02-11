@@ -19,6 +19,7 @@ class TableAdapter extends AbstractTableAdapter {
     getButtons = (item: ?Object) => {
         const {
             actions,
+            itemActions,
             onItemClick,
         } = this.props;
 
@@ -37,6 +38,10 @@ class TableAdapter extends AbstractTableAdapter {
                 icon: editPermission ? 'su-pen' : 'su-eye',
                 onClick: onItemClick,
             });
+        }
+
+        if (itemActions) {
+            buttons.push(...itemActions.map((action) => action.getItemActionConfig(item)));
         }
 
         if (actions) {
