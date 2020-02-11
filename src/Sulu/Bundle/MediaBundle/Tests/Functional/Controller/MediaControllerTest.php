@@ -101,6 +101,16 @@ class MediaControllerTest extends SuluTestCase
      */
     protected $mediaDefaultDescription = 'description';
 
+    /**
+     * @var string
+     */
+    protected $mediaDefaultCopyright = 'copyright';
+
+    /**
+     * @var string
+     */
+    protected $mediaDefaultCredits = 'credits';
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -288,6 +298,8 @@ class MediaControllerTest extends SuluTestCase
         $fileVersionMeta->setLocale($locale);
         $fileVersionMeta->setTitle($name);
         $fileVersionMeta->setDescription($this->mediaDefaultDescription);
+        $fileVersionMeta->setCredits($this->mediaDefaultCredits);
+        $fileVersionMeta->setCopyright($this->mediaDefaultCopyright);
         $fileVersionMeta->setFileVersion($fileVersion);
 
         $fileVersion->addMeta($fileVersionMeta);
@@ -1202,6 +1214,27 @@ class MediaControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(400, $client->getResponse());
+    }
+
+    public function testPutRemovingMetadata()
+    {
+        $media = $this->createMedia('image', 'de');
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'PUT',
+            '/api/media/' . $media->getId() . '?locale=de',
+            [
+                'description' => null,
+                'copyright' => null,
+                'credits' => null,
+            ]
+        );
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertSame(null, $response['description']);
+        $this->assertSame(null, $response['copyright']);
+        $this->assertSame(null, $response['credits']);
     }
 
     public function testPutRemovingTargetGroups()

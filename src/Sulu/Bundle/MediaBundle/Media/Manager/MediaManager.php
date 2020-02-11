@@ -396,12 +396,12 @@ class MediaManager implements MediaManagerInterface
             );
         } else {
             // not setable in update
-            $data['name'] = null;
-            $data['size'] = null;
-            $data['type'] = null;
-            $data['version'] = null;
-            $data['mimeType'] = null;
-            $data['storageOptions'] = null;
+            unset($data['name']);
+            unset($data['size']);
+            unset($data['type']);
+            unset($data['version']);
+            unset($data['mimeType']);
+            unset($data['storageOptions']);
             $data['changed'] = date('Y-m-d H:i:s');
 
             if ((isset($data['focusPointX']) && $data['focusPointX'] != $currentFileVersion->getFocusPointX())
@@ -524,15 +524,15 @@ class MediaManager implements MediaManagerInterface
     {
         foreach ($data as $attribute => $value) {
             if ($value ||
-                ('tags' === $attribute && null !== $value) ||
-                ('size' === $attribute && null !== $value) ||
-                ('description' === $attribute && null !== $value) ||
-                ('copyright' === $attribute && null !== $value) ||
-                ('credits' === $attribute && null !== $value) ||
-                ('categories' === $attribute && null !== $value) ||
-                ('targetGroups' === $attribute && null !== $value) ||
-                ('focusPointX' === $attribute && null !== $value) ||
-                ('focusPointY' === $attribute && null !== $value)
+                'tags' === $attribute ||
+                'size' === $attribute ||
+                'description' === $attribute ||
+                'copyright' === $attribute ||
+                'credits' === $attribute ||
+                'categories' === $attribute ||
+                'targetGroups' === $attribute ||
+                'focusPointX' === $attribute ||
+                'focusPointY' === $attribute
             ) {
                 switch ($attribute) {
                     case 'size':
