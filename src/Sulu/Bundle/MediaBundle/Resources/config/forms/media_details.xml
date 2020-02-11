@@ -39,6 +39,12 @@
                                 <title>sulu_media.copyright</title>
                             </meta>
                         </property>
+
+                        <property name="credits" type="text_area">
+                            <meta>
+                                <title>sulu_media.credits</title>
+                            </meta>
+                        </property>
                     </properties>
                 </section>
                 <section name="taxonomies">

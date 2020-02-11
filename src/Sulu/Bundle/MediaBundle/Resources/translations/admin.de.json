@@ -32,6 +32,7 @@
     "sulu_media.mime_type": "MIME-Typ",
     "sulu_media.license": "Lizenz",
     "sulu_media.copyright": "Copyright Informationen",
+    "sulu_media.credits": "Credits",
     "sulu_media.taxonomies": "Taxonomien",
     "sulu_media.history": "Verlauf",
     "sulu_media.formats": "Formate",
