@@ -21,6 +21,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
+use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TagBundle\Entity\Tag;
@@ -291,6 +292,17 @@ class MediaControllerTest extends SuluTestCase
 
         $fileVersion->addMeta($fileVersionMeta);
         $fileVersion->setDefaultMeta($fileVersionMeta);
+
+        // create format options
+        $formatOptions = new FormatOptions();
+        $formatOptions->setFileVersion($fileVersion);
+        $formatOptions->setFormatKey('format-key-1');
+        $formatOptions->setCropX(50);
+        $formatOptions->setCropY(50);
+        $formatOptions->setCropWidth(100);
+        $formatOptions->setCropHeight(100);
+
+        $fileVersion->addFormatOptions($formatOptions);
 
         $file->addFileVersion($fileVersion);
 
