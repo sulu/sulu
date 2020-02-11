@@ -527,8 +527,8 @@ class MediaManager implements MediaManagerInterface
                 ('tags' === $attribute && null !== $value) ||
                 ('size' === $attribute && null !== $value) ||
                 ('description' === $attribute) ||
-                ('copyright' === $attribute) ||
-                ('credits' === $attribute && null !== $value) ||
+                ('copyright' === $attribute ) ||
+                ('credits' === $attribute) ||
                 ('categories' === $attribute && null !== $value) ||
                 ('targetGroups' === $attribute && null !== $value) ||
                 ('focusPointX' === $attribute && null !== $value) ||
