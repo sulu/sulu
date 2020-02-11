@@ -526,8 +526,8 @@ class MediaManager implements MediaManagerInterface
             if ($value ||
                 ('tags' === $attribute && null !== $value) ||
                 ('size' === $attribute && null !== $value) ||
-                ('description' === $attribute && null !== $value) ||
-                ('copyright' === $attribute && null !== $value) ||
+                ('description' === $attribute) ||
+                ('copyright' === $attribute) ||
                 ('credits' === $attribute && null !== $value) ||
                 ('categories' === $attribute && null !== $value) ||
                 ('targetGroups' === $attribute && null !== $value) ||
