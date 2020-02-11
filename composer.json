@@ -124,7 +124,8 @@
         "symfony/var-dumper": "^4.3",
         "symfony/web-profiler-bundle": "^4.3",
         "symfony/web-server-bundle": "^4.3",
-        "handcraftedinthealps/zendsearch": "^2.0"
+        "handcraftedinthealps/zendsearch": "^2.0",
+        "ext-intl": "*"
     },
     "conflict": {
         "doctrine/dbal": "2.7.0",
