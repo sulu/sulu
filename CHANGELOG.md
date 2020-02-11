@@ -1,7 +1,8 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-release/1.6
+* 1.6.31 (2020-02-11)
+    * BUGFIX      #5026  [Content]                 Add reserved property names
     * BUGFIX      #4998  [ContentBundle]           Fix assigning more than 10 teasers when using elasticsearch
 
 * 1.6.30 (2020-01-13)
