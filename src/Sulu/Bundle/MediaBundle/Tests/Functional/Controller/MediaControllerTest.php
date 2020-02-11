@@ -100,6 +100,16 @@ class MediaControllerTest extends SuluTestCase
      */
     protected $mediaDefaultDescription = 'description';
 
+    /**
+     * @var string
+     */
+    protected $mediaDefaultCopyright = 'copyright';
+
+    /**
+     * @var string
+     */
+    protected $mediaDefaultCredits = 'credits';
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -287,6 +297,8 @@ class MediaControllerTest extends SuluTestCase
         $fileVersionMeta->setLocale($locale);
         $fileVersionMeta->setTitle($name);
         $fileVersionMeta->setDescription($this->mediaDefaultDescription);
+        $fileVersionMeta->setCredits($this->mediaDefaultCredits);
+        $fileVersionMeta->setCopyright($this->mediaDefaultCopyright);
         $fileVersionMeta->setFileVersion($fileVersion);
 
         $fileVersion->addMeta($fileVersionMeta);
@@ -669,7 +681,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertNotEmpty($response);
 
         $medias = array_map(
-            function ($item) {
+            function($item) {
                 return [
                     'id' => $item->id,
                     'name' => $item->name,
@@ -745,7 +757,7 @@ class MediaControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $medias = array_map(
-            function ($item) {
+            function($item) {
                 return ['id' => $item->id, 'name' => $item->name];
             },
             $response->_embedded->media
@@ -778,7 +790,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertCount(2, $response['_embedded']['media']);
 
         $titles = array_map(
-            function ($media) {
+            function($media) {
                 return $media['name'];
             },
             $response['_embedded']['media']
@@ -1070,7 +1082,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($media->getId(), $response->id);
         $this->assertEquals($this->collection->getId(), $response->collection);
         $this->assertEquals(2, $response->version);
-        $this->assertCount(2, (array)$response->versions);
+        $this->assertCount(2, (array) $response->versions);
         $this->assertNotEquals($response->versions->{'2'}->created, $response->versions->{'1'}->created);
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('New Image Title', $response->title);
@@ -1114,7 +1126,7 @@ class MediaControllerTest extends SuluTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertCount(2, (array)$response->versions);
+        $this->assertCount(2, (array) $response->versions);
 
         $client->request(
             'DELETE',
@@ -1130,7 +1142,7 @@ class MediaControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertCount(1, (array)$response->versions);
+        $this->assertCount(1, (array) $response->versions);
         $this->assertEquals(2, $response->version);
     }
 
@@ -1182,7 +1194,7 @@ class MediaControllerTest extends SuluTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertCount(2, (array)$response->versions);
+        $this->assertCount(2, (array) $response->versions);
 
         $client->request(
             'DELETE',
@@ -1192,41 +1204,9 @@ class MediaControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $client->getResponse());
     }
 
-    public function testPutRemovingCopyright()
+    public function testPutRemovingMetadata()
     {
         $media = $this->createMedia('image', 'de');
-
-        $fileVersionMetadata = $media->getFiles()[0]->getFileVersions()[0]->getMeta()[0];
-        $fileVersionMetadata->setCopyright('Copyright by Test');
-
-        $this->em->persist($media);
-        $this->em->persist($fileVersionMetadata);
-        $this->em->flush();
-
-        $client = $this->createAuthenticatedClient();
-        $client->request(
-            'PUT',
-            '/api/media/' . $media->getId() . '?locale=de',
-            [
-                'copyright' => null,
-            ]
-        );
-
-        $response = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertSame(null, $response['copyright']);
-    }
-
-    public function testPutRemovingDescription()
-    {
-        $media = $this->createMedia('image', 'de');
-
-        $fileVersionMetadata = $media->getFiles()[0]->getFileVersions()[0]->getMeta()[0];
-        $fileVersionMetadata->setDescription('Test description');
-
-        $this->em->persist($media);
-        $this->em->persist($fileVersionMetadata);
-        $this->em->flush();
 
         $client = $this->createAuthenticatedClient();
         $client->request(
@@ -1234,36 +1214,14 @@ class MediaControllerTest extends SuluTestCase
             '/api/media/' . $media->getId() . '?locale=de',
             [
                 'description' => null,
-            ]
-        );
-
-        $response = json_decode($client->getResponse()->getContent(), true);
-
-        $this->assertSame(null, $response['description']);
-    }
-
-    public function testPutRemovingCredits()
-    {
-        $media = $this->createMedia('image', 'de');
-
-        $fileVersionMetadata = $media->getFiles()[0]->getFileVersions()[0]->getMeta()[0];
-        $fileVersionMetadata->setCredits('Test Credits');
-
-        $this->em->persist($media);
-        $this->em->persist($fileVersionMetadata);
-        $this->em->flush();
-
-        $client = $this->createAuthenticatedClient();
-        $client->request(
-            'PUT',
-            '/api/media/' . $media->getId() . '?locale=de',
-            [
+                'copyright' => null,
                 'credits' => null,
             ]
         );
-
         $response = json_decode($client->getResponse()->getContent(), true);
 
+        $this->assertSame(null, $response['description']);
+        $this->assertSame(null, $response['copyright']);
         $this->assertSame(null, $response['credits']);
     }
 
@@ -1338,7 +1296,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($media->getId(), $response->id);
         $this->assertEquals($this->collection->getId(), $response->collection);
         $this->assertEquals(1, $response->version);
-        $this->assertCount(1, (array)$response->versions);
+        $this->assertCount(1, (array) $response->versions);
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('Update Title', $response->title);
         $this->assertEquals('Update Description', $response->description);
@@ -1418,7 +1376,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($this->mediaDefaultDescription, $response->description);
         $this->assertEquals($this->collection->getId(), $response->collection);
         $this->assertEquals(2, $response->version);
-        $this->assertCount(2, (array)$response->versions);
+        $this->assertCount(2, (array) $response->versions);
         $this->assertNotEmpty($response->url);
         $this->assertNotEmpty($response->thumbnails);
     }
