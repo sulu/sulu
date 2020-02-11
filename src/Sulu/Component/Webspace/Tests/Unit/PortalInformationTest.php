@@ -33,9 +33,9 @@ class PortalInformationTest extends TestCase
     public function provideUrl()
     {
         return [
-            ['sulu.lo', 'sulu.lo', ''],
-            ['sulu.io/', 'sulu.io', '/'],
-            ['sulu.com/example', 'sulu.com', '/example'],
+            ['sulu.lo', 'sulu.lo', null],
+            ['sulu.io/', 'sulu.io', null],
+            ['sulu.com/example', 'sulu.com', 'example/'],
         ];
     }
 

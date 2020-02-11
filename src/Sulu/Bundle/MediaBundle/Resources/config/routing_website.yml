@@ -12,4 +12,4 @@ sulu_media.website.media.download:
         _controller: sulu_media.media_stream_controller:downloadAction
         _requestAnalyzer: false
     requirements:
-        slug: .*
+        id: "\\d+"
