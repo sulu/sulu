@@ -2,7 +2,7 @@
 
 exports[`Should render item with children 1`] = `
 <div
-  class="item"
+  class="chip"
 >
   Name
   <span
@@ -16,7 +16,7 @@ exports[`Should render item with children 1`] = `
 
 exports[`Should render item without icon in disabled state 1`] = `
 <div
-  class="item disabled"
+  class="chip disabled"
 >
   Name
 </div>

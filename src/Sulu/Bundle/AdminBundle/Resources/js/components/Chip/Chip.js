@@ -2,7 +2,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import Icon from '../../components/Icon';
-import itemStyles from './item.scss';
+import chipStyles from './chip.scss';
 
 type Props = {|
     children: string,
@@ -11,7 +11,7 @@ type Props = {|
     value: Object,
 |};
 
-export default class Item extends React.Component<Props> {
+export default class Chip extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
     };
@@ -24,17 +24,17 @@ export default class Item extends React.Component<Props> {
     render() {
         const {children, disabled} = this.props;
 
-        const itemClass = classNames(
-            itemStyles.item,
+        const chipClass = classNames(
+            chipStyles.chip,
             {
-                [itemStyles.disabled]: disabled,
+                [chipStyles.disabled]: disabled,
             }
         );
 
         return (
-            <div className={itemClass}>
+            <div className={chipClass}>
                 {children}
-                {!disabled && <Icon className={itemStyles.icon} name="su-times" onClick={this.handleDelete} />}
+                {!disabled && <Icon className={chipStyles.icon} name="su-times" onClick={this.handleDelete} />}
             </div>
         );
     }

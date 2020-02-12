@@ -9,7 +9,7 @@ import classNames from 'classnames';
 import Icon from '../Icon';
 import Loader from '../Loader';
 import AutoCompletePopover from '../AutoCompletePopover';
-import Item from './Item';
+import Chip from '../Chip';
 import multiAutoCompleteStyles from './multiAutoComplete.scss';
 
 type Props = {|
@@ -182,14 +182,14 @@ class MultiAutoComplete extends React.Component<Props> {
                     </div>
                     <div className={multiAutoCompleteStyles.items}>
                         {value.map((item) => (
-                            <Item
+                            <Chip
                                 disabled={disabled}
                                 key={item[idProperty]}
                                 onDelete={this.handleDelete}
                                 value={item}
                             >
                                 {item[displayProperty]}
-                            </Item>
+                            </Chip>
                         ))}
                         <input
                             className={inputClass}

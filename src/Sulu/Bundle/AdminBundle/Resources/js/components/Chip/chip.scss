@@ -1,11 +1,12 @@
 @import '../../containers/Application/colors.scss';
 
-$itemBackgroundColor: $wildSand;
-$itemDisabledBackgroundColor: $silver;
+$chipBackgroundColor: $wildSand;
+$chipDisabledBackgroundColor: $silver;
 
-.item {
-    background-color: $itemBackgroundColor;
+.chip {
+    background-color: $chipBackgroundColor;
     border-radius: 3px;
+    display: inline-block;
     font-size: 12px;
     line-height: 18px;
     height: 18px;
@@ -18,6 +19,6 @@ $itemDisabledBackgroundColor: $silver;
     }
 
     &.disabled {
-        background-color: $itemDisabledBackgroundColor;
+        background-color: $chipDisabledBackgroundColor;
     }
 }
