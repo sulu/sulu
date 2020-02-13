@@ -81,11 +81,24 @@ class PathCleanup implements PathCleanupInterface
                 $dirty = str_replace($key, $value, $dirty);
             }
         }
+        // replace multiple dash with one
+        $dirty = preg_replace('/([-]+)/', '-', $dirty);
+
+        // remove dash before slash
+        $dirty = preg_replace('/[-]+\//', '/', $dirty);
+
+        // remove dash after slash
+        $dirty = preg_replace('/\/[-]+/', '/', $dirty);
+
+        // delete dash at the beginning or end
+        $dirty = preg_replace('/^([-])/', '', $dirty);
+        $dirty = preg_replace('/([-])$/', '', $dirty);
+
+        $dirty = str_replace('//', '/', $dirty);
 
         $parts = explode('/', $dirty);
         $newParts = [];
         foreach ($parts as $part) {
-            $part = str_replace('&', '-and-', $part);
             $slug = $this->slugger->slug($part, '-', $languageCode);
             $slug = $slug->lower();
             $newParts[] = $slug->toString();
