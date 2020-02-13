@@ -44,7 +44,7 @@
         </service>
 
         <service id="sulu_document_manager.slugifier" class="Sulu\Component\DocumentManager\Slugifier\PathCleanupSlugifier" public="false">
-            <argument type="service" id="sulu.content.slugger"/>
+            <argument type="service" id="sulu.content.path_cleaner"/>
         </service>
 
         <service id="sulu_document_manager.node_name_slugifier"
