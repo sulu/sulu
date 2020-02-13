@@ -14,5 +14,6 @@
             <argument type="service" id="sulu_route.manager.conflict_resolver.auto_increment"/>
             <argument type="service" id="sulu.repository.route"/>
         </service>
+        <service id="Sulu\Bundle\RouteBundle\Manager\RouteManagerInterface" alias="sulu_route.manager.route_manager" />
     </services>
 </container>
