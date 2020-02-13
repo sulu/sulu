@@ -18,8 +18,8 @@ exports[`Render a SingleMediaDropzone 1`] = `
     >
       <div>
         <span
-          aria-label="fa-cloud-upload"
-          class="fa fa-cloud-upload uploadIcon"
+          aria-label="su-upload"
+          class="su-upload uploadIcon"
         />
       </div>
     </div>
@@ -50,8 +50,8 @@ exports[`Render a SingleMediaDropzone in disabled state 1`] = `
     >
       <div>
         <span
-          aria-label="fa-cloud-upload"
-          class="fa fa-cloud-upload uploadIcon"
+          aria-label="su-upload"
+          class="su-upload uploadIcon"
         />
       </div>
     </div>
@@ -156,8 +156,8 @@ exports[`Render a SingleMediaDropzone with a MimeTypeIndicator if an error appea
     >
       <div>
         <span
-          aria-label="fa-cloud-upload"
-          class="fa fa-cloud-upload uploadIcon"
+          aria-label="su-upload"
+          class="su-upload uploadIcon"
         />
       </div>
     </div>
@@ -199,8 +199,8 @@ exports[`Render a SingleMediaDropzone with a loader if image has not been loaded
     >
       <div>
         <span
-          aria-label="fa-cloud-upload"
-          class="fa fa-cloud-upload uploadIcon"
+          aria-label="su-upload"
+          class="su-upload uploadIcon"
         />
       </div>
     </div>
@@ -235,8 +235,8 @@ exports[`Render a SingleMediaDropzone with the default empty icon 1`] = `
     >
       <div>
         <span
-          aria-label="fa-cloud-upload"
-          class="fa fa-cloud-upload uploadIcon"
+          aria-label="su-upload"
+          class="su-upload uploadIcon"
         />
       </div>
     </div>
@@ -271,8 +271,8 @@ exports[`Render a SingleMediaDropzone with the passed empty icon 1`] = `
     >
       <div>
         <span
-          aria-label="fa-cloud-upload"
-          class="fa fa-cloud-upload uploadIcon"
+          aria-label="su-upload"
+          class="su-upload uploadIcon"
         />
       </div>
     </div>
@@ -303,8 +303,8 @@ exports[`Render a SingleMediaDropzone with the round skin 1`] = `
     >
       <div>
         <span
-          aria-label="fa-cloud-upload"
-          class="fa fa-cloud-upload uploadIcon"
+          aria-label="su-upload"
+          class="su-upload uploadIcon"
         />
       </div>
     </div>
@@ -335,8 +335,8 @@ exports[`Render a SingleMediaDropzone without a loader if image has been loaded 
     >
       <div>
         <span
-          aria-label="fa-cloud-upload"
-          class="fa fa-cloud-upload uploadIcon"
+          aria-label="su-upload"
+          class="su-upload uploadIcon"
         />
       </div>
     </div>
@@ -367,8 +367,8 @@ exports[`Render a SingleMediaDropzone without a loader if image has been loaded 
     >
       <div>
         <span
-          aria-label="fa-cloud-upload"
-          class="fa fa-cloud-upload uploadIcon"
+          aria-label="su-upload"
+          class="su-upload uploadIcon"
         />
       </div>
     </div>

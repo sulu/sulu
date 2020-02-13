@@ -391,8 +391,8 @@ Array [
                                     class="downloadButton"
                                   >
                                     <span
-                                      aria-label="fa-cloud-download"
-                                      class="fa fa-cloud-download"
+                                      aria-label="su-download"
+                                      class="su-download"
                                     />
                                   </button>
                                 </div>
@@ -523,8 +523,8 @@ Array [
                                     class="downloadButton"
                                   >
                                     <span
-                                      aria-label="fa-cloud-download"
-                                      class="fa fa-cloud-download"
+                                      aria-label="su-download"
+                                      class="su-download"
                                     />
                                   </button>
                                 </div>
@@ -1001,8 +1001,8 @@ Array [
                                     class="downloadButton"
                                   >
                                     <span
-                                      aria-label="fa-cloud-download"
-                                      class="fa fa-cloud-download"
+                                      aria-label="su-download"
+                                      class="su-download"
                                     />
                                   </button>
                                 </div>
@@ -1133,8 +1133,8 @@ Array [
                                     class="downloadButton"
                                   >
                                     <span
-                                      aria-label="fa-cloud-download"
-                                      class="fa fa-cloud-download"
+                                      aria-label="su-download"
+                                      class="su-download"
                                     />
                                   </button>
                                 </div>
