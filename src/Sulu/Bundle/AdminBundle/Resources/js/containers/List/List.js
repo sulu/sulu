@@ -16,7 +16,6 @@ import userStore from '../../stores/userStore';
 import SingleListOverlay from '../SingleListOverlay';
 import {translate} from '../../utils/Translator';
 import type {
-    Action,
     ItemAction,
     ResolveCopyArgument,
     ResolveDeleteArgument,
@@ -34,7 +33,6 @@ import listStyles from './list.scss';
 import ColumnOptionsOverlay from './ColumnOptionsOverlay';
 
 type Props = {|
-    actions?: Array<Action>,
     adapterOptions?: {[adapterKey: string]: {[key: string]: mixed}},
     adapters: Array<string>,
     allowActivateForDisabledItems: boolean,
@@ -467,7 +465,6 @@ class List extends React.Component<Props> {
 
     render() {
         const {
-            actions,
             adapterOptions,
             adapters,
             copyable,
@@ -552,7 +549,6 @@ class List extends React.Component<Props> {
                     {store.loading && store.pageCount === 0
                         ? <Loader />
                         : <Adapter
-                            actions={actions}
                             active={store.active.get()}
                             activeItems={store.activeItems}
                             adapterOptions={adapterOptions ? adapterOptions[this.currentAdapterKey] : undefined}

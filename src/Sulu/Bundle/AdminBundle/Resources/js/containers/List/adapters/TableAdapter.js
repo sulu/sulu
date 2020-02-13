@@ -18,7 +18,6 @@ class TableAdapter extends AbstractTableAdapter {
 
     getButtons = (item: ?Object) => {
         const {
-            actions,
             itemActions,
             onItemClick,
         } = this.props;
@@ -42,10 +41,6 @@ class TableAdapter extends AbstractTableAdapter {
 
         if (itemActions) {
             buttons.push(...itemActions.map((action) => action.getItemActionConfig(item)));
-        }
-
-        if (actions) {
-            buttons.push(...actions);
         }
 
         return buttons;

@@ -26,13 +26,6 @@ export type Schema = {
 
 export type SortOrder = 'asc' | 'desc';
 
-// @deprecated
-export type Action = {|
-    disabled?: boolean,
-    icon: string,
-    onClick: ?(itemId: string | number, index: number) => void,
-|};
-
 export type ItemActionConfig = {|
     disabled?: boolean,
     icon: string,
@@ -44,7 +37,6 @@ export interface ItemAction {
 }
 
 export type ListAdapterProps = {|
-    actions?: Array<Action>,
     active: ?string | number,
     activeItems: ?Array<?string | number>,
     adapterOptions?: {[key: string]: mixed},
