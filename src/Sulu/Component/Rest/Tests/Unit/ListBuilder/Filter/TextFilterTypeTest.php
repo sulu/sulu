@@ -38,21 +38,21 @@ class TextFilterTypeTest extends TestCase
     public function provideFilter()
     {
         return [
-            ['firstName', 'Max'],
-            ['lastName', 'Mustermann'],
+            ['firstName', ['eq' => 'Max'], '=', 'Max'],
+            ['lastName', ['eq' => 'Mustermann'], '=', 'Mustermann'],
         ];
     }
 
     /**
      * @dataProvider provideFilter
      */
-    public function testFilter($fieldName, $value)
+    public function testFilter($fieldName, $value, $expectedOperator, $expectedValue)
     {
         $fieldDescriptor = $this->prophesize(FieldDescriptor::class);
 
         $this->textFilterType->filter($this->listBuilder->reveal(), $fieldDescriptor->reveal(), $value);
 
-        $this->listBuilder->where($fieldDescriptor->reveal(), $value)->shouldBeCalled();
+        $this->listBuilder->where($fieldDescriptor->reveal(), $expectedValue, $expectedOperator)->shouldBeCalled();
     }
 
     public function testFilterWithInvalidOptions()
@@ -60,6 +60,14 @@ class TextFilterTypeTest extends TestCase
         $this->expectException(InvalidFilterTypeOptionsException::class);
 
         $fieldDescriptor = $this->prophesize(FieldDescriptor::class);
-        $this->textFilterType->filter($this->listBuilder->reveal(), $fieldDescriptor->reveal(), []);
+        $this->textFilterType->filter($this->listBuilder->reveal(), $fieldDescriptor->reveal(), false);
+    }
+
+    public function testFilterWithInvalidOptionsArray()
+    {
+        $this->expectException(InvalidFilterTypeOptionsException::class);
+
+        $fieldDescriptor = $this->prophesize(FieldDescriptor::class);
+        $this->textFilterType->filter($this->listBuilder->reveal(), $fieldDescriptor->reveal(), ['nonsense' => 8]);
     }
 }

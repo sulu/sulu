@@ -763,10 +763,7 @@ class ContactControllerTest extends SuluTestCase
         $this->em->flush();
 
         $client = $this->createTestClient();
-        $client->request(
-            'GET',
-            '/api/contacts?flat=true&fields=fullName&filter[salutation]=Mann'
-        );
+        $client->request('GET', '/api/contacts?flat=true&fields=fullName&filter[salutation][eq]=Mann');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());

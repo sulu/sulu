@@ -21,10 +21,22 @@ class TextFilterType implements FilterTypeInterface
         FieldDescriptorInterface $fieldDescriptor,
         $options
     ): void {
-        if (!is_string($options)) {
-            throw new InvalidFilterTypeOptionsException('The TextFilterType requires its options to be a string');
+        if (!is_array($options)) {
+            throw new InvalidFilterTypeOptionsException('The TextFilterType requires its options to be an array');
         }
 
-        $listBuilder->where($fieldDescriptor, $options);
+        foreach (array_keys($options) as $operator) {
+            switch ($operator) {
+                case 'eq':
+                    $listBuilderOperator = ListBuilderInterface::WHERE_COMPARATOR_EQUAL;
+                    break;
+                default:
+                    throw new InvalidFilterTypeOptionsException(
+                        'The TextFilterType does not support the "' . $operator . '" operator'
+                    );
+            }
+
+            $listBuilder->where($fieldDescriptor, $options[$operator], $listBuilderOperator);
+        }
     }
 }
