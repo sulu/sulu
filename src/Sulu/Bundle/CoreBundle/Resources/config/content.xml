@@ -40,6 +40,8 @@
             <argument type="service" id="sulu.content.path_cleaner.replacer_loader.file_locator"/>
         </service>
         <service id="sulu.content.path_cleaner" class="%sulu.content.path_cleaner.class%" public="true">
+            <argument type="collection" key="$replacers">
+            </argument>
             <argument type="service" key="$slugger" id="sulu.content.slugger"/>
         </service>
         <service id="sulu.content.template_resolver" public="false" class="%sulu.content.template_resolver.class%"/>
