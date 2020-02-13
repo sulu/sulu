@@ -74,18 +74,18 @@ class PageSettingsVersions extends React.Component<Props> {
     };
 
     render() {
-        const actions = [
-            {
+        const restoreAction = {
+            getItemActionConfig: () => ({
                 icon: 'su-process',
                 onClick: this.handleRestoreClick,
-            },
-        ];
+            }),
+        };
 
         return (
             <Fragment>
                 <List
-                    actions={actions}
                     adapters={['table']}
+                    itemActions={[restoreAction]}
                     searchable={false}
                     selectable={false}
                     store={this.listStore}
