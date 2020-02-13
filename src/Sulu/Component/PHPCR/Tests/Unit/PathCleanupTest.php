@@ -45,6 +45,9 @@ class PathCleanupTest extends TestCase
                 'en' => [
                     '&' => 'and',
                 ],
+                'bg' => [
+                    '&' => 'и',
+                ],
             ],
             new AsciiSlugger()
         );
@@ -65,6 +68,7 @@ class PathCleanupTest extends TestCase
             ['-/aSDf     asdf/äöü-/hello: world\'s', '/asdf-asdf/aeoeue/hello-world-s', 'de'],
             ['You & I', 'you-and-i', 'en'],
             ['You & I', 'you-und-i', 'de'],
+            ['ти & аз', 'ti-i-az', 'bg'],
             ['шише', 'shishe', 'bg'],
             ['Горна Оряховица', 'gorna-oryakhovitsa', 'bg'],
             ['Златни пясъци', 'zlatni-pyasutsi', 'bg'],
