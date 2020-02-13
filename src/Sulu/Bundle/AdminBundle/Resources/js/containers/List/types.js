@@ -12,6 +12,7 @@ export type ColumnItem = DataItem & {
 };
 
 export type SchemaEntry = {
+    filterType: ?string,
     label: string,
     sortable: boolean,
     type: string,

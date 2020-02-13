@@ -61,6 +61,7 @@ test('Render data with schema', () => {
     ];
     const schema = {
         title: {
+            filterType: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -120,6 +121,7 @@ test('Render data without header', () => {
     ];
     const schema = {
         title: {
+            filterType: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -145,12 +147,14 @@ test('Attach onClick handler for sorting if schema says the header is sortable',
 
     const schema = {
         title: {
+            filterType: null,
             type: 'string',
             sortable: true,
             visibility: 'yes',
             label: 'Title',
         },
         description: {
+            filterType: null,
             type: 'string',
             sortable: false,
             visibility: 'yes',
@@ -206,12 +210,14 @@ test('Render data with two columns', () => {
     ];
     const schema = {
         title: {
+            filterType: null,
             type: 'string',
             sortable: true,
             visibility: 'yes',
             label: 'Title',
         },
         title2: {
+            filterType: null,
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -262,6 +268,7 @@ test('Render data with schema and selections', () => {
     ];
     const schema = {
         title: {
+            filterType: null,
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -332,6 +339,7 @@ test('Execute onItemActivate respectively onItemDeactivate callback when an item
     ];
     const schema = {
         title: {
+            filterType: null,
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -376,12 +384,14 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
     ];
     const schema = {
         title: {
+            filterType: null,
             label: 'Title',
             sortable: true,
             type: 'string',
             visibility: 'no',
         },
         description: {
+            filterType: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -446,6 +456,7 @@ test('Render correct buttons based on permissions when item permissions are prov
     ];
     const schema = {
         title: {
+            filterType: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -513,6 +524,7 @@ test('Render disabled rows based on given disabledIds prop', () => {
     ];
     const schema = {
         title: {
+            filterType: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -550,12 +562,14 @@ test('Render data with plus button when onItemAdd callback is passed', () => {
     ];
     const schema = {
         title: {
+            filterType: null,
             label: 'Title',
             sortable: true,
             type: 'string',
             visibility: 'no',
         },
         description: {
+            filterType: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -589,12 +603,14 @@ test('Click on pencil should execute onItemClick callback', () => {
     ];
     const schema = {
         title: {
+            filterType: null,
             label: 'Title',
             sortable: true,
             type: 'string',
             visibility: 'no',
         },
         description: {
+            filterType: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -631,12 +647,14 @@ test('Click on add should execute onItemAdd callback', () => {
     ];
     const schema = {
         title: {
+            filterType: null,
             label: 'Title',
             sortable: true,
             type: 'string',
             visibility: 'no',
         },
         description: {
+            filterType: null,
             label: 'Description',
             sortable: true,
             type: 'string',
