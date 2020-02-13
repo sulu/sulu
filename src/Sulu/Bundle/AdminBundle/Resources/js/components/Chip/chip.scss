@@ -5,6 +5,7 @@ $chipDisabledBackgroundColor: $silver;
 
 .chip {
     background-color: $chipBackgroundColor;
+    border: none;
     border-radius: 3px;
     display: inline-block;
     font-size: 12px;
@@ -12,13 +13,18 @@ $chipDisabledBackgroundColor: $silver;
     height: 18px;
     margin: 5px 10px 5px 0;
     padding: 0 10px;
+    position: relative;
     white-space: nowrap;
 
     .icon {
         margin-left: 10px;
     }
+}
 
-    &.disabled {
-        background-color: $chipDisabledBackgroundColor;
-    }
+.clickable {
+    cursor: pointer;
+}
+
+.disabled {
+    background-color: $chipDisabledBackgroundColor;
 }

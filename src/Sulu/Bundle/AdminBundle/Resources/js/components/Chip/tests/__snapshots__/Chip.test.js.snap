@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should render item with children 1`] = `
-<div
+<button
   class="chip"
 >
   Name
@@ -11,13 +11,13 @@ exports[`Should render item with children 1`] = `
     role="button"
     tabindex="0"
   />
-</div>
+</button>
 `;
 
 exports[`Should render item without icon in disabled state 1`] = `
-<div
+<button
   class="chip disabled"
 >
   Name
-</div>
+</button>
 `;

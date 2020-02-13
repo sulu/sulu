@@ -15,7 +15,7 @@ exports[`MultiAutoComplete should render 1`] = `
   <div
     class="items"
   >
-    <div
+    <button
       class="chip"
     >
       Test
@@ -25,8 +25,8 @@ exports[`MultiAutoComplete should render 1`] = `
         role="button"
         tabindex="0"
       />
-    </div>
-    <div
+    </button>
+    <button
       class="chip"
     >
       Test 2
@@ -36,7 +36,7 @@ exports[`MultiAutoComplete should render 1`] = `
         role="button"
         tabindex="0"
       />
-    </div>
+    </button>
     <input
       class="input mousetrap"
       value=""
@@ -60,16 +60,16 @@ exports[`MultiAutoComplete should render in disabled state 1`] = `
   <div
     class="items"
   >
-    <div
+    <button
       class="chip disabled"
     >
       Test
-    </div>
-    <div
+    </button>
+    <button
       class="chip disabled"
     >
       Test 2
-    </div>
+    </button>
     <input
       class="input mousetrap"
       disabled=""

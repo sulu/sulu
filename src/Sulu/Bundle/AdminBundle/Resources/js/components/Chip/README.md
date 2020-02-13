@@ -15,6 +15,18 @@ Chips can also be displayed in a disabled state:
 </div>
 ```
 
+Chips can also be clicked, which will trigger the optional `onClick` callback:
+
+```javascript
+const handleClick = (value) => {
+    alert('Clicked the chip with the value ' + value);
+};
+
+<div style={{backgroundColor: 'white', padding: '10px'}}>
+    <Chip onClick={handleClick} value={7}>Click me!</Chip>
+</div>
+```
+
 They also accept a `onDelete` callback, which will render an `Icon` the user can click:
 
 ```javascript
