@@ -15,6 +15,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
+use Sulu\Bundle\AdminBundle\Admin\View\ListItemAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
@@ -95,7 +96,8 @@ class ContactAdmin extends Admin
         if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $contactFormToolbarActions = [];
             $contactListToolbarActions = [];
-            $contactDocumentsToolbarAction = [];
+            $contactDocumentsToolbarActions = [];
+            $contactDocumentsItemActions = [];
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::ADD)) {
                 $contactListToolbarActions[] = new ToolbarAction('sulu_admin.add');
@@ -103,8 +105,8 @@ class ContactAdmin extends Admin
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
                 $contactFormToolbarActions[] = new ToolbarAction('sulu_admin.save');
-                $contactDocumentsToolbarAction[] = new ToolbarAction('sulu_contact.add_media');
-                $contactDocumentsToolbarAction[] = new ToolbarAction('sulu_contact.delete_media');
+                $contactDocumentsToolbarActions[] = new ToolbarAction('sulu_contact.add_media');
+                $contactDocumentsToolbarActions[] = new ToolbarAction('sulu_contact.delete_media');
             }
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::DELETE)) {
@@ -114,6 +116,10 @@ class ContactAdmin extends Admin
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::VIEW)) {
                 $contactListToolbarActions[] = new ToolbarAction('sulu_admin.export');
+                $contactDocumentsItemActions[] = new ListItemAction(
+                    'link',
+                    ['icon' => 'fa-cloud-download', 'link_property' => 'url']
+                );
             }
 
             $viewCollection->add(
@@ -167,7 +173,8 @@ class ContactAdmin extends Admin
                     ->setUserSettingsKey('contact_media')
                     ->setTabTitle('sulu_contact.documents')
                     ->addListAdapters(['table'])
-                    ->addToolbarActions($contactDocumentsToolbarAction)
+                    ->addToolbarActions($contactDocumentsToolbarActions)
+                    ->addItemActions($contactDocumentsItemActions)
                     ->addRouterAttributesToListRequest(['id' => 'contactId'])
                     ->setTabOrder(2048)
                     ->setParent(static::CONTACT_EDIT_FORM_VIEW)
@@ -177,7 +184,8 @@ class ContactAdmin extends Admin
         if ($this->securityChecker->hasPermission(static::ACCOUNT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $accountFormToolbarActions = [];
             $accountListToolbarActions = [];
-            $accountDocumentsToolbarAction = [];
+            $accountDocumentsToolbarActions = [];
+            $accountDocumentsItemActions = [];
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::ADD)) {
                 $accountListToolbarActions[] = new ToolbarAction('sulu_admin.add');
@@ -185,8 +193,8 @@ class ContactAdmin extends Admin
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
                 $accountFormToolbarActions[] = new ToolbarAction('sulu_admin.save');
-                $accountDocumentsToolbarAction[] = new ToolbarAction('sulu_contact.add_media');
-                $accountDocumentsToolbarAction[] = new ToolbarAction('sulu_contact.delete_media');
+                $accountDocumentsToolbarActions[] = new ToolbarAction('sulu_contact.add_media');
+                $accountDocumentsToolbarActions[] = new ToolbarAction('sulu_contact.delete_media');
             }
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::DELETE)) {
@@ -202,6 +210,10 @@ class ContactAdmin extends Admin
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::VIEW)) {
                 $accountListToolbarActions[] = new ToolbarAction('sulu_admin.export');
+                $accountDocumentsItemActions[] = new ListItemAction(
+                    'link',
+                    ['icon' => 'fa-cloud-download', 'link_property' => 'url']
+                );
             }
 
             $viewCollection->add(
@@ -274,7 +286,8 @@ class ContactAdmin extends Admin
                     ->setTabTitle('sulu_contact.documents')
                     ->addListAdapters(['table'])
                     ->addRouterAttributesToListRequest(['id' => 'contactId'])
-                    ->addToolbarActions($accountDocumentsToolbarAction)
+                    ->addToolbarActions($accountDocumentsToolbarActions)
+                    ->addItemActions($accountDocumentsItemActions)
                     ->setTabOrder(3072)
                     ->setParent(static::ACCOUNT_EDIT_FORM_VIEW)
             );
