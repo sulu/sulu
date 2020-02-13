@@ -16,7 +16,8 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * cleans path strings.
- * @internal this class is for internal use.
+ *
+ * @internal this class is for internal use
  */
 class PathCleanup implements PathCleanupInterface
 {
@@ -44,7 +45,7 @@ class PathCleanup implements PathCleanupInterface
 
     public function __construct(array $replacers, SluggerInterface $slugger = null)
     {
-        if ($slugger === null) {
+        if (null === $slugger) {
             @trigger_error(
                 'Initializing the PathCleanup without a slugger is deprecated since Sulu 2.1.',
                 E_USER_DEPRECATED
