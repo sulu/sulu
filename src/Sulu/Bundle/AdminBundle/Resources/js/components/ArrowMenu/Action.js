@@ -8,13 +8,14 @@ type Props<T> = {|
     disabled: boolean,
     icon?: string,
     onAfterAction?: () => void,
-    onClick: (value: ?T) => void,
-    value?: T,
+    onClick: (value: T) => void,
+    value: T,
 |};
 
 export default class Action<T> extends React.PureComponent<Props<T>> {
     static defaultProps = {
         disabled: false,
+        value: undefined,
     };
 
     handleButtonClick = () => {
