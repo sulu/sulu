@@ -126,4 +126,16 @@ trait ListViewBuilderTrait
 
         $route->setOption('requestParameters', $newRequestParameters);
     }
+
+    /**
+     * @param ListItemAction[] $itemActions
+     */
+    private function addItemActionsToView(View $view, array $itemActions): void
+    {
+        $oldItemActions = $view->getOption('itemActions');
+        $newItemActions = $oldItemActions
+            ? array_merge($oldItemActions, $itemActions)
+            : $itemActions;
+        $view->setOption('itemActions', $newItemActions);
+    }
 }

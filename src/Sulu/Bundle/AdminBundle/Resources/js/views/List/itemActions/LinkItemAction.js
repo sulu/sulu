@@ -21,8 +21,8 @@ export default class LinkItemAction extends AbstractListItemAction {
         }
 
         const linkValue = item ? item[linkProperty] : null;
-        if (linkValue && linkProperty !== 'string') {
-            throw new Error('The value of the property given via  "link_property" must have a string value!');
+        if (linkValue && typeof linkValue !== 'string') {
+            throw new Error('The value of the property given via "link_property" must have a string value!');
         }
 
         return {
