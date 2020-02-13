@@ -36,12 +36,11 @@ export type Action = {|
 export type ItemActionConfig = {|
     disabled?: boolean,
     icon: string,
-    onClick: ?() => void,
+    onClick: ?(rowId: string | number, index: number) => void,
 |};
 
 export interface ItemAction {
     getItemActionConfig(item: ?Object): ItemActionConfig,
-    getNode(): Node,
 }
 
 export type ListAdapterProps = {|

@@ -44,6 +44,5 @@ export type ToolbarConfig = {
 };
 
 export interface ToolbarAction {
-    getNode(): Node,
     getToolbarItemConfig(): ?ToolbarItemConfig,
 }

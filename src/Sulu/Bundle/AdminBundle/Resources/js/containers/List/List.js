@@ -687,7 +687,6 @@ class List extends React.Component<Props> {
                         {translate('sulu_admin.order_warning_text')}
                     </Dialog>
                 }
-                {itemActions.map((itemAction) => itemAction.getNode())}
             </div>
         );
     }

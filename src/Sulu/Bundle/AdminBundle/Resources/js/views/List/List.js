@@ -12,7 +12,9 @@ import type {Route} from '../../services/Router/types';
 import {translate} from '../../utils/Translator';
 import ResourceStore from '../../stores/ResourceStore';
 import listToolbarActionRegistry from './registries/listToolbarActionRegistry';
+import listItemActionRegistry from './registries/listItemActionRegistry';
 import AbstractListToolbarAction from './toolbarActions/AbstractListToolbarAction';
+import AbstractListItemAction from './itemActions/AbstractListItemAction';
 
 const DEFAULT_USER_SETTINGS_KEY = 'list';
 const DEFAULT_LIMIT = 10;
@@ -34,6 +36,7 @@ class List extends React.Component<Props> {
     list: ?ElementRef<typeof ListContainer>;
 
     @observable toolbarActions: Array<AbstractListToolbarAction> = [];
+    @observable itemActions: Array<AbstractListItemAction> = [];
     @observable errors = [];
 
     static getDerivedRouteAttributes(route: Route) {
@@ -213,27 +216,20 @@ class List extends React.Component<Props> {
             route: {
                 options: {
                     locales,
-                    toolbarActions: rawToolbarActions,
+                    toolbarActions: rawToolbarActions = [],
+                    itemActions: rawItemActions = [],
                 },
             },
         } = router;
 
-        const toolbarActions = toJS(rawToolbarActions);
-
-        if (!toolbarActions) {
-            return;
-        }
-
-        toolbarActions.forEach((toolbarAction) => {
+        rawToolbarActions.forEach((toolbarAction) => {
             if (typeof toolbarAction !== 'object') {
                 throw new Error(
                     'The value of a toolbarAction entry must be an object, but ' + typeof toolbarAction + ' was given!'
                 );
             }
-        });
 
-        this.toolbarActions = toolbarActions
-            .map((toolbarAction): AbstractListToolbarAction => new (listToolbarActionRegistry.get(toolbarAction.type))(
+            this.toolbarActions.push(new (listToolbarActionRegistry.get(toolbarAction.type))(
                 this.listStore,
                 this,
                 router,
@@ -241,6 +237,24 @@ class List extends React.Component<Props> {
                 resourceStore,
                 toolbarAction.options
             ));
+        });
+
+        rawItemActions.forEach((itemAction) => {
+            if (typeof itemAction !== 'object') {
+                throw new Error(
+                    'The value of a itemAction entry must be an object, but ' + typeof itemAction + ' was given!'
+                );
+            }
+
+            this.itemActions.push(new (listItemActionRegistry.get(itemAction.type))(
+                this.listStore,
+                this,
+                router,
+                locales,
+                resourceStore,
+                itemAction.options
+            ));
+        });
     }
 
     componentDidUpdate(prevProps: Props) {
@@ -263,6 +277,10 @@ class List extends React.Component<Props> {
         if (!equals(locales, prevLocales)) {
             this.toolbarActions.forEach((toolbarAction) => {
                 toolbarAction.setLocales(locales);
+            });
+
+            this.itemActions.forEach((itemAction) => {
+                itemAction.setLocales(locales);
             });
         }
     }
@@ -349,6 +367,7 @@ class List extends React.Component<Props> {
                 <ListContainer
                     adapters={adapters}
                     header={title && <h1>{title}</h1>}
+                    itemActions={[...this.itemActions]}
                     itemDisabledCondition={itemDisabledCondition}
                     onItemAdd={onItemAdd || addView ? this.addItem : undefined}
                     onItemClick={onItemClick || editView ? this.handleItemClick : undefined}
@@ -357,6 +376,7 @@ class List extends React.Component<Props> {
                     store={this.listStore}
                 />
                 {this.toolbarActions.map((toolbarAction) => toolbarAction.getNode())}
+                {this.itemActions.map((itemAction) => itemAction.getNode())}
             </Fragment>
         );
     }
