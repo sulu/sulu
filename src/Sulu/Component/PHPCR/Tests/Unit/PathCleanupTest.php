@@ -14,6 +14,7 @@ namespace Sulu\Component\PHPCR\Tests\Unit;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\PHPCR\PathCleanup;
 use Sulu\Component\PHPCR\PathCleanupInterface;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class PathCleanupTest extends TestCase
 {
@@ -44,15 +45,30 @@ class PathCleanupTest extends TestCase
                 'en' => [
                     '&' => 'and',
                 ],
-            ]
+            ],
+            new AsciiSlugger()
         );
     }
 
-    public function testCleanup()
+    /**
+     * @dataProvider cleanupProvider
+     */
+    public function testCleanup($a, $b, $locale)
     {
-        $clean = $this->cleaner->cleanup('-/aSDf     asdf/äöü-/hello: world\'s', 'de');
+        $clean = $this->cleaner->cleanup($a, $locale);
+        $this->assertEquals($b, $clean);
+    }
 
-        $this->assertEquals('/asdf-asdf/aeoeue/hello-worlds', $clean);
+    public function cleanupProvider()
+    {
+        return [
+            ['-/aSDf     asdf/äöü-/hello: world\'s', '/asdf-asdf/aeoeue/hello-world-s', 'de'],
+            ['You & I', 'you-and-i', 'en'],
+            ['You & I', 'you-und-i', 'de'],
+            ['шише', 'shishe', 'bg'],
+            ['Горна Оряховица', 'gorna-oryakhovitsa', 'bg'],
+            ['Златни пясъци', 'zlatni-pyasutsi', 'bg'],
+        ];
     }
 
     public function testValidate()

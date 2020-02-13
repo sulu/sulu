@@ -32,12 +32,16 @@
     </parameters>
 
     <services>
+        <service id="sulu.content.slugger" class="Symfony\Component\String\Slugger\AsciiSlugger" />
+
         <service id="sulu.content.path_cleaner.replacer_loader.file_locator" class="%sulu.content.path_cleaner.replacer_loader.file_locator.class%" synthetic="false">
         </service>
         <service id="sulu.content.path_cleaner.replacer_loader" class="%sulu.content.path_cleaner.replacer_loader.class%" synthetic="false">
             <argument type="service" id="sulu.content.path_cleaner.replacer_loader.file_locator"/>
         </service>
-        <service id="sulu.content.path_cleaner" class="%sulu.content.path_cleaner.class%" public="true"/>
+        <service id="sulu.content.path_cleaner" class="%sulu.content.path_cleaner.class%" public="true">
+            <argument type="service" key="$slugger" id="sulu.content.slugger"/>
+        </service>
         <service id="sulu.content.template_resolver" public="false" class="%sulu.content.template_resolver.class%"/>
 
         <!-- content mapper -->
