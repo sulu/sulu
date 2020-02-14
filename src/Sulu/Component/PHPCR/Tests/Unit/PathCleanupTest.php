@@ -66,6 +66,14 @@ class PathCleanupTest extends TestCase
     {
         return [
             ['-/aSDf     asdf/äöü-/hello: world\'s', '/asdf-asdf/aeoeue/hello-world-s', 'de'],
+            ['it\'s+-_,.a multiple---dash test!!!', 'it-s-a-multiple-dash-test', 'en'],
+            ['dash before slash -/', 'dash-before-slash/', 'en'],
+            ['dash after slash /-', 'dash-after-slash/', 'en'],
+            ['-dash in beginning', 'dash-in-beginning', 'en'],
+            ['dash in end-', 'dash-in-end', 'en'],
+            ['multiple slashes 1 ///', 'multiple-slashes-1/', 'en'],
+            ['multiple slashes 2 \\\\\\', 'multiple-slashes-2', 'en'],
+            ['multiple slashes 3 /\\/\\/', 'multiple-slashes-3/', 'en'],
             ['You & I', 'you-and-i', 'en'],
             ['You & I', 'you-und-i', 'de'],
             ['ти & аз', 'ti-i-az', 'bg'],

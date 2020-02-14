@@ -94,14 +94,19 @@ class PathCleanup implements PathCleanupInterface
         $dirty = preg_replace('/^([-])/', '', $dirty);
         $dirty = preg_replace('/([-])$/', '', $dirty);
 
-        $dirty = str_replace('//', '/', $dirty);
+        // replace multiple slashes
+        $dirty = preg_replace('/([\/]+)/', '/', $dirty);
 
         $parts = explode('/', $dirty);
         $newParts = [];
-        foreach ($parts as $part) {
+
+        $totalParts = count($parts);
+        foreach ($parts as $i => $part) {
             $slug = $this->slugger->slug($part, '-', $languageCode);
             $slug = $slug->lower();
-            $newParts[] = $slug->toString();
+            if ($i === 0 || $i + 1 === $totalParts || !$slug->isEmpty()) {
+                $newParts[] = $slug->toString();
+            }
         }
 
         return implode('/', $newParts);
