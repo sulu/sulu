@@ -1,5 +1,5 @@
 // @flow
-import listItemActionRegistry from '../../registries/listITemActionRegistry';
+import listItemActionRegistry from '../../registries/listItemActionRegistry';
 import AbstractListItemAction from '../../itemActions/AbstractListItemAction';
 
 beforeEach(() => {
