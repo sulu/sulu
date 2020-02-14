@@ -31,6 +31,7 @@ import AdapterSwitch from './AdapterSwitch';
 import Search from './Search';
 import listStyles from './list.scss';
 import ColumnOptionsOverlay from './ColumnOptionsOverlay';
+import FieldFilter from './FieldFilter';
 
 type Props = {|
     adapterOptions?: {[adapterKey: string]: {[key: string]: mixed}},
@@ -401,6 +402,10 @@ class List extends React.Component<Props> {
         this.props.store.search(search);
     };
 
+    handleFilterChange = (filter: {[string]: mixed}) => {
+        this.props.store.filter(filter);
+    };
+
     handleItemSelectionChange = (id: string | number, selected?: boolean) => {
         const {store} = this.props;
         const row = store.findById(id);
@@ -479,6 +484,12 @@ class List extends React.Component<Props> {
             store,
             toolbarClassName,
         } = this.props;
+
+        const {
+            filterableFields,
+            userSchema,
+        } = store;
+
         const Adapter = this.currentAdapter;
 
         const listClass = classNames(
@@ -533,9 +544,16 @@ class List extends React.Component<Props> {
                                     onClose={this.handleColumnOptionsClose}
                                     onConfirm={this.handleColumnOptionsChange}
                                     open={this.columnOptionsOpen}
-                                    schema={this.props.store.userSchema}
+                                    schema={userSchema}
                                 />
                             </Fragment>
+                        }
+                        {filterableFields && Object.keys(filterableFields).length > 0 &&
+                            <FieldFilter
+                                fields={filterableFields}
+                                onChange={this.handleFilterChange}
+                                value={store.filterOptions.get()}
+                            />
                         }
                         <AdapterSwitch
                             adapters={adapters}

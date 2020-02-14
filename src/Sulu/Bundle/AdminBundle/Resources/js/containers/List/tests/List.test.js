@@ -41,6 +41,10 @@ jest.mock('../stores/ListStore', () => {
         this.observableOptions = observableOptions;
         this.options = options;
         this.metadataOptions = metadataOptions;
+        this.filterableFields = {};
+        this.filterOptions = {
+            get: jest.fn().mockReturnValue({}),
+        };
 
         this.setPage = jest.fn();
         this.setActive = jest.fn();
@@ -95,6 +99,7 @@ jest.mock('../stores/ListStore', () => {
         this.data = this.structureStrategy.data;
         this.visibleItems = this.structureStrategy.visibleItems;
         this.search = jest.fn();
+        this.filter = jest.fn();
         this.move = jest.fn();
         this.copy = jest.fn();
 
@@ -387,6 +392,32 @@ test('Render the adapter in disabled state', () => {
     ).toMatchSnapshot();
 });
 
+test('Render the adapter with filters', () => {
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+
+    // $FlowFixMe
+    listStore.filterableFields = {
+        title: {
+            label: 'Title',
+        },
+        created: {
+            label: 'Created at',
+        },
+        changed: {
+            label: 'Changed at',
+        },
+    };
+
+    listStore.filterOptions.get.mockReturnValue({
+        title: undefined,
+        created: undefined,
+    });
+
+    expect(
+        render(<List adapters={['test']} disabled={true} header={<h1>Title</h1>} store={listStore} />)
+    ).toMatchSnapshot();
+});
+
 test('Pass the given disabledIds to the adapter', () => {
     const disabledIds = [1, 3];
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
@@ -646,9 +677,31 @@ test('Trigger a search should call search on the store', () => {
     ];
     const list = mount(<List adapters={['table']} store={listStore} />);
 
-    const search = list.find('Search');
-    search.prop('onSearch')('search-value');
+    list.find('Search').prop('onSearch')('search-value');
     expect(listStore.search).toBeCalledWith('search-value');
+});
+
+test('Trigger a filter should call filter on the store', () => {
+    listAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+
+    // $FlowFixMe
+    listStore.filterableFields = {
+        title: {
+            label: 'Title',
+        },
+    };
+
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+
+    const list = mount(<List adapters={['table']} store={listStore} />);
+
+    list.find('FieldFilter').prop('onChange')({title: undefined});
+    expect(listStore.filter).toBeCalledWith({title: undefined});
 });
 
 test('Should start with adapter from user settings', () => {

@@ -39,6 +39,7 @@ export default class ListStore {
     @observable schema: Schema;
     @observable forbidden: boolean;
     active: IObservableValue<?string | number> = observable.box();
+    filterOptions: IObservableValue<{[string]: mixed}> = observable.box({});
     sortColumn: IObservableValue<string> = observable.box();
     sortOrder: IObservableValue<SortOrder> = observable.box();
     searchTerm: IObservableValue<?string> = observable.box();
@@ -263,9 +264,26 @@ export default class ListStore {
         ListStore.setSchemaSetting(this.listKey, this.userSettingsKey, schemaSettings);
     };
 
+    @computed get filterableFields(): ?Schema {
+        if (!this.schema) {
+            return undefined;
+        }
+
+        return Object.keys(this.schema).reduce(
+            (filterableFields, schemaKey) => {
+                if (this.schema[schemaKey].filterType){
+                    filterableFields[schemaKey] = this.schema[schemaKey];
+                }
+
+                return filterableFields;
+            },
+            {}
+        );
+    }
+
     @computed get fields(): Array<string> {
         const fields = [];
-        Object.keys(this.userSchema).map((schemaKey) => {
+        Object.keys(this.userSchema).forEach((schemaKey) => {
             const schemaEntry = this.userSchema[schemaKey];
             if (schemaEntry.visibility === 'yes' || schemaEntry.visibility === 'always') {
                 fields.push(schemaKey);
@@ -605,6 +623,10 @@ export default class ListStore {
         }
 
         this.searchTerm.set(searchTerm);
+    }
+
+    @action filter(filter: {[string]: mixed}) {
+        this.filterOptions.set(filter);
     }
 
     @action select(row: Object) {

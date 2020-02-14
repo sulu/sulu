@@ -167,3 +167,83 @@ exports[`Render the adapter in non-searchable mode if searchable is set to true 
   </div>
 </div>
 `;
+
+exports[`Render the adapter with filters 1`] = `
+<div
+  class="listContainer"
+>
+  <h1>
+    Title
+  </h1>
+  <div
+    class="toolbar"
+  >
+    <label
+      class="input dark left collapsed hasAppendIcon"
+    >
+      <div
+        class="prependedContainer dark collapsed"
+      >
+        <span
+          aria-label="su-search"
+          class="su-search clickable icon dark iconClickable collapsed"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+      <input
+        type="text"
+        value=""
+      />
+    </label>
+    <div>
+      <button
+        class="button icon"
+        type="button"
+      >
+        <span
+          aria-label="fa-filter"
+          class="fa fa-filter buttonIcon"
+        />
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down dropdownIcon"
+        />
+      </button>
+    </div>
+    <span>
+      <button
+        class="chip secondary small clickable"
+      >
+        Title
+        <span
+          aria-label="su-times"
+          class="su-times clickable icon"
+          role="button"
+          tabindex="0"
+        />
+      </button>
+    </span>
+    <span>
+      <button
+        class="chip secondary small clickable"
+      >
+        Created at
+        <span
+          aria-label="su-times"
+          class="su-times clickable icon"
+          role="button"
+          tabindex="0"
+        />
+      </button>
+    </span>
+  </div>
+  <div
+    class="list disabled"
+  >
+    <div>
+      Test Adapter
+    </div>
+  </div>
+</div>
+`;
