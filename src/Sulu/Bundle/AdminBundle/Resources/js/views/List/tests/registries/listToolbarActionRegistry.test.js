@@ -17,7 +17,7 @@ test('Clear all toolbar actions', () => {
     expect(Object.keys(listToolbarActionRegistry.toolbarActions)).toHaveLength(0);
 });
 
-test('Add adapter', () => {
+test('Add toolbar action', () => {
     listToolbarActionRegistry.add('test1', AbstractListToolbarAction);
     listToolbarActionRegistry.add('test2', AbstractListToolbarAction);
 
@@ -25,11 +25,11 @@ test('Add adapter', () => {
     expect(listToolbarActionRegistry.get('test2')).toBe(AbstractListToolbarAction);
 });
 
-test('Add adapter with existing key should throw', () => {
+test('Add toolbar action with existing key should throw', () => {
     listToolbarActionRegistry.add('test1', AbstractListToolbarAction);
     expect(() => listToolbarActionRegistry.add('test1', AbstractListToolbarAction)).toThrow(/test1/);
 });
 
-test('Get adapter of not existing key', () => {
+test('Get toolbar action of not existing key', () => {
     expect(() => listToolbarActionRegistry.get('XXX')).toThrow();
 });
