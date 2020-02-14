@@ -104,7 +104,7 @@ class PathCleanup implements PathCleanupInterface
         foreach ($parts as $i => $part) {
             $slug = $this->slugger->slug($part, '-', $languageCode);
             $slug = $slug->lower();
-            if ($i === 0 || $i + 1 === $totalParts || !$slug->isEmpty()) {
+            if (0 === $i || $i + 1 === $totalParts || !$slug->isEmpty()) {
                 $newParts[] = $slug->toString();
             }
         }
