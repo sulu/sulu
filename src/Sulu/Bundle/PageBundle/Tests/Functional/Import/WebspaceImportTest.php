@@ -41,13 +41,13 @@ class WebspaceImportTest extends SuluTestCase
      */
     private $webspaceImporter;
 
-    protected $distPath = __DIR__ . '/../../fixtures/import/export.xliff.dist';
+    protected $distPath = __DIR__.'/../../fixtures/import/export.xliff.dist';
 
-    protected $distPathRU = __DIR__ . '/../../fixtures/import/export_ru.xliff.dist';
+    protected $distPathRU = __DIR__.'/../../fixtures/import/export_ru.xliff.dist';
 
-    protected $path = __DIR__ . '/../../fixtures/import/export.xliff';
+    protected $path = __DIR__.'/../../fixtures/import/export.xliff';
 
-    protected $pathRU = __DIR__ . '/../../fixtures/import/export_ru.xliff';
+    protected $pathRU = __DIR__.'/../../fixtures/import/export_ru.xliff';
 
     /**
      * Setup data for import.
@@ -125,24 +125,24 @@ class WebspaceImportTest extends SuluTestCase
         $this->assertEquals($import->successes, 2);
 
         // structure
-        $this->assertEquals($loadedDocuments[0]->getTitle(), 'test 0 imported');
-        $this->assertEquals($loadedDocuments[1]->getTitle(), 'test 1 imported');
+        $this->assertEquals('test 0 imported', $loadedDocuments[0]->getTitle());
+        $this->assertEquals('test 1 imported', $loadedDocuments[1]->getTitle());
 
         // path
-        $this->assertEquals($loadedDocuments[0]->getPath(), '/cmf/sulu_io/contents/test-0-imported');
-        $this->assertEquals($loadedDocuments[1]->getPath(), '/cmf/sulu_io/contents/test-1-imported');
+        $this->assertEquals('/cmf/sulu_io/contents/test-0-imported', $loadedDocuments[0]->getPath());
+        $this->assertEquals('/cmf/sulu_io/contents/test-1-imported', $loadedDocuments[1]->getPath());
 
         // resource segment
-        $this->assertEquals($loadedDocuments[0]->getResourceSegment(), '/parent');
-        $this->assertEquals($loadedDocuments[1]->getResourceSegment(), '/child');
+        $this->assertEquals('/parent', $loadedDocuments[0]->getResourceSegment());
+        $this->assertEquals('/child', $loadedDocuments[1]->getResourceSegment());
 
         // seo
-        $this->assertEquals($loadedDocuments[0]->getExtensionsData()->toArray()['seo']['title'], '');
-        $this->assertEquals($loadedDocuments[1]->getExtensionsData()->toArray()['seo']['title'], 'SEO Title');
+        $this->assertEquals('', $loadedDocuments[0]->getExtensionsData()->toArray()['seo']['title']);
+        $this->assertEquals('SEO Title', $loadedDocuments[1]->getExtensionsData()->toArray()['seo']['title']);
 
         // excerpt
-        $this->assertEquals($loadedDocuments[0]->getExtensionsData()->toArray()['excerpt']['title'], 'Excerpt title');
-        $this->assertEquals($loadedDocuments[1]->getExtensionsData()->toArray()['excerpt']['title'], '');
+        $this->assertEquals('Excerpt title', $loadedDocuments[0]->getExtensionsData()->toArray()['excerpt']['title']);
+        $this->assertEquals('', $loadedDocuments[1]->getExtensionsData()->toArray()['excerpt']['title']);
     }
 
     /**
@@ -199,24 +199,24 @@ class WebspaceImportTest extends SuluTestCase
         $this->assertEquals($import->successes, 2);
 
         // structure
-        $this->assertEquals($loadedDocuments[0]->getTitle(), 'привет');
-        $this->assertEquals($loadedDocuments[1]->getTitle(), 'привет привет привет');
+        $this->assertEquals('привет', $loadedDocuments[0]->getTitle());
+        $this->assertEquals('привет привет привет', $loadedDocuments[1]->getTitle());
 
         // path
-        $this->assertEquals($loadedDocuments[0]->getPath(), '/cmf/sulu_io/contents/parent');
-        $this->assertEquals($loadedDocuments[1]->getPath(), '/cmf/sulu_io/contents/child');
+        $this->assertEquals('/cmf/sulu_io/contents/parent', $loadedDocuments[0]->getPath());
+        $this->assertEquals('/cmf/sulu_io/contents/child', $loadedDocuments[1]->getPath());
 
         // resource segment
-        $this->assertEquals($loadedDocuments[0]->getResourceSegment(), '/parent-ru-new-shit');
-        $this->assertEquals($loadedDocuments[1]->getResourceSegment(), '/child-ru-new-shit');
+        $this->assertEquals('/parent-ru-new-shit', $loadedDocuments[0]->getResourceSegment());
+        $this->assertEquals('/child-ru-new-shit', $loadedDocuments[1]->getResourceSegment());
 
         // seo
-        $this->assertEquals($loadedDocuments[0]->getExtensionsData()->toArray()['seo']['title'], '');
-        $this->assertEquals($loadedDocuments[1]->getExtensionsData()->toArray()['seo']['title'], 'SEO Title');
+        $this->assertEquals('', $loadedDocuments[0]->getExtensionsData()->toArray()['seo']['title']);
+        $this->assertEquals('SEO Title', $loadedDocuments[1]->getExtensionsData()->toArray()['seo']['title']);
 
         // excerpt
-        $this->assertEquals($loadedDocuments[0]->getExtensionsData()->toArray()['excerpt']['title'], 'Excerpt title');
-        $this->assertEquals($loadedDocuments[1]->getExtensionsData()->toArray()['excerpt']['title'], '');
+        $this->assertEquals('Excerpt title', $loadedDocuments[0]->getExtensionsData()->toArray()['excerpt']['title']);
+        $this->assertEquals('', $loadedDocuments[1]->getExtensionsData()->toArray()['excerpt']['title']);
     }
 
     /**
@@ -230,7 +230,7 @@ class WebspaceImportTest extends SuluTestCase
             $fs->remove($this->path);
             $fs->remove($this->pathRU);
         } catch (IOExceptionInterface $e) {
-            echo 'An error occurred while creating your directory at ' . $e->getPath();
+            echo 'An error occurred while creating your directory at '.$e->getPath();
         }
     }
 
@@ -245,34 +245,42 @@ class WebspaceImportTest extends SuluTestCase
             $fs->copy($this->distPath, $this->path);
 
             $distContent = file_get_contents($this->path, true);
-            $newContent = str_replace([
-                '%uuid_page_0%',
-                '%uuid_page_1%',
-            ], [
-                $this->pages[0]->getUuid(),
-                $this->pages[1]->getUuid(),
-            ], $distContent);
+            $newContent = str_replace(
+                [
+                    '%uuid_page_0%',
+                    '%uuid_page_1%',
+                ],
+                [
+                    $this->pages[0]->getUuid(),
+                    $this->pages[1]->getUuid(),
+                ],
+                $distContent
+            );
 
             file_put_contents($this->path, $newContent);
         } catch (IOExceptionInterface $e) {
-            echo 'An error occurred while creating your directory at ' . $e->getPath();
+            echo 'An error occurred while creating your directory at '.$e->getPath();
         }
 
         try {
             $fs->copy($this->distPathRU, $this->pathRU);
 
             $distContent = file_get_contents($this->pathRU, true);
-            $newContent = str_replace([
-                '%uuid_page_0%',
-                '%uuid_page_1%',
-            ], [
-                $this->pages[0]->getUuid(),
-                $this->pages[1]->getUuid(),
-            ], $distContent);
+            $newContent = str_replace(
+                [
+                    '%uuid_page_0%',
+                    '%uuid_page_1%',
+                ],
+                [
+                    $this->pages[0]->getUuid(),
+                    $this->pages[1]->getUuid(),
+                ],
+                $distContent
+            );
 
             file_put_contents($this->pathRU, $newContent);
         } catch (IOExceptionInterface $e) {
-            echo 'An error occurred while creating your directory at ' . $e->getPath();
+            echo 'An error occurred while creating your directory at '.$e->getPath();
         }
     }
 
@@ -307,14 +315,16 @@ class WebspaceImportTest extends SuluTestCase
         $page->setLocale('en');
         $page->setParent($this->homeDocument);
         $page->setStructureType('simple');
-        $page->setExtensionsData([
-            'excerpt' => [
-                'title' => '',
-                'description' => '',
-                'categories' => [],
-                'tags' => [],
-            ],
-        ]);
+        $page->setExtensionsData(
+            [
+                'excerpt' => [
+                    'title' => '',
+                    'description' => '',
+                    'categories' => [],
+                    'tags' => [],
+                ],
+            ]
+        );
 
         $this->documentManager->persist($page, 'en');
 
