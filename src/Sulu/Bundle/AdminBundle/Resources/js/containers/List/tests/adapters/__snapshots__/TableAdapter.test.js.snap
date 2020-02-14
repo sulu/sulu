@@ -484,7 +484,7 @@ exports[`Render data with all different visibility types schema 1`] = `
 </section>
 `;
 
-exports[`Render data with pencil button and given actions when onItemEdit callback is passed 1`] = `
+exports[`Render data with pencil button and given itemActions when onItemEdit callback is passed 1`] = `
 <section>
   <div
     class="tableContainer dark"

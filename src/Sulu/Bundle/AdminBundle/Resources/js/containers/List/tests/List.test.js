@@ -251,11 +251,13 @@ test('Render TableAdapter with correct values', () => {
     expect(tableAdapter.prop('onAllSelectionChange')).toBeInstanceOf(Function);
 });
 
-test('Render TableAdapter with actions', () => {
+test('Render TableAdapter with itemActions', () => {
     const actions = [
         {
-            icon: 'su-process',
-            onClick: undefined,
+            getItemActionConfig: () => ({
+                icon: 'su-process',
+                onClick: undefined,
+            }),
         },
     ];
 
@@ -269,10 +271,10 @@ test('Render TableAdapter with actions', () => {
 
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
 
-    const list = shallow(<List actions={actions} adapters={['table']} store={listStore} />);
+    const list = shallow(<List adapters={['table']} itemActions={actions} store={listStore} />);
 
     const tableAdapter = list.find('TableAdapter');
-    expect(tableAdapter.prop('actions')).toEqual(actions);
+    expect(tableAdapter.prop('itemActions')).toEqual(actions);
 });
 
 test('Render the adapter in non-selectable mode', () => {

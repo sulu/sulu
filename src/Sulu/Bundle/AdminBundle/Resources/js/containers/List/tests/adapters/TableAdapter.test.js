@@ -475,7 +475,7 @@ test('Render disabled rows based on given disabledIds prop', () => {
     expect(tableAdapter.find('Row').at(2).props().disabled).toEqual(true);
 });
 
-test('Render data with pencil button and given actions when onItemEdit callback is passed', () => {
+test('Render data with pencil button and given itemActions when onItemEdit callback is passed', () => {
     const rowEditClickSpy = jest.fn();
     const data = [
         {
@@ -509,20 +509,24 @@ test('Render data with pencil button and given actions when onItemEdit callback 
     };
     const actions = [
         {
-            icon: 'su-process',
-            onClick: undefined,
+            getItemActionConfig: () => ({
+                icon: 'su-process',
+                onClick: undefined,
+            }),
         },
         {
-            icon: 'su-trash',
-            onClick: undefined,
+            getItemActionConfig: () => ({
+                icon: 'su-trash',
+                onClick: undefined,
+            }),
         },
     ];
 
     const tableAdapter = render(
         <TableAdapter
             {...listAdapterDefaultProps}
-            actions={actions}
             data={data}
+            itemActions={actions}
             onItemClick={rowEditClickSpy}
             page={1}
             pageCount={3}
@@ -665,8 +669,9 @@ test('Click on pencil should execute onItemClick callback', () => {
     expect(rowEditClickSpy).toBeCalledWith(1);
 });
 
-test('Click on action should execute its callback', () => {
+test('Click on itemAction should execute its callback', () => {
     const rowEditClickSpy = jest.fn();
+    const actionClickSpy = jest.fn();
     const data = [
         {
             id: 1,
@@ -699,16 +704,18 @@ test('Click on action should execute its callback', () => {
     };
     const actions = [
         {
-            icon: 'su-process',
-            onClick: jest.fn(),
+            getItemActionConfig: () => ({
+                icon: 'su-process',
+                onClick: actionClickSpy,
+            }),
         },
     ];
 
     const tableAdapter = shallow(
         <TableAdapter
             {...listAdapterDefaultProps}
-            actions={actions}
             data={data}
+            itemActions={actions}
             onItemClick={rowEditClickSpy}
             page={1}
             pageCount={3}
@@ -720,7 +727,7 @@ test('Click on action should execute its callback', () => {
     expect(buttons[1].icon).toBe('su-process');
 
     buttons[1].onClick(1);
-    expect(actions[0].onClick).toBeCalledWith(1);
+    expect(actionClickSpy).toBeCalledWith(1);
 });
 
 test('Click on checkbox should call onItemSelectionChange callback', () => {
