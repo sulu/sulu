@@ -228,6 +228,38 @@ test('Should render the list with nodes of given ToolbarActions', () => {
     expect(list.render()).toMatchSnapshot();
 });
 
+test('Should render the list with nodes of given ListItemActions', () => {
+    const List = require('../List').default;
+    const listItemActionRegistry = require('../registries/listItemActionRegistry').default;
+
+    const ListItemActionMock1 = jest.fn(function() {
+        this.getNode = jest.fn().mockReturnValue(<div key="node-1">item action node</div>);
+        this.getItemActionConfig = jest.fn().mockReturnValue({icon: 'su-eye'});
+    });
+    listItemActionRegistry.add('mock1', ListItemActionMock1);
+
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'snippets',
+                resourceKey: 'snippets',
+                title: 'sulu_snippet.snippets',
+                itemActions: [
+                    {
+                        type: 'mock1',
+                        options: {},
+                    },
+                ],
+            },
+        },
+    };
+
+    const list = mount(<List router={router} title="Test 2" />);
+    expect(list.render()).toMatchSnapshot();
+});
+
 test('Get ToolbarActions from listToolbarActionRegistry and instantiate them correct with the arguments', () => {
     const List = require('../List').default;
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
@@ -296,16 +328,28 @@ test('Get ToolbarActions from listToolbarActionRegistry and instantiate them cor
     expect(ToolbarActionMock3).not.toBeCalled();
 });
 
-test('Throw error if "toolbarActions" option is not an array of objects', () => {
+test('Get ListItemActions from listItemActionRegistry and instantiate them correct with the arguments', () => {
     const List = require('../List').default;
-    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
+    const listItemActionRegistry = require('../registries/listItemActionRegistry').default;
+    const resourceStore = new ResourceStore('tests', '123-456-789');
 
-    const ToolbarActionMock1 = jest.fn(function() {
+    const ItemActionMock1 = jest.fn(function() {
         this.getNode = jest.fn().mockReturnValue(null);
-        this.getToolbarItemConfig = jest.fn().mockReturnValue({});
+        this.getItemActionConfig = jest.fn().mockReturnValue({icon: 'su-eye'});
     });
 
-    listToolbarActionRegistry.add('mock1', ToolbarActionMock1);
+    const ItemActionMock2 = jest.fn(function() {
+        this.getNode = jest.fn().mockReturnValue(null);
+        this.getItemActionConfig = jest.fn().mockReturnValue({icon: 'su-eye'});
+    });
+
+    const ItemActionMock3 = jest.fn(function() {
+        this.getNode = jest.fn().mockReturnValue(null);
+        this.getItemActionConfig = jest.fn().mockReturnValue({icon: 'su-eye'});
+    });
+
+    listItemActionRegistry.add('mock1', ItemActionMock1);
+    listItemActionRegistry.add('mock2', ItemActionMock2);
 
     const locales = ['de', 'en'];
 
@@ -317,7 +361,74 @@ test('Throw error if "toolbarActions" option is not an array of objects', () => 
                 listKey: 'snippets_list',
                 locales,
                 resourceKey: 'snippets',
+                itemActions: [
+                    {
+                        type: 'mock1',
+                        options: {'test1': 'value1'},
+                    },
+                    {
+                        type: 'mock2',
+                        options: {'test2': 'value2'},
+                    },
+                ],
+            },
+        },
+    };
+
+    const list = shallow(<List resourceStore={resourceStore} router={router} />);
+
+    expect(ItemActionMock1).toBeCalledWith(
+        list.instance().listStore,
+        list.instance(),
+        router,
+        locales,
+        resourceStore,
+        {'test1': 'value1'}
+    );
+    expect(ItemActionMock2).toBeCalledWith(
+        list.instance().listStore,
+        list.instance(),
+        router,
+        locales,
+        resourceStore,
+        {'test2': 'value2'}
+    );
+    expect(ItemActionMock3).not.toBeCalled();
+});
+
+test('Throw error if "toolbarActions" route-option is not an array of objects', () => {
+    const List = require('../List').default;
+    const locales = ['de', 'en'];
+
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'snippets_list',
+                locales,
+                resourceKey: 'snippets',
                 toolbarActions: ['mock1'],
+            },
+        },
+    };
+
+    expect(() => shallow(<List router={router} />)).toThrow('but string was given');
+});
+
+test('Throw error if "itemActions" route-option is not an array of objects', () => {
+    const List = require('../List').default;
+    const locales = ['de', 'en'];
+
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'snippets_list',
+                locales,
+                resourceKey: 'snippets',
+                itemActions: ['mock1'],
             },
         },
     };
@@ -347,6 +458,44 @@ test('Update locales of given ToolbarActions if "locales" prop is changed', () =
                 locales: ['de', 'en'],
                 resourceKey: 'snippets',
                 toolbarActions: [
+                    {
+                        type: 'mock1',
+                        options: {},
+                    },
+                ],
+            },
+        },
+    };
+
+    const list = shallow(<List router={router} />);
+
+    expect(setLocalesSpy).not.toBeCalled();
+    list.setProps({router: {route: {options: {locales: ['de', 'ru']}}}});
+    expect(setLocalesSpy).toBeCalledWith(['de', 'ru']);
+});
+
+test('Update locales of given ListItemActions if "locales" prop is changed', () => {
+    const List = require('../List').default;
+    const listItemActionRegistry = require('../registries/listItemActionRegistry').default;
+
+    const setLocalesSpy = jest.fn();
+    const ListItemActionMock1 = jest.fn(function() {
+        this.getNode = jest.fn().mockReturnValue(null);
+        this.getItemActionConfig = jest.fn().mockReturnValue({icon: 'su-eye'});
+        this.setLocales = setLocalesSpy;
+    });
+
+    listItemActionRegistry.add('mock1', ListItemActionMock1);
+
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'snippets_list',
+                locales: ['de', 'en'],
+                resourceKey: 'snippets',
+                itemActions: [
                     {
                         type: 'mock1',
                         options: {},
