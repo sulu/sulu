@@ -41,13 +41,13 @@ class WebspaceImportTest extends SuluTestCase
      */
     private $webspaceImporter;
 
-    protected $distPath = __DIR__.'/../../fixtures/import/export.xliff.dist';
+    protected $distPath = __DIR__ . '/../../fixtures/import/export.xliff.dist';
 
-    protected $distPathRU = __DIR__.'/../../fixtures/import/export_ru.xliff.dist';
+    protected $distPathRU = __DIR__ . '/../../fixtures/import/export_ru.xliff.dist';
 
-    protected $path = __DIR__.'/../../fixtures/import/export.xliff';
+    protected $path = __DIR__ . '/../../fixtures/import/export.xliff';
 
-    protected $pathRU = __DIR__.'/../../fixtures/import/export_ru.xliff';
+    protected $pathRU = __DIR__ . '/../../fixtures/import/export_ru.xliff';
 
     /**
      * Setup data for import.
@@ -230,7 +230,7 @@ class WebspaceImportTest extends SuluTestCase
             $fs->remove($this->path);
             $fs->remove($this->pathRU);
         } catch (IOExceptionInterface $e) {
-            echo 'An error occurred while creating your directory at '.$e->getPath();
+            echo 'An error occurred while creating your directory at ' . $e->getPath();
         }
     }
 
@@ -259,7 +259,7 @@ class WebspaceImportTest extends SuluTestCase
 
             file_put_contents($this->path, $newContent);
         } catch (IOExceptionInterface $e) {
-            echo 'An error occurred while creating your directory at '.$e->getPath();
+            echo 'An error occurred while creating your directory at ' . $e->getPath();
         }
 
         try {
@@ -280,7 +280,7 @@ class WebspaceImportTest extends SuluTestCase
 
             file_put_contents($this->pathRU, $newContent);
         } catch (IOExceptionInterface $e) {
-            echo 'An error occurred while creating your directory at '.$e->getPath();
+            echo 'An error occurred while creating your directory at ' . $e->getPath();
         }
     }
 
