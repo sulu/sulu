@@ -26,25 +26,8 @@ class PathCleanupSlugifier implements SlugifierInterface
 
     public function slugify($text)
     {
-        $text = $this->pathCleanup->cleanup($text);
         $text = str_replace('/', '-', $text);
 
-        // Remove apostrophes which are not used as quotes around a string
-        $text = preg_replace('/(\\w)\'(\\w)/', '${1}${2}', $text);
-
-        // Replace all none word characters with a space
-        $text = preg_replace('/\W/', ' ', $text);
-
-        $text = preg_replace('/([a-z\d])([A-Z])/', '\1_\2', $text);
-        $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\1_\2', $text);
-        $text = preg_replace('/::/', '.', $text);
-
-        if (function_exists('mb_strtolower')) {
-            $text = mb_strtolower($text);
-        } else {
-            $text = strtolower($text);
-        }
-
-        return trim($text, '-');
+        return $this->pathCleanup->cleanup($text);
     }
 }
