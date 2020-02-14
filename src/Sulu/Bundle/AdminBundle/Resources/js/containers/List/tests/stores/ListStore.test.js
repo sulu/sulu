@@ -561,6 +561,43 @@ test('The loading strategy should be called with the defined search', () => {
     listStore.destroy();
 });
 
+test('The loading strategy should be called with the defined filter', () => {
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    const page = observable.box(1);
+    const listStore = new ListStore(
+        'snippets',
+        'snippets',
+        'list_test',
+        {
+            page,
+        }
+    );
+    listStore.schema = {};
+
+    listStore.updateLoadingStrategy(loadingStrategy);
+    listStore.updateStructureStrategy(structureStrategy);
+
+    listStore.filter({title: 'Test Title', template: 'test'});
+
+    expect(loadingStrategy.load).toBeCalledWith(
+        'snippets',
+        {
+            fields: [
+                'id',
+            ],
+            filter: {title: 'Test Title', template: 'test'},
+            page: 1,
+            limit: 10,
+            sortBy: undefined,
+            sortOrder: undefined,
+        },
+        undefined
+    );
+
+    listStore.destroy();
+});
+
 test('The loading strategy should be called with the active item as parentId', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();

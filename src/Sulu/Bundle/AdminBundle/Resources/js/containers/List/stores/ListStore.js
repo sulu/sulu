@@ -224,6 +224,18 @@ export default class ListStore {
         return queryOptions;
     }
 
+    @computed.struct get filterQueryOption() {
+        const filterOptions = this.filterOptions.get();
+
+        return Object.keys(filterOptions).reduce((filterQueryOption, column) => {
+            if (filterOptions[column] !== undefined) {
+                filterQueryOption[column] = filterOptions[column];
+            }
+
+            return filterQueryOption;
+        }, {});
+    }
+
     @computed get userSchema(): Schema {
         if (!this.initialized) {
             return {};
@@ -502,6 +514,9 @@ export default class ListStore {
         options.sortOrder = this.sortOrder.get();
         options.limit = this.limit.get();
         options.fields = this.fields;
+        if (Object.keys(this.filterQueryOption).length > 0) {
+            options.filter = this.filterQueryOption;
+        }
 
         if (this.searchTerm.get()) {
             options.search = this.searchTerm.get();
