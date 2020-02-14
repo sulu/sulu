@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render data with pencil button when onItemEdit callback is passed 1`] = `
+exports[`Render data with pencil button and given itemActions when onItemEdit callback is passed 1`] = `
 <div
   class="tableContainer dark"
 >
@@ -18,6 +18,26 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
             <span
               aria-label="su-pen"
               class="su-pen"
+            />
+          </span>
+        </th>
+        <th
+          class="headerButtonCell headerCell"
+        >
+          <span>
+            <span
+              aria-label="su-process"
+              class="su-process"
+            />
+          </span>
+        </th>
+        <th
+          class="headerButtonCell headerCell"
+        >
+          <span>
+            <span
+              aria-label="su-trash"
+              class="su-trash"
             />
           </span>
         </th>
@@ -44,6 +64,34 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
               <span
                 aria-label="su-pen"
                 class="su-pen"
+              />
+            </button>
+          </div>
+        </td>
+        <td
+          class="buttonCell cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <button>
+              <span
+                aria-label="su-process"
+                class="su-process"
+              />
+            </button>
+          </div>
+        </td>
+        <td
+          class="buttonCell cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <button>
+              <span
+                aria-label="su-trash"
+                class="su-trash"
               />
             </button>
           </div>

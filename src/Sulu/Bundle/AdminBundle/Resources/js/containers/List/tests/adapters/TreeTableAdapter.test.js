@@ -377,7 +377,7 @@ test('Execute onItemActivate respectively onItemDeactivate callback when an item
     expect(onItemDeactivateSpy).toBeCalledWith(3);
 });
 
-test('Render data with pencil button when onItemEdit callback is passed', () => {
+test('Render data with pencil button and given itemActions when onItemEdit callback is passed', () => {
     const rowEditClickSpy = jest.fn();
     const test1 = {
         data: {
@@ -408,10 +408,26 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
             visibility: 'yes',
         },
     };
+    const actions = [
+        {
+            getItemActionConfig: () => ({
+                icon: 'su-process',
+                onClick: undefined,
+            }),
+        },
+        {
+            getItemActionConfig: () => ({
+                icon: 'su-trash',
+                onClick: undefined,
+            }),
+        },
+    ];
+
     const treeListAdapter = render(
         <TreeTableAdapter
             {...listAdapterDefaultProps}
             data={data}
+            itemActions={actions}
             onItemClick={rowEditClickSpy}
             schema={schema}
         />
@@ -694,4 +710,58 @@ test('Click on add should execute onItemAdd callback', () => {
 
     buttons[0].onClick(1);
     expect(rowAddClickSpy).toBeCalledWith(1);
+});
+
+test('Click on itemAction should execute its callback', () => {
+    const test1 = {
+        data: {
+            id: 2,
+            title: 'Test1',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const data = [
+        test1,
+    ];
+    const schema = {
+        title: {
+            label: 'Title',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        description: {
+            label: 'Description',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+    };
+    const actionClickSpy = jest.fn();
+    const actions = [
+        {
+            getItemActionConfig: () => ({
+                icon: 'su-process',
+                onClick: actionClickSpy,
+            }),
+        },
+    ];
+
+    const rowAddClickSpy = jest.fn();
+    const treeListAdapter = shallow(
+        <TreeTableAdapter
+            {...listAdapterDefaultProps}
+            data={data}
+            itemActions={actions}
+            onItemAdd={rowAddClickSpy}
+            schema={schema}
+        />
+    );
+    const buttons = treeListAdapter.find('Table').prop('buttons');
+    expect(buttons).toHaveLength(2);
+    expect(buttons[1].icon).toBe('su-process');
+
+    buttons[1].onClick(1);
+    expect(actionClickSpy).toBeCalledWith(1);
 });
