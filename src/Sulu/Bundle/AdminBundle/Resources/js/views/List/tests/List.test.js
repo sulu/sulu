@@ -196,9 +196,42 @@ test('Should render the list with a title', () => {
     expect(list).toMatchSnapshot();
 });
 
-test('Pass correct arguments to ToolbarActions', () => {
+test('Should render the list with nodes of given ToolbarActions', () => {
     const List = require('../List').default;
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
+
+    const ToolbarActionMock1 = jest.fn(function() {
+        this.getNode = jest.fn().mockReturnValue(<div key="node-1">toolbar action node</div>);
+        this.getToolbarItemConfig = jest.fn().mockReturnValue({});
+    });
+    listToolbarActionRegistry.add('mock1', ToolbarActionMock1);
+
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'snippets',
+                resourceKey: 'snippets',
+                title: 'sulu_snippet.snippets',
+                toolbarActions: [
+                    {
+                        type: 'mock1',
+                        options: {},
+                    },
+                ],
+            },
+        },
+    };
+
+    const list = mount(<List router={router} title="Test 2" />);
+    expect(list.render()).toMatchSnapshot();
+});
+
+test('Get ToolbarActions from listToolbarActionRegistry and instantiate them correct with the arguments', () => {
+    const List = require('../List').default;
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
+    const resourceStore = new ResourceStore('tests', '123-456-789');
 
     const ToolbarActionMock1 = jest.fn(function() {
         this.getNode = jest.fn().mockReturnValue(null);
@@ -242,14 +275,14 @@ test('Pass correct arguments to ToolbarActions', () => {
         },
     };
 
-    const list = shallow(<List router={router} />);
+    const list = shallow(<List resourceStore={resourceStore} router={router} />);
 
     expect(ToolbarActionMock1).toBeCalledWith(
         list.instance().listStore,
         list.instance(),
         router,
         locales,
-        undefined,
+        resourceStore,
         {'test1': 'value1'}
     );
     expect(ToolbarActionMock2).toBeCalledWith(
@@ -257,13 +290,13 @@ test('Pass correct arguments to ToolbarActions', () => {
         list.instance(),
         router,
         locales,
-        undefined,
+        resourceStore,
         {'test2': 'value2'}
     );
     expect(ToolbarActionMock3).not.toBeCalled();
 });
 
-test('Throw error if options are not passed correctly', () => {
+test('Throw error if "toolbarActions" option is not an array of objects', () => {
     const List = require('../List').default;
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
 
@@ -292,19 +325,18 @@ test('Throw error if options are not passed correctly', () => {
     expect(() => shallow(<List router={router} />)).toThrow('but string was given');
 });
 
-test('Pass correct arguments with passed ResourceStore to ToolbarActions', () => {
+test('Update locales of given ToolbarActions if "locales" prop is changed', () => {
     const List = require('../List').default;
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
-    const resourceStore = new ResourceStore('tests', '123-456-789');
 
-    const ToolbarActionMock = jest.fn(function() {
+    const setLocalesSpy = jest.fn();
+    const ToolbarActionMock1 = jest.fn(function() {
         this.getNode = jest.fn().mockReturnValue(null);
         this.getToolbarItemConfig = jest.fn().mockReturnValue({});
+        this.setLocales = setLocalesSpy;
     });
 
-    listToolbarActionRegistry.add('mock1', ToolbarActionMock);
-
-    const locales = ['de', 'en'];
+    listToolbarActionRegistry.add('mock1', ToolbarActionMock1);
 
     const router = {
         bind: jest.fn(),
@@ -312,25 +344,23 @@ test('Pass correct arguments with passed ResourceStore to ToolbarActions', () =>
             options: {
                 adapters: ['table'],
                 listKey: 'snippets_list',
-                locales,
+                locales: ['de', 'en'],
                 resourceKey: 'snippets',
                 toolbarActions: [
-                    {type: 'mock1', options: {}},
+                    {
+                        type: 'mock1',
+                        options: {},
+                    },
                 ],
             },
         },
     };
 
-    const list = shallow(<List resourceStore={resourceStore} router={router} />);
+    const list = shallow(<List router={router} />);
 
-    expect(ToolbarActionMock).toBeCalledWith(
-        list.instance().listStore,
-        list.instance(),
-        router,
-        locales,
-        resourceStore,
-        {}
-    );
+    expect(setLocalesSpy).not.toBeCalled();
+    list.setProps({router: {route: {options: {locales: ['de', 'ru']}}}});
+    expect(setLocalesSpy).toBeCalledWith(['de', 'ru']);
 });
 
 test('Should pass correct props to move list overlay', () => {

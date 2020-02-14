@@ -216,13 +216,13 @@ class List extends React.Component<Props> {
             route: {
                 options: {
                     locales,
-                    toolbarActions: rawToolbarActions = [],
-                    itemActions: rawItemActions = [],
+                    toolbarActions = [],
+                    itemActions = [],
                 },
             },
         } = router;
 
-        rawToolbarActions.forEach((toolbarAction) => {
+        toolbarActions.forEach((toolbarAction) => {
             if (typeof toolbarAction !== 'object') {
                 throw new Error(
                     'The value of a toolbarAction entry must be an object, but ' + typeof toolbarAction + ' was given!'
@@ -239,7 +239,7 @@ class List extends React.Component<Props> {
             ));
         });
 
-        rawItemActions.forEach((itemAction) => {
+        itemActions.forEach((itemAction) => {
             if (typeof itemAction !== 'object') {
                 throw new Error(
                     'The value of a itemAction entry must be an object, but ' + typeof itemAction + ' was given!'
