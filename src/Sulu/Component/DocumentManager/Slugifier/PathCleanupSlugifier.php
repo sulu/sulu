@@ -26,6 +26,7 @@ class PathCleanupSlugifier implements SlugifierInterface
 
     public function slugify($text)
     {
+        $text = $this->pathCleanup->cleanup($text);
         $text = str_replace('/', '-', $text);
 
         // Remove apostrophes which are not used as quotes around a string
@@ -44,6 +45,6 @@ class PathCleanupSlugifier implements SlugifierInterface
             $text = strtolower($text);
         }
 
-        return trim($this->pathCleanup->cleanup($text), '-');
+        return trim($text, '-');
     }
 }
