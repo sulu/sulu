@@ -108,6 +108,12 @@ export interface FieldTransformer {
     transform(value: *): Node,
 }
 
+export type FieldFilterTypeProps<T> = {|
+    column: string,
+    onChange: (column: string, value: T) => void,
+    value: T,
+|};
+
 export type ResolveCopyArgument = {copied: boolean, parent?: ?Object};
 export type ResolveDeleteArgument = {deleted: boolean};
 export type ResolveMoveArgument = {moved: boolean, parent?: ?Object};
