@@ -26,6 +26,10 @@
                 <source>media.media.mime-type</source>
                 <target>MIME-Type</target>
             </trans-unit>
+            <trans-unit id="3c8f1c7c02abd468cc0794e987e2b212" resname="media.media.downloadCounter">
+                <source>media.media.downloadCounter</source>
+                <target>Downloads count</target>
+            </trans-unit>
             <trans-unit id="6f5e8f5b65fd4e7ae7ec509e742cc85f" resname="media.media.thumbnails">
                 <source>media.media.thumbnails</source>
                 <target>Thumbnail</target>

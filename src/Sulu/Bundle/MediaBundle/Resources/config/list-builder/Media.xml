@@ -109,6 +109,13 @@
             <orm:joins ref="fileVersion"/>
         </property>
 
+        <property name="downloadCounter" list:translation="media.media.downloadCounter">
+            <orm:field-name>downloadCounter</orm:field-name>
+            <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
+
+            <orm:joins ref="fileVersion"/>
+        </property>
+
         <property name="storageOptions" display="never">
             <orm:field-name>storageOptions</orm:field-name>
             <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
