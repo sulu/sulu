@@ -19,9 +19,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SnippetType extends AbstractStructureBehaviorType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $options)
     {
         $options->setDefaults([
@@ -31,9 +28,6 @@ class SnippetType extends AbstractStructureBehaviorType
         parent::configureOptions($options);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);

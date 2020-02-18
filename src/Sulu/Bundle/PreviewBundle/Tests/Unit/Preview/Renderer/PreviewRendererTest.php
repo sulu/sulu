@@ -162,7 +162,6 @@ class PreviewRendererTest extends TestCase
     }
 
     /**
-     * @param ObjectProphecy $object
      * @param string $expectedScheme
      * @param string $expectedHost
      * @param int $expectedPort

@@ -38,9 +38,6 @@ class RefreshSubscriber implements EventSubscriberInterface
         $this->documentRegistry = $documentRegistry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -51,8 +48,6 @@ class RefreshSubscriber implements EventSubscriberInterface
 
     /**
      * Refreshes the document when the DocumentManager method for it is called.
-     *
-     * @param RefreshEvent $event
      */
     public function refreshDocument(RefreshEvent $event)
     {
@@ -68,8 +63,6 @@ class RefreshSubscriber implements EventSubscriberInterface
 
     /**
      * Refreshes the document after a draft have been removed.
-     *
-     * @param RemoveDraftEvent $event
      */
     public function refreshDocumentForDeleteDraft(RemoveDraftEvent $event)
     {
@@ -80,7 +73,6 @@ class RefreshSubscriber implements EventSubscriberInterface
      * Rehydrates the given document from the given node for the given locale.
      *
      * @param object $document
-     * @param NodeInterface $node
      * @param string $locale
      */
     private function rehydrateDocument($document, NodeInterface $node, $locale)

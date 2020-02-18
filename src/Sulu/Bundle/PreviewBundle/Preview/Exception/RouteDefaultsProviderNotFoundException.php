@@ -17,9 +17,7 @@ namespace Sulu\Bundle\PreviewBundle\Preview\Exception;
 class RouteDefaultsProviderNotFoundException extends PreviewRendererException
 {
     /**
-     * @param mixed $object
      * @param int|string $id
-     * @param mixed $webspaceKey
      * @param string $locale
      */
     public function __construct($object, $id, $webspaceKey, $locale)

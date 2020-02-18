@@ -42,9 +42,6 @@ abstract class AbstractLoader implements LoaderInterface
         $this->schemaNamespaceURI = $schemaNamespaceURI;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($resource, $type = null)
     {
         $schemaPath = __DIR__ . $this->schemaPath;
@@ -175,25 +172,16 @@ abstract class AbstractLoader implements LoaderInterface
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($resource, $type = null)
     {
         throw new FeatureNotImplementedException();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getResolver()
     {
         throw new FeatureNotImplementedException();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setResolver(LoaderResolverInterface $resolver)
     {
         throw new FeatureNotImplementedException();

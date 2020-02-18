@@ -281,9 +281,6 @@ class ContactAdmin extends Admin
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContexts()
     {
         return [

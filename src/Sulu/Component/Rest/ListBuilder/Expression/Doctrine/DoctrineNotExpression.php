@@ -25,17 +25,12 @@ class DoctrineNotExpression extends AbstractDoctrineExpression
 
     /**
      * DoctrineNotExpression constructor.
-     *
-     * @param AbstractDoctrineExpression $expression
      */
     public function __construct(AbstractDoctrineExpression $expression)
     {
         $this->expression = $expression;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStatement(QueryBuilder $queryBuilder)
     {
         return 'NOT(' . $this->expression->getStatement($queryBuilder) . ')';

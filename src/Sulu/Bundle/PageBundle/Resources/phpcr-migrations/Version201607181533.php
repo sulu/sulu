@@ -28,9 +28,6 @@ class Version201607181533 implements VersionInterface, ContainerAwareInterface
      */
     private $container;
 
-    /**
-     * {@inheritdoc}
-     */
     public function up(SessionInterface $session)
     {
         $defaultSession = $this->container->get('sulu_document_manager.default_session');
@@ -72,9 +69,6 @@ class Version201607181533 implements VersionInterface, ContainerAwareInterface
         unlink($fileName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function down(SessionInterface $session)
     {
         $liveSession = $this->container->get('sulu_document_manager.live_session');

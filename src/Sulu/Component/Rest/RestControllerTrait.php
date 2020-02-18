@@ -57,10 +57,6 @@ trait RestControllerTrait
 
     /**
      * Returns the language.
-     *
-     * @param Request $request
-     *
-     * @return mixed
      */
     public function getLocale(Request $request)
     {

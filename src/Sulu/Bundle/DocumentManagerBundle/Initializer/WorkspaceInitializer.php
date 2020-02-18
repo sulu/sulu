@@ -30,9 +30,6 @@ class WorkspaceInitializer implements InitializerInterface
         $this->registry = $registry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function initialize(OutputInterface $output, $purge = false)
     {
         foreach ($this->registry->getConnections() as $connection) {

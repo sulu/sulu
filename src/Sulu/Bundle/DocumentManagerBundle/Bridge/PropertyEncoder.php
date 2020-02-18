@@ -21,9 +21,6 @@ use Sulu\Component\DocumentManager\PropertyEncoder as BasePropertyEncoder;
  */
 class PropertyEncoder extends BasePropertyEncoder
 {
-    /**
-     * @param NamespaceRegistry $namespaceRegistry
-     */
     public function __construct(NamespaceRegistry $namespaceRegistry)
     {
         parent::__construct($namespaceRegistry);

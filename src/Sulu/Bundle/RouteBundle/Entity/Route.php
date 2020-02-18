@@ -91,17 +91,11 @@ class Route implements RouteInterface, AuditableInterface
         $this->histories = new ArrayCollection();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setPath($path)
     {
         $this->path = $path;
@@ -109,17 +103,11 @@ class Route implements RouteInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPath()
     {
         return $this->path;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setLocale($locale)
     {
         $this->locale = $locale;
@@ -127,25 +115,16 @@ class Route implements RouteInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale()
     {
         return $this->locale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEntityClass()
     {
         return $this->entityClass;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setEntityClass($entityClass)
     {
         $this->entityClass = $entityClass;
@@ -153,17 +132,11 @@ class Route implements RouteInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEntityId()
     {
         return $this->entityId;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setEntityId($entityId)
     {
         $this->entityId = $entityId;
@@ -171,17 +144,11 @@ class Route implements RouteInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isHistory()
     {
         return $this->history;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setHistory($history)
     {
         $this->history = $history;
@@ -189,17 +156,11 @@ class Route implements RouteInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTarget()
     {
         return $this->target;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setTarget(RouteInterface $target = null)
     {
         $this->target = $target;
@@ -207,9 +168,6 @@ class Route implements RouteInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeTarget()
     {
         $this->target = null;
@@ -217,17 +175,11 @@ class Route implements RouteInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getHistories()
     {
         return $this->histories;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addHistory(RouteInterface $history)
     {
         $this->histories[] = $history;
@@ -236,8 +188,6 @@ class Route implements RouteInterface, AuditableInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @VirtualProperty
      */
     public function getCreated()

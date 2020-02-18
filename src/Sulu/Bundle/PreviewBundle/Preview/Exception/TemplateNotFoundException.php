@@ -17,8 +17,6 @@ namespace Sulu\Bundle\PreviewBundle\Preview\Exception;
 class TemplateNotFoundException extends PreviewRendererException
 {
     /**
-     * @param \InvalidArgumentException $exception
-     * @param mixed $object
      * @param int|string $id
      * @param string $webspaceKey
      * @param string $locale

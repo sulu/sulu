@@ -513,14 +513,8 @@ class ExcerptStructureExtension extends AbstractExtension
      */
     protected $properties = [];
 
-    /**
-     * {@inheritdoc}
-     */
     protected $name = self::EXCERPT_EXTENSION_NAME;
 
-    /**
-     * {@inheritdoc}
-     */
     protected $additionalPrefix = self::EXCERPT_EXTENSION_NAME;
 
     /**
@@ -551,9 +545,6 @@ class ExcerptStructureExtension extends AbstractExtension
         $this->structureManager = $structureManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
     {
         foreach ($this->excerptStructure->getProperties() as $property) {
@@ -577,9 +568,6 @@ class ExcerptStructureExtension extends AbstractExtension
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(NodeInterface $node, $webspaceKey, $languageCode)
     {
         $data = [];
@@ -602,9 +590,6 @@ class ExcerptStructureExtension extends AbstractExtension
         return $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setLanguageCode($languageCode, $languageNamespace, $namespace)
     {
         // lazy load excerpt structure to avoid redeclaration of classes

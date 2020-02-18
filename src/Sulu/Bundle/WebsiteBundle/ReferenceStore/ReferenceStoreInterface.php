@@ -18,8 +18,6 @@ interface ReferenceStoreInterface
 {
     /**
      * Add id.
-     *
-     * @param mixed $id
      */
     public function add($id);
 

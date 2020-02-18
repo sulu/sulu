@@ -48,12 +48,6 @@ class MappingSubscriber implements EventSubscriberInterface
      */
     private $documentRegistry;
 
-    /**
-     * @param MetadataFactoryInterface $factory
-     * @param PropertyEncoder $encoder
-     * @param ProxyFactory $proxyFactory
-     * @param DocumentRegistry $documentRegistry
-     */
     public function __construct(
         MetadataFactoryInterface $factory,
         PropertyEncoder $encoder,
@@ -66,9 +60,6 @@ class MappingSubscriber implements EventSubscriberInterface
         $this->documentRegistry = $documentRegistry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -78,9 +69,6 @@ class MappingSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param AbstractMappingEvent $event
-     */
     public function handleMapping(AbstractMappingEvent $event)
     {
         $metadata = $this->factory->getMetadataForClass(get_class($event->getDocument()));
@@ -110,12 +98,6 @@ class MappingSubscriber implements EventSubscriberInterface
 
     /**
      * Persist a reference field type.
-     *
-     * @param NodeInterface $node
-     * @param DocumentAccessor $accessor
-     * @param mixed $fieldName
-     * @param mixed $locale
-     * @param mixed $fieldMapping
      */
     private function persistReference(
         NodeInterface $node,
@@ -151,12 +133,6 @@ class MappingSubscriber implements EventSubscriberInterface
 
     /**
      * Persist "scalar" field types.
-     *
-     * @param NodeInterface $node
-     * @param DocumentAccessor $accessor
-     * @param mixed $fieldName
-     * @param mixed $locale
-     * @param array $fieldMapping
      */
     private function persistGeneric(
         NodeInterface $node,
@@ -178,12 +154,6 @@ class MappingSubscriber implements EventSubscriberInterface
 
     /**
      * Persist "json_array" field types.
-     *
-     * @param NodeInterface $node
-     * @param DocumentAccessor $accessor
-     * @param mixed $fieldName
-     * @param mixed $locale
-     * @param array $fieldMapping
      */
     private function persistJsonArray(
         NodeInterface $node,
@@ -203,9 +173,6 @@ class MappingSubscriber implements EventSubscriberInterface
         }
     }
 
-    /**
-     * @param AbstractMappingEvent $event
-     */
     public function handleHydrate(AbstractMappingEvent $event)
     {
         $class = get_class($event->getDocument());
@@ -253,14 +220,6 @@ class MappingSubscriber implements EventSubscriberInterface
 
     /**
      * Hydrate reference field types.
-     *
-     * @param NodeInterface $node
-     * @param mixed $document
-     * @param DocumentAccessor $accessor
-     * @param mixed $fieldName
-     * @param mixed $locale
-     * @param array $fieldMapping
-     * @param array $options
      */
     private function hydrateReferenceField(
         NodeInterface $node,
@@ -292,12 +251,6 @@ class MappingSubscriber implements EventSubscriberInterface
 
     /**
      * Hydrate "scalar" field types.
-     *
-     * @param NodeInterface $node
-     * @param DocumentAccessor $accessor
-     * @param mixed $fieldName
-     * @param mixed $locale
-     * @param array $fieldMapping
      */
     private function hydrateGenericField(
         NodeInterface $node,
@@ -321,12 +274,6 @@ class MappingSubscriber implements EventSubscriberInterface
 
     /**
      * Hydrate "json_array" field types.
-     *
-     * @param NodeInterface $node
-     * @param DocumentAccessor $accessor
-     * @param mixed $fieldName
-     * @param mixed $locale
-     * @param array $fieldMapping
      */
     private function hydrateJsonArrayField(
         NodeInterface $node,

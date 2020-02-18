@@ -171,8 +171,6 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
     /**
      * Set type.
      *
-     * @param CollectionType $type
-     *
      * @return CollectionInterface
      */
     public function setType(CollectionType $type);
@@ -184,8 +182,5 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
      */
     public function getType();
 
-    /**
-     * @param DoctrineCollection $children
-     */
     public function setChildren(DoctrineCollection $children);
 }

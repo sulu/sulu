@@ -38,8 +38,6 @@ class TeaserController extends AbstractRestController implements ClassResourceIn
     /**
      * Returns teaser by ids (get-parameter).
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function cgetAction(Request $request)

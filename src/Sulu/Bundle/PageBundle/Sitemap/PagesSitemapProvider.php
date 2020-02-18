@@ -42,9 +42,6 @@ class PagesSitemapProvider extends AbstractSitemapProvider
      */
     private $environment;
 
-    /**
-     * @param ContentRepositoryInterface $contentRepository
-     */
     public function __construct(
         ContentRepositoryInterface $contentRepository,
         WebspaceManagerInterface $webspaceManager,
@@ -55,9 +52,6 @@ class PagesSitemapProvider extends AbstractSitemapProvider
         $this->environment = $environment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function build($page, $scheme, $host)
     {
         $portalInformations = $this->webspaceManager->findPortalInformationsByHostIncludingSubdomains(
@@ -160,9 +154,6 @@ class PagesSitemapProvider extends AbstractSitemapProvider
         return $sitemapUrl;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAlias(): string
     {
         return 'pages';

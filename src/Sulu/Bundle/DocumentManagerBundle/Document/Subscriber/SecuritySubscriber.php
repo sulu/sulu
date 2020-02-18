@@ -35,9 +35,6 @@ class SecuritySubscriber implements EventSubscriberInterface
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -47,8 +44,6 @@ class SecuritySubscriber implements EventSubscriberInterface
 
     /**
      * Sets the default user from the session.
-     *
-     * @param ConfigureOptionsEvent $event
      */
     public function setDefaultUser(ConfigureOptionsEvent $event)
     {

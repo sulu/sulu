@@ -21,9 +21,6 @@ use JMS\Serializer\Visitor\SerializationVisitorInterface;
  */
 class DateHandler implements SubscribingHandlerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribingMethods()
     {
         return [

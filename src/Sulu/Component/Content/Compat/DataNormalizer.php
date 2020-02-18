@@ -21,8 +21,6 @@ class DataNormalizer
 {
     /**
      * Normalize incoming data from the legacy node controller.
-     *
-     * @param FormEvent $event
      */
     public static function normalize(FormEvent $event)
     {

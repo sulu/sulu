@@ -108,7 +108,6 @@ trait RelationTrait
      * function compares entities with data of array and makes callback.
      *
      * @param Traversable $entities
-     * @param array $requestEntities
      * @param callable $compare
      * @param callable $add
      * @param callable $update

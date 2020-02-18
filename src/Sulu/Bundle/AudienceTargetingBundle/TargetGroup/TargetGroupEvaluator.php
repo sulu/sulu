@@ -48,9 +48,6 @@ class TargetGroupEvaluator implements TargetGroupEvaluatorInterface
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function evaluate(
         $maxFrequency = TargetGroupRuleInterface::FREQUENCY_VISITOR,
         TargetGroupInterface $currentTargetGroup = null
@@ -84,8 +81,6 @@ class TargetGroupEvaluator implements TargetGroupEvaluatorInterface
      * Evaluates if one of the rules of the given TargetGroup match. If one of these rules are matching the entire
      * target group is matching.
      *
-     * @param TargetGroupInterface $targetGroup
-     *
      * @return bool
      */
     private function evaluateTargetGroup(TargetGroupInterface $targetGroup)
@@ -101,8 +96,6 @@ class TargetGroupEvaluator implements TargetGroupEvaluatorInterface
 
     /**
      * Evaluates if the given rule is matching. Only returns true if all of the conditions are matching.
-     *
-     * @param TargetGroupRuleInterface $targetGroupRule
      *
      * @return bool
      */

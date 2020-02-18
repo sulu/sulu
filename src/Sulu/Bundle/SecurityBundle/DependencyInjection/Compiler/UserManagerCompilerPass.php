@@ -18,9 +18,6 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class UserManagerCompilerPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         $definition = new Definition(

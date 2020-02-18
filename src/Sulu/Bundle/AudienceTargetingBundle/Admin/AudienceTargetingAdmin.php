@@ -139,9 +139,6 @@ class AudienceTargetingAdmin extends Admin
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContexts()
     {
         return [

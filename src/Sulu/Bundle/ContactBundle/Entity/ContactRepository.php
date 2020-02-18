@@ -25,9 +25,6 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
 {
     use DataProviderRepositoryTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     public function findById($id)
     {
         // Create basic query
@@ -92,9 +89,6 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByIds($ids)
     {
         if (0 === count($ids)) {
@@ -162,9 +156,6 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByIdAndDelete($id)
     {
         // Create basic query
@@ -237,9 +228,6 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findGetAll($limit = null, $offset = null, $sorting = ['id' => 'asc'], $where = [])
     {
         // Create basic query
@@ -272,9 +260,6 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
         return $query->getArrayResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByAccountId(
         $accountId,
         $excludeContactId = null,
@@ -364,9 +349,6 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
         return $qb;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByCriteriaEmailAndPhone($where, $email = null, $phone = null)
     {
         // Create basic query
@@ -407,9 +389,6 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findContactWithAccountsById($id)
     {
         // Create basic query
@@ -456,9 +435,6 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
         return $query->getResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function appendJoins(QueryBuilder $queryBuilder, $alias, $locale)
     {
         $queryBuilder->addSelect('emails')

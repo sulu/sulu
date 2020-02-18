@@ -61,8 +61,6 @@ class RouteController extends AbstractRestController implements ClassResourceInt
     /**
      * Returns list of routes for given entity.
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function cgetAction(Request $request)
@@ -106,8 +104,6 @@ class RouteController extends AbstractRestController implements ClassResourceInt
 
     /**
      * Delete given history-route.
-     *
-     * @param int[] $ids
      *
      * @return Response
      *

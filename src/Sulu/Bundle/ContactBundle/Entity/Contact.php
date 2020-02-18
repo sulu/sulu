@@ -250,17 +250,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         $this->medias = new ArrayCollection();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setFirstName($firstName)
     {
         $this->firstName = $firstName;
@@ -268,17 +262,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFirstName()
     {
         return $this->firstName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setMiddleName($middleName)
     {
         $this->middleName = $middleName;
@@ -286,17 +274,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMiddleName()
     {
         return $this->middleName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setLastName($lastName)
     {
         $this->lastName = $lastName;
@@ -304,17 +286,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setAvatar($avatar)
     {
         $this->avatar = $avatar;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLastName()
     {
         return $this->lastName;
@@ -331,9 +307,6 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this->firstName . ' ' . $this->lastName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setTitle($title)
     {
         $this->title = $title;
@@ -341,17 +314,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTitle()
     {
         return $this->title;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setPosition($position)
     {
         $mainAccountContact = $this->getMainAccountContact();
@@ -365,8 +332,6 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     /**
      * @VirtualProperty
      * @Groups({"fullContact"})
-     *
-     * {@inheritdoc}
      */
     public function getPosition()
     {
@@ -378,9 +343,6 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setBirthday($birthday)
     {
         $this->birthday = $birthday;
@@ -388,33 +350,21 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getBirthday()
     {
         return $this->birthday;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreated()
     {
         return $this->created;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChanged()
     {
         return $this->changed;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addLocale(ContactLocale $locale)
     {
         $this->locales[] = $locale;
@@ -422,17 +372,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeLocale(ContactLocale $locale)
     {
         $this->locales->removeElement($locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocales()
     {
         return $this->locales;
@@ -452,9 +396,6 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChanger()
     {
         return $this->changer;
@@ -474,9 +415,6 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreator()
     {
         return $this->creator;
@@ -494,9 +432,6 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this->note;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addNote(Note $note)
     {
         $this->notes[] = $note;
@@ -504,25 +439,16 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeNote(Note $note)
     {
         $this->notes->removeElement($note);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNotes()
     {
         return $this->notes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addEmail(Email $email)
     {
         $this->emails[] = $email;
@@ -530,25 +456,16 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeEmail(Email $email)
     {
         $this->emails->removeElement($email);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEmails()
     {
         return $this->emails;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addPhone(Phone $phone)
     {
         $this->phones[] = $phone;
@@ -556,25 +473,16 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removePhone(Phone $phone)
     {
         $this->phones->removeElement($phone);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPhones()
     {
         return $this->phones;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addFax(Fax $fax)
     {
         $this->faxes[] = $fax;
@@ -582,25 +490,16 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeFax(Fax $fax)
     {
         $this->faxes->removeElement($fax);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFaxes()
     {
         return $this->faxes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile)
     {
         $this->socialMediaProfiles[] = $socialMediaProfile;
@@ -608,25 +507,16 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile)
     {
         $this->socialMediaProfiles->removeElement($socialMediaProfile);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSocialMediaProfiles()
     {
         return $this->socialMediaProfiles;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addUrl(Url $url)
     {
         $this->urls[] = $url;
@@ -634,25 +524,16 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeUrl(Url $url)
     {
         $this->urls->removeElement($url);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUrls()
     {
         return $this->urls;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setFormOfAddress($formOfAddress)
     {
         $this->formOfAddress = $formOfAddress;
@@ -660,17 +541,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFormOfAddress()
     {
         return $this->formOfAddress;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setSalutation($salutation)
     {
         $this->salutation = $salutation;
@@ -678,17 +553,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSalutation()
     {
         return $this->salutation;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addTag(TagInterface $tag)
     {
         $this->tags[] = $tag;
@@ -696,25 +565,16 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeTag(TagInterface $tag)
     {
         $this->tags->removeElement($tag);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTags()
     {
         return $this->tags;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTagNameArray()
     {
         $tags = [];
@@ -728,9 +588,6 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $tags;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addAccountContact(AccountContact $accountContact)
     {
         $this->accountContacts[] = $accountContact;
@@ -738,25 +595,16 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeAccountContact(AccountContact $accountContact)
     {
         $this->accountContacts->removeElement($accountContact);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAccountContacts()
     {
         return $this->accountContacts;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setNewsletter($newsletter)
     {
         $this->newsletter = $newsletter;
@@ -764,17 +612,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNewsletter()
     {
         return $this->newsletter;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setGender($gender)
     {
         $this->gender = $gender;
@@ -782,17 +624,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getGender()
     {
         return $this->gender;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMainAccount()
     {
         $mainAccountContact = $this->getMainAccountContact();
@@ -822,9 +658,6 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAddresses()
     {
         $contactAddresses = $this->getContactAddresses();
@@ -842,9 +675,6 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $addresses;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setMainEmail($mainEmail)
     {
         $this->mainEmail = $mainEmail;
@@ -852,17 +682,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMainEmail()
     {
         return $this->mainEmail;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setMainPhone($mainPhone)
     {
         $this->mainPhone = $mainPhone;
@@ -870,17 +694,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMainPhone()
     {
         return $this->mainPhone;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setMainFax($mainFax)
     {
         $this->mainFax = $mainFax;
@@ -888,17 +706,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMainFax()
     {
         return $this->mainFax;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setMainUrl($mainUrl)
     {
         $this->mainUrl = $mainUrl;
@@ -906,17 +718,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMainUrl()
     {
         return $this->mainUrl;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addContactAddress(ContactAddress $contactAddress)
     {
         $this->contactAddresses[] = $contactAddress;
@@ -924,25 +730,16 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeContactAddress(ContactAddress $contactAddress)
     {
         $this->contactAddresses->removeElement($contactAddress);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContactAddresses()
     {
         return $this->contactAddresses;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMainAddress()
     {
         $contactAddresses = $this->getContactAddresses();
@@ -959,41 +756,26 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addMedia(MediaInterface $media)
     {
         $this->medias[] = $media;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeMedia(MediaInterface $media)
     {
         $this->medias->removeElement($media);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMedias()
     {
         return $this->medias;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAvatar()
     {
         return $this->avatar;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addCategory(CategoryInterface $category)
     {
         $this->categories[] = $category;
@@ -1001,25 +783,16 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeCategory(CategoryInterface $category)
     {
         $this->categories->removeElement($category);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCategories()
     {
         return $this->categories;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addBankAccount(BankAccount $bankAccount)
     {
         $this->bankAccounts[] = $bankAccount;
@@ -1027,17 +800,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeBankAccount(BankAccount $bankAccounts)
     {
         $this->bankAccounts->removeElement($bankAccounts);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getBankAccounts()
     {
         return $this->bankAccounts;

@@ -27,8 +27,6 @@ interface BlockPropertyInterface extends PropertyInterface
 
     /**
      * adds a type.
-     *
-     * @param BlockPropertyType $type
      */
     public function addType(BlockPropertyType $type);
 

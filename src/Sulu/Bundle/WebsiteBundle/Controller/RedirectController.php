@@ -35,8 +35,6 @@ class RedirectController
     /**
      * Creates a redirect for configured webspaces.
      *
-     * @param Request $request
-     *
      * @return RedirectResponse
      *
      * @deprecated since 1.6 will be removed with 2.0. Replaced by ExceptionListener::redirectPartialMatch
@@ -57,8 +55,6 @@ class RedirectController
     /**
      * Creates a redirect for *.html to * (without html).
      *
-     * @param Request $request
-     *
      * @return RedirectResponse
      */
     public function redirectAction(Request $request)
@@ -69,7 +65,6 @@ class RedirectController
     /**
      * Create a redirect response which uses a route to generate redirect.
      *
-     * @param Request $request
      * @param string $route
      * @param bool $permanent
      *

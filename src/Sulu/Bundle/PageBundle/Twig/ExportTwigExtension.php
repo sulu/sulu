@@ -30,9 +30,6 @@ class ExportTwigExtension extends AbstractExtension
      */
     private $counter = 0;
 
-    /**
-     * @param ExportManagerInterface $exportManager
-     */
     public function __construct(ExportManagerInterface $exportManager)
     {
         $this->exportManager = $exportManager;

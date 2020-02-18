@@ -21,9 +21,6 @@ use Sulu\Component\Content\Document\Extension\ExtensionContainer;
  */
 class ExtensionContainerSubscriber implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -34,9 +31,6 @@ class ExtensionContainerSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param PreSerializeEvent $event
-     */
     public function onPreSerialize(PreSerializeEvent $event)
     {
         $object = $event->getObject();

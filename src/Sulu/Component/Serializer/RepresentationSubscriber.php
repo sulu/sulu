@@ -24,9 +24,6 @@ use Sulu\Component\Rest\ListBuilder\RepresentationInterface;
  */
 class RepresentationSubscriber implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [

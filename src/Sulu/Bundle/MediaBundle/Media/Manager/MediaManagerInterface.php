@@ -61,7 +61,6 @@ interface MediaManagerInterface
     /**
      * Returns the medias with the given ids in the specified order.
      *
-     * @param array $ids
      * @param string $locale
      *
      * @return Media[]
@@ -104,8 +103,6 @@ interface MediaManagerInterface
      * Increase the download counter of a fileVersion.
      *
      * @param int $fileVersionId
-     *
-     * @return mixed
      */
     public function increaseDownloadCounter($fileVersionId);
 
@@ -121,8 +118,6 @@ interface MediaManagerInterface
 
     /**
      * Adds thumbnails and image urls.
-     *
-     * @param Media $media
      *
      * @return Media
      */

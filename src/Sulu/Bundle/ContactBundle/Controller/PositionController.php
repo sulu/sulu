@@ -28,14 +28,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class PositionController extends AbstractRestController implements ClassResourceInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     protected static $entityName = 'SuluContactBundle:Position';
 
-    /**
-     * {@inheritdoc}
-     */
     protected static $entityKey = 'contact_positions';
 
     /**
@@ -98,8 +92,6 @@ class PositionController extends AbstractRestController implements ClassResource
     /**
      * Creates a new position.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
@@ -132,7 +124,6 @@ class PositionController extends AbstractRestController implements ClassResource
     /**
      * Edits the existing position for the given id.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param int $id The id of the position to update
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -224,8 +215,6 @@ class PositionController extends AbstractRestController implements ClassResource
 
     /**
      * Add or update a bunch of positions.
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

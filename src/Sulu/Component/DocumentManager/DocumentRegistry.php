@@ -66,8 +66,6 @@ class DocumentRegistry
     /**
      * Register a document.
      *
-     * @param mixed $document
-     * @param NodeInterface $node
      * @param string $locale
      *
      * @throws DocumentManagerException
@@ -104,7 +102,6 @@ class DocumentRegistry
     /**
      * Return true if the node is managed.
      *
-     * @param NodeInterface $node
      * @param string $locale
      *
      * @return bool
@@ -201,7 +198,6 @@ class DocumentRegistry
     /**
      * Return the document for the given managed node.
      *
-     * @param NodeInterface $node
      * @param string $locale
      *
      * @return mixed If the node is not managed
@@ -239,9 +235,6 @@ class DocumentRegistry
         }
     }
 
-    /**
-     * @param mixed $identifier
-     */
     private function assertNodeExists($identifier)
     {
         if (!isset($this->nodeMap[$identifier])) {
@@ -269,7 +262,6 @@ class DocumentRegistry
      * has a UUID.
      *
      * @param object $document
-     * @param NodeInterface $node
      * @param string $oid
      * @param string $uuid
      *

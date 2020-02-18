@@ -17,8 +17,6 @@ namespace Sulu\Bundle\PreviewBundle\Preview\Exception;
 class UnexpectedException extends PreviewRendererException
 {
     /**
-     * @param \Exception $exception
-     * @param mixed $object
      * @param int|string $id
      * @param string $webspaceKey
      * @param string $locale

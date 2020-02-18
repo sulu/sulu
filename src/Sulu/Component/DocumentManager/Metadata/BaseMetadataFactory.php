@@ -53,9 +53,6 @@ class BaseMetadataFactory implements MetadataFactoryInterface
      */
     private $metadata = [];
 
-    /**
-     * @param array $mapping
-     */
     public function __construct(EventDispatcherInterface $dispatcher, array $mapping)
     {
         $this->dispatcher = $dispatcher;
@@ -67,9 +64,6 @@ class BaseMetadataFactory implements MetadataFactoryInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMetadataForAlias($alias)
     {
         if (!isset($this->aliasMap[$alias])) {
@@ -84,9 +78,6 @@ class BaseMetadataFactory implements MetadataFactoryInterface
         return $this->loadMetadata($map);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMetadataForPhpcrType($phpcrType)
     {
         if (!isset($this->phpcrTypeMap[$phpcrType])) {
@@ -101,17 +92,11 @@ class BaseMetadataFactory implements MetadataFactoryInterface
         return $this->loadMetadata($map);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasMetadataForPhpcrType($phpcrType)
     {
         return isset($this->phpcrTypeMap[$phpcrType]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasMetadataForClass($class)
     {
         $class = ClassNameInflector::getUserClassName($class);
@@ -119,9 +104,6 @@ class BaseMetadataFactory implements MetadataFactoryInterface
         return isset($this->classMap[$class]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMetadataForClass($class)
     {
         $class = ClassNameInflector::getUserClassName($class);
@@ -138,25 +120,16 @@ class BaseMetadataFactory implements MetadataFactoryInterface
         return $this->loadMetadata($map);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasAlias($alias)
     {
         return isset($this->aliasMap[$alias]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAliases()
     {
         return array_keys($this->aliasMap);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMetadataForPhpcrNode(NodeInterface $node)
     {
         throw new \BadMethodCallException(
@@ -172,9 +145,6 @@ class BaseMetadataFactory implements MetadataFactoryInterface
         return $this->phpcrTypeMap;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAllMetadata()
     {
         $metadatas = [];

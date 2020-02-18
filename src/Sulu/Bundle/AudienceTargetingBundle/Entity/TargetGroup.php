@@ -69,25 +69,16 @@ class TargetGroup implements TargetGroupInterface
         $this->rules = new ArrayCollection();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTitle()
     {
         return $this->title;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setTitle($title)
     {
         $this->title = $title;
@@ -95,17 +86,11 @@ class TargetGroup implements TargetGroupInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDescription()
     {
         return $this->description;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setDescription($description)
     {
         $this->description = $description;
@@ -113,17 +98,11 @@ class TargetGroup implements TargetGroupInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPriority()
     {
         return $this->priority;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setPriority($priority)
     {
         $this->priority = $priority;
@@ -131,17 +110,11 @@ class TargetGroup implements TargetGroupInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isAllWebspaces()
     {
         return $this->allWebspaces;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setAllWebspaces($allWebspaces)
     {
         $this->allWebspaces = $allWebspaces;
@@ -149,17 +122,11 @@ class TargetGroup implements TargetGroupInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isActive()
     {
         return $this->active;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setActive($active)
     {
         $this->active = $active;
@@ -167,9 +134,6 @@ class TargetGroup implements TargetGroupInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getWebspaces()
     {
         return $this->webspaces;
@@ -188,9 +152,6 @@ class TargetGroup implements TargetGroupInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addWebspace(TargetGroupWebspaceInterface $webspace)
     {
         $this->webspaces[] = $webspace;
@@ -198,9 +159,6 @@ class TargetGroup implements TargetGroupInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeWebspace(TargetGroupWebspaceInterface $webspace)
     {
         $this->webspaces->removeElement($webspace);
@@ -208,25 +166,16 @@ class TargetGroup implements TargetGroupInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function clearWebspaces()
     {
         $this->webspaces->clear();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRules()
     {
         return $this->rules;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addRule(TargetGroupRuleInterface $rule)
     {
         $this->rules[] = $rule;
@@ -234,9 +183,6 @@ class TargetGroup implements TargetGroupInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeRule(TargetGroupRuleInterface $rule)
     {
         $this->rules->removeElement($rule);
@@ -244,9 +190,6 @@ class TargetGroup implements TargetGroupInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function clearRules()
     {
         $this->rules->clear();

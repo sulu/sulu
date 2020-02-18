@@ -28,17 +28,11 @@ class MediaTwigExtension extends AbstractExtension
      */
     private $mediaManager;
 
-    /**
-     * @param MediaManagerInterface $mediaManager
-     */
     public function __construct(MediaManagerInterface $mediaManager)
     {
         $this->mediaManager = $mediaManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [

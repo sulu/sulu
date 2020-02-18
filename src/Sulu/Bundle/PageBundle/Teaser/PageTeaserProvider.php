@@ -31,18 +31,12 @@ class PageTeaserProvider implements TeaserProviderInterface
      */
     private $translator;
 
-    /**
-     * @param SearchManagerInterface $searchManager
-     */
     public function __construct(SearchManagerInterface $searchManager, TranslatorInterface $translator)
     {
         $this->searchManager = $searchManager;
         $this->translator = $translator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfiguration()
     {
         return new TeaserConfiguration(
@@ -54,9 +48,6 @@ class PageTeaserProvider implements TeaserProviderInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function find(array $ids, $locale)
     {
         $statements = array_map(
@@ -122,7 +113,6 @@ class PageTeaserProvider implements TeaserProviderInterface
     /**
      * Returns media-id.
      *
-     * @param Document $document
      * @param string $field
      *
      * @return int|null
@@ -155,8 +145,6 @@ class PageTeaserProvider implements TeaserProviderInterface
 
     /**
      * Returns attributes for teaser.
-     *
-     * @param Document $document
      *
      * @return array
      */

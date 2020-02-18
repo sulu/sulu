@@ -43,9 +43,6 @@ class MetadataSubscriber implements EventSubscriber
         $this->objects = $objects;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSubscribedEvents()
     {
         return [
@@ -53,9 +50,6 @@ class MetadataSubscriber implements EventSubscriber
         ];
     }
 
-    /**
-     * @param LoadClassMetadataEventArgs $event
-     */
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)
     {
         /** @var ClassMetadataInfo $metadata */
@@ -70,9 +64,6 @@ class MetadataSubscriber implements EventSubscriber
         }
     }
 
-    /**
-     * @param ClassMetadataInfo $metadata
-     */
     private function process(ClassMetadataInfo $metadata)
     {
         foreach ($this->objects as $application => $classes) {
@@ -88,10 +79,6 @@ class MetadataSubscriber implements EventSubscriber
         }
     }
 
-    /**
-     * @param ClassMetadataInfo $metadata
-     * @param Configuration $configuration
-     */
     private function setAssociationMappings(ClassMetadataInfo $metadata, Configuration $configuration)
     {
         if (!class_exists($metadata->getName())) {
@@ -123,9 +110,6 @@ class MetadataSubscriber implements EventSubscriber
         }
     }
 
-    /**
-     * @param ClassMetadataInfo $metadata
-     */
     private function unsetAssociationMappings(ClassMetadataInfo $metadata)
     {
         foreach ($metadata->getAssociationMappings() as $key => $value) {
@@ -154,8 +138,6 @@ class MetadataSubscriber implements EventSubscriber
     }
 
     /**
-     * @param Configuration $configuration
-     *
      * @return array
      */
     private function getAllClassNames(Configuration $configuration)

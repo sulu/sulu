@@ -23,9 +23,6 @@ use Sulu\Bundle\ContactBundle\Entity\UrlType;
 
 class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(ObjectManager $manager)
     {
         // Phone types.
@@ -135,9 +132,6 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
         $manager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getOrder()
     {
         return 2;

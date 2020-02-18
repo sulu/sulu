@@ -21,9 +21,6 @@ class PathBuilder
      */
     private $registry;
 
-    /**
-     * @param PathSegmentRegistry $registry
-     */
     public function __construct(PathSegmentRegistry $registry)
     {
         $this->registry = $registry;
@@ -47,8 +44,6 @@ class PathBuilder
      * `%articles` is "articleDirectory"
      *
      * @see Sulu\Component\DocumentManager\PathSegmentRegistry
-     *
-     * @param array $segments
      *
      * @return string
      */

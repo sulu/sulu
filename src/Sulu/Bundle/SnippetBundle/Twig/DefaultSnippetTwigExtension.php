@@ -52,9 +52,6 @@ class DefaultSnippetTwigExtension extends AbstractExtension
         $this->snippetResolver = $snippetResolver;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [

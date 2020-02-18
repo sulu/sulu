@@ -65,9 +65,6 @@ class PagesSitemapProviderTest extends TestCase
      */
     private $portalKey = 'sulu_io';
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         $this->contentRepository = $this->prophesize(ContentRepositoryInterface::class);

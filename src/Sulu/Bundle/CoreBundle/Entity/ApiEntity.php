@@ -55,8 +55,6 @@ abstract class ApiEntity
 
     /**
      * returns the id of an entity.
-     *
-     * @return mixed
      */
     public function getId()
     {

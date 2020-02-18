@@ -110,9 +110,6 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
         $this->translatedProperties->setLanguage($locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function build($webspaceKey, $locales)
     {
         $additionalFields = [];
@@ -182,9 +179,6 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
         return [$sql2, $additionalFields];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPublished()
     {
         return $this->published;

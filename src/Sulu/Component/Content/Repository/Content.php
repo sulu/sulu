@@ -175,9 +175,6 @@ class Content implements \ArrayAccess
      * Returns value for given property or given default.
      *
      * @param string $name
-     * @param mixed $default
-     *
-     * @return mixed
      */
     public function getPropertyWithDefault($name, $default = null)
     {
@@ -190,7 +187,6 @@ class Content implements \ArrayAccess
 
     /**
      * @param string $propertyName
-     * @param mixed $value
      */
     public function setDataProperty($propertyName, $value)
     {
@@ -327,9 +323,6 @@ class Content implements \ArrayAccess
         return $this->row;
     }
 
-    /**
-     * @param Row $row
-     */
     public function setRow(Row $row)
     {
         $this->row = $row;
@@ -391,33 +384,21 @@ class Content implements \ArrayAccess
         $this->contentLocales = $contentLocales;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetExists($offset)
     {
         return array_key_exists($offset, $this->data);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetGet($offset)
     {
         return $this->data[$offset];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetSet($offset, $value)
     {
         throw new FeatureNotImplementedException();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetUnset($offset)
     {
         throw new FeatureNotImplementedException();
@@ -428,8 +409,6 @@ class Content implements \ArrayAccess
      *
      * @VirtualProperty
      * @SerializedName("_embedded")
-     *
-     * @return array
      */
     public function getEmbedded(): array
     {

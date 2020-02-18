@@ -25,7 +25,6 @@ use Sulu\Component\SmartContent\PublishInterface;
 class ContentDataItem extends ArrayAccessItem implements ItemInterface, PublishInterface
 {
     /**
-     * @param array $data
      * @param object $resource
      */
     public function __construct(array $data, $resource)
@@ -34,8 +33,6 @@ class ContentDataItem extends ArrayAccessItem implements ItemInterface, PublishI
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @VirtualProperty
      */
     public function getTitle()
@@ -83,9 +80,6 @@ class ContentDataItem extends ArrayAccessItem implements ItemInterface, PublishI
         return $this->get('url');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getImage()
     {
         return;

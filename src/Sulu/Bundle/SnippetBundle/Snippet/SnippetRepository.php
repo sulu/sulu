@@ -48,10 +48,6 @@ class SnippetRepository
      */
     private $documentManager;
 
-    /**
-     * @param SessionManager $sessionManager
-     * @param ContentMapper $contentMapper
-     */
     public function __construct(SessionManager $sessionManager, ContentMapper $contentMapper, DocumentManager $documentManager)
     {
         $this->contentMapper = $contentMapper;
@@ -80,7 +76,6 @@ class SnippetRepository
      *
      * UUIDs which fail to resolve to a snippet will be ignored.
      *
-     * @param array $uuids
      * @param string $locale
      * @param bool $loadGhostContent
      *

@@ -88,9 +88,6 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
         $this->contactReferenceStore = $contactReferenceStore;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(
         NodeInterface $node,
         PropertyInterface $property,
@@ -107,9 +104,6 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
         $property->setValue($refs);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -122,9 +116,6 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
         $node->setProperty($property->getName(), (null === $value ? [] : $value));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove(
         NodeInterface $node,
         PropertyInterface $property,
@@ -137,9 +128,6 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentData(PropertyInterface $property)
     {
         $value = $property->getValue();
@@ -186,17 +174,11 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultValue()
     {
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [
@@ -205,9 +187,6 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exportData($propertyValue)
     {
         if (is_array($propertyValue)) {
@@ -217,9 +196,6 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
         return '';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,
@@ -233,9 +209,6 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function preResolve(PropertyInterface $property)
     {
         $value = $property->getValue();

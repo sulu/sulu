@@ -23,7 +23,6 @@ interface RouteManagerInterface
     /**
      * Returns a newly creates route for given routable-entity.
      *
-     * @param RoutableInterface $entity
      * @param string|null $path
      * @param bool $resolveConflict
      *
@@ -34,7 +33,6 @@ interface RouteManagerInterface
     /**
      * Creates a new route and handles the histories if the route has changed.
      *
-     * @param RoutableInterface $entity
      * @param string|null $path
      * @param bool $resolveConflict
      *

@@ -175,8 +175,6 @@ class SitemapUrl
     /**
      * Add new alternate-link.
      *
-     * @param SitemapAlternateLink $alternateLink
-     *
      * @return $this
      */
     public function addAlternateLink(SitemapAlternateLink $alternateLink)

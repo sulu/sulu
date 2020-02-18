@@ -28,7 +28,6 @@ use Sulu\Component\Rest\ApiWrapper;
 class AccountContact extends ApiWrapper
 {
     /**
-     * @param AccountContactEntity $accountContact
      * @param string $locale The locale of this product
      */
     public function __construct(AccountContactEntity $accountContact, $locale)
@@ -80,8 +79,6 @@ class AccountContact extends ApiWrapper
     /**
      * Set contact.
      *
-     * @param ContactEntity $contact
-     *
      * @return AccountContact
      */
     public function setContact(ContactEntity $contact)
@@ -111,8 +108,6 @@ class AccountContact extends ApiWrapper
 
     /**
      * Set account.
-     *
-     * @param AccountInterface $account
      *
      * @return AccountContact
      */

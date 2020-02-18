@@ -32,9 +32,6 @@ class MediaAudienceTargetingSubscriber implements EventSubscriber
         $this->targetGroupClass = $targetGroupClass;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSubscribedEvents()
     {
         return [
@@ -42,9 +39,6 @@ class MediaAudienceTargetingSubscriber implements EventSubscriber
         ];
     }
 
-    /**
-     * @param LoadClassMetadataEventArgs $event
-     */
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)
     {
         /** @var $metadata ClassMetadataInfo */

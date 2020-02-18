@@ -34,18 +34,12 @@ class TargetGroupSelection extends ComplexContentType implements ContentTypeExpo
         $this->targetGroupRepository = $targetGroupRepository;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $ids = $node->getPropertyValueWithDefault($property->getName(), []);
         $property->setValue($ids);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentData(PropertyInterface $property)
     {
         $audienceTargetGroupIds = $property->getValue();
@@ -56,9 +50,6 @@ class TargetGroupSelection extends ComplexContentType implements ContentTypeExpo
         return $this->targetGroupRepository->findByIds($audienceTargetGroupIds);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -70,9 +61,6 @@ class TargetGroupSelection extends ComplexContentType implements ContentTypeExpo
         $node->setProperty($property->getName(), $property->getValue());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         if ($node->hasProperty($property->getName())) {
@@ -80,9 +68,6 @@ class TargetGroupSelection extends ComplexContentType implements ContentTypeExpo
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exportData($propertyValue)
     {
         if (is_array($propertyValue) && count($propertyValue) > 0) {
@@ -92,9 +77,6 @@ class TargetGroupSelection extends ComplexContentType implements ContentTypeExpo
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,

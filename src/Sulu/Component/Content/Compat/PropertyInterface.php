@@ -69,15 +69,11 @@ interface PropertyInterface extends ArrayableInterface
 
     /**
      * sets the value from property.
-     *
-     * @param mixed $value
      */
     public function setValue($value);
 
     /**
      * gets the value from property.
-     *
-     * @return mixed
      */
     public function getValue();
 

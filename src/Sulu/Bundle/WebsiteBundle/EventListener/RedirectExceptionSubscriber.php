@@ -50,12 +50,6 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
      */
     private $urlReplacer;
 
-    /**
-     * @param RequestMatcherInterface $router
-     * @param RequestAnalyzerInterface $requestAnalyzer
-     * @param DefaultLocaleProviderInterface $defaultLocaleProvider
-     * @param ReplacerInterface $urlReplacer
-     */
     public function __construct(
         RequestMatcherInterface $router,
         RequestAnalyzerInterface $requestAnalyzer,
@@ -68,9 +62,6 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
         $this->urlReplacer = $urlReplacer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -83,8 +74,6 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
 
     /**
      * Redirect trailing slashes or ".html".
-     *
-     * @param GetResponseForExceptionEvent $event
      */
     public function redirectTrailingSlashOrHtml(GetResponseForExceptionEvent $event)
     {
@@ -116,8 +105,6 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
 
     /**
      * Redirect partial and redirect matches.
-     *
-     * @param GetResponseForExceptionEvent $event
      */
     public function redirectPartialMatch(GetResponseForExceptionEvent $event)
     {

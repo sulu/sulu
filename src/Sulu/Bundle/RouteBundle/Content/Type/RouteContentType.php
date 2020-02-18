@@ -25,9 +25,6 @@ class RouteContentType extends SimpleContentType
         parent::__construct('Route', '');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [

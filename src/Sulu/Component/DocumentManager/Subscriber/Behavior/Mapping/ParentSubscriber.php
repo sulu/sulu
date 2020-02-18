@@ -42,11 +42,6 @@ class ParentSubscriber implements EventSubscriberInterface
      */
     private $documentManager;
 
-    /**
-     * @param ProxyFactory $proxyFactory
-     * @param DocumentInspector $inspector
-     * @param DocumentManagerInterface $documentManager
-     */
     public function __construct(
         ProxyFactory $proxyFactory,
         DocumentInspector $inspector,
@@ -57,9 +52,6 @@ class ParentSubscriber implements EventSubscriberInterface
         $this->documentManager = $documentManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -72,9 +64,6 @@ class ParentSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param MoveEvent $event
-     */
     public function handleMove(MoveEvent $event)
     {
         $document = $event->getDocument();
@@ -82,9 +71,6 @@ class ParentSubscriber implements EventSubscriberInterface
         $this->mapParent($document, $node);
     }
 
-    /**
-     * @param PersistEvent $event
-     */
     public function handleSetParentNodeFromDocument(PersistEvent $event)
     {
         $document = $event->getDocument();
@@ -107,9 +93,6 @@ class ParentSubscriber implements EventSubscriberInterface
         $event->setParentNode($parentNode);
     }
 
-    /**
-     * @param HydrateEvent $event
-     */
     public function handleHydrate(HydrateEvent $event)
     {
         $document = $event->getDocument();
@@ -132,9 +115,6 @@ class ParentSubscriber implements EventSubscriberInterface
         $this->mapParent($document, $node, $event->getOptions());
     }
 
-    /**
-     * @param PersistEvent $event
-     */
     public function handleChangeParent(PersistEvent $event)
     {
         $document = $event->getDocument();

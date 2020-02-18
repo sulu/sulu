@@ -53,13 +53,7 @@ interface AccessControlInterface
      */
     public function setEntityId($entityId);
 
-    /**
-     * @return mixed
-     */
     public function getEntityClass();
 
-    /**
-     * @param mixed $entityClass
-     */
     public function setEntityClass($entityClass);
 }

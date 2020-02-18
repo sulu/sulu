@@ -78,8 +78,6 @@ class AccountContact
     /**
      * Set contact.
      *
-     * @param ContactInterface $contact
-     *
      * @return AccountContact
      */
     public function setContact(ContactInterface $contact)
@@ -102,8 +100,6 @@ class AccountContact
     /**
      * Set account.
      *
-     * @param AccountInterface $account
-     *
      * @return AccountContact
      */
     public function setAccount(AccountInterface $account)
@@ -125,8 +121,6 @@ class AccountContact
 
     /**
      * Set position.
-     *
-     * @param Position|null $position
      *
      * @return AccountContact
      */

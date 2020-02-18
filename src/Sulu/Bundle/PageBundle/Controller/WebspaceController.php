@@ -108,9 +108,6 @@ class WebspaceController extends AbstractRestController implements ClassResource
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         $request = $this->requestStack->getCurrentRequest();

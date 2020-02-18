@@ -31,9 +31,6 @@ class CacheManager implements CacheManagerInterface
         $this->fosCacheManager = $fosCacheManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function invalidatePath(string $path, array $headers = []): void
     {
         if (!$this->fosCacheManager->supports(FOSCacheManager::PATH)) {
@@ -47,9 +44,6 @@ class CacheManager implements CacheManagerInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function invalidateReference(string $alias, string $id): void
     {
         if (!Uuid::isValid($id)) {
@@ -59,9 +53,6 @@ class CacheManager implements CacheManagerInterface
         $this->invalidateTag($id);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function invalidateTag(string $tag): void
     {
         if (!$this->fosCacheManager->supports(FOSCacheManager::TAGS)) {
@@ -71,9 +62,6 @@ class CacheManager implements CacheManagerInterface
         $this->fosCacheManager->invalidateTags([$tag]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function invalidateDomain(string $domain): void
     {
         if (!$this->fosCacheManager->supports(FOSCacheManager::INVALIDATE)) {
@@ -87,9 +75,6 @@ class CacheManager implements CacheManagerInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsInvalidate(): bool
     {
         return $this->fosCacheManager->supports(FOSCacheManager::INVALIDATE);

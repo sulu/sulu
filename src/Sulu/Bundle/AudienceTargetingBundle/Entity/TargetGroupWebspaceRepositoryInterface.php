@@ -21,7 +21,6 @@ interface TargetGroupWebspaceRepositoryInterface extends RepositoryInterface
     /**
      * Finds a target-group-webspace by given target-group and webspace-key or creates it.
      *
-     * @param TargetGroupInterface $targetGroup
      * @param string $webspaceKey
      *
      * @return TargetGroupWebspaceInterface
@@ -30,8 +29,6 @@ interface TargetGroupWebspaceRepositoryInterface extends RepositoryInterface
 
     /**
      * Removes a target group webspace from database.
-     *
-     * @param TargetGroupWebspaceInterface $targetGroupWebspace
      */
     public function remove(TargetGroupWebspaceInterface $targetGroupWebspace);
 }

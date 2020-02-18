@@ -86,8 +86,6 @@ class DocumentInspector extends BaseDocumentInspector
      * TODO: We need a better solution for retrieving webspace paths (the existing
      *       "session manager" is not a good solution).
      *
-     * @param PathBehavior $document
-     *
      * @return string
      */
     public function getContentPath(PathBehavior $document)
@@ -109,8 +107,6 @@ class DocumentInspector extends BaseDocumentInspector
 
     /**
      * Return the structure for the given StructureBehavior implementing document.
-     *
-     * @param StructureBehavior $document
      *
      * @return StructureMetadata
      */
@@ -244,8 +240,6 @@ class DocumentInspector extends BaseDocumentInspector
     /**
      * Return the enabled shadow locales for the given document.
      *
-     * @param ShadowLocaleBehavior $document
-     *
      * @return array
      */
     public function getShadowLocales(ShadowLocaleBehavior $document)
@@ -274,8 +268,6 @@ class DocumentInspector extends BaseDocumentInspector
     /**
      * Return the published locales for the given document.
      *
-     * @param ShadowLocaleBehavior $document
-     *
      * @return array
      */
     public function getPublishedLocales(ShadowLocaleBehavior $document)
@@ -302,8 +294,6 @@ class DocumentInspector extends BaseDocumentInspector
      * Returns urls for given page for all locales in webspace.
      *
      * TODO: Implement a router service instead of this.
-     *
-     * @param BasePageDocument $page
      *
      * @return array
      */

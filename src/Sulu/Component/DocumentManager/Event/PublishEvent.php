@@ -18,7 +18,6 @@ class PublishEvent extends AbstractMappingEvent
     /**
      * @param object $document
      * @param string $locale
-     * @param array $options
      */
     public function __construct($document, $locale, array $options = [])
     {
@@ -29,8 +28,6 @@ class PublishEvent extends AbstractMappingEvent
 
     /**
      * Sets the node this event should operate on.
-     *
-     * @param NodeInterface $node
      */
     public function setNode(NodeInterface $node)
     {

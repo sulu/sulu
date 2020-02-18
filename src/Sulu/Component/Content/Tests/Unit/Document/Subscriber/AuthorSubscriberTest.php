@@ -53,9 +53,6 @@ class AuthorSubscriberTest extends TestCase
      */
     private $authorSubscriber;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         $this->propertyEncoder = $this->prophesize(PropertyEncoder::class);

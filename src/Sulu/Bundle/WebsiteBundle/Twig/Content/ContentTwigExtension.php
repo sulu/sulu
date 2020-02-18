@@ -69,9 +69,6 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         $this->logger = $logger ?: new NullLogger();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [
@@ -80,9 +77,6 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($uuid)
     {
         if (!$uuid) {
@@ -104,9 +98,6 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadParent($uuid)
     {
         $session = $this->sessionManager->getSession();

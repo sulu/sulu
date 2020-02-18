@@ -33,18 +33,12 @@ class InstantiatorSubscriber implements EventSubscriberInterface
      */
     private $metadataFactory;
 
-    /**
-     * @param MetadataFactoryInterface $metadataFactory
-     */
     public function __construct(
         MetadataFactoryInterface $metadataFactory
     ) {
         $this->metadataFactory = $metadataFactory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -53,9 +47,6 @@ class InstantiatorSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param HydrateEvent $event
-     */
     public function handleHydrate(HydrateEvent $event)
     {
         // don't need to instantiate the document if it is already existing.
@@ -69,9 +60,6 @@ class InstantiatorSubscriber implements EventSubscriberInterface
         $event->setDocument($document);
     }
 
-    /**
-     * @param CreateEvent $event
-     */
     public function handleCreate(CreateEvent $event)
     {
         $metadata = $this->metadataFactory->getMetadataForAlias($event->getAlias());
@@ -83,8 +71,6 @@ class InstantiatorSubscriber implements EventSubscriberInterface
      * Instantiate a new document. The class is determined from
      * the mixins present in the PHPCR node for legacy reasons.
      *
-     * @param NodeInterface $node
-     *
      * @return object
      */
     private function getDocumentFromNode(NodeInterface $node)
@@ -95,8 +81,6 @@ class InstantiatorSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param Metadata $metadata
-     *
      * @return object
      */
     private function instantiateFromMetadata(Metadata $metadata)

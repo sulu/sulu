@@ -29,9 +29,6 @@ class Configuration implements ConfigurationInterface
         $this->debug = $debug;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('sulu_http_cache');

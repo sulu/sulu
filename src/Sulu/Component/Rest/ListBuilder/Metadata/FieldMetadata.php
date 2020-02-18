@@ -69,9 +69,6 @@ class FieldMetadata
         $this->joins = $joins;
     }
 
-    /**
-     * @param JoinMetadata $join
-     */
     public function addJoin(JoinMetadata $join)
     {
         $this->joins[] = $join;

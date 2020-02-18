@@ -68,7 +68,6 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
     /**
      * Returns webspace analytics by webspace key.
      *
-     * @param Request $request
      * @param string $webspace
      *
      * @return Response
@@ -100,7 +99,6 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
     /**
      * Creates a analytics for given webspace.
      *
-     * @param Request $request
      * @param string $webspace
      *
      * @return Response
@@ -120,7 +118,6 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
     /**
      * Updates analytics with given id.
      *
-     * @param Request $request
      * @param string $webspace
      * @param int $id
      *
@@ -158,7 +155,6 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
     /**
      * Removes a list of analytics.
      *
-     * @param Request $request
      * @param $webspace
      *
      * @return Response
@@ -174,9 +170,6 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
         return $this->handleView($this->view(null, 204));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         $request = $this->requestStack->getCurrentRequest();

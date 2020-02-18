@@ -113,16 +113,12 @@ interface TargetGroupInterface
     /**
      * Adds a Webspaces to the TargetGroup.
      *
-     * @param TargetGroupWebspaceInterface $webspace
-     *
      * @return $this
      */
     public function addWebspace(TargetGroupWebspaceInterface $webspace);
 
     /**
      * Removes a webspace from the TargetGroup.
-     *
-     * @param TargetGroupWebspaceInterface $webspace
      *
      * @return $this
      */
@@ -143,16 +139,12 @@ interface TargetGroupInterface
     /**
      * Adds a new rule for this TargetGroup.
      *
-     * @param TargetGroupRuleInterface $rule
-     *
      * @return $this
      */
     public function addRule(TargetGroupRuleInterface $rule);
 
     /**
      * Removes a rule from this TargetGroup.
-     *
-     * @param TargetGroupRuleInterface $rule
      *
      * @return $this
      */

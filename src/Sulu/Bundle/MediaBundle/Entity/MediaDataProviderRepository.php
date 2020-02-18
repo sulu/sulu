@@ -60,9 +60,6 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         $this->mediaManager = $mediaManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByFilters($filters, $page, $pageSize, $limit, $locale, $options = [])
     {
         if (!array_key_exists('dataSource', $filters) ||
@@ -87,9 +84,6 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function appendJoins(QueryBuilder $queryBuilder, $alias, $locale)
     {
         $queryBuilder
@@ -129,9 +123,6 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
             ->setParameter('locale', $locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function append(QueryBuilder $queryBuilder, $alias, $locale, $options = [])
     {
         $parameter = [];
@@ -153,9 +144,6 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         return $parameter;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function appendTagsRelation(QueryBuilder $queryBuilder, $alias)
     {
         $queryBuilder
@@ -165,25 +153,16 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         return 'fileVersion.tags';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function appendCategoriesRelation(QueryBuilder $queryBuilder, $alias)
     {
         return 'fileVersion.categories';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function appendTargetGroupRelation(QueryBuilder $queryBuilder, $alias)
     {
         return 'fileVersion.targetGroups';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function appendDatasource($datasource, $includeSubFolders, QueryBuilder $queryBuilder, $alias)
     {
         if (!$includeSubFolders) {
@@ -209,9 +188,6 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         return ['collectionId' => $datasource];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function appendSortByJoins(QueryBuilder $queryBuilder, $alias, $locale)
     {
         $queryBuilder
@@ -224,9 +200,6 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
             ->setParameter('locale', $locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createQueryBuilder($alias, $indexBy = null)
     {
         return $this->entityManager->createQueryBuilder()

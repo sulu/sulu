@@ -23,9 +23,6 @@ use Sulu\Component\Content\Document\RedirectType;
  */
 class RedirectTypeSubscriber implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -39,8 +36,6 @@ class RedirectTypeSubscriber implements EventSubscriberInterface
 
     /**
      * Adds the type of redirect and the redirect location to the serialization.
-     *
-     * @param ObjectEvent $event
      */
     public function onPostSerialize(ObjectEvent $event)
     {

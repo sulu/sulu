@@ -26,9 +26,6 @@ class Select extends SimpleContentType
         parent::__construct('MultipleSelect', []);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [
@@ -36,9 +33,6 @@ class Select extends SimpleContentType
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,

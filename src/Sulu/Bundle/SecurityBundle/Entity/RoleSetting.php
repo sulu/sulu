@@ -39,17 +39,11 @@ class RoleSetting implements RoleSettingInterface
      */
     private $role;
 
-    /**
-     * {@inheritdoc}
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setKey($key)
     {
         $this->key = $key;
@@ -57,17 +51,11 @@ class RoleSetting implements RoleSettingInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getKey()
     {
         return $this->key;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setValue($value)
     {
         $this->value = $value;
@@ -75,17 +63,11 @@ class RoleSetting implements RoleSettingInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getValue()
     {
         return $this->value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setRole(RoleInterface $role = null)
     {
         $this->role = $role;
@@ -93,9 +75,6 @@ class RoleSetting implements RoleSettingInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRole()
     {
         return $this->role;

@@ -133,8 +133,6 @@ class RouteManager implements RouteManagerInterface
     /**
      * Returns true if route is unique.
      *
-     * @param RouteInterface $route
-     *
      * @return bool
      */
     private function isUnique(RouteInterface $route)
@@ -149,9 +147,6 @@ class RouteManager implements RouteManagerInterface
      * If no route was found the method returns the newly created route.
      * If the route is a history route for given entity the history route will be returned.
      * Else a RouteIsNotUniqueException will be thrown.
-     *
-     * @param RouteInterface $route
-     * @param RoutableInterface $entity
      *
      * @return RouteInterface
      *

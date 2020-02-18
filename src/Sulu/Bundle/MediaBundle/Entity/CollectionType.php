@@ -129,8 +129,6 @@ class CollectionType
     /**
      * Add collections.
      *
-     * @param Collection $collections
-     *
      * @return $this
      */
     public function addCollection(Collection $collections)
@@ -142,8 +140,6 @@ class CollectionType
 
     /**
      * Remove collections.
-     *
-     * @param Collection $collections
      *
      * @return $this
      */

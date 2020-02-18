@@ -29,17 +29,11 @@ class ExportManager implements ExportManagerInterface
      */
     protected $contentTypeManager;
 
-    /**
-     * @param ContentTypeManagerInterface $contentTypeManager
-     */
     public function __construct(ContentTypeManagerInterface $contentTypeManager)
     {
         $this->contentTypeManager = $contentTypeManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function add($contentTypeName, $format, $options)
     {
         if (!isset($this->contentTypeOptions[$contentTypeName])) {
@@ -49,9 +43,6 @@ class ExportManager implements ExportManagerInterface
         $this->contentTypeOptions[$contentTypeName][$format] = $options;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function export($contentTypeName, $propertyValue)
     {
         $contentType = $this->contentTypeManager->get($contentTypeName);
@@ -63,17 +54,11 @@ class ExportManager implements ExportManagerInterface
         return '';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasExport($contentTypeName, $format)
     {
         return $this->existOptions($contentTypeName, $format);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getOptions($contentTypeName, $format)
     {
         $options = null;

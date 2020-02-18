@@ -19,7 +19,6 @@ use Twig\Error\Error;
 class TwigException extends PreviewRendererException
 {
     /**
-     * @param mixed $object
      * @param int|string $id
      * @param string $webspaceKey
      * @param string $locale

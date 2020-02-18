@@ -42,9 +42,6 @@ class TextEditor extends SimpleContentType
         $this->markupNamespace = $markupNamespace;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $value = $node->getPropertyValueWithDefault($property->getName(), $this->defaultValue);
@@ -53,9 +50,6 @@ class TextEditor extends SimpleContentType
         return $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -111,9 +105,6 @@ class TextEditor extends SimpleContentType
         return preg_replace('/ sulu-validation-state="[a-zA-Z ]*"/', '', $content);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [

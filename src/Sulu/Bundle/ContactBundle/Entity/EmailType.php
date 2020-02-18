@@ -92,8 +92,6 @@ class EmailType implements \JsonSerializable
     /**
      * Add emails.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
-     *
      * @return EmailType
      */
     public function addEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails)
@@ -105,8 +103,6 @@ class EmailType implements \JsonSerializable
 
     /**
      * Remove emails.
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Email $emails
      */
     public function removeEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails)
     {

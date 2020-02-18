@@ -30,9 +30,6 @@ class ReorderEvent extends AbstractMappingEvent
         $this->destId = $destId;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDebugMessage()
     {
         return sprintf(
@@ -50,9 +47,6 @@ class ReorderEvent extends AbstractMappingEvent
         return $this->destId;
     }
 
-    /**
-     * @param NodeInterface $node
-     */
     public function setNode(NodeInterface $node)
     {
         $this->node = $node;

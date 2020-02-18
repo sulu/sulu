@@ -45,15 +45,11 @@ interface MetadataFactoryInterface
     /**
      * Return the metadata for the PHPCR node. If the PHPCR node is not managed
      * then the Metadata should be that of the Sulu\Component\DocumentManager\Document\UnknownDocument.
-     *
-     * @param NodeInterface $phpcrNode
      */
     public function getMetadataForPhpcrNode(NodeInterface $phpcrNode);
 
     /**
      * Return metadata for the given class.
-     *
-     * @param mixed $class
      *
      * @return Metadata
      */

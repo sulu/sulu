@@ -50,8 +50,6 @@ class SmartContentItemController extends AbstractRestController
     /**
      * Resolves filter for smart-content UI.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Sulu\Component\Rest\Exception\MissingParameterException
@@ -110,8 +108,6 @@ class SmartContentItemController extends AbstractRestController
     /**
      * Returns property-parameter.
      *
-     * @param array $params
-     *
      * @return PropertyParameter[]
      */
     private function getParams(array $params)
@@ -130,9 +126,6 @@ class SmartContentItemController extends AbstractRestController
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale(Request $request)
     {
         return $this->getRequestParameter($request, 'locale', true);

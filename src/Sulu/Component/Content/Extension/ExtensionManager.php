@@ -18,9 +18,6 @@ class ExtensionManager implements ExtensionManagerInterface
 {
     private $extensions = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExtensions($structureType)
     {
         $extensions = [];
@@ -48,9 +45,6 @@ class ExtensionManager implements ExtensionManagerInterface
         return isset($extensions[$name]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExtension($structureType, $name)
     {
         $extensions = $this->getExtensions($structureType);

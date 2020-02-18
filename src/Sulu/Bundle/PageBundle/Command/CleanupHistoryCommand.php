@@ -121,7 +121,6 @@ EOT
     /**
      * Cleanup specific node and his children.
      *
-     * @param NodeInterface $node
      * @param string $rootPath
      * @param bool $dryRun
      */

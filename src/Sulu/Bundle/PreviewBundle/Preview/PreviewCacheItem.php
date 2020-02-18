@@ -72,17 +72,11 @@ class PreviewCacheItem
         return $this->providerKey;
     }
 
-    /**
-     * @return mixed
-     */
     public function getObject()
     {
         return $this->object;
     }
 
-    /**
-     * @param mixed $object
-     */
     public function setObject($object): void
     {
         $this->object = $object;

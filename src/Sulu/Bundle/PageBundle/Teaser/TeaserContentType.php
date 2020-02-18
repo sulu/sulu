@@ -41,11 +41,6 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
      */
     private $referenceStorePool;
 
-    /**
-     * @param TeaserProviderPoolInterface $providerPool
-     * @param TeaserManagerInterface $teaserManager
-     * @param ReferenceStorePoolInterface $referenceStorePool
-     */
     public function __construct(
         TeaserProviderPoolInterface $providerPool,
         TeaserManagerInterface $teaserManager,
@@ -58,9 +53,6 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
         $this->referenceStorePool = $referenceStorePool;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [
@@ -69,25 +61,16 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function decodeValue($value)
     {
         return json_decode($value, true);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function encodeValue($value)
     {
         return json_encode($value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentData(PropertyInterface $property)
     {
         $items = $this->getItems($property);
@@ -123,17 +106,11 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getViewData(PropertyInterface $property)
     {
         return $this->getValue($property);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,
@@ -150,9 +127,6 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
         parent::importData($node, $property, $value, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function preResolve(PropertyInterface $property)
     {
         foreach ($this->getItems($property) as $item) {
@@ -166,8 +140,6 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
 
     /**
      * Returns items.
-     *
-     * @param PropertyInterface $property
      *
      * @return array
      */
@@ -183,8 +155,6 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
 
     /**
      * Returns property-value merged with defaults.
-     *
-     * @param PropertyInterface $property
      *
      * @return array
      */

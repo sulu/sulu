@@ -37,9 +37,6 @@ class AliasFilingSubscriber extends AbstractFilingSubscriber
         $this->metadataFactory = $metadataFactory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -47,9 +44,6 @@ class AliasFilingSubscriber extends AbstractFilingSubscriber
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function generatePath(PersistEvent $event)
     {
         $document = $event->getDocument();

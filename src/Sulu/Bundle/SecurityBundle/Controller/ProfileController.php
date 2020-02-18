@@ -69,10 +69,6 @@ class ProfileController implements ClassResourceInterface
     private $contactClass;
 
     /**
-     * @param TokenStorageInterface $tokenStorage
-     * @param ObjectManager $objectManager
-     * @param ViewHandlerInterface $viewHandler
-     * @param UserSettingRepositoryInterface $userSettingRepository
      * @param UserManagerInterface $userManager
      */
     public function __construct(
@@ -114,8 +110,6 @@ class ProfileController implements ClassResourceInterface
     /**
      * Sets the given profile information of a user.
      *
-     * @param Request $request
-     *
      * @return Response
      *
      * @throws \Exception
@@ -143,8 +137,6 @@ class ProfileController implements ClassResourceInterface
 
     /**
      * Takes a key, value pair and stores it as settings for the user.
-     *
-     * @param Request $request
      *
      * @return Response
      */
@@ -185,8 +177,6 @@ class ProfileController implements ClassResourceInterface
     /**
      * Deletes a user setting by a given key.
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function deleteSettingsAction(Request $request)
@@ -220,8 +210,6 @@ class ProfileController implements ClassResourceInterface
 
     /**
      * Checks the arguments of the given request.
-     *
-     * @param Request $request
      *
      * @throws MissingArgumentException
      */

@@ -19,10 +19,6 @@ interface IndexComparatorInterface
     /**
      * Compares given ids a and b with their index in ids array.
      *
-     * @param mixed $a
-     * @param mixed $b
-     * @param array $ids
-     *
      * @return int
      */
     public function compare($a, $b, array $ids);

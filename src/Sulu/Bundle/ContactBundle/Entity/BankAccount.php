@@ -149,8 +149,6 @@ class BankAccount
     /**
      * Add accounts.
      *
-     * @param AccountInterface $accounts
-     *
      * @return BankAccount
      */
     public function addAccount(AccountInterface $accounts)
@@ -162,8 +160,6 @@ class BankAccount
 
     /**
      * Remove accounts.
-     *
-     * @param AccountInterface $accounts
      */
     public function removeAccount(AccountInterface $accounts)
     {
@@ -207,8 +203,6 @@ class BankAccount
     /**
      * Add contacts.
      *
-     * @param ContactInterface $contacts
-     *
      * @return BankAccount
      */
     public function addContact(ContactInterface $contacts)
@@ -220,8 +214,6 @@ class BankAccount
 
     /**
      * Remove contacts.
-     *
-     * @param ContactInterface $contacts
      */
     public function removeContact(ContactInterface $contacts)
     {

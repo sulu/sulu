@@ -20,9 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class PortalInformationRequestProcessor implements RequestProcessorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
         $portalInformation = $requestAttributes->getAttribute('portalInformation');
@@ -79,9 +76,6 @@ class PortalInformationRequestProcessor implements RequestProcessorInterface
         return new RequestAttributes($attributes);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validate(RequestAttributes $attributes)
     {
         return true;
@@ -90,8 +84,6 @@ class PortalInformationRequestProcessor implements RequestProcessorInterface
     /**
      * Returns resource locator and format of current request.
      *
-     * @param PortalInformation $portalInformation
-     * @param Request $request
      * @param string $path
      *
      * @return array

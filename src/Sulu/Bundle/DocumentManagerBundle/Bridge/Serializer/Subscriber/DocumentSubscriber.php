@@ -53,9 +53,6 @@ class DocumentSubscriber implements EventSubscriberInterface
         $this->metadataFactory = $metadataFactory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -66,9 +63,6 @@ class DocumentSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param ObjectEvent $event
-     */
     public function onPostDeserialize(ObjectEvent $event)
     {
         $document = $event->getObject();

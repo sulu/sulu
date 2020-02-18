@@ -117,9 +117,6 @@ class CollectionManager implements CollectionManagerInterface
         $this->permissions = $permissions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = [], $sortBy = [], $children = false)
     {
         $collectionEntity = $this->collectionRepository->findCollectionById($id);
@@ -147,9 +144,6 @@ class CollectionManager implements CollectionManagerInterface
         return $this->getApiEntity($collectionEntity, $locale, $collectionChildren, $breadcrumbEntities);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function get($locale, $filter = [], $limit = null, $offset = null, $sortBy = [])
     {
         $collectionEntities = $this->collectionRepository->findCollections($filter, $limit, $offset, $sortBy);
@@ -164,9 +158,6 @@ class CollectionManager implements CollectionManagerInterface
         return $collections;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getByKey($key, $locale)
     {
         $collection = $this->collectionRepository->findCollectionByKey($key);
@@ -178,9 +169,6 @@ class CollectionManager implements CollectionManagerInterface
         return $this->getApiEntity($collection, $locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTreeById($id, $locale)
     {
         $collectionSet = $this->collectionRepository->findTree($id, $locale);
@@ -205,9 +193,6 @@ class CollectionManager implements CollectionManagerInterface
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = [], $systemCollections = true)
     {
         $filter = [
@@ -364,9 +349,6 @@ class CollectionManager implements CollectionManagerInterface
         return $this->fieldDescriptors;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFieldDescriptors()
     {
         if (null === $this->fieldDescriptors) {
@@ -376,17 +358,11 @@ class CollectionManager implements CollectionManagerInterface
         return $this->fieldDescriptors;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFieldDescriptor($key)
     {
         return $this->fieldDescriptors[$key];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save(array $data, ?int $userId = null, bool $breadcrumb = false)
     {
         if (isset($data['id'])) {
@@ -445,7 +421,6 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * Data can be set over by array.
      *
-     * @param Collection $collection
      * @param array $data
      *
      * @return Collection
@@ -531,9 +506,6 @@ class CollectionManager implements CollectionManagerInterface
         return $type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function delete($id)
     {
         $collectionEntity = $this->collectionRepository->findCollectionById($id);
@@ -546,9 +518,6 @@ class CollectionManager implements CollectionManagerInterface
         $this->em->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function move($id, $locale, $destinationId = null)
     {
         try {
@@ -585,8 +554,6 @@ class CollectionManager implements CollectionManagerInterface
     }
 
     /**
-     * @param Collection $collection
-     *
      * @return Collection
      */
     protected function addPreview(Collection $collection)
@@ -670,7 +637,6 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * Prepare an api entity.
      *
-     * @param CollectionInterface $entity
      * @param string $locale
      * @param CollectionEntity[] $entities nested set
      * @param array $breadcrumbEntities

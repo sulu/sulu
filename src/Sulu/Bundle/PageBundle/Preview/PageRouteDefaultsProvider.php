@@ -42,11 +42,6 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
      */
     private $structureManager;
 
-    /**
-     * @param StructureMetadataFactoryInterface $structureMetadataFactory
-     * @param DocumentInspector $inspector
-     * @param StructureManagerInterface $structureManager
-     */
     public function __construct(
         StructureMetadataFactoryInterface $structureMetadataFactory,
         DocumentInspector $inspector,
@@ -75,17 +70,11 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isPublished($entityClass, $id, $locale)
     {
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($entityClass)
     {
         return HomeDocument::class === $entityClass
@@ -96,8 +85,6 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
 
     /**
      * Return a structure bridge corresponding to the given document.
-     *
-     * @param BasePageDocument $document
      *
      * @return PageBridge
      */

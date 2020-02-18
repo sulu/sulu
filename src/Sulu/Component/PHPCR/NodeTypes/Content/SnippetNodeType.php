@@ -16,17 +16,11 @@ namespace Sulu\Component\PHPCR\NodeTypes\Content;
  */
 class SnippetNodeType extends ContentNodeType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'sulu:snippet';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDeclaredSupertypeNames()
     {
         return [

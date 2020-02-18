@@ -92,8 +92,6 @@ class UserSetting
     /**
      * Sets the user for this user setting.
      *
-     * @param UserInterface $user
-     *
      * @return UserSetting
      */
     public function setUser(UserInterface $user)

@@ -17,9 +17,6 @@ class ConfigureOptionsEvent extends AbstractEvent
 {
     use EventOptionsTrait;
 
-    /**
-     * @param OptionsResolver $options
-     */
     public function __construct(OptionsResolver $options)
     {
         $this->options = $options;

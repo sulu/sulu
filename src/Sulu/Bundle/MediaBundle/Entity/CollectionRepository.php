@@ -30,9 +30,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
 {
     use SecuredEntityRepositoryTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     public function findCollectionById($id)
     {
         $dql = sprintf(
@@ -60,9 +57,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         return $result[0];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findCollectionSet(
         $depth = 0,
         $filter = [],
@@ -105,9 +99,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         return $queryBuilder->getQuery()->getResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function countCollections($depth = 0, $filter = [], CollectionInterface $collection = null)
     {
         $ids = $this->getIdsQuery($depth, $filter, [], $collection, 'DISTINCT collection.id')->getScalarResult();
@@ -119,9 +110,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function countMedia(CollectionInterface $collection)
     {
         if (!$collection || !$collection->getId()) {
@@ -137,9 +125,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         return intval($queryBuilder->getQuery()->getSingleScalarResult());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function countSubCollections(CollectionInterface $collection)
     {
         if (!$collection || !$collection->getId()) {
@@ -155,9 +140,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         return intval($queryBuilder->getQuery()->getSingleScalarResult());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findCollections($filter = [], $limit = null, $offset = null, $sortBy = [])
     {
         list($parent, $depth, $search) = [
@@ -211,9 +193,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findCollectionBreadcrumbById($id)
     {
         try {
@@ -239,9 +218,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findCollectionByKey($key)
     {
         $queryBuilder = $this->createQueryBuilder('collection')
@@ -259,9 +235,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findTree($id, $locale)
     {
         $subQueryBuilder = $this->createQueryBuilder('subCollection')
@@ -287,9 +260,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         return $queryBuilder->getQuery()->getResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findCollectionTypeById($id)
     {
         $queryBuilder = $this->createQueryBuilder('collection')
@@ -308,7 +278,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
      * @param int $depth
      * @param array $filter
      * @param array $sortBy
-     * @param CollectionInterface|null $collection
      * @param string $select
      *
      * @return Query

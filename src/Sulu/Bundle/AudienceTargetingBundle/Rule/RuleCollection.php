@@ -21,17 +21,11 @@ class RuleCollection implements RuleCollectionInterface
      */
     private $rules;
 
-    /**
-     * @param array $rules
-     */
     public function __construct(array $rules)
     {
         $this->rules = $rules;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRule($name)
     {
         if (!isset($this->rules[$name])) {
@@ -41,9 +35,6 @@ class RuleCollection implements RuleCollectionInterface
         return $this->rules[$name];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRules()
     {
         return $this->rules;

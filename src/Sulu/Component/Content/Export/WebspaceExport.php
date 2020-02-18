@@ -63,9 +63,6 @@ class WebspaceExport extends Export implements WebspaceExportInterface
         $this->output = new NullOutput();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function export(
         $webspaceKey,
         $locale,
@@ -93,9 +90,6 @@ class WebspaceExport extends Export implements WebspaceExportInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExportData($webspaceKey, $uuid = null, $nodes = null, $ignoredNodes = null)
     {
         /** @var PageDocument[] $documents */

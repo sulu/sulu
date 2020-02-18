@@ -22,9 +22,6 @@ use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
  */
 class ChildrenCollectionHandler implements SubscribingHandlerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribingMethods()
     {
         return [

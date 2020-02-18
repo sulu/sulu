@@ -70,9 +70,6 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
         $this->joins = $joins;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSelect()
     {
         return $this->encodeAlias($this->entityName) . '.' . $this->getFieldName();
@@ -108,9 +105,6 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
         return $this->joins;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function compare(FieldDescriptorInterface $other)
     {
         if (!$other instanceof self) {

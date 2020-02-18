@@ -24,7 +24,6 @@ class PersistEvent extends AbstractMappingEvent
     /**
      * @param object $document
      * @param string $locale
-     * @param array $options
      */
     public function __construct($document, $locale, array $options = [])
     {
@@ -33,9 +32,6 @@ class PersistEvent extends AbstractMappingEvent
         $this->options = $options;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDebugMessage()
     {
         return sprintf(
@@ -45,17 +41,11 @@ class PersistEvent extends AbstractMappingEvent
         );
     }
 
-    /**
-     * @param NodeInterface $node
-     */
     public function setNode(NodeInterface $node)
     {
         $this->node = $node;
     }
 
-    /**
-     * @param NodeInterface $parentNode
-     */
     public function setParentNode(NodeInterface $parentNode)
     {
         $this->parentNode = $parentNode;

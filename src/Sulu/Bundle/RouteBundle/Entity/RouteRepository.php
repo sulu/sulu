@@ -20,9 +20,6 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
  */
 class RouteRepository extends EntityRepository implements RouteRepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function findByPath($path, $locale)
     {
         $query = $this->createQueryBuilder('entity')
@@ -40,9 +37,6 @@ class RouteRepository extends EntityRepository implements RouteRepositoryInterfa
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByEntity($entityClass, $entityId, $locale)
     {
         $query = $this->createQueryBuilder('entity')
@@ -60,9 +54,6 @@ class RouteRepository extends EntityRepository implements RouteRepositoryInterfa
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findHistoryByEntity($entityClass, $entityId, $locale)
     {
         $query = $this->createQueryBuilder('entity')
@@ -76,9 +67,6 @@ class RouteRepository extends EntityRepository implements RouteRepositoryInterfa
         return $query->getResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findAllByEntity($entityClass, $entityId, $locale = null)
     {
         $queryBuilder = $this->createQueryBuilder('entity')

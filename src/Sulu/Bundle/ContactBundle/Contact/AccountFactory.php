@@ -29,9 +29,6 @@ class AccountFactory implements AccountFactoryInterface
         $this->entityName = $entityName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createEntity()
     {
         $entityName = $this->entityName;
@@ -39,9 +36,6 @@ class AccountFactory implements AccountFactoryInterface
         return new $entityName();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createApiEntity(AccountInterface $account, $locale)
     {
         return new AccountApi($account, $locale);

@@ -18,9 +18,6 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 
 class TargetGroupRuleSerializeSubscriber implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -34,8 +31,6 @@ class TargetGroupRuleSerializeSubscriber implements EventSubscriberInterface
 
     /**
      * Called after a target group rule was deserialized.
-     *
-     * @param ObjectEvent $event
      */
     public function onPostDeserialize(ObjectEvent $event)
     {

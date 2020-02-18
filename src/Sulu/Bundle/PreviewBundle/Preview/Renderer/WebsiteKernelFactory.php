@@ -18,9 +18,6 @@ use Sulu\Component\HttpKernel\SuluKernel;
  */
 class WebsiteKernelFactory implements KernelFactoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function create($environment)
     {
         $kernel = new PreviewKernel($environment, 'dev' === $environment, SuluKernel::CONTEXT_WEBSITE);

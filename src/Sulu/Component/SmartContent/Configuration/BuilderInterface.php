@@ -73,8 +73,6 @@ interface BuilderInterface
     /**
      * Enables audience targeting.
      *
-     * @param bool $enable
-     *
      * @return BuilderInterface
      */
     public function enableAudienceTargeting(bool $enable = true);

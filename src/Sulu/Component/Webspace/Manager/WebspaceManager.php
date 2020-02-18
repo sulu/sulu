@@ -278,9 +278,6 @@ class WebspaceManager implements WebspaceManagerInterface
         return $urls;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPortalInformations(?string $environment = null): array
     {
         if (null === $environment) {

@@ -21,9 +21,6 @@ use Twig\TwigFunction;
  */
 class UtilTwigExtension extends AbstractExtension
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getFilters()
     {
         return [
@@ -33,9 +30,6 @@ class UtilTwigExtension extends AbstractExtension
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [

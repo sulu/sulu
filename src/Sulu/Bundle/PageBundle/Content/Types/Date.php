@@ -26,9 +26,6 @@ class Date extends SimpleContentType
         parent::__construct('Date');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -47,9 +44,6 @@ class Date extends SimpleContentType
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $value = '';
@@ -67,9 +61,6 @@ class Date extends SimpleContentType
         return $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [

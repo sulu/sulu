@@ -34,9 +34,6 @@ class StructureSubscriber implements EventSubscriberInterface
      */
     protected $searchManager;
 
-    /**
-     * @param SearchManagerInterface $searchManager
-     */
     public function __construct(SearchManagerInterface $searchManager)
     {
         $this->searchManager = $searchManager;
@@ -55,8 +52,6 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Indexes a persisted document.
-     *
-     * @param PersistEvent $event
      */
     public function indexPersistedDocument(PersistEvent $event)
     {
@@ -65,8 +60,6 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Indexes a published document.
-     *
-     * @param PublishEvent $event
      */
     public function indexPublishedDocument(PublishEvent $event)
     {
@@ -75,8 +68,6 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Indexes a document after its draft have been removed.
-     *
-     * @param RemoveDraftEvent $event
      */
     public function indexDocumentAfterRemoveDraft(RemoveDraftEvent $event)
     {
@@ -117,8 +108,6 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Schedules a document to be deindexed.
-     *
-     * @param RemoveEvent $event
      */
     public function deindexRemovedDocument(RemoveEvent $event)
     {
@@ -144,8 +133,6 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Deindexes the document from the search index for the website.
-     *
-     * @param UnpublishEvent $event
      */
     public function deindexUnpublishedDocument(UnpublishEvent $event)
     {

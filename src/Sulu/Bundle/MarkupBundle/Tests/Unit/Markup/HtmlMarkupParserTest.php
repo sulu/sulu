@@ -46,9 +46,6 @@ class HtmlMarkupParserTest extends TestCase
      */
     private $parser;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

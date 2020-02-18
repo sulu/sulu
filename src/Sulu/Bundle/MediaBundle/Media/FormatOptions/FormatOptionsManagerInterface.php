@@ -43,8 +43,6 @@ interface FormatOptionsManagerInterface
      *
      * @throws MediaNotFoundException
      * @throws FileVersionNotFoundException
-     *
-     * @return mixed
      */
     public function getAll($mediaId);
 
@@ -53,7 +51,6 @@ interface FormatOptionsManagerInterface
      *
      * @param int $mediaId
      * @param string $formatKey
-     * @param array $data
      *
      * @throws MediaNotFoundException
      * @throws FormatNotFoundException

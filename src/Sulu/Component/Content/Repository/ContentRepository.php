@@ -117,9 +117,6 @@ class ContentRepository implements ContentRepositoryInterface
         $this->qomFactory = $this->session->getWorkspace()->getQueryManager()->getQOMFactory();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function find($uuid, $locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null)
     {
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
@@ -143,9 +140,6 @@ class ContentRepository implements ContentRepositoryInterface
         return $this->resolveContent(current($rows), $locale, $locales, $mapping, $user);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByParentUuid(
         $uuid,
         $locale,
@@ -168,9 +162,6 @@ class ContentRepository implements ContentRepositoryInterface
         return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByWebspaceRoot($locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null)
     {
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
@@ -183,9 +174,6 @@ class ContentRepository implements ContentRepositoryInterface
         return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findParentsWithSiblingsByUuid(
         $uuid,
         $locale,
@@ -218,9 +206,6 @@ class ContentRepository implements ContentRepositoryInterface
         return $this->generateTreeByPath($result, $uuid);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByPaths(
         array $paths,
         $locale,
@@ -240,9 +225,6 @@ class ContentRepository implements ContentRepositoryInterface
         return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByUuids(
         array $uuids,
         $locale,
@@ -270,9 +252,6 @@ class ContentRepository implements ContentRepositoryInterface
         return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findAll($locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null)
     {
         $contentPath = $this->sessionManager->getContentPath($webspaceKey);
@@ -287,9 +266,6 @@ class ContentRepository implements ContentRepositoryInterface
         return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findAllByPortal($locale, $portalKey, MappingInterface $mapping, UserInterface $user = null)
     {
         $webspaceKey = $this->webspaceManager->findPortalByKey($portalKey)->getWebspace()->getKey();
@@ -390,9 +366,7 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * Resolves query results to content.
      *
-     * @param QueryBuilder $queryBuilder
      * @param string $locale
-     * @param MappingInterface $mapping
      * @param UserInterface $user
      *
      * @return Content[]
@@ -517,7 +491,6 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * Append mapping selects to given query-builder.
      *
-     * @param QueryBuilder $queryBuilder
      * @param MappingInterface $mapping Includes array of property names
      * @param string $locale
      * @param string[] $locales
@@ -550,7 +523,6 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * Append mapping selects for a single property to given query-builder.
      *
-     * @param QueryBuilder $queryBuilder
      * @param string $propertyName
      * @param string[] $locales
      */
@@ -570,7 +542,6 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * Append mapping for url to given query-builder.
      *
-     * @param QueryBuilder $queryBuilder
      * @param string[] $locales
      */
     private function appendUrlMapping(QueryBuilder $queryBuilder, $locales)
@@ -595,7 +566,6 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * Resolve a single result row to a content object.
      *
-     * @param Row $row
      * @param string $locale
      * @param string $locales
      * @param MappingInterface $mapping Includes array of property names
@@ -700,8 +670,6 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * Resolves all available localizations for given row.
      *
-     * @param Row $row
-     *
      * @return string[]
      */
     private function resolveAvailableLocales(Row $row)
@@ -721,7 +689,6 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * Resolve a single result row which is an internal link to a content object.
      *
-     * @param Row $row
      * @param string $locale
      * @param string $webspaceKey
      * @param MappingInterface $mapping Includes array of property names
@@ -771,12 +738,9 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * Resolve a property and follow shadow locale if it has one.
      *
-     * @param Row $row
      * @param string $name
      * @param string $locale
      * @param string $shadowLocale
-     *
-     * @return mixed
      */
     private function resolveProperty(Row $row, $name, $locale, $shadowLocale = null)
     {
@@ -801,7 +765,6 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * Resolve url property.
      *
-     * @param Row $row
      * @param string $locale
      *
      * @return string
@@ -830,7 +793,6 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * Resolves path for given row.
      *
-     * @param Row $row
      * @param string $webspaceKey
      *
      * @return string
@@ -843,7 +805,6 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * Resolves permissions for given user.
      *
-     * @param Row $row
      * @param UserInterface $user
      *
      * @return array
@@ -875,8 +836,6 @@ class ContentRepository implements ContentRepositoryInterface
 
     /**
      * Resolve property has-children with given node.
-     *
-     * @param Row $row
      *
      * @return bool
      */

@@ -23,8 +23,6 @@ class MemoizedSitemapTwigExtension extends AbstractExtension
     use MemoizeTwigExtensionTrait;
 
     /**
-     * @param SitemapTwigExtensionInterface $extension
-     * @param MemoizeInterface $memoizeCache
      * @param int $lifeTime
      */
     public function __construct(SitemapTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)

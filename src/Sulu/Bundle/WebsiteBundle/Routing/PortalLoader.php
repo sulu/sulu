@@ -22,9 +22,6 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class PortalLoader extends Loader
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load($resource, $type = null)
     {
         $collection = new RouteCollection();
@@ -59,9 +56,6 @@ class PortalLoader extends Loader
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($resource, $type = null)
     {
         return 'portal' === $type;

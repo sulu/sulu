@@ -69,9 +69,6 @@ class RouteSubscriber implements EventSubscriberInterface
         $this->nodeManager = $nodeManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -88,8 +85,6 @@ class RouteSubscriber implements EventSubscriberInterface
 
     /**
      * Writes the history status of the node to the document.
-     *
-     * @param HydrateEvent $event
      */
     public function handleHydrate(HydrateEvent $event)
     {
@@ -104,8 +99,6 @@ class RouteSubscriber implements EventSubscriberInterface
 
     /**
      * Receives node for route and overwrite when the node is empty.
-     *
-     * @param PersistEvent $event
      */
     public function handleSetNodeOnPersist(PersistEvent $event)
     {
@@ -134,8 +127,6 @@ class RouteSubscriber implements EventSubscriberInterface
 
     /**
      * Updates the route for the given document and creates history routes if necessary.
-     *
-     * @param PersistEvent $event
      */
     public function handlePersist(PersistEvent $event)
     {
@@ -187,8 +178,6 @@ class RouteSubscriber implements EventSubscriberInterface
 
     /**
      * Removes the routes for the given document and removes history routes if necessary.
-     *
-     * @param RemoveEvent $event
      */
     public function handleRemove(RemoveEvent $event)
     {
@@ -203,8 +192,6 @@ class RouteSubscriber implements EventSubscriberInterface
 
     /**
      * Handles the history field for the route on publish.
-     *
-     * @param PublishEvent $event
      */
     public function handlePublish(PublishEvent $event)
     {
@@ -219,8 +206,6 @@ class RouteSubscriber implements EventSubscriberInterface
 
     /**
      * Remove given Route and his history.
-     *
-     * @param RouteBehavior $document
      */
     private function recursivelyRemoveRoutes(RouteBehavior $document)
     {
@@ -238,9 +223,6 @@ class RouteSubscriber implements EventSubscriberInterface
 
     /**
      * Changes the old route to a history route and redirect to the new route.
-     *
-     * @param RouteBehavior $oldDocument
-     * @param RouteBehavior $newDocument
      */
     private function changeOldPathToHistoryRoutes(RouteBehavior $oldDocument, RouteBehavior $newDocument)
     {

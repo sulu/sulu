@@ -53,9 +53,6 @@ class TagTwigExtension extends AbstractExtension
         $this->memoizeCache = $memoizeCache;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [

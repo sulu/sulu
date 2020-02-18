@@ -48,10 +48,8 @@ class SuluNodeHelper
     private $structureMetadataFactory;
 
     /**
-     * @param SessionInterface $session
      * @param string $languageNamespace
      * @param array $paths Path segments from configuration
-     * @param StructureMetadataFactoryInterface $structureMetadataFactory
      */
     public function __construct(
         SessionInterface $session,
@@ -77,8 +75,6 @@ class SuluNodeHelper
      * Return the languages that are currently registered on the
      * given PHPCR node.
      *
-     * @param NodeInterface $node
-     *
      * @return array
      */
     public function getLanguagesForNode(NodeInterface $node)
@@ -98,8 +94,6 @@ class SuluNodeHelper
 
     /**
      * Return the structure type for the given node.
-     *
-     * @param NodeInterface $node
      *
      * @return string
      */
@@ -122,7 +116,6 @@ class SuluNodeHelper
      * Return all the localized values of the localized property indicated
      * by $name.
      *
-     * @param NodeInterface $node
      * @param string $name Name of localized property
      */
     public function getLocalizedPropertyValues(NodeInterface $node, $name)
@@ -320,7 +313,6 @@ class SuluNodeHelper
      * Return either the next or previous sibling of the given node
      * according to the $previous flag.
      *
-     * @param NodeInterface $node
      * @param bool $previous
      *
      * @return NodeInterface|null

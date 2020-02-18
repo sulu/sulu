@@ -31,9 +31,6 @@ class RedirectEnhancer extends AbstractEnhancer
         $this->webspaceManager = $webspaceManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function doEnhance(
         CustomUrlBehavior $customUrl,
         Webspace $webspace,
@@ -64,9 +61,6 @@ class RedirectEnhancer extends AbstractEnhancer
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function supports(CustomUrlBehavior $customUrl)
     {
         return $customUrl->isRedirect() || null === $customUrl->getTargetDocument();

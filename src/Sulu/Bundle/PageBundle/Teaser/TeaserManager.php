@@ -23,17 +23,11 @@ class TeaserManager implements TeaserManagerInterface
      */
     private $providerPool;
 
-    /**
-     * @param TeaserProviderPoolInterface $providerPool
-     */
     public function __construct(TeaserProviderPoolInterface $providerPool)
     {
         $this->providerPool = $providerPool;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function find(array $items, $locale)
     {
         if (0 === count($items)) {
@@ -56,8 +50,6 @@ class TeaserManager implements TeaserManagerInterface
      * Returns sorted teaser by given position array.
      *
      * @param Teaser[] $teasers
-     * @param array $result
-     * @param array $positions
      *
      * @return array
      */

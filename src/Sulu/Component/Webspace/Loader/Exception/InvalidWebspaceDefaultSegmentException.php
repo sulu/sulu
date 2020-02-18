@@ -15,9 +15,6 @@ use Sulu\Component\Webspace\Webspace;
 
 class InvalidWebspaceDefaultSegmentException extends WebspaceException
 {
-    /**
-     * @param Webspace $webspace
-     */
     public function __construct(Webspace $webspace)
     {
         $this->webspace = $webspace;

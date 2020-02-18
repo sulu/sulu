@@ -14,14 +14,8 @@ namespace Sulu\Bundle\CategoryBundle\Entity;
 use Doctrine\ORM\Query;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
-/**
- * {@inheritdoc}
- */
 class CategoryRepository extends NestedTreeRepository implements CategoryRepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function createNew()
     {
         $className = $this->getClassName();
@@ -29,9 +23,6 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
         return new $className();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isCategoryId($id)
     {
         $queryBuilder = $this->createQueryBuilder('category')
@@ -45,9 +36,6 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
         return !empty($query->getResult());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isCategoryKey($key)
     {
         $queryBuilder = $this->createQueryBuilder('category')
@@ -61,9 +49,6 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
         return !empty($query->getResult());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findCategoryById($id)
     {
         $queryBuilder = $this->getCategoryQuery()->where('category.id = :categoryId');
@@ -73,9 +58,6 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
         return $query->getOneOrNullResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findCategoryByKey($key)
     {
         $queryBuilder = $this->getCategoryQuery()->where('category.key = :categoryKey');
@@ -85,9 +67,6 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
         return $query->getOneOrNullResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findCategoriesByIds(array $ids)
     {
         $queryBuilder = $this->getCategoryQuery();
@@ -98,9 +77,6 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
         return $queryBuilder->getQuery()->getResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findChildrenCategoriesByParentId($parentId = null)
     {
         $queryBuilder = $this->getCategoryQuery();
@@ -120,9 +96,6 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
         return $query->getResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findChildrenCategoriesByParentKey($parentKey = null)
     {
         $queryBuilder = $this->getCategoryQuery();
@@ -142,9 +115,6 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
         return $query->getResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findCategoryIdsBetween($fromIds, $toIds)
     {
         $fromIds = array_filter($fromIds);
@@ -202,9 +172,6 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
             ->addSelect('categoryChildren');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findCategoryByIds(array $ids)
     {
         @trigger_error(__METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findCategoriesByIds() instead.', E_USER_DEPRECATED);
@@ -212,9 +179,6 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
         return $this->findCategoriesByIds($ids);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findCategories($parent = null, $depth = null, $sortBy = null, $sortOrder = null)
     {
         @trigger_error(__METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenCategoriesByParentId() instead.', E_USER_DEPRECATED);
@@ -245,9 +209,6 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
         return $query->getResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findChildren($key, $sortBy = null, $sortOrder = null)
     {
         @trigger_error(__METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenCategoriesByParentKey() instead.', E_USER_DEPRECATED);

@@ -28,9 +28,6 @@ use Symfony\Component\DependencyInjection\Loader;
  */
 class SuluCustomUrlExtension extends Extension implements PrependExtensionInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
@@ -40,9 +37,6 @@ class SuluCustomUrlExtension extends Extension implements PrependExtensionInterf
         $loader->load('event_listener.xml');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function prepend(ContainerBuilder $container)
     {
         if ($container->hasExtension('sulu_admin')) {

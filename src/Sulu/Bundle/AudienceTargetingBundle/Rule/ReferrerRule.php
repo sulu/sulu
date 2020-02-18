@@ -72,9 +72,6 @@ class ReferrerRule implements RuleInterface
         return $this->translator->trans('sulu_audience_targeting.referrer', [], 'admin');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType()
     {
         return new Input(static::REFERRER);

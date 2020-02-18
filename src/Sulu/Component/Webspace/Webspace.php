@@ -144,8 +144,6 @@ class Webspace implements ArrayableInterface
 
     /**
      * Adds a localization to the webspace.
-     *
-     * @param Localization $localization
      */
     public function addLocalization(Localization $localization)
     {
@@ -283,8 +281,6 @@ class Webspace implements ArrayableInterface
 
     /**
      * Adds a portal to the webspace.
-     *
-     * @param Portal $portal
      */
     public function addPortal(Portal $portal)
     {
@@ -313,8 +309,6 @@ class Webspace implements ArrayableInterface
 
     /**
      * Adds a segment to the webspace.
-     *
-     * @param Segment $segment
      */
     public function addSegment(Segment $segment)
     {
@@ -565,9 +559,6 @@ class Webspace implements ArrayableInterface
         return $this->resourceLocatorStrategy;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toArray($depth = null)
     {
         $res = [];

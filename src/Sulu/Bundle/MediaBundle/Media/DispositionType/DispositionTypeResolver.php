@@ -37,8 +37,6 @@ class DispositionTypeResolver implements DispositionTypeResolverInterface
      * DispositionTypeResolver constructor.
      *
      * @param string $defaultType
-     * @param array $mimeTypesInline
-     * @param array $mimeTypesAttachment
      */
     public function __construct($defaultType, array $mimeTypesInline = [], array $mimeTypesAttachment = [])
     {
@@ -47,9 +45,6 @@ class DispositionTypeResolver implements DispositionTypeResolverInterface
         $this->mimeTypesAttachment = $mimeTypesAttachment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getByMimeType($mimeType)
     {
         if (in_array($mimeType, $this->mimeTypesInline)) {

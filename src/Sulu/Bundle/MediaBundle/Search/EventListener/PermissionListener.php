@@ -41,8 +41,6 @@ class PermissionListener
 
     /**
      * Removes all FileVersionMetas belonging to the collection, which just got secured.
-     *
-     * @param PermissionUpdateEvent $event
      */
     public function onPermissionUpdate(PermissionUpdateEvent $event)
     {

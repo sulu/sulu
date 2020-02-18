@@ -68,14 +68,6 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
      */
     private $liveSession;
 
-    /**
-     * @param PropertyEncoder $encoder
-     * @param DocumentManagerInterface $documentManager
-     * @param DocumentInspector $documentInspector
-     * @param ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool
-     * @param SessionInterface $defaultSession
-     * @param SessionInterface $liveSession
-     */
     public function __construct(
         PropertyEncoder $encoder,
         DocumentManagerInterface $documentManager,
@@ -92,9 +84,6 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
         $this->liveSession = $liveSession;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -124,8 +113,6 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the ResourceSegment of the document.
-     *
-     * @param AbstractMappingEvent $event
      */
     public function handleHydrate(AbstractMappingEvent $event)
     {
@@ -157,8 +144,6 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the ResourceSegment on the Structure.
-     *
-     * @param PersistEvent $event
      */
     public function handlePersistDocument(PersistEvent $event)
     {
@@ -179,8 +164,6 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
 
     /**
      * Creates or updates the route for the document.
-     *
-     * @param PublishEvent $event
      */
     public function handlePersistRoute(PublishEvent $event)
     {
@@ -208,8 +191,6 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
 
     /**
      * Moves the routes for all localizations of the document in the event.
-     *
-     * @param MoveEvent $event
      */
     public function updateMovedDocument(MoveEvent $event)
     {
@@ -233,8 +214,6 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
 
     /**
      * Copy the routes for all localization of the document in the event.
-     *
-     * @param CopyEvent $event
      */
     public function updateCopiedDocument(CopyEvent $event)
     {
@@ -285,9 +264,6 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the ResourceSegment to the given property of the given document.
-     *
-     * @param ResourceSegmentBehavior $document
-     * @param PropertyMetadata $property
      */
     private function persistDocument(ResourceSegmentBehavior $document, PropertyMetadata $property)
     {
@@ -298,8 +274,6 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
 
     /**
      * Creates or updates the route of the document using the RlpStrategy.
-     *
-     * @param ResourceSegmentBehavior $document
      */
     private function persistRoute(ResourceSegmentBehavior $document)
     {
@@ -372,7 +346,6 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
     /**
      * Updates the property for the resource segment on the given node.
      *
-     * @param NodeInterface $node
      * @param string $resourceSegmentPropertyName
      * @param string $parentUuid
      * @param string $webspaceKey

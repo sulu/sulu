@@ -83,9 +83,6 @@ class ContentMapperSubscriber implements EventSubscriberInterface
         $this->structureManager = $structureManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -100,8 +97,6 @@ class ContentMapperSubscriber implements EventSubscriberInterface
 
     /**
      * Dispatches the deprecated pre remove event.
-     *
-     * @param RemoveEvent $event
      */
     public function handlePreRemove(RemoveEvent $event)
     {
@@ -121,8 +116,6 @@ class ContentMapperSubscriber implements EventSubscriberInterface
 
     /**
      * Dispatches the deprected post remove event.
-     *
-     * @param RemoveEvent $event
      */
     public function handlePostRemove(RemoveEvent $event)
     {
@@ -145,8 +138,6 @@ class ContentMapperSubscriber implements EventSubscriberInterface
 
     /**
      * Saves all persisted documents to dispatch the deprecated post save event later when flushed.
-     *
-     * @param PersistEvent $event
      */
     public function handlePersist(PersistEvent $event)
     {
@@ -159,8 +150,6 @@ class ContentMapperSubscriber implements EventSubscriberInterface
 
     /**
      * Dispatches the deprecated post save event for every persisted document.
-     *
-     * @param FlushEvent $event
      */
     public function handleFlush(FlushEvent $event)
     {
@@ -195,8 +184,6 @@ class ContentMapperSubscriber implements EventSubscriberInterface
 
     /**
      * Return a structure bridge corresponding to the given document.
-     *
-     * @param StructureBehavior $document
      *
      * @return StructureBridge
      *

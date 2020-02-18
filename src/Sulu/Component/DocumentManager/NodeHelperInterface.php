@@ -22,7 +22,6 @@ interface NodeHelperInterface
     /**
      * Move the given node to the given parent node. Additionally a new name can also be passed.
      *
-     * @param NodeInterface $node
      * @param string $parentUuid
      * @param null $destinationName
      */
@@ -31,7 +30,6 @@ interface NodeHelperInterface
     /**
      * Copies the given node to the given parent node. Additionally a new name can also be passed.
      *
-     * @param NodeInterface $node
      * @param string $parentUuid
      * @param null $destinationName
      *
@@ -45,7 +43,6 @@ interface NodeHelperInterface
      *
      * If the node should be passed to the last position null should be passed as destinationUuid.
      *
-     * @param NodeInterface $node
      * @param string|null $destinationUuid
      *
      * @throws DocumentManagerException

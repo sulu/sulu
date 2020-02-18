@@ -34,27 +34,18 @@ class PageObjectProvider implements PreviewObjectProviderInterface
      */
     private $serializer;
 
-    /**
-     * @param DocumentManagerInterface $documentManager
-     * @param SerializerInterface $serializer
-     */
     public function __construct(DocumentManagerInterface $documentManager, SerializerInterface $serializer)
     {
         $this->documentManager = $documentManager;
         $this->serializer = $serializer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getObject($id, $locale)
     {
         return $this->documentManager->find($id, $locale);
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @param BasePageDocument $object
      */
     public function getId($object)
@@ -63,8 +54,6 @@ class PageObjectProvider implements PreviewObjectProviderInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @param BasePageDocument $object
      */
     public function setValues($object, $locale, array $data)
@@ -84,8 +73,6 @@ class PageObjectProvider implements PreviewObjectProviderInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @param BasePageDocument $object
      */
     public function setContext($object, $locale, array $context)
@@ -98,8 +85,6 @@ class PageObjectProvider implements PreviewObjectProviderInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @param BasePageDocument $object
      */
     public function serialize($object)
@@ -111,11 +96,6 @@ class PageObjectProvider implements PreviewObjectProviderInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param BasePageDocument $object
-     */
     public function deserialize($serializedObject, $objectClass)
     {
         return $this->serializer->deserialize(

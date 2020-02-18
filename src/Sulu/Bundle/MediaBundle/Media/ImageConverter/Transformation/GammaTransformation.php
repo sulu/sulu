@@ -18,9 +18,6 @@ use Imagine\Image\ImageInterface;
  */
 class GammaTransformation implements TransformationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function execute(ImageInterface $image, $parameters)
     {
         if (!isset($parameters['correction'])) {

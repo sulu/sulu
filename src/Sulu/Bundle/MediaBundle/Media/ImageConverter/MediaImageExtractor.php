@@ -148,8 +148,6 @@ class MediaImageExtractor implements MediaImageExtractorInterface
     /**
      * Create temporary resource which will removed on fclose or end of process.
      *
-     * @param string $content
-     *
      * @return resource
      */
     private function createTemporaryResource(string $content)

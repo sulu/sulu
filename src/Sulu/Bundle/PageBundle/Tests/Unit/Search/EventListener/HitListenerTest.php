@@ -43,9 +43,6 @@ class HitListenerTest extends TestCase
      */
     private $event;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         $reflection = $this->prophesize(\ReflectionClass::class);

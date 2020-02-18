@@ -33,9 +33,6 @@ class CacheLifetimeResolver implements CacheLifetimeResolverInterface
      */
     protected $cacheLifetimes = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolve($type, $value)
     {
         $cacheLifetimeKey = sprintf('%s:%s', $type, $value);
@@ -56,9 +53,6 @@ class CacheLifetimeResolver implements CacheLifetimeResolverInterface
         return $this->cacheLifetimes[$cacheLifetimeKey];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($type, $value)
     {
         if (!in_array($type, self::$types)) {

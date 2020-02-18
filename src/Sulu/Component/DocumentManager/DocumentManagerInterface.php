@@ -20,7 +20,6 @@ interface DocumentManagerInterface
      *
      * @param string $identifier Path or UUID
      * @param string $locale Locale
-     * @param array $options
      *
      * @throws Exception\DocumentManagerException
      *
@@ -44,7 +43,6 @@ interface DocumentManagerInterface
      *
      * @param object $document
      * @param string $locale
-     * @param array $options
      */
     public function persist($document, $locale = null, array $options = []);
 
@@ -87,7 +85,6 @@ interface DocumentManagerInterface
      *
      * @param object $document
      * @param string $locale
-     * @param array $options
      */
     public function publish($document, $locale = null, array $options = []);
 
@@ -113,11 +110,8 @@ interface DocumentManagerInterface
      * @param object $document
      * @param string $locale
      * @param string $version The UUID of the version to restore
-     * @param array $options
      *
      * @throws Exception\VersionNotFoundException
-     *
-     * @return mixed
      */
     public function restore($document, $locale, $version, array $options = []);
 
@@ -146,7 +140,6 @@ interface DocumentManagerInterface
      *
      * @param mixed $query Either a JCR-SQL2 string, or a PHPCR query object
      * @param string $locale
-     * @param array $options
      *
      * @return Query
      */

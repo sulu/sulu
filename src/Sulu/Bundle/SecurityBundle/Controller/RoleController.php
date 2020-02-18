@@ -123,8 +123,6 @@ class RoleController extends AbstractRestController implements ClassResourceInte
     /**
      * returns all roles.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
@@ -182,8 +180,6 @@ class RoleController extends AbstractRestController implements ClassResourceInte
     /**
      * Creates a new role with the given data.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
      * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      *
@@ -237,7 +233,6 @@ class RoleController extends AbstractRestController implements ClassResourceInte
     /**
      * Updates the role with the given id and the data given by the request.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -341,7 +336,6 @@ class RoleController extends AbstractRestController implements ClassResourceInte
     /**
      * Adds a permission to the given role.
      *
-     * @param RoleInterface $role
      * @param $permissionData
      *
      * @return bool
@@ -378,7 +372,6 @@ class RoleController extends AbstractRestController implements ClassResourceInte
     /**
      * Updates an already existing permission.
      *
-     * @param Permission $permission
      * @param $permissionData
      *
      * @return bool
@@ -396,8 +389,6 @@ class RoleController extends AbstractRestController implements ClassResourceInte
 
     /**
      * Converts a role object into an array for the rest service.
-     *
-     * @param RoleInterface $role
      *
      * @return array
      */
@@ -465,9 +456,6 @@ class RoleController extends AbstractRestController implements ClassResourceInte
         $role->setSecurityType($securityType);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         return 'sulu.security.roles';

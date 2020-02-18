@@ -30,9 +30,6 @@ class CustomUrl implements ArrayableInterface
         $this->url = $url;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUrl()
     {
         return $this->url;
@@ -48,9 +45,6 @@ class CustomUrl implements ArrayableInterface
         $this->url = $url;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toArray($depth = null)
     {
         return ['url' => $this->getUrl()];

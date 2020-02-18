@@ -22,7 +22,6 @@ interface TransformationInterface
     /**
      * Executes the transformation on a given image.
      *
-     * @param ImageInterface $image
      * @param $parameters
      *
      * @return ImageInterface $image The modified image

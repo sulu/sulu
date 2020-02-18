@@ -38,17 +38,11 @@ class SectionProperty extends Property implements SectionPropertyInterface
         parent::__construct($name, $metadata, 'section', false, false, 1, 1, [], [], $col);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChildProperties()
     {
         return $this->childProperties;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addChild(PropertyInterface $property)
     {
         $this->childProperties[] = $property;

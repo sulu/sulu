@@ -21,17 +21,11 @@ class AutoIncrementConflictResolver implements ConflictResolverInterface
      */
     private $routeRepository;
 
-    /**
-     * @param RouteRepositoryInterface $routeRepository
-     */
     public function __construct(RouteRepositoryInterface $routeRepository)
     {
         $this->routeRepository = $routeRepository;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolve(RouteInterface $route)
     {
         $i = 1;

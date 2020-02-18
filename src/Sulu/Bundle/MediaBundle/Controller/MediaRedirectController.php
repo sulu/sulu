@@ -39,7 +39,6 @@ class MediaRedirectController
     /**
      * Redirects to format or original url.
      *
-     * @param Request $request
      * @param int $id
      *
      * @return RedirectResponse

@@ -33,8 +33,6 @@ class HitListener
 
     /**
      * Prefix url of document with current resourcelocator prefix.
-     *
-     * @param HitEvent $event
      */
     public function onHit(HitEvent $event)
     {

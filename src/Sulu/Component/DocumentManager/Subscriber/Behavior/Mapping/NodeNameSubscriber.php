@@ -22,9 +22,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class NodeNameSubscriber implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -38,8 +35,6 @@ class NodeNameSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the initial node name.
-     *
-     * @param AbstractMappingEvent $event
      */
     public function setInitialNodeName(AbstractMappingEvent $event)
     {
@@ -48,8 +43,6 @@ class NodeNameSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the final node name at the end, in case it was changed.
-     *
-     * @param AbstractMappingEvent $event
      */
     public function setFinalNodeName(AbstractMappingEvent $event)
     {
@@ -58,8 +51,6 @@ class NodeNameSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the node name.
-     *
-     * @param AbstractMappingEvent $event
      *
      * @throws DocumentManagerException
      */

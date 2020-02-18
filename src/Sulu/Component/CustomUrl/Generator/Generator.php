@@ -33,9 +33,6 @@ class Generator implements GeneratorInterface
         $this->urlReplacer = $urlReplacer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function generate($baseDomain, $domainParts, Localization $locale = null)
     {
         $domain = $baseDomain;
@@ -59,7 +56,6 @@ class Generator implements GeneratorInterface
      * Localize given domain.
      *
      * @param string $domain
-     * @param Localization $locale
      *
      * @return string
      */

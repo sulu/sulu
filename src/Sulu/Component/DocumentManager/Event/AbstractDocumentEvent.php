@@ -34,9 +34,6 @@ abstract class AbstractDocumentEvent extends AbstractEvent
         return $this->document;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDebugMessage()
     {
         return sprintf(

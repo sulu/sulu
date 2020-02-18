@@ -29,9 +29,6 @@ class TogglerToolbarActionSubscriber implements EventSubscriberInterface
         $this->translator = $translator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [

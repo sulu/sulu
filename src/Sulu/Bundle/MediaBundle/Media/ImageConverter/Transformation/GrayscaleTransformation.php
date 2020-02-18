@@ -18,9 +18,6 @@ use Imagine\Image\ImageInterface;
  */
 class GrayscaleTransformation implements TransformationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function execute(ImageInterface $image, $parameters)
     {
         $image->effects()->grayscale();

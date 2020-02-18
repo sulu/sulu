@@ -29,9 +29,6 @@ class DelegatingTagExtractor implements TagExtractorInterface
         $this->pool = $pool;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function count($html)
     {
         $result = 0;
@@ -42,9 +39,6 @@ class DelegatingTagExtractor implements TagExtractorInterface
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function extract($html)
     {
         $result = [];

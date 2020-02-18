@@ -76,7 +76,6 @@ class VersionController extends AbstractRestController implements
     /**
      * Returns the versions for the page with the given UUID.
      *
-     * @param Request $request
      * @param string $id
      *
      * @return Response
@@ -136,7 +135,6 @@ class VersionController extends AbstractRestController implements
     }
 
     /**
-     * @param Request $request
      * @param string $id
      * @param int $version
      *
@@ -171,9 +169,6 @@ class VersionController extends AbstractRestController implements
         return $this->handleView($view->setContext($context));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         $webspace = $this->requestAnalyzer->getWebspace();
@@ -187,25 +182,16 @@ class VersionController extends AbstractRestController implements
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale(Request $request)
     {
         return $this->getRequestParameter($request, 'locale', true);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecuredClass()
     {
         return SecurityBehavior::class;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecuredObjectId(Request $request)
     {
         return $request->get('id');

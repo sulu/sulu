@@ -46,9 +46,6 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
         $this->stopwatch = $stopwatch;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(
         $webspaceKey,
         $locales,

@@ -32,9 +32,6 @@ class ParameterResolver implements ParameterResolverInterface
 
     /**
      * ParameterResolver constructor.
-     *
-     * @param StructureResolverInterface $structureResolver
-     * @param RequestAnalyzerResolverInterface $requestAnalyzerResolver
      */
     public function __construct(
         StructureResolverInterface $structureResolver,
@@ -44,9 +41,6 @@ class ParameterResolver implements ParameterResolverInterface
         $this->requestAnalyzerResolver = $requestAnalyzerResolver;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolve(
         array $parameter,
         RequestAnalyzerInterface $requestAnalyzer = null,

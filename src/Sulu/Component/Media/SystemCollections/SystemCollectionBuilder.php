@@ -37,42 +37,27 @@ class SystemCollectionBuilder implements BuilderInterface, ContainerAwareInterfa
      */
     private $systemCollectionManager;
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'system_collections';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDependencies()
     {
         return ['database', 'fixtures'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function build()
     {
         $this->systemCollectionManager = $this->container->get('sulu_media.system_collections.manager');
         $this->systemCollectionManager->warmUp();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setContext(BuilderContext $context)
     {
         $this->output = $context->getOutput();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;

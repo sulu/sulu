@@ -82,9 +82,6 @@ abstract class ItemMetadata
      */
     protected $visibleCondition = null;
 
-    /**
-     * @param mixed $name
-     */
     public function __construct($name = null)
     {
         $this->name = $name;
@@ -114,8 +111,6 @@ abstract class ItemMetadata
      * Set the name of the metadata property which can also be a int or float value.
      *
      * @param string|int|float $name
-     *
-     * @return self
      */
     public function setName($name): self
     {
@@ -253,8 +248,6 @@ abstract class ItemMetadata
      * Return the paramter with the given name.
      *
      * @param string $name
-     *
-     * @return mixed
      */
     public function getParameter($name)
     {

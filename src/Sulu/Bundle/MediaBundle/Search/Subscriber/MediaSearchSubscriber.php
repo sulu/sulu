@@ -55,7 +55,6 @@ class MediaSearchSubscriber implements EventSubscriberInterface
     protected $logger;
 
     /**
-     * @param MediaManagerInterface $mediaManager
      * @param Factory $factory Massive search factory
      * @param LoggerInterface $logger
      * @param $thumbnailMimeTypes
@@ -75,9 +74,6 @@ class MediaSearchSubscriber implements EventSubscriberInterface
         $this->logger = $logger ?: new NullLogger();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -87,8 +83,6 @@ class MediaSearchSubscriber implements EventSubscriberInterface
 
     /**
      * Adds the image to the search document.
-     *
-     * @param PreIndexEvent $event
      */
     public function handlePreIndex(PreIndexEvent $event)
     {

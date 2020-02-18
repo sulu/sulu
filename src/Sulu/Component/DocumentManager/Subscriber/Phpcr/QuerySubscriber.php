@@ -37,19 +37,12 @@ class QuerySubscriber implements EventSubscriberInterface
      */
     private $eventDispatcher;
 
-    /**
-     * @param SessionInterface $session
-     * @param EventDispatcherInterface $eventDispatcher
-     */
     public function __construct(SessionInterface $session, EventDispatcherInterface $eventDispatcher)
     {
         $this->session = $session;
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -61,8 +54,6 @@ class QuerySubscriber implements EventSubscriberInterface
 
     /**
      * Create a new Sulu Query object.
-     *
-     * @param QueryCreateEvent $event
      */
     public function handleCreate(QueryCreateEvent $event)
     {
@@ -92,8 +83,6 @@ class QuerySubscriber implements EventSubscriberInterface
 
     /**
      * Handle query execution.
-     *
-     * @param QueryExecuteEvent $event
      */
     public function handleQueryExecute(QueryExecuteEvent $event)
     {

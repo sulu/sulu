@@ -18,9 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class UrlRequestProcessor implements RequestProcessorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
         $host = $request->getHost();
@@ -29,9 +26,6 @@ class UrlRequestProcessor implements RequestProcessorInterface
         return new RequestAttributes(['host' => $host, 'port' => $port, 'path' => $request->getPathInfo()]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validate(RequestAttributes $attributes)
     {
         return true;

@@ -18,9 +18,6 @@ class AccessControlProviderPass implements CompilerPassInterface
 {
     const ACCESS_CONTROL_TAG = 'sulu.access_control';
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         $accessControlManager = $container->getDefinition('sulu_security.access_control_manager');

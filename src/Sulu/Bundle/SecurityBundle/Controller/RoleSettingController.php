@@ -67,7 +67,6 @@ class RoleSettingController extends AbstractRestController implements ClassResou
     /**
      * Save role-setting with value from request body.
      *
-     * @param Request $request
      * @param int $roleId
      * @param string $key
      *

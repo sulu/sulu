@@ -23,9 +23,6 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 class SuluSnippetExtension extends Extension implements PrependExtensionInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function prepend(ContainerBuilder $container)
     {
         if ($container->hasExtension('sulu_admin')) {
@@ -158,9 +155,6 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();

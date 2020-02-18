@@ -250,8 +250,6 @@ abstract class Structure implements StructureInterface
 
     /**
      * adds a property to structure.
-     *
-     * @param PropertyInterface $property
      */
     protected function addChild(PropertyInterface $property)
     {
@@ -416,8 +414,6 @@ abstract class Structure implements StructureInterface
     /**
      * sets created datetime.
      *
-     * @param DateTime $created
-     *
      * @return \DateTime
      */
     public function setCreated(DateTime $created)
@@ -437,8 +433,6 @@ abstract class Structure implements StructureInterface
 
     /**
      * sets changed datetime.
-     *
-     * @param \DateTime $changed
      */
     public function setChanged(DateTime $changed)
     {
@@ -508,8 +502,6 @@ abstract class Structure implements StructureInterface
      * return value of property with given name.
      *
      * @param string $name name of property
-     *
-     * @return mixed
      */
     public function getPropertyValue($name)
     {
@@ -520,8 +512,6 @@ abstract class Structure implements StructureInterface
      * returns value of property with given tag name.
      *
      * @param string $tagName
-     *
-     * @return mixed
      */
     public function getPropertyValueByTagName($tagName)
     {
@@ -759,9 +749,6 @@ abstract class Structure implements StructureInterface
         $this->internal = $internal;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNodeName()
     {
         if ($this->hasProperty('title')) {
@@ -771,17 +758,11 @@ abstract class Structure implements StructureInterface
         return '';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasTag($tag)
     {
         return array_key_exists($tag, $this->tags);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocalizedTitle($languageCode)
     {
         $default = ucfirst($this->key);
@@ -796,8 +777,6 @@ abstract class Structure implements StructureInterface
      * magic getter.
      *
      * @param string $property name of property
-     *
-     * @return mixed
      *
      * @throws NoSuchPropertyException
      */
@@ -815,8 +794,6 @@ abstract class Structure implements StructureInterface
      *
      * @param string $property name of property
      * @param mixed $value value
-     *
-     * @return mixed
      *
      * @throws NoSuchPropertyException
      */
@@ -1036,9 +1013,6 @@ abstract class Structure implements StructureInterface
         $this->path = $path;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function copyFrom(StructureInterface $structure)
     {
         $this->setWebspaceKey($structure->getWebspaceKey());

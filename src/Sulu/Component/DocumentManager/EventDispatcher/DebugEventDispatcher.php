@@ -33,7 +33,6 @@ class DebugEventDispatcher extends EventDispatcher
     private $logger;
 
     /**
-     * @param Stopwatch $stopwatch
      * @param LoggerInterface $logger
      */
     public function __construct(
@@ -45,9 +44,6 @@ class DebugEventDispatcher extends EventDispatcher
         $this->logger = $logger ?: new NullLogger();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function doDispatch($listeners, $eventName, Event $event)
     {
         $eventStopwatch = $this->stopwatch->start($eventName, 'section');

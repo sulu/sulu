@@ -24,9 +24,6 @@ class PreRenderEvent extends Event
      */
     private $requestAttributes;
 
-    /**
-     * @param RequestAttributes $requestAttributes
-     */
     public function __construct(RequestAttributes $requestAttributes)
     {
         $this->requestAttributes = $requestAttributes;
@@ -47,8 +44,6 @@ class PreRenderEvent extends Event
      *
      * @param string $name
      * @param mixed|null $default
-     *
-     * @return mixed
      */
     public function getAttribute($name, $default = null)
     {

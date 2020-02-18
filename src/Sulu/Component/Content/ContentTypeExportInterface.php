@@ -20,16 +20,11 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 interface ContentTypeExportInterface
 {
     /**
-     * @param mixed $propertyValue
-     *
      * @return string
      */
     public function exportData($propertyValue);
 
     /**
-     * @param NodeInterface $node
-     * @param PropertyInterface $property
-     * @param mixed $value
      * @param int $userId
      * @param string $webspaceKey
      * @param string $languageCode

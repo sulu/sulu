@@ -200,7 +200,6 @@ class ResettingController
      * Generates a token for a user and sends an email with
      * a link to the resetting route.
      *
-     * @param Request $request
      * @param bool $generateNewKey If true a new token will be generated before sending the mail
      *
      * @return JsonResponse
@@ -236,8 +235,6 @@ class ResettingController
     /**
      * Resets a users password.
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function resetAction(Request $request)
@@ -261,8 +258,6 @@ class ResettingController
 
     /**
      * Returns the sender's email address.
-     *
-     * @param Request $request
      *
      * @return string
      */
@@ -334,8 +329,6 @@ class ResettingController
     /**
      * Returns the users email or as a fallback the installation-email-adress.
      *
-     * @param UserInterface $user
-     *
      * @return string
      */
     private function getEmail(UserInterface $user)
@@ -399,7 +392,6 @@ class ResettingController
     /**
      * Gives a user a token, so she's logged in.
      *
-     * @param UserInterface $user
      * @param $request
      */
     private function loginUser(UserInterface $user, $request)
@@ -414,8 +406,6 @@ class ResettingController
 
     /**
      * Deletes the user's reset-password-token.
-     *
-     * @param UserInterface $user
      */
     private function deleteToken(UserInterface $user)
     {
@@ -429,7 +419,6 @@ class ResettingController
     /**
      * Sends the password-reset-token of a user to an email-adress.
      *
-     * @param UserInterface $user
      * @param string $from From-Email-Address
      * @param string $to To-Email-Address
      *
@@ -463,7 +452,6 @@ class ResettingController
     /**
      * Changes the password of a user.
      *
-     * @param UserInterface $user
      * @param string $password
      *
      * @throws MissingPasswordException
@@ -480,8 +468,6 @@ class ResettingController
 
     /**
      * Generates a new token for a new user.
-     *
-     * @param UserInterface $user
      *
      * @throws TokenAlreadyRequestedException
      */
@@ -505,8 +491,6 @@ class ResettingController
     /**
      * Takes a date-time of a reset-token and returns true iff the token associated with the date-time
      * was requested less then the request-interval before. (So there is not really a need to generate a new token).
-     *
-     * @param \DateTime $date
      *
      * @return bool
      */
@@ -550,11 +534,8 @@ class ResettingController
     /**
      * Returns an encoded password gor a given one.
      *
-     * @param UserInterface $user
      * @param string $password
      * @param string $salt
-     *
-     * @return mixed
      */
     private function encodePassword(UserInterface $user, $password, $salt)
     {
@@ -565,8 +546,6 @@ class ResettingController
 
     /**
      * Check if given user has sulu-system.
-     *
-     * @param SuluUserInterface $user
      *
      * @return bool
      */

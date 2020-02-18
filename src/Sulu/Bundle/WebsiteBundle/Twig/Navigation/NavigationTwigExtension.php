@@ -48,9 +48,6 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [
@@ -63,9 +60,6 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function flatRootNavigationFunction($context = null, $depth = 1, $loadExcerpt = false)
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
@@ -74,9 +68,6 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
         return $this->navigationMapper->getRootNavigation($webspaceKey, $locale, $depth, true, $context, $loadExcerpt);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function treeRootNavigationFunction($context = null, $depth = 1, $loadExcerpt = false)
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
@@ -85,9 +76,6 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
         return $this->navigationMapper->getRootNavigation($webspaceKey, $locale, $depth, false, $context, $loadExcerpt);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function flatNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null)
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
@@ -115,9 +103,6 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function treeNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null)
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
@@ -153,9 +138,6 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function breadcrumbFunction($uuid)
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();

@@ -23,8 +23,6 @@ interface ImportManagerInterface
      * Import property of a document.
      *
      * @param string $contentTypeName
-     * @param NodeInterface $node
-     * @param PropertyInterface $property
      * @param int $userId
      * @param string $webspaceKey
      * @param string $languageCode

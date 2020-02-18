@@ -37,8 +37,6 @@ class PathCleanup implements PathCleanupInterface
 
     /**
      * PathCleanup constructor.
-     *
-     * @param array $replacers
      */
     public function __construct(array $replacers)
     {

@@ -20,9 +20,6 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class SuluBuildCommand extends BuildCommand
 {
-    /**
-     * {@inheritdoc}
-     */
     public function configure()
     {
         parent::configure();

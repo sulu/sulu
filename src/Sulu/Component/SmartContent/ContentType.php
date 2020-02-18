@@ -80,13 +80,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
     /**
      * SmartContentType constructor.
      *
-     * @param DataProviderPoolInterface $dataProviderPool
-     * @param TagManagerInterface $tagManager
-     * @param RequestStack $requestStack
-     * @param TagRequestHandlerInterface $tagRequestHandler
-     * @param CategoryRequestHandlerInterface $categoryRequestHandler
-     * @param ReferenceStoreInterface $tagReferenceStore
-     * @param ReferenceStoreInterface $categoryReferenceStore
      * @param TargetGroupStoreInterface $targetGroupStore
      */
     public function __construct(
@@ -109,9 +102,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         $this->targetGroupStore = $targetGroupStore;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(
         NodeInterface $node,
         PropertyInterface $property,
@@ -131,9 +121,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         $property->setValue($data);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -153,9 +140,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         $node->setProperty($property->getName(), json_encode($value));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove(
         NodeInterface $node,
         PropertyInterface $property,
@@ -168,9 +152,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         $provider = $this->getProvider($property);
@@ -223,9 +204,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentData(PropertyInterface $property)
     {
         // check memoize
@@ -330,9 +308,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         return $this->cache[$hash] = $data->getItems();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getViewData(PropertyInterface $property)
     {
         /** @var PropertyParameter[] $params */
@@ -369,8 +344,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
 
     /**
      * Returns provider for given property.
-     *
-     * @param PropertyInterface $property
      *
      * @return DataProviderInterface
      */
@@ -409,9 +382,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         return $page;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exportData($propertyValue)
     {
         if (is_string($propertyValue)) {
@@ -425,9 +395,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         return '';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,

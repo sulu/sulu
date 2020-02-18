@@ -82,9 +82,6 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();

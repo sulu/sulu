@@ -67,11 +67,7 @@ class AppendAnalyticsListener
     private $preview;
 
     /**
-     * @param Environment $engine
-     * @param RequestAnalyzerInterface $requestAnalyzer
-     * @param AnalyticsRepository $analyticsRepository
      * @param $environment
-     * @param bool $preview
      */
     public function __construct(
         Environment $engine,
@@ -89,8 +85,6 @@ class AppendAnalyticsListener
 
     /**
      * Appends analytics scripts into body.
-     *
-     * @param FilterResponseEvent $event
      */
     public function onResponse(FilterResponseEvent $event)
     {
@@ -127,9 +121,6 @@ class AppendAnalyticsListener
     /**
      * Generate content for each possible position.
      *
-     * @param array $analyticsContent
-     * @param Analytics $analytics
-     *
      * @return array
      */
     protected function generateAnalyticsContent(array $analyticsContent, Analytics $analytics)
@@ -160,7 +151,6 @@ class AppendAnalyticsListener
      * Set the generated content for each position.
      *
      * @param string $responseContent
-     * @param array $analyticsContent
      *
      * @return string
      */

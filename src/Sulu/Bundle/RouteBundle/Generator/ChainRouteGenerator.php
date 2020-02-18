@@ -36,9 +36,7 @@ class ChainRouteGenerator implements ChainRouteGeneratorInterface
     private $routeRepository;
 
     /**
-     * @param array $mappings
      * @param RouteGeneratorInterface[] $routeGenerators
-     * @param RouteRepositoryInterface $routeRepository
      */
     public function __construct(array $mappings, array $routeGenerators, RouteRepositoryInterface $routeRepository)
     {
@@ -47,9 +45,6 @@ class ChainRouteGenerator implements ChainRouteGeneratorInterface
         $this->routeRepository = $routeRepository;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function generate(RoutableInterface $entity, $path = null)
     {
         $config = $this->getClassMappingConfiguration(get_class($entity));

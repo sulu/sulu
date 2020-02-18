@@ -38,9 +38,6 @@ abstract class AbstractMappingEvent extends AbstractEvent
      */
     protected $accessor;
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDebugMessage()
     {
         return sprintf(

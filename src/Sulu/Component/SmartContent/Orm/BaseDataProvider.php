@@ -69,33 +69,21 @@ abstract class BaseDataProvider implements DataProviderInterface
         $this->referenceStore = $referenceStore;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultPropertyParameter()
     {
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfiguration()
     {
         return $this->configuration;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolveDatasource($datasource, array $propertyParameter, array $options)
     {
         return;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolveDataItems(
         array $filters,
         array $propertyParameter,
@@ -116,9 +104,6 @@ abstract class BaseDataProvider implements DataProviderInterface
         return new DataProviderResult($this->decorateDataItems($result), $hasNextPage);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolveResourceItems(
         array $filters,
         array $propertyParameter,
@@ -184,7 +169,6 @@ abstract class BaseDataProvider implements DataProviderInterface
     /**
      * Decorates result as resource item.
      *
-     * @param array $data
      * @param string $locale
      *
      * @return ArrayAccessItem[]
@@ -232,7 +216,6 @@ abstract class BaseDataProvider implements DataProviderInterface
      * Returns additional options for query creation.
      *
      * @param PropertyParameter[] $propertyParameter
-     * @param array $options
      *
      * @return array
      */
@@ -245,8 +228,6 @@ abstract class BaseDataProvider implements DataProviderInterface
 
     /**
      * Decorates result as data item.
-     *
-     * @param array $data
      *
      * @return ItemInterface[]
      */

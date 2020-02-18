@@ -28,10 +28,6 @@ class QueryExecuteEvent extends AbstractEvent
      */
     private $result;
 
-    /**
-     * @param Query $query
-     * @param array $options
-     */
     public function __construct(Query $query, array $options = [])
     {
         $this->query = $query;
@@ -46,17 +42,11 @@ class QueryExecuteEvent extends AbstractEvent
         return $this->query;
     }
 
-    /**
-     * @param QueryResultCollection $collection
-     */
     public function setResult(QueryResultCollection $collection)
     {
         $this->result = $collection;
     }
 
-    /**
-     * @return mixed
-     */
     public function getResult()
     {
         return $this->result;

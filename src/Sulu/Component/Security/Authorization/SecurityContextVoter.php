@@ -39,25 +39,16 @@ class SecurityContextVoter implements VoterInterface
         $this->permissions = $permissions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsAttribute($attribute)
     {
         return in_array($attribute, array_keys($this->permissions));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsClass($class)
     {
         return SecurityCondition::class === $class || is_subclass_of($class, SecurityCondition::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function vote(TokenInterface $token, $object, array $attributes)
     {
         /** @var User $user */

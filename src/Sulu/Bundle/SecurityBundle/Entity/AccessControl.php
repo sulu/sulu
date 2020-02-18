@@ -49,73 +49,46 @@ class AccessControl implements AccessControlInterface
      */
     private $entityClass;
 
-    /**
-     * {@inheritdoc}
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRole()
     {
         return $this->role;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setRole($role)
     {
         $this->role = $role;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPermissions()
     {
         return $this->permissions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setPermissions($permissions)
     {
         $this->permissions = $permissions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEntityId()
     {
         return $this->entityId;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setEntityId($entityId)
     {
         $this->entityId = $entityId;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEntityClass()
     {
         return $this->entityClass;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setEntityClass($entityClass)
     {
         $this->entityClass = $entityClass;

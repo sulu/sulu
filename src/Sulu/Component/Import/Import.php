@@ -75,9 +75,6 @@ class Import
     /**
      * Prepare document-property and import them.
      *
-     * @param PropertyInterface $property
-     * @param NodeInterface $node
-     * @param StructureInterface $structure
      * @param string $value
      * @param string $webspaceKey
      * @param string $locale

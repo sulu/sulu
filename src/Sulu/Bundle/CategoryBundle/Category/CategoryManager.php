@@ -30,9 +30,6 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-/**
- * {@inheritdoc}
- */
 class CategoryManager implements CategoryManagerInterface
 {
     public static $categoryEntityName = CategoryInterface::class;
@@ -97,9 +94,6 @@ class CategoryManager implements CategoryManagerInterface
         $this->keywordManager = $keywordManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findById($id)
     {
         if (!$entity = $this->categoryRepository->findCategoryById($id)) {
@@ -109,9 +103,6 @@ class CategoryManager implements CategoryManagerInterface
         return $entity;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByKey($key)
     {
         if (!$entity = $this->categoryRepository->findCategoryByKey($key)) {
@@ -121,17 +112,11 @@ class CategoryManager implements CategoryManagerInterface
         return $entity;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByIds(array $ids)
     {
         return $this->categoryRepository->findCategoriesByIds($ids);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findChildrenByParentId($parentId = null)
     {
         if ($parentId && !$this->categoryRepository->isCategoryId($parentId)) {
@@ -141,9 +126,6 @@ class CategoryManager implements CategoryManagerInterface
         return $this->categoryRepository->findChildrenCategoriesByParentId($parentId);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findChildrenByParentKey($parentKey = null)
     {
         if ($parentKey && !$this->categoryRepository->isCategoryKey($parentKey)) {
@@ -156,8 +138,6 @@ class CategoryManager implements CategoryManagerInterface
     /**
      * Returns category-translation or create a new one.
      *
-     * @param CategoryInterface $category
-     * @param CategoryWrapper $categoryWrapper
      * @param string $locale
      *
      * @return CategoryTranslationInterface
@@ -177,9 +157,6 @@ class CategoryManager implements CategoryManagerInterface
         return $translationEntity;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save($data, $userId, $locale, $patch = false)
     {
         if ($this->getProperty($data, 'id')) {
@@ -262,9 +239,6 @@ class CategoryManager implements CategoryManagerInterface
         return $categoryEntity;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function delete($id)
     {
         if (!$entity = $this->categoryRepository->findCategoryById($id)) {
@@ -286,9 +260,6 @@ class CategoryManager implements CategoryManagerInterface
         $this->eventDispatcher->dispatch($event, CategoryEvents::CATEGORY_DELETE);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function move($id, $parent)
     {
         if (!$category = $this->categoryRepository->findCategoryById($id)) {
@@ -362,9 +333,6 @@ class CategoryManager implements CategoryManagerInterface
         return (array_key_exists($key, $data) && null !== $data[$key]) ? $data[$key] : $default;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function find($parent = null, $depth = null, $sortBy = null, $sortOrder = null)
     {
         @trigger_error(
@@ -379,9 +347,6 @@ class CategoryManager implements CategoryManagerInterface
         return $this->categoryRepository->findCategories($parent, $depth, $sortBy, $sortOrder);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findChildren($key, $sortBy = null, $sortOrder = null)
     {
         @trigger_error(

@@ -72,8 +72,6 @@ class AccountAddress extends ApiWrapper
     /**
      * Set address.
      *
-     * @param AddressEntity $address
-     *
      * @return AccountAddress
      */
     public function setAddress(AddressEntity $address)

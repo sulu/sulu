@@ -25,9 +25,6 @@ class SuluAudienceTargetingExtension extends Extension implements PrependExtensi
 {
     use PersistenceExtensionTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();

@@ -126,8 +126,6 @@ class CollectionMeta
     /**
      * Set collection.
      *
-     * @param CollectionInterface $collection
-     *
      * @return CollectionMeta
      */
     public function setCollection(CollectionInterface $collection)

@@ -41,9 +41,6 @@ class CategoryMeta implements CategoryMetaInterface
      */
     protected $category;
 
-    /**
-     * {@inheritdoc}
-     */
     public function setKey($key)
     {
         $this->key = $key;
@@ -51,17 +48,11 @@ class CategoryMeta implements CategoryMetaInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getKey()
     {
         return $this->key;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setValue($value)
     {
         $this->value = $value;
@@ -69,17 +60,11 @@ class CategoryMeta implements CategoryMetaInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getValue()
     {
         return $this->value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setLocale($locale)
     {
         $this->locale = $locale;
@@ -87,25 +72,16 @@ class CategoryMeta implements CategoryMetaInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale()
     {
         return $this->locale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setId($id)
     {
         $this->id = $id;
@@ -113,9 +89,6 @@ class CategoryMeta implements CategoryMetaInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setCategory(CategoryInterface $category)
     {
         $this->category = $category;
@@ -123,9 +96,6 @@ class CategoryMeta implements CategoryMetaInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCategory()
     {
         return $this->category;

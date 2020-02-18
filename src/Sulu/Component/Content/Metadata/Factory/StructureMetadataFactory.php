@@ -52,13 +52,6 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
      */
     private $cache = [];
 
-    /**
-     * @param LoaderInterface $loader
-     * @param array $typePaths
-     * @param array $defaultTypes
-     * @param mixed $cachePath
-     * @param mixed $debug
-     */
     public function __construct(
         LoaderInterface $loader,
         array $typePaths,
@@ -73,9 +66,6 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
         $this->defaultTypes = $defaultTypes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStructureMetadata($type, $structureType = null)
     {
         $cacheKey = $type . $structureType;
@@ -139,9 +129,6 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
         return $structure;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStructures($type)
     {
         $structureNames = $this->getStructureNames($type);
@@ -159,9 +146,6 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
         return array_keys($this->typePaths);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasStructuresFor($type)
     {
         return isset($this->typePaths[$type]);

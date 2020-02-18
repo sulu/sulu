@@ -30,9 +30,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
 {
     use SecuredEntityRepositoryTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     public function findMediaById($id, $asArray = false)
     {
         try {
@@ -87,9 +84,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findMediaByIdForRendering($id, $formatKey)
     {
         try {
@@ -117,9 +111,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findMedia(
         $filter = [],
         $limit = null,
@@ -202,9 +193,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         return $queryBuilder->getQuery()->getResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findMediaDisplayInfo($ids, $locale)
     {
         $queryBuilder = $this->createQueryBuilder('media')
@@ -225,9 +213,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         return $queryBuilder->getQuery()->getArrayResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function count(array $filter)
     {
         list($collection, $systemCollections, $types, $search) = $this->extractFilterVars($filter);
@@ -250,8 +235,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
 
     /**
      * Extracts filter vars.
-     *
-     * @param array $filter
      *
      * @return array
      */

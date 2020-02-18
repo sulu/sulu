@@ -21,8 +21,6 @@ interface TargetGroupRuleRepositoryInterface extends RepositoryInterface
     /**
      * Saves the rule of the target group to the database.
      *
-     * @param TargetGroupRuleInterface $targetGroupRule
-     *
      * @return TargetGroupRuleInterface
      */
     public function save(TargetGroupRuleInterface $targetGroupRule);

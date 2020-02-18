@@ -68,8 +68,6 @@ class ContactLocale
     /**
      * Set contact.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\ContactInterface $contact
-     *
      * @return ContactLocale
      */
     public function setContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contact)

@@ -124,8 +124,6 @@ class ValidateWebspacesCommand extends Command
 
     /**
      * Output webspace.
-     *
-     * @param Webspace $webspace
      */
     private function outputWebspace(Webspace $webspace)
     {
@@ -145,8 +143,6 @@ class ValidateWebspacesCommand extends Command
 
     /**
      * Output webspace default templates.
-     *
-     * @param Webspace $webspace
      */
     private function outputWebspaceDefaultTemplates(Webspace $webspace)
     {
@@ -159,8 +155,6 @@ class ValidateWebspacesCommand extends Command
 
     /**
      * Output webspace page templates.
-     *
-     * @param Webspace $webspace
      */
     private function outputWebspacePageTemplates(Webspace $webspace)
     {
@@ -185,8 +179,6 @@ class ValidateWebspacesCommand extends Command
 
     /**
      * Output webspace default templates.
-     *
-     * @param Webspace $webspace
      */
     private function outputWebspaceTemplates(Webspace $webspace)
     {
@@ -199,8 +191,6 @@ class ValidateWebspacesCommand extends Command
 
     /**
      * Output webspace localizations.
-     *
-     * @param Webspace $webspace
      */
     private function outputWebspaceLocalizations(Webspace $webspace)
     {

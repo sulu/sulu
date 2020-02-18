@@ -67,7 +67,6 @@ class CustomUrlController extends AbstractRestController implements SecuredContr
      * Returns a list of custom-urls.
      *
      * @param string $webspace
-     * @param Request $request
      *
      * @return Response
      */
@@ -85,7 +84,6 @@ class CustomUrlController extends AbstractRestController implements SecuredContr
      *
      * @param string $webspace
      * @param string $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -112,7 +110,6 @@ class CustomUrlController extends AbstractRestController implements SecuredContr
      * Create a new custom-url object.
      *
      * @param string $webspace
-     * @param Request $request
      *
      * @return Response
      */
@@ -136,7 +133,6 @@ class CustomUrlController extends AbstractRestController implements SecuredContr
      *
      * @param string $webspace
      * @param string $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -174,7 +170,6 @@ class CustomUrlController extends AbstractRestController implements SecuredContr
      * Deletes a list of custom-urls identified by a list of uuids.
      *
      * @param string $webspace
-     * @param Request $request
      *
      * @return Response
      */
@@ -190,9 +185,6 @@ class CustomUrlController extends AbstractRestController implements SecuredContr
         return $this->handleView($this->view());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -200,9 +192,6 @@ class CustomUrlController extends AbstractRestController implements SecuredContr
         return CustomUrlAdmin::getCustomUrlSecurityContext($request->get('webspace'));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale(Request $request)
     {
         return;

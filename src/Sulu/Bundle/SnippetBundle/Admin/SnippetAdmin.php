@@ -92,9 +92,6 @@ class SnippetAdmin extends Admin
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureViews(ViewCollection $viewCollection): void
     {
         $snippetLocales = $this->webspaceManager->getAllLocales();
@@ -188,9 +185,6 @@ class SnippetAdmin extends Admin
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContexts()
     {
         $contexts = $this->getGlobalSnippetsSecurityContext();

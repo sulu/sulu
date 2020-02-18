@@ -18,25 +18,16 @@ use Doctrine\DBAL\Exception\ConnectionException;
  */
 class DatabaseBuilder extends SuluBuilder
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'database';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDependencies()
     {
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function build()
     {
         $doctrine = $this->container->get('doctrine');

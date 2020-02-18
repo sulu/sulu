@@ -21,9 +21,6 @@ abstract class AbstractLazyCollection implements \Iterator, \Countable
      */
     protected $documents;
 
-    /**
-     * {@inheritdoc}
-     */
     public function count()
     {
         $this->initialize();
@@ -31,14 +28,8 @@ abstract class AbstractLazyCollection implements \Iterator, \Countable
         return $this->documents->count();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     abstract public function current();
 
-    /**
-     * {@inheritdoc}
-     */
     public function key()
     {
         $this->initialize();
@@ -46,9 +37,6 @@ abstract class AbstractLazyCollection implements \Iterator, \Countable
         return $this->documents->key();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function next()
     {
         $this->initialize();
@@ -56,9 +44,6 @@ abstract class AbstractLazyCollection implements \Iterator, \Countable
         $this->documents->next();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rewind()
     {
         $this->initialize();
@@ -66,9 +51,6 @@ abstract class AbstractLazyCollection implements \Iterator, \Countable
         $this->documents->rewind();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function valid()
     {
         $this->initialize();

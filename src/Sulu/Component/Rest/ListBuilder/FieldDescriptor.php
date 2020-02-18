@@ -91,17 +91,12 @@ class FieldDescriptor implements FieldDescriptorInterface
         $this->translation = null == $translation ? $name : $translation;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->name;
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @Serializer\VirtualProperty()
      */
     public function getDisabled()
@@ -112,41 +107,27 @@ class FieldDescriptor implements FieldDescriptorInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTranslation()
     {
         return $this->translation;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType()
     {
         return $this->type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getVisibility()
     {
         return $this->visibility;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSearchability()
     {
         return $this->searchability;
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @Serializer\VirtualProperty()
      */
     public function getDefault()
@@ -157,17 +138,11 @@ class FieldDescriptor implements FieldDescriptorInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSortable()
     {
         return $this->sortable;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMetadata()
     {
         return $this->metadata;
@@ -183,9 +158,6 @@ class FieldDescriptor implements FieldDescriptorInterface
         $this->metadata = $metadata;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function compare(FieldDescriptorInterface $other)
     {
         if (!$other instanceof self) {

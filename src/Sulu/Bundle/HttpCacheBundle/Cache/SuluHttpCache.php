@@ -36,7 +36,6 @@ class SuluHttpCache extends HttpCache implements CacheInvalidation
     const HEADER_REVERSE_PROXY_TTL = 'X-Reverse-Proxy-TTL';
 
     /**
-     * @param HttpKernelInterface $kernel
      * @param string $cacheDir
      */
     public function __construct(HttpKernelInterface $kernel, $cacheDir = null)

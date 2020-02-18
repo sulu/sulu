@@ -291,8 +291,6 @@ class Collection implements CollectionInterface
     /**
      * Set type.
      *
-     * @param CollectionType $type
-     *
      * @return CollectionInterface
      */
     public function setType(CollectionType $type)
@@ -344,9 +342,6 @@ class Collection implements CollectionInterface
         return $this->children;
     }
 
-    /**
-     * @param DoctrineCollection $children
-     */
     public function setChildren(DoctrineCollection $children)
     {
         $this->children = $children;
@@ -379,8 +374,6 @@ class Collection implements CollectionInterface
     /**
      * Add meta.
      *
-     * @param CollectionMeta $meta
-     *
      * @return Collection
      */
     public function addMeta(CollectionMeta $meta)
@@ -392,8 +385,6 @@ class Collection implements CollectionInterface
 
     /**
      * Remove meta.
-     *
-     * @param CollectionMeta $meta
      */
     public function removeMeta(CollectionMeta $meta)
     {
@@ -413,8 +404,6 @@ class Collection implements CollectionInterface
     /**
      * Add media.
      *
-     * @param MediaInterface $media
-     *
      * @return Collection
      */
     public function addMedia(MediaInterface $media)
@@ -426,8 +415,6 @@ class Collection implements CollectionInterface
 
     /**
      * Remove media.
-     *
-     * @param MediaInterface $media
      */
     public function removeMedia(MediaInterface $media)
     {
@@ -447,8 +434,6 @@ class Collection implements CollectionInterface
     /**
      * Add children.
      *
-     * @param CollectionInterface $children
-     *
      * @return Collection
      */
     public function addChildren(CollectionInterface $children)
@@ -460,8 +445,6 @@ class Collection implements CollectionInterface
 
     /**
      * Remove children.
-     *
-     * @param CollectionInterface $children
      */
     public function removeChildren(CollectionInterface $children)
     {
@@ -492,9 +475,6 @@ class Collection implements CollectionInterface
         return $this->defaultMeta;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         return 'sulu.media.collections';

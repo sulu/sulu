@@ -13,17 +13,11 @@ namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
 abstract class AbstractSitemapProvider implements SitemapProviderInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getMaxPage($scheme, $host)
     {
         return 1;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createSitemap($scheme, $host)
     {
         return new Sitemap($this->getAlias(), $this->getMaxPage($scheme, $host));

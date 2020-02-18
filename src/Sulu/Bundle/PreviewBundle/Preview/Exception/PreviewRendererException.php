@@ -41,7 +41,6 @@ abstract class PreviewRendererException extends PreviewException
     /**
      * @param string $message
      * @param int $code
-     * @param mixed $object
      * @param int|string $id
      * @param string $webspaceKey
      * @param string $locale
@@ -57,9 +56,6 @@ abstract class PreviewRendererException extends PreviewException
         $this->locale = $locale;
     }
 
-    /**
-     * @return mixed
-     */
     public function getObject()
     {
         return $this->object;

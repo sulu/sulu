@@ -151,9 +151,6 @@ abstract class WebsiteController extends AbstractController
         return $this->get('request_stack')->getCurrentRequest();
     }
 
-    /**
-     * @return null|CacheLifetimeEnhancer
-     */
     protected function getCacheTimeLifeEnhancer(): ?CacheLifetimeEnhancer
     {
         if (!$this->has('sulu_http_cache.cache_lifetime.enhancer')) {
@@ -163,9 +160,6 @@ abstract class WebsiteController extends AbstractController
         return $this->get('sulu_http_cache.cache_lifetime.enhancer');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedServices()
     {
         $subscribedServices = parent::getSubscribedServices();

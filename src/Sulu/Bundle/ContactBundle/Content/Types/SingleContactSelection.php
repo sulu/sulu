@@ -51,9 +51,6 @@ class SingleContactSelection extends SimpleContentType implements PreResolvableC
         return $this->contactRepository->findById($id);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function preResolve(PropertyInterface $property)
     {
         $id = $property->getValue();

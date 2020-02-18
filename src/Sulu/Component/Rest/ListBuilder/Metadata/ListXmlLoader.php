@@ -68,9 +68,6 @@ class ListXmlLoader
     /**
      * Extracts attributes from dom-node to create a new property-metadata object.
      *
-     * @param \DOMXPath $xpath
-     * @param \DOMNode $propertyNode
-     *
      * @return AbstractPropertyMetadata
      */
     private function loadPropertyMetadata(\DOMXPath $xpath, \DOMNode $propertyNode)
@@ -227,9 +224,6 @@ class ListXmlLoader
 
     /**
      * Extracts filter type parameters from dom-node.
-     *
-     * @param \DOMXPath $xpath
-     * @param \DOMNode $propertyNode
      *
      * @return array
      */

@@ -34,11 +34,6 @@ class DocumentInspector
      */
     protected $proxyFactory;
 
-    /**
-     * @param DocumentRegistry $documentRegistry
-     * @param PathSegmentRegistry $pathSegmentRegistry
-     * @param ProxyFactory $proxyFactory
-     */
     public function __construct(
         DocumentRegistry $documentRegistry,
         PathSegmentRegistry $pathSegmentRegistry,
@@ -95,7 +90,6 @@ class DocumentInspector
      * Returns lazy-loading children collection for given document.
      *
      * @param object $document
-     * @param array $options
      *
      * @return Collection\ChildrenCollection
      */

@@ -23,7 +23,6 @@ trait RequestParametersTrait
     /**
      * returns request parameter with given name.
      *
-     * @param Request $request
      * @param string $name
      * @param bool $force TRUE if value is mandatory
      * @param mixed $default value if parameter not exists

@@ -70,8 +70,6 @@ interface CategoryRepositoryInterface extends RepositoryInterface
     /**
      * Returns an array of categories which are assigned to the given array of ids.
      *
-     * @param array $ids
-     *
      * @return CategoryInterface[]
      */
     public function findCategoriesByIds(array $ids);

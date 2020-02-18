@@ -18,9 +18,6 @@ use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 
 class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function onLogoutSuccess(Request $request)
     {
         return new JsonResponse(null, Response::HTTP_OK);

@@ -39,8 +39,6 @@ class UserLocaleListener
 
     /**
      * Sets the locale of the current User to the request, if a User is logged in.
-     *
-     * @param GetResponseEvent $event
      */
     public function copyUserLocaleToRequest(GetResponseEvent $event)
     {

@@ -95,8 +95,6 @@ class Phone
     /**
      * Set phoneType.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\PhoneType $phoneType
-     *
      * @return Phone
      */
     public function setPhoneType(\Sulu\Bundle\ContactBundle\Entity\PhoneType $phoneType)
@@ -119,8 +117,6 @@ class Phone
     /**
      * Add contacts.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts
-     *
      * @return Phone
      */
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts)
@@ -132,8 +128,6 @@ class Phone
 
     /**
      * Remove contacts.
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts
      */
     public function removeContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts)
     {
@@ -153,8 +147,6 @@ class Phone
     /**
      * Add accounts.
      *
-     * @param AccountInterface $account
-     *
      * @return Phone
      */
     public function addAccount(AccountInterface $account)
@@ -166,8 +158,6 @@ class Phone
 
     /**
      * Remove accounts.
-     *
-     * @param AccountInterface $account
      */
     public function removeAccount(AccountInterface $account)
     {

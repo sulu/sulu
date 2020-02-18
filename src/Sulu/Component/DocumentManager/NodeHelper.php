@@ -23,9 +23,6 @@ use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
  */
 class NodeHelper implements NodeHelperInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function move(NodeInterface $node, $parentUuid, $destinationName = null)
     {
         if (!$destinationName) {
@@ -37,9 +34,6 @@ class NodeHelper implements NodeHelperInterface
         $session->move($node->getPath(), $parentPath . '/' . $destinationName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function copy(NodeInterface $node, $parentUuid, $destinationName = null)
     {
         if (!$destinationName) {
@@ -54,9 +48,6 @@ class NodeHelper implements NodeHelperInterface
         return $destinationPath;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function reorder(NodeInterface $node, $destinationUuid)
     {
         $session = $node->getSession();
@@ -86,7 +77,6 @@ class NodeHelper implements NodeHelperInterface
     /**
      * Returns the path based on the given UUID.
      *
-     * @param SessionInterface $session
      * @param string $identifier
      *
      * @return string

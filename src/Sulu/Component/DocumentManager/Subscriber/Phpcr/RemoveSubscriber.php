@@ -40,9 +40,6 @@ class RemoveSubscriber implements EventSubscriberInterface
         $this->nodeManager = $nodeManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -53,8 +50,6 @@ class RemoveSubscriber implements EventSubscriberInterface
     /**
      * Remove the given documents node from PHPCR session and optionally
      * remove any references to the node.
-     *
-     * @param RemoveEvent $event
      */
     public function handleRemove(RemoveEvent $event)
     {

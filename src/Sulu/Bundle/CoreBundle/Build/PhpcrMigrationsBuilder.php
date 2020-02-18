@@ -38,25 +38,16 @@ class PhpcrMigrationsBuilder extends SuluBuilder
         $this->versionStorage = $versionStorage;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'phpcr_migrations';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDependencies()
     {
         return ['phpcr'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function build()
     {
         $migrator = $this->migratorFactory->getMigrator();

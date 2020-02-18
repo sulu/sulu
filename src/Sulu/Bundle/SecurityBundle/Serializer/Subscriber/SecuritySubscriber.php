@@ -48,9 +48,6 @@ class SecuritySubscriber implements EventSubscriberInterface
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -64,8 +61,6 @@ class SecuritySubscriber implements EventSubscriberInterface
 
     /**
      * Adds the permissions for the current user to the serialization.
-     *
-     * @param ObjectEvent $event
      */
     public function onPostSerialize(ObjectEvent $event)
     {

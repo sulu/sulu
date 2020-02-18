@@ -20,8 +20,6 @@ interface PreResolvableContentTypeInterface
 {
     /**
      * Will be called before the property will get resolved.
-     *
-     * @param PropertyInterface $property
      */
     public function preResolve(PropertyInterface $property);
 }

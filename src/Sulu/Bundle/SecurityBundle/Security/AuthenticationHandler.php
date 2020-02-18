@@ -49,9 +49,6 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
      * Handler for AuthenticationSuccess. Returns a JsonResponse if request is an AJAX-request.
      * Returns a RedirectResponse otherwise.
      *
-     * @param Request $request
-     * @param TokenInterface $token
-     *
      * @return Response
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
@@ -80,9 +77,6 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
     /**
      * Handler for AuthenticationFailure. Returns a JsonResponse if request is an AJAX-request.
      * Returns a Redirect-response otherwise.
-     *
-     * @param Request $request
-     * @param AuthenticationException $exception
      *
      * @return Response
      */

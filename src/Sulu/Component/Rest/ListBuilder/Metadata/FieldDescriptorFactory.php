@@ -134,9 +134,6 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFieldDescriptors(string $listKey): ?array
     {
         $configCache = $this->getConfigCache($listKey);
@@ -324,7 +321,6 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
      * Resolves options for string.
      *
      * @param string $string
-     * @param array $options
      *
      * @return string
      */

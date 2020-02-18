@@ -27,8 +27,6 @@ interface SectionPropertyInterface extends PropertyInterface
 
     /**
      * add a child to section.
-     *
-     * @param PropertyInterface $property
      */
     public function addChild(PropertyInterface $property);
 }

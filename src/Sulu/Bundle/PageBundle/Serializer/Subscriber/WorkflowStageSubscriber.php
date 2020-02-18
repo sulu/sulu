@@ -25,9 +25,6 @@ use Sulu\Component\Content\Document\WorkflowStage;
  */
 class WorkflowStageSubscriber implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -41,8 +38,6 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
 
     /**
      * Adds the published state to the serialization.
-     *
-     * @param ObjectEvent $event
      */
     public function onPostSerialize(ObjectEvent $event)
     {

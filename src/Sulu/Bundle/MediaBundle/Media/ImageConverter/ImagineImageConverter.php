@@ -105,9 +105,6 @@ class ImagineImageConverter implements ImageConverterInterface
         $this->svgImagine = $svgImagine;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSupportedOutputImageFormats(?string $mimeType): array
     {
         if (!$mimeType) {
@@ -150,9 +147,6 @@ class ImagineImageConverter implements ImageConverterInterface
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function convert(FileVersion $fileVersion, $formatKey, $imageFormat)
     {
         $imageResource = $this->mediaImageExtractor->extract($this->storage->load($fileVersion->getStorageOptions()));
@@ -216,7 +210,6 @@ class ImagineImageConverter implements ImageConverterInterface
     /**
      * Applies an array of transformations on a passed image.
      *
-     * @param ImageInterface $image
      * @param $tansformations
      *
      * @return ImageInterface The modified image
@@ -270,10 +263,6 @@ class ImagineImageConverter implements ImageConverterInterface
     /**
      * Crops the given image according to the focus point defined in the file version.
      *
-     * @param ImageInterface $image
-     * @param FileVersion $fileVersion
-     * @param array $scale
-     *
      * @return ImageInterface
      */
     private function applyFocus(ImageInterface $image, FileVersion $fileVersion, array $scale)
@@ -295,7 +284,6 @@ class ImagineImageConverter implements ImageConverterInterface
     /**
      * Scales a given image according to the information passed as the second argument.
      *
-     * @param ImageInterface $image
      * @param $scale
      *
      * @return ImageInterface
@@ -320,8 +308,6 @@ class ImagineImageConverter implements ImageConverterInterface
     /**
      * Ensures that the color mode of the passed image is RGB.
      *
-     * @param ImageInterface $image
-     *
      * @return ImageInterface $image The modified image
      */
     private function toRGB(ImageInterface $image)
@@ -336,8 +322,6 @@ class ImagineImageConverter implements ImageConverterInterface
     /**
      * Autorotate based on metadata of an image.
      *
-     * @param ImageInterface $image
-     *
      * @return ImageInterface
      */
     private function autorotate(ImageInterface $image)
@@ -351,9 +335,7 @@ class ImagineImageConverter implements ImageConverterInterface
      * Constructs the parameters for the cropper. Returns null when
      * the image should not be cropped.
      *
-     * @param ImageInterface $image
      * @param FormatOptions|null $formatOptions
-     * @param array $format
      *
      * @return ?array
      */
@@ -386,7 +368,6 @@ class ImagineImageConverter implements ImageConverterInterface
     /**
      * Applies a callback to every layer of an image and returns the resulting image.
      *
-     * @param ImageInterface $image
      * @param callable $modifier The callable to apply to all layers
      *
      * @return ImageInterface
@@ -441,7 +422,6 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
-     * @param ImageInterface $image
      * @param string $imageExtension
      * @param array $imagineOptions
      *

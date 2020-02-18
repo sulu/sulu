@@ -27,10 +27,6 @@ class RequestListener
      */
     private $requestAnalyzer;
 
-    /**
-     * @param RouterInterface $router
-     * @param RequestAnalyzerInterface $requestAnalyzer
-     */
     public function __construct(RouterInterface $router, RequestAnalyzerInterface $requestAnalyzer)
     {
         $this->router = $router;

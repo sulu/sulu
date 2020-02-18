@@ -35,17 +35,11 @@ class HtmlTagExtractor implements TagExtractorInterface
         $this->namespace = $namespace;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function count($html)
     {
         return preg_match_all(sprintf(self::COUNT_REGEX, $this->namespace), $html, $matches);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function extract($html)
     {
         if (!preg_match_all(sprintf(self::TAG_REGEX, $this->namespace), $html, $matches)) {

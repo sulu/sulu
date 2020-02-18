@@ -65,25 +65,16 @@ class BlockProperty extends Property implements BlockPropertyInterface
         $this->defaultTypeName = $defaultTypeName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTypes()
     {
         return $this->types;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addType(BlockPropertyType $type)
     {
         $this->types[$type->getName()] = $type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType($name)
     {
         if (!$this->hasType($name)) {
@@ -99,17 +90,11 @@ class BlockProperty extends Property implements BlockPropertyInterface
         return $this->types[$name];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasType($name)
     {
         return isset($this->types[$name]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultTypeName()
     {
         return $this->defaultTypeName;
@@ -127,9 +112,6 @@ class BlockProperty extends Property implements BlockPropertyInterface
         return $this->getType($typeName)->getChildProperties();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function initProperties($index, $typeName)
     {
         $type = $this->getType($typeName);
@@ -138,17 +120,11 @@ class BlockProperty extends Property implements BlockPropertyInterface
         return $this->properties[$index];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function clearProperties()
     {
         $this->properties = [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getProperties($index)
     {
         if (!isset($this->properties[$index])) {
@@ -161,17 +137,11 @@ class BlockProperty extends Property implements BlockPropertyInterface
         return $this->properties[$index];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLength()
     {
         return count($this->properties);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setValue($value)
     {
         $this->doSetValue($value);

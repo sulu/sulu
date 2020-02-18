@@ -23,9 +23,6 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
  */
 class ParentSubscriber implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -39,8 +36,6 @@ class ParentSubscriber implements EventSubscriberInterface
 
     /**
      * Adds the identifier of the parent document to the serialization.
-     *
-     * @param ObjectEvent $event
      */
     public function onPostSerialize(ObjectEvent $event)
     {
