@@ -20,9 +20,6 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class FormatCacheClearerCompilerPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition('sulu_media.format_cache_clearer')) {

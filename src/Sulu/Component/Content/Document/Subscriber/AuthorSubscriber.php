@@ -45,11 +45,6 @@ class AuthorSubscriber implements EventSubscriberInterface
      */
     private $metadataFactory;
 
-    /**
-     * @param PropertyEncoder $propertyEncoder
-     * @param UserRepositoryInterface $userRepository
-     * @param MetadataFactoryInterface $metadataFactory
-     */
     public function __construct(
         PropertyEncoder $propertyEncoder,
         UserRepositoryInterface $userRepository,
@@ -60,9 +55,6 @@ class AuthorSubscriber implements EventSubscriberInterface
         $this->metadataFactory = $metadataFactory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -74,8 +66,6 @@ class AuthorSubscriber implements EventSubscriberInterface
 
     /**
      * Set author/authored to document on-hydrate.
-     *
-     * @param HydrateEvent $event
      */
     public function setAuthorOnDocument(HydrateEvent $event)
     {
@@ -108,8 +98,6 @@ class AuthorSubscriber implements EventSubscriberInterface
 
     /**
      * Set author/authored to document on-persist.
-     *
-     * @param AbstractMappingEvent $event
      */
     public function setAuthorOnNode(AbstractMappingEvent $event)
     {
@@ -148,8 +136,6 @@ class AuthorSubscriber implements EventSubscriberInterface
 
     /**
      * Set default author (if not set) to given document.
-     *
-     * @param LocalizedAuthorBehavior $document
      */
     private function setDefaultAuthor(LocalizedAuthorBehavior $document)
     {

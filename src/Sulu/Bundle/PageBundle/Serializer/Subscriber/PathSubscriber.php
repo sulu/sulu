@@ -40,9 +40,6 @@ class PathSubscriber implements EventSubscriberInterface
         $this->documentRegistry = $documentRegistry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -56,8 +53,6 @@ class PathSubscriber implements EventSubscriberInterface
 
     /**
      * Adds the relative path to the serialization.
-     *
-     * @param ObjectEvent $event
      */
     public function onPostSerialize(ObjectEvent $event)
     {

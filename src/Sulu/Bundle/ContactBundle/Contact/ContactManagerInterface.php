@@ -34,8 +34,6 @@ interface ContactManagerInterface
      *
      * @param $entity
      * @param $address
-     *
-     * @return mixed
      */
     public function removeAddressRelation($entity, $address);
 
@@ -43,8 +41,6 @@ interface ContactManagerInterface
      * Returns a collection of relations to get addresses.
      *
      * @param $entity
-     *
-     * @return mixed
      */
     public function getAddressRelations($entity);
 
@@ -68,8 +64,6 @@ interface ContactManagerInterface
      * sets main email, based on emails that are set on entity.
      *
      * @param $entity
-     *
-     * @return mixed
      */
     public function setMainEmail($entity);
 
@@ -77,8 +71,6 @@ interface ContactManagerInterface
      * sets main fax, based on faxes that are set on entity.
      *
      * @param $entity
-     *
-     * @return mixed
      */
     public function setMainFax($entity);
 
@@ -86,8 +78,6 @@ interface ContactManagerInterface
      * sets main url, based on urls that are set on entity.
      *
      * @param $entity
-     *
-     * @return mixed
      */
     public function setMainUrl($entity);
 
@@ -95,8 +85,6 @@ interface ContactManagerInterface
      * sets main phone, based on phones that are set on entity.
      *
      * @param $entity
-     *
-     * @return mixed
      */
     public function setMainPhone($entity);
 
@@ -105,8 +93,6 @@ interface ContactManagerInterface
      *
      * @param $id
      * @param string $locale
-     *
-     * @return mixed
      */
     public function getById($id, $locale);
 
@@ -115,8 +101,6 @@ interface ContactManagerInterface
      *
      * @param $ids
      * @param string $locale
-     *
-     * @return mixed
      */
     public function getByIds($ids, $locale);
 }

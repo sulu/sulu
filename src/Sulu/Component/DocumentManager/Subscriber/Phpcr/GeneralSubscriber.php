@@ -55,9 +55,6 @@ class GeneralSubscriber implements EventSubscriberInterface
         $this->nodeHelper = $nodeHelper;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -68,9 +65,6 @@ class GeneralSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param MoveEvent $event
-     */
     public function handleMove(MoveEvent $event)
     {
         $document = $event->getDocument();
@@ -78,9 +72,6 @@ class GeneralSubscriber implements EventSubscriberInterface
         $this->nodeHelper->move($node, $event->getDestId(), $event->getDestName());
     }
 
-    /**
-     * @param CopyEvent $event
-     */
     public function handleCopy(CopyEvent $event)
     {
         $document = $event->getDocument();
@@ -89,17 +80,11 @@ class GeneralSubscriber implements EventSubscriberInterface
         $event->setCopiedNode($this->nodeManager->find($newPath));
     }
 
-    /**
-     * @param ClearEvent $event
-     */
     public function handleClear(ClearEvent $event)
     {
         $this->nodeManager->clear();
     }
 
-    /**
-     * @param FlushEvent $event
-     */
     public function handleFlush(FlushEvent $event)
     {
         $this->nodeManager->save();

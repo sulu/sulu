@@ -344,8 +344,6 @@ class CollectionController extends AbstractRestController implements ClassResour
     }
 
     /**
-     * @param Request $request
-     *
      * @return Collection
      */
     protected function getData(Request $request)
@@ -419,17 +417,11 @@ class CollectionController extends AbstractRestController implements ClassResour
         return 'sulu.media.collections';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecuredClass()
     {
         return CollectionEntity::class;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecuredObjectId(Request $request)
     {
         return $request->get('id') ?: $request->get('parent');

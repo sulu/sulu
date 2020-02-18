@@ -20,17 +20,11 @@ namespace Sulu\Component\Content\Types\ResourceLocator\Strategy;
  */
 class TreeFullEditStrategy extends ResourceLocatorStrategy implements ResourceLocatorStrategyInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getChildPart($resourceSegment)
     {
         return ltrim($resourceSegment, '/');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getInputType()
     {
         return self::INPUT_TYPE_FULL;

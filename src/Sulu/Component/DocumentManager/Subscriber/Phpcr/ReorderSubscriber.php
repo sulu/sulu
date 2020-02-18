@@ -32,9 +32,6 @@ class ReorderSubscriber implements EventSubscriberInterface
         $this->nodeHelper = $nodeHelper;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -44,8 +41,6 @@ class ReorderSubscriber implements EventSubscriberInterface
 
     /**
      * Handle the reorder operation.
-     *
-     * @param ReorderEvent $event
      *
      * @throws DocumentManagerException
      */

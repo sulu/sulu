@@ -27,9 +27,6 @@ class RoleSettingControllerTest extends SuluTestCase
      */
     private $role;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         $this->entityManager = $this->getEntityManager();

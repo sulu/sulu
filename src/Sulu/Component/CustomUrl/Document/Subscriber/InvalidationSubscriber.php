@@ -61,9 +61,6 @@ class InvalidationSubscriber implements EventSubscriberInterface
         $this->requestStack = $requestStack;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [

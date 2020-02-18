@@ -31,25 +31,16 @@ class SessionManager implements SessionManagerInterface
         $this->nodeNames = $nodeNames;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSession()
     {
         return $this->session;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRouteNode($webspaceKey, $languageCode, $segment = null)
     {
         return $this->getSession()->getNode($this->getRoutePath($webspaceKey, $languageCode, $segment));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoutePath($webspaceKey, $languageCode, $segment = null)
     {
         $path = sprintf(
@@ -64,17 +55,11 @@ class SessionManager implements SessionManagerInterface
         return $path;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentNode($webspaceKey)
     {
         return $this->getSession()->getNode($this->getContentPath($webspaceKey));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentPath($webspaceKey)
     {
         $path = sprintf(
@@ -87,17 +72,11 @@ class SessionManager implements SessionManagerInterface
         return $path;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getWebspaceNode($webspaceKey)
     {
         return $this->getSession()->getNode($this->getWebspacePath($webspaceKey));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getWebspacePath($webspaceKey)
     {
         return sprintf(
@@ -107,9 +86,6 @@ class SessionManager implements SessionManagerInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSnippetNode($templateKey = null)
     {
         $snippetPath = '/' . $this->nodeNames['base'] . '/' . $this->nodeNames['snippet'];

@@ -52,9 +52,6 @@ class SnippetExport extends Export implements SnippetExportInterface
         $this->output = new NullOutput();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function export($locale, $output = null, $format = '1.2.xliff')
     {
         if (!$locale) {

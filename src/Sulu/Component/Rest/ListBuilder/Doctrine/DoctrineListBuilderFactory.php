@@ -34,11 +34,6 @@ class DoctrineListBuilderFactory implements DoctrineListBuilderFactoryInterface
      */
     private $permissions;
 
-    /**
-     * @param EntityManager $em
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param array $permissions
-     */
     public function __construct(EntityManager $em, EventDispatcherInterface $eventDispatcher, array $permissions)
     {
         $this->em = $em;

@@ -22,9 +22,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class SuluPreviewExtension extends Extension implements PrependExtensionInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
@@ -37,9 +34,6 @@ class SuluPreviewExtension extends Extension implements PrependExtensionInterfac
         $loader->load('services.xml');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function prepend(ContainerBuilder $container)
     {
         if ($container->hasExtension('doctrine_cache')) {

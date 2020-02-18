@@ -528,33 +528,21 @@ class TestRoutable implements RoutableInterface
         $this->route = $route;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getId()
     {
         return 1;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoute()
     {
         return $this->route;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setRoute(RouteInterface $route)
     {
         $this->route = $route;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale()
     {
         return 'de';

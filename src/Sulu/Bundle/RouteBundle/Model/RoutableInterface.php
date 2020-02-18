@@ -18,8 +18,6 @@ interface RoutableInterface
 {
     /**
      * Returns identifier.
-     *
-     * @return mixed
      */
     public function getId();
 
@@ -32,8 +30,6 @@ interface RoutableInterface
 
     /**
      * Set route.
-     *
-     * @param RouteInterface $route
      */
     public function setRoute(RouteInterface $route);
 

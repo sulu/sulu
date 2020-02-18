@@ -16,25 +16,16 @@ namespace Sulu\Bundle\CoreBundle\Build;
  */
 class FixturesBuilder extends SuluBuilder
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'fixtures';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDependencies()
     {
         return ['database', 'phpcr'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function build()
     {
         $this->execCommand('Loading ORM fixtures', 'doctrine:fixtures:load', ['--no-interaction' => true, '--append' => true]);

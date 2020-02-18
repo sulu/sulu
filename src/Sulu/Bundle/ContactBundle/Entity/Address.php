@@ -333,8 +333,6 @@ class Address
     /**
      * Set addressType.
      *
-     * @param AddressType $addressType
-     *
      * @return Address
      */
     public function setAddressType(AddressType $addressType)
@@ -370,8 +368,6 @@ class Address
 
     /**
      * Get countryCode.
-     *
-     * @return string|null
      */
     public function getCountryCode(): ?string
     {
@@ -534,8 +530,6 @@ class Address
     /**
      * Add contactAddresses.
      *
-     * @param ContactAddress $contactAddresses
-     *
      * @return Address
      */
     public function addContactAddress(ContactAddress $contactAddresses)
@@ -547,8 +541,6 @@ class Address
 
     /**
      * Remove contactAddresses.
-     *
-     * @param ContactAddress $contactAddresses
      */
     public function removeContactAddress(ContactAddress $contactAddresses)
     {
@@ -568,8 +560,6 @@ class Address
     /**
      * Add accountAddresses.
      *
-     * @param AccountAddress $accountAddresses
-     *
      * @return Address
      */
     public function addAccountAddress(AccountAddress $accountAddresses)
@@ -581,8 +571,6 @@ class Address
 
     /**
      * Remove accountAddresses.
-     *
-     * @param AccountAddress $accountAddresses
      */
     public function removeAccountAddress(AccountAddress $accountAddresses)
     {

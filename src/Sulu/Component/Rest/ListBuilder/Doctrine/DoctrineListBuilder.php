@@ -154,9 +154,6 @@ class DoctrineListBuilder extends AbstractListBuilder
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setPermissionCheck(UserInterface $user, $permission, $securedEntityName = null)
     {
         parent::setPermissionCheck($user, $permission);
@@ -164,17 +161,11 @@ class DoctrineListBuilder extends AbstractListBuilder
         $this->securedEntityName = $securedEntityName ?: $this->entityName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addPermissionCheckField(DoctrineFieldDescriptor $fieldDescriptor)
     {
         $this->permissionCheckFields[$fieldDescriptor->getEntityName()] = $fieldDescriptor;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function count()
     {
         $subQueryBuilder = $this->createSubQueryBuilder('COUNT(' . $this->idField->getSelect() . ')');
@@ -194,9 +185,6 @@ class DoctrineListBuilder extends AbstractListBuilder
         return 0;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute()
     {
         // emit listbuilder.create event
@@ -560,7 +548,6 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * Adds joins to querybuilder.
      *
-     * @param QueryBuilder $queryBuilder
      * @param array $joins
      */
     protected function assignJoins(QueryBuilder $queryBuilder, array $joins = null)
@@ -591,9 +578,6 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createNotExpression(ExpressionInterface $expression)
     {
         if (!$expression instanceof AbstractDoctrineExpression) {
@@ -603,9 +587,6 @@ class DoctrineListBuilder extends AbstractListBuilder
         return new DoctrineNotExpression($expression);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createWhereExpression(FieldDescriptorInterface $fieldDescriptor, $value, $comparator)
     {
         if (!$fieldDescriptor instanceof DoctrineFieldDescriptorInterface) {
@@ -615,9 +596,6 @@ class DoctrineListBuilder extends AbstractListBuilder
         return new DoctrineWhereExpression($fieldDescriptor, $value, $comparator);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createInExpression(FieldDescriptorInterface $fieldDescriptor, array $values)
     {
         if (!$fieldDescriptor instanceof DoctrineFieldDescriptorInterface) {
@@ -627,9 +605,6 @@ class DoctrineListBuilder extends AbstractListBuilder
         return new DoctrineInExpression($fieldDescriptor, $values);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createBetweenExpression(FieldDescriptorInterface $fieldDescriptor, array $values)
     {
         if (!$fieldDescriptor instanceof DoctrineFieldDescriptorInterface) {
@@ -651,8 +626,6 @@ class DoctrineListBuilder extends AbstractListBuilder
 
     /**
      * Set id-field of the "root" entity.
-     *
-     * @param FieldDescriptorInterface $idField
      */
     public function setIdField(FieldDescriptorInterface $idField)
     {
@@ -704,9 +677,6 @@ class DoctrineListBuilder extends AbstractListBuilder
         return $fieldNames;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createAndExpression(array $expressions)
     {
         if (count($expressions) >= 2) {
@@ -716,9 +686,6 @@ class DoctrineListBuilder extends AbstractListBuilder
         throw new InvalidExpressionArgumentException('and', 'expressions');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createOrExpression(array $expressions)
     {
         if (count($expressions) >= 2) {
@@ -731,7 +698,6 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * Get select as from doctrine field descriptor.
      *
-     * @param DoctrineFieldDescriptorInterface $field
      * @param bool $hidden
      *
      * @return string

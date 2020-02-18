@@ -17,7 +17,6 @@ namespace Sulu\Bundle\PreviewBundle\Preview\Exception;
 class WebspaceLocalizationNotFoundException extends PreviewRendererException
 {
     /**
-     * @param mixed $object
      * @param int|string $id
      * @param string $webspaceKey
      * @param string $locale

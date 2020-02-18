@@ -28,9 +28,6 @@ class Kernel extends SuluTestKernel
         $this->name = $suluContext;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         parent::registerContainerConfiguration($loader);

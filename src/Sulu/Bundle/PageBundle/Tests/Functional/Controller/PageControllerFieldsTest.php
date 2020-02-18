@@ -257,7 +257,6 @@ class PageControllerFieldsTest extends SuluTestCase
      * @param string $locale
      * @param array $data
      * @param PageDocument $parent
-     * @param array $permissions
      * @param string $path
      *
      * @return PageDocument
@@ -330,7 +329,6 @@ class PageControllerFieldsTest extends SuluTestCase
     /**
      * @param string $title
      * @param string $locale
-     * @param PageDocument $link
      *
      * @return PageDocument
      */

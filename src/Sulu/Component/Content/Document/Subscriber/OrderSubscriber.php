@@ -38,19 +38,12 @@ class OrderSubscriber implements EventSubscriberInterface
      */
     private $propertyEncoder;
 
-    /**
-     * @param DocumentInspector $documentInspector
-     * @param PropertyEncoder $propertyEncoder
-     */
     public function __construct(DocumentInspector $documentInspector, PropertyEncoder $propertyEncoder)
     {
         $this->documentInspector = $documentInspector;
         $this->propertyEncoder = $propertyEncoder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -76,8 +69,6 @@ class OrderSubscriber implements EventSubscriberInterface
 
     /**
      * Adjusts the order of the document and its siblings.
-     *
-     * @param PersistEvent $event
      */
     public function handlePersist(PersistEvent $event)
     {
@@ -101,8 +92,6 @@ class OrderSubscriber implements EventSubscriberInterface
 
     /**
      * Adjusts the order of the document and its siblings.
-     *
-     * @param ReorderEvent $event
      */
     public function handleReorder(ReorderEvent $event)
     {

@@ -33,10 +33,6 @@ abstract class AbstractFilingSubscriber implements EventSubscriberInterface
      */
     private $liveSession;
 
-    /**
-     * @param SessionInterface $defaultSession
-     * @param SessionInterface $liveSession
-     */
     public function __construct(
         SessionInterface $defaultSession,
         SessionInterface $liveSession
@@ -45,9 +41,6 @@ abstract class AbstractFilingSubscriber implements EventSubscriberInterface
         $this->liveSession = $liveSession;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -104,11 +97,8 @@ abstract class AbstractFilingSubscriber implements EventSubscriberInterface
     /**
      * Adds a node with the given path segment as a node name to the given node.
      *
-     * @param NodeInterface $node
      * @param string $pathSegment
      * @param string $uuid
-     *
-     * @return mixed
      */
     private function createNode(NodeInterface $node, $pathSegment, $uuid)
     {

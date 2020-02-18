@@ -27,9 +27,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class SuluAdminExtension extends Extension implements PrependExtensionInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function prepend(ContainerBuilder $container)
     {
         if ($container->hasExtension('framework')) {
@@ -134,9 +131,6 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();

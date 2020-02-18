@@ -38,9 +38,6 @@ class OperatingSystemRule implements RuleInterface
         $this->translator = $translator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function evaluate(array $options)
     {
         if (!array_key_exists(static::OPERATING_SYSTEM, $options)) {
@@ -52,17 +49,11 @@ class OperatingSystemRule implements RuleInterface
         return $operatingSystem == $options[static::OPERATING_SYSTEM];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->translator->trans('sulu_audience_targeting.operating_system', [], 'admin');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType()
     {
         return new SingleSelect(static::OPERATING_SYSTEM, array_map(function($operatingSystem) {

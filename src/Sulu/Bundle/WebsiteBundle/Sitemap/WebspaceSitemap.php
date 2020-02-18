@@ -37,17 +37,11 @@ class WebspaceSitemap implements WebspaceSitemapInterface
      */
     private $sitemap = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function getWebspaceKey()
     {
         return $this->webspaceKey;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setWebspaceKey($webspaceKey)
     {
         $this->webspaceKey = $webspaceKey;
@@ -55,17 +49,11 @@ class WebspaceSitemap implements WebspaceSitemapInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultLocalization()
     {
         return $this->defaultLocalization;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setDefaultLocalization($defaultLocalization)
     {
         $this->defaultLocalization = $defaultLocalization;
@@ -73,17 +61,11 @@ class WebspaceSitemap implements WebspaceSitemapInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSitemap()
     {
         return $this->sitemap;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setSitemap($sitemap)
     {
         $this->sitemap = $sitemap;
@@ -91,17 +73,11 @@ class WebspaceSitemap implements WebspaceSitemapInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocalizations()
     {
         return $this->localizations;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setLocalizations($localizations)
     {
         $this->localizations = $localizations;
@@ -109,9 +85,6 @@ class WebspaceSitemap implements WebspaceSitemapInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addLocalization($localization)
     {
         $this->localizations[$localization] = $localization;
@@ -119,9 +92,6 @@ class WebspaceSitemap implements WebspaceSitemapInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeLocalization($localization)
     {
         unset($this->localizations[$localization]);

@@ -27,17 +27,11 @@ class ImportManager implements ImportManagerInterface
      */
     protected $contentTypeManager;
 
-    /**
-     * @param ContentTypeManagerInterface $contentTypeManager
-     */
     public function __construct(ContentTypeManagerInterface $contentTypeManager)
     {
         $this->contentTypeManager = $contentTypeManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function import(
         $contentTypeName,
         NodeInterface $node,
@@ -57,9 +51,6 @@ class ImportManager implements ImportManagerInterface
         $contentType->importData($node, $property, $value, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasImport($contentTypeName, $format)
     {
         $contentType = $this->contentTypeManager->get($contentTypeName);

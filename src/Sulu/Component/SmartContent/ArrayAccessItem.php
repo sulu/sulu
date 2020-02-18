@@ -39,8 +39,6 @@ class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess, \JsonSeria
     private $resource;
 
     /**
-     * @param mixed $id
-     * @param array $data
      * @param object $resource
      */
     public function __construct($id, array $data, $resource)
@@ -50,17 +48,12 @@ class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess, \JsonSeria
         $this->resource = $resource;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getResource()
     {
         return $this->resource;
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @VirtualProperty()
      */
     public function getId()
@@ -85,8 +78,6 @@ class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess, \JsonSeria
      *
      * @param string $key
      *
-     * @return mixed
-     *
      * @throws NoSuchPropertyException
      */
     protected function get($key)
@@ -98,49 +89,31 @@ class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess, \JsonSeria
         return $this->data[$key];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __get($name)
     {
         return $this->get($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetExists($offset)
     {
         return $this->exists($offset);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetGet($offset)
     {
         return $this->get($offset);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetSet($offset, $value)
     {
         throw new NotSupportedException();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetUnset($offset)
     {
         throw new NotSupportedException();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function jsonSerialize()
     {
         return $this->data;

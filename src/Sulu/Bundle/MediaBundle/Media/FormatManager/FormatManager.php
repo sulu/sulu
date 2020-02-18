@@ -82,9 +82,6 @@ class FormatManager implements FormatManagerInterface
     private $supportedImageFormats;
 
     /**
-     * @param MediaRepositoryInterface $mediaRepository
-     * @param FormatCacheInterface $formatCache
-     * @param ImageConverterInterface $converter
      * @param string $saveImage
      * @param array $responseHeaders
      * @param array $formats
@@ -109,9 +106,6 @@ class FormatManager implements FormatManagerInterface
         $this->logger = $logger ?: new NullLogger();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function returnImage($id, $formatKey, $fileName)
     {
         $setExpireHeaders = false;
@@ -180,9 +174,6 @@ class FormatManager implements FormatManagerInterface
         return new Response($responseContent, $status, $headers);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFormats($id, $fileName, $version, $subVersion, $mimeType)
     {
         $fileName = pathinfo($fileName)['filename'];
@@ -217,9 +208,6 @@ class FormatManager implements FormatManagerInterface
         return $formats;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function purge($idMedia, $fileName, $mimeType)
     {
         $extensions = $this->converter->getSupportedOutputImageFormats($mimeType);
@@ -237,17 +225,11 @@ class FormatManager implements FormatManagerInterface
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function clearCache()
     {
         $this->formatCache->clear();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFormatDefinition($formatKey, $locale = null)
     {
         if (!isset($this->formats[$formatKey])) {
@@ -273,9 +255,6 @@ class FormatManager implements FormatManagerInterface
         return $formatArray;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFormatDefinitions($locale = null)
     {
         $definitionsArray = [];
@@ -341,8 +320,6 @@ class FormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param MediaInterface $media
-     *
      * @return FileVersion
      *
      * @throws ImageProxyMediaNotFoundException

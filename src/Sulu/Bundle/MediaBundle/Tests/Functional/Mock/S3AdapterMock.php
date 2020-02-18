@@ -49,9 +49,6 @@ class S3AdapterMock extends AwsS3Adapter implements AdapterInterface
         return array_key_exists($path, $this->objectMap);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write($path, $contents, Config $config)
     {
         $this->objectMap[$path] = $contents;
@@ -66,17 +63,11 @@ class S3AdapterMock extends AwsS3Adapter implements AdapterInterface
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function update($path, $contents, Config $config)
     {
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read($path)
     {
         if (array_key_exists($path, $this->objectMap)) {
@@ -86,17 +77,11 @@ class S3AdapterMock extends AwsS3Adapter implements AdapterInterface
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rename($path, $newpath)
     {
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function delete($path)
     {
         unset($this->objectMap[$path]);
@@ -104,65 +89,41 @@ class S3AdapterMock extends AwsS3Adapter implements AdapterInterface
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function listContents($directory = '', $recursive = false)
     {
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMetadata($path)
     {
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSize($path)
     {
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMimetype($path)
     {
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTimestamp($path)
     {
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getVisibility($path)
     {
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setVisibility($path, $visibility)
     {
         return compact('visibility');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createDir($dirname, Config $config)
     {
         $this->objectMap[$dirname] = null;
@@ -170,9 +131,6 @@ class S3AdapterMock extends AwsS3Adapter implements AdapterInterface
         return ['path' => $dirname, 'type' => 'dir'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function deleteDir($dirname)
     {
         return false;

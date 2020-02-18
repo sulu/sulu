@@ -42,7 +42,6 @@ interface StructureManagerInterface extends ContainerAwareInterface
      * Wrap the given Structure with a legacy (bridge) structure.
      *
      * @param string $type
-     * @param StructureMetadata $structure
      *
      * @return StructureInterface
      */

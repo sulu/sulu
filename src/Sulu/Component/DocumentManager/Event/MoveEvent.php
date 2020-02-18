@@ -38,9 +38,6 @@ class MoveEvent extends AbstractEvent
         $this->destId = $destId;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDebugMessage()
     {
         return sprintf(

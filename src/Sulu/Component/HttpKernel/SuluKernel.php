@@ -58,9 +58,6 @@ abstract class SuluKernel extends Kernel
         parent::__construct($environment, $debug);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function registerBundles()
     {
         $contents = require $this->getProjectDir() . '/config/bundles.php';
@@ -76,9 +73,6 @@ abstract class SuluKernel extends Kernel
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
     {
         $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
@@ -91,9 +85,6 @@ abstract class SuluKernel extends Kernel
         $this->load($loader, $confDir, '/{services}_' . $this->environment);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureRoutes(RouteCollectionBuilder $routes)
     {
         $confDir = $this->getProjectDir() . '/config';
@@ -140,9 +131,6 @@ abstract class SuluKernel extends Kernel
         return array_keys(iterator_to_array($resources));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCacheDir()
     {
         return $this->getProjectDir() . DIRECTORY_SEPARATOR
@@ -161,9 +149,6 @@ abstract class SuluKernel extends Kernel
             . $this->environment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLogDir()
     {
         return $this->getProjectDir() . DIRECTORY_SEPARATOR
@@ -191,8 +176,6 @@ abstract class SuluKernel extends Kernel
     /**
      * Set context.
      *
-     * @param string $context
-     *
      * @return $this
      */
     protected function setContext(string $context)
@@ -202,9 +185,6 @@ abstract class SuluKernel extends Kernel
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getKernelParameters()
     {
         return array_merge(

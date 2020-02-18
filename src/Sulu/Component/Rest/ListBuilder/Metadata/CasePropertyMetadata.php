@@ -45,8 +45,6 @@ class CasePropertyMetadata extends AbstractPropertyMetadata
 
     /**
      * Add a case.
-     *
-     * @param FieldMetadata $case
      */
     public function addCase(FieldMetadata $case)
     {

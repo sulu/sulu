@@ -25,9 +25,6 @@ use Sulu\Component\Rest\ApiWrapper;
  */
 class BankAccount extends ApiWrapper
 {
-    /**
-     * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $account
-     */
     public function __construct(BankAccountEntity $account)
     {
         $this->entity = $account;

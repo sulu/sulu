@@ -127,16 +127,12 @@ interface ContactInterface
     /**
      * Add locale.
      *
-     * @param ContactLocale $locale
-     *
      * @return ContactInterface
      */
     public function addLocale(ContactLocale $locale);
 
     /**
      * Remove locale.
-     *
-     * @param ContactLocale $locale
      */
     public function removeLocale(ContactLocale $locale);
 
@@ -150,16 +146,12 @@ interface ContactInterface
     /**
      * Add note.
      *
-     * @param Note $note
-     *
      * @return ContactInterface
      */
     public function addNote(Note $note);
 
     /**
      * Remove note.
-     *
-     * @param Note $note
      */
     public function removeNote(Note $note);
 
@@ -173,16 +165,12 @@ interface ContactInterface
     /**
      * Add email.
      *
-     * @param Email $email
-     *
      * @return ContactInterface
      */
     public function addEmail(Email $email);
 
     /**
      * Remove email.
-     *
-     * @param Email $email
      */
     public function removeEmail(Email $email);
 
@@ -196,16 +184,12 @@ interface ContactInterface
     /**
      * Add phone.
      *
-     * @param Phone $phone
-     *
      * @return ContactInterface
      */
     public function addPhone(Phone $phone);
 
     /**
      * Remove phone.
-     *
-     * @param Phone $phone
      */
     public function removePhone(Phone $phone);
 
@@ -219,16 +203,12 @@ interface ContactInterface
     /**
      * Add fax.
      *
-     * @param Fax $fax
-     *
      * @return ContactInterface
      */
     public function addFax(Fax $fax);
 
     /**
      * Remove fax.
-     *
-     * @param Fax $fax
      */
     public function removeFax(Fax $fax);
 
@@ -242,16 +222,12 @@ interface ContactInterface
     /**
      * Add social media profile.
      *
-     * @param SocialMediaProfile $socialMediaProfile
-     *
      * @return ContactInterface
      */
     public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile);
 
     /**
      * Remove social media profile.
-     *
-     * @param SocialMediaProfile $socialMediaProfile
      */
     public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile);
 
@@ -265,16 +241,12 @@ interface ContactInterface
     /**
      * Add url.
      *
-     * @param Url $url
-     *
      * @return ContactInterface
      */
     public function addUrl(Url $url);
 
     /**
      * Remove url.
-     *
-     * @param Url $url
      */
     public function removeUrl(Url $url);
 
@@ -304,16 +276,12 @@ interface ContactInterface
     /**
      * Add tag.
      *
-     * @param TagInterface $tag
-     *
      * @return ContactInterface
      */
     public function addTag(TagInterface $tag);
 
     /**
      * Remove tag.
-     *
-     * @param TagInterface $tag
      */
     public function removeTag(TagInterface $tag);
 
@@ -350,16 +318,12 @@ interface ContactInterface
     /**
      * Add account contact.
      *
-     * @param AccountContact $accountContact
-     *
      * @return ContactInterface
      */
     public function addAccountContact(AccountContact $accountContact);
 
     /**
      * Remove account contact.
-     *
-     * @param AccountContact $accountContact
      */
     public function removeAccountContact(AccountContact $accountContact);
 
@@ -476,16 +440,12 @@ interface ContactInterface
     /**
      * Add contact address.
      *
-     * @param ContactAddress $contactAddress
-     *
      * @return ContactInterface
      */
     public function addContactAddress(ContactAddress $contactAddress);
 
     /**
      * Remove contact address.
-     *
-     * @param ContactAddress $contactAddress
      */
     public function removeContactAddress(ContactAddress $contactAddress);
 
@@ -503,15 +463,11 @@ interface ContactInterface
 
     /**
      * Returns the main address.
-     *
-     * @return mixed
      */
     public function getMainAddress();
 
     /**
      * Add medias.
-     *
-     * @param MediaInterface $media
      *
      * @return ContactInterface
      */
@@ -519,8 +475,6 @@ interface ContactInterface
 
     /**
      * Remove media.
-     *
-     * @param MediaInterface $media
      */
     public function removeMedia(MediaInterface $media);
 
@@ -548,16 +502,12 @@ interface ContactInterface
     /**
      * Add category.
      *
-     * @param CategoryInterface $category
-     *
      * @return ContactInterface
      */
     public function addCategory(CategoryInterface $category);
 
     /**
      * Remove category.
-     *
-     * @param CategoryInterface $category
      */
     public function removeCategory(CategoryInterface $category);
 
@@ -571,16 +521,12 @@ interface ContactInterface
     /**
      * Add bank account.
      *
-     * @param BankAccount $bankAccount
-     *
      * @return ContactInterface
      */
     public function addBankAccount(BankAccount $bankAccount);
 
     /**
      * Remove bank account.
-     *
-     * @param BankAccount $bankAccount
      */
     public function removeBankAccount(BankAccount $bankAccount);
 

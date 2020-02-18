@@ -195,8 +195,6 @@ class FileVersion implements AuditableInterface
      * Increases the subversion. Required for cache busting on certain operations which change the image without
      * creating a new file version.
      *
-     * @param int $subVersion
-     *
      * @return FileVersion
      */
     public function increaseSubVersion()
@@ -336,8 +334,6 @@ class FileVersion implements AuditableInterface
     /**
      * Add contentLanguages.
      *
-     * @param FileVersionContentLanguage $contentLanguages
-     *
      * @return FileVersion
      */
     public function addContentLanguage(FileVersionContentLanguage $contentLanguages)
@@ -349,8 +345,6 @@ class FileVersion implements AuditableInterface
 
     /**
      * Remove contentLanguages.
-     *
-     * @param FileVersionContentLanguage $contentLanguages
      */
     public function removeContentLanguage(FileVersionContentLanguage $contentLanguages)
     {
@@ -370,8 +364,6 @@ class FileVersion implements AuditableInterface
     /**
      * Add publishLanguages.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $publishLanguages
-     *
      * @return FileVersion
      */
     public function addPublishLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $publishLanguages)
@@ -383,8 +375,6 @@ class FileVersion implements AuditableInterface
 
     /**
      * Remove publishLanguages.
-     *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $publishLanguages
      */
     public function removePublishLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $publishLanguages)
     {
@@ -404,8 +394,6 @@ class FileVersion implements AuditableInterface
     /**
      * Add meta.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $meta
-     *
      * @return FileVersion
      */
     public function addMeta(\Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $meta)
@@ -417,8 +405,6 @@ class FileVersion implements AuditableInterface
 
     /**
      * Remove meta.
-     *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $meta
      */
     public function removeMeta(\Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $meta)
     {
@@ -437,8 +423,6 @@ class FileVersion implements AuditableInterface
 
     /**
      * Adds a format-options entity to the file-version.
-     *
-     * @param FormatOptions $formatOptions
      *
      * @return FileVersion
      */
@@ -486,8 +470,6 @@ class FileVersion implements AuditableInterface
     /**
      * Add tags.
      *
-     * @param TagInterface $tags
-     *
      * @return FileVersion
      */
     public function addTag(TagInterface $tags)
@@ -499,8 +481,6 @@ class FileVersion implements AuditableInterface
 
     /**
      * Remove tags.
-     *
-     * @param TagInterface $tags
      */
     public function removeTag(TagInterface $tags)
     {
@@ -636,8 +616,6 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * @param array $properties
-     *
      * @return self
      */
     public function setProperties(array $properties)
@@ -649,8 +627,6 @@ class FileVersion implements AuditableInterface
 
     /**
      * Add categories.
-     *
-     * @param CategoryInterface $categories´
      *
      * @return self
      */
@@ -681,8 +657,6 @@ class FileVersion implements AuditableInterface
 
     /**
      * Add a target group.
-     *
-     * @param TargetGroupInterface $targetGroup
      */
     public function addTargetGroup(TargetGroupInterface $targetGroup)
     {

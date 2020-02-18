@@ -101,9 +101,6 @@ class PageAdmin extends Admin
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureViews(ViewCollection $viewCollection): void
     {
         /** @var Webspace $firstWebspace */
@@ -296,9 +293,6 @@ class PageAdmin extends Admin
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContexts()
     {
         $webspaceContexts = [];

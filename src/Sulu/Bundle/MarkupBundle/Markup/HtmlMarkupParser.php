@@ -28,19 +28,12 @@ class HtmlMarkupParser implements MarkupParserInterface
      */
     private $tagExtractor;
 
-    /**
-     * @param TagRegistryInterface $tagRegistry
-     * @param TagExtractorInterface $tagExtractor
-     */
     public function __construct(TagRegistryInterface $tagRegistry, TagExtractorInterface $tagExtractor)
     {
         $this->tagRegistry = $tagRegistry;
         $this->tagExtractor = $tagExtractor;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function parse($content, $locale)
     {
         if (0 === $this->tagExtractor->count($content)) {
@@ -58,9 +51,6 @@ class HtmlMarkupParser implements MarkupParserInterface
         return $this->parse($content, $locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validate($content, $locale)
     {
         if (0 === $this->tagExtractor->count($content)) {

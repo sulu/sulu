@@ -38,9 +38,6 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getProvider($alias)
     {
         if (!$this->hasProvider($alias)) {
@@ -50,25 +47,16 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
         return $this->providers[$alias];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getProviders()
     {
         return $this->providers;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasProvider($alias)
     {
         return array_key_exists($alias, $this->providers);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getIndex($scheme, $host)
     {
         if ($this->index) {

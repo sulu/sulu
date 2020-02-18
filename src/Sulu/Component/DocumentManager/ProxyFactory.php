@@ -44,12 +44,6 @@ class ProxyFactory
      */
     private $metadataFactory;
 
-    /**
-     * @param LazyLoadingGhostFactory $proxyFactory
-     * @param EventDispatcherInterface $dispatcher
-     * @param DocumentRegistry $registry
-     * @param MetadataFactoryInterface $metadataFactory
-     */
     public function __construct(
         LazyLoadingGhostFactory $proxyFactory,
         EventDispatcherInterface $dispatcher,
@@ -70,7 +64,6 @@ class ProxyFactory
      *       later. I wonder if it necessary.
      *
      * @param object $fromDocument
-     * @param NodeInterface $targetNode
      * @param array $options
      *
      * @return \ProxyManager\Proxy\GhostObjectInterface

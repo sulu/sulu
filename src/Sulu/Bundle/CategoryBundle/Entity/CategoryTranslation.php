@@ -82,9 +82,6 @@ class CategoryTranslation implements CategoryTranslationInterface
         $this->medias = new ArrayCollection();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setTranslation($translation)
     {
         $this->translation = $translation;
@@ -92,25 +89,16 @@ class CategoryTranslation implements CategoryTranslationInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTranslation()
     {
         return $this->translation;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDescription()
     {
         return $this->description;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setDescription($description)
     {
         $this->description = $description;
@@ -118,25 +106,16 @@ class CategoryTranslation implements CategoryTranslationInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMedias()
     {
         return $this->medias;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setMedias($medias)
     {
         $this->medias = $medias;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setLocale($locale)
     {
         $this->locale = $locale;
@@ -144,25 +123,16 @@ class CategoryTranslation implements CategoryTranslationInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale()
     {
         return $this->locale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setCategory(CategoryInterface $category)
     {
         $this->category = $category;
@@ -170,81 +140,51 @@ class CategoryTranslation implements CategoryTranslationInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCategory()
     {
         return $this->category;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreator()
     {
         return $this->creator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setCreator($creator)
     {
         $this->creator = $creator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChanger()
     {
         return $this->changer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setChanger($changer)
     {
         $this->changer = $changer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreated()
     {
         return $this->created;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setCreated($created)
     {
         $this->created = $created;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChanged()
     {
         return $this->changed;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setChanged($changed)
     {
         $this->changed = $changed;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addKeyword(KeywordInterface $keyword)
     {
         $this->keywords[] = $keyword;
@@ -252,25 +192,16 @@ class CategoryTranslation implements CategoryTranslationInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeKeyword(KeywordInterface $keyword)
     {
         $this->keywords->removeElement($keyword);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getKeywords()
     {
         return $this->keywords;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasKeyword(KeywordInterface $keyword)
     {
         return $this->getKeywords()->exists(

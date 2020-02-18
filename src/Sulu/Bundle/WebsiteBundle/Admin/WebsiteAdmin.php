@@ -95,9 +95,6 @@ class WebsiteAdmin extends Admin
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContexts()
     {
         $webspaceContexts = [];

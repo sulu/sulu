@@ -67,10 +67,7 @@ class Query
     private $firstResult;
 
     /**
-     * @param QueryInterface $phpcrQuery
-     * @param EventDispatcherInterface $dispatcher
      * @param null|string $locale
-     * @param array $options
      * @param null|string $primarySelector
      */
     public function __construct(
@@ -88,7 +85,6 @@ class Query
     }
 
     /**
-     * @param array $parameters
      * @param string $hydrationMode
      *
      * @return mixed|\PHPCR\Query\QueryResultInterface

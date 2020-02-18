@@ -48,9 +48,6 @@ class PageDocumentType extends BasePageDocumentType
         $this->metadataFactory = $metadataFactory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
@@ -60,9 +57,6 @@ class PageDocumentType extends BasePageDocumentType
         $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'postSubmitDocumentParent']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $options)
     {
         $metadata = $this->metadataFactory->getMetadataForAlias('page');
@@ -77,8 +71,6 @@ class PageDocumentType extends BasePageDocumentType
     /**
      * Set the document parent to be the webspace content path
      * when the document has no parent.
-     *
-     * @param FormEvent $event
      */
     public function postSubmitDocumentParent(FormEvent $event)
     {

@@ -67,9 +67,6 @@ class VersionSubscriber implements EventSubscriberInterface
         $this->versionManager = $defaultSession->getWorkspace()->getVersionManager();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -89,8 +86,6 @@ class VersionSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the versionable mixin on the node if it is a versionable document.
-     *
-     * @param AbstractMappingEvent $event
      */
     public function setVersionMixin(AbstractMappingEvent $event)
     {
@@ -103,8 +98,6 @@ class VersionSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the version information set on the node to the document.
-     *
-     * @param HydrateEvent $event
      */
     public function setVersionsOnDocument(HydrateEvent $event)
     {
@@ -133,8 +126,6 @@ class VersionSubscriber implements EventSubscriberInterface
 
     /**
      * Remember which uuids need to be checked out after everything has been saved.
-     *
-     * @param PersistEvent $event
      */
     public function rememberCheckoutUuids(PersistEvent $event)
     {
@@ -147,8 +138,6 @@ class VersionSubscriber implements EventSubscriberInterface
 
     /**
      * Remember for which uuids a new version has to be created.
-     *
-     * @param PublishEvent $event
      */
     public function rememberCreateVersion(PublishEvent $event)
     {
@@ -218,8 +207,6 @@ class VersionSubscriber implements EventSubscriberInterface
     /**
      * Restore the properties of the old version.
      *
-     * @param RestoreEvent $event
-     *
      * @throws VersionNotFoundException
      */
     public function restoreProperties(RestoreEvent $event)
@@ -250,8 +237,6 @@ class VersionSubscriber implements EventSubscriberInterface
      * Restore given node with properties given from frozen-node.
      * Will be called recursive.
      *
-     * @param NodeInterface $node
-     * @param NodeInterface $frozenNode
      * @param string $contentPropertyPrefix
      * @param string $systemPropertyPrefix
      */

@@ -35,17 +35,11 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
      */
     private $container;
 
-    /**
-     * {@inheritdoc}
-     */
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function up(SessionInterface $session)
     {
         $webspaceManager = $this->container->get('sulu_core.webspace.webspace_manager');
@@ -54,17 +48,12 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function down(SessionInterface $session)
     {
     }
 
     /**
      * Upgrade a single webspace.
-     *
-     * @param Webspace $webspace
      */
     private function upgradeWebspace(Webspace $webspace)
     {
@@ -82,7 +71,6 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
     /**
      * Upgrade a single node.
      *
-     * @param NodeInterface $node
      * @param string $propertyName
      * @param string $locale
      */
@@ -123,7 +111,6 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
     /**
      * Returns tags of given node and locale.
      *
-     * @param NodeInterface $node
      * @param string $locale
      *
      * @return array
@@ -139,7 +126,6 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
     /**
      * Returns categories of given node and locale.
      *
-     * @param NodeInterface $node
      * @param string $locale
      *
      * @return array
@@ -155,7 +141,6 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
     /**
      * Returns navigation context of given node and locale.
      *
-     * @param NodeInterface $node
      * @param string $locale
      *
      * @return array

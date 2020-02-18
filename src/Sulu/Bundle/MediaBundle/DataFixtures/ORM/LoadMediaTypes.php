@@ -18,9 +18,6 @@ use Sulu\Bundle\MediaBundle\Entity\MediaType;
 
 class LoadMediaTypes extends AbstractFixture implements OrderedFixtureInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(ObjectManager $manager)
     {
         // set id manually
@@ -51,9 +48,6 @@ class LoadMediaTypes extends AbstractFixture implements OrderedFixtureInterface
         $manager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getOrder()
     {
         return 4;

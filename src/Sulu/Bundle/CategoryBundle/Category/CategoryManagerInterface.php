@@ -49,8 +49,6 @@ interface CategoryManagerInterface
      * Returns an array of categories which are assigned to the given array of ids.
      * If an id of the array is not assigned to a category, no error is thrown.
      *
-     * @param array $ids
-     *
      * @return CategoryInterface[]
      */
     public function findByIds(array $ids);

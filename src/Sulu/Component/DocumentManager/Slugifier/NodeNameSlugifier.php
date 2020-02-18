@@ -23,9 +23,6 @@ class NodeNameSlugifier implements SlugifierInterface
      */
     private $slugifier;
 
-    /**
-     * @param SlugifierInterface $slugifier
-     */
     public function __construct(SlugifierInterface $slugifier)
     {
         $this->slugifier = $slugifier;

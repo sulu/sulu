@@ -97,9 +97,6 @@ class SingleAccountSelection extends ComplexContentType implements PreResolvable
         return $this->accountManager->getById($account['id'], $property->getStructure()->getLanguageCode());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function preResolve(PropertyInterface $property)
     {
         $account = $property->getValue();

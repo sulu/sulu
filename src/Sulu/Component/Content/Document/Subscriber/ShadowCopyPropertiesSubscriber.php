@@ -37,17 +37,11 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
      */
     protected $encoder;
 
-    /**
-     * @param PropertyEncoder $encoder
-     */
     public function __construct(PropertyEncoder $encoder)
     {
         $this->encoder = $encoder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -58,8 +52,6 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
 
     /**
      * Handles persist event of document manager.
-     *
-     * @param AbstractMappingEvent $event
      */
     public function copyShadowProperties(AbstractMappingEvent $event)
     {
@@ -80,7 +72,6 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
      * Copy tags and categories from current locale to all shadowed pages with this locale as base-locale.
      *
      * @param object $document
-     * @param NodeInterface $node
      */
     public function copyToShadows($document, NodeInterface $node)
     {
@@ -103,7 +94,6 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
      * Copy tags and categories from base-locale to current locale.
      *
      * @param object $document
-     * @param NodeInterface $node
      */
     public function copyFromShadow($document, NodeInterface $node)
     {
@@ -121,7 +111,6 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
     /**
      * Returns tags of given node and locale.
      *
-     * @param NodeInterface $node
      * @param string $locale
      *
      * @return array
@@ -137,7 +126,6 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
     /**
      * Returns categories of given node and locale.
      *
-     * @param NodeInterface $node
      * @param string $locale
      *
      * @return array
@@ -153,7 +141,6 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
     /**
      * Returns navigation context of given node and locale.
      *
-     * @param NodeInterface $node
      * @param string $locale
      *
      * @return array
@@ -173,9 +160,6 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
         return $match['locale'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function supports($document)
     {
         return $document instanceof ShadowLocaleBehavior && $document instanceof LocaleBehavior;

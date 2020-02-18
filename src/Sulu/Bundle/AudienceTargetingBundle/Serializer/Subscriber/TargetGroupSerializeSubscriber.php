@@ -22,9 +22,6 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceInterface;
  */
 class TargetGroupSerializeSubscriber implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -38,8 +35,6 @@ class TargetGroupSerializeSubscriber implements EventSubscriberInterface
 
     /**
      * Called after a target group was deserialized.
-     *
-     * @param ObjectEvent $event
      */
     public function onPostDeserialize(ObjectEvent $event)
     {

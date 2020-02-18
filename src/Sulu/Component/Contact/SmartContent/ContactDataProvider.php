@@ -37,9 +37,6 @@ class ContactDataProvider extends BaseDataProvider
             ->getConfiguration();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function decorateDataItems(array $data)
     {
         return array_map(
@@ -50,9 +47,6 @@ class ContactDataProvider extends BaseDataProvider
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getSerializationContext()
     {
         return parent::getSerializationContext()->setGroups(['fullContact', 'partialAccount', 'partialCategory']);

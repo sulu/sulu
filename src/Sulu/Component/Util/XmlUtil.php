@@ -20,9 +20,7 @@ class XmlUtil
      * Returns value of path.
      *
      * @param string $path
-     * @param \DOMXPath $xpath
      * @param \DOMNode $context
-     * @param mixed $default
      *
      * @return bool|null|string|mixed
      */
@@ -45,9 +43,7 @@ class XmlUtil
      * Returns boolean value of path.
      *
      * @param string $path
-     * @param \DOMXPath $xpath
      * @param \DOMNode $context
-     * @param mixed $default
      *
      * @return bool|null|string|mixed
      */

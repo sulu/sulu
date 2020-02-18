@@ -42,9 +42,6 @@ class BlameSubscriber implements EventSubscriberInterface
         $this->propertyEncoder = $propertyEncoder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -57,8 +54,6 @@ class BlameSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the changer and creator of the document.
-     *
-     * @param HydrateEvent $event
      */
     public function setBlamesOnDocument(HydrateEvent $event)
     {
@@ -93,8 +88,6 @@ class BlameSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the creator and changer for the persist event.
-     *
-     * @param PersistEvent $event
      */
     public function setBlamesOnNodeForPersist(PersistEvent $event)
     {
@@ -115,8 +108,6 @@ class BlameSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the creator and changer for the publish event.
-     *
-     * @param PublishEvent $event
      */
     public function setBlamesOnNodeForPublish(PublishEvent $event)
     {
@@ -138,10 +129,7 @@ class BlameSubscriber implements EventSubscriberInterface
     /**
      * Persists the data of creator and changer to the Node.
      *
-     * @param LocalizedBlameBehavior $document
-     * @param NodeInterface $node
      * @param string $locale string
-     * @param DocumentAccessor $accessor
      * @param int $userId
      */
     public function setBlamesOnNode(
@@ -175,8 +163,6 @@ class BlameSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the changer for the restore event.
-     *
-     * @param RestoreEvent $event
      */
     public function setChangerForRestore(RestoreEvent $event)
     {

@@ -49,8 +49,6 @@ class ChildrenCollection extends AbstractLazyCollection
     private $initialized = false;
 
     /**
-     * @param NodeInterface $parentNode
-     * @param EventDispatcherInterface $dispatcher
      * @param string $locale
      * @param array $options
      */
@@ -66,9 +64,6 @@ class ChildrenCollection extends AbstractLazyCollection
         $this->options = $options;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function current()
     {
         $this->initialize();
@@ -80,9 +75,6 @@ class ChildrenCollection extends AbstractLazyCollection
         return $hydrateEvent->getDocument();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function initialize()
     {
         if (true === $this->initialized) {

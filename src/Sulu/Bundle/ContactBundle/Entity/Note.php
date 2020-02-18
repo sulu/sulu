@@ -89,8 +89,6 @@ class Note
     /**
      * Add contacts.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts
-     *
      * @return Note
      */
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts)
@@ -102,8 +100,6 @@ class Note
 
     /**
      * Remove contacts.
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts
      */
     public function removeContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts)
     {
@@ -123,8 +119,6 @@ class Note
     /**
      * Add accounts.
      *
-     * @param AccountInterface $account
-     *
      * @return Note
      */
     public function addAccount(AccountInterface $account)
@@ -136,8 +130,6 @@ class Note
 
     /**
      * Remove accounts.
-     *
-     * @param AccountInterface $account
      */
     public function removeAccount(AccountInterface $account)
     {

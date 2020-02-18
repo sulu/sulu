@@ -25,8 +25,6 @@ interface SecuredEntityInterface
 
     /**
      * Returns the security context, to which this class of entity is attached.
-     *
-     * @return mixed
      */
     public function getSecurityContext();
 }

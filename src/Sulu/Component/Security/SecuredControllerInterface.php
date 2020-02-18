@@ -20,15 +20,11 @@ interface SecuredControllerInterface
 {
     /**
      * Returns the SecurityContext required for the controller.
-     *
-     * @return mixed
      */
     public function getSecurityContext();
 
     /**
      * Returns the locale for the given request.
-     *
-     * @param Request $request
      *
      * @return string
      */

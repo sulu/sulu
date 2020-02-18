@@ -98,8 +98,6 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
 
     /**
      * Removes related route of given document.
-     *
-     * @param StructureBehavior $document
      */
     private function removeRoute(StructureBehavior $document)
     {
@@ -118,9 +116,6 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
         $this->removeReferencesForNode($this->liveSession->getNode($node->getPath()));
     }
 
-    /**
-     * @param NodeInterface $node
-     */
     private function removeReferencesForNode(NodeInterface $node)
     {
         $references = $node->getReferences();
@@ -140,9 +135,6 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
     /**
      * Remove the given property, or the value which references the node (when
      * multi-valued).
-     *
-     * @param NodeInterface $node
-     * @param PropertyInterface $property
      */
     private function dereferenceProperty(NodeInterface $node, PropertyInterface $property)
     {

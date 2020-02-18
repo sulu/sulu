@@ -93,17 +93,11 @@ class Role implements RoleInterface
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRole()
     {
         return 'ROLE_SULU_' . strtoupper($this->name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getIdentifier()
     {
         return 'ROLE_SULU_' . strtoupper($this->getName());
@@ -184,8 +178,6 @@ class Role implements RoleInterface
     /**
      * Add permissions.
      *
-     * @param Permission $permissions
-     *
      * @return Role
      */
     public function addPermission(Permission $permissions)
@@ -197,8 +189,6 @@ class Role implements RoleInterface
 
     /**
      * Remove permissions.
-     *
-     * @param Permission $permissions
      */
     public function removePermission(Permission $permissions)
     {
@@ -218,8 +208,6 @@ class Role implements RoleInterface
     /**
      * Add userRoles.
      *
-     * @param UserRole $userRoles
-     *
      * @return Role
      */
     public function addUserRole(UserRole $userRoles)
@@ -231,8 +219,6 @@ class Role implements RoleInterface
 
     /**
      * Remove userRoles.
-     *
-     * @param UserRole $userRoles
      */
     public function removeUserRole(UserRole $userRoles)
     {
@@ -252,8 +238,6 @@ class Role implements RoleInterface
     /**
      * Add groups.
      *
-     * @param Group $groups
-     *
      * @return Role
      */
     public function addGroup(Group $groups)
@@ -265,8 +249,6 @@ class Role implements RoleInterface
 
     /**
      * Remove groups.
-     *
-     * @param Group $groups
      */
     public function removeGroup(Group $groups)
     {
@@ -286,8 +268,6 @@ class Role implements RoleInterface
     /**
      * Add setting.
      *
-     * @param RoleSettingInterface $setting
-     *
      * @return Role
      */
     public function addSetting(RoleSettingInterface $setting)
@@ -299,8 +279,6 @@ class Role implements RoleInterface
 
     /**
      * Remove setting.
-     *
-     * @param RoleSettingInterface $setting
      */
     public function removeSetting(RoleSettingInterface $setting)
     {
@@ -317,9 +295,6 @@ class Role implements RoleInterface
         return $this->settings;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSetting($key)
     {
         return $this->settings->get($key);

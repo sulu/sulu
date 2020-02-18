@@ -138,9 +138,6 @@ class PropertyParameter implements \JsonSerializable
         return $this->metadata->get('placeholder', $languageCode, '');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __toString()
     {
         $value = $this->getValue();
@@ -154,9 +151,6 @@ class PropertyParameter implements \JsonSerializable
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function jsonSerialize()
     {
         return [

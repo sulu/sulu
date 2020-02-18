@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 abstract class AbstractMediaController extends AbstractRestController
 {
     /**
-     * @param Request $request
      * @param bool $fallback
      *
      * @return array
@@ -58,7 +57,6 @@ abstract class AbstractMediaController extends AbstractRestController
     }
 
     /**
-     * @param Request $request
      * @param $name
      *
      * @return UploadedFile

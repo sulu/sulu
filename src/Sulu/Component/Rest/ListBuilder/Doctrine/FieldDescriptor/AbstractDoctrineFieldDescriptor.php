@@ -18,29 +18,17 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
  */
 abstract class AbstractDoctrineFieldDescriptor extends FieldDescriptor implements DoctrineFieldDescriptorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     abstract public function getSelect();
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSearch()
     {
         return sprintf('%s LIKE :search', $this->getSelect());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getWhere()
     {
         return $this->getSelect();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     abstract public function getJoins();
 }

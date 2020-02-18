@@ -50,9 +50,6 @@ class Focus implements FocusInterface
      */
     const FOCUS_BOTTOM = 2;
 
-    /**
-     * {@inheritdoc}
-     */
     public function focus(ImageInterface $image, $x, $y, $width, $height)
     {
         $x = (null !== $x) ? $x : static::FOCUS_CENTER;

@@ -87,9 +87,6 @@ class TagManager implements TagManagerInterface
         return $this->tagRepository->findTagByName($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findOrCreateByName($name)
     {
         $tag = $this->findByName($name);
@@ -101,9 +98,6 @@ class TagManager implements TagManagerInterface
         return $tag;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save($data, $id = null)
     {
         $name = $data['name'];

@@ -96,8 +96,6 @@ class Fax
     /**
      * Set faxType.
      *
-     * @param FaxType $faxType
-     *
      * @return Fax
      */
     public function setFaxType(FaxType $faxType)
@@ -120,8 +118,6 @@ class Fax
     /**
      * Add contacts.
      *
-     * @param ContactInterface $contacts
-     *
      * @return Fax
      */
     public function addContact(ContactInterface $contacts)
@@ -133,8 +129,6 @@ class Fax
 
     /**
      * Remove contacts.
-     *
-     * @param ContactInterface $contacts
      */
     public function removeContact(ContactInterface $contacts)
     {
@@ -154,8 +148,6 @@ class Fax
     /**
      * Add accounts.
      *
-     * @param AccountInterface $account
-     *
      * @return Fax
      */
     public function addAccount(AccountInterface $account)
@@ -167,8 +159,6 @@ class Fax
 
     /**
      * Remove accounts.
-     *
-     * @param AccountInterface $account
      */
     public function removeAccount(AccountInterface $account)
     {

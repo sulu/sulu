@@ -202,7 +202,6 @@ interface ContentMapperInterface
     /**
      * Converts a query result in a list of arrays.
      *
-     * @param QueryResultInterface $queryResult
      * @param string $webspaceKey
      * @param string[] $locales
      * @param array $fields

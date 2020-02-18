@@ -46,9 +46,6 @@ class LocalFormatCache implements FormatCacheInterface
         $this->segments = intval($segments);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save($content, $id, $fileName, $format)
     {
         $savePath = $this->getPath($this->path, $id, $fileName, $format);
@@ -65,9 +62,6 @@ class LocalFormatCache implements FormatCacheInterface
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function purge($id, $fileName, $format)
     {
         $path = $this->getPath($this->path, $id, $fileName, $format);
@@ -76,17 +70,11 @@ class LocalFormatCache implements FormatCacheInterface
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMediaUrl($id, $fileName, $format, $version, $subVersion)
     {
         return $this->getPathUrl($this->pathUrl, $id, $fileName, $format, $version, $subVersion);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function clear()
     {
         $realCacheDir = $this->path;
@@ -143,9 +131,6 @@ class LocalFormatCache implements FormatCacheInterface
         ) . '?v=' . $version . '-' . $subVersion;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function analyzedMediaUrl($url)
     {
         if (empty($url)) {

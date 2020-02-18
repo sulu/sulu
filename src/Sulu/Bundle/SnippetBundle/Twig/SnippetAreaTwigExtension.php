@@ -49,9 +49,6 @@ class SnippetAreaTwigExtension extends AbstractExtension
         $this->snippetResolver = $snippetResolver;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [

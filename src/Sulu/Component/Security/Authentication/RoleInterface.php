@@ -82,16 +82,12 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
     /**
      * Add permissions.
      *
-     * @param Permission $permissions
-     *
      * @return RoleInterface
      */
     public function addPermission(Permission $permissions);
 
     /**
      * Remove permissions.
-     *
-     * @param Permission $permissions
      */
     public function removePermission(Permission $permissions);
 
@@ -105,16 +101,12 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
     /**
      * Add userRoles.
      *
-     * @param UserRole $userRoles
-     *
      * @return UserRole
      */
     public function addUserRole(UserRole $userRoles);
 
     /**
      * Remove userRoles.
-     *
-     * @param UserRole $userRoles
      */
     public function removeUserRole(UserRole $userRoles);
 
@@ -128,16 +120,12 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
     /**
      * Add groups.
      *
-     * @param Group $groups
-     *
      * @return RoleInterface
      */
     public function addGroup(Group $groups);
 
     /**
      * Remove groups.
-     *
-     * @param Group $groups
      */
     public function removeGroup(Group $groups);
 

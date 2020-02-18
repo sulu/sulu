@@ -37,9 +37,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class TargetGroupController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     protected static $entityKey = 'target_groups';
 
     /**
@@ -90,9 +87,6 @@ class TargetGroupController extends AbstractRestController implements ClassResou
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         return AudienceTargetingAdmin::SECURITY_CONTEXT;
@@ -100,8 +94,6 @@ class TargetGroupController extends AbstractRestController implements ClassResou
 
     /**
      * Returns list of target-groups.
-     *
-     * @param Request $request
      *
      * @return Response
      */
@@ -157,8 +149,6 @@ class TargetGroupController extends AbstractRestController implements ClassResou
     /**
      * Handle post request for target group.
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function postAction(Request $request)
@@ -175,7 +165,6 @@ class TargetGroupController extends AbstractRestController implements ClassResou
     /**
      * Handle put request for target group.
      *
-     * @param Request $request
      * @param int $id
      *
      * @return Response
@@ -216,8 +205,6 @@ class TargetGroupController extends AbstractRestController implements ClassResou
 
     /**
      * Handle multiple delete requests for target groups.
-     *
-     * @param Request $request
      *
      * @throws MissingParameterException
      *

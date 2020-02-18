@@ -18,9 +18,6 @@ use Sulu\Component\Content\Query\ContentQueryBuilder;
  */
 class SitemapContentQueryBuilder extends ContentQueryBuilder
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function buildWhere($webspaceKey, $locale)
     {
         return sprintf("
@@ -35,17 +32,11 @@ class SitemapContentQueryBuilder extends ContentQueryBuilder
         )", $webspaceKey, $webspaceKey, $locale, $locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function buildSelect($webspaceKey, $locale, &$additionalFields)
     {
         return '';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function init(array $options)
     {
     }

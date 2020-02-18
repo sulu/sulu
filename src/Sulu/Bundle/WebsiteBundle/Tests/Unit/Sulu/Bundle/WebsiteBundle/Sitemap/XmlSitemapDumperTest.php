@@ -42,9 +42,6 @@ class XmlSitemapDumperTest extends TestCase
      */
     protected $dumper;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         $this->renderer = $this->prophesize(XmlSitemapRendererInterface::class);

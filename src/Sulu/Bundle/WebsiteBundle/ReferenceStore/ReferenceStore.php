@@ -21,9 +21,6 @@ class ReferenceStore implements ReferenceStoreInterface
      */
     private $ids = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function add($id)
     {
         if (in_array($id, $this->ids)) {
@@ -33,9 +30,6 @@ class ReferenceStore implements ReferenceStoreInterface
         $this->ids[] = $id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAll()
     {
         return $this->ids;

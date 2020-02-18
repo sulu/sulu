@@ -21,10 +21,6 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 trait PersistenceExtensionTrait
 {
-    /**
-     * @param array $objects
-     * @param ContainerBuilder $container
-     */
     protected function configurePersistence(array $objects, ContainerBuilder $container)
     {
         $this->defineRepositories($objects, $container);
@@ -45,9 +41,6 @@ trait PersistenceExtensionTrait
 
     /**
      * Define repositories.
-     *
-     * @param array $objects
-     * @param ContainerBuilder $container
      */
     private function defineRepositories(array $objects, ContainerBuilder $container)
     {
@@ -66,8 +59,6 @@ trait PersistenceExtensionTrait
      * Get the repository service definition.
      *
      * @param string $object
-     * @param array $services
-     * @param ContainerBuilder $container
      *
      * @return Definition
      */
@@ -96,8 +87,6 @@ trait PersistenceExtensionTrait
     }
 
     /**
-     * @param mixed $model
-     *
      * @return Definition
      */
     private function getClassMetadataDefinition($model)
@@ -116,9 +105,6 @@ trait PersistenceExtensionTrait
 
     /**
      * Remap object parameters.
-     *
-     * @param array $objects
-     * @param ContainerBuilder $container
      */
     private function remapObjectParameters(array $objects, ContainerBuilder $container)
     {

@@ -16,9 +16,7 @@ use PHPCR\NodeInterface;
 class HydrateEvent extends AbstractMappingEvent
 {
     /**
-     * @param NodeInterface $node
      * @param string $locale
-     * @param array $options
      */
     public function __construct(NodeInterface $node, $locale, array $options = [])
     {

@@ -31,9 +31,6 @@ class SuluTestKernel extends SuluKernel
         parent::__construct($environment, $debug, $suluContext);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function registerBundles()
     {
         $bundles = [
@@ -119,9 +116,6 @@ class SuluTestKernel extends SuluKernel
         return $this->projectDir;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(SuluTestBundle::getConfigDir() . '/config.php');

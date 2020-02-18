@@ -28,10 +28,6 @@ class XmlSitemapRenderer implements XmlSitemapRendererInterface
      */
     private $engine;
 
-    /**
-     * @param SitemapProviderPoolInterface $sitemapProviderPool
-     * @param Environment $engine
-     */
     public function __construct(
         SitemapProviderPoolInterface $sitemapProviderPool,
         Environment $engine
@@ -40,9 +36,6 @@ class XmlSitemapRenderer implements XmlSitemapRendererInterface
         $this->engine = $engine;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function renderIndex($scheme, $host)
     {
         if (!$this->needsIndex($scheme, $host)) {
@@ -55,9 +48,6 @@ class XmlSitemapRenderer implements XmlSitemapRendererInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function renderSitemap($alias, $page, $scheme, $host)
     {
         if (!$this->sitemapProviderPool->hasProvider($alias)) {

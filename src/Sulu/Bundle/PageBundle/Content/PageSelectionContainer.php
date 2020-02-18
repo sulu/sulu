@@ -175,9 +175,6 @@ class PageSelectionContainer implements ArrayableInterface
         return 'data' == $name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toArray($depth = null)
     {
         return ['ids' => $this->ids];

@@ -46,9 +46,6 @@ class ContentPathTwigExtension extends AbstractExtension implements ContentPathI
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [
@@ -57,9 +54,6 @@ class ContentPathTwigExtension extends AbstractExtension implements ContentPathI
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentPath($route, $webspaceKey = null, $locale = null, $domain = null, $scheme = null, $withoutDomain = true)
     {
         // if the request analyzer null or a route is passed which is relative or inclusive a domain nothing should be
@@ -110,9 +104,6 @@ class ContentPathTwigExtension extends AbstractExtension implements ContentPathI
         return $url ?: $route;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentRootPath($full = false)
     {
         return $this->getContentPath('/');

@@ -22,9 +22,6 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
  */
 class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function start(Request $request, AuthenticationException $authException = null)
     {
         return new Response('', 401);

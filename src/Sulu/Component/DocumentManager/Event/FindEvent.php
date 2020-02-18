@@ -35,7 +35,6 @@ class FindEvent extends AbstractEvent
     /**
      * @param string $identifier
      * @param string $locale
-     * @param array $options
      */
     public function __construct($identifier, $locale, array $options = [])
     {
@@ -44,9 +43,6 @@ class FindEvent extends AbstractEvent
         $this->options = $options;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDebugMessage()
     {
         return sprintf(

@@ -20,17 +20,11 @@ class RouteDocument extends BaseRouteDocument
      */
     protected $locale;
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale()
     {
         return $this->locale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setLocale($locale)
     {
         $this->locale = $locale;

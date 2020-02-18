@@ -24,7 +24,6 @@ class RestoreEvent extends AbstractMappingEvent
      * @param object $document
      * @param string $locale
      * @param string $version
-     * @param array $options
      */
     public function __construct($document, $locale, $version, array $options = [])
     {
@@ -36,8 +35,6 @@ class RestoreEvent extends AbstractMappingEvent
 
     /**
      * Sets the node this event should operate on.
-     *
-     * @param NodeInterface $node
      */
     public function setNode(NodeInterface $node)
     {

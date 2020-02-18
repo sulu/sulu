@@ -32,8 +32,6 @@ class BlockPropertyWrapper implements PropertyInterface
     private $index;
 
     /**
-     * @param PropertyInterface $property
-     * @param PropertyInterface $block
      * @param int $index
      */
     public function __construct(PropertyInterface $property, PropertyInterface $block, $index = null)
@@ -117,8 +115,6 @@ class BlockPropertyWrapper implements PropertyInterface
 
     /**
      * sets the value from property.
-     *
-     * @param mixed $value
      */
     public function setValue($value)
     {
@@ -127,8 +123,6 @@ class BlockPropertyWrapper implements PropertyInterface
 
     /**
      * gets the value from property.
-     *
-     * @return mixed
      */
     public function getValue()
     {
@@ -275,25 +269,16 @@ class BlockPropertyWrapper implements PropertyInterface
         return $this->property->getPlaceholder($languageCode);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toArray($depth = null)
     {
         return $this->property->toArray($depth);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStructure()
     {
         return $this->property->getStructure();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setStructure($structure)
     {
         $this->property->setStructure($structure);

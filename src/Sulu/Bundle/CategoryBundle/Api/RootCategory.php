@@ -47,8 +47,6 @@ class RootCategory
      *
      * @VirtualProperty
      * @SerializedName("_embedded")
-     *
-     * @return array
      */
     public function getEmbedded(): array
     {

@@ -44,11 +44,6 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
      */
     private $documentInspector;
 
-    /**
-     * @param SessionManagerInterface $sessionManager
-     * @param DocumentManagerInterface $documentManager
-     * @param DocumentInspector $documentInspector
-     */
     public function __construct(
         SessionManagerInterface $sessionManager,
         DocumentManagerInterface $documentManager,
@@ -59,9 +54,6 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
         $this->documentInspector = $documentInspector;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save(ResourceSegmentBehavior $document)
     {
         $path = $document->getResourceSegment();
@@ -108,9 +100,6 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadByContent(NodeInterface $contentNode, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $result = $this->iterateRouteNodes(
@@ -137,7 +126,6 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
     /**
      * Iterates over all route nodes assigned by the given node, and executes the callback on it.
      *
-     * @param NodeInterface $node
      * @param callable $callback will be called foreach route node (stops and return value if not false)
      * @param string $webspaceKey
      * @param string $languageCode
@@ -183,9 +171,6 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $session = $this->sessionManager->getSession();
@@ -194,9 +179,6 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
         return $this->loadByContent($contentNode, $webspaceKey, $languageCode, $segmentKey);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
     {
         // get content node
@@ -256,9 +238,6 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $resourceLocator = ltrim($resourceLocator, '/');
@@ -304,9 +283,6 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function unique($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $routes = $this->getWebspaceRouteNode($webspaceKey, $languageCode, $segmentKey);
@@ -314,9 +290,6 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
         return $this->isUnique($routes, $path);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUniquePath($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $routes = $this->getWebspaceRouteNode($webspaceKey, $languageCode, $segmentKey);
@@ -339,18 +312,12 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function deleteById($id, $languageCode, $segmentKey = null)
     {
         $routeDocument = $this->documentManager->find($id, $languageCode);
         $this->documentManager->remove($routeDocument);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getParentPath($uuid, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $session = $this->sessionManager->getSession();

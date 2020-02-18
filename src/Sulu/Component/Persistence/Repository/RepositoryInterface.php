@@ -20,8 +20,6 @@ interface RepositoryInterface extends ObjectRepository
 {
     /**
      * Create a new instance of a model.
-     *
-     * @return mixed
      */
     public function createNew();
 }

@@ -43,7 +43,6 @@ class DocumentAccessor
 
     /**
      * @param string $field
-     * @param mixed $value
      *
      * @throws DocumentManagerException
      */

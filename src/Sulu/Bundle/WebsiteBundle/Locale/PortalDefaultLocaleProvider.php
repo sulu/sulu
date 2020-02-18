@@ -23,17 +23,11 @@ class PortalDefaultLocaleProvider implements DefaultLocaleProviderInterface
      */
     private $requestAnalyzer;
 
-    /**
-     * @param RequestAnalyzerInterface $requestAnalyzer
-     */
     public function __construct(RequestAnalyzerInterface $requestAnalyzer)
     {
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultLocale()
     {
         return $this->requestAnalyzer->getPortal()->getDefaultLocalization();

@@ -25,8 +25,6 @@ interface ContentQueryBuilderInterface
 
     /**
      * initialize query builder.
-     *
-     * @param array $options
      */
     public function init(array $options);
 

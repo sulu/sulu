@@ -76,8 +76,6 @@ class ContactAddress
     /**
      * Set address.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Address $address
-     *
      * @return ContactAddress
      */
     public function setAddress(\Sulu\Bundle\ContactBundle\Entity\Address $address)
@@ -99,8 +97,6 @@ class ContactAddress
 
     /**
      * Set contact.
-     *
-     * @param ContactInterface $contact
      *
      * @return ContactAddress
      */

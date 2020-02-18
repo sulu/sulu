@@ -25,9 +25,6 @@ class SingleSelect extends SimpleContentType
         parent::__construct('SingleSelect', '');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [

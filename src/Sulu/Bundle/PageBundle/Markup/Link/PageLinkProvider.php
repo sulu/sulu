@@ -62,9 +62,6 @@ class PageLinkProvider implements LinkProviderInterface
         $this->environment = $environment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfiguration()
     {
         return LinkConfigurationBuilder::create()
@@ -78,9 +75,6 @@ class PageLinkProvider implements LinkProviderInterface
             ->getLinkConfiguration();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function preload(array $hrefs, $locale, $published = true)
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -111,7 +105,6 @@ class PageLinkProvider implements LinkProviderInterface
     /**
      * Returns new link item.
      *
-     * @param Content $content
      * @param string $locale
      * @param string $scheme
      *

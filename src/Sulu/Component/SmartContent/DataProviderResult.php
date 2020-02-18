@@ -27,7 +27,6 @@ class DataProviderResult
     private $items;
 
     /**
-     * @param array $items
      * @param bool $hasNextPage
      */
     public function __construct(array $items, $hasNextPage)

@@ -24,9 +24,6 @@ class StructureExtensionCompilerPass implements CompilerPassInterface
 
     const STRUCTURE_EXTENSION_TAG = 'sulu.structure.extension';
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition(self::STRUCTURE_MANAGER_ID)) {

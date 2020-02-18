@@ -154,8 +154,6 @@ class UserController extends AbstractRestController implements ClassResourceInte
     /**
      * Creates a new user in the system.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
@@ -184,7 +182,6 @@ class UserController extends AbstractRestController implements ClassResourceInte
 
     /**
      * @param int $id
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -221,7 +218,6 @@ class UserController extends AbstractRestController implements ClassResourceInte
     /**
      * Updates the given user with the given data.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -251,7 +247,6 @@ class UserController extends AbstractRestController implements ClassResourceInte
     /**
      * Partly updates a user entity for a given id.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -321,8 +316,6 @@ class UserController extends AbstractRestController implements ClassResourceInte
      * Returns a user with a specific contact id or all users
      * optional parameter 'flat' calls listAction.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
@@ -362,9 +355,6 @@ class UserController extends AbstractRestController implements ClassResourceInte
         return $this->handleView($view);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         return 'sulu.security.users';

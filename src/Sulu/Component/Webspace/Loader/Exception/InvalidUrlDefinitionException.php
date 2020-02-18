@@ -23,7 +23,6 @@ class InvalidUrlDefinitionException extends WebspaceException
     private $urlPattern;
 
     /**
-     * @param Webspace $portal
      * @param string $urlPattern
      */
     public function __construct(Webspace $portal, $urlPattern)

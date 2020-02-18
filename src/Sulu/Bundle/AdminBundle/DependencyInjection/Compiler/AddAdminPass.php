@@ -22,9 +22,6 @@ class AddAdminPass implements CompilerPassInterface
     const ADMIN_POOL_DEFINITION_ID = 'sulu_admin.admin_pool';
     const ADMIN_TAG = 'sulu.admin';
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         $pool = $container->getDefinition(self::ADMIN_POOL_DEFINITION_ID);

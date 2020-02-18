@@ -77,7 +77,6 @@ class PageResourcelocatorController extends AbstractRestController implements Cl
      * return all resource locators for given node.
      *
      * @param string $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -93,7 +92,6 @@ class PageResourcelocatorController extends AbstractRestController implements Cl
      * deletes resource locator with given path.
      *
      * @param string $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -111,8 +109,6 @@ class PageResourcelocatorController extends AbstractRestController implements Cl
     /**
      * returns webspacekey and languagecode.
      *
-     * @param Request $request
-     *
      * @return array list($webspaceKey, $locale)
      */
     private function getWebspaceAndLanguage(Request $request)
@@ -123,9 +119,6 @@ class PageResourcelocatorController extends AbstractRestController implements Cl
         return [$webspaceKey, $locale];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale(Request $request)
     {
         return $this->getRequestParameter($request, 'locale', true);

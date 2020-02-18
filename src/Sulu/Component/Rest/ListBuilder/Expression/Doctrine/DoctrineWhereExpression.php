@@ -52,9 +52,6 @@ class DoctrineWhereExpression extends AbstractDoctrineExpression implements Wher
         $this->comparator = $comparator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStatement(QueryBuilder $queryBuilder)
     {
         $paramName = $this->getFieldName() . $this->getUniqueId();
@@ -96,25 +93,16 @@ class DoctrineWhereExpression extends AbstractDoctrineExpression implements Wher
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getValue()
     {
         return $this->value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getComparator()
     {
         return $this->comparator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFieldName()
     {
         return $this->field->getName();

@@ -43,9 +43,6 @@ class CacheLifetimeEnhancer implements CacheLifetimeEnhancerInterface
         $this->sharedMaxAge = $sharedMaxAge;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function enhance(Response $response, StructureInterface $structure)
     {
         if (!$structure instanceof PageInterface) {

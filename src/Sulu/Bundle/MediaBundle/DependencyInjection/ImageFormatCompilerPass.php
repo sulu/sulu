@@ -18,9 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class ImageFormatCompilerPass extends AbstractImageFormatCompilerPass
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function getFiles(ContainerBuilder $container)
     {
         return $container->getParameter('sulu_media.image_format_files');

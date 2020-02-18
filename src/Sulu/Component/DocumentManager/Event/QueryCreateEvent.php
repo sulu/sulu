@@ -41,7 +41,6 @@ class QueryCreateEvent extends AbstractEvent
     /**
      * @param string $innerQuery
      * @param string $locale
-     * @param array $options
      * @param null|string $primarySelector
      */
     public function __construct($innerQuery, $locale, array $options = [], $primarySelector = null)
@@ -60,9 +59,6 @@ class QueryCreateEvent extends AbstractEvent
         return $this->innerQuery;
     }
 
-    /**
-     * @param Query $query
-     */
     public function setQuery(Query $query)
     {
         $this->query = $query;
@@ -85,8 +81,6 @@ class QueryCreateEvent extends AbstractEvent
     }
 
     /**
-     * @return mixed
-     *
      * @throws DocumentManagerException
      */
     public function getQuery()

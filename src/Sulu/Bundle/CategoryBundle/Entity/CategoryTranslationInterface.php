@@ -95,8 +95,6 @@ interface CategoryTranslationInterface extends AuditableInterface
     /**
      * Set category.
      *
-     * @param CategoryInterface $category
-     *
      * @return CategoryTranslationInterface
      */
     public function setCategory(CategoryInterface $category);
@@ -111,16 +109,12 @@ interface CategoryTranslationInterface extends AuditableInterface
     /**
      * Add keyword.
      *
-     * @param KeywordInterface $keyword
-     *
      * @return CategoryInterface
      */
     public function addKeyword(KeywordInterface $keyword);
 
     /**
      * Remove keyword.
-     *
-     * @param KeywordInterface $keyword
      */
     public function removeKeyword(KeywordInterface $keyword);
 
@@ -133,8 +127,6 @@ interface CategoryTranslationInterface extends AuditableInterface
 
     /**
      * Returns true if given keyword already linked with the category.
-     *
-     * @param KeywordInterface $keyword
      *
      * @return bool
      */

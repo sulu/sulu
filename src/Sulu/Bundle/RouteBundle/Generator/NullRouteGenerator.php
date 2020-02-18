@@ -20,9 +20,6 @@ class NullRouteGenerator implements RouteGeneratorInterface
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getOptionsResolver(array $options)
     {
         return new OptionsResolver();

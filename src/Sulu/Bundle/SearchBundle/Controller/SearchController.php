@@ -78,8 +78,6 @@ class SearchController
     /**
      * Perform a search and return a JSON response.
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function searchAction(Request $request)

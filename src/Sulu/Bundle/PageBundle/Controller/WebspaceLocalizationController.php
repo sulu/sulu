@@ -41,8 +41,6 @@ class WebspaceLocalizationController extends AbstractRestController implements C
     /**
      * Returns the localizations for the given webspace.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)

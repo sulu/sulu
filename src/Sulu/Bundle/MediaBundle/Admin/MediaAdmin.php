@@ -85,9 +85,6 @@ class MediaAdmin extends Admin
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureViews(ViewCollection $viewCollection): void
     {
         $mediaLocales = $this->localizationManager->getLocales();

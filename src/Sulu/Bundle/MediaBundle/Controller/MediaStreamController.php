@@ -86,8 +86,6 @@ class MediaStreamController
     }
 
     /**
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getImageAction(Request $request)
@@ -112,7 +110,6 @@ class MediaStreamController
     }
 
     /**
-     * @param Request $request
      * @param int $id
      *
      * @return Response

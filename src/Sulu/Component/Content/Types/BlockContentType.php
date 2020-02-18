@@ -45,9 +45,6 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         $this->languageNamespace = $languageNamespace;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(
         NodeInterface $node,
         PropertyInterface $property,
@@ -111,9 +108,6 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasValue(
         NodeInterface $node,
         PropertyInterface $property,
@@ -139,9 +133,6 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -156,8 +147,6 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
     /**
      * Save the value from given property.
      *
-     * @param NodeInterface $node
-     * @param PropertyInterface $property
      * @param string $userId
      * @param string $webspaceKey
      * @param string $languageCode
@@ -287,9 +276,6 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove(
         NodeInterface $node,
         PropertyInterface $property,
@@ -302,9 +288,6 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getViewData(PropertyInterface $property)
     {
         return $this->prepareData(
@@ -316,9 +299,6 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentData(PropertyInterface $property)
     {
         return $this->prepareData(
@@ -333,8 +313,6 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
      * Returns prepared data from property
      * use callback to prepare data foreach property function($contentType, $property).
      *
-     * @param PropertyInterface $property
-     * @param callable $dataCallback
      * @param bool $returnType
      *
      * @return array
@@ -369,17 +347,11 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         return $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exportData($propertyValue)
     {
         return $propertyValue;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,
@@ -393,9 +365,6 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         $this->doWrite($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey, true);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function preResolve(PropertyInterface $property)
     {
         $this->prepareData(

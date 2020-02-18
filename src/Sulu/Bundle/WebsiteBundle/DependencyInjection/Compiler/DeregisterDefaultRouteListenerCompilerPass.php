@@ -20,9 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class DeregisterDefaultRouteListenerCompilerPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         $container->getDefinition('router_listener')->clearTag('kernel.event_subscriber');

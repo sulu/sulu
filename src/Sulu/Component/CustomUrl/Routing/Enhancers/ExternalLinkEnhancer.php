@@ -21,9 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ExternalLinkEnhancer implements RouteEnhancerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function enhance(array $defaults, Request $request)
     {
         if (!array_key_exists('_structure', $defaults)

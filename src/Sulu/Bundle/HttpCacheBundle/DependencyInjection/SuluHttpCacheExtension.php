@@ -23,9 +23,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class SuluHttpCacheExtension extends Extension implements PrependExtensionInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function prepend(ContainerBuilder $container)
     {
         $configs = $container->getExtensionConfig($this->getAlias());
@@ -68,17 +65,11 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
         $container->prependExtensionConfig('fos_http_cache', $fosHttpCacheConfig);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfiguration(array $config, ContainerBuilder $container)
     {
         return new Configuration($container->getParameter('kernel.debug'));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
@@ -117,10 +108,6 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
 
     /**
      * Returns boolean if system should cache in current environment.
-     *
-     * @param ContainerInterface $container
-     *
-     * @return bool
      */
     private function shouldCache(ContainerInterface $container): bool
     {

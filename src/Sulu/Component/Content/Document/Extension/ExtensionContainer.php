@@ -23,9 +23,6 @@ class ExtensionContainer implements \ArrayAccess, \Iterator
      */
     protected $data;
 
-    /**
-     * @param array $data
-     */
     public function __construct(array $data = [])
     {
         $this->data = $data;

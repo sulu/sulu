@@ -28,9 +28,6 @@ class WebspaceUrlChainProvider implements WebspaceUrlProviderInterface
         $this->chain = $chain;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUrls(Webspace $webspace, $environment)
     {
         $urls = [];

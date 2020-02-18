@@ -34,9 +34,6 @@ class ForwardedUrlRequestProcessor implements RequestProcessorInterface
         $this->urlHeader = $urlHeader;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
         if (!$request->headers->has($this->urlHeader)) {
@@ -50,9 +47,6 @@ class ForwardedUrlRequestProcessor implements RequestProcessorInterface
         return new RequestAttributes(['host' => $host, 'port' => $port, 'path' => $originalRequest->getPathInfo()]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validate(RequestAttributes $attributes)
     {
         return true;

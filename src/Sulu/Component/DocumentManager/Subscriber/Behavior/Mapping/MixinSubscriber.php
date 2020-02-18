@@ -29,9 +29,6 @@ class MixinSubscriber implements EventSubscriberInterface
         $this->metadataFactory = $metadataFactory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [

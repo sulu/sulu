@@ -43,9 +43,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class ContactController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     protected static $entityKey = 'contacts';
 
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
@@ -66,9 +63,6 @@ class ContactController extends AbstractRestController implements ClassResourceI
      */
     protected $basePath = 'admin/api/contacts';
 
-    /**
-     * {@inheritdoc}
-     */
     protected $bundlePrefix = 'contact.contacts.';
 
     // TODO: move the field descriptors to a manager
@@ -247,8 +241,6 @@ class ContactController extends AbstractRestController implements ClassResourceI
      * lists all contacts
      * optional parameter 'flat' calls listAction.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
@@ -298,7 +290,6 @@ class ContactController extends AbstractRestController implements ClassResourceI
     /**
      * Returns list for cget.
      *
-     * @param Request $request
      * @param string $locale
      *
      * @return ListRepresentation
@@ -330,7 +321,6 @@ class ContactController extends AbstractRestController implements ClassResourceI
     /**
      * Prepare list response.
      *
-     * @param DoctrineListBuilder $listBuilder
      * @param string $locale
      *
      * @return array
@@ -405,8 +395,6 @@ class ContactController extends AbstractRestController implements ClassResourceI
     /**
      * Creates a new contact.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
@@ -437,7 +425,6 @@ class ContactController extends AbstractRestController implements ClassResourceI
 
     /**
      * @param $id
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -464,7 +451,6 @@ class ContactController extends AbstractRestController implements ClassResourceI
      * Partially update an existing contact.
      *
      * @param $id
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -506,9 +492,6 @@ class ContactController extends AbstractRestController implements ClassResourceI
         return $contacts;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         return 'sulu.contact.people';

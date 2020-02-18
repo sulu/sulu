@@ -34,7 +34,6 @@ class TagMatchGroup
     /**
      * @param string $namespace
      * @param string $tagName
-     * @param array $tags
      */
     public function __construct($namespace, $tagName, array $tags = [])
     {
@@ -77,7 +76,6 @@ class TagMatchGroup
      * Add a new tag to group.
      *
      * @param string $tag
-     * @param array $tagAttributes
      *
      * @return $this
      */

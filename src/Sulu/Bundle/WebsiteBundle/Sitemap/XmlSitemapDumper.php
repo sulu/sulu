@@ -39,9 +39,6 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
     private $filesystem;
 
     /**
-     * @param XmlSitemapRendererInterface $sitemapRenderer
-     * @param SitemapProviderPoolInterface $sitemapProviderPool
-     * @param Filesystem $filesystem
      * @param string $baseDirectory
      */
     public function __construct(
@@ -56,9 +53,6 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
         $this->baseDirectory = $baseDirectory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getIndexDumpPath($scheme, $host)
     {
         return sprintf(
@@ -69,9 +63,6 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDumpPath($scheme, $host, $alias, $page)
     {
         return sprintf(
@@ -84,9 +75,6 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function dumpHost($scheme, $host)
     {
         $dumpPath = $this->getIndexDumpPath($scheme, $host);

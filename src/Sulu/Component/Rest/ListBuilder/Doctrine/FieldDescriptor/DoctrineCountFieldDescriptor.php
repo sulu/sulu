@@ -18,9 +18,6 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
  */
 class DoctrineCountFieldDescriptor extends DoctrineFieldDescriptor
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getSelect()
     {
         return 'COUNT(' . $this->encodeAlias($this->getEntityName()) . '.' . $this->getFieldName() . ')';

@@ -20,9 +20,7 @@ use Sulu\Component\DocumentManager\Exception\NodeNameAlreadyExistsException;
 class NameResolver
 {
     /**
-     * @param NodeInterface $parentNode
      * @param string $name
-     * @param null|NodeInterface $forNode
      * @param bool $autoRename When set to false an exception is thrown, in case the passed name already exists
      *
      * @return string
@@ -46,7 +44,6 @@ class NameResolver
     }
 
     /**
-     * @param NodeInterface $parentNode
      * @param string $name
      * @param NodeInterface $forNode
      *

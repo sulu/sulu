@@ -23,9 +23,6 @@ class Configuration implements ConfigurationInterface
 
     const STORAGE_S3 = 's3';
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('sulu_media');
@@ -240,8 +237,6 @@ class Configuration implements ConfigurationInterface
 
     /**
      * Adds `objects` section.
-     *
-     * @param ArrayNodeDefinition $node
      */
     private function addObjectsSection(ArrayNodeDefinition $node)
     {

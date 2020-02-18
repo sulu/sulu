@@ -25,9 +25,6 @@ class LoadSecurityTypes implements FixtureInterface, OrderedFixtureInterface, Co
 {
     use ContainerAwareTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(ObjectManager $manager)
     {
         // get already present
@@ -72,9 +69,6 @@ class LoadSecurityTypes implements FixtureInterface, OrderedFixtureInterface, Co
         $manager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getOrder()
     {
         return 5;

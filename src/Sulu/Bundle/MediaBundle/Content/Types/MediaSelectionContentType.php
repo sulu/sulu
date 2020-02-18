@@ -43,9 +43,6 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         $this->referenceStore = $referenceStore;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [
@@ -64,9 +61,6 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         return array_merge($this->getDefaultParams(), $params);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(
         NodeInterface $node,
         PropertyInterface $property,
@@ -79,9 +73,6 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         $property->setValue(isset($data['ids']) ? $data : null);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -104,9 +95,6 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         $node->setProperty($property->getName(), json_encode($value));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove(
         NodeInterface $node,
         PropertyInterface $property,
@@ -119,9 +107,6 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentData(PropertyInterface $property)
     {
         $data = $property->getValue();
@@ -141,17 +126,11 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         return $container->getData();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getViewData(PropertyInterface $property)
     {
         return $property->getValue();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exportData($propertyValue)
     {
         if (!is_array($propertyValue)) {
@@ -165,9 +144,6 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         return '';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,
@@ -181,9 +157,6 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function preResolve(PropertyInterface $property)
     {
         $data = $property->getValue();

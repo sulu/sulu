@@ -50,9 +50,6 @@ class ReferrerCollection extends AbstractLazyCollection
         $this->documents = new \ArrayIterator();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function current()
     {
         $this->initialize();
@@ -64,9 +61,6 @@ class ReferrerCollection extends AbstractLazyCollection
         return $hydrateEvent->getDocument();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function initialize()
     {
         if (true === $this->initialized) {

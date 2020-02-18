@@ -70,33 +70,21 @@ class NodeOrderBuilder implements BuilderInterface
         $this->propertyName = $propertyEncoder->systemName(OrderSubscriber::FIELD);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setContext(BuilderContext $context)
     {
         $this->context = $context;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'node_order';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDependencies()
     {
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function build()
     {
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {

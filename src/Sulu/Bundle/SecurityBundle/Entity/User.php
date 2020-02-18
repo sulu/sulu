@@ -367,9 +367,6 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocked()
     {
         return $this->locked;
@@ -389,9 +386,6 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEnabled()
     {
         return $this->enabled;
@@ -558,8 +552,6 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Add userRoles.
      *
-     * @param UserRole $userRoles
-     *
      * @return self
      */
     public function addUserRole(UserRole $userRoles)
@@ -571,8 +563,6 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
 
     /**
      * Remove userRoles.
-     *
-     * @param UserRole $userRoles
      */
     public function removeUserRole(UserRole $userRoles)
     {
@@ -590,8 +580,6 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @VirtualProperty
      */
     public function getRoles()
@@ -606,9 +594,6 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
         return $roles;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoleObjects()
     {
         $roles = [];
@@ -622,8 +607,6 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Add userGroups.
      *
-     * @param UserGroup $userGroups
-     *
      * @return self
      */
     public function addUserGroup(UserGroup $userGroups)
@@ -635,8 +618,6 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
 
     /**
      * Remove userGroups.
-     *
-     * @param UserGroup $userGroups
      */
     public function removeUserGroup(UserGroup $userGroups)
     {
@@ -656,8 +637,6 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Add userSettings.
      *
-     * @param UserSetting $userSettings
-     *
      * @return self
      */
     public function addUserSetting(UserSetting $userSettings)
@@ -669,8 +648,6 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
 
     /**
      * Remove userSettings.
-     *
-     * @param UserSetting $userSettings
      */
     public function removeUserSetting(UserSetting $userSettings)
     {

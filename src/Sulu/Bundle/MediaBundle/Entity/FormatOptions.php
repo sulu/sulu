@@ -169,8 +169,6 @@ class FormatOptions
     /**
      * Set fileVersion.
      *
-     * @param FileVersion $fileVersion
-     *
      * @return FormatOptions
      */
     public function setFileVersion(FileVersion $fileVersion)

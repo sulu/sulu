@@ -34,8 +34,6 @@ class MediaDataItem implements ItemInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @VirtualProperty
      */
     public function getId()
@@ -44,8 +42,6 @@ class MediaDataItem implements ItemInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @VirtualProperty
      */
     public function getTitle()
@@ -54,8 +50,6 @@ class MediaDataItem implements ItemInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @VirtualProperty
      */
     public function getImage()
@@ -67,9 +61,6 @@ class MediaDataItem implements ItemInterface
         return $thumbnails['sulu-50x50'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getResource()
     {
         return $this->entity;

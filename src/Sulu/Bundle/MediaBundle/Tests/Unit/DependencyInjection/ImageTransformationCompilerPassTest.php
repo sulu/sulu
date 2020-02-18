@@ -22,9 +22,6 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class ImageTransformationCompilerPassTest extends AbstractCompilerPassTestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function registerCompilerPass(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new ImageTransformationCompilerPass());

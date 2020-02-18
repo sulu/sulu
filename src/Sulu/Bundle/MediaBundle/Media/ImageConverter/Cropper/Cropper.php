@@ -20,9 +20,6 @@ use Imagine\Image\Point;
  */
 class Cropper implements CropperInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function crop(ImageInterface $image, $x, $y, $width, $height)
     {
         $point = new Point($x, $y);
@@ -33,9 +30,6 @@ class Cropper implements CropperInterface
         return $image;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isValid(ImageInterface $image, $x, $y, $width, $height, array $format)
     {
         return $this->isInsideImage($image, $x, $y, $width, $height)
@@ -45,7 +39,6 @@ class Cropper implements CropperInterface
     /**
      * Returns true iff the cropping does not exceed the image borders.
      *
-     * @param ImageInterface $image
      * @param $x
      * @param $y
      * @param $width
@@ -73,7 +66,6 @@ class Cropper implements CropperInterface
      *
      * @param $width
      * @param $height
-     * @param array $format
      *
      * @return bool
      */

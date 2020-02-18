@@ -15,9 +15,6 @@ use Sulu\Component\Webspace\Webspace;
 
 class WebspaceDefaultLocalizationNotFoundException extends WebspaceException
 {
-    /**
-     * @param Webspace $webspace
-     */
     public function __construct(Webspace $webspace)
     {
         $this->webspace = $webspace;

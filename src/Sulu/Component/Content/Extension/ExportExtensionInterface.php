@@ -16,7 +16,6 @@ use PHPCR\NodeInterface;
 interface ExportExtensionInterface
 {
     /**
-     * @param mixed $properties
      * @param string $format
      *
      * @return string[]
@@ -29,7 +28,6 @@ interface ExportExtensionInterface
     public function getImportPropertyNames();
 
     /**
-     * @param NodeInterface $node
      * @param array $data
      * @param string $webspaceKey
      * @param string $languageCode

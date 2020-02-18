@@ -34,7 +34,6 @@ class FileValidator implements FileValidatorInterface
     protected $maxFileSize;
 
     /**
-     * @param UploadedFile $file
      * @param array $methods
      *
      * @return mixed|void

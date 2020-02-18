@@ -98,8 +98,6 @@ interface StructureInterface extends \JsonSerializable
 
     /**
      * sets created datetime.
-     *
-     * @param DateTime $created
      */
     public function setCreated(DateTime $created);
 
@@ -112,8 +110,6 @@ interface StructureInterface extends \JsonSerializable
 
     /**
      * sets changed datetime.
-     *
-     * @param DateTime $changed
      */
     public function setChanged(DateTime $changed);
 
@@ -200,8 +196,6 @@ interface StructureInterface extends \JsonSerializable
      * return value of property with given name.
      *
      * @param string $name string name of property
-     *
-     * @return mixed
      */
     public function getPropertyValue($name);
 
@@ -284,8 +278,6 @@ interface StructureInterface extends \JsonSerializable
      * returns value of property with given tag name.
      *
      * @param string $tagName
-     *
-     * @return mixed
      */
     public function getPropertyValueByTagName($tagName);
 

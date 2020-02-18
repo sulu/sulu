@@ -29,17 +29,11 @@ class ResolveTargetEntitiesPass implements CompilerPassInterface
         $this->interfaces = $interfaces;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         $this->resolve($container);
     }
 
-    /**
-     * @param ContainerBuilder $container
-     */
     private function resolve(ContainerBuilder $container)
     {
         if (!$container->hasDefinition('doctrine.orm.listeners.resolve_target_entity')) {
@@ -67,7 +61,6 @@ class ResolveTargetEntitiesPass implements CompilerPassInterface
     }
 
     /**
-     * @param ContainerBuilder $container
      * @param string $key
      *
      * @return string

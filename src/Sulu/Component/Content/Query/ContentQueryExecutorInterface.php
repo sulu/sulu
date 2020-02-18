@@ -21,7 +21,6 @@ interface ContentQueryExecutorInterface
      *
      * @param string $webspaceKey
      * @param string[] $locales
-     * @param ContentQueryBuilderInterface $contentQueryBuilder
      * @param bool $flat
      * @param int $depth
      * @param int $limit

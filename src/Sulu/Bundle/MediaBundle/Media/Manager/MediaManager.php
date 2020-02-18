@@ -195,9 +195,6 @@ class MediaManager implements MediaManagerInterface
         $this->maxFileSize = $maxFileSize;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getById($id, $locale)
     {
         $mediaEntity = $this->getEntityById($id);
@@ -205,9 +202,6 @@ class MediaManager implements MediaManagerInterface
         return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEntityById($id)
     {
         $mediaEntity = $this->mediaRepository->findMediaById($id);
@@ -218,9 +212,6 @@ class MediaManager implements MediaManagerInterface
         return $mediaEntity;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getByIds(array $ids, $locale)
     {
         $media = [];
@@ -237,9 +228,6 @@ class MediaManager implements MediaManagerInterface
         return array_values($media);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function get($locale, $filter = [], $limit = null, $offset = null)
     {
         $media = [];
@@ -259,17 +247,11 @@ class MediaManager implements MediaManagerInterface
         return $media;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCount()
     {
         return $this->count;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save($uploadedFile, $data, $userId)
     {
         if (isset($data['id'])) {
@@ -282,8 +264,6 @@ class MediaManager implements MediaManagerInterface
     }
 
     /**
-     * @param UploadedFile $uploadedFile
-     *
      * @return array
      */
     private function getProperties(UploadedFile $uploadedFile)
@@ -666,9 +646,6 @@ class MediaManager implements MediaManagerInterface
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function delete($id, $checkSecurity = false)
     {
         $mediaEntity = $this->getEntityById($id);
@@ -713,9 +690,6 @@ class MediaManager implements MediaManagerInterface
         $this->em->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function move($id, $locale, $destCollection)
     {
         try {
@@ -735,9 +709,6 @@ class MediaManager implements MediaManagerInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function increaseDownloadCounter($fileVersionId)
     {
         $query = $this->em->createQueryBuilder()->update('SuluMediaBundle:FileVersion', 'fV')
@@ -749,9 +720,6 @@ class MediaManager implements MediaManagerInterface
         $query->execute();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFormatUrls($ids, $locale)
     {
         $mediaArray = $this->getByIds($ids, $locale);
@@ -782,8 +750,6 @@ class MediaManager implements MediaManagerInterface
     }
 
     /**
-     * @param Media $media
-     *
      * @return Media
      */
     public function addFormatsAndUrl(Media $media)
@@ -866,9 +832,6 @@ class MediaManager implements MediaManagerInterface
         return $this->userRepository->findUserById($userId);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUrl($id, $fileName, $version)
     {
         return str_replace(

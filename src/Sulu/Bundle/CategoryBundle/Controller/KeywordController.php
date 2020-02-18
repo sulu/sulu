@@ -83,9 +83,6 @@ class KeywordController extends AbstractRestController implements ClassResourceI
      */
     private $keywordClass;
 
-    /**
-     * {@inheritdoc}
-     */
     protected static $entityKey = 'category_keywords';
 
     public function __construct(
@@ -114,7 +111,6 @@ class KeywordController extends AbstractRestController implements ClassResourceI
      * Returns list of keywords filtered by the category.
      *
      * @param int $categoryId
-     * @param Request $request
      *
      * @return Response
      */
@@ -157,7 +153,6 @@ class KeywordController extends AbstractRestController implements ClassResourceI
      * Creates new keyword for given category.
      *
      * @param int $categoryId
-     * @param Request $request
      *
      * @return Response
      */
@@ -216,7 +211,6 @@ class KeywordController extends AbstractRestController implements ClassResourceI
      * Delete given keyword from given category.
      *
      * @param int $categoryId
-     * @param int $keywordId
      *
      * @return Response
      */
@@ -235,7 +229,6 @@ class KeywordController extends AbstractRestController implements ClassResourceI
      * Delete given keyword from given category.
      *
      * @param int $categoryId
-     * @param Request $request
      *
      * @return Response
      */
@@ -254,9 +247,6 @@ class KeywordController extends AbstractRestController implements ClassResourceI
         return $this->handleView($this->view());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         return CategoryAdmin::SECURITY_CONTEXT;

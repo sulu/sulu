@@ -98,8 +98,6 @@ class SocialMediaProfile
     }
 
     /**
-     * @param SocialMediaProfileType $socialMediaProfileType
-     *
      * @return SocialMediaProfile
      */
     public function setSocialMediaProfileType(SocialMediaProfileType $socialMediaProfileType)
@@ -122,8 +120,6 @@ class SocialMediaProfile
     }
 
     /**
-     * @param ContactInterface $contacts
-     *
      * @return SocialMediaProfile
      */
     public function addContact(ContactInterface $contacts)
@@ -133,9 +129,6 @@ class SocialMediaProfile
         return $this;
     }
 
-    /**
-     * @param ContactInterface $contacts
-     */
     public function removeContact(ContactInterface $contacts)
     {
         $this->contacts->removeElement($contacts);
@@ -150,8 +143,6 @@ class SocialMediaProfile
     }
 
     /**
-     * @param AccountInterface $account
-     *
      * @return SocialMediaProfile
      */
     public function addAccount(AccountInterface $account)
@@ -161,9 +152,6 @@ class SocialMediaProfile
         return $this;
     }
 
-    /**
-     * @param AccountInterface $account
-     */
     public function removeAccount(AccountInterface $account)
     {
         $this->accounts->removeElement($account);

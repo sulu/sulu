@@ -80,13 +80,6 @@ class InvalidationSubscriber implements EventSubscriberInterface
     private $environment;
 
     /**
-     * @param null|CacheManager $cacheManager
-     * @param StructureManagerInterface $structureManager
-     * @param DocumentInspector $documentInspector
-     * @param ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool
-     * @param WebspaceManagerInterface $webspaceManager
-     * @param RequestStack $requestStack
-     * @param TagManagerInterface $tagManager
      * @param string $environment - kernel envionment, dev, prod, etc
      */
     public function __construct(
@@ -109,9 +102,6 @@ class InvalidationSubscriber implements EventSubscriberInterface
         $this->environment = $environment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -125,8 +115,6 @@ class InvalidationSubscriber implements EventSubscriberInterface
      * Invalidates the assigned structure and all urls in the locale of the document of an already published document
      * when it gets republished (eg on content change).
      * This method is executed before the actual publishing of the document to avoid purging new urls.
-     *
-     * @param PublishEvent $event
      */
     public function invalidateDocumentBeforePublishing(PublishEvent $event)
     {
@@ -152,8 +140,6 @@ class InvalidationSubscriber implements EventSubscriberInterface
      * Invalidates the assigned structure and all urls in the locale of the document when a document gets unpublished.
      * This method is executed before the actual unpublishing of the document because the document must still
      * be published to gather the urls of the document.
-     *
-     * @param UnpublishEvent $event
      */
     public function invalidateDocumentBeforeUnpublishing(UnpublishEvent $event)
     {
@@ -175,8 +161,6 @@ class InvalidationSubscriber implements EventSubscriberInterface
      * Invalidates the assigned structure and all urls in all locales of the document when a document gets removed.
      * This method is executed before the actual removing of the document because the document must still
      * exist to gather the urls of the document.
-     *
-     * @param RemoveEvent $event
      */
     public function invalidateDocumentBeforeRemoving(RemoveEvent $event)
     {
@@ -232,8 +216,6 @@ class InvalidationSubscriber implements EventSubscriberInterface
 
     /**
      * Invalidates all tags and categories from excerpt extension.
-     *
-     * @param ExtensionBehavior $document
      */
     private function invalidateDocumentExcerpt(ExtensionBehavior $document)
     {
@@ -265,7 +247,6 @@ class InvalidationSubscriber implements EventSubscriberInterface
      * Returns all urls of the given locale which are associated with the given document.
      * The returned array contains all current urls and all history urls.
      *
-     * @param ResourceSegmentBehavior $document
      * @param string $locale
      *
      * @return array Urls of the given locale which are associated with the given document

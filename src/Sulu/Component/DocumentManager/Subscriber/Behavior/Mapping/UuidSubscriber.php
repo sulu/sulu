@@ -22,9 +22,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class UuidSubscriber implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -34,8 +31,6 @@ class UuidSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param AbstractMappingEvent $event
-     *
      * @throws DocumentManagerException
      */
     public function handleUuid(AbstractMappingEvent $event)

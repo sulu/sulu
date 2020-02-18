@@ -42,9 +42,6 @@ class RequestDefaultLocaleProviderTest extends TestCase
      */
     private $defaultLocaleProvider;
 
-    /**
-     * {@inheritdoc}
-     */
     public function setUp(): void
     {
         parent::setUp();

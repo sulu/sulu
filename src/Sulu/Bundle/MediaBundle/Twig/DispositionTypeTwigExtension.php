@@ -36,7 +36,6 @@ class DispositionTypeTwigExtension extends AbstractExtension
     /**
      * Get media url.
      *
-     * @param Media $media
      * @param null|string $dispositionType
      *
      * @return string

@@ -20,9 +20,6 @@ class NamespaceRegistry
 {
     private $roleMap = [];
 
-    /**
-     * @param array $roleMap
-     */
     public function __construct(array $roleMap)
     {
         $this->roleMap = $roleMap;

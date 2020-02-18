@@ -18,25 +18,16 @@ use Sulu\Bundle\CoreBundle\Build\SuluBuilder;
  */
 class UserBuilder extends SuluBuilder
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'user';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDependencies()
     {
         return ['fixtures', 'database'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function build()
     {
         $user = 'admin';

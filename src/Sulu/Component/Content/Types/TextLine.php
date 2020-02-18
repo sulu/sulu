@@ -25,9 +25,6 @@ class TextLine extends SimpleContentType
         parent::__construct('TextLine', '');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [

@@ -45,9 +45,6 @@ class SitemapGenerator implements SitemapGeneratorInterface
         $this->contentQueryBuilder = $contentQueryBuilder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function generateAllLocals($webspaceKey, $flat = false)
     {
         $webSpaceSitemap = $this->getWebspaceSitemap($webspaceKey);
@@ -58,9 +55,6 @@ class SitemapGenerator implements SitemapGeneratorInterface
         return $webSpaceSitemap;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function generate($webspaceKey, $locale, $flat = false)
     {
         $webspaceSitemapInformation = $this->getWebspaceSitemap($webspaceKey);

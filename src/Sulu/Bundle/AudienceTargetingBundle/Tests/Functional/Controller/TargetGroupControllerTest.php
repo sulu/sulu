@@ -22,9 +22,6 @@ class TargetGroupControllerTest extends SuluTestCase
 {
     const BASE_URL = 'api/target-groups';
 
-    /**
-     * {@inheritdoc}
-     */
     public function setUp(): void
     {
         $this->purgeDatabase();
@@ -454,7 +451,6 @@ class TargetGroupControllerTest extends SuluTestCase
      * Creates a target group webspace entity.
      *
      * @param array $data
-     * @param TargetGroupInterface $targetGroup
      *
      * @return TargetGroupWebspaceInterface
      */
@@ -504,9 +500,6 @@ class TargetGroupControllerTest extends SuluTestCase
      *
      * @param array $data
      * @param string $key
-     * @param mixed $default
-     *
-     * @return mixed
      */
     private function getProperty($data, $key, $default)
     {

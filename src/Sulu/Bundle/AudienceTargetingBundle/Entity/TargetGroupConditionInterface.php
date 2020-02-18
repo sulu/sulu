@@ -51,8 +51,6 @@ interface TargetGroupConditionInterface
     public function getRule();
 
     /**
-     * @param TargetGroupRuleInterface $rule
-     *
      * @return $this
      */
     public function setRule(TargetGroupRuleInterface $rule);

@@ -38,9 +38,6 @@ class Builder implements BuilderInterface
         $this->configuration = new ProviderConfiguration();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function enableTags(bool $enable = true)
     {
         $this->configuration->setTags($enable);
@@ -48,9 +45,6 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function enableCategories(bool $enable = true)
     {
         $this->configuration->setCategories($enable);
@@ -58,9 +52,6 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function enableLimit(bool $enable = true)
     {
         $this->configuration->setLimit($enable);
@@ -68,9 +59,6 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function enablePagination(bool $enable = true)
     {
         $this->configuration->setPaginated($enable);
@@ -78,9 +66,6 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function enablePresentAs(bool $enable = true)
     {
         $this->configuration->setPresentAs($enable);
@@ -88,9 +73,6 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function enableDatasource(string $resourceKey, string $listKey, string $listAdapter)
     {
         $this->configuration->setDatasourceResourceKey($resourceKey);
@@ -100,9 +82,6 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function enableAudienceTargeting(bool $enable = true)
     {
         $this->configuration->setAudienceTargeting($enable);
@@ -110,9 +89,6 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function enableSorting(array $sorting)
     {
         $this->configuration->setSorting(
@@ -127,9 +103,6 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfiguration(): ProviderConfigurationInterface
     {
         return $this->configuration;

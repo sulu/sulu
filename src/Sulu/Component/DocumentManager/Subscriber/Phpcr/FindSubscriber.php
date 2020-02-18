@@ -42,11 +42,6 @@ class FindSubscriber implements EventSubscriberInterface
      */
     private $eventDispatcher;
 
-    /**
-     * @param MetadataFactoryInterface $metadataFactory
-     * @param NodeManager $nodeManager
-     * @param EventDispatcherInterface $eventDispatcher
-     */
     public function __construct(
         MetadataFactoryInterface $metadataFactory,
         NodeManager $nodeManager,
@@ -57,9 +52,6 @@ class FindSubscriber implements EventSubscriberInterface
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -68,9 +60,6 @@ class FindSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param ConfigureOptionsEvent $event
-     */
     public function configureOptions(ConfigureOptionsEvent $event)
     {
         $options = $event->getOptions();
@@ -80,8 +69,6 @@ class FindSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param FindEvent $event
-     *
      * @throws DocumentManagerException
      * @throws DocumentNotFoundException
      */

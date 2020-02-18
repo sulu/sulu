@@ -74,8 +74,6 @@ class SecurityCondition
 
     /**
      * Returns the id of the object.
-     *
-     * @return mixed
      */
     public function getObjectId()
     {

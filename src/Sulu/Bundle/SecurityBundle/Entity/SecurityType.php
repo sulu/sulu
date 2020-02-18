@@ -88,8 +88,6 @@ class SecurityType
     /**
      * Add roles.
      *
-     * @param RoleInterface $roles
-     *
      * @return SecurityType
      */
     public function addRole(RoleInterface $roles)
@@ -101,8 +99,6 @@ class SecurityType
 
     /**
      * Remove roles.
-     *
-     * @param RoleInterface $roles
      */
     public function removeRole(RoleInterface $roles)
     {

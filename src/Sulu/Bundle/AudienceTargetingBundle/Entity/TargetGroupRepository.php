@@ -18,9 +18,6 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
  */
 class TargetGroupRepository extends EntityRepository implements TargetGroupRepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function save(TargetGroupInterface $targetGroup)
     {
         $newRules = [];
@@ -70,9 +67,6 @@ class TargetGroupRepository extends EntityRepository implements TargetGroupRepos
         return $targetGroup;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByIds($ids)
     {
         $query = $this->createQueryBuilder('targetGroup')
@@ -82,9 +76,6 @@ class TargetGroupRepository extends EntityRepository implements TargetGroupRepos
         return $query->setParameter('ids', $ids)->getResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findAllActiveForWebspaceOrderedByPriority(
         $webspace,
         $maxFrequency = TargetGroupRuleInterface::FREQUENCY_VISITOR

@@ -31,9 +31,6 @@ class WebspaceCustomUrlProvider implements WebspaceUrlProviderInterface
         $this->customUrlManager = $customUrlManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUrls(Webspace $webspace, $environment)
     {
         $urls = [];

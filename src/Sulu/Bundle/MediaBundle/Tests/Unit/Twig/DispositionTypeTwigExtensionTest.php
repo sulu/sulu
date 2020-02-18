@@ -63,7 +63,6 @@ class DispositionTypeTwigExtensionTest extends TestCase
     }
 
     /**
-     * @param Media $media
      * @param string $dispositionType
      *
      * @return string

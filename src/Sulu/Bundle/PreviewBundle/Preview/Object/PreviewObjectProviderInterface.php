@@ -21,15 +21,11 @@ interface PreviewObjectProviderInterface
      *
      * @param string $id
      * @param string $locale
-     *
-     * @return mixed
      */
     public function getObject($id, $locale);
 
     /**
      * Returns id for given object.
-     *
-     * @param mixed $object
      *
      * @return string
      */
@@ -40,7 +36,6 @@ interface PreviewObjectProviderInterface
      *
      * @param $object
      * @param string $locale
-     * @param array $data
      */
     public function setValues($object, $locale, array $data);
 
@@ -49,7 +44,6 @@ interface PreviewObjectProviderInterface
      *
      * @param $object
      * @param string $locale
-     * @param array $context
      *
      * @return mixed New object which will be saved for the session
      */
@@ -57,8 +51,6 @@ interface PreviewObjectProviderInterface
 
     /**
      * Serializes object to string.
-     *
-     * @param mixed $object
      *
      * @return string
      */
@@ -69,8 +61,6 @@ interface PreviewObjectProviderInterface
      *
      * @param string $serializedObject
      * @param string $objectClass
-     *
-     * @return mixed
      */
     public function deserialize($serializedObject, $objectClass);
 }

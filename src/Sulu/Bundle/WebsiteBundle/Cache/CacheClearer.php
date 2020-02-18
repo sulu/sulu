@@ -75,9 +75,6 @@ class CacheClearer implements CacheClearerInterface
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function clear()
     {
         if ($this->cacheManager && $this->cacheManager->supportsInvalidate()) {

@@ -15,17 +15,11 @@ use Sulu\Component\Content\Compat\PageInterface;
 
 class PageBridge extends StructureBridge implements PageInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getView()
     {
         return $this->structure->getView();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getController()
     {
         return $this->structure->getController();
@@ -50,49 +44,31 @@ class PageBridge extends StructureBridge implements PageInterface
         return parent::getLanguageCode();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCacheLifeTime()
     {
         return $this->structure->getCacheLifetime();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getOriginTemplate()
     {
         return $this->structure->getName();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setOriginTemplate($originTemplate)
     {
         $this->readOnlyException(__METHOD__);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNavContexts()
     {
         return $this->document->getNavigationContexts();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setNavContexts($navContexts)
     {
         $this->readOnlyException(__METHOD__);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getInternalLinkContent()
     {
         $target = $this->getDocument()->getRedirectTarget();
@@ -107,25 +83,16 @@ class PageBridge extends StructureBridge implements PageInterface
         return $this->documentToStructure($target);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setInternalLinkContent($internalLinkContent)
     {
         $this->readOnlyException(__METHOD__);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setInternal($internal)
     {
         $this->readOnlyException(__METHOD__);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setNodeState($state)
     {
         $this->readOnlyException(__METHOD__);

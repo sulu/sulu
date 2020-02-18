@@ -52,8 +52,6 @@ class QueryResultCollection extends AbstractLazyCollection
     private $primarySelector = null;
 
     /**
-     * @param QueryResultInterface $result
-     * @param EventDispatcherInterface $eventDispatcher
      * @param string $locale
      * @param array $options
      * @param null|string $primarySelector
@@ -72,9 +70,6 @@ class QueryResultCollection extends AbstractLazyCollection
         $this->primarySelector = $primarySelector;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function current()
     {
         $this->initialize();
@@ -87,9 +82,6 @@ class QueryResultCollection extends AbstractLazyCollection
         return $hydrateEvent->getDocument();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function initialize()
     {
         if (true === $this->initialized) {

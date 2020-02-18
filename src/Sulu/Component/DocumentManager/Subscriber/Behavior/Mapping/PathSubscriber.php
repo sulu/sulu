@@ -27,17 +27,11 @@ class PathSubscriber implements EventSubscriberInterface
      */
     private $documentInspector;
 
-    /**
-     * @param DocumentInspector $documentInspector
-     */
     public function __construct(DocumentInspector $documentInspector)
     {
         $this->documentInspector = $documentInspector;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -51,8 +45,6 @@ class PathSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the path at the beginning of persisting.
-     *
-     * @param AbstractMappingEvent $event
      */
     public function setInitialPath(AbstractMappingEvent $event)
     {
@@ -61,17 +53,12 @@ class PathSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the path at the very end, in case the path has been changed in the persisting process.
-     *
-     * @param AbstractMappingEvent $event
      */
     public function setFinalPath(AbstractMappingEvent $event)
     {
         $this->setPath($event);
     }
 
-    /**
-     * @param AbstractMappingEvent $event
-     */
     private function setPath(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();

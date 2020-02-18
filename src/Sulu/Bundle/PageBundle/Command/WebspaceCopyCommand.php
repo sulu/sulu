@@ -283,8 +283,6 @@ class WebspaceCopyCommand extends Command
     }
 
     /**
-     * @param BasePageDocument $documentSource
-     * @param BasePageDocument|null $parentDocumentDestination
      * @param string $localeDestination
      */
     protected function recursiveCopy(
@@ -342,7 +340,6 @@ class WebspaceCopyCommand extends Command
     }
 
     /**
-     * @param BasePageDocument $documentSource
      * @param string $localeDestination
      */
     protected function recursiveCopyRedirectsAndStructure(
@@ -411,8 +408,6 @@ class WebspaceCopyCommand extends Command
     }
 
     /**
-     * @param ItemMetadata $property
-     * @param array $structureArray
      * @param string $localeSource
      * @param string $localeDestination
      */
@@ -477,8 +472,6 @@ class WebspaceCopyCommand extends Command
     /**
      * Process content type block.
      *
-     * @param array $structureArray
-     * @param BlockMetadata $property
      * @param string $localeSource
      * @param string $localeDestination
      */
@@ -512,8 +505,6 @@ class WebspaceCopyCommand extends Command
     /**
      * Updates the smart content structure when the property `dataSource` is set and the target is in the same webspace.
      *
-     * @param array $structureArray
-     * @param PropertyMetadata $property
      * @param string $localeSource
      * @param string $localeDestination
      */
@@ -554,8 +545,6 @@ class WebspaceCopyCommand extends Command
     /**
      * Updates references in structure for content type `teaser_selection`.
      *
-     * @param array $structureArray
-     * @param PropertyMetadata $property
      * @param string $localeSource
      * @param string $localeDestination
      */
@@ -589,8 +578,6 @@ class WebspaceCopyCommand extends Command
     }
 
     /**
-     * @param array $structureArray
-     * @param PropertyMetadata $property
      * @param string $localeSource
      * @param string $localeDestination
      */
@@ -643,8 +630,6 @@ class WebspaceCopyCommand extends Command
     /**
      * Updates references in structure for content type `page_selection`.
      *
-     * @param array $structureArray
-     * @param PropertyMetadata $property
      * @param string $localeSource
      * @param string $localeDestination
      */
@@ -676,8 +661,6 @@ class WebspaceCopyCommand extends Command
     /**
      * Updates references in structure for content type `single_page_selection`.
      *
-     * @param array $structureArray
-     * @param PropertyMetadata $property
      * @param string $localeSource
      * @param string $localeDestination
      */
@@ -741,7 +724,6 @@ class WebspaceCopyCommand extends Command
     }
 
     /**
-     * @param BasePageDocument $document
      * @param string $locale
      * @param string|null $path
      */

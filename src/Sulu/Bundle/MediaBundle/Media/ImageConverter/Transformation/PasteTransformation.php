@@ -34,9 +34,6 @@ class PasteTransformation implements TransformationInterface
 
     /**
      * MaskTransformation constructor.
-     *
-     * @param ImagineInterface $imagine
-     * @param FileLocator $fileLocator
      */
     public function __construct(
         ImagineInterface $imagine,
@@ -46,9 +43,6 @@ class PasteTransformation implements TransformationInterface
         $this->fileLocator = $fileLocator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(ImageInterface $image, $parameters)
     {
         $maskPath = isset($parameters['image']) ? $this->fileLocator->locate($parameters['image']) : null;

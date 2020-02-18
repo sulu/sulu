@@ -128,7 +128,6 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * returns finished Node (with _links and _embedded).
      *
-     * @param StructureInterface $structure
      * @param string $webspaceKey
      * @param string $languageCode
      * @param int $depth
@@ -191,9 +190,6 @@ class NodeRepository implements NodeRepositoryInterface
         $this->apiBasePath = $apiBasePath;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNode(
         $uuid,
         $webspaceKey,
@@ -216,9 +212,6 @@ class NodeRepository implements NodeRepositoryInterface
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getIndexNode($webspaceKey, $languageCode)
     {
         $structure = $this->getMapper()->loadStartPage($webspaceKey, $languageCode);
@@ -226,9 +219,6 @@ class NodeRepository implements NodeRepositoryInterface
         return $this->prepareNode($structure, $webspaceKey, $languageCode);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getReferences($uuid)
     {
         $session = $this->sessionManager->getSession();
@@ -237,9 +227,6 @@ class NodeRepository implements NodeRepositoryInterface
         return iterator_to_array($node->getReferences());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNodes(
         $parent,
         $webspaceKey,
@@ -274,9 +261,6 @@ class NodeRepository implements NodeRepositoryInterface
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNodesByIds(
         $ids,
         $webspaceKey,
@@ -311,9 +295,6 @@ class NodeRepository implements NodeRepositoryInterface
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getWebspaceNode(
         $webspaceKey,
         $languageCode,
@@ -338,9 +319,6 @@ class NodeRepository implements NodeRepositoryInterface
         return $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getWebspaceNodes($languageCode)
     {
         // init result
@@ -403,9 +381,6 @@ class NodeRepository implements NodeRepositoryInterface
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFilteredNodes(
         array $filterConfig,
         $languageCode,
@@ -515,9 +490,6 @@ class NodeRepository implements NodeRepositoryInterface
         return $results;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNodesTree(
         $uuid,
         $webspaceKey,
@@ -649,9 +621,6 @@ class NodeRepository implements NodeRepositoryInterface
         $this->iterateTiers($tiers, $node['_embedded']['pages']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadExtensionData($uuid, $extensionName, $webspaceKey, $languageCode)
     {
         $structure = $this->getMapper()->load($uuid, $webspaceKey, $languageCode);
@@ -678,9 +647,6 @@ class NodeRepository implements NodeRepositoryInterface
         return $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function saveExtensionData($uuid, $data, $extensionName, $webspaceKey, $languageCode, $userId)
     {
         $structure = $this->getMapper()->saveExtension(
@@ -712,9 +678,6 @@ class NodeRepository implements NodeRepositoryInterface
         return $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function orderAt($uuid, $position, $webspaceKey, $languageCode, $userId)
     {
         try {
@@ -731,9 +694,6 @@ class NodeRepository implements NodeRepositoryInterface
         return $this->prepareNode($structure, $webspaceKey, $languageCode);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function copyLocale($uuid, $userId, $webspaceKey, $srcLocale, $destLocales)
     {
         try {

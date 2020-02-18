@@ -20,8 +20,6 @@ interface SecurityBehavior
     /**
      * Sets the permission for the document. The passed array consists of the role name as key and a boolean array with
      * the permissions as value.
-     *
-     * @param array $permissions
      */
     public function setPermissions(array $permissions);
 

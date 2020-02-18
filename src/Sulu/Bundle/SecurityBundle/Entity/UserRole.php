@@ -98,8 +98,6 @@ class UserRole extends ApiEntity
     /**
      * Set user.
      *
-     * @param UserInterface $user
-     *
      * @return UserRole
      */
     public function setUser(UserInterface $user)
@@ -121,8 +119,6 @@ class UserRole extends ApiEntity
 
     /**
      * Set role.
-     *
-     * @param RoleInterface $role
      *
      * @return UserRole
      */

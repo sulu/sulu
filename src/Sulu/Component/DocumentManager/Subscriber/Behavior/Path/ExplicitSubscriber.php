@@ -34,17 +34,11 @@ class ExplicitSubscriber implements EventSubscriberInterface
      */
     private $nodeManager;
 
-    /**
-     * @param NodeManager $nodeManager
-     */
     public function __construct(NodeManager $nodeManager)
     {
         $this->nodeManager = $nodeManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -53,9 +47,6 @@ class ExplicitSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param ConfigureOptionsEvent $event
-     */
     public function configureOptions(ConfigureOptionsEvent $event)
     {
         $options = $event->getOptions();
@@ -75,8 +66,6 @@ class ExplicitSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param PersistEvent $event
-     *
      * @throws DocumentManagerException
      */
     public function handlePersist(PersistEvent $event)

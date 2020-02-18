@@ -92,8 +92,6 @@ class AddressType implements \JsonSerializable
     /**
      * Add addresses.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
-     *
      * @return AddressType
      */
     public function addAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
@@ -105,8 +103,6 @@ class AddressType implements \JsonSerializable
 
     /**
      * Remove addresses.
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
      */
     public function removeAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
     {
@@ -143,8 +139,6 @@ class AddressType implements \JsonSerializable
     /**
      * Add addresses.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
-     *
      * @return AddressType
      */
     public function addAddress(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
@@ -156,8 +150,6 @@ class AddressType implements \JsonSerializable
 
     /**
      * Remove addresses.
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
      */
     public function removeAddress(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
     {

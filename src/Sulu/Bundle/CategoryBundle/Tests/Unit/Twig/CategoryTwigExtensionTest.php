@@ -43,8 +43,6 @@ class CategoryTwigExtensionTest extends TestCase
     /**
      * Returns ApiCategory with given Data (id, name).
      *
-     * @param array $data
-     *
      * @return ApiCategory
      */
     private function createCategoryEntity(array $data)

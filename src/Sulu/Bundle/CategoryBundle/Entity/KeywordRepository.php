@@ -18,17 +18,11 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
  */
 class KeywordRepository extends EntityRepository implements KeywordRepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function findById($id)
     {
         return $this->find($id);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByKeyword($keyword, $locale)
     {
         return $this->findOneBy(['keyword' => $keyword, 'locale' => $locale]);

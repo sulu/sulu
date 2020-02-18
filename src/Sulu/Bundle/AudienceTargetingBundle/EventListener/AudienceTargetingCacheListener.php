@@ -40,9 +40,6 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
 
     protected $hadValidTargetGroupCookie = false;
 
-    /**
-     * @param CacheEvent $cacheEvent
-     */
     public function preHandle(CacheEvent $cacheEvent)
     {
         if (self::TARGET_GROUP_URL === $cacheEvent->getRequest()->getRequestUri()) {
@@ -55,9 +52,6 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
         );
     }
 
-    /**
-     * @param CacheEvent $cacheEvent
-     */
     public function postHandle(CacheEvent $cacheEvent)
     {
         if (self::TARGET_GROUP_URL === $cacheEvent->getRequest()->getRequestUri()) {
@@ -83,9 +77,6 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
      *
      * Returns true if the cookie was already set and false otherwise.
      *
-     * @param Request $request
-     * @param CacheInvalidation $kernel
-     *
      * @return bool
      */
     private function setTargetGroupHeader(Request $request, CacheInvalidation $kernel)
@@ -109,10 +100,6 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
 
     /**
      * Sends a request to the application to determine the target group of the current visitor.
-     *
-     * @param Request $request
-     * @param CacheInvalidation $kernel
-     * @param null|int $currentTargetGroup
      *
      * @return ?string
      */
@@ -145,9 +132,6 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
 
     /**
      * Set the cookie for the target group from the request. Should only be set in case the cookie was not set before.
-     *
-     * @param Response $response
-     * @param Request $request
      */
     private function setTargetGroupCookie(Response $response, Request $request)
     {
@@ -167,9 +151,6 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [

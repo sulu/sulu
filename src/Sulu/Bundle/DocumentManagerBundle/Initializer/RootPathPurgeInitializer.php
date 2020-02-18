@@ -44,9 +44,6 @@ class RootPathPurgeInitializer implements InitializerInterface
         $this->pathSegments = $pathSegments;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function initialize(OutputInterface $output, $purge = false)
     {
         if (!$purge) {

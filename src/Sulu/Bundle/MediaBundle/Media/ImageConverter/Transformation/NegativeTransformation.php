@@ -18,9 +18,6 @@ use Imagine\Image\ImageInterface;
  */
 class NegativeTransformation implements TransformationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function execute(ImageInterface $image, $parameters)
     {
         $image->effects()->negative();

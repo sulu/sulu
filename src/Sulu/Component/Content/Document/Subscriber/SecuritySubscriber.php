@@ -33,9 +33,6 @@ class SecuritySubscriber implements EventSubscriberInterface
         $this->permissions = $permissions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -58,8 +55,6 @@ class SecuritySubscriber implements EventSubscriberInterface
 
     /**
      * Adds the security information to the node.
-     *
-     * @param PersistEvent $event
      */
     public function handlePersist(PersistEvent $event)
     {
@@ -80,8 +75,6 @@ class SecuritySubscriber implements EventSubscriberInterface
 
     /**
      * Adds the security information to the hydrated object.
-     *
-     * @param HydrateEvent $event
      */
     public function handleHydrate(HydrateEvent $event)
     {

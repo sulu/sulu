@@ -16,9 +16,6 @@ namespace Sulu\Bundle\ContactBundle\Util;
  */
 class CustomerIdConverter implements IdConverterInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function convertIdsToGroupedIds(array $ids, array $default = [])
     {
         $result = $default;
@@ -37,9 +34,6 @@ class CustomerIdConverter implements IdConverterInterface
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function convertGroupedIdsToIds(array $groupedIds)
     {
         $result = [];

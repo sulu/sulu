@@ -18,9 +18,6 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
  */
 class TargetGroupRuleRepository extends EntityRepository implements TargetGroupRuleRepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function save(TargetGroupRuleInterface $targetGroupRule)
     {
         $newConditions = [];

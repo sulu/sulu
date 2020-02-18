@@ -127,7 +127,6 @@ class SnippetImport extends Import implements SnippetImportInterface
     /**
      * Import document by locale into given webspace.
      *
-     * @param array $parsedData
      * @param string $locale
      * @param string $format
      *

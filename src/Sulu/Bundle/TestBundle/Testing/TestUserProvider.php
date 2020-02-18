@@ -72,9 +72,6 @@ class TestUserProvider implements UserProviderInterface
         $this->userProvider = $userProvider;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUser()
     {
         if ($this->user) {
@@ -136,8 +133,6 @@ class TestUserProvider implements UserProviderInterface
      * object can just be merged into some internal array of users / identity
      * map.
      *
-     * @param UserInterface $user
-     *
      * @return UserInterface
      *
      * @throws UnsupportedUserException if the account is not supported
@@ -165,8 +160,6 @@ class TestUserProvider implements UserProviderInterface
 
     /**
      * Sets the standard credentials for the user.
-     *
-     * @param UserInterface $user
      */
     private function setCredentials(UserInterface $user)
     {

@@ -39,9 +39,6 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
         parent::__construct('SingleMediaSelection', '{"id": null}');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentData(PropertyInterface $property): ?Media
     {
         $data = $property->getValue();
@@ -58,17 +55,11 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
         return $entity;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getViewData(PropertyInterface $property)
     {
         return $property->getValue();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function preResolve(PropertyInterface $property)
     {
         $data = $property->getValue();
@@ -79,17 +70,11 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
         $this->mediaReferenceStore->add($data['id']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function encodeValue($value)
     {
         return json_encode($value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function decodeValue($value)
     {
         if (!is_string($value)) {

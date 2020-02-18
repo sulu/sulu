@@ -30,8 +30,6 @@ class RobotSubscriber implements EventSubscriberInterface
 
     /**
      * Append mapping for robot fields.
-     *
-     * @param MetadataLoadEvent $event
      */
     public function handleMetadataLoad(MetadataLoadEvent $event)
     {

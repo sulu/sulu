@@ -95,8 +95,6 @@ class Email
     /**
      * Set emailType.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\EmailType $emailType
-     *
      * @return Email
      */
     public function setEmailType(\Sulu\Bundle\ContactBundle\Entity\EmailType $emailType)
@@ -119,8 +117,6 @@ class Email
     /**
      * Add contacts.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts
-     *
      * @return Email
      */
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts)
@@ -132,8 +128,6 @@ class Email
 
     /**
      * Remove contacts.
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts
      */
     public function removeContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts)
     {
@@ -153,8 +147,6 @@ class Email
     /**
      * Add accounts.
      *
-     * @param AccountInterface $account
-     *
      * @return Email
      */
     public function addAccount(AccountInterface $account)
@@ -166,8 +158,6 @@ class Email
 
     /**
      * Remove accounts.
-     *
-     * @param AccountInterface $account
      */
     public function removeAccount(AccountInterface $account)
     {

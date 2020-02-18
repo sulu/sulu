@@ -88,9 +88,6 @@ class AutoNameSubscriber implements EventSubscriberInterface
         $this->liveSession = $liveSession;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -122,25 +119,17 @@ class AutoNameSubscriber implements EventSubscriberInterface
         $options->setAllowedTypes('auto_name_locale', ['string', 'null']);
     }
 
-    /**
-     * @param MoveEvent $event
-     */
     public function handleMove(MoveEvent $event)
     {
         $this->handleMoveCopy($event);
     }
 
-    /**
-     * @param CopyEvent $event
-     */
     public function handleCopy(CopyEvent $event)
     {
         $this->handleMoveCopy($event);
     }
 
     /**
-     * @param PersistEvent $event
-     *
      * @throws DocumentManagerException
      */
     public function handlePersist(PersistEvent $event)
@@ -158,8 +147,6 @@ class AutoNameSubscriber implements EventSubscriberInterface
 
     /**
      * Renames node if necessary.
-     *
-     * @param PersistEvent $event
      */
     public function handleScheduleRename(PersistEvent $event)
     {
@@ -211,9 +198,6 @@ class AutoNameSubscriber implements EventSubscriberInterface
     /**
      * Returns unique name for given document and nodes.
      *
-     * @param AutoNameBehavior $document
-     * @param NodeInterface $parentNode
-     * @param NodeInterface|null $node
      * @param bool $autoRename
      *
      * @return string
@@ -261,8 +245,6 @@ class AutoNameSubscriber implements EventSubscriberInterface
 
     /**
      * Resolve the destination name on move and copy events.
-     *
-     * @param MoveEvent $event
      */
     private function handleMoveCopy(MoveEvent $event)
     {

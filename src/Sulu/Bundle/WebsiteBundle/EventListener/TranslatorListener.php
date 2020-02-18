@@ -48,9 +48,6 @@ class TranslatorListener implements EventSubscriberInterface
         $this->translator->setLocale($localization->getLocale(Localization::LCID));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [

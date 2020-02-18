@@ -33,9 +33,6 @@ class LocaleSubscriber implements EventSubscriberInterface
         $this->registry = $registry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -45,8 +42,6 @@ class LocaleSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param AbstractMappingEvent $event
-     *
      * @throws DocumentManagerException
      */
     public function handleLocale(AbstractMappingEvent $event)

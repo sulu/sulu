@@ -638,8 +638,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @param TagInterface $tagEntity
-     *
      * @return $this
      */
     public function addTag(TagInterface $tagEntity)
@@ -774,8 +772,6 @@ class Media extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("created")
-     *
-     * @return mixed
      */
     public function getCreated()
     {
@@ -972,8 +968,6 @@ class Media extends ApiWrapper
 
     /**
      * Adds a category to the entity.
-     *
-     * @param CategoryEntity $category
      */
     public function addCategory(CategoryEntity $category)
     {
@@ -1017,8 +1011,6 @@ class Media extends ApiWrapper
 
     /**
      * Adds a target group to the entity.
-     *
-     * @param TargetGroupInterface $targetGroup
      *
      * @return self
      */

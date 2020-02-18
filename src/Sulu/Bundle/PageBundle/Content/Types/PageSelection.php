@@ -61,9 +61,6 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
         $this->showDrafts = $showDrafts;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(
         NodeInterface $node,
         PropertyInterface $property,
@@ -80,17 +77,11 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
         $property->setValue($refs);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return ['properties' => new PropertyParameter('properties', [], 'collection')];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -122,9 +113,6 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
         $node->setProperty($property->getName(), $value, PropertyType::REFERENCE);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove(
         NodeInterface $node,
         PropertyInterface $property,
@@ -137,9 +125,6 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentData(PropertyInterface $property)
     {
         $data = $property->getValue();
@@ -156,9 +141,6 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
         return $container->getData();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exportData($propertyValue)
     {
         if (!is_array($propertyValue) || empty($propertyValue)) {
@@ -168,9 +150,6 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
         return json_encode($propertyValue);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,
@@ -184,9 +163,6 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function preResolve(PropertyInterface $property)
     {
         $uuids = $property->getValue();

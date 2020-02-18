@@ -22,9 +22,6 @@ use Sulu\Component\DocumentManager\ClassNameInflector;
  */
 class ProxySubscriber implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -35,9 +32,6 @@ class ProxySubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param PreSerializeEvent $event
-     */
     public function onPreSerialize(PreSerializeEvent $event)
     {
         $object = $event->getObject();

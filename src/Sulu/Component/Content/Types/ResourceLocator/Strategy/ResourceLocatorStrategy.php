@@ -70,16 +70,6 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
      */
     private $resourceLocatorGenerator;
 
-    /**
-     * @param ResourceLocatorMapperInterface $mapper
-     * @param PathCleanupInterface $cleaner
-     * @param StructureManagerInterface $structureManager
-     * @param ContentTypeManagerInterface $contentTypeManager
-     * @param SuluNodeHelper $nodeHelper
-     * @param DocumentInspector $documentInspector
-     * @param DocumentManagerInterface $documentManager
-     * @param ResourceLocatorGeneratorInterface $resourceLocatorGenerator
-     */
     public function __construct(
         ResourceLocatorMapperInterface $mapper,
         PathCleanupInterface $cleaner,
@@ -100,9 +90,6 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
         $this->resourceLocatorGenerator = $resourceLocatorGenerator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey = null)
     {
         // title should not have a slash
@@ -154,9 +141,6 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
         } while ($document instanceof ParentBehavior);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save(ResourceSegmentBehavior $document, $userId)
     {
         $path = $document->getResourceSegment();
@@ -195,9 +179,6 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
         $this->mapper->save($document);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadByContent(ResourceSegmentBehavior $document)
     {
         // delegate to mapper
@@ -209,43 +190,28 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
     {
         // delegate to mapper
         return $this->mapper->loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
     {
         return $this->mapper->loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
     {
         // delegate to mapper
         return $this->mapper->loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isValid($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
         return '/' !== $path && $this->cleaner->validate($path);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function deleteById($id, $languageCode, $segmentKey = null)
     {
         $this->mapper->deleteById($id, $languageCode, $segmentKey);

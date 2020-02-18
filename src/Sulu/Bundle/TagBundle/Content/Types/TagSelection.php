@@ -31,18 +31,12 @@ class TagSelection extends ComplexContentType implements ContentTypeExportInterf
         $this->tagManager = $tagManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $tags = $this->tagManager->resolveTagIds($node->getPropertyValueWithDefault($property->getName(), []));
         $property->setValue($tags);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -61,9 +55,6 @@ class TagSelection extends ComplexContentType implements ContentTypeExportInterf
         $node->setProperty($property->getName(), $tagIds);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         if ($node->hasProperty($property->getName())) {
@@ -71,9 +62,6 @@ class TagSelection extends ComplexContentType implements ContentTypeExportInterf
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exportData($propertyValue)
     {
         if (false === is_array($propertyValue)) {
@@ -96,9 +84,6 @@ class TagSelection extends ComplexContentType implements ContentTypeExportInterf
         return '';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,

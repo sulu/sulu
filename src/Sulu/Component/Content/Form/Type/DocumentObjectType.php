@@ -27,25 +27,16 @@ class DocumentObjectType extends AbstractType
      */
     private $documentManager;
 
-    /**
-     * @param DocumentManager $documentManager
-     */
     public function __construct(DocumentManager $documentManager)
     {
         $this->documentManager = $documentManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $options)
     {
         $options->setDefault('compound', false);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addViewTransformer(new DocumentToUuidTransformer($this->documentManager));

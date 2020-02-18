@@ -19,9 +19,6 @@ use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
-/**
- * {@inheritdoc}
- */
 class NavigationMapper implements NavigationMapperInterface
 {
     /**
@@ -63,9 +60,6 @@ class NavigationMapper implements NavigationMapperInterface
         $this->stopwatch = $stopwatch;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNavigation(
         $parent,
         $webspaceKey,
@@ -104,9 +98,6 @@ class NavigationMapper implements NavigationMapperInterface
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRootNavigation(
         $webspaceKey,
         $locale,
@@ -135,9 +126,6 @@ class NavigationMapper implements NavigationMapperInterface
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getBreadcrumb($uuid, $webspace, $language)
     {
         $breadcrumbItems = $this->contentMapper->loadBreadcrumb($uuid, $language, $webspace);
@@ -230,7 +218,6 @@ class NavigationMapper implements NavigationMapperInterface
     /**
      * checks if content should be displayed.
      *
-     * @param StructureInterface $content
      * @param string|null $context
      *
      * @return bool

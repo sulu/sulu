@@ -148,7 +148,6 @@ class MediaController extends AbstractMediaController implements
      * Shows a single media with the given id.
      *
      * @param $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -193,8 +192,6 @@ class MediaController extends AbstractMediaController implements
 
     /**
      * Lists all media.
-     *
-     * @param Request $request
      *
      * @return Response
      */
@@ -260,7 +257,6 @@ class MediaController extends AbstractMediaController implements
     /**
      * Returns a list-builder for media list.
      *
-     * @param Request $request
      * @param FieldDescriptorInterface[] $fieldDescriptors
      * @param array $types
      *
@@ -341,8 +337,6 @@ class MediaController extends AbstractMediaController implements
     /**
      * Creates a new media.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException
@@ -356,7 +350,6 @@ class MediaController extends AbstractMediaController implements
      * Edits the existing media with the given id.
      *
      * @param int $id The id of the media to update
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
@@ -392,7 +385,6 @@ class MediaController extends AbstractMediaController implements
     }
 
     /**
-     * @param Request $request
      * @param $id
      * @param $version
      *
@@ -437,7 +429,6 @@ class MediaController extends AbstractMediaController implements
      * Trigger an action for given media. Action is specified over get-action parameter.
      *
      * @param int $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -467,7 +458,6 @@ class MediaController extends AbstractMediaController implements
      * Move an entity to another collection.
      *
      * @param int $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -495,7 +485,6 @@ class MediaController extends AbstractMediaController implements
 
     /**
      * @param $id
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -517,9 +506,6 @@ class MediaController extends AbstractMediaController implements
         return $this->handleView($view);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         return 'sulu.media.collections';
@@ -538,8 +524,6 @@ class MediaController extends AbstractMediaController implements
 
     /**
      * Returns the id of the object to check.
-     *
-     * @param Request $request
      *
      * @return string
      */

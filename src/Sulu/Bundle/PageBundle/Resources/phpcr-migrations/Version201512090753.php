@@ -20,9 +20,6 @@ use PHPCR\SessionInterface;
  */
 class Version201512090753 implements VersionInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function up(SessionInterface $session)
     {
         $root = $session->getRootNode();
@@ -30,17 +27,12 @@ class Version201512090753 implements VersionInterface
         $this->upgradeNode($root);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function down(SessionInterface $session)
     {
     }
 
     /**
      * Removes non translated properties.
-     *
-     * @param NodeInterface $node
      */
     private function upgradeNode(NodeInterface $node)
     {

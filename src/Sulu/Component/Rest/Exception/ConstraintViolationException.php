@@ -48,9 +48,6 @@ class ConstraintViolationException extends RestException
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toArray()
     {
         return [

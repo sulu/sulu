@@ -118,8 +118,6 @@ class Collection extends ApiWrapper
      *
      * @VirtualProperty
      * @SerializedName("_embedded")
-     *
-     * @return array
      */
     public function getEmbedded(): array
     {
@@ -303,8 +301,6 @@ class Collection extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("locale")
-     *
-     * @return mixed
      */
     public function getLocale()
     {

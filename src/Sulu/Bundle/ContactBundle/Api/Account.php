@@ -48,7 +48,6 @@ class Account extends ApiWrapper
     private $logo = null;
 
     /**
-     * @param AccountInterface $account
      * @param string $locale The locale of this product
      */
     public function __construct(AccountInterface $account, $locale)
@@ -213,8 +212,6 @@ class Account extends ApiWrapper
     /**
      * Add urls.
      *
-     * @param UrlEntity $url
-     *
      * @return Account
      */
     public function addUrl(UrlEntity $url)
@@ -226,8 +223,6 @@ class Account extends ApiWrapper
 
     /**
      * Remove urls.
-     *
-     * @param UrlEntity $url
      */
     public function removeUrl(UrlEntity $url)
     {
@@ -254,8 +249,6 @@ class Account extends ApiWrapper
     /**
      * Add phones.
      *
-     * @param PhoneEntity $phones
-     *
      * @return Account
      */
     public function addPhone(PhoneEntity $phones)
@@ -267,8 +260,6 @@ class Account extends ApiWrapper
 
     /**
      * Remove phones.
-     *
-     * @param PhoneEntity $phone
      */
     public function removePhone(PhoneEntity $phone)
     {
@@ -295,8 +286,6 @@ class Account extends ApiWrapper
     /**
      * Add emails.
      *
-     * @param EmailEntity $email
-     *
      * @return Account
      */
     public function addEmail(EmailEntity $email)
@@ -308,8 +297,6 @@ class Account extends ApiWrapper
 
     /**
      * Remove emails.
-     *
-     * @param EmailEntity $email
      */
     public function removeEmail(EmailEntity $email)
     {
@@ -351,8 +338,6 @@ class Account extends ApiWrapper
     /**
      * Add notes.
      *
-     * @param NoteEntity $notes
-     *
      * @return Account
      */
     public function addNote(NoteEntity $notes)
@@ -364,8 +349,6 @@ class Account extends ApiWrapper
 
     /**
      * Remove notes.
-     *
-     * @param NoteEntity $note
      */
     public function removeNote(NoteEntity $note)
     {
@@ -411,8 +394,6 @@ class Account extends ApiWrapper
     /**
      * Add faxes.
      *
-     * @param FaxEntity $fax
-     *
      * @return Account
      */
     public function addFax(FaxEntity $fax)
@@ -424,8 +405,6 @@ class Account extends ApiWrapper
 
     /**
      * Remove faxes.
-     *
-     * @param FaxEntity $fax
      */
     public function removeFax(FaxEntity $fax)
     {
@@ -452,8 +431,6 @@ class Account extends ApiWrapper
     /**
      * Add social media profile.
      *
-     * @param SocialMediaProfileEntity $socialMediaProfile
-     *
      * @return Account
      */
     public function addSocialMediaProfile(SocialMediaProfileEntity $socialMediaProfile)
@@ -465,8 +442,6 @@ class Account extends ApiWrapper
 
     /**
      * Remove social media profile.
-     *
-     * @param SocialMediaProfileEntity $socialMediaProfile
      */
     public function removeSocialMediaProfile(SocialMediaProfileEntity $socialMediaProfile)
     {
@@ -574,8 +549,6 @@ class Account extends ApiWrapper
     /**
      * Add bankAccounts.
      *
-     * @param BankAccountEntity $bankAccount
-     *
      * @return Account
      */
     public function addBankAccount(BankAccountEntity $bankAccount)
@@ -587,8 +560,6 @@ class Account extends ApiWrapper
 
     /**
      * Remove bankAccounts.
-     *
-     * @param BankAccountEntity $bankAccount
      */
     public function removeBankAccount(BankAccountEntity $bankAccount)
     {
@@ -619,8 +590,6 @@ class Account extends ApiWrapper
     /**
      * Add tags.
      *
-     * @param TagInterface $tag
-     *
      * @return Account
      */
     public function addTag(TagInterface $tag)
@@ -632,8 +601,6 @@ class Account extends ApiWrapper
 
     /**
      * Remove tags.
-     *
-     * @param TagInterface $tag
      */
     public function removeTag(TagInterface $tag)
     {
@@ -656,8 +623,6 @@ class Account extends ApiWrapper
     /**
      * Add accountContacts.
      *
-     * @param AccountContactEntity $accountContact
-     *
      * @return Account
      */
     public function addAccountContact(AccountContactEntity $accountContact)
@@ -669,8 +634,6 @@ class Account extends ApiWrapper
 
     /**
      * Remove accountContacts.
-     *
-     * @param AccountContactEntity $accountContact
      */
     public function removeAccountContact(AccountContactEntity $accountContact)
     {
@@ -918,8 +881,6 @@ class Account extends ApiWrapper
     /**
      * Add accountAddresses.
      *
-     * @param AccountAddressEntity $accountAddress
-     *
      * @return Account
      */
     public function addAccountAddress(AccountAddressEntity $accountAddress)
@@ -931,8 +892,6 @@ class Account extends ApiWrapper
 
     /**
      * Remove accountAddresses.
-     *
-     * @param AccountAddressEntity $accountAddresses
      */
     public function removeAccountAddress(AccountAddressEntity $accountAddresses)
     {
@@ -985,7 +944,6 @@ class Account extends ApiWrapper
     /**
      * Returns the main address.
      *
-     * @return mixed
      * @VirtualProperty
      * @SerializedName("mainAddress")
      * @Groups({"fullAccount", "partialAccount"})
@@ -1031,8 +989,6 @@ class Account extends ApiWrapper
 
     /**
      * Sets the logo (media-api object).
-     *
-     * @param Media $logo
      */
     public function setLogo(Media $logo)
     {
@@ -1064,8 +1020,6 @@ class Account extends ApiWrapper
     /**
      * Add media.
      *
-     * @param MediaInterface $media
-     *
      * @return Account
      */
     public function addMedia(MediaInterface $media)
@@ -1077,8 +1031,6 @@ class Account extends ApiWrapper
 
     /**
      * Remove medias.
-     *
-     * @param MediaInterface $media
      */
     public function removeMedia(MediaInterface $media)
     {

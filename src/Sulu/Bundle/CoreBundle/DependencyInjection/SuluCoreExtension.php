@@ -35,9 +35,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class SuluCoreExtension extends Extension implements PrependExtensionInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function prepend(ContainerBuilder $container)
     {
         // process the configuration of SuluCoreExtension
@@ -213,9 +210,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
@@ -291,8 +285,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
     /**
      * @param $webspaceConfig
-     * @param ContainerBuilder $container
-     * @param Loader\XmlFileLoader $loader
      */
     private function initWebspace($webspaceConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
@@ -303,7 +295,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
     /**
      * @param $fieldsConfig
-     * @param ContainerBuilder $container
      */
     private function initFields($fieldsConfig, ContainerBuilder $container)
     {
@@ -313,8 +304,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
     /**
      * @param $contentConfig
-     * @param ContainerBuilder $container
-     * @param Loader\XmlFileLoader $loader
      */
     private function initContent($contentConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
@@ -387,9 +376,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
     /**
      * Initializes list builder.
-     *
-     * @param ContainerBuilder $container
-     * @param Loader\XmlFileLoader $loader
      */
     private function initListBuilder(ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {

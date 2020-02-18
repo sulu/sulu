@@ -20,9 +20,6 @@ class NavigationContextSubscriber implements EventSubscriberInterface
 {
     const FIELD = 'navContexts';
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -30,9 +27,6 @@ class NavigationContextSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param MetadataLoadEvent $event
-     */
     public function handleMetadataLoad(MetadataLoadEvent $event)
     {
         $metadata = $event->getMetadata();

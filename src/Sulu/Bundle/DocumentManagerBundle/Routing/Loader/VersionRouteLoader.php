@@ -32,9 +32,6 @@ class VersionRouteLoader extends Loader
         $this->enabled = $enabled;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($resource, $type = null)
     {
         if (!$this->enabled) {
@@ -44,9 +41,6 @@ class VersionRouteLoader extends Loader
         return $this->import($resource, 'rest');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($resource, $type = null)
     {
         return 'versioning_rest' === $type;

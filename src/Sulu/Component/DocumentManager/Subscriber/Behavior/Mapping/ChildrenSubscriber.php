@@ -27,17 +27,11 @@ class ChildrenSubscriber implements EventSubscriberInterface
      */
     private $proxyFactory;
 
-    /**
-     * @param ProxyFactory $proxyFactory
-     */
     public function __construct(ProxyFactory $proxyFactory)
     {
         $this->proxyFactory = $proxyFactory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -45,9 +39,6 @@ class ChildrenSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param HydrateEvent $event
-     */
     public function handleHydrate(HydrateEvent $event)
     {
         $document = $event->getDocument();

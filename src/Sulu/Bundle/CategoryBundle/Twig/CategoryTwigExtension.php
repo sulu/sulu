@@ -56,9 +56,6 @@ class CategoryTwigExtension extends AbstractExtension
         $this->memoizeCache = $memoizeCache;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [

@@ -39,8 +39,6 @@ interface TargetGroupWebspaceInterface
     public function getTargetGroup();
 
     /**
-     * @param TargetGroupInterface $targetGroup
-     *
      * @return $this
      */
     public function setTargetGroup(TargetGroupInterface $targetGroup);

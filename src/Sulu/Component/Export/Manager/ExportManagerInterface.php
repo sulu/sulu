@@ -30,7 +30,6 @@ interface ExportManagerInterface
      * Export data for document by given Content-Type.
      *
      * @param string $contentTypeName
-     * @param mixed $propertyValue
      */
     public function export($contentTypeName, $propertyValue);
 

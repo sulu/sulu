@@ -36,9 +36,6 @@ class DoctrineInExpression extends AbstractDoctrineExpression implements InExpre
 
     /**
      * DoctrineInExpression constructor.
-     *
-     * @param DoctrineFieldDescriptorInterface $field
-     * @param array $values
      */
     public function __construct(DoctrineFieldDescriptorInterface $field, array $values)
     {
@@ -46,9 +43,6 @@ class DoctrineInExpression extends AbstractDoctrineExpression implements InExpre
         $this->field = $field;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStatement(QueryBuilder $queryBuilder)
     {
         $paramName = $this->getFieldName() . $this->getUniqueId();
@@ -72,8 +66,6 @@ class DoctrineInExpression extends AbstractDoctrineExpression implements InExpre
     /**
      * Returns a new array without null values.
      *
-     * @param array $values
-     *
      * @return array
      */
     protected function filterNullValues(array $values)
@@ -88,17 +80,11 @@ class DoctrineInExpression extends AbstractDoctrineExpression implements InExpre
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getValues()
     {
         return $this->values;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFieldName()
     {
         return $this->field->getName();

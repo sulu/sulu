@@ -28,9 +28,6 @@ class DeviceDetectorSubscriber implements EventSubscriberInterface
         $this->deviceDetector = $deviceDetector;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [

@@ -49,9 +49,6 @@ class DoctrineConjunctionExpression extends AbstractDoctrineExpression implement
         $this->conjunction = $conjunction;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStatement(QueryBuilder $queryBuilder)
     {
         $statements = [];
@@ -62,17 +59,11 @@ class DoctrineConjunctionExpression extends AbstractDoctrineExpression implement
         return implode(' ' . $this->conjunction . ' ', $statements);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExpressions()
     {
         return $this->expressions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFieldNames()
     {
         $result = [];

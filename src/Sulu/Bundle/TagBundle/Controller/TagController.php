@@ -128,8 +128,6 @@ class TagController extends AbstractRestController implements ClassResourceInter
     /**
      * returns all tags.
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function cgetAction(Request $request)
@@ -168,8 +166,6 @@ class TagController extends AbstractRestController implements ClassResourceInter
 
     /**
      * Inserts a new tag.
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
@@ -210,7 +206,6 @@ class TagController extends AbstractRestController implements ClassResourceInter
     /**
      * Updates the tag with the given ID.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -274,8 +269,6 @@ class TagController extends AbstractRestController implements ClassResourceInter
     /**
      * POST Route annotation.
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function postMergeAction(Request $request)
@@ -302,8 +295,6 @@ class TagController extends AbstractRestController implements ClassResourceInter
     }
 
     /**
-     * @param Request $request
-     *
      * @return Response
      */
     public function cpatchAction(Request $request)
@@ -337,9 +328,6 @@ class TagController extends AbstractRestController implements ClassResourceInter
         return $this->handleView($view);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         return TagAdmin::SECURITY_CONTEXT;
@@ -347,8 +335,6 @@ class TagController extends AbstractRestController implements ClassResourceInter
 
     /**
      * Get data.
-     *
-     * @param Request $request
      *
      * @return array
      */

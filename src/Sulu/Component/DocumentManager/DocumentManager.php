@@ -26,17 +26,11 @@ class DocumentManager implements DocumentManagerInterface
      */
     private $optionsResolvers = [];
 
-    /**
-     * @param EventDispatcherInterface $eventDispatcher
-     */
     public function __construct(EventDispatcherInterface $eventDispatcher)
     {
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function find($identifier, $locale = null, array $options = [])
     {
         $options = $this->getOptionsResolver(Events::FIND)->resolve($options);
@@ -47,9 +41,6 @@ class DocumentManager implements DocumentManagerInterface
         return $event->getDocument();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function create($alias)
     {
         $event = new Event\CreateEvent($alias);
@@ -58,9 +49,6 @@ class DocumentManager implements DocumentManagerInterface
         return $event->getDocument();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function persist($document, $locale = null, array $options = [])
     {
         $options = $this->getOptionsResolver(Events::PERSIST)->resolve($options);
@@ -69,27 +57,18 @@ class DocumentManager implements DocumentManagerInterface
         $this->eventDispatcher->dispatch($event, Events::PERSIST);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove($document)
     {
         $event = new Event\RemoveEvent($document);
         $this->eventDispatcher->dispatch($event, Events::REMOVE);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function move($document, $destId)
     {
         $event = new Event\MoveEvent($document, $destId);
         $this->eventDispatcher->dispatch($event, Events::MOVE);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function copy($document, $destPath)
     {
         $event = new Event\CopyEvent($document, $destPath);
@@ -98,18 +77,12 @@ class DocumentManager implements DocumentManagerInterface
         return $event->getCopiedPath();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function reorder($document, $destId)
     {
         $event = new Event\ReorderEvent($document, $destId);
         $this->eventDispatcher->dispatch($event, Events::REORDER);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function publish($document, $locale = null, array $options = [])
     {
         $options = $this->getOptionsResolver(Events::PUBLISH)->resolve($options);
@@ -118,27 +91,18 @@ class DocumentManager implements DocumentManagerInterface
         $this->eventDispatcher->dispatch($event, Events::PUBLISH);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function unpublish($document, $locale)
     {
         $event = new Event\UnpublishEvent($document, $locale);
         $this->eventDispatcher->dispatch($event, Events::UNPUBLISH);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeDraft($document, $locale)
     {
         $event = new Event\RemoveDraftEvent($document, $locale);
         $this->eventDispatcher->dispatch($event, Events::REMOVE_DRAFT);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function restore($document, $locale, $version, array $options = [])
     {
         $options = $this->getOptionsResolver(Events::RESTORE)->resolve($options);
@@ -147,36 +111,24 @@ class DocumentManager implements DocumentManagerInterface
         $this->eventDispatcher->dispatch($event, Events::RESTORE);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function refresh($document)
     {
         $event = new Event\RefreshEvent($document);
         $this->eventDispatcher->dispatch($event, Events::REFRESH);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function flush()
     {
         $event = new Event\FlushEvent();
         $this->eventDispatcher->dispatch($event, Events::FLUSH);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function clear()
     {
         $event = new Event\ClearEvent();
         $this->eventDispatcher->dispatch($event, Events::CLEAR);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createQuery($query, $locale = null, array $options = [])
     {
         $event = new Event\QueryCreateEvent($query, $locale, $options);
@@ -185,9 +137,6 @@ class DocumentManager implements DocumentManagerInterface
         return $event->getQuery();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     private function getOptionsResolver($eventName)
     {
         if (isset($this->optionsResolvers[$eventName])) {

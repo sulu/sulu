@@ -54,9 +54,6 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
         $this->registry = $registry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -110,8 +107,6 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
      * Update the locale to the shadow locale, if it is enabled.
      *
      * Note that this should happen before the fallback locale has been resolved
-     *
-     * @param AbstractMappingEvent $event
      */
     public function handleHydrate(AbstractMappingEvent $event)
     {
@@ -136,9 +131,6 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
         $document->setLocale($shadowLocale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function saveShadowProperties(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
@@ -170,8 +162,6 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
      * If this is a shadow document, update the URL to that of the shadowed document.
      *
      * TODO: This is about caching and should be handled somewhere else.
-     *
-     * @param PersistEvent $event
      */
     public function handlePersistUpdateUrl(PersistEvent $event)
     {

@@ -42,9 +42,6 @@ class MetaTwigExtension extends AbstractExtension
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [

@@ -124,9 +124,6 @@ class WebspaceCollectionBuilder
         return $collection;
     }
 
-    /**
-     * @param Webspace $webspace
-     */
     private function buildPortals(Webspace $webspace)
     {
         foreach ($webspace->getPortals() as $portal) {
@@ -183,12 +180,8 @@ class WebspaceCollectionBuilder
     }
 
     /**
-     * @param Webspace $webspace
-     * @param Environment $environment
-     * @param Portal $portal
      * @param string $urlAddress
      * @param string $urlRedirect
-     * @param Url $url
      */
     private function buildUrlRedirect(
         Webspace $webspace,
@@ -213,13 +206,9 @@ class WebspaceCollectionBuilder
     }
 
     /**
-     * @param Portal $portal
-     * @param Environment $environment
      * @param Segment[] $segments
      * @param string[] $replacers
      * @param string $urlAddress
-     * @param Localization $localization
-     * @param Url $url
      */
     private function buildUrlFullMatch(
         Portal $portal,
@@ -265,10 +254,7 @@ class WebspaceCollectionBuilder
     }
 
     /**
-     * @param Portal $portal
-     * @param Environment $environment
      * @param string $urlAddress
-     * @param Url $url
      */
     private function buildUrlPartialMatch(
         Portal $portal,
@@ -313,9 +299,6 @@ class WebspaceCollectionBuilder
     /**
      * Builds the URLs for the portal, which are not a redirect.
      *
-     * @param Portal $portal
-     * @param Environment $environment
-     * @param Url $url
      * @param Segment[] $segments
      * @param string $urlAddress
      */
@@ -373,7 +356,6 @@ class WebspaceCollectionBuilder
 
     /**
      * @param string $urlResult
-     * @param Environment $environment
      *
      * @return bool
      */

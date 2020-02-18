@@ -33,7 +33,6 @@ class BasePathSubscriber implements EventSubscriberInterface
     private $basePath;
 
     /**
-     * @param NodeManager $nodeManager
      * @param string $basePath
      */
     public function __construct(
@@ -44,9 +43,6 @@ class BasePathSubscriber implements EventSubscriberInterface
         $this->basePath = $basePath;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [

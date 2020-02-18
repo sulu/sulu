@@ -381,7 +381,6 @@ class UserManager implements UserManagerInterface
     /**
      * Process all user roles from request.
      *
-     * @param UserInterface $user
      * @param array $userRoles
      *
      * @return bool True if the processing was successful, otherwise false
@@ -425,7 +424,6 @@ class UserManager implements UserManagerInterface
     /**
      * Process all user groups from request.
      *
-     * @param UserInterface $user
      * @param $userGroups
      *
      * @return bool True if the processing was successful, otherwise false
@@ -469,7 +467,6 @@ class UserManager implements UserManagerInterface
     /**
      * Updates an existing UserRole with the given data.
      *
-     * @param UserRole $userRole
      * @param $userRoleData
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
@@ -497,7 +494,6 @@ class UserManager implements UserManagerInterface
     /**
      * Adds a new UserRole to the given user.
      *
-     * @param UserInterface $user
      * @param $userRoleData
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
@@ -538,7 +534,6 @@ class UserManager implements UserManagerInterface
     /**
      * Adds a new UserGroup to the given user.
      *
-     * @param UserInterface $user
      * @param $userGroupData
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
@@ -567,7 +562,6 @@ class UserManager implements UserManagerInterface
     /**
      * Updates an existing UserGroup with the given data.
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroup
      * @param $userGroupData
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
@@ -625,7 +619,6 @@ class UserManager implements UserManagerInterface
     /**
      * Encodes the given password, for the given passwort, with he given salt and returns the result.
      *
-     * @param UserInterface $user
      * @param string $password
      * @param string $salt
      *
@@ -665,7 +658,6 @@ class UserManager implements UserManagerInterface
     /**
      * Processes the email and adds it to the user.
      *
-     * @param UserInterface $user
      * @param string $email
      * @param null|array $contact
      *
@@ -729,10 +721,6 @@ class UserManager implements UserManagerInterface
      * this is just a hack to avoid relations that start with index != 0
      * otherwise deserialization process will parse relations as object instead of an array
      * reindex entities.
-     *
-     * @param mixed $entities
-     *
-     * @return mixed
      */
     private function resetIndexOfSubentites($entities)
     {

@@ -49,9 +49,6 @@ class TimestampSubscriber implements EventSubscriberInterface
         $this->documentInspector = $documentInspector;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -64,8 +61,6 @@ class TimestampSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the timestamps from the node to the document.
-     *
-     * @param HydrateEvent $event
      */
     public function setTimestampsOnDocument(HydrateEvent $event)
     {
@@ -98,8 +93,6 @@ class TimestampSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the timestamps on the nodes for the persist operation.
-     *
-     * @param PersistEvent $event
      */
     public function setTimestampsOnNodeForPersist(PersistEvent $event)
     {
@@ -137,9 +130,6 @@ class TimestampSubscriber implements EventSubscriberInterface
     /**
      * Set the timestamps on the node.
      *
-     * @param LocalizedTimestampBehavior $document
-     * @param NodeInterface $node
-     * @param DocumentAccessor $accessor
      * @param string $locale
      * @param \DateTime|null $timestamp The timestamp to set, will use the documents timestamps if null is provided
      */
@@ -170,8 +160,6 @@ class TimestampSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the changed timestamp when restoring a document.
-     *
-     * @param RestoreEvent $event
      */
     public function setChangedForRestore(RestoreEvent $event)
     {

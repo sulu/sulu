@@ -18,9 +18,6 @@ use Imagine\Image\ImageInterface;
  */
 class BlurTransformation implements TransformationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function execute(ImageInterface $image, $parameters)
     {
         if (!isset($parameters['sigma'])) {

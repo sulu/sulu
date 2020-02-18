@@ -29,8 +29,6 @@ interface NavigationContextBehavior
     /**
      * Set the navigation contexts. The array should contain a list of keys.
      * (eg. to add it to the default main menu: ['main']).
-     *
-     * @param array $navigationContexts
      */
     public function setNavigationContexts(array $navigationContexts = []);
 }

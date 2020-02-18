@@ -27,9 +27,6 @@ class SinglePageSelection extends SimpleContentType implements PreResolvableCont
      */
     private $referenceStore;
 
-    /**
-     * @param ReferenceStoreInterface $referenceStore
-     */
     public function __construct(ReferenceStoreInterface $referenceStore)
     {
         parent::__construct('SinglePageSelection', '');
@@ -37,9 +34,6 @@ class SinglePageSelection extends SimpleContentType implements PreResolvableCont
         $this->referenceStore = $referenceStore;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -57,9 +51,6 @@ class SinglePageSelection extends SimpleContentType implements PreResolvableCont
         parent::write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $value = $this->defaultValue;
@@ -77,9 +68,6 @@ class SinglePageSelection extends SimpleContentType implements PreResolvableCont
         return $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function preResolve(PropertyInterface $property)
     {
         $uuid = $property->getValue();

@@ -19,7 +19,6 @@ interface TokenProviderInterface
     /**
      * Returns resolved token for entity.
      *
-     * @param mixed $entity
      * @param string $name
      *
      * @return string

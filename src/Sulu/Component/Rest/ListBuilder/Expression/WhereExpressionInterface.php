@@ -16,13 +16,7 @@ namespace Sulu\Component\Rest\ListBuilder\Expression;
  */
 interface WhereExpressionInterface extends BasicExpressionInterface
 {
-    /**
-     * @return mixed
-     */
     public function getValue();
 
-    /**
-     * @return mixed
-     */
     public function getComparator();
 }

@@ -29,18 +29,12 @@ class SymfonyExpressionTokenProvider implements TokenProviderInterface
      */
     private $expressionLanguage;
 
-    /**
-     * @param TranslatorInterface $translator
-     */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
         $this->expressionLanguage = new ExpressionLanguage();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function provide($entity, $name)
     {
         try {

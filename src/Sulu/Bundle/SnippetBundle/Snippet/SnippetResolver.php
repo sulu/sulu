@@ -42,9 +42,6 @@ class SnippetResolver implements SnippetResolverInterface
         $this->structureResolver = $structureResolver;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolve($uuids, $webspaceKey, $locale, $shadowLocale = null, $loadExcerpt = false)
     {
         $snippets = [];

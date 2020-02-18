@@ -23,9 +23,6 @@ class InvalidCustomUrlException extends WebspaceException
      */
     private $customUrl;
 
-    /**
-     * @param Webspace $webspace
-     */
     public function __construct(Webspace $webspace, $customUrl)
     {
         parent::__construct(

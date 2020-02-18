@@ -21,9 +21,6 @@ class SuluContactBundle extends Bundle
 {
     use PersistenceBundleTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     public function build(ContainerBuilder $container)
     {
         parent::build($container);

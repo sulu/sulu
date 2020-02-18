@@ -37,9 +37,6 @@ class SecurityChecker extends AbstractSecurityChecker
         $this->authorizationChecker = $authorizationChecker;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasPermission($subject, $permission)
     {
         if (!$subject || !$this->tokenStorage->getToken()) {

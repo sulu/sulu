@@ -411,8 +411,6 @@ class PageController extends AbstractRestController implements ClassResourceInte
     /**
      * returns language code from request.
      *
-     * @param Request $request
-     *
      * @return string
      */
     public function getLocale(Request $request)

@@ -22,9 +22,6 @@ use Imagine\Image\Point;
  */
 class CropTransformation implements TransformationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function execute(ImageInterface $image, $parameters)
     {
         @trigger_error(

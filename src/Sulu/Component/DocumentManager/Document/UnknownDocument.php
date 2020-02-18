@@ -29,17 +29,11 @@ class UnknownDocument implements NodeNameBehavior, UuidBehavior
      */
     private $uuid;
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNodeName()
     {
         return $this->nodeName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUuid()
     {
         return $this->uuid;

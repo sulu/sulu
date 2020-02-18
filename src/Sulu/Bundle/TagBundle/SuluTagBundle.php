@@ -23,9 +23,6 @@ class SuluTagBundle extends Bundle
 {
     use PersistenceBundleTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     public function build(ContainerBuilder $container)
     {
         $this->buildPersistence(

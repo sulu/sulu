@@ -73,8 +73,6 @@ class AccountAddress
     /**
      * Set address.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Address $address
-     *
      * @return AccountAddress
      */
     public function setAddress(\Sulu\Bundle\ContactBundle\Entity\Address $address)
@@ -96,8 +94,6 @@ class AccountAddress
 
     /**
      * Set account.
-     *
-     * @param AccountInterface $account
      *
      * @return AccountAddress
      */

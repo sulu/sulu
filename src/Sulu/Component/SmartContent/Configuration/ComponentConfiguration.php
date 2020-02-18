@@ -32,9 +32,6 @@ class ComponentConfiguration implements ComponentConfigurationInterface
         $this->componentOptions = $componentOptions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->component;
@@ -48,9 +45,6 @@ class ComponentConfiguration implements ComponentConfigurationInterface
         $this->component = $component;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getOptions()
     {
         return $this->componentOptions;
@@ -64,9 +58,6 @@ class ComponentConfiguration implements ComponentConfigurationInterface
         $this->componentOptions = $componentOptions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function jsonSerialize()
     {
         return [

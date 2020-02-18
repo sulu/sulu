@@ -16,17 +16,11 @@ namespace Sulu\Component\PHPCR\NodeTypes\Content;
  */
 class HomeNodeType extends ContentNodeType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'sulu:home';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDeclaredSupertypeNames()
     {
         return [

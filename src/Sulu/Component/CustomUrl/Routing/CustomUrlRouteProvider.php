@@ -48,9 +48,6 @@ class CustomUrlRouteProvider implements RouteProviderInterface
         $this->environment = $environment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRouteCollectionForRequest(Request $request)
     {
         $collection = new RouteCollection();
@@ -102,17 +99,11 @@ class CustomUrlRouteProvider implements RouteProviderInterface
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRouteByName($name)
     {
         // TODO: Implement getRouteByName() method.
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoutesByNames($names)
     {
         return [];
@@ -121,9 +112,6 @@ class CustomUrlRouteProvider implements RouteProviderInterface
     /**
      * Add redirect to current custom-url.
      *
-     * @param Request $request
-     * @param RouteDocument $routeDocument
-     * @param RouteCollection $collection
      * @param string $webspaceKey
      *
      * @return RouteCollection

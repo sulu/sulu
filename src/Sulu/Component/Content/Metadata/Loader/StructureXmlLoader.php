@@ -115,9 +115,6 @@ class StructureXmlLoader extends AbstractLoader
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($resource, $type = null)
     {
         if (null === $type) {
@@ -287,7 +284,6 @@ class StructureXmlLoader extends AbstractLoader
      * Load cache lifetime metadata.
      *
      * @param string $path
-     * @param \DOMXPath $xpath
      *
      * @return array
      */

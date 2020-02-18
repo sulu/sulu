@@ -96,8 +96,6 @@ class SocialMediaProfileType implements \JsonSerializable
     }
 
     /**
-     * @param SocialMediaProfile $socialMediaProfile
-     *
      * @return SocialMediaProfileType
      */
     public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile)
@@ -107,9 +105,6 @@ class SocialMediaProfileType implements \JsonSerializable
         return $this;
     }
 
-    /**
-     * @param SocialMediaProfile $socialMediaProfile
-     */
     public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile)
     {
         $this->socialMediaProfiles->removeElement($socialMediaProfile);

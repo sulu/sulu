@@ -66,11 +66,6 @@ class StructureSubscriber implements EventSubscriberInterface
     private $defaultTypes;
 
     /**
-     * @param PropertyEncoder $encoder
-     * @param ContentTypeManagerInterface $contentTypeManager
-     * @param DocumentInspector $inspector
-     * @param LegacyPropertyFactory $legacyPropertyFactory
-     * @param WebspaceManagerInterface $webspaceManager
      * @param array $defaultTypes
      */
     public function __construct(
@@ -89,9 +84,6 @@ class StructureSubscriber implements EventSubscriberInterface
         $this->defaultTypes = $defaultTypes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -110,9 +102,6 @@ class StructureSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param ConfigureOptionsEvent $event
-     */
     public function configureOptions(ConfigureOptionsEvent $event)
     {
         $options = $event->getOptions();
@@ -132,8 +121,6 @@ class StructureSubscriber implements EventSubscriberInterface
     /**
      * Set the structure type early so that subsequent subscribers operate
      * upon the correct structure type.
-     *
-     * @param PersistEvent $event
      */
     public function handlePersistStructureType(PersistEvent $event)
     {
@@ -153,8 +140,6 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Commit the properties, which are only staged on the structure yet.
-     *
-     * @param PersistEvent $event
      */
     public function handlePersistStagedProperties(PersistEvent $event)
     {
@@ -167,9 +152,6 @@ class StructureSubscriber implements EventSubscriberInterface
         $document->getStructure()->commitStagedData($event->getOption('clear_missing_content'));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function handleHydrate(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
@@ -198,9 +180,6 @@ class StructureSubscriber implements EventSubscriberInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function saveStructureData(AbstractMappingEvent $event)
     {
         // Set the structure type
@@ -231,8 +210,6 @@ class StructureSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param AbstractMappingEvent $event
-     * @param StructureBehavior $document
      * @param bool $rehydrate
      *
      * @return string
@@ -257,8 +234,6 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Return the default structure for the given StructureBehavior implementing document.
-     *
-     * @param StructureBehavior $document
      *
      * @return string
      */
@@ -306,8 +281,6 @@ class StructureSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param mixed $document
-     *
      * @return ManagedStructure
      */
     private function createStructure($document)
@@ -323,8 +296,6 @@ class StructureSubscriber implements EventSubscriberInterface
     /**
      * Map to the content properties to the node using the content types.
      *
-     * @param mixed $document
-     * @param NodeInterface $node
      * @param string $locale
      * @param bool $ignoreRequired
      *

@@ -62,8 +62,6 @@ class WebsiteSearchController
     /**
      * Returns the search results for the given query.
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function queryAction(Request $request)
