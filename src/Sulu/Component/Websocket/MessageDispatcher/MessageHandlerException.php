@@ -18,8 +18,6 @@ class MessageHandlerException extends \Exception
 {
     /**
      * MessageHandlerException constructor.
-     *
-     * @param \Exception $previous
      */
     public function __construct(\Exception $previous)
     {

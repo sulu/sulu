@@ -22,7 +22,6 @@ interface ChainRouteGeneratorInterface
     /**
      * Using configuration for entity to generate a route.
      *
-     * @param RoutableInterface $entity
      * @param string $path
      *
      * @return RouteInterface

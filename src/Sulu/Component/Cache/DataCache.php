@@ -32,9 +32,6 @@ class DataCache implements CacheInterface
         $this->file = $file;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read()
     {
         if (!is_file($this->file)) {
@@ -44,9 +41,6 @@ class DataCache implements CacheInterface
         return unserialize(file_get_contents($this->file));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write($data)
     {
         $mode = 0666;
@@ -61,18 +55,12 @@ class DataCache implements CacheInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function invalidate()
     {
         $filesystem = new Filesystem();
         $filesystem->remove($this->file);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isFresh()
     {
         return is_file($this->file);

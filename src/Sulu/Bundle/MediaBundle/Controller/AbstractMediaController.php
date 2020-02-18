@@ -43,7 +43,6 @@ class AbstractMediaController extends RestController
     }
 
     /**
-     * @param Request $request
      * @param bool $fallback
      *
      * @return array
@@ -80,7 +79,6 @@ class AbstractMediaController extends RestController
     }
 
     /**
-     * @param Request $request
      * @param $name
      *
      * @return UploadedFile

@@ -33,10 +33,6 @@ class StructureResolver implements StructureResolverInterface
      */
     protected $extensionManager;
 
-    /**
-     * @param ContentTypeManagerInterface $contentTypeManager
-     * @param ExtensionManagerInterface $structureManager
-     */
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,
         ExtensionManagerInterface $structureManager
@@ -45,9 +41,6 @@ class StructureResolver implements StructureResolverInterface
         $this->extensionManager = $structureManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolve(StructureInterface $structure)
     {
         $data = [

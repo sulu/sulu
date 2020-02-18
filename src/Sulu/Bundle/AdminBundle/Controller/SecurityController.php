@@ -24,8 +24,6 @@ class SecurityController extends Controller
     /**
      * Renders the login template.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function loginAction(Request $request)

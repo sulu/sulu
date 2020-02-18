@@ -32,9 +32,6 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
         'canonicalUrl',
     ];
 
-    /**
-     * {@inheritdoc}
-     */
     protected $properties = [
         'title',
         'description',
@@ -45,19 +42,10 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
         'hideInSitemap',
     ];
 
-    /**
-     * {@inheritdoc}
-     */
     protected $name = self::SEO_EXTENSION_NAME;
 
-    /**
-     * {@inheritdoc}
-     */
     protected $additionalPrefix = 'seo';
 
-    /**
-     * {@inheritdoc}
-     */
     public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
     {
         $this->saveProperty($node, $data, 'title');
@@ -69,9 +57,6 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
         $this->saveProperty($node, $data, 'hideInSitemap', false);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(NodeInterface $node, $webspaceKey, $languageCode)
     {
         return [
@@ -85,9 +70,6 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function export($properties, $format = null)
     {
         $data = [];
@@ -134,17 +116,11 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getImportPropertyNames()
     {
         return $this->properties;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function import(NodeInterface $node, $data, $webspaceKey, $languageCode, $format)
     {
         $this->setLanguageCode($languageCode, 'i18n', null);
@@ -156,9 +132,6 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
         $this->save($node, $data, $webspaceKey, $languageCode);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function convertCheckboxData(&$data, $key, $default = false)
     {
         if ('0' === $data[$key]) {

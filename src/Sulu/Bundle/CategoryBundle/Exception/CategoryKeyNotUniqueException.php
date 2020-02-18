@@ -23,8 +23,6 @@ class CategoryKeyNotUniqueException extends \Exception
 
     /**
      * CategoryNotFoundException constructor.
-     *
-     * @param mixed $categoryKey
      */
     public function __construct($categoryKey)
     {

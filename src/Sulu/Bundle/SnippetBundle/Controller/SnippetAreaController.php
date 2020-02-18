@@ -34,8 +34,6 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
     /**
      * Get snippet areas.
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function cgetAction(Request $request)
@@ -93,7 +91,6 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
     /**
      * Put default action.
      *
-     * @param Request $request
      * @param string $key
      *
      * @return JsonResponse
@@ -133,7 +130,6 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
     /**
      * Delete default action.
      *
-     * @param Request $request
      * @param string $key
      *
      * @return JsonResponse

@@ -61,9 +61,6 @@ class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
         $this->case2 = $case2;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSelect()
     {
         return sprintf(
@@ -74,9 +71,6 @@ class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSearch()
     {
         return sprintf(
@@ -87,9 +81,6 @@ class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getJoins()
     {
         return array_merge($this->case1->getJoins(), $this->case2->getJoins());

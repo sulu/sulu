@@ -32,8 +32,6 @@ class ListRestHelper implements ListRestHelperInterface
     /**
      * The constructor takes the request stack as an argument, which
      * is injected by the service container.
-     *
-     * @param RequestStack $requestStack
      */
     public function __construct(RequestStack $requestStack)
     {
@@ -101,8 +99,6 @@ class ListRestHelper implements ListRestHelperInterface
 
     /**
      * returns the current page.
-     *
-     * @return mixed
      */
     public function getPage()
     {
@@ -124,8 +120,6 @@ class ListRestHelper implements ListRestHelperInterface
 
     /**
      * Returns the pattern of the search.
-     *
-     * @return mixed
      */
     public function getSearchPattern()
     {

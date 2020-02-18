@@ -29,9 +29,6 @@ class TagRegistry implements TagRegistryInterface
         $this->tags = $tags;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTag($name, $type, $namespace = 'sulu')
     {
         if (!array_key_exists($type, $this->tags)

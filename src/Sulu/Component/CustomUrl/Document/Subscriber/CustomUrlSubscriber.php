@@ -73,9 +73,6 @@ class CustomUrlSubscriber implements EventSubscriberInterface
         $this->webspaceManager = $webspaceManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -87,8 +84,6 @@ class CustomUrlSubscriber implements EventSubscriberInterface
 
     /**
      * Creates routes for persisted custom-url.
-     *
-     * @param PersistEvent $event
      */
     public function handlePersist(PersistEvent $event)
     {
@@ -139,8 +134,6 @@ class CustomUrlSubscriber implements EventSubscriberInterface
      * Create route-document for given domain.
      *
      * @param string $domain
-     * @param CustomUrlBehavior $document
-     * @param Localization $locale
      * @param string $persistedLocale
      * @param string $routesPath
      *
@@ -179,7 +172,6 @@ class CustomUrlSubscriber implements EventSubscriberInterface
      *
      * @param string $path
      * @param string $locale
-     * @param CustomUrlBehavior $document
      * @param string $route
      *
      * @return RouteDocument
@@ -206,8 +198,6 @@ class CustomUrlSubscriber implements EventSubscriberInterface
 
     /**
      * Set routes to custom-url.
-     *
-     * @param HydrateEvent $event
      */
     public function handleHydrate(HydrateEvent $event)
     {
@@ -222,8 +212,6 @@ class CustomUrlSubscriber implements EventSubscriberInterface
 
     /**
      * Removes the routes for the given document.
-     *
-     * @param RemoveEvent $event
      */
     public function handleRemove(RemoveEvent $event)
     {

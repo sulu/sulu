@@ -25,9 +25,6 @@ class PreviewKernel extends \WebsiteKernel
      */
     private $projectDir;
 
-    /**
-     * {@inheritdoc}
-     */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         parent::registerContainerConfiguration($loader);
@@ -41,9 +38,6 @@ class PreviewKernel extends \WebsiteKernel
         $loader->load(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'Resources', 'config', 'config_preview.yml']));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRootDir()
     {
         if (null === $this->rootDir) {
@@ -54,9 +48,6 @@ class PreviewKernel extends \WebsiteKernel
         return $this->rootDir;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getProjectDir()
     {
         if (null === $this->projectDir) {
@@ -74,9 +65,6 @@ class PreviewKernel extends \WebsiteKernel
         return $this->projectDir;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLogDir()
     {
         $context = $this->getContext();
@@ -89,9 +77,6 @@ class PreviewKernel extends \WebsiteKernel
         return $logDirectory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCacheDir()
     {
         $context = $this->getContext();

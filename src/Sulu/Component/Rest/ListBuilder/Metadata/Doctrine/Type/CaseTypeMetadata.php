@@ -47,8 +47,6 @@ class CaseTypeMetadata
 
     /**
      * Add a case.
-     *
-     * @param FieldMetadata $case
      */
     public function addCase(FieldMetadata $case)
     {

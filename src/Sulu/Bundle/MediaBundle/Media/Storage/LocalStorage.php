@@ -54,9 +54,6 @@ class LocalStorage implements StorageInterface
         $this->logger = $logger ?: new NullLogger();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save($tempPath, $fileName, $version, $storageOption = null)
     {
         $this->storageOption = new stdClass();
@@ -90,9 +87,6 @@ class LocalStorage implements StorageInterface
         return json_encode($this->storageOption);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($fileName, $version, $storageOption)
     {
         $this->storageOption = json_decode($storageOption);
@@ -107,9 +101,6 @@ class LocalStorage implements StorageInterface
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadAsString($fileName, $version, $storageOption)
     {
         $path = $this->load($fileName, $version, $storageOption);
@@ -121,9 +112,6 @@ class LocalStorage implements StorageInterface
         return file_get_contents($path);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove($storageOption)
     {
         $this->storageOption = json_decode($storageOption);
@@ -201,8 +189,6 @@ class LocalStorage implements StorageInterface
 
     /**
      * @param $key
-     *
-     * @return mixed
      */
     private function getStorageOption($key)
     {

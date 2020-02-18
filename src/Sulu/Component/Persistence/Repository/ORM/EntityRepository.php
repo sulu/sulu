@@ -19,9 +19,6 @@ use Sulu\Component\Persistence\Repository\RepositoryInterface;
  */
 class EntityRepository extends BaseEntityRepository implements RepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function createNew()
     {
         $className = $this->getClassName();

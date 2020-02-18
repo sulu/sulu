@@ -91,11 +91,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
     private $visitorSessionCookie;
 
     /**
-     * @param \Twig_Environment $twig
      * @param bool $preview
-     * @param TargetGroupStoreInterface $targetGroupStore
-     * @param TargetGroupEvaluatorInterface $targetGroupEvaluator
-     * @param TargetGroupRepositoryInterface $targetGroupRepository
      * @param string $targetGroupUrl
      * @param string $targetGroupHitUrl
      * @param string $urlHeader
@@ -135,9 +131,6 @@ class TargetGroupSubscriber implements EventSubscriberInterface
         $this->visitorSessionCookie = $visitorSessionCookie;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -155,8 +148,6 @@ class TargetGroupSubscriber implements EventSubscriberInterface
     /**
      * Evaluates the cookie holding the target group information. This has only an effect if there is no cache used,
      * since in that case the cache already did it.
-     *
-     * @param GetResponseEvent $event
      */
     public function setTargetGroup(GetResponseEvent $event)
     {
@@ -195,8 +186,6 @@ class TargetGroupSubscriber implements EventSubscriberInterface
 
     /**
      * Adds the vary header on the response, so that the cache takes the target group into account.
-     *
-     * @param FilterResponseEvent $event
      */
     public function addVaryHeader(FilterResponseEvent $event)
     {
@@ -211,8 +200,6 @@ class TargetGroupSubscriber implements EventSubscriberInterface
     /**
      * Adds the SetCookie header for the target group, if the user context has changed. In addition to that a second
      * cookie without a lifetime is set, whose expiration marks a new session.
-     *
-     * @param FilterResponseEvent $event
      */
     public function addSetCookieHeader(FilterResponseEvent $event)
     {
@@ -242,8 +229,6 @@ class TargetGroupSubscriber implements EventSubscriberInterface
 
     /**
      * Adds a script for triggering an ajax request, which updates the target group on every hit.
-     *
-     * @param FilterResponseEvent $event
      */
     public function addTargetGroupHitScript(FilterResponseEvent $event)
     {

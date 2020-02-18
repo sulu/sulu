@@ -47,7 +47,6 @@ interface XmlSitemapDumperInterface
     /**
      * Dump sitemaps for given portal-information.
      *
-     * @param PortalInformation $portalInformation
      * @param string $scheme
      *
      * @throws \InvalidArgumentException

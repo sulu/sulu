@@ -366,9 +366,6 @@ class Localization implements \JsonSerializable, ArrayableInterface
         return $this->getLocale();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function jsonSerialize()
     {
         return [
@@ -377,9 +374,6 @@ class Localization implements \JsonSerializable, ArrayableInterface
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toArray($depth = null)
     {
         $res = [];

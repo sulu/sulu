@@ -33,7 +33,6 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
      * @Post("media/{id}/preview")
      *
      * @param int $id
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
@@ -86,7 +85,6 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
      * @Delete("media/{id}/preview")
      *
      * @param $id
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

@@ -50,9 +50,6 @@ class DefaultSnippetTwigExtension extends \Twig_Extension
         $this->snippetResolver = $snippetResolver;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [
@@ -81,9 +78,6 @@ class DefaultSnippetTwigExtension extends \Twig_Extension
         return $this->snippetResolver->resolve($ids, $webspaceKey, $locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'sulu_snippet.default';

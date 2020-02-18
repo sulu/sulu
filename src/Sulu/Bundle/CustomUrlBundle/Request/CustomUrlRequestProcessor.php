@@ -59,9 +59,6 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
         $this->environment = $environment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
         $url = $this->decodeUrl(rtrim(sprintf('%s%s', $request->getHost(), $request->getRequestUri()), '/'));
@@ -95,9 +92,6 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
         return new RequestAttributes();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validate(RequestAttributes $attributes)
     {
         return true;
@@ -107,8 +101,6 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
      * Matches given url to portal-information.
      *
      * @param string $url
-     * @param PortalInformation $portalInformation
-     * @param Request $request
      *
      * @return array
      */

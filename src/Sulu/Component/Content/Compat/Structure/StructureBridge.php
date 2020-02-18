@@ -65,9 +65,6 @@ class StructureBridge implements StructureInterface
     protected $locale;
 
     /**
-     * @param StructureMetadata $structure
-     * @param DocumentInspector $inspector
-     * @param LegacyPropertyFactory $propertyFactory
      * @param object $document
      */
     public function __construct(
@@ -82,25 +79,16 @@ class StructureBridge implements StructureInterface
         $this->document = $document;
     }
 
-    /**
-     * @param StructureBehavior $document
-     */
     public function setDocument(StructureBehavior $document)
     {
         $this->document = $document;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setLanguageCode($locale)
     {
         $this->locale = $locale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLanguageCode()
     {
         if (!$this->document) {
@@ -110,17 +98,11 @@ class StructureBridge implements StructureInterface
         return $this->inspector->getLocale($this->getDocument());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setWebspaceKey($webspace)
     {
         $this->readOnlyException(__METHOD__);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getWebspaceKey()
     {
         if (!$this->document) {
@@ -130,105 +112,66 @@ class StructureBridge implements StructureInterface
         return $this->inspector->getWebspace($this->getDocument());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUuid()
     {
         return $this->getDocument()->getUuid();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setUuid($uuid)
     {
         $this->readOnlyException(__METHOD__);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreator()
     {
         return $this->getDocument()->getCreator();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setCreator($userId)
     {
         $this->readOnlyException(__METHOD__);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChanger()
     {
         return $this->getDocument()->getChanger();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setChanger($userId)
     {
         $this->readOnlyException(__METHOD__);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreated()
     {
         return $this->getDocument()->getCreated();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setCreated(\DateTime $created)
     {
         $this->readOnlyException(__METHOD__);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChanged()
     {
         return $this->getDocument()->getChanged();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setChanged(\DateTime $changed)
     {
         $this->readOnlyException(__METHOD__);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getKey()
     {
         return $this->structure->getName();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getInternal()
     {
         return $this->structure->isInternal();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getProperty($name)
     {
         if ($this->hasProperty($name)) {
@@ -240,17 +183,11 @@ class StructureBridge implements StructureInterface
         return $this->createLegacyPropertyFromItem($property);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasProperty($name)
     {
         return $this->structure->hasProperty($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getProperties($flatten = false)
     {
         if ($flatten) {
@@ -267,33 +204,21 @@ class StructureBridge implements StructureInterface
         return $propertyBridges;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setHasChildren($hasChildren)
     {
         $this->readOnlyException(__METHOD__);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getHasChildren()
     {
         return $this->inspector->hasChildren($this->getDocument());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setChildren($children)
     {
         $this->readOnlyException(__METHOD__);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChildren()
     {
         $children = [];
@@ -313,57 +238,36 @@ class StructureBridge implements StructureInterface
         return $this->documentToStructure($this->inspector->getParent($this->getDocument()));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPublishedState()
     {
         return WorkflowStage::PUBLISHED === $this->getWorkflowDocument(__METHOD__)->getWorkflowStage();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setPublished($published)
     {
         $this->readOnlyException(__METHOD__);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPublished()
     {
         return $this->getWorkflowDocument(__METHOD__)->getPublished();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPropertyValue($name)
     {
         return $this->getProperty($name)->getValue();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPropertyNames()
     {
         return array_keys($this->structure->children);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setType($type)
     {
         $this->readOnlyException(__METHOD__);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType()
     {
         $document = $this->getDocument();
@@ -378,41 +282,26 @@ class StructureBridge implements StructureInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPath()
     {
         return $this->inspector->getContentPath($this->getDocument());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setPath($path)
     {
         $this->readOnlyException(__METHOD__);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setHasTranslation($hasTranslation)
     {
         $this->readOnlyException(__METHOD__);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getHasTranslation()
     {
         return $this->getTitle() ? true : false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toArray($complete = true)
     {
         $document = $this->getDocument();
@@ -500,24 +389,15 @@ class StructureBridge implements StructureInterface
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function jsonSerialize()
     {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPropertyByTagName($tagName, $highest = true)
     {
         return $this->createLegacyPropertyFromItem($this->structure->getPropertyByTagName($tagName, $highest));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPropertiesByTagName($tagName)
     {
         $properties = [];
@@ -528,25 +408,16 @@ class StructureBridge implements StructureInterface
         return $properties;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPropertyValueByTagName($tagName)
     {
         return $this->getPropertyByTagName($tagName)->getValue();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasTag($tag)
     {
         return $this->structure->hasPropertyWithTagName($tag);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNodeType()
     {
         if ($this->getDocument() instanceof RedirectTypeBehavior) {
@@ -556,9 +427,6 @@ class StructureBridge implements StructureInterface
         return RedirectType::NONE;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNodeName()
     {
         if ($this->document instanceof RedirectTypeBehavior &&
@@ -571,17 +439,11 @@ class StructureBridge implements StructureInterface
         return $this->getDocument()->getTitle();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocalizedTitle($languageCode)
     {
         return $this->structure->getTitle($languageCode);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNodeState()
     {
         $document = $this->getDocument();
@@ -603,9 +465,6 @@ class StructureBridge implements StructureInterface
         return $this->getDocument()->getResourceSegment();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function copyFrom(StructureInterface $structure)
     {
         foreach ($this->getProperties(true) as $property) {

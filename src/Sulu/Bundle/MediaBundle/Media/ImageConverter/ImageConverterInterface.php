@@ -24,7 +24,6 @@ interface ImageConverterInterface
     /**
      * Convert an image and return the tmpPath.
      *
-     * @param FileVersion $media
      * @param string $formatKey
      *
      * @return ImageInterface

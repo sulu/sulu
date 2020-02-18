@@ -68,12 +68,6 @@ class PageBridgeHandler implements SubscribingHandlerInterface
         ];
     }
 
-    /**
-     * @param VisitorInterface $visitor
-     * @param PageBridge $bridge
-     * @param array $type
-     * @param Context $context
-     */
     public function doSerialize(
         VisitorInterface $visitor,
         PageBridge $bridge,
@@ -90,11 +84,6 @@ class PageBridgeHandler implements SubscribingHandlerInterface
     }
 
     /**
-     * @param VisitorInterface $visitor
-     * @param array $data
-     * @param array $type
-     * @param Context $context
-     *
      * @return PageBridge
      */
     public function doDeserialize(

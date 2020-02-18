@@ -22,9 +22,6 @@ use Doctrine\ORM\NoResultException;
  */
 class FilterRepository extends EntityRepository implements FilterRepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function findByIdAndLocale($id, $locale)
     {
         try {
@@ -38,9 +35,6 @@ class FilterRepository extends EntityRepository implements FilterRepositoryInter
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByUserAndContextAndLocale($locale, $context, $userId)
     {
         try {
@@ -84,9 +78,6 @@ class FilterRepository extends EntityRepository implements FilterRepositoryInter
         return $qb;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findById($id)
     {
         try {
@@ -104,8 +95,6 @@ class FilterRepository extends EntityRepository implements FilterRepositoryInter
      * Deletes multiple filters.
      *
      * @param $ids
-     *
-     * @return mixed
      */
     public function deleteByIds($ids)
     {

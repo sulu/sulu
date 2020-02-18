@@ -21,9 +21,6 @@ class AddJsConfigPass implements CompilerPassInterface
 {
     const CONFIG_TAG = 'sulu.js_config';
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         $pool = $container->getDefinition('sulu_admin.js_config_pool');

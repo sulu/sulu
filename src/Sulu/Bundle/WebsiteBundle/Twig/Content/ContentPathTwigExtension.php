@@ -44,9 +44,6 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [
@@ -55,9 +52,6 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentPath($route, $webspaceKey = null, $locale = null, $domain = null, $scheme = null, $withoutDomain = true)
     {
         // if the request analyzer null or a route is passed which is relative or inclusive a domain nothing should be
@@ -108,17 +102,11 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
         return $url ?: $route;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentRootPath($full = false)
     {
         return $this->getContentPath('/');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'sulu_website_content_path';

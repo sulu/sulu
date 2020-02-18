@@ -79,9 +79,6 @@ class SecurityAdmin extends Admin
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getJsBundleName()
     {
         return 'sulusecurity';

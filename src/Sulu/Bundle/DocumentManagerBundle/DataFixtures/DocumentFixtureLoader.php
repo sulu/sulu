@@ -25,9 +25,6 @@ class DocumentFixtureLoader
      */
     private $container;
 
-    /**
-     * @param ContainerInterface $container
-     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -36,8 +33,6 @@ class DocumentFixtureLoader
     /**
      * Load, instantiate and sort all fixture files found
      * within the given paths.
-     *
-     * @param array $paths
      *
      * @return DocumentFixtureInterface[]
      */

@@ -20,8 +20,6 @@ interface ContentNavigationProviderInterface
     /**
      * Returns the navigation items this class provides.
      *
-     * @param array $options
-     *
      * @return ContentNavigationItem[]
      */
     public function getNavigationItems(array $options = []);

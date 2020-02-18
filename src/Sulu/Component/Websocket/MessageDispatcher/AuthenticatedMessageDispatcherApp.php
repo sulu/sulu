@@ -37,17 +37,11 @@ class AuthenticatedMessageDispatcherApp extends MessageDispatcherApp
         $this->firewallName = $firewallName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function createContext(ConnectionInterface $conn)
     {
         return new AuthenticatedConnectionContext($this->firewallName, $conn);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function createMessageHandlerContext(ConnectionContextInterface $context, $handlerName)
     {
         return new AuthenticatedMessageHandlerContext($context, $handlerName);

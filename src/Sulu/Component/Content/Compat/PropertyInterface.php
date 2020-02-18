@@ -76,8 +76,6 @@ interface PropertyInterface extends ArrayableInterface
 
     /**
      * gets the value from property.
-     *
-     * @return mixed
      */
     public function getValue();
 

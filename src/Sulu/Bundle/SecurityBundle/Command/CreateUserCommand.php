@@ -290,8 +290,6 @@ class CreateUserCommand extends ContainerAwareCommand
      * @param $user
      * @param $password
      * @param $salt
-     *
-     * @return mixed
      */
     private function encodePassword($user, $password, $salt)
     {

@@ -22,8 +22,6 @@ class MemoizedSnippetTwigExtension extends \Twig_Extension
     use MemoizeTwigExtensionTrait;
 
     /**
-     * @param SnippetTwigExtensionInterface $extension
-     * @param MemoizeInterface $memoizeCache
      * @param int $lifeTime
      */
     public function __construct(SnippetTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
@@ -33,9 +31,6 @@ class MemoizedSnippetTwigExtension extends \Twig_Extension
         $this->lifeTime = $lifeTime;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->extension->getName();

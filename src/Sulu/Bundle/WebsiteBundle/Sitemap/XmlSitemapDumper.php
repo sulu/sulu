@@ -45,9 +45,6 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
     private $filesystem;
 
     /**
-     * @param XmlSitemapRendererInterface $sitemapRenderer
-     * @param SitemapProviderPoolInterface $sitemapProviderPool
-     * @param Filesystem $filesystem
      * @param string $baseDirectory
      * @param string $defaultHost
      */
@@ -65,9 +62,6 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
         $this->defaultHost = $defaultHost;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getIndexDumpPath($scheme, $webspaceKey, $locale, $url)
     {
         return sprintf(
@@ -80,9 +74,6 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDumpPath($scheme, $webspaceKey, $locale, $url, $alias, $page)
     {
         return sprintf(
@@ -97,9 +88,6 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function dumpPortalInformation(PortalInformation $portalInformation, $scheme)
     {
         if (false !== strpos($portalInformation->getUrl(), '{host}')) {
@@ -145,7 +133,6 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
      * Render sitemap for provider.
      *
      * @param string $alias
-     * @param PortalInformation $portalInformation
      * @param string $scheme
      */
     private function dumpProviderSitemap($alias, PortalInformation $portalInformation, $scheme)

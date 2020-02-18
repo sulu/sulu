@@ -19,9 +19,6 @@ namespace Sulu\Bundle\ContentBundle\Document;
  */
 class HomeDocument extends BasePageDocument
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getResourceSegment()
     {
         return '/';

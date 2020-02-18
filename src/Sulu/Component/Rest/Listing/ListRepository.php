@@ -27,11 +27,6 @@ class ListRepository extends EntityRepository
      */
     private $helper;
 
-    /**
-     * @param ObjectManager $em
-     * @param ClassMetadata $class
-     * @param ListRestHelper $helper
-     */
     public function __construct(ObjectManager $em, ClassMetadata $class, ListRestHelper $helper)
     {
         parent::__construct($em, $class);
@@ -177,7 +172,6 @@ class ListRepository extends EntityRepository
     /**
      * returns all fields with a specified type.
      *
-     * @param array $types
      * @param null $intersectArray only return fields that are defined in this array
      *
      * @return array

@@ -29,7 +29,6 @@ interface TagInterface
     /**
      * Returns array of validity.
      *
-     * @param array $attributesByTag
      * @param string $locale
      *
      * @return array Tag array which indicates validity of each tag

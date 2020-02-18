@@ -197,8 +197,6 @@ class Analytics
     /**
      * Add domain.
      *
-     * @param Domain $domain
-     *
      * @return self
      */
     public function addDomain(Domain $domain)
@@ -214,8 +212,6 @@ class Analytics
 
     /**
      * Remove domain.
-     *
-     * @param Domain $domain
      */
     public function removeDomain(Domain $domain)
     {

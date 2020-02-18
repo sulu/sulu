@@ -24,25 +24,16 @@ class LinkProviderJsConfig implements JsConfigInterface
      */
     private $linkProviderPool;
 
-    /**
-     * @param LinkProviderPoolInterface $linkProviderPool
-     */
     public function __construct(LinkProviderPoolInterface $linkProviderPool)
     {
         $this->linkProviderPool = $linkProviderPool;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getParameters()
     {
         return $this->linkProviderPool->getConfiguration();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'sulu_content.link_provider.configuration';

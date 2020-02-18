@@ -31,25 +31,16 @@ class TargetGroupWebspace implements TargetGroupWebspaceInterface
      */
     private $targetGroup;
 
-    /**
-     * {@inheritdoc}
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getWebspaceKey()
     {
         return $this->webspaceKey;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setWebspaceKey($webspaceKey)
     {
         $this->webspaceKey = $webspaceKey;
@@ -57,17 +48,11 @@ class TargetGroupWebspace implements TargetGroupWebspaceInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTargetGroup()
     {
         return $this->targetGroup;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setTargetGroup(TargetGroupInterface $targetGroup)
     {
         $this->targetGroup = $targetGroup;

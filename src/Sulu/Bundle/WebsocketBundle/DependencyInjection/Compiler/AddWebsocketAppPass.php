@@ -30,9 +30,6 @@ class AddWebsocketAppPass implements CompilerPassInterface
      */
     const APP_TAG = 'sulu.websocket.app';
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         $manager = $container->getDefinition(self::MANAGER_ID);

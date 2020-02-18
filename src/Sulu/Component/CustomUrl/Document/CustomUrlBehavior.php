@@ -88,7 +88,6 @@ interface CustomUrlBehavior extends UuidBehavior, PathBehavior, RobotBehavior, T
      * Add a route to document.
      *
      * @param string $route
-     * @param RouteDocument $routeDocument
      */
     public function addRoute($route, RouteDocument $routeDocument);
 }

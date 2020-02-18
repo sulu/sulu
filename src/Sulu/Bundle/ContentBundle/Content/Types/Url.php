@@ -32,9 +32,6 @@ class Url extends SimpleContentType
         $this->template = $template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [

@@ -74,9 +74,6 @@ class ReferencesOption implements EventSubscriber
         $this->targetEntityMapping = $targetEntityMapping;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSubscribedEvents()
     {
         return [

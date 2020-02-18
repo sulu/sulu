@@ -82,9 +82,6 @@ class CollaborationMessageHandler implements MessageHandlerInterface
         $this->threshold = $threshold;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function handle(ConnectionInterface $conn, array $message, MessageHandlerContext $context)
     {
         try {
@@ -94,9 +91,6 @@ class CollaborationMessageHandler implements MessageHandlerInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onClose(ConnectionInterface $conn, MessageHandlerContext $context)
     {
         $connectionId = $context->getId();
@@ -119,10 +113,6 @@ class CollaborationMessageHandler implements MessageHandlerInterface
 
     /**
      * Executes command.
-     *
-     * @param ConnectionInterface $conn
-     * @param MessageHandlerContext $context
-     * @param array $msg
      *
      * @return mixed|null
      *
@@ -157,10 +147,6 @@ class CollaborationMessageHandler implements MessageHandlerInterface
     /**
      * Called when the user has entered the page.
      *
-     * @param ConnectionInterface $conn
-     * @param MessageHandlerContext $context
-     * @param array $msg
-     *
      * @return array
      */
     private function enter(ConnectionInterface $conn, MessageHandlerContext $context, array $msg)
@@ -182,10 +168,6 @@ class CollaborationMessageHandler implements MessageHandlerInterface
     /**
      * Sends a keep message, to tell the server that the connection is still working.
      *
-     * @param ConnectionInterface $conn
-     * @param MessageHandlerContext $context
-     * @param array $msg
-     *
      * @return array
      */
     private function keep(ConnectionInterface $conn, MessageHandlerContext $context, array $msg)
@@ -201,9 +183,6 @@ class CollaborationMessageHandler implements MessageHandlerInterface
 
     /**
      * Called when the user has left the page.
-     *
-     * @param MessageHandlerContext $context
-     * @param array $msg
      *
      * @return array
      */

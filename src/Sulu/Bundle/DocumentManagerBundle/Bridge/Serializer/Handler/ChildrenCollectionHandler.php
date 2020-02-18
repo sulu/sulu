@@ -22,9 +22,6 @@ use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
  */
 class ChildrenCollectionHandler implements SubscribingHandlerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribingMethods()
     {
         return [
@@ -37,14 +34,6 @@ class ChildrenCollectionHandler implements SubscribingHandlerInterface
         ];
     }
 
-    /**
-     * @param JsonSerializationVisitor $visitor
-     * @param ChildrenCollection $childrenCollection
-     * @param array $type
-     * @param Context $context
-     *
-     * @return mixed
-     */
     public function doSerialize(
         JsonSerializationVisitor $visitor,
         ChildrenCollection $childrenCollection,

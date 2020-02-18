@@ -62,7 +62,6 @@ class DispositionTypeTwigExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param Media $media
      * @param string $dispositionType
      *
      * @return string

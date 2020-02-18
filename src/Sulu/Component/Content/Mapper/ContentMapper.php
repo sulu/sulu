@@ -265,9 +265,6 @@ class ContentMapper implements ContentMapperInterface
         return $children;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($uuid, $webspaceKey, $locale, $loadGhostContent = false)
     {
         $document = $this->documentManager->find(
@@ -285,9 +282,6 @@ class ContentMapper implements ContentMapperInterface
         return $this->documentToStructure($document);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadStartPage($webspaceKey, $locale)
     {
         $startPage = $this->getContentDocument($webspaceKey, $locale);
@@ -297,9 +291,6 @@ class ContentMapper implements ContentMapperInterface
         return $this->documentToStructure($startPage);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadBySql2($sql2, $locale, $webspaceKey, $limit = null)
     {
         $query = $this->documentManager->createQuery($sql2, $locale);
@@ -310,9 +301,6 @@ class ContentMapper implements ContentMapperInterface
         return $this->documentsToStructureCollection($documents, null);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadByQuery(
         QueryInterface $query,
         $locale,
@@ -330,9 +318,6 @@ class ContentMapper implements ContentMapperInterface
         return $this->documentsToStructureCollection($documents, $options);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadNodeAndAncestors(
         $uuid,
         $locale,
@@ -386,7 +371,6 @@ class ContentMapper implements ContentMapperInterface
      * Shallow structures do not have content properties / extensions
      * hydrated.
      *
-     * @param NodeInterface $node
      * @param string $localization
      * @param string $webspaceKey
      *
@@ -399,9 +383,6 @@ class ContentMapper implements ContentMapperInterface
         return $this->documentToStructure($document);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadByNode(
         NodeInterface $node,
         $locale,
@@ -423,9 +404,6 @@ class ContentMapper implements ContentMapperInterface
         return $this->documentToStructure($document);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadBreadcrumb($uuid, $locale, $webspaceKey)
     {
         $document = $this->documentManager->find($uuid, $locale);
@@ -457,9 +435,6 @@ class ContentMapper implements ContentMapperInterface
         return $items;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function delete($uuid, $webspaceKey)
     {
         $document = $this->documentManager->find($uuid);
@@ -467,9 +442,6 @@ class ContentMapper implements ContentMapperInterface
         $this->documentManager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function copyLanguage(
         $uuid,
         $userId,
@@ -530,9 +502,6 @@ class ContentMapper implements ContentMapperInterface
         return $this->documentToStructure($document);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $locale)
     {
         $document = $this->documentManager->find($uuid, $locale);
@@ -634,9 +603,6 @@ class ContentMapper implements ContentMapperInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function convertQueryResultToArray(
         QueryResultInterface $queryResult,
         $webspaceKey,

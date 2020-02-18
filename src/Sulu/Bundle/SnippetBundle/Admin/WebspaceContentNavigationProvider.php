@@ -37,9 +37,6 @@ class WebspaceContentNavigationProvider implements ContentNavigationProviderInte
         $this->defaultEnabled = $defaultEnabled;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNavigationItems(array $options = [])
     {
         if (!$this->securityChecker->hasPermission(

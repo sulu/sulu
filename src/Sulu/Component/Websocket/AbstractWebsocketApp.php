@@ -38,8 +38,6 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
 
     /**
      * initialize clients container.
-     *
-     * @param Cache $contextsCache
      */
     public function __construct(Cache $contextsCache)
     {
@@ -47,9 +45,6 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
         $this->contexts = $contextsCache;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onOpen(ConnectionInterface $conn)
     {
         if (!$this->getContext($conn)->isValid()) {
@@ -59,25 +54,16 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onClose(ConnectionInterface $conn)
     {
         $this->clients->detach($conn);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
         $this->onClose($conn);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->name;
@@ -85,8 +71,6 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
 
     /**
      * Returns websocket context for given connection.
-     *
-     * @param ConnectionInterface $conn
      *
      * @return ConnectionContextInterface
      */
@@ -102,8 +86,6 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
 
     /**
      * Saves websocket context.
-     *
-     * @param ConnectionContextInterface $context
      */
     protected function saveContext(ConnectionContextInterface $context)
     {
@@ -120,9 +102,6 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
         return new ConnectionContext($conn);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __toString()
     {
         return $this->getName();

@@ -24,9 +24,6 @@ class DataProviderPool implements DataProviderPoolInterface
      */
     private $providers = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function add($alias, DataProviderInterface $provider)
     {
         if ($this->exists($alias)) {
@@ -36,17 +33,11 @@ class DataProviderPool implements DataProviderPoolInterface
         $this->providers[$alias] = $provider;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exists($alias)
     {
         return array_key_exists($alias, $this->providers);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function get($alias)
     {
         if (!$this->exists($alias)) {
@@ -56,9 +47,6 @@ class DataProviderPool implements DataProviderPoolInterface
         return $this->providers[$alias];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAll()
     {
         return $this->providers;

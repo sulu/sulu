@@ -25,8 +25,6 @@ interface MemoizeInterface
      *
      * @throws \InvalidArgumentException
      *
-     * @return mixed
-     *
      * @deprecated Will be removed with 2.0. Use MemoizeInterface::memoizeById instead.
      */
     public function memoize($compute, $lifeTime = null);
@@ -35,12 +33,9 @@ interface MemoizeInterface
      * Returns the value stored in the cache or uses the passed function to compute the value and save to cache
      * This function uses the given key for the caching mechanism.
      *
-     * @param mixed $id
      * @param array $arguments array of parameter to call compute function
      * @param callable $compute
      * @param int $lifeTime cache lifetime
-     *
-     * @return mixed
      */
     public function memoizeById($id, $arguments, $compute, $lifeTime = null);
 }

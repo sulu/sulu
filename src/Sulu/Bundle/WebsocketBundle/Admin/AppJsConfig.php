@@ -29,17 +29,11 @@ class AppJsConfig extends JsConfig
         $this->appManager = $appManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'sulu.websocket.apps';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getParameters()
     {
         return $this->appManager->getApps();

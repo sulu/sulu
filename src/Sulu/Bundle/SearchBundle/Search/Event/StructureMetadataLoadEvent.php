@@ -35,10 +35,6 @@ class StructureMetadataLoadEvent extends Event
      */
     private $indexMetadata;
 
-    /**
-     * @param StructureInterface $structure
-     * @param IndexMetadata $indexMetadata
-     */
     public function __construct(StructureInterface $structure, IndexMetadata $indexMetadata)
     {
         $this->structure = $structure;

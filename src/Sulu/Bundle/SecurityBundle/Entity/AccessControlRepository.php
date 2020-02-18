@@ -17,9 +17,6 @@ use Sulu\Component\Security\Authorization\AccessControl\AccessControlRepositoryI
 
 class AccessControlRepository extends EntityRepository implements AccessControlRepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function findByTypeAndIdAndRole($type, $id, $roleId)
     {
         try {
@@ -40,9 +37,6 @@ class AccessControlRepository extends EntityRepository implements AccessControlR
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByTypeAndId($type, $id)
     {
         $queryBuilder = $this->createQueryBuilder('accessControl')

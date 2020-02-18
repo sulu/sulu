@@ -161,8 +161,6 @@ class Condition
     /**
      * Set conditionGroup.
      *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\ConditionGroup $conditionGroup
-     *
      * @return Condition
      */
     public function setConditionGroup(\Sulu\Bundle\ResourceBundle\Entity\ConditionGroup $conditionGroup)

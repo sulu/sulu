@@ -60,9 +60,6 @@ class PropertyMetadata extends BasePropertyMetadata
         return array_key_exists($name, $this->metadata);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function serialize()
     {
         return serialize(
@@ -74,9 +71,6 @@ class PropertyMetadata extends BasePropertyMetadata
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function unserialize($str)
     {
         list($this->class,

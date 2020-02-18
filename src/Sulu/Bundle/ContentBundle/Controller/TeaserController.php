@@ -25,8 +25,6 @@ class TeaserController extends RestController implements ClassResourceInterface
     /**
      * Returns teaser by ids (get-parameter).
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function cgetAction(Request $request)

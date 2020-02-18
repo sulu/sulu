@@ -64,8 +64,6 @@ class ManagedExtensionContainer extends ExtensionContainer
 
     /**
      * @param string $structureType
-     * @param ExtensionManagerInterface $extensionManager
-     * @param NodeInterface $node
      * @param string $locale
      * @param string $prefix
      * @param string $internalPrefix
@@ -93,8 +91,6 @@ class ManagedExtensionContainer extends ExtensionContainer
      * Lazily evaluate the value for the given extension.
      *
      * @param string $extensionName
-     *
-     * @return mixed
      */
     public function offsetGet($extensionName)
     {
@@ -118,17 +114,11 @@ class ManagedExtensionContainer extends ExtensionContainer
         return $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetExists($extensionName)
     {
         return $this->extensionManager->hasExtension($this->structureType, $extensionName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toArray()
     {
         $result = [];

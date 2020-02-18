@@ -36,17 +36,11 @@ class MessageDispatcher implements MessageDispatcherInterface
         $this->messageBuilder = $messageBuilder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function add($name, MessageHandlerInterface $handler)
     {
         $this->handlers[$name] = $handler;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function dispatch(
         ConnectionInterface $conn,
         $name,
@@ -70,9 +64,6 @@ class MessageDispatcher implements MessageDispatcherInterface
         return $this->messageBuilder->build($name, $message, $options, $error);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onClose(
         ConnectionInterface $conn,
         ConnectionContextInterface $context

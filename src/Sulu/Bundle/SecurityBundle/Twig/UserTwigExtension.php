@@ -69,9 +69,6 @@ class UserTwigExtension extends \Twig_Extension
         return $user;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'sulu_user';

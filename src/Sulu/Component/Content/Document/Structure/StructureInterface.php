@@ -69,8 +69,6 @@ interface StructureInterface extends \ArrayAccess
 
     /**
      * Set staged data, see documentation for commitStagedData.
-     *
-     * @param array $stagedData
      */
     public function setStagedData(array $stagedData);
 

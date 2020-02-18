@@ -36,7 +36,6 @@ class FallbackController
      * Redirect message to app and returns value as json response.
      *
      * @param string $appName
-     * @param Request $request
      *
      * @return JsonResponse
      */

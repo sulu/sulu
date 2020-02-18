@@ -70,8 +70,6 @@ class Version201510210733 implements VersionInterface, ContainerAwareInterface
 
     /**
      * Migrate the repository up.
-     *
-     * @param SessionInterface $session
      */
     public function up(SessionInterface $session)
     {
@@ -82,8 +80,6 @@ class Version201510210733 implements VersionInterface, ContainerAwareInterface
 
     /**
      * Migrate the system down.
-     *
-     * @param SessionInterface $session
      */
     public function down(SessionInterface $session)
     {

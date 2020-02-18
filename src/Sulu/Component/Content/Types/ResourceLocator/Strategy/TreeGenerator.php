@@ -16,9 +16,6 @@ namespace Sulu\Component\Content\Types\ResourceLocator\Strategy;
  */
 class TreeGenerator implements ResourceLocatorGeneratorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function generate($title, $parentPath = null)
     {
         // if parent has no resource create a new tree

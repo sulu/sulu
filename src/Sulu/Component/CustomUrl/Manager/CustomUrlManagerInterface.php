@@ -24,7 +24,6 @@ interface CustomUrlManagerInterface
      * Create a new custom-url with given data.
      *
      * @param string $webspaceKey
-     * @param array $data
      * @param string|null $locale
      *
      * @throws TitleAlreadyExistsException
@@ -75,8 +74,6 @@ interface CustomUrlManagerInterface
     /**
      * Returns a list of custom-url documents which targeting the given page.
      *
-     * @param UuidBehavior $page
-     *
      * @return CustomUrlDocument[]
      */
     public function findByPage(UuidBehavior $page);
@@ -96,7 +93,6 @@ interface CustomUrlManagerInterface
      * Update a single custom-url object identified by uuid with given data.
      *
      * @param string $uuid
-     * @param array $data
      * @param string|null $locale
      *
      * @return CustomUrlDocument
@@ -126,8 +122,6 @@ interface CustomUrlManagerInterface
 
     /**
      * Invalidate http-cache for given document.
-     *
-     * @param CustomUrlDocument $document
      */
     public function invalidate(CustomUrlDocument $document);
 
@@ -135,7 +129,6 @@ interface CustomUrlManagerInterface
      * Invalidate http-cache for given route-document.
      *
      * @param string $webspaceKey
-     * @param RouteDocument $routeDocument
      */
     public function invalidateRoute($webspaceKey, RouteDocument $routeDocument);
 }

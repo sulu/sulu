@@ -33,7 +33,6 @@ class SingleInternalLink extends SimpleContentType implements PreResolvableConte
     private $referenceStore;
 
     /**
-     * @param ReferenceStoreInterface $referenceStore
      * @param string $template
      */
     public function __construct(ReferenceStoreInterface $referenceStore, $template)
@@ -44,9 +43,6 @@ class SingleInternalLink extends SimpleContentType implements PreResolvableConte
         $this->template = $template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -64,9 +60,6 @@ class SingleInternalLink extends SimpleContentType implements PreResolvableConte
         parent::write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $value = $this->defaultValue;
@@ -92,9 +85,6 @@ class SingleInternalLink extends SimpleContentType implements PreResolvableConte
         return $this->template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function preResolve(PropertyInterface $property)
     {
         $uuid = $property->getValue();

@@ -38,24 +38,14 @@ class CategoryController extends RestController implements ClassResourceInterfac
 {
     use RequestParametersTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     protected static $entityName = CategoryInterface::class;
 
-    /**
-     * {@inheritdoc}
-     */
     protected static $entityKey = 'categories';
 
     /**
      * Returns all fields that can be used by list.
      *
      * @Get("categories/fields")
-     *
-     * @param Request $request
-     *
-     * @return mixed
      */
     public function getFieldsAction(Request $request)
     {
@@ -78,7 +68,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * Returns the category which is assigned to the given id.
      *
      * @param $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -100,9 +89,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * Returns the sub-graph below the category which is assigned to the given parentId.
      * This method is used by the husky datagrid to load children of a category.
      * If request.flat is set, only the first level of the respective graph is returned in a flat format.
-     *
-     * @param Request $request
-     * @param mixed $parentId
      *
      * @return Response
      */
@@ -128,8 +114,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * If request.rootKey is set, only the sub-graph below the category which is assigned to the given key is returned.
      * If request.flat is set, only the first level of the respective graph is returned in a flat format.
      * If request.expand is set, the paths to the respective categories are expanded.
-     *
-     * @param Request $request
      *
      * @return Response
      */
@@ -157,7 +141,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * @Post("categories/{id}")
      *
      * @param int $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -184,7 +167,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * Moves category - identified by id.
      *
      * @param int $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -204,8 +186,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
     /**
      * Adds a new category.
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function postAction(Request $request)
@@ -218,7 +198,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * Properties which are not set in the request will be removed from the category.
      *
      * @param $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -232,7 +211,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * Properties which are not set in the request will not be changed.
      *
      * @param $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -264,7 +242,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * If id is set, the category which is assigned to the given id is overwritten.
      * If patch is set, the category which is assigned to the given id is updated partially.
      *
-     * @param Request $request
      * @param null $id
      * @param bool $patch
      *
@@ -305,7 +282,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * If parentId is set, the root level of the sub-graph below the category with the given parentId is returned.
      * If expandIds is set, the paths to the categories which are assigned to the ids are expanded.
      *
-     * @param Request $request
      * @param $locale
      * @param null $parentId
      * @param array $expandIds
@@ -402,9 +378,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
         return $listBuilder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         return 'sulu.settings.categories';

@@ -45,7 +45,6 @@ class PublicHandler implements HandlerUpdateResponseInterface
     private $usePageTtl;
 
     /**
-     * @param CacheLifetimeResolverInterface $cacheLifetimeResolver
      * @param int $maxAge Cache max age in seconds
      * @param int $sharedMaxAge Cache shared max age in seconds
      * @param bool $usePageTtl Use page TTL
@@ -62,9 +61,6 @@ class PublicHandler implements HandlerUpdateResponseInterface
         $this->usePageTtl = $usePageTtl;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function updateResponse(Response $response, StructureInterface $structure)
     {
         if (!$structure instanceof PageInterface) {

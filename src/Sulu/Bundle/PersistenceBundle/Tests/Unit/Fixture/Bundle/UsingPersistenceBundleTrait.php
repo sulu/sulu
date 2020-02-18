@@ -21,9 +21,6 @@ class UsingPersistenceBundleTrait extends Bundle
 
     public $modelInterfaces = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function build(ContainerBuilder $container)
     {
         parent::build($container);

@@ -43,9 +43,6 @@ class PageLinkProvider implements LinkProviderInterface
     protected $environment;
 
     /**
-     * @param ContentRepositoryInterface $contentRepository
-     * @param WebspaceManagerInterface $webspaceManager
-     * @param RequestStack $requestStack
      * @param string $environment
      */
     public function __construct(
@@ -60,9 +57,6 @@ class PageLinkProvider implements LinkProviderInterface
         $this->environment = $environment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfiguration()
     {
         return new LinkConfiguration(
@@ -73,9 +67,6 @@ class PageLinkProvider implements LinkProviderInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function preload(array $hrefs, $locale, $published = true)
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -106,7 +97,6 @@ class PageLinkProvider implements LinkProviderInterface
     /**
      * Returns new link item.
      *
-     * @param Content $content
      * @param string $locale
      * @param string $scheme
      *

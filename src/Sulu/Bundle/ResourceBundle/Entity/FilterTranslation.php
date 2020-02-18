@@ -155,8 +155,6 @@ class FilterTranslation
     /**
      * Set filter.
      *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\Filter $filter
-     *
      * @return FilterTranslation
      */
     public function setFilter(\Sulu\Bundle\ResourceBundle\Entity\Filter $filter)

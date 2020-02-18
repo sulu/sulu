@@ -21,9 +21,6 @@ class RegisterLocalizationProvidersPass implements CompilerPassInterface
 {
     const LOCALIZATION_PROVIDER_TAG = 'sulu.localization_provider';
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         $localizationManager = $container->getDefinition('sulu.core.localization_manager');

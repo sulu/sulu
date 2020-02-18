@@ -45,9 +45,6 @@ class SerializerEventListener implements EventSubscriberInterface
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -61,8 +58,6 @@ class SerializerEventListener implements EventSubscriberInterface
 
     /**
      * Add data for serialization of content objects.
-     *
-     * @param ObjectEvent $event
      */
     public function onPostSerialize(ObjectEvent $event)
     {

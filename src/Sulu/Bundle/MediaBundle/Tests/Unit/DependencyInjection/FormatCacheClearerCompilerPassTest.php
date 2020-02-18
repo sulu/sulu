@@ -22,9 +22,6 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class FormatCacheClearerCompilerPassTest extends AbstractCompilerPassTestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function registerCompilerPass(ContainerBuilder $container)
     {
         $container->addCompilerPass(new FormatCacheClearerCompilerPass());

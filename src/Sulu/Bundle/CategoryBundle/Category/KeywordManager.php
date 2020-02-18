@@ -50,9 +50,6 @@ class KeywordManager implements KeywordManagerInterface
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save(KeywordInterface $keyword, CategoryInterface $category, $force = null)
     {
         // overwrite existing keyword if force is present
@@ -81,7 +78,6 @@ class KeywordManager implements KeywordManagerInterface
     /**
      * Overwrites given keyword.
      *
-     * @param CategoryInterface $category
      * @param Keyword $keyword
      *
      * @return Keyword
@@ -122,7 +118,6 @@ class KeywordManager implements KeywordManagerInterface
     /**
      * Detach given and create new keyword entity.
      *
-     * @param CategoryInterface $category
      * @param Keyword $keyword
      *
      * @return Keyword
@@ -149,9 +144,6 @@ class KeywordManager implements KeywordManagerInterface
         return $this->save($newEntity, $category);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function delete(KeywordInterface $keyword, CategoryInterface $category)
     {
         $categoryTranslation = $category->findTranslationByLocale($keyword->getLocale());
@@ -189,7 +181,6 @@ class KeywordManager implements KeywordManagerInterface
     /**
      * Creates a new category translation for a given category and locale.
      *
-     * @param CategoryInterface $category
      * @param $locale
      *
      * @return CategoryTranslationInterface

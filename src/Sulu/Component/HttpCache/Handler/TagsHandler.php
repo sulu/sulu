@@ -44,27 +44,17 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerInvalid
      */
     private $referencesToInvalidate = [];
 
-    /**
-     * @param ProxyClientInterface $proxyClient
-     * @param ReferenceStorePoolInterface $referenceStorePool
-     */
     public function __construct(ProxyClientInterface $proxyClient, ReferenceStorePoolInterface $referenceStorePool)
     {
         $this->proxyClient = $proxyClient;
         $this->referenceStorePool = $referenceStorePool;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function invalidateStructure(StructureInterface $structure)
     {
         $this->referencesToInvalidate[] = $structure->getUuid();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function invalidateReference($alias, $id)
     {
         $reference = $id;
@@ -79,9 +69,6 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerInvalid
         $this->referencesToInvalidate[] = $reference;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function updateResponse(Response $response, StructureInterface $structure)
     {
         $tags = array_merge([$structure->getUuid()], $this->getTags());
@@ -89,9 +76,6 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerInvalid
         $response->headers->set(self::TAGS_HEADER, implode(',', $tags));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function flush()
     {
         if (0 === count($this->referencesToInvalidate)) {
@@ -131,7 +115,6 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerInvalid
      * Returns tags from given store.
      *
      * @param string $alias
-     * @param ReferenceStoreInterface $referenceStore
      *
      * @return array
      */

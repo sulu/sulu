@@ -31,8 +31,6 @@ class RouteController extends RestController implements ClassResourceInterface
     /**
      * Returns list of routes for given entity.
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function cgetAction(Request $request)

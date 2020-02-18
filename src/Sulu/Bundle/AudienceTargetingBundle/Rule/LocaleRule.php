@@ -38,9 +38,6 @@ class LocaleRule implements RuleInterface
         $this->translator = $translator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function evaluate(array $options)
     {
         if (!isset($options[static::LOCALE])) {
@@ -55,17 +52,11 @@ class LocaleRule implements RuleInterface
         return substr($languages[0], 0, 2) === strtolower($options[static::LOCALE]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->translator->trans('sulu_audience_targeting.rules.locale', [], 'backend');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType()
     {
         return new Text(static::LOCALE);

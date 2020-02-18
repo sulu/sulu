@@ -33,9 +33,6 @@ class TitleSubscriber implements EventSubscriberInterface
         $this->propertyEncoder = $propertyEncoder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -48,8 +45,6 @@ class TitleSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the title on the document from the node.
-     *
-     * @param AbstractMappingEvent $event
      */
     public function setTitleOnDocument(AbstractMappingEvent $event)
     {

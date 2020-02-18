@@ -17,9 +17,6 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
 class TagRepository extends EntityRepository implements TagRepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function findTagById($id)
     {
         $qb = $this->createQueryBuilder('t')
@@ -35,9 +32,6 @@ class TagRepository extends EntityRepository implements TagRepositoryInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findTagByName($name)
     {
         $qb = $this->createQueryBuilder('t')
@@ -53,9 +47,6 @@ class TagRepository extends EntityRepository implements TagRepositoryInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findAllTags()
     {
         return $this->findAll();

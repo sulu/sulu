@@ -16,17 +16,11 @@ namespace Sulu\Component\PHPCR\NodeTypes\Content;
  */
 class PageNodeType extends ContentNodeType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'sulu:page';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDeclaredSupertypeNames()
     {
         return [

@@ -30,7 +30,6 @@ class FormatController extends RestController implements ClassResourceInterface
      * Returns all format resources.
      *
      * @param $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -48,7 +47,6 @@ class FormatController extends RestController implements ClassResourceInterface
      *
      * @param int $id
      * @param string $key
-     * @param Request $request
      *
      * @return Response
      */

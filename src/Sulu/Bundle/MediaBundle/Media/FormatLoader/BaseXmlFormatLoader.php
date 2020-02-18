@@ -126,7 +126,6 @@ abstract class BaseXmlFormatLoader extends FileLoader
      * For a given format node and a given array of formats, this method parses the
      * format node to an array and adds it to the formats array.
      *
-     * @param \DOMNode $formatNode
      * @param $formats
      */
     private function addFormatFromFormatNode(\DOMNode $formatNode, &$formats)
@@ -198,16 +197,12 @@ abstract class BaseXmlFormatLoader extends FileLoader
     /**
      * For a given format node returns the key of the format.
      *
-     * @param \DOMNode $formatNode
-     *
      * @return string
      */
     abstract protected function getKeyFromFormatNode(\DOMNode $formatNode);
 
     /**
      * For a given format node returns the internal flag of the format.
-     *
-     * @param \DOMNode $formatNode
      *
      * @return bool
      */
@@ -216,16 +211,12 @@ abstract class BaseXmlFormatLoader extends FileLoader
     /**
      * For a given format node returns the meta information of the format.
      *
-     * @param \DOMNode $formatNode
-     *
      * @return array
      */
     abstract protected function getMetaFromFormatNode(\DOMNode $formatNode);
 
     /**
      * For a given format node returns the scale information of the format.
-     *
-     * @param \DOMNode $formatNode
      *
      * @return array
      */
@@ -234,16 +225,12 @@ abstract class BaseXmlFormatLoader extends FileLoader
     /**
      * For a given format node returns the transformations for it.
      *
-     * @param \DOMNode $formatNode
-     *
      * @return array
      */
     abstract protected function getTransformationsFromFormatNode(\DOMNode $formatNode);
 
     /**
      * For a given format node returns the options for it.
-     *
-     * @param \DOMNode $formatNode
      *
      * @return array
      */

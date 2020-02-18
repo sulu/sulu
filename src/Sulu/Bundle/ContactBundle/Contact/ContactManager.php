@@ -55,15 +55,6 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      */
     protected $mediaRepository;
 
-    /**
-     * @param ObjectManager $em
-     * @param TagManagerInterface $tagManager
-     * @param MediaManagerInterface $mediaManager
-     * @param AccountRepository $accountRepository
-     * @param ContactTitleRepository $contactTitleRepository
-     * @param ContactRepository $contactRepository
-     * @param MediaRepositoryInterface $mediaRepository
-     */
     public function __construct(
         ObjectManager $em,
         TagManagerInterface $tagManager,
@@ -102,8 +93,6 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      *
      * @param $ids
      * @param $locale
-     *
-     * @return mixed
      */
     public function getByIds($ids, $locale)
     {
@@ -429,8 +418,6 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      * Returns a collection of relations to get addresses.
      *
      * @param $entity
-     *
-     * @return mixed
      */
     public function getAddressRelations($entity)
     {
@@ -442,8 +429,6 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      * @param $locale
      *
      * @throws EntityNotFoundException
-     *
-     * @return mixed
      */
     public function getById($id, $locale)
     {
@@ -473,7 +458,6 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     }
 
     /**
-     * @param Contact $contact
      * @param $data
      *
      * @throws EntityNotFoundException
@@ -536,7 +520,6 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     /**
      * Sets a media with a given id as the avatar of a given contact.
      *
-     * @param Contact $contact
      * @param array $avatar with id property
      *
      * @throws EntityNotFoundException
@@ -559,7 +542,6 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      * Sets the medias of the given contact to the given medias.
      * Currently associated medias are replaced.
      *
-     * @param Contact $contact
      * @param $medias
      *
      * @throws EntityNotFoundException
@@ -654,9 +636,6 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
         return $this->contactRepository->getClassName();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByFilters($filters, $page, $pageSize, $limit, $locale, $options = [])
     {
         $entities = $this->contactRepository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options);

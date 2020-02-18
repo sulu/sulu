@@ -19,9 +19,6 @@ use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
  */
 class TargetGroupContentNavigationProvider implements ContentNavigationProviderInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getNavigationItems(array $options = [])
     {
         $details = new ContentNavigationItem('public.details');

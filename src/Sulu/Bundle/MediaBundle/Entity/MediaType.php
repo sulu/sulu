@@ -118,8 +118,6 @@ class MediaType
     /**
      * Add media.
      *
-     * @param MediaInterface $media
-     *
      * @return MediaType
      */
     public function addMedia(MediaInterface $media)
@@ -131,8 +129,6 @@ class MediaType
 
     /**
      * Remove media.
-     *
-     * @param MediaInterface $media
      */
     public function removeMedia(MediaInterface $media)
     {

@@ -27,9 +27,6 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
 {
     use PersistenceExtensionTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();

@@ -16,25 +16,16 @@ namespace Sulu\Bundle\CoreBundle\Build;
  */
 class PhpcrBuilder extends SuluBuilder
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'phpcr';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDependencies()
     {
         return ['database'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function build()
     {
         $command = 'sulu:document:initialize';

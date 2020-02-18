@@ -47,8 +47,6 @@ interface ListRestHelperInterface
 
     /**
      * returns the current page.
-     *
-     * @return mixed
      */
     public function getPage();
 
@@ -62,8 +60,6 @@ interface ListRestHelperInterface
 
     /**
      * Returns the pattern of the search.
-     *
-     * @return mixed
      */
     public function getSearchPattern();
 

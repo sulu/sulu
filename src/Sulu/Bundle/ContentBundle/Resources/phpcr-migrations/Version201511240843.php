@@ -75,8 +75,6 @@ class Version201511240843 implements VersionInterface, ContainerAwareInterface
 
     /**
      * Migrate the repository up.
-     *
-     * @param SessionInterface $session
      */
     public function up(SessionInterface $session)
     {
@@ -86,8 +84,6 @@ class Version201511240843 implements VersionInterface, ContainerAwareInterface
 
     /**
      * Migrate the system down.
-     *
-     * @param SessionInterface $session
      */
     public function down(SessionInterface $session)
     {
@@ -236,9 +232,6 @@ class Version201511240843 implements VersionInterface, ContainerAwareInterface
     /**
      * Upgrades the given block property to the new date representation.
      *
-     * @param BlockMetadata $blockProperty
-     * @param array $components
-     * @param NodeInterface $node
      * @param string $locale
      * @param bool $up
      */
@@ -288,8 +281,6 @@ class Version201511240843 implements VersionInterface, ContainerAwareInterface
     /**
      * Upgrades the given property to the new date representation.
      *
-     * @param PropertyMetadata $property
-     * @param NodeInterface $node
      * @param bool $up
      */
     private function upgradeProperty(PropertyMetadata $property, NodeInterface $node, $locale, $up)

@@ -111,8 +111,6 @@ class UserController extends RestController implements ClassResourceInterface, S
     /**
      * Creates a new user in the system.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
@@ -142,7 +140,6 @@ class UserController extends RestController implements ClassResourceInterface, S
      * @Post("/users/{id}")
      *
      * @param int $id
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -174,7 +171,6 @@ class UserController extends RestController implements ClassResourceInterface, S
     /**
      * Updates the given user with the given data.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -204,7 +200,6 @@ class UserController extends RestController implements ClassResourceInterface, S
     /**
      * Partly updates a user entity for a given id.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -274,8 +269,6 @@ class UserController extends RestController implements ClassResourceInterface, S
      * Returns a user with a specific contact id or all users
      * optional parameter 'flat' calls listAction.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
@@ -328,9 +321,6 @@ class UserController extends RestController implements ClassResourceInterface, S
         return $this->handleView($view);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         return 'sulu.security.users';
@@ -359,9 +349,6 @@ class UserController extends RestController implements ClassResourceInterface, S
         return $this->get('sulu_security.user_manager');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale(Request $request)
     {
         return;

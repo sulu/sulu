@@ -66,9 +66,6 @@ class PublishSubscriber implements EventSubscriberInterface
         $this->metadataFactory = $metadataFactory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -90,8 +87,6 @@ class PublishSubscriber implements EventSubscriberInterface
     /**
      * Creates the node with the same UUID in the public workspace if it does not exist yet. In case it does it will
      * be renamed if necessary.
-     *
-     * @param PersistEvent $event
      */
     public function createNodeInPublicWorkspace(PersistEvent $event)
     {
@@ -114,8 +109,6 @@ class PublishSubscriber implements EventSubscriberInterface
     /**
      * Since deleting is not draftable the node will be deleted in the live session as soon as it is deleted in the
      * default session.
-     *
-     * @param RemoveEvent $event
      */
     public function removeNodeFromPublicWorkspace(RemoveEvent $event)
     {
@@ -130,8 +123,6 @@ class PublishSubscriber implements EventSubscriberInterface
 
     /**
      * Since moving is not draftable the node will also be moved in the live session immediately.
-     *
-     * @param MoveEvent $event
      */
     public function moveNodeInPublicWorkspace(MoveEvent $event)
     {
@@ -141,8 +132,6 @@ class PublishSubscriber implements EventSubscriberInterface
 
     /**
      * If a node is copied a node with the same UUID will be created in the live session.
-     *
-     * @param CopyEvent $event
      */
     public function copyNodeInPublicWorkspace(CopyEvent $event)
     {
@@ -151,8 +140,6 @@ class PublishSubscriber implements EventSubscriberInterface
 
     /**
      * Reordering is also not draftable, and therefore also immediately applied to the live session.
-     *
-     * @param ReorderEvent $event
      */
     public function reorderNodeInPublicWorkspace(ReorderEvent $event)
     {
@@ -170,8 +157,6 @@ class PublishSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the correct node from the live session for the PublishEvent.
-     *
-     * @param PublishEvent $event
      */
     public function setNodeFromPublicWorkspaceForPublishing(PublishEvent $event)
     {
@@ -180,8 +165,6 @@ class PublishSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the correct node from the live session for the UnpublishEvent.
-     *
-     * @param UnpublishEvent $event
      */
     public function setNodeFromPublicWorkspaceForUnpublishing(UnpublishEvent $event)
     {
@@ -191,8 +174,6 @@ class PublishSubscriber implements EventSubscriberInterface
     /**
      * Removes all the properties for the given locale from the node, so that the content is not accessible anymore from
      * the live workspace.
-     *
-     * @param UnpublishEvent $event
      */
     public function removePropertiesFromPublicWorkspace(UnpublishEvent $event)
     {
@@ -248,8 +229,6 @@ class PublishSubscriber implements EventSubscriberInterface
 
     /**
      * Creates every node on the path to the given node. Also uses the same UUIDs for these nodes.
-     *
-     * @param NodeInterface $node
      */
     private function createNodesWithUuid(NodeInterface $node)
     {
@@ -281,8 +260,6 @@ class PublishSubscriber implements EventSubscriberInterface
     /**
      * Returns the live node for given document.
      *
-     * @param PathBehavior $document
-     *
      * @return NodeInterface
      */
     private function getLiveNode(PathBehavior $document)
@@ -303,7 +280,6 @@ class PublishSubscriber implements EventSubscriberInterface
     /**
      * Removes all localized properties in the given locale from the given node.
      *
-     * @param NodeInterface $node
      * @param string $locale
      */
     private function removeLocalizedNodeProperties(NodeInterface $node, $locale)

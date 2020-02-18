@@ -27,7 +27,6 @@ class JsConfig implements JsConfigInterface
      * constructor.
      *
      * @param $bundleName
-     * @param array $params
      */
     public function __construct($bundleName, array $params)
     {
@@ -56,8 +55,6 @@ class JsConfig implements JsConfigInterface
 
     /**
      * adds array of parameters.
-     *
-     * @param array $params
      *
      * @throws \InvalidArgumentException
      */

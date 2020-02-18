@@ -95,9 +95,6 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
         $this->contactReferenceStore = $contactReferenceStore;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(
         NodeInterface $node,
         PropertyInterface $property,
@@ -114,9 +111,6 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
         $property->setValue($refs);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -129,9 +123,6 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
         $node->setProperty($property->getName(), (null === $value ? [] : $value));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove(
         NodeInterface $node,
         PropertyInterface $property,
@@ -144,9 +135,6 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentData(PropertyInterface $property)
     {
         $value = $property->getValue();
@@ -194,25 +182,16 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultValue()
     {
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTemplate()
     {
         return $this->template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [
@@ -221,9 +200,6 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exportData($propertyValue)
     {
         if (is_array($propertyValue)) {
@@ -233,9 +209,6 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
         return '';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,
@@ -249,9 +222,6 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function preResolve(PropertyInterface $property)
     {
         $value = $property->getValue();

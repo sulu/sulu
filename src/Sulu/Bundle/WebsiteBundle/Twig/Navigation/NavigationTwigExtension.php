@@ -46,9 +46,6 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [
@@ -61,9 +58,6 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function flatRootNavigationFunction($context = null, $depth = 1, $loadExcerpt = false)
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
@@ -72,9 +66,6 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
         return $this->navigationMapper->getRootNavigation($webspaceKey, $locale, $depth, true, $context, $loadExcerpt);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function treeRootNavigationFunction($context = null, $depth = 1, $loadExcerpt = false)
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
@@ -83,9 +74,6 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
         return $this->navigationMapper->getRootNavigation($webspaceKey, $locale, $depth, false, $context, $loadExcerpt);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function flatNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null)
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
@@ -113,9 +101,6 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function treeNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null)
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
@@ -151,9 +136,6 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function breadcrumbFunction($uuid)
     {
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
@@ -181,9 +163,6 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
         return preg_match(sprintf('/%s([\/]|$)/', preg_quote($itemPath, '/')), $requestPath);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'sulu_website_navigation';

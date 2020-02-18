@@ -89,8 +89,6 @@ class Note
     /**
      * Add contacts.
      *
-     * @param \Sulu\Component\Contact\Model\ContactInterface $contacts
-     *
      * @return Note
      */
     public function addContact(\Sulu\Component\Contact\Model\ContactInterface $contacts)
@@ -102,8 +100,6 @@ class Note
 
     /**
      * Remove contacts.
-     *
-     * @param \Sulu\Component\Contact\Model\ContactInterface $contacts
      */
     public function removeContact(\Sulu\Component\Contact\Model\ContactInterface $contacts)
     {
@@ -123,8 +119,6 @@ class Note
     /**
      * Add accounts.
      *
-     * @param AccountInterface $account
-     *
      * @return Note
      */
     public function addAccount(AccountInterface $account)
@@ -136,8 +130,6 @@ class Note
 
     /**
      * Remove accounts.
-     *
-     * @param AccountInterface $account
      */
     public function removeAccount(AccountInterface $account)
     {

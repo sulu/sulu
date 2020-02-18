@@ -40,9 +40,6 @@ class XmlLoader extends XmlLegacyLoader
         $this->contentTypeManager = $contentTypeManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($resource, $type = 'page')
     {
         $data = parent::load($resource, $type);
@@ -236,25 +233,16 @@ class XmlLoader extends XmlLegacyLoader
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($resource, $type = null)
     {
         throw new FeatureNotImplementedException();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getResolver()
     {
         throw new FeatureNotImplementedException();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setResolver(LoaderResolverInterface $resolver)
     {
         throw new FeatureNotImplementedException();

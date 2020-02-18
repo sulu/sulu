@@ -39,9 +39,6 @@ class ChildrenSubscriber implements EventSubscriberInterface
         $this->documentRegistry = $documentRegistry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -55,8 +52,6 @@ class ChildrenSubscriber implements EventSubscriberInterface
 
     /**
      * Adds a flag to indicate if the document has children.
-     *
-     * @param ObjectEvent $event
      */
     public function onPostSerialize(ObjectEvent $event)
     {

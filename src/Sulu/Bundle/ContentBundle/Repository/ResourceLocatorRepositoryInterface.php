@@ -46,8 +46,6 @@ interface ResourceLocatorRepositoryInterface
      * @param string $webspaceKey
      * @param string $languageCode
      * @param null|string $segmentKey
-     *
-     * @return mixed
      */
     public function delete($path, $webspaceKey, $languageCode, $segmentKey = null);
 }

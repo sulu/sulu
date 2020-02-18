@@ -50,89 +50,56 @@ class MessageHandlerContext implements ConnectionContextInterface
         $this->parameters = $this->context->get($parameterName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getQuery()
     {
         return $this->context->getQuery();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRequest()
     {
         return $this->context->getRequest();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSession()
     {
         return $this->context->getSession();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getToken($firewall)
     {
         return $this->context->getToken($firewall);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUser($firewall)
     {
         return $this->context->getUser($firewall);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getId()
     {
         return $this->context->getId();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isValid()
     {
         return $this->context->isValid();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function get($name)
     {
         return $this->parameters->get($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function has($name)
     {
         return $this->parameters->has($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function all()
     {
         return $this->parameters->all();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function set($name, $value)
     {
         $this->parameters->set($name, $value);

@@ -35,14 +35,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class TargetGroupController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     protected static $entityKey = 'target-groups';
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         return 'sulu.settings.target-groups';
@@ -74,8 +68,6 @@ class TargetGroupController extends RestController implements ClassResourceInter
 
     /**
      * Returns list of target-groups.
-     *
-     * @param Request $request
      *
      * @return Response
      */
@@ -133,8 +125,6 @@ class TargetGroupController extends RestController implements ClassResourceInter
     /**
      * Handle post request for target group.
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function postAction(Request $request)
@@ -152,7 +142,6 @@ class TargetGroupController extends RestController implements ClassResourceInter
     /**
      * Handle put request for target group.
      *
-     * @param Request $request
      * @param int $id
      *
      * @return Response
@@ -193,8 +182,6 @@ class TargetGroupController extends RestController implements ClassResourceInter
 
     /**
      * Handle multiple delete requests for target groups.
-     *
-     * @param Request $request
      *
      * @throws MissingParameterException
      *

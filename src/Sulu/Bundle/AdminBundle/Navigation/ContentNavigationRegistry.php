@@ -31,9 +31,6 @@ class ContentNavigationRegistry implements ContentNavigationRegistryInterface
         $this->setContainer($container);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNavigationItems($alias, array $options = [])
     {
         if (!array_key_exists($alias, $this->providers)) {
@@ -62,9 +59,6 @@ class ContentNavigationRegistry implements ContentNavigationRegistryInterface
         return $navigationItems;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addContentNavigationProvider($alias, $id)
     {
         if (!array_key_exists($alias, $this->providers)) {

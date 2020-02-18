@@ -119,16 +119,12 @@ interface CategoryInterface extends AuditableInterface
     /**
      * Add meta.
      *
-     * @param CategoryMetaInterface $meta
-     *
      * @return CategoryInterface
      */
     public function addMeta(CategoryMetaInterface $meta);
 
     /**
      * Remove meta.
-     *
-     * @param CategoryMetaInterface $meta
      */
     public function removeMeta(CategoryMetaInterface $meta);
 
@@ -142,16 +138,12 @@ interface CategoryInterface extends AuditableInterface
     /**
      * Add translations.
      *
-     * @param CategoryTranslationInterface $translations
-     *
      * @return CategoryInterface
      */
     public function addTranslation(CategoryTranslationInterface $translations);
 
     /**
      * Remove translations.
-     *
-     * @param CategoryTranslationInterface $translations
      */
     public function removeTranslation(CategoryTranslationInterface $translations);
 
@@ -247,8 +239,6 @@ interface CategoryInterface extends AuditableInterface
     /**
      * Set changed.
      * Note: This property is set automatically by the TimestampableSubscriber if not set manually.
-     *
-     * @param \DateTime $changed
      *
      * @return CategoryInterface
      */

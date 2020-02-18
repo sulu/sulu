@@ -24,9 +24,6 @@ class XmlFileLoader11 extends XmlFileLoader10
 
     const SCHEMA_URI = 'http://schemas.sulu.io/webspace/webspace-1.1.xsd';
 
-    /**
-     * {@inheritdoc}
-     */
     protected function parseXml($file)
     {
         $webspace = parent::parseXml($file);
@@ -41,9 +38,6 @@ class XmlFileLoader11 extends XmlFileLoader10
         return $webspace;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function generateDefaultTemplates(Webspace $webspace)
     {
         $expected = ['page', 'home'];
@@ -74,8 +68,6 @@ class XmlFileLoader11 extends XmlFileLoader10
      *
      * The types can be arbitrary, so that another bundle can easily add a new type and use the information from the
      * webspace.
-     *
-     * @param Webspace $webspace
      *
      * @return Webspace
      */

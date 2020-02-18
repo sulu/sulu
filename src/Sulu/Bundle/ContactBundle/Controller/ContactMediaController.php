@@ -40,7 +40,6 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
      * Adds a new media to the account.
      *
      * @param $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -54,7 +53,6 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
      * optional parameter 'flat' calls listAction.
      *
      * @param $id
-     * @param Request $request
      *
      * @return Response
      */

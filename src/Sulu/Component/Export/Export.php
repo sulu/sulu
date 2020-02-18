@@ -78,7 +78,6 @@ class Export
     /**
      * Creates and returns a property-array.
      *
-     * @param PropertyMetadata $property
      * @param PropertyValue $propertyValue
      *
      * @return array
@@ -96,7 +95,6 @@ class Export
     /**
      * Creates and Returns a property-array for content-type Block.
      *
-     * @param BlockMetadata $property
      * @param PropertyValue $propertyValue
      *
      * @return array

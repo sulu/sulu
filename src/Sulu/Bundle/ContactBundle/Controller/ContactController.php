@@ -37,9 +37,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ContactController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     protected static $entityKey = 'contacts';
 
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
@@ -60,9 +57,6 @@ class ContactController extends RestController implements ClassResourceInterface
      */
     protected $basePath = 'admin/api/contacts';
 
-    /**
-     * {@inheritdoc}
-     */
     protected $bundlePrefix = 'contact.contacts.';
 
     // TODO: move the field descriptors to a manager
@@ -179,8 +173,6 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * returns all fields that can be used by list.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function fieldsAction(Request $request)
@@ -196,8 +188,6 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * lists all contacts
      * optional parameter 'flat' calls listAction.
-     *
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -252,7 +242,6 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * Returns list for cget.
      *
-     * @param Request $request
      * @param string $locale
      *
      * @return ListRepresentation
@@ -284,8 +273,6 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * Prepare list response.
      *
-     * @param Request $request
-     * @param DoctrineListBuilder $listBuilder
      * @param string $locale
      *
      * @return array
@@ -373,8 +360,6 @@ class ContactController extends RestController implements ClassResourceInterface
     /**
      * Creates a new contact.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
@@ -407,7 +392,6 @@ class ContactController extends RestController implements ClassResourceInterface
 
     /**
      * @param $id
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -439,7 +423,6 @@ class ContactController extends RestController implements ClassResourceInterface
      * Partially update an existing contact.
      *
      * @param $id
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -492,9 +475,6 @@ class ContactController extends RestController implements ClassResourceInterface
         return $contacts;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         return 'sulu.contact.people';

@@ -21,9 +21,6 @@ use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
  */
 class RoleRepository extends EntityRepository implements RoleRepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function findRoleById($id)
     {
         try {
@@ -43,9 +40,6 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findRoleByNameAndSystem($name, $system)
     {
         try {
@@ -67,9 +61,6 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findAllRoles()
     {
         try {
@@ -85,9 +76,6 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoleNames()
     {
         $query = $this->createQueryBuilder('role')

@@ -56,8 +56,6 @@ class CollectionController extends RestController implements ClassResourceInterf
      * returns all fields that can be used by list.
      *
      * @Get("collection/fields")
-     *
-     * @return mixed
      */
     public function getFieldsAction()
     {
@@ -70,7 +68,6 @@ class CollectionController extends RestController implements ClassResourceInterf
      * Shows a single collection with the given id.
      *
      * @param $id
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -149,8 +146,6 @@ class CollectionController extends RestController implements ClassResourceInterf
     /**
      * lists all collections.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
@@ -222,8 +217,6 @@ class CollectionController extends RestController implements ClassResourceInterf
     /**
      * Creates a new collection.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
@@ -235,7 +228,6 @@ class CollectionController extends RestController implements ClassResourceInterf
      * Edits the existing collection with the given id.
      *
      * @param int $id The id of the collection to update
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
@@ -277,7 +269,6 @@ class CollectionController extends RestController implements ClassResourceInterf
      * @Post("collections/{id}")
      *
      * @param int $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -304,7 +295,6 @@ class CollectionController extends RestController implements ClassResourceInterf
      * Moves an entity into another one.
      *
      * @param int $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -319,8 +309,6 @@ class CollectionController extends RestController implements ClassResourceInterf
     }
 
     /**
-     * @param Request $request
-     *
      * @return Collection
      */
     protected function getData(Request $request)
@@ -341,7 +329,6 @@ class CollectionController extends RestController implements ClassResourceInterf
 
     /**
      * @param $id
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -382,7 +369,6 @@ class CollectionController extends RestController implements ClassResourceInterf
     }
 
     /**
-     * @param Request $request
      * @param $limit
      *
      * @return int
@@ -402,17 +388,11 @@ class CollectionController extends RestController implements ClassResourceInterf
         return 'sulu.media.collections';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecuredClass()
     {
         return CollectionEntity::class;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecuredObjectId(Request $request)
     {
         return $request->get('id') ?: $request->get('parent');

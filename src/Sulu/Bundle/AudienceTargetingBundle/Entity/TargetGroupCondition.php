@@ -36,25 +36,16 @@ class TargetGroupCondition implements TargetGroupConditionInterface
      */
     private $rule;
 
-    /**
-     * {@inheritdoc}
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType()
     {
         return $this->type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setType($type)
     {
         $this->type = $type;
@@ -62,17 +53,11 @@ class TargetGroupCondition implements TargetGroupConditionInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCondition()
     {
         return $this->condition;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setCondition($condition)
     {
         $this->condition = $condition;
@@ -80,17 +65,11 @@ class TargetGroupCondition implements TargetGroupConditionInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRule()
     {
         return $this->rule;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setRule(TargetGroupRuleInterface $rule)
     {
         $this->rule = $rule;

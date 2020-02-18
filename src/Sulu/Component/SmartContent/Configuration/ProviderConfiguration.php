@@ -63,17 +63,11 @@ class ProviderConfiguration implements ProviderConfigurationInterface
      */
     private $deepLink;
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasDatasource()
     {
         return null !== $this->datasource && false !== $this->datasource;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDatasource()
     {
         return $this->datasource;
@@ -87,9 +81,6 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         $this->datasource = $datasource;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasAudienceTargeting()
     {
         return $this->audienceTargeting;
@@ -103,9 +94,6 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         $this->audienceTargeting = $audienceTargeting;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasTags()
     {
         return $this->tags;
@@ -119,9 +107,6 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         $this->tags = $tags;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasCategories()
     {
         return $this->categories;
@@ -135,17 +120,11 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         $this->categories = $categories;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSorting()
     {
         return $this->sorting;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasSorting()
     {
         return count($this->sorting) > 0;
@@ -159,9 +138,6 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         $this->sorting = $sorting;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasLimit()
     {
         return $this->limit;
@@ -175,9 +151,6 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         $this->limit = $limit;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasPresentAs()
     {
         return $this->presentAs;
@@ -191,9 +164,6 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         $this->presentAs = $presentAs;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasPagination()
     {
         return $this->paginated;
@@ -207,9 +177,6 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         $this->paginated = $paginated;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDeepLink()
     {
         return $this->deepLink;

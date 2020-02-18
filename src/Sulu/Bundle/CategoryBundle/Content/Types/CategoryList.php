@@ -42,18 +42,12 @@ class CategoryList extends ComplexContentType implements ContentTypeExportInterf
         $this->template = $template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $categoryIds = $node->getPropertyValueWithDefault($property->getName(), []);
         $property->setValue($categoryIds);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentData(PropertyInterface $property)
     {
         $ids = $property->getValue();
@@ -72,9 +66,6 @@ class CategoryList extends ComplexContentType implements ContentTypeExportInterf
         return $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -105,9 +96,6 @@ class CategoryList extends ComplexContentType implements ContentTypeExportInterf
         $node->setProperty($property->getName(), $categoryIds);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         if ($node->hasProperty($property->getName())) {
@@ -126,9 +114,6 @@ class CategoryList extends ComplexContentType implements ContentTypeExportInterf
         return $this->template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exportData($propertyValue)
     {
         if (is_array($propertyValue) && count($propertyValue) > 0) {
@@ -138,9 +123,6 @@ class CategoryList extends ComplexContentType implements ContentTypeExportInterf
         return '';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,

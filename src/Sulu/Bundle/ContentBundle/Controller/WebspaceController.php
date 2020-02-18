@@ -58,9 +58,6 @@ class WebspaceController extends RestController implements ClassResourceInterfac
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();

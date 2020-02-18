@@ -21,9 +21,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SnippetExportCommand extends ContainerAwareCommand
 {
-    /**
-     * {@inheritdoc}
-     */
     public function configure()
     {
         $this->setName('sulu:snippet:export');
@@ -32,9 +29,6 @@ class SnippetExportCommand extends ContainerAwareCommand
         $this->addArgument('locale', InputArgument::REQUIRED, 'Locale to export (e.g. de, en)');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $target = $input->getArgument('target');

@@ -24,9 +24,6 @@ class ClassMetadata extends BaseClassMetadata implements MergeableInterface
      */
     public $propertyMetadata = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function merge(MergeableInterface $object)
     {
         if (!$object instanceof BaseClassMetadata) {

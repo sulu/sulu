@@ -24,17 +24,11 @@ class CacheClearCommand extends BaseCacheClearCommand
 {
     protected static $defaultName = 'cache:clear';
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         parent::configure();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $nullOutput = new NullOutput();

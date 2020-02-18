@@ -39,9 +39,6 @@ class ExcerptValueContainer implements ArrayableInterface
         return array_key_exists($name, $this->data);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toArray($depth = null)
     {
         $result = [];

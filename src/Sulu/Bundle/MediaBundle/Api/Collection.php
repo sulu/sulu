@@ -347,8 +347,6 @@ class Collection extends ApiWrapper
     /**
      * @VirtualProperty
      * @SerializedName("locale")
-     *
-     * @return mixed
      */
     public function getLocale()
     {

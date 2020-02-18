@@ -27,14 +27,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ContactTitleController extends RestController implements ClassResourceInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     protected static $entityName = 'SuluContactBundle:ContactTitle';
 
-    /**
-     * {@inheritdoc}
-     */
     protected static $entityKey = 'contactTitles';
 
     /**
@@ -81,8 +75,6 @@ class ContactTitleController extends RestController implements ClassResourceInte
     /**
      * Creates a new contact title.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("contact/titles")
      */
@@ -117,7 +109,6 @@ class ContactTitleController extends RestController implements ClassResourceInte
     /**
      * Edits the existing contact title for the given id.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param int $id The id of the title to update
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -190,8 +181,6 @@ class ContactTitleController extends RestController implements ClassResourceInte
 
     /**
      * Add or update a bunch of contact titles.
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("contact/titles")

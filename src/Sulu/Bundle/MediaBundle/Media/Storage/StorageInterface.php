@@ -23,8 +23,6 @@ interface StorageInterface
      * @param $tempPath
      * @param $fileName
      * @param $version
-     *
-     * @return mixed
      */
     public function save($tempPath, $fileName, $version);
 
@@ -56,8 +54,6 @@ interface StorageInterface
      * Removes the file from storage.
      *
      * @param $storageOption
-     *
-     * @return mixed
      */
     public function remove($storageOption);
 }

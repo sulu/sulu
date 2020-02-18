@@ -120,9 +120,6 @@ class MediaSelectionContainer implements ArrayableInterface
         return $this->config;
     }
 
-    /**
-     * @return mixed
-     */
     public function getDisplayOption()
     {
         return $this->displayOption;
@@ -159,9 +156,6 @@ class MediaSelectionContainer implements ArrayableInterface
         return 'data' == $name || 'config' == $name || 'ids' == $name || 'displayOption' == $name || 'types' == $name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toArray($depth = null)
     {
         return [

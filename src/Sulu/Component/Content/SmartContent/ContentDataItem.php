@@ -24,7 +24,6 @@ use Sulu\Component\SmartContent\ItemInterface;
 class ContentDataItem extends ArrayAccessItem implements ItemInterface
 {
     /**
-     * @param array $data
      * @param object $resource
      */
     public function __construct(array $data, $resource)
@@ -33,8 +32,6 @@ class ContentDataItem extends ArrayAccessItem implements ItemInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @VirtualProperty
      */
     public function getTitle()
@@ -82,9 +79,6 @@ class ContentDataItem extends ArrayAccessItem implements ItemInterface
         return $this->get('url');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getImage()
     {
         return;

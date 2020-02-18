@@ -17,9 +17,7 @@ namespace Sulu\Bundle\PreviewBundle\Preview\Exception;
 class TwigException extends PreviewRendererException
 {
     /**
-     * @param \Twig_Error $exception
      * @param int $object
-     * @param mixed $id
      * @param string $webspaceKey
      * @param string $locale
      */

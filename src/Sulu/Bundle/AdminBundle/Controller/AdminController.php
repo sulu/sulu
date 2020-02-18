@@ -200,8 +200,6 @@ class AdminController
     /**
      * Returns contexts of admin.
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function contextsAction(Request $request)
@@ -236,11 +234,8 @@ class AdminController
      * Will transform the different representations of permission types to the same representation and adds it to the
      * passed array.
      *
-     * @param array $mappedContexts
      * @param string $system
      * @param string $section
-     * @param mixed $context
-     * @param mixed $permissionTypes
      */
     private function addContext(array &$mappedContexts, $system, $section, $context, $permissionTypes)
     {

@@ -61,9 +61,6 @@ class DumpSitemapCommand extends ContainerAwareCommand
      */
     private $scheme = 'http';
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         $this->setName('sulu:website:dump-sitemap')
@@ -71,9 +68,6 @@ class DumpSitemapCommand extends ContainerAwareCommand
             ->addOption('clear', null, InputOption::VALUE_NONE, 'Delete all file before start.');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->output = $output;
@@ -101,8 +95,6 @@ class DumpSitemapCommand extends ContainerAwareCommand
 
     /**
      * Dump given webspace.
-     *
-     * @param Webspace $webspace
      */
     private function dumpWebspace(Webspace $webspace)
     {

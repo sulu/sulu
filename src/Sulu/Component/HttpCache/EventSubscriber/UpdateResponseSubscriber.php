@@ -26,9 +26,6 @@ class UpdateResponseSubscriber implements EventSubscriberInterface
      */
     private $handler;
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -36,9 +33,6 @@ class UpdateResponseSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param HandlerUpdateResponseInterface $handler
-     */
     public function __construct(HandlerUpdateResponseInterface $handler)
     {
         $this->handler = $handler;

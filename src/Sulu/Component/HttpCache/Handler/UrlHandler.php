@@ -43,11 +43,6 @@ class UrlHandler implements HandlerInvalidatePathInterface, HandlerFlushInterfac
      */
     private $pathsToInvalidate = [];
 
-    /**
-     * @param ProxyClientInterface $proxyClient
-     * @param RequestStack $requestStack
-     * @param ReplacerInterface $replacer
-     */
     public function __construct(
         ProxyClientInterface $proxyClient,
         RequestStack $requestStack,
@@ -58,18 +53,12 @@ class UrlHandler implements HandlerInvalidatePathInterface, HandlerFlushInterfac
         $this->requestHost = ($requestStack->getCurrentRequest()) ? $requestStack->getCurrentRequest()->getHost() : null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function invalidatePath($path, array $headers = [])
     {
         $path = ($this->requestHost) ? $this->replacer->replaceHost($path, $this->requestHost) : $path;
         $this->pathsToInvalidate[] = ['path' => $path, 'headers' => $headers];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function flush()
     {
         if (!$this->proxyClient instanceof PurgeInterface) {

@@ -98,8 +98,6 @@ class Media implements MediaInterface
     /**
      * Set changed.
      *
-     * @param \DateTime $changed
-     *
      * @return $this
      */
     public function setChanged(\DateTime $changed)
@@ -122,8 +120,6 @@ class Media implements MediaInterface
     /**
      * Add files.
      *
-     * @param File $files
-     *
      * @return Media
      */
     public function addFile(File $files)
@@ -135,8 +131,6 @@ class Media implements MediaInterface
 
     /**
      * Remove files.
-     *
-     * @param File $files
      */
     public function removeFile(File $files)
     {
@@ -155,8 +149,6 @@ class Media implements MediaInterface
 
     /**
      * Set collection.
-     *
-     * @param CollectionInterface $collection
      *
      * @return Media
      */
@@ -179,8 +171,6 @@ class Media implements MediaInterface
 
     /**
      * Set type.
-     *
-     * @param MediaType $type
      *
      * @return Media
      */

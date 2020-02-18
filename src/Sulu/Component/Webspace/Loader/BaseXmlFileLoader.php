@@ -25,9 +25,6 @@ abstract class BaseXmlFileLoader extends FileLoader
 
     const SCHEMA_URI = '';
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($resource, $type = null)
     {
         if (!is_string($resource) || 'xml' !== pathinfo($resource, PATHINFO_EXTENSION)) {

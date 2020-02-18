@@ -36,17 +36,11 @@ class SuluSearchAdmin extends Admin
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getJsBundleName()
     {
         return 'sulusearch';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContexts()
     {
         return [];

@@ -31,9 +31,6 @@ class Version201702021447 implements VersionInterface, ContainerAwareInterface
      */
     private $userRepository;
 
-    /**
-     * {@inheritdoc}
-     */
     public function up(SessionInterface $session)
     {
         $liveSession = $this->container->get('sulu_document_manager.live_session');
@@ -46,9 +43,6 @@ class Version201702021447 implements VersionInterface, ContainerAwareInterface
         $session->save();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function down(SessionInterface $session)
     {
         $liveSession = $this->container->get('sulu_document_manager.live_session');
@@ -63,8 +57,6 @@ class Version201702021447 implements VersionInterface, ContainerAwareInterface
 
     /**
      * Upgrade all nodes in given session.
-     *
-     * @param SessionInterface $session
      */
     private function upgrade(SessionInterface $session)
     {
@@ -105,8 +97,6 @@ class Version201702021447 implements VersionInterface, ContainerAwareInterface
 
     /**
      * Downgrades all nodes in given session.
-     *
-     * @param SessionInterface $session
      */
     private function downgrade(SessionInterface $session)
     {

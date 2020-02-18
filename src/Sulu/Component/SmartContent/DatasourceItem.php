@@ -50,8 +50,6 @@ class DatasourceItem implements DatasourceItemInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @VirtualProperty
      */
     public function getId()
@@ -60,8 +58,6 @@ class DatasourceItem implements DatasourceItemInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @VirtualProperty
      */
     public function getTitle()
@@ -70,8 +66,6 @@ class DatasourceItem implements DatasourceItemInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @VirtualProperty
      */
     public function getPath()
@@ -80,8 +74,6 @@ class DatasourceItem implements DatasourceItemInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @VirtualProperty
      */
     public function getImage()

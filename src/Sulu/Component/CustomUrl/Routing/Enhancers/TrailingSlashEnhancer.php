@@ -20,9 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class TrailingSlashEnhancer extends AbstractEnhancer
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function doEnhance(
         CustomUrlBehavior $customUrl,
         Webspace $webspace,

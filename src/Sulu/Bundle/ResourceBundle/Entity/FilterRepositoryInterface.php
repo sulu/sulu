@@ -21,8 +21,6 @@ interface FilterRepositoryInterface
      *
      * @param $id
      * @param $locale
-     *
-     * @return mixed
      */
     public function findByIdAndLocale($id, $locale);
 
@@ -30,8 +28,6 @@ interface FilterRepositoryInterface
      * Searches for a filter by id.
      *
      * @param $id
-     *
-     * @return mixed
      */
     public function findById($id);
 
@@ -39,8 +35,6 @@ interface FilterRepositoryInterface
      * Deletes multiple filters.
      *
      * @param $ids
-     *
-     * @return mixed
      */
     public function deleteByIds($ids);
 
@@ -52,8 +46,6 @@ interface FilterRepositoryInterface
      * @param string $locale
      * @param string $context
      * @param string|int $userId
-     *
-     * @return mixed
      */
     public function findByUserAndContextAndLocale($locale, $context, $userId);
 }

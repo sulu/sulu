@@ -24,9 +24,6 @@ class TemplateController
      */
     private $templateEngine;
 
-    /**
-     * @param EngineInterface $templateEngine
-     */
     public function __construct(EngineInterface $templateEngine)
     {
         $this->templateEngine = $templateEngine;

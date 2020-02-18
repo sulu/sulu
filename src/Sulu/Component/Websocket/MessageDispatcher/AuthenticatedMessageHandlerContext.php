@@ -23,9 +23,6 @@ class AuthenticatedMessageHandlerContext extends MessageHandlerContext implement
         parent::__construct($context, $handlerName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFirewallUser()
     {
         return $this->context->getFirewallUser();

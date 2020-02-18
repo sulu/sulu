@@ -47,9 +47,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         $this->parameterBag = $parameterBag;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function loadMetadataFromFile(\ReflectionClass $class, $file)
     {
         $classMetadata = new MergeableClassMetadata($class->getName());
@@ -74,8 +71,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     /**
      * Extracts data from dom-node to create a new property-metadata object.
      *
-     * @param \DOMXPath $xpath
-     * @param \DOMElement $propertyNode
      * @param string $className
      *
      * @return PropertyMetadata
@@ -91,9 +86,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
 
     /**
      * Extracts type from property-node.
-     *
-     * @param \DOMXPath $xpath
-     * @param \DOMElement $propertyNode
      *
      * @return null|CaseTypeMetadata|ConcatenationTypeMetadata|CountTypeMetadata|GroupConcatTypeMetadata|IdentityTypeMetadata|SingleTypeMetadata
      */
@@ -118,9 +110,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     /**
      * Extracts single-type for property-node.
      *
-     * @param \DOMXPath $xpath
-     * @param \DOMElement $propertyNode
-     *
      * @return SingleTypeMetadata
      */
     protected function getSingleType(\DOMXPath $xpath, \DOMElement $propertyNode)
@@ -134,9 +123,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
 
     /**
      * Extracts concatenation-type for property-node.
-     *
-     * @param \DOMXPath $xpath
-     * @param \DOMElement $propertyNode
      *
      * @return ConcatenationTypeMetadata
      */
@@ -157,9 +143,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     /**
      * Extracts group-concatenation-type for property-node.
      *
-     * @param \DOMXPath $xpath
-     * @param \DOMElement $propertyNode
-     *
      * @return GroupConcatTypeMetadata
      */
     protected function getGroupConcatenationType(\DOMXPath $xpath, \DOMElement $propertyNode)
@@ -178,9 +161,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     /**
      * Extracts identity-type for property-node.
      *
-     * @param \DOMXPath $xpath
-     * @param \DOMElement $propertyNode
-     *
      * @return IdentityTypeMetadata
      */
     protected function getIdentityType(\DOMXPath $xpath, \DOMElement $propertyNode)
@@ -194,9 +174,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
 
     /**
      * Extracts case-type for property-node.
-     *
-     * @param \DOMXPath $xpath
-     * @param \DOMElement $propertyNode
      *
      * @return CaseTypeMetadata
      */
@@ -217,9 +194,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     /**
      * Extracts count-type for property-node.
      *
-     * @param \DOMXPath $xpath
-     * @param \DOMElement $propertyNode
-     *
      * @return CountTypeMetadata
      */
     protected function getCountType(\DOMXPath $xpath, \DOMElement $propertyNode)
@@ -233,9 +207,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
 
     /**
      * Extracts data from dom-node to create a new field object.
-     *
-     * @param \DOMXPath $xpath
-     * @param \DOMElement $fieldNode
      *
      * @return FieldMetadata
      *
@@ -272,10 +243,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     /**
      * Extracts data from dom-node to create all join-metadata.
      *
-     * @param \DOMXPath $xpath
-     * @param \DOMElement $joinsNode
-     * @param FieldMetadata $field
-     *
      * @throws \Exception
      */
     protected function getJoinsMetadata(\DOMXPath $xpath, \DOMElement $joinsNode, FieldMetadata $field)
@@ -297,9 +264,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
 
     /**
      * Extracts data from dom-node to create a new join-metadata object.
-     *
-     * @param \DOMXPath $xpath
-     * @param \DOMElement $joinNode
      *
      * @return JoinMetadata
      */
@@ -340,9 +304,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         return $this->parameterBag->resolveValue($value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExtension()
     {
         return 'xml';

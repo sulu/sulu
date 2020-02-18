@@ -45,7 +45,6 @@ class RoleSettingController extends RestController implements ClassResourceInter
     /**
      * Save role-setting with value from request body.
      *
-     * @param Request $request
      * @param int $roleId
      * @param string $key
      *

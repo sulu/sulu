@@ -29,9 +29,6 @@ class ContentTypeManager implements ContentTypeManagerInterface
      */
     protected $aliasServiceIdMap = [];
 
-    /**
-     * @param ContainerInterface $container
-     */
     public function __construct(ContainerInterface $container)
     {
         $this->setContainer($container);
@@ -48,9 +45,6 @@ class ContentTypeManager implements ContentTypeManagerInterface
         $this->aliasServiceIdMap[$alias] = $serviceId;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function get($alias)
     {
         if (!isset($this->aliasServiceIdMap[$alias])) {
@@ -66,17 +60,11 @@ class ContentTypeManager implements ContentTypeManagerInterface
         return $this->container->get($serviceId);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function has($alias)
     {
         return isset($this->aliasServiceIdMap[$alias]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAll()
     {
         $result = [];

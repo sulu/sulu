@@ -29,9 +29,6 @@ class TeaserProviderPool implements TeaserProviderPoolInterface
         $this->providers = $providers;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getProvider($name)
     {
         if (!$this->hasProvider($name)) {
@@ -41,17 +38,11 @@ class TeaserProviderPool implements TeaserProviderPoolInterface
         return $this->providers[$name];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasProvider($name)
     {
         return array_key_exists($name, $this->providers);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfiguration()
     {
         $configuration = [];

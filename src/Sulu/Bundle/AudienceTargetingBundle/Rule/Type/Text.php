@@ -26,9 +26,6 @@ class Text implements RuleTypeInterface
         $this->name = $name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTemplate()
     {
         return '<div class="grid-col-12">

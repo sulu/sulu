@@ -29,9 +29,6 @@ class ChainProvider implements ProviderInterface
         $this->chain = $chain;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMetadataForClass($className)
     {
         $classMetadata = new ClassMetadata($className);

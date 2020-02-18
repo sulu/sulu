@@ -46,7 +46,6 @@ class BaseFunctional extends SuluTestCase
      * Create new analytics.
      *
      * @param string $webspaceKey
-     * @param array $data
      *
      * @return Analytics
      */
@@ -62,9 +61,7 @@ class BaseFunctional extends SuluTestCase
     /**
      * Set data to given key.
      *
-     * @param Analytics $analytics
      * @param string $webspaceKey
-     * @param array $data
      *
      * @return Analytics
      */
@@ -90,8 +87,6 @@ class BaseFunctional extends SuluTestCase
      * Returns domain.
      * If the domain does not exists this function creates a new one.
      *
-     * @param array $domain
-     *
      * @return Domain
      */
     protected function findOrCreateNewDomain(array $domain)
@@ -115,11 +110,7 @@ class BaseFunctional extends SuluTestCase
      * Returns property of data with given name.
      * If this property does not exists this function returns given default.
      *
-     * @param array $data
      * @param string $name
-     * @param mixed $default
-     *
-     * @return mixed
      */
     protected function getValue(array $data, $name, $default = null)
     {

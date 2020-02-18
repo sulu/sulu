@@ -51,9 +51,6 @@ class TagTwigExtension extends \Twig_Extension
         $this->memoizeCache = $memoizeCache;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [
@@ -122,9 +119,6 @@ class TagTwigExtension extends \Twig_Extension
         return $this->tagRequestHandler->removeTagsFromUrl($tagsParameter);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'sulu_tag';

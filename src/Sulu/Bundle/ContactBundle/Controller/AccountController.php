@@ -40,9 +40,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AccountController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     protected static $entityKey = 'accounts';
 
     protected static $positionEntityName = 'SuluContactBundle:Position';
@@ -65,9 +62,6 @@ class AccountController extends RestController implements ClassResourceInterface
         'partialCategory',
     ];
 
-    /**
-     * {@inheritdoc}
-     */
     protected $bundlePrefix = 'contact.accounts.';
 
     /**
@@ -91,8 +85,6 @@ class AccountController extends RestController implements ClassResourceInterface
 
     /**
      * Returns all fields that can be used by list.
-     *
-     * @return mixed
      */
     public function fieldsAction()
     {
@@ -104,7 +96,6 @@ class AccountController extends RestController implements ClassResourceInterface
      * Shows a single account with the given id.
      *
      * @param int $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -137,7 +128,6 @@ class AccountController extends RestController implements ClassResourceInterface
      * optional parameter 'flat' calls listAction.
      *
      * @param int $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -204,7 +194,6 @@ class AccountController extends RestController implements ClassResourceInterface
      * optional parameter 'flat' calls listAction.
      *
      * @param int $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -246,7 +235,6 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * @param int $accountId
      * @param int j$contactId
-     * @param Request $request
      *
      * @throws \Exception
      *
@@ -371,8 +359,6 @@ class AccountController extends RestController implements ClassResourceInterface
      * Lists all accounts.
      * Optional parameter 'flat' calls listAction.
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function cgetAction(Request $request)
@@ -440,7 +426,6 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * Applies the filter parameter and hasNoparent parameter for listbuilder.
      *
-     * @param Request $request
      * @param array $filter
      * @param DoctrineListBuilder $listBuilder
      */
@@ -487,8 +472,6 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * Creates a new account.
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function postAction(Request $request)
@@ -523,8 +506,6 @@ class AccountController extends RestController implements ClassResourceInterface
 
     /**
      * Maps data from request to a new account.
-     *
-     * @param Request $request
      *
      * @throws EntityNotFoundException
      *
@@ -562,7 +543,6 @@ class AccountController extends RestController implements ClassResourceInterface
      * Edits the existing contact with the given id.
      *
      * @param int $id The id of the contact to update
-     * @param Request $request
      *
      * @return Response
      *
@@ -607,9 +587,6 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * processes given entity for put.
      *
-     * @param AccountInterface $account
-     * @param Request $request
-     *
      * @throws EntityNotFoundException
      * @throws RestException
      */
@@ -652,7 +629,6 @@ class AccountController extends RestController implements ClassResourceInterface
      * Set parent to account.
      *
      * @param array $parentData
-     * @param AccountInterface $account
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
@@ -675,7 +651,6 @@ class AccountController extends RestController implements ClassResourceInterface
      * Partial update of account infos.
      *
      * @param $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -716,10 +691,6 @@ class AccountController extends RestController implements ClassResourceInterface
 
     /**
      * Process geiven entity for patch.
-     *
-     * @param AccountInterface $account
-     * @param Request $request
-     * @param ObjectManager $entityManager
      */
     protected function doPatch(AccountInterface $account, Request $request, ObjectManager $entityManager)
     {
@@ -763,7 +734,6 @@ class AccountController extends RestController implements ClassResourceInterface
      * Delete an account with the given id.
      *
      * @param $id
-     * @param Request $request
      *
      * @return Response
      */
@@ -809,8 +779,6 @@ class AccountController extends RestController implements ClassResourceInterface
 
     /**
      * Returns delete info for multiple ids.
-     *
-     * @param Request $request
      *
      * @return Response
      */
@@ -917,9 +885,6 @@ class AccountController extends RestController implements ClassResourceInterface
         return $this->handleView($view);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         return 'sulu.contact.organizations';
@@ -1284,7 +1249,6 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * Retrieves the ids from the request.
      *
-     * @param Request $request
      * @param int &$count
      *
      * @return array

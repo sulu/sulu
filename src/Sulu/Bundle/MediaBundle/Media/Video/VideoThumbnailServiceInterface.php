@@ -31,7 +31,6 @@ interface VideoThumbnailServiceInterface
      * Generates images from video frames at given times.
      *
      * @param string $video
-     * @param array $times
      * @param string $destinationPath
      *
      * @return array|bool

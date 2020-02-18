@@ -21,9 +21,6 @@ class DataNormalizer
 {
     /**
      * Normalize incoming data from the legacy node controller.
-     *
-     * @param mixed $data
-     * @param mixed $state Translates to the workflow state
      */
     public static function normalize(FormEvent $event)
     {

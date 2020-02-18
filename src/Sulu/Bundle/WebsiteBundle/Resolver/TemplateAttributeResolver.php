@@ -55,11 +55,6 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
     /**
      * TemplateAttributeResolver constructor.
      *
-     * @param RequestAnalyzerInterface $requestAnalyzer
-     * @param RequestAnalyzerResolverInterface $requestAnalyzerResolver
-     * @param WebspaceManagerInterface $webspaceManager
-     * @param RouterInterface $router
-     * @param RequestStack $requestStack
      * @param string $environment
      */
     public function __construct(
@@ -78,9 +73,6 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
         $this->environment = $environment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolve($customParameters = [])
     {
         $parameters = array_merge(

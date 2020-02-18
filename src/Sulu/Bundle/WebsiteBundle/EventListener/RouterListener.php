@@ -46,8 +46,6 @@ class RouterListener implements EventSubscriberInterface
     /**
      * Analyzes the request before passing the event to the default RouterListener from symfony and validates the result
      * afterwards.
-     *
-     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
@@ -64,17 +62,12 @@ class RouterListener implements EventSubscriberInterface
 
     /**
      * Simply pass the event to the route listener, because we have nothing to add here.
-     *
-     * @param FinishRequestEvent $event
      */
     public function onKernelFinishRequest(FinishRequestEvent $event)
     {
         $this->baseRouteListener->onKernelFinishRequest($event);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [

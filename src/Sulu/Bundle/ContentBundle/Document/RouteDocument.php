@@ -68,89 +68,56 @@ class RouteDocument implements
      */
     protected $changed;
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNodeName()
     {
         return $this->nodeName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPath()
     {
         return $this->path;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUuid()
     {
         return $this->uuid;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTargetDocument()
     {
         return $this->targetDocument;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setTargetDocument($targetDocument)
     {
         $this->targetDocument = $targetDocument;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isHistory()
     {
         return $this->history;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setHistory($history)
     {
         $this->history = $history;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreated()
     {
         return $this->created;
     }
 
-    /**
-     * @param \DateTime $created
-     */
     public function setCreated(\DateTime $created)
     {
         $this->created = $created;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChanged()
     {
         return $this->changed;
     }
 
-    /**
-     * @param \DateTime $changed
-     */
     public function setChanged(\DateTime $changed)
     {
         $this->changed = $changed;

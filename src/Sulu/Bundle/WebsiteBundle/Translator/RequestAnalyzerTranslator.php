@@ -41,9 +41,6 @@ class RequestAnalyzerTranslator implements TranslatorInterface
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function trans($id, array $parameters = [], $domain = null, $locale = null)
     {
         $this->initialize();
@@ -51,9 +48,6 @@ class RequestAnalyzerTranslator implements TranslatorInterface
         return $this->translator->trans($id, $parameters, $domain, $locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null)
     {
         $this->initialize();
@@ -61,9 +55,6 @@ class RequestAnalyzerTranslator implements TranslatorInterface
         return $this->translator->transChoice($id, $number, $parameters, $domain, $locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setLocale($locale)
     {
         // don't initialize here because of the TranslateListener (will be called on every request)
@@ -71,9 +62,6 @@ class RequestAnalyzerTranslator implements TranslatorInterface
         return $this->translator->setLocale($locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale()
     {
         $this->initialize();

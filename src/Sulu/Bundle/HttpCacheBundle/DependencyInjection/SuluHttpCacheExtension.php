@@ -23,9 +23,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class SuluHttpCacheExtension extends Extension implements PrependExtensionInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function prepend(ContainerBuilder $container)
     {
         if (in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
@@ -42,9 +39,6 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $config = $this->processConfiguration($this->getConfiguration($configs, $container), $configs);
@@ -65,7 +59,6 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
      * Configure the proxy client services.
      *
      * @param array $config
-     * @param ContainerBuilder $container
      */
     private function configureProxyClient($config, ContainerBuilder $container)
     {
@@ -103,7 +96,6 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
      * Configure the varnish services.
      *
      * @param array $config
-     * @param ContainerBuilder $container
      */
     private function configureProxyClientVarnish($config, ContainerBuilder $container)
     {
@@ -119,7 +111,6 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
      * Configure the structure cache handler services.
      *
      * @param array $config
-     * @param ContainerBuilder $container
      */
     private function configureStructureCacheHandlers($config, ContainerBuilder $container)
     {

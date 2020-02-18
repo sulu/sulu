@@ -18,8 +18,6 @@ interface ResourceItemInterface
 {
     /**
      * Returns the resource which belongs to the item.
-     *
-     * @return mixed
      */
     public function getResource();
 

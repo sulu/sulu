@@ -29,8 +29,6 @@ interface LocalizationManagerInterface
 
     /**
      * Adds another LocalizationProvider to the manager.
-     *
-     * @param LocalizationProviderInterface $localizationProvider
      */
     public function addLocalizationProvider(LocalizationProviderInterface $localizationProvider);
 }

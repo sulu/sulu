@@ -53,15 +53,6 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      */
     protected $mediaRepository;
 
-    /**
-     * @param ObjectManager $em
-     * @param TagManagerInterface $tagManager
-     * @param MediaManagerInterface $mediaManager
-     * @param AccountFactory $accountFactory
-     * @param AccountRepository $accountRepository
-     * @param ContactRepository $contactRepository
-     * @param MediaRepositoryInterface $mediaRepository
-     */
     public function __construct(
         ObjectManager $em,
         TagManagerInterface $tagManager,
@@ -154,8 +145,6 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      * Returns a collection of relations to get addresses.
      *
      * @param $entity
-     *
-     * @return mixed
      */
     public function getAddressRelations($entity)
     {
@@ -169,8 +158,6 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      * @param string $locale
      *
      * @throws EntityNotFoundException
-     *
-     * @return mixed
      */
     public function getById($id, $locale)
     {
@@ -275,7 +262,6 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      * Sets the medias of the given account to the given medias.
      * Currently associated medias are replaced.
      *
-     * @param Account $account
      * @param $medias
      *
      * @throws EntityNotFoundException
@@ -352,9 +338,6 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
         return;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function deleteAllRelations($entity)
     {
         parent::deleteAllRelations($entity);
@@ -374,9 +357,6 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByFilters($filters, $page, $pageSize, $limit, $locale, $options = [])
     {
         $entities = $this->accountRepository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options);

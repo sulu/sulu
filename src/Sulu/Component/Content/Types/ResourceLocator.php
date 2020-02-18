@@ -29,9 +29,6 @@ class ResourceLocator extends SimpleContentType
         $this->template = $template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTemplate()
     {
         return $this->template;

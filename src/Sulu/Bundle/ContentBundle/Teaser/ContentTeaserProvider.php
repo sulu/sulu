@@ -28,25 +28,16 @@ class ContentTeaserProvider implements TeaserProviderInterface
      */
     private $searchManager;
 
-    /**
-     * @param SearchManagerInterface $searchManager
-     */
     public function __construct(SearchManagerInterface $searchManager)
     {
         $this->searchManager = $searchManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfiguration()
     {
         return new TeaserConfiguration('sulu-content.teaser.content', 'teaser-selection/content@sulucontent');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function find(array $ids, $locale)
     {
         $statements = array_map(
@@ -114,7 +105,6 @@ class ContentTeaserProvider implements TeaserProviderInterface
     /**
      * Returns media-id.
      *
-     * @param Document $document
      * @param string $field
      *
      * @return int|null

@@ -30,9 +30,6 @@ class OperatorManager implements OperatorManagerInterface
         $this->operatorRepo = $operatorRepo;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findAllByLocale($locale)
     {
         $operators = $this->operatorRepo->findAllByLocale($locale);

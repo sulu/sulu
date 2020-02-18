@@ -55,9 +55,6 @@ abstract class AbstractExtension implements ExtensionInterface
         return $this->translatedProperties->getName($propertyName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setLanguageCode($languageCode, $languageNamespace, $namespace)
     {
         // build namespace
@@ -75,9 +72,6 @@ abstract class AbstractExtension implements ExtensionInterface
         $this->translatedProperties->setLanguage($languageCode);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->name;
@@ -86,7 +80,6 @@ abstract class AbstractExtension implements ExtensionInterface
     /**
      * save a single property value.
      *
-     * @param NodeInterface $node
      * @param array $data data array
      * @param string $name name of property in node an data array
      * @param string $default value if no data exists with given name
@@ -101,28 +94,19 @@ abstract class AbstractExtension implements ExtensionInterface
     /**
      * load a single property value.
      *
-     * @param NodeInterface $node
      * @param string $name name of property in node
      * @param string $default value if no property exists with given name
-     *
-     * @return mixed
      */
     protected function loadProperty(NodeInterface $node, $name, $default = '')
     {
         return $node->getPropertyValueWithDefault($this->getPropertyName($name), $default);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentData($container)
     {
         return $container;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFieldMapping()
     {
         return [];

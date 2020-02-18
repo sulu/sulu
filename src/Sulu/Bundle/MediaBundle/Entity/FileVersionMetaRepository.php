@@ -18,9 +18,6 @@ use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 
 class FileVersionMetaRepository extends EntityRepository implements FileVersionMetaRepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function findLatestWithoutSecurity()
     {
         $queryBuilder = $this->createQueryBuilder('fileVersionMeta')
@@ -47,8 +44,6 @@ class FileVersionMetaRepository extends EntityRepository implements FileVersionM
     /**
      * Returns query-builder to find file-version-meta without permissions.
      *
-     * @param QueryBuilder $queryBuilder
-     *
      * @return QueryBuilder
      */
     public function getQueryBuilderWithoutSecurity(QueryBuilder $queryBuilder)
@@ -74,9 +69,6 @@ class FileVersionMetaRepository extends EntityRepository implements FileVersionM
         return $queryBuilder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByCollectionId($collectionId)
     {
         $queryBuilder = $this->createQueryBuilder('fileVersionMeta')

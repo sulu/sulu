@@ -56,9 +56,6 @@ class NavigationQueryBuilder extends ContentQueryBuilder
         return '';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function buildOrder($webspaceKey, $locale)
     {
         return 'page.[sulu:order]';

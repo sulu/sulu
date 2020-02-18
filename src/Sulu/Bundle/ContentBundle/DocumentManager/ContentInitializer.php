@@ -43,9 +43,6 @@ class ContentInitializer implements InitializerInterface
         $this->languageNamespace = $languageNamespace;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function initialize(OutputInterface $output, $purge = false)
     {
         foreach ($this->connectionRegistry->getConnections() as $connection) {

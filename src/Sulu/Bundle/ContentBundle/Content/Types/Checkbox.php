@@ -34,9 +34,6 @@ class Checkbox extends SimpleContentType
         $this->template = $template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -64,9 +61,6 @@ class Checkbox extends SimpleContentType
         return $this->template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [
@@ -74,9 +68,6 @@ class Checkbox extends SimpleContentType
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,

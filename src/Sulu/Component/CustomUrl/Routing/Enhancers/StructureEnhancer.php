@@ -20,9 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class StructureEnhancer implements RouteEnhancerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function enhance(array $defaults, Request $request)
     {
         if (!array_key_exists('_structure', $defaults)) {

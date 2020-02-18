@@ -66,17 +66,11 @@ class StructureProvider implements LocalizedReindexProviderInterface
         $this->context = $context;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocalesForObject($object)
     {
         return $this->inspector->getLocales($object);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function translateObject($object, $locale)
     {
         $document = $this->documentManager->find($this->inspector->getUuid($object), $locale);
@@ -91,9 +85,6 @@ class StructureProvider implements LocalizedReindexProviderInterface
         return $document;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function provide($classFqn, $offset, $maxResults)
     {
         $query = $this->getQuery($classFqn);
@@ -116,17 +107,11 @@ class StructureProvider implements LocalizedReindexProviderInterface
         return $newDocuments;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function cleanUp($classFqn)
     {
         $this->documentManager->clear();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCount($classFqn)
     {
         $query = $this->getQuery($classFqn);
@@ -137,9 +122,6 @@ class StructureProvider implements LocalizedReindexProviderInterface
         return count($query->execute());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getClassFqns()
     {
         $classFqns = [];

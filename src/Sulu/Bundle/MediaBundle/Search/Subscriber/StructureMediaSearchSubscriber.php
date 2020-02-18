@@ -43,7 +43,6 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
     protected $searchImageFormat;
 
     /**
-     * @param MediaManagerInterface $mediaManager
      * @param RequestAnalyzerInterface $requestAnalyzer
      * @param $searchImageFormat
      */
@@ -71,8 +70,6 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
 
     /**
      * Adds the image to the search document.
-     *
-     * @param PreIndexEvent $e
      */
     public function handlePreIndex(PreIndexEvent $e)
     {

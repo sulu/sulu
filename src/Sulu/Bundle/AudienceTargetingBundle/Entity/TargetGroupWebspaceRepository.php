@@ -18,9 +18,6 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
  */
 class TargetGroupWebspaceRepository extends EntityRepository implements TargetGroupWebspaceRepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function findOrCreate(TargetGroupInterface $targetGroup, $webspaceKey)
     {
         $targetGroupWebspace = null;
@@ -41,9 +38,6 @@ class TargetGroupWebspaceRepository extends EntityRepository implements TargetGr
         return $targetGroupWebspace;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove(TargetGroupWebspaceInterface $targetGroupWebspace)
     {
         $this->getEntityManager()->remove($targetGroupWebspace);

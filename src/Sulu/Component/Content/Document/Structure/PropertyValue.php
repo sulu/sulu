@@ -30,25 +30,16 @@ class PropertyValue implements \ArrayAccess
         $this->value = $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getValue()
     {
         return $this->value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setValue($value)
     {
         $this->value = $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->name;
@@ -59,17 +50,11 @@ class PropertyValue implements \ArrayAccess
         $this->name = $name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetExists($offset)
     {
         return is_array($this->value) && isset($this->value[$offset]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetGet($offset)
     {
         if (!is_array($this->value)) {
@@ -79,9 +64,6 @@ class PropertyValue implements \ArrayAccess
         return $this->value[$offset];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetSet($offset, $value)
     {
         if (!is_array($this->value)) {
@@ -91,9 +73,6 @@ class PropertyValue implements \ArrayAccess
         $this->value[$offset] = $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetUnset($offset)
     {
         if (!is_array($this->value)) {

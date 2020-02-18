@@ -22,9 +22,6 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
@@ -43,17 +40,11 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    /**
-     * @param NodeBuilder $rootNode
-     */
     private function getCoreConfiguration(NodeBuilder $rootNode)
     {
         $rootNode->scalarNode('cache_dir')->defaultValue('%kernel.cache_dir%/sulu')->end();
     }
 
-    /**
-     * @param NodeBuilder $rootNode
-     */
     private function getLocaleConfiguration(NodeBuilder $rootNode)
     {
         $rootNode
@@ -69,9 +60,6 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('fallback_locale')->defaultValue('en')->end();
     }
 
-    /**
-     * @param NodeBuilder $rootNode
-     */
     private function getWebspaceConfiguration(NodeBuilder $rootNode)
     {
         $rootNode->arrayNode('webspace')
@@ -83,9 +71,6 @@ class Configuration implements ConfigurationInterface
         ->end();
     }
 
-    /**
-     * @param NodeBuilder $rootNode
-     */
     private function getFieldsConfiguration(NodeBuilder $rootNode)
     {
         $rootNode->arrayNode('fields_defaults')
@@ -111,9 +96,6 @@ class Configuration implements ConfigurationInterface
         ->end();
     }
 
-    /**
-     * @param NodeBuilder $rootNode
-     */
     private function getContentConfiguration(NodeBuilder $rootNode)
     {
         $rootNode->arrayNode('content')

@@ -92,9 +92,6 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
         $this->showDrafts = $showDrafts;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfiguration()
     {
         if (!$this->configuration) {
@@ -141,9 +138,6 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
         return $this->configuration;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultPropertyParameter()
     {
         return [
@@ -151,9 +145,6 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolveDatasource($datasource, array $propertyParameter, array $options)
     {
         $properties = array_key_exists('properties', $propertyParameter) ?
@@ -184,9 +175,6 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
         return new DatasourceItem($result[0]['uuid'], $result[0]['title'], '/' . ltrim($result[0]['path'], '/'));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolveDataItems(
         array $filters,
         array $propertyParameter,
@@ -209,9 +197,6 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
         return new DataProviderResult($items, $hasNextPage);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolveResourceItems(
         array $filters,
         array $propertyParameter,
@@ -293,7 +278,6 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
     /**
      * Load paginated data.
      *
-     * @param array $options
      * @param int $limit
      * @param int $page
      * @param int $pageSize
@@ -327,7 +311,6 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
     /**
      * Load data.
      *
-     * @param array $options
      * @param int $limit
      *
      * @return array
@@ -347,7 +330,6 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
     /**
      * Decorates result with item class.
      *
-     * @param array $data
      * @param string $locale
      *
      * @return ContentDataItem[]
@@ -365,7 +347,6 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
     /**
      * Decorates result with item class.
      *
-     * @param array $data
      * @param string $locale
      *
      * @return ArrayAccessItem[]
@@ -409,9 +390,6 @@ class ContentDataProvider implements DataProviderInterface, DataProviderAliasInt
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAlias()
     {
         return 'content';

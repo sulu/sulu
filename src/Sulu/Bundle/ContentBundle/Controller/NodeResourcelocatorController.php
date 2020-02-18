@@ -57,7 +57,6 @@ class NodeResourcelocatorController extends RestController implements ClassResou
      * return all resource locators for given node.
      *
      * @param string $uuid
-     * @param Request $request
      *
      * @return Response
      */
@@ -71,8 +70,6 @@ class NodeResourcelocatorController extends RestController implements ClassResou
 
     /**
      * deletes resource locator with given path.
-     *
-     * @param Request $request
      *
      * @return Response
      */
@@ -89,8 +86,6 @@ class NodeResourcelocatorController extends RestController implements ClassResou
 
     /**
      * returns webspacekey and languagecode.
-     *
-     * @param Request $request
      *
      * @return array list($webspaceKey, $languageCode)
      */
@@ -118,9 +113,6 @@ class NodeResourcelocatorController extends RestController implements ClassResou
         return $this->get('sulu_document_manager.document_manager');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale(Request $request)
     {
         return $this->getRequestParameter($request, 'language', true);

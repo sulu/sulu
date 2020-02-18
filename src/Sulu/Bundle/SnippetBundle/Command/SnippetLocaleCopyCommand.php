@@ -66,9 +66,6 @@ class SnippetLocaleCopyCommand extends ContainerAwareCommand
      */
     private $output;
 
-    /**
-     * {@inheritdoc}
-     */
     public function configure()
     {
         $this->setName('sulu:snippet:locale-copy');
@@ -93,9 +90,6 @@ EOT
         $this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Do not persist changes');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $srcLocale = $input->getArgument('srcLocale');

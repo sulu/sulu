@@ -34,7 +34,6 @@ class GroupConcatTypeMetadata
     private $distinct;
 
     /**
-     * @param FieldMetadata $field
      * @param string $glue
      * @param bool $distinct
      */

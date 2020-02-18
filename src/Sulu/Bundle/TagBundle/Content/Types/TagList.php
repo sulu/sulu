@@ -42,18 +42,12 @@ class TagList extends ComplexContentType implements ContentTypeExportInterface
         $this->template = $template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $tags = $this->tagManager->resolveTagIds($node->getPropertyValueWithDefault($property->getName(), []));
         $property->setValue($tags);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -72,9 +66,6 @@ class TagList extends ComplexContentType implements ContentTypeExportInterface
         $node->setProperty($property->getName(), $tagIds);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         if ($node->hasProperty($property->getName())) {
@@ -92,9 +83,6 @@ class TagList extends ComplexContentType implements ContentTypeExportInterface
         return $this->template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exportData($propertyValue)
     {
         if (false === is_array($propertyValue)) {
@@ -117,9 +105,6 @@ class TagList extends ComplexContentType implements ContentTypeExportInterface
         return '';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,

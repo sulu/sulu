@@ -58,9 +58,6 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         $this->localizationFinder = $localizationFinder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -70,9 +67,6 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param HydrateEvent $event
-     */
     public function handleHydrate(HydrateEvent $event)
     {
         $document = $event->getDocument();
@@ -98,7 +92,6 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
     /**
      * Return available localizations.
      *
-     * @param StructureBehavior $document
      * @param string $locale
      *
      * @return string

@@ -26,8 +26,6 @@ class SitemapController extends WebsiteController
      * Render sitemap-index of all available sitemap.xml files.
      * If only one provider exists this provider will be rendered directly.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
@@ -48,8 +46,6 @@ class SitemapController extends WebsiteController
 
     /**
      * Returns index-response if dumped file exists.
-     *
-     * @param Request $request
      *
      * @return null|BinaryFileResponse
      */
@@ -95,7 +91,6 @@ class SitemapController extends WebsiteController
     /**
      * Render a single page for a single sitemap.xml provider.
      *
-     * @param Request $request
      * @param string $alias
      * @param int $page
      *
@@ -132,7 +127,6 @@ class SitemapController extends WebsiteController
     /**
      * Returns index-response if dumped file exists.
      *
-     * @param Request $request
      * @param string $alias
      * @param int $page
      *
@@ -165,8 +159,6 @@ class SitemapController extends WebsiteController
 
     /**
      * Set cache headers.
-     *
-     * @param Response $response
      *
      * @return Response
      */

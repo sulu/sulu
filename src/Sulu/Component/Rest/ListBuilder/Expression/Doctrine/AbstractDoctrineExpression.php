@@ -22,8 +22,6 @@ abstract class AbstractDoctrineExpression implements ExpressionInterface
     /**
      * Returns a statement for an expression.
      *
-     * @param QueryBuilder $queryBuilder
-     *
      * @return string
      */
     abstract public function getStatement(QueryBuilder $queryBuilder);

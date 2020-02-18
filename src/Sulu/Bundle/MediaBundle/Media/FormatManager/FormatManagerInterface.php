@@ -56,7 +56,6 @@ interface FormatManagerInterface
      *
      * @param string $formatKey
      * @param string $locale
-     * @param array $formatOptions
      *
      * @return array
      */
@@ -67,7 +66,6 @@ interface FormatManagerInterface
      * format-options merged into them.
      *
      * @param string $locale
-     * @param array $formatOptions
      *
      * @return array
      */

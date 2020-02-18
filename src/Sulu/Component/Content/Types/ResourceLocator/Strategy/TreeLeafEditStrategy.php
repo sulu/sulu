@@ -23,9 +23,6 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
  */
 class TreeLeafEditStrategy extends ResourceLocatorStrategy implements ResourceLocatorStrategyInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getChildPart($resourceSegment)
     {
         $divider = strrpos($resourceSegment, '/');
@@ -37,17 +34,11 @@ class TreeLeafEditStrategy extends ResourceLocatorStrategy implements ResourceLo
         return substr($resourceSegment, $divider + 1);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getInputType()
     {
         return self::INPUT_TYPE_LEAF;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save(ResourceSegmentBehavior $document, $userId)
     {
         if (false === parent::save($document, $userId)) {
@@ -60,7 +51,6 @@ class TreeLeafEditStrategy extends ResourceLocatorStrategy implements ResourceLo
     /**
      * adopts resource locator of children by iteration.
      *
-     * @param ResourceSegmentBehavior $document
      * @param int $userId
      */
     private function adaptResourceLocators(ResourceSegmentBehavior $document, $userId)

@@ -69,7 +69,6 @@ interface FilterManagerInterface
     /**
      * Saves the given filter.
      *
-     * @param array $data
      * @param string $locale
      * @param int $userId
      * @param int $id

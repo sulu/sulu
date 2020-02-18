@@ -37,9 +37,6 @@ class RequestAnalyzer implements RequestAnalyzerInterface
         $this->requestProcessors = $requestProcessors;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function analyze(Request $request)
     {
         if ($request->attributes->has('_sulu')) {
@@ -54,9 +51,6 @@ class RequestAnalyzer implements RequestAnalyzerInterface
         $request->attributes->set('_sulu', $attributes);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validate(Request $request)
     {
         $attributes = $request->attributes->get('_sulu');
@@ -66,9 +60,6 @@ class RequestAnalyzer implements RequestAnalyzerInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAttribute($name, $default = null)
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -84,105 +75,66 @@ class RequestAnalyzer implements RequestAnalyzerInterface
         return $request->attributes->get('_sulu')->getAttribute($name, $default);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMatchType()
     {
         return $this->getAttribute('matchType');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getWebspace()
     {
         return $this->getAttribute('webspace');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPortal()
     {
         return $this->getAttribute('portal');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSegment()
     {
         return $this->getAttribute('segment');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCurrentLocalization()
     {
         return $this->getAttribute('localization');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPortalUrl()
     {
         return $this->getAttribute('portalUrl');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRedirect()
     {
         return $this->getAttribute('redirect');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getResourceLocator()
     {
         return $this->getAttribute('resourceLocator', false);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getResourceLocatorPrefix()
     {
         return $this->getAttribute('resourceLocatorPrefix');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPostParameters()
     {
         return $this->getAttribute('postParameter', []);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getGetParameters()
     {
         return $this->getAttribute('getParameter', []);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAnalyticsKey()
     {
         return $this->getAttribute('analyticsKey', '');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPortalInformation()
     {
         return $this->getAttribute('portalInformation');

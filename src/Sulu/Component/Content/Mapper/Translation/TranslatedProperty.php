@@ -151,8 +151,6 @@ class TranslatedProperty implements PropertyInterface
 
     /**
      * gets the value from property.
-     *
-     * @return mixed
      */
     public function getValue()
     {
@@ -287,25 +285,16 @@ class TranslatedProperty implements PropertyInterface
         return $this->property->getPlaceholder($languageCode);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toArray($depth = null)
     {
         return $this->property->toArray($depth);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStructure()
     {
         return $this->property->getStructure();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setStructure($structure)
     {
         $this->property->setStructure($structure);

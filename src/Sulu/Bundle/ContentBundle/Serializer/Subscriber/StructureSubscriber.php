@@ -38,9 +38,6 @@ class StructureSubscriber implements EventSubscriberInterface
         $this->inspector = $inspector;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -56,9 +53,6 @@ class StructureSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param PreSerializeEvent $event
-     */
     public function onPreSerialize(PreSerializeEvent $event)
     {
         if ($event->getObject() instanceof Structure) {
@@ -68,8 +62,6 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Adds all the structure specific data (template, structure properties and breadcrumb) to the serialization.
-     *
-     * @param ObjectEvent $event
      */
     public function onPostSerialize(ObjectEvent $event)
     {
@@ -107,9 +99,6 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Adds the properties of the structure to the serialization.
-     *
-     * @param StructureBehavior $document
-     * @param VisitorInterface $visitor
      */
     private function addStructureProperties(
         StructureMetadata $structureMetadata,
@@ -130,9 +119,6 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Adds the breadcrumb to the serialization.
-     *
-     * @param StructureBehavior $document
-     * @param VisitorInterface $visitor
      */
     private function addBreadcrumb(StructureBehavior $document, VisitorInterface $visitor)
     {

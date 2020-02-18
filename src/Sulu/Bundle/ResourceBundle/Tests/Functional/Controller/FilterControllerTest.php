@@ -184,7 +184,6 @@ class FilterControllerTest extends SuluTestCase
 
     /**
      * @param $id
-     * @param array $group
      *
      * @return null|stdClass
      */

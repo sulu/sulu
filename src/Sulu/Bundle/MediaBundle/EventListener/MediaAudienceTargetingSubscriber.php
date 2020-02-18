@@ -23,9 +23,6 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
  */
 class MediaAudienceTargetingSubscriber implements EventSubscriber
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getSubscribedEvents()
     {
         return [
@@ -33,9 +30,6 @@ class MediaAudienceTargetingSubscriber implements EventSubscriber
         ];
     }
 
-    /**
-     * @param LoadClassMetadataEventArgs $event
-     */
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)
     {
         /** @var $metadata ClassMetadataInfo */

@@ -30,9 +30,6 @@ abstract class AbstractImageFormatCompilerPass implements CompilerPassInterface
      */
     private $globalOptions;
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         $this->globalOptions = $container->getParameter('sulu_media.format_manager.default_imagine_options');
@@ -56,8 +53,6 @@ abstract class AbstractImageFormatCompilerPass implements CompilerPassInterface
     /**
      * Returns the paths to all the image format files which should be loaded by this compiler pass.
      *
-     * @param ContainerBuilder $container
-     *
      * @return string[]
      */
     abstract protected function getFiles(ContainerBuilder $container);
@@ -66,7 +61,6 @@ abstract class AbstractImageFormatCompilerPass implements CompilerPassInterface
      * Adds the image formats from the file at the given path to the given array.
      *
      * @param string $path
-     * @param array $formats
      */
     private function loadFormatsFromFile($path, array &$formats)
     {

@@ -34,7 +34,6 @@ class DispositionTypeTwigExtension extends \Twig_Extension
     /**
      * Get media url.
      *
-     * @param Media $media
      * @param null|string $dispositionType
      *
      * @return string

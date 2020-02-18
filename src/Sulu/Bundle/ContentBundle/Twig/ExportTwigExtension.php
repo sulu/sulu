@@ -28,9 +28,6 @@ class ExportTwigExtension extends \Twig_Extension
      */
     private $counter = 0;
 
-    /**
-     * @param ExportManagerInterface $exportManager
-     */
     public function __construct(ExportManagerInterface $exportManager)
     {
         $this->exportManager = $exportManager;

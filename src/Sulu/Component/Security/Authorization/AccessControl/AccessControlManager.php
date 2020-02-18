@@ -46,9 +46,6 @@ class AccessControlManager implements AccessControlManagerInterface
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setPermissions($type, $identifier, $permissions)
     {
         $accessControlProvider = $this->getAccessControlProvider($type);
@@ -65,9 +62,6 @@ class AccessControlManager implements AccessControlManagerInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPermissions($type, $identifier)
     {
         $accessControlProvider = $this->getAccessControlProvider($type);
@@ -79,9 +73,6 @@ class AccessControlManager implements AccessControlManagerInterface
         return $accessControlProvider->getPermissions($type, $identifier);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUserPermissions(SecurityCondition $securityCondition, UserInterface $user)
     {
         $objectPermissions = $this->getUserObjectPermission($securityCondition, $user);
@@ -101,9 +92,6 @@ class AccessControlManager implements AccessControlManagerInterface
         return $this->restrictPermissions($objectPermissions, $securityContextPermissions);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUserPermissionByArray($locale, $securityContext, $objectPermissionsByRole, UserInterface $user)
     {
         $objectPermissions = $this->getUserObjectPermissionByArray($objectPermissionsByRole, $user);
@@ -254,9 +242,6 @@ class AccessControlManager implements AccessControlManagerInterface
     }
 
     /**
-     * @param array $userPermission
-     * @param array $permissions
-     *
      * @return array
      */
     private function mapPermissions(array $userPermission, array $permissions, callable $reduce)
@@ -277,8 +262,6 @@ class AccessControlManager implements AccessControlManagerInterface
      *
      * @param array $permissions The array of the additional permissions
      * @param array $userPermission The array of the currently changing permissions
-     *
-     * @return mixed
      */
     private function cumulatePermissions(array $userPermission, array $permissions)
     {
@@ -292,8 +275,6 @@ class AccessControlManager implements AccessControlManagerInterface
      *
      * @param array $permissions The array of the additional permissions
      * @param array $userPermission The array of the currently changing permissions
-     *
-     * @return mixed
      */
     private function restrictPermissions(array $userPermission, array $permissions)
     {

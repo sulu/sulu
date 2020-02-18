@@ -23,17 +23,11 @@ class LocalizationProvider implements LocalizationProviderInterface
      */
     private $locales;
 
-    /**
-     * @param array $locales
-     */
     public function __construct(array $locales)
     {
         $this->locales = $locales;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAllLocalizations()
     {
         $result = [];

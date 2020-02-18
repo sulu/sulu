@@ -23,9 +23,6 @@ class RouteAlreadyCreatedException extends \Exception
      */
     private $entity;
 
-    /**
-     * @param RoutableInterface $entity
-     */
     public function __construct(RoutableInterface $entity)
     {
         parent::__construct(

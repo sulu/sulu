@@ -84,7 +84,6 @@ interface ContentMapperInterface
      * returns the data for the given node.
      *
      * @param NodeInterface $contentNode The node for which to load the data
-     * @param string $languageCode The locale
      * @param string $webspaceKey Key of the webspace
      * @param bool $excludeGhost Do not return Ghost structures (return null instead)
      * @param bool $loadGhostContent Load ghost content
@@ -201,7 +200,6 @@ interface ContentMapperInterface
     /**
      * Converts a query result in a list of arrays.
      *
-     * @param QueryResultInterface $queryResult
      * @param string $webspaceKey
      * @param string[] $locales
      * @param array $fields

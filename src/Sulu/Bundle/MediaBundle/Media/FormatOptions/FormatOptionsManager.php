@@ -53,13 +53,6 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
      */
     private $formats;
 
-    /**
-     * @param EntityManagerInterface $em
-     * @param EntityRepository $formatOptionsRepository
-     * @param MediaManagerInterface $mediaManager
-     * @param FormatManagerInterface $formatManager
-     * @param array $formats
-     */
     public function __construct(
         EntityManagerInterface $em,
         EntityRepository $formatOptionsRepository,
@@ -74,9 +67,6 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
         $this->formats = $formats;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function get($mediaId, $formatKey)
     {
         if (!isset($this->formats[$formatKey])) {
@@ -101,9 +91,6 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
         return $this->entityToArray($formatOptions);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAll($mediaId)
     {
         $media = $this->mediaManager->getEntityById($mediaId);
@@ -121,9 +108,6 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
         return $formatOptionsArray;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save($mediaId, $formatKey, array $data)
     {
         if (!isset($this->formats[$formatKey])) {
@@ -152,9 +136,6 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
         return $formatOptions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function delete($mediaId, $formatKey)
     {
         if (!isset($this->formats[$formatKey])) {
@@ -176,8 +157,6 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
 
     /**
      * Gets the latest file-version of a given media.
-     *
-     * @param MediaInterface $media
      *
      * @throws FileVersionNotFoundException
      *
@@ -202,9 +181,6 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
     /**
      * Sets a given array of data onto a given format-options entity.
      *
-     * @param FormatOptions $formatOptions
-     * @param array $data
-     *
      * @throws FormatOptionsMissingParameterException
      *
      * @return FormatOptions The format-options entity with set data
@@ -226,8 +202,6 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
     /**
      * Converts a given entity to its array representation.
      *
-     * @param FormatOptions $formatOptions
-     *
      * @return array
      */
     private function entityToArray(FormatOptions $formatOptions)
@@ -244,7 +218,6 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
      * Purges a file-version of a media with a given id.
      *
      * @param int $mediaId
-     * @param FileVersion $fileVersion
      */
     private function purgeMedia($mediaId, FileVersion $fileVersion)
     {

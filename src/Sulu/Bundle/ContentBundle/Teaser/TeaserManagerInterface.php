@@ -19,7 +19,6 @@ interface TeaserManagerInterface
     /**
      * Returns teasers for given items.
      *
-     * @param array $items
      * @param string $locale
      *
      * @return Teaser[]

@@ -109,9 +109,6 @@ class WebspaceImport extends Import implements WebspaceImportInterface
         $this->logger = $logger;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function import(
         $webspaceKey,
         $locale,
@@ -177,7 +174,6 @@ class WebspaceImport extends Import implements WebspaceImportInterface
     /**
      * Import document by locale into given webspace.
      *
-     * @param array $parsedData
      * @param string $webspaceKey
      * @param string $locale
      *
@@ -266,7 +262,6 @@ class WebspaceImport extends Import implements WebspaceImportInterface
     /**
      * Loops all documents and imports all properties of the documents.
      *
-     * @param BasePageDocument $document
      * @param string $structureType
      * @param string $webspaceKey
      * @param string $locale
@@ -372,7 +367,6 @@ class WebspaceImport extends Import implements WebspaceImportInterface
      * Set all Settings for the given documents and import them.
      * Import property -o must be set to true.
      *
-     * @param BasePageDocument $document
      * @param string $format
      * @param array $data
      * @param $overrideSettings
@@ -440,9 +434,7 @@ class WebspaceImport extends Import implements WebspaceImportInterface
     /**
      * Importing the Extensions like SEO- and Excerption-Tab.
      *
-     * @param ExportExtensionInterface $extension
      * @param string $extensionKey
-     * @param NodeInterface $node
      * @param array $data
      * @param string $webspaceKey
      * @param string $locale

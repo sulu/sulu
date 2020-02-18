@@ -33,9 +33,6 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
 {
     use PersistenceExtensionTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
@@ -53,9 +50,6 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
         $this->configurePersistence($config['objects'], $container);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function prepend(ContainerBuilder $container)
     {
         if ($container->hasExtension('fos_rest')) {

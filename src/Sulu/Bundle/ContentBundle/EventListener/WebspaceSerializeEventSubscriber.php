@@ -52,9 +52,6 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
         $this->environment = $environment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -85,10 +82,6 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
 
     /**
      * Extract portal-information and add them to serialization.
-     *
-     * @param Webspace $webspace
-     * @param Context $context
-     * @param JsonSerializationVisitor $visitor
      */
     private function appendPortalInformation(Webspace $webspace, Context $context, JsonSerializationVisitor $visitor)
     {
@@ -103,10 +96,6 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
 
     /**
      * Extract urls and add them to serialization.
-     *
-     * @param Webspace $webspace
-     * @param Context $context
-     * @param JsonSerializationVisitor $visitor
      */
     private function appendUrls(Webspace $webspace, Context $context, JsonSerializationVisitor $visitor)
     {
@@ -117,10 +106,6 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
 
     /**
      * Extract custom-url and add them to serialization.
-     *
-     * @param Webspace $webspace
-     * @param Context $context
-     * @param JsonSerializationVisitor $visitor
      */
     private function appendCustomUrls(Webspace $webspace, Context $context, JsonSerializationVisitor $visitor)
     {
@@ -138,10 +123,6 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
 
     /**
      * Returns custom-url data with the connected locales.
-     *
-     * @param Portal $portal
-     * @param Environment $environment
-     * @param Context $context
      *
      * @return array
      */

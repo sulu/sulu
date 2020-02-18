@@ -270,385 +270,241 @@ class BasePageDocument implements
         $this->children = new \ArrayIterator();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNodeName()
     {
         return $this->nodeName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTitle()
     {
         return $this->title;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setTitle($title)
     {
         $this->title = $title;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreated()
     {
         return $this->created;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChanged()
     {
         return $this->changed;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreator()
     {
         return $this->creator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChanger()
     {
         return $this->changer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getResourceSegment()
     {
         return $this->resourceSegment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setResourceSegment($resourceSegment)
     {
         $this->resourceSegment = $resourceSegment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNavigationContexts()
     {
         return $this->navigationContexts;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setNavigationContexts(array $navigationContexts = [])
     {
         $this->navigationContexts = $navigationContexts;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRedirectType()
     {
         return $this->redirectType;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setRedirectType($redirectType)
     {
         $this->redirectType = $redirectType;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRedirectTarget()
     {
         return $this->redirectTarget;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setRedirectTarget($redirectTarget)
     {
         $this->redirectTarget = $redirectTarget;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRedirectExternal()
     {
         return $this->redirectExternal;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setRedirectExternal($redirectExternal)
     {
         $this->redirectExternal = $redirectExternal;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getWorkflowStage()
     {
         return $this->workflowStage;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setWorkflowStage($workflowStage)
     {
         $this->workflowStage = $workflowStage;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPublished()
     {
         return $this->published;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getShadowLocale()
     {
         return $this->shadowLocale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setShadowLocale($shadowLocale)
     {
         $this->shadowLocale = $shadowLocale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isShadowLocaleEnabled()
     {
         return $this->shadowLocaleEnabled;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setShadowLocaleEnabled($shadowLocaleEnabled)
     {
         $this->shadowLocaleEnabled = $shadowLocaleEnabled;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUuid()
     {
         return $this->uuid;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStructureType()
     {
         return $this->structureType;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStructure()
     {
         return $this->structure;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setStructureType($structureType)
     {
         $this->structureType = $structureType;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale()
     {
         return $this->locale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setLocale($locale)
     {
         $this->locale = $locale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getOriginalLocale()
     {
         return $this->originalLocale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setOriginalLocale($originalLocale)
     {
         $this->originalLocale = $originalLocale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChildren()
     {
         return $this->children;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPath()
     {
         return $this->path;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExtensionsData()
     {
         return $this->extensions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setExtensionsData($extensions)
     {
         $this->extensions = $extensions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setExtension($name, $data)
     {
         $this->extensions[$name] = $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getWebspaceName()
     {
         return $this->webspaceName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSuluOrder()
     {
         return $this->suluOrder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setSuluOrder($order)
     {
         $this->suluOrder = $order;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setPermissions(array $permissions)
     {
         $this->permissions = $permissions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPermissions()
     {
         return $this->permissions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getVersions()
     {
         return $this->versions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setVersions($versions)
     {
         $this->versions = $versions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAuthored()
     {
         return $this->authored;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setAuthored($authored)
     {
         $this->authored = $authored;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAuthor()
     {
         return $this->author;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setAuthor($author)
     {
         $this->author = $author;

@@ -32,19 +32,12 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
      */
     private $permissions;
 
-    /**
-     * @param DocumentManagerInterface $documentManager
-     * @param array $permissions
-     */
     public function __construct(DocumentManagerInterface $documentManager, array $permissions)
     {
         $this->documentManager = $documentManager;
         $this->permissions = $permissions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setPermissions($type, $identifier, $permissions)
     {
         $document = $this->documentManager->find($identifier, null, ['rehydrate' => false]);
@@ -54,9 +47,6 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
         $this->documentManager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPermissions($type, $identifier)
     {
         $permissions = [];
@@ -74,9 +64,6 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
         return $document->getPermissions();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($type)
     {
         try {

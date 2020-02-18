@@ -23,9 +23,6 @@ class SnippetBridge extends StructureBridge
      */
     private $shadowBaseLanguage;
 
-    /**
-     * {@inheritdoc}
-     */
     public function getIsShadow()
     {
         return $this->isShadow;
@@ -39,9 +36,6 @@ class SnippetBridge extends StructureBridge
         $this->isShadow = $isShadow;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getShadowBaseLanguage()
     {
         return $this->shadowBaseLanguage;

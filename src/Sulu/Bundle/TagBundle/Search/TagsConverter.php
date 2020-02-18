@@ -29,9 +29,6 @@ class TagsConverter implements ConverterInterface
         $this->tagManager = $tagManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function convert($value)
     {
         return $this->tagManager->resolveTagNames($value);

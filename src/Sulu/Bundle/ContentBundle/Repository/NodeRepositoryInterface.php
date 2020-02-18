@@ -80,8 +80,6 @@ interface NodeRepositoryInterface
      * @param $languageCode
      * @param int $depth
      * @param bool $excludeGhosts
-     *
-     * @return mixed
      */
     public function getWebspaceNode(
         $webspaceKey,

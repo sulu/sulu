@@ -68,8 +68,6 @@ class ContactLocale
     /**
      * Set contact.
      *
-     * @param \Sulu\Component\Contact\Model\ContactInterface $contact
-     *
      * @return ContactLocale
      */
     public function setContact(\Sulu\Component\Contact\Model\ContactInterface $contact)

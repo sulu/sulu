@@ -84,15 +84,11 @@ interface MediaRepositoryInterface extends RepositoryInterface
      * @param $collectionId
      * @param $limit
      * @param $offset
-     *
-     * @return mixed
      */
     public function findMediaByCollectionId($collectionId, $limit, $offset);
 
     /**
      * Returns amount of affected rows.
-     *
-     * @param array $filter
      *
      * @return int
      *

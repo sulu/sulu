@@ -198,7 +198,6 @@ abstract class KernelTestCase extends \PHPUnit_Framework_TestCase
      * response body in case of failure.
      *
      * @param int $code
-     * @param Response $response
      * @param int $debugLength
      */
     protected function assertHttpStatusCode($code, Response $response, $debugLength = 20)

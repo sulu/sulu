@@ -34,8 +34,6 @@ class MarkupListener
 
     /**
      * Parses content of response and set the replaced html as new content.
-     *
-     * @param FilterResponseEvent $event
      */
     public function replaceMarkup(FilterResponseEvent $event)
     {

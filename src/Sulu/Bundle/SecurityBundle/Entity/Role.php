@@ -61,8 +61,6 @@ class Role extends BaseRole
     /**
      * Add permissions.
      *
-     * @param Permission $permissions
-     *
      * @return Role
      */
     public function addPermission(Permission $permissions)
@@ -74,8 +72,6 @@ class Role extends BaseRole
 
     /**
      * Remove permissions.
-     *
-     * @param Permission $permissions
      */
     public function removePermission(Permission $permissions)
     {
@@ -95,8 +91,6 @@ class Role extends BaseRole
     /**
      * Add userRoles.
      *
-     * @param UserRole $userRoles
-     *
      * @return Role
      */
     public function addUserRole(UserRole $userRoles)
@@ -108,8 +102,6 @@ class Role extends BaseRole
 
     /**
      * Remove userRoles.
-     *
-     * @param UserRole $userRoles
      */
     public function removeUserRole(UserRole $userRoles)
     {
@@ -129,8 +121,6 @@ class Role extends BaseRole
     /**
      * Add groups.
      *
-     * @param Group $groups
-     *
      * @return Role
      */
     public function addGroup(Group $groups)
@@ -142,8 +132,6 @@ class Role extends BaseRole
 
     /**
      * Remove groups.
-     *
-     * @param Group $groups
      */
     public function removeGroup(Group $groups)
     {
@@ -163,8 +151,6 @@ class Role extends BaseRole
     /**
      * Add setting.
      *
-     * @param RoleSettingInterface $setting
-     *
      * @return Role
      */
     public function addSetting(RoleSettingInterface $setting)
@@ -176,8 +162,6 @@ class Role extends BaseRole
 
     /**
      * Remove setting.
-     *
-     * @param RoleSettingInterface $setting
      */
     public function removeSetting(RoleSettingInterface $setting)
     {
@@ -194,9 +178,6 @@ class Role extends BaseRole
         return $this->settings;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSetting($key)
     {
         return $this->settings->get($key);

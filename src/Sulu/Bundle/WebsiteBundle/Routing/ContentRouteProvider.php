@@ -58,13 +58,6 @@ class ContentRouteProvider implements RouteProviderInterface
      */
     private $requestAnalyzer;
 
-    /**
-     * @param DocumentManagerInterface $documentManager
-     * @param DocumentInspector $documentInspector
-     * @param ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool
-     * @param StructureManagerInterface $structureManager
-     * @param RequestAnalyzerInterface $requestAnalyzer
-     */
     public function __construct(
         DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
@@ -79,9 +72,6 @@ class ContentRouteProvider implements RouteProviderInterface
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRouteCollectionForRequest(Request $request)
     {
         $collection = new RouteCollection();
@@ -209,17 +199,11 @@ class ContentRouteProvider implements RouteProviderInterface
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRouteByName($name, $parameters = [])
     {
         // TODO: Implement getRouteByName() method.
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoutesByNames($names, $parameters = [])
     {
         // TODO
@@ -242,7 +226,6 @@ class ContentRouteProvider implements RouteProviderInterface
     }
 
     /**
-     * @param Request $request
      * @param string $url
      *
      * @return Route
@@ -260,9 +243,6 @@ class ContentRouteProvider implements RouteProviderInterface
     }
 
     /**
-     * @param Request $request
-     * @param PageBridge $content
-     *
      * @return Route
      */
     protected function getStructureRoute(Request $request, PageBridge $content)

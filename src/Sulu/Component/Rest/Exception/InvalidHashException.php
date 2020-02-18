@@ -52,8 +52,6 @@ class InvalidHashException extends RestException
 
     /**
      * Returns the id of the entity for which an invalid hash has been passed.
-     *
-     * @return mixed
      */
     public function getId()
     {

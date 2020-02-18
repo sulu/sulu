@@ -41,10 +41,6 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         '/admin/api/nodes/{uuid}/resourcelocators',
     ];
 
-    /**
-     * @param ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool
-     * @param StructureManagerInterface $structureManager
-     */
     public function __construct(
         ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
         StructureManagerInterface $structureManager
@@ -53,9 +49,6 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         $this->structureManager = $structureManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function generate($parts, $parentUuid, $webspaceKey, $languageCode, $templateKey, $segmentKey = null)
     {
         /** @var StructureInterface $structure */
@@ -84,9 +77,6 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getHistory($uuid, $webspaceKey, $languageCode)
     {
         $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspaceKey);
@@ -119,9 +109,6 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function delete($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspaceKey);
@@ -146,8 +133,6 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     }
 
     /**
-     * @param StructureInterface $structure
-     * @param array $parts
      * @param string $separator default '-'
      *
      * @return string

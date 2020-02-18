@@ -50,7 +50,6 @@ class Contact extends ApiWrapper
     private $avatar = null;
 
     /**
-     * @param ContactEntity $contact
      * @param string $locale The locale of this product
      */
     public function __construct(ContactEntity $contact, $locale)
@@ -294,8 +293,6 @@ class Contact extends ApiWrapper
     /**
      * Add locale.
      *
-     * @param ContactLocaleEntity $locale
-     *
      * @return Contact
      */
     public function addLocale(ContactLocaleEntity $locale)
@@ -307,8 +304,6 @@ class Contact extends ApiWrapper
 
     /**
      * Remove locale.
-     *
-     * @param ContactLocaleEntity $locale
      *
      * @return Contact
      */
@@ -371,8 +366,6 @@ class Contact extends ApiWrapper
     /**
      * Add note.
      *
-     * @param NoteEntity $note
-     *
      * @return Contact
      */
     public function addNote(NoteEntity $note)
@@ -384,8 +377,6 @@ class Contact extends ApiWrapper
 
     /**
      * Remove note.
-     *
-     * @param NoteEntity $note
      *
      * @return $this
      */
@@ -420,8 +411,6 @@ class Contact extends ApiWrapper
     /**
      * Add email.
      *
-     * @param EmailEntity $email
-     *
      * @return Contact
      */
     public function addEmail(EmailEntity $email)
@@ -433,8 +422,6 @@ class Contact extends ApiWrapper
 
     /**
      * Remove email.
-     *
-     * @param EmailEntity $email
      */
     public function removeEmail(EmailEntity $email)
     {
@@ -465,8 +452,6 @@ class Contact extends ApiWrapper
     /**
      * Add phone.
      *
-     * @param PhoneEntity $phone
-     *
      * @return Contact
      */
     public function addPhone(PhoneEntity $phone)
@@ -478,8 +463,6 @@ class Contact extends ApiWrapper
 
     /**
      * Remove phone.
-     *
-     * @param PhoneEntity $phone
      */
     public function removePhone(PhoneEntity $phone)
     {
@@ -510,8 +493,6 @@ class Contact extends ApiWrapper
     /**
      * Add fax.
      *
-     * @param FaxEntity $fax
-     *
      * @return Contact
      */
     public function addFax(FaxEntity $fax)
@@ -523,8 +504,6 @@ class Contact extends ApiWrapper
 
     /**
      * Remove fax.
-     *
-     * @param FaxEntity $fax
      */
     public function removeFax(FaxEntity $fax)
     {
@@ -555,8 +534,6 @@ class Contact extends ApiWrapper
     /**
      * Add social media profile.
      *
-     * @param SocialMediaProfileEntity $socialMediaProfile
-     *
      * @return Contact
      */
     public function addSocialMediaProfile(SocialMediaProfileEntity $socialMediaProfile)
@@ -568,8 +545,6 @@ class Contact extends ApiWrapper
 
     /**
      * Remove social media profile.
-     *
-     * @param SocialMediaProfileEntity $socialMediaProfile
      */
     public function removeSocialMediaProfile(SocialMediaProfileEntity $socialMediaProfile)
     {
@@ -600,8 +575,6 @@ class Contact extends ApiWrapper
     /**
      * Add url.
      *
-     * @param UrlEntity $url
-     *
      * @return Contact
      */
     public function addUrl(UrlEntity $url)
@@ -613,8 +586,6 @@ class Contact extends ApiWrapper
 
     /**
      * Remove url.
-     *
-     * @param UrlEntity $url
      */
     public function removeUrl(UrlEntity $url)
     {
@@ -700,8 +671,6 @@ class Contact extends ApiWrapper
 
     /**
      * Sets the avatar (media-api object).
-     *
-     * @param Media $avatar
      */
     public function setAvatar(Media $avatar)
     {
@@ -733,8 +702,6 @@ class Contact extends ApiWrapper
     /**
      * Add tag.
      *
-     * @param TagInterface $tag
-     *
      * @return Contact
      */
     public function addTag(TagInterface $tag)
@@ -746,8 +713,6 @@ class Contact extends ApiWrapper
 
     /**
      * Remove tag.
-     *
-     * @param TagInterface $tag
      */
     public function removeTag(TagInterface $tag)
     {
@@ -1002,8 +967,6 @@ class Contact extends ApiWrapper
     /**
      * Returns the main address.
      *
-     * @return mixed
-     *
      * @VirtualProperty
      * @SerializedName("mainAddress")
      * @Groups({"fullContact","partialContact"})
@@ -1027,8 +990,6 @@ class Contact extends ApiWrapper
     /**
      * Add media.
      *
-     * @param MediaInterface $media
-     *
      * @return Contact
      */
     public function addMedia(MediaInterface $media)
@@ -1038,8 +999,6 @@ class Contact extends ApiWrapper
 
     /**
      * Remove media.
-     *
-     * @param MediaInterface $media
      */
     public function removeMedia(MediaInterface $media)
     {
@@ -1070,8 +1029,6 @@ class Contact extends ApiWrapper
     /**
      * Add category.
      *
-     * @param CategoryEntity $category
-     *
      * @return Contact
      */
     public function addCategory(CategoryEntity $category)
@@ -1083,8 +1040,6 @@ class Contact extends ApiWrapper
 
     /**
      * Remove category.
-     *
-     * @param CategoryEntity $category
      */
     public function removeCategory(CategoryEntity $category)
     {

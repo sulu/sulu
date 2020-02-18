@@ -31,7 +31,6 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
     private $enabledSecurity;
 
     /**
-     * @param SecurityCheckerInterface $securityChecker
      * @param bool $enabledSecurity
      */
     public function __construct(SecurityCheckerInterface $securityChecker, $enabledSecurity = false)
@@ -40,9 +39,6 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
         $this->enabledSecurity = $enabledSecurity;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNavigationItems(array $options = [])
     {
         $content = new ContentNavigationItem('content-navigation.contents.content');

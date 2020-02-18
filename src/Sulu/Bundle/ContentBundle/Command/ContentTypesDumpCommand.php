@@ -22,18 +22,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ContentTypesDumpCommand extends ContainerAwareCommand
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         $this->setName('sulu:content:types:dump')
             ->setDescription('Dumps all ContentTypes registered in the system');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var ContentTypeManagerInterface $contentTypeManager */

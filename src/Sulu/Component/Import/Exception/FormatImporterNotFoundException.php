@@ -16,9 +16,6 @@ namespace Sulu\Component\Import\Exception;
  */
 class FormatImporterNotFoundException extends \Exception
 {
-    /**
-     * {@inheritdoc}
-     */
     public function __construct(
         $message = '',
         $code = 0,

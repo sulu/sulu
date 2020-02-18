@@ -79,9 +79,6 @@ class QueryBuilder extends ContentQueryBuilder
         $this->sessionManager = $sessionManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function buildWhere($webspaceKey, $locale)
     {
         $sql2Where = [];
@@ -155,9 +152,6 @@ class QueryBuilder extends ContentQueryBuilder
         return implode(' AND ', $sql2Where);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function buildSelect($webspaceKey, $locale, &$additionalFields)
     {
         $select = [];
@@ -169,9 +163,6 @@ class QueryBuilder extends ContentQueryBuilder
         return implode(', ', $select);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function buildOrder($webspaceKey, $locale)
     {
         $sortOrder = (isset($this->config['sortMethod']) && 'desc' === strtolower($this->config['sortMethod']))
@@ -197,9 +188,6 @@ class QueryBuilder extends ContentQueryBuilder
         return implode(', ', $sql2Order);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function init(array $options)
     {
         $this->propertiesConfig = isset($options['properties']) ? $options['properties'] : [];
@@ -370,7 +358,6 @@ class QueryBuilder extends ContentQueryBuilder
      * returns config value.
      *
      * @param string $name config name
-     * @param mixed $default
      *
      * @return mixed config value
      */

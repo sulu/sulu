@@ -26,9 +26,6 @@ class InternalLink implements RuleTypeInterface
         $this->name = $name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTemplate()
     {
         return '<div class="grid-12">

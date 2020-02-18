@@ -130,89 +130,56 @@ class FieldDescriptor implements FieldDescriptorInterface
         $this->class = $cssClass;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDisabled()
     {
         return $this->disabled;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTranslation()
     {
         return $this->translation;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType()
     {
         return $this->type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getWidth()
     {
         return $this->width;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefault()
     {
         return $this->default;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSortable()
     {
         return $this->sortable;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEditable()
     {
         return $this->editable;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMinWidth()
     {
         return $this->minWidth;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getClass()
     {
         return $this->class;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMetadata()
     {
         return $this->metadata;
@@ -228,9 +195,6 @@ class FieldDescriptor implements FieldDescriptorInterface
         $this->metadata = $metadata;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function compare(FieldDescriptorInterface $other)
     {
         if (!$other instanceof self) {

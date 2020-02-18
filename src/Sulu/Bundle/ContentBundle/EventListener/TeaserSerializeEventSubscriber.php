@@ -27,17 +27,11 @@ class TeaserSerializeEventSubscriber implements EventSubscriberInterface
      */
     private $mediaManager;
 
-    /**
-     * @param MediaManagerInterface $mediaManager
-     */
     public function __construct(MediaManagerInterface $mediaManager)
     {
         $this->mediaManager = $mediaManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -51,8 +45,6 @@ class TeaserSerializeEventSubscriber implements EventSubscriberInterface
 
     /**
      * Add uniqueid and media-data to serialized data.
-     *
-     * @param ObjectEvent $event
      */
     public function onPostSerialize(ObjectEvent $event)
     {

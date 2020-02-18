@@ -53,8 +53,6 @@ class WebspaceCollection implements \IteratorAggregate
 
     /**
      * Adds a new FileResource, which is required to determine if the cache is fresh.
-     *
-     * @param FileResource $resource
      */
     public function addResource(FileResource $resource)
     {

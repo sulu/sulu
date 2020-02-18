@@ -20,25 +20,16 @@ use Symfony\Component\HttpKernel\Kernel;
  */
 class CacheBuilder extends SuluBuilder
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'cache';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDependencies()
     {
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function build()
     {
         @trigger_error(

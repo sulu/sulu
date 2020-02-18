@@ -21,8 +21,6 @@ interface ConditionRepositoryInterface
      * Finds an entity by id.
      *
      * @param $id
-     *
-     * @return mixed
      */
     public function findById($id);
 }

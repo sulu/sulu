@@ -26,9 +26,6 @@ class ContentNodeOrderEvent extends Event
      */
     protected $node;
 
-    /**
-     * @param NodeInterface $node
-     */
     public function __construct(NodeInterface $node)
     {
         $this->node = $node;

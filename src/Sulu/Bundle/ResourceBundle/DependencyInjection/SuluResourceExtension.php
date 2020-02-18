@@ -24,9 +24,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class SuluResourceExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
@@ -53,7 +50,6 @@ class SuluResourceExtension extends Extension
      * Create and return directory.
      *
      * @param string $directory
-     * @param ContainerBuilder $container
      *
      * @return string
      */

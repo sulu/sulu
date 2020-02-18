@@ -114,8 +114,6 @@ class Collaboration
 
     /**
      * Returns the id of the entity the user collaborating on.
-     *
-     * @return mixed
      */
     public function getId()
     {

@@ -22,9 +22,6 @@ use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
  */
 class GeneralMetadataSerializeSubscriber implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -38,8 +35,6 @@ class GeneralMetadataSerializeSubscriber implements EventSubscriberInterface
 
     /**
      * Add general metadata which is not present in the field-descriptor.
-     *
-     * @param ObjectEvent $event
      */
     public function onPostSerialize(ObjectEvent $event)
     {

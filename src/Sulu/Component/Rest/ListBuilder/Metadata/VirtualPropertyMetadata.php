@@ -22,9 +22,6 @@ class VirtualPropertyMetadata extends PropertyMetadata
         $this->name = $name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function serialize()
     {
         return serialize(
@@ -36,9 +33,6 @@ class VirtualPropertyMetadata extends PropertyMetadata
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function unserialize($str)
     {
         list($this->class,

@@ -32,9 +32,6 @@ class Select implements RuleTypeInterface
         $this->options = $options;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTemplate()
     {
         return '<div class="grid-12">

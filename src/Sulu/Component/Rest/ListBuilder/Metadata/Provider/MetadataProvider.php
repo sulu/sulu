@@ -29,9 +29,6 @@ class MetadataProvider implements ProviderInterface
         $this->metadataFactory = $metadataFactory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMetadataForClass($className)
     {
         return $this->metadataFactory->getMetadataForClass($className);

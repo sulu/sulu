@@ -53,9 +53,6 @@ class UserBlameSubscriber implements EventSubscriber
         $this->userClass = $userClass;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSubscribedEvents()
     {
         $events = [
@@ -68,8 +65,6 @@ class UserBlameSubscriber implements EventSubscriber
 
     /**
      * Map creator and changer fields to User objects.
-     *
-     * @param LoadClassMetadataEventArgs $event
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)
     {
@@ -182,8 +177,6 @@ class UserBlameSubscriber implements EventSubscriber
 
     /**
      * Return the user from the token.
-     *
-     * @param TokenInterface $token
      *
      * @return UserInterface
      */

@@ -36,9 +36,6 @@ class ParameterRequestProcessor implements RequestProcessorInterface
         $this->environment = $environment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
         if (!$request->get('_locale') && !$request->get('_portal')) {
@@ -62,9 +59,6 @@ class ParameterRequestProcessor implements RequestProcessorInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validate(RequestAttributes $attributes)
     {
         return true;

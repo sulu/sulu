@@ -92,8 +92,6 @@ class File implements AuditableInterface
     /**
      * Set changed.
      *
-     * @param \DateTime $changed
-     *
      * @return $this
      */
     public function setChanged(\DateTime $changed)
@@ -140,8 +138,6 @@ class File implements AuditableInterface
     /**
      * Add fileVersions.
      *
-     * @param FileVersion $fileVersions
-     *
      * @return File
      */
     public function addFileVersion(FileVersion $fileVersions)
@@ -153,8 +149,6 @@ class File implements AuditableInterface
 
     /**
      * Remove fileVersions.
-     *
-     * @param FileVersion $fileVersions
      */
     public function removeFileVersion(FileVersion $fileVersions)
     {
@@ -202,8 +196,6 @@ class File implements AuditableInterface
 
     /**
      * Set media.
-     *
-     * @param MediaInterface $media
      *
      * @return File
      */

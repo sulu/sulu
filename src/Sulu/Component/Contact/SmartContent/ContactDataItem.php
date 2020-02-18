@@ -34,8 +34,6 @@ class ContactDataItem implements ItemInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @VirtualProperty
      */
     public function getId()
@@ -44,8 +42,6 @@ class ContactDataItem implements ItemInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @VirtualProperty
      */
     public function getTitle()
@@ -54,8 +50,6 @@ class ContactDataItem implements ItemInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @VirtualProperty
      */
     public function getImage()
@@ -63,9 +57,6 @@ class ContactDataItem implements ItemInterface
         return;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getResource()
     {
         return $this->entity;

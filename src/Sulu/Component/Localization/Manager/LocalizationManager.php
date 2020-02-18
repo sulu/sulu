@@ -25,9 +25,6 @@ class LocalizationManager implements LocalizationManagerInterface
      */
     private $localizationProviders = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocalizations()
     {
         $localizations = [];
@@ -41,9 +38,6 @@ class LocalizationManager implements LocalizationManagerInterface
         return $localizations;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addLocalizationProvider(LocalizationProviderInterface $localizationProvider)
     {
         $this->localizationProviders[] = $localizationProvider;

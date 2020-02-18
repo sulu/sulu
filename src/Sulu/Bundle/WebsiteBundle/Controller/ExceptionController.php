@@ -50,10 +50,6 @@ class ExceptionController
     private $debug;
 
     /**
-     * @param BaseExceptionController $exceptionController
-     * @param RequestAnalyzerInterface $requestAnalyzer
-     * @param ParameterResolverInterface $parameterResolver
-     * @param \Twig_Environment $twig
      * @param bool $debug
      */
     public function __construct(

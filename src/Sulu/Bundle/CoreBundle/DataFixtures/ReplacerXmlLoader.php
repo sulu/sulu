@@ -19,9 +19,6 @@ use Symfony\Component\Config\Util\XmlUtils;
  */
 class ReplacerXmlLoader extends FileLoader
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load($resource, $type = null)
     {
         $path = $this->getLocator()->locate($resource);
@@ -30,9 +27,6 @@ class ReplacerXmlLoader extends FileLoader
         return $this->parseXml($path);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($resource, $type = null)
     {
         return 'xml' === pathinfo($resource, PATHINFO_EXTENSION);

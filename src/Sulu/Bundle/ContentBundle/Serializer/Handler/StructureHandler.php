@@ -23,9 +23,6 @@ use Sulu\Component\Content\Document\Structure\Structure;
  */
 class StructureHandler implements SubscribingHandlerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribingMethods()
     {
         return [
@@ -44,14 +41,6 @@ class StructureHandler implements SubscribingHandlerInterface
         ];
     }
 
-    /**
-     * @param JsonSerializationVisitor $visitor
-     * @param Structure $structure
-     * @param array $type
-     * @param Context $context
-     *
-     * @return mixed
-     */
     public function doSerialize(
         JsonSerializationVisitor $visitor,
         Structure $structure,
@@ -64,11 +53,6 @@ class StructureHandler implements SubscribingHandlerInterface
     }
 
     /**
-     * @param JsonDeserializationVisitor $visitor
-     * @param array $data
-     * @param array $type
-     * @param Context $context
-     *
      * @return Structure
      */
     public function doDeserialize(

@@ -178,8 +178,6 @@ class Teaser
     /**
      * Merges given data with this teaser.
      *
-     * @param array $item
-     *
      * @return Teaser
      */
     public function merge(array $item)
@@ -197,10 +195,6 @@ class Teaser
      * Returns array-value by name or default value.
      *
      * @param string $name
-     * @param array $item
-     * @param mixed $default
-     *
-     * @return mixed
      */
     private function getValue($name, array $item, $default)
     {

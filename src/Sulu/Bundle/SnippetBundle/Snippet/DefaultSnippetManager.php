@@ -62,9 +62,6 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         $this->areas = new FrozenParameterBag(array_change_key_case($areas));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save($webspaceKey, $type, $uuid, $locale)
     {
         /** @var SnippetDocument $document */
@@ -87,17 +84,11 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         return $document;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove($webspaceKey, $type)
     {
         $this->settingsManager->remove($webspaceKey, 'snippets-' . $type);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($webspaceKey, $type, $locale)
     {
         $snippetNode = $this->settingsManager->load($webspaceKey, 'snippets-' . $type);
@@ -117,9 +108,6 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         return $document;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isDefault($uuid)
     {
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
@@ -133,9 +121,6 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadType($uuid)
     {
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
@@ -153,9 +138,6 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadIdentifier($webspaceKey, $type)
     {
         // TODO remove strtolower as soon as lowest Symfony version is 3.4

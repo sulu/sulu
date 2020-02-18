@@ -35,7 +35,6 @@ class NominatimGeolocator implements GeolocatorInterface
     protected $baseUrl;
 
     /**
-     * @param ClientInterface $client
      * @param string $baseUrl
      */
     public function __construct(ClientInterface $client, $baseUrl = '')
@@ -44,9 +43,6 @@ class NominatimGeolocator implements GeolocatorInterface
         $this->baseUrl = $baseUrl;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function locate($query)
     {
         $response = $this->client->request(

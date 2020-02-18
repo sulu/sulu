@@ -22,9 +22,6 @@ interface HandlerUpdateResponseInterface extends HandlerInterface
 {
     /**
      * Update the response based on the given structure.
-     *
-     * @param Response $response
-     * @param StructureInterface $structure
      */
     public function updateResponse(Response $response, StructureInterface $structure);
 }

@@ -22,9 +22,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class BasePageDocumentType extends AbstractStructureBehaviorType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $options)
     {
         $options->setRequired(
@@ -36,9 +33,6 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
         parent::configureOptions($options);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);

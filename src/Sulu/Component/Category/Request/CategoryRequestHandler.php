@@ -28,9 +28,6 @@ class CategoryRequestHandler implements CategoryRequestHandlerInterface
         $this->requestStack = $requestStack;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCategories($categoriesParameter = 'categories')
     {
         if (null !== $this->requestStack->getCurrentRequest()) {
@@ -47,9 +44,6 @@ class CategoryRequestHandler implements CategoryRequestHandlerInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function appendCategoryToUrl($category, $categoriesParameter = 'categories')
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -74,9 +68,6 @@ class CategoryRequestHandler implements CategoryRequestHandlerInterface
         return $request->getPathInfo() . (strlen($queryString) > 0 ? '?' . $queryString : '');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setCategoryToUrl($category, $categoriesParameter = 'categories')
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -96,9 +87,6 @@ class CategoryRequestHandler implements CategoryRequestHandlerInterface
         return $request->getPathInfo() . (strlen($queryString) > 0 ? '?' . $queryString : '');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeCategoriesFromUrl($categoriesParameter = 'categories')
     {
         $request = $this->requestStack->getCurrentRequest();

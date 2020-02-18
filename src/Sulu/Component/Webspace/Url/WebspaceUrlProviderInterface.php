@@ -22,7 +22,6 @@ interface WebspaceUrlProviderInterface
     /**
      * Returns urls for given webspace.
      *
-     * @param Webspace $webspace
      * @param string $environment
      *
      * @return Url[]

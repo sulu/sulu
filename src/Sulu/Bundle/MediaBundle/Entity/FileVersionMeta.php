@@ -184,8 +184,6 @@ class FileVersionMeta
     /**
      * Set fileVersion.
      *
-     * @param FileVersion $fileVersion
-     *
      * @return FileVersionMeta
      */
     public function setFileVersion(FileVersion $fileVersion)

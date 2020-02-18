@@ -22,7 +22,6 @@ interface RouteGeneratorInterface
      * Generates route by route-schema for given entity.
      *
      * @param object $entity
-     * @param array $options
      *
      * @return string
      */
@@ -30,8 +29,6 @@ interface RouteGeneratorInterface
 
     /**
      * Returns options-resolver for validating options.
-     *
-     * @param array $options
      *
      * @return OptionsResolver
      */

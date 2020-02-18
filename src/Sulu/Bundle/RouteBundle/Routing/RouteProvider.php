@@ -84,9 +84,6 @@ class RouteProvider implements RouteProviderInterface
         $this->proxyFactory = $proxyFactory ?: new LazyLoadingValueHolderFactory();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRouteCollectionForRequest(Request $request)
     {
         $path = $this->decodePathInfo($request->getPathInfo());
@@ -164,9 +161,6 @@ class RouteProvider implements RouteProviderInterface
         return $this->routeCache[$path];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRouteByName($name)
     {
         if (0 !== strpos($name, self::ROUTE_PREFIX)) {
@@ -203,9 +197,6 @@ class RouteProvider implements RouteProviderInterface
         return $this->createRoute($route, $request, $attributes);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoutesByNames($names)
     {
         return [];
@@ -213,9 +204,6 @@ class RouteProvider implements RouteProviderInterface
 
     /**
      * Will create a symfony route.
-     *
-     * @param RouteInterface $route
-     * @param Request $request
      *
      * @return Route
      */

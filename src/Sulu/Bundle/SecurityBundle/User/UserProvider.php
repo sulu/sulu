@@ -50,9 +50,6 @@ class UserProvider implements UserProviderInterface
         $this->suluSystem = $suluSystem;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadUserByUsername($username)
     {
         $exceptionMessage = sprintf(
@@ -83,9 +80,6 @@ class UserProvider implements UserProviderInterface
         throw new UsernameNotFoundException($exceptionMessage, 0);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function refreshUser(BaseUserInterface $user)
     {
         $class = get_class($user);
@@ -111,9 +105,6 @@ class UserProvider implements UserProviderInterface
         return $user;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsClass($class)
     {
         return is_subclass_of($class, UserInterface::class);

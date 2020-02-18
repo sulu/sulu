@@ -257,9 +257,6 @@ class PropertyMetadata extends BasePropertyMetadata
         $this->filterTypeParameters = $parameters;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function serialize()
     {
         return serialize(
@@ -280,9 +277,6 @@ class PropertyMetadata extends BasePropertyMetadata
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function unserialize($str)
     {
         list(

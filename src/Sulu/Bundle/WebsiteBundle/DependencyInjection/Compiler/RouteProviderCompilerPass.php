@@ -22,9 +22,6 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class RouteProviderCompilerPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         if (SuluKernel::CONTEXT_WEBSITE === $container->getParameter('sulu.context')) {

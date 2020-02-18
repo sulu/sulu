@@ -29,10 +29,6 @@ class RouteIsNotUniqueException extends \DomainException
      */
     private $entity;
 
-    /**
-     * @param RouteInterface $route
-     * @param RoutableInterface $entity
-     */
     public function __construct(RouteInterface $route, RoutableInterface $entity)
     {
         $this->route = $route;

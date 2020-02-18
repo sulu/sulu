@@ -52,9 +52,6 @@ class SecurityConfig implements JsConfigInterface
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getParameters()
     {
         $parameters = [];
@@ -79,9 +76,6 @@ class SecurityConfig implements JsConfigInterface
         return $parameters;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->name;

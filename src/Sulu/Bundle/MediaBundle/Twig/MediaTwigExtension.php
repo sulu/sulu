@@ -26,17 +26,11 @@ class MediaTwigExtension extends \Twig_Extension
      */
     private $mediaManager;
 
-    /**
-     * @param MediaManagerInterface $mediaManager
-     */
     public function __construct(MediaManagerInterface $mediaManager)
     {
         $this->mediaManager = $mediaManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [
@@ -123,9 +117,6 @@ class MediaTwigExtension extends \Twig_Extension
         return;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'sulu_media';

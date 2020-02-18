@@ -241,8 +241,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add urls.
      *
-     * @param Url $urls
-     *
      * @return Account
      */
     public function addUrl(Url $urls)
@@ -254,8 +252,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
 
     /**
      * Remove url.
-     *
-     * @param Url $url
      */
     public function removeUrl(Url $url)
     {
@@ -275,8 +271,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add phones.
      *
-     * @param Phone $phone
-     *
      * @return Account
      */
     public function addPhone(Phone $phone)
@@ -288,8 +282,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
 
     /**
      * Remove phone.
-     *
-     * @param Phone $phone
      */
     public function removePhone(Phone $phone)
     {
@@ -309,8 +301,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add emails.
      *
-     * @param Email $email
-     *
      * @return Account
      */
     public function addEmail(Email $email)
@@ -322,8 +312,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
 
     /**
      * Remove emails.
-     *
-     * @param Email $email
      */
     public function removeEmail(Email $email)
     {
@@ -343,8 +331,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add notes.
      *
-     * @param Note $note
-     *
      * @return Account
      */
     public function addNote(Note $note)
@@ -356,8 +342,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
 
     /**
      * Remove notes.
-     *
-     * @param Note $note
      */
     public function removeNote(Note $note)
     {
@@ -377,8 +361,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add children.
      *
-     * @param AccountInterface $children
-     *
      * @return Account
      */
     public function addChildren(AccountInterface $children)
@@ -390,8 +372,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
 
     /**
      * Remove children.
-     *
-     * @param AccountInterface $children
      */
     public function removeChildren(AccountInterface $children)
     {
@@ -411,8 +391,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add faxes.
      *
-     * @param Fax $fax
-     *
      * @return Account
      */
     public function addFax(Fax $fax)
@@ -424,8 +402,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
 
     /**
      * Remove fax.
-     *
-     * @param Fax $fax
      */
     public function removeFax(Fax $fax)
     {
@@ -445,8 +421,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add social media profile.
      *
-     * @param SocialMediaProfile $socialMediaProfile
-     *
      * @return Account
      */
     public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile)
@@ -458,8 +432,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
 
     /**
      * Remove social media profile.
-     *
-     * @param SocialMediaProfile $socialMediaProfile
      */
     public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile)
     {
@@ -479,8 +451,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add bankAccounts.
      *
-     * @param BankAccount $bankAccount
-     *
      * @return Account
      */
     public function addBankAccount(BankAccount $bankAccount)
@@ -492,8 +462,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
 
     /**
      * Remove bankAccount.
-     *
-     * @param BankAccount $bankAccounts
      */
     public function removeBankAccount(BankAccount $bankAccount)
     {
@@ -513,8 +481,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add tags.
      *
-     * @param TagInterface $tags
-     *
      * @return Account
      */
     public function addTag(TagInterface $tag)
@@ -526,8 +492,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
 
     /**
      * Remove tag.
-     *
-     * @param TagInterface $tag
      */
     public function removeTag(TagInterface $tag)
     {
@@ -564,8 +528,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add accountContact.
      *
-     * @param AccountContact $accountContact
-     *
      * @return Account
      */
     public function addAccountContact(AccountContact $accountContacts)
@@ -577,8 +539,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
 
     /**
      * Remove accountContacts.
-     *
-     * @param AccountContact $accountContacts
      */
     public function removeAccountContact(AccountContact $accountContacts)
     {
@@ -598,8 +558,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add accountAddresses.
      *
-     * @param AccountAddress $accountAddress
-     *
      * @return Account
      */
     public function addAccountAddress(AccountAddress $accountAddress)
@@ -611,8 +569,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
 
     /**
      * Remove accountAddresses.
-     *
-     * @param AccountAddress $accountAddress
      */
     public function removeAccountAddress(AccountAddress $accountAddress)
     {
@@ -651,8 +607,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
 
     /**
      * Returns the main address.
-     *
-     * @return mixed
      */
     public function getMainAddress()
     {
@@ -693,8 +647,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add medias.
      *
-     * @param MediaInterface $media
-     *
      * @return Account
      */
     public function addMedia(MediaInterface $media)
@@ -706,8 +658,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
 
     /**
      * Remove medias.
-     *
-     * @param MediaInterface $media
      */
     public function removeMedia(MediaInterface $media)
     {
@@ -727,8 +677,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * Add children.
      *
-     * @param AccountInterface $children
-     *
      * @return Account
      */
     public function addChild(AccountInterface $children)
@@ -740,8 +688,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
 
     /**
      * Remove children.
-     *
-     * @param AccountInterface $children
      */
     public function removeChild(AccountInterface $children)
     {
@@ -750,8 +696,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
 
     /**
      * Add categories.
-     *
-     * @param CategoryInterface $categories
      *
      * @return Account
      */
@@ -764,8 +708,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
 
     /**
      * Remove category.
-     *
-     * @param CategoryInterface $category
      */
     public function removeCategory(CategoryInterface $category)
     {

@@ -48,9 +48,6 @@ class MediaImageExtractor implements MediaImageExtractorInterface
         $this->videoThumbnail = $videoThumbnail;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function extract($content)
     {
         $finfo = new \finfo();

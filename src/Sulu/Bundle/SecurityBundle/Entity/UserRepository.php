@@ -59,9 +59,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findUserById($id)
     {
         try {
@@ -91,9 +88,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findUsersById(array $ids)
     {
         $query = $this->createQueryBuilder('user')
@@ -224,9 +218,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         return $query->getSingleResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findUserByIdentifier($identifier)
     {
         $qb = $this->getUserWithPermissionsQuery()
@@ -240,9 +231,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         return $query->getSingleResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findUserWithSecurityById($id)
     {
         $queryBuilder = $this->getUserWithPermissionsQuery()

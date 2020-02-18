@@ -53,9 +53,6 @@ class SuluSearchExtension extends Extension implements PrependExtensionInterface
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();

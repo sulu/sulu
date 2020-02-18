@@ -55,10 +55,6 @@ class PageRule implements RuleInterface
     private $urlHeader;
 
     /**
-     * @param RequestStack $requestStack
-     * @param RequestAnalyzerInterface $requestAnalyzer
-     * @param TranslatorInterface $translator
-     * @param ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool
      * @param string $uuidHeader
      * @param string $urlHeader
      */
@@ -78,9 +74,6 @@ class PageRule implements RuleInterface
         $this->urlHeader = $urlHeader;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function evaluate(array $options)
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -123,17 +116,11 @@ class PageRule implements RuleInterface
         return $options['page'] === $uuid;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->translator->trans('sulu_content.rules.page', [], 'backend');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType()
     {
         return new InternalLink(static::PAGE);

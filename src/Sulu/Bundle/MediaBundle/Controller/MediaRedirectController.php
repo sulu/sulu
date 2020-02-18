@@ -27,7 +27,6 @@ class MediaRedirectController extends Controller
     /**
      * Redirects to format or original url.
      *
-     * @param Request $request
      * @param int $id
      *
      * @return RedirectResponse

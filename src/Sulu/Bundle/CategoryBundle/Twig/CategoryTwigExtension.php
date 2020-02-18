@@ -54,9 +54,6 @@ class CategoryTwigExtension extends \Twig_Extension
         $this->memoizeCache = $memoizeCache;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [
@@ -130,9 +127,6 @@ class CategoryTwigExtension extends \Twig_Extension
         return $this->categoryRequestHandler->removeCategoriesFromUrl($categoriesParameter);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'sulu_category';

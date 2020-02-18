@@ -475,9 +475,6 @@ class ListQueryBuilder
         return $result;
     }
 
-    /**
-     * @return mixed
-     */
     public function getRelationalFilters()
     {
         return $this->relationalFilters;

@@ -38,9 +38,6 @@ class WebspaceSubscriber implements EventSubscriberInterface
         $this->inspector = $inspector;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -50,9 +47,6 @@ class WebspaceSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param AbstractMappingEvent $event
-     */
     public function handleWebspace(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();

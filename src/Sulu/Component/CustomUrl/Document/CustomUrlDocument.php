@@ -142,17 +142,11 @@ class CustomUrlDocument implements
         $this->routes = [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUuid()
     {
         return $this->uuid;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTitle()
     {
         return $this->title;
@@ -168,9 +162,6 @@ class CustomUrlDocument implements
         $this->title = $title;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isPublished()
     {
         return $this->published;
@@ -186,9 +177,6 @@ class CustomUrlDocument implements
         $this->published = $published;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getBaseDomain()
     {
         return $this->baseDomain;
@@ -204,9 +192,6 @@ class CustomUrlDocument implements
         $this->baseDomain = $baseDomain;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDomainParts()
     {
         return $this->domainParts;
@@ -222,57 +207,36 @@ class CustomUrlDocument implements
         $this->domainParts = $domainParts;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTargetDocument()
     {
         return $this->targetDocument;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setTargetDocument($targetDocument)
     {
         $this->targetDocument = $targetDocument;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getOriginalLocale()
     {
         return $this->originalLocale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setOriginalLocale($originalLocale)
     {
         $this->originalLocale = $originalLocale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale()
     {
         return $this->locale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setLocale($locale)
     {
         $this->locale = $locale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTargetLocale()
     {
         return $this->targetLocale;
@@ -288,9 +252,6 @@ class CustomUrlDocument implements
         $this->targetLocale = $targetLocale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isCanonical()
     {
         return $this->canonical;
@@ -306,9 +267,6 @@ class CustomUrlDocument implements
         $this->canonical = $canonical;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isRedirect()
     {
         return $this->redirect;
@@ -324,9 +282,6 @@ class CustomUrlDocument implements
         $this->redirect = $redirect;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isNoFollow()
     {
         return $this->noFollow;
@@ -340,9 +295,6 @@ class CustomUrlDocument implements
         $this->noFollow = $noFollow;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isNoIndex()
     {
         return $this->noIndex;
@@ -356,89 +308,56 @@ class CustomUrlDocument implements
         $this->noIndex = $noIndex;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoutes()
     {
         return $this->routes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setRoutes(array $routes)
     {
         $this->routes = $routes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addRoute($route, RouteDocument $routeDocument)
     {
         $this->routes[$route] = $routeDocument;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNodeName()
     {
         return $this->nodeName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreated()
     {
         return $this->created;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChanged()
     {
         return $this->changed;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreator()
     {
         return $this->creator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChanger()
     {
         return $this->changer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getParent()
     {
         return $this->parent;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setParent($parent)
     {
         $this->parent = $parent;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPath()
     {
         return $this->path;

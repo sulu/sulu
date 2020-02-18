@@ -60,9 +60,6 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
         $this->debug = $debug;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFieldDescriptorForClass($className, $options = [], $type = null)
     {
         $cacheKey = md5(json_encode($options));
@@ -156,8 +153,6 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
     /**
      * Returns field-descriptor for given general metadata.
      *
-     * @param GeneralPropertyMetadata $generalMetadata
-     * @param FieldMetadata $fieldMetadata
      * @param array $options
      *
      * @return DoctrineFieldDescriptor
@@ -198,9 +193,6 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
     /**
      * Returns count-field-descriptor for given general metadata.
      *
-     * @param GeneralPropertyMetadata $generalMetadata
-     * @param FieldMetadata $fieldMetadata
-     *
      * @return DoctrineCountFieldDescriptor
      */
     protected function getCountFieldDescriptor(GeneralPropertyMetadata $generalMetadata, FieldMetadata $fieldMetadata)
@@ -236,8 +228,6 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
     /**
      * Returns concatenation field-descriptor for given general metadata.
      *
-     * @param GeneralPropertyMetadata $generalMetadata
-     * @param ConcatenationTypeMetadata $type
      * @param array $options
      *
      * @return DoctrineConcatenationFieldDescriptor
@@ -271,8 +261,6 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
     /**
      * Returns concatenation field-descriptor for given general metadata.
      *
-     * @param GeneralPropertyMetadata $generalMetadata
-     * @param GroupConcatTypeMetadata $type
      * @param array $options
      *
      * @return DoctrineGroupConcatFieldDescriptor
@@ -302,8 +290,6 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
     /**
      * Returns identity field-descriptor for given general metadata.
      *
-     * @param GeneralPropertyMetadata $generalMetadata
-     * @param IdentityTypeMetadata $type
      * @param array $options
      *
      * @return DoctrineIdentityFieldDescriptor
@@ -335,8 +321,6 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
     /**
      * Returns case field-descriptor for given general metadata.
      *
-     * @param GeneralPropertyMetadata $generalMetadata
-     * @param CaseTypeMetadata $type
      * @param array $options
      *
      * @return DoctrineCaseFieldDescriptor
@@ -400,7 +384,6 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
      * Resolves options for string.
      *
      * @param string $string
-     * @param array $options
      *
      * @return string
      */
@@ -417,7 +400,6 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
      * Creates doctrine-joins.
      *
      * @param JoinMetadata[] $joinMetadata
-     * @param array $options
      *
      * @return DoctrineFieldDescriptor[]
      */
@@ -441,8 +423,6 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
     /**
      * Determine disabled state.
      *
-     * @param GeneralPropertyMetadata $generalMetadata
-     *
      * @return bool
      */
     private function isDisabled(GeneralPropertyMetadata $generalMetadata)
@@ -455,8 +435,6 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
 
     /**
      * Determine default state.
-     *
-     * @param GeneralPropertyMetadata $generalMetadata
      *
      * @return bool
      */

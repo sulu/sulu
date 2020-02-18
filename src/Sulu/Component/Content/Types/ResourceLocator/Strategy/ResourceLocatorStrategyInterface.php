@@ -48,7 +48,6 @@ interface ResourceLocatorStrategyInterface
     /**
      * Creates a new route for given path.
      *
-     * @param ResourceSegmentBehavior $document
      * @param int $userId
      *
      * @return

@@ -37,9 +37,6 @@ abstract class SuluTestCase extends KernelTestCase
      */
     protected $importer;
 
-    /**
-     * {@inheritdoc}
-     */
     public static function setUpBeforeClass()
     {
         // enables garbage collector because symfony/phpunit-bridge disables it. see:
@@ -143,7 +140,6 @@ abstract class SuluTestCase extends KernelTestCase
     /**
      * Initialize / reset Sulu PHPCR environment for given session.
      *
-     * @param SessionInterface $session
      * @param string $workspace
      */
     private function importSession(SessionInterface $session, $workspace)
@@ -192,7 +188,6 @@ abstract class SuluTestCase extends KernelTestCase
     }
 
     /**
-     * @param SessionInterface $session
      * @param string $workspace
      */
     protected function dumpPhpcr(SessionInterface $session, $workspace)

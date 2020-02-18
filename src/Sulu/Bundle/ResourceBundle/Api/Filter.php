@@ -29,7 +29,6 @@ use Sulu\Component\Security\Authentication\UserInterface;
 class Filter extends ApiWrapper
 {
     /**
-     * @param FilterEntity $entity
      * @param string $locale
      */
     public function __construct(FilterEntity $entity, $locale)
@@ -134,8 +133,6 @@ class Filter extends ApiWrapper
 
     /**
      * Add translations.
-     *
-     * @param FilterTranslation $translation
      */
     public function addTranslation(FilterTranslation $translation)
     {
@@ -144,8 +141,6 @@ class Filter extends ApiWrapper
 
     /**
      * Remove translations.
-     *
-     * @param FilterTranslation $translations
      *
      * @return bool
      */
@@ -190,8 +185,6 @@ class Filter extends ApiWrapper
     /**
      * Add conditionGroups.
      *
-     * @param ConditionGroup $conditionGroup
-     *
      * @return Filter
      */
     public function addConditionGroup(ConditionGroup $conditionGroup)
@@ -201,8 +194,6 @@ class Filter extends ApiWrapper
 
     /**
      * Remove conditionGroup.
-     *
-     * @param ConditionGroup $conditionGroup
      */
     public function removeConditionGroup(ConditionGroup $conditionGroup)
     {
@@ -251,8 +242,6 @@ class Filter extends ApiWrapper
 
     /**
      * Sets the change time of the filter.
-     *
-     * @param \DateTime $changed
      */
     public function setChanged(\DateTime $changed)
     {
@@ -261,8 +250,6 @@ class Filter extends ApiWrapper
 
     /**
      * Sets the created time of the filter.
-     *
-     * @param \DateTime $created
      */
     public function setCreated(\DateTime $created)
     {

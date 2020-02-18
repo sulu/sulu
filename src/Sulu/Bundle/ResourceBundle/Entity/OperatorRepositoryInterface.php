@@ -21,8 +21,6 @@ interface OperatorRepositoryInterface
      * Searches for all operatory by locale.
      *
      * @param $locale
-     *
-     * @return mixed
      */
     public function findAllByLocale($locale);
 }

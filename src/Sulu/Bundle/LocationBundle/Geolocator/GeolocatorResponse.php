@@ -20,8 +20,6 @@ class GeolocatorResponse implements \Countable
 
     /**
      * Add a location to the response.
-     *
-     * @param GeolocatorLocation $location
      */
     public function addLocation(GeolocatorLocation $location)
     {

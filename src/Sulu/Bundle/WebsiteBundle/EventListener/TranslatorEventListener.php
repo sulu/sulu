@@ -21,9 +21,6 @@ class TranslatorEventListener
      */
     private $translator;
 
-    /**
-     * @param TranslatorInterface $translator
-     */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
@@ -31,8 +28,6 @@ class TranslatorEventListener
 
     /**
      * Set locale to translator.
-     *
-     * @param PreRenderEvent $event
      */
     public function setLocaleOnPreviewPreRender(PreRenderEvent $event)
     {

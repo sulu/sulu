@@ -18,9 +18,6 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class WebspacesPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         $directory = $container->getParameter('sulu_core.webspace.config_dir');

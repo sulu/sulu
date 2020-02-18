@@ -127,7 +127,6 @@ class SnippetTest extends SuluTestCase
     /**
      * Creates and returns a property-array.
      *
-     * @param PropertyMetadata $property
      * @param PropertyValue $propertyValue
      *
      * @return array
