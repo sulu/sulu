@@ -240,7 +240,7 @@ class ListXmlLoader
             $name = XmlUtil::getValueFromXPath('@name', $xpath, $paramNode);
             $type = XmlUtil::getValueFromXPath('@type', $xpath, $paramNode);
 
-            if ($type === 'collection') {
+            if ('collection' === $type) {
                 $parameters[$name] = $this->getFilterTypeParameters($xpath, $paramNode);
             } else {
                 $parameters[$name] = $this->parameterBag->resolveValue(
