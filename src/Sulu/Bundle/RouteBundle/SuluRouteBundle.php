@@ -31,7 +31,6 @@ class SuluRouteBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new PageTreeCompilerPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -1024);
         $container->addCompilerPass(new RouteGeneratorCompilerPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -1024);
         $container->addCompilerPass(
             new TaggedServiceCollectorCompilerPass('sulu_route.routing.defaults_provider', 'sulu_route.defaults_provider')

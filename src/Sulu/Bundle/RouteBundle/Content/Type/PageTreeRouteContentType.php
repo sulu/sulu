@@ -79,9 +79,7 @@ class PageTreeRouteContentType extends SimpleContentType
     {
         $propertyName = $property->getName();
 
-        /*
-         * TODO
-         *
+        /**
          * If path wouldn't be saved to the property, querying the routes table in getContentData() would be necessary
          * to return the documents url, but for that query the entity class of the current document is needed, which is
          * not available at this point.
@@ -91,6 +89,8 @@ class PageTreeRouteContentType extends SimpleContentType
          * But the website's performance is generally more important than the admin's performance.
          *
          * To change this, there needs to be a way to access the entity class from a property.
+         *
+         * @see https://github.com/sulu/sulu/issues/5069
          */
         $value = [
             'page' => $this->readPage($propertyName, $node),

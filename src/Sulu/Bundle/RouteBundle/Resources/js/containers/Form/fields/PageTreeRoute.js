@@ -79,7 +79,8 @@ class PageTreeRoute extends Component<Props> {
 
     handleSuffixChange = (value: ?string): void => {
         this.handleChange({
-            ...this.props.value, suffix: value,
+            ...this.props.value,
+            suffix: value,
         });
     };
 

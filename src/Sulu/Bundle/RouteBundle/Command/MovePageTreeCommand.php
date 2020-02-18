@@ -39,22 +39,15 @@ class MovePageTreeCommand extends Command
      */
     private $documentManager;
 
-    /**
-     * @var bool
-     */
-    private $pageTreeEnabled;
-
     public function __construct(
         PageTreeMoverInterface $pageTreeMover,
         ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
-        DocumentManagerInterface $documentManager,
-        bool $pageTreeEnabled
+        DocumentManagerInterface $documentManager
     ) {
         parent::__construct('sulu:route:page-tree:move');
         $this->pageTreeMover = $pageTreeMover;
         $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
         $this->documentManager = $documentManager;
-        $this->pageTreeEnabled = $pageTreeEnabled;
     }
 
     /**
@@ -86,13 +79,5 @@ class MovePageTreeCommand extends Command
         $this->pageTreeMover->move($source, $document);
 
         $this->documentManager->flush();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isEnabled()
-    {
-        return $this->pageTreeEnabled;
     }
 }

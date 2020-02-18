@@ -17,7 +17,6 @@
             <argument type="service" id="sulu_route.page_tree_route.mover" />
             <argument type="service" id="sulu.content.resource_locator.strategy_pool" />
             <argument type="service" id="sulu_document_manager.document_manager" />
-            <argument>%sulu_route.page_tree_enabled%</argument>
             <tag name="console.command" />
         </service>
     </services>
