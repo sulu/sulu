@@ -8,7 +8,7 @@ type Props<T> = {|
     children: string,
     disabled: boolean,
     onClick?: (value: T) => void,
-    onDelete: (value: T) => void,
+    onDelete?: (value: T) => void,
     value: T,
 |};
 
@@ -27,11 +27,14 @@ export default class Chip<T> extends React.Component<Props<T>> {
 
     handleDelete = () => {
         const {onDelete, value} = this.props;
-        onDelete(value);
+
+        if (onDelete) {
+            onDelete(value);
+        }
     };
 
     render() {
-        const {children, disabled, onClick} = this.props;
+        const {children, disabled, onClick, onDelete} = this.props;
 
         const chipClass = classNames(
             chipStyles.chip,
@@ -44,7 +47,9 @@ export default class Chip<T> extends React.Component<Props<T>> {
         return (
             <button className={chipClass} onClick={this.handleClick}>
                 {children}
-                {!disabled && <Icon className={chipStyles.icon} name="su-times" onClick={this.handleDelete} />}
+                {!disabled && onDelete &&
+                    <Icon className={chipStyles.icon} name="su-times" onClick={this.handleDelete} />
+                }
             </button>
         );
     }

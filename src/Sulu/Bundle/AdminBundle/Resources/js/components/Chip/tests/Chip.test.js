@@ -4,6 +4,10 @@ import {render, shallow} from 'enzyme';
 import Chip from '../Chip';
 
 test('Should render item with children', () => {
+    expect(render(<Chip value={{}}>Name</Chip>)).toMatchSnapshot();
+});
+
+test('Should render item with delete icon', () => {
     expect(render(<Chip onDelete={jest.fn()} value={{}}>Name</Chip>)).toMatchSnapshot();
 });
 

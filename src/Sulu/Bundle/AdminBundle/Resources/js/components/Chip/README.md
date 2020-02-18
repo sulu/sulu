@@ -30,11 +30,15 @@ const handleClick = (value) => {
 They also accept a `onDelete` callback, which will render an `Icon` the user can click:
 
 ```javascript
+const handleClick = (value) => {
+    alert('Clicked the chip with the value ' + value);
+};
+
 const handleDelete = (value) => {
     alert('Delete the chip with the value ' + value);
 };
 
 <div style={{backgroundColor: 'white', padding: '10px'}}>
-    <Chip onDelete={handleDelete} value={9}>Remove me!</Chip>
+    <Chip onClick={handleClick} onDelete={handleDelete} value={9}>Remove me!</Chip>
 </div>
 ```
