@@ -1,6 +1,10 @@
 {
     "sulu_media.media": "Medien",
     "sulu_media.all_media": "Alle Medien",
+    "sulu_media.audio": "Audio",
+    "sulu_media.document": "Dokument",
+    "sulu_media.image": "Bild",
+    "sulu_media.video": "Video",
     "sulu_media.copy_url": "URL kopieren",
     "sulu_media.download_masterfile": "Original herunterladen",
     "sulu_media.select_media_singular": "Medium auswählen",

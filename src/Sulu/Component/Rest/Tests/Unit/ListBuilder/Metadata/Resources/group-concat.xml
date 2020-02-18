@@ -12,6 +12,12 @@
                     <field-name>%sulu.model.contact.class%.tags</field-name>
                 </join>
             </joins>
+            <filter type="test">
+                <param name="testCollection" type="collection">
+                    <param name="test1" value="%test-parameter%" />
+                    <param name="test2" value="test" />
+                </param>
+            </filter>
         </group-concat-property>
     </properties>
 </list>

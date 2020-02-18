@@ -126,8 +126,14 @@ class ListXmlLoader
         $propertyMetadata->setSortable(
             XmlUtil::getBooleanValueFromXPath('@sortable', $xpath, $propertyNode, true)
         );
-        $propertyMetadata->setFilterType(XmlUtil::getValueFromXPath('@filter-type', $xpath, $propertyNode));
-        $propertyMetadata->setFilterTypeParameters($this->getFilterTypeParameters($xpath, $propertyNode));
+        $propertyMetadata->setFilterType(XmlUtil::getValueFromXPath('x:filter/@type', $xpath, $propertyNode));
+
+        $filterNodes = $xpath->query('x:filter', $propertyNode);
+        if (count($filterNodes) > 0) {
+            $propertyMetadata->setFilterTypeParameters(
+                $this->getFilterTypeParameters($xpath, $filterNodes->item(0)) // There can only be one filter node
+            );
+        }
 
         return $propertyMetadata;
     }
@@ -227,12 +233,20 @@ class ListXmlLoader
      *
      * @return array
      */
-    protected function getFilterTypeParameters(\DOMXPath $xpath, \DOMNode $propertyNode)
+    protected function getFilterTypeParameters(\DOMXPath $xpath, \DOMNode $filterNode)
     {
         $parameters = [];
-        foreach ($xpath->query('x:filter-type-parameters/x:parameter', $propertyNode) as $parameterNode) {
-            $key = XmlUtil::getValueFromXPath('@key', $xpath, $parameterNode);
-            $parameters[$key] = $this->parameterBag->resolveValue(trim($parameterNode->nodeValue));
+        foreach ($xpath->query('x:param', $filterNode) as $paramNode) {
+            $name = XmlUtil::getValueFromXPath('@name', $xpath, $paramNode);
+            $type = XmlUtil::getValueFromXPath('@type', $xpath, $paramNode);
+
+            if ($type === 'collection') {
+                $parameters[$name] = $this->getFilterTypeParameters($xpath, $paramNode);
+            } else {
+                $parameters[$name] = $this->parameterBag->resolveValue(
+                    trim(XmlUtil::getValueFromXPath('@value', $xpath, $paramNode))
+                );
+            }
         }
 
         return $parameters;

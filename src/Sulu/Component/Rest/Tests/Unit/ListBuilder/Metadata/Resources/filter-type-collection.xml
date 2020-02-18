@@ -1,18 +1,14 @@
 <list xmlns="http://schemas.sulu.io/list-builder/list">
-    <key>identity</key>
+    <key>filter-type-collection</key>
 
     <properties>
-        <identity-property name="tags">
-            <field-name>tags</field-name>
-            <entity-name>%sulu.model.contact.class%</entity-name>
-
+        <property name="tags">
             <filter type="test">
                 <param name="testCollection" type="collection">
                     <param name="test1" value="%test-parameter%" />
                     <param name="test2" value="test" />
                 </param>
             </filter>
-        </identity-property>
+        </property>
     </properties>
 </list>
-

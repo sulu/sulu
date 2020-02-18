@@ -40,11 +40,12 @@
             name="name"
             visibility="always"
             searchability="yes"
-            filter-type="string"
             translation="sulu_tag.tag"
         >
             <field-name>name</field-name>
             <entity-name>%sulu.model.tag.class%</entity-name>
+
+            <filter type="text" />
         </property>
 
         <concatenation-property name="changer" translation="sulu_admin.changer" visibility="no">
@@ -60,6 +61,11 @@
 
                 <joins ref="changer"/>
             </field>
+
+            <filter type="selection">
+                <param name="displayProperty" value="fullName" />
+                <param name="resourceKey" value="contacts" />
+            </filter>
         </concatenation-property>
 
         <property
@@ -70,6 +76,8 @@
         >
             <field-name>changed</field-name>
             <entity-name>%sulu.model.tag.class%</entity-name>
+
+            <filter type="datetime" />
         </property>
 
         <concatenation-property name="creator" translation="sulu_admin.creator" visibility="no">
@@ -85,6 +93,11 @@
 
                 <joins ref="creator"/>
             </field>
+
+            <filter type="selection">
+                <param name="displayProperty" value="fullName" />
+                <param name="resourceKey" value="contacts" />
+            </filter>
         </concatenation-property>
 
         <property
@@ -95,6 +108,8 @@
         >
             <field-name>created</field-name>
             <entity-name>%sulu.model.tag.class%</entity-name>
+
+            <filter type="datetime" />
         </property>
     </properties>
 </list>

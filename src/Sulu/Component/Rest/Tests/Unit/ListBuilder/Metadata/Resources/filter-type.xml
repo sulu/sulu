@@ -1,6 +1,8 @@
 <list xmlns="http://schemas.sulu.io/list-builder/list">
     <key>filter-type</key>
     <properties>
-        <property name="tags" filter-type="test-input"/>
+        <property name="tags">
+            <filter type="test-input" />
+        </property>
     </properties>
 </list>
