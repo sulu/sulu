@@ -20,6 +20,7 @@
     "sulu_media.move_collection": "Ordner verschieben",
     "sulu_media.edit_collection": "Ordner bearbeiten",
     "sulu_media.download_media": "Medium downloaden",
+    "sulu_media.download_counter": "Anzahl Downloads",
     "sulu_media.delete_media": "Medium löschen",
     "sulu_media.delete_media_warning_title": "Medium löschen",
     "sulu_media.delete_media_warning_text": "Diese Operation löscht ein Medium und kann nicht rückgängig gemacht werden. Wollen sie wirklich fortfahren?",

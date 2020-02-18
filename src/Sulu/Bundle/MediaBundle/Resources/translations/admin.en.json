@@ -20,6 +20,7 @@
     "sulu_media.move_collection": "Move collection",
     "sulu_media.edit_collection": "Edit collection",
     "sulu_media.download_media": "Download media",
+    "sulu_media.download_counter": "Download count",
     "sulu_media.delete_media": "Delete media",
     "sulu_media.delete_media_warning_title": "Delete media",
     "sulu_media.delete_media_warning_text": "This operation deletes a media and cannot be undone. Do you really wish to proceed?",

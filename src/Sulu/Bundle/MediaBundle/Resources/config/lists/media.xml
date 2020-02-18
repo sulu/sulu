@@ -120,6 +120,13 @@
             <joins ref="fileVersion"/>
         </property>
 
+        <property name="downloadCounter" translation="sulu_media.download_counter">
+            <field-name>downloadCounter</field-name>
+            <entity-name>SuluMediaBundle:FileVersion</entity-name>
+
+            <joins ref="fileVersion"/>
+        </property>
+
         <property name="storageOptions" visibility="never">
             <field-name>storageOptions</field-name>
             <entity-name>SuluMediaBundle:FileVersion</entity-name>
