@@ -20,7 +20,6 @@ interface PageTreeMoverInterface
 {
     /**
      * @param string $source
-     * @param BasePageDocument $destination
      */
     public function move($source, BasePageDocument $destination);
 }

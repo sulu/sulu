@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\RouteBundle;
 
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
-use Sulu\Bundle\RouteBundle\DependencyInjection\PageTreeCompilerPass;
 use Sulu\Bundle\RouteBundle\DependencyInjection\RouteGeneratorCompilerPass;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;

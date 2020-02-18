@@ -63,9 +63,6 @@ class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInter
         $this->documentInspector = $documentInspector;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function update(BasePageDocument $parentDocument)
     {
         $documents = $this->findLinkedDocuments('page', $parentDocument->getUuid(), $parentDocument->getLocale());
@@ -74,9 +71,6 @@ class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInter
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function move($source, BasePageDocument $parentDocument)
     {
         $documents = $this->findLinkedDocuments('page-path', $source, $parentDocument->getLocale());

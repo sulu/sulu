@@ -72,9 +72,6 @@ class PageTreeRouteContentType extends SimpleContentType
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $propertyName = $property->getName();
@@ -103,9 +100,6 @@ class PageTreeRouteContentType extends SimpleContentType
         return $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -156,9 +150,6 @@ class PageTreeRouteContentType extends SimpleContentType
         $node->setProperty($pagePropertyName . '-path', $page['path']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentData(PropertyInterface $property)
     {
         $value = parent::getContentData($property);
@@ -166,9 +157,6 @@ class PageTreeRouteContentType extends SimpleContentType
         return $value['path'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getViewData(PropertyInterface $property)
     {
         return $property->getValue();
@@ -202,9 +190,6 @@ class PageTreeRouteContentType extends SimpleContentType
      * Get value of array or default.
      *
      * @param mixed[] $value
-     * @param mixed $default
-     *
-     * @return mixed
      */
     private function getAttribute(string $name, array $value, $default = null)
     {

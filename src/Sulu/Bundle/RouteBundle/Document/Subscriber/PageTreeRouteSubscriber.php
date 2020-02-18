@@ -77,9 +77,6 @@ class PageTreeRouteSubscriber implements EventSubscriberInterface
         $this->routeUpdater = $routeUpdater;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [

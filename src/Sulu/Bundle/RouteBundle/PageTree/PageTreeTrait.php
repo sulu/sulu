@@ -29,8 +29,6 @@ trait PageTreeTrait
     abstract protected function getDocumentInspector();
 
     /**
-     * @param RoutableBehavior $document
-     *
      * @return null|string
      */
     protected function getParentPageUuidFromPageTree(RoutableBehavior $document)
@@ -57,8 +55,6 @@ trait PageTreeTrait
 
     /**
      * Returns property-metadata for route-path property.
-     *
-     * @param StructureMetadata $metadata
      *
      * @return null|PropertyMetadata
      */

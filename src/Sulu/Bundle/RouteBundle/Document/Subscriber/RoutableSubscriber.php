@@ -108,9 +108,6 @@ class RoutableSubscriber implements EventSubscriberInterface
         $this->conflictResolver = $conflictResolver;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [

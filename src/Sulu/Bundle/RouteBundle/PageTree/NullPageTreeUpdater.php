@@ -18,9 +18,6 @@ use Sulu\Bundle\PageBundle\Document\BasePageDocument;
  */
 class NullPageTreeUpdater implements PageTreeUpdaterInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function update(BasePageDocument $document)
     {
         // do nothing

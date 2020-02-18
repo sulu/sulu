@@ -50,9 +50,6 @@ class MovePageTreeCommand extends Command
         $this->documentManager = $documentManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configure()
     {
         $this->addArgument('source-segment', InputArgument::REQUIRED)
@@ -61,9 +58,6 @@ class MovePageTreeCommand extends Command
             ->addArgument('locale', InputArgument::REQUIRED);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $source = $input->getArgument('source-segment');
