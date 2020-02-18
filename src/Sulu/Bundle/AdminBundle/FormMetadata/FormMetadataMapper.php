@@ -63,6 +63,24 @@ class FormMetadataMapper
         return new SchemaMetadata($this->mapSchemaProperties($itemsMetadata));
     }
 
+    /**
+     * @param mixed[] $tagsMetadata
+     */
+    public function mapTags(array $tagsMetadata): array
+    {
+        $tags = [];
+        foreach ($tagsMetadata as $tagMetadata) {
+            $tag = new TagMetadata();
+            $tag->setName($tagMetadata['name']);
+            $tag->setPriority($tagMetadata['priority'] ?? null);
+            $tag->setAttributes($tagMetadata['attributes'] ?? []);
+
+            $tags[] = $tag;
+        }
+
+        return $tags;
+    }
+
     private function mapSection(ContentSectionMetadata $property, string $locale): SectionMetadata
     {
         $section = new SectionMetadata($property->getName());
@@ -119,12 +137,7 @@ class FormMetadataMapper
     private function mapProperty(ContentPropertyMetadata $property, string $locale): FieldMetadata
     {
         $field = new FieldMetadata($property->getName());
-        foreach ($property->getTags() as $tag) {
-            $fieldTag = new TagMetadata();
-            $fieldTag->setName($tag['name']);
-            $fieldTag->setPriority($tag['priority']);
-            $field->addTag($fieldTag);
-        }
+        $field->setTags($this->mapTags($property->getTags()));
 
         $field->setLabel($property->getTitle($locale));
         $field->setDisabledCondition($property->getDisabledCondition());

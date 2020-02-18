@@ -50,4 +50,30 @@ class FormMetadataProviderTest extends KernelTestCase
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
         $this->assertCount(2, $typedForm->getForms());
     }
+
+    public function testGetMetadataTagFiltered()
+    {
+        $typedForm = $this->formMetadataProvider->getMetadata('page', 'de', ['tags' => ['test' => 'test-value']]);
+        $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
+        $this->assertCount(1, $typedForm->getForms());
+        $this->assertEquals(['default'], array_keys($typedForm->getForms()));
+
+        $typedForm = $this->formMetadataProvider->getMetadata('page', 'de', ['tags' => ['test' => 'test-value2']]);
+        $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
+        $this->assertCount(0, $typedForm->getForms());
+
+        $typedForm = $this->formMetadataProvider->getMetadata('page', 'de', ['tags' => ['test2' => 'test-value2']]);
+        $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
+        $this->assertCount(0, $typedForm->getForms());
+
+        $typedForm = $this->formMetadataProvider->getMetadata('page', 'de', ['tags' => ['test2' => 'test-value2'], 'tagAttributes' => ['test2' => 'test']]);
+        $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
+        $this->assertCount(1, $typedForm->getForms());
+        $this->assertEquals(['default'], array_keys($typedForm->getForms()));
+
+        $typedForm = $this->formMetadataProvider->getMetadata('page', 'de', ['tags' => ['test' => '']]);
+        $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
+        $this->assertCount(1, $typedForm->getForms());
+        $this->assertEquals(['overview'], array_keys($typedForm->getForms()));
+    }
 }

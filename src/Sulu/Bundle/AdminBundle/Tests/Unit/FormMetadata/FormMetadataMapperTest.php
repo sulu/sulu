@@ -35,6 +35,33 @@ class FormMetadataMapperTest extends TestCase
         $this->formMetadataMapper = new FormMetadataMapper();
     }
 
+    public function testMapTags()
+    {
+        $result = $this->formMetadataMapper->mapTags([
+            [
+                'name' => 'test_tag',
+                'priority' => 1,
+                'attributes' => [
+                    'test' => 1,
+                ],
+            ],
+            [
+                'name' => 'test_tag2',
+            ],
+        ]);
+
+        $this->assertCount(2, $result);
+
+        $this->assertEquals('test_tag', $result[0]->getName());
+        $this->assertEquals(1, $result[0]->getPriority());
+        $this->assertEquals(['test' => 1], $result[0]->getAttributes());
+        $this->assertEquals(1, $result[0]->getAttribute('test'));
+
+        $this->assertEquals('test_tag2', $result[1]->getName());
+        $this->assertEquals(null, $result[1]->getPriority());
+        $this->assertEquals([], $result[1]->getAttributes());
+    }
+
     public function testMapPropertiesEnglish()
     {
         $form = $this->createFormWithBasicProperties();

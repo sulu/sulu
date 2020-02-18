@@ -158,4 +158,12 @@ class FieldMetadata extends ItemMetadata
     {
         $this->tags[] = $tag;
     }
+
+    /**
+     * @param TagMetadata[] $tags
+     */
+    public function setTags(array $tags): void
+    {
+        $this->tags = $tags;
+    }
 }

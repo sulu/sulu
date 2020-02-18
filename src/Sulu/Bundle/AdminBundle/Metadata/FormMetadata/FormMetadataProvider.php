@@ -55,9 +55,29 @@ class FormMetadataProvider implements MetadataProviderInterface
             foreach ($form->getForms() as $formType) {
                 $this->evaluateFormItemExpressions($formType->getItems());
             }
+
+            if (array_key_exists('tags', $metadataOptions)) {
+                $tags = $metadataOptions['tags'];
+                $tagAttributes = $metadataOptions['tagAttributes'] ?? [];
+                foreach ($tags as $tagName => $tagValue) {
+                    $this->filterByTag($form, $tagName, $tagValue, $tagAttributes[$tagName] ?? 'value');
+                }
+            }
         }
 
         return $form;
+    }
+
+    private function filterByTag(TypedFormMetadata $form, string $tagName, string $tagValue, string $tagAttribute): void
+    {
+        foreach ($form->getForms() as $formKey => $childForm) {
+            $tag = $childForm->getTag($tagName);
+            $actualTagValue = $tag ? $tag->getAttribute($tagAttribute) : '';
+
+            if ($actualTagValue !== $tagValue) {
+                $form->removeForm($formKey);
+            }
+        }
     }
 
     /**
