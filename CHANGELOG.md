@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.32 (2020-02-17)
+    * FEATURE            [MediaBundle]             Added download counter to list view of medias.
+
 * 1.6.31 (2020-02-11)
     * BUGFIX      #5026  [Content]                 Add reserved property names
     * BUGFIX      #4998  [ContentBundle]           Fix assigning more than 10 teasers when using elasticsearch
