@@ -44,6 +44,7 @@ test('Render data with schema', () => {
     const schema = {
         title: {
             filterType: null,
+            filterTypeParameters: null,
             type: 'string',
             sortable: true,
             visibility: 'no',
@@ -51,6 +52,7 @@ test('Render data with schema', () => {
         },
         description: {
             filterType: null,
+            filterTypeParameters: null,
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -76,6 +78,7 @@ test('Render data with skin', () => {
     const schema = {
         title: {
             filterType: null,
+            filterTypeParameters: null,
             type: 'string',
             sortable: true,
             visibility: 'no',
@@ -83,6 +86,7 @@ test('Render data with skin', () => {
         },
         description: {
             filterType: null,
+            filterTypeParameters: null,
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -111,6 +115,7 @@ test('Attach onClick handler for sorting if schema says the header is sortable',
     const schema = {
         title: {
             filterType: null,
+            filterTypeParameters: null,
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -118,6 +123,7 @@ test('Attach onClick handler for sorting if schema says the header is sortable',
         },
         description: {
             filterType: null,
+            filterTypeParameters: null,
             type: 'string',
             sortable: false,
             visibility: 'yes',
@@ -153,6 +159,7 @@ test('Render data with all different visibility types schema', () => {
     const schema = {
         title: {
             filterType: null,
+            filterTypeParameters: null,
             type: 'string',
             sortable: true,
             visibility: 'no',
@@ -160,6 +167,7 @@ test('Render data with all different visibility types schema', () => {
         },
         description: {
             filterType: null,
+            filterTypeParameters: null,
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -167,6 +175,7 @@ test('Render data with all different visibility types schema', () => {
         },
         test1: {
             filterType: null,
+            filterTypeParameters: null,
             type: 'string',
             sortable: true,
             visibility: 'always',
@@ -174,6 +183,7 @@ test('Render data with all different visibility types schema', () => {
         },
         test2: {
             filterType: null,
+            filterTypeParameters: null,
             type: 'string',
             sortable: true,
             visibility: 'never',
@@ -214,6 +224,7 @@ test('Render data with schema and selections', () => {
     const schema = {
         title: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -221,6 +232,7 @@ test('Render data with schema and selections', () => {
         },
         description: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -258,6 +270,7 @@ test('Render data with schema in different order', () => {
     const schema = {
         title: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -265,6 +278,7 @@ test('Render data with schema in different order', () => {
         },
         description: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -300,6 +314,7 @@ test('Render data with schema not containing all fields', () => {
     const schema = {
         title: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -336,6 +351,7 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
     const schema = {
         title: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -343,6 +359,7 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
         },
         description: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -388,6 +405,7 @@ test('Render correct button based on permissions when item permissions are provi
     const schema = {
         title: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -433,6 +451,7 @@ test('Render disabled rows based on given disabledIds prop', () => {
     const schema = {
         title: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -473,6 +492,7 @@ test('Render data with pencil button and given actions when onItemEdit callback 
     const schema = {
         title: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -480,6 +500,7 @@ test('Render data with pencil button and given actions when onItemEdit callback 
         },
         description: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -523,6 +544,7 @@ test('Render column with ascending sort icon', () => {
     const schema = {
         title: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -530,6 +552,7 @@ test('Render column with ascending sort icon', () => {
         },
         description: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -562,6 +585,7 @@ test('Render column with descending sort icon', () => {
     const schema = {
         title: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -569,6 +593,7 @@ test('Render column with descending sort icon', () => {
         },
         description: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -607,6 +632,7 @@ test('Click on pencil should execute onItemClick callback', () => {
     const schema = {
         title: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -614,6 +640,7 @@ test('Click on pencil should execute onItemClick callback', () => {
         },
         description: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -655,6 +682,7 @@ test('Click on action should execute its callback', () => {
     const schema = {
         title: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -662,6 +690,7 @@ test('Click on action should execute its callback', () => {
         },
         description: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -711,6 +740,7 @@ test('Click on checkbox should call onItemSelectionChange callback', () => {
     const schema = {
         title: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -718,6 +748,7 @@ test('Click on checkbox should call onItemSelectionChange callback', () => {
         },
         description: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -744,6 +775,7 @@ test('Click on checkbox in header should call onAllSelectionChange callback', ()
     const schema = {
         title: {
             filterType: null,
+            filterTypeParameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',

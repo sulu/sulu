@@ -211,6 +211,7 @@ test('The user store should be called correctly when changing the schema', () =>
         const newSchema = {
             id: {
                 filterType: null,
+                filterTypeParameters: null,
                 label: 'ID',
                 name: 'id',
                 sortable: true,
@@ -219,6 +220,7 @@ test('The user store should be called correctly when changing the schema', () =>
             },
             changed: {
                 filterType: null,
+                filterTypeParameters: null,
                 label: 'Changed at',
                 name: 'changed',
                 sortable: true,
@@ -227,6 +229,7 @@ test('The user store should be called correctly when changing the schema', () =>
             },
             title: {
                 filterType: null,
+                filterTypeParameters: null,
                 label: 'Title',
                 name: 'title',
                 sortable: true,
@@ -235,6 +238,7 @@ test('The user store should be called correctly when changing the schema', () =>
             },
             name: {
                 filterType: null,
+                filterTypeParameters: null,
                 label: 'Name',
                 name: 'name',
                 sortable: true,
