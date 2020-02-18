@@ -40,9 +40,6 @@ class ContentEnhancer extends AbstractEnhancer
         $this->structureManager = $structureManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function doEnhance(
         CustomUrlBehavior $customUrl,
         Webspace $webspace,
@@ -52,9 +49,6 @@ class ContentEnhancer extends AbstractEnhancer
         return ['_structure' => $this->documentToStructure($customUrl->getTargetDocument())];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function supports(CustomUrlBehavior $customUrl)
     {
         return !$customUrl->isRedirect() && null !== $customUrl->getTargetDocument();
@@ -62,8 +56,6 @@ class ContentEnhancer extends AbstractEnhancer
 
     /**
      * Return a structure bridge corresponding to the given document.
-     *
-     * @param BasePageDocument $document
      *
      * @return PageBridge
      */

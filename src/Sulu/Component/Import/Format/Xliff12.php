@@ -18,9 +18,6 @@ use Symfony\Component\Config\Util\XmlUtils;
  */
 class Xliff12 implements FormatImportInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function parse($filePath, $locale)
     {
         $dom = XmlUtils::loadFile($filePath);
@@ -28,9 +25,6 @@ class Xliff12 implements FormatImportInterface
         return $this->extractData($dom, $locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getProperty($name, $data, $contentTypeName = null, $extension = null, $default = null)
     {
         $propertyName = '';
@@ -51,9 +45,6 @@ class Xliff12 implements FormatImportInterface
         return $property;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPropertyData($name, $data, $contentTypeName = null, $extension = null, $default = null)
     {
         $property = $this->getProperty($name, $data, $contentTypeName, $extension);
@@ -92,7 +83,6 @@ class Xliff12 implements FormatImportInterface
     }
 
     /**
-     * @param \DOMDocument $dom
      * @param string $locale
      *
      * @return array

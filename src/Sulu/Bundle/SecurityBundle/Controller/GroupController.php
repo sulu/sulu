@@ -58,8 +58,6 @@ class GroupController extends RestController implements ClassResourceInterface, 
     /**
      * returns all groups.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
@@ -121,8 +119,6 @@ class GroupController extends RestController implements ClassResourceInterface, 
     /**
      * Creates a new group with the given data.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -160,7 +156,6 @@ class GroupController extends RestController implements ClassResourceInterface, 
     /**
      * Updates the group with the given id and the data given by the request.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -264,7 +259,6 @@ class GroupController extends RestController implements ClassResourceInterface, 
     /**
      * Adds the given role to the group.
      *
-     * @param Group $group
      * @param array $roleData
      *
      * @return bool
@@ -291,7 +285,6 @@ class GroupController extends RestController implements ClassResourceInterface, 
     /**
      * Updates an already existing role.
      *
-     * @param RoleInterface $role
      * @param $roleData
      *
      * @return bool
@@ -304,7 +297,6 @@ class GroupController extends RestController implements ClassResourceInterface, 
 
     /**
      * @param $group
-     * @param Request $request
      *
      * @throws EntityNotFoundException
      */
@@ -325,8 +317,6 @@ class GroupController extends RestController implements ClassResourceInterface, 
 
     /**
      * Returns the SecurityContext required for the controller.
-     *
-     * @return mixed
      */
     public function getSecurityContext()
     {

@@ -31,9 +31,6 @@ class SeoEnhancer extends AbstractEnhancer
         $this->webspaceManager = $webspaceManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function doEnhance(
         CustomUrlBehavior $customUrl,
         Webspace $webspace,
@@ -60,9 +57,6 @@ class SeoEnhancer extends AbstractEnhancer
         return ['_seo' => $seo];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function supports(CustomUrlBehavior $customUrl)
     {
         return null !== $customUrl->getTargetDocument();

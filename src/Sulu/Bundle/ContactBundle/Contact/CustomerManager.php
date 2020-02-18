@@ -59,9 +59,6 @@ class CustomerManager implements CustomerManagerInterface
         $this->accountEntityClass = $accountEntityClass;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByIds($ids)
     {
         if (0 === count($ids)) {

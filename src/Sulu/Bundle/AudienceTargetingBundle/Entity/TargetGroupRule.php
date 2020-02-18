@@ -68,9 +68,6 @@ class TargetGroupRule implements TargetGroupRuleInterface
         return $this->title;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setTitle($title)
     {
         $this->title = $title;
@@ -78,17 +75,11 @@ class TargetGroupRule implements TargetGroupRuleInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFrequency()
     {
         return $this->frequency;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setFrequency($frequency)
     {
         $this->frequency = $frequency;
@@ -96,17 +87,11 @@ class TargetGroupRule implements TargetGroupRuleInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTargetGroup()
     {
         return $this->targetGroup;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setTargetGroup(TargetGroupInterface $targetGroup)
     {
         $this->targetGroup = $targetGroup;
@@ -114,17 +99,11 @@ class TargetGroupRule implements TargetGroupRuleInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConditions()
     {
         return $this->conditions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addCondition(TargetGroupConditionInterface $condition)
     {
         $this->conditions[] = $condition;
@@ -132,9 +111,6 @@ class TargetGroupRule implements TargetGroupRuleInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeCondition(TargetGroupConditionInterface $condition)
     {
         $this->conditions->removeElement($condition);
@@ -142,9 +118,6 @@ class TargetGroupRule implements TargetGroupRuleInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function clearConditions()
     {
         $this->conditions->clear();

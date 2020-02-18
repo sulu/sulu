@@ -36,8 +36,6 @@ interface MediaInterface extends AuditableInterface
     /**
      * Set changed.
      *
-     * @param \DateTime $changed
-     *
      * @return $this
      */
     public function setChanged(\DateTime $changed);
@@ -52,16 +50,12 @@ interface MediaInterface extends AuditableInterface
     /**
      * Add files.
      *
-     * @param File $files
-     *
      * @return Media
      */
     public function addFile(File $files);
 
     /**
      * Remove files.
-     *
-     * @param File $files
      */
     public function removeFile(File $files);
 
@@ -74,8 +68,6 @@ interface MediaInterface extends AuditableInterface
 
     /**
      * Set collection.
-     *
-     * @param CollectionInterface $collection
      *
      * @return Media
      */
@@ -90,8 +82,6 @@ interface MediaInterface extends AuditableInterface
 
     /**
      * Set type.
-     *
-     * @param MediaType $type
      *
      * @return Media
      */

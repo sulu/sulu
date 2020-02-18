@@ -73,13 +73,6 @@ class StructureProvider implements ProviderInterface
      */
     private $metadataFactory;
 
-    /**
-     * @param Factory $factory
-     * @param MetadataFactory $metadataFactory
-     * @param StructureMetadataFactory $structureFactory
-     * @param ExtensionManagerInterface $extensionManager
-     * @param array $mapping
-     */
     public function __construct(
         Factory $factory,
         MetadataFactory $metadataFactory,
@@ -295,9 +288,6 @@ EOT;
         return $classMetadata;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAllMetadata()
     {
         $metadatas = [];
@@ -317,9 +307,6 @@ EOT;
         return $metadatas;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMetadataForDocument(Document $document)
     {
         if (!$document->hasField(self::FIELD_STRUCTURE_TYPE)) {

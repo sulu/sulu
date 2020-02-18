@@ -63,8 +63,6 @@ interface TargetGroupRuleInterface
     public function getTargetGroup();
 
     /**
-     * @param TargetGroupInterface $targetGroup
-     *
      * @return $this
      */
     public function setTargetGroup(TargetGroupInterface $targetGroup);
@@ -75,15 +73,11 @@ interface TargetGroupRuleInterface
     public function getConditions();
 
     /**
-     * @param TargetGroupConditionInterface $condition
-     *
      * @return $this
      */
     public function addCondition(TargetGroupConditionInterface $condition);
 
     /**
-     * @param TargetGroupConditionInterface $condition
-     *
      * @return $this
      */
     public function removeCondition(TargetGroupConditionInterface $condition);

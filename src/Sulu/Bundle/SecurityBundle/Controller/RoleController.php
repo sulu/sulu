@@ -126,8 +126,6 @@ class RoleController extends RestController implements ClassResourceInterface, S
      * returns all fields that can be used by list.
      *
      * @Get("roles/fields")
-     *
-     * @return mixed
      */
     public function getFieldsAction()
     {
@@ -137,8 +135,6 @@ class RoleController extends RestController implements ClassResourceInterface, S
 
     /**
      * returns all roles.
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -203,8 +199,6 @@ class RoleController extends RestController implements ClassResourceInterface, S
     /**
      * Creates a new role with the given data.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
      * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      *
@@ -260,7 +254,6 @@ class RoleController extends RestController implements ClassResourceInterface, S
     /**
      * Updates the role with the given id and the data given by the request.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -369,7 +362,6 @@ class RoleController extends RestController implements ClassResourceInterface, S
     /**
      * Adds a permission to the given role.
      *
-     * @param RoleInterface $role
      * @param $permissionData
      *
      * @return bool
@@ -408,7 +400,6 @@ class RoleController extends RestController implements ClassResourceInterface, S
     /**
      * Updates an already existing permission.
      *
-     * @param Permission $permission
      * @param $permissionData
      *
      * @return bool
@@ -427,8 +418,6 @@ class RoleController extends RestController implements ClassResourceInterface, S
 
     /**
      * Converts a role object into an array for the rest service.
-     *
-     * @param RoleInterface $role
      *
      * @return array
      */
@@ -497,9 +486,6 @@ class RoleController extends RestController implements ClassResourceInterface, S
         $role->setSecurityType($securityType);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         return 'sulu.security.roles';

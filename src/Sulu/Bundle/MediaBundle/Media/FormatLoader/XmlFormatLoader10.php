@@ -24,9 +24,6 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
 
     const SCHEME_PATH = '/schema/formats/formats-1.0.xsd';
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($resource, $type = null)
     {
         @trigger_error(
@@ -37,25 +34,16 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
         return parent::load($resource, $type);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getKeyFromFormatNode(\DOMNode $formatNode)
     {
         return $this->xpath->query('x:name', $formatNode)->item(0)->nodeValue;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getInternalFlagFromFormatNode(\DOMNode $formatNode)
     {
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getMetaFromFormatNode(\DOMNode $formatNode)
     {
         return [
@@ -63,9 +51,6 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getScaleFromFormatNode(\DOMNode $formatNode)
     {
         foreach ($this->xpath->query('x:commands/x:command', $formatNode) as $commandNode) {
@@ -114,9 +99,6 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
         return;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getTransformationsFromFormatNode(\DOMNode $formatNode)
     {
         $transformations = [];

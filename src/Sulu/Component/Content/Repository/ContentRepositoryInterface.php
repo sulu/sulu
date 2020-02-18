@@ -120,8 +120,6 @@ interface ContentRepositoryInterface
      *
      * @param string $locale
      * @param string $webspaceKey
-     * @param MappingInterface $mapping
-     * @param UserInterface|null $user
      *
      * @return Content[]
      */
@@ -132,8 +130,6 @@ interface ContentRepositoryInterface
      *
      * @param string $locale
      * @param string $portalKey
-     * @param MappingInterface $mapping
-     * @param UserInterface|null $user
      *
      * @return Content[]
      */

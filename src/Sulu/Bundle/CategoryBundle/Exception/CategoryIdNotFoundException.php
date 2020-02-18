@@ -23,8 +23,6 @@ class CategoryIdNotFoundException extends \Exception
 
     /**
      * CategoryIdNotFoundException constructor.
-     *
-     * @param mixed $categoryId
      */
     public function __construct($categoryId)
     {

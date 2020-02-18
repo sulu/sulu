@@ -19,25 +19,16 @@ namespace Sulu\Bundle\CoreBundle\Build;
  */
 class PhpcrMigrationsBuilder extends SuluBuilder
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'phpcr_migrations';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDependencies()
     {
         return ['phpcr'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function build()
     {
         $migrator = $this->container->get('phpcr_migrations.migrator_factory')->getMigrator();

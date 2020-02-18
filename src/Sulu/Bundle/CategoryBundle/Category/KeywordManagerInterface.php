@@ -29,7 +29,6 @@ interface KeywordManagerInterface
      * Add given keyword to the category.
      *
      * @param Keyword $keyword
-     * @param CategoryInterface $category
      * @param string $force
      *
      * @return Keyword
@@ -40,7 +39,6 @@ interface KeywordManagerInterface
      * Removes keyword from given category.
      *
      * @param Keyword $keyword
-     * @param CategoryInterface $category
      *
      * @return bool true if keyword is deleted completely from the database otherwise only from the category
      */

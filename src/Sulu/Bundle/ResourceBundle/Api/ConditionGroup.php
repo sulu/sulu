@@ -25,7 +25,6 @@ use Sulu\Component\Rest\ApiWrapper;
 class ConditionGroup extends ApiWrapper
 {
     /**
-     * @param ConditionGroupEntity $entity
      * @param string $locale
      */
     public function __construct(ConditionGroupEntity $entity, $locale)
@@ -73,8 +72,6 @@ class ConditionGroup extends ApiWrapper
     /**
      * Add conditions.
      *
-     * @param Condition $condition
-     *
      * @return ConditionGroup
      */
     public function addCondition(Condition $condition)
@@ -85,8 +82,6 @@ class ConditionGroup extends ApiWrapper
     /**
      * Remove condition.
      *
-     * @param Condition $condition
-     *
      * @internal param Condition $conditions
      */
     public function removeCondition(Condition $condition)
@@ -96,8 +91,6 @@ class ConditionGroup extends ApiWrapper
 
     /**
      * Set filter.
-     *
-     * @param Filter $filter
      */
     public function setFilter(Filter $filter)
     {

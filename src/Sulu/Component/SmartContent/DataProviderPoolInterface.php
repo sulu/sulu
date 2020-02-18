@@ -23,7 +23,6 @@ interface DataProviderPoolInterface
      * Add new DataProvider with given alias.
      *
      * @param string $alias identify the DataProvider
-     * @param DataProviderInterface $provider
      *
      * @throws DataProviderAliasAlreadyExistsException
      */

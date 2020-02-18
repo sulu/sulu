@@ -21,7 +21,6 @@ interface SettingsManagerInterface
      *
      * @param string $webspaceKey
      * @param string $key
-     * @param mixed $data
      */
     public function save($webspaceKey, $key, $data);
 
@@ -38,8 +37,6 @@ interface SettingsManagerInterface
      *
      * @param string $webspaceKey
      * @param string $key
-     *
-     * @return mixed
      */
     public function load($webspaceKey, $key);
 

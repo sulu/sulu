@@ -70,9 +70,6 @@ abstract class ItemMetadata
      */
     public $children = [];
 
-    /**
-     * @param mixed $name
-     */
     public function __construct($name = null)
     {
         $this->name = $name;
@@ -169,8 +166,6 @@ abstract class ItemMetadata
      * Return the paramter with the given name.
      *
      * @param string $name
-     *
-     * @return mixed
      */
     public function getParameter($name)
     {

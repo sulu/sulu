@@ -49,19 +49,12 @@ class FilterListBuilder implements FilterListBuilderInterface
      */
     protected $expressions = [];
 
-    /**
-     * @param FilterManagerInterface $manager
-     * @param RequestStack $requestStack
-     */
     public function __construct(FilterManagerInterface $manager, RequestStack $requestStack)
     {
         $this->filterManager = $manager;
         $this->requestStack = $requestStack;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function applyFilterToList(ListBuilderInterface $listBuilder)
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -131,8 +124,6 @@ class FilterListBuilder implements FilterListBuilderInterface
     /**
      * Creates a conditions for a condition group.
      *
-     * @param ConditionGroup $conditionGroup
-     *
      * @throws ConditionFieldNotFoundException
      * @throws FeatureNotImplementedException
      */
@@ -156,7 +147,6 @@ class FilterListBuilder implements FilterListBuilderInterface
     /**
      * Creates expressions from conditions and add them to the expressions array.
      *
-     * @param Condition $condition
      * @param AbstractFieldDescriptor $fieldDescriptor
      */
     protected function createExpression(Condition $condition, $fieldDescriptor)
@@ -177,10 +167,6 @@ class FilterListBuilder implements FilterListBuilderInterface
 
     /**
      * Parses and returns the value of a condition.
-     *
-     * @param Condition $condition
-     *
-     * @return mixed
      *
      * @throws ConditionTypeMismatchException
      */

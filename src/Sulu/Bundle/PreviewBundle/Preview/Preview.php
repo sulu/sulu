@@ -44,8 +44,6 @@ class Preview implements PreviewInterface
 
     /**
      * @param PreviewObjectProviderInterface[] $objectProviders
-     * @param Cache $dataCache
-     * @param PreviewRendererInterface $renderer
      * @param int $cacheLifeTime
      */
     public function __construct(
@@ -60,9 +58,6 @@ class Preview implements PreviewInterface
         $this->cacheLifeTime = $cacheLifeTime;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function start($objectClass, $id, $userId, $webspaceKey, $locale, array $data = [])
     {
         $provider = $this->getProvider($objectClass);
@@ -78,9 +73,6 @@ class Preview implements PreviewInterface
         return $token;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function stop($token)
     {
         if (!$this->exists($token)) {
@@ -90,17 +82,11 @@ class Preview implements PreviewInterface
         $this->dataCache->delete($token);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exists($token)
     {
         return $this->dataCache->contains($token);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function update($token, $webspaceKey, $locale, array $data, $targetGroupId = null)
     {
         if (0 === count($data)) {
@@ -120,9 +106,6 @@ class Preview implements PreviewInterface
         return $extractor->getPropertyValues(array_keys($data));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function updateContext($token, $webspaceKey, $locale, array $context, array $data, $targetGroupId = null)
     {
         $object = $this->fetch($token);
@@ -147,9 +130,6 @@ class Preview implements PreviewInterface
         return $this->renderer->render($object, $id, $webspaceKey, $locale, false, $targetGroupId);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function render($token, $webspaceKey, $locale, $targetGroupId = null)
     {
         $object = $this->fetch($token);
@@ -196,8 +176,6 @@ class Preview implements PreviewInterface
      * Fetch the object.
      *
      * @param string $token
-     *
-     * @return mixed
      *
      * @throws ProviderNotFoundException
      * @throws TokenNotFoundException

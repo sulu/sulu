@@ -21,9 +21,6 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class HandlerPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition('sulu_http_cache.handler.aggregate')) {
@@ -81,9 +78,6 @@ class HandlerPass implements CompilerPassInterface
     /**
      * Ensure that the handler implements the HandlerInterface
      * (if it does not then someone has added a tag in the wrong place).
-     *
-     * @param ContainerBuilder $container
-     * @param mixed $id
      */
     private function validateHandler(ContainerBuilder $container, $id)
     {

@@ -50,9 +50,6 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
         return $this->name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $value = $this->defaultValue;
@@ -65,17 +62,11 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
         return $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasValue(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         return $node->hasProperty($property->getName());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -92,9 +83,6 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         // if exist remove property of node
@@ -117,41 +105,26 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultValue()
     {
         return $this->defaultValue;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getViewData(PropertyInterface $property)
     {
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentData(PropertyInterface $property)
     {
         return $property->getValue();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exportData($propertyValue)
     {
         if (is_bool($propertyValue)) {
@@ -185,9 +158,6 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
         return '';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,
@@ -216,10 +186,6 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
 
     /**
      * Prepares value for database.
-     *
-     * @param mixed $value
-     *
-     * @return mixed
      */
     protected function encodeValue($value)
     {
@@ -228,10 +194,6 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
 
     /**
      * Decodes value from database.
-     *
-     * @param mixed $value
-     *
-     * @return mixed
      */
     protected function decodeValue($value)
     {

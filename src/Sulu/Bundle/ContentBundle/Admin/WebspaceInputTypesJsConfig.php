@@ -30,10 +30,6 @@ class WebspaceInputTypesJsConfig implements JsConfigInterface
      */
     private $resourceLocatorStrategyPool;
 
-    /**
-     * @param WebspaceManagerInterface $webspaceManager
-     * @param ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool
-     */
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
         ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool
@@ -42,9 +38,6 @@ class WebspaceInputTypesJsConfig implements JsConfigInterface
         $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getParameters()
     {
         $result = [];
@@ -57,9 +50,6 @@ class WebspaceInputTypesJsConfig implements JsConfigInterface
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'sulu_content.webspace_input_types';

@@ -366,9 +366,6 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setLogo($logo)
     {
         $this->logo = $logo;
@@ -376,9 +373,6 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLogo()
     {
         return $this->logo;

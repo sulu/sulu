@@ -30,9 +30,6 @@ class Date extends SimpleContentType
         $this->template = $template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -51,9 +48,6 @@ class Date extends SimpleContentType
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $value = '';
@@ -71,17 +65,11 @@ class Date extends SimpleContentType
         return $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTemplate()
     {
         return $this->template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [

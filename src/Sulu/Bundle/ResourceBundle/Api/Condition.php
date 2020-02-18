@@ -25,7 +25,6 @@ use Sulu\Component\Rest\ApiWrapper;
 class Condition extends ApiWrapper
 {
     /**
-     * @param ConditionEntity $entity
      * @param string $locale
      */
     public function __construct(ConditionEntity $entity, $locale)
@@ -52,8 +51,6 @@ class Condition extends ApiWrapper
      *
      * @VirtualProperty
      * @SerializedName("value")
-     *
-     * @return mixed
      */
     public function getValue()
     {
@@ -141,8 +138,6 @@ class Condition extends ApiWrapper
 
     /**
      * Set conditionGroup.
-     *
-     * @param ConditionGroup $conditionGroup
      */
     public function setConditionGroup(ConditionGroup $conditionGroup)
     {

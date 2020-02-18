@@ -30,7 +30,6 @@ class AudienceTargetingAdmin extends Admin
     private $securityChecker;
 
     /**
-     * @param SecurityCheckerInterface $securityChecker
      * @param string $title
      */
     public function __construct(SecurityCheckerInterface $securityChecker, $title)
@@ -59,9 +58,6 @@ class AudienceTargetingAdmin extends Admin
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContexts()
     {
         return [
@@ -78,9 +74,6 @@ class AudienceTargetingAdmin extends Admin
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getJsBundleName()
     {
         return 'suluaudiencetargeting';

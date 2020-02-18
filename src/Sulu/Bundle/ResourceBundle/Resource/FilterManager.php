@@ -87,9 +87,6 @@ class FilterManager implements FilterManagerInterface
         $this->contextConfiguration = $contextConfig;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFieldDescriptors($locale)
     {
         $fieldDescriptors = [];
@@ -143,9 +140,6 @@ class FilterManager implements FilterManagerInterface
         return $fieldDescriptors;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getListFieldDescriptors($locale)
     {
         $fieldDescriptors = $this->getFieldDescriptors($locale);
@@ -176,9 +170,6 @@ class FilterManager implements FilterManagerInterface
         return $fieldDescriptors;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByIdAndLocale($id, $locale)
     {
         $filter = $this->filterRepository->findByIdAndLocale($id, $locale);
@@ -189,9 +180,6 @@ class FilterManager implements FilterManagerInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function delete($id)
     {
         $filter = $this->filterRepository->findById($id);
@@ -202,9 +190,6 @@ class FilterManager implements FilterManagerInterface
         $this->em->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save(array $data, $locale, $userId, $id = null)
     {
         $user = $this->userRepository->findUserById($userId);
@@ -289,7 +274,6 @@ class FilterManager implements FilterManagerInterface
     /**
      * Updates the given condition group with the values from the given array.
      *
-     * @param ConditionGroupEntity $conditionGroup
      * @param array $matchedEntry
      *
      * @return bool
@@ -414,11 +398,8 @@ class FilterManager implements FilterManagerInterface
     /**
      * Returns the entry from the data with the given key, or the given default value, if the key does not exist.
      *
-     * @param array $data
      * @param string $key
      * @param string $default
-     *
-     * @return mixed
      */
     protected function getProperty(array $data, $key, $default = null)
     {

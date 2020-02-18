@@ -46,12 +46,6 @@ class WebsiteSearchController
      */
     private $engine;
 
-    /**
-     * @param SearchManagerInterface $searchManager
-     * @param RequestAnalyzerInterface $requestAnalyzer
-     * @param ParameterResolverInterface $parameterResolver
-     * @param EngineInterface $engine
-     */
     public function __construct(
         SearchManagerInterface $searchManager,
         RequestAnalyzerInterface $requestAnalyzer,
@@ -66,8 +60,6 @@ class WebsiteSearchController
 
     /**
      * Returns the search results for the given query.
-     *
-     * @param Request $request
      *
      * @return Response
      */

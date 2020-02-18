@@ -79,17 +79,11 @@ class SnippetAdmin extends Admin
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getJsBundleName()
     {
         return 'sulusnippet';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContexts()
     {
         $contexts = [

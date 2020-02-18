@@ -256,8 +256,6 @@ abstract class BaseCollection implements CollectionInterface
     /**
      * Set type.
      *
-     * @param CollectionType $type
-     *
      * @return CollectionInterface
      */
     public function setType(CollectionType $type)

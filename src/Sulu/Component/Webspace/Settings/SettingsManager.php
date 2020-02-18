@@ -38,9 +38,6 @@ class SettingsManager implements SettingsManagerInterface
         $this->deprecatedSessionManager = $deprecatedSessionManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save($webspaceKey, $key, $data)
     {
         $propertyName = $this->getPropertyName($key);
@@ -59,9 +56,6 @@ class SettingsManager implements SettingsManagerInterface
         $this->sessionManager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove($webspaceKey, $key)
     {
         $propertyName = $this->getPropertyName($key);
@@ -75,9 +69,6 @@ class SettingsManager implements SettingsManagerInterface
         $this->sessionManager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($webspaceKey, $key)
     {
         $propertyName = $this->getPropertyName($key);
@@ -90,9 +81,6 @@ class SettingsManager implements SettingsManagerInterface
         return $this->decodeValue($value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadString($webspaceKey, $key)
     {
         $propertyName = $this->getPropertyName($key);
@@ -104,9 +92,6 @@ class SettingsManager implements SettingsManagerInterface
         return $webspaceNode->getProperty($propertyName)->getString();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadByWildcard($webspaceKey, $wildcard)
     {
         $properties = $this->deprecatedSessionManager->getWebspaceNode($webspaceKey)->getProperties(
@@ -121,9 +106,6 @@ class SettingsManager implements SettingsManagerInterface
         return $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadStringByWildcard($webspaceKey, $wildcard)
     {
         $webspaceNode = $this->deprecatedSessionManager->getWebspaceNode($webspaceKey);
@@ -140,10 +122,6 @@ class SettingsManager implements SettingsManagerInterface
 
     /**
      * Returns decoded value.
-     *
-     * @param mixed $value
-     *
-     * @return mixed
      */
     private function decodeValue($value)
     {

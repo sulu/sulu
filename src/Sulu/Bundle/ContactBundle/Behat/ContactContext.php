@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -31,7 +31,7 @@ class ContactContext extends BaseContext implements SnippetAcceptingContext
     {
         $emailType = new EmailType();
         $emailType->setId(self::$emailTypeId);
-        self::$emailTypeId += 1;
+        ++self::$emailTypeId;
         $emailType->setName($type);
 
         $this->getEntityManager()->persist($emailType);

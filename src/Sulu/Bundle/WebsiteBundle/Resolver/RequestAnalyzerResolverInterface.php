@@ -21,8 +21,6 @@ interface RequestAnalyzerResolverInterface
     /**
      * Resolves the request analyzer to an array.
      *
-     * @param RequestAnalyzerInterface $requestAnalyzer
-     *
      * @return array
      */
     public function resolve(RequestAnalyzerInterface $requestAnalyzer);

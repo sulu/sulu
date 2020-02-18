@@ -44,11 +44,6 @@ class TestUserProvider implements UserProviderInterface
      */
     private $userRepository;
 
-    /**
-     * @param EntityManager $entityManager
-     * @param ContactRepositoryInterface $contactRepository
-     * @param UserRepositoryInterface $userRepository
-     */
     public function __construct(
         EntityManager $entityManager,
         ContactRepositoryInterface $contactRepository,
@@ -59,9 +54,6 @@ class TestUserProvider implements UserProviderInterface
         $this->userRepository = $userRepository;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUser()
     {
         if ($this->user) {
@@ -120,8 +112,6 @@ class TestUserProvider implements UserProviderInterface
      * object can just be merged into some internal array of users / identity
      * map.
      *
-     * @param UserInterface $user
-     *
      * @return UserInterface
      *
      * @throws UnsupportedUserException if the account is not supported
@@ -145,8 +135,6 @@ class TestUserProvider implements UserProviderInterface
 
     /**
      * Sets the standard credentials for the user.
-     *
-     * @param UserInterface $user
      */
     private function setCredentials(UserInterface $user)
     {

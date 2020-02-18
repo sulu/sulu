@@ -57,9 +57,6 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
     protected $defaultEnabled;
 
     /**
-     * @param DefaultSnippetManagerInterface $defaultSnippetManager
-     * @param SnippetResolverInterface $snippetResolver
-     * @param ReferenceStoreInterface $referenceStore
      * @param true $defaultEnabled
      * @param string $template
      */
@@ -77,17 +74,11 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         $this->template = $template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTemplate()
     {
         return $this->template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $refs = [];
@@ -98,9 +89,6 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         $property->setValue($refs);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -134,9 +122,6 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         $node->setProperty($property->getName(), $snippetReferences, PropertyType::REFERENCE);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         if ($node->hasProperty($property->getName())) {
@@ -144,17 +129,11 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getViewData(PropertyInterface $property)
     {
         $viewData = [];
@@ -165,9 +144,6 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         return $viewData;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentData(PropertyInterface $property)
     {
         $contentData = [];
@@ -239,9 +215,6 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
      *
      * @param PropertyParameter[] $parameter
      * @param string $name
-     * @param mixed $default
-     *
-     * @return mixed
      */
     private function getParameterValue(array $parameter, $name, $default = null)
     {
@@ -252,9 +225,6 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         return $parameter[$name]->getValue();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exportData($propertyValue)
     {
         $uuids = $this->getUuids($propertyValue);
@@ -266,9 +236,6 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         return json_encode($this->getUuids($propertyValue));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,
@@ -282,9 +249,6 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function preResolve(PropertyInterface $property)
     {
         foreach ($this->getUuids($property->getValue()) as $uuid) {

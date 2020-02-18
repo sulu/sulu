@@ -59,11 +59,8 @@ class CacheClearer implements CacheClearerInterface
     private $eventDispatcher;
 
     /**
-     * @param Filesystem $filesystem
      * @param $kernelEnvironment
      * @param $kernelRootDir
-     * @param RequestStack $requestStack
-     * @param EventDispatcherInterface $eventDispatcher
      * @param string $varDir
      * @param ProxyClientInterface $proxyClient
      */
@@ -85,9 +82,6 @@ class CacheClearer implements CacheClearerInterface
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function clear()
     {
         if ($this->proxyClient instanceof BanInterface) {

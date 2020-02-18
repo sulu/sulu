@@ -39,9 +39,6 @@ class CustomUrlSerializeEventSubscriber implements EventSubscriberInterface
         $this->userManager = $userManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -55,8 +52,6 @@ class CustomUrlSerializeEventSubscriber implements EventSubscriberInterface
 
     /**
      * Add information to serialized custom-url document.
-     *
-     * @param ObjectEvent $event
      */
     public function onPostSerialize(ObjectEvent $event)
     {

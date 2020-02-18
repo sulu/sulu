@@ -26,17 +26,11 @@ class FlushSubscriber implements EventSubscriberInterface
      */
     private $handler;
 
-    /**
-     * @param HandlerFlushInterface $handler
-     */
     public function __construct(HandlerFlushInterface $handler)
     {
         $this->handler = $handler;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [

@@ -29,8 +29,6 @@ class SeoController extends RestController implements ClassResourceInterface
     /**
      * returns webspace key from request.
      *
-     * @param Request $request
-     *
      * @return string
      */
     private function getWebspace(Request $request)
@@ -49,7 +47,6 @@ class SeoController extends RestController implements ClassResourceInterface
     /**
      * returns seo information for given node uuid.
      *
-     * @param Request $request
      * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -81,7 +78,6 @@ class SeoController extends RestController implements ClassResourceInterface
     /**
      * handles a post request to save seo data.
      *
-     * @param Request $request
      * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -106,9 +102,6 @@ class SeoController extends RestController implements ClassResourceInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale(Request $request)
     {
         return $this->getRequestParameter($request, 'language', true);

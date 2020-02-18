@@ -73,8 +73,6 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
 
     /**
      * Migrate the repository up.
-     *
-     * @param SessionInterface $session
      */
     public function up(SessionInterface $session)
     {
@@ -85,8 +83,6 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
 
     /**
      * Migrate the system down.
-     *
-     * @param SessionInterface $session
      */
     public function down(SessionInterface $session)
     {
@@ -272,9 +268,6 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
     /**
      * Upgrades the given block property to the new URL representation.
      *
-     * @param BlockMetadata $blockProperty
-     * @param array $components
-     * @param PropertyValue $propertyValue
      * @param bool $addScheme
      */
     private function upgradeBlockProperty(

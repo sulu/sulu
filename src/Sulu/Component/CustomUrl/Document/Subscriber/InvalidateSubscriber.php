@@ -32,9 +32,6 @@ class InvalidateSubscriber implements EventSubscriberInterface
         $this->manager = $manager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [Events::PERSIST => 'handlePersist'];
@@ -42,8 +39,6 @@ class InvalidateSubscriber implements EventSubscriberInterface
 
     /**
      * Invalidate custom-urls for persisted pages.
-     *
-     * @param PersistEvent $event
      */
     public function handlePersist(PersistEvent $event)
     {

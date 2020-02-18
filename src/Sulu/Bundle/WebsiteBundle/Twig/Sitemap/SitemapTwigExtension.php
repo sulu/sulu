@@ -52,9 +52,6 @@ class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensi
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [
@@ -63,9 +60,6 @@ class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensi
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function sitemapUrlFunction($url, $locale = null, $webspaceKey = null)
     {
         if (null === $webspaceKey) {
@@ -84,9 +78,6 @@ class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensi
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function sitemapFunction($locale = null, $webspaceKey = null)
     {
         if (null === $webspaceKey) {
@@ -100,9 +91,6 @@ class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensi
         return $this->sitemapGenerator->generate($webspaceKey, $locale)->getSitemap();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'sulu_website_sitemap';

@@ -226,9 +226,6 @@ class NavigationItem implements \Iterator
         return $this->event;
     }
 
-    /**
-     * @param string $event
-     */
     public function setEventArguments($eventArguments)
     {
         $this->eventArguments = $eventArguments;

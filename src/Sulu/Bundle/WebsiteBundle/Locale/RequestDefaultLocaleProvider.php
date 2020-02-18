@@ -30,19 +30,12 @@ class RequestDefaultLocaleProvider implements DefaultLocaleProviderInterface
      */
     private $requestStack;
 
-    /**
-     * @param RequestAnalyzerInterface $requestAnalyzer
-     * @param RequestStack $requestStack
-     */
     public function __construct(RequestAnalyzerInterface $requestAnalyzer, RequestStack $requestStack)
     {
         $this->requestAnalyzer = $requestAnalyzer;
         $this->requestStack = $requestStack;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultLocale()
     {
         $request = $this->requestStack->getCurrentRequest();

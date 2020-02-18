@@ -41,9 +41,6 @@ class RequestDefaultLocaleProviderTest extends \PHPUnit_Framework_TestCase
      */
     private $defaultLocaleProvider;
 
-    /**
-     * {@inheritdoc}
-     */
     public function setUp()
     {
         parent::setUp();

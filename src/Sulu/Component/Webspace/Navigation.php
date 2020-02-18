@@ -33,9 +33,6 @@ class Navigation
         }
     }
 
-    /**
-     * @param NavigationContext $context
-     */
     public function addContext(NavigationContext $context)
     {
         $this->contexts[] = $context;

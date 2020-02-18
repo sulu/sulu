@@ -21,7 +21,6 @@ interface SecurityCheckerInterface
     /**
      * Checks a Sulu specific permission based on the subject, a permission type and a locale.
      *
-     * @param mixed $subject
      * @param string $permission
      *
      * @return bool

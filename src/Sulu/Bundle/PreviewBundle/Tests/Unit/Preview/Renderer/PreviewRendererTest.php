@@ -185,7 +185,6 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param ObjectProphecy $object
      * @param string $expectedScheme
      * @param string $expectedHost
      * @param int $expectedPort

@@ -41,14 +41,6 @@ class ExtensionContainerHandler implements SubscribingHandlerInterface
         ];
     }
 
-    /**
-     * @param JsonSerializationVisitor $visitor
-     * @param ExtensionContainer $container
-     * @param array $type
-     * @param Context $context
-     *
-     * @return mixed
-     */
     public function doSerialize(
         JsonSerializationVisitor $visitor,
         ExtensionContainer $container,
@@ -59,11 +51,6 @@ class ExtensionContainerHandler implements SubscribingHandlerInterface
     }
 
     /**
-     * @param JsonDeserializationVisitor $visitor
-     * @param array $data
-     * @param array $type
-     * @param Context $context
-     *
      * @return ExtensionContainer
      */
     public function doDeserialize(

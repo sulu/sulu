@@ -21,9 +21,6 @@ use Symfony\Component\DependencyInjection\Definition;
  */
 class DeprecationCompilerPassTest extends AbstractCompilerPassTestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function registerCompilerPass(ContainerBuilder $container)
     {
         $container->addCompilerPass(new DeprecationCompilerPass());

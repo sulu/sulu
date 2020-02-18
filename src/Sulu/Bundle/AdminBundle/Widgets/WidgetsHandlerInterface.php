@@ -30,8 +30,6 @@ interface WidgetsHandlerInterface
      * return true of widget group exists.
      *
      * @param $groupAlias
-     *
-     * @return mixed
      */
     public function hasWidgetGroup($groupAlias);
 
@@ -48,7 +46,6 @@ interface WidgetsHandlerInterface
     /**
      * add an widget to rendering process.
      *
-     * @param WidgetInterface $widget
      * @param string $alias
      */
     public function addWidget(WidgetInterface $widget, $alias);

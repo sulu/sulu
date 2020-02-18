@@ -83,8 +83,6 @@ interface CategoryMetaInterface
     /**
      * Set category.
      *
-     * @param CategoryInterface $category
-     *
      * @return CategoryMetaInterface
      */
     public function setCategory(CategoryInterface $category);

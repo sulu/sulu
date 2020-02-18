@@ -49,17 +49,11 @@ class CustomUrlAdmin extends Admin
         $this->webspaceManager = $webspaceManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getJsBundleName()
     {
         return 'sulucustomurl';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContexts()
     {
         $webspaceContexts = [];

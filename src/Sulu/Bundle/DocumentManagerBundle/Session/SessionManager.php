@@ -34,18 +34,12 @@ class SessionManager implements SessionManagerInterface
         $this->liveSession = $liveSession;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setNodeProperty($nodePath, $propertyName, $value)
     {
         $this->setNodePropertyForSession($this->defaultSession, $nodePath, $propertyName, $value);
         $this->setNodePropertyForSession($this->liveSession, $nodePath, $propertyName, $value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function flush()
     {
         $this->defaultSession->save();
@@ -56,10 +50,8 @@ class SessionManager implements SessionManagerInterface
      * Sets the property of the node at the given path to the given value. The change is only applied to the given
      * session.
      *
-     * @param SessionInterface $session
      * @param string $nodePath
      * @param string $propertyName
-     * @param mixed $value
      */
     private function setNodePropertyForSession(SessionInterface $session, $nodePath, $propertyName, $value)
     {

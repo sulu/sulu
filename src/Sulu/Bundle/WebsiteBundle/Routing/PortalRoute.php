@@ -20,8 +20,6 @@ class PortalRoute extends Route
 {
     /**
      * Trims leading slash to avoid "//".
-     *
-     * @return mixed
      */
     public function getPath()
     {

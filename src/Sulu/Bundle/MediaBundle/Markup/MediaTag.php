@@ -37,10 +37,6 @@ class MediaTag implements TagInterface
      */
     private $mediaManager;
 
-    /**
-     * @param MediaRepositoryInterface $mediaRepository
-     * @param MediaManagerInterface $mediaManager
-     */
     public function __construct(
         MediaRepositoryInterface $mediaRepository,
         MediaManagerInterface $mediaManager
@@ -49,9 +45,6 @@ class MediaTag implements TagInterface
         $this->mediaManager = $mediaManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function parseAll(array $attributesByTag, $locale)
     {
         $medias = $this->preloadMedias($attributesByTag, $locale);
@@ -64,9 +57,6 @@ class MediaTag implements TagInterface
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validateAll(array $attributesByTag, $locale)
     {
         $medias = $this->preloadMedias($attributesByTag, $locale);

@@ -35,11 +35,6 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
      */
     protected $cache;
 
-    /**
-     * @param \Twig_Environment $twig
-     * @param StructureManagerInterface $structureManager
-     * @param Cache $cache
-     */
     public function __construct(
         \Twig_Environment $twig,
         StructureManagerInterface $structureManager,
@@ -50,9 +45,6 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
         $this->cache = $cache;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStructures($webspaceKey)
     {
         if (!$this->cache->contains($webspaceKey)) {

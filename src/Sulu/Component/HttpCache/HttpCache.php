@@ -43,7 +43,6 @@ class HttpCache extends AbstractHttpCache
     private $hasAudienceTargeting;
 
     /**
-     * @param HttpKernelInterface $kernel
      * @param bool $hasAudienceTargeting
      * @param string $cacheDir
      */
@@ -54,9 +53,6 @@ class HttpCache extends AbstractHttpCache
         $this->hasAudienceTargeting = $hasAudienceTargeting;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
         $hadValidTargetGroupCookie = null;
@@ -82,9 +78,6 @@ class HttpCache extends AbstractHttpCache
         return $response;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function invalidate(Request $request, $catch = false)
     {
         if ('PURGE' !== $request->getMethod()) {
@@ -101,9 +94,6 @@ class HttpCache extends AbstractHttpCache
         return $response;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function isFreshEnough(Request $request, Response $entry)
     {
         if (!$entry->isFresh() && !$this->isFreshCacheEntry($entry)) {
@@ -118,8 +108,6 @@ class HttpCache extends AbstractHttpCache
      * to it. If the cookie didn't exist yet, another request is fired in order to set the value for the cookie.
      *
      * Returns true if the cookie was already set and false otherwise.
-     *
-     * @param Request $request
      *
      * @return bool
      */
@@ -145,7 +133,6 @@ class HttpCache extends AbstractHttpCache
     /**
      * Sends a request to the application to determine the target group of the current visitor.
      *
-     * @param Request $request
      * @param int $currentTargetGroup
      *
      * @return string
@@ -175,9 +162,6 @@ class HttpCache extends AbstractHttpCache
 
     /**
      * Set the cookie for the target group from the request. Should only be set in case the cookie was not set before.
-     *
-     * @param Response $response
-     * @param Request $request
      */
     private function setTargetGroupCookie(Response $response, Request $request)
     {
@@ -200,8 +184,6 @@ class HttpCache extends AbstractHttpCache
     /**
      * Returns true if the cache entry is "fresh".
      *
-     * @param Response $entry
-     *
      * @return bool
      */
     private function isFreshCacheEntry(Response $entry)
@@ -211,8 +193,6 @@ class HttpCache extends AbstractHttpCache
 
     /**
      * Returns the response reverse-proxy cache TTL in seconds.
-     *
-     * @param Response $response
      *
      * @return int|null The TTL in seconds
      */

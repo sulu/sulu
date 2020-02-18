@@ -78,9 +78,6 @@ class DoctrineIdentityFieldDescriptor extends AbstractDoctrineFieldDescriptor
         $this->joins = $joins;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSelect()
     {
         return sprintf('IDENTITY(%s.%s)', $this->encodeAlias($this->entityName), $this->getFieldName());
@@ -106,17 +103,11 @@ class DoctrineIdentityFieldDescriptor extends AbstractDoctrineFieldDescriptor
         return $this->entityName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getJoins()
     {
         return $this->joins;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function compare(FieldDescriptorInterface $other)
     {
         if (!$other instanceof self) {

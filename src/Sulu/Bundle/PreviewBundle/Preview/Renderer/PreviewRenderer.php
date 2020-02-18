@@ -91,12 +91,6 @@ class PreviewRenderer implements PreviewRendererInterface
     private $targetGroupHeader;
 
     /**
-     * @param RouteDefaultsProviderInterface $routeDefaultsProvider
-     * @param RequestStack $requestStack
-     * @param KernelFactoryInterface $kernelFactory
-     * @param WebspaceManagerInterface $webspaceManager
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param array $previewDefaults
      * @param string $environment
      * @param string $targetGroupHeader
      */
@@ -124,9 +118,6 @@ class PreviewRenderer implements PreviewRendererInterface
         $this->targetGroupHeader = $targetGroupHeader;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function render($object, $id, $webspaceKey, $locale, $partial = false, $targetGroupId = null)
     {
         if (!$this->routeDefaultsProvider->supports(get_class($object))) {
@@ -211,8 +202,6 @@ class PreviewRenderer implements PreviewRendererInterface
     /**
      * Handles given request and returns response.
      *
-     * @param Request $request
-     *
      * @return Response
      *
      * @throws \Exception
@@ -234,9 +223,6 @@ class PreviewRenderer implements PreviewRendererInterface
 
     /**
      * Create server attributes.
-     *
-     * @param PortalInformation $portalInformation
-     * @param Request|null $currentRequest
      *
      * @return array
      */

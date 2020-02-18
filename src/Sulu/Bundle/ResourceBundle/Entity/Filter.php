@@ -96,8 +96,6 @@ class Filter
     /**
      * Add translations.
      *
-     * @param FilterTranslation $translations
-     *
      * @return Filter
      */
     public function addTranslation(FilterTranslation $translations)
@@ -109,8 +107,6 @@ class Filter
 
     /**
      * Remove translations.
-     *
-     * @param FilterTranslation $translations
      */
     public function removeTranslation(FilterTranslation $translations)
     {
@@ -130,8 +126,6 @@ class Filter
     /**
      * Add conditionGroups.
      *
-     * @param ConditionGroup $conditionGroups
-     *
      * @return Filter
      */
     public function addConditionGroup(ConditionGroup $conditionGroups)
@@ -143,8 +137,6 @@ class Filter
 
     /**
      * Remove conditionGroups.
-     *
-     * @param ConditionGroup $conditionGroups
      */
     public function removeConditionGroup(ConditionGroup $conditionGroups)
     {

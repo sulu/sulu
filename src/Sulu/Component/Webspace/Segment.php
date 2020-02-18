@@ -99,9 +99,6 @@ class Segment implements ArrayableInterface
         return $this->default;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toArray($depth = null)
     {
         $res = [];

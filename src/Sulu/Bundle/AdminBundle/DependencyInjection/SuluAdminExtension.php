@@ -23,9 +23,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class SuluAdminExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();

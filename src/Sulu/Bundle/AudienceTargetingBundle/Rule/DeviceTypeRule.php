@@ -46,9 +46,6 @@ class DeviceTypeRule implements RuleInterface
         $this->translator = $translator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function evaluate(array $options)
     {
         if (!array_key_exists(static::DEVICE_TYPE, $options)) {
@@ -67,17 +64,11 @@ class DeviceTypeRule implements RuleInterface
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->translator->trans('sulu_audience_targeting.rules.device_type', [], 'backend');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType()
     {
         return new Select(static::DEVICE_TYPE, array_map(function($deviceTypes) {

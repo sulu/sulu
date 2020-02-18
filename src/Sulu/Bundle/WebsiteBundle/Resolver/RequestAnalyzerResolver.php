@@ -45,9 +45,6 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
         $this->environment = $environment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolve(RequestAnalyzerInterface $requestAnalyzer)
     {
         // determine default locale (if one exists)

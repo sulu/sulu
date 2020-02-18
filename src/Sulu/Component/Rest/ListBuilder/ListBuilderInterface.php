@@ -44,8 +44,6 @@ interface ListBuilderInterface
      * Sets all the field descriptors for the ListBuilder at once.
      *
      * @param FieldDescriptorInterface[] $fieldDescriptors
-     *
-     * @return mixed
      */
     public function setSelectFields($fieldDescriptors);
 
@@ -57,16 +55,12 @@ interface ListBuilderInterface
     /**
      * Adds a field descriptor to the ListBuilder, which is then used to retrieve and return the list.
      *
-     * @param FieldDescriptorInterface $fieldDescriptor
-     *
      * @return ListBuilderInterface
      */
     public function addSelectField(FieldDescriptorInterface $fieldDescriptor);
 
     /**
      * @deprecated use addSelectField instead
-     *
-     * @param FieldDescriptorInterface $fieldDescriptor
      *
      * @return ListBuilderInterface
      */
@@ -98,8 +92,6 @@ interface ListBuilderInterface
     /**
      * Adds a field descriptor, which will be used for search.
      *
-     * @param FieldDescriptorInterface $fieldDescriptor
-     *
      * @return ListBuilderInterface
      */
     public function addSearchField(FieldDescriptorInterface $fieldDescriptor);
@@ -116,7 +108,6 @@ interface ListBuilderInterface
     /**
      * Adds a field by which the table is sorted.
      *
-     * @param FieldDescriptorInterface $fieldDescriptor
      * @param string $order
      *
      * @return ListBuilderInterface
@@ -183,9 +174,6 @@ interface ListBuilderInterface
     /**
      * @deprecated use where instead
      *
-     * @param FieldDescriptorInterface $fieldDescriptor
-     * @param mixed $value
-     *
      * @return ListBuilderInterface
      */
     public function whereNot(FieldDescriptorInterface $fieldDescriptor, $value);
@@ -193,24 +181,18 @@ interface ListBuilderInterface
     /**
      * Defines GROUP BY.
      *
-     * @param FieldDescriptorInterface $fieldDescriptor
-     *
      * @return ListBuilderInterface
      */
     public function addGroupBy(FieldDescriptorInterface $fieldDescriptor);
 
     /**
      * Defines an IN constraint.
-     *
-     * @param FieldDescriptorInterface $fieldDescriptor
-     * @param array $values
      */
     public function in(FieldDescriptorInterface $fieldDescriptor, array $values);
 
     /**
      * Defines a between constraint.
      *
-     * @param FieldDescriptorInterface $fieldDescriptor
      * @param $values
      *
      * @return
@@ -226,8 +208,6 @@ interface ListBuilderInterface
 
     /**
      * Returns the objects for the built query.
-     *
-     * @return mixed
      */
     public function execute();
 
@@ -249,39 +229,24 @@ interface ListBuilderInterface
 
     /**
      * Adds an expression.
-     *
-     * @param ExpressionInterface $expression
      */
     public function addExpression(ExpressionInterface $expression);
 
     /**
      * Creates a between expression from the given values.
-     *
-     * @param FieldDescriptorInterface $fieldDescriptor
-     * @param array $values
-     *
-     * @return mixed
      */
     public function createBetweenExpression(FieldDescriptorInterface $fieldDescriptor, array $values);
 
     /**
      * Creates an in expression from the given values.
-     *
-     * @param FieldDescriptorInterface $fieldDescriptor
-     * @param array $values
-     *
-     * @return mixed
      */
     public function createInExpression(FieldDescriptorInterface $fieldDescriptor, array $values);
 
     /**
      * Creates an where expression from the given values.
      *
-     * @param FieldDescriptorInterface $fieldDescriptor
      * @param $value
      * @param string $comparator
-     *
-     * @return mixed
      */
     public function createWhereExpression(FieldDescriptorInterface $fieldDescriptor, $value, $comparator);
 

@@ -146,7 +146,6 @@ abstract class AbstractMediaController extends RestController
      *
      * @param string $entityName
      * @param string $routeName
-     * @param AbstractContactManager $contactManager
      * @param string $id
      * @param Request $request
      *

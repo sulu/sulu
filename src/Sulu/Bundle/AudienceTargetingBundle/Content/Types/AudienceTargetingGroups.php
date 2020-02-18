@@ -46,18 +46,12 @@ class AudienceTargetingGroups extends ComplexContentType implements ContentTypeE
         return ContentTypeInterface::PRE_SAVE;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $ids = $node->getPropertyValueWithDefault($property->getName(), []);
         $property->setValue($ids);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentData(PropertyInterface $property)
     {
         $audienceTargetGroupIds = $property->getValue();
@@ -68,9 +62,6 @@ class AudienceTargetingGroups extends ComplexContentType implements ContentTypeE
         return $this->targetGroupRepository->findByIds($audienceTargetGroupIds);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -82,9 +73,6 @@ class AudienceTargetingGroups extends ComplexContentType implements ContentTypeE
         $node->setProperty($property->getName(), $property->getValue());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         if ($node->hasProperty($property->getName())) {
@@ -102,9 +90,6 @@ class AudienceTargetingGroups extends ComplexContentType implements ContentTypeE
         return 'SuluAudienceTargetingBundle:Template:content-types/audience_targeting_groups.html.twig';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exportData($propertyValue)
     {
         if (is_array($propertyValue) && count($propertyValue) > 0) {
@@ -114,9 +99,6 @@ class AudienceTargetingGroups extends ComplexContentType implements ContentTypeE
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,

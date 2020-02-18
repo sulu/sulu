@@ -249,9 +249,6 @@ class Url implements ArrayableInterface
             || (empty($this->getLanguage()) && empty($this->getCountry()));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toArray($depth = null)
     {
         $res = [];

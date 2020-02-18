@@ -16,9 +16,6 @@ namespace Sulu\Bundle\PreviewBundle\Preview\Renderer;
  */
 class WebsiteKernelFactory implements KernelFactoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function create($environment)
     {
         $kernel = new PreviewKernel($environment, 'dev' === $environment);

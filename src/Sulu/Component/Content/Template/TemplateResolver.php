@@ -16,9 +16,6 @@ namespace Sulu\Component\Content\Template;
  */
 class TemplateResolver implements TemplateResolverInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function resolve($nodeType, $templateKey)
     {
         if (Structure::NODE_TYPE_EXTERNAL_LINK === $nodeType) {

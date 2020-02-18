@@ -19,7 +19,6 @@ class RouteDefaultsProviderNotFoundException extends PreviewRendererException
     /**
      * @param string $object
      * @param int $id
-     * @param mixed $webspaceKey
      * @param string $locale
      */
     public function __construct($object, $id, $webspaceKey, $locale)

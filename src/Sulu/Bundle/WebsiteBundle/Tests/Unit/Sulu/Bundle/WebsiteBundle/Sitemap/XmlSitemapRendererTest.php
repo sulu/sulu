@@ -38,9 +38,6 @@ class XmlSitemapRendererTest extends \PHPUnit_Framework_TestCase
      */
     protected $renderer;
 
-    /**
-     * {@inheritdoc}
-     */
     public function setUp()
     {
         $this->providerPoolInterface = $this->prophesize(SitemapProviderPoolInterface::class);

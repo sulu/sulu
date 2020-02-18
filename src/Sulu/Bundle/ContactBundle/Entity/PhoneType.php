@@ -92,8 +92,6 @@ class PhoneType implements \JsonSerializable
     /**
      * Add phones.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
-     *
      * @return PhoneType
      */
     public function addPhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones)
@@ -105,8 +103,6 @@ class PhoneType implements \JsonSerializable
 
     /**
      * Remove phones.
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Phone $phones
      */
     public function removePhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones)
     {

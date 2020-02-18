@@ -38,8 +38,5 @@ interface ContentTwigExtensionInterface extends \Twig_ExtensionInterface
      */
     public function load($uuid);
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions();
 }

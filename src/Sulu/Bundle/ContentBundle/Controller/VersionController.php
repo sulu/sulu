@@ -39,7 +39,6 @@ class VersionController extends FOSRestController implements
     /**
      * Returns the versions for the node with the given UUID.
      *
-     * @param Request $request
      * @param string $uuid
      *
      * @return Response
@@ -100,7 +99,6 @@ class VersionController extends FOSRestController implements
     }
 
     /**
-     * @param Request $request
      * @param string $uuid
      * @param int $version
      *
@@ -141,9 +139,6 @@ class VersionController extends FOSRestController implements
         return $this->get('sulu_document_manager.document_manager');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer');
@@ -158,25 +153,16 @@ class VersionController extends FOSRestController implements
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale(Request $request)
     {
         return $this->getRequestParameter($request, 'language', true);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecuredClass()
     {
         return SecurityBehavior::class;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecuredObjectId(Request $request)
     {
         return $request->get('uuid');

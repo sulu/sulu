@@ -26,18 +26,12 @@ class DumpWebsocketAppsCommand extends ContainerAwareCommand
      */
     const MANAGER_ID = 'sulu_websocket.manager';
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         $this->setName('sulu:websocket:dump');
         $this->setDescription('Dumps websocket apps config');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $manager = $this->getContainer()->get(self::MANAGER_ID);

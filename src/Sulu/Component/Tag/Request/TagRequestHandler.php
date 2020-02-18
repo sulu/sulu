@@ -28,9 +28,6 @@ class TagRequestHandler implements TagRequestHandlerInterface
         $this->requestStack = $requestStack;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTags($tagsParameter = 'tags')
     {
         if (null !== $this->requestStack->getCurrentRequest()) {
@@ -47,9 +44,6 @@ class TagRequestHandler implements TagRequestHandlerInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function appendTagToUrl($tag, $tagsParameter = 'tags')
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -72,9 +66,6 @@ class TagRequestHandler implements TagRequestHandlerInterface
         return $request->getPathInfo() . (strlen($queryString) > 0 ? '?' . $queryString : '');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setTagToUrl($tag, $tagsParameter = 'tags')
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -92,9 +83,6 @@ class TagRequestHandler implements TagRequestHandlerInterface
         return $request->getPathInfo() . (strlen($queryString) > 0 ? '?' . $queryString : '');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeTagsFromUrl($tagsParameter = 'tags')
     {
         $request = $this->requestStack->getCurrentRequest();

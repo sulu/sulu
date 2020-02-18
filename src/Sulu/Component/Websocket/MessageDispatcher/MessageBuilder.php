@@ -16,9 +16,6 @@ namespace Sulu\Component\Websocket\MessageDispatcher;
  */
 class MessageBuilder implements MessageBuilderInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function build($handlerName, array $message, array $options, $error = false)
     {
         return json_encode(

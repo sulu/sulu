@@ -37,9 +37,6 @@ class FallbackConnection implements ConnectionInterface
         $this->resourceId = $resourceId;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function send($data)
     {
         $this->data = $data;
@@ -47,17 +44,11 @@ class FallbackConnection implements ConnectionInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function close()
     {
         // do nothing
     }
 
-    /**
-     * @return mixed
-     */
     public function getData()
     {
         return $this->data;

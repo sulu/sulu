@@ -240,24 +240,12 @@ interface AccountInterface
      */
     public function setChanged($changed);
 
-    /**
-     * @return mixed
-     */
     public function getChanger();
 
-    /**
-     * @param mixed $changer
-     */
     public function setChanger($changer);
 
-    /**
-     * @return mixed
-     */
     public function getCreator();
 
-    /**
-     * @param mixed $creator
-     */
     public function setCreator($creator);
 
     /**
@@ -337,16 +325,12 @@ interface AccountInterface
     /**
      * Add urls.
      *
-     * @param Url $urls
-     *
      * @return Account
      */
     public function addUrl(Url $urls);
 
     /**
      * Remove urls.
-     *
-     * @param Url $urls
      */
     public function removeUrl(Url $urls);
 
@@ -360,16 +344,12 @@ interface AccountInterface
     /**
      * Add phones.
      *
-     * @param Phone $phones
-     *
      * @return Account
      */
     public function addPhone(Phone $phones);
 
     /**
      * Remove phones.
-     *
-     * @param Phone $phones
      */
     public function removePhone(Phone $phones);
 
@@ -383,16 +363,12 @@ interface AccountInterface
     /**
      * Add emails.
      *
-     * @param Email $emails
-     *
      * @return Account
      */
     public function addEmail(Email $emails);
 
     /**
      * Remove emails.
-     *
-     * @param Email $emails
      */
     public function removeEmail(Email $emails);
 
@@ -406,16 +382,12 @@ interface AccountInterface
     /**
      * Add notes.
      *
-     * @param Note $notes
-     *
      * @return Account
      */
     public function addNote(Note $notes);
 
     /**
      * Remove notes.
-     *
-     * @param Note $notes
      */
     public function removeNote(Note $notes);
 
@@ -436,16 +408,12 @@ interface AccountInterface
     /**
      * Add faxes.
      *
-     * @param Fax $faxes
-     *
      * @return Account
      */
     public function addFax(Fax $faxes);
 
     /**
      * Remove faxes.
-     *
-     * @param Fax $faxes
      */
     public function removeFax(Fax $faxes);
 
@@ -459,16 +427,12 @@ interface AccountInterface
     /**
      * Add social media profile.
      *
-     * @param SocialMediaProfile $socialMediaProfile
-     *
      * @return Account
      */
     public function addSocialMediaProfile(SocialMediaProfile $socialMediaProfile);
 
     /**
      * Remove social media profile.
-     *
-     * @param SocialMediaProfile $socialMediaProfile
      */
     public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile);
 
@@ -482,16 +446,12 @@ interface AccountInterface
     /**
      * Add bankAccounts.
      *
-     * @param BankAccount $bankAccounts
-     *
      * @return Account
      */
     public function addBankAccount(BankAccount $bankAccounts);
 
     /**
      * Remove bankAccounts.
-     *
-     * @param BankAccount $bankAccounts
      */
     public function removeBankAccount(BankAccount $bankAccounts);
 
@@ -505,16 +465,12 @@ interface AccountInterface
     /**
      * Add tags.
      *
-     * @param TagInterface $tags
-     *
      * @return Account
      */
     public function addTag(TagInterface $tags);
 
     /**
      * Remove tags.
-     *
-     * @param TagInterface $tags
      */
     public function removeTag(TagInterface $tags);
 
@@ -528,16 +484,12 @@ interface AccountInterface
     /**
      * Add accountContacts.
      *
-     * @param AccountContact $accountContacts
-     *
      * @return Account
      */
     public function addAccountContact(AccountContact $accountContacts);
 
     /**
      * Remove accountContacts.
-     *
-     * @param AccountContact $accountContacts
      */
     public function removeAccountContact(AccountContact $accountContacts);
 
@@ -557,8 +509,6 @@ interface AccountInterface
 
     /**
      * Returns the main address.
-     *
-     * @return mixed
      */
     public function getMainAddress();
 
@@ -572,16 +522,12 @@ interface AccountInterface
     /**
      * Add media.
      *
-     * @param MediaInterface $media
-     *
      * @return Account
      */
     public function addMedia(MediaInterface $media);
 
     /**
      * Remove media.
-     *
-     * @param MediaInterface $media
      */
     public function removeMedia(MediaInterface $media);
 
@@ -595,16 +541,12 @@ interface AccountInterface
     /**
      * Add accountAddresses.
      *
-     * @param AccountAddress $accountAddresses
-     *
      * @return Account
      */
     public function addAccountAddress(AccountAddress $accountAddresses);
 
     /**
      * Remove accountAddresses.
-     *
-     * @param AccountAddress $accountAddresses
      */
     public function removeAccountAddress(AccountAddress $accountAddresses);
 
@@ -627,16 +569,12 @@ interface AccountInterface
     /**
      * Add categories.
      *
-     * @param CategoryInterface $category
-     *
      * @return Account
      */
     public function addCategory(CategoryInterface $category);
 
     /**
      * Remove categories.
-     *
-     * @param CategoryInterface $category
      */
     public function removeCategory(CategoryInterface $category);
 

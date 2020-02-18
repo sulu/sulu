@@ -51,8 +51,6 @@ class ContentTwigExtension extends \Twig_Extension
     /**
      * Returns parameters for given property merged wit default parameters.
      *
-     * @param PropertyInterface $property
-     *
      * @return array
      */
     public function getParamsFunction(PropertyInterface $property)

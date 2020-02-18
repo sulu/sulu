@@ -63,9 +63,6 @@ class ExtensionSubscriber implements EventSubscriberInterface
         $this->namespaceRegistry = $namespaceRegistry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -77,9 +74,6 @@ class ExtensionSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function handleHydrate(AbstractMappingEvent $event)
     {
         if (!$event->getDocument() instanceof ExtensionBehavior) {
@@ -89,9 +83,6 @@ class ExtensionSubscriber implements EventSubscriberInterface
         $this->hydrate($event);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function saveExtensionData(AbstractMappingEvent $event)
     {
         $locale = $event->getLocale();

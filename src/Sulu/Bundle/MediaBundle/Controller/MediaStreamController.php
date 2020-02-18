@@ -43,8 +43,6 @@ class MediaStreamController extends Controller
     protected $storage = null;
 
     /**
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getImageAction(Request $request)
@@ -65,7 +63,6 @@ class MediaStreamController extends Controller
     }
 
     /**
-     * @param Request $request
      * @param int $id
      *
      * @return Response

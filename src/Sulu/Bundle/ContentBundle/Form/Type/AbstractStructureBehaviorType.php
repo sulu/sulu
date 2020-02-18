@@ -23,9 +23,6 @@ use Symfony\Component\Form\FormEvents;
  */
 abstract class AbstractStructureBehaviorType extends AbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('title', TextType::class);

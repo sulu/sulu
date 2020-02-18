@@ -28,9 +28,6 @@ class DocumentManagerAdmin extends Admin
         $this->setNavigation(new Navigation(new NavigationItem($title)));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getJsBundleName()
     {
         return 'suludocumentmanager';

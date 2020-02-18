@@ -17,9 +17,6 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class AddRulesPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         $ruleCollection = $container->getDefinition('sulu_audience_targeting.rules_collection');

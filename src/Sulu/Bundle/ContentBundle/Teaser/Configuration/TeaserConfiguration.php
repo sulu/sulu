@@ -39,8 +39,6 @@ class TeaserConfiguration implements \JsonSerializable
     /**
      * @param string $title
      * @param string $component
-     * @param array $componentOptions
-     * @param array $additionalSlides
      */
     public function __construct($title, $component, array $componentOptions = [], array $additionalSlides = [])
     {
@@ -90,9 +88,6 @@ class TeaserConfiguration implements \JsonSerializable
         return $this->additionalSlides;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function jsonSerialize()
     {
         return [

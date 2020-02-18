@@ -24,97 +24,61 @@ class Replacer implements ReplacerInterface
         self::REPLACER_HOST,
     ];
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasLanguageReplacer($url)
     {
         return $this->hasReplacer($url, self::REPLACER_LANGUAGE);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function replaceLanguage($url, $language)
     {
         return $this->replace($url, self::REPLACER_LANGUAGE, $language);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasCountryReplacer($url)
     {
         return $this->hasReplacer($url, self::REPLACER_COUNTRY);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function replaceCountry($url, $country)
     {
         return $this->replace($url, self::REPLACER_COUNTRY, $country);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasLocalizationReplacer($url)
     {
         return $this->hasReplacer($url, self::REPLACER_LOCALIZATION);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function replaceLocalization($url, $localization)
     {
         return $this->replace($url, self::REPLACER_LOCALIZATION, $localization);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasSegmentReplacer($url)
     {
         return $this->hasReplacer($url, self::REPLACER_SEGMENT);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function replaceSegment($url, $segment)
     {
         return $this->replace($url, self::REPLACER_SEGMENT, $segment);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasHostReplacer($url)
     {
         return $this->hasReplacer($url, self::REPLACER_HOST);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function replaceHost($url, $host)
     {
         return $this->replace($url, self::REPLACER_HOST, $host);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function replace($url, $replacer, $value)
     {
         return str_replace($replacer, $value, $url);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function cleanup($url, array $replacers = null)
     {
         if (!$replacers) {
@@ -131,9 +95,6 @@ class Replacer implements ReplacerInterface
         return str_replace('//', '/', $url);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function appendLocalizationReplacer($url)
     {
         return rtrim($url, '/') . '/' . self::REPLACER_LOCALIZATION;

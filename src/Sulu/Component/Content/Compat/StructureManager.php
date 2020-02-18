@@ -34,12 +34,6 @@ class StructureManager implements StructureManagerInterface
 
     private $typeMap;
 
-    /**
-     * @param StructureMetadataFactory $structureFactory
-     * @param DocumentInspector $inspector
-     * @param LegacyPropertyFactory $propertyFactory
-     * @param array $typeMap
-     */
     public function __construct(
         StructureMetadataFactory $structureFactory,
         DocumentInspector $inspector,
@@ -52,9 +46,6 @@ class StructureManager implements StructureManagerInterface
         $this->typeMap = $typeMap;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStructure($key, $type = Structure::TYPE_PAGE)
     {
         try {
@@ -66,9 +57,6 @@ class StructureManager implements StructureManagerInterface
         return $this->wrapStructure($type, $metadata);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStructures($type = Structure::TYPE_PAGE)
     {
         $wrappedStructures = [];
@@ -81,9 +69,6 @@ class StructureManager implements StructureManagerInterface
         return $wrappedStructures;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function wrapStructure($type, StructureMetadata $structure)
     {
         if (!isset($this->typeMap[$type])) {

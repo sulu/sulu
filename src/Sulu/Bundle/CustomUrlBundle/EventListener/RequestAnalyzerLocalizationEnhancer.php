@@ -22,9 +22,6 @@ class RequestAnalyzerLocalizationEnhancer implements EnhancerInterface
 {
     /**
      * Update locale in request analyzer.
-     *
-     * @param Request $request
-     * @param RequestAnalyzerInterface $requestAnalyzer
      */
     public function enhance(Request $request, RequestAnalyzerInterface $requestAnalyzer)
     {

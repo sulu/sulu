@@ -45,9 +45,6 @@ class HtmlMarkupParserTest extends \PHPUnit_Framework_TestCase
      */
     private $parser;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp()
     {
         parent::setUp();

@@ -35,9 +35,6 @@ class LegacyPropertyFactory
 {
     private $namespaceRegistry;
 
-    /**
-     * @param NamespaceRegistry $namespaceRegistry
-     */
     public function __construct(NamespaceRegistry $namespaceRegistry)
     {
         $this->namespaceRegistry = $namespaceRegistry;
@@ -67,8 +64,6 @@ class LegacyPropertyFactory
 
     /**
      * Create a new property.
-     *
-     * @param Item $item
      *
      * @return PropertyInterface $property
      */

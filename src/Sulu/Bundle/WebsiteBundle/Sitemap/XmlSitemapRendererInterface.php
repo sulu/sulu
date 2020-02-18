@@ -38,7 +38,6 @@ interface XmlSitemapRendererInterface
      * @param string $alias
      * @param int $page
      * @param string $locale
-     * @param Portal $portal
      * @param string $host
      * @param string $scheme
      *

@@ -44,9 +44,6 @@ class TargetGroupEvaluationController
     private $targetGroupHeader;
 
     /**
-     * @param TargetGroupEvaluatorInterface $targetGroupEvaluator
-     * @param TargetGroupRepositoryInterface $targetGroupRepository
-     * @param TargetGroupStoreInterface $targetGroupStore
      * @param string $targetGroupHeader
      */
     public function __construct(
@@ -63,8 +60,6 @@ class TargetGroupEvaluationController
 
     /**
      * Takes the request and evaluates a target group based on the request.
-     *
-     * @param Request $request
      *
      * @return Response
      */

@@ -29,7 +29,6 @@ interface TeaserProviderInterface
     /**
      * Returns teasers by ids.
      *
-     * @param array $ids
      * @param string $locale
      *
      * @return Teaser[]

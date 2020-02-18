@@ -77,8 +77,6 @@ class Environment
 
     /**
      * Sets the main url.
-     *
-     * @param Url $url
      */
     private function setMainUrl(Url $url)
     {
@@ -142,8 +140,6 @@ class Environment
 
     /**
      * Adds a new custom-url to this environment.
-     *
-     * @param CustomUrl $customUrl
      */
     public function addCustomUrl(CustomUrl $customUrl)
     {

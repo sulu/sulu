@@ -31,9 +31,6 @@ class VideoThumbnailService implements VideoThumbnailServiceInterface
         $this->ffmpeg = $ffmpeg;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function generate($file, $time, $destination)
     {
         $destination = $this->normalizeFilename($destination);
@@ -52,9 +49,6 @@ class VideoThumbnailService implements VideoThumbnailServiceInterface
         return file_exists($destination);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function batchGenerate(
         $video,
         array $times,

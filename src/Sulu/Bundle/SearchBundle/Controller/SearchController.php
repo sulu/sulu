@@ -63,14 +63,6 @@ class SearchController
      */
     private $indexConfigurationProvider;
 
-    /**
-     * @param SearchManagerInterface $searchManager
-     * @param ProviderInterface $metadataProvider
-     * @param SecurityCheckerInterface $securityChecker
-     * @param ViewHandlerInterface $viewHandler
-     * @param ListRestHelperInterface $listRestHelper
-     * @param IndexConfigurationProviderInterface $indexConfigurationProvider
-     */
     public function __construct(
         SearchManagerInterface $searchManager,
         ProviderInterface $metadataProvider,
@@ -89,8 +81,6 @@ class SearchController
 
     /**
      * Perform a search and return a JSON response.
-     *
-     * @param Request $request
      *
      * @return Response
      */

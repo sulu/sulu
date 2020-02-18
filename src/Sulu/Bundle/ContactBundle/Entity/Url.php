@@ -94,8 +94,6 @@ class Url
     /**
      * Set urlType.
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\UrlType $urlType
-     *
      * @return Url
      */
     public function setUrlType(\Sulu\Bundle\ContactBundle\Entity\UrlType $urlType)
@@ -118,8 +116,6 @@ class Url
     /**
      * Add accounts.
      *
-     * @param AccountInterface $account
-     *
      * @return Url
      */
     public function addAccount(AccountInterface $account)
@@ -131,8 +127,6 @@ class Url
 
     /**
      * Remove accounts.
-     *
-     * @param AccountInterface $account
      */
     public function removeAccount(AccountInterface $account)
     {
@@ -152,8 +146,6 @@ class Url
     /**
      * Add contacts.
      *
-     * @param \Sulu\Component\Contact\Model\ContactInterface $contacts
-     *
      * @return Url
      */
     public function addContact(\Sulu\Component\Contact\Model\ContactInterface $contacts)
@@ -165,8 +157,6 @@ class Url
 
     /**
      * Remove contacts.
-     *
-     * @param \Sulu\Component\Contact\Model\ContactInterface $contacts
      */
     public function removeContact(\Sulu\Component\Contact\Model\ContactInterface $contacts)
     {

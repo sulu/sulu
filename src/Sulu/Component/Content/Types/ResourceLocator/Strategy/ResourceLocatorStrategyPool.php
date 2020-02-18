@@ -30,7 +30,6 @@ class ResourceLocatorStrategyPool implements ResourceLocatorStrategyPoolInterfac
 
     /**
      * @param ResourceLocatorStrategyInterface[] $strategies
-     * @param WebspaceManagerInterface $webspaceManager
      */
     public function __construct(array $strategies, WebspaceManagerInterface $webspaceManager)
     {
@@ -38,9 +37,6 @@ class ResourceLocatorStrategyPool implements ResourceLocatorStrategyPoolInterfac
         $this->webspaceManager = $webspaceManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStrategy($name)
     {
         if (!array_key_exists($name, $this->strategies)) {
@@ -50,9 +46,6 @@ class ResourceLocatorStrategyPool implements ResourceLocatorStrategyPoolInterfac
         return $this->strategies[$name];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStrategyByWebspaceKey($webspaceKey)
     {
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);

@@ -36,19 +36,12 @@ class PreviewMessageHandler implements MessageHandlerInterface
      */
     private $preview;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     * @param PreviewInterface $preview
-     */
     public function __construct(EntityManagerInterface $entityManager, PreviewInterface $preview)
     {
         $this->entityManager = $entityManager;
         $this->preview = $preview;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function handle(ConnectionInterface $conn, array $message, MessageHandlerContext $context)
     {
         // reconnect mysql
@@ -112,7 +105,6 @@ class PreviewMessageHandler implements MessageHandlerInterface
     /**
      * Start preview with given parameters.
      *
-     * @param MessageHandlerContext $context
      * @param array $message
      *
      * @return array
@@ -143,8 +135,6 @@ class PreviewMessageHandler implements MessageHandlerInterface
     /**
      * Stop preview for given context.
      *
-     * @param MessageHandlerContext $context
-     *
      * @return array
      */
     private function stop(MessageHandlerContext $context)
@@ -157,7 +147,6 @@ class PreviewMessageHandler implements MessageHandlerInterface
     /**
      * Update preview with given parameter.
      *
-     * @param MessageHandlerContext $context
      * @param array $message
      *
      * @return array
@@ -209,9 +198,6 @@ class PreviewMessageHandler implements MessageHandlerInterface
         return ['command' => 'render', 'response' => $response, 'msg' => 'OK'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onClose(ConnectionInterface $conn, MessageHandlerContext $context)
     {
         $this->preview->stop($context->get('previewToken'));

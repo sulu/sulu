@@ -30,17 +30,11 @@ class PropertyMetadata extends BasePropertyMetadata
         $this->type = $type;
     }
 
-    /**
-     * @return mixed
-     */
     public function getType()
     {
         return $this->type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function serialize()
     {
         return serialize(
@@ -52,9 +46,6 @@ class PropertyMetadata extends BasePropertyMetadata
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function unserialize($str)
     {
         list(

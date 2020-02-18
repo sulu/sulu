@@ -66,9 +66,6 @@ class ManagedStructure extends Structure
     private $propertyValues = [];
 
     /**
-     * @param ContentTypeManagerInterface $contentTypeManager
-     * @param LegacyPropertyFactory $legacyPropertyFactory
-     * @param DocumentInspector $inspector
      * @param object $document
      */
     public function __construct(
@@ -83,9 +80,6 @@ class ManagedStructure extends Structure
         $this->inspector = $inspector;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getProperty($name)
     {
         $this->init();
@@ -135,9 +129,6 @@ class ManagedStructure extends Structure
         return $valueProperty;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentViewProperty($name)
     {
         if (isset($this->propertyValues[$name])) {
@@ -162,8 +153,6 @@ class ManagedStructure extends Structure
 
     /**
      * Update the structure.
-     *
-     * @param StructureMetadata $structure
      */
     public function setStructureMetadata(StructureMetadata $structure)
     {
@@ -186,9 +175,6 @@ class ManagedStructure extends Structure
         return $values;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetExists($offset)
     {
         $this->init();

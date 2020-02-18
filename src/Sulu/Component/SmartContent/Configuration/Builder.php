@@ -38,9 +38,6 @@ class Builder implements BuilderInterface
         $this->configuration = new ProviderConfiguration();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function enableTags($enable = true)
     {
         $this->configuration->setTags($enable);
@@ -48,9 +45,6 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function enableCategories($enable = true)
     {
         $this->configuration->setCategories($enable);
@@ -58,9 +52,6 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function enableLimit($enable = true)
     {
         $this->configuration->setLimit($enable);
@@ -68,9 +59,6 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function enablePagination($enable = true)
     {
         $this->configuration->setPaginated($enable);
@@ -78,9 +66,6 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function enablePresentAs($enable = true)
     {
         $this->configuration->setPresentAs($enable);
@@ -88,9 +73,6 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function enableDatasource($component, array $options = [])
     {
         $this->configuration->setDatasource(new ComponentConfiguration($component, $options));
@@ -98,9 +80,6 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function enableAudienceTargeting($enable = true)
     {
         $this->configuration->setAudienceTargeting($enable);
@@ -108,9 +87,6 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function enableSorting(array $sorting)
     {
         $this->configuration->setSorting(
@@ -125,9 +101,6 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setDeepLink($deepLink)
     {
         $this->configuration->setDeepLink($deepLink);
@@ -135,9 +108,6 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfiguration()
     {
         return $this->configuration;

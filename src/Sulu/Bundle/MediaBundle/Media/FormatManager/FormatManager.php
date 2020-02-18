@@ -77,13 +77,9 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
     private $supportedMimeTypes;
 
     /**
-     * @param MediaRepositoryInterface $mediaRepository
-     * @param FormatCacheInterface $formatCache
-     * @param ImageConverterInterface $converter
      * @param string $saveImage
      * @param array $responseHeaders
      * @param array $formats
-     * @param array $supportedMimeTypes
      */
     public function __construct(
         MediaRepositoryInterface $mediaRepository,
@@ -105,9 +101,6 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
         $this->logger = new NullLogger();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function returnImage($id, $formatKey)
     {
         $setExpireHeaders = false;
@@ -159,9 +152,6 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
         return new Response($responseContent, $status, $headers);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFormats($id, $fileName, $storageOptions, $version, $subVersion, $mimeType)
     {
         $formats = [];
@@ -181,33 +171,21 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
         return $formats;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function purge($idMedia, $fileName, $mimeType, $options)
     {
         return $this->formatCache->purge($idMedia, $this->replaceExtension($fileName, $mimeType), $options);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMediaProperties($url)
     {
         return $this->formatCache->analyzedMediaUrl($url);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function clearCache()
     {
         $this->formatCache->clear();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFormatDefinition($formatKey, $locale = null, array $formatOptions = [])
     {
         if (!isset($this->formats[$formatKey])) {
@@ -233,9 +211,6 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
         return $formatArray;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFormatDefinitions($locale = null, array $formatOptions = [])
     {
         $definitionsArray = [];
@@ -290,7 +265,6 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
 
     /**
      * @param string $filename
-     * @param string $newExtension
      *
      * @return string
      */
@@ -314,8 +288,6 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
     }
 
     /**
-     * @param MediaInterface $media
-     *
      * @return FileVersion
      *
      * @throws ImageProxyMediaNotFoundException

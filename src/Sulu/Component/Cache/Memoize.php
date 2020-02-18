@@ -37,9 +37,6 @@ class Memoize implements MemoizeInterface
         $this->defaultLifeTime = $defaultLifeTime;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function memoize($compute, $lifeTime = null)
     {
         // used to get information of the caller
@@ -61,9 +58,6 @@ class Memoize implements MemoizeInterface
         return $this->memoizeById($id, $callers[1]['args'], $compute, $lifeTime);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function memoizeById($id, $arguments, $compute, $lifeTime = null)
     {
         // determine lifetime

@@ -22,9 +22,6 @@ use Doctrine\ORM\NoResultException;
  */
 class ConditionRepository extends EntityRepository implements ConditionRepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function findById($id)
     {
         try {

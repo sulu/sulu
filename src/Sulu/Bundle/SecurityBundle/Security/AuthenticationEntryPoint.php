@@ -34,9 +34,6 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
         $this->urlGenerator = $urlGenerator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function start(Request $request, AuthenticationException $authException = null)
     {
         if (0 === strpos($request->getPathInfo(), '/admin/api') || $request->isXmlHttpRequest()) {

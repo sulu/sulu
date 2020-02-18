@@ -69,9 +69,6 @@ abstract class SuluKernel extends Kernel
         $this->context = $context;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getKernelParameters()
     {
         return array_merge(

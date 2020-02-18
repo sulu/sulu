@@ -24,8 +24,6 @@ class OperatorRepository extends EntityRepository implements OperatorRepositoryI
      * Searches for all operator by locale.
      *
      * @param $locale
-     *
-     * @return mixed
      */
     public function findAllByLocale($locale)
     {

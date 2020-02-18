@@ -75,9 +75,6 @@ class BlockPropertyType
         return;
     }
 
-    /**
-     * @param PropertyInterface $property
-     */
     public function addChild(PropertyInterface $property)
     {
         $this->childProperties[] = $property;

@@ -19,9 +19,6 @@ use Sulu\Component\Persistence\Model\AuditableInterface;
  */
 class AuditableHasher implements HasherInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function hash($object)
     {
         if ($object instanceof AuditableInterface) {

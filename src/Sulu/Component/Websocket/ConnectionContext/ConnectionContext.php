@@ -69,33 +69,21 @@ class ConnectionContext implements ConnectionContextInterface
         $this->parameters = new ParameterBag();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getQuery()
     {
         return $this->query;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRequest()
     {
         return $this->request;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSession()
     {
         return $this->session;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getToken($firewall)
     {
         if (null !== $this->session) {
@@ -105,9 +93,6 @@ class ConnectionContext implements ConnectionContextInterface
         return;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUser($firewall)
     {
         if (null !== ($token = $this->getToken($firewall))) {
@@ -117,57 +102,36 @@ class ConnectionContext implements ConnectionContextInterface
         return;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getParameters()
     {
         return $this->parameters;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isValid()
     {
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function get($name)
     {
         return $this->parameters->get($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function has($name)
     {
         return $this->parameters->has($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function set($name, $value)
     {
         $this->parameters->set($name, $value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function clear()
     {
         $this->parameters->clear();
@@ -185,8 +149,6 @@ class ConnectionContext implements ConnectionContextInterface
 
     /**
      * Return id of connection context for connection.
-     *
-     * @param ConnectionInterface $conn
      *
      * @return string
      */

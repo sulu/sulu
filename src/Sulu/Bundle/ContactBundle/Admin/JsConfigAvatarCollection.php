@@ -29,9 +29,6 @@ class JsConfigAvatarCollection implements JsConfigInterface
         $this->systemCollectionManager = $systemCollectionManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getParameters()
     {
         return [
@@ -40,9 +37,6 @@ class JsConfigAvatarCollection implements JsConfigInterface
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'sulu.contact.form';

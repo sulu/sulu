@@ -62,9 +62,6 @@ class CsvHandler
     /**
      * Handles response for csv-request.
      *
-     * @param ViewHandler $handler
-     * @param View $view
-     * @param Request $request
      * @param string $format
      *
      * @return Response
@@ -115,8 +112,6 @@ class CsvHandler
     /**
      * The exporter is not able to write DateTime objects into csv. This method converts them to string.
      *
-     * @param mixed $row
-     *
      * @return array
      */
     public function prepareData($row)
@@ -146,7 +141,6 @@ class CsvHandler
      * Return mapped value or value itself.
      *
      * @param string $value
-     * @param array $map
      *
      * @return string
      */

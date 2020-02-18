@@ -130,17 +130,11 @@ class SnippetDocument implements
         $this->extensions = new ExtensionContainer();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNodeName()
     {
         return $this->nodeName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTitle()
     {
         return $this->title;
@@ -154,169 +148,106 @@ class SnippetDocument implements
         $this->title = $title;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreated()
     {
         return $this->created;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChanged()
     {
         return $this->changed;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreator()
     {
         return $this->creator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChanger()
     {
         return $this->changer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getParent()
     {
         return $this->parent;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setParent($parent)
     {
         $this->parent = $parent;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getWorkflowStage()
     {
         return $this->workflowStage;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setWorkflowStage($workflowStage)
     {
         $this->workflowStage = $workflowStage;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPublished()
     {
         return $this->published;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUuid()
     {
         return $this->uuid;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStructureType()
     {
         return $this->structureType;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStructure()
     {
         return $this->structure;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setStructureType($structureType)
     {
         $this->structureType = $structureType;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale()
     {
         return $this->locale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setLocale($locale)
     {
         $this->locale = $locale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getOriginalLocale()
     {
         return $this->originalLocale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setOriginalLocale($originalLocale)
     {
         $this->originalLocale = $originalLocale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPath()
     {
         return $this->path;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExtensionsData()
     {
         return $this->extensions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setExtensionsData($extensions)
     {
         $this->extensions = $extensions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setExtension($name, $data)
     {
         $this->extensions[$name] = $data;

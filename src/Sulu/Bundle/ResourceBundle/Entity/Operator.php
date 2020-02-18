@@ -150,8 +150,6 @@ class Operator
     /**
      * Add translations.
      *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\OperatorTranslation $translations
-     *
      * @return Operator
      */
     public function addTranslation(\Sulu\Bundle\ResourceBundle\Entity\OperatorTranslation $translations)
@@ -163,8 +161,6 @@ class Operator
 
     /**
      * Remove translations.
-     *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\OperatorTranslation $translations
      */
     public function removeTranslation(\Sulu\Bundle\ResourceBundle\Entity\OperatorTranslation $translations)
     {
@@ -184,8 +180,6 @@ class Operator
     /**
      * Add values.
      *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\OperatorValue $values
-     *
      * @return Operator
      */
     public function addValue(\Sulu\Bundle\ResourceBundle\Entity\OperatorValue $values)
@@ -197,8 +191,6 @@ class Operator
 
     /**
      * Remove values.
-     *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\OperatorValue $values
      */
     public function removeValue(\Sulu\Bundle\ResourceBundle\Entity\OperatorValue $values)
     {

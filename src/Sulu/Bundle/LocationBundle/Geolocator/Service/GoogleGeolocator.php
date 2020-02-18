@@ -46,9 +46,6 @@ class GoogleGeolocator implements GeolocatorInterface
         $this->apiKey = $apiKey;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function locate($query)
     {
         $response = $this->client->request(

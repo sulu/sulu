@@ -31,8 +31,6 @@ class RequestAttributes
      *
      * @param string $name
      * @param mixed|null $default
-     *
-     * @return mixed
      */
     public function getAttribute($name, $default = null)
     {

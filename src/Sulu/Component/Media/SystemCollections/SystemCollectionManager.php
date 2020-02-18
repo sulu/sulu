@@ -74,17 +74,11 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
         $this->locale = $locale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function warmUp()
     {
         $this->getSystemCollections();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSystemCollection($key)
     {
         $systemCollections = $this->getSystemCollections();
@@ -96,9 +90,6 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
         return $systemCollections[$key];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isSystemCollection($id)
     {
         return in_array($id, $this->getSystemCollections());

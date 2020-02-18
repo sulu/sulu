@@ -42,7 +42,6 @@ class TypeManager implements TypeManagerInterface
     private $mediaTypeEntities;
 
     /**
-     * @param ObjectManager $objectManager
      * @param array $mediaTypes
      * @param array $blockedMimeTypes
      */
@@ -56,9 +55,6 @@ class TypeManager implements TypeManagerInterface
         $this->blockedMimeTypes = $blockedMimeTypes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function get($id)
     {
         /** @var MediaType $type */
@@ -70,9 +66,6 @@ class TypeManager implements TypeManagerInterface
         return $type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMediaType($fileMimeType)
     {
         $name = null;

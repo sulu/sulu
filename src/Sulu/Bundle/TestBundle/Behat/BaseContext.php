@@ -37,9 +37,6 @@ abstract class BaseContext extends RawMinkContext implements Context, KernelAwar
      */
     protected $kernel;
 
-    /**
-     * {@inheritdoc}
-     */
     public function setKernel(KernelInterface $kernel)
     {
         $this->kernel = $kernel;
@@ -130,8 +127,6 @@ abstract class BaseContext extends RawMinkContext implements Context, KernelAwar
 
     /**
      * Return the named service from the DI container.
-     *
-     * @return mixed
      */
     protected function getService($serviceId)
     {
@@ -335,7 +330,6 @@ EOT;
      * Set the value of the named selector.
      *
      * @param string $selector
-     * @param mixed $value
      */
     protected function fillSelector($selector, $value)
     {

@@ -30,7 +30,6 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     /**
      * Returns webspace analytics by webspace key.
      *
-     * @param Request $request
      * @param string $webspaceKey
      *
      * @return Response
@@ -66,7 +65,6 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     /**
      * Creates a analytics for given webspace.
      *
-     * @param Request $request
      * @param string $webspaceKey
      *
      * @return Response
@@ -83,7 +81,6 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     /**
      * Updates analytics with given id.
      *
-     * @param Request $request
      * @param string $webspaceKey
      * @param int $id
      *
@@ -118,7 +115,6 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     /**
      * Removes a list of analytics.
      *
-     * @param Request $request
      * @param $webspaceKey
      *
      * @return Response
@@ -134,9 +130,6 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
         return $this->handleView($this->view(null, 204));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();

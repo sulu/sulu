@@ -40,9 +40,6 @@ class QueryStringRule implements RuleInterface
         $this->urlHeader = $urlHeader;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function evaluate(array $options)
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -60,17 +57,11 @@ class QueryStringRule implements RuleInterface
         return $value == $options['value'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->translator->trans('sulu_audience_targeting.rules.query_string', [], 'backend');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType()
     {
         return new KeyValue(

@@ -36,9 +36,6 @@ class MissingParameterException extends \Exception
         return $this->name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __toString()
     {
         return $this->getName();

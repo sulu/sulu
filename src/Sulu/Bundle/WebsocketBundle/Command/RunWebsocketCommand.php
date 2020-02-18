@@ -25,18 +25,12 @@ class RunWebsocketCommand extends ContainerAwareCommand
      */
     const MANAGER_ID = 'sulu_websocket.manager';
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         $this->setName('sulu:websocket:run');
         $this->setDescription('Start websocket server');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $manager = $this->getContainer()->get(self::MANAGER_ID);

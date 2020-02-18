@@ -58,9 +58,6 @@ class Symfony implements ProxyClientInterface, PurgeInterface
         $this->client = $client ?: new Client();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function purge($url, array $headers = [])
     {
         $this->queueRequest(self::HTTP_METHOD_PURGE, $url);
@@ -68,9 +65,6 @@ class Symfony implements ProxyClientInterface, PurgeInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function flush()
     {
         $queue = $this->queue;
@@ -218,9 +212,6 @@ class Symfony implements ProxyClientInterface, PurgeInterface
         return 'http';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getAllowedSchemes()
     {
         return ['http'];

@@ -57,17 +57,11 @@ class LocationContentType extends ComplexContentType implements ContentTypeExpor
         $this->geolocatorName = $geolocatorName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTemplate()
     {
         return $this->template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [
@@ -82,18 +76,12 @@ class LocationContentType extends ComplexContentType implements ContentTypeExpor
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{}'), true);
         $property->setValue($data);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -106,9 +94,6 @@ class LocationContentType extends ComplexContentType implements ContentTypeExpor
         $node->setProperty($property->getName(), json_encode($value));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         if ($node->hasProperty($property->getName())) {
@@ -131,9 +116,6 @@ class LocationContentType extends ComplexContentType implements ContentTypeExpor
         return $countries;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function exportData($propertyValue)
     {
         if (false === is_string($propertyValue)) {
@@ -143,9 +125,6 @@ class LocationContentType extends ComplexContentType implements ContentTypeExpor
         return $propertyValue;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,

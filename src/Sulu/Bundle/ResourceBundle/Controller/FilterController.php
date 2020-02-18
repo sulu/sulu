@@ -49,7 +49,6 @@ class FilterController extends RestController implements ClassResourceInterface
     /**
      * Retrieves a filter by id.
      *
-     * @param Request $request
      * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -69,8 +68,6 @@ class FilterController extends RestController implements ClassResourceInterface
 
     /**
      * Returns a list of filters.
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -160,8 +157,6 @@ class FilterController extends RestController implements ClassResourceInterface
     /**
      * Creates and stores a new filter.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
@@ -196,7 +191,6 @@ class FilterController extends RestController implements ClassResourceInterface
     /**
      * Change a filter by the given id.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param int $id the attribute id
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -254,8 +248,6 @@ class FilterController extends RestController implements ClassResourceInterface
     /**
      * Delete an filter with the given id.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cdeleteAction(Request $request)
@@ -279,10 +271,6 @@ class FilterController extends RestController implements ClassResourceInterface
 
     /**
      * returns all fields that can be used by list.
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return mixed
      */
     public function fieldsAction(Request $request)
     {

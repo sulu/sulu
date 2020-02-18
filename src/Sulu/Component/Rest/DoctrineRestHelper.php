@@ -24,9 +24,6 @@ class DoctrineRestHelper extends RestHelper implements RestHelperInterface
         parent::__construct($listRestHelper);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function processSubEntities(
         $entities,
         array $requestEntities,

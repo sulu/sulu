@@ -61,16 +61,12 @@ interface KeywordInterface extends AuditableInterface
     /**
      * Add category-translation.
      *
-     * @param CategoryTranslationInterface $categoryTranslation
-     *
      * @return KeywordInterface
      */
     public function addCategoryTranslation(CategoryTranslationInterface $categoryTranslation);
 
     /**
      * Remove category-translation.
-     *
-     * @param CategoryTranslationInterface $categoryTranslation
      */
     public function removeCategoryTranslation(CategoryTranslationInterface $categoryTranslation);
 

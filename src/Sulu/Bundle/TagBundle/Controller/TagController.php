@@ -94,8 +94,6 @@ class TagController extends RestController implements ClassResourceInterface, Se
      * returns all fields that can be used by list.
      *
      * @Get("tags/fields")
-     *
-     * @return mixed
      */
     public function getFieldsAction()
     {
@@ -125,8 +123,6 @@ class TagController extends RestController implements ClassResourceInterface, Se
 
     /**
      * returns all tags.
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -174,8 +170,6 @@ class TagController extends RestController implements ClassResourceInterface, Se
     /**
      * Inserts a new tag.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      *
@@ -214,7 +208,6 @@ class TagController extends RestController implements ClassResourceInterface, Se
     /**
      * Updates the tag with the given ID.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -279,8 +272,6 @@ class TagController extends RestController implements ClassResourceInterface, Se
      *
      * @Post("/tags/merge")
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postMergeAction(Request $request)
@@ -306,8 +297,6 @@ class TagController extends RestController implements ClassResourceInterface, Se
      *
      * @Route("/tags", name="tags")
      * updates an array of tags
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -340,9 +329,6 @@ class TagController extends RestController implements ClassResourceInterface, Se
         return $this->handleView($view);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         return 'sulu.settings.tags';
@@ -350,8 +336,6 @@ class TagController extends RestController implements ClassResourceInterface, Se
 
     /**
      * Get data.
-     *
-     * @param Request $request
      *
      * @return array
      */

@@ -24,9 +24,6 @@ use Sulu\Component\Rest\ApiWrapper;
  */
 class ContactLocale extends ApiWrapper
 {
-    /**
-     * @param ContactLocaleEntity $contactLocale
-     */
     public function __construct(ContactLocaleEntity $contactLocale)
     {
         $this->entity = $contactLocale;

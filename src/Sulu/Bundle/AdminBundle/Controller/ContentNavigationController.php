@@ -50,8 +50,6 @@ class ContentNavigationController implements ClassResourceInterface
     /**
      * Returns all the content navigation items for a given alias.
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function cgetAction(Request $request)

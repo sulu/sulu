@@ -20,9 +20,6 @@ use Symfony\Component\Config\Loader\LoaderInterface;
  */
 class SuluTestKernel extends SuluKernel
 {
-    /**
-     * {@inheritdoc}
-     */
     public function registerBundles()
     {
         $bundles = [
@@ -84,9 +81,6 @@ class SuluTestKernel extends SuluKernel
         return $bundles;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(SuluTestBundle::getConfigDir() . '/config.php');
@@ -99,9 +93,6 @@ class SuluTestKernel extends SuluKernel
         });
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCacheDir()
     {
         return $this->rootDir . '/cache/' . $this->getContext() . '/' . $this->environment;

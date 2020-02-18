@@ -29,8 +29,6 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
 
     /**
      * Allow an extension to prepend the extension configurations.
-     *
-     * @param ContainerBuilder $container
      */
     public function prepend(ContainerBuilder $container)
     {
@@ -72,9 +70,6 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();

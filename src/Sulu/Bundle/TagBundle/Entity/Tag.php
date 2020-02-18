@@ -58,9 +58,6 @@ class Tag extends ApiEntity implements AuditableInterface, TagInterface
      */
     private $creator;
 
-    /**
-     * {@inheritdoc}
-     */
     public function setName($name)
     {
         $this->name = $name;
@@ -68,25 +65,16 @@ class Tag extends ApiEntity implements AuditableInterface, TagInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setId($id)
     {
         $this->id = $id;
@@ -94,25 +82,16 @@ class Tag extends ApiEntity implements AuditableInterface, TagInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreated()
     {
         return $this->created;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChanged()
     {
         return $this->changed;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setChanger(UserInterface $changer = null)
     {
         $this->changer = $changer;
@@ -120,17 +99,11 @@ class Tag extends ApiEntity implements AuditableInterface, TagInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChanger()
     {
         return $this->changer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setCreator(UserInterface $creator = null)
     {
         $this->creator = $creator;
@@ -138,17 +111,11 @@ class Tag extends ApiEntity implements AuditableInterface, TagInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreator()
     {
         return $this->creator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __toString()
     {
         return $this->getName();

@@ -19,9 +19,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class UnstructuredType extends AbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

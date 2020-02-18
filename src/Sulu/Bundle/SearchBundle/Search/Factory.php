@@ -20,8 +20,6 @@ use Massive\Bundle\SearchBundle\Search\Factory as BaseFactory;
 class Factory extends BaseFactory
 {
     /**
-     * {@inheritdoc}
-     *
      * @return Document
      */
     public function createDocument()

@@ -47,9 +47,6 @@ class SnippetAreaTwigExtension extends \Twig_Extension
         $this->snippetResolver = $snippetResolver;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [
@@ -96,9 +93,6 @@ class SnippetAreaTwigExtension extends \Twig_Extension
         return $snippets[0];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'sulu_snippet.area';

@@ -21,9 +21,6 @@ use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
  */
 class AnalyticsSerializeEventSubscriber implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [

@@ -24,9 +24,6 @@ class ListBuilderListener
      */
     protected $filterListBuilder;
 
-    /**
-     * @param FilterListBuilderInterface $filterListBuilder
-     */
     public function __construct(FilterListBuilderInterface $filterListBuilder)
     {
         $this->filterListBuilder = $filterListBuilder;
@@ -34,8 +31,6 @@ class ListBuilderListener
 
     /**
      * Will be called when a listbuilder.create event is emitted.
-     *
-     * @param ListBuilderCreateEvent $event
      */
     public function onListBuilderCreate(ListBuilderCreateEvent $event)
     {

@@ -80,8 +80,6 @@ class AccountContact
     /**
      * Set contact.
      *
-     * @param ContactInterface $contact
-     *
      * @return AccountContact
      */
     public function setContact(ContactInterface $contact)
@@ -103,8 +101,6 @@ class AccountContact
 
     /**
      * Set account.
-     *
-     * @param AccountInterface $account
      *
      * @return AccountContact
      */

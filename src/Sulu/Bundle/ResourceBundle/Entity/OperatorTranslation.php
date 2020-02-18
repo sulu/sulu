@@ -155,8 +155,6 @@ class OperatorTranslation
     /**
      * Set operator.
      *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\Operator $operator
-     *
      * @return OperatorTranslation
      */
     public function setOperator(\Sulu\Bundle\ResourceBundle\Entity\Operator $operator)

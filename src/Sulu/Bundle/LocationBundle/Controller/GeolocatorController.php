@@ -27,9 +27,6 @@ class GeolocatorController
      */
     private $geolocatorManager;
 
-    /**
-     * @param GeolocatorManager $geolocatorManager
-     */
     public function __construct(GeolocatorManager $geolocatorManager)
     {
         $this->geolocatorManager = $geolocatorManager;
@@ -37,8 +34,6 @@ class GeolocatorController
 
     /**
      * Query the configured geolocation service.
-     *
-     * @param Request $request
      *
      * @return JsonResponse
      */

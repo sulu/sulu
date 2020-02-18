@@ -37,7 +37,6 @@ class CustomUrlController extends RestController implements SecuredControllerInt
      * Returns a list of custom-urls.
      *
      * @param string $webspaceKey
-     * @param Request $request
      *
      * @return Response
      */
@@ -64,7 +63,6 @@ class CustomUrlController extends RestController implements SecuredControllerInt
      *
      * @param string $webspaceKey
      * @param string $uuid
-     * @param Request $request
      *
      * @return Response
      */
@@ -92,7 +90,6 @@ class CustomUrlController extends RestController implements SecuredControllerInt
      * Create a new custom-url object.
      *
      * @param string $webspaceKey
-     * @param Request $request
      *
      * @return Response
      */
@@ -117,7 +114,6 @@ class CustomUrlController extends RestController implements SecuredControllerInt
      *
      * @param string $webspaceKey
      * @param string $uuid
-     * @param Request $request
      *
      * @return Response
      */
@@ -162,7 +158,6 @@ class CustomUrlController extends RestController implements SecuredControllerInt
      * Deletes a list of custom-urls identified by a list of uuids.
      *
      * @param string $webspaceKey
-     * @param Request $request
      *
      * @return Response
      */
@@ -185,7 +180,6 @@ class CustomUrlController extends RestController implements SecuredControllerInt
      *
      * @param $webspaceKey
      * @param string $customUrlUuid
-     * @param Request $request
      *
      * @return Response
      */
@@ -203,9 +197,6 @@ class CustomUrlController extends RestController implements SecuredControllerInt
         return $this->handleView($this->view());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
@@ -213,9 +204,6 @@ class CustomUrlController extends RestController implements SecuredControllerInt
         return CustomUrlAdmin::getCustomUrlSecurityContext($request->get('webspaceKey'));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale(Request $request)
     {
         return;

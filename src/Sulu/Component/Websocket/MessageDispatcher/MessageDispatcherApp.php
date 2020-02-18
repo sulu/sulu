@@ -23,9 +23,6 @@ use Sulu\Component\Websocket\Exception\MissingParameterException;
  */
 class MessageDispatcherApp extends AbstractWebsocketApp implements MessageComponentInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     protected $name;
 
     /**
@@ -80,9 +77,6 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
         $this->saveContext($context);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onClose(ConnectionInterface $connection)
     {
         $context = $this->getContext($connection);
@@ -94,10 +88,6 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
 
     /**
      * Dispatches message to handler with dispatcher service.
-     *
-     * @param ConnectionInterface $conn
-     * @param ConnectionContextInterface $context
-     * @param array $msg
      *
      * @throws MissingParameterException
      */
@@ -122,7 +112,6 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
     /**
      * Create a message handler context.
      *
-     * @param ConnectionContextInterface $context
      * @param string $handlerName
      *
      * @return MessageHandlerContext

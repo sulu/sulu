@@ -52,8 +52,6 @@ class ConditionGroup
     /**
      * Add conditions.
      *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\Condition $conditions
-     *
      * @return ConditionGroup
      */
     public function addCondition(\Sulu\Bundle\ResourceBundle\Entity\Condition $conditions)
@@ -65,8 +63,6 @@ class ConditionGroup
 
     /**
      * Remove conditions.
-     *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\Condition $conditions
      */
     public function removeCondition(\Sulu\Bundle\ResourceBundle\Entity\Condition $conditions)
     {
@@ -85,8 +81,6 @@ class ConditionGroup
 
     /**
      * Set filter.
-     *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\Filter $filter
      *
      * @return ConditionGroup
      */

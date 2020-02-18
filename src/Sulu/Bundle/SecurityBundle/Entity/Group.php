@@ -269,8 +269,6 @@ class Group extends ApiEntity implements AuditableInterface
     /**
      * Add userGroups.
      *
-     * @param UserGroup $userGroups
-     *
      * @return Group
      */
     public function addUserGroup(UserGroup $userGroups)
@@ -282,8 +280,6 @@ class Group extends ApiEntity implements AuditableInterface
 
     /**
      * Remove userGroups.
-     *
-     * @param UserGroup $userGroups
      */
     public function removeUserGroup(UserGroup $userGroups)
     {
@@ -327,8 +323,6 @@ class Group extends ApiEntity implements AuditableInterface
     /**
      * Add roles.
      *
-     * @param RoleInterface $roles
-     *
      * @return Group
      */
     public function addRole(RoleInterface $roles)
@@ -340,8 +334,6 @@ class Group extends ApiEntity implements AuditableInterface
 
     /**
      * Remove roles.
-     *
-     * @param RoleInterface $roles
      */
     public function removeRole(RoleInterface $roles)
     {

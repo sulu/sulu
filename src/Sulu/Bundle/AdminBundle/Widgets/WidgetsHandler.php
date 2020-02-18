@@ -73,9 +73,6 @@ class WidgetsHandler implements WidgetsHandlerInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasWidgetGroup($groupAlias)
     {
         return array_key_exists($groupAlias, $this->widgetGroups) && count($this->widgetGroups[$groupAlias]) > 0;

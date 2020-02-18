@@ -28,7 +28,6 @@ use Sulu\Component\Rest\ApiWrapper;
 class Operator extends ApiWrapper
 {
     /**
-     * @param OperatorEntity $entity
      * @param string $locale
      */
     public function __construct(OperatorEntity $entity, $locale)
@@ -162,8 +161,6 @@ class Operator extends ApiWrapper
 
     /**
      * Add translations.
-     *
-     * @param OperatorTranslation $translations
      */
     public function addTranslation(OperatorTranslation $translations)
     {
@@ -172,8 +169,6 @@ class Operator extends ApiWrapper
 
     /**
      * Remove translations.
-     *
-     * @param OperatorTranslation $translations
      */
     public function removeTranslation(OperatorTranslation $translations)
     {
@@ -192,8 +187,6 @@ class Operator extends ApiWrapper
 
     /**
      * Add values.
-     *
-     * @param OperatorValue $value
      */
     public function addValue(OperatorValue $value)
     {
@@ -202,8 +195,6 @@ class Operator extends ApiWrapper
 
     /**
      * Remove values.
-     *
-     * @param OperatorValue $value
      */
     public function removeValue(OperatorValue $value)
     {

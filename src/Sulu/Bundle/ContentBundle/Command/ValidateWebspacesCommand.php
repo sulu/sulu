@@ -110,8 +110,6 @@ class ValidateWebspacesCommand extends ContainerAwareCommand
 
     /**
      * Output webspace.
-     *
-     * @param Webspace $webspace
      */
     private function outputWebspace(Webspace $webspace)
     {
@@ -131,8 +129,6 @@ class ValidateWebspacesCommand extends ContainerAwareCommand
 
     /**
      * Output webspace default templates.
-     *
-     * @param Webspace $webspace
      */
     private function outputWebspaceDefaultTemplates(Webspace $webspace)
     {
@@ -145,8 +141,6 @@ class ValidateWebspacesCommand extends ContainerAwareCommand
 
     /**
      * Output webspace page templates.
-     *
-     * @param Webspace $webspace
      */
     private function outputWebspacePageTemplates(Webspace $webspace)
     {
@@ -171,8 +165,6 @@ class ValidateWebspacesCommand extends ContainerAwareCommand
 
     /**
      * Output webspace default templates.
-     *
-     * @param Webspace $webspace
      */
     private function outputWebspaceTemplates(Webspace $webspace)
     {
@@ -185,8 +177,6 @@ class ValidateWebspacesCommand extends ContainerAwareCommand
 
     /**
      * Output webspace localizations.
-     *
-     * @param Webspace $webspace
      */
     private function outputWebspaceLocalizations(Webspace $webspace)
     {

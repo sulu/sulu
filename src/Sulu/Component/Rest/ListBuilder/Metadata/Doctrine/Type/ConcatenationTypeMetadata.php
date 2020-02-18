@@ -55,8 +55,6 @@ class ConcatenationTypeMetadata
 
     /**
      * Add a field which should be combined with the other fields.
-     *
-     * @param FieldMetadata $field
      */
     public function addField(FieldMetadata $field)
     {

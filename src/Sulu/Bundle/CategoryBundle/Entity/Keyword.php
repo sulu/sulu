@@ -68,9 +68,6 @@ class Keyword implements KeywordInterface
         $this->categoryTranslations = new ArrayCollection();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setLocale($locale)
     {
         $this->locale = $locale;
@@ -78,17 +75,11 @@ class Keyword implements KeywordInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale()
     {
         return $this->locale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setKeyword($keyword)
     {
         $this->keyword = $keyword;
@@ -96,98 +87,62 @@ class Keyword implements KeywordInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getKeyword()
     {
         return $this->keyword;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreator()
     {
         return $this->creator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setCreator($creator)
     {
         $this->creator = $creator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChanger()
     {
         return $this->changer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setChanger($changer)
     {
         $this->changer = $changer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreated()
     {
         return $this->created;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setCreated($created)
     {
         $this->created = $created;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChanged()
     {
         return $this->changed;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setChanged($changed)
     {
         $this->changed = $changed;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function equals(KeywordInterface $keyword)
     {
         return $keyword->getKeyword() === $this->getKeyword()
         && $keyword->getLocale() === $this->getLocale();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addCategoryTranslation(CategoryTranslationInterface $categoryTranslation)
     {
         $this->categoryTranslations[] = $categoryTranslation;
@@ -195,41 +150,26 @@ class Keyword implements KeywordInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeCategoryTranslation(CategoryTranslationInterface $categoryTranslation)
     {
         $this->categoryTranslations->removeElement($categoryTranslation);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCategoryTranslations()
     {
         return $this->categoryTranslations;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isReferencedMultiple()
     {
         return $this->getCategoryTranslations()->count() > 1;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isReferenced()
     {
         return $this->getCategoryTranslations()->count() > 0;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCategoryTranslationCount()
     {
         return $this->getCategoryTranslations()->count();

@@ -31,17 +31,11 @@ class TargetGroupStore implements TargetGroupStoreInterface
      */
     private $influencedContent = false;
 
-    /**
-     * {@inheritdoc}
-     */
     public function setTargetGroupId($targetGroupId)
     {
         $this->targetGroupId = $targetGroupId;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTargetGroupId($internal = false)
     {
         if (!$internal) {
@@ -51,26 +45,17 @@ class TargetGroupStore implements TargetGroupStoreInterface
         return $this->targetGroupId;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function updateTargetGroupId($targetGroupId)
     {
         $this->changedTargetGroup = $this->targetGroupId != $targetGroupId;
         $this->setTargetGroupId($targetGroupId);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasChangedTargetGroup()
     {
         return $this->changedTargetGroup;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasInfluencedContent()
     {
         return $this->influencedContent;

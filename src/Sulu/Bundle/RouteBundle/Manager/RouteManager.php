@@ -37,11 +37,6 @@ class RouteManager implements RouteManagerInterface
      */
     private $routeRepository;
 
-    /**
-     * @param ChainRouteGeneratorInterface $chainRouteGenerator
-     * @param ConflictResolverInterface $conflictResolver
-     * @param RouteRepositoryInterface $routeRepository
-     */
     public function __construct(
         ChainRouteGeneratorInterface $chainRouteGenerator,
         ConflictResolverInterface $conflictResolver,
@@ -52,9 +47,6 @@ class RouteManager implements RouteManagerInterface
         $this->routeRepository = $routeRepository;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function create(RoutableInterface $entity, $path = null, $resolveConflict = true)
     {
         if (null !== $entity->getRoute()) {
@@ -73,9 +65,6 @@ class RouteManager implements RouteManagerInterface
         return $route;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function update(RoutableInterface $entity, $path = null, $resolveConflict = true)
     {
         if (null === $entity->getRoute()) {
@@ -121,8 +110,6 @@ class RouteManager implements RouteManagerInterface
     /**
      * Returns true if route is unique.
      *
-     * @param RouteInterface $route
-     *
      * @return bool
      */
     private function isUnique(RouteInterface $route)
@@ -137,9 +124,6 @@ class RouteManager implements RouteManagerInterface
      * If no route was found the method returns the newly created route.
      * If the route is a history route for given entity the history route will be returned.
      * Else a RouteIsNotUniqueException will be thrown.
-     *
-     * @param RouteInterface $route
-     * @param RoutableInterface $entity
      *
      * @return RouteInterface
      *

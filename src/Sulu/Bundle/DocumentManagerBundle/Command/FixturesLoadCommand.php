@@ -53,9 +53,6 @@ class FixturesLoadCommand extends Command
         $this->kernel = $kernel;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         $this
@@ -86,9 +83,6 @@ EOT
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $noInitialize = $input->getOption('no-initialize');

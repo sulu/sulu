@@ -21,9 +21,6 @@ class IndexConfigurationProvider implements IndexConfigurationProviderInterface
      */
     private $indexConfigurations = [];
 
-    /**
-     * @param array $indexConfigurations
-     */
     public function __construct(array $indexConfigurations)
     {
         foreach ($indexConfigurations as $indexName => $indexConfiguration) {

@@ -38,9 +38,6 @@ class BrowserRule implements RuleInterface
         $this->translator = $translator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function evaluate(array $options)
     {
         if (!array_key_exists(static::BROWSER, $options)) {
@@ -52,17 +49,11 @@ class BrowserRule implements RuleInterface
         return $browser == $options[static::BROWSER];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->translator->trans('sulu_audience_targeting.rules.browser', [], 'backend');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType()
     {
         return new Select(static::BROWSER, array_map(function($browser) {

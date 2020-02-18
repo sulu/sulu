@@ -30,9 +30,6 @@ class AddMessageDispatcherPass implements CompilerPassInterface
      */
     const HANDLER_TAG = 'sulu.websocket.message.handler';
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         $dispatchers = $this->findDispatchers($container);
@@ -53,8 +50,6 @@ class AddMessageDispatcherPass implements CompilerPassInterface
     }
 
     /**
-     * @param ContainerBuilder $container
-     *
      * @return Reference[]
      */
     private function findDispatchers(ContainerBuilder $container)

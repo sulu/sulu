@@ -64,8 +64,6 @@ class BlockMetadata extends PropertyMetadata
 
     /**
      * Add a new component.
-     *
-     * @param ComponentMetadata $component
      */
     public function addComponent(ComponentMetadata $component)
     {

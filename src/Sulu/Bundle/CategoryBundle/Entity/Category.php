@@ -100,9 +100,6 @@ class Category implements CategoryInterface
         $this->children = new ArrayCollection();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setId($id)
     {
         $this->id = $id;
@@ -110,9 +107,6 @@ class Category implements CategoryInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setLft($lft)
     {
         $this->lft = $lft;
@@ -120,17 +114,11 @@ class Category implements CategoryInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLft()
     {
         return $this->lft;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setRgt($rgt)
     {
         $this->rgt = $rgt;
@@ -138,17 +126,11 @@ class Category implements CategoryInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRgt()
     {
         return $this->rgt;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setDepth($depth)
     {
         $this->depth = $depth;
@@ -156,33 +138,21 @@ class Category implements CategoryInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDepth()
     {
         return $this->depth;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreated()
     {
         return $this->created;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getKey()
     {
         return $this->key;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setKey($key)
     {
         $this->key = $key;
@@ -190,9 +160,6 @@ class Category implements CategoryInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setDefaultLocale($defaultLocale)
     {
         $this->defaultLocale = $defaultLocale;
@@ -200,33 +167,21 @@ class Category implements CategoryInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultLocale()
     {
         return $this->defaultLocale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChanged()
     {
         return $this->changed;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setParent(CategoryInterface $parent = null)
     {
         $this->parent = $parent;
@@ -234,17 +189,11 @@ class Category implements CategoryInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getParent()
     {
         return $this->parent;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setCreator(UserInterface $creator = null)
     {
         $this->creator = $creator;
@@ -252,17 +201,11 @@ class Category implements CategoryInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreator()
     {
         return $this->creator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setChanger(UserInterface $changer = null)
     {
         $this->changer = $changer;
@@ -270,9 +213,6 @@ class Category implements CategoryInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setChanged(\DateTime $changed)
     {
         $this->changed = $changed;
@@ -280,17 +220,11 @@ class Category implements CategoryInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChanger()
     {
         return $this->changer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addMeta(CategoryMetaInterface $meta)
     {
         $this->meta[] = $meta;
@@ -298,25 +232,16 @@ class Category implements CategoryInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeMeta(CategoryMetaInterface $meta)
     {
         $this->meta->removeElement($meta);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMeta()
     {
         return $this->meta;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addTranslation(CategoryTranslationInterface $translations)
     {
         $this->translations[] = $translations;
@@ -324,25 +249,16 @@ class Category implements CategoryInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeTranslation(CategoryTranslationInterface $translations)
     {
         $this->translations->removeElement($translations);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTranslations()
     {
         return $this->translations;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findTranslationByLocale($locale)
     {
         return $this->translations->filter(
@@ -352,9 +268,6 @@ class Category implements CategoryInterface
         )->first();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addChildren(CategoryInterface $child)
     {
         @trigger_error(__METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use addChild() instead.', E_USER_DEPRECATED);
@@ -362,9 +275,6 @@ class Category implements CategoryInterface
         $this->addChild($child);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addChild(CategoryInterface $child)
     {
         $this->children[] = $child;
@@ -372,9 +282,6 @@ class Category implements CategoryInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeChildren(CategoryInterface $child)
     {
         @trigger_error(__METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use removeChild() instead.', E_USER_DEPRECATED);
@@ -382,17 +289,11 @@ class Category implements CategoryInterface
         $this->removeChild($child);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeChild(CategoryInterface $child)
     {
         $this->children->removeElement($child);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getChildren()
     {
         return $this->children;

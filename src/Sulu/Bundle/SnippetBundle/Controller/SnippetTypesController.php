@@ -86,7 +86,6 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
     /**
      * Put default action.
      *
-     * @param Request $request
      * @param string $key
      *
      * @return JsonResponse
@@ -101,7 +100,6 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
     /**
      * Delete default action.
      *
-     * @param Request $request
      * @param string $key
      *
      * @return JsonResponse

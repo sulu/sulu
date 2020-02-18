@@ -19,17 +19,11 @@ use Sulu\Bundle\AdminBundle\Navigation\Navigation;
  */
 class WebsocketAdmin extends Admin
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getJsBundleName()
     {
         return 'suluwebsocket';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNavigation()
     {
         return new Navigation();

@@ -34,9 +34,6 @@ class RouteDefaultsProvider implements RouteDefaultsProviderInterface
         $this->defaultsProvider = $defaultsProvider;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getByEntity($entityClass, $id, $locale, $object = null)
     {
         if (!$this->supports($entityClass)) {
@@ -46,25 +43,16 @@ class RouteDefaultsProvider implements RouteDefaultsProviderInterface
         return $this->getDefaultProvider($entityClass)->getByEntity($entityClass, $id, $locale, $object);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isPublished($entityClass, $id, $locale)
     {
         return $this->getDefaultProvider($entityClass)->isPublished($entityClass, $id, $locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($entityClass)
     {
         return null !== $this->getDefaultProvider($entityClass);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     private function getDefaultProvider($entityClass)
     {
         if (array_key_exists($entityClass, $this->defaultsProviderMap)) {

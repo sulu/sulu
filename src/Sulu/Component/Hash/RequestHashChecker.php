@@ -41,9 +41,6 @@ class RequestHashChecker implements RequestHashCheckerInterface
         $this->forceParameter = $forceParameter;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function checkHash(Request $request, $object, $identifier)
     {
         if (!$request->request->has($this->hashParameter)

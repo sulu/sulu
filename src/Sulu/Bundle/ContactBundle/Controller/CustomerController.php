@@ -26,8 +26,6 @@ class CustomerController extends RestController implements ClassResourceInterfac
     /**
      * Returns list of contacts and organizations.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)

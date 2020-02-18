@@ -80,9 +80,6 @@ class RatchetAppManager implements AppManagerInterface
         $this->loop = $loop;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function add($route, WebsocketAppInterface $app, $allowedOrigins = ['*'], $httpHost = null)
     {
         $this->apps[$app->getName()] = [
@@ -94,9 +91,6 @@ class RatchetAppManager implements AppManagerInterface
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function run()
     {
         $this->ratchetApp = new WebsocketApp($this->getHttpHost(), $this->getPort(), $this->getIpAddress(), $this->loop);
@@ -109,41 +103,26 @@ class RatchetAppManager implements AppManagerInterface
         $this->ratchetApp->run();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getApps()
     {
         return $this->apps;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getApp($name)
     {
         return $this->apps[$name]['app'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPort()
     {
         return $this->port;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getHttpHost()
     {
         return $this->httpHost;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getIpAddress()
     {
         return $this->ipAddress;

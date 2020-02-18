@@ -120,9 +120,6 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $bundles = $container->getParameter('kernel.bundles');
@@ -234,9 +231,6 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
 
     /**
      * Append configuration for article "set_default_author".
-     *
-     * @param array $config
-     * @param ContainerBuilder $container
      */
     private function appendDefaultAuthor(array $config, ContainerBuilder $container)
     {

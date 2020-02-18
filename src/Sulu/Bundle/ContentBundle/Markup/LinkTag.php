@@ -31,17 +31,11 @@ class LinkTag implements TagInterface
      */
     private $linkProviderPool;
 
-    /**
-     * @param LinkProviderPoolInterface $linkProviderPool
-     */
     public function __construct(LinkProviderPoolInterface $linkProviderPool)
     {
         $this->linkProviderPool = $linkProviderPool;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function parseAll(array $attributesByTag, $locale)
     {
         $contents = $this->preload($attributesByTag, $locale);
@@ -82,9 +76,6 @@ class LinkTag implements TagInterface
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validateAll(array $attributesByTag, $locale)
     {
         $items = $this->preload($attributesByTag, $locale, false);
@@ -142,11 +133,7 @@ class LinkTag implements TagInterface
     /**
      * Returns attribute identified by name or default if not exists.
      *
-     * @param array $attributes
      * @param string $name
-     * @param mixed $default
-     *
-     * @return mixed
      */
     private function getValue(array $attributes, $name, $default = null)
     {
@@ -159,8 +146,6 @@ class LinkTag implements TagInterface
 
     /**
      * Returns content or title of given attributes.
-     *
-     * @param array $attributes
      *
      * @return string
      */

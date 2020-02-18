@@ -29,7 +29,6 @@ interface AccountFactoryInterface
     /**
      * Creates a new api entity out of an account.
      *
-     * @param AccountInterface $account
      * @param string $locale
      *
      * @return Account

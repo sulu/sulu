@@ -60,8 +60,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * returns language code from request.
      *
-     * @param Request $request
-     *
      * @return string
      */
     private function getLanguage(Request $request)
@@ -69,9 +67,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
         return $this->getRequestParameter($request, 'language', true);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale(Request $request)
     {
         return $this->getLanguage($request);
@@ -80,7 +75,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * returns webspace key from request.
      *
-     * @param Request $request
      * @param bool $force
      *
      * @return string
@@ -92,8 +86,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
     /**
      * returns entry point (webspace as node).
-     *
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -127,7 +119,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * returns a content item with given UUID as JSON String.
      *
-     * @param Request $request
      * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -144,7 +135,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * Returns single content.
      *
-     * @param Request $request
      * @param $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -194,8 +184,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * @param string $locale
      * @param string $webspaceKey
      * @param bool $webspaceNodes
-     * @param MappingInterface $mapping
-     * @param UserInterface $user
      *
      * @return Response
      *
@@ -238,7 +226,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * @param Request $request
      * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -290,7 +277,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * Returns a tree along the given path with the siblings of all nodes on the path.
      * This functionality is required for preloading the content navigation.
      *
-     * @param Request $request
      * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -340,7 +326,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * Returns nodes by given ids.
      *
-     * @param Request $request
      * @param array $idString
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -362,8 +347,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * returns a content item for startpage.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
@@ -379,8 +362,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * returns all content items as JSON String.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
@@ -394,8 +375,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
     /**
      * Returns complete nodes.
-     *
-     * @param Request $request
      *
      * @return Response
      *
@@ -441,8 +420,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
     /**
      * Returns content array by parent or webspace root.
-     *
-     * @param Request $request
      *
      * @return Response
      *
@@ -502,8 +479,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
     /**
      * Returns the title of the pages for a given smart content configuration.
-     *
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
@@ -577,7 +552,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * saves node with given uuid and data.
      *
-     * @param Request $request
      * @param string $uuid
      *
      * @return Response
@@ -621,8 +595,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * Updates a content item and returns result as JSON String.
      *
-     * @param Request $request
-     *
      * @return Response
      *
      * @throws InvalidFormException
@@ -654,7 +626,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * deletes node with given uuid.
      *
-     * @param Request $request
      * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -717,7 +688,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * @Post("/nodes/{uuid}")
      *
      * @param string $uuid
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -818,9 +788,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
         return $this->get('sulu_document_manager.metadata_factory.base');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer');
@@ -831,17 +798,11 @@ class NodeController extends RestController implements ClassResourceInterface, S
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecuredClass()
     {
         return SecurityBehavior::class;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecuredObjectId(Request $request)
     {
         $id = null;
@@ -861,10 +822,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * Returns content for all webspaces.
      * If a webspaceKey is given the $contents array will be set as children of this webspace.
      *
-     * @param MappingInterface $mapping
-     * @param array $contents
      * @param string $locale
-     * @param UserInterface $user
      *
      * @return Content[]
      */
@@ -896,11 +854,8 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * Returns content for all webspaces.
      * If a webspaceKey is given the $contents array will be set as children of this webspace.
      *
-     * @param MappingInterface $mapping
-     * @param array $contents
      * @param string $webspaceKey
      * @param string $locale
-     * @param UserInterface $user
      *
      * @return Content[]
      */
@@ -931,10 +886,8 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * @param string[] $paths
      * @param string $locale
-     * @param MappingInterface $mapping
      * @param Webspace[] $webspaces
      * @param Content[] $contents
-     * @param UserInterface $user
      *
      * @return Content[]
      */
@@ -972,7 +925,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * Persists the document using the given information.
      *
-     * @param Request $request
      * @param $formType
      * @param $document
      * @param $language

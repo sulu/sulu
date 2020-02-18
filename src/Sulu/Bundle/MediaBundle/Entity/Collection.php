@@ -61,9 +61,6 @@ class Collection extends BaseCollection
         return $this->children;
     }
 
-    /**
-     * @param DoctrineCollection $children
-     */
     public function setChildren(DoctrineCollection $children)
     {
         $this->children = $children;
@@ -96,8 +93,6 @@ class Collection extends BaseCollection
     /**
      * Add meta.
      *
-     * @param CollectionMeta $meta
-     *
      * @return Collection
      */
     public function addMeta(CollectionMeta $meta)
@@ -109,8 +104,6 @@ class Collection extends BaseCollection
 
     /**
      * Remove meta.
-     *
-     * @param CollectionMeta $meta
      */
     public function removeMeta(CollectionMeta $meta)
     {
@@ -130,8 +123,6 @@ class Collection extends BaseCollection
     /**
      * Add media.
      *
-     * @param MediaInterface $media
-     *
      * @return Collection
      */
     public function addMedia(MediaInterface $media)
@@ -143,8 +134,6 @@ class Collection extends BaseCollection
 
     /**
      * Remove media.
-     *
-     * @param MediaInterface $media
      */
     public function removeMedia(MediaInterface $media)
     {
@@ -164,8 +153,6 @@ class Collection extends BaseCollection
     /**
      * Add children.
      *
-     * @param CollectionInterface $children
-     *
      * @return Collection
      */
     public function addChildren(CollectionInterface $children)
@@ -177,8 +164,6 @@ class Collection extends BaseCollection
 
     /**
      * Remove children.
-     *
-     * @param CollectionInterface $children
      */
     public function removeChildren(CollectionInterface $children)
     {
@@ -209,9 +194,6 @@ class Collection extends BaseCollection
         return $this->defaultMeta;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         return 'sulu.media.collections';

@@ -231,8 +231,6 @@ class Property implements PropertyInterface, \JsonSerializable
     /**
      * add a property tag.
      *
-     * @param PropertyTag $tag
-     *
      * @return PropertyTag
      */
     public function addTag(PropertyTag $tag)
@@ -298,8 +296,6 @@ class Property implements PropertyInterface, \JsonSerializable
 
     /**
      * sets the value from property.
-     *
-     * @param mixed $value
      */
     public function setValue($value)
     {
@@ -317,8 +313,6 @@ class Property implements PropertyInterface, \JsonSerializable
 
     /**
      * gets the value from property.
-     *
-     * @return mixed
      */
     public function getValue()
     {
@@ -428,9 +422,6 @@ class Property implements PropertyInterface, \JsonSerializable
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function jsonSerialize()
     {
         $result = [
@@ -463,9 +454,6 @@ class Property implements PropertyInterface, \JsonSerializable
         $this->setValue($value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toArray($depth = null)
     {
         if ($this->getValue() instanceof ArrayableInterface) {

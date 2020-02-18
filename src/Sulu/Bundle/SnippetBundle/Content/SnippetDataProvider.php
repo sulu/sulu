@@ -82,9 +82,6 @@ class SnippetDataProvider implements DataProviderInterface
         $this->referenceStore = $referenceStore;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfiguration()
     {
         if (!$this->configuration) {
@@ -109,17 +106,11 @@ class SnippetDataProvider implements DataProviderInterface
         return $this->configuration;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultPropertyParameter()
     {
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolveDataItems(
         array $filters,
         array $propertyParameter,
@@ -140,9 +131,6 @@ class SnippetDataProvider implements DataProviderInterface
         return new DataProviderResult($this->decorateDataItems($items, $options['locale']), $hasNextPage);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolveResourceItems(
         array $filters,
         array $propertyParameter,
@@ -163,9 +151,6 @@ class SnippetDataProvider implements DataProviderInterface
         return new DataProviderResult($this->decorateResourceItems($items, $options['locale']), $hasNextPage);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolveDatasource($datasource, array $propertyParameter, array $options)
     {
         return null;
@@ -174,7 +159,6 @@ class SnippetDataProvider implements DataProviderInterface
     /**
      * Decorates result with item class.
      *
-     * @param array $data
      * @param string $locale
      *
      * @return ContentDataItem[]
@@ -192,7 +176,6 @@ class SnippetDataProvider implements DataProviderInterface
     /**
      * Decorates result with item class.
      *
-     * @param array $data
      * @param string $locale
      *
      * @return ArrayAccessItem[]
@@ -237,9 +220,6 @@ class SnippetDataProvider implements DataProviderInterface
     }
 
     /**
-     * @param array $filters
-     * @param array $propertyParameter
-     * @param array $options
      * @param int $limit
      * @param int $page
      * @param int $pageSize

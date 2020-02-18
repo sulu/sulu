@@ -32,9 +32,6 @@ class ExceptionWrapperHandler implements ExceptionWrapperHandlerInterface
         $this->environment = $environment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function wrap($data)
     {
         $data['status_code'] = $data['exception']->getCode();

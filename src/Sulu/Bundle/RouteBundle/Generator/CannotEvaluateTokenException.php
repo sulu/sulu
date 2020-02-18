@@ -28,8 +28,6 @@ class CannotEvaluateTokenException extends \Exception
 
     /**
      * @param string $token
-     * @param mixed $entity
-     * @param \Exception $previous
      */
     public function __construct($token, $entity, \Exception $previous)
     {
@@ -55,8 +53,6 @@ class CannotEvaluateTokenException extends \Exception
 
     /**
      * Get entity.
-     *
-     * @return mixed
      */
     public function getEntity()
     {

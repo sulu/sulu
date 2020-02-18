@@ -39,9 +39,6 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
         $this->documentRegistry = $documentRegistry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -55,8 +52,6 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
 
     /**
      * Adds the enabled shadow languages to the serialization.
-     *
-     * @param ObjectEvent $event
      */
     public function onPostSerialize(ObjectEvent $event)
     {

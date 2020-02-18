@@ -21,9 +21,6 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Path\AbstractFilingSubscr
  */
 class StructureTypeFilingSubscriber extends AbstractFilingSubscriber
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -31,9 +28,6 @@ class StructureTypeFilingSubscriber extends AbstractFilingSubscriber
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function generatePath(PersistEvent $event)
     {
         $document = $event->getDocument();
@@ -47,17 +41,11 @@ class StructureTypeFilingSubscriber extends AbstractFilingSubscriber
         return sprintf('%s/%s', $currentPath, $parentName);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function supports($document)
     {
         return $document instanceof StructureTypeFilingBehavior;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getParentName($document)
     {
         return $document->getStructureType();

@@ -192,9 +192,6 @@ class XmlFileLoader10 extends BaseXmlFileLoader
 
     /**
      * Generates all localizations for the given portal.
-     *
-     * @param \DOMNode $portalNode
-     * @param Portal $portal
      */
     protected function generatePortalLocalizations(\DOMNode $portalNode, Portal $portal)
     {
@@ -212,8 +209,6 @@ class XmlFileLoader10 extends BaseXmlFileLoader
     /**
      * Generates the localizations for the given portal from the given DOMNodeList.
      *
-     * @param \DOMNodeList $localizationNodes
-     * @param Portal $portal
      * @param bool $flat
      */
     protected function generateLocalizationsFromNodeList(\DOMNodeList $localizationNodes, Portal $portal, $flat = false)
@@ -372,8 +367,6 @@ class XmlFileLoader10 extends BaseXmlFileLoader
     /**
      * Generates the available template types for the given webspace.
      *
-     * @param Webspace $webspace
-     *
      * @return Webspace
      *
      * @throws InvalidAmountOfDefaultErrorTemplateException
@@ -411,8 +404,6 @@ class XmlFileLoader10 extends BaseXmlFileLoader
 
     /**
      * Generates the default templates for the webspace.
-     *
-     * @param Webspace $webspace
      *
      * @return Webspace
      *
@@ -467,7 +458,6 @@ class XmlFileLoader10 extends BaseXmlFileLoader
      * Loads the meta information like a translatable title from the webspace.
      *
      * @param $path
-     * @param \DOMNode|null $context
      *
      * @return array
      */
@@ -491,9 +481,6 @@ class XmlFileLoader10 extends BaseXmlFileLoader
 
     /**
      * Generates the definitions for the available environments for this webspace.
-     *
-     * @param \DOMNode $portalNode
-     * @param Portal $portal
      */
     protected function generateEnvironments(\DOMNode $portalNode, Portal $portal)
     {
@@ -511,9 +498,6 @@ class XmlFileLoader10 extends BaseXmlFileLoader
 
     /**
      * Generates the URLs for the given environment.
-     *
-     * @param \DOMNode $environmentNode
-     * @param Environment $environment
      *
      * @throws Exception\InvalidUrlDefinitionException
      */
@@ -547,9 +531,6 @@ class XmlFileLoader10 extends BaseXmlFileLoader
      *
      * A custom URL must contain at lease one *, which will be used as a placeholder.
      *
-     * @param \DOMNode $environmentNode
-     * @param Environment $environment
-     *
      * @throws InvalidCustomUrlException
      */
     protected function generateCustomUrls(\DOMNode $environmentNode, Environment $environment)
@@ -571,11 +552,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
     /**
      * Returns an optional value from the given node. The default value will be used if the node does not exist.
      *
-     * @param \DOMNode $node
      * @param string $name
-     * @param mixed $default
-     *
-     * @return mixed
      */
     protected function getOptionalNodeAttribute(\DOMNode $node, $name, $default = null)
     {
@@ -589,8 +566,6 @@ class XmlFileLoader10 extends BaseXmlFileLoader
 
     /**
      * Checks if the urlNode is valid for this webspace.
-     *
-     * @param \DOMNode $urlNode
      *
      * @return bool
      */

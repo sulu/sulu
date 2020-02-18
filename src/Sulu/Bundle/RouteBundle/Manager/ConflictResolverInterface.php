@@ -21,8 +21,6 @@ interface ConflictResolverInterface
     /**
      * Resolves path conflicts.
      *
-     * @param RouteInterface $route
-     *
      * @return RouteInterface
      */
     public function resolve(RouteInterface $route);

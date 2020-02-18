@@ -532,7 +532,6 @@ class NodeControllerFieldsTest extends SuluTestCase
      * @param string $locale
      * @param array $data
      * @param PageDocument $parent
-     * @param array $permissions
      * @param string $path
      *
      * @return PageDocument
@@ -605,7 +604,6 @@ class NodeControllerFieldsTest extends SuluTestCase
     /**
      * @param string $title
      * @param string $locale
-     * @param PageDocument $link
      *
      * @return PageDocument
      */

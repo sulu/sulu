@@ -42,9 +42,6 @@ class HitListenerTest extends \PHPUnit_Framework_TestCase
      */
     private $event;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp()
     {
         $reflection = $this->prophesize(\ReflectionClass::class);

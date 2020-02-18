@@ -19,9 +19,6 @@ use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
  */
 class SnippetContentNavigationProvider implements ContentNavigationProviderInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getNavigationItems(array $options = [])
     {
         $details = new ContentNavigationItem('content-navigation.snippets.details');

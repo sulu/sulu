@@ -65,8 +65,6 @@ class User extends BaseUser
     /**
      * Add userRoles.
      *
-     * @param UserRole $userRoles
-     *
      * @return self
      */
     public function addUserRole(UserRole $userRoles)
@@ -78,8 +76,6 @@ class User extends BaseUser
 
     /**
      * Remove userRoles.
-     *
-     * @param UserRole $userRoles
      */
     public function removeUserRole(UserRole $userRoles)
     {
@@ -97,8 +93,6 @@ class User extends BaseUser
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @VirtualProperty
      */
     public function getRoles()
@@ -113,9 +107,6 @@ class User extends BaseUser
         return $roles;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoleObjects()
     {
         $roles = [];
@@ -129,8 +120,6 @@ class User extends BaseUser
     /**
      * Add userGroups.
      *
-     * @param UserGroup $userGroups
-     *
      * @return self
      */
     public function addUserGroup(UserGroup $userGroups)
@@ -142,8 +131,6 @@ class User extends BaseUser
 
     /**
      * Remove userGroups.
-     *
-     * @param UserGroup $userGroups
      */
     public function removeUserGroup(UserGroup $userGroups)
     {
@@ -163,8 +150,6 @@ class User extends BaseUser
     /**
      * Add userSettings.
      *
-     * @param UserSetting $userSettings
-     *
      * @return self
      */
     public function addUserSetting(UserSetting $userSettings)
@@ -176,8 +161,6 @@ class User extends BaseUser
 
     /**
      * Remove userSettings.
-     *
-     * @param UserSetting $userSettings
      */
     public function removeUserSetting(UserSetting $userSettings)
     {

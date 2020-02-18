@@ -20,18 +20,11 @@ interface MessageHandlerInterface
 {
     /**
      * Processes given message.
-     *
-     * @param ConnectionInterface $conn
-     * @param array $message
-     * @param MessageHandlerContext $context
      */
     public function handle(ConnectionInterface $conn, array $message, MessageHandlerContext $context);
 
     /**
      * Connection lost.
-     *
-     * @param ConnectionInterface $conn
-     * @param MessageHandlerContext $context
      */
     public function onClose(ConnectionInterface $conn, MessageHandlerContext $context);
 }

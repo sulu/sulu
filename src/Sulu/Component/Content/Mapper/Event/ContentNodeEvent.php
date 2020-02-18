@@ -32,10 +32,6 @@ class ContentNodeEvent extends Event
      */
     protected $structure;
 
-    /**
-     * @param NodeInterface $node
-     * @param StructureInterface $structure
-     */
     public function __construct(NodeInterface $node, StructureInterface $structure)
     {
         $this->node = $node;

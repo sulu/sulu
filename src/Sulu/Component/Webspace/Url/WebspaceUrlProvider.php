@@ -18,9 +18,6 @@ use Sulu\Component\Webspace\Webspace;
  */
 class WebspaceUrlProvider implements WebspaceUrlProviderInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getUrls(Webspace $webspace, $environment)
     {
         $urls = [];

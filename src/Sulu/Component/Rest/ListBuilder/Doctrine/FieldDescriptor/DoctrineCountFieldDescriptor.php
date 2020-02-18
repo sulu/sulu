@@ -20,9 +20,6 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
  */
 class DoctrineCountFieldDescriptor extends DoctrineFieldDescriptor
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getSelect()
     {
         return 'COUNT(' . $this->encodeAlias($this->getEntityName()) . '.' . $this->getFieldName() . ')';

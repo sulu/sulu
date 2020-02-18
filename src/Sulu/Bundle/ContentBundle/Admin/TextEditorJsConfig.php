@@ -27,17 +27,11 @@ class TextEditorJsConfig implements JsConfigInterface
      */
     private $tokenStorage;
 
-    /**
-     * @param TokenStorageInterface $tokenStorage
-     */
     public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getParameters()
     {
         if (null === $this->tokenStorage->getToken()) {
@@ -73,9 +67,6 @@ class TextEditorJsConfig implements JsConfigInterface
         return ['settingKey' => self::SETTING_KEY, 'userToolbar' => $result];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'sulu_content.texteditor_toolbar';

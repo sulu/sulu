@@ -69,9 +69,6 @@ class MediaDataProvider extends BaseDataProvider
         $this->collectionManager = $collectionManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultPropertyParameter()
     {
         return [
@@ -80,9 +77,6 @@ class MediaDataProvider extends BaseDataProvider
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolveDatasource($datasource, array $propertyParameter, array $options)
     {
         if (empty($datasource)) {
@@ -100,9 +94,6 @@ class MediaDataProvider extends BaseDataProvider
         return new DatasourceItem($entity->getId(), $entity->getTitle(), $entity->getTitle());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getOptions(
         array $propertyParameter,
         array $options = []
@@ -121,9 +112,6 @@ class MediaDataProvider extends BaseDataProvider
         return array_merge($options, array_filter($queryOptions));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function decorateDataItems(array $data)
     {
         return array_map(
@@ -134,9 +122,6 @@ class MediaDataProvider extends BaseDataProvider
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getSerializationContext()
     {
         $serializationContext = parent::getSerializationContext();

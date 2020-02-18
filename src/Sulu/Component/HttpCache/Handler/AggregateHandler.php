@@ -51,9 +51,6 @@ class AggregateHandler implements
         $this->logger = $logger ?: new NullLogger();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function invalidateStructure(StructureInterface $structure)
     {
         foreach ($this->handlers as $handler) {
@@ -73,9 +70,6 @@ class AggregateHandler implements
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function invalidateReference($alias, $id)
     {
         foreach ($this->handlers as $handler) {
@@ -95,9 +89,6 @@ class AggregateHandler implements
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function invalidatePath($path, array $headers = [])
     {
         foreach ($this->handlers as $handler) {
@@ -114,9 +105,6 @@ class AggregateHandler implements
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function updateResponse(Response $response, StructureInterface $structure)
     {
         foreach ($this->handlers as $handler) {
@@ -134,9 +122,6 @@ class AggregateHandler implements
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function flush()
     {
         foreach ($this->handlers as $handler) {

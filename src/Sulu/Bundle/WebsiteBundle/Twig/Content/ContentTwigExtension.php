@@ -66,9 +66,6 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
         $this->logger = $logger;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [
@@ -77,9 +74,6 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($uuid)
     {
         if (!$uuid) {
@@ -101,9 +95,6 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadParent($uuid)
     {
         $session = $this->sessionManager->getSession();
@@ -117,9 +108,6 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
         return $this->load($node->getParent()->getIdentifier());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'sulu_website_content';

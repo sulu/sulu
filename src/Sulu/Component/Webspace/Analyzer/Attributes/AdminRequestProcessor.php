@@ -36,9 +36,6 @@ class AdminRequestProcessor implements RequestProcessorInterface
         $this->environment = $environment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
         $attributes = [];
@@ -64,9 +61,6 @@ class AdminRequestProcessor implements RequestProcessorInterface
         return new RequestAttributes($attributes);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validate(RequestAttributes $attributes)
     {
         return true;

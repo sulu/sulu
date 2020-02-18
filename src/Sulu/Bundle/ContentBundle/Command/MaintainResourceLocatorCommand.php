@@ -79,9 +79,6 @@ class MaintainResourceLocatorCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         $this->setName('sulu:content:resource-locator:maintain')

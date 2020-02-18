@@ -59,9 +59,6 @@ class Mapping implements MappingInterface
         $this->properties = new ArrayCollection();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function shouldHydrateShadow()
     {
         return $this->hydrateShadow;
@@ -75,9 +72,6 @@ class Mapping implements MappingInterface
         $this->hydrateShadow = $hydrateShadow;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function followInternalLink()
     {
         return $this->followInternalLink;
@@ -91,9 +85,6 @@ class Mapping implements MappingInterface
         $this->followInternalLink = $followInternalLink;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function shouldHydrateGhost()
     {
         return $this->hydrateGhost;
@@ -107,9 +98,6 @@ class Mapping implements MappingInterface
         $this->hydrateGhost = $hydrateGhost;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolveUrl()
     {
         return $this->resolveUrl;
@@ -123,9 +111,6 @@ class Mapping implements MappingInterface
         $this->resolveUrl = $resolveUrl;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onlyPublished()
     {
         return $this->onlyPublished;
@@ -139,9 +124,6 @@ class Mapping implements MappingInterface
         $this->onlyPublished = $onlyPublished;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolveConcreteLocales()
     {
         return $this->resolveConcreteLocales;
@@ -155,9 +137,6 @@ class Mapping implements MappingInterface
         $this->resolveConcreteLocales = $resolveConcreteLocales;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getProperties()
     {
         return $this->properties->toArray();

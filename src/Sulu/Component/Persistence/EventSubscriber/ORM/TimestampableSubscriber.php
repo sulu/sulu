@@ -27,9 +27,6 @@ class TimestampableSubscriber implements EventSubscriber
 
     const CHANGED_FIELD = 'changed';
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSubscribedEvents()
     {
         return [
@@ -42,8 +39,6 @@ class TimestampableSubscriber implements EventSubscriber
     /**
      * Load the class data, mapping the created and changed fields
      * to datetime fields.
-     *
-     * @param LoadClassMetadataEventArgs $event
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)
     {
@@ -71,8 +66,6 @@ class TimestampableSubscriber implements EventSubscriber
 
     /**
      * Set the timestamps before update.
-     *
-     * @param LifecycleEventArgs $event
      */
     public function preUpdate(LifecycleEventArgs $event)
     {
@@ -81,8 +74,6 @@ class TimestampableSubscriber implements EventSubscriber
 
     /**
      * Set the timestamps before creation.
-     *
-     * @param LifecycleEventArgs $event
      */
     public function prePersist(LifecycleEventArgs $event)
     {
@@ -92,8 +83,6 @@ class TimestampableSubscriber implements EventSubscriber
     /**
      * Set the timestamps. If created is NULL then set it. Always
      * set the changed field.
-     *
-     * @param LifecycleEventArgs $event
      */
     private function handleTimestamp(LifecycleEventArgs $event)
     {

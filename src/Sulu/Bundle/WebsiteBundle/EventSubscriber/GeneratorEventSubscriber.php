@@ -33,9 +33,6 @@ class GeneratorEventSubscriber implements EventSubscriberInterface
         $this->version = $version;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -43,9 +40,6 @@ class GeneratorEventSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param FilterResponseEvent $event
-     */
     public function onResponse(FilterResponseEvent $event)
     {
         $event->getResponse()->headers->set('X-Generator', 'Sulu/' . $this->version);

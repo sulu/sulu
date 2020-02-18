@@ -46,9 +46,6 @@ class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
      */
     private $portalKey = 'sulu_io';
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp()
     {
         $this->contentRepository = $this->prophesize(ContentRepositoryInterface::class);

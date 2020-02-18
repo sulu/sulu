@@ -44,9 +44,6 @@ class WebspaceContentNavigationProvider implements ContentNavigationProviderInte
         $this->environment = $environment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNavigationItems(array $options = [])
     {
         $navigationItems = [];

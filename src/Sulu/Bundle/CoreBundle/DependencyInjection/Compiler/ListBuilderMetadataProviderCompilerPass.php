@@ -24,9 +24,6 @@ class ListBuilderMetadataProviderCompilerPass implements CompilerPassInterface
 
     const PROVIDER_TAG_ID = 'sulu.list-builder.metadata.provider';
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition(self::CHAIN_PROVIDER_ID)) {

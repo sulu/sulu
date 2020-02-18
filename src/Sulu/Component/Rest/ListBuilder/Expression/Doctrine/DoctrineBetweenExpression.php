@@ -40,7 +40,6 @@ class DoctrineBetweenExpression extends AbstractDoctrineExpression implements Be
     /**
      * DoctrineInExpression constructor.
      *
-     * @param AbstractDoctrineFieldDescriptor $field
      * @param $start
      * @param $end
      */
@@ -54,8 +53,6 @@ class DoctrineBetweenExpression extends AbstractDoctrineExpression implements Be
     /**
      *  Returns a statement for an expression.
      *
-     * @param QueryBuilder $queryBuilder
-     *
      * @return string
      */
     public function getStatement(QueryBuilder $queryBuilder)
@@ -68,25 +65,16 @@ class DoctrineBetweenExpression extends AbstractDoctrineExpression implements Be
         return $this->field->getSelect() . ' BETWEEN :' . $paramName1 . ' AND :' . $paramName2;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStart()
     {
         return $this->start;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEnd()
     {
         return $this->end;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFieldName()
     {
         return $this->field->getName();

@@ -29,8 +29,6 @@ class OperatorController extends RestController implements ClassResourceInterfac
     protected static $entityName = 'SuluResourceBundle:Operator';
 
     /**
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)

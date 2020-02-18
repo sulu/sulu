@@ -21,9 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 abstract class AbstractEnhancer implements RouteEnhancerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function enhance(array $defaults, Request $request)
     {
         if ((array_key_exists('_finalized', $defaults) && true === $defaults['_finalized'])
@@ -41,11 +38,6 @@ abstract class AbstractEnhancer implements RouteEnhancerInterface
     /**
      * Returns default for given custom-url.
      *
-     * @param CustomUrlBehavior $customUrl
-     * @param Webspace $webspace
-     * @param array $defaults
-     * @param Request $request
-     *
      * @return array
      */
     abstract protected function doEnhance(
@@ -57,8 +49,6 @@ abstract class AbstractEnhancer implements RouteEnhancerInterface
 
     /**
      * Returns true if enhancer supports given custom-url.
-     *
-     * @param CustomUrlBehavior $customUrl
      *
      * @return bool
      */

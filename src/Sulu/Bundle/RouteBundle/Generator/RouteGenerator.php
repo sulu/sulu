@@ -31,9 +31,6 @@ class RouteGenerator implements RouteGeneratorInterface
 
     /**
      * RouteGenerator constructor.
-     *
-     * @param TokenProviderInterface $tokenProvider
-     * @param SlugifierInterface $slugifier
      */
     public function __construct(TokenProviderInterface $tokenProvider, SlugifierInterface $slugifier)
     {
@@ -41,9 +38,6 @@ class RouteGenerator implements RouteGeneratorInterface
         $this->slugifier = $slugifier;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function generate($entity, array $options)
     {
         $routeSchema = $options['route_schema'];
@@ -73,9 +67,6 @@ class RouteGenerator implements RouteGeneratorInterface
         return $path;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getOptionsResolver(array $options)
     {
         return (new OptionsResolver())->setRequired('route_schema');

@@ -78,17 +78,11 @@ class TagManager implements TagManagerInterface
         $this->initializeFieldDescriptors();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFieldDescriptors()
     {
         return $this->fieldDescriptors;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFieldDescriptor($key)
     {
         return $this->fieldDescriptors[$key];
@@ -128,9 +122,6 @@ class TagManager implements TagManagerInterface
         return $this->tagRepository->findTagByName($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findOrCreateByName($name, $userId)
     {
         $tag = $this->findByName($name);
@@ -142,9 +133,6 @@ class TagManager implements TagManagerInterface
         return $tag;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save($data, $userId, $id = null)
     {
         $name = $data['name'];

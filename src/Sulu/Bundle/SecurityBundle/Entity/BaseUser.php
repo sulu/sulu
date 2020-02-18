@@ -352,9 +352,6 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocked()
     {
         return $this->locked;
@@ -374,9 +371,6 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEnabled()
     {
         return $this->enabled;

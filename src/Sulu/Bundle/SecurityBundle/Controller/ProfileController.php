@@ -50,12 +50,6 @@ class ProfileController implements ClassResourceInterface
      */
     private $userSettingRepository;
 
-    /**
-     * @param TokenStorageInterface $tokenStorage
-     * @param ObjectManager $objectManager
-     * @param ViewHandlerInterface $viewHandler
-     * @param UserSettingRepositoryInterface $userSettingRepository
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ObjectManager $objectManager,
@@ -71,8 +65,6 @@ class ProfileController implements ClassResourceInterface
     /**
      * Sets the given language on the current user.
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function putLanguageAction(Request $request)
@@ -87,8 +79,6 @@ class ProfileController implements ClassResourceInterface
 
     /**
      * Takes a key, value pair and stores it as settings for the user.
-     *
-     * @param Request $request
      *
      * @return Response
      */
@@ -138,8 +128,6 @@ class ProfileController implements ClassResourceInterface
 
     /**
      * Deletes a user setting by a given key.
-     *
-     * @param Request $request
      *
      * @return Response
      */

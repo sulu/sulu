@@ -35,9 +35,6 @@ class PagesSitemapProvider implements SitemapProviderInterface
      */
     private $webspaceManager;
 
-    /**
-     * @param ContentRepositoryInterface $contentRepository
-     */
     public function __construct(
         ContentRepositoryInterface $contentRepository,
         WebspaceManagerInterface $webspaceManager
@@ -46,9 +43,6 @@ class PagesSitemapProvider implements SitemapProviderInterface
         $this->webspaceManager = $webspaceManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function build($page, $portalKey)
     {
         $portal = $this->webspaceManager->findPortalByKey($portalKey);
@@ -92,17 +86,11 @@ class PagesSitemapProvider implements SitemapProviderInterface
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createSitemap($alias)
     {
         return new Sitemap($alias, $this->getMaxPage());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMaxPage()
     {
         return 1;

@@ -43,8 +43,6 @@ class TemplateController extends Controller
     /**
      * returns all structures in system.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
      * @return JsonResponse
      */
     public function getAction(Request $request)
@@ -87,7 +85,6 @@ class TemplateController extends Controller
     /**
      * renders one structure as form.
      *
-     * @param Request $request
      * @param string $key template key
      *
      * @return Response
@@ -207,8 +204,6 @@ class TemplateController extends Controller
 
     /**
      * renders template fpr settings.
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return Response
      */

@@ -30,8 +30,6 @@ interface ExtensionInterface
     /**
      * save data to node.
      *
-     * @param NodeInterface $node
-     * @param mixed $data
      * @param string $webspaceKey
      * @param string $languageCode
      */
@@ -40,7 +38,6 @@ interface ExtensionInterface
     /**
      * load data from node.
      *
-     * @param NodeInterface $node
      * @param string $webspaceKey
      * @param string $languageCode
      *
@@ -50,10 +47,6 @@ interface ExtensionInterface
 
     /**
      * Returns content data for given values.
-     *
-     * @param mixed $container
-     *
-     * @return mixed
      */
     public function getContentData($container);
 

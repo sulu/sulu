@@ -24,8 +24,6 @@ interface ResourceLocatorMapperInterface
 {
     /**
      * Saves the route for the given document.
-     *
-     * @param ResourceSegmentBehavior $document
      */
     public function save(ResourceSegmentBehavior $document);
 

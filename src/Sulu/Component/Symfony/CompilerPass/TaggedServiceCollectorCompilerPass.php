@@ -54,9 +54,6 @@ class TaggedServiceCollectorCompilerPass implements CompilerPassInterface
         $this->aliasAttribute = $aliasAttribute;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition($this->serviceId)) {

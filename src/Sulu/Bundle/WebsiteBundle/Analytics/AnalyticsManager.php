@@ -37,11 +37,6 @@ class AnalyticsManager implements AnalyticsManagerInterface
      */
     private $domainRepository;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     * @param AnalyticsRepository $analyticsRepository
-     * @param DomainRepository $domainRepository
-     */
     public function __construct(
         EntityManagerInterface $entityManager,
         AnalyticsRepository $analyticsRepository,
@@ -52,25 +47,16 @@ class AnalyticsManager implements AnalyticsManagerInterface
         $this->domainRepository = $domainRepository;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findAll($webspaceKey)
     {
         return $this->analyticsRepository->findByWebspaceKey($webspaceKey);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function find($id)
     {
         return $this->analyticsRepository->findById($id);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function create($webspaceKey, $data)
     {
         $entity = new Analytics();
@@ -81,9 +67,6 @@ class AnalyticsManager implements AnalyticsManagerInterface
         return $entity;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function update($id, $data)
     {
         $entity = $this->find($id);
@@ -92,17 +75,11 @@ class AnalyticsManager implements AnalyticsManagerInterface
         return $entity;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove($id)
     {
         $this->entityManager->remove($this->entityManager->getReference(Analytics::class, $id));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeMultiple(array $ids)
     {
         foreach ($ids as $id) {
@@ -113,7 +90,6 @@ class AnalyticsManager implements AnalyticsManagerInterface
     /**
      * Set data to given key.
      *
-     * @param Analytics $analytics
      * @param string $webspaceKey
      * @param array $data
      */
@@ -136,8 +112,6 @@ class AnalyticsManager implements AnalyticsManagerInterface
     /**
      * Returns domain.
      * If the domain does not exists this function creates a new one.
-     *
-     * @param array $domain
      *
      * @return Domain
      */
@@ -164,9 +138,6 @@ class AnalyticsManager implements AnalyticsManagerInterface
      *
      * @param string $data
      * @param string $name
-     * @param mixed $default
-     *
-     * @return mixed
      */
     private function getValue($data, $name, $default = null)
     {

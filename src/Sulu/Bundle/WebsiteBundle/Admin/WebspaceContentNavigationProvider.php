@@ -31,9 +31,6 @@ class WebspaceContentNavigationProvider implements ContentNavigationProviderInte
         $this->securityChecker = $securityChecker;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNavigationItems(array $options = [])
     {
         if (!$this->securityChecker->hasPermission(

@@ -21,8 +21,6 @@ interface OperatorManagerInterface
      * Returns all operators with a specific locale.
      *
      * @param $locale
-     *
-     * @return mixed
      */
     public function findAllByLocale($locale);
 }

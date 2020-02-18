@@ -291,8 +291,6 @@ class Category extends ApiEntityWrapper
     /**
      * Sets a translation to the entity.
      * If no other translation was assigned before, the translation is added as default.
-     *
-     * @param CategoryTranslationInterface $translation
      */
     public function setTranslation(CategoryTranslationInterface $translation)
     {

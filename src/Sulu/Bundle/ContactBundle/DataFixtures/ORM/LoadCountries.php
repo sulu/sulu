@@ -18,9 +18,6 @@ use Sulu\Bundle\ContactBundle\Entity\Country;
 
 class LoadCountries implements FixtureInterface, OrderedFixtureInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(ObjectManager $manager)
     {
         // get already stored countries
@@ -62,9 +59,6 @@ class LoadCountries implements FixtureInterface, OrderedFixtureInterface
         $manager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getOrder()
     {
         return 1;

@@ -52,9 +52,6 @@ class CleanupHistoryCommand extends ContainerAwareCommand
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configure()
     {
         $this->setName('sulu:content:cleanup-history');
@@ -76,9 +73,6 @@ EOT
         $this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Do not persist changes');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $webspaceKey = $input->getArgument('webspaceKey');
@@ -129,7 +123,6 @@ EOT
     /**
      * Cleanup specific node and his children.
      *
-     * @param NodeInterface $node
      * @param string $rootPath
      * @param bool $dryRun
      */

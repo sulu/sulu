@@ -41,9 +41,6 @@ class KeyValue implements RuleTypeInterface
         $this->valuePlaceholder = $valuePlaceHolder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTemplate()
     {
         return '<div class="grid-col-6">

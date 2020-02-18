@@ -1113,7 +1113,6 @@ class ContentRepositoryTest extends SuluTestCase
      * @param string $title
      * @param string $locale
      * @param array $data
-     * @param PageDocument $parent
      * @param array $permissions
      *
      * @return PageDocument

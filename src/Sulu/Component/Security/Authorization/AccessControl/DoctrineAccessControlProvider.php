@@ -43,12 +43,6 @@ class DoctrineAccessControlProvider implements AccessControlProviderInterface
      */
     private $maskConverter;
 
-    /**
-     * @param ObjectManager $objectManager
-     * @param RoleRepositoryInterface $roleRepository
-     * @param AccessControlRepositoryInterface $accessControlRepository
-     * @param MaskConverterInterface $maskConverter
-     */
     public function __construct(
         ObjectManager $objectManager,
         RoleRepositoryInterface $roleRepository,

@@ -138,8 +138,6 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     /**
      * Returns list of snippets.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetAction(Request $request)
@@ -191,7 +189,6 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     /**
      * Returns snippet by ID.
      *
-     * @param Request $request
      * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -211,8 +208,6 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     /**
      * Saves a new snippet.
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
@@ -226,7 +221,6 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     /**
      * Saves a new existing snippet.
      *
-     * @param Request $request
      * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -255,7 +249,6 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     /**
      * Deletes an existing Snippet.
      *
-     * @param Request $request
      * @param string $uuid
      *
      * @return JsonResponse
@@ -287,7 +280,6 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      * @Post("/snippets/{uuid}")
      *
      * @param string $uuid
-     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -447,17 +439,11 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLocale(Request $request)
     {
         return $request->query->get('language', null);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         return 'sulu.global.snippets';

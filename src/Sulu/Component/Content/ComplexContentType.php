@@ -19,17 +19,11 @@ use Sulu\Component\Content\Compat\PropertyInterface;
  */
 abstract class ComplexContentType implements ContentTypeInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __get($property)
     {
         if (method_exists($this, 'get' . ucfirst($property))) {
@@ -39,9 +33,6 @@ abstract class ComplexContentType implements ContentTypeInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasValue(
         NodeInterface $node,
         PropertyInterface $property,
@@ -52,25 +43,16 @@ abstract class ComplexContentType implements ContentTypeInterface
         return $node->hasProperty($property->getName());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultValue()
     {
         return;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getViewData(PropertyInterface $property)
     {
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentData(PropertyInterface $property)
     {
         return $property->getValue();

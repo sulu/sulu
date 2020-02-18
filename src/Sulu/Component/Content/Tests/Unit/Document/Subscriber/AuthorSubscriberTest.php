@@ -55,9 +55,6 @@ class AuthorSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     private $authorSubscriber;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp()
     {
         $this->propertyEncoder = $this->prophesize(PropertyEncoder::class);

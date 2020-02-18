@@ -20,17 +20,11 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
  */
 class AccountFactory implements AccountFactoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function createEntity()
     {
         return new AccountEntity();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createApiEntity(AccountInterface $account, $locale)
     {
         return new AccountApi($account, $locale);

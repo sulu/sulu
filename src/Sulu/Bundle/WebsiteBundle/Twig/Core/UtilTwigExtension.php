@@ -25,9 +25,6 @@ class UtilTwigExtension extends \Twig_Extension
         return 'sulu_util';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFilters()
     {
         return [
@@ -37,9 +34,6 @@ class UtilTwigExtension extends \Twig_Extension
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [

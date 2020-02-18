@@ -58,17 +58,11 @@ class DisplayCondition implements \JsonSerializable
         return $this->operator;
     }
 
-    /**
-     * @return mixed
-     */
     public function getValue()
     {
         return $this->value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function jsonSerialize()
     {
         return [

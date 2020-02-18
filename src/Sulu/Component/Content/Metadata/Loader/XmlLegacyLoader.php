@@ -81,17 +81,11 @@ class XmlLegacyLoader implements LoaderInterface
      */
     private $cacheLifetimeResolver;
 
-    /**
-     * @param CacheLifetimeResolverInterface $cacheLifetimeResolver
-     */
     public function __construct(CacheLifetimeResolverInterface $cacheLifetimeResolver)
     {
         $this->cacheLifetimeResolver = $cacheLifetimeResolver;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($resource, $type = 'page')
     {
         // init running vars
@@ -337,7 +331,6 @@ class XmlLegacyLoader implements LoaderInterface
      * Load cache lifetime metadata.
      *
      * @param $path
-     * @param \DOMXPath $xpath
      *
      * @return array
      */
@@ -617,25 +610,16 @@ class XmlLegacyLoader implements LoaderInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($resource, $type = null)
     {
         throw new FeatureNotImplementedException();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getResolver()
     {
         throw new FeatureNotImplementedException();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setResolver(LoaderResolverInterface $resolver)
     {
         throw new FeatureNotImplementedException();

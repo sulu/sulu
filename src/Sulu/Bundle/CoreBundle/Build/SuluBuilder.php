@@ -31,9 +31,6 @@ abstract class SuluBuilder implements ContainerAwareInterface, BuilderInterface
 
     protected $application;
 
-    /**
-     * {@inheritdoc}
-     */
     public function setContext(BuilderContext $context)
     {
         $this->input = $context->getInput();
@@ -43,9 +40,6 @@ abstract class SuluBuilder implements ContainerAwareInterface, BuilderInterface
         $this->output->getFormatter()->setStyle('section', $style);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;

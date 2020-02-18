@@ -43,9 +43,6 @@ class InitializeCommand extends Command
         $this->questionHelper = $questionHelper ?: new QuestionHelper();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         $this
@@ -67,9 +64,6 @@ EOT
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $purge = $input->getOption('purge');

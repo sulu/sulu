@@ -29,9 +29,6 @@ class MaskConverter implements MaskConverterInterface
         $this->permissions = $permissions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function convertPermissionsToNumber($permissionsData)
     {
         $permissions = 0;
@@ -45,9 +42,6 @@ class MaskConverter implements MaskConverterInterface
         return $permissions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function convertPermissionsToArray($permissions)
     {
         $permissionsData = [

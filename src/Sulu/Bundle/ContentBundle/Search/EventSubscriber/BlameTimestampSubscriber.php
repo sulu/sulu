@@ -41,18 +41,12 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
      */
     private $entityManager;
 
-    /**
-     * @param Factory $factory
-     */
     public function __construct(Factory $factory, EntityManager $entityManager)
     {
         $this->factory = $factory;
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -63,8 +57,6 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
 
     /**
      * Map blame and timestamp information to the search document.
-     *
-     * @param PreIndexEvent $event
      */
     public function handleBlameTimestamp(PreIndexEvent $event)
     {
@@ -83,8 +75,6 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     /**
      * Map the changer and created from the field data to
      * the search document (we don't include the field data in the search result API).
-     *
-     * @param HitEvent $event
      */
     public function handleBlameTimestampHitMapping(HitEvent $event)
     {
@@ -92,9 +82,6 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
         $this->doHandleBlameTimestampHitMapping($document);
     }
 
-    /**
-     * @param Document $document
-     */
     private function doHandleBlameTimestampHitMapping(Document $document)
     {
         $document->setCreatorName($this->getFieldValue($document, 'creator'));
@@ -107,9 +94,6 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
 
     /**
      * Return the named field from the document or return null.
-     *
-     * @param mixed $document
-     * @param mixed $fieldName
      */
     private function getFieldValue($document, $fieldName)
     {
@@ -123,7 +107,6 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     /**
      * Map timestamps to the search document.
      *
-     * @param Document $document
      * @param \DateTime $created
      * @param \DateTime $changed
      */
@@ -141,7 +124,6 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     /**
      * Map the creator and changer to the document.
      *
-     * @param Document $document
      * @param UserInterface $creator
      * @param UserInterface $changer
      */

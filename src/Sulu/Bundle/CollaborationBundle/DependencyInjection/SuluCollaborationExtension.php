@@ -20,9 +20,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class SuluCollaborationExtension extends Extension implements PrependExtensionInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function prepend(ContainerBuilder $container)
     {
         if ($container->hasExtension('doctrine_cache')) {
@@ -50,17 +47,11 @@ class SuluCollaborationExtension extends Extension implements PrependExtensionIn
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfiguration(array $config, ContainerBuilder $container)
     {
         return new Configuration();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();

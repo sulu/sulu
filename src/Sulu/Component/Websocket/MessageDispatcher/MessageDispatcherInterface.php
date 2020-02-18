@@ -28,11 +28,7 @@ interface MessageDispatcherInterface
     /**
      * Dispatch event to handler with given name.
      *
-     * @param ConnectionInterface $conn
      * @param string $name Message name
-     * @param array $message
-     * @param array $options
-     * @param ConnectionContextInterface $context
      */
     public function dispatch(
         ConnectionInterface $conn,
@@ -44,9 +40,6 @@ interface MessageDispatcherInterface
 
     /**
      * All message handler get the message that the connection is losed.
-     *
-     * @param ConnectionInterface $conn
-     * @param ConnectionContextInterface $context
      */
     public function onClose(ConnectionInterface $conn, ConnectionContextInterface $context);
 }

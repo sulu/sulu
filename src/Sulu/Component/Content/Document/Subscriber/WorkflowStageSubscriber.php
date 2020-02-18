@@ -81,8 +81,6 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
     /**
      * Sets the workflow properties from the node on the document.
      *
-     * @param HydrateEvent $event
-     *
      * @throws \Sulu\Component\DocumentManager\Exception\DocumentManagerException
      */
     public function setWorkflowStageOnDocument(HydrateEvent $event)
@@ -114,8 +112,6 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the workflow stage for the passed document to test.
-     *
-     * @param PersistEvent $event
      */
     public function setWorkflowStageToTest(PersistEvent $event)
     {
@@ -130,8 +126,6 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the workflow stage for the passed document to published.
-     *
-     * @param PublishEvent $event
      */
     public function setWorkflowStageToPublished(PublishEvent $event)
     {
@@ -146,8 +140,6 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
 
     /**
      * Resets the workflowstage to test and the published date to null.
-     *
-     * @param UnpublishEvent $event
      */
     public function setWorkflowStageToTestAndResetPublishedDate(UnpublishEvent $event)
     {
@@ -171,8 +163,6 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
     /**
      * Sets the workflowstage for the copied node and all its children to test. This is done because newly copied pages
      * shouldn't be automatically published on the website.
-     *
-     * @param CopyEvent $event
      */
     public function setWorkflowStageToTestForCopy(CopyEvent $event)
     {
@@ -181,8 +171,6 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the workflowstage for the restored node to test.
-     *
-     * @param RestoreEvent $event
      */
     public function setWorkflowStageToTestForRestore(RestoreEvent $event)
     {
@@ -196,8 +184,6 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
     /**
      * Sets the workflowstage and the published date for the given node and all of its children to test resp. null. This
      * is done for every language in which the given properties exist.
-     *
-     * @param NodeInterface $node
      */
     private function setNodeWorkflowStageToTestForCopy(NodeInterface $node)
     {
@@ -234,8 +220,6 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
     /**
      * Sets the workflow properties on the given document.
      *
-     * @param WorkflowStageBehavior $document
-     * @param DocumentAccessor $accessor
      * @param string $workflowStage
      * @param string $locale
      * @param string $live
@@ -271,7 +255,6 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
     /**
      * Sets the workflow stage properties on the given node.
      *
-     * @param NodeInterface $node
      * @param string $locale
      * @param int $workflowStage
      * @param \DateTime $publishDate

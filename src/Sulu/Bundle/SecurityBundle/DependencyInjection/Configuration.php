@@ -20,9 +20,6 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
@@ -82,8 +79,6 @@ class Configuration implements ConfigurationInterface
 
     /**
      * Adds `objects` section.
-     *
-     * @param ArrayNodeDefinition $node
      */
     private function addObjectsSection(ArrayNodeDefinition $node)
     {

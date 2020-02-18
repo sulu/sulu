@@ -17,9 +17,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluSnippetBundle extends Bundle
 {
-    /**
-     * {@inheritdoc}
-     */
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new SnippetAreaCompilerPass());

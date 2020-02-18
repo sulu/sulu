@@ -40,14 +40,8 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
      */
     protected $properties = [];
 
-    /**
-     * {@inheritdoc}
-     */
     protected $name = self::EXCERPT_EXTENSION_NAME;
 
-    /**
-     * {@inheritdoc}
-     */
     protected $additionalPrefix = self::EXCERPT_EXTENSION_NAME;
 
     /**
@@ -85,13 +79,6 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
      */
     private $factory;
 
-    /**
-     * @param StructureManagerInterface $structureManager
-     * @param ContentTypeManagerInterface $contentTypeManager
-     * @param ExportManagerInterface $exportManager
-     * @param ImportManagerInterface $importManager
-     * @param Factory $factory
-     */
     public function __construct(
         StructureManagerInterface $structureManager,
         ContentTypeManagerInterface $contentTypeManager,
@@ -106,9 +93,6 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
         $this->factory = $factory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
     {
         $excerptStructure = $this->getExcerptStructure($languageCode);
@@ -135,9 +119,6 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(NodeInterface $node, $webspaceKey, $languageCode)
     {
         $excerptStructure = $this->getExcerptStructure($languageCode);
@@ -164,9 +145,6 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
         return $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setLanguageCode($languageCode, $languageNamespace, $namespace)
     {
         // lazy load excerpt structure to avoid redeclaration of classes
@@ -180,9 +158,6 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
         parent::setLanguageCode($languageCode, $languageNamespace, $namespace);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentData($container)
     {
         $container = new ExcerptValueContainer($container);
@@ -199,9 +174,6 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
         return $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFieldMapping()
     {
         $mappings = parent::getFieldMapping();
@@ -256,9 +228,6 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function export($properties, $format = null)
     {
         $container = new ExcerptValueContainer($properties);
@@ -284,9 +253,6 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
         return $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getImportPropertyNames()
     {
         $propertyNames = [];
@@ -298,9 +264,6 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
         return $propertyNames;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function import(NodeInterface $node, $data, $webspaceKey, $languageCode, $format)
     {
         $this->setLanguageCode($languageCode, 'i18n', null);

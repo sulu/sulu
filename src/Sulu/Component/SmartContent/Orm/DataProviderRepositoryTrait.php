@@ -200,7 +200,6 @@ trait DataProviderRepositoryTrait
     /**
      * Append tags to query builder with given operator.
      *
-     * @param QueryBuilder $queryBuilder
      * @param string $relation
      * @param int[] $values
      * @param string $operator "and" or "or"
@@ -223,7 +222,6 @@ trait DataProviderRepositoryTrait
     /**
      * Append tags to query builder with "or" operator.
      *
-     * @param QueryBuilder $queryBuilder
      * @param string $relation
      * @param int[] $values
      * @param string $alias
@@ -241,7 +239,6 @@ trait DataProviderRepositoryTrait
     /**
      * Append tags to query builder with "and" operator.
      *
-     * @param QueryBuilder $queryBuilder
      * @param string $relation
      * @param int[] $values
      * @param string $alias
@@ -279,7 +276,6 @@ trait DataProviderRepositoryTrait
     /**
      * Append joins to query builder for "findByFilters" function.
      *
-     * @param QueryBuilder $queryBuilder
      * @param string $alias
      * @param string $locale
      */
@@ -288,7 +284,6 @@ trait DataProviderRepositoryTrait
     /**
      * Append additional condition to query builder for "findByFilters" function.
      *
-     * @param QueryBuilder $queryBuilder
      * @param string $locale
      * @param array $options
      *
@@ -303,7 +298,6 @@ trait DataProviderRepositoryTrait
     /**
      * Extension point to append relations to tag relation if it is not direct linked.
      *
-     * @param QueryBuilder $queryBuilder
      * @param string $alias
      *
      * @return string field path to tag relation
@@ -316,7 +310,6 @@ trait DataProviderRepositoryTrait
     /**
      * Extension point to append relations to category relation if it is not direct linked.
      *
-     * @param QueryBuilder $queryBuilder
      * @param string $alias
      *
      * @return string field path to category relation
@@ -329,7 +322,6 @@ trait DataProviderRepositoryTrait
     /**
      * Extension point to append relations to target group relation if it is not direct linked.
      *
-     * @param QueryBuilder $queryBuilder
      * @param string $alias
      *
      * @return string
@@ -342,9 +334,7 @@ trait DataProviderRepositoryTrait
     /**
      * Extension point to append datasource.
      *
-     * @param mixed $datasource
      * @param bool $includeSubFolders
-     * @param QueryBuilder $queryBuilder
      * @param string $alias
      *
      * @return array parameters for query
@@ -360,7 +350,6 @@ trait DataProviderRepositoryTrait
      *
      * @param array $sortBy
      * @param string $sortMethod
-     * @param QueryBuilder $queryBuilder
      * @param string $alias
      * @param string $locale
      *
@@ -380,7 +369,6 @@ trait DataProviderRepositoryTrait
     /**
      * Append joins to query builder for "findByFilters" function specially for sort-by.
      *
-     * @param QueryBuilder $queryBuilder
      * @param string $alias
      * @param string $locale
      */

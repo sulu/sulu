@@ -39,9 +39,6 @@ class TextLine extends SimpleContentType
         return $this->template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultParams(PropertyInterface $property = null)
     {
         return [

@@ -61,8 +61,6 @@ interface RequestAnalyzerInterface
 
     /**
      * Validates the data written on the given request and throws exceptions in case something is wrong or missing.
-     *
-     * @param Request $request
      */
     public function validate(Request $request);
 
@@ -162,8 +160,6 @@ interface RequestAnalyzerInterface
      *
      * @param string $name
      * @param mixed|null $default
-     *
-     * @return mixed
      */
     public function getAttribute($name, $default = null);
 }

@@ -84,9 +84,6 @@ class CustomUrlManager implements CustomUrlManagerInterface
         $this->environment = $environment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function create($webspaceKey, array $data, $locale = null)
     {
         $document = $this->documentManager->create('custom_url');
@@ -110,9 +107,6 @@ class CustomUrlManager implements CustomUrlManagerInterface
         return $document;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findList($webspaceKey, $locale)
     {
         // TODO pagination
@@ -130,25 +124,16 @@ class CustomUrlManager implements CustomUrlManagerInterface
         return $this->customUrlRepository->findList($this->getItemsPath($webspaceKey), $locale, $baseDomains);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findUrls($webspaceKey)
     {
         return $this->customUrlRepository->findUrls($this->getItemsPath($webspaceKey));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function find($uuid, $locale = null)
     {
         return $this->documentManager->find($uuid, $locale, ['load_ghost_content' => true]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByUrl($url, $webspaceKey, $locale = null)
     {
         $routeDocument = $this->findRouteByUrl($url, $webspaceKey, $locale);
@@ -160,9 +145,6 @@ class CustomUrlManager implements CustomUrlManagerInterface
         return $routeDocument->getTargetDocument();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByPage(UuidBehavior $page)
     {
         $query = $this->documentManager->createQuery(
@@ -175,9 +157,6 @@ class CustomUrlManager implements CustomUrlManagerInterface
         return $query->execute();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findRouteByUrl($url, $webspaceKey, $locale = null)
     {
         try {
@@ -216,9 +195,6 @@ class CustomUrlManager implements CustomUrlManagerInterface
         return $document;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save($uuid, array $data, $locale = null)
     {
         $document = $this->find($uuid, $locale);
@@ -243,9 +219,6 @@ class CustomUrlManager implements CustomUrlManagerInterface
         return $document;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function delete($uuid)
     {
         $document = $this->find($uuid);
@@ -254,9 +227,6 @@ class CustomUrlManager implements CustomUrlManagerInterface
         return $document;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function deleteRoute($webspaceKey, $uuid)
     {
         $routeDocument = $this->findRoute($uuid);
@@ -272,9 +242,6 @@ class CustomUrlManager implements CustomUrlManagerInterface
         return $routeDocument;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function invalidate(CustomUrlDocument $document)
     {
         foreach ($document->getRoutes() as $route => $routeDocument) {
@@ -282,9 +249,6 @@ class CustomUrlManager implements CustomUrlManagerInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function invalidateRoute($webspaceKey, RouteDocument $routeDocument)
     {
         $this->cacheHandler->invalidatePath(
@@ -297,7 +261,6 @@ class CustomUrlManager implements CustomUrlManagerInterface
      *
      * TODO this logic have to be extracted in a proper way.
      *
-     * @param CustomUrlDocument $document
      * @param array $data
      * @param string $locale
      */

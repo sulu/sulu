@@ -31,8 +31,6 @@ interface TagRepositoryInterface extends RepositoryInterface
      * Finds the tag with the given name.
      *
      * @param string $name
-     *
-     * @return mixed
      */
     public function findTagByName($name);
 

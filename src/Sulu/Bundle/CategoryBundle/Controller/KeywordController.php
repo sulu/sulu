@@ -41,9 +41,6 @@ class KeywordController extends RestController implements ClassResourceInterface
 
     const FORCE_MERGE = 'merge';
 
-    /**
-     * {@inheritdoc}
-     */
     protected static $entityKey = 'keywords';
 
     /**
@@ -64,7 +61,6 @@ class KeywordController extends RestController implements ClassResourceInterface
      * Returns list of keywords filtered by the category.
      *
      * @param int $categoryId
-     * @param Request $request
      *
      * @return Response
      */
@@ -113,7 +109,6 @@ class KeywordController extends RestController implements ClassResourceInterface
      * Creates new keyword for given category.
      *
      * @param int $categoryId
-     * @param Request $request
      *
      * @return Response
      */
@@ -138,7 +133,6 @@ class KeywordController extends RestController implements ClassResourceInterface
      *
      * @param int $categoryId
      * @param int $keywordId
-     * @param Request $request
      *
      * @return Response
      *
@@ -188,7 +182,6 @@ class KeywordController extends RestController implements ClassResourceInterface
      * Delete given keyword from given category.
      *
      * @param int $categoryId
-     * @param Request $request
      *
      * @return Response
      */
@@ -251,9 +244,6 @@ class KeywordController extends RestController implements ClassResourceInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContext()
     {
         return 'sulu.settings.categories';

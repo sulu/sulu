@@ -37,8 +37,6 @@ class SuluSecurityListener
     /**
      * Checks if the action is allowed for the current user, and throws an Exception otherwise.
      *
-     * @param FilterControllerEvent $event
-     *
      * @throws AccessDeniedException
      */
     public function onKernelController(FilterControllerEvent $event)

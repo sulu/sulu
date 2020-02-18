@@ -48,9 +48,6 @@ class ListRestHelper
     /**
      * The constructor takes the request as an argument, which
      * is injected by the service container.
-     *
-     * @param Request $request
-     * @param ObjectManager $em
      */
     public function __construct(Request $request, ObjectManager $em)
     {
@@ -133,8 +130,6 @@ class ListRestHelper
 
     /**
      * returns the current page.
-     *
-     * @return mixed
      */
     public function getPage()
     {
@@ -184,8 +179,6 @@ class ListRestHelper
 
     /**
      * Returns the pattern of the search.
-     *
-     * @return mixed
      */
     public function getSearchPattern()
     {

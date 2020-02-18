@@ -401,9 +401,6 @@ class PortalInformation implements ArrayableInterface
         $this->priority = $priority;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toArray($depth = null)
     {
         $result = [];

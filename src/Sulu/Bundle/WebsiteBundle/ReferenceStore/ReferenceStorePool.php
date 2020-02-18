@@ -29,17 +29,11 @@ class ReferenceStorePool implements ReferenceStorePoolInterface
         $this->stores = $stores;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStores()
     {
         return $this->stores;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStore($alias)
     {
         if (!array_key_exists($alias, $this->stores)) {

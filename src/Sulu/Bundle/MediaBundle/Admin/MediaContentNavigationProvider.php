@@ -22,17 +22,11 @@ class MediaContentNavigationProvider implements ContentNavigationProviderInterfa
      */
     private $securityChecker;
 
-    /**
-     * @param SecurityCheckerInterface $securityChecker
-     */
     public function __construct(SecurityCheckerInterface $securityChecker)
     {
         $this->securityChecker = $securityChecker;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNavigationItems(array $options = [])
     {
         $files = new ContentNavigationItem('content-navigation.media.files');

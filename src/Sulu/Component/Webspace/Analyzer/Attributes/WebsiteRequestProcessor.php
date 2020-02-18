@@ -55,9 +55,6 @@ class WebsiteRequestProcessor implements RequestProcessorInterface
         $this->environment = $environment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
         $host = $requestAttributes->getAttribute('host');
@@ -95,9 +92,6 @@ class WebsiteRequestProcessor implements RequestProcessorInterface
         return new RequestAttributes(['portalInformation' => $portalInformation]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validate(RequestAttributes $attributes)
     {
         if (null === $attributes->getAttribute('portalInformation')) {

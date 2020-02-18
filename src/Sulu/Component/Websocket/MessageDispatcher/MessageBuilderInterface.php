@@ -18,8 +18,6 @@ interface MessageBuilderInterface
 {
     /**
      * @param $handlerName
-     * @param array $message
-     * @param array $options
      * @param bool $error
      *
      * @return string

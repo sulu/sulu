@@ -49,9 +49,6 @@ class SnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensi
         $this->structureResolver = $structureResolver;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [
@@ -59,9 +56,6 @@ class SnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensi
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadSnippet($uuid, $locale = null)
     {
         if (null === $locale) {
@@ -77,9 +71,6 @@ class SnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensi
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'sulu_snippet';

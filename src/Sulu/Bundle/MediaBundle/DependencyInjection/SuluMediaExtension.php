@@ -27,9 +27,6 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
 {
     use PersistenceExtensionTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     public function prepend(ContainerBuilder $container)
     {
         if ($container->hasExtension('sulu_search')) {
@@ -79,9 +76,6 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $bundles = $container->getParameter('kernel.bundles');

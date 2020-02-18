@@ -34,9 +34,6 @@ class HashSerializeEventSubscriber implements EventSubscriberInterface
         $this->hasher = $hasher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [
@@ -46,8 +43,6 @@ class HashSerializeEventSubscriber implements EventSubscriberInterface
 
     /**
      * Adds the hash of the given object to its serialization.
-     *
-     * @param ObjectEvent $event
      */
     public function onPostSerialize(ObjectEvent $event)
     {

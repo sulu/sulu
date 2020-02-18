@@ -19,9 +19,6 @@ use Imagine\Image\ImageInterface;
  */
 class Scaler implements ScalerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function scale(
         ImageInterface $image,
         $x,

@@ -24,9 +24,6 @@ class ImageTransformationCompilerPass implements CompilerPassInterface
 
     const TAG = 'sulu_media.image.transformation';
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition(self::POOL_SERVICE_ID)) {

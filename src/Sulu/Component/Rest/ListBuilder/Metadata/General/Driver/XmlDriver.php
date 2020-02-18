@@ -39,9 +39,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         $this->parameterBag = $parameterBag;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function loadMetadataFromFile(\ReflectionClass $class, $file)
     {
         $classMetadata = new MergeableClassMetadata($class->getName());
@@ -63,8 +60,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     /**
      * Extracts attributes from dom-node to create a new property-metadata object.
      *
-     * @param \DOMXPath $xpath
-     * @param \DOMNode $propertyNode
      * @param string $className
      *
      * @return PropertyMetadata
@@ -79,10 +74,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
 
     /**
      * Set default data onto the property-metadata.
-     *
-     * @param PropertyMetadata $propertyMetadata
-     * @param \DOMXPath $xpath
-     * @param \DOMNode $propertyNode
      *
      * @return PropertyMetadata
      */
@@ -126,9 +117,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     /**
      * Extracts filter type parameters from dom-node.
      *
-     * @param \DOMXPath $xpath
-     * @param \DOMNode $propertyNode
-     *
      * @return array
      */
     protected function getFilterTypeParameters(\DOMXPath $xpath, \DOMNode $propertyNode)
@@ -142,9 +130,6 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         return $parameters;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExtension()
     {
         return 'xml';

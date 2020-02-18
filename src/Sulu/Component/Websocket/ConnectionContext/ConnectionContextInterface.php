@@ -79,8 +79,6 @@ interface ConnectionContextInterface
      * Get parameter with given name.
      *
      * @param string $name
-     *
-     * @return mixed
      */
     public function get($name);
 
@@ -104,7 +102,6 @@ interface ConnectionContextInterface
      * Set parameter with given name.
      *
      * @param string $name
-     * @param mixed $value
      */
     public function set($name, $value);
 

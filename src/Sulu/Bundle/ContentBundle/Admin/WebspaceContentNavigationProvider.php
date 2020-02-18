@@ -19,9 +19,6 @@ use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
  */
 class WebspaceContentNavigationProvider implements ContentNavigationProviderInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getNavigationItems(array $options = [])
     {
         $general = new ContentNavigationItem('content-navigation.webspace.general');

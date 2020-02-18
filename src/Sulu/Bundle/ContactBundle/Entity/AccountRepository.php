@@ -67,8 +67,6 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
      *
      * @param $id
      * @param $contacts
-     *
-     * @return mixed
      */
     public function findAccountById($id, $contacts = false)
     {
@@ -140,8 +138,6 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
      * Get account by id.
      *
      * @param $ids
-     *
-     * @return mixed
      */
     public function findByIds($ids)
     {
@@ -203,9 +199,6 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findByFilter(array $filter)
     {
         try {
@@ -254,8 +247,6 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
      * Get account by id to delete.
      *
      * @param $id
-     *
-     * @return mixed
      */
     public function findAccountByIdAndDelete($id)
     {
@@ -336,8 +327,6 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
      * distinct count account's children and contacts.
      *
      * @param $id
-     *
-     * @return mixed
      */
     public function countDistinctAccountChildrenAndContacts($id)
     {
@@ -363,8 +352,6 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
      * distinct count account's children and contacts.
      *
      * @param $id
-     *
-     * @return mixed
      */
     public function findChildrenAndContacts($id)
     {

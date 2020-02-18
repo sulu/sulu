@@ -22,8 +22,6 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension
     use MemoizeTwigExtensionTrait;
 
     /**
-     * @param NavigationTwigExtensionInterface $extension
-     * @param MemoizeInterface $memoizeCache
      * @param $lifeTime
      */
     public function __construct(NavigationTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
@@ -33,9 +31,6 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension
         $this->lifeTime = $lifeTime;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->extension->getName();

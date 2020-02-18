@@ -30,17 +30,11 @@ class AuthenticatedConnectionContext extends ConnectionContext implements Authen
         $this->firewall = $firewall;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFirewallUser()
     {
         return $this->getUser($this->firewall);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isValid()
     {
         return null !== $this->getUser($this->firewall);

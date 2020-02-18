@@ -25,9 +25,7 @@ final class ArrayUtils
     /**
      * Filter array with given symfony-expression.
      *
-     * @param array $collection
      * @param string $expression
-     * @param array $context
      *
      * @return array
      */

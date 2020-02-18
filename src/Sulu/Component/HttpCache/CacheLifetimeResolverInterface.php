@@ -31,7 +31,6 @@ interface CacheLifetimeResolverInterface
      * Get cache lifetime in seconds.
      *
      * @param string $type
-     * @param mixed $value
      *
      * @return int Cache lifetime in seconds
      */
@@ -41,7 +40,6 @@ interface CacheLifetimeResolverInterface
      * Returns true if combination of type and value is supported.
      *
      * @param string $type
-     * @param mixed $value
      *
      * @return bool
      */

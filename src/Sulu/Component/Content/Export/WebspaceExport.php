@@ -62,9 +62,6 @@ class WebspaceExport extends Export implements WebspaceExportInterface
         $this->output = new NullOutput();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function export(
         $webspaceKey,
         $locale,
@@ -92,9 +89,6 @@ class WebspaceExport extends Export implements WebspaceExportInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExportData($webspaceKey, $uuid = null, $nodes = null, $ignoredNodes = null)
     {
         /** @var PageDocument[] $documents */
@@ -141,8 +135,6 @@ class WebspaceExport extends Export implements WebspaceExportInterface
     /**
      * Returns a flat array with the extensions of the given document.
      *
-     * @param BasePageDocument $document
-     *
      * @return array
      */
     protected function getExtensionData(BasePageDocument $document)
@@ -163,8 +155,6 @@ class WebspaceExport extends Export implements WebspaceExportInterface
 
     /**
      * Returns a flat array with the settings of the given document.
-     *
-     * @param BasePageDocument $document
      *
      * @return array
      */

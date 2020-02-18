@@ -48,7 +48,6 @@ class DebugHandler implements HandlerUpdateResponseInterface
     private $proxyClientName;
 
     /**
-     * @param CacheLifetimeResolverInterface $cacheLifetimeResolver
      * @param array $handlerNames List of handlers (strings)
      * @param string $proxyClientName Current proxy client name
      */
@@ -62,9 +61,6 @@ class DebugHandler implements HandlerUpdateResponseInterface
         $this->proxyClientName = $proxyClientName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function updateResponse(Response $response, StructureInterface $structure)
     {
         $response->headers->set(self::HEADER_HANDLERS, implode(', ', $this->handlerNames));

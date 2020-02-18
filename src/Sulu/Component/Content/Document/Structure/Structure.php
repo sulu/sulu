@@ -26,34 +26,22 @@ class Structure implements StructureInterface
      */
     protected $stagedData = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStagedData()
     {
         return $this->stagedData;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setStagedData(array $stagedData)
     {
         $this->stagedData = $stagedData;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function commitStagedData($clearMissingContent)
     {
         $this->bind($this->stagedData, $clearMissingContent);
         $this->stagedData = [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getProperty($name)
     {
         if (isset($this->properties[$name])) {
@@ -66,57 +54,36 @@ class Structure implements StructureInterface
         return $property;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentViewProperty($name)
     {
         throw new \Exception('Cannot retrieve content view property for non-managed property');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasProperty($name)
     {
         return $this->offsetExists($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetExists($offset)
     {
         return isset($this->properties[$offset]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetGet($offset)
     {
         return $this->getProperty($offset);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetSet($offset, $value)
     {
         $this->getProperty($offset)->setValue($value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetUnset($offset)
     {
         unset($this->properties[$offset]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toArray()
     {
         $values = [];
@@ -127,9 +94,6 @@ class Structure implements StructureInterface
         return $values;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function bind($data, $clearMissing = false)
     {
         foreach ($data as $key => $value) {

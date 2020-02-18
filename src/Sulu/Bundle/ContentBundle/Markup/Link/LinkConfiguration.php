@@ -39,8 +39,6 @@ class LinkConfiguration implements \JsonSerializable
     /**
      * @param string $title
      * @param string $component
-     * @param array $componentOptions
-     * @param array $slideOptions
      */
     public function __construct($title, $component, array $componentOptions = [], array $slideOptions = [])
     {
@@ -90,9 +88,6 @@ class LinkConfiguration implements \JsonSerializable
         return $this->slideOptions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function jsonSerialize()
     {
         return [

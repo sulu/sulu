@@ -43,9 +43,6 @@ interface WebspaceExportInterface
      * Load all content, extension and settings from given webspace and locale.
      *
      * @param string $webspaceKey
-     * @param string $locale
-     * @param $output
-     * @param string $format
      * @param string $uuid
      * @param array $nodes
      * @param array $ignoredNodes

@@ -70,25 +70,16 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
         $this->distinct = $distinct;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSelect()
     {
         return 'GROUP_CONCAT(' . ($this->distinct ? 'DISTINCT ' : '') . $this->fieldDescriptor->getSelect() . ' SEPARATOR \'' . $this->glue . '\')';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getWhere()
     {
         return $this->fieldDescriptor->getSelect();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getJoins()
     {
         return $this->fieldDescriptor->getJoins();
