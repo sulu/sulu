@@ -1211,4 +1211,10 @@
         <column name="from"><![CDATA[&]]></column>
         <column name="to">y</column>
     </item>
+
+    <item>
+        <column name="locale">BG</column>
+        <column name="from"><![CDATA[&]]></column>
+        <column name="to">и</column>
+    </item>
 </replacers>

@@ -11,6 +11,9 @@
 
 namespace Sulu\Component\PHPCR;
 
+use Symfony\Component\String\Slugger\AsciiSlugger;
+use Symfony\Component\String\Slugger\SluggerInterface;
+
 /**
  * cleans path strings.
  */
@@ -24,6 +27,11 @@ class PathCleanup implements PathCleanupInterface
     protected $replacers = [];
 
     /**
+     * @var SluggerInterface
+     */
+    private $slugger;
+
+    /**
      * valid pattern for path
      * example: /products/machines
      *  + test whole input case insensitive
@@ -35,12 +43,18 @@ class PathCleanup implements PathCleanupInterface
      */
     private $pattern = '/^(\/[a-z0-9][a-z0-9-_]*)+$/';
 
-    /**
-     * PathCleanup constructor.
-     */
-    public function __construct(array $replacers)
+    public function __construct(array $replacers, SluggerInterface $slugger = null)
     {
+        if (null === $slugger) {
+            @trigger_error(
+                'Initializing the PathCleanup without a slugger is deprecated since Sulu 2.1.',
+                E_USER_DEPRECATED
+            );
+            $slugger = new AsciiSlugger();
+        }
+
         $this->replacers = $replacers;
+        $this->slugger = $slugger;
     }
 
     /**
@@ -67,30 +81,35 @@ class PathCleanup implements PathCleanupInterface
                 $dirty = str_replace($key, $value, $dirty);
             }
         }
-
-        $clean = strtolower($dirty);
-
-        // Inspired by ZOOLU
-        // delete problematic characters
-        $clean = str_replace('%2F', '/', urlencode(preg_replace('/([^A-za-z0-9\s\-_\/])/', '', $clean)));
-
         // replace multiple dash with one
-        $clean = preg_replace('/([-]+)/', '-', $clean);
+        $dirty = preg_replace('/([-]+)/', '-', $dirty);
 
         // remove dash before slash
-        $clean = preg_replace('/[-]+\//', '/', $clean);
+        $dirty = preg_replace('/[-]+\//', '/', $dirty);
 
         // remove dash after slash
-        $clean = preg_replace('/\/[-]+/', '/', $clean);
+        $dirty = preg_replace('/\/[-]+/', '/', $dirty);
 
         // delete dash at the beginning or end
-        $clean = preg_replace('/^([-])/', '', $clean);
-        $clean = preg_replace('/([-])$/', '', $clean);
+        $dirty = preg_replace('/^([-])/', '', $dirty);
+        $dirty = preg_replace('/([-])$/', '', $dirty);
 
-        // remove double slashes
-        $clean = str_replace('//', '/', $clean);
+        // replace multiple slashes
+        $dirty = preg_replace('/([\/]+)/', '/', $dirty);
 
-        return $clean;
+        $parts = explode('/', $dirty);
+        $newParts = [];
+
+        $totalParts = count($parts);
+        foreach ($parts as $i => $part) {
+            $slug = $this->slugger->slug($part, '-', $languageCode);
+            $slug = $slug->lower();
+            if (0 === $i || $i + 1 === $totalParts || !$slug->isEmpty()) {
+                $newParts[] = $slug->toString();
+            }
+        }
+
+        return implode('/', $newParts);
     }
 
     /**

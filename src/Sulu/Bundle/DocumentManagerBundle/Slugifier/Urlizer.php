@@ -36,6 +36,8 @@ namespace Sulu\Bundle\DocumentManagerBundle\Slugifier;
  * @author         Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author         Jonathan H. Wage <jonwage@gmail.com>
  * @author         <hsivonen@iki.fi>
+ *
+ * @deprecated since 2.1. To be removed in 3.0
  */
 class Urlizer
 {

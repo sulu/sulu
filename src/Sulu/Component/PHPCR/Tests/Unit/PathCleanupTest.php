@@ -14,6 +14,7 @@ namespace Sulu\Component\PHPCR\Tests\Unit;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\PHPCR\PathCleanup;
 use Sulu\Component\PHPCR\PathCleanupInterface;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class PathCleanupTest extends TestCase
 {
@@ -44,15 +45,42 @@ class PathCleanupTest extends TestCase
                 'en' => [
                     '&' => 'and',
                 ],
-            ]
+                'bg' => [
+                    '&' => 'и',
+                ],
+            ],
+            new AsciiSlugger()
         );
     }
 
-    public function testCleanup()
+    /**
+     * @dataProvider cleanupProvider
+     */
+    public function testCleanup($a, $b, $locale)
     {
-        $clean = $this->cleaner->cleanup('-/aSDf     asdf/äöü-/hello: world\'s', 'de');
+        $clean = $this->cleaner->cleanup($a, $locale);
+        $this->assertEquals($b, $clean);
+    }
 
-        $this->assertEquals('/asdf-asdf/aeoeue/hello-worlds', $clean);
+    public function cleanupProvider()
+    {
+        return [
+            ['-/aSDf     asdf/äöü-/hello: world\'s', '/asdf-asdf/aeoeue/hello-world-s', 'de'],
+            ['it\'s+-_,.a multiple---dash test!!!', 'it-s-a-multiple-dash-test', 'en'],
+            ['dash before slash -/', 'dash-before-slash/', 'en'],
+            ['dash after slash /-', 'dash-after-slash/', 'en'],
+            ['-dash in beginning', 'dash-in-beginning', 'en'],
+            ['dash in end-', 'dash-in-end', 'en'],
+            ['multiple slashes 1 ///', 'multiple-slashes-1/', 'en'],
+            ['multiple slashes 2 \\\\\\', 'multiple-slashes-2', 'en'],
+            ['multiple slashes 3 /\\/\\/', 'multiple-slashes-3/', 'en'],
+            ['You & I', 'you-and-i', 'en'],
+            ['You & I', 'you-und-i', 'de'],
+            ['ти & аз', 'ti-i-az', 'bg'],
+            ['шише', 'shishe', 'bg'],
+            ['Горна Оряховица', 'gorna-oryakhovitsa', 'bg'],
+            ['Златни пясъци', 'zlatni-pyasutsi', 'bg'],
+        ];
     }
 
     public function testValidate()
