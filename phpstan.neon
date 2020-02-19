@@ -27,3 +27,5 @@ parameters:
         - %currentWorkingDirectory%/src/Sulu/Bundle/TestBundle/Resources/app/config/config.php
         # The following should be removed at some point
         - %currentWorkingDirectory%/*/Tests/*
+    ignoreErrors:
+        - /Class Imagine\\Vips\\Imagine not found./

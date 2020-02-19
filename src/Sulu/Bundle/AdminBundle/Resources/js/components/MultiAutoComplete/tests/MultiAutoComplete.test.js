@@ -82,7 +82,7 @@ test('Render the MultiAutoComplete with open suggestions list', () => {
     multiAutoComplete.instance().inputValue = 'test';
     multiAutoComplete.update();
 
-    expect(multiAutoComplete.find('.item').text()).toEqual('Test');
+    expect(multiAutoComplete.find('.chip').text()).toEqual('Test');
     expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
 });
 
@@ -143,7 +143,7 @@ test('Clicking on delete icon of a suggestion should call the onChange callback 
         />
     );
 
-    multiAutoComplete.find('Item').at(1).find('Icon').simulate('click');
+    multiAutoComplete.find('Chip').at(1).find('Icon').simulate('click');
 
     expect(changeSpy).toHaveBeenCalledWith([value[0]]);
 });
