@@ -2,6 +2,52 @@
 
 ## dev-master
 
+### Configuration of list filters
+
+The old filter configuration on a list XML file was ignored until now. But the new list filtering functionality requires
+some changes in order to work. That also has some effects on the list XML files. Mind that this only concerns you if
+you had some `filter-type` attributes in your configurations, which would not have any effect at all until now.
+
+```diff
+-        <identity-property name="accountId" visibility="never" filter-type="auto-complete" translation="sulu_contact.organization">
++        <identity-property name="accountId" visibility="never" translation="sulu_contact.organization">
+             <field-name>account</field-name>
+             <entity-name>SuluContactBundle:AccountContact</entity-name>
+ 
+             <joins ref="accountContact"/>
+ 
+-            <filter-type-parameters>
+-                <parameter key="singleUrl"><![CDATA[/admin/api/accounts/{id}]]></parameter>
+-                <parameter key="remoteUrl">
+-                    <![CDATA[/admin/api/accounts?searchFields=name,number&fields=id,name&flat=true]]>
+-                </parameter>
+-                <parameter key="resultKey">accounts</parameter>
+-                <parameter key="valueKey">name</parameter>
+-            </filter-type-parameters>
++            <filter type="selection">
++                <param name="displayProperty" value="name" />
++                <param name="resourceKey" value="accounts" />
++            </filter>
+         </identity-property>
+```
+
+The `filter-type` property is gone, and replaced as `type` attribute on the new `filter` node within the `property` tag.
+The `parameter` have been renamed to `param` to match the template XML files and take a `name` (instead of a `key`) and
+a `value` (instead of using the child of the node) attribute. This was necessary to allow params to be nested:
+
+```xml
+<property name="type" visibility="never" translation="sulu_media.type">
+    <filter type="dropdown">
+        <param name="options" type="collection">
+            <param name="audio" value="Audio" />
+            <param name="document" value="Document" />
+            <param name="image" value="Image" />
+            <param name="video" value="Video" />
+        </param>
+    </filter>
+</property>
+```
+
 ### RouteRepositoryInterface changed
 
 In the `RouteRepositoryInterface` a new remove method was introduced.
