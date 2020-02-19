@@ -1,24 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Should render item as clickable 1`] = `
+exports[`Should render chip as clickable 1`] = `
 <button
-  class="chip clickable"
+  class="chip secondary clickable"
 >
   Name
 </button>
 `;
 
-exports[`Should render item with children 1`] = `
+exports[`Should render chip with children 1`] = `
 <button
-  class="chip"
+  class="chip secondary"
 >
   Name
 </button>
 `;
 
-exports[`Should render item with delete icon 1`] = `
+exports[`Should render chip with delete icon 1`] = `
 <button
-  class="chip"
+  class="chip secondary"
 >
   Name
   <span
@@ -30,9 +30,17 @@ exports[`Should render item with delete icon 1`] = `
 </button>
 `;
 
-exports[`Should render item without delete icon in disabled state 1`] = `
+exports[`Should render chip without delete icon in disabled state 1`] = `
 <button
-  class="chip disabled"
+  class="chip secondary disabled"
+>
+  Name
+</button>
+`;
+
+exports[`Should render primary chip with children 1`] = `
+<button
+  class="chip primary"
 >
   Name
 </button>

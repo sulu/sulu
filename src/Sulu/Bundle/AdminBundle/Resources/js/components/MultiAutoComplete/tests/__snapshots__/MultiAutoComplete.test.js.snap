@@ -16,7 +16,7 @@ exports[`MultiAutoComplete should render 1`] = `
     class="items"
   >
     <button
-      class="chip"
+      class="chip secondary"
     >
       Test
       <span
@@ -27,7 +27,7 @@ exports[`MultiAutoComplete should render 1`] = `
       />
     </button>
     <button
-      class="chip"
+      class="chip secondary"
     >
       Test 2
       <span
@@ -61,12 +61,12 @@ exports[`MultiAutoComplete should render in disabled state 1`] = `
     class="items"
   >
     <button
-      class="chip disabled"
+      class="chip secondary disabled"
     >
       Test
     </button>
     <button
-      class="chip disabled"
+      class="chip secondary disabled"
     >
       Test 2
     </button>

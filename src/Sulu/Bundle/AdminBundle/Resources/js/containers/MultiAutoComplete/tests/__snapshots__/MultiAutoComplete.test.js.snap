@@ -16,12 +16,12 @@ exports[`Render in disabled state 1`] = `
     class="items"
   >
     <button
-      class="chip disabled"
+      class="chip secondary disabled"
     >
       James Bond
     </button>
     <button
-      class="chip disabled"
+      class="chip secondary disabled"
     >
       John Doe
     </button>
@@ -80,7 +80,7 @@ exports[`Render with given value 1`] = `
     class="items"
   >
     <button
-      class="chip"
+      class="chip secondary"
     >
       James Bond
       <span
@@ -91,7 +91,7 @@ exports[`Render with given value 1`] = `
       />
     </button>
     <button
-      class="chip"
+      class="chip secondary"
     >
       John Doe
       <span
