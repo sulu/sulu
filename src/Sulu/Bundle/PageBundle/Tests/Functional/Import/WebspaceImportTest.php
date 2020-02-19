@@ -207,8 +207,8 @@ class WebspaceImportTest extends SuluTestCase
         $this->assertEquals('/cmf/sulu_io/contents/child', $loadedDocuments[1]->getPath());
 
         // resource segment
-        $this->assertEquals('/parent-ru-new-shit', $loadedDocuments[0]->getResourceSegment());
-        $this->assertEquals('/child-ru-new-shit', $loadedDocuments[1]->getResourceSegment());
+        $this->assertEquals('/privet', $loadedDocuments[0]->getResourceSegment());
+        $this->assertEquals('/privet-privet-privet', $loadedDocuments[1]->getResourceSegment());
 
         // seo
         $this->assertEquals('', $loadedDocuments[0]->getExtensionsData()->toArray()['seo']['title']);
