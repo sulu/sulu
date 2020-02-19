@@ -213,7 +213,7 @@ exports[`Render the adapter with filters 1`] = `
     </div>
     <span>
       <button
-        class="chip secondary small clickable"
+        class="chip primary small clickable"
       >
         Title
         <span
@@ -226,7 +226,7 @@ exports[`Render the adapter with filters 1`] = `
     </span>
     <span>
       <button
-        class="chip secondary small clickable"
+        class="chip primary small clickable"
       >
         Created at
         <span

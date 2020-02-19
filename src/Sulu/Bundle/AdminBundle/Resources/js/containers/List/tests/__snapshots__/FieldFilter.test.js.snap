@@ -19,7 +19,7 @@ Array [
   </div>,
   <span>
     <button
-      class="chip secondary small clickable"
+      class="chip primary small clickable"
     >
       First name
       <span
@@ -32,7 +32,7 @@ Array [
   </span>,
   <span>
     <button
-      class="chip secondary small clickable"
+      class="chip primary small clickable"
     >
       Last name
       <span

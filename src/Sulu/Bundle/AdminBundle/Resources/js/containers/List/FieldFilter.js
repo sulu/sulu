@@ -107,6 +107,7 @@ class FieldFilter extends React.Component<Props> {
                                 <Chip
                                     onClick={this.handleFilterChipClick}
                                     onDelete={this.handleFilterChipDelete}
+                                    skin="primary"
                                     value={column}
                                 >
                                     {fields[column].label}
