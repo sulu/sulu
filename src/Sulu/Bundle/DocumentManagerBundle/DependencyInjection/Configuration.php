@@ -69,7 +69,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('slugifier')
                     ->defaultValue('Sulu\Bundle\DocumentManagerBundle\Slugifier\Urlizer::urlize')
-                    ->setDeprecated('The "sulu_document_manager.slugifier" is not used and deprecated since 2.1. To be removed 3.0. Use `sulu_document_manager.slugifier` instead.')
+                    ->setDeprecated('The "sulu_document_manager.slugifier" is not used and deprecated since 2.1. To be removed 3.0. Use `sulu_document_manager.slugifier` service instead.')
                 ->end()
                 ->arrayNode('mapping')
                     ->useAttributeAsKey('alias')
