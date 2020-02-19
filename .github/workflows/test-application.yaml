@@ -1,0 +1,28 @@
+name: Test application
+
+on: pull_request
+
+jobs:
+    php-cs-fixer:
+        name: Run php-cs-fixer
+        runs-on: ubuntu-18.04
+        steps:
+            - name: Checkout project
+              uses: actions/checkout@v1
+            - name: Create downloads directory
+              run: mkdir downloads
+            - name: Get downloads path
+              id: php-cs-fixer-dir
+              run: echo "::set-output name=dir::downloads"
+            - name: Get php-cs-fixer path
+              id: php-cs-fixer-path
+              run: echo "::set-output name=path::${{ steps.php-cs-fixer-dir.outputs.dir }}/php-cs-fixer.phar"
+            - name: Cache dependencies
+              uses: actions/cache@v1
+              with:
+                  path: ${{ steps.php-cs-fixer-dir.outputs.dir }}
+                  key: php-cs-fixer
+            - name: Download php-cs-fixer
+              run: curl "https://cs.symfony.com/download/php-cs-fixer-v2.phar" --output ${{ steps.php-cs-fixer-path.outputs.path }} && chmod +x ${{ steps.php-cs-fixer-path.outputs.path }}
+            - name: Run php-cs-fixer
+              run: ./${{ steps.php-cs-fixer-path.outputs.path }} fix --dry-run --diff
