@@ -378,7 +378,6 @@ test('Execute onItemActivate respectively onItemDeactivate callback when an item
 });
 
 test('Render data with pencil button and given itemActions when onItemEdit callback is passed', () => {
-    const rowEditClickSpy = jest.fn();
     const test1 = {
         data: {
             id: 2,
@@ -428,7 +427,7 @@ test('Render data with pencil button and given itemActions when onItemEdit callb
             {...listAdapterDefaultProps}
             data={data}
             itemActions={actions}
-            onItemClick={rowEditClickSpy}
+            onItemClick={jest.fn()}
             schema={schema}
         />
     );
@@ -576,7 +575,6 @@ test('Render disabled rows based on given disabledIds prop', () => {
 });
 
 test('Render data with plus button when onItemAdd callback is passed', () => {
-    const rowAddClickSpy = jest.fn();
     const test1 = {
         data: {
             id: 2,
@@ -610,7 +608,7 @@ test('Render data with plus button when onItemAdd callback is passed', () => {
         <TreeTableAdapter
             {...listAdapterDefaultProps}
             data={data}
-            onItemAdd={rowAddClickSpy}
+            onItemAdd={jest.fn()}
             schema={schema}
         />
     );
@@ -748,13 +746,12 @@ test('Click on itemAction should execute its callback', () => {
         },
     ];
 
-    const rowAddClickSpy = jest.fn();
     const treeListAdapter = shallow(
         <TreeTableAdapter
             {...listAdapterDefaultProps}
             data={data}
             itemActions={actions}
-            onItemAdd={rowAddClickSpy}
+            onItemAdd={jest.fn()}
             schema={schema}
         />
     );

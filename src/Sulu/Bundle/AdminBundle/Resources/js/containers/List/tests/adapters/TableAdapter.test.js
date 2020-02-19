@@ -335,7 +335,6 @@ test('Render data with schema not containing all fields', () => {
 });
 
 test('Render data with pencil button when onItemEdit callback is passed', () => {
-    const rowEditClickSpy = jest.fn();
     const data = [
         {
             id: 1,
@@ -370,7 +369,7 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
-            onItemClick={rowEditClickSpy}
+            onItemClick={jest.fn()}
             page={1}
             pageCount={3}
             schema={schema}
@@ -381,7 +380,6 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
 });
 
 test('Render correct button based on permissions when item permissions are provided', () => {
-    const rowEditClickSpy = jest.fn();
     const data = [
         {
             id: 1,
@@ -416,7 +414,7 @@ test('Render correct button based on permissions when item permissions are provi
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
-            onItemClick={rowEditClickSpy}
+            onItemClick={jest.fn()}
             page={1}
             pageCount={3}
             schema={schema}
@@ -476,7 +474,6 @@ test('Render disabled rows based on given disabledIds prop', () => {
 });
 
 test('Render data with pencil button and given itemActions when onItemEdit callback is passed', () => {
-    const rowEditClickSpy = jest.fn();
     const data = [
         {
             id: 1,
@@ -527,7 +524,7 @@ test('Render data with pencil button and given itemActions when onItemEdit callb
             {...listAdapterDefaultProps}
             data={data}
             itemActions={actions}
-            onItemClick={rowEditClickSpy}
+            onItemClick={jest.fn()}
             page={1}
             pageCount={3}
             schema={schema}
@@ -670,7 +667,6 @@ test('Click on pencil should execute onItemClick callback', () => {
 });
 
 test('Click on itemAction should execute its callback', () => {
-    const rowEditClickSpy = jest.fn();
     const actionClickSpy = jest.fn();
     const data = [
         {
@@ -716,7 +712,7 @@ test('Click on itemAction should execute its callback', () => {
             {...listAdapterDefaultProps}
             data={data}
             itemActions={actions}
-            onItemClick={rowEditClickSpy}
+            onItemClick={jest.fn()}
             page={1}
             pageCount={3}
             schema={schema}
