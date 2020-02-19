@@ -6,6 +6,7 @@ import ArrowMenu from '../../components/ArrowMenu';
 import Button from '../../components/Button';
 import Chip from '../../components/Chip';
 import type {Schema} from './types';
+import fieldFilterStyles from './fieldFilter.scss';
 
 type Props = {|
     fields: Schema,
@@ -72,58 +73,62 @@ class FieldFilter extends React.Component<Props> {
         const {fields} = this.props;
 
         return (
-            <Fragment>
-                <ArrowMenu
-                    anchorElement={
-                        <div>
-                            <Button
-                                icon="fa-filter"
-                                onClick={this.handleFilterButtonClick}
-                                showDropdownIcon={true}
-                                skin="icon"
-                            />
-                        </div>
-                    }
-                    onClose={this.handleFilterClose}
-                    open={this.filterOpen}
-                >
-                    <ArrowMenu.Section>
-                        {Object.keys(fields).map((fieldName) => (
-                            <ArrowMenu.Action
-                                disabled={this.filteredFields.includes(fieldName)}
-                                key={fieldName}
-                                onClick={this.handleFilterFieldClick}
-                                value={fieldName}
+            <div className={fieldFilterStyles.fieldFilter}>
+                {Object.keys(fields).length > 0 &&
+                    <Fragment>
+                        <ArrowMenu
+                            anchorElement={
+                                <div className={fieldFilterStyles.filterButton}>
+                                    <Button
+                                        icon="fa-filter"
+                                        onClick={this.handleFilterButtonClick}
+                                        showDropdownIcon={true}
+                                        skin="icon"
+                                    />
+                                </div>
+                            }
+                            onClose={this.handleFilterClose}
+                            open={this.filterOpen}
+                        >
+                            <ArrowMenu.Section>
+                                {Object.keys(fields).map((fieldName) => (
+                                    <ArrowMenu.Action
+                                        disabled={this.filteredFields.includes(fieldName)}
+                                        key={fieldName}
+                                        onClick={this.handleFilterFieldClick}
+                                        value={fieldName}
+                                    >
+                                        {fields[fieldName].label}
+                                    </ArrowMenu.Action>
+                                ))}
+                            </ArrowMenu.Section>
+                        </ArrowMenu>
+                        {this.filteredFields.map((column) => (
+                            <ArrowMenu
+                                anchorElement={
+                                    <span>
+                                        <Chip
+                                            onClick={this.handleFilterChipClick}
+                                            onDelete={this.handleFilterChipDelete}
+                                            skin="primary"
+                                            value={column}
+                                        >
+                                            {fields[column].label}
+                                        </Chip>
+                                    </span>
+                                }
+                                key={column}
+                                onClose={this.handleFilterChipClose}
+                                open={this.filterChipOpen === column}
                             >
-                                {fields[fieldName].label}
-                            </ArrowMenu.Action>
+                                <ArrowMenu.Section>
+                                    <p>{fields[column].filterType}</p>
+                                </ArrowMenu.Section>
+                            </ArrowMenu>
                         ))}
-                    </ArrowMenu.Section>
-                </ArrowMenu>
-                {this.filteredFields.map((column) => (
-                    <ArrowMenu
-                        anchorElement={
-                            <span>
-                                <Chip
-                                    onClick={this.handleFilterChipClick}
-                                    onDelete={this.handleFilterChipDelete}
-                                    skin="primary"
-                                    value={column}
-                                >
-                                    {fields[column].label}
-                                </Chip>
-                            </span>
-                        }
-                        key={column}
-                        onClose={this.handleFilterChipClose}
-                        open={this.filterChipOpen === column}
-                    >
-                        <ArrowMenu.Section>
-                            <p>{fields[column].filterType}</p>
-                        </ArrowMenu.Section>
-                    </ArrowMenu>
-                ))}
-            </Fragment>
+                    </Fragment>
+                }
+            </div>
         );
     }
 }

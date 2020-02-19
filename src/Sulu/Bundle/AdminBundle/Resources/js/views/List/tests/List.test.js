@@ -33,6 +33,9 @@ jest.mock(
         this.observableOptions = observableOptions;
         this.options = options;
         this.metadataOptions = metadataOptions;
+        this.filterOptions = {
+            get: jest.fn().mockReturnValue({}),
+        };
         this.loading = false;
         this.pageCount = 3;
         this.active = {

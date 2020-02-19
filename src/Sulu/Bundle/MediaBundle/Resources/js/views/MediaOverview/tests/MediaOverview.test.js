@@ -61,6 +61,9 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.pageCount = 3;
             this.moveSelection = jest.fn();
             this.reload = jest.fn();
+            this.filterOptions = {
+                get: jest.fn().mockReturnValue({}),
+            };
             this.active = {
                 get: jest.fn(),
             };

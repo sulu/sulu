@@ -487,6 +487,8 @@ class List extends React.Component<Props> {
 
         const {
             filterableFields,
+            loading,
+            schemaLoading,
             userSchema,
         } = store;
 
@@ -505,6 +507,9 @@ class List extends React.Component<Props> {
         );
 
         const searchable = this.props.searchable && Adapter.searchable;
+        const filterable = filterableFields && Object.keys(filterableFields).length > 0;
+
+        const {hasColumnOptions} = this.currentAdapter;
 
         if (store.forbidden) {
             return <PermissionHint />;
@@ -513,12 +518,19 @@ class List extends React.Component<Props> {
         return (
             <div className={listStyles.listContainer}>
                 {header}
-                {!store.schemaLoading && (searchable || this.currentAdapter.hasColumnOptions || adapters.length > 1) &&
+                {!schemaLoading && (searchable || adapters.length > 1 || filterable || hasColumnOptions) &&
                     <div className={toolbarClass}>
                         {searchable &&
                             <Search onSearch={this.handleSearch} value={store.searchTerm.get()} />
                         }
-                        {this.currentAdapter.hasColumnOptions &&
+                        {filterableFields && Object.keys(filterableFields).length > 0 &&
+                            <FieldFilter
+                                fields={filterableFields || {}}
+                                onChange={this.handleFilterChange}
+                                value={store.filterOptions.get()}
+                            />
+                        }
+                        {hasColumnOptions &&
                             <Fragment>
                                 <ArrowMenu
                                     anchorElement={
@@ -548,13 +560,6 @@ class List extends React.Component<Props> {
                                 />
                             </Fragment>
                         }
-                        {filterableFields && Object.keys(filterableFields).length > 0 &&
-                            <FieldFilter
-                                fields={filterableFields}
-                                onChange={this.handleFilterChange}
-                                value={store.filterOptions.get()}
-                            />
-                        }
                         <AdapterSwitch
                             adapters={adapters}
                             currentAdapter={this.currentAdapterKey}
@@ -563,7 +568,7 @@ class List extends React.Component<Props> {
                     </div>
                 }
                 <div className={listClass}>
-                    {store.loading && store.pageCount === 0
+                    {loading && store.pageCount === 0
                         ? <Loader />
                         : <Adapter
                             active={store.active.get()}
@@ -573,7 +578,7 @@ class List extends React.Component<Props> {
                             disabledIds={this.disabledIds}
                             itemActionsProvider={itemActionsProvider}
                             limit={store.limit.get()}
-                            loading={store.loading}
+                            loading={loading}
                             onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}
                             onItemActivate={this.handleItemActivate}
                             onItemAdd={onItemAdd}

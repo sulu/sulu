@@ -196,47 +196,53 @@ exports[`Render the adapter with filters 1`] = `
         value=""
       />
     </label>
-    <div>
-      <button
-        class="button icon"
-        type="button"
+    <div
+      class="fieldFilter"
+    >
+      <div
+        class="filterButton"
       >
-        <span
-          aria-label="fa-filter"
-          class="fa fa-filter buttonIcon"
-        />
-        <span
-          aria-label="su-angle-down"
-          class="su-angle-down dropdownIcon"
-        />
-      </button>
+        <button
+          class="button icon"
+          type="button"
+        >
+          <span
+            aria-label="fa-filter"
+            class="fa fa-filter buttonIcon"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
+      </div>
+      <span>
+        <button
+          class="chip primary small clickable"
+        >
+          Title
+          <span
+            aria-label="su-times"
+            class="su-times clickable icon"
+            role="button"
+            tabindex="0"
+          />
+        </button>
+      </span>
+      <span>
+        <button
+          class="chip primary small clickable"
+        >
+          Created at
+          <span
+            aria-label="su-times"
+            class="su-times clickable icon"
+            role="button"
+            tabindex="0"
+          />
+        </button>
+      </span>
     </div>
-    <span>
-      <button
-        class="chip primary small clickable"
-      >
-        Title
-        <span
-          aria-label="su-times"
-          class="su-times clickable icon"
-          role="button"
-          tabindex="0"
-        />
-      </button>
-    </span>
-    <span>
-      <button
-        class="chip primary small clickable"
-      >
-        Created at
-        <span
-          aria-label="su-times"
-          class="su-times clickable icon"
-          role="button"
-          tabindex="0"
-        />
-      </button>
-    </span>
   </div>
   <div
     class="list disabled"

@@ -40,6 +40,9 @@ jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () =>
         });
         this.observableOptions = observableOptions;
         this.pageCount = 3;
+        this.filterOptions = {
+            get: jest.fn().mockReturnValue({}),
+        };
         this.active = {
             get: jest.fn(),
         };
