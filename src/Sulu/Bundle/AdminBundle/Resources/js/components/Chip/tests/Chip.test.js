@@ -11,8 +11,12 @@ test('Should render item with delete icon', () => {
     expect(render(<Chip onDelete={jest.fn()} value={{}}>Name</Chip>)).toMatchSnapshot();
 });
 
-test('Should render item without icon in disabled state', () => {
+test('Should render item without delete icon in disabled state', () => {
     expect(render(<Chip disabled={true} onDelete={jest.fn()} value={{}}>Name</Chip>)).toMatchSnapshot();
+});
+
+test('Should render item as clickable', () => {
+    expect(render(<Chip onClick={jest.fn()} value={{}}>Name</Chip>)).toMatchSnapshot();
 });
 
 test('Should call onClick callback when the button is clicked', () => {
