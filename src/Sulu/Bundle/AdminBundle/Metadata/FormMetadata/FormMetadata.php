@@ -118,15 +118,19 @@ class FormMetadata extends AbstractMetadata
         return $this->tags;
     }
 
-    public function getTag(string $name): ?TagMetadata
+    /**
+     * @return TagMetadata[]
+     */
+    public function getTagsByName(string $name): array
     {
+        $tags = [];
         foreach ($this->getTags() as $tag) {
             if ($tag->getName() === $name) {
-                return $tag;
+                $tags[] = $tag;
             }
         }
 
-        return null;
+        return $tags;
     }
 
     public function addTag(TagMetadata $tag): void

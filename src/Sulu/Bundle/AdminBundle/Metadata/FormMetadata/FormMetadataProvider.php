@@ -58,9 +58,8 @@ class FormMetadataProvider implements MetadataProviderInterface
 
             if (array_key_exists('tags', $metadataOptions)) {
                 $tags = $metadataOptions['tags'];
-                $tagAttributes = $metadataOptions['tagAttributes'] ?? [];
-                foreach ($tags as $tagName => $tagValue) {
-                    $this->filterByTag($form, $tagName, $tagValue, $tagAttributes[$tagName] ?? 'value');
+                foreach ($tags as $tagName => $tagAttributes) {
+                    $this->filterByTag($form, $tagName, $tagAttributes ?: []);
                 }
             }
         }
@@ -68,16 +67,32 @@ class FormMetadataProvider implements MetadataProviderInterface
         return $form;
     }
 
-    private function filterByTag(TypedFormMetadata $form, string $tagName, string $tagValue, string $tagAttribute): void
+    private function filterByTag(TypedFormMetadata $form, string $tagName, array $tagAttributes): void
     {
         foreach ($form->getForms() as $formKey => $childForm) {
-            $tag = $childForm->getTag($tagName);
-            $actualTagValue = $tag ? $tag->getAttribute($tagAttribute) : '';
-
-            if ($actualTagValue !== $tagValue) {
+            if (!$this->matchFormAgainstTag($childForm, $tagName, $tagAttributes)) {
                 $form->removeForm($formKey);
             }
         }
+    }
+
+    private function matchFormAgainstTag(FormMetadata $form, string $tagName, array $tagAttributes): bool
+    {
+        $tags = $form->getTagsByName($tagName);
+        if (array_key_exists('exists', $tagAttributes)) {
+            $exists = filter_var($tagAttributes['exists'], FILTER_VALIDATE_BOOLEAN);
+            if (($exists && 0 === \count($tags)) || (!$exists && 0 < \count($tags))) {
+                return false;
+            }
+        }
+
+        foreach ($tags as $tag) {
+            if (!$tag->matchAttributes($tagAttributes)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

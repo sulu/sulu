@@ -53,25 +53,45 @@ class FormMetadataProviderTest extends KernelTestCase
 
     public function testGetMetadataTagFiltered()
     {
-        $typedForm = $this->formMetadataProvider->getMetadata('page', 'de', ['tags' => ['test' => 'test-value']]);
+        $typedForm = $this->formMetadataProvider->getMetadata(
+            'page',
+            'de',
+            ['tags' => ['test' => ['exists' => true, 'value' => 'test-value']]]
+        );
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
         $this->assertCount(1, $typedForm->getForms());
         $this->assertEquals(['default'], array_keys($typedForm->getForms()));
 
-        $typedForm = $this->formMetadataProvider->getMetadata('page', 'de', ['tags' => ['test' => 'test-value2']]);
+        $typedForm = $this->formMetadataProvider->getMetadata(
+            'page',
+            'de',
+            ['tags' => ['test' => ['exists' => true, 'value' => 'test-value2']]]
+        );
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
         $this->assertCount(0, $typedForm->getForms());
 
-        $typedForm = $this->formMetadataProvider->getMetadata('page', 'de', ['tags' => ['test2' => 'test-value2']]);
+        $typedForm = $this->formMetadataProvider->getMetadata(
+            'page',
+            'de',
+            ['tags' => ['test2' => ['exists' => true, 'value' => 'test-value2']]]
+        );
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
         $this->assertCount(0, $typedForm->getForms());
 
-        $typedForm = $this->formMetadataProvider->getMetadata('page', 'de', ['tags' => ['test2' => 'test-value2'], 'tagAttributes' => ['test2' => 'test']]);
+        $typedForm = $this->formMetadataProvider->getMetadata(
+            'page',
+            'de',
+            ['tags' => ['test2' => ['exists' => true, 'test' => 'test-value2']]]
+        );
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
         $this->assertCount(1, $typedForm->getForms());
         $this->assertEquals(['default'], array_keys($typedForm->getForms()));
 
-        $typedForm = $this->formMetadataProvider->getMetadata('page', 'de', ['tags' => ['test' => '']]);
+        $typedForm = $this->formMetadataProvider->getMetadata(
+            'page',
+            'de',
+            ['tags' => ['test' => ['exists' => false]]]
+        );
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
         $this->assertCount(1, $typedForm->getForms());
         $this->assertEquals(['overview'], array_keys($typedForm->getForms()));
