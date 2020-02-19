@@ -43,8 +43,8 @@
             <argument type="service" id="sulu_document_manager.metadata_factory.base" />
         </service>
 
-        <service id="sulu_document_manager.slugifier" class="Symfony\Cmf\Api\Slugifier\CallbackSlugifier" public="false">
-            <argument>%sulu_document_manager.slugifier%</argument>
+        <service id="sulu_document_manager.slugifier" class="Sulu\Component\DocumentManager\Slugifier\PathCleanupSlugifier" public="false">
+            <argument type="service" id="sulu.content.path_cleaner"/>
         </service>
 
         <service id="sulu_document_manager.node_name_slugifier"
