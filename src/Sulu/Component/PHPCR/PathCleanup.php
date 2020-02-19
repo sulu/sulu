@@ -17,7 +17,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 /**
  * cleans path strings.
  *
- * @internal this class is for internal use
+ * @internal You can you this class thought service `sulu.content.path_cleaner`. Do not directly instantiate it.
  */
 class PathCleanup implements PathCleanupInterface
 {
@@ -28,7 +28,9 @@ class PathCleanup implements PathCleanupInterface
      */
     protected $replacers = [];
 
-    /** @var SluggerInterface */
+    /**
+     * @var SluggerInterface
+     */
     private $slugger;
 
     /**
