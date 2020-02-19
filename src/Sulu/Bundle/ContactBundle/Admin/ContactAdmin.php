@@ -118,7 +118,7 @@ class ContactAdmin extends Admin
                 $contactListToolbarActions[] = new ToolbarAction('sulu_admin.export');
                 $contactDocumentsItemActions[] = new ListItemAction(
                     'link',
-                    ['icon' => 'fa-cloud-download', 'link_property' => 'url']
+                    ['icon' => 'su-download', 'link_property' => 'url']
                 );
             }
 
@@ -212,7 +212,7 @@ class ContactAdmin extends Admin
                 $accountListToolbarActions[] = new ToolbarAction('sulu_admin.export');
                 $accountDocumentsItemActions[] = new ListItemAction(
                     'link',
-                    ['icon' => 'fa-cloud-download', 'link_property' => 'url']
+                    ['icon' => 'su-download', 'link_property' => 'url']
                 );
             }
 
