@@ -63,7 +63,7 @@ class TagMetadata
         return $this->attributes[$name] ?? null;
     }
 
-    public function matchAttributes(array $attributes): bool
+    public function hasAttributes(array $attributes): bool
     {
         foreach ($this->attributes as $key => $value) {
             if (($attributes[$key] ?? null) !== $value) {

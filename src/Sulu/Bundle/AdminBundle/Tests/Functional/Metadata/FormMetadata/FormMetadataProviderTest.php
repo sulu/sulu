@@ -81,7 +81,7 @@ class FormMetadataProviderTest extends KernelTestCase
         $typedForm = $this->formMetadataProvider->getMetadata(
             'page',
             'de',
-            ['tags' => ['test2' => ['exists' => true, 'test' => 'test-value2']]]
+            ['tags' => ['test2' => ['test' => 'test-value2']]]
         );
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
         $this->assertCount(1, $typedForm->getForms());

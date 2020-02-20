@@ -57,8 +57,7 @@ class FormMetadataProvider implements MetadataProviderInterface
             }
 
             if (array_key_exists('tags', $metadataOptions)) {
-                $tags = $metadataOptions['tags'];
-                foreach ($tags as $tagName => $tagAttributes) {
+                foreach ($metadataOptions['tags'] as $tagName => $tagAttributes) {
                     if (!is_array($tagAttributes)) {
                         $tagAttributes = filter_var($tagAttributes, FILTER_VALIDATE_BOOLEAN);
                     }
@@ -98,7 +97,7 @@ class FormMetadataProvider implements MetadataProviderInterface
         }
 
         foreach ($tags as $tag) {
-            if (!$tag->matchAttributes($tagAttributes)) {
+            if (!$tag->hasAttributes($tagAttributes)) {
                 return false;
             }
         }
