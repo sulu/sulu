@@ -8,41 +8,37 @@ exports[`Render PageList 1`] = `
     class="listContainer"
   >
     <div
-      class="headerContainer"
+      class="toolbar listToolbar"
     >
       <div
-        class="toolbar"
+        class="buttonGroup"
       >
-        <div
-          class="buttonGroup"
+        <button
+          class="button icon active button"
+          type="button"
         >
-          <button
-            class="button icon active button"
-            type="button"
+          <span
+            class="text"
           >
             <span
-              class="text"
-            >
-              <span
-                aria-label="su-columns"
-                class="su-columns"
-              />
-            </span>
-          </button>
-          <button
-            class="button icon button"
-            type="button"
+              aria-label="su-columns"
+              class="su-columns"
+            />
+          </span>
+        </button>
+        <button
+          class="button icon button"
+          type="button"
+        >
+          <span
+            class="text"
           >
             <span
-              class="text"
-            >
-              <span
-                aria-label="su-columns"
-                class="su-columns"
-              />
-            </span>
-          </button>
-        </div>
+              aria-label="su-columns"
+              class="su-columns"
+            />
+          </span>
+        </button>
       </div>
     </div>
     <div

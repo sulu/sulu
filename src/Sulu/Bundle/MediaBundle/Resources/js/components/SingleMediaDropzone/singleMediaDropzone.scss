@@ -3,10 +3,12 @@
 $uploadIconColor: $scorpion;
 $uploadInfoTextColor: $scorpion;
 $uploadIndicatorBackgroundColor: rgba($alabaster, .8);
-$mediaContainerBreakpoint: 520px; /* $dropzoneSize + 2 * $viewPadding because calc doesn't work for media-queries */
 $imageBorderColor: $silver;
 $emptyBackgroundColor: $white;
 $emptyColor: $alto;
+
+/* $dropzoneSize + 2 * $viewPaddingHorizontal because calc doesn't work for media-queries */
+$mediaContainerBreakpoint: 520px;
 
 .media-container {
     position: relative;

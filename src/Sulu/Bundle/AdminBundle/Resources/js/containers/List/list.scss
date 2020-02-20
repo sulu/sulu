@@ -20,21 +20,11 @@ $listHeaderMarginBottom: 40px;
     }
 }
 
-.header-container {
-    display: flex;
-    flex-grow: 0;
-    margin-bottom: $listHeaderMarginBottom;
-    align-items: center;
-
-    .toolbar {
-        flex-grow: 1;
-    }
-}
-
 .toolbar {
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    margin-bottom: 20px;
 
     & > * {
         height: $listToolbarHeight;

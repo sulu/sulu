@@ -13,7 +13,6 @@ import {translate} from '../../utils/Translator';
 import ResourceStore from '../../stores/ResourceStore';
 import listToolbarActionRegistry from './registries/listToolbarActionRegistry';
 import AbstractListToolbarAction from './toolbarActions/AbstractListToolbarAction';
-import listStyles from './list.scss';
 
 const DEFAULT_USER_SETTINGS_KEY = 'list';
 const DEFAULT_LIMIT = 10;
@@ -349,7 +348,7 @@ class List extends React.Component<Props> {
             <Fragment>
                 <ListContainer
                     adapters={adapters}
-                    header={title && <h1 className={listStyles.header}>{title}</h1>}
+                    header={title && <h1>{title}</h1>}
                     itemDisabledCondition={itemDisabledCondition}
                     onItemAdd={onItemAdd || addView ? this.addItem : undefined}
                     onItemClick={onItemClick || editView ? this.handleItemClick : undefined}

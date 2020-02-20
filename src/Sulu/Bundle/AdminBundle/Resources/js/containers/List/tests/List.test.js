@@ -202,6 +202,17 @@ test('Do not render Loader instead of Adapter if no page count is given', () => 
     expect(render(<List adapters={['table']} store={listStore} />)).toMatchSnapshot();
 });
 
+test('Render toolbar with given toolbar class', () => {
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    // $FlowFixMe
+    listStore.loading = true;
+    listStore.pageCount = undefined;
+
+    const list = shallow(<List adapters={['table']} store={listStore} toolbarClassName="test-class" />);
+
+    expect(list.find('.toolbar').prop('className')).toEqual(expect.stringContaining('test-class'));
+});
+
 test('Render TableAdapter with correct values', () => {
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     mockStructureStrategyData = [

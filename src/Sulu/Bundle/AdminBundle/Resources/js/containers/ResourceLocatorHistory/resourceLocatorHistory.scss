@@ -2,5 +2,5 @@
 
 .resource-locator-history-overlay,
 .loader {
-    padding: $viewPadding;
+    padding: $viewPaddingVertical $viewPaddingHorizontal;
 }

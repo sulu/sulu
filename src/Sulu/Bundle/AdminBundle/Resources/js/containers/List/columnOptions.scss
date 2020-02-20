@@ -12,7 +12,7 @@ $optionDisabledBackgroundColor: $mercury;
 .overlay {
     display: flex;
     flex-direction: column;
-    padding: $viewPadding;
+    padding: $viewPaddingVertical $viewPaddingHorizontal;
 
     &.sorting {
         user-select: none;

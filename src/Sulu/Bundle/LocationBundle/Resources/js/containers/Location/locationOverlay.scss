@@ -2,7 +2,7 @@
 @import 'sulu-admin-bundle/containers/Application/variables.scss';
 
 .container {
-    padding: $viewPadding;
+    padding: $viewPaddingVertical $viewPaddingHorizontal;
 }
 
 .map {
