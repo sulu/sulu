@@ -42,7 +42,3 @@ export type ToolbarConfig = {
     showSuccess?: IObservableValue<boolean>,
     warnings?: Array<string>,
 };
-
-export interface ToolbarAction {
-    getToolbarItemConfig(): ?ToolbarItemConfig,
-}
