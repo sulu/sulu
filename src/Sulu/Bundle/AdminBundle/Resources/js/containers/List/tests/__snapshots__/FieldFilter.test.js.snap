@@ -21,9 +21,11 @@ exports[`Render FieldFilter with schema and value 1`] = `
       />
     </button>
   </div>
-  <span>
+  <span
+    class="chip"
+  >
     <button
-      class="chip primary small clickable"
+      class="chip primary medium clickable"
     >
       First name
       <span
@@ -34,9 +36,11 @@ exports[`Render FieldFilter with schema and value 1`] = `
       />
     </button>
   </span>
-  <span>
+  <span
+    class="chip"
+  >
     <button
-      class="chip primary small clickable"
+      class="chip primary medium clickable"
     >
       Last name
       <span

@@ -106,10 +106,11 @@ class FieldFilter extends React.Component<Props> {
                         {this.filteredFields.map((column) => (
                             <ArrowMenu
                                 anchorElement={
-                                    <span>
+                                    <span className={fieldFilterStyles.chip}>
                                         <Chip
                                             onClick={this.handleFilterChipClick}
                                             onDelete={this.handleFilterChipDelete}
+                                            size="medium"
                                             skin="primary"
                                             value={column}
                                         >
