@@ -248,6 +248,32 @@ class ListXmlLoaderTest extends TestCase
         );
     }
 
+    public function testLoadMetadataFromFileCollectionParamEmptyName()
+    {
+        $result = $this->listXmlLoader->load(__DIR__ . '/Resources/filter-type-collection-param-empty-name.xml');
+
+        $this->assertInstanceOf(ListMetadata::class, $result);
+        $this->assertEquals('filter-type-collection-param-empty-name', $result->getKey());
+
+        $propertiesMetadata = $result->getPropertiesMetadata();
+        $this->assertCount(1, $propertiesMetadata);
+
+        $this->assertSingleMetadata(
+            [
+                'name' => 'tags',
+                'translation' => 'Tags',
+                'filter-type' => 'test',
+                'filter-type-params' => [
+                    'testCollection' => [
+                        'test-value',
+                        'test',
+                    ],
+                ],
+            ],
+            $propertiesMetadata[0]
+        );
+    }
+
     public function testLoadMetadataFromFileGroupConcat()
     {
         $result = $this->listXmlLoader->load(__DIR__ . '/Resources/group-concat.xml');

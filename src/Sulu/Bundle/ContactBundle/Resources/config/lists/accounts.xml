@@ -122,8 +122,6 @@
         >
             <field property-ref="street"/>
             <field property-ref="streetNumber"/>
-
-            <filter type="text" />
         </concatenation-property>
 
         <property

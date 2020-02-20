@@ -21,8 +21,6 @@
         >
             <field-name>name</field-name>
             <entity-name>%sulu.model.role.class%</entity-name>
-
-            <filter type="text" />
         </property>
 
         <property

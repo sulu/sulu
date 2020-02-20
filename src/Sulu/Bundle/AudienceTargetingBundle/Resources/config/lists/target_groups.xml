@@ -10,8 +10,6 @@
         <property name="title" translation="sulu_admin.title" visibility="always">
             <field-name>title</field-name>
             <entity-name>%sulu.model.target_group.class%</entity-name>
-
-            <filter type="text" />
         </property>
         <property
             name="active"
