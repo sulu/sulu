@@ -5,6 +5,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: $viewPadding;
+    padding: $viewPaddingVertical $viewPaddingHorizontal;
     height: $overlayContentMaxHeight;
 }

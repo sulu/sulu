@@ -3,7 +3,7 @@
 @import '../../components/Toolbar/variables.scss';
 
 .loader {
-    margin-top: calc($toolbarHeight + $viewPadding);
+    margin-top: calc($toolbarHeight + $viewPaddingHorizontal);
 }
 
 .root {
@@ -45,7 +45,7 @@
     flex-direction: column;
     flex-grow: 1;
     overflow-y: auto;
-    padding: $viewPadding;
+    padding: $viewPaddingVertical $viewPaddingHorizontal;
 }
 
 .main {

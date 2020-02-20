@@ -107,7 +107,7 @@ $textEditorUnpublishedLinkColor: $gold;
             border-color: $textEditorBackgroundColor !important;
             line-height: 20px;
             min-height: 100px;
-            max-height: calc(100vh - $toolbarHeight - $snackbarHeight - $tabMenuHeight - $viewPadding - 8px);
+            max-height: calc(100vh - $toolbarHeight - $snackbarHeight - $tabMenuHeight - $viewPaddingVertical - 8px);
         }
 
         .ck-widget.table {

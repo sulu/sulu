@@ -2,5 +2,5 @@
 
 .overlay {
     width: 500px;
-    padding: $viewPadding;
+    padding: $viewPaddingVertical $viewPaddingHorizontal;
 }

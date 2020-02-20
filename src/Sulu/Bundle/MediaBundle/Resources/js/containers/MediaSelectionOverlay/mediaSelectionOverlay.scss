@@ -2,7 +2,7 @@
 
 .overlay {
     width: 1170px;
-    padding: $viewPadding;
+    padding: $viewPaddingVertical $viewPaddingHorizontal;
     display: flex;
 
     @media (max-width: 1280px) {
