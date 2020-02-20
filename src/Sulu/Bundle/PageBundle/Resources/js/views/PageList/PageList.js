@@ -172,6 +172,7 @@ class PageList extends React.Component<Props> {
                     searchable={false}
                     selectable={false}
                     store={this.listStore}
+                    toolbarClassName={pageListStyles.listToolbar}
                 />
                 {this.cacheClearToolbarAction.getNode()}
             </div>

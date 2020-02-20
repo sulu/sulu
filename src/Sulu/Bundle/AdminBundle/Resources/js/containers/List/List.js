@@ -50,6 +50,7 @@ type Props = {|
     searchable: boolean,
     selectable: boolean,
     store: ListStore,
+    toolbarClassName?: string,
 |};
 
 const USER_SETTING_PREFIX = 'sulu_admin.list';
@@ -476,6 +477,7 @@ class List extends React.Component<Props> {
             orderable,
             selectable,
             store,
+            toolbarClassName,
         } = this.props;
         const Adapter = this.currentAdapter;
 
@@ -484,6 +486,11 @@ class List extends React.Component<Props> {
             {
                 [listStyles.disabled]: disabled,
             }
+        );
+
+        const toolbarClass = classNames(
+            listStyles.toolbar,
+            toolbarClassName
         );
 
         const searchable = this.props.searchable && Adapter.searchable;
@@ -496,7 +503,7 @@ class List extends React.Component<Props> {
             <div className={listStyles.listContainer}>
                 {header}
                 {!store.schemaLoading && (searchable || adapters.length > 1) &&
-                    <div className={listStyles.toolbar}>
+                    <div className={toolbarClass}>
                         {searchable &&
                             <Search onSearch={this.handleSearch} value={store.searchTerm.get()} />
                         }

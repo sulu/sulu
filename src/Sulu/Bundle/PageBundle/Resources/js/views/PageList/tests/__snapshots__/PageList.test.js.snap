@@ -8,7 +8,7 @@ exports[`Render PageList 1`] = `
     class="listContainer"
   >
     <div
-      class="toolbar"
+      class="toolbar listToolbar"
     >
       <div
         class="buttonGroup"
