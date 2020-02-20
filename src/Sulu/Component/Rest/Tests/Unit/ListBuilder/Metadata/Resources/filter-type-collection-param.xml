@@ -4,10 +4,12 @@
     <properties>
         <property name="tags">
             <filter type="test">
-                <param name="testCollection" type="collection">
-                    <param name="test1" value="%test-parameter%" />
-                    <param name="test2" value="test" />
-                </param>
+                <params>
+                    <param name="testCollection" type="collection">
+                        <param name="test1" value="%test-parameter%" />
+                        <param name="test2" value="test" />
+                    </param>
+                </params>
             </filter>
         </property>
     </properties>

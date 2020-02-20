@@ -3,8 +3,10 @@
     <properties>
         <property name="tags">
             <filter type="test-input">
-                <param name="test1" value="%test-parameter%" />
-                <param name="test2" value="test" />
+                <params>
+                    <param name="test1" value="%test-parameter%" />
+                    <param name="test2" value="test" />
+                </params>
             </filter>
         </property>
     </properties>

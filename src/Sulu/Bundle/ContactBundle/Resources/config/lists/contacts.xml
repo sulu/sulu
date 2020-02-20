@@ -103,8 +103,10 @@
             <joins ref="accountContact"/>
 
             <filter type="selection">
-                <param name="displayProperty" value="name" />
-                <param name="resourceKey" value="accounts" />
+                <params>
+                    <param name="displayProperty" value="name" />
+                    <param name="resourceKey" value="accounts" />
+                </params>
             </filter>
         </identity-property>
 
@@ -232,8 +234,10 @@
             <entity-name>%sulu.model.contact.class%</entity-name>
 
             <filter type="selection">
-                <param name="displayProperty" value="title" />
-                <param name="resourceKey" value="contact_titles" />
+                <params>
+                    <param name="displayProperty" value="title" />
+                    <param name="resourceKey" value="contact_titles" />
+                </params>
             </filter>
         </identity-property>
 

@@ -74,9 +74,15 @@
 
     <xs:complexType name="filterType">
         <xs:sequence>
-            <xs:element type="paramType" name="param" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="paramsType" name="params" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
         <xs:attributeGroup ref="filterAttributeGroup"/>
+    </xs:complexType>
+
+    <xs:complexType name="paramsType">
+        <xs:sequence>
+            <xs:element type="paramType" name="param" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="paramType">

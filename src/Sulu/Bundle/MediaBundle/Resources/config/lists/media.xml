@@ -90,12 +90,14 @@
             <joins ref="type"/>
 
             <filter type="dropdown">
-                <param name="options" type="collection">
-                    <param name="audio" value="sulu_media.audio" />
-                    <param name="document" value="sulu_media.document" />
-                    <param name="image" value="sulu_media.image" />
-                    <param name="video" value="sulu_media.video" />
-                </param>
+                <params>
+                    <param name="options" type="collection">
+                        <param name="audio" value="sulu_media.audio" />
+                        <param name="document" value="sulu_media.document" />
+                        <param name="image" value="sulu_media.image" />
+                        <param name="video" value="sulu_media.video" />
+                    </param>
+                </params>
             </filter>
         </property>
 

@@ -61,8 +61,10 @@
             </field>
 
             <filter type="selection">
-                <param name="displayProperty" value="fullName" />
-                <param name="resourceKey" value="contacts" />
+                <params>
+                    <param name="displayProperty" value="fullName" />
+                    <param name="resourceKey" value="contacts" />
+                </params>
             </filter>
         </concatenation-property>
 
@@ -93,8 +95,10 @@
             </field>
 
             <filter type="selection">
-                <param name="displayProperty" value="fullName" />
-                <param name="resourceKey" value="contacts" />
+                <params>
+                    <param name="displayProperty" value="fullName" />
+                    <param name="resourceKey" value="contacts" />
+                </params>
             </filter>
         </concatenation-property>
 

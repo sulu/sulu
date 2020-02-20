@@ -128,10 +128,13 @@ class ListXmlLoader
         );
         $propertyMetadata->setFilterType(XmlUtil::getValueFromXPath('x:filter/@type', $xpath, $propertyNode));
 
-        $filterNodes = $xpath->query('x:filter', $propertyNode);
-        if (count($filterNodes) > 0) {
+        $filterParamNodes = $xpath->query('x:filter/x:params', $propertyNode);
+        if (count($filterParamNodes) > 0) {
             $propertyMetadata->setFilterTypeParameters(
-                $this->getFilterTypeParameters($xpath, $filterNodes->item(0)) // There can only be one filter node
+                $this->getFilterTypeParameters(
+                    $xpath,
+                    $filterParamNodes->item(0) // There can only be one filter node
+                )
             );
         }
 
