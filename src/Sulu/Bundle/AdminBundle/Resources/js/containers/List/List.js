@@ -16,7 +16,7 @@ import userStore from '../../stores/userStore';
 import SingleListOverlay from '../SingleListOverlay';
 import {translate} from '../../utils/Translator';
 import type {
-    ItemAction,
+    ItemActionsProvider,
     ResolveCopyArgument,
     ResolveDeleteArgument,
     ResolveMoveArgument,
@@ -41,7 +41,7 @@ type Props = {|
     disabled: boolean,
     disabledIds: Array<string | number>,
     header?: Node,
-    itemActions: Array<ItemAction>,
+    itemActionsProvider?: ItemActionsProvider,
     itemDisabledCondition?: ?string,
     movable: boolean,
     onItemAdd?: (id: ?string | number) => void,
@@ -64,7 +64,6 @@ class List extends React.Component<Props> {
         deletable: true,
         disabled: false,
         disabledIds: [],
-        itemActions: [],
         movable: true,
         orderable: true,
         searchable: true,
@@ -471,7 +470,7 @@ class List extends React.Component<Props> {
             deletable,
             disabled,
             header,
-            itemActions,
+            itemActionsProvider,
             movable,
             onItemClick,
             onItemAdd,
@@ -554,7 +553,7 @@ class List extends React.Component<Props> {
                             adapterOptions={adapterOptions ? adapterOptions[this.currentAdapterKey] : undefined}
                             data={store.data}
                             disabledIds={this.disabledIds}
-                            itemActions={itemActions}
+                            itemActionsProvider={itemActionsProvider}
                             limit={store.limit.get()}
                             loading={store.loading}
                             onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}

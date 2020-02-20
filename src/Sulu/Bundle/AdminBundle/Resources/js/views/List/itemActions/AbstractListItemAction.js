@@ -1,12 +1,12 @@
 // @flow
 import type {Node} from 'react';
-import type {ItemActionConfig, ItemAction} from '../../../containers/List/types';
+import type {ItemActionConfig} from '../../../containers/List/types';
 import ResourceStore from '../../../stores/ResourceStore';
 import Router from '../../../services/Router';
 import List from '../../../views/List/List';
 import ListStore from '../../../containers/List/stores/ListStore';
 
-export default class AbstractListItemAction implements ItemAction {
+export default class AbstractListItemAction {
     listStore: ListStore;
     list: List;
     router: Router;

@@ -407,18 +407,14 @@ test('Render data with pencil button and given itemActions when onItemEdit callb
             visibility: 'yes',
         },
     };
-    const actions = [
+    const actionsProvider = () => [
         {
-            getItemActionConfig: () => ({
-                icon: 'su-process',
-                onClick: undefined,
-            }),
+            icon: 'su-process',
+            onClick: undefined,
         },
         {
-            getItemActionConfig: () => ({
-                icon: 'su-trash',
-                onClick: undefined,
-            }),
+            icon: 'su-trash',
+            onClick: undefined,
         },
     ];
 
@@ -426,7 +422,8 @@ test('Render data with pencil button and given itemActions when onItemEdit callb
         <TreeTableAdapter
             {...listAdapterDefaultProps}
             data={data}
-            itemActions={actions}
+            /* eslint-disable-next-line react/jsx-no-bind */
+            itemActionsProvider={actionsProvider}
             onItemClick={jest.fn()}
             schema={schema}
         />
@@ -711,7 +708,8 @@ test('Click on add should execute onItemAdd callback', () => {
 });
 
 test('Click on itemAction should execute its callback', () => {
-    const test1 = {
+    const actionClickSpy = jest.fn();
+    const item1 = {
         data: {
             id: 2,
             title: 'Test1',
@@ -719,9 +717,7 @@ test('Click on itemAction should execute its callback', () => {
         children: [],
         hasChildren: false,
     };
-    const data = [
-        test1,
-    ];
+    const data = [item1];
     const schema = {
         title: {
             label: 'Title',
@@ -736,25 +732,26 @@ test('Click on itemAction should execute its callback', () => {
             visibility: 'yes',
         },
     };
-    const actionClickSpy = jest.fn();
-    const actions = [
+    const actionsProvider = jest.fn(() => [
         {
-            getItemActionConfig: () => ({
-                icon: 'su-process',
-                onClick: actionClickSpy,
-            }),
+            icon: 'su-process',
+            onClick: actionClickSpy,
         },
-    ];
+    ]);
 
     const treeListAdapter = shallow(
         <TreeTableAdapter
             {...listAdapterDefaultProps}
             data={data}
-            itemActions={actions}
+            /* eslint-disable-next-line react/jsx-no-bind */
+            itemActionsProvider={actionsProvider}
             onItemAdd={jest.fn()}
             schema={schema}
         />
     );
+
+    expect(actionsProvider).toBeCalledWith(item1);
+
     const buttons = treeListAdapter.find('Table').prop('buttons');
     expect(buttons).toHaveLength(2);
     expect(buttons[1].icon).toBe('su-process');

@@ -504,18 +504,14 @@ test('Render data with pencil button and given itemActions when onItemEdit callb
             visibility: 'yes',
         },
     };
-    const actions = [
+    const actionsProvider = () => [
         {
-            getItemActionConfig: () => ({
-                icon: 'su-process',
-                onClick: undefined,
-            }),
+            icon: 'su-process',
+            onClick: undefined,
         },
         {
-            getItemActionConfig: () => ({
-                icon: 'su-trash',
-                onClick: undefined,
-            }),
+            icon: 'su-trash',
+            onClick: undefined,
         },
     ];
 
@@ -523,7 +519,8 @@ test('Render data with pencil button and given itemActions when onItemEdit callb
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
-            itemActions={actions}
+            /* eslint-disable-next-line react/jsx-no-bind */
+            itemActionsProvider={actionsProvider}
             onItemClick={jest.fn()}
             page={1}
             pageCount={3}
@@ -668,18 +665,17 @@ test('Click on pencil should execute onItemClick callback', () => {
 
 test('Click on itemAction should execute its callback', () => {
     const actionClickSpy = jest.fn();
-    const data = [
-        {
-            id: 1,
-            title: 'Title 1',
-            description: 'Description 1',
-        },
-        {
-            id: 2,
-            title: 'Title 2',
-            description: 'Description 2',
-        },
-    ];
+    const item1 = {
+        id: 1,
+        title: 'Title 1',
+        description: 'Description 1',
+    };
+    const item2 = {
+        id: 2,
+        title: 'Title 2',
+        description: 'Description 2',
+    };
+    const data = [item1, item2];
     const schema = {
         title: {
             filterType: null,
@@ -698,26 +694,29 @@ test('Click on itemAction should execute its callback', () => {
             visibility: 'yes',
         },
     };
-    const actions = [
+    const actionsProvider = jest.fn(() => [
         {
-            getItemActionConfig: () => ({
-                icon: 'su-process',
-                onClick: actionClickSpy,
-            }),
+            icon: 'su-process',
+            onClick: actionClickSpy,
         },
-    ];
+    ]);
 
     const tableAdapter = shallow(
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
-            itemActions={actions}
+            /* eslint-disable-next-line react/jsx-no-bind */
+            itemActionsProvider={actionsProvider}
             onItemClick={jest.fn()}
             page={1}
             pageCount={3}
             schema={schema}
         />
     );
+
+    expect(actionsProvider).toBeCalledWith(item1);
+    expect(actionsProvider).toBeCalledWith(item2);
+
     const buttons = tableAdapter.find('Table').prop('buttons');
     expect(buttons).toHaveLength(2);
     expect(buttons[1].icon).toBe('su-process');

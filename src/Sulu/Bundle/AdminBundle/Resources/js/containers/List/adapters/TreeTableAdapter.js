@@ -26,7 +26,7 @@ class TreeTableAdapter extends AbstractTableAdapter {
 
     getButtons = (item: ?Object) => {
         const {
-            itemActions,
+            itemActionsProvider,
             onItemClick,
             onItemAdd,
         } = this.props;
@@ -59,8 +59,8 @@ class TreeTableAdapter extends AbstractTableAdapter {
             });
         }
 
-        if (itemActions) {
-            buttons.push(...itemActions.map((action) => action.getItemActionConfig(item)));
+        if (itemActionsProvider) {
+            buttons.push(...itemActionsProvider(item));
         }
 
         return buttons;

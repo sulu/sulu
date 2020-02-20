@@ -252,12 +252,10 @@ test('Render TableAdapter with correct values', () => {
 });
 
 test('Render TableAdapter with itemActions', () => {
-    const actions = [
+    const actionsProvider = () => [
         {
-            getItemActionConfig: () => ({
-                icon: 'su-process',
-                onClick: undefined,
-            }),
+            icon: 'su-process',
+            onClick: undefined,
         },
     ];
 
@@ -271,10 +269,11 @@ test('Render TableAdapter with itemActions', () => {
 
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
 
-    const list = shallow(<List adapters={['table']} itemActions={actions} store={listStore} />);
+    // eslint-disable-next-line react/jsx-no-bind
+    const list = shallow(<List adapters={['table']} itemActionsProvider={actionsProvider} store={listStore} />);
 
     const tableAdapter = list.find('TableAdapter');
-    expect(tableAdapter.prop('itemActions')).toEqual(actions);
+    expect(tableAdapter.prop('itemActionsProvider')).toEqual(actionsProvider);
 });
 
 test('Render the adapter in non-selectable mode', () => {

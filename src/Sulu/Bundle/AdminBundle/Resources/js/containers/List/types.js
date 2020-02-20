@@ -32,9 +32,7 @@ export type ItemActionConfig = {|
     onClick: ?(rowId: string | number, index: number) => void,
 |};
 
-export interface ItemAction {
-    getItemActionConfig(item: ?Object): ItemActionConfig,
-}
+export type ItemActionsProvider = (item: ?Object) => Array<ItemActionConfig>;
 
 export type ListAdapterProps = {|
     active: ?string | number,
@@ -42,7 +40,7 @@ export type ListAdapterProps = {|
     adapterOptions?: {[key: string]: mixed},
     data: Array<*>,
     disabledIds: Array<string | number>,
-    itemActions?: Array<ItemAction>,
+    itemActionsProvider?: ItemActionsProvider,
     limit: number,
     loading: boolean,
     onAllSelectionChange: ?(selected?: boolean) => void,
