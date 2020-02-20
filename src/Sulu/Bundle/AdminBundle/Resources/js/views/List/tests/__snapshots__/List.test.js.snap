@@ -512,50 +512,44 @@ Array [
   <div
     class="listContainer"
   >
+    <h1>
+      Snippets
+    </h1>
     <div
-      class="headerContainer"
+      class="toolbar"
     >
-      <h1
-        class="header"
+      <label
+        class="input dark left collapsed hasAppendIcon"
       >
-        Snippets
-      </h1>
-      <div
-        class="toolbar"
-      >
-        <label
-          class="input dark left collapsed hasAppendIcon"
+        <div
+          class="prependedContainer dark collapsed"
         >
-          <div
-            class="prependedContainer dark collapsed"
-          >
-            <span
-              aria-label="su-search"
-              class="su-search clickable icon dark iconClickable collapsed"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <input
-            type="text"
-            value=""
+          <span
+            aria-label="su-search"
+            class="su-search clickable icon dark iconClickable collapsed"
+            role="button"
+            tabindex="0"
           />
-        </label>
-        <div>
-          <button
-            class="button icon"
-            type="button"
-          >
-            <span
-              aria-label="su-sort"
-              class="su-sort buttonIcon"
-            />
-            <span
-              aria-label="su-angle-down"
-              class="su-angle-down dropdownIcon"
-            />
-          </button>
         </div>
+        <input
+          type="text"
+          value=""
+        />
+      </label>
+      <div>
+        <button
+          class="button icon"
+          type="button"
+        >
+          <span
+            aria-label="su-sort"
+            class="su-sort buttonIcon"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
       </div>
     </div>
     <div
@@ -819,50 +813,44 @@ Array [
   <div
     class="listContainer"
   >
+    <h1>
+      Snippets
+    </h1>
     <div
-      class="headerContainer"
+      class="toolbar"
     >
-      <h1
-        class="header"
+      <label
+        class="input dark left collapsed hasAppendIcon"
       >
-        Snippets
-      </h1>
-      <div
-        class="toolbar"
-      >
-        <label
-          class="input dark left collapsed hasAppendIcon"
+        <div
+          class="prependedContainer dark collapsed"
         >
-          <div
-            class="prependedContainer dark collapsed"
-          >
-            <span
-              aria-label="su-search"
-              class="su-search clickable icon dark iconClickable collapsed"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <input
-            type="text"
-            value=""
+          <span
+            aria-label="su-search"
+            class="su-search clickable icon dark iconClickable collapsed"
+            role="button"
+            tabindex="0"
           />
-        </label>
-        <div>
-          <button
-            class="button icon"
-            type="button"
-          >
-            <span
-              aria-label="su-sort"
-              class="su-sort buttonIcon"
-            />
-            <span
-              aria-label="su-angle-down"
-              class="su-angle-down dropdownIcon"
-            />
-          </button>
         </div>
+        <input
+          type="text"
+          value=""
+        />
+      </label>
+      <div>
+        <button
+          class="button icon"
+          type="button"
+        >
+          <span
+            aria-label="su-sort"
+            class="su-sort buttonIcon"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down dropdownIcon"
+          />
+        </button>
       </div>
     </div>
     <div
