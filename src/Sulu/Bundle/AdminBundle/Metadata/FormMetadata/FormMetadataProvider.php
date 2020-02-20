@@ -59,7 +59,11 @@ class FormMetadataProvider implements MetadataProviderInterface
             if (array_key_exists('tags', $metadataOptions)) {
                 $tags = $metadataOptions['tags'];
                 foreach ($tags as $tagName => $tagAttributes) {
-                    $this->filterByTag($form, $tagName, $tagAttributes ?: []);
+                    if (!is_array($tagAttributes)) {
+                        $tagAttributes = filter_var($tagAttributes, FILTER_VALIDATE_BOOLEAN);
+                    }
+
+                    $this->filterByTag($form, $tagName, $tagAttributes);
                 }
             }
         }
@@ -67,7 +71,10 @@ class FormMetadataProvider implements MetadataProviderInterface
         return $form;
     }
 
-    private function filterByTag(TypedFormMetadata $form, string $tagName, array $tagAttributes): void
+    /**
+     * @param array|bool $tagAttributes
+     */
+    private function filterByTag(TypedFormMetadata $form, string $tagName, $tagAttributes): void
     {
         foreach ($form->getForms() as $formKey => $childForm) {
             if (!$this->matchFormAgainstTag($childForm, $tagName, $tagAttributes)) {
@@ -76,14 +83,18 @@ class FormMetadataProvider implements MetadataProviderInterface
         }
     }
 
-    private function matchFormAgainstTag(FormMetadata $form, string $tagName, array $tagAttributes): bool
+    /**
+     * @param array|bool $tagAttributes
+     */
+    private function matchFormAgainstTag(FormMetadata $form, string $tagName, $tagAttributes): bool
     {
         $tags = $form->getTagsByName($tagName);
-        if (array_key_exists('exists', $tagAttributes)) {
-            $exists = filter_var($tagAttributes['exists'], FILTER_VALIDATE_BOOLEAN);
-            if (($exists && 0 === \count($tags)) || (!$exists && 0 < \count($tags))) {
-                return false;
-            }
+        if (is_bool($tagAttributes)) {
+            return ($tagAttributes && 0 !== \count($tags)) || (!$tagAttributes && 0 === \count($tags));
+        }
+
+        if (0 === \count($tags)) {
+            return false;
         }
 
         foreach ($tags as $tag) {
