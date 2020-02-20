@@ -44,8 +44,6 @@
         >
             <field-name>name</field-name>
             <entity-name>%sulu.model.tag.class%</entity-name>
-
-            <filter type="text" />
         </property>
 
         <concatenation-property name="changer" translation="sulu_admin.changer" visibility="no">

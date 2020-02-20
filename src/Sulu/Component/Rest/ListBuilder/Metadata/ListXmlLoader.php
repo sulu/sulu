@@ -231,7 +231,7 @@ class ListXmlLoader
     /**
      * Extracts filter type parameters from dom-node.
      *
-     * @return array
+     * @return ?array
      */
     protected function getFilterTypeParameters(\DOMXPath $xpath, \DOMNode $filterNode)
     {
@@ -249,7 +249,11 @@ class ListXmlLoader
             }
         }
 
-        return $parameters;
+        if (count($parameters) > 0) {
+            return $parameters;
+        }
+
+        return null;
     }
 
     private function getField(\DOMXPath $xpath, \DOMElement $fieldNode)

@@ -56,7 +56,7 @@ abstract class AbstractPropertyMetadata
     /**
      * @var array
      */
-    private $filterTypeParameters = [];
+    private $filterTypeParameters;
 
     public function __construct($name)
     {

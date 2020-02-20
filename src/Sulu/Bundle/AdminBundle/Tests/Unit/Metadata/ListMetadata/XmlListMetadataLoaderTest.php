@@ -112,7 +112,7 @@ class XmlListMetadataLoaderTest extends TestCase
             $contactListFields['firstName']->getVisibility()
         );
         $this->assertEquals('string', $contactListFields['firstName']->getFilterType());
-        $this->assertEquals([], $contactListFields['firstName']->getFilterTypeParameters());
+        $this->assertEquals(null, $contactListFields['firstName']->getFilterTypeParameters());
 
         $this->assertEquals('lastName', $contactListFields['lastName']->getName());
         $this->assertEquals('Last name', $contactListFields['lastName']->getLabel());
@@ -123,7 +123,7 @@ class XmlListMetadataLoaderTest extends TestCase
             $contactListFields['lastName']->getVisibility()
         );
         $this->assertEquals('integer', $contactListFields['lastName']->getFilterType());
-        $this->assertEquals([], $contactListFields['lastName']->getFilterTypeParameters());
+        $this->assertEquals(null, $contactListFields['lastName']->getFilterTypeParameters());
 
         $accountListMetadata = $this->xmlListMetadataLoader->getMetadata('account', 'en');
         $accountListFields = $accountListMetadata->getFields();

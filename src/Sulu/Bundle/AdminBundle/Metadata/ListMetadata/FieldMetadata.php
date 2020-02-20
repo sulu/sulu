@@ -44,7 +44,7 @@ class FieldMetadata
     protected $filterType;
 
     /**
-     * @var array
+     * @var ?array
      */
     protected $filterTypeParameters;
 
@@ -108,12 +108,12 @@ class FieldMetadata
         return $this->filterType;
     }
 
-    public function setFilterTypeParameters(array $filterTypeParameters): void
+    public function setFilterTypeParameters(?array $filterTypeParameters): void
     {
         $this->filterTypeParameters = $filterTypeParameters;
     }
 
-    public function getFilterTypeParameters(): array
+    public function getFilterTypeParameters(): ?array
     {
         return $this->filterTypeParameters;
     }

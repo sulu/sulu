@@ -176,8 +176,6 @@
 
                 <joins ref="defaultFileVersionMeta"/>
             </field>
-
-            <filter type="text" />
         </case-property>
 
         <property name="description" translation="sulu_admin.description" searchability="yes">

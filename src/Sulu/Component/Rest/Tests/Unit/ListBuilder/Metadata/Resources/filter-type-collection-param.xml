@@ -1,5 +1,5 @@
 <list xmlns="http://schemas.sulu.io/list-builder/list">
-    <key>filter-type-collection</key>
+    <key>filter-type-collection-param</key>
 
     <properties>
         <property name="tags">

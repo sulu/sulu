@@ -57,8 +57,6 @@
         >
             <field-name>name</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
-
-            <filter type="text" />
         </property>
 
         <property
@@ -188,8 +186,6 @@
         >
             <field-name>mainEmail</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
-
-            <filter type="text" />
         </property>
 
         <property name="mainFax" translation="sulu_contact.fax">

@@ -84,9 +84,16 @@
             <xs:element type="paramType" name="param" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="name" type="xs:string"/>
-        <xs:attribute name="type" type="xs:string"/>
+        <xs:attribute name="type" type="paramTypeType" default="string"/>
         <xs:attribute name="value" type="xs:string"/>
     </xs:complexType>
+
+    <xs:simpleType name="paramTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="collection"/>
+            <xs:enumeration value="string"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:group name="propertiesGroup">
         <xs:sequence>

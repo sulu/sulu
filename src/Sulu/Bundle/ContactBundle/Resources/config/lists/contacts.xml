@@ -52,8 +52,6 @@
         >
             <field property-ref="firstName"/>
             <field property-ref="lastName"/>
-
-            <filter type="text" />
         </concatenation-property>
 
         <property
@@ -64,8 +62,6 @@
         >
             <field-name>firstName</field-name>
             <entity-name>%sulu.model.contact.class%</entity-name>
-
-            <filter type="text" />
         </property>
 
         <property
@@ -76,8 +72,6 @@
         >
             <field-name>lastName</field-name>
             <entity-name>%sulu.model.contact.class%</entity-name>
-
-            <filter type="text" />
         </property>
 
         <property
@@ -88,8 +82,6 @@
         >
             <field-name>mainEmail</field-name>
             <entity-name>%sulu.model.contact.class%</entity-name>
-
-            <filter type="text" />
         </property>
 
         <property name="account" visibility="always" translation="sulu_contact.organization">

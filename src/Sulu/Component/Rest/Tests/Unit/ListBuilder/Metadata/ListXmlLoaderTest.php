@@ -222,12 +222,12 @@ class ListXmlLoaderTest extends TestCase
         );
     }
 
-    public function testLoadMetadataFromFileNoInputType()
+    public function testLoadMetadataFromFileCollectionParam()
     {
-        $result = $this->listXmlLoader->load(__DIR__ . '/Resources/filter-type-collection.xml');
+        $result = $this->listXmlLoader->load(__DIR__ . '/Resources/filter-type-collection-param.xml');
 
         $this->assertInstanceOf(ListMetadata::class, $result);
-        $this->assertEquals('filter-type-collection', $result->getKey());
+        $this->assertEquals('filter-type-collection-param', $result->getKey());
 
         $propertiesMetadata = $result->getPropertiesMetadata();
         $this->assertCount(1, $propertiesMetadata);
@@ -371,7 +371,7 @@ class ListXmlLoaderTest extends TestCase
                 'type' => 'string',
                 'sortable' => true,
                 'filter-type' => null,
-                'filter-type-params' => [],
+                'filter-type-params' => null,
                 'entityName' => null,
                 'joins' => [],
             ],

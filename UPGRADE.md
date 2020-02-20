@@ -39,10 +39,10 @@ a `value` (instead of using the child of the node) attribute. This was necessary
 <property name="type" visibility="never" translation="sulu_media.type">
     <filter type="dropdown">
         <param name="options" type="collection">
-            <param name="audio" value="Audio" />
-            <param name="document" value="Document" />
-            <param name="image" value="Image" />
-            <param name="video" value="Video" />
+            <param name="audio" value="sulu_media.audio" />
+            <param name="document" value="sulu_media.document" />
+            <param name="image" value="sulu_media.image" />
+            <param name="video" value="sulu_media.video" />
         </param>
     </filter>
 </property>
