@@ -41,18 +41,18 @@
 
         <property
             name="number"
-            filter-type="string"
             translation="sulu_contact.number"
         >
             <field-name>number</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
+
+            <filter type="text" />
         </property>
 
         <property
             name="name"
             visibility="always"
             searchability="yes"
-            filter-type="string"
             translation="sulu_contact.name"
         >
             <field-name>name</field-name>
@@ -61,16 +61,16 @@
 
         <property
             name="corporation"
-            filter-type="string"
             translation="sulu_contact.corporation"
         >
             <field-name>corporation</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
+
+            <filter type="text" />
         </property>
 
         <property
             name="city"
-            filter-type="string"
             visibility="always"
             translation="sulu_contact.city"
         >
@@ -78,11 +78,12 @@
             <entity-name>SuluContactBundle:Address</entity-name>
 
             <joins ref="address"/>
+
+            <filter type="text" />
         </property>
 
         <property
             name="zip"
-            filter-type="string"
             visibility="no"
             translation="sulu_contact.zip"
         >
@@ -90,20 +91,23 @@
             <entity-name>SuluContactBundle:Address</entity-name>
 
             <joins ref="address"/>
+
+            <filter type="text" />
         </property>
 
         <property
             name="street"
-            filter-type="string"
             translation="sulu_contact.street"
         >
             <field-name>street</field-name>
             <entity-name>SuluContactBundle:Address</entity-name>
 
             <joins ref="address"/>
+
+            <filter type="text" />
         </property>
 
-        <property name="streetNumber" filter-type="string" translation="sulu_contact.number">
+        <property name="streetNumber" translation="sulu_contact.number">
             <field-name>number</field-name>
             <entity-name>SuluContactBundle:Address</entity-name>
 
@@ -112,7 +116,6 @@
 
         <concatenation-property
             name="addressLine"
-            filter-type="string"
             translation="sulu_contact.address_line"
             sortable="false"
             glue=" "
@@ -123,7 +126,6 @@
 
         <property
             name="state"
-            filter-type="string"
             visibility="no"
             translation="sulu_contact.state"
         >
@@ -131,11 +133,12 @@
             <entity-name>SuluContactBundle:Address</entity-name>
 
             <joins ref="address"/>
+
+            <filter type="text" />
         </property>
 
         <property
             name="countryCode"
-            filter-type="string"
             visibility="no"
             translation="sulu_contact.country"
         >
@@ -143,11 +146,12 @@
             <entity-name>SuluContactBundle:Address</entity-name>
 
             <joins ref="address"/>
+
+            <filter type="text" />
         </property>
 
         <concatenation-property
             name="mainContact"
-            filter-type="string"
             translation="sulu_contact.main_contact"
             sortable="false"
             glue=" "
@@ -167,7 +171,7 @@
             </field>
         </concatenation-property>
 
-        <property name="mainPhone" filter-type="string" translation="sulu_contact.phone">
+        <property name="mainPhone" translation="sulu_contact.phone">
             <field-name>mainPhone</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
         </property>
@@ -176,46 +180,48 @@
             name="mainEmail"
             visibility="always"
             searchability="yes"
-            filter-type="string"
             translation="sulu_contact.email"
         >
             <field-name>mainEmail</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
         </property>
 
-        <property name="mainFax" filter-type="string" translation="sulu_contact.fax">
+        <property name="mainFax" translation="sulu_contact.fax">
             <field-name>mainFax</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
         </property>
 
-        <property name="mainUrl" filter-type="string" translation="sulu_contact.website">
+        <property name="mainUrl" translation="sulu_contact.website">
             <field-name>mainUrl</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
         </property>
 
-        <property name="created" filter-type="datetime" translation="sulu_admin.created" type="datetime">
+        <property name="created" translation="sulu_admin.created" type="datetime">
             <field-name>created</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
+
+            <filter type="datetime" />
         </property>
 
-        <property name="changed" filter-type="datetime" translation="sulu_admin.changed" type="datetime">
+        <property name="changed" translation="sulu_admin.changed" type="datetime">
             <field-name>changed</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
+
+            <filter type="datetime" />
         </property>
 
-        <property name="id" filter-type="integer" translation="sulu_admin.id" type="string">
+        <property name="id" translation="sulu_admin.id" type="string">
             <field-name>id</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
         </property>
 
-        <property name="uid" filter-type="string" translation="sulu_contact.uid" type="string">
+        <property name="uid" translation="sulu_contact.uid" type="string">
             <field-name>uid</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
         </property>
 
         <property
             name="registerNumber"
-            filter-type="string"
             translation="sulu_contact.register_number"
             type="string"
         >
@@ -225,7 +231,6 @@
 
         <property
             name="placeOfJurisdiction"
-            filter-type="string"
             translation="sulu_contact.jurisdiction"
             type="string"
         >
@@ -236,7 +241,6 @@
         <group-concat-property
             name="tagIds"
             visibility="never"
-            filter-type="tags"
             translation="sulu_tag.tags"
             glue=","
         >

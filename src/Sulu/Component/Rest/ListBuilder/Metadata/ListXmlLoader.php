@@ -126,8 +126,17 @@ class ListXmlLoader
         $propertyMetadata->setSortable(
             XmlUtil::getBooleanValueFromXPath('@sortable', $xpath, $propertyNode, true)
         );
-        $propertyMetadata->setFilterType(XmlUtil::getValueFromXPath('@filter-type', $xpath, $propertyNode));
-        $propertyMetadata->setFilterTypeParameters($this->getFilterTypeParameters($xpath, $propertyNode));
+        $propertyMetadata->setFilterType(XmlUtil::getValueFromXPath('x:filter/@type', $xpath, $propertyNode));
+
+        $filterParamNodes = $xpath->query('x:filter/x:params', $propertyNode);
+        if (count($filterParamNodes) > 0) {
+            $propertyMetadata->setFilterTypeParameters(
+                $this->getFilterTypeParameters(
+                    $xpath,
+                    $filterParamNodes->item(0) // There can only be one filter node
+                )
+            );
+        }
 
         return $propertyMetadata;
     }
@@ -225,17 +234,35 @@ class ListXmlLoader
     /**
      * Extracts filter type parameters from dom-node.
      *
-     * @return array
+     * @return ?array
      */
-    protected function getFilterTypeParameters(\DOMXPath $xpath, \DOMNode $propertyNode)
+    protected function getFilterTypeParameters(\DOMXPath $xpath, \DOMNode $filterNode)
     {
         $parameters = [];
-        foreach ($xpath->query('x:filter-type-parameters/x:parameter', $propertyNode) as $parameterNode) {
-            $key = XmlUtil::getValueFromXPath('@key', $xpath, $parameterNode);
-            $parameters[$key] = $this->parameterBag->resolveValue(trim($parameterNode->nodeValue));
+        foreach ($xpath->query('x:param', $filterNode) as $paramNode) {
+            $name = XmlUtil::getValueFromXPath('@name', $xpath, $paramNode);
+            $type = XmlUtil::getValueFromXPath('@type', $xpath, $paramNode);
+
+            if ('collection' === $type) {
+                $parameters[$name] = $this->getFilterTypeParameters($xpath, $paramNode);
+            } else {
+                $value = $this->parameterBag->resolveValue(
+                    trim(XmlUtil::getValueFromXPath('@value', $xpath, $paramNode))
+                );
+
+                if (null === $name) {
+                    $parameters[] = $value;
+                } else {
+                    $parameters[$name] = $value;
+                }
+            }
         }
 
-        return $parameters;
+        if (count($parameters) > 0) {
+            return $parameters;
+        }
+
+        return null;
     }
 
     private function getField(\DOMXPath $xpath, \DOMElement $fieldNode)

@@ -142,12 +142,18 @@ class AdminControllerTest extends SuluTestCase
         $client->request('GET', '/admin/metadata/list/contacts');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertObjectHasAttribute('id', $response);
-        $this->assertObjectHasAttribute('title', $response);
-        $this->assertObjectHasAttribute('account', $response);
-        $this->assertObjectHasAttribute('firstName', $response);
+        $this->assertArrayHasKey('id', $response);
+        $this->assertArrayHasKey('title', $response);
+        $this->assertArrayHasKey('account', $response);
+        $this->assertArrayHasKey('firstName', $response);
+
+        $this->assertEquals('selection', $response['accountId']['filterType']);
+        $this->assertEquals([
+            'displayProperty' => 'name',
+            'resourceKey' => 'accounts',
+        ], $response['accountId']['filterTypeParameters']);
     }
 
     public function testAccountsListMetadataAction()

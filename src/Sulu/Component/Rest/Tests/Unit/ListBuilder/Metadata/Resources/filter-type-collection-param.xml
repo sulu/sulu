@@ -1,11 +1,8 @@
 <list xmlns="http://schemas.sulu.io/list-builder/list">
-    <key>count</key>
+    <key>filter-type-collection-param</key>
 
     <properties>
-        <count-property name="tags">
-            <field-name>tags</field-name>
-            <entity-name>%sulu.model.contact.class%</entity-name>
-
+        <property name="tags">
             <filter type="test">
                 <params>
                     <param name="testCollection" type="collection">
@@ -14,7 +11,6 @@
                     </param>
                 </params>
             </filter>
-        </count-property>
+        </property>
     </properties>
 </list>
-

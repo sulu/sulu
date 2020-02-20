@@ -12,6 +12,8 @@ export type ColumnItem = DataItem & {
 };
 
 export type SchemaEntry = {
+    filterType: ?string,
+    filterTypeParameters: ?{[string]: mixed},
     label: string,
     sortable: boolean,
     type: string,

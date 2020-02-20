@@ -210,6 +210,8 @@ test('The user store should be called correctly when changing the schema', () =>
     return schemaPromise.then(() => {
         const newSchema = {
             id: {
+                filterType: null,
+                filterTypeParameters: null,
                 label: 'ID',
                 name: 'id',
                 sortable: true,
@@ -217,6 +219,8 @@ test('The user store should be called correctly when changing the schema', () =>
                 visibility: 'no',
             },
             changed: {
+                filterType: null,
+                filterTypeParameters: null,
                 label: 'Changed at',
                 name: 'changed',
                 sortable: true,
@@ -224,6 +228,8 @@ test('The user store should be called correctly when changing the schema', () =>
                 visibility: 'no',
             },
             title: {
+                filterType: null,
+                filterTypeParameters: null,
                 label: 'Title',
                 name: 'title',
                 sortable: true,
@@ -231,6 +237,8 @@ test('The user store should be called correctly when changing the schema', () =>
                 visibility: 'no',
             },
             name: {
+                filterType: null,
+                filterTypeParameters: null,
                 label: 'Name',
                 name: 'name',
                 sortable: true,

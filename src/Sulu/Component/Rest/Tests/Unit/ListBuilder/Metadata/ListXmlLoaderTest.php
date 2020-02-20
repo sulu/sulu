@@ -200,10 +200,10 @@ class ListXmlLoaderTest extends TestCase
 
     public function testLoadMetadataFromFileParameters()
     {
-        $result = $this->listXmlLoader->load(__DIR__ . '/Resources/filter-type-parameters.xml');
+        $result = $this->listXmlLoader->load(__DIR__ . '/Resources/filter-type-params.xml');
 
         $this->assertInstanceOf(ListMetadata::class, $result);
-        $this->assertEquals('filter-type-parameters', $result->getKey());
+        $this->assertEquals('filter-type-params', $result->getKey());
 
         $propertiesMetadata = $result->getPropertiesMetadata();
         $this->assertCount(1, $propertiesMetadata);
@@ -213,7 +213,7 @@ class ListXmlLoaderTest extends TestCase
                 'name' => 'tags',
                 'translation' => 'Tags',
                 'filter-type' => 'test-input',
-                'filter-type-parameters' => [
+                'filter-type-params' => [
                     'test1' => 'test-value',
                     'test2' => 'test',
                 ],
@@ -222,12 +222,12 @@ class ListXmlLoaderTest extends TestCase
         );
     }
 
-    public function testLoadMetadataFromFileNoInputType()
+    public function testLoadMetadataFromFileCollectionParam()
     {
-        $result = $this->listXmlLoader->load(__DIR__ . '/Resources/filter-type-no-input.xml');
+        $result = $this->listXmlLoader->load(__DIR__ . '/Resources/filter-type-collection-param.xml');
 
         $this->assertInstanceOf(ListMetadata::class, $result);
-        $this->assertEquals('filter-type-no-input', $result->getKey());
+        $this->assertEquals('filter-type-collection-param', $result->getKey());
 
         $propertiesMetadata = $result->getPropertiesMetadata();
         $this->assertCount(1, $propertiesMetadata);
@@ -236,10 +236,38 @@ class ListXmlLoaderTest extends TestCase
             [
                 'name' => 'tags',
                 'translation' => 'Tags',
-                'filter-type' => null,
-                'filter-type-parameters' => [
-                    'test1' => 'test-value',
-                    'test2' => 'test',
+                'filter-type' => 'test',
+                'filter-type-params' => [
+                    'testCollection' => [
+                        'test1' => 'test-value',
+                        'test2' => 'test',
+                    ],
+                ],
+            ],
+            $propertiesMetadata[0]
+        );
+    }
+
+    public function testLoadMetadataFromFileCollectionParamEmptyName()
+    {
+        $result = $this->listXmlLoader->load(__DIR__ . '/Resources/filter-type-collection-param-empty-name.xml');
+
+        $this->assertInstanceOf(ListMetadata::class, $result);
+        $this->assertEquals('filter-type-collection-param-empty-name', $result->getKey());
+
+        $propertiesMetadata = $result->getPropertiesMetadata();
+        $this->assertCount(1, $propertiesMetadata);
+
+        $this->assertSingleMetadata(
+            [
+                'name' => 'tags',
+                'translation' => 'Tags',
+                'filter-type' => 'test',
+                'filter-type-params' => [
+                    'testCollection' => [
+                        'test-value',
+                        'test',
+                    ],
                 ],
             ],
             $propertiesMetadata[0]
@@ -267,6 +295,13 @@ class ListXmlLoaderTest extends TestCase
                         'entityField' => 'SuluContactBundle:Contact.tags',
                     ],
                 ],
+                'filter-type' => 'test',
+                'filter-type-params' => [
+                    'testCollection' => [
+                        'test1' => 'test-value',
+                        'test2' => 'test',
+                    ],
+                ],
             ],
             $propertiesMetadata[0]
         );
@@ -287,6 +322,13 @@ class ListXmlLoaderTest extends TestCase
                 'name' => 'tags',
                 'translation' => 'Tags',
                 'entityName' => 'SuluContactBundle:Contact',
+                'filter-type' => 'test',
+                'filter-type-params' => [
+                    'testCollection' => [
+                        'test1' => 'test-value',
+                        'test2' => 'test',
+                    ],
+                ],
             ],
             $propertiesMetadata[0]
         );
@@ -307,6 +349,13 @@ class ListXmlLoaderTest extends TestCase
                 'name' => 'tags',
                 'translation' => 'Tags',
                 'entityName' => 'SuluContactBundle:Contact',
+                'filter-type' => 'test',
+                'filter-type-params' => [
+                    'testCollection' => [
+                        'test1' => 'test-value',
+                        'test2' => 'test',
+                    ],
+                ],
             ],
             $propertiesMetadata[0]
         );
@@ -348,7 +397,7 @@ class ListXmlLoaderTest extends TestCase
                 'type' => 'string',
                 'sortable' => true,
                 'filter-type' => null,
-                'filter-type-parameters' => [],
+                'filter-type-params' => null,
                 'entityName' => null,
                 'joins' => [],
             ],
@@ -358,7 +407,7 @@ class ListXmlLoaderTest extends TestCase
         $this->assertEquals($expected['name'], $metadata->getName());
         $this->assertEquals($expected['translation'], $metadata->getTranslation());
         $this->assertEquals($expected['filter-type'], $metadata->getFilterType());
-        $this->assertEquals($expected['filter-type-parameters'], $metadata->getFilterTypeParameters());
+        $this->assertEquals($expected['filter-type-params'], $metadata->getFilterTypeParameters());
         $this->assertEquals($expected['visibility'], $metadata->getVisibility());
         $this->assertEquals($expected['searchability'], $metadata->getSearchability());
 

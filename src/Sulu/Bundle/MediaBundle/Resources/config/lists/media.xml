@@ -55,11 +55,15 @@
         <property name="changed" translation="sulu_admin.changed" visibility="no" type="datetime">
             <field-name>changed</field-name>
             <entity-name>%sulu.model.media.class%</entity-name>
+
+            <filter type="datetime" />
         </property>
 
         <property name="created" translation="sulu_admin.created" visibility="no" type="datetime">
             <field-name>created</field-name>
             <entity-name>%sulu.model.media.class%</entity-name>
+
+            <filter type="datetime" />
         </property>
 
         <property name="collection" visibility="never">
@@ -76,6 +80,7 @@
             sortable="false"
             visibility="always"
         />
+
         <property name="url" visibility="never"/>
 
         <property name="type" translation="sulu_media.type" visibility="always">
@@ -83,6 +88,17 @@
             <entity-name>SuluMediaBundle:MediaType</entity-name>
 
             <joins ref="type"/>
+
+            <filter type="dropdown">
+                <params>
+                    <param name="options" type="collection">
+                        <param name="audio" value="sulu_media.audio" />
+                        <param name="document" value="sulu_media.document" />
+                        <param name="image" value="sulu_media.image" />
+                        <param name="video" value="sulu_media.video" />
+                    </param>
+                </params>
+            </filter>
         </property>
 
         <property name="version" translation="sulu_media.version">

@@ -72,19 +72,34 @@
         <xs:attributeGroup ref="fieldAttributeGroup"/>
     </xs:complexType>
 
-    <xs:complexType name="parametersType">
+    <xs:complexType name="filterType">
         <xs:sequence>
-            <xs:element type="parameterType" name="parameter" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element type="paramsType" name="params" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="filterAttributeGroup"/>
+    </xs:complexType>
+
+    <xs:complexType name="paramsType">
+        <xs:sequence>
+            <xs:element type="paramType" name="param" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="parameterType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute name="key" type="xs:string"/>
-            </xs:extension>
-        </xs:simpleContent>
+    <xs:complexType name="paramType">
+        <xs:sequence>
+            <xs:element type="paramType" name="param" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="type" type="paramTypeType" default="string"/>
+        <xs:attribute name="value" type="xs:string"/>
     </xs:complexType>
+
+    <xs:simpleType name="paramTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="collection"/>
+            <xs:enumeration value="string"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:group name="propertiesGroup">
         <xs:sequence>
@@ -110,18 +125,23 @@
     <xs:group name="propertyGroup">
         <xs:sequence>
             <xs:group ref="fieldGroup"/>
-            <xs:element name="filter-type-parameters" type="parametersType" minOccurs="0"/>
+            <xs:element name="filter" type="filterType" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:group>
 
     <xs:group name="concatenationPropertyGroup">
         <xs:sequence>
             <xs:element type="fieldType" name="field" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="filter" type="filterType" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:group>
 
     <xs:attributeGroup name="fieldAttributeGroup">
         <xs:attribute type="xs:string" name="property-ref" use="optional"/>
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="filterAttributeGroup">
+        <xs:attribute type="xs:string" name="type"/>
     </xs:attributeGroup>
 
     <xs:attributeGroup name="concatenationPropertyAttributeGroup">
@@ -138,6 +158,7 @@
     <xs:group name="casePropertyGroup">
         <xs:sequence>
             <xs:element type="fieldType" name="field" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="filter" type="filterType" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:group>
 
@@ -146,7 +167,6 @@
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute type="xs:string" name="type" default="string"/>
         <xs:attribute type="xs:boolean" name="sortable" default="true"/>
-        <xs:attribute name="filter-type" type="xs:string"/>
         <xs:attribute name="visibility" default="no">
             <xs:simpleType>
                 <xs:restriction base="xs:string">

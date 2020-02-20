@@ -3,7 +3,7 @@
     <key>target_groups_selection</key>
 
     <properties>
-        <property name="title" filter-type="string" translation="sulu_admin.title" visibility="always">
+        <property name="title" translation="sulu_admin.title" visibility="always">
             <field-name>title</field-name>
             <entity-name>%sulu.model.target_group.class%</entity-name>
         </property>

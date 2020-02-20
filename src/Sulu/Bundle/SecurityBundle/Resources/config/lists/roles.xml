@@ -31,6 +31,8 @@
         >
             <field-name>system</field-name>
             <entity-name>%sulu.model.role.class%</entity-name>
+
+            <filter type="text" />
         </property>
 
         <property
@@ -40,6 +42,8 @@
         >
             <field-name>created</field-name>
             <entity-name>%sulu.model.role.class%</entity-name>
+
+            <filter type="datetime" />
         </property>
 
         <property
@@ -50,6 +54,8 @@
         >
             <field-name>changed</field-name>
             <entity-name>%sulu.model.role.class%</entity-name>
+
+            <filter type="datetime" />
         </property>
     </properties>
 </list>
