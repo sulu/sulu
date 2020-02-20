@@ -235,31 +235,27 @@ exports[`Render the MediaCollection 1`] = `
       class="listContainer"
     >
       <div
-        class="headerContainer"
+        class="toolbar"
       >
-        <div
-          class="toolbar"
+        <label
+          class="input dark left collapsed hasAppendIcon"
         >
-          <label
-            class="input dark left collapsed hasAppendIcon"
+          <div
+            class="prependedContainer dark collapsed"
           >
-            <div
-              class="prependedContainer dark collapsed"
-            >
-              <span
-                aria-label="su-search"
-                class="su-search clickable icon dark iconClickable collapsed"
-                role="button"
-                tabindex="0"
-              />
-            </div>
-            <input
-              placeholder="sulu_admin.list_search_placeholder"
-              type="text"
-              value=""
+            <span
+              aria-label="su-search"
+              class="su-search clickable icon dark iconClickable collapsed"
+              role="button"
+              tabindex="0"
             />
-          </label>
-        </div>
+          </div>
+          <input
+            placeholder="sulu_admin.list_search_placeholder"
+            type="text"
+            value=""
+          />
+        </label>
       </div>
       <div
         class="list"
@@ -773,31 +769,27 @@ exports[`Render the MediaCollection for all media 1`] = `
       class="listContainer"
     >
       <div
-        class="headerContainer"
+        class="toolbar"
       >
-        <div
-          class="toolbar"
+        <label
+          class="input dark left collapsed hasAppendIcon"
         >
-          <label
-            class="input dark left collapsed hasAppendIcon"
+          <div
+            class="prependedContainer dark collapsed"
           >
-            <div
-              class="prependedContainer dark collapsed"
-            >
-              <span
-                aria-label="su-search"
-                class="su-search clickable icon dark iconClickable collapsed"
-                role="button"
-                tabindex="0"
-              />
-            </div>
-            <input
-              placeholder="sulu_admin.list_search_placeholder"
-              type="text"
-              value=""
+            <span
+              aria-label="su-search"
+              class="su-search clickable icon dark iconClickable collapsed"
+              role="button"
+              tabindex="0"
             />
-          </label>
-        </div>
+          </div>
+          <input
+            placeholder="sulu_admin.list_search_placeholder"
+            type="text"
+            value=""
+          />
+        </label>
       </div>
       <div
         class="list"
