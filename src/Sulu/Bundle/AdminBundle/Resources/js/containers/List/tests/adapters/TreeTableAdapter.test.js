@@ -720,12 +720,16 @@ test('Click on itemAction should execute its callback', () => {
     const data = [item1];
     const schema = {
         title: {
+            filterType: null,
+            filterTypeParameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
             visibility: 'no',
         },
         description: {
+            filterType: null,
+            filterTypeParameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',

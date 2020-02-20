@@ -11,6 +11,7 @@ import type {ViewProps} from '../../containers/ViewRenderer';
 import type {Route} from '../../services/Router/types';
 import {translate} from '../../utils/Translator';
 import ResourceStore from '../../stores/ResourceStore';
+import type {ItemActionConfig} from '../../containers/List/types';
 import listToolbarActionRegistry from './registries/listToolbarActionRegistry';
 import listItemActionRegistry from './registries/listItemActionRegistry';
 import AbstractListToolbarAction from './toolbarActions/AbstractListToolbarAction';
@@ -325,6 +326,10 @@ class List extends React.Component<Props> {
         router.navigate(editView, {id: itemId, locale: this.locale.get()});
     };
 
+    getItemActionConfigs = (item: ?Object): Array<ItemActionConfig> => {
+        return this.itemActions.map((itemAction) => itemAction.getItemActionConfig(item));
+    };
+
     requestSelectionDelete = (allowConflictDelete: boolean = true) => {
         if (!this.list) {
             throw new Error('List not created yet.');
@@ -367,7 +372,7 @@ class List extends React.Component<Props> {
                 <ListContainer
                     adapters={adapters}
                     header={title && <h1>{title}</h1>}
-                    itemActions={[...this.itemActions]}
+                    itemActionsProvider={this.getItemActionConfigs}
                     itemDisabledCondition={itemDisabledCondition}
                     onItemAdd={onItemAdd || addView ? this.addItem : undefined}
                     onItemClick={onItemClick || editView ? this.handleItemClick : undefined}
