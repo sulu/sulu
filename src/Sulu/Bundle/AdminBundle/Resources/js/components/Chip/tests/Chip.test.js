@@ -7,8 +7,8 @@ test('Should render chip with children', () => {
     expect(render(<Chip value={{}}>Name</Chip>)).toMatchSnapshot();
 });
 
-test('Should render primary chip with children', () => {
-    expect(render(<Chip skin="primary" value={{}}>Name</Chip>)).toMatchSnapshot();
+test('Should render medium, primary chip with children', () => {
+    expect(render(<Chip size="medium" skin="primary" value={{}}>Name</Chip>)).toMatchSnapshot();
 });
 
 test('Should render chip with delete icon', () => {

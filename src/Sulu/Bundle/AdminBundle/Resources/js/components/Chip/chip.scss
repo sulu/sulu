@@ -12,8 +12,6 @@ $chipDisabledBackgroundColor: $silver;
     display: inline-block;
     font-size: 12px;
     line-height: 18px;
-    height: 18px;
-    margin: 5px 10px 5px 0;
     padding: 0 10px;
     position: relative;
     white-space: nowrap;
@@ -43,4 +41,12 @@ $chipDisabledBackgroundColor: $silver;
         background-color: $chipSecondaryBackgroundColor;
         color: $chipSecondaryColor;
     }
+}
+
+.small {
+    height: 18px;
+}
+
+.medium {
+    height: 30px;
 }
