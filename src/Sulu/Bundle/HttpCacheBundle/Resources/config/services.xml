@@ -4,5 +4,10 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="sulu_http_cache.cache_lifetime.resolver" class="Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolver"/>
+        <service id="sulu_http_cache.command.clear" class="Sulu\Bundle\HttpCacheBundle\Command\ClearHttpCacheCommand">
+            <argument type="service" id="sulu_website.http_cache.clearer"/>
+
+            <tag name="console.command"/>
+        </service>
     </services>
 </container>
