@@ -397,4 +397,24 @@ class ListViewBuilderTest extends TestCase
             $view->getOption('toolbarActions')
         );
     }
+
+    public function testBuildAddItemActions()
+    {
+        $linkItemAction = new ToolbarAction('sulu_admin.link');
+        $exportItemAction = new ToolbarAction('sulu_admin.export');
+        $downloadItemAction = new ToolbarAction('sulu_admin.download');
+
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->addItemActions([$linkItemAction, $exportItemAction])
+            ->addItemActions([$downloadItemAction])
+            ->getView();
+
+        $this->assertEquals(
+            [$linkItemAction, $exportItemAction, $downloadItemAction],
+            $view->getOption('itemActions')
+        );
+    }
 }

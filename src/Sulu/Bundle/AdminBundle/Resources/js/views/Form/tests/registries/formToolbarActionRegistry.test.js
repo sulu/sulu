@@ -20,7 +20,7 @@ test('Clear all toolbar actions', () => {
     expect(Object.keys(formToolbarActionRegistry.toolbarActions)).toHaveLength(0);
 });
 
-test('Add adapter', () => {
+test('Add toolbar action', () => {
     formToolbarActionRegistry.add('test1', AbstractFormToolbarAction);
     formToolbarActionRegistry.add('test2', AbstractFormToolbarAction);
 
@@ -28,11 +28,11 @@ test('Add adapter', () => {
     expect(formToolbarActionRegistry.get('test2')).toBe(AbstractFormToolbarAction);
 });
 
-test('Add adapter with existing key should throw', () => {
+test('Add toolbar action with existing key should throw', () => {
     formToolbarActionRegistry.add('test1', AbstractFormToolbarAction);
     expect(() => formToolbarActionRegistry.add('test1', AbstractFormToolbarAction)).toThrow(/test1/);
 });
 
-test('Get adapter of not existing key', () => {
+test('Get toolbar action of not existing key', () => {
     expect(() => formToolbarActionRegistry.get('XXX')).toThrow();
 });

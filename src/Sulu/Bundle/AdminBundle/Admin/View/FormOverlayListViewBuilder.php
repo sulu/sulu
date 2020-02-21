@@ -141,6 +141,13 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
         return $this;
     }
 
+    public function addItemActions(array $itemActions): FormOverlayListViewBuilderInterface
+    {
+        $this->addItemActionsToView($this->view, $itemActions);
+
+        return $this;
+    }
+
     public function setBackView(string $backView): FormOverlayListViewBuilderInterface
     {
         $this->setBackViewToView($this->view, $backView);

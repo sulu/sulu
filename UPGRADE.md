@@ -2,6 +2,53 @@
 
 ## dev-master
 
+### Configuration of list item actions
+
+The prop of the `List` container which is used to configure the item actions was changed from `actions` to 
+`itemActionsProvider`. The new prop accepts a function that returns an array of actions for a given item.
+This allows to disable specific actions for specific items.
+
+```javascript
+// Before
+render() {
+    const actions = [
+        {
+            icon: 'su-process',
+            onClick: this.handleRestoreClick,
+        },
+    ];
+
+    return (
+        <List
+            actions={actions}
+            adapters={['table']}
+            store={this.listStore}
+        />
+    );
+}
+
+// After
+render() {
+    const itemActionsProvider = (item) => {
+        return [
+            {
+                icon: 'su-process',
+                onClick: this.handleRestoreClick,
+                disabled: item.disabled
+            },
+        ];
+    };
+
+    return (
+        <List
+            adapters={['table']}
+            itemActionsProvider={itemActionsProvider}
+            store={this.listStore}
+        />
+    );
+}
+```
+
 ### Configuration of list filters
 
 The old filter configuration on a list XML file was ignored until now. But the new list filtering functionality requires

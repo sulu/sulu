@@ -26,6 +26,7 @@ class TreeTableAdapter extends AbstractTableAdapter {
 
     getButtons = (item: ?Object) => {
         const {
+            itemActionsProvider,
             onItemClick,
             onItemAdd,
         } = this.props;
@@ -56,6 +57,10 @@ class TreeTableAdapter extends AbstractTableAdapter {
                 icon: 'su-plus-circle',
                 onClick: onItemAdd,
             });
+        }
+
+        if (itemActionsProvider) {
+            buttons.push(...itemActionsProvider(item));
         }
 
         return buttons;

@@ -42,6 +42,11 @@ interface ListViewBuilderInterface extends ViewBuilderInterface
      */
     public function addToolbarActions(array $toolbarActions): self;
 
+    /**
+     * @param ListItemAction[] $itemActions
+     */
+    public function addItemActions(array $itemActions): self;
+
     public function setDefaultLocale(string $locale): self;
 
     public function setItemDisabledCondition(string $itemDisabledCondition): self;

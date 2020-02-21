@@ -132,7 +132,7 @@ test('Open and cancel restore overlay', () => {
     );
 
     expect(pageSettingsVersions.find('Dialog').prop('open')).toEqual(false);
-    pageSettingsVersions.find('List').prop('actions')[0].onClick(3);
+    pageSettingsVersions.find('List').prop('itemActionsProvider')()[0].onClick(3);
     pageSettingsVersions.update();
     expect(pageSettingsVersions.find('Dialog').prop('open')).toEqual(true);
     pageSettingsVersions.find('Dialog').prop('onCancel')();
@@ -158,7 +158,7 @@ test('Open and confirm restore overlay', () => {
     );
 
     expect(pageSettingsVersions.find('Dialog').prop('open')).toEqual(false);
-    pageSettingsVersions.find('List').prop('actions')[0].onClick(3);
+    pageSettingsVersions.find('List').prop('itemActionsProvider')()[0].onClick(3);
     pageSettingsVersions.update();
     expect(pageSettingsVersions.find('Dialog').prop('open')).toEqual(true);
     pageSettingsVersions.find('Dialog').prop('onConfirm')();

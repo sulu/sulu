@@ -13,9 +13,11 @@ of the available options:
 | title                                | Title (or translation key) that is displayed above the actual list.           |
 | adapters                             | Array of list-adapters that are available to the user to display the list.    |
 | locales                              | Array of locales that are available in the locale chooser in the toolbar      |
-|                                      | of the view                                                                   |
-| toolbarActions                       | Array of toolbar-action registered in the `ToolbarActionRegistry` that should |
-|                                      | be shown in the toolbar of the view                                           |
+|                                      | of the view.                                                                  |
+| toolbarActions                       | Array of toolbar-actions registered in the `ListToolbarActionRegistry` that   |
+|                                      | should be shown in the toolbar of the view.                                   |
+| itemActions                          | Array of item-actions registered in the `ListItemActionRegistry` that should  |
+|                                      | be shown for each item of the list.                                           |
 | backView                             | Route to which the user will be navigated when the back button is clicked.    |
 | addView                              | Route to which the user will be navigated when the add button is clicked.     |
 | editView                             | Route to which the user will be navigated when the edit button of an item in  |

@@ -412,4 +412,25 @@ class FormOverlayListViewBuilderTest extends TestCase
             $route->getOption('toolbarActions')
         );
     }
+
+    public function testBuildAddItemActions()
+    {
+        $linkItemAction = new ToolbarAction('sulu_admin.link');
+        $exportItemAction = new ToolbarAction('sulu_admin.export');
+        $downloadItemAction = new ToolbarAction('sulu_admin.download');
+
+        $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->setFormKey('role_details')
+            ->addListAdapters(['tree'])
+            ->addItemActions([$linkItemAction, $exportItemAction])
+            ->addItemActions([$downloadItemAction])
+            ->getView();
+
+        $this->assertEquals(
+            [$linkItemAction, $exportItemAction, $downloadItemAction],
+            $route->getOption('itemActions')
+        );
+    }
 }

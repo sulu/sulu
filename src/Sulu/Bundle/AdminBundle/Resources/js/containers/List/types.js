@@ -26,19 +26,21 @@ export type Schema = {
 
 export type SortOrder = 'asc' | 'desc';
 
-export type Action = {|
+export type ItemActionConfig = {|
     disabled?: boolean,
     icon: string,
-    onClick: ?(itemId: string | number, index: number) => void,
+    onClick: ?(rowId: string | number, index: number) => void,
 |};
 
+export type ItemActionsProvider = (item: ?Object) => Array<ItemActionConfig>;
+
 export type ListAdapterProps = {|
-    actions?: Array<Action>,
     active: ?string | number,
     activeItems: ?Array<?string | number>,
     adapterOptions?: {[key: string]: mixed},
     data: Array<*>,
     disabledIds: Array<string | number>,
+    itemActionsProvider?: ItemActionsProvider,
     limit: number,
     loading: boolean,
     onAllSelectionChange: ?(selected?: boolean) => void,

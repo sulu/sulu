@@ -16,7 +16,9 @@ import {Config, resourceRouteRegistry} from './services';
 import initializer from './services/initializer';
 import ResourceTabs from './views/ResourceTabs';
 import List, {
+    listItemActionRegistry,
     listToolbarActionRegistry,
+    LinkItemAction as ListLinkItemAction,
     AddToolbarAction as ListAddToolbarAction,
     DeleteToolbarAction as ListDeleteToolbarAction,
     MoveToolbarAction as ListMoveToolbarAction,
@@ -127,6 +129,7 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
         registerBlockPreviewTransformers();
         registerListAdapters();
         registerListFieldTransformers();
+        registerListItemActions();
         registerFieldTypes(config.fieldTypeOptions);
         registerTextEditors();
         registerInternalLinkTypes(config.internalLinkTypes);
@@ -173,6 +176,10 @@ function registerListFieldTransformers() {
 
     // TODO: Remove this type when not needed anymore
     listFieldTransformerRegistry.add('title', new StringFieldTransformer());
+}
+
+function registerListItemActions() {
+    listItemActionRegistry.add('link', ListLinkItemAction);
 }
 
 function registerFieldTypes(fieldTypeOptions) {

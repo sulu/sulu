@@ -28,6 +28,9 @@ have to be cancelled.
 
 The `List` component also takes an `onRowEditClick` callback, which is executed when a row has been clicked with
 the intent of editing it. The callback gets one parameter, which is the ID of the row to edit.
+Furthermore, the `List` allows to configure additional item specific actions via the `itemActionsProvider` callback. 
+The callback is executed for each item and should return an array of item-action configuration-objects. These 
+configuration-objects are used by the adapters to render elements to execute the respective actions for the item.
 
 ### Adapters
 

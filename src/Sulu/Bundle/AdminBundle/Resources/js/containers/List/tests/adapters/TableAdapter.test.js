@@ -335,7 +335,6 @@ test('Render data with schema not containing all fields', () => {
 });
 
 test('Render data with pencil button when onItemEdit callback is passed', () => {
-    const rowEditClickSpy = jest.fn();
     const data = [
         {
             id: 1,
@@ -370,7 +369,7 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
-            onItemClick={rowEditClickSpy}
+            onItemClick={jest.fn()}
             page={1}
             pageCount={3}
             schema={schema}
@@ -381,7 +380,6 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
 });
 
 test('Render correct button based on permissions when item permissions are provided', () => {
-    const rowEditClickSpy = jest.fn();
     const data = [
         {
             id: 1,
@@ -416,7 +414,7 @@ test('Render correct button based on permissions when item permissions are provi
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
-            onItemClick={rowEditClickSpy}
+            onItemClick={jest.fn()}
             page={1}
             pageCount={3}
             schema={schema}
@@ -475,8 +473,7 @@ test('Render disabled rows based on given disabledIds prop', () => {
     expect(tableAdapter.find('Row').at(2).props().disabled).toEqual(true);
 });
 
-test('Render data with pencil button and given actions when onItemEdit callback is passed', () => {
-    const rowEditClickSpy = jest.fn();
+test('Render data with pencil button and given itemActions when onItemEdit callback is passed', () => {
     const data = [
         {
             id: 1,
@@ -507,7 +504,7 @@ test('Render data with pencil button and given actions when onItemEdit callback 
             visibility: 'yes',
         },
     };
-    const actions = [
+    const actionsProvider = () => [
         {
             icon: 'su-process',
             onClick: undefined,
@@ -521,9 +518,10 @@ test('Render data with pencil button and given actions when onItemEdit callback 
     const tableAdapter = render(
         <TableAdapter
             {...listAdapterDefaultProps}
-            actions={actions}
             data={data}
-            onItemClick={rowEditClickSpy}
+            /* eslint-disable-next-line react/jsx-no-bind */
+            itemActionsProvider={actionsProvider}
+            onItemClick={jest.fn()}
             page={1}
             pageCount={3}
             schema={schema}
@@ -665,20 +663,19 @@ test('Click on pencil should execute onItemClick callback', () => {
     expect(rowEditClickSpy).toBeCalledWith(1);
 });
 
-test('Click on action should execute its callback', () => {
-    const rowEditClickSpy = jest.fn();
-    const data = [
-        {
-            id: 1,
-            title: 'Title 1',
-            description: 'Description 1',
-        },
-        {
-            id: 2,
-            title: 'Title 2',
-            description: 'Description 2',
-        },
-    ];
+test('Click on itemAction should execute its callback', () => {
+    const actionClickSpy = jest.fn();
+    const item1 = {
+        id: 1,
+        title: 'Title 1',
+        description: 'Description 1',
+    };
+    const item2 = {
+        id: 2,
+        title: 'Title 2',
+        description: 'Description 2',
+    };
+    const data = [item1, item2];
     const schema = {
         title: {
             filterType: null,
@@ -697,30 +694,35 @@ test('Click on action should execute its callback', () => {
             visibility: 'yes',
         },
     };
-    const actions = [
+    const actionsProvider = jest.fn(() => [
         {
             icon: 'su-process',
-            onClick: jest.fn(),
+            onClick: actionClickSpy,
         },
-    ];
+    ]);
 
     const tableAdapter = shallow(
         <TableAdapter
             {...listAdapterDefaultProps}
-            actions={actions}
             data={data}
-            onItemClick={rowEditClickSpy}
+            /* eslint-disable-next-line react/jsx-no-bind */
+            itemActionsProvider={actionsProvider}
+            onItemClick={jest.fn()}
             page={1}
             pageCount={3}
             schema={schema}
         />
     );
+
+    expect(actionsProvider).toBeCalledWith(item1);
+    expect(actionsProvider).toBeCalledWith(item2);
+
     const buttons = tableAdapter.find('Table').prop('buttons');
     expect(buttons).toHaveLength(2);
     expect(buttons[1].icon).toBe('su-process');
 
     buttons[1].onClick(1);
-    expect(actions[0].onClick).toBeCalledWith(1);
+    expect(actionClickSpy).toBeCalledWith(1);
 });
 
 test('Click on checkbox should call onItemSelectionChange callback', () => {

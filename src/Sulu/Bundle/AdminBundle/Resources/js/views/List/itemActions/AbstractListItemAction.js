@@ -1,12 +1,12 @@
 // @flow
 import type {Node} from 'react';
-import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
+import type {ItemActionConfig} from '../../../containers/List/types';
 import ResourceStore from '../../../stores/ResourceStore';
 import Router from '../../../services/Router';
 import List from '../../../views/List/List';
 import ListStore from '../../../containers/List/stores/ListStore';
 
-export default class AbstractListToolbarAction {
+export default class AbstractListItemAction {
     listStore: ListStore;
     list: List;
     router: Router;
@@ -38,7 +38,8 @@ export default class AbstractListToolbarAction {
         return null;
     }
 
-    getToolbarItemConfig(): ?ToolbarItemConfig {
-        throw new Error('The getToolbarItemConfig method must be implemented by the sub class!');
+    // eslint-disable-next-line no-unused-vars
+    getItemActionConfig(item: ?Object): ItemActionConfig {
+        throw new Error('The getItemActionConfig method must be implemented by the sub class!');
     }
 }

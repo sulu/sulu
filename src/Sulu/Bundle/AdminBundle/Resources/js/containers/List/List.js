@@ -16,7 +16,7 @@ import userStore from '../../stores/userStore';
 import SingleListOverlay from '../SingleListOverlay';
 import {translate} from '../../utils/Translator';
 import type {
-    Action,
+    ItemActionsProvider,
     ResolveCopyArgument,
     ResolveDeleteArgument,
     ResolveMoveArgument,
@@ -33,7 +33,6 @@ import listStyles from './list.scss';
 import ColumnOptionsOverlay from './ColumnOptionsOverlay';
 
 type Props = {|
-    actions?: Array<Action>,
     adapterOptions?: {[adapterKey: string]: {[key: string]: mixed}},
     adapters: Array<string>,
     allowActivateForDisabledItems: boolean,
@@ -42,6 +41,7 @@ type Props = {|
     disabled: boolean,
     disabledIds: Array<string | number>,
     header?: Node,
+    itemActionsProvider?: ItemActionsProvider,
     itemDisabledCondition?: ?string,
     movable: boolean,
     onItemAdd?: (id: ?string | number) => void,
@@ -464,13 +464,13 @@ class List extends React.Component<Props> {
 
     render() {
         const {
-            actions,
             adapterOptions,
             adapters,
             copyable,
             deletable,
             disabled,
             header,
+            itemActionsProvider,
             movable,
             onItemClick,
             onItemAdd,
@@ -548,12 +548,12 @@ class List extends React.Component<Props> {
                     {store.loading && store.pageCount === 0
                         ? <Loader />
                         : <Adapter
-                            actions={actions}
                             active={store.active.get()}
                             activeItems={store.activeItems}
                             adapterOptions={adapterOptions ? adapterOptions[this.currentAdapterKey] : undefined}
                             data={store.data}
                             disabledIds={this.disabledIds}
+                            itemActionsProvider={itemActionsProvider}
                             limit={store.limit.get()}
                             loading={store.loading}
                             onAllSelectionChange={selectable ? this.handleAllSelectionChange : undefined}

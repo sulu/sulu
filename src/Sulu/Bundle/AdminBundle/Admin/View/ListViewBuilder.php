@@ -108,6 +108,13 @@ class ListViewBuilder implements ListViewBuilderInterface
         return $this;
     }
 
+    public function addItemActions(array $itemActions): ListViewBuilderInterface
+    {
+        $this->addItemActionsToView($this->view, $itemActions);
+
+        return $this;
+    }
+
     public function setAddView(string $addView): ListViewBuilderInterface
     {
         $this->setAddViewToView($this->view, $addView);
