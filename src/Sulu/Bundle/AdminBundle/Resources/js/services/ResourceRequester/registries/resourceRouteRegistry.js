@@ -7,14 +7,24 @@ function transformParameters(parameters) {
     return Object.keys(parameters)
         .filter((parameterKey) => parameters[parameterKey] !== undefined)
         .reduce((transformedParameters, parameterKey) => {
-            const parameterValue = parameters[parameterKey];
+            const value = parameters[parameterKey];
 
-            transformedParameters[parameterKey] = Array.isArray(parameterValue) || isObservableArray(parameterValue)
-                ? parameterValue.join(',')
-                : toJS(parameterValue);
+            transformedParameters[parameterKey] = Array.isArray(value) || isObservableArray(value)
+                ? value.join(',')
+                : value instanceof Date
+                    ? transformDate(value)
+                    : value instanceof Object ? transformParameters(value) : toJS(value);
 
             return transformedParameters;
         }, {});
+}
+
+function transformDate(value: Date) {
+    const year = value.getFullYear().toString();
+    const month = (value.getMonth() + 1).toString();
+    const date = value.getDate().toString();
+
+    return year + '-' + (month[1] ? month : '0' + month) + '-' + (date[1] ? date : '0' + date);
 }
 
 class ResourceRouteRegistry {
