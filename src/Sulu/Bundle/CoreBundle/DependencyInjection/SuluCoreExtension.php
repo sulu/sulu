@@ -102,9 +102,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                     'serializer' => [
                         'serialize_null' => true,
                     ],
-                    'service' => [
-                        'templating' => 'twig',
-                    ],
                     'view' => [
                         'formats' => [
                             'json' => true,
