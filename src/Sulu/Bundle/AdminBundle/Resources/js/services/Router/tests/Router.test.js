@@ -123,6 +123,96 @@ test('Navigate to route with search parameters using state', () => {
     expect(history.location.search).toBe('?page=1&sort=title');
 });
 
+test('Navigate to route with object search parameters using state', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            type: 'form',
+            path: '/pages/:uuid',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+    });
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+
+    router.navigate(
+        'page',
+        {uuid: 'some-uuid', page: 1, filter: {firstName: {eq: 'Max'}, lastName: {eq: 'Mustermann'}}}
+    );
+    expect(isObservable(router.route)).toBe(true);
+    expect(router.route.type).toBe('form');
+    expect(router.route.options.type).toBe('page');
+    expect(router.attributes.uuid).toBe('some-uuid');
+    expect(router.attributes.page).toBe(1);
+    expect(router.attributes.filter).toEqual({firstName: {eq: 'Max'}, lastName: {eq: 'Mustermann'}});
+    expect(history.location.pathname).toBe('/pages/some-uuid');
+    expect(history.location.search).toBe('?page=1&filter.firstName.eq=Max&filter.lastName.eq=Mustermann');
+});
+
+test('Navigate to route with array search parameters using state', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            type: 'form',
+            path: '/pages/:uuid',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+    });
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+
+    router.navigate(
+        'page',
+        {uuid: 'some-uuid', page: 1, ids: [1, 2, 3]}
+    );
+    expect(isObservable(router.route)).toBe(true);
+    expect(router.route.type).toBe('form');
+    expect(router.route.options.type).toBe('page');
+    expect(router.attributes.uuid).toBe('some-uuid');
+    expect(router.attributes.page).toBe(1);
+    expect(router.attributes.ids).toEqual([1, 2, 3]);
+    expect(history.location.pathname).toBe('/pages/some-uuid');
+    expect(history.location.search).toBe('?page=1&ids%5B0%5D=1&ids%5B1%5D=2&ids%5B2%5D=3');
+});
+
+test('Navigate to route with array nested in object search parameters using state', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            type: 'form',
+            path: '/pages/:uuid',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+    });
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+
+    router.navigate(
+        'page',
+        {uuid: 'some-uuid', page: 1, filter: {ids: [1, 2, 3]}}
+    );
+    expect(isObservable(router.route)).toBe(true);
+    expect(router.route.type).toBe('form');
+    expect(router.route.options.type).toBe('page');
+    expect(router.attributes.uuid).toBe('some-uuid');
+    expect(router.attributes.page).toBe(1);
+    expect(router.attributes.filter).toEqual({ids: [1, 2, 3]});
+    expect(history.location.pathname).toBe('/pages/some-uuid');
+    expect(history.location.search).toBe('?page=1&filter.ids%5B0%5D=1&filter.ids%5B1%5D=2&filter.ids%5B2%5D=3');
+});
+
 test('Navigate to route without parameters using state', () => {
     routeRegistry.getAll.mockReturnValue({
         page: {

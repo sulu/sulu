@@ -7,6 +7,76 @@ import pathToRegexp, {compile} from 'path-to-regexp';
 import type {AttributeMap, Route, UpdateAttributesHook, UpdateRouteHook, UpdateRouteMethod} from './types';
 import routeRegistry from './registries/routeRegistry';
 
+const OBJECT_DELIMITER = '.';
+
+function tryParse(value: string) {
+    if (value === 'true') {
+        return true;
+    }
+
+    if (value === 'false') {
+        return false;
+    }
+
+    if (value === 'undefined') {
+        return undefined;
+    }
+
+    if (isNaN(value)) {
+        return value;
+    }
+
+    return parseFloat(value);
+}
+
+function addValueToSearchParameters(searchParameters: URLSearchParams, value: Object, path: string) {
+    if (Array.isArray(value)) {
+        addArrayToSearchParameters(searchParameters, value, path);
+    } else if (typeof value === 'object') {
+        addObjectToSearchParameters(searchParameters, value, path);
+    } else {
+        searchParameters.set(path, value);
+    }
+}
+
+function addObjectToSearchParameters(searchParameters: URLSearchParams, value: Object, path: string) {
+    for (const key in value) {
+        const childPath = path + OBJECT_DELIMITER + key;
+        if (typeof value[key] === 'object') {
+            addValueToSearchParameters(searchParameters, value[key], childPath);
+        } else {
+            searchParameters.set(childPath, value[key]);
+        }
+    }
+}
+
+function addArrayToSearchParameters(searchParameters: URLSearchParams, values: Array<*>, path: string) {
+    values.forEach((value, index) => {
+        searchParameters.append(path + '[' + index + ']', value);
+    });
+}
+
+function addAttributesFromSearchParameters(attributes: Object, value: string, key: string) {
+    if (key.includes(OBJECT_DELIMITER)) {
+        const keyParts = key.split(OBJECT_DELIMITER);
+        if (!attributes[keyParts[0]]) {
+            attributes[keyParts[0]] = {};
+        }
+
+        addAttributesFromSearchParameters(attributes[keyParts[0]], value, keyParts.slice(1).join(OBJECT_DELIMITER));
+    } else if (key.includes('[') && key.includes(']')) {
+        const arrayKey = key.slice(0, key.indexOf('['));
+
+        if (!attributes[arrayKey]) {
+            attributes[arrayKey] = [];
+        }
+
+        attributes[arrayKey].push(tryParse(value));
+    } else {
+        attributes[key] = tryParse(value);
+    }
+}
+
 export default class Router {
     history: Object;
     @observable route: Route;
@@ -82,7 +152,11 @@ export default class Router {
         this.updateAttributesHooks.push(hook);
     }
 
-    @action bind(key: string, value: IObservableValue<*>, defaultValue: ?string | number | boolean = undefined) {
+    @action bind(
+        key: string,
+        value: IObservableValue<*>,
+        defaultValue: ?string | number | boolean | Object = undefined
+    ) {
         if (key in this.attributes && value.get() !== this.attributes[key]) {
             // when the bound parameter is bound set the state of the passed observable to the current value once
             // required because otherwise the parameter will be overridden on the initial start of the application
@@ -123,12 +197,12 @@ export default class Router {
 
             const attributes = {};
             for (let i = 1; i < match.length; i++) {
-                attributes[names[i - 1].name] = Router.tryParse(match[i]);
+                attributes[names[i - 1].name] = tryParse(match[i]);
             }
 
             const search = new URLSearchParams(queryString);
             search.forEach((value, key) => {
-                attributes[key] = Router.tryParse(value);
+                addAttributesFromSearchParameters(attributes, value, key);
             });
 
             this.handleNavigation(name, attributes, this.navigate);
@@ -139,7 +213,7 @@ export default class Router {
         const attributes = {};
         const search = new URLSearchParams(queryString);
         search.forEach((value, key) => {
-            attributes[key] = Router.tryParse(value);
+            attributes[key] = tryParse(value);
         });
 
         this.attributes = attributes;
@@ -238,11 +312,12 @@ export default class Router {
         const url = compile(this.route.path)(attributes);
         const searchParameters = new URLSearchParams();
         Object.keys(attributes).forEach((key) => {
-            const value = attributes[key];
+            const value = toJS(attributes[key]);
             if (keyNames.includes(key) || value == this.bindingDefaults.get(key)) {
                 return;
             }
-            searchParameters.set(key, value);
+
+            addValueToSearchParameters(searchParameters, value, key);
         });
 
         const queryString = searchParameters.toString();
@@ -270,21 +345,5 @@ export default class Router {
             && this.route.name === route.name
             && equal(this.attributes, attributes)
         );
-    }
-
-    static tryParse(value: string) {
-        if (value === 'true') {
-            return true;
-        }
-
-        if (value === 'false') {
-            return false;
-        }
-
-        if (isNaN(value)) {
-            return value;
-        }
-
-        return parseFloat(value);
     }
 }
