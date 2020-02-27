@@ -18,6 +18,7 @@
 
     <tag name="test" value="test-value"/>
     <tag name="test2" test="test-value2"/>
+    <tag name="test3" value="test-value"/>
 
     <properties>
         <property name="title" type="text_line" mandatory="true">

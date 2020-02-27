@@ -65,8 +65,8 @@ class TagMetadata
 
     public function hasAttributes(array $attributes): bool
     {
-        foreach ($this->attributes as $key => $value) {
-            if (($attributes[$key] ?? null) !== $value) {
+        foreach ($attributes as $key => $value) {
+            if (!array_key_exists($key, $this->attributes) || $this->attributes[$key] !== $value) {
                 return false;
             }
         }
