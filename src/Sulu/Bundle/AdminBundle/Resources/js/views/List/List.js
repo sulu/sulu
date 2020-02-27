@@ -147,6 +147,7 @@ class List extends React.Component<Props> {
         router.bind('sortOrder', this.listStore.sortOrder);
         router.bind('search', this.listStore.searchTerm);
         router.bind('limit', this.listStore.limit, DEFAULT_LIMIT);
+        router.bind('filter', this.listStore.filterOptions, {});
     }
 
     buildMetadataOptions(

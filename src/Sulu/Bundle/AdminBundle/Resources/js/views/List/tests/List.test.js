@@ -752,6 +752,7 @@ test('Should destroy the store on unmount', () => {
     expect(router.bind).toBeCalledWith('sortColumn', listStore.sortColumn);
     expect(router.bind).toBeCalledWith('sortOrder', listStore.sortOrder);
     expect(router.bind).toBeCalledWith('limit', listStore.limit, 10);
+    expect(router.bind).toBeCalledWith('filter', listStore.filterOptions, {});
 
     list.unmount();
 
