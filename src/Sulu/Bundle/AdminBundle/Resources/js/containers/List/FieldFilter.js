@@ -4,7 +4,8 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import ArrowMenu from '../../components/ArrowMenu';
 import Button from '../../components/Button';
-import Chip from '../../components/Chip';
+import AbstractFieldFilterTypes from './fieldFilterTypes/AbstractFieldFilterType';
+import FieldFilterItem from './FieldFilterItem';
 import type {Schema} from './types';
 import fieldFilterStyles from './fieldFilter.scss';
 
@@ -16,13 +17,25 @@ type Props = {|
 
 @observer
 class FieldFilter extends React.Component<Props> {
+    @observable fieldFilterTypes: {[column: string]: AbstractFieldFilterTypes<*>} = {};
     @observable filterOpen: boolean = false;
     @observable filterChipOpen: ?string = undefined;
+    @observable value: {[string]: mixed} = {};
+
+    @action componentDidMount() {
+        const {value} = this.props;
+        this.value = value;
+    }
+
+    @action componentDidUpdate(prevProps: Props) {
+        const {value} = this.props;
+        if (prevProps.value !== value) {
+            this.value = value;
+        }
+    }
 
     @computed get filteredFields(): Array<string> {
-        const {value} = this.props;
-
-        return Object.keys(value);
+        return Object.keys(this.value);
     }
 
     @action handleFilterButtonClick = () => {
@@ -33,29 +46,36 @@ class FieldFilter extends React.Component<Props> {
         this.filterOpen = false;
     };
 
-    @action openFilterChip = (column: string) => {
+    @action openFilterItem = (column: string) => {
         this.filterChipOpen = column;
     };
 
-    @action closeFilterChip = () => {
+    @action closeFilterItem = () => {
         this.filterChipOpen = undefined;
     };
 
     handleFilterFieldClick = (column: string) => {
         const {onChange, value} = this.props;
+
         onChange({...value, [column]: undefined});
-        this.openFilterChip(column);
+        this.openFilterItem(column);
     };
 
-    handleFilterChipClick = (column: string) => {
-        this.openFilterChip(column);
+    handleFilterItemClick = (column: string) => {
+        this.openFilterItem(column);
     };
 
-    handleFilterChipClose = () => {
-        this.closeFilterChip();
+    handleFilterItemClose = () => {
+        this.closeFilterItem();
     };
 
-    @action handleFilterChipDelete = (column: string) => {
+    handleFilterItemChange = (column: string, columnValue: mixed) => {
+        const {onChange, value} = this.props;
+        onChange({...value, [column]: columnValue});
+        this.closeFilterItem();
+    };
+
+    @action handleFilterItemDelete = (column: string) => {
         const {onChange, value} = this.props;
 
         onChange(
@@ -103,32 +123,23 @@ class FieldFilter extends React.Component<Props> {
                                 ))}
                             </ArrowMenu.Section>
                         </ArrowMenu>
-                        {this.filteredFields.map((column) => (
-                            <ArrowMenu
-                                anchorElement={
-                                    <span className={fieldFilterStyles.chip}>
-                                        <Chip
-                                            onClick={this.handleFilterChipClick}
-                                            onDelete={this.handleFilterChipDelete}
-                                            size="medium"
-                                            skin="primary"
-                                            value={column}
-                                        >
-                                            {fields[column].label}
-                                        </Chip>
-                                    </span>
-                                }
-                                key={column}
-                                onClose={this.handleFilterChipClose}
-                                open={this.filterChipOpen === column}
-                            >
-                                <ArrowMenu.Section>
-                                    <p>{fields[column].filterType}</p>
-                                </ArrowMenu.Section>
-                            </ArrowMenu>
-                        ))}
                     </Fragment>
                 }
+                {this.filteredFields.map((column) => (
+                    <FieldFilterItem
+                        column={column}
+                        filterType={fields[column].filterType}
+                        filterTypeParameters={fields[column].filterTypeParameters}
+                        key={column}
+                        label={fields[column].label}
+                        onChange={this.handleFilterItemChange}
+                        onClick={this.handleFilterItemClick}
+                        onClose={this.handleFilterItemClose}
+                        onDelete={this.handleFilterItemDelete}
+                        open={this.filterChipOpen === column}
+                        value={this.value[column]}
+                    />
+                ))}
             </div>
         );
     }

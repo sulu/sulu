@@ -29,17 +29,23 @@ import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
 import {InternalLinkTypeOverlay, internalLinkTypeRegistry} from './containers/CKEditor5';
 import {
     ArrayFieldTransformer,
+    BooleanFieldFilterType,
     BoolFieldTransformer,
     BytesFieldTransformer,
     ColumnListAdapter,
     listAdapterRegistry,
     listFieldTransformerRegistry,
+    listFieldFilterTypeRegistry,
     DateFieldTransformer,
+    DateTimeFieldFilterType,
     DateTimeFieldTransformer,
     FolderAdapter,
+    NumberFieldFilterType,
     NumberFieldTransformer,
+    SelectionFieldFilterType,
     StringFieldTransformer,
     TableAdapter,
+    TextFieldFilterType,
     ThumbnailFieldTransformer,
     TimeFieldTransformer,
     TreeTableAdapter,
@@ -128,6 +134,7 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
     if (!initialized) {
         registerBlockPreviewTransformers();
         registerListAdapters();
+        registerListFieldFilterTypes();
         registerListFieldTransformers();
         registerListItemActions();
         registerFieldTypes(config.fieldTypeOptions);
@@ -161,6 +168,14 @@ function registerListAdapters() {
     listAdapterRegistry.add('table_light', TableAdapter, {skin: 'light'});
     listAdapterRegistry.add('tree_table', TreeTableAdapter);
     listAdapterRegistry.add('tree_table_slim', TreeTableAdapter, {showHeader: false});
+}
+
+function registerListFieldFilterTypes() {
+    listFieldFilterTypeRegistry.add('boolean', BooleanFieldFilterType);
+    listFieldFilterTypeRegistry.add('datetime', DateTimeFieldFilterType);
+    listFieldFilterTypeRegistry.add('number', NumberFieldFilterType);
+    listFieldFilterTypeRegistry.add('selection', SelectionFieldFilterType);
+    listFieldFilterTypeRegistry.add('text', TextFieldFilterType);
 }
 
 function registerListFieldTransformers() {

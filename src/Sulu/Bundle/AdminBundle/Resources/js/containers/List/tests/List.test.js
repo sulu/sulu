@@ -8,6 +8,7 @@ import SingleListOverlay from '../../SingleListOverlay';
 import List from '../List';
 import ListStore from '../stores/ListStore';
 import listAdapterRegistry from '../registries/listAdapterRegistry';
+import listFieldFilterTypeRegistry from '../registries/listFieldFilterTypeRegistry';
 import listFieldTransformerRegistry from '../registries/listFieldTransformerRegistry';
 import AbstractAdapter from '../adapters/AbstractAdapter';
 import TableAdapter from '../adapters/TableAdapter';
@@ -115,6 +116,10 @@ jest.mock('../registries/listAdapterRegistry', () => ({
     get: jest.fn(),
     getOptions: jest.fn().mockReturnValue({}),
     has: jest.fn(),
+}));
+
+jest.mock('../registries/listFieldFilterTypeRegistry', () => ({
+    get: jest.fn(),
 }));
 
 jest.mock('../registries/listFieldTransformerRegistry', () => ({
@@ -398,9 +403,11 @@ test('Render the adapter with filters', () => {
     // $FlowFixMe
     listStore.filterableFields = {
         title: {
+            filterType: 'text',
             label: 'Title',
         },
         created: {
+            filterType: 'datetime',
             label: 'Created at',
         },
         changed: {
@@ -408,13 +415,25 @@ test('Render the adapter with filters', () => {
         },
     };
 
+    listFieldFilterTypeRegistry.get.mockImplementation((key) => {
+        switch (key) {
+            case 'datetime':
+            case 'text':
+                return class {
+                    getFormNode = jest.fn();
+                    getValueNode = jest.fn();
+                    setValue = jest.fn();
+                };
+        }
+    });
+
     listStore.filterOptions.get.mockReturnValue({
         title: undefined,
         created: undefined,
     });
 
     expect(
-        render(<List adapters={['test']} disabled={true} header={<h1>Title</h1>} store={listStore} />)
+        mount(<List adapters={['test']} disabled={true} header={<h1>Title</h1>} store={listStore} />).render()
     ).toMatchSnapshot();
 });
 

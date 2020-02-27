@@ -1,0 +1,207 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render with value of "{ eq: 6 }" 1`] = `
+<div
+  class="numberFieldFilterType"
+>
+  <div
+    class="select"
+  >
+    <button
+      class="displayValue default"
+      type="button"
+    >
+      <div
+        aria-label="="
+        class="croppedText"
+        title="="
+      >
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          =
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span />
+        </div>
+        <div
+          class="whole"
+        >
+          =
+        </div>
+      </div>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down toggle"
+      />
+    </button>
+  </div>
+  <label
+    class="input default left"
+  >
+    <input
+      type="number"
+      value="6"
+    />
+  </label>
+</div>
+`;
+
+exports[`Render with value of "{ gt: 7 }" 1`] = `
+<div
+  class="numberFieldFilterType"
+>
+  <div
+    class="select"
+  >
+    <button
+      class="displayValue default"
+      type="button"
+    >
+      <div
+        aria-label=">"
+        class="croppedText"
+        title=">"
+      >
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          &gt;
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span />
+        </div>
+        <div
+          class="whole"
+        >
+          &gt;
+        </div>
+      </div>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down toggle"
+      />
+    </button>
+  </div>
+  <label
+    class="input default left"
+  >
+    <input
+      type="number"
+      value="7"
+    />
+  </label>
+</div>
+`;
+
+exports[`Render with value of "{ lt: 2 }" 1`] = `
+<div
+  class="numberFieldFilterType"
+>
+  <div
+    class="select"
+  >
+    <button
+      class="displayValue default"
+      type="button"
+    >
+      <div
+        aria-label="<"
+        class="croppedText"
+        title="<"
+      >
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          &lt;
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span />
+        </div>
+        <div
+          class="whole"
+        >
+          &lt;
+        </div>
+      </div>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down toggle"
+      />
+    </button>
+  </div>
+  <label
+    class="input default left"
+  >
+    <input
+      type="number"
+      value="2"
+    />
+  </label>
+</div>
+`;
+
+exports[`Render with value of "undefined" 1`] = `
+<div
+  class="numberFieldFilterType"
+>
+  <div
+    class="select"
+  >
+    <button
+      class="displayValue default"
+      type="button"
+    >
+      <div
+        aria-label="sulu_admin.please_choose"
+        class="croppedText"
+        title="sulu_admin.please_choose"
+      >
+        <div
+          aria-hidden="true"
+          class="front"
+        >
+          sulu_admin.p
+        </div>
+        <div
+          aria-hidden="true"
+          class="back"
+        >
+          <span>
+            lease_choose
+          </span>
+        </div>
+        <div
+          class="whole"
+        >
+          sulu_admin.please_choose
+        </div>
+      </div>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down toggle"
+      />
+    </button>
+  </div>
+  <label
+    class="input default left"
+  >
+    <input
+      type="number"
+      value=""
+    />
+  </label>
+</div>
+`;

@@ -1,59 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render FieldFilter with schema and value 1`] = `
-<div
-  class="fieldFilter"
->
-  <div
-    class="filterButton"
-  >
-    <button
-      class="button icon"
-      type="button"
-    >
-      <span
-        aria-label="fa-filter"
-        class="fa fa-filter buttonIcon"
-      />
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down dropdownIcon"
-      />
-    </button>
-  </div>
-  <span
-    class="chip"
-  >
-    <button
-      class="chip primary medium clickable"
-    >
-      First name
-      <span
-        aria-label="su-times"
-        class="su-times clickable icon"
-        role="button"
-        tabindex="0"
-      />
-    </button>
-  </span>
-  <span
-    class="chip"
-  >
-    <button
-      class="chip primary medium clickable"
-    >
-      Last name
-      <span
-        aria-label="su-times"
-        class="su-times clickable icon"
-        role="button"
-        tabindex="0"
-      />
-    </button>
-  </span>
-</div>
-`;
-
 exports[`Render empty FieldFilter 1`] = `
 <div
   class="fieldFilter"

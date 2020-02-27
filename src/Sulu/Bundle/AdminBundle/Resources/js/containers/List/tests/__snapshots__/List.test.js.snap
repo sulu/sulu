@@ -217,12 +217,12 @@ exports[`Render the adapter with filters 1`] = `
         </button>
       </div>
       <span
-        class="chip"
+        class="fieldFilterItem"
       >
         <button
           class="chip primary medium clickable"
         >
-          Title
+          Title: 
           <span
             aria-label="su-times"
             class="su-times clickable icon"
@@ -232,12 +232,12 @@ exports[`Render the adapter with filters 1`] = `
         </button>
       </span>
       <span
-        class="chip"
+        class="fieldFilterItem"
       >
         <button
           class="chip primary medium clickable"
         >
-          Created at
+          Created at: 
           <span
             aria-label="su-times"
             class="su-times clickable icon"

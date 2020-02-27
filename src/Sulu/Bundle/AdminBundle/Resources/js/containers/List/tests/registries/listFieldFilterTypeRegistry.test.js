@@ -1,14 +1,13 @@
 // @flow
-import React from 'react';
 import listFieldFilterTypeRegistry from '../../registries/listFieldFilterTypeRegistry';
-import type {FieldFilterTypeProps} from '../../types';
+import AbstractFieldFilterType from '../../fieldFilterTypes/AbstractFieldFilterType';
 
 beforeEach(() => {
     listFieldFilterTypeRegistry.clear();
 });
 
 test('Clear all filter types', () => {
-    const Test1 = class Test1 extends React.Component<FieldFilterTypeProps<string>> {};
+    const Test1 = class Test1 extends AbstractFieldFilterType<*> {};
     listFieldFilterTypeRegistry.add('test1', Test1);
     expect(Object.keys(listFieldFilterTypeRegistry.fieldFilterTypes)).toHaveLength(1);
 
@@ -17,8 +16,8 @@ test('Clear all filter types', () => {
 });
 
 test('Add filter type', () => {
-    const Test1 = class Test1 extends React.Component<FieldFilterTypeProps<string>> {};
-    const Test2 = class Test1 extends React.Component<FieldFilterTypeProps<string>> {};
+    const Test1 = class Test1 extends AbstractFieldFilterType<*> {};
+    const Test2 = class Test1 extends AbstractFieldFilterType<*> {};
     listFieldFilterTypeRegistry.add('test1', Test1);
     listFieldFilterTypeRegistry.add('test2', Test2);
 
@@ -27,7 +26,7 @@ test('Add filter type', () => {
 });
 
 test('Add filter type with existing key should throw', () => {
-    const Test1 = class Test1 extends React.Component<FieldFilterTypeProps<string>> {};
+    const Test1 = class Test1 extends AbstractFieldFilterType<*> {};
     listFieldFilterTypeRegistry.add('test1', Test1);
     expect(() => listFieldFilterTypeRegistry.add('test1', Test1)).toThrow(/test1/);
 });
@@ -37,7 +36,7 @@ test('Get filter type of not existing key', () => {
 });
 
 test('Has a filter type with an existing key', () => {
-    const Test1 = class Test1 extends React.Component<FieldFilterTypeProps<string>> {};
+    const Test1 = class Test1 extends AbstractFieldFilterType<*> {};
     listFieldFilterTypeRegistry.add('test1', Test1);
     expect(listFieldFilterTypeRegistry.has('test1')).toEqual(true);
 });
