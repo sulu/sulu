@@ -4,6 +4,14 @@ import DatePicker from '../../../components/DatePicker';
 import AbstractFieldFilterType from './AbstractFieldFilterType';
 import dateTimeFieldFilterTypeStyles from './dateTimeFieldFilterType.scss';
 
+function formatDate(date: ?Date) {
+    if (!date) {
+        return '';
+    }
+
+    return date.toLocaleString(undefined, {year: 'numeric', month: '2-digit', day: '2-digit'});
+}
+
 class DateTimeFieldFilterType extends AbstractFieldFilterType<?{from?: Date, to?: Date}> {
     handleChange = (field: string, fieldValue: ?Date) => {
         const {onChange, value} = this;
@@ -37,7 +45,7 @@ class DateTimeFieldFilterType extends AbstractFieldFilterType<?{from?: Date, to?
 
         const {from, to} = value;
 
-        return Promise.resolve((from ? from.toLocaleDateString() : '') + ' - ' + (to ? to.toLocaleDateString() : ''));
+        return Promise.resolve(formatDate(from) + ' - ' + formatDate(to));
     }
 }
 

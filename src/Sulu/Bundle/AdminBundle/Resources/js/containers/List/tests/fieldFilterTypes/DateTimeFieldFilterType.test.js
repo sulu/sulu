@@ -78,3 +78,26 @@ test('Call onChange handler with to value and existing value', () => {
 
     expect(changeSpy).toBeCalledWith({from: new Date('2018-03-07'), to: new Date('2018-04-06')});
 });
+
+test.each([
+    [{from: new Date('2018-03-07'), to: new Date('2018-08-02')}, '03/07/2018 - 08/02/2018'],
+    [{from: new Date('2017-11-07'), to: new Date('2017-12-11')}, '11/07/2017 - 12/11/2017'],
+    [undefined, null],
+])('Return value node with value "%s"', (value, expectedValueNode) => {
+    const dateTimeFieldFilterType = new DateTimeFieldFilterType(jest.fn(), {}, undefined);
+
+    const valueNodePromise = dateTimeFieldFilterType.getValueNode(value);
+
+    if (value === undefined) {
+        expect(valueNodePromise).toEqual(expectedValueNode);
+        return;
+    }
+
+    if (!valueNodePromise) {
+        throw new Error('The getValueNode function must return a promise!');
+    }
+
+    return valueNodePromise.then((valueNode) => {
+        expect(valueNode).toEqual(expectedValueNode);
+    });
+});
