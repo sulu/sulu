@@ -44,6 +44,11 @@ class FormMetadata extends AbstractMetadata
      */
     private $key;
 
+    /**
+     * @var TagMetadata[]
+     */
+    protected $tags;
+
     public function setName(string $name)
     {
         $this->name = $name;
@@ -103,6 +108,42 @@ class FormMetadata extends AbstractMetadata
     public function getSchema(): SchemaMetadata
     {
         return $this->schema;
+    }
+
+    /**
+     * @return TagMetadata[]
+     */
+    public function getTags(): array
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @return TagMetadata[]
+     */
+    public function getTagsByName(string $name): array
+    {
+        $tags = [];
+        foreach ($this->getTags() as $tag) {
+            if ($tag->getName() === $name) {
+                $tags[] = $tag;
+            }
+        }
+
+        return $tags;
+    }
+
+    public function addTag(TagMetadata $tag): void
+    {
+        $this->tags[] = $tag;
+    }
+
+    /**
+     * @param TagMetadata[] $tags
+     */
+    public function setTags(array $tags): void
+    {
+        $this->tags = $tags;
     }
 
     public function merge(self $otherForm): FormMetadata
