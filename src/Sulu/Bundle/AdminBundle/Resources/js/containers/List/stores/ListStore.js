@@ -1,6 +1,7 @@
 // @flow
 import {action, autorun, computed, intercept, observable, untracked} from 'mobx';
 import type {IObservableValue, IValueWillChange} from 'mobx';
+import equals from 'fast-deep-equal';
 import log from 'loglevel';
 import ResourceRequester, {RequestPromise} from '../../../services/ResourceRequester';
 import type {
@@ -50,6 +51,7 @@ export default class ListStore {
     observableOptions: ObservableOptions;
     localeDisposer: ?() => void;
     searchDisposer: () => void;
+    filterDisposer: () => void;
     sortColumnDisposer: () => void;
     sortOrderDisposer: () => void;
     limitDisposer: () => void;
@@ -160,6 +162,32 @@ export default class ListStore {
 
         this.searchDisposer = intercept(this.searchTerm, '', (change: IValueWillChange<*>) => {
             callResetForChangedObservable(change);
+            return change;
+        });
+
+        this.filterDisposer = intercept(this.filterOptions, '', (change: IValueWillChange<*>) => {
+            const oldValue = change.object.get();
+            const oldFilteredValue = Object.keys(oldValue).reduce((oldFilteredValue, currentKey) => {
+                if (oldValue[currentKey]) {
+                    oldFilteredValue[currentKey] = oldValue[currentKey];
+                }
+
+                return oldFilteredValue;
+            }, {});
+
+            const newValue = change.newValue;
+            const newFilteredValue = Object.keys(newValue).reduce((newFilteredValue, currentKey) => {
+                if (newValue[currentKey]) {
+                    newFilteredValue[currentKey] = newValue[currentKey];
+                }
+
+                return newFilteredValue;
+            }, {});
+
+            if (!equals(oldFilteredValue, newFilteredValue)) {
+                callResetForChangedObservable(change);
+            }
+
             return change;
         });
 
@@ -710,6 +738,7 @@ export default class ListStore {
     destroy() {
         this.sendRequestDisposer();
         this.searchDisposer();
+        this.filterDisposer();
         this.sortColumnDisposer();
         this.sortOrderDisposer();
         this.limitDisposer();
