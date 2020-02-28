@@ -72,6 +72,23 @@ test('The active item should be updated when set from the outside', () => {
     expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.list_store.tests.list_test.active', '123');
 });
 
+test('The filter value should be updated when set from the outside', () => {
+    const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
+    expect(listStore.filterOptions.get()).toEqual({});
+
+    listStore.filterOptions.set({test: {eq: 'Test'}});
+    expect(userStore.setPersistentSetting)
+        .toBeCalledWith('sulu_admin.list_store.tests.list_test.filter', {test: {eq: 'Test'}});
+});
+
+test('The filter value should not be updated when set from the outside and only an undefined value was added', () => {
+    const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
+    expect(listStore.filterOptions.get()).toEqual({});
+
+    listStore.filterOptions.set({test: undefined});
+    expect(userStore.setPersistentSetting).not.toBeCalled();
+});
+
 test('The limit value should be updated when set from the outside', () => {
     const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
     expect(listStore.limit.get()).toEqual(10);

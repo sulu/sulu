@@ -19,6 +19,7 @@ const USER_SETTING_PREFIX = 'sulu_admin.list_store';
 const USER_SETTING_ACTIVE = 'active';
 const USER_SETTING_SORT_COLUMN = 'sort_column';
 const USER_SETTING_SORT_ORDER = 'sort_order';
+const USER_SETTING_FILTER = 'filter';
 const USER_SETTING_LIMIT = 'limit';
 const USER_SETTING_SCHEMA = 'schema';
 
@@ -69,6 +70,18 @@ export default class ListStore {
 
     static setActiveSetting(listKey: string, userSettingsKey: string, value: *) {
         const key = [USER_SETTING_PREFIX, listKey, userSettingsKey, USER_SETTING_ACTIVE].join('.');
+
+        userStore.setPersistentSetting(key, value);
+    }
+
+    static getFilterSetting(listKey: string, userSettingsKey: string): string {
+        const key = [USER_SETTING_PREFIX, listKey, userSettingsKey, USER_SETTING_FILTER].join('.');
+
+        return userStore.getPersistentSetting(key);
+    }
+
+    static setFilterSetting(listKey: string, userSettingsKey: string, value: *) {
+        const key = [USER_SETTING_PREFIX, listKey, userSettingsKey, USER_SETTING_FILTER].join('.');
 
         userStore.setPersistentSetting(key, value);
     }
@@ -167,24 +180,29 @@ export default class ListStore {
 
         this.filterDisposer = intercept(this.filterOptions, '', (change: IValueWillChange<*>) => {
             const oldValue = change.object.get();
-            const oldFilteredValue = Object.keys(oldValue).reduce((oldFilteredValue, currentKey) => {
-                if (oldValue[currentKey]) {
-                    oldFilteredValue[currentKey] = oldValue[currentKey];
-                }
+            const oldFilteredValue = oldValue ?
+                Object.keys(oldValue).reduce((oldFilteredValue, currentKey) => {
+                    if (oldValue[currentKey]) {
+                        oldFilteredValue[currentKey] = oldValue[currentKey];
+                    }
 
-                return oldFilteredValue;
-            }, {});
+                    return oldFilteredValue;
+                }, {})
+                : {};
 
             const newValue = change.newValue;
-            const newFilteredValue = Object.keys(newValue).reduce((newFilteredValue, currentKey) => {
-                if (newValue[currentKey]) {
-                    newFilteredValue[currentKey] = newValue[currentKey];
-                }
+            const newFilteredValue = newValue ?
+                Object.keys(newValue).reduce((newFilteredValue, currentKey) => {
+                    if (newValue[currentKey]) {
+                        newFilteredValue[currentKey] = newValue[currentKey];
+                    }
 
-                return newFilteredValue;
-            }, {});
+                    return newFilteredValue;
+                }, {})
+                : {};
 
             if (!equals(oldFilteredValue, newFilteredValue)) {
+                ListStore.setFilterSetting(this.listKey, this.userSettingsKey, change.newValue);
                 callResetForChangedObservable(change);
             }
 

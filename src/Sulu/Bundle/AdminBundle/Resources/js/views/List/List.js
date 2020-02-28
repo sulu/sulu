@@ -52,6 +52,7 @@ class List extends React.Component<Props> {
 
         return {
             active: ListStore.getActiveSetting(listKey, userSettingsKey),
+            filter: ListStore.getFilterSetting(listKey, userSettingsKey),
             sortColumn: ListStore.getSortColumnSetting(listKey, userSettingsKey),
             sortOrder: ListStore.getSortOrderSetting(listKey, userSettingsKey),
             limit: limit === DEFAULT_LIMIT ? undefined : limit,

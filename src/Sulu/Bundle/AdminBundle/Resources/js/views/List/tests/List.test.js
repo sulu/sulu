@@ -1074,11 +1074,13 @@ test('Should load the route attributes from the ListStore', () => {
     const ListStore = require('../../../containers/List').ListStore;
     ListStore.getActiveSetting = jest.fn();
     ListStore.getSortColumnSetting = jest.fn();
+    ListStore.getFilterSetting = jest.fn();
     ListStore.getSortOrderSetting = jest.fn();
     ListStore.getLimitSetting = jest.fn();
 
     ListStore.getActiveSetting.mockReturnValueOnce('some-uuid');
     ListStore.getSortColumnSetting.mockReturnValueOnce('title');
+    ListStore.getFilterSetting.mockReturnValueOnce({test: {eq: 'Test'}});
     ListStore.getSortOrderSetting.mockReturnValueOnce('desc');
     ListStore.getLimitSetting.mockReturnValueOnce(50);
 
@@ -1089,6 +1091,11 @@ test('Should load the route attributes from the ListStore', () => {
         },
     })).toEqual({
         active: 'some-uuid',
+        filter: {
+            test: {
+                eq: 'Test'
+            },
+        },
         limit: 50,
         sortColumn: 'title',
         sortOrder: 'desc',
@@ -1096,6 +1103,7 @@ test('Should load the route attributes from the ListStore', () => {
 
     expect(ListStore.getActiveSetting).toBeCalledWith('list_test', 'list');
     expect(ListStore.getSortColumnSetting).toBeCalledWith('list_test', 'list');
+    expect(ListStore.getFilterSetting).toBeCalledWith('list_test', 'list');
     expect(ListStore.getSortOrderSetting).toBeCalledWith('list_test', 'list');
     expect(ListStore.getLimitSetting).toBeCalledWith('list_test', 'list');
 });
@@ -1105,6 +1113,7 @@ test('Should return the limit route attributes as undefined if ListStore is set 
     const ListStore = require('../../../containers/List').ListStore;
     ListStore.getActiveSetting = jest.fn();
     ListStore.getSortColumnSetting = jest.fn();
+    ListStore.getFilterSetting = jest.fn();
     ListStore.getSortOrderSetting = jest.fn();
     ListStore.getLimitSetting = jest.fn();
 
@@ -1127,6 +1136,7 @@ test('Should return the limit route attributes as undefined if ListStore is set 
 
     expect(ListStore.getActiveSetting).toBeCalledWith('list_test', 'list');
     expect(ListStore.getSortColumnSetting).toBeCalledWith('list_test', 'list');
+    expect(ListStore.getFilterSetting).toBeCalledWith('list_test', 'list');
     expect(ListStore.getSortOrderSetting).toBeCalledWith('list_test', 'list');
     expect(ListStore.getLimitSetting).toBeCalledWith('list_test', 'list');
 });
@@ -1136,6 +1146,7 @@ test('Should load the route attributes from the ListStore using the passed userS
     const ListStore = require('../../../containers/List').ListStore;
     ListStore.getActiveSetting = jest.fn();
     ListStore.getSortColumnSetting = jest.fn();
+    ListStore.getFilterSetting = jest.fn();
     ListStore.getSortOrderSetting = jest.fn();
     ListStore.getLimitSetting = jest.fn();
 
@@ -1159,6 +1170,7 @@ test('Should load the route attributes from the ListStore using the passed userS
 
     expect(ListStore.getActiveSetting).toBeCalledWith('list_test', 'user_key');
     expect(ListStore.getSortColumnSetting).toBeCalledWith('list_test', 'user_key');
+    expect(ListStore.getFilterSetting).toBeCalledWith('list_test', 'user_key');
     expect(ListStore.getSortOrderSetting).toBeCalledWith('list_test', 'user_key');
     expect(ListStore.getLimitSetting).toBeCalledWith('list_test', 'user_key');
 });
