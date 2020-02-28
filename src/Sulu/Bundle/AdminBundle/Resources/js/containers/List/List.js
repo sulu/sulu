@@ -523,13 +523,11 @@ class List extends React.Component<Props> {
                         {searchable &&
                             <Search onSearch={this.handleSearch} value={store.searchTerm.get()} />
                         }
-                        {filterableFields && Object.keys(filterableFields).length > 0 &&
-                            <FieldFilter
-                                fields={filterableFields || {}}
-                                onChange={this.handleFilterChange}
-                                value={store.filterOptions.get()}
-                            />
-                        }
+                        <FieldFilter
+                            fields={filterableFields || {}}
+                            onChange={this.handleFilterChange}
+                            value={store.filterOptions.get()}
+                        />
                         {hasColumnOptions &&
                             <Fragment>
                                 <ArrowMenu

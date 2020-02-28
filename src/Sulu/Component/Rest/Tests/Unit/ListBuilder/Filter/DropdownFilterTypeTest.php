@@ -13,8 +13,8 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Filter;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Filter\InvalidFilterTypeOptionsException;
 use Sulu\Component\Rest\ListBuilder\Filter\DropdownFilterType;
+use Sulu\Component\Rest\ListBuilder\Filter\InvalidFilterTypeOptionsException;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 
 class DropdownFilterTypeTest extends TestCase

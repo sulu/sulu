@@ -278,6 +278,9 @@ exports[`Should render the list with a title 1`] = `
         value=""
       />
     </label>
+    <div
+      class="fieldFilter"
+    />
     <div>
       <button
         class="button icon"
@@ -536,6 +539,9 @@ Array [
           value=""
         />
       </label>
+      <div
+        class="fieldFilter"
+      />
       <div>
         <button
           class="button icon"
@@ -837,6 +843,9 @@ Array [
           value=""
         />
       </label>
+      <div
+        class="fieldFilter"
+      />
       <div>
         <button
           class="button icon"
@@ -1099,6 +1108,9 @@ exports[`Should render the list with the correct resourceKey 1`] = `
         value=""
       />
     </label>
+    <div
+      class="fieldFilter"
+    />
     <div>
       <button
         class="button icon"

@@ -25,6 +25,9 @@ exports[`Do not render Loader instead of Adapter if no page count is given 1`] =
         value=""
       />
     </label>
+    <div
+      class="fieldFilter"
+    />
   </div>
   <div
     class="list"
@@ -61,6 +64,9 @@ exports[`Render Loader instead of Adapter if nothing was loaded yet 1`] = `
         value=""
       />
     </label>
+    <div
+      class="fieldFilter"
+    />
   </div>
   <div
     class="list"
@@ -123,6 +129,9 @@ exports[`Render the adapter in disabled state 1`] = `
         value=""
       />
     </label>
+    <div
+      class="fieldFilter"
+    />
   </div>
   <div
     class="list disabled"
