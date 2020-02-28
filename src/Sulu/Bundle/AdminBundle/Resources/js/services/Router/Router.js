@@ -4,12 +4,13 @@ import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import equal from 'fast-deep-equal';
 import log from 'loglevel';
 import pathToRegexp, {compile} from 'path-to-regexp';
+import {transformDateForUrl} from '../../utils/Date';
 import type {AttributeMap, Route, UpdateAttributesHook, UpdateRouteHook, UpdateRouteMethod} from './types';
 import routeRegistry from './registries/routeRegistry';
 
 const OBJECT_DELIMITER = '.';
 
-function tryParse(value: string) {
+function tryParse(value: ?string) {
     if (value === 'true') {
         return true;
     }
@@ -22,6 +23,13 @@ function tryParse(value: string) {
         return undefined;
     }
 
+    if (value && value.match(/\d\d\d\d-\d\d-\d\d/)) {
+        const date = new Date(value);
+        if (date.toString() !== 'Invalid Date') {
+            return date;
+        }
+    }
+
     if (isNaN(value)) {
         return value;
     }
@@ -32,11 +40,23 @@ function tryParse(value: string) {
 function addValueToSearchParameters(searchParameters: URLSearchParams, value: Object, path: string) {
     if (Array.isArray(value)) {
         addArrayToSearchParameters(searchParameters, value, path);
+    } else if (value instanceof Date) {
+        addDateToSearchParameters(searchParameters, value, path);
     } else if (typeof value === 'object') {
         addObjectToSearchParameters(searchParameters, value, path);
     } else {
         searchParameters.set(path, value);
     }
+}
+
+function addArrayToSearchParameters(searchParameters: URLSearchParams, values: Array<*>, path: string) {
+    values.forEach((value, index) => {
+        searchParameters.append(path + '[' + index + ']', value);
+    });
+}
+
+function addDateToSearchParameters(searchParameters: URLSearchParams, value: Date, path: string) {
+    searchParameters.set(path, transformDateForUrl(value));
 }
 
 function addObjectToSearchParameters(searchParameters: URLSearchParams, value: Object, path: string) {
@@ -48,12 +68,6 @@ function addObjectToSearchParameters(searchParameters: URLSearchParams, value: O
             searchParameters.set(childPath, value[key]);
         }
     }
-}
-
-function addArrayToSearchParameters(searchParameters: URLSearchParams, values: Array<*>, path: string) {
-    values.forEach((value, index) => {
-        searchParameters.append(path + '[' + index + ']', value);
-    });
 }
 
 function addAttributesFromSearchParameters(attributes: Object, value: string, key: string) {

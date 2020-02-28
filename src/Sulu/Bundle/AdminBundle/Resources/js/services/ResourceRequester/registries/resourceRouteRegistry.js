@@ -2,6 +2,7 @@
 import {isObservableArray, toJS} from 'mobx';
 import symfonyRouting from 'fos-jsrouting/router';
 import type {EndpointConfiguration} from '../types';
+import {transformDateForUrl} from '../../../utils/Date';
 
 function transformParameters(parameters) {
     return Object.keys(parameters)
@@ -12,19 +13,11 @@ function transformParameters(parameters) {
             transformedParameters[parameterKey] = Array.isArray(value) || isObservableArray(value)
                 ? value.join(',')
                 : value instanceof Date
-                    ? transformDate(value)
+                    ? transformDateForUrl(value)
                     : value instanceof Object ? transformParameters(value) : toJS(value);
 
             return transformedParameters;
         }, {});
-}
-
-function transformDate(value: Date) {
-    const year = value.getFullYear().toString();
-    const month = (value.getMonth() + 1).toString();
-    const date = value.getDate().toString();
-
-    return year + '-' + (month[1] ? month : '0' + month) + '-' + (date[1] ? date : '0' + date);
 }
 
 class ResourceRouteRegistry {
