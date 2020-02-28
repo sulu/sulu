@@ -1093,7 +1093,7 @@ test('Should load the route attributes from the ListStore', () => {
         active: 'some-uuid',
         filter: {
             test: {
-                eq: 'Test'
+                eq: 'Test',
             },
         },
         limit: 50,
