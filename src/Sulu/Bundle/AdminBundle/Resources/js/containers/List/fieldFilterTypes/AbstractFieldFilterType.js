@@ -17,6 +17,8 @@ export default class AbstractFieldFilterType<T> {
         this.value = value;
     }
 
+    destroy() {}
+
     @action setValue(value: T): void {
         this.value = value;
     }

@@ -185,6 +185,13 @@ test('Return correct value node when value changes', () => {
 });
 
 test('Call disposers when unmounted', () => {
+    listFieldFilterTypeRegistry.get.mockReturnValue(class {
+        getValueNode = jest.fn((value) => Promise.resolve('The value is ' + value));
+        getFormNode = jest.fn(() => <div>This is the form node</div>);
+        setValue = jest.fn();
+        destroy = jest.fn();
+    });
+
     const fieldFilterItem = mount(
         <FieldFilterItem
             column="salutation"
@@ -201,9 +208,15 @@ test('Call disposers when unmounted', () => {
     );
 
     const valueNodeDisposer = jest.fn();
+    const valueDisposer = jest.fn();
+    const fieldFilterTypeDestroyer = jest.fn();
     fieldFilterItem.instance().valueNodeDisposer = valueNodeDisposer;
+    fieldFilterItem.instance().valueDisposer = valueDisposer;
+    fieldFilterItem.instance().fieldFilterType.destroy = fieldFilterTypeDestroyer;
 
     fieldFilterItem.unmount();
 
     expect(valueNodeDisposer).toBeCalledWith();
+    expect(valueDisposer).toBeCalledWith();
+    expect(fieldFilterTypeDestroyer).toBeCalled();
 });

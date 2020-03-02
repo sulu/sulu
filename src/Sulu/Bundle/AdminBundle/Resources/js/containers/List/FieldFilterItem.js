@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import type {Node} from 'react';
-import {action, autorun, observable} from 'mobx';
+import {action, autorun, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import ArrowMenu from '../../components/ArrowMenu';
 import Button from '../../components/Button';
@@ -29,6 +29,7 @@ type Props = {|
 class FieldFilterItem extends React.Component<Props> {
     @observable value: mixed;
     fieldFilterType: AbstractFieldFilterType<*>;
+    valueDisposer: () => void;
     valueNodeDisposer: () => void;
     @observable valueNodeLoading: boolean = false;
     @observable valueNode: ?Node;
@@ -52,9 +53,12 @@ class FieldFilterItem extends React.Component<Props> {
             value
         );
 
-        this.valueNodeDisposer = autorun(() => {
+        this.valueDisposer = autorun(() => {
             this.fieldFilterType.setValue(this.value);
-            const valueNodePromise = this.fieldFilterType.getValueNode(this.props.value);
+        });
+
+        this.valueNodeDisposer = autorun(() => {
+            const valueNodePromise = this.fieldFilterType.getValueNode(this.propValue);
 
             if (valueNodePromise) {
                 this.setValueNodeLoading(true);
@@ -66,6 +70,10 @@ class FieldFilterItem extends React.Component<Props> {
         });
     }
 
+    @computed get propValue() {
+        return this.props.value;
+    }
+
     @action componentDidUpdate(prevProps: Props) {
         const {open, value} = this.props;
         if (prevProps.open === false && open === true) {
@@ -74,7 +82,9 @@ class FieldFilterItem extends React.Component<Props> {
     }
 
     componentWillUnmount() {
+        this.valueDisposer();
         this.valueNodeDisposer();
+        this.fieldFilterType.destroy();
     }
 
     @action setValueNodeLoading(valueNodeLoading: boolean) {

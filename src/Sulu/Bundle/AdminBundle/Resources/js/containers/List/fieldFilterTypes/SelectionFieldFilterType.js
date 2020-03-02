@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, toJS, when} from 'mobx';
+import {autorun, computed, toJS, untracked, when} from 'mobx';
 import equals from 'fast-deep-equal';
 import MultiSelectionStore from '../../../stores/MultiSelectionStore';
 import MultiAutoComplete from '../../MultiAutoComplete';
@@ -9,6 +9,8 @@ import selectionFieldFilterTypeStyles from './selectionFieldFilterType.scss';
 
 class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | number>> {
     selectionStore: MultiSelectionStore<string | number>;
+    selectionStoreDisposer: () => void;
+    valueDisposer: () => void;
 
     constructor(
         onChange: (value: ?Array<string | number>) => void,
@@ -27,7 +29,31 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
             throw new Error('The "resourceKey" parameters must be a string!');
         }
 
-        this.selectionStore = new MultiSelectionStore(resourceKey, value || []);
+        this.selectionStore = new MultiSelectionStore(resourceKey, []);
+
+        this.selectionStoreDisposer = autorun(() => {
+            const {onChange, selectionStore} = this;
+
+            if (selectionStore.ids.length === 0) {
+                onChange(undefined);
+                return;
+            }
+
+            onChange(selectionStore.ids);
+        });
+
+        this.valueDisposer = autorun(() => {
+            const {value = []} = this;
+
+            if (!equals(toJS(value), untracked(() => this.selectionStore.ids))) {
+                this.selectionStore.loadItems(value);
+            }
+        });
+    }
+
+    destroy() {
+        this.selectionStoreDisposer();
+        this.valueDisposer();
     }
 
     @computed get resourceKey() {
@@ -62,28 +88,13 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
         return displayProperty;
     }
 
-    handleChange = (value: ?Array<string | number>) => {
-        const {onChange} = this;
-
-        if (value && value.length === 0) {
-            onChange(undefined);
-            return;
-        }
-
-        onChange(value);
-    };
-
     getFormNode() {
-        const {value} = this;
-
         return (
             <div className={selectionFieldFilterTypeStyles.selectionFieldFilterType}>
                 <MultiAutoComplete
                     displayProperty={this.displayProperty}
-                    onChange={this.handleChange}
-                    resourceKey={this.resourceKey}
                     searchProperties={[this.displayProperty]}
-                    value={value || []}
+                    selectionStore={this.selectionStore}
                 />
             </div>
         );
@@ -91,18 +102,21 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
 
     getValueNode(value: ?Array<string | number>) {
         if (!value) {
-            this.selectionStore.loadItems([]);
             return Promise.resolve(null);
         }
 
         return new Promise<string>((resolve) => {
-            if (!equals(toJS(value), this.selectionStore.ids)) {
-                this.selectionStore.loadItems(value);
-            }
-
             when(
                 () => !this.selectionStore.loading,
-                () => resolve(this.selectionStore.items.map((item) => item[this.displayProperty]).join(', '))
+                () => resolve(
+                    value.map(
+                        (id) => {
+                            const item = this.selectionStore.getById(id);
+
+                            return item ? item[this.displayProperty] : '';
+                        }
+                    ).join(', ')
+                )
             );
         });
     }
