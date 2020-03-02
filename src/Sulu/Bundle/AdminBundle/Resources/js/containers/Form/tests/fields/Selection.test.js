@@ -11,6 +11,19 @@ import Selection from '../../fields/Selection';
 import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 
+jest.mock('../../../../stores/MultiSelectionStore', () => jest.fn(
+    function(resourceKey, selectedItemIds, locale, idFilterParameter) {
+        this.locale = locale;
+        this.loading = false;
+        this.idFilterParameter = idFilterParameter;
+
+        mockExtendObservable(this, {
+            items: [],
+            ids: [],
+        });
+    })
+);
+
 jest.mock('../../../List', () => jest.fn(() => null));
 
 jest.mock('../../../List/stores/ListStore',
@@ -637,9 +650,11 @@ test('Should call the disposers for list selections and locale and ListStore if 
     const changeListDisposerSpy = jest.fn();
     const changeLocaleDisposerSpy = jest.fn();
     const changeListOptionsDisposerSpy = jest.fn();
+    const changeSelectionDisposerSpy = jest.fn();
     selection.instance().changeListDisposer = changeListDisposerSpy;
     selection.instance().changeLocaleDisposer = changeLocaleDisposerSpy;
     selection.instance().changeListOptionsDisposer = changeListOptionsDisposerSpy;
+    selection.instance().changeSelectionDisposer = changeSelectionDisposerSpy;
     const listStoreDestroy = selection.instance().listStore.destroy;
 
     selection.unmount();
@@ -647,6 +662,7 @@ test('Should call the disposers for list selections and locale and ListStore if 
     expect(changeListDisposerSpy).toBeCalledWith();
     expect(changeLocaleDisposerSpy).toBeCalledWith();
     expect(changeListOptionsDisposerSpy).toBeCalledWith();
+    expect(changeSelectionDisposerSpy).toBeCalledWith();
     expect(listStoreDestroy).toBeCalledWith();
 });
 
@@ -1110,13 +1126,12 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
         allowAdd: false,
         disabled: true,
         displayProperty: 'name',
-        filterParameter: 'names',
         idProperty: 'uuid',
-        locale,
-        resourceKey: 'snippets',
         searchProperties: ['name'],
-        value,
+        selectionStore: selection.instance().selectionStore,
     }));
+
+    expect(selection.instance().selectionStore.idFilterParameter).toEqual('names');
 });
 
 test('Should pass locale from userStore to MultiAutoComplete component if form has no locale', () => {
@@ -1154,7 +1169,7 @@ test('Should pass locale from userStore to MultiAutoComplete component if form h
         />
     );
 
-    expect(toJS(selection.find('MultiAutoComplete').prop('locale'))).toEqual('de');
+    expect(selection.instance().selectionStore.locale.get()).toEqual('de');
 });
 
 test('Should pass props with schema-options type correctly to MultiAutoComplete component', () => {
@@ -1211,12 +1226,9 @@ test('Should pass props with schema-options type correctly to MultiAutoComplete 
         allowAdd: false,
         disabled: true,
         displayProperty: 'name',
-        filterParameter: 'names',
         idProperty: 'uuid',
-        locale,
-        resourceKey: 'snippets',
         searchProperties: ['name'],
-        value,
+        selectionStore: selection.instance().selectionStore,
     }));
 });
 
@@ -1304,6 +1316,46 @@ test('Throw an error if a none string was passed to field-type-options', () => {
             />
         )
     ).toThrow(/"default_type"/);
+});
+
+test('Should call onChange and onFinish callback when content of selectionStore has changed', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const fieldOptions = {
+        default_type: 'auto_complete',
+        resource_key: 'pages',
+        types: {
+            auto_complete: {
+                allow_add: true,
+                display_property: 'name',
+                filter_parameter: 'names',
+                id_property: 'uuid',
+                search_properties: ['name'],
+            },
+        },
+    };
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+
+    const selection = mount(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldOptions}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+        />
+    );
+
+    selection.instance().selectionStore.dataLoading = false;
+    selection.instance().selectionStore.items = [
+        {uuid: 1},
+        {uuid: 2},
+        {uuid: 3},
+    ];
+
+    expect(changeSpy).toBeCalledWith([1, 2, 3]);
+    expect(finishSpy).toBeCalledWith();
 });
 
 test('Should pass allowAdd prop to MultiAutoComplete component', () => {

@@ -55,6 +55,31 @@ test('Should not load items but replace current selection with empty array when 
     expect(toJS(selectionStore.items)).toEqual([]);
 });
 
+test('Should return item ids', () => {
+    const selectionStore = new MultiSelectionStore('snippets', [], observable.box('en'));
+    selectionStore.items = [{id: 1}, {id: 4}];
+
+    expect(toJS(selectionStore.ids)).toEqual([1, 4]);
+});
+
+test('Should return the item with the given ID', () => {
+    const selectionStore = new MultiSelectionStore('snippets', [], observable.box('en'));
+    const item1 = {id: 1};
+    const item2 = {id: 4};
+    selectionStore.items = [item1, item2];
+
+    expect(selectionStore.getById(4)).toEqual(item2);
+});
+
+test('Should return undefined if the given ID does not exist', () => {
+    const selectionStore = new MultiSelectionStore('snippets', [], observable.box('en'));
+    const item1 = {id: 1};
+    const item2 = {id: 4};
+    selectionStore.items = [item1, item2];
+
+    expect(selectionStore.getById(5)).toEqual(undefined);
+});
+
 test('Should load items with different filterParameter when being constructed', () => {
     const listPromise = Promise.resolve({
         _embedded: {
