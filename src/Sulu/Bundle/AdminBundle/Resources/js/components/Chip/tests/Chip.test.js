@@ -3,19 +3,23 @@ import React from 'react';
 import {render, shallow} from 'enzyme';
 import Chip from '../Chip';
 
-test('Should render item with children', () => {
+test('Should render chip with children', () => {
     expect(render(<Chip value={{}}>Name</Chip>)).toMatchSnapshot();
 });
 
-test('Should render item with delete icon', () => {
+test('Should render medium, primary chip with children', () => {
+    expect(render(<Chip size="medium" skin="primary" value={{}}>Name</Chip>)).toMatchSnapshot();
+});
+
+test('Should render chip with delete icon', () => {
     expect(render(<Chip onDelete={jest.fn()} value={{}}>Name</Chip>)).toMatchSnapshot();
 });
 
-test('Should render item without delete icon in disabled state', () => {
+test('Should render chip without delete icon in disabled state', () => {
     expect(render(<Chip disabled={true} onDelete={jest.fn()} value={{}}>Name</Chip>)).toMatchSnapshot();
 });
 
-test('Should render item as clickable', () => {
+test('Should render chip as clickable', () => {
     expect(render(<Chip onClick={jest.fn()} value={{}}>Name</Chip>)).toMatchSnapshot();
 });
 

@@ -9,12 +9,16 @@ type Props<T> = {|
     disabled: boolean,
     onClick?: (value: T) => void,
     onDelete?: (value: T) => void,
+    size: 'small' | 'medium',
+    skin: 'primary' | 'secondary',
     value: T,
 |};
 
 export default class Chip<T> extends React.Component<Props<T>> {
     static defaultProps = {
         disabled: false,
+        size: 'small',
+        skin: 'secondary',
     };
 
     handleClick = () => {
@@ -34,10 +38,12 @@ export default class Chip<T> extends React.Component<Props<T>> {
     };
 
     render() {
-        const {children, disabled, onClick, onDelete} = this.props;
+        const {children, disabled, onClick, onDelete, size, skin} = this.props;
 
         const chipClass = classNames(
             chipStyles.chip,
+            chipStyles[skin],
+            chipStyles[size],
             {
                 [chipStyles.disabled]: disabled,
                 [chipStyles.clickable]: !!onClick,

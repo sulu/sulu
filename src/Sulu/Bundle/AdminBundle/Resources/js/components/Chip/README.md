@@ -1,9 +1,16 @@
 Chips are compact elements that represent an attribute in its used context. It can e.g. be used to display tags in a tag
-selection or can indicate that a list is filtered.
+selection or can indicate that a list is filtered. The `size` and `skin` properties allow you to configure how the Chip
+looks.
 
 ```javascript
 <div style={{backgroundColor: 'white', padding: '10px'}}>
     <Chip>Tag 1</Chip>
+</div>
+<div style={{backgroundColor: 'white', padding: '10px'}}>
+    <Chip skin="primary">Tag 2</Chip>
+</div>
+<div style={{backgroundColor: 'white', padding: '10px'}}>
+    <Chip size="medium" skin="primary">Tag 3</Chip>
 </div>
 ```
 

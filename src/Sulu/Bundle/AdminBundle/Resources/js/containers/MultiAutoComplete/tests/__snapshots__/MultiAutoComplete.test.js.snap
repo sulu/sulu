@@ -15,16 +15,24 @@ exports[`Render in disabled state 1`] = `
   <div
     class="items"
   >
-    <button
-      class="chip disabled"
+    <span
+      class="chip"
     >
-      James Bond
-    </button>
-    <button
-      class="chip disabled"
+      <button
+        class="chip secondary small disabled"
+      >
+        James Bond
+      </button>
+    </span>
+    <span
+      class="chip"
     >
-      John Doe
-    </button>
+      <button
+        class="chip secondary small disabled"
+      >
+        John Doe
+      </button>
+    </span>
     <input
       class="input mousetrap"
       disabled=""
@@ -79,28 +87,36 @@ exports[`Render with given value 1`] = `
   <div
     class="items"
   >
-    <button
+    <span
       class="chip"
     >
-      James Bond
-      <span
-        aria-label="su-times"
-        class="su-times clickable icon"
-        role="button"
-        tabindex="0"
-      />
-    </button>
-    <button
+      <button
+        class="chip secondary small"
+      >
+        James Bond
+        <span
+          aria-label="su-times"
+          class="su-times clickable icon"
+          role="button"
+          tabindex="0"
+        />
+      </button>
+    </span>
+    <span
       class="chip"
     >
-      John Doe
-      <span
-        aria-label="su-times"
-        class="su-times clickable icon"
-        role="button"
-        tabindex="0"
-      />
-    </button>
+      <button
+        class="chip secondary small"
+      >
+        John Doe
+        <span
+          aria-label="su-times"
+          class="su-times clickable icon"
+          role="button"
+          tabindex="0"
+        />
+      </button>
+    </span>
     <input
       class="input mousetrap"
       value=""

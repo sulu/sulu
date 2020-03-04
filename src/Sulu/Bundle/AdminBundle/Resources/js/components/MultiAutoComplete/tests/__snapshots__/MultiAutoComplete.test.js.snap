@@ -15,28 +15,36 @@ exports[`MultiAutoComplete should render 1`] = `
   <div
     class="items"
   >
-    <button
+    <span
       class="chip"
     >
-      Test
-      <span
-        aria-label="su-times"
-        class="su-times clickable icon"
-        role="button"
-        tabindex="0"
-      />
-    </button>
-    <button
+      <button
+        class="chip secondary small"
+      >
+        Test
+        <span
+          aria-label="su-times"
+          class="su-times clickable icon"
+          role="button"
+          tabindex="0"
+        />
+      </button>
+    </span>
+    <span
       class="chip"
     >
-      Test 2
-      <span
-        aria-label="su-times"
-        class="su-times clickable icon"
-        role="button"
-        tabindex="0"
-      />
-    </button>
+      <button
+        class="chip secondary small"
+      >
+        Test 2
+        <span
+          aria-label="su-times"
+          class="su-times clickable icon"
+          role="button"
+          tabindex="0"
+        />
+      </button>
+    </span>
     <input
       class="input mousetrap"
       value=""
@@ -60,16 +68,24 @@ exports[`MultiAutoComplete should render in disabled state 1`] = `
   <div
     class="items"
   >
-    <button
-      class="chip disabled"
+    <span
+      class="chip"
     >
-      Test
-    </button>
-    <button
-      class="chip disabled"
+      <button
+        class="chip secondary small disabled"
+      >
+        Test
+      </button>
+    </span>
+    <span
+      class="chip"
     >
-      Test 2
-    </button>
+      <button
+        class="chip secondary small disabled"
+      >
+        Test 2
+      </button>
+    </span>
     <input
       class="input mousetrap"
       disabled=""

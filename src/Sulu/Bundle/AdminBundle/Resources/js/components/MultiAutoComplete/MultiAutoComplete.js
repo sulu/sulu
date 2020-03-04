@@ -182,14 +182,15 @@ class MultiAutoComplete extends React.Component<Props> {
                     </div>
                     <div className={multiAutoCompleteStyles.items}>
                         {value.map((item) => (
-                            <Chip
-                                disabled={disabled}
-                                key={item[idProperty]}
-                                onDelete={this.handleDelete}
-                                value={item}
-                            >
-                                {item[displayProperty]}
-                            </Chip>
+                            <span className={multiAutoCompleteStyles.chip} key={item[idProperty]}>
+                                <Chip
+                                    disabled={disabled}
+                                    onDelete={this.handleDelete}
+                                    value={item}
+                                >
+                                    {item[displayProperty]}
+                                </Chip>
+                            </span>
                         ))}
                         <input
                             className={inputClass}
