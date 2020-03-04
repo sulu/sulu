@@ -92,7 +92,7 @@ class SmartContent extends React.Component<Props> {
                     disabled={disabled}
                     label={translate('sulu_admin.smart_content_label', {count: store.items.length})}
                     leftButton={{
-                        icon: 'fa-filter',
+                        icon: 'su-filter',
                         onClick: this.handleFilterClick,
                     }}
                     loading={store.itemsLoading || store.loading}
