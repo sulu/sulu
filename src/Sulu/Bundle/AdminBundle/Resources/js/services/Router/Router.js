@@ -42,6 +42,10 @@ function equalBindings(value1, value2) {
         return value1 == value2;
     }
 
+    if (value1 instanceof Date && value2 instanceof Date) {
+        return value1.getTime() === value2.getTime();
+    }
+
     const objectKeys = Object.keys(value1);
 
     if (!equal(objectKeys, Object.keys(value2))) {

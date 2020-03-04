@@ -1070,6 +1070,56 @@ test('Binding should be updated if another object is set', () => {
     expect(filter.set.mock.calls).toContainEqual([{test: {eq: 'Test'}}]);
 });
 
+test('Binding should not be updated if the same date is set again', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            type: 'list',
+            path: '/list',
+            attributeDefaults: {},
+        },
+    });
+
+    const from = jest.fn(() => ({
+        get: jest.fn().mockReturnValue(new Date('2020-02-02')),
+        set: jest.fn(),
+        observe: jest.fn(),
+        intercept: jest.fn(),
+    }))();
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+    router.bind('from', from);
+
+    router.navigate('list', {from: new Date('2020-02-02')});
+    expect(from.set.mock.calls).not.toContainEqual([new Date('2020-02-02')]);
+});
+
+test('Binding should be updated if the date changes', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            type: 'list',
+            path: '/list',
+            attributeDefaults: {},
+        },
+    });
+
+    const from = jest.fn(() => ({
+        get: jest.fn().mockReturnValue(new Date('2020-02-02')),
+        set: jest.fn(),
+        observe: jest.fn(),
+        intercept: jest.fn(),
+    }))();
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+    router.bind('from', from);
+
+    router.navigate('list', {from: new Date('2020-02-03')});
+    expect(from.set.mock.calls).toContainEqual([new Date('2020-02-03')]);
+});
+
 test('Navigate to child route using state', () => {
     const formRoute = extendObservable({}, {
         name: 'sulu_snippet.form',
