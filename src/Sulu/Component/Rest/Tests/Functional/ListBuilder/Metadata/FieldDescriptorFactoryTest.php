@@ -245,6 +245,12 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
                         'method' => 'LEFT',
                         'condition' => 'SuluContactBundle_ContactAddress.locale = \'de\'',
                     ],
+                    'user' => [
+                        'entity-name' => 'user',
+                        'field-name' => 'SuluSecurityBundle:User',
+                        'method' => 'LEFT',
+                        'condition' => 'user.idContacts = contact.id',
+                    ],
                 ],
             ],
         ];

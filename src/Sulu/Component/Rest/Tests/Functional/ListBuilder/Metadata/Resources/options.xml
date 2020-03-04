@@ -13,6 +13,12 @@
                     <orm:method>LEFT</orm:method>
                     <orm:condition>SuluContactBundle:ContactAddress.locale = ':locale'</orm:condition>
                 </orm:join>
+                <orm:join>
+                    <orm:entity-name>user</orm:entity-name>
+                    <orm:field-name>SuluSecurityBundle:User</orm:field-name>
+                    <orm:method>LEFT</orm:method>
+                    <orm:condition>user.idContacts = contact.id</orm:condition>
+                </orm:join>
             </orm:joins>
         </property>
     </properties>
