@@ -361,8 +361,8 @@ exports[`Render the MediaCollection 1`] = `
                         class="downloadButton"
                       >
                         <span
-                          aria-label="fa-cloud-download"
-                          class="fa fa-cloud-download"
+                          aria-label="su-download"
+                          class="su-download"
                         />
                       </button>
                     </div>
@@ -493,8 +493,8 @@ exports[`Render the MediaCollection 1`] = `
                         class="downloadButton"
                       >
                         <span
-                          aria-label="fa-cloud-download"
-                          class="fa fa-cloud-download"
+                          aria-label="su-download"
+                          class="su-download"
                         />
                       </button>
                     </div>
@@ -895,8 +895,8 @@ exports[`Render the MediaCollection for all media 1`] = `
                         class="downloadButton"
                       >
                         <span
-                          aria-label="fa-cloud-download"
-                          class="fa fa-cloud-download"
+                          aria-label="su-download"
+                          class="su-download"
                         />
                       </button>
                     </div>
@@ -1027,8 +1027,8 @@ exports[`Render the MediaCollection for all media 1`] = `
                         class="downloadButton"
                       >
                         <span
-                          aria-label="fa-cloud-download"
-                          class="fa fa-cloud-download"
+                          aria-label="su-download"
+                          class="su-download"
                         />
                       </button>
                     </div>

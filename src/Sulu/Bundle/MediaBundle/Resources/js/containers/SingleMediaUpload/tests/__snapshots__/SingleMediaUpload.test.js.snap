@@ -19,8 +19,8 @@ Array [
       >
         <div>
           <span
-            aria-label="fa-cloud-upload"
-            class="fa fa-cloud-upload uploadIcon"
+            aria-label="su-upload"
+            class="su-upload uploadIcon"
           />
           <div
             class="uploadInfoText"
@@ -89,8 +89,8 @@ exports[`Render a SingleMediaUpload in disabled state 1`] = `
     >
       <div>
         <span
-          aria-label="fa-cloud-upload"
-          class="fa fa-cloud-upload uploadIcon"
+          aria-label="su-upload"
+          class="su-upload uploadIcon"
         />
         <div
           class="uploadInfoText"
@@ -128,8 +128,8 @@ Array [
       >
         <div>
           <span
-            aria-label="fa-cloud-upload"
-            class="fa fa-cloud-upload uploadIcon"
+            aria-label="su-upload"
+            class="su-upload uploadIcon"
           />
           <div
             class="uploadInfoText"
@@ -202,8 +202,8 @@ exports[`Render a SingleMediaUpload with an empty icon if no image is passed 1`]
     >
       <div>
         <span
-          aria-label="fa-cloud-upload"
-          class="fa fa-cloud-upload uploadIcon"
+          aria-label="su-upload"
+          class="su-upload uploadIcon"
         />
         <div
           class="uploadInfoText"
@@ -240,8 +240,8 @@ Array [
       >
         <div>
           <span
-            aria-label="fa-cloud-upload"
-            class="fa fa-cloud-upload uploadIcon"
+            aria-label="su-upload"
+            class="su-upload uploadIcon"
           />
           <div
             class="uploadInfoText"
@@ -311,8 +311,8 @@ Array [
       >
         <div>
           <span
-            aria-label="fa-cloud-upload"
-            class="fa fa-cloud-upload uploadIcon"
+            aria-label="su-upload"
+            class="su-upload uploadIcon"
           />
           <div
             class="uploadInfoText"

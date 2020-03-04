@@ -19,8 +19,8 @@ Array [
       >
         <div>
           <span
-            aria-label="fa-cloud-upload"
-            class="fa fa-cloud-upload uploadIcon"
+            aria-label="su-upload"
+            class="su-upload uploadIcon"
           />
           <div
             class="uploadInfoText"
@@ -93,8 +93,8 @@ Array [
       >
         <div>
           <span
-            aria-label="fa-cloud-upload"
-            class="fa fa-cloud-upload uploadIcon"
+            aria-label="su-upload"
+            class="su-upload uploadIcon"
           />
           <div
             class="uploadInfoText"
@@ -179,8 +179,8 @@ Array [
       >
         <div>
           <span
-            aria-label="fa-cloud-upload"
-            class="fa fa-cloud-upload uploadIcon"
+            aria-label="su-upload"
+            class="su-upload uploadIcon"
           />
           <div
             class="uploadInfoText"

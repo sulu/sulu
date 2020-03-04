@@ -9,7 +9,7 @@ import MimeTypeIndicator from '../MimeTypeIndicator';
 import DownloadList from './DownloadList';
 import mediaCardStyles from './mediaCard.scss';
 
-const DOWNLOAD_ICON = 'fa-cloud-download';
+const DOWNLOAD_ICON = 'su-download';
 
 type Props = {|
     downloadCopyText: string,
