@@ -1,11 +1,12 @@
 @font-face {
   font-family: 'sulu';
   src:
-    url('fonts/sulu.ttf?i4s12p') format('truetype'),
-    url('fonts/sulu.woff?i4s12p') format('woff'),
-    url('fonts/sulu.svg?i4s12p#sulu') format('svg');
+    url('fonts/sulu.ttf?aawe35') format('truetype'),
+    url('fonts/sulu.woff?aawe35') format('woff'),
+    url('fonts/sulu.svg?aawe35#sulu') format('svg');
   font-weight: normal;
   font-style: normal;
+  font-display: block;
 }
 
 [class^="su-"], [class*=" su-"] {
@@ -23,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.su-filter:before {
+  content: "\e977";
+}
 .su-enter:before {
   content: "\e974";
 }
