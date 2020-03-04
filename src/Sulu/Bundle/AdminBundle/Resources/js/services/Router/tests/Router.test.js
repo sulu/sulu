@@ -1020,6 +1020,56 @@ test('Binding should not be updated if only data type changes', () => {
     expect(page.set.mock.calls).not.toContainEqual(['2']);
 });
 
+test('Binding should not be updated if the same object is set again', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            type: 'list',
+            path: '/list',
+            attributeDefaults: {},
+        },
+    });
+
+    const filter = jest.fn(() => ({
+        get: jest.fn().mockReturnValue({}),
+        set: jest.fn(),
+        observe: jest.fn(),
+        intercept: jest.fn(),
+    }))();
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+    router.bind('filter', filter);
+
+    router.navigate('list', {filter: {}});
+    expect(filter.set.mock.calls).not.toContainEqual([{}]);
+});
+
+test('Binding should be updated if another object is set', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            type: 'list',
+            path: '/list',
+            attributeDefaults: {},
+        },
+    });
+
+    const filter = jest.fn(() => ({
+        get: jest.fn().mockReturnValue({}),
+        set: jest.fn(),
+        observe: jest.fn(),
+        intercept: jest.fn(),
+    }))();
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+    router.bind('filter', filter);
+
+    router.navigate('list', {filter: {test: {eq: 'Test'}}});
+    expect(filter.set.mock.calls).toContainEqual([{test: {eq: 'Test'}}]);
+});
+
 test('Navigate to child route using state', () => {
     const formRoute = extendObservable({}, {
         name: 'sulu_snippet.form',

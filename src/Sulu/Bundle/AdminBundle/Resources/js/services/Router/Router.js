@@ -37,6 +37,20 @@ function tryParse(value: ?string) {
     return parseFloat(value);
 }
 
+function equalBindings(value1, value2) {
+    if (typeof(value1) !== 'object' || typeof(value2) !== 'object') {
+        return value1 == value2;
+    }
+
+    const objectKeys = Object.keys(value1);
+
+    if (!equal(objectKeys, Object.keys(value2))) {
+        return false;
+    }
+
+    return objectKeys.every((key) => equalBindings(value1[key], value2[key]));
+}
+
 function addValueToSearchParameters(searchParameters: URLSearchParams, value: Object, path: string) {
     if (Array.isArray(value)) {
         addArrayToSearchParameters(searchParameters, value, path);
@@ -302,7 +316,7 @@ export default class Router {
                 : this.bindingDefaults.get(key);
 
             // Type unsafe comparison to not trigger a new navigation when only data type changes
-            if (value != observableValue.get()) {
+            if (!equalBindings(value, observableValue.get())) {
                 observableValue.set(value);
             }
         }
