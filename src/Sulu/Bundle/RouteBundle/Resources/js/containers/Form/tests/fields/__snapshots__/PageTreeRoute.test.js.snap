@@ -1,0 +1,122 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a PageTreeRoute 1`] = `
+<div
+  class="grid"
+>
+  <div
+    class="item colSpan colSpan-5 space-before-0 space-after-0"
+  >
+    <div
+      class="singleItemSelection"
+    >
+      <button
+        class="button left"
+        type="button"
+      >
+        <span
+          aria-label="su-document"
+          class="su-document icon"
+        />
+      </button>
+      <div
+        class="itemContainer"
+      >
+        <div
+          class="item"
+        >
+          <div
+            class="empty"
+          >
+            sulu_page.no_page_selected
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="item colSpan colSpan-7 space-before-0 space-after-0"
+  />
+</div>
+`;
+
+exports[`Render a PageTreeRoute 2`] = `
+<div
+  class="singleItemSelection"
+>
+  <button
+    class="button left"
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document icon"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+    >
+      <div>
+        <span
+          class="itemColumn"
+          style="width: 100%;"
+        >
+          /test/uuid-uuid-uuid-uuid
+        </span>
+      </div>
+    </div>
+    <button
+      class="removeButton"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Render a PageTreeRoute without value 1`] = `
+<div
+  class="grid"
+>
+  <div
+    class="item colSpan colSpan-5 space-before-0 space-after-0"
+  >
+    <div
+      class="singleItemSelection"
+    >
+      <button
+        class="button left"
+        type="button"
+      >
+        <span
+          aria-label="su-document"
+          class="su-document icon"
+        />
+      </button>
+      <div
+        class="itemContainer"
+      >
+        <div
+          class="item"
+        >
+          <div
+            class="empty"
+          >
+            sulu_page.no_page_selected
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="item colSpan colSpan-7 space-before-0 space-after-0"
+  />
+</div>
+`;

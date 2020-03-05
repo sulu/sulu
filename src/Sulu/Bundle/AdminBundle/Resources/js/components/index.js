@@ -32,6 +32,7 @@ import Overlay from './Overlay';
 import Phone from './Phone';
 import Popover from './Popover';
 import PublishIndicator from './PublishIndicator';
+import ResourceLocator from './ResourceLocator';
 import SingleSelect from './SingleSelect';
 import Table from './Table';
 import Toolbar from './Toolbar';
@@ -72,6 +73,7 @@ export {
     Phone,
     Popover,
     PublishIndicator,
+    ResourceLocator,
     SingleSelect,
     Table,
     Toolbar,
