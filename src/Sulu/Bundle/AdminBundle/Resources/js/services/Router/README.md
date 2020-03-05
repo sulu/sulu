@@ -111,8 +111,6 @@ router.bind('value', value, 'default');
 value.get(); // returns something
 
 value.set('anything'); // will navigate to /page?value=anything
-
-router.unbind('value', value); // unbind to avoid leaking listeners
 ```
 
 Mind that the bindings will be cleared on every `navigate` call. This is necessary to avoid superfluous updates because
