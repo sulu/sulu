@@ -96,7 +96,7 @@ test('Show filter options in disabled state if a filter for them was already add
 
     const fieldFilter = mount(<FieldFilter fields={schema} onChange={changeSpy} value={value} />);
 
-    fieldFilter.find('Button[icon="fa-filter"]').simulate('click');
+    fieldFilter.find('Button[icon="su-filter"]').simulate('click');
 
     expect(fieldFilter.find('ArrowMenu Action[value="firstName"]').prop('disabled')).toEqual(true);
     expect(fieldFilter.find('ArrowMenu Action[value="lastName"]').prop('disabled')).toEqual(false);
@@ -135,7 +135,7 @@ test('Call onChange with new filter chip when Action in ArrowMenu was clicked', 
     };
 
     const fieldFilter = mount(<FieldFilter fields={schema} onChange={changeSpy} value={value} />);
-    fieldFilter.find('Button[icon="fa-filter"]').simulate('click');
+    fieldFilter.find('Button[icon="su-filter"]').simulate('click');
     fieldFilter.find('ArrowMenu Action[value="lastName"]').simulate('click');
 
     expect(changeSpy).toBeCalledWith({firstName: undefined, lastName: undefined});

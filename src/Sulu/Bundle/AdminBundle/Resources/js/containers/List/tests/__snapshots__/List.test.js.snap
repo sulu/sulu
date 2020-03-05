@@ -216,8 +216,8 @@ exports[`Render the adapter with filters 1`] = `
           type="button"
         >
           <span
-            aria-label="fa-filter"
-            class="fa fa-filter buttonIcon"
+            aria-label="su-filter"
+            class="su-filter buttonIcon"
           />
           <span
             aria-label="su-angle-down"

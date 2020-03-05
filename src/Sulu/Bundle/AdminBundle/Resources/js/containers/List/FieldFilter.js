@@ -100,7 +100,7 @@ class FieldFilter extends React.Component<Props> {
                             anchorElement={
                                 <div className={fieldFilterStyles.filterButton}>
                                     <Button
-                                        icon="fa-filter"
+                                        icon="su-filter"
                                         onClick={this.handleFilterButtonClick}
                                         showDropdownIcon={true}
                                         skin="icon"
