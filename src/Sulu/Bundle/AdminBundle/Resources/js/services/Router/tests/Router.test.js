@@ -231,14 +231,14 @@ test('Navigate to route with date search parameters using state', () => {
 
     router.navigate(
         'page',
-        {uuid: 'some-uuid', page: 1, from: new Date('2020-02-28')}
+        {uuid: 'some-uuid', page: 1, from: new Date('2020-02-28 00:00')}
     );
     expect(isObservable(router.route)).toBe(true);
     expect(router.route.type).toBe('form');
     expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
     expect(router.attributes.page).toBe(1);
-    expect(router.attributes.from).toEqual(new Date('2020-02-28'));
+    expect(router.attributes.from).toEqual(new Date('2020-02-28 00:00'));
     expect(history.location.pathname).toBe('/pages/some-uuid');
     expect(history.location.search).toBe('?page=1&from=2020-02-28');
 });
@@ -426,6 +426,30 @@ test('Update observable attribute on route change', () => {
     history.push('/list/de');
     expect(router.attributes.locale).toBe('de');
     expect(history.location.pathname).toBe('/list/de');
+});
+
+test('Update date observable attribute on route change', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            type: 'list',
+            path: '/list',
+            attributeDefaults: {},
+        },
+    });
+
+    const date = observable.box();
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+
+    router.bind('date', date);
+
+    router.navigate('list', {date: new Date('2020-02-29 00:00')});
+    expect(router.attributes.date).toEqual(new Date('2020-02-29 00:00'));
+
+    history.push('/list?date=2020-02-29');
+    expect(router.attributes.date).toEqual(new Date('2020-02-29 00:00'));
 });
 
 test('Update boolean observable attribute on route change', () => {
