@@ -54,17 +54,27 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                 return;
             }
 
-            const parts = formInspector.getValuesByTag(PART_TAG)
-                .filter((part) => part !== null && part !== undefined);
+            const partEntries = formInspector.getPathsByTag(PART_TAG)
+                .map((path: string) => [path, formInspector.getValueByPath(path)])
+                .filter(([, value: mixed]) => !!value)
+                .map(([path: string, value: mixed]) => {
+                    // path is a jsonpointer but the api controller requires property names
+                    if (path.startsWith('/')) {
+                        return [path.substr(1), value];
+                    }
 
-            if (parts.length === 0) {
+                    return [path, value];
+                });
+
+            if (partEntries.length === 0) {
                 return;
             }
 
             Requester.post(
                 generationUrl,
                 {
-                    parts,
+                    parts: Object.fromEntries(partEntries),
+                    resourceKey: formInspector.resourceKey,
                     locale: formInspector.locale ? formInspector.locale.get() : undefined,
                     ...formInspector.options,
                 }

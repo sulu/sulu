@@ -98,6 +98,7 @@ export interface FormStoreInterface {
     errors: Object,
     +finishField: (dataPath: string) => void,
     +forbidden: boolean,
+    +getPathsByTag: (tagName: string) => Array<string>,
     +getSchemaEntryByPath: (schemaPath: string) => SchemaEntry,
     +getValueByPath: (path: string) => mixed,
     +getValuesByTag: (tagName: string) => Array<mixed>,

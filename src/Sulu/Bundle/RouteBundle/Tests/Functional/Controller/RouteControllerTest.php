@@ -24,6 +24,28 @@ class RouteControllerTest extends SuluTestCase
 
     const TEST_LOCALE = 'de';
 
+    public function testGenerate()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'POST',
+            '/api/routes?action=generate',
+            [
+                'locale' => self::TEST_LOCALE,
+                'resourceKey' => self::TEST_RESOURCE_KEY,
+                'parts' => [
+                    'title' => 'test',
+                    'year' => '2019',
+                ],
+            ]
+        );
+
+        $result = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $this->assertEquals($result['resourcelocator'], '/prefix/2019/test');
+    }
+
     public function testCGetAction()
     {
         $this->purgeDatabase();

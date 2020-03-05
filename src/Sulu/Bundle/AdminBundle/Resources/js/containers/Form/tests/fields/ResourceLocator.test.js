@@ -15,11 +15,13 @@ jest.mock('../../../../utils/Translator', () => ({
 }));
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions = {}) {
+    this.resourceKey = resourceKey;
     this.id = id;
     this.locale = observableOptions.locale;
 }));
 
 jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore, formKey, options) {
+    this.resourceKey = resourceStore.resourceKey;
     this.id = resourceStore.id;
     this.locale = resourceStore.locale;
     this.options = options;
@@ -29,9 +31,11 @@ jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.id = formStore.id;
     this.locale = formStore.locale;
     this.options = formStore.options;
+    this.resourceKey = formStore.resourceKey;
     this.errors = {};
     this.addFinishFieldHandler = jest.fn();
-    this.getValuesByTag = jest.fn();
+    this.getPathsByTag = jest.fn();
+    this.getValueByPath = jest.fn();
     this.getSchemaEntryByPath = jest.fn().mockReturnValue({});
     this.isFieldModified = jest.fn().mockReturnValue(false);
 }));
@@ -138,7 +142,7 @@ test('Render history link if entity already existed including passed options', (
         resourceLocator.update();
         expect(resourceLocator.find('ResourceLocatorHistory')).toHaveLength(1);
         expect(resourceLocator.find('ResourceLocatorHistory').prop('options'))
-            .toEqual({history: true, webspace: 'sulu'});
+            .toEqual({history: true, webspace: 'sulu', resourceKey: 'test'});
         expect(resourceLocator.find('ResourceLocatorHistory').prop('resourceKey')).toEqual('page_resourcelocators');
         expect(resourceLocator.find('ResourceLocatorHistory').prop('id')).toEqual(1);
     });
@@ -260,7 +264,7 @@ test('Should not request a new URL if on an edit form', () =>{
 test('Should request a new URL if no URL was defined', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            new ResourceStore('tests', undefined, {locale: observable.box('en')}),
             'test'
         )
     );
@@ -283,7 +287,9 @@ test('Should request a new URL if no URL was defined', () => {
 
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
-    formInspector.getValuesByTag.mockReturnValue(['te', 'st']);
+    formInspector.getPathsByTag.mockReturnValue(['/ti', '/tle']);
+    formInspector.getValueByPath.mockReturnValueOnce('te');
+    formInspector.getValueByPath.mockReturnValueOnce('st');
     formInspector.getSchemaEntryByPath.mockReturnValue({
         tags: [
             {name: 'sulu.rlp.part'},
@@ -297,10 +303,16 @@ test('Should request a new URL if no URL was defined', () => {
     finishFieldHandler('/block/0/url', '/url');
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
-    expect(formInspector.getValuesByTag).toBeCalledWith('sulu.rlp.part');
+    expect(formInspector.getPathsByTag).toBeCalledWith('sulu.rlp.part');
+    expect(formInspector.getValueByPath).toBeCalledWith('/ti');
+    expect(formInspector.getValueByPath).toBeCalledWith('/tle');
     expect(Requester.post).toBeCalledWith(
         '/admin/api/resourcelocators?action=generate',
-        {locale: 'en', parts: ['te', 'st']}
+        {
+            locale: 'en',
+            resourceKey: 'tests',
+            parts: {ti: 'te', tle: 'st'},
+        }
     );
 
     return resourceLocatorPromise.then(() => {
@@ -335,7 +347,6 @@ test('Should not request a new URL if URL was defined', () => {
 
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
-    formInspector.getValuesByTag.mockReturnValue(['te', 'st']);
     formInspector.getSchemaEntryByPath.mockReturnValue({
         tags: [
             {name: 'sulu.rlp.part'},
@@ -345,7 +356,7 @@ test('Should not request a new URL if URL was defined', () => {
     finishFieldHandler('/block/0/url', '/url');
 
     expect(formInspector.getSchemaEntryByPath).not.toBeCalled();
-    expect(formInspector.getValuesByTag).not.toBeCalled();
+    expect(formInspector.getPathsByTag).not.toBeCalled();
     expect(Requester.post).not.toBeCalled();
 });
 
@@ -376,7 +387,9 @@ test('Should request a new URL including the options from the ResourceFormStore 
 
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
-    formInspector.getValuesByTag.mockReturnValue(['te', 'st']);
+    formInspector.getPathsByTag.mockReturnValue(['/ti', '/tle']);
+    formInspector.getValueByPath.mockReturnValueOnce('te');
+    formInspector.getValueByPath.mockReturnValueOnce('st');
     formInspector.getSchemaEntryByPath.mockReturnValue({
         tags: [
             {name: 'sulu.rlp.part'},
@@ -391,10 +404,17 @@ test('Should request a new URL including the options from the ResourceFormStore 
     finishFieldHandler('/block/0/url', '/url');
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
-    expect(formInspector.getValuesByTag).toBeCalledWith('sulu.rlp.part');
+    expect(formInspector.getPathsByTag).toBeCalledWith('sulu.rlp.part');
+    expect(formInspector.getValueByPath).toBeCalledWith('/ti');
+    expect(formInspector.getValueByPath).toBeCalledWith('/tle');
     expect(Requester.post).toBeCalledWith(
         '/admin/api/resourcelocators?action=generate',
-        {locale: undefined, parts: ['te', 'st'], webspace: 'example'}
+        {
+            locale: undefined,
+            parts: {ti: 'te', tle: 'st'},
+            resourceKey: 'test',
+            webspace: 'example',
+        }
     );
 
     return resourceLocatorPromise.then(() => {
@@ -425,11 +445,11 @@ test('Should not request a new URL if no parts are available', () => {
             {name: 'sulu.rlp.part'},
         ],
     });
-    formInspector.getValuesByTag.mockReturnValue([]);
+    formInspector.getPathsByTag.mockReturnValue([]);
     finishFieldHandler('/block/0/url', '/url');
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
-    expect(formInspector.getValuesByTag).toBeCalledWith('sulu.rlp.part');
+    expect(formInspector.getPathsByTag).toBeCalledWith('sulu.rlp.part');
     expect(Requester.post).not.toBeCalled();
 });
 
@@ -451,7 +471,9 @@ test('Should not request a new URL if only empty parts are available', () => {
 
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
-    formInspector.getValuesByTag.mockReturnValue([null, undefined]);
+    formInspector.getPathsByTag.mockReturnValue(['/ti', '/tle']);
+    formInspector.getValueByPath.mockReturnValueOnce(null);
+    formInspector.getValueByPath.mockReturnValueOnce(undefined);
     formInspector.getSchemaEntryByPath.mockReturnValue({
         tags: [
             {name: 'sulu.rlp.part'},
@@ -460,7 +482,9 @@ test('Should not request a new URL if only empty parts are available', () => {
     finishFieldHandler('/block/0/url', '/url');
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
-    expect(formInspector.getValuesByTag).toBeCalledWith('sulu.rlp.part');
+    expect(formInspector.getPathsByTag).toBeCalledWith('sulu.rlp.part');
+    expect(formInspector.getValueByPath).toBeCalledWith('/ti');
+    expect(formInspector.getValueByPath).toBeCalledWith('/tle');
     expect(Requester.post).not.toBeCalled();
 });
 
@@ -482,7 +506,9 @@ test('Should not request a new URL if a field without the "sulu.rlp.part" tag ha
 
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
-    formInspector.getValuesByTag.mockReturnValue(['te', 'st']);
+    formInspector.getPathsByTag.mockReturnValue(['/ti', '/tle']);
+    formInspector.getValueByPath.mockReturnValueOnce('te');
+    formInspector.getValueByPath.mockReturnValueOnce('st');
     formInspector.getSchemaEntryByPath.mockReturnValue({
         tags: [
             {name: 'sulu.rlp'},
@@ -491,7 +517,7 @@ test('Should not request a new URL if a field without the "sulu.rlp.part" tag ha
     finishFieldHandler('/block/0/url', '/url');
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
-    expect(formInspector.getValuesByTag).not.toBeCalledWith('sulu.rlp.part');
+    expect(formInspector.getPathsByTag).not.toBeCalledWith('sulu.rlp.part');
     expect(Requester.post).not.toBeCalled();
 });
 
@@ -513,11 +539,13 @@ test('Should not request a new URL if a field without any tags has finished edit
 
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
-    formInspector.getValuesByTag.mockReturnValue(['te', 'st']);
+    formInspector.getPathsByTag.mockReturnValue(['/ti', '/tle']);
+    formInspector.getValueByPath.mockReturnValueOnce('te');
+    formInspector.getValueByPath.mockReturnValueOnce('st');
     finishFieldHandler('/block/0/url', '/url');
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
-    expect(formInspector.getValuesByTag).not.toBeCalledWith('sulu.rlp.part');
+    expect(formInspector.getPathsByTag).not.toBeCalledWith('sulu.rlp.part');
     expect(Requester.post).not.toBeCalled();
 });
 
@@ -548,7 +576,9 @@ test('Should not request a new URL if the resource locator field has already bee
 
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
-    formInspector.getValuesByTag.mockReturnValue(['te', 'st']);
+    formInspector.getPathsByTag.mockReturnValue(['/ti', '/tle']);
+    formInspector.getValueByPath.mockReturnValueOnce('te');
+    formInspector.getValueByPath.mockReturnValueOnce('st');
     formInspector.getSchemaEntryByPath.mockReturnValue({
         tags: [
             {name: 'sulu.rlp.part'},
@@ -561,6 +591,6 @@ test('Should not request a new URL if the resource locator field has already bee
     expect(formInspector.isFieldModified).toHaveBeenCalledTimes(1);
     expect(formInspector.isFieldModified).toBeCalledWith('/block/0/url');
     expect(formInspector.getSchemaEntryByPath).not.toBeCalledWith('/url');
-    expect(formInspector.getValuesByTag).not.toBeCalledWith('sulu.rlp.part');
+    expect(formInspector.getPathsByTag).not.toBeCalledWith('sulu.rlp.part');
     expect(Requester.post).not.toBeCalledWith();
 });

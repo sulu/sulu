@@ -40,6 +40,10 @@ export default class FormInspector {
         return this.formStore.getValuesByTag(tagName);
     }
 
+    getPathsByTag(tagName: string): Array<string> {
+        return this.formStore.getPathsByTag(tagName);
+    }
+
     getSchemaEntryByPath(schemaPath: string) {
         return this.formStore.getSchemaEntryByPath(schemaPath);
     }

@@ -39,7 +39,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
     public function testGenerate()
     {
         $this->client->request('POST', '/api/resourcelocators?action=generate', [
-            'parts' => ['test1', 'test2'],
+            'parts' => ['title' => 'test1', 'discription' => 'test2'],
             'locale' => 'en',
             'webspace' => 'sulu_io',
         ]);
@@ -65,7 +65,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
 
         $this->client->request('POST', '/api/resourcelocators?action=generate', [
             'parentId' => $parentPage['id'],
-            'parts' => ['test1', 'test2'],
+            'parts' => ['title' => 'test1', 'discription' => 'test2'],
             'locale' => 'en',
             'webspace' => 'sulu_io',
         ]);
@@ -90,7 +90,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->client->request('POST', '/api/resourcelocators?action=generate', [
-            'parts' => ['test'],
+            'parts' => ['title' => 'test'],
             'locale' => 'en',
             'webspace' => 'sulu_io',
         ]);

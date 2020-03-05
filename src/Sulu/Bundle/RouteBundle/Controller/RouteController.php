@@ -15,9 +15,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
+use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,16 +48,35 @@ class RouteController extends AbstractRestController implements ClassResourceInt
      */
     private $entityManager;
 
+    /**
+     * @var RouteGeneratorInterface
+     */
+    private $routeGenerator;
+
     public function __construct(
         ViewHandlerInterface $viewHandler,
         RouteRepositoryInterface $routeRepository,
         EntityManagerInterface $entityManager,
+        RouteGeneratorInterface $routeGenerator,
         array $resourceKeyMappings
     ) {
         parent::__construct($viewHandler);
+
         $this->routeRepository = $routeRepository;
         $this->entityManager = $entityManager;
+        $this->routeGenerator = $routeGenerator;
         $this->resourceKeyMappings = $resourceKeyMappings;
+    }
+
+    public function postAction(Request $request): Response
+    {
+        $action = $request->query->get('action');
+        switch ($action) {
+            case 'generate':
+                return $this->generateUrlResponse($request);
+        }
+
+        throw new RestException('Unrecognized action: ' . $action);
     }
 
     /**
@@ -72,7 +93,8 @@ class RouteController extends AbstractRestController implements ClassResourceInt
 
         // optional parameter
         $history = $this->getBooleanRequestParameter($request, 'history', false, false);
-        $entityClass = $this->resourceKeyMappings[$resourceKey] ?? null;
+        $mapping = $this->resourceKeyMappings[$resourceKey] ?? [];
+        $entityClass = $mapping['entityClass'] ?? null;
 
         if (!$entityClass) {
             throw new NotFoundHttpException(sprintf('No route mapping configured for resourceKey "%s"', $resourceKey));
@@ -125,5 +147,21 @@ class RouteController extends AbstractRestController implements ClassResourceInt
         $this->entityManager->flush();
 
         return $this->handleView($this->view());
+    }
+
+    private function generateUrlResponse(Request $request)
+    {
+        $resourceKey = $this->getRequestParameter($request, 'resourceKey');
+        $resourceKeyMapping = $this->resourceKeyMappings[$resourceKey] ?? null;
+
+        /** @var array $parts */
+        $parts = $this->getRequestParameter($request, 'parts', true);
+
+        $route = '/' . implode('-', $parts);
+        if ($resourceKeyMapping) {
+            $route = $this->routeGenerator->generate($parts, $this->resourceKeyMappings[$resourceKey]['options']);
+        }
+
+        return $this->handleView($this->view(['resourcelocator' => $route]));
     }
 }

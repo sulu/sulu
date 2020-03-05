@@ -29,4 +29,4 @@ sulu_route:
             resource_key: tests
             generator: schema
             options:
-                route_schema: "/{object.getTitle()}"
+                route_schema: "/prefix/{object['year']}/{object['title']}"

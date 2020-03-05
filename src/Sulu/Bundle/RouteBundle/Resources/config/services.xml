@@ -14,6 +14,7 @@
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="sulu.repository.route"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_route.generator.route_generator"/>
             <argument>%sulu_route.resource_key_mappings%</argument>
 
             <tag name="sulu.context" context="admin"/>
