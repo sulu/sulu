@@ -116,10 +116,10 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu_media.format_cache.segments', $config['format_cache']['segments']);
 
         // converter
-        $container->setParameter('sulu_media.ghost_script.path', $config['ghost_script']['path']);
+        $ghostScriptPath = $config['ghost_script']['path'];
+        $container->setParameter('sulu_media.ghost_script.path', $ghostScriptPath);
 
         // storage
-        $container->setParameter('sulu_media.media.max_file_size', '16MB');
         $container->setParameter(
             'sulu_media.media.blocked_file_types',
             $config['format_manager']['blocked_file_types']
@@ -194,5 +194,15 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         }
 
         $this->configurePersistence($config['objects'], $container);
+        $this->configureFileValidator($config, $container);
+    }
+
+    private function configureFileValidator(array $config, ContainerBuilder $container)
+    {
+        $definition = $container->getDefinition('sulu_media.file_validator');
+        $definition->addMethodCall('setMaxFileSize', [$config['upload']['max_filesize']]);
+
+        $blockedFileTypes = $config['format_manager']['blocked_file_types'];
+        $definition->addMethodCall('setBlockedMimeTypes', [$blockedFileTypes]);
     }
 }
