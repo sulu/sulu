@@ -70,4 +70,22 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
             ],
         ]);
     }
+
+    public function testConfigureFileValidator()
+    {
+        $this->container->setParameter('kernel.bundles', []);
+        $this->load();
+
+        $this->assertContainerBuilderHasService('sulu_media.file_validator');
+        $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
+            'sulu_media.file_validator',
+            'setMaxFileSize',
+            ['256MB']
+        );
+        $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
+            'sulu_media.file_validator',
+            'setBlockedMimeTypes',
+            [['file/exe']]
+        );
+    }
 }
