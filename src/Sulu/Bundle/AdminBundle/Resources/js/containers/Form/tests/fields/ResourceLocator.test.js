@@ -287,9 +287,9 @@ test('Should request a new URL if no URL was defined', () => {
 
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
-    formInspector.getPathsByTag.mockReturnValue(['/ti', '/tle']);
-    formInspector.getValueByPath.mockReturnValueOnce('te');
-    formInspector.getValueByPath.mockReturnValueOnce('st');
+    formInspector.getPathsByTag.mockReturnValue(['/title', '/subtitle']);
+    formInspector.getValueByPath.mockReturnValueOnce('title-value');
+    formInspector.getValueByPath.mockReturnValueOnce('subtitle-value');
     formInspector.getSchemaEntryByPath.mockReturnValue({
         tags: [
             {name: 'sulu.rlp.part'},
@@ -304,14 +304,14 @@ test('Should request a new URL if no URL was defined', () => {
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
     expect(formInspector.getPathsByTag).toBeCalledWith('sulu.rlp.part');
-    expect(formInspector.getValueByPath).toBeCalledWith('/ti');
-    expect(formInspector.getValueByPath).toBeCalledWith('/tle');
+    expect(formInspector.getValueByPath).toBeCalledWith('/title');
+    expect(formInspector.getValueByPath).toBeCalledWith('/subtitle');
     expect(Requester.post).toBeCalledWith(
         '/admin/api/resourcelocators?action=generate',
         {
             locale: 'en',
             resourceKey: 'tests',
-            parts: {ti: 'te', tle: 'st'},
+            parts: {title: 'title-value', subtitle: 'subtitle-value'},
         }
     );
 
@@ -387,9 +387,9 @@ test('Should request a new URL including the options from the ResourceFormStore 
 
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
-    formInspector.getPathsByTag.mockReturnValue(['/ti', '/tle']);
-    formInspector.getValueByPath.mockReturnValueOnce('te');
-    formInspector.getValueByPath.mockReturnValueOnce('st');
+    formInspector.getPathsByTag.mockReturnValue(['/title', '/subtitle']);
+    formInspector.getValueByPath.mockReturnValueOnce('title-value');
+    formInspector.getValueByPath.mockReturnValueOnce('subtitle-value');
     formInspector.getSchemaEntryByPath.mockReturnValue({
         tags: [
             {name: 'sulu.rlp.part'},
@@ -405,13 +405,13 @@ test('Should request a new URL including the options from the ResourceFormStore 
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
     expect(formInspector.getPathsByTag).toBeCalledWith('sulu.rlp.part');
-    expect(formInspector.getValueByPath).toBeCalledWith('/ti');
-    expect(formInspector.getValueByPath).toBeCalledWith('/tle');
+    expect(formInspector.getValueByPath).toBeCalledWith('/title');
+    expect(formInspector.getValueByPath).toBeCalledWith('/subtitle');
     expect(Requester.post).toBeCalledWith(
         '/admin/api/resourcelocators?action=generate',
         {
             locale: undefined,
-            parts: {ti: 'te', tle: 'st'},
+            parts: {title: 'title-value', subtitle: 'subtitle-value'},
             resourceKey: 'test',
             webspace: 'example',
         }
@@ -471,7 +471,7 @@ test('Should not request a new URL if only empty parts are available', () => {
 
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
-    formInspector.getPathsByTag.mockReturnValue(['/ti', '/tle']);
+    formInspector.getPathsByTag.mockReturnValue(['/title', '/subtitle']);
     formInspector.getValueByPath.mockReturnValueOnce(null);
     formInspector.getValueByPath.mockReturnValueOnce(undefined);
     formInspector.getSchemaEntryByPath.mockReturnValue({
@@ -483,8 +483,8 @@ test('Should not request a new URL if only empty parts are available', () => {
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
     expect(formInspector.getPathsByTag).toBeCalledWith('sulu.rlp.part');
-    expect(formInspector.getValueByPath).toBeCalledWith('/ti');
-    expect(formInspector.getValueByPath).toBeCalledWith('/tle');
+    expect(formInspector.getValueByPath).toBeCalledWith('/title');
+    expect(formInspector.getValueByPath).toBeCalledWith('/subtitle');
     expect(Requester.post).not.toBeCalled();
 });
 
@@ -506,9 +506,9 @@ test('Should not request a new URL if a field without the "sulu.rlp.part" tag ha
 
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
-    formInspector.getPathsByTag.mockReturnValue(['/ti', '/tle']);
-    formInspector.getValueByPath.mockReturnValueOnce('te');
-    formInspector.getValueByPath.mockReturnValueOnce('st');
+    formInspector.getPathsByTag.mockReturnValue(['/title', '/subtitle']);
+    formInspector.getValueByPath.mockReturnValueOnce('title-value');
+    formInspector.getValueByPath.mockReturnValueOnce('subtitle-value');
     formInspector.getSchemaEntryByPath.mockReturnValue({
         tags: [
             {name: 'sulu.rlp'},
@@ -539,9 +539,9 @@ test('Should not request a new URL if a field without any tags has finished edit
 
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
-    formInspector.getPathsByTag.mockReturnValue(['/ti', '/tle']);
-    formInspector.getValueByPath.mockReturnValueOnce('te');
-    formInspector.getValueByPath.mockReturnValueOnce('st');
+    formInspector.getPathsByTag.mockReturnValue(['/title', '/subtitle']);
+    formInspector.getValueByPath.mockReturnValueOnce('title-value');
+    formInspector.getValueByPath.mockReturnValueOnce('subtitle-value');
     finishFieldHandler('/block/0/url', '/url');
 
     expect(formInspector.getSchemaEntryByPath).toBeCalledWith('/url');
@@ -576,9 +576,9 @@ test('Should not request a new URL if the resource locator field has already bee
 
     const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
 
-    formInspector.getPathsByTag.mockReturnValue(['/ti', '/tle']);
-    formInspector.getValueByPath.mockReturnValueOnce('te');
-    formInspector.getValueByPath.mockReturnValueOnce('st');
+    formInspector.getPathsByTag.mockReturnValue(['/title', '/subtitle']);
+    formInspector.getValueByPath.mockReturnValueOnce('title-value');
+    formInspector.getValueByPath.mockReturnValueOnce('subtitle-value');
     formInspector.getSchemaEntryByPath.mockReturnValue({
         tags: [
             {name: 'sulu.rlp.part'},

@@ -4,7 +4,7 @@ import {fieldRegistry, ResourceLocator} from 'sulu-admin-bundle/containers';
 import initializer from 'sulu-admin-bundle/services/initializer';
 
 initializer.addUpdateConfigHook('sulu_admin', () => {
-    const generationUrl = resourceRouteRegistry.getListUrl('routes', {action: 'generate'});
+    const routeGenerationUrl = resourceRouteRegistry.getListUrl('routes', {action: 'generate'});
 
     fieldRegistry.add(
         'route',
@@ -14,7 +14,7 @@ initializer.addUpdateConfigHook('sulu_admin', () => {
             modeResolver: () => {
                 return Promise.resolve('full');
             },
-            generationUrl: generationUrl,
+            generationUrl: routeGenerationUrl,
             options: {history: true},
         }
     );
