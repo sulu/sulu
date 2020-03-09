@@ -48,13 +48,16 @@ class SuluRouteExtension extends Extension implements PrependExtensionInterface
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
         $container->setParameter('sulu_route.mappings', $config['mappings']);
+
+        $resourceKeyMappings = [];
+        foreach ($config['mappings'] as $entityClass => $mapping) {
+            $resourceKeyMappings[$mapping['resource_key']] = $mapping;
+            $resourceKeyMappings[$mapping['resource_key']]['entityClass'] = $entityClass;
+        }
+
         $container->setParameter(
             'sulu_route.resource_key_mappings',
-            array_flip(
-                array_map(function($mapping) {
-                    return $mapping['resource_key'];
-                }, $config['mappings'])
-            )
+            $resourceKeyMappings
         );
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
