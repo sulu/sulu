@@ -183,6 +183,36 @@ test('Navigate to route with array search parameters using state', () => {
     expect(history.location.search).toBe('?page=1&ids%5B0%5D=1&ids%5B1%5D=2&ids%5B2%5D=3');
 });
 
+test('Navigate to route with dates in array search parameters using state', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            type: 'form',
+            path: '/pages/:uuid',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+    });
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+
+    router.navigate(
+        'page',
+        {uuid: 'some-uuid', page: 1, dates: [new Date('2020-03-10 00:00'), new Date('2020-03-20 00:00')]}
+    );
+    expect(isObservable(router.route)).toBe(true);
+    expect(router.route.type).toBe('form');
+    expect(router.route.options.type).toBe('page');
+    expect(router.attributes.uuid).toBe('some-uuid');
+    expect(router.attributes.page).toBe(1);
+    expect(router.attributes.dates).toEqual([new Date('2020-03-10 00:00'), new Date('2020-03-20 00:00')]);
+    expect(history.location.pathname).toBe('/pages/some-uuid');
+    expect(history.location.search).toBe('?page=1&dates%5B0%5D=2020-03-10&dates%5B1%5D=2020-03-20');
+});
+
 test('Navigate to route with array nested in object search parameters using state', () => {
     routeRegistry.getAll.mockReturnValue({
         page: {

@@ -69,7 +69,7 @@ function addValueToSearchParameters(searchParameters: URLSearchParams, value: Ob
 
 function addArrayToSearchParameters(searchParameters: URLSearchParams, values: Array<*>, path: string) {
     values.forEach((value, index) => {
-        searchParameters.append(path + '[' + index + ']', value);
+        addValueToSearchParameters(searchParameters, value, path + '[' + index + ']');
     });
 }
 
@@ -80,11 +80,7 @@ function addDateToSearchParameters(searchParameters: URLSearchParams, value: Dat
 function addObjectToSearchParameters(searchParameters: URLSearchParams, value: Object, path: string) {
     for (const key in value) {
         const childPath = path + OBJECT_DELIMITER + key;
-        if (typeof value[key] === 'object') {
-            addValueToSearchParameters(searchParameters, value[key], childPath);
-        } else {
-            searchParameters.set(childPath, value[key]);
-        }
+        addValueToSearchParameters(searchParameters, value[key], childPath);
     }
 }
 

@@ -4,18 +4,21 @@ import symfonyRouting from 'fos-jsrouting/router';
 import type {EndpointConfiguration} from '../types';
 import {transformDateForUrl} from '../../../utils/Date';
 
+function transformParameter(parameter) {
+    return Array.isArray(parameter) || isObservableArray(parameter)
+        ? parameter.map(transformParameter).join(',')
+        : parameter instanceof Date
+            ? transformDateForUrl(parameter)
+            : parameter instanceof Object ? transformParameters(parameter) : toJS(parameter);
+}
+
 function transformParameters(parameters) {
     return Object.keys(parameters)
         .filter((parameterKey) => parameters[parameterKey] !== undefined)
         .reduce((transformedParameters, parameterKey) => {
             const value = parameters[parameterKey];
 
-            transformedParameters[parameterKey] = Array.isArray(value) || isObservableArray(value)
-                ? value.join(',')
-                : value instanceof Date
-                    ? transformDateForUrl(value)
-                    : value instanceof Object ? transformParameters(value) : toJS(value);
-
+            transformedParameters[parameterKey] = transformParameter(value);
             return transformedParameters;
         }, {});
 }
