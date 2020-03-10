@@ -60,6 +60,23 @@ test('Set and get endpoints for given key with date array parameter', () => {
         .toEqual('get_snippets?dates=2020-09-07,2020-11-05');
 });
 
+test('Set and get endpoints for given key with date in object parameter', () => {
+    resourceRouteRegistry.setEndpoints({
+        snippets: {
+            routes: {
+                detail: 'get_snippet',
+                list: 'get_snippets',
+            },
+        },
+    });
+
+    resourceRouteRegistry.getDetailUrl('snippets', {value: {name: 'test', date: new Date('2020-09-07')}});
+    expect(SymfonyRouting.generate).toBeCalledWith('get_snippet', {'value': {'name': 'test', 'date': '2020-09-07'}});
+
+    resourceRouteRegistry.getListUrl('snippets', {value: {name: 'test', date: new Date('2020-09-07')}});
+    expect(SymfonyRouting.generate).toBeCalledWith('get_snippets', {'value': {'name': 'test', 'date': '2020-09-07'}});
+});
+
 test('Throw exception when getting detail url for not existing key', () => {
     expect(() => resourceRouteRegistry.getDetailUrl('not-existing')).toThrow(/"not-existing"/);
 });
