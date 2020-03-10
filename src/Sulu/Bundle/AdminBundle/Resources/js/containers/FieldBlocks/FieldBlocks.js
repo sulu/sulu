@@ -1,6 +1,7 @@
 // @flow
 import jsonpointer from 'json-pointer';
 import React, {Fragment} from 'react';
+import log from 'loglevel';
 import {toJS} from 'mobx';
 import BlockCollection from '../../components/BlockCollection';
 import type {BlockEntry} from '../../components/BlockCollection/types';
@@ -40,6 +41,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
     renderExpandedBlockContent = (value: Object, type: string, index: number) => {
         const {
             dataPath,
+            defaultType,
             error,
             formInspector,
             onFinish,
@@ -58,7 +60,10 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
             throw new Error(MISSING_BLOCK_ERROR_MESSAGE);
         }
 
-        const blockType = types[type];
+        const blockType = types[type] ? types[type] : types[defaultType];
+        if (!types[type]) {
+            log.warn('Could not find block type "' + type + '" in "' + schemaPath + '".');
+        }
 
         const errors = ((toJS(error): any): ?BlockError);
 
