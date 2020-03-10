@@ -371,7 +371,59 @@ test('Render block with schema', () => {
     const fieldBlocks = mount(
         <FieldBlocks
             {...fieldTypeDefaultProps}
-            defaultType="editor"
+            defaultType="default"
+            formInspector={formInspector}
+            types={types}
+            value={value}
+        />
+    );
+
+    fieldBlocks.find('Block').at(0).simulate('click');
+    fieldBlocks.find('Block').at(1).simulate('click');
+
+    expect(fieldBlocks.render()).toMatchSnapshot();
+});
+
+test('Render block with schema where type does not exist', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text1: {
+                    label: 'Text 1',
+                    type: 'text_line',
+                    visible: true,
+                },
+                text2: {
+                    label: 'Text 2',
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
+
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const value = [
+        {
+            text1: 'Test 1',
+            text2: 'Test 2',
+            type: 'not-exist',
+        },
+        {
+            text1: 'Test 3',
+            text2: 'Test 4',
+            type: 'default',
+        },
+    ];
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="default"
             formInspector={formInspector}
             types={types}
             value={value}

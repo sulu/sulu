@@ -32,6 +32,42 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
         onFinish();
     };
 
+    getBlockSchemaType = (type: ?string) => {
+        const {defaultType, types, schemaPath} = this.props;
+
+        if (!type) {
+            throw new Error(
+                'It is impossible that a block has no type. This should not happen and is likely a bug.'
+            );
+        }
+
+        if (!types) {
+            throw new Error(MISSING_BLOCK_ERROR_MESSAGE);
+        }
+
+        if (types[type]) {
+            return types[type];
+        }
+
+        if (!defaultType) {
+            throw new Error(
+                'It is impossible that a block has no defaultType. This should not happen and is likely a bug.'
+            );
+        }
+
+        log.warn(
+            'Could not find type "' + type + '" in "' + schemaPath + '" fallback to default type "' + defaultType + '".'
+        );
+
+        if (!types[defaultType]) {
+            throw new Error(
+                'The default type should exist in block "' + schemaPath + '".'
+            );
+        }
+
+        return types[defaultType];
+    };
+
     renderBlockContent = (value: Object, type: string, index: number, expanded: boolean) => {
         return expanded
             ? this.renderExpandedBlockContent(value, type, index)
@@ -41,7 +77,6 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
     renderExpandedBlockContent = (value: Object, type: string, index: number) => {
         const {
             dataPath,
-            defaultType,
             error,
             formInspector,
             onFinish,
@@ -49,22 +84,9 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
             router,
             schemaPath,
             showAllErrors,
-            types,
         } = this.props;
 
-        if (!formInspector) {
-            throw new Error('The FieldBlocks field type needs a formInspector to work properly');
-        }
-
-        if (!types) {
-            throw new Error(MISSING_BLOCK_ERROR_MESSAGE);
-        }
-
-        const blockType = types[type] ? types[type] : types[defaultType];
-        if (!types[type]) {
-            log.warn('Could not find block type "' + type + '" in "' + schemaPath + '".');
-        }
-
+        const blockSchemaType = this.getBlockSchemaType(type);
         const errors = ((toJS(error): any): ?BlockError);
 
         return (
@@ -78,7 +100,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
                 onFieldFinish={onFinish}
                 onSuccess={onSuccess}
                 router={router}
-                schema={blockType.form}
+                schema={blockSchemaType.form}
                 schemaPath={schemaPath + '/types/' + type + '/form'}
                 showAllErrors={showAllErrors}
             />
@@ -87,22 +109,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
 
     // eslint-disable-next-line no-unused-vars
     renderCollapsedBlockContent = (value: Object, type: string, index: number) => {
-        if (!type) {
-            throw new Error(
-                'It is impossible that a collapsed block has no type. This should not happen and is likely a bug.'
-            );
-        }
-
-        const {formInspector, schemaPath} = this.props;
-        const blockSchemaTypes = formInspector.getSchemaEntryByPath(schemaPath).types;
-
-        if (!blockSchemaTypes) {
-            throw new Error(
-                'It is impossible that the schema for blocks has no types. This should not happen and is likely a bug.'
-            );
-        }
-
-        const blockSchemaType = blockSchemaTypes[type];
+        const blockSchemaType = this.getBlockSchemaType(type);
         const blockSchemaTypeForm = blockSchemaType.form;
 
         const previewPropertyNames = Object.keys(blockSchemaTypeForm)
