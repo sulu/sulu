@@ -2,6 +2,11 @@
 
 ## dev-master
 
+### Router attributes
+
+The `Router` service now interprets more into the URL parameters that are passed to it. In addition to parsing numbers,
+boolean and strings to its JS equivalents, it will now do the same for `undefined` and dates in the format `yyyy-mm-dd`.
+
 ### Configuration of list item actions
 
 The prop of the `List` container which is used to configure the item actions was changed from `actions` to 

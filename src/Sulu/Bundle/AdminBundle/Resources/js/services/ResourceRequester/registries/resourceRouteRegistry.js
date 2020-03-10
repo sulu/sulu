@@ -2,17 +2,23 @@
 import {isObservableArray, toJS} from 'mobx';
 import symfonyRouting from 'fos-jsrouting/router';
 import type {EndpointConfiguration} from '../types';
+import {transformDateForUrl} from '../../../utils/Date';
+
+function transformParameter(parameter) {
+    return Array.isArray(parameter) || isObservableArray(parameter)
+        ? parameter.map(transformParameter).join(',')
+        : parameter instanceof Date
+            ? transformDateForUrl(parameter)
+            : parameter instanceof Object ? transformParameters(parameter) : toJS(parameter);
+}
 
 function transformParameters(parameters) {
     return Object.keys(parameters)
         .filter((parameterKey) => parameters[parameterKey] !== undefined)
         .reduce((transformedParameters, parameterKey) => {
-            const parameterValue = parameters[parameterKey];
+            const value = parameters[parameterKey];
 
-            transformedParameters[parameterKey] = Array.isArray(parameterValue) || isObservableArray(parameterValue)
-                ? parameterValue.join(',')
-                : toJS(parameterValue);
-
+            transformedParameters[parameterKey] = transformParameter(value);
             return transformedParameters;
         }, {});
 }

@@ -123,6 +123,186 @@ test('Navigate to route with search parameters using state', () => {
     expect(history.location.search).toBe('?page=1&sort=title');
 });
 
+test('Navigate to route with object search parameters using state', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            type: 'form',
+            path: '/pages/:uuid',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+    });
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+
+    router.navigate(
+        'page',
+        {uuid: 'some-uuid', page: 1, filter: {firstName: {eq: 'Max'}, lastName: {eq: 'Mustermann'}}}
+    );
+    expect(isObservable(router.route)).toBe(true);
+    expect(router.route.type).toBe('form');
+    expect(router.route.options.type).toBe('page');
+    expect(router.attributes.uuid).toBe('some-uuid');
+    expect(router.attributes.page).toBe(1);
+    expect(router.attributes.filter).toEqual({firstName: {eq: 'Max'}, lastName: {eq: 'Mustermann'}});
+    expect(history.location.pathname).toBe('/pages/some-uuid');
+    expect(history.location.search).toBe('?page=1&filter.firstName.eq=Max&filter.lastName.eq=Mustermann');
+});
+
+test('Navigate to route with array search parameters using state', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            type: 'form',
+            path: '/pages/:uuid',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+    });
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+
+    router.navigate(
+        'page',
+        {uuid: 'some-uuid', page: 1, ids: [1, 2, 3]}
+    );
+    expect(isObservable(router.route)).toBe(true);
+    expect(router.route.type).toBe('form');
+    expect(router.route.options.type).toBe('page');
+    expect(router.attributes.uuid).toBe('some-uuid');
+    expect(router.attributes.page).toBe(1);
+    expect(router.attributes.ids).toEqual([1, 2, 3]);
+    expect(history.location.pathname).toBe('/pages/some-uuid');
+    expect(history.location.search).toBe('?page=1&ids%5B0%5D=1&ids%5B1%5D=2&ids%5B2%5D=3');
+});
+
+test('Navigate to route with dates in array search parameters using state', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            type: 'form',
+            path: '/pages/:uuid',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+    });
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+
+    router.navigate(
+        'page',
+        {uuid: 'some-uuid', page: 1, dates: [new Date('2020-03-10 00:00'), new Date('2020-03-20 00:00')]}
+    );
+    expect(isObservable(router.route)).toBe(true);
+    expect(router.route.type).toBe('form');
+    expect(router.route.options.type).toBe('page');
+    expect(router.attributes.uuid).toBe('some-uuid');
+    expect(router.attributes.page).toBe(1);
+    expect(router.attributes.dates).toEqual([new Date('2020-03-10 00:00'), new Date('2020-03-20 00:00')]);
+    expect(history.location.pathname).toBe('/pages/some-uuid');
+    expect(history.location.search).toBe('?page=1&dates%5B0%5D=2020-03-10&dates%5B1%5D=2020-03-20');
+});
+
+test('Navigate to route with array nested in object search parameters using state', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            type: 'form',
+            path: '/pages/:uuid',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+    });
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+
+    router.navigate(
+        'page',
+        {uuid: 'some-uuid', page: 1, filter: {ids: [1, 2, 3]}}
+    );
+    expect(isObservable(router.route)).toBe(true);
+    expect(router.route.type).toBe('form');
+    expect(router.route.options.type).toBe('page');
+    expect(router.attributes.uuid).toBe('some-uuid');
+    expect(router.attributes.page).toBe(1);
+    expect(router.attributes.filter).toEqual({ids: [1, 2, 3]});
+    expect(history.location.pathname).toBe('/pages/some-uuid');
+    expect(history.location.search).toBe('?page=1&filter.ids%5B0%5D=1&filter.ids%5B1%5D=2&filter.ids%5B2%5D=3');
+});
+
+test('Navigate to route with date search parameters using state', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            type: 'form',
+            path: '/pages/:uuid',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+    });
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+
+    router.navigate(
+        'page',
+        {uuid: 'some-uuid', page: 1, from: new Date('2020-02-28 00:00')}
+    );
+    expect(isObservable(router.route)).toBe(true);
+    expect(router.route.type).toBe('form');
+    expect(router.route.options.type).toBe('page');
+    expect(router.attributes.uuid).toBe('some-uuid');
+    expect(router.attributes.page).toBe(1);
+    expect(router.attributes.from).toEqual(new Date('2020-02-28 00:00'));
+    expect(history.location.pathname).toBe('/pages/some-uuid');
+    expect(history.location.search).toBe('?page=1&from=2020-02-28');
+});
+
+test('Navigate to route with string representing invalid date search parameters using state', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: {
+            name: 'page',
+            type: 'form',
+            path: '/pages/:uuid',
+            options: {
+                type: 'page',
+            },
+            attributeDefaults: {},
+        },
+    });
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+
+    router.navigate(
+        'page',
+        {uuid: 'some-uuid', page: 1, from: '2020-02-32'}
+    );
+    expect(isObservable(router.route)).toBe(true);
+    expect(router.route.type).toBe('form');
+    expect(router.route.options.type).toBe('page');
+    expect(router.attributes.uuid).toBe('some-uuid');
+    expect(router.attributes.page).toBe(1);
+    expect(router.attributes.from).toEqual('2020-02-32');
+    expect(history.location.pathname).toBe('/pages/some-uuid');
+    expect(history.location.search).toBe('?page=1&from=2020-02-32');
+});
+
 test('Navigate to route without parameters using state', () => {
     routeRegistry.getAll.mockReturnValue({
         page: {
@@ -276,6 +456,30 @@ test('Update observable attribute on route change', () => {
     history.push('/list/de');
     expect(router.attributes.locale).toBe('de');
     expect(history.location.pathname).toBe('/list/de');
+});
+
+test('Update date observable attribute on route change', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            type: 'list',
+            path: '/list',
+            attributeDefaults: {},
+        },
+    });
+
+    const date = observable.box();
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+
+    router.bind('date', date);
+
+    router.navigate('list', {date: new Date('2020-02-29 00:00')});
+    expect(router.attributes.date).toEqual(new Date('2020-02-29 00:00'));
+
+    history.push('/list?date=2020-02-29');
+    expect(router.attributes.date).toEqual(new Date('2020-02-29 00:00'));
 });
 
 test('Update boolean observable attribute on route change', () => {
@@ -868,6 +1072,106 @@ test('Binding should not be updated if only data type changes', () => {
 
     router.navigate('list', {page: '2'});
     expect(page.set.mock.calls).not.toContainEqual(['2']);
+});
+
+test('Binding should not be updated if the same object is set again', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            type: 'list',
+            path: '/list',
+            attributeDefaults: {},
+        },
+    });
+
+    const filter = jest.fn(() => ({
+        get: jest.fn().mockReturnValue({}),
+        set: jest.fn(),
+        observe: jest.fn(),
+        intercept: jest.fn(),
+    }))();
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+    router.bind('filter', filter);
+
+    router.navigate('list', {filter: {}});
+    expect(filter.set.mock.calls).not.toContainEqual([{}]);
+});
+
+test('Binding should be updated if another object is set', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            type: 'list',
+            path: '/list',
+            attributeDefaults: {},
+        },
+    });
+
+    const filter = jest.fn(() => ({
+        get: jest.fn().mockReturnValue({}),
+        set: jest.fn(),
+        observe: jest.fn(),
+        intercept: jest.fn(),
+    }))();
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+    router.bind('filter', filter);
+
+    router.navigate('list', {filter: {test: {eq: 'Test'}}});
+    expect(filter.set.mock.calls).toContainEqual([{test: {eq: 'Test'}}]);
+});
+
+test('Binding should not be updated if the same date is set again', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            type: 'list',
+            path: '/list',
+            attributeDefaults: {},
+        },
+    });
+
+    const from = jest.fn(() => ({
+        get: jest.fn().mockReturnValue(new Date('2020-02-02')),
+        set: jest.fn(),
+        observe: jest.fn(),
+        intercept: jest.fn(),
+    }))();
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+    router.bind('from', from);
+
+    router.navigate('list', {from: new Date('2020-02-02')});
+    expect(from.set.mock.calls).not.toContainEqual([new Date('2020-02-02')]);
+});
+
+test('Binding should be updated if the date changes', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            type: 'list',
+            path: '/list',
+            attributeDefaults: {},
+        },
+    });
+
+    const from = jest.fn(() => ({
+        get: jest.fn().mockReturnValue(new Date('2020-02-02')),
+        set: jest.fn(),
+        observe: jest.fn(),
+        intercept: jest.fn(),
+    }))();
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+    router.bind('from', from);
+
+    router.navigate('list', {from: new Date('2020-02-03')});
+    expect(from.set.mock.calls).toContainEqual([new Date('2020-02-03')]);
 });
 
 test('Navigate to child route using state', () => {
