@@ -127,7 +127,6 @@ class SnippetAdmin extends Admin
                     ->setTitle('sulu_snippet.snippets')
                     ->addListAdapters(['table'])
                     ->addLocales($snippetLocales)
-                    ->setDefaultLocale($snippetLocales[0])
                     ->setAddView(static::ADD_FORM_VIEW)
                     ->setEditView(static::EDIT_FORM_VIEW)
                     ->addToolbarActions($listToolbarActions)

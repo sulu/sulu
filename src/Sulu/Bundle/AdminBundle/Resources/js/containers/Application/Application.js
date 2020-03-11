@@ -69,8 +69,8 @@ class Application extends React.Component<Props>{
 
     navigationPinnedDisposer: () => void;
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.navigationPinnedDisposer = autorun(
             () => this.navigationPinned = userStore.getPersistentSetting(NAVIGATION_PINNED_SETTING_KEY)

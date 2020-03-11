@@ -4,6 +4,7 @@ import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import {List, ListStore, withToolbar} from 'sulu-admin-bundle/containers';
+import userStore from 'sulu-admin-bundle/stores/userStore/userStore';
 import type {Localization} from 'sulu-admin-bundle/stores';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import type {AttributeMap, Route} from 'sulu-admin-bundle/services';
@@ -27,7 +28,7 @@ type Props = ViewProps & {
 @observer
 class PageList extends React.Component<Props> {
     page: IObservableValue<number> = observable.box();
-    locale: IObservableValue<string> = observable.box();
+    locale: IObservableValue<string> = observable.box(userStore.contentLocale);
     excludeGhostsAndShadows: IObservableValue<boolean> = observable.box(false);
     cacheClearToolbarAction: CacheClearToolbarAction;
     listStore: ListStore;

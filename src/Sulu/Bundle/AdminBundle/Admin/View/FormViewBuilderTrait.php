@@ -50,6 +50,10 @@ trait FormViewBuilderTrait
         $oldLocales = $view->getOption('locales');
         $newLocales = $oldLocales ? array_merge($oldLocales, $locales) : $locales;
         $view->setOption('locales', $newLocales);
+
+        if (!$view->getAttributeDefault('locale') && isset($newLocales[0])) {
+            $view->setAttributeDefault('locale', $newLocales[0]);
+        }
     }
 
     private function addRouterAttributesToFormRequestToView(View $view, array $routerAttributesToFormRequest): void

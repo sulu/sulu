@@ -100,7 +100,6 @@ class CategoryAdmin extends Admin
                 ->setTitle('sulu_category.categories')
                 ->addListAdapters(['tree_table'])
                 ->addLocales($locales)
-                ->setDefaultLocale($locales[0])
                 ->setEditView(static::EDIT_FORM_VIEW)
                 ->enableSearching()
                 ->addToolbarActions($listToolbarActions);

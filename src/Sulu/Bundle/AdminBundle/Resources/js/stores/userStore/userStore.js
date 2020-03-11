@@ -8,6 +8,7 @@ import localizationStore from '../localizationStore';
 import type {Contact, User} from './types';
 
 const UPDATE_PERSISTENT_SETTINGS_DELAY = 2500;
+const CONTENT_LOCALE_SETTING_KEY = 'sulu_admin.content_locale';
 
 class UserStore {
     @observable persistentSettings: Map<string, string> = new Map();
@@ -60,12 +61,25 @@ class UserStore {
             this.persistentSettings.set(key, persistentSettings[key]);
         });
 
-        // TODO this code should be adjusted/removed when a proper content-locale handling is implemented
-        // load and use first (default) localization of first webspace as content-locale for the user
-        const {localizations} = localizationStore;
-        const defaultLocalizations = localizations.filter((localization) => localization.default);
-        const fallbackLocalization = defaultLocalizations.length ? defaultLocalizations[0] : localizations[0];
-        this.contentLocale = fallbackLocalization ? fallbackLocalization.locale : this.contentLocale;
+        const contentLocale = this.persistentSettings.get(CONTENT_LOCALE_SETTING_KEY);
+
+        if (contentLocale) {
+            this.contentLocale = contentLocale;
+        }
+
+        if (!this.contentLocale) {
+            // TODO this code should be adjusted/removed when a proper content-locale handling is implemented
+            // load and use first (default) localization of first webspace as content-locale for the user
+            const {localizations} = localizationStore;
+            const defaultLocalizations = localizations.filter((localization) => localization.default);
+            const fallbackLocalization = defaultLocalizations.length ? defaultLocalizations[0] : localizations[0];
+            this.contentLocale = fallbackLocalization ? fallbackLocalization.locale : this.contentLocale;
+        }
+    }
+
+    @action updateContentLocale(contentLocale: string) {
+        this.contentLocale = contentLocale;
+        this.setPersistentSetting(CONTENT_LOCALE_SETTING_KEY, contentLocale);
     }
 
     @action setContact(contact: Contact) {
