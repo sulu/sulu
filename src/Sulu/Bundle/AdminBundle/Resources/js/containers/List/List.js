@@ -502,7 +502,7 @@ class List extends React.Component<Props> {
         return (
             <div className={listStyles.listContainer}>
                 {header}
-                {!store.schemaLoading && (searchable || adapters.length > 1) &&
+                {!store.schemaLoading && (searchable || this.currentAdapter.hasColumnOptions || adapters.length > 1) &&
                     <div className={toolbarClass}>
                         {searchable &&
                             <Search onSearch={this.handleSearch} value={store.searchTerm.get()} />

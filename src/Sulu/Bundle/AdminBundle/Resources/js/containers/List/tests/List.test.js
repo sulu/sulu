@@ -213,6 +213,45 @@ test('Render toolbar with given toolbar class', () => {
     expect(list.find('.toolbar').prop('className')).toEqual(expect.stringContaining('test-class'));
 });
 
+test('Do not render toolbar if list is not searchable and adapter has no column options', () => {
+    class NewTestAdapter extends TestAdapter {
+        static hasColumnOptions = false;
+    }
+    listAdapterRegistry.get.mockReturnValue(NewTestAdapter);
+
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+
+    const list = shallow(<List adapters={['table']} searchable={false} store={listStore} />);
+
+    expect(list.find('.toolbar').exists()).toBeFalsy();
+});
+
+test('Render toolbar if list is not searchable and adapter has no column options', () => {
+    class NewTestAdapter extends TestAdapter {
+        static hasColumnOptions = true;
+    }
+    listAdapterRegistry.get.mockReturnValue(NewTestAdapter);
+
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+
+    const list = shallow(<List adapters={['table']} searchable={false} store={listStore} />);
+
+    expect(list.find('.toolbar').exists()).toBeTruthy();
+});
+
+test('Render toolbar with multiple adapters if list is not searchable and adapter has no column options', () => {
+    class NewTestAdapter extends TestAdapter {
+        static hasColumnOptions = false;
+    }
+    listAdapterRegistry.get.mockReturnValue(NewTestAdapter);
+
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+
+    const list = shallow(<List adapters={['table', 'other-table']} searchable={false} store={listStore} />);
+
+    expect(list.find('.toolbar').exists()).toBeTruthy();
+});
+
 test('Render TableAdapter with correct values', () => {
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     mockStructureStrategyData = [
