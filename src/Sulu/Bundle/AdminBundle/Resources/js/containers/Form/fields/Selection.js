@@ -23,9 +23,9 @@ const USER_SETTINGS_KEY = 'selection';
 @observer
 class Selection extends React.Component<Props> {
     listStore: ?ListStore;
-    selectionStore: ?MultiSelectionStore<string | number>;
+    autoCompleteSelectionStore: ?MultiSelectionStore<string | number>;
     changeListDisposer: ?() => *;
-    changeSelectionDisposer: ?() => *;
+    changeAutoCompleteSelectionDisposer: ?() => *;
     changeListOptionsDisposer: ?() => *;
     changeLocaleDisposer: ?() => *;
 
@@ -146,18 +146,18 @@ class Selection extends React.Component<Props> {
         } else if (this.type === 'auto_complete') {
             const {value} = this.props;
 
-            this.selectionStore = new MultiSelectionStore(
+            this.autoCompleteSelectionStore = new MultiSelectionStore(
                 resourceKey,
                 value || [],
                 this.locale,
                 this.autoCompleteFilterParameter
             );
 
-            this.changeSelectionDisposer = reaction(
-                () => this.selectionStore
-                    ? this.selectionStore.items.map((item) => item[this.autoCompleteIdProperty])
+            this.changeAutoCompleteSelectionDisposer = reaction(
+                () => this.autoCompleteSelectionStore
+                    ? this.autoCompleteSelectionStore.items.map((item) => item[this.autoCompleteIdProperty])
                     : [],
-                this.handleSelectionChange
+                this.handleAutoCompleteSelectionChange
             );
         }
     }
@@ -167,8 +167,8 @@ class Selection extends React.Component<Props> {
             this.changeListDisposer();
         }
 
-        if (this.changeSelectionDisposer) {
-            this.changeSelectionDisposer();
+        if (this.changeAutoCompleteSelectionDisposer) {
+            this.changeAutoCompleteSelectionDisposer();
         }
 
         if (this.changeListOptionsDisposer) {
@@ -356,7 +356,7 @@ class Selection extends React.Component<Props> {
     };
 
     renderAutoComplete() {
-        if (!this.selectionStore) {
+        if (!this.autoCompleteSelectionStore) {
             throw new Error('The SelectionStore has not been initialized! This should not happen and is likely a bug.');
         }
 
@@ -391,7 +391,7 @@ class Selection extends React.Component<Props> {
                 id={dataPath}
                 idProperty={idProperty}
                 searchProperties={searchProperties}
-                selectionStore={this.selectionStore}
+                selectionStore={this.autoCompleteSelectionStore}
             />
         );
     }
@@ -457,16 +457,16 @@ class Selection extends React.Component<Props> {
         }
     };
 
-    handleSelectionChange = (selectedIds: Array<string | number>) => {
+    handleAutoCompleteSelectionChange = (selectedIds: Array<string | number>) => {
         const {onChange, onFinish, value} = this.props;
 
-        if (!this.selectionStore) {
+        if (!this.autoCompleteSelectionStore) {
             throw new Error(
                 'The SelectionStore has not been initialized! This should not happen and is likely a bug.'
             );
         }
 
-        if (this.selectionStore.loading) {
+        if (this.autoCompleteSelectionStore.loading) {
             return;
         }
 

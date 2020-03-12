@@ -650,11 +650,11 @@ test('Should call the disposers for list selections and locale and ListStore if 
     const changeListDisposerSpy = jest.fn();
     const changeLocaleDisposerSpy = jest.fn();
     const changeListOptionsDisposerSpy = jest.fn();
-    const changeSelectionDisposerSpy = jest.fn();
+    const changeAutoCompleteSelectionDisposerSpy = jest.fn();
     selection.instance().changeListDisposer = changeListDisposerSpy;
     selection.instance().changeLocaleDisposer = changeLocaleDisposerSpy;
     selection.instance().changeListOptionsDisposer = changeListOptionsDisposerSpy;
-    selection.instance().changeSelectionDisposer = changeSelectionDisposerSpy;
+    selection.instance().changeAutoCompleteSelectionDisposer = changeAutoCompleteSelectionDisposerSpy;
     const listStoreDestroy = selection.instance().listStore.destroy;
 
     selection.unmount();
@@ -662,7 +662,7 @@ test('Should call the disposers for list selections and locale and ListStore if 
     expect(changeListDisposerSpy).toBeCalledWith();
     expect(changeLocaleDisposerSpy).toBeCalledWith();
     expect(changeListOptionsDisposerSpy).toBeCalledWith();
-    expect(changeSelectionDisposerSpy).toBeCalledWith();
+    expect(changeAutoCompleteSelectionDisposerSpy).toBeCalledWith();
     expect(listStoreDestroy).toBeCalledWith();
 });
 
@@ -1128,10 +1128,10 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
         displayProperty: 'name',
         idProperty: 'uuid',
         searchProperties: ['name'],
-        selectionStore: selection.instance().selectionStore,
+        selectionStore: selection.instance().autoCompleteSelectionStore,
     }));
 
-    expect(selection.instance().selectionStore.idFilterParameter).toEqual('names');
+    expect(selection.instance().autoCompleteSelectionStore.idFilterParameter).toEqual('names');
 });
 
 test('Should pass locale from userStore to MultiAutoComplete component if form has no locale', () => {
@@ -1169,7 +1169,7 @@ test('Should pass locale from userStore to MultiAutoComplete component if form h
         />
     );
 
-    expect(selection.instance().selectionStore.locale.get()).toEqual('de');
+    expect(selection.instance().autoCompleteSelectionStore.locale.get()).toEqual('de');
 });
 
 test('Should pass props with schema-options type correctly to MultiAutoComplete component', () => {
@@ -1228,7 +1228,7 @@ test('Should pass props with schema-options type correctly to MultiAutoComplete 
         displayProperty: 'name',
         idProperty: 'uuid',
         searchProperties: ['name'],
-        selectionStore: selection.instance().selectionStore,
+        selectionStore: selection.instance().autoCompleteSelectionStore,
     }));
 });
 
@@ -1347,8 +1347,8 @@ test('Should call onChange and onFinish callback when content of selectionStore 
         />
     );
 
-    selection.instance().selectionStore.dataLoading = false;
-    selection.instance().selectionStore.items = [
+    selection.instance().autoCompleteSelectionStore.dataLoading = false;
+    selection.instance().autoCompleteSelectionStore.items = [
         {uuid: 1},
         {uuid: 2},
         {uuid: 3},
