@@ -36,11 +36,6 @@ export default class MultiSelectionStore<T = string | number, U: {id: T} = Objec
         this.items = items;
     }
 
-    getById(id: T) {
-        // TODO use metadata instead of hardcoded id
-        return this.items.find((item) => item.id === id);
-    }
-
     @action removeById(id: T) {
         // TODO use metadata instead of hardcoded id
         this.items.splice(this.items.findIndex((item) => item.id === id), 1);
