@@ -4,6 +4,7 @@ import {extendObservable as mockExtendObservable, observable, toJS} from 'mobx';
 import {mount, shallow} from 'enzyme';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import {translate} from '../../../../utils/Translator';
+import MultiSelectionStore from '../../../../stores/MultiSelectionStore';
 import ResourceStore from '../../../../stores/ResourceStore';
 import userStore from '../../../../stores/userStore';
 import List from '../../../List';
@@ -1122,7 +1123,7 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
         />
     );
 
-    expect(selection.find('MultiAutoComplete').props()).toEqual(expect.objectContaining({
+    expect(selection.find('MultiAutoComplete').at(0).props()).toEqual(expect.objectContaining({
         allowAdd: false,
         disabled: true,
         displayProperty: 'name',
@@ -1131,7 +1132,7 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
         selectionStore: selection.instance().autoCompleteSelectionStore,
     }));
 
-    expect(selection.instance().autoCompleteSelectionStore.idFilterParameter).toEqual('names');
+    expect(MultiSelectionStore).toBeCalledWith('snippets', value, locale, 'names');
 });
 
 test('Should pass locale from userStore to MultiAutoComplete component if form has no locale', () => {
