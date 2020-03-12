@@ -13,7 +13,6 @@ namespace Sulu\Bundle\CategoryBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
@@ -32,7 +31,7 @@ class CategoryTranslation implements CategoryTranslationInterface
     protected $description;
 
     /**
-     * @var Media[]
+     * @var CategoryTranslationMedia[]
      */
     protected $medias;
 
@@ -108,12 +107,36 @@ class CategoryTranslation implements CategoryTranslationInterface
 
     public function getMedias()
     {
-        return $this->medias;
+        $medias = [];
+
+        foreach ($this->medias as $media) {
+            $medias[] = $media->getMedia();
+        }
+
+        return $medias;
     }
 
     public function setMedias($medias)
     {
-        $this->medias = $medias;
+        $position = 0;
+        foreach ($this->medias as $media) {
+            $mediaEntity = $medias[$position] ?? null;
+            ++$position;
+
+            if (!$mediaEntity) {
+                $this->medias->removeElement($media);
+
+                continue;
+            }
+
+            $media->setMedia($mediaEntity);
+            $media->setPosition($position);
+        }
+
+        for (; $position < count($medias); ++$position) {
+            $media = new CategoryTranslationMedia($this, $medias[$position], $position + 1);
+            $this->medias->add($media);
+        }
     }
 
     public function setLocale($locale)
