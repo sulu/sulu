@@ -41,6 +41,8 @@ class Url extends SimpleContentType
                 [
                     'http://' => new PropertyParameter('http://', ''),
                     'https://' => new PropertyParameter('https://', ''),
+                    'mailto:' => new PropertyParameter('mailto:', ''),
+                    'tel:' => new PropertyParameter('tel:', ''),
                     'ftp://' => new PropertyParameter('ftp://', ''),
                     'ftps://' => new PropertyParameter('ftps://', ''),
                 ],

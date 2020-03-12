@@ -145,7 +145,6 @@ class ExternalLinkOverlay extends React.Component<Props> {
                             onBlur={this.handleUrlBlur}
                             onChange={this.handleUrlChange}
                             onProtocolChange={this.handleProtocolChange}
-                            protocols={['http://', 'https://', 'ftp://', 'ftps://', 'mailto:']}
                             valid={true}
                             value={this.url}
                         />

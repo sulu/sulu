@@ -60,35 +60,34 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
                     value: defaults = [],
                 } = {},
                 schemes: {
-                    value: schemes = [
-                        {name: 'http://'},
-                        {name: 'https://'},
-                        {name: 'ftp://'},
-                        {name: 'ftps://'},
-                    ],
+                    value: schemes = undefined,
                 } = {},
             } = {},
             value,
         } = this.props;
 
-        if (!Array.isArray(schemes) || schemes.length === 0) {
-            throw new Error('The "schemes" schema option must contain some values!');
-        }
+        let protocols = undefined;
 
-        const protocols = schemes.map((scheme) => {
-            if (typeof scheme.name !== 'string') {
-                throw new Error(
-                    'Every schema in the "schemes" schemaOption must contain a string string name'
-                );
+        if (schemes) {
+            if (!Array.isArray(schemes) || schemes.length === 0) {
+                throw new Error('The "schemes" schema option must contain some values!');
             }
-            return scheme.name;
-        });
+
+            protocols = schemes.map((scheme) => {
+                if (typeof scheme.name !== 'string') {
+                    throw new Error(
+                        'Every schema in the "schemes" schemaOption must contain a string string name'
+                    );
+                }
+                return scheme.name;
+            });
+        }
 
         if (!Array.isArray(defaults)) {
             throw new Error('The "defaults" schema option must be an array!');
         }
 
-        let defaultProtocol = protocols[0];
+        let defaultProtocol = protocols ? protocols[0] : undefined;
         const defaultScheme = defaults.find((defaultOption) => defaultOption.name === 'scheme');
 
         if (defaultScheme && defaultScheme.value) {

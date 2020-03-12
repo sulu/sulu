@@ -22,18 +22,25 @@ type Props = {|
 
 // eslint-disable-next-line max-len
 const URL_REGEX = /^(?:(?:https?|ftps?):\/\/)(?:\S+(?::\S*)?@)?(?:(?!127(?:\.\d{1,3}){3})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,})?(?:\/[^\s]*)?$/iu;
+const URL_PROTOCOLS = ['http://', 'https://', 'ftp://', 'ftps://'];
 
 @observer
 class Url extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
-        protocols: ['http://', 'https://', 'ftp://', 'ftps://'],
+        protocols: [...URL_PROTOCOLS, 'mailto:', 'tel:'],
         valid: true,
     };
 
-    @observable protocol: ?string = undefined;
+    @observable selectedProtocol: string;
     @observable path: ?string = undefined;
     @observable validUrl: boolean = true;
+
+    constructor(props: Props) {
+        super(props);
+
+        this.selectedProtocol = props.defaultProtocol || props.protocols[0];
+    }
 
     componentDidMount() {
         const {value} = this.props;
@@ -42,7 +49,7 @@ class Url extends React.Component<Props> {
 
     componentDidUpdate(prevProps: Props) {
         const {value} = this.props;
-        if (prevProps.value !== value && !((this.protocol || this.path) && !value)) {
+        if (prevProps.value !== value && !((this.selectedProtocol || this.path) && !value)) {
             this.setUrl(value);
         }
     }
@@ -52,15 +59,15 @@ class Url extends React.Component<Props> {
             return true;
         }
 
-        if (url.indexOf('mailto:') === 0) {
+        if (this.selectedProtocol === 'mailto:') {
             return Isemail.validate(url.substring(7));
         }
 
-        return URL_REGEX.test(url);
-    }
+        if (URL_PROTOCOLS.includes(this.selectedProtocol)) {
+            return URL_REGEX.test(url);
+        }
 
-    @computed get protocols() {
-        return this.props.protocols;
+        return true;
     }
 
     callChangeCallback = () => {
@@ -75,13 +82,13 @@ class Url extends React.Component<Props> {
 
     @action setUrl(url: ?string) {
         if (!url) {
-            this.protocol = undefined;
             this.path = undefined;
 
-            const {defaultProtocol, onProtocolChange} = this.props;
+            const {defaultProtocol, onProtocolChange, protocols} = this.props;
+            this.selectedProtocol = defaultProtocol || protocols[0];
 
             if (onProtocolChange) {
-                onProtocolChange(defaultProtocol);
+                onProtocolChange(this.selectedProtocol);
             }
 
             return;
@@ -98,7 +105,7 @@ class Url extends React.Component<Props> {
             log.warn('The URL "' + url + '" has a protocol type not supported by this instance.');
         }
 
-        this.protocol = protocol;
+        this.selectedProtocol = protocol || this.selectedProtocol;
         this.path = url.substring(protocol ? protocol.length : 0);
 
         this.validUrl = this.isValidUrl(this.url);
@@ -113,9 +120,7 @@ class Url extends React.Component<Props> {
             return undefined;
         }
 
-        const protocol = this.protocol || this.protocols[0];
-
-        return protocol + this.path;
+        return this.selectedProtocol + this.path;
     }
 
     @action handleProtocolChange = (protocol: string) => {
@@ -128,7 +133,7 @@ class Url extends React.Component<Props> {
             );
         }
 
-        this.protocol = protocol;
+        this.selectedProtocol = protocol;
 
         this.callChangeCallback();
 
@@ -149,8 +154,8 @@ class Url extends React.Component<Props> {
 
         const protocol = protocols.find((protocol) => path.startsWith(protocol));
         if (protocol) {
-            this.protocol = protocol;
-            this.path = path.substring(this.protocol.length);
+            this.selectedProtocol = protocol;
+            this.path = path.substring(this.selectedProtocol.length);
         }
 
         this.callChangeCallback();
@@ -171,7 +176,7 @@ class Url extends React.Component<Props> {
     };
 
     render() {
-        const {disabled, defaultProtocol, id, protocols, valid} = this.props;
+        const {disabled, id, protocols, valid} = this.props;
 
         const urlClass = classNames(
             urlStyles.url,
@@ -187,7 +192,7 @@ class Url extends React.Component<Props> {
                         disabled={disabled}
                         onChange={this.handleProtocolChange}
                         skin="flat"
-                        value={this.protocol || defaultProtocol || this.protocols[0]}
+                        value={this.selectedProtocol}
                     >
                         {protocols.map((protocol) => (
                             <SingleSelect.Option key={protocol} value={protocol}>{protocol}</SingleSelect.Option>
