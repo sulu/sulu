@@ -368,7 +368,6 @@ class Selection extends React.Component<Props> {
                     auto_complete: {
                         allow_add: allowAdd,
                         display_property: displayProperty,
-                        id_property: idProperty,
                         search_properties: searchProperties,
                     },
                 },
@@ -389,7 +388,7 @@ class Selection extends React.Component<Props> {
                 disabled={!!disabled}
                 displayProperty={displayProperty}
                 id={dataPath}
-                idProperty={idProperty}
+                idProperty={this.autoCompleteIdProperty}
                 searchProperties={searchProperties}
                 selectionStore={this.autoCompleteSelectionStore}
             />
