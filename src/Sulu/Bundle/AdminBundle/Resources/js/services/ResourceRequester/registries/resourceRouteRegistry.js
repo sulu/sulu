@@ -16,7 +16,7 @@ function transformParameters(parameters) {
     return Object.keys(parameters)
         .filter((parameterKey) => parameters[parameterKey] !== undefined)
         .reduce((transformedParameters, parameterKey) => {
-            const value = parameters[parameterKey];
+            const value = toJS(parameters[parameterKey]);
 
             transformedParameters[parameterKey] = transformParameter(value);
             return transformedParameters;

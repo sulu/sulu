@@ -1,5 +1,6 @@
 // @flow
 import SymfonyRouting from 'fos-jsrouting/router';
+import {observable} from 'mobx';
 import resourceRouteRegistry from '../../registries/resourceRouteRegistry';
 
 test('Set and get endpoints for given key', () => {
@@ -38,6 +39,26 @@ test('Set and get endpoints for given key with date parameter', () => {
         .toEqual('get_snippet?value=2013-12-24');
     expect(resourceRouteRegistry.getListUrl('snippets', {value: new Date('2020-09-07')}))
         .toEqual('get_snippets?value=2020-09-07');
+});
+
+test('Set and get endpoints for given key with boxed observable parameter', () => {
+    SymfonyRouting.generate.mockImplementation((routeName, {value}) => {
+        return routeName + '?value=' + value;
+    });
+
+    resourceRouteRegistry.setEndpoints({
+        snippets: {
+            routes: {
+                detail: 'get_snippet',
+                list: 'get_snippets',
+            },
+        },
+    });
+
+    expect(resourceRouteRegistry.getDetailUrl('snippets', {value: observable.box('boxed-value')}))
+        .toEqual('get_snippet?value=boxed-value');
+    expect(resourceRouteRegistry.getListUrl('snippets', {value: observable.box('boxed-value')}))
+        .toEqual('get_snippets?value=boxed-value');
 });
 
 test('Set and get endpoints for given key with date array parameter', () => {
