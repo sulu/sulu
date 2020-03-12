@@ -184,6 +184,22 @@ test('Call onChange callback with correct mail address', () => {
     expect(url.find('.error')).toHaveLength(0);
 });
 
+test('Call onChange callback with correct value with custom protocol', () => {
+    const changeSpy = jest.fn();
+    const url = shallow(<Url onChange={changeSpy} protocols={['custom-protocol:']} value={undefined} />);
+    url.find('input').prop('onChange')({
+        currentTarget: {
+            value: '012345ABC',
+        },
+    });
+    url.find('input').prop('onBlur')();
+
+    expect(changeSpy).toBeCalledWith('custom-protocol:012345ABC');
+    expect(url.find('SingleSelect').prop('value')).toEqual('custom-protocol:');
+    expect(url.find('input').prop('value')).toEqual('012345ABC');
+    expect(url.find('.error')).toHaveLength(0);
+});
+
 test('Call onChange callback with undefined if incorrect mail address is entered', () => {
     const changeSpy = jest.fn();
     const url = shallow(<Url onChange={changeSpy} protocols={['mailto:']} value={undefined} />);
