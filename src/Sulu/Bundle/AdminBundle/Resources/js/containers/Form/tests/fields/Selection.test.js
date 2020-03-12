@@ -17,6 +17,7 @@ jest.mock('../../../../stores/MultiSelectionStore', () => jest.fn(
         this.locale = locale;
         this.loading = false;
         this.idFilterParameter = idFilterParameter;
+        this.loadItems = jest.fn();
 
         mockExtendObservable(this, {
             items: [],
@@ -1231,6 +1232,92 @@ test('Should pass props with schema-options type correctly to MultiAutoComplete 
         searchProperties: ['name'],
         selectionStore: selection.instance().autoCompleteSelectionStore,
     }));
+});
+
+test('Should trigger a reload of the items if the value prop changes', () => {
+    const value = [1, 6, 8];
+
+    const fieldTypeOptions = {
+        default_type: 'auto_complete',
+        resource_key: 'snippets',
+        types: {
+            auto_complete: {
+                display_property: 'name',
+                filter_parameter: 'names',
+                id_property: 'uuid',
+                search_properties: ['name'],
+            },
+        },
+    };
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('pages', 1),
+            'pages'
+        )
+    );
+
+    userStore.contentLocale = 'de';
+
+    const selection = shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            value={value}
+        />
+    );
+
+    expect(selection.instance().autoCompleteSelectionStore.loadItems).not.toBeCalled();
+
+    selection.instance().autoCompleteSelectionStore.items = [{uuid: 1}, {uuid: 6}, {uuid: 8}];
+
+    selection.setProps({value: [3, 4, 7]});
+
+    expect(selection.instance().autoCompleteSelectionStore.loadItems).toBeCalledWith([3, 4, 7]);
+});
+
+test('Should not trigger a reload of the items if the value prop changes to the same value again', () => {
+    const value = [1, 6, 8];
+
+    const fieldTypeOptions = {
+        default_type: 'auto_complete',
+        resource_key: 'snippets',
+        types: {
+            auto_complete: {
+                display_property: 'name',
+                filter_parameter: 'names',
+                id_property: 'uuid',
+                search_properties: ['name'],
+            },
+        },
+    };
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('pages', 1),
+            'pages'
+        )
+    );
+
+    userStore.contentLocale = 'de';
+
+    const selection = shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            value={value}
+        />
+    );
+
+    selection.instance().autoCompleteSelectionStore.items = [{uuid: 1}, {uuid: 6}, {uuid: 8}];
+
+    selection.setProps({value: [1, 6, 8]});
+
+    expect(selection.instance().autoCompleteSelectionStore.loadItems).not.toBeCalled();
 });
 
 test('Throw an error if a none string was passed to schema-options', () => {

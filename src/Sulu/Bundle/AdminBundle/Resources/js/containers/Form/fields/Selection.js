@@ -2,7 +2,7 @@
 import React from 'react';
 import {computed, observable, intercept, toJS, reaction} from 'mobx';
 import type {IObservableValue} from 'mobx';
-import equal from 'fast-deep-equal';
+import equals from 'fast-deep-equal';
 import {observer} from 'mobx-react';
 import FormInspector from '../FormInspector';
 import List from '../../../containers/List';
@@ -87,7 +87,7 @@ class Selection extends React.Component<Props> {
                     formInspector
                 );
 
-                if (!equal(this.requestOptions, newRequestOptions)) {
+                if (!equals(this.requestOptions, newRequestOptions)) {
                     this.requestOptions = newRequestOptions;
                 }
             }
@@ -159,6 +159,21 @@ class Selection extends React.Component<Props> {
                     : [],
                 this.handleAutoCompleteSelectionChange
             );
+        }
+    }
+
+    componentDidUpdate() {
+        const {value} = this.props;
+
+        if (
+            this.type === 'auto_complete'
+            && this.autoCompleteSelectionStore
+            && !equals(
+                this.autoCompleteSelectionStore.items.map((item) => item[this.autoCompleteIdProperty]),
+                toJS(value)
+            )
+        ) {
+            this.autoCompleteSelectionStore.loadItems(value);
         }
     }
 
@@ -450,7 +465,7 @@ class Selection extends React.Component<Props> {
             return;
         }
 
-        if (!equal(toJS(value), toJS(selectedIds))) {
+        if (!equals(toJS(value), toJS(selectedIds))) {
             onChange(selectedIds);
             onFinish();
         }
@@ -469,7 +484,7 @@ class Selection extends React.Component<Props> {
             return;
         }
 
-        if (!equal(toJS(value), toJS(selectedIds))) {
+        if (!equals(toJS(value), toJS(selectedIds))) {
             onChange(selectedIds);
             onFinish();
         }
