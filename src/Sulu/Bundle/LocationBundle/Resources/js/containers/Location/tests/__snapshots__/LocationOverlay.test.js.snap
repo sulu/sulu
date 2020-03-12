@@ -90,7 +90,7 @@ Array [
                         >
                           <div
                             class="leaflet-tile-container leaflet-zoom-animated"
-                            style="left: 0px; top: 0px;"
+                            style="z-index: 18; left: 0px; top: 0px;"
                           >
                             <img
                               alt=""
@@ -536,7 +536,7 @@ Array [
                         >
                           <div
                             class="leaflet-tile-container leaflet-zoom-animated"
-                            style="left: 0px; top: 0px;"
+                            style="z-index: 18; left: 0px; top: 0px;"
                           >
                             <img
                               alt=""
