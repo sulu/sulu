@@ -47,6 +47,7 @@ class SingleSelection extends React.Component<Props> {
 
         const {detailOptions, locale, resourceKey, value} = this.props;
 
+        // TODO instead of creating the store here and passing the props required for this, we should pass a store prop
         this.singleSelectionStore = new SingleSelectionStore(resourceKey, value, locale, detailOptions);
         this.changeDisposer = reaction(
             () => this.singleSelectionStore.item === undefined
