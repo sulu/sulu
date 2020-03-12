@@ -119,6 +119,22 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                                 ],
                             ],
                         ],
+                        'single_selection' => [
+                            'single_category_selection' => [
+                                'default_type' => 'list_overlay',
+                                'resource_key' => 'categories',
+                                'types' => [
+                                    'list_overlay' => [
+                                        'adapter' => 'tree_table_slim',
+                                        'list_key' => 'categories',
+                                        'display_properties' => ['name'],
+                                        'empty_text' => 'sulu_category.no_category_selected',
+                                        'icon' => 'fa-tags',
+                                        'overlay_title' => 'sulu_category.single_category_selection_overlay_title',
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                 ]
             );
