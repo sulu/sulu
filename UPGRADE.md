@@ -7,6 +7,12 @@
 The `Router` service now interprets more into the URL parameters that are passed to it. In addition to parsing numbers,
 boolean and strings to its JS equivalents, it will now do the same for `undefined` and dates in the format `yyyy-mm-dd`.
 
+### Passing MultiSelectionStore to MultiAutoComplete
+
+The `MultiAutoComplete` container component now accepts the `MultiSelectionStore` via the `store` prop, instead of
+creating it on its own. Therefore the `filterParameter`, `locale`, `onChange`, `resourceKey` and `value` prop have been
+removed. Instead a `MultiSelectionStore` has to be created manually and passed via the `store` prop.
+
 ### Configuration of list item actions
 
 The prop of the `List` container which is used to configure the item actions was changed from `actions` to 

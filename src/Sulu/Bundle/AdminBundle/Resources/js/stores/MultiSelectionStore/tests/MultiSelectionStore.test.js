@@ -55,6 +55,13 @@ test('Should not load items but replace current selection with empty array when 
     expect(toJS(selectionStore.items)).toEqual([]);
 });
 
+test('Should return item ids', () => {
+    const selectionStore = new MultiSelectionStore('snippets', [], observable.box('en'));
+    selectionStore.items = [{id: 1}, {id: 4}];
+
+    expect(toJS(selectionStore.ids)).toEqual([1, 4]);
+});
+
 test('Should load items with different filterParameter when being constructed', () => {
     const listPromise = Promise.resolve({
         _embedded: {

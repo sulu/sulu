@@ -53,6 +53,7 @@ class MultiSelection extends React.Component<Props> {
 
         const {locale, options, resourceKey, value} = this.props;
 
+        // TODO instead of creating the store here and passing the props required for this, we should pass a store prop
         this.selectionStore = new MultiSelectionStore(resourceKey, value, locale, 'ids', options);
 
         this.changeSelectionDisposer = reaction(

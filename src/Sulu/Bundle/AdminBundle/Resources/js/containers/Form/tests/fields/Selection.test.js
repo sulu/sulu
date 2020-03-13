@@ -4,12 +4,27 @@ import {extendObservable as mockExtendObservable, observable, toJS} from 'mobx';
 import {mount, shallow} from 'enzyme';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import {translate} from '../../../../utils/Translator';
+import MultiSelectionStore from '../../../../stores/MultiSelectionStore';
 import ResourceStore from '../../../../stores/ResourceStore';
 import userStore from '../../../../stores/userStore';
 import List from '../../../List';
 import Selection from '../../fields/Selection';
 import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
+
+jest.mock('../../../../stores/MultiSelectionStore', () => jest.fn(
+    function(resourceKey, selectedItemIds, locale, idFilterParameter) {
+        this.locale = locale;
+        this.loading = false;
+        this.idFilterParameter = idFilterParameter;
+        this.loadItems = jest.fn();
+
+        mockExtendObservable(this, {
+            items: [],
+            ids: [],
+        });
+    })
+);
 
 jest.mock('../../../List', () => jest.fn(() => null));
 
@@ -637,9 +652,11 @@ test('Should call the disposers for list selections and locale and ListStore if 
     const changeListDisposerSpy = jest.fn();
     const changeLocaleDisposerSpy = jest.fn();
     const changeListOptionsDisposerSpy = jest.fn();
+    const changeAutoCompleteSelectionDisposerSpy = jest.fn();
     selection.instance().changeListDisposer = changeListDisposerSpy;
     selection.instance().changeLocaleDisposer = changeLocaleDisposerSpy;
     selection.instance().changeListOptionsDisposer = changeListOptionsDisposerSpy;
+    selection.instance().changeAutoCompleteSelectionDisposer = changeAutoCompleteSelectionDisposerSpy;
     const listStoreDestroy = selection.instance().listStore.destroy;
 
     selection.unmount();
@@ -647,6 +664,7 @@ test('Should call the disposers for list selections and locale and ListStore if 
     expect(changeListDisposerSpy).toBeCalledWith();
     expect(changeLocaleDisposerSpy).toBeCalledWith();
     expect(changeListOptionsDisposerSpy).toBeCalledWith();
+    expect(changeAutoCompleteSelectionDisposerSpy).toBeCalledWith();
     expect(listStoreDestroy).toBeCalledWith();
 });
 
@@ -1106,17 +1124,16 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
         />
     );
 
-    expect(selection.find('MultiAutoComplete').props()).toEqual(expect.objectContaining({
+    expect(selection.find('MultiAutoComplete').at(0).props()).toEqual(expect.objectContaining({
         allowAdd: false,
         disabled: true,
         displayProperty: 'name',
-        filterParameter: 'names',
         idProperty: 'uuid',
-        locale,
-        resourceKey: 'snippets',
         searchProperties: ['name'],
-        value,
+        selectionStore: selection.instance().autoCompleteSelectionStore,
     }));
+
+    expect(MultiSelectionStore).toBeCalledWith('snippets', value, locale, 'names');
 });
 
 test('Should pass locale from userStore to MultiAutoComplete component if form has no locale', () => {
@@ -1154,7 +1171,7 @@ test('Should pass locale from userStore to MultiAutoComplete component if form h
         />
     );
 
-    expect(toJS(selection.find('MultiAutoComplete').prop('locale'))).toEqual('de');
+    expect(selection.instance().autoCompleteSelectionStore.locale.get()).toEqual('de');
 });
 
 test('Should pass props with schema-options type correctly to MultiAutoComplete component', () => {
@@ -1211,13 +1228,96 @@ test('Should pass props with schema-options type correctly to MultiAutoComplete 
         allowAdd: false,
         disabled: true,
         displayProperty: 'name',
-        filterParameter: 'names',
         idProperty: 'uuid',
-        locale,
-        resourceKey: 'snippets',
         searchProperties: ['name'],
-        value,
+        selectionStore: selection.instance().autoCompleteSelectionStore,
     }));
+});
+
+test('Should trigger a reload of the auto_complete items if the value prop changes', () => {
+    const value = [1, 6, 8];
+
+    const fieldTypeOptions = {
+        default_type: 'auto_complete',
+        resource_key: 'snippets',
+        types: {
+            auto_complete: {
+                display_property: 'name',
+                filter_parameter: 'names',
+                id_property: 'uuid',
+                search_properties: ['name'],
+            },
+        },
+    };
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('pages', 1),
+            'pages'
+        )
+    );
+
+    userStore.contentLocale = 'de';
+
+    const selection = shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            value={value}
+        />
+    );
+
+    expect(selection.instance().autoCompleteSelectionStore.loadItems).not.toBeCalled();
+
+    selection.instance().autoCompleteSelectionStore.items = [{uuid: 1}, {uuid: 6}, {uuid: 8}];
+
+    selection.setProps({value: [3, 4, 7]});
+
+    expect(selection.instance().autoCompleteSelectionStore.loadItems).toBeCalledWith([3, 4, 7]);
+});
+
+test('Should not trigger a reload of the auto_complete items if the value prop changes to the same value again', () => {
+    const value = [1, 6, 8];
+
+    const fieldTypeOptions = {
+        default_type: 'auto_complete',
+        resource_key: 'snippets',
+        types: {
+            auto_complete: {
+                display_property: 'name',
+                filter_parameter: 'names',
+                id_property: 'uuid',
+                search_properties: ['name'],
+            },
+        },
+    };
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('pages', 1),
+            'pages'
+        )
+    );
+
+    userStore.contentLocale = 'de';
+
+    const selection = shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            value={value}
+        />
+    );
+
+    selection.instance().autoCompleteSelectionStore.items = [{uuid: 1}, {uuid: 6}, {uuid: 8}];
+
+    selection.setProps({value: [1, 6, 8]});
+
+    expect(selection.instance().autoCompleteSelectionStore.loadItems).not.toBeCalled();
 });
 
 test('Throw an error if a none string was passed to schema-options', () => {
@@ -1304,6 +1404,46 @@ test('Throw an error if a none string was passed to field-type-options', () => {
             />
         )
     ).toThrow(/"default_type"/);
+});
+
+test('Should call onChange and onFinish callback when content of selectionStore has changed', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const fieldOptions = {
+        default_type: 'auto_complete',
+        resource_key: 'pages',
+        types: {
+            auto_complete: {
+                allow_add: true,
+                display_property: 'name',
+                filter_parameter: 'names',
+                id_property: 'uuid',
+                search_properties: ['name'],
+            },
+        },
+    };
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+
+    const selection = mount(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldOptions}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+        />
+    );
+
+    selection.instance().autoCompleteSelectionStore.dataLoading = false;
+    selection.instance().autoCompleteSelectionStore.items = [
+        {uuid: 1},
+        {uuid: 2},
+        {uuid: 3},
+    ];
+
+    expect(changeSpy).toBeCalledWith([1, 2, 3]);
+    expect(finishSpy).toBeCalledWith();
 });
 
 test('Should pass allowAdd prop to MultiAutoComplete component', () => {

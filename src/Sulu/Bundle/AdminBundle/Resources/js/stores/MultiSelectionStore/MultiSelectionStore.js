@@ -1,5 +1,5 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {arrayMove} from '../../utils';
 import {ResourceRequester} from '../../services';
@@ -25,6 +25,11 @@ export default class MultiSelectionStore<T = string | number, U: {id: T} = Objec
         this.requestParameters = requestParameters;
 
         this.loadItems(selectedItemIds);
+    }
+
+    @computed get ids(): Array<T> {
+        // TODO use metadata instead of hardcoded id
+        return this.items.map((item) => item.id);
     }
 
     @action set(items: Array<U>) {

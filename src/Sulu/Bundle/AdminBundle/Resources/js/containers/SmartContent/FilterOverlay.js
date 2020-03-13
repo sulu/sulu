@@ -10,6 +10,7 @@ import Overlay from '../../components/Overlay';
 import MultiListOverlay from '../../containers/MultiListOverlay';
 import SingleListOverlay from '../../containers/SingleListOverlay';
 import MultiAutoComplete from '../../containers/MultiAutoComplete';
+import MultiSelectionStore from '../../stores/MultiSelectionStore';
 import {translate} from '../../utils/Translator';
 import SmartContentStore from './stores/SmartContentStore';
 import type {Conjunction, FilterCriteria, SortOrder} from './types';
@@ -46,15 +47,22 @@ class FilterOverlay extends React.Component<Props> {
     @observable showDataSourceDialog: boolean = false;
     @observable showCategoryDialog: boolean = false;
     updateFilterCriteriaDisposer: () => void;
+    tagSelectionStore: MultiSelectionStore<string | number>;
+    tagSelectionStoreDisposer: () => void;
 
     constructor(props: Props) {
         super(props);
 
         this.updateFilterCriteriaDisposer = autorun(() => this.updateFilterCriteria(this.props.smartContentStore));
+        this.tagSelectionStore = new MultiSelectionStore('tags', this.tags || [], undefined, 'names');
+        this.tagSelectionStoreDisposer = autorun(() => {
+            this.tags = this.tagSelectionStore.items.map((item) => item.name);
+        });
     }
 
     componentWillUnmount() {
         this.updateFilterCriteriaDisposer();
+        this.tagSelectionStoreDisposer();
     }
 
     @action updateFilterCriteria = (smartContentStore: SmartContentStore) => {
@@ -144,10 +152,6 @@ class FilterOverlay extends React.Component<Props> {
         }
 
         this.categoryOperator = categoryOperator;
-    };
-
-    @action handleTagsChange = (tags: Array<string | number>) => {
-        this.tags = tags;
     };
 
     @action handleTagOperatorChange = (tagOperator: string | number) => {
@@ -293,12 +297,9 @@ class FilterOverlay extends React.Component<Props> {
                                     <div className={filterOverlayStyles.tagsAutoComplete}>
                                         <MultiAutoComplete
                                             displayProperty="name"
-                                            filterParameter="names"
                                             idProperty="name"
-                                            onChange={this.handleTagsChange}
-                                            resourceKey="tags"
                                             searchProperties={['name']}
-                                            value={this.tags}
+                                            selectionStore={this.tagSelectionStore}
                                         />
                                     </div>
                                     <div className={filterOverlayStyles.tagsSelect}>

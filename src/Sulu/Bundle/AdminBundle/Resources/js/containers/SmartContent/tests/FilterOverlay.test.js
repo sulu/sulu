@@ -1,11 +1,12 @@
 // @flow
 import React from 'react';
+import {extendObservable as mockExtendObservable} from 'mobx';
 import {shallow, mount} from 'enzyme';
-import SmartContentStore from '../stores/SmartContentStore';
-import MultiAutoComplete from '../../../containers/MultiAutoComplete';
 import MultiListOverlay from '../../../containers/MultiListOverlay';
 import SingleListOverlay from '../../../containers/SingleListOverlay';
+import SmartContentStore from '../stores/SmartContentStore';
 import FilterOverlay from '../FilterOverlay';
+import MultiSelectionStore from '../../../stores/MultiSelectionStore';
 
 jest.mock('../stores/SmartContentStore', () => jest.fn());
 
@@ -16,6 +17,11 @@ jest.mock('../../../utils/Translator', () => ({
 jest.mock('../../../containers/MultiAutoComplete', () => jest.fn(() => null));
 jest.mock('../../../containers/MultiListOverlay', () => jest.fn(() => null));
 jest.mock('../../../containers/SingleListOverlay', () => jest.fn(() => null));
+jest.mock('../../../stores/MultiSelectionStore', () => jest.fn(function() {
+    mockExtendObservable(this, {
+        items: [],
+    });
+}));
 
 test('Do not display if open is set to false', () => {
     const smartContentStore = new SmartContentStore('content');
@@ -317,9 +323,8 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     filterOverlay.update();
     expect(filterOverlay.find('div[className="categories"]').find('SingleSelect').prop('value')).toEqual('and');
 
-    filterOverlay.find(MultiAutoComplete).prop('onChange')(['Test1', 'Test3']);
-    filterOverlay.update();
-    expect(filterOverlay.find(MultiAutoComplete).prop('value')).toEqual(['Test1', 'Test3']);
+    filterOverlay.instance().tagSelectionStore.items.push({id: 1, name: 'Test 1'}, {id: 2, name: 'Test 3'});
+    expect(filterOverlay.instance().tags).toEqual(['Test 1', 'Test 3']);
 
     filterOverlay.find('div[className="tags"]').find('SingleSelect').prop('onChange')('or');
     filterOverlay.update();
@@ -363,7 +368,7 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     expect(smartContentStore.includeSubElements).toEqual(true);
     expect(smartContentStore.categories).toEqual([{id: 1, name: 'Test1'}, {id: 3, name: 'Test2'}]);
     expect(smartContentStore.categoryOperator).toEqual('and');
-    expect(smartContentStore.tags).toEqual(['Test1', 'Test3']);
+    expect(smartContentStore.tags).toEqual(['Test 1', 'Test 3']);
     expect(smartContentStore.tagOperator).toEqual('or');
     expect(smartContentStore.audienceTargeting).toEqual(false);
     expect(smartContentStore.sortBy).toEqual('changed');
@@ -380,7 +385,7 @@ test('Prefill all fields with correct values', () => {
     smartContentStore.includeSubElements = true;
     smartContentStore.categories = [{id: 1, name: 'Test1'}, {id: 5, name: 'Test3'}];
     smartContentStore.categoryOperator = 'or';
-    smartContentStore.tags = ['Test5', 'Test7'];
+    smartContentStore.tags = [1, 2];
     smartContentStore.tagOperator = 'and';
     smartContentStore.audienceTargeting = true;
     smartContentStore.sortBy = 'created';
@@ -439,7 +444,7 @@ test('Prefill all fields with correct values', () => {
         .toEqual([{id: 1, name: 'Test1'}, {id: 5, name: 'Test3'}]);
     expect(filterOverlay.find('div[className="categories"]').find('SingleSelect').prop('value')).toEqual('or');
 
-    expect(filterOverlay.find(MultiAutoComplete).prop('value')).toEqual(['Test5', 'Test7']);
+    expect(MultiSelectionStore).toBeCalledWith('tags', [1, 2], undefined, 'names');
     expect(filterOverlay.find('div[className="tags"]').find('SingleSelect').prop('value')).toEqual('and');
 
     expect(filterOverlay.find('Toggler[children="sulu_admin.use_target_groups"]').prop('checked')).toEqual(true);
