@@ -1234,7 +1234,7 @@ test('Should pass props with schema-options type correctly to MultiAutoComplete 
     }));
 });
 
-test('Should trigger a reload of the items if the value prop changes', () => {
+test('Should trigger a reload of the auto_complete items if the value prop changes', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
@@ -1278,7 +1278,7 @@ test('Should trigger a reload of the items if the value prop changes', () => {
     expect(selection.instance().autoCompleteSelectionStore.loadItems).toBeCalledWith([3, 4, 7]);
 });
 
-test('Should not trigger a reload of the items if the value prop changes to the same value again', () => {
+test('Should not trigger a reload of the auto_complete items if the value prop changes to the same value again', () => {
     const value = [1, 6, 8];
 
     const fieldTypeOptions = {
