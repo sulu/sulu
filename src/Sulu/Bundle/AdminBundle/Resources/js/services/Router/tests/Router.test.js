@@ -510,6 +510,36 @@ test('Update boolean observable attribute on route change', () => {
     expect(exclude.get()).toBe(false);
 });
 
+test('Update attribute containing an observable array on route change', () => {
+    routeRegistry.getAll.mockReturnValue({
+        list: {
+            name: 'list',
+            type: 'list',
+            path: '/list',
+            attributeDefaults: {
+                exclude: true,
+            },
+        },
+    });
+
+    const filter = observable.box({
+        accountId: observable([1, 2]),
+    });
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+
+    router.bind('filter', filter);
+
+    router.navigate('list', {filter: {accountId: [1, 2]}});
+    expect(router.attributes.filter).toEqual({accountId: [1, 2]});
+    expect(filter.get()).toEqual({accountId: [1, 2]});
+
+    history.push('/list?filter.accountId%5B0%5D=2');
+    expect(router.attributes.filter).toEqual({accountId: [2]});
+    expect(filter.get()).toEqual({accountId: [2]});
+});
+
 test('Navigate to route using URL', () => {
     routeRegistry.getAll.mockReturnValue({
         page: {
