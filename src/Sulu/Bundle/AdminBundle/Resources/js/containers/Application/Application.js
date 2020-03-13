@@ -69,7 +69,7 @@ class Application extends React.Component<Props>{
 
     navigationPinnedDisposer: () => void;
 
-    constructor(props) {
+    constructor(props: Props) {
         super(props);
 
         this.navigationPinnedDisposer = autorun(

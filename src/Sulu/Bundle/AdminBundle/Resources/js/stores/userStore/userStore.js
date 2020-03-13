@@ -67,8 +67,7 @@ class UserStore {
             this.contentLocale = contentLocale;
         }
 
-        if (!this.contentLocale) {
-            // TODO this code should be adjusted/removed when a proper content-locale handling is implemented
+        if (!contentLocale) {
             // load and use first (default) localization of first webspace as content-locale for the user
             const {localizations} = localizationStore;
             const defaultLocalizations = localizations.filter((localization) => localization.default);

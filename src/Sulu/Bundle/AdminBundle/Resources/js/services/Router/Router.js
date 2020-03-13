@@ -10,7 +10,6 @@ import routeRegistry from './registries/routeRegistry';
 export default class Router {
     history: Object;
     @observable route: Route;
-    @observable context: Object = {};
     @observable attributes: Object = {};
     @observable bindings: Map<string, IObservableValue<*>> = new Map();
     bindingDefaults: Map<string, ?string | number | boolean> = new Map();
@@ -164,10 +163,6 @@ export default class Router {
         this.handleNavigation(name, attributes, this.redirect);
     };
 
-    @action setContext = (name: string, value: any): void => {
-        this.context[name] = value;
-    };
-
     restore = (name: string, attributes: Object = {}): void => {
         if (!this.attributesHistory[name] || this.attributesHistory[name].length === 0) {
             this.update(name, attributes, this.restore);
@@ -183,37 +178,6 @@ export default class Router {
         this.update(name, {...attributesHistory, ...attributes}, this.restore);
     };
 
-    getAttributeDefaultsForRoute = (route: Route): Object => {
-        const attributeDefaults = route.attributeDefaults;
-
-        const keys = [];
-        pathToRegexp(route.path, keys);
-        keys.forEach((key) => {
-            const keyName = key.name;
-            const contextValue = this.context[keyName];
-
-            if (!contextValue) {
-                return;
-            }
-
-            // The locale is special and can not be set directly as every view/route define its own locales
-            // So we need to check if the current context locale is available for the route
-            if (keyName === 'locale') {
-                const locales = toJS(route.options.locales);
-
-                if (locales && locales.includes(contextValue)) {
-                    attributeDefaults[keyName] = contextValue;
-
-                    return;
-                }
-            }
-
-            attributeDefaults[keyName] = contextValue;
-        });
-
-        return attributeDefaults;
-    };
-
     @action update(name: string, attributes: Object, updateRouteMethod: UpdateRouteMethod): void {
         const route = routeRegistry.get(name);
 
@@ -225,7 +189,7 @@ export default class Router {
             ...attributes,
         };
 
-        const attributeDefaults = this.getAttributeDefaultsForRoute(route);
+        const attributeDefaults = route.attributeDefaults;
 
         Object.keys(attributeDefaults).forEach((key) => {
             // set default attributes if not passed, to automatically set important omitted attributes everywhere

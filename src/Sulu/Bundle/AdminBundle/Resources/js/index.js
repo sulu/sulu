@@ -90,6 +90,10 @@ import {navigationRegistry} from './containers/Navigation';
 import {smartContentConfigStore} from './containers/SmartContent';
 import PreviewForm from './views/PreviewForm';
 import FormOverlayList from './views/FormOverlayList';
+import {
+    updateUserStoreContentLocaleFromRouterAttributes,
+    updateRouterAttributesFromUserStoreContentLocale
+} from './services/ContentLocaleUpdater';
 
 configure({enforceActions: 'observed'});
 
@@ -123,21 +127,6 @@ const FIELD_TYPE_TEXT_LINE = 'text_line';
 const FIELD_TYPE_TIME = 'time';
 const FIELD_TYPE_URL = 'url';
 
-const router = new Router(createHashHistory());
-
-router.addUpdateRouteHook((newRoute, newAttributes) => {
-    if (newAttributes.locale) {
-        router.setContext('locale', newAttributes.locale);
-        userStore.updateContentLocale(newAttributes.locale);
-    }
-
-    if (newAttributes.webspace) {
-        router.setContext('webspace', newAttributes.webspace);
-    }
-
-    return true;
-}, -1024);
-
 initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: boolean) => {
     if (!initialized) {
         registerBlockPreviewTransformers();
@@ -156,8 +145,6 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
     userStore.setUser(config.user);
     userStore.setContact(config.contact);
     userStore.setLoggedIn(true);
-
-    router.setContext('locale', userStore.contentLocale);
 });
 
 function registerViews() {
@@ -298,7 +285,10 @@ function processConfig(config: Object) {
 }
 
 function startAdmin() {
+    const router = new Router(createHashHistory());
     router.addUpdateAttributesHook(updateRouterAttributesFromView);
+    router.addUpdateAttributesHook(updateRouterAttributesFromUserStoreContentLocale);
+    router.addUpdateRouteHook(updateUserStoreContentLocaleFromRouterAttributes, -1024);
 
     initializer.initialize(Config.initialLoginState).then(() => {
         router.reload();
