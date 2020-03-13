@@ -1,10 +1,13 @@
 // @flow
-import type {UpdateAttributesHook} from '../Router/types';
 import pathToRegexp from 'path-to-regexp';
 import {toJS} from 'mobx';
+import type {AttributeMap, Route, UpdateAttributesHook} from '../Router/types';
 import userStore from '../../stores/userStore/userStore';
 
-const updateRouterAttributesFromUserStoreContentLocale: UpdateAttributesHook = function(route, attributes) {
+const updateRouterAttributesFromUserStoreContentLocale: UpdateAttributesHook = function(
+    route: Route,
+    attributes: AttributeMap
+) {
     // do nothing when locale is explicit set
     if (attributes.locale) {
         return attributes;

@@ -92,7 +92,7 @@ import PreviewForm from './views/PreviewForm';
 import FormOverlayList from './views/FormOverlayList';
 import {
     updateUserStoreContentLocaleFromRouterAttributes,
-    updateRouterAttributesFromUserStoreContentLocale
+    updateRouterAttributesFromUserStoreContentLocale,
 } from './services/ContentLocaleUpdater';
 
 configure({enforceActions: 'observed'});
