@@ -28,7 +28,7 @@ type Props = ViewProps & {
 @observer
 class PageList extends React.Component<Props> {
     page: IObservableValue<number> = observable.box();
-    locale: IObservableValue<string> = observable.box(userStore.contentLocale);
+    locale: IObservableValue<string> = observable.box();
     excludeGhostsAndShadows: IObservableValue<boolean> = observable.box(false);
     cacheClearToolbarAction: CacheClearToolbarAction;
     listStore: ListStore;
@@ -49,6 +49,12 @@ class PageList extends React.Component<Props> {
         }
 
         if (webspace.allLocalizations.find((localization) => localization.localization === this.locale.get())) {
+            return;
+        }
+
+        if (webspace.allLocalizations.find((localization) => localization.localization === userStore.contentLocale)) {
+            this.locale.set(userStore.contentLocale);
+
             return;
         }
 

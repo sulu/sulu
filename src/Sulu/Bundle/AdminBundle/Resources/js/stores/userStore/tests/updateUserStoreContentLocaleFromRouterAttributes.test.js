@@ -1,7 +1,7 @@
 // @flow
 import updateUserStoreContentLocaleFromRouterAttributes from '../updateUserStoreContentLocaleFromRouterAttributes';
-import userStore from '../../../stores/userStore/userStore';
-import type {Route} from '../../Router';
+import userStore from '../userStore';
+import type {Route} from '../../../services/Router';
 
 const LOCALIZED_ROUTE: Route = {
     attributeDefaults: {},

@@ -65,15 +65,15 @@ class UserStore {
 
         if (contentLocale) {
             this.contentLocale = contentLocale;
+
+            return;
         }
 
-        if (!contentLocale) {
-            // load and use first (default) localization of first webspace as content-locale for the user
-            const {localizations} = localizationStore;
-            const defaultLocalizations = localizations.filter((localization) => localization.default);
-            const fallbackLocalization = defaultLocalizations.length ? defaultLocalizations[0] : localizations[0];
-            this.contentLocale = fallbackLocalization ? fallbackLocalization.locale : this.contentLocale;
-        }
+        // load and use first (default) localization of first webspace as content-locale for the user
+        const {localizations} = localizationStore;
+        const defaultLocalizations = localizations.filter((localization) => localization.default);
+        const fallbackLocalization = defaultLocalizations.length ? defaultLocalizations[0] : localizations[0];
+        this.contentLocale = fallbackLocalization ? fallbackLocalization.locale : this.contentLocale;
     }
 
     @action updateContentLocale(contentLocale: string) {

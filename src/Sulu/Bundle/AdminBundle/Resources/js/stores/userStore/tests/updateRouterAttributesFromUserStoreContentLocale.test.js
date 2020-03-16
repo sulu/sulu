@@ -1,7 +1,7 @@
 // @flow
 import updateRouterAttributesFromUserStoreContentLocale from '../updateRouterAttributesFromUserStoreContentLocale';
-import userStore from '../../../stores/userStore/userStore';
-import type {Route} from '../../Router';
+import userStore from '../userStore';
+import type {Route} from '../../../services/Router';
 
 jest.mock('../../../stores/userStore/userStore', () => {
     return {
@@ -27,6 +27,17 @@ const LOCALIZED_ROUTE: Route = {
     options: {
         locales: ['en', 'de', 'fr'],
     },
+    parent: undefined,
+    path: '/:locale/example',
+    rerenderAttributes: [],
+    type: '',
+};
+
+const LOCALIZED_WITHOUT_LOCALES_DEFINED: Route = {
+    attributeDefaults: {},
+    children: [],
+    name: 'localized_route_without_locales_defined',
+    options: {},
     parent: undefined,
     path: '/:locale/example',
     rerenderAttributes: [],
@@ -61,4 +72,11 @@ test('Should update locale attribute from user store when not explicit set', () 
     const attributes = updateRouterAttributesFromUserStoreContentLocale(LOCALIZED_ROUTE, {});
 
     expect(attributes.locale).toBe('fr');
+});
+
+test('Should update locale attribute from user store when view does not define specified locales', () => {
+    userStore.contentLocale = 'es';
+    const attributes = updateRouterAttributesFromUserStoreContentLocale(LOCALIZED_WITHOUT_LOCALES_DEFINED, {});
+
+    expect(attributes.locale).toBe('es');
 });

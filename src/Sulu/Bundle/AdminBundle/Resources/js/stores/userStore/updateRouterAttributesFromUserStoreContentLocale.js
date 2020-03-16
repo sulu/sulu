@@ -1,8 +1,8 @@
 // @flow
 import pathToRegexp from 'path-to-regexp';
 import {toJS} from 'mobx';
-import type {AttributeMap, Route, UpdateAttributesHook} from '../Router/types';
-import userStore from '../../stores/userStore/userStore';
+import type {AttributeMap, Route, UpdateAttributesHook} from '../../services/Router/types';
+import userStore from './userStore';
 
 const updateRouterAttributesFromUserStoreContentLocale: UpdateAttributesHook = function(
     route: Route,
@@ -25,7 +25,8 @@ const updateRouterAttributesFromUserStoreContentLocale: UpdateAttributesHook = f
     const locales = toJS(route.options.locales);
 
     // set content locale if route accept the current content locale
-    if (locales && locales.includes(userStore.contentLocale)) {
+    // or does not specify which locales it accepts e.g.: PageList
+    if (!locales || locales.includes(userStore.contentLocale)) {
         attributes.locale = userStore.contentLocale;
     }
 

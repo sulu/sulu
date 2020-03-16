@@ -1,5 +1,0 @@
-// @flow
-import updateRouterAttributesFromUserStoreContentLocale from './updateRouterAttributesFromUserStoreContentLocale';
-import updateUserStoreContentLocaleFromRouterAttributes from './updateUserStoreContentLocaleFromRouterAttributes';
-
-export {updateRouterAttributesFromUserStoreContentLocale, updateUserStoreContentLocaleFromRouterAttributes};
