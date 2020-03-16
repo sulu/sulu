@@ -411,7 +411,7 @@ test('Pass correct props to SingleItemSelection', () => {
         emptyText: 'sulu_contact.nothing',
         icon: 'su-account',
         itemDisabledCondition: undefined,
-        listOptions: undefined,
+        listOptions: {},
         overlayTitle: 'sulu_contact.overlay_title',
         resourceKey: 'accounts',
         value,
@@ -484,6 +484,43 @@ test('Throw an error if form_options_to_list_options schema option is not an arr
             value={value}
         />
     )).toThrow('"form_options_to_list_options"');
+});
+
+test('Throw an error if request_parameters schema option is not an array', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const value = 3;
+
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'accounts',
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                display_properties: ['name'],
+                empty_text: 'sulu_contact.nothing',
+                icon: 'su-account',
+                overlay_title: 'sulu_contact.overlay_title',
+            },
+        },
+    };
+
+    const schemaOptions = {
+        request_parameters: {
+            name: 'request_parameters',
+            value: 'test',
+        },
+    };
+
+    expect(() => shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+            value={value}
+        />
+    )).toThrow('"request_parameters"');
 });
 
 test('Throw an error if item_disabled_condition schema option is not a string', () => {
@@ -641,6 +678,15 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
             name: 'types',
             value: 'test',
         },
+        request_parameters: {
+            name: 'request_parameters',
+            value: [
+                {
+                    name: 'rootKey',
+                    value: 'testRootKey',
+                },
+            ],
+        },
     };
 
     const singleSelection = shallow(
@@ -659,6 +705,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
         allowDeselectForDisabledItems: false,
         detailOptions: {
             'ghost-content': true,
+            rootKey: 'testRootKey',
         },
         disabled: true,
         disabledIds: [],
@@ -670,6 +717,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
             segment: 'developer',
             webspace: 'sulu',
             types: 'test',
+            rootKey: 'testRootKey',
         },
         overlayTitle: 'sulu_contact.overlay_title',
         resourceKey: 'accounts',
