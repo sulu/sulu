@@ -244,7 +244,6 @@
         <service id="sulu_website.http_cache.clearer" class="Sulu\Bundle\WebsiteBundle\Cache\CacheClearer" public="true">
             <argument type="service" id="filesystem"/>
             <argument type="string">%kernel.environment%</argument>
-            <argument type="string">%kernel.root_dir%</argument>
             <argument type="service" id="request_stack"/>
             <argument type="service" id="event_dispatcher"/>
             <argument>%kernel.project_dir%/var</argument>
