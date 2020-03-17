@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 
 use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\Input;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This rule determines if the request has been sent in the desired language.

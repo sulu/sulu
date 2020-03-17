@@ -24,7 +24,7 @@ use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class StructureMetadataFactoryTest extends TestCase
 {

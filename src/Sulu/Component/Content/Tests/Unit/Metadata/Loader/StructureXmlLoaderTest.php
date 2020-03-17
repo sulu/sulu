@@ -21,7 +21,7 @@ use Sulu\Component\Content\Metadata\Loader\Exception\RequiredTagNotFoundExceptio
 use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class StructureXmlLoaderTest extends TestCase
 {

@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\ReferrerRule;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ReferrerRuleTest extends TestCase
 {

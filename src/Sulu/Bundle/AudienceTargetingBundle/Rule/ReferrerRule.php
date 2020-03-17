@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 
 use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\Input;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ReferrerRule implements RuleInterface
 {

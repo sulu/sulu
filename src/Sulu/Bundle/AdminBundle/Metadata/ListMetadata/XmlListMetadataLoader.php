@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Metadata\ListMetadata;
 
 use Sulu\Bundle\AdminBundle\Metadata\MetadataInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class XmlListMetadataLoader implements ListMetadataLoaderInterface
 {

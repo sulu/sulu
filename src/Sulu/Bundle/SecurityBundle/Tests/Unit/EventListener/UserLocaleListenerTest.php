@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Translation\Translator;
 
 class UserLocaleListenerTest extends TestCase
 {
@@ -34,7 +34,7 @@ class UserLocaleListenerTest extends TestCase
     private $tokenStorage;
 
     /**
-     * @var TranslatorInterface
+     * @var Translator
      */
     private $translator;
 
@@ -64,7 +64,7 @@ class UserLocaleListenerTest extends TestCase
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $this->tokenStorage->getToken()->willReturn($this->token->reveal());
 
-        $this->translator = $this->prophesize(TranslatorInterface::class);
+        $this->translator = $this->prophesize(Translator::class);
 
         $this->userLocaleListener = new UserLocaleListener($this->tokenStorage->reveal(), $this->translator->reveal());
     }

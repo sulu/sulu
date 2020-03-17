@@ -14,7 +14,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Rule;
 use DeviceDetector\DeviceDetector;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\OperatingSystemRule;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class OperatingSystemRuleTest extends TestCase
 {

@@ -14,7 +14,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\KeyValue;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class QueryStringRule implements RuleInterface
 {
