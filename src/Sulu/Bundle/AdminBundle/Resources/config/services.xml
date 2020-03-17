@@ -158,8 +158,12 @@
             <tag name="jms_serializer.event_subscriber"/>
         </service>
 
+        <service id="sulu_admin.http_client" class="Symfony\Contracts\HttpClient\HttpClientInterface">
+            <factory class="Symfony\Component\HttpClient\HttpClient" method="create"/>
+        </service>
+
         <service id="sulu_admin.download_build_command" class="Sulu\Bundle\AdminBundle\Command\DownloadBuildCommand">
-            <argument type="service" id="http_client" />
+            <argument type="service" id="sulu_admin.http_client" />
             <argument>%kernel.project_dir%</argument>
             <argument>%sulu.version%</argument>
             <tag name="console.command"/>
@@ -169,7 +173,7 @@
             id="sulu_admin.download_language_command"
             class="Sulu\Bundle\AdminBundle\Command\DownloadLanguageCommand"
         >
-            <argument type="service" id="http_client" />
+            <argument type="service" id="sulu_admin.http_client" />
             <argument type="service" id="filesystem" />
             <argument>%kernel.project_dir%</argument>
             <argument>%sulu_core.locales%</argument>
