@@ -135,7 +135,7 @@ export default class SingleSelection extends React.Component<Props>
             throw new Error('The "form_options_to_list_options" option has to be an array if defined!');
         }
 
-        if (requestParameters && !Array.isArray(requestParameters)) {
+        if (!Array.isArray(requestParameters)) {
             throw new Error('The "request_parameters" option has to be an array if defined!');
         }
 
@@ -162,9 +162,6 @@ export default class SingleSelection extends React.Component<Props>
         if (requestParameters) {
             requestParameters.forEach((parameter) => {
                 listOptions[parameter.name] = parameter.value;
-            });
-
-            requestParameters.forEach((parameter) => {
                 detailOptions[parameter.name] = parameter.value;
             });
         }

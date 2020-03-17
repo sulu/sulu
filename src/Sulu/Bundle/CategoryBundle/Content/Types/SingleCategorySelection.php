@@ -19,8 +19,6 @@ use Sulu\Component\Content\SimpleContentType;
 class SingleCategorySelection extends SimpleContentType implements ContentTypeExportInterface
 {
     /**
-     * Responsible for persisting the categories in the database.
-     *
      * @var CategoryManagerInterface
      */
     private $categoryManager;
