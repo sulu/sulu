@@ -1,7 +1,6 @@
 // @flow
 import jsonpointer from 'json-pointer';
 import React, {Fragment} from 'react';
-import log from 'loglevel';
 import {toJS} from 'mobx';
 import BlockCollection from '../../components/BlockCollection';
 import type {BlockEntry} from '../../components/BlockCollection/types';
