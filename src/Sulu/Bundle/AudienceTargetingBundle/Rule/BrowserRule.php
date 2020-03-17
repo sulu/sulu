@@ -14,7 +14,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\Client\Browser;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\SingleSelect;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BrowserRule implements RuleInterface
 {

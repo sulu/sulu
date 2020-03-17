@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 
 use DeviceDetector\DeviceDetector;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\SingleSelect;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This rule determines from which type of device the request have been sent.

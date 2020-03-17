@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\SearchBundle\Search\Configuration;
 
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Provides IndexConfigurations from the Symfony configuration stored in the container.

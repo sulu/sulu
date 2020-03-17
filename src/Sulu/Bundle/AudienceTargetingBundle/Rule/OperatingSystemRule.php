@@ -14,7 +14,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\OperatingSystem;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\Type\SingleSelect;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class OperatingSystemRule implements RuleInterface
 {

@@ -20,7 +20,7 @@ use Prophecy\Argument;
 use Sulu\Bundle\PageBundle\Teaser\PageTeaserProvider;
 use Sulu\Bundle\PageBundle\Teaser\Teaser;
 use Sulu\Bundle\SearchBundle\Search\Document;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PageTeaserProviderTest extends TestCase
 {

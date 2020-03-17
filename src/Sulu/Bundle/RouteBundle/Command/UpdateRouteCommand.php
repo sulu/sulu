@@ -20,14 +20,16 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Translation\TranslatorInterface as LegacyTranslatorInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UpdateRouteCommand extends Command
 {
     protected static $defaultName = 'sulu:route:update';
 
     /**
-     * @var TranslatorInterface
+     * @var TranslatorInterface|LocaleAwareInterface
      */
     private $translator;
 
@@ -46,6 +48,16 @@ class UpdateRouteCommand extends Command
         EntityManagerInterface $entityManager,
         RouteManagerInterface $routeManager
     ) {
+        if (!$translator instanceof LocaleAwareInterface && !$translator instanceof LegacyTranslatorInterface) {
+            throw new \LogicException(sprintf(
+                'Expected "translator" in "%s" to be instance of "%s" or "%s" but "%s" given.',
+                __CLASS__,
+                LocaleAwareInterface::class,
+                LegacyTranslatorInterface::class,
+                get_class($translator)
+            ));
+        }
+
         parent::__construct();
 
         $this->translator = $translator;
