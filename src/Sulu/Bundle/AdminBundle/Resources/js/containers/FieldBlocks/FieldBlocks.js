@@ -55,10 +55,6 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
             );
         }
 
-        log.warn(
-            'Could not find type "' + type + '" in "' + schemaPath + '" fallback to default type "' + defaultType + '".'
-        );
-
         if (!types[defaultType]) {
             throw new Error(
                 'The default type should exist in block "' + schemaPath + '".'
