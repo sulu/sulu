@@ -9,7 +9,28 @@ Use for development the [Symfony Local Webserver](https://symfony.com/doc/curren
 or the internal [php web server](https://www.php.net/manual/en/features.commandline.webserver.php) instead:
 
 ```bash
-php -S localhost:8000 -t public/
+php -S localhost:8000 -t public/ config/router.php
+```
+
+### Kernel accept RoutingConfigurator
+
+To support both the new RoutingConfigurator and the deprecated RouteCollectionBuilder in the SuluKernel the following method have been changed.
+Remove the type hints if you did override this methods in your Kernel:
+
+**before**
+
+```php
+protected function configureRoutes(RouteCollectionBuilder $routes) {}
+
+protected function import(RouteCollectionBuilder $routes, $confDir, $pattern) {}
+```
+
+**after**
+
+```php
+protected function import($routes, $confDir, $pattern) {}
+
+protected function configureRoutes($routes)
 ```
 
 ### Add key property to Role entity

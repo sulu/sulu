@@ -17,6 +17,7 @@ use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Config\Resource\GlobResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 
 /**
@@ -85,7 +86,10 @@ abstract class SuluKernel extends Kernel
         $this->load($loader, $confDir, '/{services}_' . $this->environment);
     }
 
-    protected function configureRoutes(RouteCollectionBuilder $routes)
+    /**
+     * @param RouteCollectionBuilder|RoutingConfigurator $routes Is a RouteCollectionBuilder for Symfony <= 4.4
+     */
+    protected function configureRoutes($routes)
     {
         $confDir = $this->getProjectDir() . '/config';
 
@@ -109,7 +113,10 @@ abstract class SuluKernel extends Kernel
         }
     }
 
-    protected function import(RouteCollectionBuilder $routes, $confDir, $pattern)
+    /**
+     * @param RouteCollectionBuilder|RoutingConfigurator $routes Is a RouteCollectionBuilder for Symfony <= 4.4
+     */
+    protected function import($routes, $confDir, $pattern)
     {
         $configExtensions = $this->getConfigExtensions();
         $reversedConfigExtensions = $this->getReversedConfigExtensions();
@@ -119,7 +126,7 @@ abstract class SuluKernel extends Kernel
 
         foreach ($configFiles as $resource) {
             if (!in_array($resource, $excludedConfigFiles)) {
-                $routes->import($resource, '/');
+                $routes->import($resource);
             }
         }
     }
