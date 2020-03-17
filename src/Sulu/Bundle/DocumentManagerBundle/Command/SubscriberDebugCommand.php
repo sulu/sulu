@@ -79,6 +79,8 @@ class SubscriberDebugCommand extends Command
         $table->setHeaders(['Class', 'Method', 'Priority']);
         $table->setRows($rows);
         $table->render();
+
+        return 0;
     }
 
     private function getPriority($eventName, $methodName, $listener)
@@ -132,5 +134,7 @@ class SubscriberDebugCommand extends Command
             ]);
         }
         $table->render();
+
+        return 0;
     }
 }

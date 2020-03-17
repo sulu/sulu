@@ -131,5 +131,7 @@ EOT
 
         //$progressBar->finish();
         $output->writeln('');
+
+        return 0;
     }
 }

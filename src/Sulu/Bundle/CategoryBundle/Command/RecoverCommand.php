@@ -126,6 +126,8 @@ class RecoverCommand extends Command
         if (true === $success) {
             $output->writeln('<info>Recovery complete<info>');
         }
+
+        return 0;
     }
 
     /**

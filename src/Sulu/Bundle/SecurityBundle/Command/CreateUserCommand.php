@@ -191,6 +191,8 @@ class CreateUserCommand extends Command
         $output->writeln(
             sprintf('Created user "<comment>%s</comment>" in role "<comment>%s</comment>"', $username, $roleName)
         );
+
+        return 0;
     }
 
     /**

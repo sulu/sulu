@@ -94,6 +94,8 @@ class MaintainResourceLocatorCommand extends Command
         }
 
         $this->liveSession->save();
+
+        return 0;
     }
 
     private function upgradeWebspace(Webspace $webspace, OutputInterface $output)

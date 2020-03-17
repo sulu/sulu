@@ -80,5 +80,7 @@ class MediaTypeUpdateCommand extends Command
         } else {
             $output->writeln('<comment>Nothing to update</comment>');
         }
+
+        return 0;
     }
 }

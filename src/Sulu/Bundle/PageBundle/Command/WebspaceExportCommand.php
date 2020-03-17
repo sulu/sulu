@@ -79,7 +79,7 @@ class WebspaceExportCommand extends Command
         if (!$helper->ask($input, $output, $question)) {
             $output->writeln('<error>Abort!</error>');
 
-            return;
+            return 0;
         }
 
         $output->writeln('<info>Continue!</info>');

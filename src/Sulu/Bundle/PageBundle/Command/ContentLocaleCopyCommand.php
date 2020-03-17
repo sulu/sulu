@@ -107,6 +107,8 @@ EOT
         } else {
             $this->output->writeln('<info>Dry run complete</info>');
         }
+
+        return 0;
     }
 
     private function copyNodes($webspaceKey, $srcLocale, $destLocale, $overwrite)

@@ -145,6 +145,8 @@ class DownloadBuildCommand extends Command
         }
 
         unlink($tempFileZip);
+
+        return 0;
     }
 
     private function getLocaleFileHash(string $path)

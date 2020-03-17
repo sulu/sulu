@@ -125,6 +125,8 @@ EOT
         } else {
             $this->output->writeln('<info>Dry run complete</info>');
         }
+
+        return 0;
     }
 
     private function copyDocuments($srcLocale, $destLocale, $overwrite)
