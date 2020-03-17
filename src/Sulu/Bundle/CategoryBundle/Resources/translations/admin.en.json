@@ -5,5 +5,7 @@
     "sulu_category.keywords": "Keywords",
     "sulu_category.keyword": "Keyword",
     "sulu_category.multiple_usage": "Multiple Usage",
-    "sulu_category.all_categories": "All categories"
+    "sulu_category.all_categories": "All categories",
+    "sulu_category.no_category_selected": "No category selected",
+    "sulu_category.single_category_selection_overlay_title": "Choose category"
 }

@@ -20,8 +20,6 @@ use Sulu\Component\Content\ContentTypeExportInterface;
 class CategorySelection extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
-     * Responsible for persisting the categories in the database.
-     *
      * @var CategoryManagerInterface
      */
     private $categoryManager;

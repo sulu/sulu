@@ -5,7 +5,7 @@ import type {IObservableValue} from 'mobx';
 import type {FieldTypeProps} from '../../../types';
 import ResourceSingleSelect from '../../../containers/ResourceSingleSelect';
 import SingleAutoComplete from '../../../containers/SingleAutoComplete';
-import SingleSelectionComponent from '../../../containers/SingleSelection';
+import SingleSelectionContainer from '../../../containers/SingleSelection';
 import userStore from '../../../stores/userStore';
 import {translate} from '../../../utils/Translator';
 
@@ -105,6 +105,9 @@ export default class SingleSelection extends React.Component<Props>
                 types: {
                     value: types,
                 } = {},
+                request_parameters: {
+                    value: requestParameters = [],
+                } = {},
             } = {},
             value,
         } = this.props;
@@ -132,6 +135,10 @@ export default class SingleSelection extends React.Component<Props>
             throw new Error('The "form_options_to_list_options" option has to be an array if defined!');
         }
 
+        if (!Array.isArray(requestParameters)) {
+            throw new Error('The "request_parameters" option has to be an array if defined!');
+        }
+
         const formListOptions = formOptionsToListOptions
             ? formOptionsToListOptions.reduce((currentOptions, formOption) => {
                 if (!formOption.name) {
@@ -150,14 +157,21 @@ export default class SingleSelection extends React.Component<Props>
                 ...formListOptions,
                 ...typeOptions,
             }
-            : undefined;
+            : {};
+
+        if (requestParameters) {
+            requestParameters.forEach((parameter) => {
+                listOptions[parameter.name] = parameter.value;
+                detailOptions[parameter.name] = parameter.value;
+            });
+        }
 
         if (detailOptions && typeof detailOptions !== 'object') {
             throw new Error('The "detail_options" option has to be an array if defined!');
         }
 
         return (
-            <SingleSelectionComponent
+            <SingleSelectionContainer
                 adapter={adapter}
                 allowDeselectForDisabledItems={!!allowDeselectForDisabledItems}
                 detailOptions={detailOptions}
