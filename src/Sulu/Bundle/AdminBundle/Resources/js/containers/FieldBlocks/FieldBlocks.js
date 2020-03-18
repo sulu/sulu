@@ -13,6 +13,46 @@ const MISSING_BLOCK_ERROR_MESSAGE = 'The "block" field type needs at least one t
 const BLOCK_PREVIEW_TAG = 'sulu.block_preview';
 
 export default class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
+    componentDidUpdate(prevProps: FieldTypeProps<Array<BlockEntry>>) {
+        const {defaultType, types, value: oldValues, onChange} = this.props;
+        const {types: oldTypes} = prevProps;
+
+        if (!oldValues) {
+            return;
+        }
+
+        if (!types || !oldTypes) {
+            throw new Error(MISSING_BLOCK_ERROR_MESSAGE);
+        }
+
+        // do nothing when types is same reference as oldTypes
+        if (types === oldTypes) {
+            return;
+        }
+
+        const newValues = toJS(oldValues);
+        const usedTypes = newValues.map((block) => block.type);
+
+        // do nothing when used types where included in oldTypes
+        if (usedTypes.every((type) => Object.keys(oldTypes).includes(type))) {
+            return;
+        }
+
+        if (!defaultType) {
+            throw new Error(
+                'It is impossible that a block has no defaultType. This should not happen and is likely a bug.'
+            );
+        }
+
+        newValues.forEach((blockValue, i) => {
+            if (!types[blockValue.type]) {
+                newValues[i].type = defaultType;
+            }
+        });
+
+        onChange(newValues);
+    }
+
     handleBlockChange = (index: number, name: string, value: Object) => {
         const {onChange, value: oldValues} = this.props;
 
