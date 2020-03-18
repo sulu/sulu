@@ -25,11 +25,6 @@ class CacheClearer implements CacheClearerInterface
     /**
      * @var string
      */
-    private $kernelRootDir;
-
-    /**
-     * @var string
-     */
     private $kernelEnvironment;
 
     /**
@@ -60,13 +55,11 @@ class CacheClearer implements CacheClearerInterface
     public function __construct(
         Filesystem $filesystem,
         $kernelEnvironment,
-        $kernelRootDir,
         RequestStack $requestStack,
         EventDispatcherInterface $eventDispatcher,
-        $varDir = null,
+        string $varDir,
         ?CacheManager $cacheManager
     ) {
-        $this->kernelRootDir = $kernelRootDir;
         $this->kernelEnvironment = $kernelEnvironment;
         $this->filesystem = $filesystem;
         $this->varDir = $varDir;
@@ -92,7 +85,7 @@ class CacheClearer implements CacheClearerInterface
 
         $path = sprintf(
             '%s/cache/common/%s/http_cache',
-            $this->varDir ?: $this->kernelRootDir,
+            $this->varDir,
             $this->kernelEnvironment
         );
 

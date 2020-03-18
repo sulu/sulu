@@ -2,6 +2,11 @@
 
 ## dev-master
 
+### CacheClearer service changed
+
+The CacheClearer service `sulu_website.http_cache.clearer` constructor arguments has changed. The third argument the
+`$kernelRootDir` has been removed. If you did overwrite or extend this service you need to update the constructor call of it.
+
 ### Router attributes
 
 The `Router` service now interprets more into the URL parameters that are passed to it. In addition to parsing numbers,
