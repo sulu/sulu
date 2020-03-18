@@ -52,5 +52,7 @@ class InitCommand extends Command
         } else {
             $output->writeLn('Directory "' . $this->formatCacheDir . '"" already exists');
         }
+
+        return 0;
     }
 }

@@ -196,6 +196,8 @@ class WebspaceCopyCommand extends Command
         }
 
         $this->output->writeln('<info>Done</info>');
+
+        return 0;
     }
 
     /**

@@ -47,5 +47,7 @@ class ClearCacheCommand extends Command
 
         $output->writeln('Clearing the Sulu media format cache.');
         $this->cacheClearer->clear($cache);
+
+        return 0;
     }
 }

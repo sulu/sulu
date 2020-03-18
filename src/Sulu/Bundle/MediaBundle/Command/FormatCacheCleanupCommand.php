@@ -114,6 +114,8 @@ class FormatCacheCleanupCommand extends Command
         } else {
             $ui->success($message);
         }
+
+        return 0;
     }
 
     private function mediaExists($mediaId)

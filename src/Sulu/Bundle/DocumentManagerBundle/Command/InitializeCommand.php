@@ -51,10 +51,10 @@ class InitializeCommand extends Command
             ->addOption('force', null, InputOption::VALUE_NONE, 'Do not ask for confiration.')
             ->setHelp(<<<'EOT'
 Initialize the PHPCR content repository. This command
-will call registered initializers. 
+will call registered initializers.
 
     <info>$ %command.full_name%</info>
-    
+
 WARNING: Initializers SHOULD be idempotent and it SHOULD be safe to run this
          command multiple times - but as we have no control over which initializers are
          registered and what they do this cannot be guaranteed, so use at your own
@@ -73,10 +73,12 @@ EOT
             if (false === $this->questionHelper->ask($input, $output, $question)) {
                 $output->writeln('Cancelled');
 
-                return;
+                return 0;
             }
         }
 
         $this->initializer->initialize($output, $purge);
+
+        return 0;
     }
 }

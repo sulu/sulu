@@ -92,6 +92,8 @@ EOT
         } else {
             $output->writeln('<info>Dry run complete</info>');
         }
+
+        return 0;
     }
 
     private function cleanSession(OutputInterface $output, SessionInterface $session, $path, $dryRun)

@@ -146,5 +146,7 @@ EOT
             '<info>Done. Executed </info>%s</info><info> fixtures.</info>',
             count($fixtures)
         ));
+
+        return 0;
     }
 }

@@ -157,5 +157,7 @@ class ValidatePagesCommand extends Command
         } else {
             $output->writeln(sprintf('<ok>%s Errors found</ok>', $result));
         }
+
+        return 0;
     }
 }

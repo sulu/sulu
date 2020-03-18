@@ -121,6 +121,8 @@ class CreateRoleCommand extends Command
                 $role->getSystem()
             )
         );
+
+        return 0;
     }
 
     /**

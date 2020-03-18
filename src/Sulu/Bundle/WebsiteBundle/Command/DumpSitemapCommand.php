@@ -117,6 +117,8 @@ class DumpSitemapCommand extends Command
         foreach ($hosts as $host) {
             $this->sitemapDumper->dumpHost($this->scheme, $host);
         }
+
+        return 0;
     }
 
     /**
