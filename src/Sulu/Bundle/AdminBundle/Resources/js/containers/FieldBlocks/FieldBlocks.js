@@ -14,7 +14,7 @@ const BLOCK_PREVIEW_TAG = 'sulu.block_preview';
 
 export default class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     componentDidUpdate(prevProps: FieldTypeProps<Array<BlockEntry>>) {
-        const {defaultType, types, value: value, onChange} = this.props;
+        const {defaultType, onChange, types, value} = this.props;
         const {types: oldTypes} = prevProps;
 
         if (!types || !oldTypes) {
@@ -66,7 +66,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
     };
 
     getBlockSchemaType = (type: ?string) => {
-        const {defaultType, types, schemaPath} = this.props;
+        const {defaultType, schemaPath, types} = this.props;
 
         if (!type) {
             throw new Error(
