@@ -384,106 +384,50 @@ test('Render block with schema', () => {
     expect(fieldBlocks.render()).toMatchSnapshot();
 });
 
-test('Render block with schema where type does not exist', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-
-    const types = {
-        default: {
-            title: 'Default',
-            form: {
-                text1: {
-                    label: 'Text 1',
-                    type: 'text_line',
-                    visible: true,
-                },
-                text2: {
-                    label: 'Text 2',
-                    type: 'text_line',
-                    visible: true,
-                },
-            },
-        },
-    };
-
-    formInspector.getSchemaEntryByPath.mockReturnValue({types});
-
-    const value = [
-        {
-            text1: 'Test 1',
-            text2: 'Test 2',
-            type: 'not-exist',
-        },
-        {
-            text1: 'Test 3',
-            text2: 'Test 4',
-            type: 'default',
-        },
-    ];
-
-    const fieldBlocks = mount(
-        <FieldBlocks
-            {...fieldTypeDefaultProps}
-            defaultType="default"
-            formInspector={formInspector}
-            types={types}
-            value={value}
-        />
-    );
-
-    fieldBlocks.find('Block').at(0).simulate('click');
-    fieldBlocks.find('Block').at(1).simulate('click');
-
-    expect(fieldBlocks.render()).toMatchSnapshot();
-});
-
 test('Call not onChange on componentDidUpdate when new types are the same', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-
-    const oldProps = {
-        defaultType: 'default',
-        value: [
-            {
-                text1: 'Test 1',
-                text2: 'Test 2',
-                type: 'default',
-            },
-            {
-                text1: 'Test 3',
-                text2: 'Test 4',
-                type: 'default',
-            },
-        ],
-        types: {
-            default: {
-                title: 'Default',
-                form: {
-                    text1: {
-                        label: 'Text 1',
-                        type: 'text_line',
-                        visible: true,
-                    },
-                    text2: {
-                        label: 'Text 2',
-                        type: 'text_line',
-                        visible: true,
-                    },
-                },
-            },
-        },
-    };
 
     const changeSpy = jest.fn();
 
     const fieldBlocks = shallow(
         <FieldBlocks
             {...fieldTypeDefaultProps}
-            {...oldProps}
+            defaultType="default"
             formInspector={formInspector}
             onChange={changeSpy}
+            types={{
+                default: {
+                    title: 'Default',
+                    form: {
+                        text1: {
+                            label: 'Text 1',
+                            type: 'text_line',
+                            visible: true,
+                        },
+                        text2: {
+                            label: 'Text 2',
+                            type: 'text_line',
+                            visible: true,
+                        },
+                    },
+                },
+            }}
+            value={[
+                {
+                    text1: 'Test 1',
+                    text2: 'Test 2',
+                    type: 'default',
+                },
+                {
+                    text1: 'Test 3',
+                    text2: 'Test 4',
+                    type: 'default',
+                },
+            ]}
         />
     );
 
-    const newProps = {
+    fieldBlocks.setProps({
         defaultType: 'default',
         value: [
             {
@@ -514,9 +458,7 @@ test('Call not onChange on componentDidUpdate when new types are the same', () =
                 },
             },
         },
-    };
-
-    fieldBlocks.setProps(newProps);
+    });
 
     expect(changeSpy).not.toBeCalled();
 });
@@ -524,51 +466,48 @@ test('Call not onChange on componentDidUpdate when new types are the same', () =
 test('Call onChange on componentDidUpdate when type not longer exist', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
-    const oldProps = {
-        defaultType: 'default',
-        value: [
-            {
-                text1: 'Test 1',
-                text2: 'Test 2',
-                type: 'default',
-            },
-            {
-                text1: 'Test 3',
-                text2: 'Test 4',
-                type: 'default',
-            },
-        ],
-        types: {
-            default: {
-                title: 'Default',
-                form: {
-                    text1: {
-                        label: 'Text 1',
-                        type: 'text_line',
-                        visible: true,
-                    },
-                    text2: {
-                        label: 'Text 2',
-                        type: 'text_line',
-                        visible: true,
-                    },
-                },
-            },
-        },
-    };
-
     const changeSpy = jest.fn();
 
-    const fieldBlocks = shallow(
+    // use mount instead of shallow here to test if component is correctly rendered
+    const fieldBlocks = mount(
         <FieldBlocks
             {...fieldTypeDefaultProps}
-            {...oldProps}
+            defaultType="default"
             formInspector={formInspector}
             onChange={changeSpy}
+            types={{
+                default: {
+                    title: 'Default',
+                    form: {
+                        text1: {
+                            label: 'Text 1',
+                            type: 'text_line',
+                            visible: true,
+                        },
+                        text2: {
+                            label: 'Text 2',
+                            type: 'text_line',
+                            visible: true,
+                        },
+                    },
+                },
+            }}
+            value={[
+                {
+                    text1: 'Test 1',
+                    text2: 'Test 2',
+                    type: 'default',
+                },
+                {
+                    text1: 'Test 3',
+                    text2: 'Test 4',
+                    type: 'default',
+                },
+            ]}
         />
     );
 
-    const newProps = {
+    fieldBlocks.setProps({
         defaultType: 'new',
         value: [
             {
@@ -599,17 +538,17 @@ test('Call onChange on componentDidUpdate when type not longer exist', () => {
                 },
             },
         },
-    };
-
-    fieldBlocks.setProps(newProps);
+    });
 
     expect(changeSpy).toBeCalledWith([
         {
+            __id: 11,
             text1: 'Test 1',
             text2: 'Test 2',
             type: 'new',
         },
         {
+            __id: 12,
             text1: 'Test 3',
             text2: 'Test 4',
             type: 'new',
