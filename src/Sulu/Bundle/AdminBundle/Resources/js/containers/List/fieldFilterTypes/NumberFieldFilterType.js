@@ -13,7 +13,7 @@ const operatorMapping = {
 };
 
 function getOperatorFromValue(value: ?{[string]: ?number}) {
-    const valueKeys = value ? Object.keys(value) : {};
+    const valueKeys = value ? Object.keys(value) : [];
 
     if (valueKeys.length > 1) {
         throw new Error('The "NumberFilterFieldType" only accepts an array with exactly one key!');
@@ -27,7 +27,7 @@ function getNumberFromValue(value: ?{[string]: ?number}) {
         return undefined;
     }
 
-    return value[Object.keys(value)[0]];
+    return value[getOperatorFromValue(value)];
 }
 
 class NumberFieldFilterType extends AbstractFieldFilterType<?{[string]: ?number}> {

@@ -48,7 +48,7 @@ class FieldFilterItem extends React.Component<Props> {
         }
 
         this.fieldFilterType = new (listFieldFilterTypeRegistry.get(filterType))(
-            this.handleFilterFieldChange,
+            this.handleFieldFilterTypeChange,
             filterTypeParameters,
             value
         );
@@ -95,7 +95,7 @@ class FieldFilterItem extends React.Component<Props> {
         this.valueNode = valueNode;
     }
 
-    @action handleFilterFieldChange = (value: mixed) => {
+    @action handleFieldFilterTypeChange = (value: mixed) => {
         this.value = value;
     };
 

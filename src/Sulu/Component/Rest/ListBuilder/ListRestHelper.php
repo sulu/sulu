@@ -172,7 +172,7 @@ class ListRestHelper implements ListRestHelperInterface
     /**
      * @return array
      */
-    public function getFilters()
+    public function getFilter()
     {
         return $this->getRequest()->get('filter', []);
     }

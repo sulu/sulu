@@ -39,7 +39,7 @@ class RestHelperTest extends TestCase
     public function setUp(): void
     {
         $this->listRestHelper = $this->prophesize(ListRestHelper::class);
-        $this->listRestHelper->getFilters()->willReturn([]);
+        $this->listRestHelper->getFilter()->willReturn([]);
         $this->listRestHelper->getPage()->willReturn(1);
         $this->listRestHelper->getIds()->willReturn([]);
         $this->listRestHelper->getExcludedIds()->willReturn([]);
@@ -165,7 +165,7 @@ class RestHelperTest extends TestCase
 
     public function testInitializeListBuilderAddFilter()
     {
-        $this->listRestHelper->getFilters()->willReturn(['name' => 'Max Mustermann']);
+        $this->listRestHelper->getFilter()->willReturn(['name' => 'Max Mustermann']);
         $this->listBuilder->filter(['name' => 'Max Mustermann'])->shouldBeCalled();
 
         $this->restHelper->initializeListBuilder($this->listBuilder->reveal(), []);

@@ -88,5 +88,5 @@ interface ListRestHelperInterface
     /**
      * @return array|null
      */
-    public function getFilters();
+    public function getFilter();
 }

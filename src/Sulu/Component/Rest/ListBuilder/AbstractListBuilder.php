@@ -219,9 +219,9 @@ abstract class AbstractListBuilder implements ListBuilderInterface
         return $this;
     }
 
-    public function filter($filters)
+    public function filter($filter)
     {
-        foreach ($filters as $fieldName => $options) {
+        foreach ($filter as $fieldName => $options) {
             $fieldDescriptor = $this->fieldDescriptors[$fieldName];
             $this->filterTypeRegistry->getFilterType($fieldDescriptor->getMetadata()->getFilterType())
                 ->filter($this, $fieldDescriptor, $options);

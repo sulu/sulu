@@ -158,6 +158,6 @@ class ListRestHelperTest extends TestCase
         $this->assertEquals($expected['offset'], $helper->getOffset());
         $this->assertEquals($expected['ids'], $helper->getIds());
         $this->assertEquals($expected['excludedIds'], $helper->getExcludedIds());
-        $this->assertEquals($expected['filters'], $helper->getFilters());
+        $this->assertEquals($expected['filters'], $helper->getFilter());
     }
 }

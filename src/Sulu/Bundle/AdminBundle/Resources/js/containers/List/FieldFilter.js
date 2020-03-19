@@ -1,10 +1,9 @@
 // @flow
-import React, {Fragment} from 'react';
+import React from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import ArrowMenu from '../../components/ArrowMenu';
 import Button from '../../components/Button';
-import AbstractFieldFilterTypes from './fieldFilterTypes/AbstractFieldFilterType';
 import FieldFilterItem from './FieldFilterItem';
 import type {Schema} from './types';
 import fieldFilterStyles from './fieldFilter.scss';
@@ -17,33 +16,19 @@ type Props = {|
 
 @observer
 class FieldFilter extends React.Component<Props> {
-    @observable fieldFilterTypes: {[column: string]: AbstractFieldFilterTypes<*>} = {};
-    @observable filterOpen: boolean = false;
+    @observable filterMenuOpen: boolean = false;
     @observable filterChipOpen: ?string = undefined;
-    @observable value: {[string]: mixed} = {};
-
-    @action componentDidMount() {
-        const {value} = this.props;
-        this.value = value;
-    }
-
-    @action componentDidUpdate(prevProps: Props) {
-        const {value} = this.props;
-        if (prevProps.value !== value) {
-            this.value = value;
-        }
-    }
 
     @computed get filteredFields(): Array<string> {
-        return Object.keys(this.value);
+        return Object.keys(this.props.value);
     }
 
-    @action handleFilterButtonClick = () => {
-        this.filterOpen = true;
+    @action handleFilterMenuButtonClick = () => {
+        this.filterMenuOpen = true;
     };
 
-    @action handleFilterClose = () => {
-        this.filterOpen = false;
+    @action handleFilterMenuClose = () => {
+        this.filterMenuOpen = false;
     };
 
     @action openFilterItem = (column: string) => {
@@ -54,7 +39,7 @@ class FieldFilter extends React.Component<Props> {
         this.filterChipOpen = undefined;
     };
 
-    handleFilterFieldClick = (column: string) => {
+    handleFilterMenuActionClick = (column: string) => {
         const {onChange, value} = this.props;
 
         onChange({...value, [column]: undefined});
@@ -78,52 +63,44 @@ class FieldFilter extends React.Component<Props> {
     @action handleFilterItemDelete = (column: string) => {
         const {onChange, value} = this.props;
 
-        onChange(
-            Object.keys(value).reduce(function(newValue, currentColumn) {
-                if (currentColumn !== column) {
-                    newValue[currentColumn] = value[currentColumn];
-                }
+        const {[column]: deletedFilter, ...newValue} = value;
 
-                return newValue;
-            }, {})
-        );
+        onChange(newValue);
     };
 
     render() {
-        const {fields} = this.props;
+        const {fields, value} = this.props;
 
         return (
             <div className={fieldFilterStyles.fieldFilter}>
                 {Object.keys(fields).length > 0 &&
-                    <Fragment>
-                        <ArrowMenu
-                            anchorElement={
-                                <div className={fieldFilterStyles.filterButton}>
-                                    <Button
-                                        icon="su-filter"
-                                        onClick={this.handleFilterButtonClick}
-                                        showDropdownIcon={true}
-                                        skin="icon"
-                                    />
-                                </div>
-                            }
-                            onClose={this.handleFilterClose}
-                            open={this.filterOpen}
-                        >
-                            <ArrowMenu.Section>
-                                {Object.keys(fields).map((fieldName) => (
-                                    <ArrowMenu.Action
-                                        disabled={this.filteredFields.includes(fieldName)}
-                                        key={fieldName}
-                                        onClick={this.handleFilterFieldClick}
-                                        value={fieldName}
-                                    >
-                                        {fields[fieldName].label}
-                                    </ArrowMenu.Action>
-                                ))}
-                            </ArrowMenu.Section>
-                        </ArrowMenu>
-                    </Fragment>
+                    <ArrowMenu
+                        anchorElement={
+                            <div className={fieldFilterStyles.filterButton}>
+                                <Button
+                                    icon="su-filter"
+                                    onClick={this.handleFilterMenuButtonClick}
+                                    showDropdownIcon={true}
+                                    skin="icon"
+                                />
+                            </div>
+                        }
+                        onClose={this.handleFilterMenuClose}
+                        open={this.filterMenuOpen}
+                    >
+                        <ArrowMenu.Section>
+                            {Object.keys(fields).map((column) => (
+                                <ArrowMenu.Action
+                                    disabled={this.filteredFields.includes(column)}
+                                    key={column}
+                                    onClick={this.handleFilterMenuActionClick}
+                                    value={column}
+                                >
+                                    {fields[column].label}
+                                </ArrowMenu.Action>
+                            ))}
+                        </ArrowMenu.Section>
+                    </ArrowMenu>
                 }
                 {this.filteredFields.map((column) => (
                     <FieldFilterItem
@@ -137,7 +114,7 @@ class FieldFilter extends React.Component<Props> {
                         onClose={this.handleFilterItemClose}
                         onDelete={this.handleFilterItemDelete}
                         open={this.filterChipOpen === column}
-                        value={this.value[column]}
+                        value={value[column]}
                     />
                 ))}
             </div>

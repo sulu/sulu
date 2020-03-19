@@ -56,22 +56,6 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
         this.valueDisposer();
     }
 
-    @computed get resourceKey() {
-        const {parameters} = this;
-
-        if (!parameters) {
-            throw new Error('The "SelectionFieldFilterType" needs some parameters to work!');
-        }
-
-        const {resourceKey} = parameters;
-
-        if (typeof resourceKey !== 'string') {
-            throw new Error('The "resourceKey" parameter must be a string!');
-        }
-
-        return resourceKey;
-    }
-
     @computed get displayProperty() {
         const {parameters} = this;
 

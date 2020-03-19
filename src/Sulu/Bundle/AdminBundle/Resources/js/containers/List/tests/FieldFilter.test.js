@@ -216,13 +216,13 @@ test('Call onChange without filter chip for which delete icon was clicked', () =
     };
 
     const value = {
-        firstName: undefined,
-        lastName: undefined,
+        firstName: 'First Name',
+        lastName: 'Last Name',
     };
 
     const fieldFilter = mount(<FieldFilter fields={schema} onChange={changeSpy} value={value} />);
 
     fieldFilter.find('Chip[value="lastName"] Icon[name="su-times"]').simulate('click');
 
-    expect(changeSpy).toBeCalledWith({firstName: undefined});
+    expect(changeSpy).toBeCalledWith({firstName: 'First Name'});
 });
