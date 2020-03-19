@@ -43,9 +43,11 @@ abstract class WebsiteController extends AbstractController
         $preview = false,
         $partial = false
     ) {
+        /** @var Request $request */
+        $request = $this->getRequest();
+
         // extract format twig file
         if (!$preview) {
-            $request = $this->getRequest();
             $requestFormat = $request->getRequestFormat();
         } else {
             $requestFormat = 'html';
@@ -83,6 +85,15 @@ abstract class WebsiteController extends AbstractController
         }
 
         $response = new Response($content);
+
+        // we need to set the content type ourselves here
+        // else symfony will use the accept header of the client and the page could be cached with false content-type
+        // see following symfony issue: https://github.com/symfony/symfony/issues/35694
+        $mimeType = $request->getMimeType($requestFormat);
+
+        if ($mimeType) {
+            $response->headers->set('Content-Type', $mimeType);
+        }
 
         if (!$preview && $this->getCacheTimeLifeEnhancer()) {
             $this->getCacheTimeLifeEnhancer()->enhance($response, $structure);
@@ -142,7 +153,7 @@ abstract class WebsiteController extends AbstractController
     /**
      * Returns the current request from the request stack.
      *
-     * @return null|Request
+     * @return Request
      *
      * @deprecated will be remove with 2.0
      */
