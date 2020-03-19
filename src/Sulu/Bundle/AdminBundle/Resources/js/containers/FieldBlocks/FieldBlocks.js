@@ -1,4 +1,5 @@
 // @flow
+import equals from 'fast-deep-equal';
 import jsonpointer from 'json-pointer';
 import React, {Fragment} from 'react';
 import {toJS} from 'mobx';
@@ -21,8 +22,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
             throw new Error(MISSING_BLOCK_ERROR_MESSAGE);
         }
 
-        const newValue = toJS(value);
-        let hasValueChanged = false;
+        let newValue = toJS(value);
 
         if (value && types !== oldTypes) {
             if (!defaultType) {
@@ -33,16 +33,17 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
 
             // set block to default type if type does not longer exist
             // this could happen for example in a template switch
-            newValue.forEach((block, i) => {
+            newValue = newValue.map((block) => {
                 if (!types[block.type]) {
-                    hasValueChanged = true;
-                    newValue[i].type = defaultType;
+                    return {...block, type: defaultType}
                 }
+
+                return block;
             });
         }
 
         // onChange should only be called when value was changed else it will end in a infinite loop
-        if (hasValueChanged) {
+        if (!equals(toJS(value), newValue)) {
             onChange(newValue);
         }
     }
