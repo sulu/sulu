@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <serializer>
     <class name="Sulu\Component\Webspace\Webspace" exclusion-policy="ALL">
-        <property name="name" type="string" expose="true"/>
-        <property name="key" type="string" expose="true"/>
-        <property name="theme" type="string" expose="true"/>
-        <property name="localizations" expose="true">
+        <property name="name" type="string" expose="true" groups="frontend,Default"/>
+        <property name="key" type="string" expose="true" groups="frontend,Default"/>
+        <property name="theme" type="string" expose="true" groups="frontend,Default"/>
+        <property name="localizations" expose="true" groups="frontend,Default">
             <type><![CDATA[array<Sulu\Component\Localization\Localization>]]></type>
         </property>
-        <property name="defaultTemplates" expose="true"/>
+        <property name="defaultTemplates" expose="true" groups="frontend,Default"/>
     </class>
 </serializer>

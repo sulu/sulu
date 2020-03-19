@@ -343,6 +343,7 @@ class PageAdmin extends Admin
         return [
             'teaser' => $this->teaserProviderPool->getConfiguration(),
             'versioning' => $this->versioningEnabled,
+            'webspaces' => $this->webspaceManager->getWebspaceCollection()->getWebspaces(),
         ];
     }
 
