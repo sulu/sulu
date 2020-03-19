@@ -24,7 +24,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
 
         let newValue = toJS(value);
 
-        if (value && types !== oldTypes) {
+        if (newValue && types !== oldTypes) {
             if (!defaultType) {
                 throw new Error(
                     'It is impossible that a block has no defaultType. This should not happen and is likely a bug.'
@@ -35,7 +35,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
             // this could happen for example in a template switch
             newValue = newValue.map((block) => {
                 if (!types[block.type]) {
-                    return {...block, type: defaultType}
+                    return {...block, type: defaultType};
                 }
 
                 return block;
