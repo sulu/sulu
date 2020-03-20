@@ -72,6 +72,7 @@ class FormXmlLoader extends AbstractLoader
         $form = new ExternalFormMetadata();
         $form->setResource($resource);
         $form->setKey($xpath->query('/x:form/x:key')->item(0)->nodeValue);
+        $form->setTags($this->loadStructureTags('/x:form/x:tag', $xpath));
 
         $propertiesNode = $xpath->query('/x:form/x:properties')->item(0);
         $properties = $this->propertiesXmlParser->load(
@@ -101,6 +102,7 @@ class FormXmlLoader extends AbstractLoader
     private function mapFormsMetadata(ExternalFormMetadata $formMetadata, string $locale): FormMetadata
     {
         $form = new FormMetadata();
+        $form->setTags($this->formMetadataMapper->mapTags($formMetadata->getTags()));
         $form->setItems($this->formMetadataMapper->mapChildren($formMetadata->getChildren(), $locale));
 
         $schema = $this->formMetadataMapper->mapSchema($formMetadata->getProperties());

@@ -384,6 +384,178 @@ test('Render block with schema', () => {
     expect(fieldBlocks.render()).toMatchSnapshot();
 });
 
+test('Call not onChange on componentDidUpdate when new types are the same', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const changeSpy = jest.fn();
+
+    const fieldBlocks = shallow(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="default"
+            formInspector={formInspector}
+            onChange={changeSpy}
+            types={{
+                default: {
+                    title: 'Default',
+                    form: {
+                        text1: {
+                            label: 'Text 1',
+                            type: 'text_line',
+                            visible: true,
+                        },
+                        text2: {
+                            label: 'Text 2',
+                            type: 'text_line',
+                            visible: true,
+                        },
+                    },
+                },
+            }}
+            value={[
+                {
+                    text1: 'Test 1',
+                    text2: 'Test 2',
+                    type: 'default',
+                },
+                {
+                    text1: 'Test 3',
+                    text2: 'Test 4',
+                    type: 'default',
+                },
+            ]}
+        />
+    );
+
+    fieldBlocks.setProps({
+        defaultType: 'default',
+        value: [
+            {
+                text1: 'Test 1 a',
+                text2: 'Test 2 b',
+                type: 'default',
+            },
+            {
+                text1: 'Test 3 a',
+                text2: 'Test 4 c',
+                type: 'default',
+            },
+        ],
+        types: {
+            default: {
+                title: 'Default',
+                form: {
+                    text1: {
+                        label: 'Text 1 a',
+                        type: 'text_line',
+                        visible: true,
+                    },
+                    text2: {
+                        label: 'Text 2 b',
+                        type: 'text_line',
+                        visible: true,
+                    },
+                },
+            },
+        },
+    });
+
+    expect(changeSpy).not.toBeCalled();
+});
+
+test('Call onChange on componentDidUpdate when type not longer exist', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const changeSpy = jest.fn();
+
+    // use mount instead of shallow here to test if component is correctly rendered
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="default"
+            formInspector={formInspector}
+            onChange={changeSpy}
+            types={{
+                default: {
+                    title: 'Default',
+                    form: {
+                        text1: {
+                            label: 'Text 1',
+                            type: 'text_line',
+                            visible: true,
+                        },
+                        text2: {
+                            label: 'Text 2',
+                            type: 'text_line',
+                            visible: true,
+                        },
+                    },
+                },
+            }}
+            value={[
+                {
+                    text1: 'Test 1',
+                    text2: 'Test 2',
+                    type: 'default',
+                },
+                {
+                    text1: 'Test 3',
+                    text2: 'Test 4',
+                    type: 'default',
+                },
+            ]}
+        />
+    );
+
+    fieldBlocks.setProps({
+        defaultType: 'new',
+        value: [
+            {
+                text1: 'Test 1',
+                text2: 'Test 2',
+                type: 'not-exist',
+            },
+            {
+                text1: 'Test 3',
+                text2: 'Test 4',
+                type: 'default',
+            },
+        ],
+        types: {
+            new: {
+                title: 'Default',
+                form: {
+                    text1: {
+                        label: 'Text 1',
+                        type: 'text_line',
+                        visible: true,
+                    },
+                    text2: {
+                        label: 'Text 2',
+                        type: 'text_line',
+                        visible: true,
+                    },
+                },
+            },
+        },
+    });
+
+    expect(changeSpy).toBeCalledWith([
+        {
+            __id: 11,
+            text1: 'Test 1',
+            text2: 'Test 2',
+            type: 'new',
+        },
+        {
+            __id: 12,
+            text1: 'Test 3',
+            text2: 'Test 4',
+            type: 'new',
+        },
+    ]);
+});
+
 test('Render block with schema and error on fields already being modified', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 

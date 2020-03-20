@@ -1,0 +1,49 @@
+sulu_document_manager:
+    sessions:
+        default:
+            backend:
+                caches:
+                    meta: doctrine_phpcr.meta_cache_provider
+                    nodes: doctrine_phpcr.nodes_cache_provider
+        live:
+            backend:
+                caches:
+                    meta: doctrine_phpcr.meta_cache_provider_live
+                    nodes: doctrine_phpcr.nodes_cache_provider_live
+
+services:
+    doctrine_phpcr.meta_cache_provider:
+        class: Symfony\Component\Cache\DoctrineProvider
+        public: false
+        arguments:
+            - '@doctrine_phpcr.meta_cache_pool'
+
+    doctrine_phpcr.nodes_cache_provider:
+        class: Symfony\Component\Cache\DoctrineProvider
+        public: false
+        arguments:
+            - '@doctrine_phpcr.nodes_cache_pool'
+
+    doctrine_phpcr.meta_cache_provider_live:
+        class: Symfony\Component\Cache\DoctrineProvider
+        public: false
+        arguments:
+            - '@doctrine_phpcr.meta_cache_pool_live'
+
+    doctrine_phpcr.nodes_cache_provider_live:
+        class: Symfony\Component\Cache\DoctrineProvider
+        public: false
+        arguments:
+            - '@doctrine_phpcr.nodes_cache_pool_live'
+
+framework:
+    cache:
+        pools:
+            doctrine_phpcr.meta_cache_pool:
+                adapter: cache.app
+            doctrine_phpcr.nodes_cache_pool:
+                adapter: cache.app
+            doctrine_phpcr.meta_cache_pool_live:
+                adapter: cache.app
+            doctrine_phpcr.nodes_cache_pool_live:
+                adapter: cache.app

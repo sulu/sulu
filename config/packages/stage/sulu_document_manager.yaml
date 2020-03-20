@@ -1,0 +1,2 @@
+imports:
+    - { resource: '../prod/sulu_document_manager.yaml' }

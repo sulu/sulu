@@ -48,9 +48,7 @@ class FormXmlLoaderTest extends TestCase
 
     public function testLoadForm()
     {
-        /**
-         * @var LocalizedFormMetadataCollection
-         */
+        /** @var LocalizedFormMetadataCollection */
         $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form.xml');
 
         $this->assertInstanceOf(LocalizedFormMetadataCollection::class, $formMetadataCollection);
@@ -58,6 +56,11 @@ class FormXmlLoaderTest extends TestCase
         $this->assertCount(2, $formMetadataCollection->getItems());
 
         $formMetadata = $formMetadataCollection->get('en');
+
+        $this->assertCount(1, $formMetadata->getTags());
+        $this->assertCount(1, $formMetadata->getTagsByName('test'));
+        $this->assertEquals('test', $formMetadata->getTagsByName('test')[0]->getName());
+        $this->assertEquals(['value' => 'test-value'], $formMetadata->getTagsByName('test')[0]->getAttributes());
 
         $this->assertEquals('form', $formMetadata->getKey());
         $this->assertCount(4, $formMetadata->getItems());

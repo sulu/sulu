@@ -119,7 +119,7 @@ export type FieldTypeProps<T> = {|
     error: ?Error | ErrorCollection,
     fieldTypeOptions: Object,
     formInspector: FormInspector,
-    label: string,
+    label: ?string,
     maxOccurs: ?number,
     minOccurs: ?number,
     onChange: (value: T) => void,

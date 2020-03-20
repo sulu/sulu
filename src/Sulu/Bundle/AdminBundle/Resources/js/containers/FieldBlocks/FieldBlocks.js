@@ -1,4 +1,5 @@
 // @flow
+import equals from 'fast-deep-equal';
 import jsonpointer from 'json-pointer';
 import React, {Fragment} from 'react';
 import {toJS} from 'mobx';
@@ -12,6 +13,40 @@ const MISSING_BLOCK_ERROR_MESSAGE = 'The "block" field type needs at least one t
 const BLOCK_PREVIEW_TAG = 'sulu.block_preview';
 
 export default class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
+    componentDidUpdate(prevProps: FieldTypeProps<Array<BlockEntry>>) {
+        const {defaultType, onChange, types, value} = this.props;
+        const {types: oldTypes} = prevProps;
+
+        if (!types || !oldTypes) {
+            throw new Error(MISSING_BLOCK_ERROR_MESSAGE);
+        }
+
+        let newValue = toJS(value);
+
+        if (newValue && types !== oldTypes) {
+            if (!defaultType) {
+                throw new Error(
+                    'It is impossible that a block has no defaultType. This should not happen and is likely a bug.'
+                );
+            }
+
+            // set block to default type if type does not longer exist
+            // this could happen for example in a template switch
+            newValue = newValue.map((block) => {
+                if (!types[block.type]) {
+                    return {...block, type: defaultType};
+                }
+
+                return block;
+            });
+        }
+
+        // onChange should only be called when value was changed else it will end in a infinite loop
+        if (!equals(toJS(value), newValue)) {
+            onChange(newValue);
+        }
+    }
+
     handleBlockChange = (index: number, name: string, value: Object) => {
         const {onChange, value: oldValues} = this.props;
 
@@ -30,6 +65,38 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
         onFinish();
     };
 
+    getBlockSchemaType = (type: ?string) => {
+        const {defaultType, schemaPath, types} = this.props;
+
+        if (!type) {
+            throw new Error(
+                'It is impossible that a block has no type. This should not happen and is likely a bug.'
+            );
+        }
+
+        if (!types) {
+            throw new Error(MISSING_BLOCK_ERROR_MESSAGE);
+        }
+
+        if (types[type]) {
+            return types[type];
+        }
+
+        if (!defaultType) {
+            throw new Error(
+                'It is impossible that a block has no defaultType. This should not happen and is likely a bug.'
+            );
+        }
+
+        if (!types[defaultType]) {
+            throw new Error(
+                'The default type should exist in block "' + schemaPath + '".'
+            );
+        }
+
+        return types[defaultType];
+    };
+
     renderBlockContent = (value: Object, type: string, index: number, expanded: boolean) => {
         return expanded
             ? this.renderExpandedBlockContent(value, type, index)
@@ -46,19 +113,9 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
             router,
             schemaPath,
             showAllErrors,
-            types,
         } = this.props;
 
-        if (!formInspector) {
-            throw new Error('The FieldBlocks field type needs a formInspector to work properly');
-        }
-
-        if (!types) {
-            throw new Error(MISSING_BLOCK_ERROR_MESSAGE);
-        }
-
-        const blockType = types[type];
-
+        const blockSchemaType = this.getBlockSchemaType(type);
         const errors = ((toJS(error): any): ?BlockError);
 
         return (
@@ -72,7 +129,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
                 onFieldFinish={onFinish}
                 onSuccess={onSuccess}
                 router={router}
-                schema={blockType.form}
+                schema={blockSchemaType.form}
                 schemaPath={schemaPath + '/types/' + type + '/form'}
                 showAllErrors={showAllErrors}
             />
@@ -81,22 +138,7 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
 
     // eslint-disable-next-line no-unused-vars
     renderCollapsedBlockContent = (value: Object, type: string, index: number) => {
-        if (!type) {
-            throw new Error(
-                'It is impossible that a collapsed block has no type. This should not happen and is likely a bug.'
-            );
-        }
-
-        const {formInspector, schemaPath} = this.props;
-        const blockSchemaTypes = formInspector.getSchemaEntryByPath(schemaPath).types;
-
-        if (!blockSchemaTypes) {
-            throw new Error(
-                'It is impossible that the schema for blocks has no types. This should not happen and is likely a bug.'
-            );
-        }
-
-        const blockSchemaType = blockSchemaTypes[type];
+        const blockSchemaType = this.getBlockSchemaType(type);
         const blockSchemaTypeForm = blockSchemaType.form;
 
         const previewPropertyNames = Object.keys(blockSchemaTypeForm)

@@ -64,6 +64,7 @@
         "no-console": "error",
         "no-prototype-builtins": "off",
         "no-unused-vars": ["error", {"ignoreRestSiblings": true}],
+        "no-useless-rename": "error",
         "padded-blocks": [
             "error",
             "never"

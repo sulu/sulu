@@ -1167,6 +1167,74 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertTrue('This meta got added' === $response->meta[1]->value);
     }
 
+    public function testSortingOfMedia()
+    {
+        $collection = $this->createCollection();
+        $type = $this->createImageType();
+        $media1 = $this->createMedia('test-1', $type, $collection);
+        $media2 = $this->createMedia('test-2', $type, $collection);
+
+        $category1 = $this->createCategory('first-category-key', 'en');
+        $categoryTranslation = $this->createCategoryTranslation($category1, 'en', 'First Category');
+        $categoryTranslation->setMedias([$media1, $media2]);
+
+        $this->em->flush();
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/categories/' . $category1->getId() . '?locale=en'
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertSame([
+            'ids' => [
+                $media1->getId(),
+                $media2->getId(),
+            ],
+        ], $response['medias']);
+
+        $client->request(
+            'PUT',
+            '/api/categories/' . $category1->getId() . '?locale=en',
+            [
+                'name' => 'Modified Category',
+                'medias' => [
+                    'ids' => [
+                        $media2->getId(),
+                        $media1->getId(),
+                    ],
+                ],
+            ]
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertSame([
+            'ids' => [
+                $media2->getId(),
+                $media1->getId(),
+            ],
+        ], $response['medias']);
+
+        $client->request(
+            'GET',
+            '/api/categories/' . $category1->getId() . '?locale=en'
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertSame([
+            'ids' => [
+                $media2->getId(),
+                $media1->getId(),
+            ],
+        ], $response['medias']);
+    }
+
     public function testPutWithNoLocale()
     {
         $category1 = $this->createCategory('first-category-key', 'en');

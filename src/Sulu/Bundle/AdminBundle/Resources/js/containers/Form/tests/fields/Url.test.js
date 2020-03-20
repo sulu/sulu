@@ -65,6 +65,27 @@ test('Pass props correctly to Url component', () => {
     expect(url.find(UrlComponent).prop('disabled')).toEqual(true);
 });
 
+test('Pass no schemaOptions to Url component and render correct defaults', () => {
+    const schemaOptions = {};
+
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const url = shallow(
+        <Url
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+            value="http://www.sulu.io"
+        />
+    );
+
+    expect(url.find(UrlComponent).prop('protocols')).toEqual(
+        ['http://', 'https://', 'ftp://', 'ftps://', 'mailto:', 'tel:']
+    );
+    expect(url.find(UrlComponent).prop('value')).toEqual('http://www.sulu.io');
+    expect(url.find(UrlComponent).prop('disabled')).toEqual(true);
+});
+
 test('Not call changed when only protocol is given', () => {
     const schemaOptions = {
         defaults: {
@@ -87,7 +108,9 @@ test('Not call changed when only protocol is given', () => {
         />
     );
 
-    expect(url.find(UrlComponent).prop('protocols')).toEqual(['http://', 'https://', 'ftp://', 'ftps://']);
+    expect(url.find(UrlComponent).prop('protocols')).toEqual(
+        ['http://', 'https://', 'ftp://', 'ftps://', 'mailto:', 'tel:']
+    );
     expect(url.find(UrlComponent).prop('defaultProtocol')).toEqual('http://');
     expect(changeSpy).not.toBeCalled();
 });
@@ -114,7 +137,9 @@ test('Pass correct default props to Url component', () => {
         />
     );
 
-    expect(url.find(UrlComponent).prop('protocols')).toEqual(['http://', 'https://', 'ftp://', 'ftps://']);
+    expect(url.find(UrlComponent).prop('protocols')).toEqual(
+        ['http://', 'https://', 'ftp://', 'ftps://', 'mailto:', 'tel:']
+    );
     expect(changeSpy).toBeCalledWith('http://github.com');
 });
 

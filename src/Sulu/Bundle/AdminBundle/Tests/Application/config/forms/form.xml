@@ -5,6 +5,8 @@
 >
     <key>form</key>
 
+    <tag name="test" value="test-value"/>
+
     <properties>
         <property name="formOfAddress" type="single_select" mandatory="true" colspan="3" spaceAfter="9">
             <meta>

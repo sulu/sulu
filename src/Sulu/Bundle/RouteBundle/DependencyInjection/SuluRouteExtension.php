@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\RouteBundle\DependencyInjection;
 
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -66,6 +67,31 @@ class SuluRouteExtension extends Extension implements PrependExtensionInterface
         $loader->load('manager.xml');
         $loader->load('generator.xml');
         $loader->load('command.xml');
+        $loader->load('page_tree_move.xml');
+
+        $pageRouteCascade = $config['content_types']['page_tree_route']['page_route_cascade'];
+
+        if ('off' !== $pageRouteCascade) {
+            $loader->load('page_tree_update.xml');
+        } else {
+            $container->setAlias(
+                'sulu_route.page_tree_route.updater.request',
+                'sulu_route.page_tree_route.updater.off'
+            );
+        }
+
+        $bundles = $container->getParameter('kernel.bundles');
+
+        if ('task' === $pageRouteCascade && !array_key_exists('SuluAutomationBundle', $bundles)) {
+            throw new InvalidConfigurationException(
+                'You need to install the SuluAutomationBundle to use task cascading!'
+            );
+        }
+
+        $container->setAlias(
+            'sulu_route.page_tree_route.updater',
+            'sulu_route.page_tree_route.updater.' . $pageRouteCascade
+        );
 
         $this->configurePersistence($config['objects'], $container);
     }

@@ -130,6 +130,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
 
         foreach ($structuresMetadata as $structureMetadata) {
             $form = new FormMetadata();
+            $form->setTags($this->formMetadataMapper->mapTags($structureMetadata->getTags()));
             $form->setName($structureMetadata->getName());
             $form->setTitle($structureMetadata->getTitle($locale) ?? ucfirst($structureMetadata->getName()));
             $form->setItems($this->formMetadataMapper->mapChildren($structureMetadata->getChildren(), $locale));

@@ -19,9 +19,14 @@ class TagMetadata
     private $name;
 
     /**
-     * @var ?int
+     * @var int|null
      */
     private $priority;
+
+    /**
+     * @var array
+     */
+    private $attributes = [];
 
     public function getName(): string
     {
@@ -33,7 +38,7 @@ class TagMetadata
         $this->name = $name;
     }
 
-    public function getPriority(): int
+    public function getPriority(): ?int
     {
         return $this->priority;
     }
@@ -41,5 +46,31 @@ class TagMetadata
     public function setPriority(?int $priority): void
     {
         $this->priority = $priority;
+    }
+
+    public function setAttributes(array $attributes): void
+    {
+        $this->attributes = $attributes;
+    }
+
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    public function getAttribute(string $name)
+    {
+        return $this->attributes[$name] ?? null;
+    }
+
+    public function hasAttributes(array $attributes): bool
+    {
+        foreach ($attributes as $key => $value) {
+            if (!array_key_exists($key, $this->attributes) || $this->attributes[$key] !== $value) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

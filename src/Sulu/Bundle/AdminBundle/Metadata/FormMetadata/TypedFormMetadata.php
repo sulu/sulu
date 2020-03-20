@@ -32,6 +32,9 @@ class TypedFormMetadata extends AbstractMetadata
         unset($this->forms[$key]);
     }
 
+    /**
+     * @return FormMetadata[]
+     */
     public function getForms(): array
     {
         return $this->forms;

@@ -115,6 +115,16 @@ a `value` (instead of using the child of the node) attribute. This was necessary
 
 In the `RouteRepositoryInterface` a new remove method was introduced.
 
+## release/2.0
+
+### Add position to category medias
+
+Currently the category media sorting was not saved for this the following database update is needed:
+
+```sql
+ALTER TABLE ca_category_translation_medias ADD id INT AUTO_INCREMENT NOT NULL, ADD position INT DEFAULT 0 NOT NULL, DROP PRIMARY KEY, ADD PRIMARY KEY (id);
+```
+
 ## 2.0.4
 
 ### Replace {host} placeholder right after loading webspaces

@@ -8,6 +8,34 @@
             <tag name="sulu.content.type" alias="route"/>
         </service>
 
+        <service id="sulu_route.content_type.page_tree_route" class="Sulu\Bundle\RouteBundle\Content\Type\PageTreeRouteContentType">
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu_document_manager.document_registry"/>
+            <argument type="service" id="sulu_route.chain_generator"/>
+            <argument type="service" id="sulu_route.manager.conflict_resolver.auto_increment"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+
+            <tag name="sulu.content.type" alias="page_tree_route"/>
+        </service>
+
+        <service id="sulu_route.subscriber.routable"
+                 class="Sulu\Bundle\RouteBundle\Document\Subscriber\RoutableSubscriber">
+            <argument type="service" id="sulu_route.chain_generator"/>
+            <argument type="service" id="sulu_route.manager.route_manager"/>
+            <argument type="service" id="sulu.repository.route"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="sulu_document_manager.property_encoder"/>
+            <argument type="service" id="sulu_page.structure.factory"/>
+            <argument type="service" id="sulu_route.manager.conflict_resolver.auto_increment"/>
+
+            <tag name="sulu_document_manager.event_subscriber"/>
+        </service>
+
+        <service id="sulu_route.page_tree_route.updater.off"
+                 class="Sulu\Bundle\RouteBundle\PageTree\NullPageTreeUpdater"/>
+
         <service id="sulu_route.route_controller"
                  class="Sulu\Bundle\RouteBundle\Controller\RouteController"
                  public="true">
