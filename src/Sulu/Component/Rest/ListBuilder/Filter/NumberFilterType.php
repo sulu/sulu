@@ -51,4 +51,9 @@ class NumberFilterType implements FilterTypeInterface
             $listBuilder->where($fieldDescriptor, $options[$operator], $listBuilderOperator);
         }
     }
+
+    public static function getDefaultIndexName(): string
+    {
+        return 'number';
+    }
 }

@@ -34,49 +34,54 @@
             id="sulu_core.list_builder_filter_type_registry"
             class="Sulu\Component\Rest\ListBuilder\Filter\FilterTypeRegistry"
         >
-            <argument type="tagged" tag="sulu_core.list_builder_filter_type" index-by="alias" />
+            <argument
+                type="tagged"
+                tag="sulu_core.list_builder_filter_type"
+                index-by="alias"
+                default-index-method="getDefaultIndexName"
+            />
         </service>
 
         <service
             id="sulu_core.text_filter_type"
             class="Sulu\Component\Rest\ListBuilder\Filter\TextFilterType"
         >
-            <tag name="sulu_core.list_builder_filter_type" alias="text" />
+            <tag name="sulu_core.list_builder_filter_type" />
         </service>
 
         <service
             id="sulu_core.boolean_filter_type"
             class="Sulu\Component\Rest\ListBuilder\Filter\BooleanFilterType"
         >
-            <tag name="sulu_core.list_builder_filter_type" alias="boolean" />
+            <tag name="sulu_core.list_builder_filter_type" />
         </service>
 
         <service
             id="sulu_core.number_filter_type"
             class="Sulu\Component\Rest\ListBuilder\Filter\NumberFilterType"
         >
-            <tag name="sulu_core.list_builder_filter_type" alias="number" />
+            <tag name="sulu_core.list_builder_filter_type" />
         </service>
 
         <service
             id="sulu_core.dropdown_filter_type"
             class="Sulu\Component\Rest\ListBuilder\Filter\DropdownFilterType"
         >
-            <tag name="sulu_core.list_builder_filter_type" alias="dropdown" />
+            <tag name="sulu_core.list_builder_filter_type" />
         </service>
 
         <service
             id="sulu_core.selection_filter_type"
             class="Sulu\Component\Rest\ListBuilder\Filter\SelectionFilterType"
         >
-            <tag name="sulu_core.list_builder_filter_type" alias="selection" />
+            <tag name="sulu_core.list_builder_filter_type" />
         </service>
 
         <service
             id="sulu_core.date_time_filter_type"
             class="Sulu\Component\Rest\ListBuilder\Filter\DateTimeFilterType"
         >
-            <tag name="sulu_core.list_builder_filter_type" alias="datetime" />
+            <tag name="sulu_core.list_builder_filter_type" />
         </service>
 
         <service id="sulu_core.rest.datetime_handler" class="Sulu\Component\Rest\Handler\DateHandler">

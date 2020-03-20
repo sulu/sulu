@@ -29,4 +29,9 @@ class DateTimeFilterType implements FilterTypeInterface
 
         $listBuilder->between($fieldDescriptor, [$options['from'], $options['to']]);
     }
+
+    public static function getDefaultIndexName(): string
+    {
+        return 'datetime';
+    }
 }

@@ -29,4 +29,9 @@ class DropdownFilterType implements FilterTypeInterface
 
         $listBuilder->in($fieldDescriptor, explode(',', $options));
     }
+
+    public static function getDefaultIndexName(): string
+    {
+        return 'dropdown';
+    }
 }

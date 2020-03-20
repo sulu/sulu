@@ -29,4 +29,9 @@ class BooleanFilterType implements FilterTypeInterface
 
         $listBuilder->where($fieldDescriptor, 'true' === $options);
     }
+
+    public static function getDefaultIndexName(): string
+    {
+        return 'boolean';
+    }
 }

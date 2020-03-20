@@ -39,4 +39,9 @@ class TextFilterType implements FilterTypeInterface
             $listBuilder->where($fieldDescriptor, $options[$operator], $listBuilderOperator);
         }
     }
+
+    public static function getDefaultIndexName(): string
+    {
+        return 'text';
+    }
 }

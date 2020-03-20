@@ -29,4 +29,9 @@ class SelectionFilterType implements FilterTypeInterface
 
         $listBuilder->in($fieldDescriptor, explode(',', $options));
     }
+
+    public static function getDefaultIndexName(): string
+    {
+        return 'selection';
+    }
 }
