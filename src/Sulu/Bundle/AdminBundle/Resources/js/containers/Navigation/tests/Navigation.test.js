@@ -57,14 +57,15 @@ jest.mock('../registries/navigationRegistry', () => ({
 test('Should render navigation', () => {
     const router = new Router({});
     router.route = {
-        name: 'sulu_admin.form_tab',
-        type: 'form_tab',
         attributeDefaults: {},
+        availableAttributes: [],
         children: [],
+        name: 'sulu_admin.form_tab',
         options: {},
         parent: undefined,
         path: '/form',
         rerenderAttributes: [],
+        type: 'form_tab',
     };
 
     const navigation = render(
@@ -86,14 +87,15 @@ test('Should render navigation', () => {
 test('Should render navigation without appVersion', () => {
     const router = new Router({});
     router.route = {
-        name: 'sulu_admin.form_tab',
-        type: 'form_tab',
         attributeDefaults: {},
+        availableAttributes: [],
         children: [],
+        name: 'sulu_admin.form_tab',
         options: {},
         parent: undefined,
         path: '/form',
         rerenderAttributes: [],
+        type: 'form_tab',
     };
 
     const navigation = render(
@@ -115,14 +117,15 @@ test('Should render navigation without appVersion', () => {
 test('Should call the navigation callback, pin callback and router navigate', () => {
     const router = new Router({});
     router.route = {
-        name: 'sulu_admin.form_tab',
-        type: 'form_tab',
         attributeDefaults: {},
+        availableAttributes: [],
         children: [],
+        name: 'sulu_admin.form_tab',
         options: {},
         parent: undefined,
         path: '/form',
         rerenderAttributes: [],
+        type: 'form_tab',
     };
     const handleNavigate = jest.fn();
     const handlePin = jest.fn();

@@ -1,6 +1,7 @@
 // @flow
 import updateRouterAttributesFromView from '../updateRouterAttributesFromView';
 import viewRegistry from '../registries/viewRegistry';
+import type {Route} from '../../../services/Router';
 
 jest.mock('../registries/viewRegistry', () => ({
     get: jest.fn(),
@@ -15,6 +16,7 @@ test('Return an empty object if the corresponding View has no getDerivedRouterAt
 
     expect(updateRouterAttributesFromView({
         attributeDefaults: {},
+        availableAttributes: [],
         children: [],
         name: 'test',
         options: {},
@@ -41,6 +43,7 @@ test('Return the attributes returned from the getDerivedRouterAttributes functio
 
     expect(updateRouterAttributesFromView({
         attributeDefaults: {},
+        availableAttributes: [],
         children: [],
         name: 'test',
         options: {},
@@ -79,8 +82,9 @@ test('Return the combined attributes from the current and parent getDerivedroute
         }
     });
 
-    const route1 = {
+    const route1: Route = {
         attributeDefaults: {},
+        availableAttributes: [],
         children: [],
         name: 'test1',
         options: {},
@@ -90,8 +94,9 @@ test('Return the combined attributes from the current and parent getDerivedroute
         type: 'test1',
     };
 
-    const route2 = {
+    const route2: Route = {
         attributeDefaults: {},
+        availableAttributes: [],
         children: [],
         name: 'test2',
         options: {},
@@ -101,8 +106,9 @@ test('Return the combined attributes from the current and parent getDerivedroute
         type: 'test2',
     };
 
-    const route3 = {
+    const route3: Route = {
         attributeDefaults: {},
+        availableAttributes: [],
         children: [],
         name: 'test3',
         options: {},

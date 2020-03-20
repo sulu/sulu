@@ -1,6 +1,7 @@
 // @flow
 import updateRouterAttributesFromUserStoreContentLocale from '../updateRouterAttributesFromUserStoreContentLocale';
 import userStore from '../userStore';
+import type {Route} from '../../../services/Router';
 
 jest.mock('../../../stores/userStore/userStore', () => ({
     contentLocale: undefined,
@@ -9,8 +10,9 @@ jest.mock('../../../stores/userStore/userStore', () => ({
 test('Should not update locale attribute when route is not localized', () => {
     userStore.contentLocale = 'fr';
 
-    const unlocalizedRoute = {
+    const unlocalizedRoute: Route = {
         attributeDefaults: {},
+        availableAttributes: [],
         children: [],
         name: 'unlocalized_route',
         options: {},
@@ -28,8 +30,9 @@ test('Should not update locale attribute when route is not localized', () => {
 test('Should not update locale attribute when locale was explicit set', () => {
     userStore.contentLocale = 'fr';
 
-    const localizedRoute = {
+    const localizedRoute: Route = {
         attributeDefaults: {},
+        availableAttributes: ['locale'],
         children: [],
         name: 'localized_route',
         options: {
@@ -51,8 +54,9 @@ test('Should not update locale attribute when locale was explicit set', () => {
 test('Should not update locale attribute when user store locale is not available for current route', () => {
     userStore.contentLocale = 'ru';
 
-    const localizedRoute = {
+    const localizedRoute: Route = {
         attributeDefaults: {},
+        availableAttributes: ['locale'],
         children: [],
         name: 'localized_route',
         options: {
@@ -72,8 +76,9 @@ test('Should not update locale attribute when user store locale is not available
 test('Should update locale attribute from user store when not explicit set', () => {
     userStore.contentLocale = 'fr';
 
-    const localizedRoute = {
+    const localizedRoute: Route = {
         attributeDefaults: {},
+        availableAttributes: ['locale'],
         children: [],
         name: 'localized_route',
         options: {
@@ -93,8 +98,9 @@ test('Should update locale attribute from user store when not explicit set', () 
 test('Should update locale attribute from user store when view does not define specified locales', () => {
     userStore.contentLocale = 'es';
 
-    const localizedRouteWithoutDefaultLocales = {
+    const localizedRouteWithoutDefaultLocales: Route = {
         attributeDefaults: {},
+        availableAttributes: ['locale'],
         children: [],
         name: 'localized_route_without_locales_defined',
         options: {},

@@ -1,5 +1,6 @@
 // @flow
 import {extendObservable} from 'mobx';
+import pathToRegexp from 'path-to-regexp';
 import type {Route, RouteConfig, RouteMap} from '../types';
 
 class RouteRegistry {
@@ -23,6 +24,12 @@ class RouteRegistry {
                 ...routeConfig,
                 children: [],
                 parent: undefined,
+                get availableAttributes() {
+                    const attributes = [];
+                    pathToRegexp(route.path, attributes);
+
+                    return attributes.map((attribute) => attribute.name);
+                },
             });
             this.routes[route.name] = route;
         });

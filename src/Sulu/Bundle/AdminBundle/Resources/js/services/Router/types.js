@@ -11,6 +11,7 @@ export type RouteConfig = {|
 
 export type Route = {|
     attributeDefaults: AttributeMap,
+    availableAttributes: Array<string>,
     children: Array<Route>,
     name: string,
     options: Object,

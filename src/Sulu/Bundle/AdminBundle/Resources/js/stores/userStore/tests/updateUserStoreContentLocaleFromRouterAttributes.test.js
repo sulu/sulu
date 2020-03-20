@@ -1,6 +1,7 @@
 // @flow
 import updateUserStoreContentLocaleFromRouterAttributes from '../updateUserStoreContentLocaleFromRouterAttributes';
 import userStore from '../userStore';
+import type {Route} from '../../../services/Router';
 
 jest.mock('../../../stores/userStore/userStore', () => ({
     contentLocale: 'fr',
@@ -8,8 +9,9 @@ jest.mock('../../../stores/userStore/userStore', () => ({
 }));
 
 test('Should not update userStore when no locale attribute is defined', () => {
-    const localizedRoute = {
+    const localizedRoute: Route = {
         attributeDefaults: {},
+        availableAttributes: ['locale'],
         children: [],
         name: 'localized_route',
         options: {
@@ -33,8 +35,9 @@ test('Should not update userStore when route and attributes are undefined', () =
 });
 
 test('Should update userStore with attribute locale', () => {
-    const localizedRoute = {
+    const localizedRoute: Route = {
         attributeDefaults: {},
+        availableAttributes: ['locale'],
         children: [],
         name: 'localized_route',
         options: {

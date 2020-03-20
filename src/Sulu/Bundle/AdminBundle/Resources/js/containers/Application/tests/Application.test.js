@@ -143,14 +143,15 @@ test('Should not fail if current route does not exist', () => {
 test('Render based on current route', () => {
     const router = new Router({});
     router.route = {
-        name: 'test',
-        type: 'test',
         attributeDefaults: {},
-        rerenderAttributes: [],
-        path: '/webspaces',
+        availableAttributes: [],
         children: [],
+        name: 'test',
         options: {},
         parent: null,
+        path: '/webspaces',
+        rerenderAttributes: [],
+        type: 'test',
     };
 
     const view = render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
@@ -161,14 +162,15 @@ test('Render based on current route', () => {
 test('Render based on current route with app version', () => {
     const router = new Router({});
     router.route = {
-        name: 'test',
-        type: 'test',
         attributeDefaults: {},
-        rerenderAttributes: [],
-        path: '/webspaces',
+        availableAttributes: [],
         children: [],
+        name: 'test',
         options: {},
         parent: null,
+        path: '/webspaces',
+        rerenderAttributes: [],
+        type: 'test',
     };
 
     const view = render(<Application appVersion="666" router={router} suluVersion="2.0.0-RC1" />);
@@ -179,14 +181,15 @@ test('Render based on current route with app version', () => {
 test('Render opened navigation', () => {
     const router = new Router({});
     router.route = {
-        name: 'test',
-        type: 'test',
         attributeDefaults: {},
-        rerenderAttributes: [],
-        path: '/webspaces',
+        availableAttributes: [],
         children: [],
+        name: 'test',
         options: {},
         parent: null,
+        path: '/webspaces',
+        rerenderAttributes: [],
+        type: 'test',
     };
 
     const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
@@ -198,14 +201,15 @@ test('Render opened navigation', () => {
 test('Pin navigation', () => {
     const router = new Router({});
     router.route = {
-        name: 'test',
-        type: 'test',
         attributeDefaults: {},
-        rerenderAttributes: [],
-        path: '/webspaces',
+        availableAttributes: [],
         children: [],
+        name: 'test',
         options: {},
         parent: null,
+        path: '/webspaces',
+        rerenderAttributes: [],
+        type: 'test',
     };
 
     const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
@@ -219,14 +223,15 @@ test('Pin navigation', () => {
 test('Pin navigation from beginning', () => {
     const router = new Router({});
     router.route = {
-        name: 'test',
-        type: 'test',
         attributeDefaults: {},
-        rerenderAttributes: [],
-        path: '/webspaces',
+        availableAttributes: [],
         children: [],
+        name: 'test',
         options: {},
         parent: null,
+        path: '/webspaces',
+        rerenderAttributes: [],
+        type: 'test',
     };
 
     mockUserStoreGetPersistentSetting.mockReturnValueOnce(true);
@@ -244,14 +249,15 @@ test('Pin navigation from beginning', () => {
 test('Do not pin navigation from beginning', () => {
     const router = new Router({});
     router.route = {
-        name: 'test',
-        type: 'test',
+        availableAttributes: [],
         attributeDefaults: {},
-        rerenderAttributes: [],
-        path: '/webspaces',
         children: [],
+        name: 'test',
         options: {},
         parent: null,
+        path: '/webspaces',
+        rerenderAttributes: [],
+        type: 'test',
     };
 
     mockUserStoreGetPersistentSetting.mockReturnValueOnce(false);

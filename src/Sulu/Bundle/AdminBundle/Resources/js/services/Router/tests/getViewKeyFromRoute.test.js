@@ -1,9 +1,11 @@
 // @flow
 import getViewKeyFromRoute from '../getViewKeyFromRoute';
+import type {Route} from '../types';
 
 test('Return just the route name if no rerender attributes are given', () => {
-    const route = {
+    const route: Route = {
         attributeDefaults: {},
+        availableAttributes: [],
         children: [],
         name: 'route1',
         options: {},
@@ -16,8 +18,9 @@ test('Return just the route name if no rerender attributes are given', () => {
 });
 
 test('Return the route name rerender attributes are not given', () => {
-    const route = {
+    const route: Route = {
         attributeDefaults: {},
+        availableAttributes: [],
         children: [],
         name: 'route1',
         options: {},
@@ -31,8 +34,9 @@ test('Return the route name rerender attributes are not given', () => {
 });
 
 test('Return the route name with the value of the rerender attributes', () => {
-    const route = {
+    const route: Route = {
         attributeDefaults: {},
+        availableAttributes: [],
         children: [],
         name: 'route1',
         options: {},

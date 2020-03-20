@@ -5,6 +5,7 @@ import {Router} from 'sulu-admin-bundle/services';
 import {userStore} from 'sulu-admin-bundle/stores';
 import WebspaceTabs from '../WebspaceTabs';
 import webspaceStore from '../../../stores/webspaceStore';
+import type {Route} from 'sulu-admin-bundle/services/Router';
 
 jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
     this.addUpdateRouteHook = jest.fn();
@@ -24,8 +25,9 @@ jest.mock('sulu-admin-bundle/stores/userStore', () => ({
 test('Render webspace select with children when webspaces are not loaded yet', () => {
     const router = new Router({});
 
-    const route = {
+    const route: Route = {
         attributeDefaults: {},
+        availableAttributes: [],
         children: [],
         name: 'webspace_tabs',
         options: {},
@@ -78,8 +80,9 @@ test('Load webspace from route attributes', () => {
 test('Should bind and unbind router attributes and updateRouteHook', () => {
     const router = new Router({});
 
-    const route = {
+    const route: Route = {
         attributeDefaults: {},
+        availableAttributes: [],
         children: [],
         name: 'webspace_tabs',
         options: {},
@@ -108,8 +111,9 @@ test('Should bind and unbind router attributes and updateRouteHook', () => {
 test('Save and update webspace when select value is changed', () => {
     const router = new Router({});
 
-    const route = {
+    const route: Route = {
         attributeDefaults: {},
+        availableAttributes: [],
         children: [],
         name: 'webspace_tabs',
         options: {},

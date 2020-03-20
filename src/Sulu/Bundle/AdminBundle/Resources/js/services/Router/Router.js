@@ -225,10 +225,6 @@ export default class Router {
             return '';
         }
 
-        const keys = [];
-        pathToRegexp(this.route.path, keys);
-        const keyNames = keys.map((key) => key.name);
-
         const attributes = toJS(this.attributes);
         for (const [key, observableValue] of this.bindings.entries()) {
             const value = observableValue.get();
@@ -237,9 +233,10 @@ export default class Router {
 
         const url = compile(this.route.path)(attributes);
         const searchParameters = new URLSearchParams();
+        const {availableAttributes} = this.route;
         Object.keys(attributes).forEach((key) => {
             const value = attributes[key];
-            if (keyNames.includes(key) || value == this.bindingDefaults.get(key)) {
+            if (availableAttributes.includes(key) || value == this.bindingDefaults.get(key)) {
                 return;
             }
             searchParameters.set(key, value);

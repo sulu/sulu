@@ -13,12 +13,8 @@ const updateRouterAttributesFromUserStoreContentLocale: UpdateAttributesHook = f
         return attributes;
     }
 
-    const keys = [];
-    pathToRegexp(route.path, keys);
-    const keyNames = keys.map((key) => key.name);
-
     // do nothing when the route does not require a locale
-    if (!keyNames.includes('locale')) {
+    if (!route.availableAttributes.includes('locale')) {
         return attributes;
     }
 
