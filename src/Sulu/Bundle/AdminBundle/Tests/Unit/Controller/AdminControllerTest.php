@@ -330,13 +330,29 @@ class AdminControllerTest extends TestCase
     public function provideTranslationsAction()
     {
         return [
-            ['en', ['save' => 'Save'], [], ['save' => 'Save']],
-            ['de', ['save' => 'Speichern'], [], ['save' => 'Speichern']],
+            [
+                'en',
+                ['save' => 'Save'],
+                [],
+                '{"save":"Save"}',
+            ],
+            [
+                'de',
+                ['save' => 'Speichern'],
+                [],
+                '{"save":"Speichern"}',
+            ],
             [
                 'de',
                 ['save' => 'Speichern'],
                 ['save' => 'Save', 'delete' => 'Delete'],
-                ['save' => 'Speichern', 'delete' => 'Delete'],
+                '{"save":"Speichern","delete":"Delete"}',
+            ],
+            [
+                'bg',
+                [],
+                [],
+                '{}',
             ],
         ];
     }
@@ -362,7 +378,7 @@ class AdminControllerTest extends TestCase
         $this->translatorBag->getCatalogue($locale)->willReturn($catalogue->reveal());
 
         $response = $this->adminController->translationsAction($request);
-        $this->assertEquals($resultTranslations, json_decode($response->getContent(), true));
+        $this->assertEquals($resultTranslations, $response->getContent());
     }
 
     public function testTranslationActionWithoutFallback()
