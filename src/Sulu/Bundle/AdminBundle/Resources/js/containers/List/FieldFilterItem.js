@@ -27,6 +27,7 @@ type Props = {|
 |};
 
 const CLOSE_KEY = 'esc';
+const CONFIRM_KEY = 'enter';
 
 @observer
 class FieldFilterItem extends React.Component<Props> {
@@ -74,6 +75,7 @@ class FieldFilterItem extends React.Component<Props> {
 
         if (open) {
             Mousetrap.bind(CLOSE_KEY, onClose);
+            Mousetrap.bind(CONFIRM_KEY, this.handleButtonClick);
         }
     }
 
@@ -90,8 +92,10 @@ class FieldFilterItem extends React.Component<Props> {
         if (prevProps.open !== open) {
             if (open) {
                 Mousetrap.bind(CLOSE_KEY, onClose);
+                Mousetrap.bind(CONFIRM_KEY, this.handleButtonClick);
             } else {
                 Mousetrap.unbind(CLOSE_KEY);
+                Mousetrap.unbind(CONFIRM_KEY);
             }
         }
     }
@@ -103,6 +107,7 @@ class FieldFilterItem extends React.Component<Props> {
 
         if (this.props.open) {
             Mousetrap.unbind(CLOSE_KEY);
+            Mousetrap.unbind(CONFIRM_KEY);
         }
     }
 

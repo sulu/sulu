@@ -90,7 +90,7 @@ test('Do not close when esc button is pressed if was not opened', () => {
     expect(closeSpy).not.toBeCalled();
 });
 
-test('Close when esc button is pressed if initially was close but has been opened in the mean time', () => {
+test('Close when esc button is pressed if initially was closed but has been opened in the mean time', () => {
     const closeSpy = jest.fn();
 
     const fieldFilterItem = mount(
@@ -136,6 +136,99 @@ test('Do not close when esc button is pressed if initially was opened but has be
 
     Mousetrap.trigger('esc');
     expect(closeSpy).not.toBeCalled();
+});
+
+test('Change when enter button is pressed', () => {
+    const changeSpy = jest.fn();
+
+    mount(
+        <FieldFilterItem
+            column="salutation"
+            filterType="text"
+            filterTypeParameters={{value: 'Test'}}
+            label="Salutation"
+            onChange={changeSpy}
+            onClick={jest.fn()}
+            onClose={jest.fn()}
+            onDelete={jest.fn()}
+            open={true}
+            value="Test"
+        />
+    );
+
+    expect(changeSpy).not.toBeCalled();
+    Mousetrap.trigger('enter');
+    expect(changeSpy).toBeCalled();
+});
+
+test('Do not change when enter button is pressed if was not opened', () => {
+    const changeSpy = jest.fn();
+
+    mount(
+        <FieldFilterItem
+            column="salutation"
+            filterType="text"
+            filterTypeParameters={{value: 'Test'}}
+            label="Salutation"
+            onChange={changeSpy}
+            onClick={jest.fn()}
+            onClose={jest.fn()}
+            onDelete={jest.fn()}
+            open={false}
+            value="Test"
+        />
+    );
+
+    Mousetrap.trigger('enter');
+    expect(changeSpy).not.toBeCalled();
+});
+
+test('Change when enter button is pressed if initially was closed but has been opened in the mean time', () => {
+    const changeSpy = jest.fn();
+
+    const fieldFilterItem = mount(
+        <FieldFilterItem
+            column="salutation"
+            filterType="text"
+            filterTypeParameters={{value: 'Test'}}
+            label="Salutation"
+            onChange={changeSpy}
+            onClick={jest.fn()}
+            onClose={jest.fn()}
+            onDelete={jest.fn()}
+            open={false}
+            value="Test"
+        />
+    );
+
+    fieldFilterItem.setProps({open: true});
+
+    Mousetrap.trigger('enter');
+    expect(changeSpy).toBeCalled();
+});
+
+test('Do not change when enter button is pressed if initially was opened but has been closed already', () => {
+    const changeSpy = jest.fn();
+
+    const fieldFilterItem = mount(
+        <FieldFilterItem
+            column="salutation"
+            filterType="text"
+            filterTypeParameters={{value: 'Test'}}
+            label="Salutation"
+            onChange={changeSpy}
+            onClick={jest.fn()}
+            onClose={jest.fn()}
+            onDelete={jest.fn()}
+            open={true}
+            value="Test"
+        />
+    );
+
+    fieldFilterItem.setProps({open: false});
+
+    Mousetrap.trigger('enter');
+    expect(changeSpy).not.toBeCalled();
 });
 
 test('Pass callbacks to correct props', () => {
