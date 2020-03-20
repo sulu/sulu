@@ -22,6 +22,7 @@ test('Return an empty object if the corresponding View has no getDerivedRouterAt
         options: {},
         path: '/test',
         parent: undefined,
+        regexp: new RegExp('^/test$'),
         rerenderAttributes: [],
         type: 'test',
     }, {})).toEqual({});
@@ -49,6 +50,7 @@ test('Return the attributes returned from the getDerivedRouterAttributes functio
         options: {},
         path: '/test',
         parent: undefined,
+        regexp: new RegExp('^/test$'),
         rerenderAttributes: [],
         type: 'test',
     }, {value3: 'test3'})).toEqual({value1: 'test1', value2: 'test2', value3: 'test3', routeName: 'test'});
@@ -90,6 +92,7 @@ test('Return the combined attributes from the current and parent getDerivedroute
         options: {},
         path: '/test',
         parent: undefined,
+        regexp: new RegExp('^/test$'),
         rerenderAttributes: [],
         type: 'test1',
     };
@@ -102,6 +105,7 @@ test('Return the combined attributes from the current and parent getDerivedroute
         options: {},
         path: '/test',
         parent: route1,
+        regexp: new RegExp('^/test$'),
         rerenderAttributes: [],
         type: 'test2',
     };
@@ -114,6 +118,7 @@ test('Return the combined attributes from the current and parent getDerivedroute
         options: {},
         path: '/test',
         parent: route2,
+        regexp: new RegExp('^/test$'),
         rerenderAttributes: [],
         type: 'test3',
     };

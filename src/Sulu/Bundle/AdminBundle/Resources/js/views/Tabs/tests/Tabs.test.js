@@ -22,6 +22,7 @@ test('Should render the children after the tabs', () => {
         },
         parent: null,
         path: '/route1',
+        regexp: new RegExp('^/route1$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -35,6 +36,7 @@ test('Should render the children after the tabs', () => {
         },
         parent: null,
         path: '/route2',
+        regexp: new RegExp('^/route2$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -52,6 +54,7 @@ test('Should render the children after the tabs', () => {
         },
         parent: null,
         path: '/parent',
+        regexp: new RegExp('^/parent$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -84,6 +87,7 @@ test('Should render the header between children and tabs', () => {
         },
         parent: null,
         path: '/route1',
+        regexp: new RegExp('^/route1$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -100,6 +104,7 @@ test('Should render the header between children and tabs', () => {
         },
         parent: null,
         path: '/parent',
+        regexp: new RegExp('^/parent$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -133,6 +138,7 @@ test('Should render the children with the passed props', () => {
         },
         parent: null,
         path: '/route1',
+        regexp: new RegExp('^/route1$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -149,6 +155,7 @@ test('Should render the children with the passed props', () => {
         },
         parent: null,
         path: '/parent',
+        regexp: new RegExp('^/parent$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -184,6 +191,7 @@ test('Should consider the tabOrder when rendering the tabs', () => {
         },
         parent: null,
         path: '/route1',
+        regexp: new RegExp('^/route1$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -198,6 +206,7 @@ test('Should consider the tabOrder when rendering the tabs', () => {
         },
         parent: null,
         path: '/route2',
+        regexp: new RegExp('^/route2$'),
         rerenderAttributes: [],
         type: 'route2',
     };
@@ -212,6 +221,7 @@ test('Should consider the tabOrder when rendering the tabs', () => {
         },
         parent: null,
         path: '/route3',
+        regexp: new RegExp('^/route3$'),
         rerenderAttributes: [],
         type: 'route3',
     };
@@ -230,6 +240,7 @@ test('Should consider the tabOrder when rendering the tabs', () => {
         },
         parent: null,
         path: '/parent',
+        regexp: new RegExp('^/parent$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -266,6 +277,7 @@ test('Should mark currently active tab as selected according to prop', (done) =>
         },
         parent: null,
         path: '/route1',
+        regexp: new RegExp('^/route1$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -279,6 +291,7 @@ test('Should mark currently active tab as selected according to prop', (done) =>
         },
         parent: null,
         path: '/route2',
+        regexp: new RegExp('^/route2$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -296,6 +309,7 @@ test('Should mark currently active tab as selected according to prop', (done) =>
         },
         parent: null,
         path: '/parent',
+        regexp: new RegExp('^/parent$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -339,6 +353,7 @@ test('Should mark currently active tab as selected', (done) => {
         },
         parent: null,
         path: '/route1',
+        regexp: new RegExp('^/route1$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -352,6 +367,7 @@ test('Should mark currently active tab as selected', (done) => {
         },
         parent: null,
         path: '/route2',
+        regexp: new RegExp('^/route2$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -369,6 +385,7 @@ test('Should mark currently active tab as selected', (done) => {
         },
         parent: null,
         path: '/parent',
+        regexp: new RegExp('^/parent$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -412,6 +429,7 @@ test('Should redirect to child route with highest priority if no tab is active b
         },
         parent: null,
         path: '/route1',
+        regexp: new RegExp('^/route1$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -426,6 +444,7 @@ test('Should redirect to child route with highest priority if no tab is active b
         },
         parent: null,
         path: '/route2',
+        regexp: new RegExp('^/route2$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -443,6 +462,7 @@ test('Should redirect to child route with highest priority if no tab is active b
         },
         parent: null,
         path: '/parent',
+        regexp: new RegExp('^/parent$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -480,6 +500,7 @@ test('Should redirect to child route from props with highest priority if no tab 
         },
         parent: null,
         path: '/route1',
+        regexp: new RegExp('^/route1$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -494,6 +515,7 @@ test('Should redirect to child route from props with highest priority if no tab 
         },
         parent: null,
         path: '/route2',
+        regexp: new RegExp('^/route2$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -510,6 +532,7 @@ test('Should redirect to child route from props with highest priority if no tab 
         },
         parent: null,
         path: '/parent',
+        regexp: new RegExp('^/parent$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -547,6 +570,7 @@ test('Navigate to tab if it was clicked', () => {
         },
         parent: null,
         path: '/route1',
+        regexp: new RegExp('^/route1$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -560,6 +584,7 @@ test('Navigate to tab if it was clicked', () => {
         },
         parent: null,
         path: '/route2',
+        regexp: new RegExp('^/route2$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -577,6 +602,7 @@ test('Navigate to tab if it was clicked', () => {
         },
         parent: null,
         path: '/parent',
+        regexp: new RegExp('^/parent$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -613,6 +639,7 @@ test('Navigate to tab if it was clicked', () => {
         },
         parent: null,
         path: '/route1',
+        regexp: new RegExp('^/route1$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -626,6 +653,7 @@ test('Navigate to tab if it was clicked', () => {
         },
         parent: null,
         path: '/route2',
+        regexp: new RegExp('^/route2$'),
         rerenderAttributes: [],
         type: 'route1',
     };
@@ -644,6 +672,7 @@ test('Navigate to tab if it was clicked', () => {
         },
         parent: null,
         path: '/parent',
+        regexp: new RegExp('^/parent$'),
         rerenderAttributes: [],
         type: 'route1',
     };

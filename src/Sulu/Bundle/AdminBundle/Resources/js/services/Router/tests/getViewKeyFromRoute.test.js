@@ -11,6 +11,7 @@ test('Return just the route name if no rerender attributes are given', () => {
         options: {},
         parent: undefined,
         path: '/route1',
+        regexp: new RegExp('^/route1$'),
         rerenderAttributes: [],
         type: 'view1',
     };
@@ -26,6 +27,7 @@ test('Return the route name rerender attributes are not given', () => {
         options: {},
         parent: undefined,
         path: '/route1',
+        regexp: new RegExp('^/route1$'),
         rerenderAttributes: ['webspace', 'locale'],
         type: 'view1',
     };
@@ -42,6 +44,7 @@ test('Return the route name with the value of the rerender attributes', () => {
         options: {},
         parent: undefined,
         path: '/route1',
+        regexp: new RegExp('^/route1$'),
         rerenderAttributes: ['webspace', 'locale'],
         type: 'view1',
     };

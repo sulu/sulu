@@ -150,6 +150,7 @@ test('Render based on current route', () => {
         options: {},
         parent: null,
         path: '/webspaces',
+        regexp: new RegExp('^/webspaces$'),
         rerenderAttributes: [],
         type: 'test',
     };
@@ -169,6 +170,7 @@ test('Render based on current route with app version', () => {
         options: {},
         parent: null,
         path: '/webspaces',
+        regexp: new RegExp('^/webspace$'),
         rerenderAttributes: [],
         type: 'test',
     };
@@ -188,6 +190,7 @@ test('Render opened navigation', () => {
         options: {},
         parent: null,
         path: '/webspaces',
+        regexp: new RegExp('^/webspace$'),
         rerenderAttributes: [],
         type: 'test',
     };
@@ -208,6 +211,7 @@ test('Pin navigation', () => {
         options: {},
         parent: null,
         path: '/webspaces',
+        regexp: new RegExp('^/webspace$'),
         rerenderAttributes: [],
         type: 'test',
     };
@@ -230,6 +234,7 @@ test('Pin navigation from beginning', () => {
         options: {},
         parent: null,
         path: '/webspaces',
+        regexp: new RegExp('^/webspace$'),
         rerenderAttributes: [],
         type: 'test',
     };
@@ -256,6 +261,7 @@ test('Do not pin navigation from beginning', () => {
         options: {},
         parent: null,
         path: '/webspaces',
+        regexp: new RegExp('^/webspace$'),
         rerenderAttributes: [],
         type: 'test',
     };

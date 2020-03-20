@@ -33,6 +33,7 @@ test('Render webspace select with children when webspaces are not loaded yet', (
         options: {},
         parent: undefined,
         path: '/webspace_tabs',
+        regexp: new RegExp('^/webspace_tabs$'),
         rerenderAttributes: [],
         type: 'webspace_tabs',
     };
@@ -88,6 +89,7 @@ test('Should bind and unbind router attributes and updateRouteHook', () => {
         options: {},
         parent: undefined,
         path: '/webspace_tabs',
+        regexp: new RegExp('^/webspace_tabs$'),
         rerenderAttributes: [],
         type: 'webspace_tabs',
     };
@@ -119,6 +121,7 @@ test('Save and update webspace when select value is changed', () => {
         options: {},
         parent: undefined,
         path: '/webspace_tabs',
+        regexp: new RegExp('^/webspace_tabs$'),
         rerenderAttributes: [],
         type: 'webspace_tabs',
     };

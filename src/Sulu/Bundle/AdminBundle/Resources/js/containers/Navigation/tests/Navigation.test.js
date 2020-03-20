@@ -64,6 +64,7 @@ test('Should render navigation', () => {
         options: {},
         parent: undefined,
         path: '/form',
+        regexp: new RegExp('^/form$'),
         rerenderAttributes: [],
         type: 'form_tab',
     };
@@ -94,6 +95,7 @@ test('Should render navigation without appVersion', () => {
         options: {},
         parent: undefined,
         path: '/form',
+        regexp: new RegExp('^/form$'),
         rerenderAttributes: [],
         type: 'form_tab',
     };
@@ -124,6 +126,7 @@ test('Should call the navigation callback, pin callback and router navigate', ()
         options: {},
         parent: undefined,
         path: '/form',
+        regexp: new RegExp('^/form$'),
         rerenderAttributes: [],
         type: 'form_tab',
     };

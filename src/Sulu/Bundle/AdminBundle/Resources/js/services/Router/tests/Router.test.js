@@ -19,7 +19,7 @@ jest.mock('../registries/routeRegistry', () => {
 
 const createRoute = (route: Object) => {
     const attributes = [];
-    pathToRegexp(route.path, attributes);
+    route.regexp = pathToRegexp(route.path, attributes);
     route.availableAttributes = attributes.map((attribute) => attribute.name);
 
     return extendObservable({}, route);

@@ -26,9 +26,12 @@ class RouteRegistry {
                 parent: undefined,
                 get availableAttributes() {
                     const attributes = [];
-                    pathToRegexp(route.path, attributes);
+                    pathToRegexp(this.path, attributes);
 
                     return attributes.map((attribute) => attribute.name);
+                },
+                get regexp() {
+                    return pathToRegexp(this.path);
                 },
             });
             this.routes[route.name] = route;

@@ -17,6 +17,7 @@ export type Route = {|
     options: Object,
     parent: ?Route,
     path: string,
+    regexp: RegExp,
     rerenderAttributes: Array<string>,
     type: string,
 |};

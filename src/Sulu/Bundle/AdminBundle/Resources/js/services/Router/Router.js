@@ -3,7 +3,7 @@ import {action, autorun, computed, observable, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import equal from 'fast-deep-equal';
 import log from 'loglevel';
-import pathToRegexp, {compile} from 'path-to-regexp';
+import {compile} from 'path-to-regexp';
 import type {AttributeMap, Route, UpdateAttributesHook, UpdateRouteHook, UpdateRouteMethod} from './types';
 import routeRegistry from './registries/routeRegistry';
 
@@ -114,16 +114,17 @@ export default class Router {
     @action match(path: string, queryString: string) {
         for (const name in routeRegistry.getAll()) {
             const route = routeRegistry.get(name);
-            const names = [];
-            const match = pathToRegexp(route.path, names).exec(path);
+            const match = route.regexp.exec(path);
 
             if (!match) {
                 continue;
             }
 
+            const {availableAttributes} = route;
+
             const attributes = {};
             for (let i = 1; i < match.length; i++) {
-                attributes[names[i - 1].name] = Router.tryParse(match[i]);
+                attributes[availableAttributes[i - 1]] = Router.tryParse(match[i]);
             }
 
             const search = new URLSearchParams(queryString);
