@@ -12,6 +12,12 @@
                     <method>LEFT</method>
                     <condition>SuluContactBundle:ContactAddress.locale = :locale</condition>
                 </join>
+                <join>
+                    <entity-name>user</entity-name>
+                    <field-name>SuluSecurityBundle:User</field-name>
+                    <method>LEFT</method>
+                    <condition>user.idContacts = contact.id</condition>
+                </join>
             </joins>
         </property>
     </properties>
