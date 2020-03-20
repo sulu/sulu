@@ -1,5 +1,4 @@
 // @flow
-import pathToRegexp from 'path-to-regexp';
 import {toJS} from 'mobx';
 import type {AttributeMap, Route, UpdateAttributesHook} from '../../services/Router/types';
 import userStore from './userStore';

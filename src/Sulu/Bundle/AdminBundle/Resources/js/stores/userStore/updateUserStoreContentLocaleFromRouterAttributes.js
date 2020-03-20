@@ -1,5 +1,4 @@
 // @flow
-import pathToRegexp from 'path-to-regexp';
 import type {UpdateRouteHook} from '../../services/Router/types';
 import userStore from './userStore';
 
