@@ -1,0 +1,7 @@
+.number-field-filter-type {
+    height: 70px;
+
+    > :not(:last-child) {
+        margin-bottom: 10px;
+    }
+}

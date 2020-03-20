@@ -285,6 +285,9 @@ Array [
                         value=""
                       />
                     </label>
+                    <div
+                      class="fieldFilter"
+                    />
                   </div>
                   <div
                     class="list"
@@ -895,6 +898,9 @@ Array [
                         value=""
                       />
                     </label>
+                    <div
+                      class="fieldFilter"
+                    />
                   </div>
                   <div
                     class="list"

@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, Element} from 'react';
+import type {Node} from 'react';
 import sectionStyles from './section.scss';
 
 type Props = {
-    children?: ChildrenArray<Element<*> | false>,
+    children?: Node,
     title?: string,
 };
 

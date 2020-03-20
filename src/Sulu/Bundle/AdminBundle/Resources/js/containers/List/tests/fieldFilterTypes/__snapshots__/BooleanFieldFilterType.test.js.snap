@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render with a value of "false" 1`] = `
+<label
+  class="label"
+>
+  <span
+    class="switch toggler"
+  >
+    <input
+      type="checkbox"
+    />
+    <span />
+  </span>
+</label>
+`;
+
+exports[`Render with a value of "true" 1`] = `
+<label
+  class="label"
+>
+  <span
+    class="switch toggler"
+  >
+    <input
+      checked=""
+      type="checkbox"
+    />
+    <span />
+  </span>
+</label>
+`;
+
+exports[`Render with a value of "undefined" 1`] = `
+<label
+  class="label"
+>
+  <span
+    class="switch toggler"
+  >
+    <input
+      type="checkbox"
+    />
+    <span />
+  </span>
+</label>
+`;
+
+exports[`Render with value set by setValue 1`] = `
+<label
+  class="label"
+>
+  <span
+    class="switch toggler"
+  >
+    <input
+      checked=""
+      type="checkbox"
+    />
+    <span />
+  </span>
+</label>
+`;

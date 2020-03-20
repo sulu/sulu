@@ -55,6 +55,7 @@ class ListRestHelperTest extends TestCase
                     'offset' => 0,
                     'ids' => null,
                     'excludedIds' => [],
+                    'filters' => [],
                 ],
             ],
             [
@@ -82,6 +83,7 @@ class ListRestHelperTest extends TestCase
                     'offset' => 0,
                     'ids' => [],
                     'excludedIds' => [],
+                    'filters' => [],
                 ],
             ],
             [
@@ -106,6 +108,7 @@ class ListRestHelperTest extends TestCase
                     'offset' => 0,
                     'ids' => ['id1', 'id2'],
                     'excludedIds' => ['id3', 'id4'],
+                    'filters' => [],
                 ],
             ],
             [
@@ -117,6 +120,7 @@ class ListRestHelperTest extends TestCase
                         'limit' => 1,
                         'ids' => 'id1,id2',
                         'excludedIds' => 'id3,id4',
+                        'filter' => ['one' => 1],
                     ],
                     [],
                     []
@@ -131,6 +135,7 @@ class ListRestHelperTest extends TestCase
                     'offset' => 0,
                     'ids' => ['id1', 'id2'],
                     'excludedIds' => ['id3', 'id4'],
+                    'filters' => ['one' => 1],
                 ],
             ],
         ];
@@ -153,5 +158,6 @@ class ListRestHelperTest extends TestCase
         $this->assertEquals($expected['offset'], $helper->getOffset());
         $this->assertEquals($expected['ids'], $helper->getIds());
         $this->assertEquals($expected['excludedIds'], $helper->getExcludedIds());
+        $this->assertEquals($expected['filters'], $helper->getFilter());
     }
 }

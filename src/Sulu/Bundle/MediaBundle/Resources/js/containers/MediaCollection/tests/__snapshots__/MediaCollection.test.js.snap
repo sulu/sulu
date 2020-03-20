@@ -256,6 +256,9 @@ exports[`Render the MediaCollection 1`] = `
             value=""
           />
         </label>
+        <div
+          class="fieldFilter"
+        />
       </div>
       <div
         class="list"
@@ -790,6 +793,9 @@ exports[`Render the MediaCollection for all media 1`] = `
             value=""
           />
         </label>
+        <div
+          class="fieldFilter"
+        />
       </div>
       <div
         class="list"

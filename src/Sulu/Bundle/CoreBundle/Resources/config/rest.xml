@@ -21,10 +21,68 @@
                  class="Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory"
                  public="true">
             <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_core.list_builder_filter_type_registry"/>
             <argument type="service" id="event_dispatcher"/>
             <argument>%sulu_security.permissions%</argument>
         </service>
-        <service id="Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface" alias="sulu_core.doctrine_list_builder_factory"/>
+        <service
+            id="Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface"
+            alias="sulu_core.doctrine_list_builder_factory"
+        />
+
+        <service
+            id="sulu_core.list_builder_filter_type_registry"
+            class="Sulu\Component\Rest\ListBuilder\Filter\FilterTypeRegistry"
+        >
+            <argument
+                type="tagged"
+                tag="sulu_core.list_builder_filter_type"
+                index-by="alias"
+                default-index-method="getDefaultIndexName"
+            />
+        </service>
+
+        <service
+            id="sulu_core.text_filter_type"
+            class="Sulu\Component\Rest\ListBuilder\Filter\TextFilterType"
+        >
+            <tag name="sulu_core.list_builder_filter_type" />
+        </service>
+
+        <service
+            id="sulu_core.boolean_filter_type"
+            class="Sulu\Component\Rest\ListBuilder\Filter\BooleanFilterType"
+        >
+            <tag name="sulu_core.list_builder_filter_type" />
+        </service>
+
+        <service
+            id="sulu_core.number_filter_type"
+            class="Sulu\Component\Rest\ListBuilder\Filter\NumberFilterType"
+        >
+            <tag name="sulu_core.list_builder_filter_type" />
+        </service>
+
+        <service
+            id="sulu_core.dropdown_filter_type"
+            class="Sulu\Component\Rest\ListBuilder\Filter\DropdownFilterType"
+        >
+            <tag name="sulu_core.list_builder_filter_type" />
+        </service>
+
+        <service
+            id="sulu_core.selection_filter_type"
+            class="Sulu\Component\Rest\ListBuilder\Filter\SelectionFilterType"
+        >
+            <tag name="sulu_core.list_builder_filter_type" />
+        </service>
+
+        <service
+            id="sulu_core.date_time_filter_type"
+            class="Sulu\Component\Rest\ListBuilder\Filter\DateTimeFilterType"
+        >
+            <tag name="sulu_core.list_builder_filter_type" />
+        </service>
 
         <service id="sulu_core.rest.datetime_handler" class="Sulu\Component\Rest\Handler\DateHandler">
             <tag name="jms_serializer.subscribing_handler" />

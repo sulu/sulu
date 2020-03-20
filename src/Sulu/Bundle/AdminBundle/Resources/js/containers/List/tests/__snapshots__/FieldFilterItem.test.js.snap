@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render FieldFilterItem with a FieldFilterType 1`] = `
+Array [
+  <span
+    class="fieldFilterItem"
+  >
+    <button
+      class="chip primary medium clickable"
+    >
+      Salutation: 
+      <div
+        class="spinner"
+        style="width: 10px; height: 10px;"
+      >
+        <div
+          class="doubleBounce1"
+        />
+        <div
+          class="doubleBounce2"
+        />
+      </div>
+      <span
+        aria-label="su-times"
+        class="su-times clickable icon"
+        role="button"
+        tabindex="0"
+      />
+    </button>
+  </span>,
+  <div
+    class="backdrop fixed"
+    role="button"
+  />,
+  <div
+    class="container"
+  >
+    <div
+      class="arrowMenuContainer"
+      style="top: 20px; left: 10px; position: fixed; pointer-events: auto;"
+    >
+      <div
+        class="arrow top right"
+      />
+      <div
+        class="arrowMenu"
+      >
+        <div
+          class="section"
+        >
+          <div
+            class="children"
+          >
+            <div>
+              This is the form node
+            </div>
+            <div
+              class="buttonContainer"
+            >
+              <button
+                class="button link"
+                type="button"
+              >
+                <span
+                  class="text"
+                >
+                  sulu_admin.ok
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>,
+]
+`;

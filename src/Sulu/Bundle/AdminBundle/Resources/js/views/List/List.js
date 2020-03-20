@@ -52,6 +52,7 @@ class List extends React.Component<Props> {
 
         return {
             active: ListStore.getActiveSetting(listKey, userSettingsKey),
+            filter: ListStore.getFilterSetting(listKey, userSettingsKey),
             sortColumn: ListStore.getSortColumnSetting(listKey, userSettingsKey),
             sortOrder: ListStore.getSortOrderSetting(listKey, userSettingsKey),
             limit: limit === DEFAULT_LIMIT ? undefined : limit,
@@ -147,6 +148,7 @@ class List extends React.Component<Props> {
         router.bind('sortOrder', this.listStore.sortOrder);
         router.bind('search', this.listStore.searchTerm);
         router.bind('limit', this.listStore.limit, DEFAULT_LIMIT);
+        router.bind('filter', this.listStore.filterOptions, {});
     }
 
     buildMetadataOptions(

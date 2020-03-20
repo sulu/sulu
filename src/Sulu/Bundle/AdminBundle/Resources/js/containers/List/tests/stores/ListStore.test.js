@@ -72,6 +72,42 @@ test('The active item should be updated when set from the outside', () => {
     expect(userStore.setPersistentSetting).toBeCalledWith('sulu_admin.list_store.tests.list_test.active', '123');
 });
 
+test('The filter value should be updated when set from the outside', () => {
+    const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
+    expect(listStore.filterOptions.get()).toEqual({});
+
+    listStore.filterOptions.set({test: {eq: 'Test'}});
+    expect(userStore.setPersistentSetting)
+        .toBeCalledWith('sulu_admin.list_store.tests.list_test.filter', {test: {eq: 'Test'}});
+});
+
+test('The filter value should not be updated when set from the outside and only an undefined value was added', () => {
+    const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
+    expect(listStore.filterOptions.get()).toEqual({});
+
+    listStore.filterOptions.set({test: undefined});
+    expect(userStore.setPersistentSetting).not.toBeCalled();
+});
+
+test('The filter value should be updated when set from the outside and only a single false value was added', () => {
+    const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
+    expect(listStore.filterOptions.get()).toEqual({});
+
+    listStore.filterOptions.set({test: false});
+    expect(userStore.setPersistentSetting)
+        .toBeCalledWith('sulu_admin.list_store.tests.list_test.filter', {test: false});
+});
+
+test('The filter value should be updated when set from the outside and only a single false value was removed', () => {
+    const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
+    listStore.filterOptions.set({test: false});
+    expect(listStore.filterOptions.get()).toEqual({test: false});
+
+    listStore.filterOptions.set({});
+    expect(userStore.setPersistentSetting)
+        .toBeCalledWith('sulu_admin.list_store.tests.list_test.filter', {});
+});
+
 test('The limit value should be updated when set from the outside', () => {
     const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
     expect(listStore.limit.get()).toEqual(10);
@@ -557,6 +593,43 @@ test('The loading strategy should be called with the defined search', () => {
     );
 
     expect(structureStrategy.clear).toBeCalled();
+
+    listStore.destroy();
+});
+
+test('The loading strategy should be called with the defined filter', () => {
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    const page = observable.box(1);
+    const listStore = new ListStore(
+        'snippets',
+        'snippets',
+        'list_test',
+        {
+            page,
+        }
+    );
+    listStore.schema = {};
+
+    listStore.updateLoadingStrategy(loadingStrategy);
+    listStore.updateStructureStrategy(structureStrategy);
+
+    listStore.filter({title: 'Test Title', template: 'test'});
+
+    expect(loadingStrategy.load).toBeCalledWith(
+        'snippets',
+        {
+            fields: [
+                'id',
+            ],
+            filter: {title: 'Test Title', template: 'test'},
+            page: 1,
+            limit: 10,
+            sortBy: undefined,
+            sortOrder: undefined,
+        },
+        undefined
+    );
 
     listStore.destroy();
 });
@@ -1261,6 +1334,71 @@ test('Should not reset page count to 0 and page to 1 when search stays the same'
     listStore.destroy();
 });
 
+test('Should reset page count to 0 and page to 1 when filter is changed', () => {
+    const page = observable.box(3);
+    const locale = observable.box('en');
+    const listStore = new ListStore('snippets', 'snippets', 'list_test', {page, locale});
+    listStore.schema = {};
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    listStore.updateLoadingStrategy(loadingStrategy);
+    listStore.updateStructureStrategy(structureStrategy);
+
+    listStore.setPage(2);
+    listStore.pageCount = 7;
+    listStore.filter({test: {eq: 'Test'}});
+
+    expect(structureStrategy.clear).toBeCalled();
+    expect(page.get()).toEqual(1);
+    expect(listStore.pageCount).toEqual(0);
+    listStore.destroy();
+});
+
+test('Should not reset page count to 0 and page to 1 when filter stays the same', () => {
+    const page = observable.box(3);
+    const locale = observable.box('en');
+    const listStore = new ListStore('snippets', 'snippets', 'list_test', {page, locale});
+    listStore.schema = {};
+    listStore.filter({test: {eq: 'Test'}});
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    listStore.updateLoadingStrategy(loadingStrategy);
+    listStore.updateStructureStrategy(structureStrategy);
+
+    listStore.setPage(2);
+    listStore.pageCount = 7;
+    listStore.filter({test: {eq: 'Test'}});
+
+    expect(structureStrategy.clear).not.toBeCalled();
+    expect(page.get()).toEqual(2);
+    expect(listStore.pageCount).toEqual(7);
+    listStore.destroy();
+});
+
+test('Should not reset page count to 0 and page to 1 when filter stays the same except for undefined fields', () => {
+    const page = observable.box(3);
+    const locale = observable.box('en');
+    const listStore = new ListStore('snippets', 'snippets', 'list_test', {page, locale});
+    listStore.schema = {};
+    listStore.filter({test: {eq: 'Test'}});
+
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    listStore.updateLoadingStrategy(loadingStrategy);
+    listStore.updateStructureStrategy(structureStrategy);
+
+    listStore.setPage(2);
+    listStore.pageCount = 7;
+    listStore.filter({test: {eq: 'Test'}, test2: undefined});
+
+    expect(structureStrategy.clear).not.toBeCalled();
+    expect(page.get()).toEqual(2);
+    expect(listStore.pageCount).toEqual(7);
+    listStore.destroy();
+});
+
 test('Should reset page count to 0 and page to 1 when sort column is changed', () => {
     const page = observable.box(3);
     const locale = observable.box('en');
@@ -1951,6 +2089,7 @@ test('Should call all disposers if destroy is called', () => {
     listStore.sendRequestDisposer = jest.fn();
     listStore.localeDisposer = jest.fn();
     listStore.searchDisposer = jest.fn();
+    listStore.filterDisposer = jest.fn();
     listStore.sortColumnDisposer = jest.fn();
     listStore.sortOrderDisposer = jest.fn();
     listStore.limitDisposer = jest.fn();
@@ -1961,6 +2100,7 @@ test('Should call all disposers if destroy is called', () => {
     expect(listStore.sendRequestDisposer).toBeCalledWith();
     expect(listStore.localeDisposer).toBeCalledWith();
     expect(listStore.searchDisposer).toBeCalledWith();
+    expect(listStore.filterDisposer).toBeCalledWith();
     expect(listStore.sortColumnDisposer).toBeCalledWith();
     expect(listStore.sortOrderDisposer).toBeCalledWith();
     expect(listStore.limitDisposer).toBeCalledWith();

@@ -1,11 +1,12 @@
 // @flow
 import React from 'react';
+import type {Node} from 'react';
 import classNames from 'classnames';
 import Icon from '../../components/Icon';
 import chipStyles from './chip.scss';
 
 type Props<T> = {|
-    children: string,
+    children: Node,
     disabled: boolean,
     onClick?: (value: T) => void,
     onDelete?: (value: T) => void,

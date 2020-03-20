@@ -39,6 +39,7 @@ function tryParse(value: ?string) {
 
 function equalBindings(value1, value2) {
     if (typeof(value1) !== 'object' || typeof(value2) !== 'object') {
+        // Type unsafe comparison to not trigger a new navigation when only data type changes
         return value1 == value2;
     }
 
@@ -315,8 +316,7 @@ export default class Router {
                 ? this.attributes[key]
                 : this.bindingDefaults.get(key);
 
-            // Type unsafe comparison to not trigger a new navigation when only data type changes
-            if (!equalBindings(value, observableValue.get())) {
+            if (!equalBindings(toJS(value), toJS(observableValue.get()))) {
                 observableValue.set(value);
             }
         }

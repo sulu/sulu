@@ -1,6 +1,7 @@
 // @flow
 import {action, autorun, computed, intercept, observable, untracked} from 'mobx';
 import type {IObservableValue, IValueWillChange} from 'mobx';
+import equals from 'fast-deep-equal';
 import log from 'loglevel';
 import ResourceRequester, {RequestPromise} from '../../../services/ResourceRequester';
 import type {
@@ -18,6 +19,7 @@ const USER_SETTING_PREFIX = 'sulu_admin.list_store';
 const USER_SETTING_ACTIVE = 'active';
 const USER_SETTING_SORT_COLUMN = 'sort_column';
 const USER_SETTING_SORT_ORDER = 'sort_order';
+const USER_SETTING_FILTER = 'filter';
 const USER_SETTING_LIMIT = 'limit';
 const USER_SETTING_SCHEMA = 'schema';
 
@@ -39,6 +41,7 @@ export default class ListStore {
     @observable schema: Schema;
     @observable forbidden: boolean;
     active: IObservableValue<?string | number> = observable.box();
+    filterOptions: IObservableValue<{[string]: mixed}> = observable.box({});
     sortColumn: IObservableValue<string> = observable.box();
     sortOrder: IObservableValue<SortOrder> = observable.box();
     searchTerm: IObservableValue<?string> = observable.box();
@@ -49,6 +52,7 @@ export default class ListStore {
     observableOptions: ObservableOptions;
     localeDisposer: ?() => void;
     searchDisposer: () => void;
+    filterDisposer: () => void;
     sortColumnDisposer: () => void;
     sortOrderDisposer: () => void;
     limitDisposer: () => void;
@@ -66,6 +70,18 @@ export default class ListStore {
 
     static setActiveSetting(listKey: string, userSettingsKey: string, value: *) {
         const key = [USER_SETTING_PREFIX, listKey, userSettingsKey, USER_SETTING_ACTIVE].join('.');
+
+        userStore.setPersistentSetting(key, value);
+    }
+
+    static getFilterSetting(listKey: string, userSettingsKey: string): string {
+        const key = [USER_SETTING_PREFIX, listKey, userSettingsKey, USER_SETTING_FILTER].join('.');
+
+        return userStore.getPersistentSetting(key);
+    }
+
+    static setFilterSetting(listKey: string, userSettingsKey: string, value: *) {
+        const key = [USER_SETTING_PREFIX, listKey, userSettingsKey, USER_SETTING_FILTER].join('.');
 
         userStore.setPersistentSetting(key, value);
     }
@@ -162,6 +178,37 @@ export default class ListStore {
             return change;
         });
 
+        this.filterDisposer = intercept(this.filterOptions, '', (change: IValueWillChange<*>) => {
+            const oldValue = change.object.get();
+            const oldFilteredValue = oldValue ?
+                Object.keys(oldValue).reduce((oldFilteredValue, currentKey) => {
+                    if (oldValue[currentKey] !== undefined) {
+                        oldFilteredValue[currentKey] = oldValue[currentKey];
+                    }
+
+                    return oldFilteredValue;
+                }, {})
+                : {};
+
+            const newValue = change.newValue;
+            const newFilteredValue = newValue ?
+                Object.keys(newValue).reduce((newFilteredValue, currentKey) => {
+                    if (newValue[currentKey] !== undefined) {
+                        newFilteredValue[currentKey] = newValue[currentKey];
+                    }
+
+                    return newFilteredValue;
+                }, {})
+                : {};
+
+            if (!equals(oldFilteredValue, newFilteredValue)) {
+                ListStore.setFilterSetting(this.listKey, this.userSettingsKey, change.newValue);
+                callResetForChangedObservable(change);
+            }
+
+            return change;
+        });
+
         this.sortColumnDisposer = intercept(this.sortColumn, '', (change: IValueWillChange<*>) => {
             ListStore.setSortColumnSetting(this.listKey, this.userSettingsKey, change.newValue);
             callResetForChangedObservable(change);
@@ -223,6 +270,18 @@ export default class ListStore {
         return queryOptions;
     }
 
+    @computed.struct get filterQueryOption() {
+        const filterOptions = this.filterOptions.get();
+
+        return Object.keys(filterOptions).reduce((filterQueryOption, column) => {
+            if (filterOptions[column] !== undefined) {
+                filterQueryOption[column] = filterOptions[column];
+            }
+
+            return filterQueryOption;
+        }, {});
+    }
+
     @computed get userSchema(): Schema {
         if (!this.initialized) {
             return {};
@@ -263,9 +322,26 @@ export default class ListStore {
         ListStore.setSchemaSetting(this.listKey, this.userSettingsKey, schemaSettings);
     };
 
+    @computed get filterableFields(): ?Schema {
+        if (!this.schema) {
+            return undefined;
+        }
+
+        return Object.keys(this.schema).reduce(
+            (filterableFields, schemaKey) => {
+                if (this.schema[schemaKey].filterType){
+                    filterableFields[schemaKey] = this.schema[schemaKey];
+                }
+
+                return filterableFields;
+            },
+            {}
+        );
+    }
+
     @computed get fields(): Array<string> {
         const fields = [];
-        Object.keys(this.userSchema).map((schemaKey) => {
+        Object.keys(this.userSchema).forEach((schemaKey) => {
             const schemaEntry = this.userSchema[schemaKey];
             if (schemaEntry.visibility === 'yes' || schemaEntry.visibility === 'always') {
                 fields.push(schemaKey);
@@ -484,6 +560,9 @@ export default class ListStore {
         options.sortOrder = this.sortOrder.get();
         options.limit = this.limit.get();
         options.fields = this.fields;
+        if (Object.keys(this.filterQueryOption).length > 0) {
+            options.filter = this.filterQueryOption;
+        }
 
         if (this.searchTerm.get()) {
             options.search = this.searchTerm.get();
@@ -607,6 +686,10 @@ export default class ListStore {
         this.searchTerm.set(searchTerm);
     }
 
+    @action filter(filter: {[string]: mixed}) {
+        this.filterOptions.set(filter);
+    }
+
     @action select(row: Object) {
         // TODO do not hardcode id but use metdata instead
         if (this.selections.findIndex((item) => item.id === row.id) !== -1) {
@@ -673,6 +756,7 @@ export default class ListStore {
     destroy() {
         this.sendRequestDisposer();
         this.searchDisposer();
+        this.filterDisposer();
         this.sortColumnDisposer();
         this.sortOrderDisposer();
         this.limitDisposer();

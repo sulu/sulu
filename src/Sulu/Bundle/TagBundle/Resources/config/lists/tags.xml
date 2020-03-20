@@ -35,7 +35,6 @@
             <entity-name>%sulu.model.tag.class%</entity-name>
         </property>
 
-        <!-- TODO: Check if editable is needed in 2.0 -->
         <property
             name="name"
             visibility="always"

@@ -41,6 +41,7 @@ class RestHelper implements RestHelperInterface
         $listBuilder->setFieldDescriptors($fieldDescriptors);
         $listBuilder->setIds($this->listRestHelper->getIds());
         $listBuilder->setExcludedIds($this->listRestHelper->getExcludedIds());
+        $listBuilder->filter($this->listRestHelper->getFilter());
 
         $fields = $this->listRestHelper->getFields();
         if (null != $fields) {

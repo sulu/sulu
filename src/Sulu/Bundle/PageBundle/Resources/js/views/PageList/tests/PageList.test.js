@@ -24,6 +24,9 @@ jest.mock('sulu-admin-bundle/containers', () => ({
         resourceKey;
         observableOptions;
         activeItems = [];
+        filterOptions = {
+            get: jest.fn().mockReturnValue({}),
+        };
         active = {
             get: jest.fn(),
             set: jest.fn(),
