@@ -11,6 +11,7 @@ import Router, {routeRegistry} from './services/Router';
 import Application from './containers/Application';
 import {updateRouterAttributesFromView, viewRegistry} from './containers/ViewRenderer';
 import CollaborationStore from './stores/CollaborationStore';
+import localizationStore from './stores/localizationStore';
 import userStore, {logoutOnUnauthorizedResponse} from './stores/userStore';
 import {Config, resourceRouteRegistry} from './services';
 import initializer from './services/initializer';
@@ -272,6 +273,7 @@ function processConfig(config: Object) {
     resourceRouteRegistry.clear();
 
     routeRegistry.addCollection(config.routes);
+    localizationStore.setLocalizations(config.localizations);
     navigationRegistry.set(config.navigation);
     resourceRouteRegistry.setEndpoints(config.resources);
     smartContentConfigStore.setConfig(config.smartContent);
