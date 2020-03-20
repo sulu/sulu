@@ -71,6 +71,17 @@ class RouterListenerTest extends TestCase
         $this->routerListener->onKernelRequest($this->event->reveal());
     }
 
+    public function testAnalyzeRequestDisabledByEsiInProdEnv()
+    {
+        $request = new Request([], [], ['_requestAnalyzer' => '0']);
+        $this->event->getRequest()->willReturn($request);
+
+        $this->requestAnalyzer->analyze($request)->shouldBeCalled();
+        $this->requestAnalyzer->validate($request)->shouldNotBeCalled();
+
+        $this->routerListener->onKernelRequest($this->event->reveal());
+    }
+
     public function testAnalyzeRequestDefault()
     {
         $request = new Request();
