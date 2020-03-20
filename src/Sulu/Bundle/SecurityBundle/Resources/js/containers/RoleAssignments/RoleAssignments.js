@@ -1,11 +1,10 @@
 // @flow
 import React from 'react';
-import {action, computed, observable} from 'mobx';
+import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import {ResourceMultiSelect} from 'sulu-admin-bundle/containers';
-import {Loader, Grid} from 'sulu-admin-bundle/components';
+import {Grid} from 'sulu-admin-bundle/components';
 import {localizationStore} from 'sulu-admin-bundle/stores';
-import type {Localization} from 'sulu-admin-bundle/stores';
 import RoleAssignment from './RoleAssignment';
 import roleAssignmentsStyle from './roleAssignments.scss';
 
@@ -20,15 +19,6 @@ class RoleAssignments extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
     };
-
-    @observable localizations: ?Array<Localization>;
-
-    componentDidMount() {
-        localizationStore.loadLocalizations()
-            .then(action((localizations) => {
-                this.localizations = localizations;
-            }));
-    }
 
     @computed get selectedRoles(): Array<number> {
         const selectedRoles = [];
@@ -81,11 +71,6 @@ class RoleAssignments extends React.Component<Props> {
 
     render() {
         const {disabled, value} = this.props;
-        const localizations = this.localizations;
-
-        if (!localizations) {
-            return <Loader />;
-        }
 
         return (
             <Grid>
@@ -108,7 +93,7 @@ class RoleAssignments extends React.Component<Props> {
                                         <RoleAssignment
                                             disabled={disabled}
                                             key={key}
-                                            localizations={localizations}
+                                            localizations={localizationStore.localizations}
                                             onChange={this.handleRoleAssignmentChange}
                                             value={userRole}
                                         />
