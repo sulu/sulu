@@ -182,7 +182,7 @@ export default class ListStore {
             const oldValue = change.object.get();
             const oldFilteredValue = oldValue ?
                 Object.keys(oldValue).reduce((oldFilteredValue, currentKey) => {
-                    if (oldValue[currentKey]) {
+                    if (oldValue[currentKey] !== undefined) {
                         oldFilteredValue[currentKey] = oldValue[currentKey];
                     }
 
@@ -193,7 +193,7 @@ export default class ListStore {
             const newValue = change.newValue;
             const newFilteredValue = newValue ?
                 Object.keys(newValue).reduce((newFilteredValue, currentKey) => {
-                    if (newValue[currentKey]) {
+                    if (newValue[currentKey] !== undefined) {
                         newFilteredValue[currentKey] = newValue[currentKey];
                     }
 

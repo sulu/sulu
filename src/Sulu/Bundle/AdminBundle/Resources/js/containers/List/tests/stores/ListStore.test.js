@@ -89,6 +89,25 @@ test('The filter value should not be updated when set from the outside and only 
     expect(userStore.setPersistentSetting).not.toBeCalled();
 });
 
+test('The filter value should be updated when set from the outside and only a single false value was added', () => {
+    const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
+    expect(listStore.filterOptions.get()).toEqual({});
+
+    listStore.filterOptions.set({test: false});
+    expect(userStore.setPersistentSetting)
+        .toBeCalledWith('sulu_admin.list_store.tests.list_test.filter', {test: false});
+});
+
+test('The filter value should be updated when set from the outside and only a single false value was removed', () => {
+    const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
+    listStore.filterOptions.set({test: false});
+    expect(listStore.filterOptions.get()).toEqual({test: false});
+
+    listStore.filterOptions.set({});
+    expect(userStore.setPersistentSetting)
+        .toBeCalledWith('sulu_admin.list_store.tests.list_test.filter', {});
+});
+
 test('The limit value should be updated when set from the outside', () => {
     const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
     expect(listStore.limit.get()).toEqual(10);
