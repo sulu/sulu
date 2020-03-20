@@ -3,6 +3,7 @@ import React from 'react';
 import type {Node} from 'react';
 import {action, autorun, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
+import Mousetrap from 'mousetrap';
 import ArrowMenu from '../../components/ArrowMenu';
 import Button from '../../components/Button';
 import Chip from '../../components/Chip';
@@ -25,6 +26,8 @@ type Props = {|
     value: mixed,
 |};
 
+const CLOSE_KEY = 'esc';
+
 @observer
 class FieldFilterItem extends React.Component<Props> {
     @observable value: mixed;
@@ -37,7 +40,7 @@ class FieldFilterItem extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const {filterType, filterTypeParameters, value} = this.props;
+        const {filterType, filterTypeParameters, onClose, open, value} = this.props;
 
         this.value = value;
 
@@ -68,6 +71,10 @@ class FieldFilterItem extends React.Component<Props> {
                 }));
             }
         });
+
+        if (open) {
+            Mousetrap.bind(CLOSE_KEY, onClose);
+        }
     }
 
     @computed get propValue() {
@@ -75,9 +82,17 @@ class FieldFilterItem extends React.Component<Props> {
     }
 
     @action componentDidUpdate(prevProps: Props) {
-        const {open, value} = this.props;
+        const {onClose, open, value} = this.props;
         if (prevProps.open === false && open === true) {
             this.value = value;
+        }
+
+        if (prevProps.open !== open) {
+            if (open) {
+                Mousetrap.bind(CLOSE_KEY, onClose);
+            } else {
+                Mousetrap.unbind(CLOSE_KEY);
+            }
         }
     }
 
@@ -85,6 +100,10 @@ class FieldFilterItem extends React.Component<Props> {
         this.valueDisposer();
         this.valueNodeDisposer();
         this.fieldFilterType.destroy();
+
+        if (this.props.open) {
+            Mousetrap.unbind(CLOSE_KEY);
+        }
     }
 
     @action setValueNodeLoading(valueNodeLoading: boolean) {
