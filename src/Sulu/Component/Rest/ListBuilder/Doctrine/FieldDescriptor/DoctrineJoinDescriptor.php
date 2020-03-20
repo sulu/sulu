@@ -95,6 +95,10 @@ class DoctrineJoinDescriptor
             return $this->entityName;
         }
 
+        if (false === strpos($this->join, '.')) {
+            return $this->join;
+        }
+
         return $this->encodeAlias($this->join);
     }
 

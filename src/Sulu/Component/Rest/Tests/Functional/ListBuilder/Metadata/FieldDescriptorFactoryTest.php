@@ -206,6 +206,12 @@ class FieldDescriptorFactoryTest extends TestCase
                         'method' => 'LEFT',
                         'condition' => 'SuluContactBundle_ContactAddress.locale = :locale',
                     ],
+                    'user' => [
+                        'entity-name' => 'user',
+                        'field-name' => 'SuluSecurityBundle:User',
+                        'method' => 'LEFT',
+                        'condition' => 'user.idContacts = contact.id',
+                    ],
                 ],
             ],
         ];
