@@ -279,6 +279,10 @@ class AdminController
             $translations = array_replace($fallbackCatalogue->all(static::TRANSLATION_DOMAIN), $translations);
         }
 
+        if (0 === count($translations)) {
+            $translations = new \stdClass();
+        }
+
         return new JsonResponse($translations);
     }
 
