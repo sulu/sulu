@@ -55,7 +55,7 @@ class AzureBlobStorage extends FlysystemStorage
         $resource = parent::load($storageOptions);
         $contents = stream_get_contents($resource);
 
-        $stream = fopen('php://memory','r+');
+        $stream = fopen('php://memory', 'r+');
         fwrite($stream, $contents);
         rewind($stream);
 
