@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Storage;
 
+use League\Flysystem\AzureBlobStorage\AzureBlobStorageAdapter;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
-use League\Flysystem\AzureBlobStorage\AzureBlobStorageAdapter;
 use MicrosoftAzure\Storage\Blob\BlobRestProxy;
 
 class AzureBlobStorage extends FlysystemStorage
@@ -24,12 +24,12 @@ class AzureBlobStorage extends FlysystemStorage
     private $adapter;
 
     /**
-     * @var string $container
+     * @var string
      */
     private $container;
 
     /**
-     * @var BlobRestProxy $client
+     * @var BlobRestProxy
      */
     private $client;
 
