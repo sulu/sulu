@@ -28,20 +28,22 @@ class AzureBlobStorageTest extends TestCase
 
         $adapter = $this->prophesize(AdapterInterface::class);
         $flysystem = $this->prophesize(Filesystem::class);
+        $client = $this->createMock(BlobRestProxy::class);
 
         $flysystem->getAdapter()->willReturn($adapter->reveal());
 
-        new AzureBlobStorage($flysystem->reveal(), 1);
+        new AzureBlobStorage($flysystem->reveal(), $client, 'test-container', 1);
     }
 
     public function testSave(): void
     {
         $adapter = $this->prophesize(AzureBlobStorageAdapter::class);
         $flysystem = $this->prophesize(Filesystem::class);
+        $client = $this->createMock(BlobRestProxy::class);
 
         $flysystem->getAdapter()->willReturn($adapter->reveal());
 
-        $storage = new AzureBlobStorage($flysystem->reveal(), 1);
+        $storage = new AzureBlobStorage($flysystem->reveal(), $client, 'test-container', 1);
 
         $flysystem->has('1/test.jpg')->wilLReturn(false);
         $flysystem->has('1')->wilLReturn(false);
@@ -58,10 +60,11 @@ class AzureBlobStorageTest extends TestCase
     {
         $adapter = $this->prophesize(AzureBlobStorageAdapter::class);
         $flysystem = $this->prophesize(Filesystem::class);
+        $client = $this->createMock(BlobRestProxy::class);
 
         $flysystem->getAdapter()->willReturn($adapter->reveal());
 
-        $storage = new AzureBlobStorage($flysystem->reveal(), 1);
+        $storage = new AzureBlobStorage($flysystem->reveal(), $client, 'test-container', 1);
 
         $flysystem->has('1/test.jpg')->wilLReturn(false);
         $flysystem->has('1')->wilLReturn(true);
@@ -78,10 +81,11 @@ class AzureBlobStorageTest extends TestCase
     {
         $adapter = $this->prophesize(AzureBlobStorageAdapter::class);
         $flysystem = $this->prophesize(Filesystem::class);
+        $client = $this->createMock(BlobRestProxy::class);
 
         $flysystem->getAdapter()->willReturn($adapter->reveal());
 
-        $storage = new AzureBlobStorage($flysystem->reveal(), 1);
+        $storage = new AzureBlobStorage($flysystem->reveal(), $client, 'test-container', 1);
 
         $flysystem->has('1/test.jpg')->wilLReturn(true);
         $flysystem->has('1/test-1.jpg')->wilLReturn(false);
@@ -98,13 +102,12 @@ class AzureBlobStorageTest extends TestCase
     public function testLoad(): void
     {
         $adapter = $this->prophesize(AzureBlobStorageAdapter::class);
-        $client = $this->createMock(BlobRestProxy::class);
-
         $flysystem = $this->prophesize(Filesystem::class);
+        $client = $this->createMock(BlobRestProxy::class);
 
         $flysystem->getAdapter()->willReturn($adapter->reveal());
 
-        $storage = new AzureBlobStorage($flysystem->reveal(), 1);
+        $storage = new AzureBlobStorage($flysystem->reveal(), $client, 'test-container', 1);
 
         $handle = tmpfile();
         $flysystem->readStream('1/test.jpg')->willReturn($handle)->shouldBeCalled();
@@ -119,10 +122,11 @@ class AzureBlobStorageTest extends TestCase
 
         $adapter = $this->prophesize(AzureBlobStorageAdapter::class);
         $flysystem = $this->prophesize(Filesystem::class);
+        $client = $this->createMock(BlobRestProxy::class);
 
         $flysystem->getAdapter()->willReturn($adapter->reveal());
 
-        $storage = new AzureBlobStorage($flysystem->reveal(), 1);
+        $storage = new AzureBlobStorage($flysystem->reveal(), $client, 'test-container', 1);
 
         $handle = tmpfile();
         $flysystem->readStream('1/test.jpg')->willThrow(new FileNotFoundException('1/test.jpg'))->shouldBeCalled();
@@ -135,10 +139,11 @@ class AzureBlobStorageTest extends TestCase
     {
         $adapter = $this->prophesize(AzureBlobStorageAdapter::class);
         $flysystem = $this->prophesize(Filesystem::class);
+        $client = $this->createMock(BlobRestProxy::class);
 
         $flysystem->getAdapter()->willReturn($adapter->reveal());
 
-        $storage = new AzureBlobStorage($flysystem->reveal(), 1);
+        $storage = new AzureBlobStorage($flysystem->reveal(), $client, 'test-container', 1);
 
         $flysystem->delete('1/test.jpg')->shouldBeCalled();
 
@@ -149,10 +154,11 @@ class AzureBlobStorageTest extends TestCase
     {
         $adapter = $this->prophesize(AzureBlobStorageAdapter::class);
         $flysystem = $this->prophesize(Filesystem::class);
+        $client = $this->createMock(BlobRestProxy::class);
 
         $flysystem->getAdapter()->willReturn($adapter->reveal());
 
-        $storage = new AzureBlobStorage($flysystem->reveal(), 1);
+        $storage = new AzureBlobStorage($flysystem->reveal(), $client, 'test-container', 1);
 
         $flysystem->delete('1/test.jpg')->willThrow(new FileNotFoundException('1/test.jpg'))->shouldBeCalled();
 
@@ -167,10 +173,7 @@ class AzureBlobStorageTest extends TestCase
 
         $flysystem->getAdapter()->willReturn($adapter->reveal());
 
-        $storage = new AzureBlobStorage($flysystem->reveal(), 1);
-
-        $storage->setClient($client);
-        $storage->setContainer('test-container');
+        $storage = new AzureBlobStorage($flysystem->reveal(), $client, 'test-container', 1);
 
         $adapter->applyPathPrefix('1/test.jpg')->willReturn('1/test.jpg')->shouldBeCalled();
 
@@ -189,10 +192,11 @@ class AzureBlobStorageTest extends TestCase
     {
         $adapter = $this->prophesize(AzureBlobStorageAdapter::class);
         $flysystem = $this->prophesize(Filesystem::class);
+        $client = $this->createMock(BlobRestProxy::class);
 
         $flysystem->getAdapter()->willReturn($adapter->reveal());
 
-        $storage = new AzureBlobStorage($flysystem->reveal(), 1);
+        $storage = new AzureBlobStorage($flysystem->reveal(), $client, 'test-container', 1);
 
         $type = $storage->getType(['segment' => '1', 'fileName' => 'test.jpg']);
         $this->assertEquals(StorageInterface::TYPE_REMOTE, $type);

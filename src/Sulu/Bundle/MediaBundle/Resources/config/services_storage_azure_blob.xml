@@ -23,13 +23,9 @@
         <service id="sulu_media.storage.azure_blob"
                  class="Sulu\Bundle\MediaBundle\Media\Storage\AzureBlobStorage">
             <argument type="service" id="sulu_media.storage.azure_blob.filesystem"/>
+            <argument type="service" id="sulu_media.storage.azure_blob.client"/>
+            <argument type="string">%sulu_media.media.storage.azure_blob.container_name%></argument>
             <argument>%sulu_media.media.storage.azure_blob.segments%</argument>
-            <call method="setClient">
-                <argument type="service" id="sulu_media.storage.azure_blob.client"/>
-            </call>
-            <call method="setContainer">
-                <argument type="string">%sulu_media.media.storage.azure_blob.container_name%></argument>
-            </call>
         </service>
     </services>
 </container>
