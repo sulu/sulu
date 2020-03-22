@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
+use League\Flysystem\AzureBlobStorage\AzureBlobStorageAdapter;
 use Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -22,6 +23,8 @@ class Configuration implements ConfigurationInterface
     const STORAGE_GOOGLE_CLOUD = 'google_cloud';
 
     const STORAGE_S3 = 's3';
+
+    const STORAGE_AZURE_BLOB = 'azure_blob';
 
     public function getConfigTreeBuilder()
     {
@@ -221,6 +224,21 @@ class Configuration implements ConfigurationInterface
                             ->scalarPrototype()->end()
                         ->end()
                     ->end()
+                ->end();
+        }
+
+        if (class_exists(AzureBlobStorageAdapter::class)) {
+            $storages[] = self::STORAGE_AZURE_BLOB;
+
+            $storagesNode
+                ->arrayNode(self::STORAGE_AZURE_BLOB)
+                ->addDefaultsIfNotSet()
+                ->children()
+                ->scalarNode('connection_string')->isRequired()->end()
+                ->scalarNode('container_name')->isRequired()->end()
+                ->scalarNode('path_prefix')->defaultNull()->end()
+                ->scalarNode('segments')->defaultValue(10)->end()
+                ->end()
                 ->end();
         }
 
