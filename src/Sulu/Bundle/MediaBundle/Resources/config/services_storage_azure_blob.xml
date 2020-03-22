@@ -4,9 +4,7 @@
     <services>
         <service id="sulu_media.storage.azure_blob.client" class="MicrosoftAzure\Storage\Blob\BlobRestProxy">
             <factory class="MicrosoftAzure\Storage\Blob\BlobRestProxy" method="createBlobService"/>
-            <argument type="string">
-                <argument key="primaryUri">%sulu_media.media.storage.azure_blob.connection_string%</argument>
-            </argument>
+            <argument type="string">%sulu_media.media.storage.azure_blob.connection_string%</argument>
         </service>
 
         <service id="sulu_media.storage.azure_blob.adapter"
