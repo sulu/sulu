@@ -234,10 +234,10 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode(self::STORAGE_AZURE_BLOB)
                 ->addDefaultsIfNotSet()
                 ->children()
-                ->scalarNode('connection_string')->isRequired()->end()
-                ->scalarNode('container_name')->isRequired()->end()
-                ->scalarNode('path_prefix')->defaultNull()->end()
-                ->scalarNode('segments')->defaultValue(10)->end()
+                    ->scalarNode('connection_string')->isRequired()->end()
+                    ->scalarNode('container_name')->isRequired()->end()
+                    ->scalarNode('path_prefix')->defaultNull()->end()
+                    ->scalarNode('segments')->defaultValue(10)->end()
                 ->end()
                 ->end();
         }
