@@ -26,7 +26,7 @@ jest.mock('sulu-admin-bundle/utils', () => ({
 
 jest.mock('sulu-page-bundle/stores', () => ({
     webspaceStore: {
-        loadWebspace: jest.fn(),
+        getWebspace: jest.fn(),
     },
 }));
 
@@ -39,13 +39,13 @@ test('Pass correct props to MultiSelect', () => {
         )
     );
 
-    const webspacePromise = Promise.resolve({
+    const webspace = {
         customUrls: [
             {url: 'www.sulu.io/*'},
             {url: '*.sulu.io'},
         ],
-    });
-    webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
+    };
+    webspaceStore.getWebspace.mockReturnValue(webspace);
 
     const customUrlsDomainSelect = shallow(
         <CustomUrlsDomainSelect
@@ -56,16 +56,14 @@ test('Pass correct props to MultiSelect', () => {
         />
     );
 
-    expect(webspaceStore.loadWebspace).toBeCalledWith('sulu_io');
+    expect(webspaceStore.getWebspace).toBeCalledWith('sulu_io');
 
-    return webspacePromise.then(() => {
-        expect(customUrlsDomainSelect.find('SingleSelect').prop('disabled')).toEqual(true);
-        expect(customUrlsDomainSelect.find('SingleSelect').prop('value')).toEqual('www.sulu.io/*');
-        expect(customUrlsDomainSelect.find('Option').at(0).prop('children')).toEqual('www.sulu.io/*');
-        expect(customUrlsDomainSelect.find('Option').at(0).prop('value')).toEqual('www.sulu.io/*');
-        expect(customUrlsDomainSelect.find('Option').at(1).prop('children')).toEqual('*.sulu.io');
-        expect(customUrlsDomainSelect.find('Option').at(1).prop('value')).toEqual('*.sulu.io');
-    });
+    expect(customUrlsDomainSelect.find('SingleSelect').prop('disabled')).toEqual(true);
+    expect(customUrlsDomainSelect.find('SingleSelect').prop('value')).toEqual('www.sulu.io/*');
+    expect(customUrlsDomainSelect.find('Option').at(0).prop('children')).toEqual('www.sulu.io/*');
+    expect(customUrlsDomainSelect.find('Option').at(0).prop('value')).toEqual('www.sulu.io/*');
+    expect(customUrlsDomainSelect.find('Option').at(1).prop('children')).toEqual('*.sulu.io');
+    expect(customUrlsDomainSelect.find('Option').at(1).prop('value')).toEqual('*.sulu.io');
 });
 
 test('Call onChange and onBlur if the value is changed', () => {
@@ -80,13 +78,13 @@ test('Call onChange and onBlur if the value is changed', () => {
         )
     );
 
-    const webspacePromise = Promise.resolve({
+    const webspace = {
         customUrls: [
             {url: 'www.sulu.io/*'},
             {url: '*.sulu.io'},
         ],
-    });
-    webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
+    };
+    webspaceStore.getWebspace.mockReturnValue(webspace);
 
     const customUrlsDomainSelect = shallow(
         <CustomUrlsDomainSelect
@@ -98,9 +96,7 @@ test('Call onChange and onBlur if the value is changed', () => {
         />
     );
 
-    return webspacePromise.then(() => {
-        customUrlsDomainSelect.find('SingleSelect').prop('onChange')('*.sulu.io');
-        expect(changeSpy).toBeCalledWith('*.sulu.io');
-        expect(finishSpy).toBeCalledWith();
-    });
+    customUrlsDomainSelect.find('SingleSelect').prop('onChange')('*.sulu.io');
+    expect(changeSpy).toBeCalledWith('*.sulu.io');
+    expect(finishSpy).toBeCalledWith();
 });
