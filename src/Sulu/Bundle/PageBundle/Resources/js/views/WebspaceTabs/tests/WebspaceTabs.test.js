@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {mount} from 'enzyme';
 import {Router} from 'sulu-admin-bundle/services';
 import {userStore} from 'sulu-admin-bundle/stores';
 import WebspaceTabs from '../WebspaceTabs';
@@ -12,19 +12,14 @@ jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
 }));
 
 jest.mock('../../../stores/webspaceStore', () => ({
-    loadWebspaces: jest.fn(() => Promise.resolve()),
+    grantedWebspaces: [],
+    getWebspace: jest.fn(),
 }));
 
 jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     setPersistentSetting: jest.fn(),
     getPersistentSetting: jest.fn(),
 }));
-
-test('Render loader when webspaces are not loaded yet', () => {
-    const router = new Router({});
-
-    expect(render(<WebspaceTabs route={router.route} router={router} />)).toMatchSnapshot();
-});
 
 test('Render webspace select with children when webspaces are not loaded yet', () => {
     const router = new Router({});
@@ -40,13 +35,13 @@ test('Render webspace select with children when webspaces are not loaded yet', (
         type: 'webspace_tabs',
     };
 
-    const promise = Promise.resolve(
-        [
-            {key: 'sulu', localizations: [{locale: 'en', default: true}]},
-            {key: 'sulu_blog', localizations: [{locale: 'en', default: false}, {locale: 'de', default: true}]},
-        ]
-    );
-    webspaceStore.loadWebspaces.mockReturnValue(promise);
+    const webspace = {key: 'sulu_blog', localizations: [{locale: 'en', default: false}, {locale: 'de', default: true}]};
+
+    webspaceStore.getWebspace.mockImplementation((key) => {
+        if (key === 'sulu_blog') {
+            return webspace;
+        }
+    });
 
     const webspaceTabs = mount(
         <WebspaceTabs route={route} router={router}>
@@ -55,11 +50,7 @@ test('Render webspace select with children when webspaces are not loaded yet', (
     );
 
     webspaceTabs.instance().webspaceKey.set('sulu_blog');
-
-    return promise.then(() => {
-        webspaceTabs.update();
-        expect(webspaceTabs.children().render()).toMatchSnapshot();
-    });
+    expect(webspaceTabs.children().render()).toMatchSnapshot();
 });
 
 test('Load webspace userStore if no route attribute is given', () => {
@@ -128,28 +119,34 @@ test('Save and update webspace when select value is changed', () => {
         type: 'webspace_tabs',
     };
 
-    const webspaces = [
-        {key: 'sulu', localizations: [{locale: 'en', default: true}]},
-        {key: 'sulu_blog', localizations: [{locale: 'en', default: false}, {locale: 'de', default: true}]},
-    ];
+    const webspace1 = {key: 'sulu', localizations: [{locale: 'en', default: true}]};
+    const webspace2 = {
+        key: 'sulu_blog',
+        localizations: [{locale: 'en', default: false}, {locale: 'de', default: true}],
+    };
 
-    const promise = Promise.resolve(webspaces);
-    webspaceStore.loadWebspaces.mockReturnValue(promise);
+    webspaceStore.getWebspace.mockImplementation((key) => {
+        if (key === 'sulu') {
+            return webspace1;
+        }
+
+        if (key === 'sulu_blog') {
+            return webspace2;
+        }
+    });
 
     const webspaceTabs = mount(<WebspaceTabs route={route} router={router}>{() => null}</WebspaceTabs>);
     webspaceTabs.instance().webspaceKey.set('sulu_blog');
 
-    return promise.then(() => {
-        webspaceTabs.update();
-        expect(webspaceTabs.find('WebspaceSelect').prop('value')).toEqual('sulu_blog');
-        expect(webspaceTabs.find('Tabs').at(0).prop('childrenProps'))
-            .toEqual(expect.objectContaining({webspace: webspaces[1]}));
-        webspaceTabs.find('WebspaceSelect').prop('onChange')('sulu');
+    webspaceTabs.update();
+    expect(webspaceTabs.find('WebspaceSelect').prop('value')).toEqual('sulu_blog');
+    expect(webspaceTabs.find('Tabs').at(0).prop('childrenProps'))
+        .toEqual(expect.objectContaining({webspace: webspace2}));
+    webspaceTabs.find('WebspaceSelect').prop('onChange')('sulu');
 
-        webspaceTabs.update();
-        expect(userStore.setPersistentSetting).toBeCalledWith('sulu_page.webspace_tabs.webspace', 'sulu');
-        expect(webspaceTabs.find('Tabs').at(0).prop('childrenProps'))
-            .toEqual(expect.objectContaining({webspace: webspaces[0]}));
-        expect(webspaceTabs.find('WebspaceSelect').prop('value')).toEqual('sulu');
-    });
+    webspaceTabs.update();
+    expect(userStore.setPersistentSetting).toBeCalledWith('sulu_page.webspace_tabs.webspace', 'sulu');
+    expect(webspaceTabs.find('Tabs').at(0).prop('childrenProps'))
+        .toEqual(expect.objectContaining({webspace: webspace1}));
+    expect(webspaceTabs.find('WebspaceSelect').prop('value')).toEqual('sulu');
 });
