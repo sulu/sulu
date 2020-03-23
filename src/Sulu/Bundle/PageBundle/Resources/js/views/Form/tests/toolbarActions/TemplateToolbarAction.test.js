@@ -43,7 +43,7 @@ jest.mock('sulu-admin-bundle/views', () => ({
 }));
 
 jest.mock('../../../../stores/webspaceStore', () => ({
-    loadWebspace: jest.fn(),
+    getWebspace: jest.fn(),
 }));
 
 function createTemplateToolbarAction(options = {}) {
@@ -125,12 +125,11 @@ test('Set the first value as default if nothing is given', () => {
         },
     };
 
-    const webspacePromise = Promise.resolve({
+    webspaceStore.getWebspace.mockReturnValue({
         defaultTemplates: {
             page: 'homepage',
         },
     });
-    webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
 
     const toolbarItemConfig = templateToolbarAction.getToolbarItemConfig();
     if (!toolbarItemConfig) {
@@ -143,10 +142,8 @@ test('Set the first value as default if nothing is given', () => {
         );
     }
 
-    return webspacePromise.then(() => {
-        templateToolbarAction.getToolbarItemConfig();
-        expect(templateToolbarAction.resourceFormStore.setType).toBeCalledWith('homepage');
-    });
+    templateToolbarAction.getToolbarItemConfig();
+    expect(templateToolbarAction.resourceFormStore.setType).toBeCalledWith('homepage');
 });
 
 test('Change the type of the FormStore when another type is selected', () => {

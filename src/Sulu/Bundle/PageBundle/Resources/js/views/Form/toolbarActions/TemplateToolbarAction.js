@@ -1,6 +1,6 @@
 // @flow
 import jexl from 'jexl';
-import {action, computed, observable} from 'mobx';
+import {computed, observable} from 'mobx';
 import {AbstractFormToolbarAction} from 'sulu-admin-bundle/views';
 import type {ToolbarItemConfig} from 'sulu-admin-bundle/types';
 import webspaceStore from '../../../stores/webspaceStore';
@@ -10,14 +10,7 @@ export default class TemplateToolbarAction extends AbstractFormToolbarAction {
     @observable webspace: ?Webspace = undefined;
 
     @computed get defaultTemplate(): ?string {
-        if (!this.webspace) {
-            webspaceStore.loadWebspace(this.router.attributes.webspace).then(action((webspace) => {
-                this.webspace = webspace;
-            }));
-            return undefined;
-        }
-
-        return this.webspace.defaultTemplates.page;
+        return webspaceStore.getWebspace(this.router.attributes.webspace).defaultTemplates.page;
     }
 
     getToolbarItemConfig(): ?ToolbarItemConfig {
