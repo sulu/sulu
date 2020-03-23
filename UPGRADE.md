@@ -2,6 +2,26 @@
 
 ## release/2.0
 
+### Deprecation of localizationStore method
+
+The `loadLocalizations` method from the `localizationStore` has been deprecated. Use the `localizations` synchronous 
+property instead.
+
+### Deprecation of webspaceStore methods
+
+The `loadWebspaces` method from the `webspaceStore` has been deprecated. Use the `grantedWebspaces` synchronous
+property instead.
+
+### Deprecation of LocalizationController
+
+The `LocalizationController` has been deprecated. The information is now delivered via `sulu_admin.localizations` config
+in the `admin/config` endpoint. 
+
+### Deprecation of WebspaceController
+
+The `WebspacesController` has been deprecated. The information is now delivered via `sulu_page.webspaces` config
+in the `admin/config` endpoint. 
+
 ### Add position to category medias
 
 Currently the category media sorting was not saved for this the following database update is needed:
