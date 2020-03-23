@@ -299,7 +299,11 @@ exports[`React and update preview when data is changed 1`] = `
 </div>
 `;
 
-exports[`Render button to start preview 1`] = `null`;
+exports[`Render button to start preview 1`] = `
+<button>
+  Start
+</button>
+`;
 
 exports[`Render correct preview 1`] = `
 <div

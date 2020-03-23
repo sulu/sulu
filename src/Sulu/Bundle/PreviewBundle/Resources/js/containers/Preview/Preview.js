@@ -10,7 +10,6 @@ import {Router} from 'sulu-admin-bundle/services';
 import {ResourceListStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import {webspaceStore} from 'sulu-page-bundle/stores';
-import type {Webspace} from 'sulu-page-bundle/types';
 import previewStyles from './preview.scss';
 import PreviewStore from './stores/PreviewStore';
 import type {PreviewMode} from './types';
@@ -38,9 +37,9 @@ class Preview extends React.Component<Props> {
     @observable selectedDeviceOption = this.availableDeviceOptions[0].value;
     @observable targetGroupsStore: ?ResourceListStore;
 
-    @observable previewStore: ?PreviewStore;
+    @observable previewStore: PreviewStore;
     @observable previewWindow: any;
-    @observable webspaceOptions: Array<Webspace> = [];
+    @observable webspaceOptions: Array<Object> = [];
     @observable reloadCounter: number = 0;
 
     typeDisposer: () => mixed;
@@ -64,23 +63,21 @@ class Preview extends React.Component<Props> {
             this.targetGroupsStore = targetGroupsStore;
         }
 
-        webspaceStore.loadWebspaces().then(action((webspaces) => {
-            this.webspaceOptions = webspaces.map((webspace) => ({
-                label: webspace.name,
-                value: webspace.key,
-            }));
-
-            this.previewStore = new PreviewStore(
-                formStore.resourceKey,
-                formStore.id,
-                locale,
-                webspace || this.webspaceOptions[0].value
-            );
-
-            if (Preview.mode === 'auto') {
-                this.startPreview();
-            }
+        this.webspaceOptions = webspaceStore.grantedWebspaces.map((webspace): Object => ({
+            label: webspace.name,
+            value: webspace.key,
         }));
+
+        this.previewStore = new PreviewStore(
+            formStore.resourceKey,
+            formStore.id,
+            locale,
+            webspace || this.webspaceOptions[0].value
+        );
+
+        if (Preview.mode === 'auto') {
+            this.startPreview();
+        }
     }
 
     @action setStarted = (started: boolean) => {
@@ -93,10 +90,6 @@ class Preview extends React.Component<Props> {
         const {
             formStore,
         } = this.props;
-
-        if (!previewStore) {
-            throw new Error('The preview cannot be started if the "PreviewStore" has not been initialized yet.');
-        }
 
         previewStore.start();
 
@@ -125,10 +118,6 @@ class Preview extends React.Component<Props> {
             }
         );
 
-        if (!previewStore) {
-            throw new Error('The preview cannot be updated if the "PreviewStore" has not been initialized yet.');
-        }
-
         this.typeDisposer = reaction(
             () => toJS(formStore.type),
             (type) => {
@@ -139,11 +128,6 @@ class Preview extends React.Component<Props> {
 
     updatePreview = debounce((data: Object) => {
         const {previewStore} = this;
-
-        if (!previewStore) {
-            throw new Error('The preview cannot be updated if the "PreviewStore has not been initialized yet."');
-        }
-
         previewStore.update(data).then(this.setContent);
     }, Preview.debounceDelay);
 
@@ -173,10 +157,7 @@ class Preview extends React.Component<Props> {
         }
 
         this.updatePreview.clear();
-
-        if (this.previewStore) {
-            this.previewStore.stop();
-        }
+        this.previewStore.stop();
     }
 
     getPreviewDocument = (): ?Document => {
@@ -208,24 +189,13 @@ class Preview extends React.Component<Props> {
     };
 
     @action handleWebspaceChange = (webspace: string) => {
-        const {previewStore} = this;
-
-        if (!previewStore) {
-            throw new Error('The preview cannot be updated if the "PreviewStore has not been initialized yet."');
-        }
-
-        previewStore.setWebspace(webspace);
+        this.previewStore.setWebspace(webspace);
     };
 
     handleTargetGroupChange = (targetGroupId: number) => {
-        const {previewStore} = this;
         const {formStore} = this.props;
 
-        if (!previewStore) {
-            throw new Error('The preview cannot be updated if the "PreviewStore has not been initialized yet."');
-        }
-
-        previewStore.setTargetGroup(targetGroupId);
+        this.previewStore.setTargetGroup(targetGroupId);
         this.updatePreview(toJS(formStore.data));
     };
 
@@ -241,25 +211,17 @@ class Preview extends React.Component<Props> {
     };
 
     @action handlePreviewWindowClick = () => {
-        const {previewStore} = this;
-
-        if (!previewStore) {
-            throw new Error('The preview cannot be updated if the "PreviewStore has not been initialized yet."');
-        }
-
-        this.previewWindow = window.open(previewStore.renderRoute);
+        this.previewWindow = window.open(this.previewStore.renderRoute);
         this.previewWindow.addEventListener('beforeunload', action(() => {
             this.previewWindow = undefined;
         }));
     };
 
     render() {
-        const {previewStore} = this;
-
         const {router} = this.props;
         const {previewWebspaceChooser = true} = router.route.options;
 
-        if (this.previewWindow || !previewStore || (this.targetGroupsStore && this.targetGroupsStore.loading)) {
+        if (this.previewWindow || (this.targetGroupsStore && this.targetGroupsStore.loading)) {
             return null;
         }
 
@@ -276,7 +238,7 @@ class Preview extends React.Component<Props> {
 
         return (
             <div className={containerClass}>
-                {previewStore.starting
+                {this.previewStore.starting
                     ? <div className={previewStyles.loaderContainer}>
                         <Loader />
                     </div>
@@ -286,7 +248,7 @@ class Preview extends React.Component<Props> {
                                 className={previewStyles.iframe}
                                 key={this.reloadCounter}
                                 ref={this.setIframe}
-                                src={previewStore.renderRoute}
+                                src={this.previewStore.renderRoute}
                             />
                         </div>
                     </div>
@@ -308,7 +270,7 @@ class Preview extends React.Component<Props> {
                                 icon="su-webspace"
                                 onChange={this.handleWebspaceChange}
                                 options={this.webspaceOptions}
-                                value={previewStore.webspace}
+                                value={this.previewStore.webspace}
                             />
                         }
                         {!!this.targetGroupsStore &&
