@@ -1,97 +1,183 @@
 // @flow
-import {ResourceRequester} from 'sulu-admin-bundle/services';
-import userStore from 'sulu-admin-bundle/stores/userStore';
+import log from 'loglevel';
 import webspaceStore from '../webspaceStore';
 
-jest.mock('sulu-admin-bundle/stores/userStore', () => ({
-    user: undefined,
-}));
-
-jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
-    getList: jest.fn().mockReturnValue({
-        then: jest.fn(),
-    }),
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
 }));
 
 beforeEach(() => {
-    webspaceStore.clear();
+    webspaceStore.setWebspaces([]);
 });
 
-test('Should fail if no user is logged in', () => {
-    expect(() => webspaceStore.loadWebspaces()).toThrow(/user must be logged in /);
-});
-
-test('Load webspaces', () => {
-    userStore.user = {
-        id: 1,
-        locale: 'de',
-        settings: {},
-        username: 'test',
-    };
-
-    const response = {
-        _embedded: {
-            webspaces: [
-                {
-                    name: 'sulu',
-                    key: 'sulu',
-                },
-                {
-                    name: 'Sulu Blog',
-                    key: 'sulu_blog',
-                },
-            ],
+test('Load granted webspaces', () => {
+    const webspace1 = {
+        _permissions: {
+            view: true,
         },
+        name: 'sulu',
+        key: 'sulu',
+        allLocalizations: [],
+        customUrls: [],
+        defaultTemplates: {},
+        localizations: [],
+        navigations: [],
+        portalInformation: [],
+        resourceLocatorStrategy: {inputType: 'leaf'},
+        urls: [],
     };
 
-    const promise = Promise.resolve(response);
+    const webspace2 = {
+        _permissions: {
+            view: false,
+        },
+        name: 'Sulu Blog',
+        key: 'sulu_blog',
+        allLocalizations: [],
+        customUrls: [],
+        defaultTemplates: {},
+        localizations: [],
+        navigations: [],
+        portalInformation: [],
+        resourceLocatorStrategy: {inputType: 'leaf'},
+        urls: [],
+    };
 
-    ResourceRequester.getList.mockReturnValue(promise);
+    const webspaces = [webspace1, webspace2];
+
+    webspaceStore.setWebspaces(webspaces);
+
     const webspacePromise = webspaceStore.loadWebspaces();
 
-    expect(ResourceRequester.getList).toBeCalledWith('webspaces', {locale: 'de'});
-
     return webspacePromise.then((webspaces) => {
-        // check if promise have been cached
-        expect(webspaceStore.webspacePromise).toEqual(promise);
-        expect(webspaces).toBe(response._embedded.webspaces);
+        expect(log.warn).toBeCalled();
+        expect(webspaces).toEqual([webspace1]);
     });
 });
 
 test('Load webspace with given key', () => {
-    userStore.user = {
-        id: 1,
-        locale: 'en',
-        settings: {},
-        username: 'test',
-    };
-
-    const response = {
-        _embedded: {
-            webspaces: [
-                {
-                    name: 'sulu',
-                    key: 'sulu',
-                },
-                {
-                    name: 'Sulu Blog',
-                    key: 'sulu_blog',
-                },
-            ],
+    const webspace1 = {
+        _permissions: {
+            view: true,
         },
+        name: 'sulu',
+        key: 'sulu',
+        allLocalizations: [],
+        customUrls: [],
+        defaultTemplates: {},
+        localizations: [],
+        navigations: [],
+        portalInformation: [],
+        resourceLocatorStrategy: {inputType: 'leaf'},
+        urls: [],
     };
 
-    const promise = Promise.resolve(response);
+    const webspace2 = {
+        _permissions: {
+            view: false,
+        },
+        name: 'Sulu Blog',
+        key: 'sulu_blog',
+        allLocalizations: [],
+        customUrls: [],
+        defaultTemplates: {},
+        localizations: [],
+        navigations: [],
+        portalInformation: [],
+        resourceLocatorStrategy: {inputType: 'leaf'},
+        urls: [],
+    };
 
-    ResourceRequester.getList.mockReturnValue(promise);
+    const webspaces = [webspace1, webspace2];
+
+    webspaceStore.setWebspaces(webspaces);
+
     const webspacePromise = webspaceStore.loadWebspace('sulu');
 
-    expect(ResourceRequester.getList).toBeCalledWith('webspaces', {locale: 'en'});
-
     return webspacePromise.then((webspace) => {
-        // check if promise have been cached
-        expect(webspaceStore.webspacePromise).toEqual(promise);
-        expect(webspace.name).toBe(response._embedded.webspaces[0].name);
-        expect(webspace.key).toBe(response._embedded.webspaces[0].key);
+        expect(log.warn).toBeCalled();
+        expect(webspace).toEqual(webspace1);
     });
+});
+
+test('Get granted webspaces', () => {
+    const webspace1 = {
+        _permissions: {
+            view: true,
+        },
+        name: 'sulu',
+        key: 'sulu',
+        allLocalizations: [],
+        customUrls: [],
+        defaultTemplates: {},
+        localizations: [],
+        navigations: [],
+        portalInformation: [],
+        resourceLocatorStrategy: {inputType: 'leaf'},
+        urls: [],
+    };
+
+    const webspace2 = {
+        _permissions: {
+            view: false,
+        },
+        name: 'Sulu Blog',
+        key: 'sulu_blog',
+        allLocalizations: [],
+        customUrls: [],
+        defaultTemplates: {},
+        localizations: [],
+        navigations: [],
+        portalInformation: [],
+        resourceLocatorStrategy: {inputType: 'leaf'},
+        urls: [],
+    };
+
+    const webspaces = [webspace1, webspace2];
+
+    webspaceStore.setWebspaces(webspaces);
+
+    expect(webspaceStore.grantedWebspaces).toEqual([webspace1]);
+    expect(log.warn).not.toBeCalled();
+});
+
+test('Get webspace with given key', () => {
+    const webspace1 = {
+        _permissions: {
+            view: true,
+        },
+        name: 'sulu',
+        key: 'sulu',
+        allLocalizations: [],
+        customUrls: [],
+        defaultTemplates: {},
+        localizations: [],
+        navigations: [],
+        portalInformation: [],
+        resourceLocatorStrategy: {inputType: 'leaf'},
+        urls: [],
+    };
+
+    const webspace2 = {
+        _permissions: {
+            view: false,
+        },
+        name: 'Sulu Blog',
+        key: 'sulu_blog',
+        allLocalizations: [],
+        customUrls: [],
+        defaultTemplates: {},
+        localizations: [],
+        navigations: [],
+        portalInformation: [],
+        resourceLocatorStrategy: {inputType: 'leaf'},
+        urls: [],
+    };
+
+    const webspaces = [webspace1, webspace2];
+
+    webspaceStore.setWebspaces(webspaces);
+
+    expect(webspaceStore.getWebspace('sulu')).toEqual(webspace1);
+    expect(log.warn).not.toBeCalled();
 });

@@ -1,43 +1,49 @@
 // @flow
-import {ResourceRequester} from 'sulu-admin-bundle/services';
-import {userStore} from 'sulu-admin-bundle/stores';
+import {computed, observable} from 'mobx';
+import log from 'loglevel';
 import type {Webspace} from './types';
 
 class WebspaceStore {
-    webspacePromise: ?Promise<Object>;
+    @observable allWebspaces: Array<Webspace>;
 
-    clear() {
-        this.webspacePromise = undefined;
+    setWebspaces(webspaces: Array<Webspace>) {
+        this.allWebspaces = webspaces;
     }
 
-    sendRequest(): Promise<Object> {
-        if (!userStore.user) {
-            throw new Error('A user must be logged in to load the webspaces with the correct locale');
-        }
-
-        if (!this.webspacePromise) {
-            this.webspacePromise = ResourceRequester.getList('webspaces', {locale: userStore.user.locale});
-        }
-
-        return this.webspacePromise;
-    }
-
-    loadWebspaces(): Promise<Array<Webspace>> {
-        return this.sendRequest().then((response: Object) => {
-            return response._embedded.webspaces;
+    @computed get grantedWebspaces(): Array<Webspace> {
+        return this.allWebspaces.filter((webspace) => {
+            return webspace._permissions.view === true;
         });
     }
 
-    loadWebspace(webspaceKey: string): Promise<Webspace> {
-        return this.sendRequest().then((response: Object) => {
-            for (const webspace of response._embedded.webspaces) {
-                if (webspace.key === webspaceKey) {
-                    return webspace;
-                }
-            }
+    getWebspace(webspaceKey: string): Webspace {
+        const webspace = this.allWebspaces.find((webspace) => webspace.key === webspaceKey);
 
+        if (!webspace) {
             throw new Error('Webspace "' + webspaceKey + '" not found');
-        });
+        }
+
+        return webspace;
+    }
+
+    // @deprecated
+    loadWebspaces(): Promise<Array<Webspace>> {
+        log.warn(
+            'The "loadWebspaces" method is deprecated sind 2.1 and will be removed. ' +
+            'Use the "grantedWebspaces" property instead.'
+        );
+
+        return Promise.resolve(this.grantedWebspaces);
+    }
+
+    // @deprecated
+    loadWebspace(webspaceKey: string): Promise<Webspace> {
+        log.warn(
+            'The "loadWebspace" method is deprecated sind 2.1 and will be removed. ' +
+            'Use the "getWebspace" method instead.'
+        );
+
+        return Promise.resolve(this.getWebspace(webspaceKey));
     }
 }
 

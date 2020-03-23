@@ -8,6 +8,7 @@ import {teaserProviderRegistry} from './containers/TeaserSelection';
 import PageSettingsNavigationSelect from './containers/Form/fields/PageSettingsNavigationSelect';
 import PageSettingsShadowLocaleSelect from './containers/Form/fields/PageSettingsShadowLocaleSelect';
 import PageSettingsVersions from './containers/Form/fields/PageSettingsVersions';
+import webspaceStore from './stores/webspaceStore';
 import {loadResourceLocatorInputTypeByWebspace} from './utils/Webspace';
 import TemplateToolbarAction from './views/Form/toolbarActions/TemplateToolbarAction';
 import PageTabs from './views/PageTabs';
@@ -15,6 +16,9 @@ import PageList from './views/PageList';
 import WebspaceTabs from './views/WebspaceTabs';
 
 initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boolean) => {
+    // $FlowFixMe
+    webspaceStore.setWebspaces(Object.values(config.webspaces));
+
     if (initialized) {
         return;
     }
