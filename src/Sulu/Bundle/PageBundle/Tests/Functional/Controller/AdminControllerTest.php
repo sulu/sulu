@@ -73,6 +73,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('footer', $pageConfig->webspaces->destination_io->navigations[1]->key);
         $this->assertEquals('leaf', $pageConfig->webspaces->destination_io->resourceLocatorStrategy->inputType);
         $this->assertEquals([], $pageConfig->webspaces->destination_io->customUrls);
+        $this->assertEquals([], $pageConfig->webspaces->destination_io->_permissions);
     }
 
     public function testPagesListMetadataAction()

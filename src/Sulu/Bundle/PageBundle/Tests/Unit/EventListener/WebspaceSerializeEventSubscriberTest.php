@@ -21,6 +21,8 @@ use Prophecy\Argument;
 use Sulu\Bundle\PageBundle\EventListener\WebspaceSerializeEventSubscriber;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -29,24 +31,65 @@ use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Url\WebspaceUrlProviderInterface;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class WebspaceSerializeEventSubscriberTest extends TestCase
 {
-    public function testGetSubscribedEvents()
+    /**
+     * @var WebspaceUrlProviderInterface
+     */
+    private $webspaceUrlProvider;
+
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
+     * @var ResourceLocatorStrategyPoolInterface
+     */
+    private $resourceLocatorStrategyPool;
+
+    /**
+     * @var AccessControlManagerInterface
+     */
+    private $accessControlManager;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
+     * @var WebspaceSerializeEventSubscriber
+     */
+    private $webspaceSerializeEventSubscriber;
+
+    public function setUp(): void
     {
-        $webspaceUrlProvider = $this->prophesize(WebspaceUrlProviderInterface::class);
-        $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
-        $resourceLocatorStrategyPool = $this->prophesize(ResourceLocatorStrategyPoolInterface::class);
-        $subscriber = new WebspaceSerializeEventSubscriber(
-            $webspaceManager->reveal(),
-            $webspaceUrlProvider->reveal(),
-            $resourceLocatorStrategyPool->reveal(),
+        $this->webspaceUrlProvider = $this->prophesize(WebspaceUrlProviderInterface::class);
+        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $this->resourceLocatorStrategyPool = $this->prophesize(ResourceLocatorStrategyPoolInterface::class);
+        $this->accessControlManager = $this->prophesize(AccessControlManagerInterface::class);
+        $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
+
+        $this->webspaceSerializeEventSubscriber = new WebspaceSerializeEventSubscriber(
+            $this->webspaceManager->reveal(),
+            $this->webspaceUrlProvider->reveal(),
+            $this->resourceLocatorStrategyPool->reveal(),
+            $this->accessControlManager->reveal(),
+            $this->tokenStorage->reveal(),
             'prod'
         );
+    }
 
-        $events = $subscriber->getSubscribedEvents();
+    public function testGetSubscribedEvents()
+    {
+        $events = $this->webspaceSerializeEventSubscriber->getSubscribedEvents();
 
-        $reflection = new \ReflectionClass(get_class($subscriber));
+        $reflection = new \ReflectionClass(get_class($this->webspaceSerializeEventSubscriber));
 
         foreach ($events as $event) {
             $this->assertTrue($reflection->hasMethod($event['method']));
@@ -60,16 +103,6 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
 
     public function testAppendPortalInformation()
     {
-        $webspaceUrlProvider = $this->prophesize(WebspaceUrlProviderInterface::class);
-        $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
-        $resourceLocatorStrategyPool = $this->prophesize(ResourceLocatorStrategyPoolInterface::class);
-        $subscriber = new WebspaceSerializeEventSubscriber(
-            $webspaceManager->reveal(),
-            $webspaceUrlProvider->reveal(),
-            $resourceLocatorStrategyPool->reveal(),
-            'prod'
-        );
-
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getKey()->willReturn('sulu_io');
 
@@ -91,13 +124,16 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
             '[{}, {}]'
         )->shouldBeCalled();
 
-        $webspaceManager->getPortalInformationsByWebspaceKey('prod', 'sulu_io')->willReturn($portalInformation);
+        $this->webspaceManager->getPortalInformationsByWebspaceKey('prod', 'sulu_io')->willReturn($portalInformation);
 
-        $reflection = new \ReflectionClass(get_class($subscriber));
+        $reflection = new \ReflectionClass(get_class($this->webspaceSerializeEventSubscriber));
         $method = $reflection->getMethod('appendPortalInformation');
         $method->setAccessible(true);
 
-        $method->invokeArgs($subscriber, [$webspace->reveal(), $context->reveal(), $visitor->reveal()]);
+        $method->invokeArgs(
+            $this->webspaceSerializeEventSubscriber,
+            [$webspace->reveal(), $context->reveal(), $visitor->reveal()]
+        );
     }
 
     public function testAppendUrls()
@@ -109,18 +145,8 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
             new Url('*.sulu.io'),
         ];
 
-        $webspaceUrlProvider = $this->prophesize(WebspaceUrlProviderInterface::class);
-        $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
-        $resourceLocatorStrategyPool = $this->prophesize(ResourceLocatorStrategyPoolInterface::class);
-        $subscriber = new WebspaceSerializeEventSubscriber(
-            $webspaceManager->reveal(),
-            $webspaceUrlProvider->reveal(),
-            $resourceLocatorStrategyPool->reveal(),
-            'prod'
-        );
-
         $webspace = $this->prophesize(Webspace::class);
-        $webspaceUrlProvider->getUrls($webspace->reveal(), 'prod')->willReturn($urls);
+        $this->webspaceUrlProvider->getUrls($webspace->reveal(), 'prod')->willReturn($urls);
 
         $context = $this->prophesize(Context::class);
         $visitor = $this->prophesize(SerializationVisitorInterface::class);
@@ -135,11 +161,14 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
             $serialzedData
         )->shouldBeCalled();
 
-        $reflection = new \ReflectionClass(get_class($subscriber));
+        $reflection = new \ReflectionClass(get_class($this->webspaceSerializeEventSubscriber));
         $method = $reflection->getMethod('appendUrls');
         $method->setAccessible(true);
 
-        $method->invokeArgs($subscriber, [$webspace->reveal(), $context->reveal(), $visitor->reveal()]);
+        $method->invokeArgs(
+            $this->webspaceSerializeEventSubscriber,
+            [$webspace->reveal(), $context->reveal(), $visitor->reveal()]
+        );
     }
 
     public function testAppendCustomUrls()
@@ -173,16 +202,6 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
             )
         );
 
-        $webspaceUrlProvider = $this->prophesize(WebspaceUrlProviderInterface::class);
-        $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
-        $resourceLocatorStrategyPool = $this->prophesize(ResourceLocatorStrategyPoolInterface::class);
-        $subscriber = new WebspaceSerializeEventSubscriber(
-            $webspaceManager->reveal(),
-            $webspaceUrlProvider->reveal(),
-            $resourceLocatorStrategyPool->reveal(),
-            'prod'
-        );
-
         $context = $this->prophesize(Context::class);
         $navigator = $this->prophesize(GraphNavigatorInterface::class);
         $context->getNavigator()->willReturn($navigator->reveal());
@@ -207,10 +226,55 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
             $serialzedData
         )->shouldBeCalled();
 
-        $reflection = new \ReflectionClass(get_class($subscriber));
+        $reflection = new \ReflectionClass(get_class($this->webspaceSerializeEventSubscriber));
         $method = $reflection->getMethod('appendCustomUrls');
         $method->setAccessible(true);
 
-        $method->invokeArgs($subscriber, [$webspace->reveal(), $context->reveal(), $visitor->reveal()]);
+        $method->invokeArgs(
+            $this->webspaceSerializeEventSubscriber,
+            [$webspace->reveal(), $context->reveal(), $visitor->reveal()]
+        );
+    }
+
+    public function testAppendPermissions()
+    {
+        $webspace = $this->prophesize(Webspace::class);
+        $webspace->getKey()->willReturn('sulu');
+
+        $permissions = ['view' => true, 'add' => false, 'edit' => true];
+
+        $token = $this->prophesize(TokenInterface::class);
+        $user = $this->prophesize(UserInterface::class);
+        $token->getUser()->willReturn($user->reveal());
+        $this->tokenStorage->getToken()->willReturn($token->reveal());
+
+        $this->accessControlManager
+             ->getUserPermissions(
+                 new SecurityCondition('sulu.webspaces.sulu'),
+                 $user->reveal()
+             )
+             ->willReturn($permissions);
+
+        $context = $this->prophesize(Context::class);
+        $visitor = $this->prophesize(SerializationVisitorInterface::class);
+        $graphNavigator = $this->prophesize(GraphNavigatorInterface::class);
+        $context->getNavigator()->willReturn($graphNavigator->reveal());
+
+        $serialzedData = '{"view": true, "add": false, "edit": true}';
+        $graphNavigator->accept($permissions)->willReturn($serialzedData);
+
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', '_permissions', $serialzedData),
+            $serialzedData
+        )->shouldBeCalled();
+
+        $reflection = new \ReflectionClass(get_class($this->webspaceSerializeEventSubscriber));
+        $method = $reflection->getMethod('appendPermissions');
+        $method->setAccessible(true);
+
+        $method->invokeArgs(
+            $this->webspaceSerializeEventSubscriber,
+            [$webspace->reveal(), $context->reveal(), $visitor->reveal()]
+        );
     }
 }
