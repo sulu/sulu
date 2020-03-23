@@ -1,7 +1,6 @@
 // @flow
-import {extendObservable} from 'mobx';
-import pathToRegexp from 'path-to-regexp';
-import type {Route, RouteConfig, RouteMap} from '../types';
+import type {Route as RouteType, RouteConfig, RouteMap} from '../types';
+import Route from '../Route';
 
 class RouteRegistry {
     routes: RouteMap;
@@ -20,20 +19,7 @@ class RouteRegistry {
                 throw new Error('The name "' + routeConfig.name + '" has already been used for another route');
             }
 
-            const route = extendObservable({}, {
-                ...routeConfig,
-                children: [],
-                parent: undefined,
-                get availableAttributes() {
-                    const attributes = [];
-                    pathToRegexp(this.path, attributes);
-
-                    return attributes.map((attribute) => attribute.name);
-                },
-                get regexp() {
-                    return pathToRegexp(this.path);
-                },
-            });
+            const route = new Route(routeConfig);
             this.routes[route.name] = route;
         });
 
@@ -48,7 +34,7 @@ class RouteRegistry {
         });
     }
 
-    get(name: string): Route {
+    get(name: string): RouteType {
         if (!(name in this.routes)) {
             throw new Error('The route with the name "' + name + '" does not exist');
         }

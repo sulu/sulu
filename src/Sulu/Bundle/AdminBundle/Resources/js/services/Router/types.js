@@ -1,15 +1,15 @@
 // @flow
 export type RouteConfig = {|
-    attributeDefaults: AttributeMap,
+    attributeDefaults?: AttributeMap,
     name: string,
-    options: Object,
+    options?: Object,
     parent?: string,
     path: string,
-    rerenderAttributes: Array<string>,
-    view: string,
+    rerenderAttributes?: Array<string>,
+    type: string,
 |};
 
-export type Route = {|
+export interface Route {
     attributeDefaults: AttributeMap,
     availableAttributes: Array<string>,
     children: Array<Route>,
@@ -20,7 +20,7 @@ export type Route = {|
     regexp: RegExp,
     rerenderAttributes: Array<string>,
     type: string,
-|};
+}
 
 export type AttributeMap = {[string]: string};
 
