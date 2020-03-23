@@ -74,6 +74,8 @@ $textEditorUnpublishedLinkColor: $gold;
 
     .ck.ck-editor__top {
         margin-bottom: 10px;
+        position: sticky;
+        top: -$viewPadding;
 
         .ck.ck-toolbar {
             border-radius: $textEditorBorderRadius !important;
@@ -107,7 +109,6 @@ $textEditorUnpublishedLinkColor: $gold;
             border-color: $textEditorBackgroundColor !important;
             line-height: 20px;
             min-height: 100px;
-            max-height: calc(100vh - $toolbarHeight - $snackbarHeight - $tabMenuHeight - $viewPadding - 8px);
         }
 
         .ck-widget.table {
