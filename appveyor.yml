@@ -9,11 +9,10 @@ environment:
     MAILER_URL: null://localhost
     SULU_ADMIN_EMAIL:
     PHPCR_TRANSPORT: doctrinedbal
-    DATABASE_URL: mysql://root:root@127.0.0.1/sulu_test?serverVersion=5.7
+    DATABASE_URL: sqlite:///c:/sulu_test.db?mode=0666
     DATABASE_CHARSET: utf8mb4
     DATABASE_COLLATE: utf8mb4_unicode_ci
     SYMFONY_DEPRECATIONS_HELPER: weak
-    MYSQL_VERSION: 8.0.17
     NODEJS_VERSION: "12"
     matrix:
         - PHP_VERSION: 7.2.5
@@ -35,10 +34,6 @@ install:
     - ps: Set-Service wuauserv -StartupType Manual
     - ps: Install-Product node $env:NODEJS_VERSION
 
-    - choco install mysql --version %MYSQL_VERSION%
-    - cd C:\tools\mysql\current\bin
-    - mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';"
-
     - IF NOT EXIST C:\tools\composer.phar (
           cd C:\tools
           && appveyor DownloadFile https://getcomposer.org/composer.phar
@@ -57,7 +52,6 @@ install:
     - echo extension=php_mbstring.dll >> php.ini
     - echo extension=php_gd2.dll >> php.ini
     - echo extension=php_intl.dll >> php.ini
-    - echo extension=php_pdo_mysql.dll >> php.ini
     - echo extension=php_pdo_sqlite.dll >> php.ini
     - echo extension=php_fileinfo.dll >> php.ini
 

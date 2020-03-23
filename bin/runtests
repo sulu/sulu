@@ -217,7 +217,7 @@ function init_dbal()
 {
     write_info('Creating database');
     exec_sf_cmd(
-        'doctrine:database:create',
+        'doctrine:database:create --if-not-exists',
         false,
         false
     );

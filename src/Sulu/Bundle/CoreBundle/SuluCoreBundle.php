@@ -18,6 +18,7 @@ use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterContentTypesComp
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterLocalizationProvidersPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RemoveForeignContextServicesPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\ReplacersCompilerPass;
+use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\SQLiteCompilerPass;
 use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -30,6 +31,7 @@ class SuluCoreBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new RegisterContentTypesCompilerPass());
+        $container->addCompilerPass(new SQLiteCompilerPass());
         $container->addCompilerPass(new RegisterLocalizationProvidersPass());
         $container->addCompilerPass(new RemoveForeignContextServicesPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1024);
         $container->addCompilerPass(new ReplacersCompilerPass(__DIR__ . '/DataFixtures/replacers.xml'));
