@@ -5,10 +5,10 @@ import type {AttributeMap, Route as RouteType, RouteConfig} from './types';
 
 export default class Route implements RouteType {
     attributeDefaults: AttributeMap = {};
-    children: Array<Route> = [];
+    children: Array<RouteType> = [];
     name: string;
     options: Object = {};
-    parent: ?Route = undefined;
+    parent: ?RouteType = undefined;
     path: string;
     rerenderAttributes: Array<string> = [];
     type: string;
@@ -22,16 +22,8 @@ export default class Route implements RouteType {
             this.attributeDefaults = config.attributeDefaults;
         }
 
-        if (config.children){
-            this.children = config.children;
-        }
-
         if (config.options) {
             this.options = config.options;
-        }
-
-        if (config.parent){
-            this.parent = config.parent;
         }
 
         if (config.rerenderAttributes) {

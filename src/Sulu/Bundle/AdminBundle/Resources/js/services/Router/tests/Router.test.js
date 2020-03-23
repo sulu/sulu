@@ -20,7 +20,6 @@ jest.mock('../registries/routeRegistry', () => {
 test('Navigate to route using state', () => {
     routeRegistry.getAll.mockReturnValue({
         page: new Route({
-            attributeDefaults: {},
             name: 'page',
             options: {
                 type: 'page',
@@ -46,7 +45,6 @@ test('Navigate to route using state', () => {
 test('Reset route using the reset method', () => {
     routeRegistry.getAll.mockReturnValue({
         page: new Route({
-            attributeDefaults: {},
             name: 'page',
             path: '/pages',
             options: {
@@ -70,7 +68,6 @@ test('Redirect to route using state', () => {
             name: 'test',
             type: 'test',
             path: '/test',
-            attributeDefaults: {},
         }),
         page: new Route({
             name: 'page',
@@ -79,7 +76,6 @@ test('Redirect to route using state', () => {
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
         }),
     });
 
@@ -106,7 +102,6 @@ test('Navigate to route with search parameters using state', () => {
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
         }),
     });
 
@@ -130,7 +125,6 @@ test('Navigate to route without parameters using state', () => {
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
-            attributeDefaults: {},
         }),
     });
 
@@ -288,7 +282,6 @@ test('Update boolean observable attribute on route change', () => {
             attributeDefaults: {
                 exclude: true,
             },
-            availableAttributes: [],
         }),
     });
 
@@ -317,7 +310,6 @@ test('Navigate to route using URL', () => {
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
         }),
     });
 
@@ -352,7 +344,6 @@ test('Navigate to route using URL with search parameters', () => {
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
         }),
     });
 
@@ -376,7 +367,6 @@ test('Navigate to route changing only parameters', () => {
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
-            attributeDefaults: {},
         }),
     });
 
@@ -396,7 +386,6 @@ test('Navigate to route by adding parameters', () => {
             name: 'page',
             type: 'form',
             path: '/pages/:uuid/:value?',
-            attributeDefaults: {},
         }),
     });
 
@@ -416,7 +405,6 @@ test('Navigate to route by removing parameters', () => {
             name: 'page',
             type: 'form',
             path: '/pages/:uuid/:value?',
-            attributeDefaults: {},
         }),
     });
 
@@ -436,8 +424,6 @@ test('Navigate to route changing only search parameters', () => {
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
-            attributeDefaults: {},
-            availableAttributes: ['uuid'],
         }),
     });
 
@@ -459,8 +445,6 @@ test('Navigate to route by adding search parameters', () => {
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
-            attributeDefaults: {},
-            availableAttributes: ['uuid'],
         }),
     });
 
@@ -482,7 +466,6 @@ test('Navigate to route by removing search parameters', () => {
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
-            attributeDefaults: {},
         }),
     });
 
@@ -504,13 +487,11 @@ test('Navigate to route and let history react', () => {
             name: 'home',
             type: 'home',
             path: '/',
-            attributeDefaults: {},
         }),
         page: new Route({
             name: 'page',
             type: 'page',
             path: '/page',
-            attributeDefaults: {},
         }),
     });
 
@@ -528,7 +509,6 @@ test('Do not navigate if all parameters are equal', () => {
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
-            attributeDefaults: {},
         }),
     });
 
@@ -549,7 +529,6 @@ test('Use current route from URL', () => {
             name: 'page',
             type: 'page',
             path: '/page',
-            attributeDefaults: {},
         }),
     });
 
@@ -567,7 +546,6 @@ test('Binding should update passed observable', () => {
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
         }),
     });
 
@@ -588,7 +566,6 @@ test('Binding should update state in router', () => {
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
         }),
     });
 
@@ -611,7 +588,6 @@ test('Binding should set default attribute', () => {
             name: 'page',
             type: 'page',
             path: '/page/:locale',
-            attributeDefaults: {},
         }),
     });
 
@@ -632,7 +608,6 @@ test('Binding should update URL with fixed attributes', () => {
             name: 'page',
             type: 'page',
             path: '/page/:uuid',
-            attributeDefaults: {},
         }),
     });
 
@@ -656,7 +631,6 @@ test('Binding should update URL with fixed attributes as string if not a number'
             name: 'page',
             type: 'page',
             path: '/page/:uuid',
-            attributeDefaults: {},
         }),
     });
 
@@ -680,7 +654,6 @@ test('Binding should update state in router with other default bindings', () => 
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
         }),
     });
 
@@ -705,7 +678,6 @@ test('Do not add parameter to URL if undefined', () => {
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
         }),
     });
 
@@ -725,7 +697,6 @@ test('Set state to undefined if parameter is removed from URL', () => {
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
         }),
     });
 
@@ -745,7 +716,6 @@ test('Bound query should update state to default value if removed from URL', () 
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
         }),
     });
 
@@ -765,7 +735,6 @@ test('Bound query should omit URL parameter if set to default value', () => {
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
         }),
     });
 
@@ -786,7 +755,6 @@ test('Bound query should initially not be set to undefined in URL', () => {
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
         }),
     });
 
@@ -806,7 +774,6 @@ test('Binding should be set to initial passed value from URL', () => {
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
         }),
     });
 
@@ -827,7 +794,6 @@ test('Binding should not be set to initial passed value from URL if values alrea
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
         }),
     });
 
@@ -852,7 +818,6 @@ test('Binding should not be updated if only data type changes', () => {
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
         }),
     });
 
@@ -882,33 +847,29 @@ test('Navigate to child route using state', () => {
         options: {
             resourceKey: 'snippet',
         },
-        attributeDefaults: {},
-        children: [],
     });
 
     const detailsRoute = new Route({
         name: 'sulu_snippet.form.details',
-        parent: formRoute,
         type: 'sulu_admin.form',
         path: '/snippets/:uuid/details',
         options: {
             tabTitle: 'Details',
         },
-        attributeDefaults: {},
     });
 
     const taxonomyRoute = new Route({
         name: 'sulu_snippet.form.taxonomy',
-        parent: formRoute,
         type: 'sulu_admin.form',
         path: '/snippets/:uuid/taxonomy',
         options: {
             tabTitle: 'Taxonomies',
         },
-        attributeDefaults: {},
     });
 
     formRoute.children = [detailsRoute, taxonomyRoute];
+    detailsRoute.parent = formRoute;
+    taxonomyRoute.parent = formRoute;
 
     routeRegistry.getAll.mockReturnValue({
         'sulu_snippet.form': formRoute,
@@ -945,30 +906,24 @@ test('Navigate to child route using URL', () => {
         options: {
             resourceKey: 'snippet',
         },
-        attributeDefaults: {},
-        children: [],
     });
 
     const detailsRoute = new Route({
         name: 'sulu_snippet.form.details',
-        parent: formRoute,
         type: 'sulu_admin.form',
         path: '/snippets/:uuid/details',
         options: {
             tabTitle: 'Details',
         },
-        attributeDefaults: {},
     });
 
     const taxonomyRoute = new Route({
         name: 'sulu_snippet.form.taxonomy',
-        parent: formRoute,
         type: 'sulu_admin.form',
         path: '/snippets/:uuid/taxonomy',
         options: {
             tabTitle: 'Taxonomies',
         },
-        attributeDefaults: {},
     });
 
     formRoute.children = [detailsRoute, taxonomyRoute];
@@ -1009,7 +964,6 @@ test('Navigating should store the old route information', () => {
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
         }),
         snippet: new Route({
             name: 'snippet',
@@ -1018,7 +972,6 @@ test('Navigating should store the old route information', () => {
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
         }),
     });
 
@@ -1087,7 +1040,6 @@ test('Restore should navigate to the given route with the stored data', () => {
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
         }),
         snippet: new Route({
             name: 'snippet',
@@ -1096,7 +1048,6 @@ test('Restore should navigate to the given route with the stored data', () => {
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
         }),
     });
 
@@ -1122,7 +1073,6 @@ test('Restore should navigate to the given route with passed data being merged',
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
         }),
         snippet: new Route({
             name: 'snippet',
@@ -1131,7 +1081,6 @@ test('Restore should navigate to the given route with passed data being merged',
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
         }),
     });
 
@@ -1158,7 +1107,6 @@ test('Restore should just navigate if no history is available', () => {
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
         }),
     });
 
@@ -1180,7 +1128,6 @@ test('Restore should not create a new history entry', () => {
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
         }),
     });
 

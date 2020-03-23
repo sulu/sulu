@@ -22,7 +22,7 @@ export interface Route {
     type: string,
 }
 
-export type AttributeMap = {[string]: string};
+export type AttributeMap = {[string]: boolean | number | string };
 
 export type RouteMap = {[string]: Route};
 
