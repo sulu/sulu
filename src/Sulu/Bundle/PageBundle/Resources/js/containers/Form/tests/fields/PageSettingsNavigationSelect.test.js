@@ -25,7 +25,7 @@ jest.mock('sulu-admin-bundle/utils', () => ({
 }));
 
 jest.mock('../../../../stores/webspaceStore', () => ({
-    loadWebspace: jest.fn(),
+    getWebspace: jest.fn(),
 }));
 
 test('Pass correct props to MultiSelect', () => {
@@ -37,13 +37,13 @@ test('Pass correct props to MultiSelect', () => {
         )
     );
 
-    const webspacePromise = Promise.resolve({
+    const webspace = {
         navigations: [
             {key: 'main', title: 'Main Navigation'},
             {key: 'footer', title: 'Footer Navigation'},
         ],
-    });
-    webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
+    };
+    webspaceStore.getWebspace.mockReturnValue(webspace);
 
     const pageSettingsNavigationSelect = shallow(
         <PageSettingsNavigationSelect
@@ -54,16 +54,14 @@ test('Pass correct props to MultiSelect', () => {
         />
     );
 
-    expect(webspaceStore.loadWebspace).toBeCalledWith('sulu_io');
+    expect(webspaceStore.getWebspace).toBeCalledWith('sulu_io');
 
-    return webspacePromise.then(() => {
-        expect(pageSettingsNavigationSelect.find('MultiSelect').prop('disabled')).toEqual(true);
-        expect(pageSettingsNavigationSelect.find('MultiSelect').prop('values')).toEqual(['footer']);
-        expect(pageSettingsNavigationSelect.find('Option').at(0).prop('children')).toEqual('Main Navigation');
-        expect(pageSettingsNavigationSelect.find('Option').at(0).prop('value')).toEqual('main');
-        expect(pageSettingsNavigationSelect.find('Option').at(1).prop('children')).toEqual('Footer Navigation');
-        expect(pageSettingsNavigationSelect.find('Option').at(1).prop('value')).toEqual('footer');
-    });
+    expect(pageSettingsNavigationSelect.find('MultiSelect').prop('disabled')).toEqual(true);
+    expect(pageSettingsNavigationSelect.find('MultiSelect').prop('values')).toEqual(['footer']);
+    expect(pageSettingsNavigationSelect.find('Option').at(0).prop('children')).toEqual('Main Navigation');
+    expect(pageSettingsNavigationSelect.find('Option').at(0).prop('value')).toEqual('main');
+    expect(pageSettingsNavigationSelect.find('Option').at(1).prop('children')).toEqual('Footer Navigation');
+    expect(pageSettingsNavigationSelect.find('Option').at(1).prop('value')).toEqual('footer');
 });
 
 test('Call onChange and onBlur if the value is changed', () => {
@@ -78,13 +76,13 @@ test('Call onChange and onBlur if the value is changed', () => {
         )
     );
 
-    const webspacePromise = Promise.resolve({
+    const webspace = {
         navigations: [
             {key: 'main', title: 'Main Navigation'},
             {key: 'footer', title: 'Footer Navigation'},
         ],
-    });
-    webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
+    };
+    webspaceStore.getWebspace.mockReturnValue(webspace);
 
     const pageSettingsNavigationSelect = shallow(
         <PageSettingsNavigationSelect
@@ -96,9 +94,7 @@ test('Call onChange and onBlur if the value is changed', () => {
         />
     );
 
-    return webspacePromise.then(() => {
-        pageSettingsNavigationSelect.find('MultiSelect').prop('onChange')(['footer', 'main']);
-        expect(changeSpy).toBeCalledWith(['footer', 'main']);
-        expect(finishSpy).toBeCalledWith();
-    });
+    pageSettingsNavigationSelect.find('MultiSelect').prop('onChange')(['footer', 'main']);
+    expect(changeSpy).toBeCalledWith(['footer', 'main']);
+    expect(finishSpy).toBeCalledWith();
 });

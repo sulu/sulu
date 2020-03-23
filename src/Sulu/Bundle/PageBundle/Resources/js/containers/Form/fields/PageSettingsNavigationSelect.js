@@ -1,24 +1,13 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {MultiSelect} from 'sulu-admin-bundle/components';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import {translate} from 'sulu-admin-bundle/utils';
 import webspaceStore from '../../../stores/webspaceStore';
-import type {Webspace} from '../../../stores/webspaceStore/types';
 
 @observer
 class PageSettingsNavigationSelect extends React.Component<FieldTypeProps<Array<string | number>>> {
-    @observable webspace: Webspace;
-
-    componentDidMount() {
-        const {formInspector} = this.props;
-        webspaceStore.loadWebspace(formInspector.options.webspace).then(action((webspace) => {
-            this.webspace = webspace;
-        }));
-    }
-
     handleChange = (value: Array<string | number>) => {
         const {onChange, onFinish} = this.props;
 
@@ -27,11 +16,7 @@ class PageSettingsNavigationSelect extends React.Component<FieldTypeProps<Array<
     };
 
     render() {
-        const {disabled, value} = this.props;
-
-        if (!this.webspace) {
-            return null;
-        }
+        const {disabled, formInspector, value} = this.props;
 
         return (
             <MultiSelect
@@ -41,7 +26,7 @@ class PageSettingsNavigationSelect extends React.Component<FieldTypeProps<Array<
                 onChange={this.handleChange}
                 values={value || []}
             >
-                {this.webspace.navigations.map(({key, title}) => (
+                {webspaceStore.getWebspace(formInspector.options.webspace).navigations.map(({key, title}) => (
                     <MultiSelect.Option key={key} value={key}>
                         {title}
                     </MultiSelect.Option>
