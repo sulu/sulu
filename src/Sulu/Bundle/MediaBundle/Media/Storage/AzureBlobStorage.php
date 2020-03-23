@@ -58,6 +58,8 @@ class AzureBlobStorage extends FlysystemStorage
     public function load(array $storageOptions)
     {
         $resource = parent::load($storageOptions);
+        // Azure Filesystem returns a not seekable resource
+        // Need converted to a seekable resource to allow get mimetype from it in the MediaImageExtractor
         $contents = stream_get_contents($resource);
 
         $stream = fopen('php://memory', 'r+');
