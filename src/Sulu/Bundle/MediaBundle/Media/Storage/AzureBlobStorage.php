@@ -50,6 +50,11 @@ class AzureBlobStorage extends FlysystemStorage
         $this->adapter = $filesystem->getAdapter();
     }
 
+    /**
+     * Azure Filesystem returns a not seekable resource.
+     *
+     * @inheritDoc
+     */
     public function load(array $storageOptions)
     {
         $resource = parent::load($storageOptions);
