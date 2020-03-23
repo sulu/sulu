@@ -1,7 +1,7 @@
 // @flow
 import updateRouterAttributesFromView from '../updateRouterAttributesFromView';
 import viewRegistry from '../registries/viewRegistry';
-import type {Route} from '../../../services/Router';
+import Route from '../../../services/Router/Route';
 
 jest.mock('../registries/viewRegistry', () => ({
     get: jest.fn(),
@@ -14,18 +14,11 @@ test('Return an empty object if the corresponding View has no getDerivedRouterAt
         }
     });
 
-    expect(updateRouterAttributesFromView({
-        attributeDefaults: {},
-        availableAttributes: [],
-        children: [],
+    expect(updateRouterAttributesFromView(new Route({
         name: 'test',
-        options: {},
         path: '/test',
-        parent: undefined,
-        regexp: new RegExp('^/test$'),
-        rerenderAttributes: [],
         type: 'test',
-    }, {})).toEqual({});
+    }), {})).toEqual({});
 });
 
 test('Return the attributes returned from the getDerivedRouterAttributes function', () => {
@@ -42,18 +35,11 @@ test('Return the attributes returned from the getDerivedRouterAttributes functio
         }
     });
 
-    expect(updateRouterAttributesFromView({
-        attributeDefaults: {},
-        availableAttributes: [],
-        children: [],
+    expect(updateRouterAttributesFromView(new Route({
         name: 'test',
-        options: {},
         path: '/test',
-        parent: undefined,
-        regexp: new RegExp('^/test$'),
-        rerenderAttributes: [],
         type: 'test',
-    }, {value3: 'test3'})).toEqual({value1: 'test1', value2: 'test2', value3: 'test3', routeName: 'test'});
+    }), {value3: 'test3'})).toEqual({value1: 'test1', value2: 'test2', value3: 'test3', routeName: 'test'});
 });
 
 test('Return the combined attributes from the current and parent getDerivedrouterAttributes function', () => {
@@ -84,44 +70,27 @@ test('Return the combined attributes from the current and parent getDerivedroute
         }
     });
 
-    const route1: Route = {
-        attributeDefaults: {},
-        availableAttributes: [],
-        children: [],
+    const route1 = new Route({
         name: 'test1',
-        options: {},
         path: '/test',
-        parent: undefined,
-        regexp: new RegExp('^/test$'),
-        rerenderAttributes: [],
         type: 'test1',
-    };
+    });
 
-    const route2: Route = {
-        attributeDefaults: {},
-        availableAttributes: [],
-        children: [],
+    const route2 = new Route({
         name: 'test2',
-        options: {},
         path: '/test',
-        parent: route1,
-        regexp: new RegExp('^/test$'),
-        rerenderAttributes: [],
         type: 'test2',
-    };
+    });
 
-    const route3: Route = {
-        attributeDefaults: {},
-        availableAttributes: [],
-        children: [],
+    route2.parent = route1;
+
+    const route3 = new Route({
         name: 'test3',
-        options: {},
         path: '/test',
-        parent: route2,
-        regexp: new RegExp('^/test$'),
-        rerenderAttributes: [],
         type: 'test3',
-    };
+    });
+
+    route3.parent = route2;
 
     expect(updateRouterAttributesFromView(route3, {value1: 'test1', value2: 'test2', value3: 'test3'}))
         .toEqual({

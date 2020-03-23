@@ -1,5 +1,6 @@
 // @flow
-import type {Route, AttributeMap} from './types';
+import type {AttributeMap} from './types';
+import Route from './Route';
 
 export default function getViewKeyFromRoute(route: ?Route, attributes: ?AttributeMap) {
     if (!route) {

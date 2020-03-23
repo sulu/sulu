@@ -1,5 +1,5 @@
 // @flow
-import type {Route as RouteType, RouteConfig, RouteMap} from '../types';
+import type {RouteConfig, RouteMap} from '../types';
 import Route from '../Route';
 
 class RouteRegistry {
@@ -34,7 +34,7 @@ class RouteRegistry {
         });
     }
 
-    get(name: string): RouteType {
+    get(name: string): Route {
         if (!(name in this.routes)) {
             throw new Error('The route with the name "' + name + '" does not exist');
         }

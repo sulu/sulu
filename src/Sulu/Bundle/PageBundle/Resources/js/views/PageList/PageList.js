@@ -7,9 +7,10 @@ import {List, ListStore, withToolbar} from 'sulu-admin-bundle/containers';
 import userStore from 'sulu-admin-bundle/stores/userStore/userStore';
 import type {Localization} from 'sulu-admin-bundle/stores';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
-import type {AttributeMap, Route} from 'sulu-admin-bundle/services';
+import type {AttributeMap} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import {CacheClearToolbarAction} from 'sulu-website-bundle/containers';
+import Route from 'sulu-admin-bundle/services/Router/Route';
 import type {Webspace} from '../../stores/webspaceStore/types';
 import pageListStyles from './pageList.scss';
 

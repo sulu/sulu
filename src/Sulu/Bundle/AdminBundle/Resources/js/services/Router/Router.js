@@ -4,8 +4,9 @@ import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import equal from 'fast-deep-equal';
 import log from 'loglevel';
 import {compile} from 'path-to-regexp';
-import type {AttributeMap, Route, UpdateAttributesHook, UpdateRouteHook, UpdateRouteMethod} from './types';
+import type {AttributeMap, UpdateAttributesHook, UpdateRouteHook, UpdateRouteMethod} from './types';
 import routeRegistry from './registries/routeRegistry';
+import Route from './Route';
 
 export default class Router {
     history: Object;

@@ -927,6 +927,8 @@ test('Navigate to child route using URL', () => {
     });
 
     formRoute.children = [detailsRoute, taxonomyRoute];
+    detailsRoute.parent = formRoute;
+    taxonomyRoute.parent = formRoute;
 
     routeRegistry.getAll.mockReturnValue({
         'sulu_snippet.form': formRoute,

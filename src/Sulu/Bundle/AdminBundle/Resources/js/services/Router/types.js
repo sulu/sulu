@@ -1,4 +1,6 @@
 // @flow
+import Route from './Route';
+
 export type RouteConfig = {|
     attributeDefaults?: AttributeMap,
     name: string,
@@ -9,20 +11,7 @@ export type RouteConfig = {|
     type: string,
 |};
 
-export interface Route {
-    attributeDefaults: AttributeMap,
-    availableAttributes: Array<string>,
-    children: Array<Route>,
-    name: string,
-    options: Object,
-    parent: ?Route,
-    path: string,
-    regexp: RegExp,
-    rerenderAttributes: Array<string>,
-    type: string,
-}
-
-export type AttributeMap = {[string]: boolean | number | string };
+export type AttributeMap = {[string]: any };
 
 export type RouteMap = {[string]: Route};
 

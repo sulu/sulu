@@ -1,36 +1,21 @@
 // @flow
-import pathToRegexp from 'path-to-regexp';
-import {extendObservable} from 'mobx';
 import updateUserStoreContentLocaleFromRouterAttributes from '../updateUserStoreContentLocaleFromRouterAttributes';
 import userStore from '../userStore';
-import type {Route} from '../../../services/Router';
+import Route from '../../../services/Router/Route';
 
 jest.mock('../../../stores/userStore/userStore', () => ({
     contentLocale: 'fr',
     updateContentLocale: jest.fn(),
 }));
 
-const createRoute = (route: Object) => {
-    const attributes = [];
-    route.regexp = pathToRegexp(route.path, attributes);
-    route.availableAttributes = attributes.map((attribute) => attribute.name);
-
-    return extendObservable({}, route);
-};
-
 test('Should not update userStore when no locale attribute is defined', () => {
-    const localizedRoute: Route = createRoute({
-        attributeDefaults: {},
-        availableAttributes: ['locale'],
-        children: [],
+    const localizedRoute = new Route({
         name: 'localized_route',
         options: {
             locales: ['en', 'de', 'fr'],
         },
-        parent: undefined,
         path: '/:locale/example',
-        rerenderAttributes: [],
-        type: '',
+        type: 'example',
     });
 
     updateUserStoreContentLocaleFromRouterAttributes(localizedRoute, {});
@@ -45,17 +30,13 @@ test('Should not update userStore when route and attributes are undefined', () =
 });
 
 test('Should update userStore with attribute locale', () => {
-    const localizedRoute: Route = createRoute({
-        availableAttributes: ['locale'],
-        children: [],
+    const localizedRoute = new Route({
         name: 'localized_route',
         options: {
             locales: ['en', 'de', 'fr'],
         },
-        parent: undefined,
         path: '/:locale/example',
-        rerenderAttributes: [],
-        type: '',
+        type: 'example',
     });
 
     updateUserStoreContentLocaleFromRouterAttributes(localizedRoute, {

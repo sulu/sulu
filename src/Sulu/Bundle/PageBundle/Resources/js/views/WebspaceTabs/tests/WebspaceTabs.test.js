@@ -3,7 +3,7 @@ import React from 'react';
 import {mount} from 'enzyme';
 import {Router} from 'sulu-admin-bundle/services';
 import {userStore} from 'sulu-admin-bundle/stores';
-import type {Route} from 'sulu-admin-bundle/services/Router';
+import Route from 'sulu-admin-bundle/services/Router/Route';
 import WebspaceTabs from '../WebspaceTabs';
 import webspaceStore from '../../../stores/webspaceStore';
 
@@ -25,18 +25,11 @@ jest.mock('sulu-admin-bundle/stores/userStore', () => ({
 test('Render webspace select with children when webspaces are not loaded yet', () => {
     const router = new Router({});
 
-    const route: Route = {
-        attributeDefaults: {},
-        availableAttributes: [],
-        children: [],
+    const route = new Route({
         name: 'webspace_tabs',
-        options: {},
-        parent: undefined,
         path: '/webspace_tabs',
-        regexp: new RegExp('^/webspace_tabs$'),
-        rerenderAttributes: [],
         type: 'webspace_tabs',
-    };
+    });
 
     const webspace = {key: 'sulu_blog', localizations: [{locale: 'en', default: false}, {locale: 'de', default: true}]};
 
@@ -81,18 +74,11 @@ test('Load webspace from route attributes', () => {
 test('Should bind and unbind router attributes and updateRouteHook', () => {
     const router = new Router({});
 
-    const route: Route = {
-        attributeDefaults: {},
-        availableAttributes: [],
-        children: [],
+    const route = new Route({
         name: 'webspace_tabs',
-        options: {},
-        parent: undefined,
         path: '/webspace_tabs',
-        regexp: new RegExp('^/webspace_tabs$'),
-        rerenderAttributes: [],
         type: 'webspace_tabs',
-    };
+    });
 
     const bindWebspaceToRouterDisposerSpy = jest.fn();
     router.addUpdateRouteHook.mockImplementationOnce(() => bindWebspaceToRouterDisposerSpy);
@@ -113,18 +99,11 @@ test('Should bind and unbind router attributes and updateRouteHook', () => {
 test('Save and update webspace when select value is changed', () => {
     const router = new Router({});
 
-    const route: Route = {
-        attributeDefaults: {},
-        availableAttributes: [],
-        children: [],
+    const route = new Route({
         name: 'webspace_tabs',
-        options: {},
-        parent: undefined,
         path: '/webspace_tabs',
-        regexp: new RegExp('^/webspace_tabs$'),
-        rerenderAttributes: [],
         type: 'webspace_tabs',
-    };
+    });
 
     const webspace1 = {key: 'sulu', localizations: [{locale: 'en', default: true}]};
     const webspace2 = {

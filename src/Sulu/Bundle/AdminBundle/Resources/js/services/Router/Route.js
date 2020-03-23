@@ -1,14 +1,14 @@
 // @flow
 import pathToRegexp from 'path-to-regexp';
 import {computed} from 'mobx';
-import type {AttributeMap, Route as RouteType, RouteConfig} from './types';
+import type {AttributeMap, RouteConfig} from './types';
 
-export default class Route implements RouteType {
+export default class Route {
     attributeDefaults: AttributeMap = {};
-    children: Array<RouteType> = [];
+    children: Array<Route> = [];
     name: string;
     options: Object = {};
-    parent: ?RouteType = undefined;
+    parent: ?Route = undefined;
     path: string;
     rerenderAttributes: Array<string> = [];
     type: string;
@@ -29,20 +29,16 @@ export default class Route implements RouteType {
         if (config.rerenderAttributes) {
             this.rerenderAttributes = config.rerenderAttributes;
         }
-
-        if (config.type) {
-            this.type = config.type;
-        }
     }
 
-    @computed get availableAttributes(): Regexp {
+    @computed get availableAttributes(): Array<string> {
         const attributes = [];
         pathToRegexp(this.path, attributes);
 
         return attributes.map((attribute) => attribute.name);
     }
 
-    @computed get regexp(): Regexp {
+    @computed get regexp(): RegExp {
         return pathToRegexp(this.path);
     }
 }

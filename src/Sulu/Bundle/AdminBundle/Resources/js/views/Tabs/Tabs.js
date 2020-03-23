@@ -5,8 +5,8 @@ import {autorun, computed} from 'mobx';
 import {observer} from 'mobx-react';
 import TabsComponent from '../../components/Tabs';
 import type {ViewProps} from '../../containers/ViewRenderer';
-import type {Route} from '../../services/Router';
 import {translate} from '../../utils/Translator';
+import Route from '../../services/Router/Route';
 import tabsStyles from './tabs.scss';
 
 type Props = ViewProps & {

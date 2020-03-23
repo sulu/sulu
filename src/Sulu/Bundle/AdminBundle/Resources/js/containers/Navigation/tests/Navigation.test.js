@@ -3,6 +3,7 @@ import React from 'react';
 import {render, mount} from 'enzyme';
 import Navigation from '../Navigation';
 import Router from '../../../services/Router';
+import Route from '../../../services/Router/Route';
 
 jest.mock('../../../services/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
@@ -56,18 +57,11 @@ jest.mock('../registries/navigationRegistry', () => ({
 
 test('Should render navigation', () => {
     const router = new Router({});
-    router.route = {
-        attributeDefaults: {},
-        availableAttributes: [],
-        children: [],
+    router.route = new Route({
         name: 'sulu_admin.form_tab',
-        options: {},
-        parent: undefined,
         path: '/form',
-        regexp: new RegExp('^/form$'),
-        rerenderAttributes: [],
         type: 'form_tab',
-    };
+    });
 
     const navigation = render(
         <Navigation
@@ -87,18 +81,11 @@ test('Should render navigation', () => {
 
 test('Should render navigation without appVersion', () => {
     const router = new Router({});
-    router.route = {
-        attributeDefaults: {},
-        availableAttributes: [],
-        children: [],
+    router.route = new Route({
         name: 'sulu_admin.form_tab',
-        options: {},
-        parent: undefined,
         path: '/form',
-        regexp: new RegExp('^/form$'),
-        rerenderAttributes: [],
         type: 'form_tab',
-    };
+    });
 
     const navigation = render(
         <Navigation
@@ -118,18 +105,11 @@ test('Should render navigation without appVersion', () => {
 
 test('Should call the navigation callback, pin callback and router navigate', () => {
     const router = new Router({});
-    router.route = {
-        attributeDefaults: {},
-        availableAttributes: [],
-        children: [],
+    router.route = new Route({
         name: 'sulu_admin.form_tab',
-        options: {},
-        parent: undefined,
         path: '/form',
-        regexp: new RegExp('^/form$'),
-        rerenderAttributes: [],
         type: 'form_tab',
-    };
+    });
     const handleNavigate = jest.fn();
     const handlePin = jest.fn();
 

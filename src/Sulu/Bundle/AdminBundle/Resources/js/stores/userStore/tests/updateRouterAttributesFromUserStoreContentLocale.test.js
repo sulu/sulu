@@ -1,34 +1,19 @@
 // @flow
-import pathToRegexp from 'path-to-regexp';
-import {extendObservable} from 'mobx';
 import updateRouterAttributesFromUserStoreContentLocale from '../updateRouterAttributesFromUserStoreContentLocale';
 import userStore from '../userStore';
-import type {Route} from '../../../services/Router';
+import Route from '../../../services/Router/Route';
 
 jest.mock('../../../stores/userStore/userStore', () => ({
     contentLocale: undefined,
 }));
 
-const createRoute = (route: Object) => {
-    const attributes = [];
-    route.regexp = pathToRegexp(route.path, attributes);
-    route.availableAttributes = attributes.map((attribute) => attribute.name);
-
-    return extendObservable({}, route);
-};
-
 test('Should not update locale attribute when route is not localized', () => {
     userStore.contentLocale = 'fr';
 
-    const unlocalizedRoute: Route = createRoute({
-        availableAttributes: [],
-        children: [],
+    const unlocalizedRoute = new Route({
         name: 'unlocalized_route',
-        options: {},
-        parent: undefined,
         path: '/example',
-        rerenderAttributes: [],
-        type: '',
+        type: 'example',
     });
 
     const attributes = updateRouterAttributesFromUserStoreContentLocale(unlocalizedRoute, {});
@@ -39,17 +24,13 @@ test('Should not update locale attribute when route is not localized', () => {
 test('Should not update locale attribute when locale was explicit set', () => {
     userStore.contentLocale = 'fr';
 
-    const localizedRoute: Route = createRoute({
-        availableAttributes: ['locale'],
-        children: [],
+    const localizedRoute = new Route({
         name: 'localized_route',
         options: {
             locales: ['en', 'de', 'fr'],
         },
-        parent: undefined,
         path: '/:locale/example',
-        rerenderAttributes: [],
-        type: '',
+        type: 'example',
     });
 
     const attributes = updateRouterAttributesFromUserStoreContentLocale(localizedRoute, {
@@ -62,18 +43,13 @@ test('Should not update locale attribute when locale was explicit set', () => {
 test('Should not update locale attribute when user store locale is not available for current route', () => {
     userStore.contentLocale = 'ru';
 
-    const localizedRoute: Route = createRoute({
-        attributeDefaults: {},
-        availableAttributes: ['locale'],
-        children: [],
+    const localizedRoute = new Route({
         name: 'localized_route',
         options: {
             locales: ['en', 'de', 'fr'],
         },
-        parent: undefined,
         path: '/:locale/example',
-        rerenderAttributes: [],
-        type: '',
+        type: 'example',
     });
 
     const attributes = updateRouterAttributesFromUserStoreContentLocale(localizedRoute, {});
@@ -84,17 +60,13 @@ test('Should not update locale attribute when user store locale is not available
 test('Should update locale attribute from user store when not explicit set', () => {
     userStore.contentLocale = 'fr';
 
-    const localizedRoute: Route = createRoute({
-        availableAttributes: ['locale'],
-        children: [],
+    const localizedRoute = new Route({
         name: 'localized_route',
         options: {
             locales: ['en', 'de', 'fr'],
         },
-        parent: undefined,
         path: '/:locale/example',
-        rerenderAttributes: [],
-        type: '',
+        type: 'example',
     });
 
     const attributes = updateRouterAttributesFromUserStoreContentLocale(localizedRoute, {});
@@ -105,16 +77,10 @@ test('Should update locale attribute from user store when not explicit set', () 
 test('Should update locale attribute from user store when view does not define specified locales', () => {
     userStore.contentLocale = 'es';
 
-    const localizedRouteWithoutDefaultLocales: Route = createRoute({
-        attributeDefaults: {},
-        availableAttributes: ['locale'],
-        children: [],
+    const localizedRouteWithoutDefaultLocales = new Route({
         name: 'localized_route_without_locales_defined',
-        options: {},
-        parent: undefined,
         path: '/:locale/example',
-        rerenderAttributes: [],
-        type: '',
+        type: 'example',
     });
 
     const attributes = updateRouterAttributesFromUserStoreContentLocale(localizedRouteWithoutDefaultLocales, {});
