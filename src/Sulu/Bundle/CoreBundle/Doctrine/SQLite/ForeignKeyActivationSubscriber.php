@@ -9,13 +9,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CoreBundle\Doctrine;
+namespace Sulu\Bundle\CoreBundle\Doctrine\SQLite;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\DBAL\Event\ConnectionEventArgs;
 use Doctrine\DBAL\Events;
 
-class SQLiteForeignKeyActivationSubscriber implements EventSubscriber
+class ForeignKeyActivationSubscriber implements EventSubscriber
 {
     public function getSubscribedEvents()
     {

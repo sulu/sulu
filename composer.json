@@ -173,6 +173,9 @@
         "psr-0": {
             "Sulu\\": "src/"
         },
+        "files": [
+            "src/Sulu/Bundle/CoreBundle/Doctrine/SQLite/GroupConcat.php"
+        ],
         "exclude-from-classmap": [
             "src/Sulu/Component/*/Tests/",
             "src/Sulu/Bundle/*/Tests/"

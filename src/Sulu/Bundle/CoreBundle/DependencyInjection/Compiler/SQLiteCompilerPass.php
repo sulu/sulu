@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\CoreBundle\DependencyInjection\Compiler;
 
-use Sulu\Bundle\CoreBundle\Doctrine\SQLiteForeignKeyActivationSubscriber;
+use Sulu\Bundle\CoreBundle\Doctrine\SQLite\ForeignKeyActivationSubscriber;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -25,7 +25,7 @@ class SQLiteCompilerPass implements CompilerPassInterface
         }
 
         $sqliteForeignKeyActivationSubscriberDefinition = new Definition(
-            SQLiteForeignKeyActivationSubscriber::class
+            ForeignKeyActivationSubscriber::class
         );
 
         $sqliteForeignKeyActivationSubscriberDefinition->addTag(
