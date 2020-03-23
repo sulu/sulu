@@ -15,6 +15,9 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\DBAL\Event\ConnectionEventArgs;
 use Doctrine\DBAL\Events;
 
+/**
+ * @internal
+ */
 class ForeignKeyActivationSubscriber implements EventSubscriber
 {
     public function getSubscribedEvents()

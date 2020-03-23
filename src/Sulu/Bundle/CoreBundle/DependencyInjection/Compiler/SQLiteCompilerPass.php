@@ -16,6 +16,9 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
+/**
+ * @internal
+ */
 class SQLiteCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
@@ -50,7 +53,7 @@ class SQLiteCompilerPass implements CompilerPassInterface
         if (empty($configuration['url'])) {
             // if no url is set check if driver is set to sqlite or pdo_sqlite
             if (isset($configuration['driver'])
-                && false !== strpos($configuration['driver'], 'sqlite')
+                && false !== strpos(strtolower($configuration['driver']), 'sqlite')
             ) {
                 return true;
             }
@@ -60,7 +63,7 @@ class SQLiteCompilerPass implements CompilerPassInterface
 
         $databaseUrl = $container->resolveEnvPlaceholders($configuration['url'], true);
 
-        if (0 !== strpos($databaseUrl, 'sqlite')) {
+        if (0 !== strpos(strtolower($databaseUrl), 'sqlite')) {
             return false;
         }
 

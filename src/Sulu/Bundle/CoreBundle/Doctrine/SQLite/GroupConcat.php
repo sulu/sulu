@@ -20,6 +20,9 @@ use Doctrine\ORM\Query\SqlWalker;
 use Oro\ORM\Query\AST\Functions\String\GroupConcat as Base;
 use Oro\ORM\Query\AST\Platform\Functions\PlatformFunctionNode;
 
+/**
+ * @internal
+ */
 class GroupConcat extends PlatformFunctionNode
 {
     /**
