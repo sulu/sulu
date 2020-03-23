@@ -25,6 +25,7 @@ class AdminControllerTest extends SuluTestCase
 {
     public function setUp(): void
     {
+        $this->initPhpcr();
         $this->purgeDatabase();
         $em = $this->getEntityManager();
         //

@@ -15,6 +15,13 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminControllerTest extends SuluTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->initPhpcr();
+        $this->purgeDatabase();
+    }
+
     public function testRulesConfig()
     {
         $client = $this->createAuthenticatedClient();

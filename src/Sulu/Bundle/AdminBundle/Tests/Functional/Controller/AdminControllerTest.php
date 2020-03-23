@@ -25,6 +25,7 @@ class AdminControllerTest extends SuluTestCase
     public function setUp(): void
     {
         $this->client = $this->createAuthenticatedClient();
+        $this->initPhpcr();
         $this->purgeDatabase();
         $this->em = $this->getEntityManager();
         $collectionType = new LoadCollectionTypes();
