@@ -36,6 +36,11 @@ class PageAdminTest extends TestCase
     private $securityChecker;
 
     /**
+     * @var ObjectProphecy
+     */
+    private $webspaceCollection;
+
+    /**
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
@@ -54,9 +59,12 @@ class PageAdminTest extends TestCase
     {
         $this->viewBuilderFactory = new ViewBuilderFactory();
         $this->securityChecker = $this->prophesize(SecurityChecker::class);
+        $this->webspaceCollection = $this->prophesize(WebspaceCollection::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->sessionManager = $this->prophesize(SessionManagerInterface::class);
         $this->teaserProviderPool = $this->prophesize(TeaserProviderPoolInterface::class);
+
+        $this->webspaceManager->getWebspaceCollection()->willReturn($this->webspaceCollection->reveal());
     }
 
     public function testGetViews()
