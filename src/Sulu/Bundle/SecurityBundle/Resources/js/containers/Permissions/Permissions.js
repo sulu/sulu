@@ -2,9 +2,8 @@
 import React, {Fragment} from 'react';
 import {action, autorun, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import {Loader} from 'sulu-admin-bundle/components';
-import {ResourceMultiSelect} from 'sulu-admin-bundle/containers';
-import {userStore} from 'sulu-admin-bundle/stores';
+import {Loader, MultiSelect} from 'sulu-admin-bundle/components';
+import {webspaceStore} from 'sulu-page-bundle/stores';
 import securityContextStore from '../../stores/securityContextStore';
 import type {SecurityContextGroups, SecurityContexts} from '../../stores/securityContextStore/types';
 import type {ContextPermission} from './types';
@@ -156,34 +155,33 @@ class Permissions extends React.Component<Props> {
     };
 
     renderWebspaceMatrixes() {
+        const {disabled, value} = this.props;
         if (!this.webspaceSecurityContextGroupKey) {
             return null;
-        }
-
-        if (!userStore.user) {
-            throw new Error('This component needs a logged in user to determine the locale!');
         }
 
         return (
             <Fragment>
                 <h2>{this.webspaceSecurityContextGroupKey}</h2>
                 <div className={permissionsStyle.selectContainer}>
-                    <ResourceMultiSelect
-                        disabled={this.props.disabled}
-                        displayProperty="name"
-                        idProperty="key"
+                    <MultiSelect
+                        disabled={disabled}
                         onChange={this.handleWebspaceChange}
-                        requestParameters={{checkForPermissions: 0, locale: userStore.user.locale}}
-                        resourceKey="webspaces"
                         values={this.selectedWebspaces}
-                    />
+                    >
+                        {webspaceStore.allWebspaces.map((webspace) => (
+                            <MultiSelect.Option key={webspace.key} value={webspace.key}>
+                                {webspace.name}
+                            </MultiSelect.Option>
+                        ))}
+                    </MultiSelect>
                 </div>
                 <div className={permissionsStyle.matrixContainer}>
                     {this.selectedWebspaces.map((webspace, matrixIndex) => {
                         return (
                             <PermissionMatrix
-                                contextPermissions={this.props.value}
-                                disabled={this.props.disabled}
+                                contextPermissions={value}
+                                disabled={disabled}
                                 key={matrixIndex}
                                 onChange={this.handleChange}
                                 securityContexts={this.getWebspaceSecurityContexts(webspace)}
