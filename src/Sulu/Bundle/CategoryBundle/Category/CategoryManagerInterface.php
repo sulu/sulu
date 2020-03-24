@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\Category;
 
+use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryIdNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotFoundException;
@@ -136,20 +137,20 @@ interface CategoryManagerInterface
      * Returns an API-Object for a given category-entity. The API-Object wraps the entity
      * and provides neat getters and setters.
      *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryInterface $category
+     * @param CategoryInterface $category
      * @param string $locale
      *
-     * @return CategoryInterface
+     * @return Category
      */
     public function getApiObject($category, $locale);
 
     /**
      * Same as getApiObject, but takes multiple category-entities.
      *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryInterface[] $categories
+     * @param CategoryInterface[] $categories
      * @param string $locale
      *
-     * @return CategoryInterface
+     * @return Category[]
      */
     public function getApiObjects($categories, $locale);
 
