@@ -21,8 +21,7 @@ const updateRouterAttributesFromUserStoreContentLocale: UpdateAttributesHook = f
     const locales = toJS(route.options.locales);
 
     // set content locale if route accept the current content locale
-    // or does not specify which locales it accepts e.g.: PageList
-    if (!locales || locales.includes(userStore.contentLocale)) {
+    if (locales && locales.includes(userStore.contentLocale)) {
         attributes.locale = userStore.contentLocale;
     }
 

@@ -39,11 +39,12 @@ class PageList extends React.Component<Props> {
     static getDerivedRouteAttributes(route: Route, attributes: AttributeMap) {
         return {
             active: ListStore.getActiveSetting(PAGES_RESOURCE_KEY, getUserSettingsKeyForWebspace(attributes.webspace)),
+            locale: userStore.contentLocale,
         };
     }
 
     @action setDefaultLocaleForWebspace = () => {
-        const {webspace} = this.props;
+        const {webspace, router} = this.props;
 
         if (!webspace || !webspace.localizations) {
             return;
@@ -53,19 +54,27 @@ class PageList extends React.Component<Props> {
             return;
         }
 
-        if (webspace.allLocalizations.find((localization) => localization.localization === userStore.contentLocale)) {
-            this.locale.set(userStore.contentLocale);
+        let locale = null;
 
-            return;
+        if (webspace.allLocalizations.find((localization) => localization.localization === userStore.contentLocale)) {
+            locale = userStore.contentLocale;
         }
 
-        const locale = this.findDefaultLocale(webspace.localizations);
+        if (!locale) {
+            locale = this.findDefaultLocale(webspace.localizations);
+        }
 
         if (!locale) {
             throw new Error(
                 'Default locale in webspace "' + webspace.key + '" not found'
             );
         }
+
+        if (locale === this.locale.get()) {
+            return;
+        }
+
+        router.redirect(router.route.name, {...router.attributes, locale: locale});
 
         this.locale.set(locale);
     };
@@ -100,6 +109,9 @@ class PageList extends React.Component<Props> {
         const observableOptions = {};
         const requestParameters = {webspace};
 
+        this.setDefaultLocaleForWebspace();
+        router.bind('locale', this.locale);
+
         router.bind('page', this.page, 1);
         observableOptions.page = this.page;
 
@@ -107,9 +119,6 @@ class PageList extends React.Component<Props> {
         observableOptions['exclude-ghosts'] = this.excludeGhostsAndShadows;
         observableOptions['exclude-shadows'] = this.excludeGhostsAndShadows;
 
-        router.bind('locale', this.locale);
-
-        this.setDefaultLocaleForWebspace();
         observableOptions.locale = this.locale;
 
         this.cacheClearToolbarAction = new CacheClearToolbarAction();
