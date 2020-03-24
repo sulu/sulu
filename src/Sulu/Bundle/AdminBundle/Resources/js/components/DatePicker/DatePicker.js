@@ -15,6 +15,7 @@ import './datePicker.scss';
 type Props = {|
     disabled: boolean,
     id?: string,
+    inputRef?: (ref: ?ElementRef<'input'>) => void,
     onChange: (value: ?Date) => void,
     options: {
         dateFormat?: ?string | boolean,
@@ -161,6 +162,7 @@ class DatePicker extends React.Component<Props> {
             <Input
                 {...props}
                 id={this.props.id}
+                inputRef={this.props.inputRef}
                 onBlur={this.handleInputBlur}
                 onChange={handleInputChange}
                 onIconClick={!props.disabled ? this.handleOpenOverlay : undefined}
