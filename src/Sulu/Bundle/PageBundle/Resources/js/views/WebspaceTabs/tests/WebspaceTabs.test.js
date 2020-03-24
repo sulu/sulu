@@ -1,13 +1,13 @@
 // @flow
 import React from 'react';
 import {mount} from 'enzyme';
-import {Router} from 'sulu-admin-bundle/services';
+import {Router, Route} from 'sulu-admin-bundle/services';
 import {userStore} from 'sulu-admin-bundle/stores';
-import Route from 'sulu-admin-bundle/services/Router/Route';
+
 import WebspaceTabs from '../WebspaceTabs';
 import webspaceStore from '../../../stores/webspaceStore';
 
-jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
+jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function() {
     this.addUpdateRouteHook = jest.fn();
     this.bind = jest.fn();
 }));

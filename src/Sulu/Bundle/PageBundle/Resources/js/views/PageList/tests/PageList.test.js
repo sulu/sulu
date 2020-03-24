@@ -66,7 +66,7 @@ jest.mock('sulu-admin-bundle/services/Requester', () => ({
     delete: jest.fn(),
 }));
 
-jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
+jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function() {
     this.bind = jest.fn();
 }));
 

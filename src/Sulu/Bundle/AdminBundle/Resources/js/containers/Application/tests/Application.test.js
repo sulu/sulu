@@ -1,11 +1,10 @@
 //@flow
 import React from 'react';
 import {render, mount} from 'enzyme';
-import Router from '../../../services/Router';
+import Router, {Route} from '../../../services/Router';
 import Application from '../Application';
-import Route from '../../../services/Router/Route';
 
-jest.mock('../../../services/Router', () => jest.fn(function() {
+jest.mock('../../../services/Router/Router', () => jest.fn(function() {
     this.attributes = {};
 }));
 

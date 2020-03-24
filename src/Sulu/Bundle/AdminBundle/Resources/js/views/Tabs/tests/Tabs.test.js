@@ -1,11 +1,10 @@
 // @flow
 import React from 'react';
 import {mount, render} from 'enzyme';
-import Router from '../../../services/Router';
+import Router, {Route} from '../../../services/Router';
 import Tabs from '../Tabs';
-import Route from '../../../services/Router/Route';
 
-jest.mock('../../../services/Router', () => jest.fn());
+jest.mock('../../../services/Router/Router', () => jest.fn());
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),

@@ -2,7 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {shallow} from 'enzyme';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
+import {ResourceStore, userStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import TeaserSelection from '../../fields/TeaserSelection';
@@ -20,13 +20,7 @@ jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(funct
     this.locale = formStore.locale;
 }));
 
-let mockedContentLocale = 'en';
-
-jest.mock('sulu-admin-bundle/stores/userStore', () => ({
-    get contentLocale(): string {
-        return mockedContentLocale;
-    },
-}));
+jest.mock('sulu-admin-bundle/stores/userStore', () => ({}));
 
 test('Pass props correctly to component', () => {
     const changeSpy = jest.fn();
@@ -64,7 +58,8 @@ test('Pass props correctly to component', () => {
 
 test('Pass disabled value from props to component', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    mockedContentLocale = 'de';
+    // $FlowFixMe
+    userStore.contentLocale = 'de';
 
     const field = shallow(<TeaserSelection {...fieldTypeDefaultProps} disabled={true} formInspector={formInspector} />);
 
@@ -73,7 +68,8 @@ test('Pass disabled value from props to component', () => {
 
 test('Pass locale from userStore when form has no locale', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    mockedContentLocale = 'de';
+    // $FlowFixMe
+    userStore.contentLocale = 'de';
 
     const field = shallow(<TeaserSelection {...fieldTypeDefaultProps} formInspector={formInspector} />);
 
@@ -82,7 +78,8 @@ test('Pass locale from userStore when form has no locale', () => {
 
 test('Pass presentations prop correctly to component', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    mockedContentLocale = 'de';
+    // $FlowFixMe
+    userStore.contentLocale = 'de';
 
     const schemaOptions = {
         present_as: {
@@ -110,7 +107,8 @@ test('Pass presentations prop correctly to component', () => {
 
 test('Throw error if present_as schemaOption is from wrong type', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
-    mockedContentLocale = 'de';
+    // $FlowFixMe
+    userStore.contentLocale = 'de';
 
     const schemaOptions = {
         present_as: {

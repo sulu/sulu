@@ -1,17 +1,13 @@
 // @flow
 import updateRouterAttributesFromUserStoreContentLocale from '../updateRouterAttributesFromUserStoreContentLocale';
-import Route from '../../../services/Router/Route';
+import {Route} from '../../../services/Router';
+import userStore from '../userStore';
 
-let mockedContentLocale = undefined;
-
-jest.mock('../../../stores/userStore/userStore', () => ({
-    get contentLocale() {
-        return mockedContentLocale;
-    },
-}));
+jest.mock('../userStore', () => ({}));
 
 test('Should not update locale attribute when route is not localized', () => {
-    mockedContentLocale = 'fr';
+    // $FlowFixMe
+    userStore.contentLocale = 'fr';
 
     const unlocalizedRoute = new Route({
         name: 'unlocalized_route',
@@ -25,7 +21,8 @@ test('Should not update locale attribute when route is not localized', () => {
 });
 
 test('Should not update locale attribute when locale was explicit set', () => {
-    mockedContentLocale = 'fr';
+    // $FlowFixMe
+    userStore.contentLocale = 'fr';
 
     const localizedRoute = new Route({
         name: 'localized_route',
@@ -44,7 +41,8 @@ test('Should not update locale attribute when locale was explicit set', () => {
 });
 
 test('Should not update locale attribute when user store locale is not available for current route', () => {
-    mockedContentLocale = 'ru';
+    // $FlowFixMe
+    userStore.contentLocale = 'ru';
 
     const localizedRoute = new Route({
         name: 'localized_route',
@@ -61,7 +59,8 @@ test('Should not update locale attribute when user store locale is not available
 });
 
 test('Should update locale attribute from user store when not explicit set', () => {
-    mockedContentLocale = 'fr';
+    // $FlowFixMe
+    userStore.contentLocale = 'fr';
 
     const localizedRoute = new Route({
         name: 'localized_route',
@@ -78,7 +77,8 @@ test('Should update locale attribute from user store when not explicit set', () 
 });
 
 test('Should update locale attribute from user store when view does not define specified locales', () => {
-    mockedContentLocale = 'es';
+    // $FlowFixMe
+    userStore.contentLocale = 'es';
 
     const localizedRouteWithoutDefaultLocales = new Route({
         name: 'localized_route_without_locales_defined',

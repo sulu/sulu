@@ -7,7 +7,7 @@ import type {ViewProps} from 'sulu-admin-bundle/containers';
 import type {AttributeMap} from 'sulu-admin-bundle/services';
 import {userStore} from 'sulu-admin-bundle/stores';
 import {Tabs} from 'sulu-admin-bundle/views';
-import Route from 'sulu-admin-bundle/services/Router/Route';
+import {Route} from 'sulu-admin-bundle/services';
 import WebspaceSelect from '../../components/WebspaceSelect';
 import webspaceStore from '../../stores/webspaceStore';
 import type {Webspace} from '../../stores/webspaceStore/types';

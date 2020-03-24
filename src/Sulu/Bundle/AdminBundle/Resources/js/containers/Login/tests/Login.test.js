@@ -5,7 +5,7 @@ import Router from '../../../services/Router';
 import userStore from '../../../stores/userStore';
 import Login from '../Login';
 
-jest.mock('../../../services/Router', () => jest.fn(function() {
+jest.mock('../../../services/Router/Router', () => jest.fn(function() {
     this.attributes = {};
     this.reset = jest.fn();
 }));

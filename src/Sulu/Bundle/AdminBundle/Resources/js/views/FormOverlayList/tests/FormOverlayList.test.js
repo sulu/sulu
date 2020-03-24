@@ -8,9 +8,8 @@ import Overlay from '../../../components/Overlay';
 import ResourceStore from '../../../stores/ResourceStore';
 import ResourceFormStore from '../../../containers/Form/stores/ResourceFormStore';
 import Form from '../../../containers/Form';
-import Router from '../../../services/Router';
+import Router, {Route} from '../../../services/Router';
 import Snackbar from '../../../components/Snackbar';
-import Route from '../../../services/Router/Route';
 
 const React = mockReact;
 

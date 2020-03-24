@@ -2,10 +2,9 @@
 import React from 'react';
 import {render, mount} from 'enzyme';
 import Navigation from '../Navigation';
-import Router from '../../../services/Router';
-import Route from '../../../services/Router/Route';
+import Router, {Route} from '../../../services/Router';
 
-jest.mock('../../../services/Router', () => jest.fn(function() {
+jest.mock('../../../services/Router/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
 }));
 

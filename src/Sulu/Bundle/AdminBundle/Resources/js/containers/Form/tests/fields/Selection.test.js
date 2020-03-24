@@ -4,7 +4,7 @@ import {extendObservable as mockExtendObservable, observable, toJS} from 'mobx';
 import {mount, shallow} from 'enzyme';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import {translate} from '../../../../utils/Translator';
-import ResourceStore from '../../../../stores/ResourceStore';
+import {ResourceStore, userStore} from '../../../../stores';
 import List from '../../../List';
 import Selection from '../../fields/Selection';
 import FormInspector from '../../FormInspector';
@@ -40,13 +40,7 @@ jest.mock('../../../List/stores/ListStore',
     }
 );
 
-let mockedContentLocale = 'en';
-
-jest.mock('../../../../stores/userStore', () => ({
-    get contentLocale(): string {
-        return mockedContentLocale;
-    },
-}));
+jest.mock('../../../../stores/userStore', () => ({}));
 
 jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.id = formStore.id;
@@ -200,7 +194,8 @@ test('Should pass locale from userStore to MultiSelection component if form has 
         )
     );
 
-    mockedContentLocale = 'de';
+    // $FlowFixMe
+    userStore.contentLocale = 'de';
 
     const selection = shallow(
         <Selection
@@ -865,7 +860,8 @@ test('Should pass locale from userStore to listStore if form has no locale', () 
         )
     );
 
-    mockedContentLocale = 'en';
+    // $FlowFixMe
+    userStore.contentLocale = 'en';
 
     const selection = shallow(
         <Selection
@@ -1147,7 +1143,8 @@ test('Should pass locale from userStore to MultiAutoComplete component if form h
         )
     );
 
-    mockedContentLocale = 'de';
+    // $FlowFixMe
+    userStore.contentLocale = 'de';
 
     const selection = shallow(
         <Selection

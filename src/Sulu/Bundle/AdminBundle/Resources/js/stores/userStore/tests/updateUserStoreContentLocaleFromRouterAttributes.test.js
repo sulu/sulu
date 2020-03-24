@@ -1,7 +1,7 @@
 // @flow
 import updateUserStoreContentLocaleFromRouterAttributes from '../updateUserStoreContentLocaleFromRouterAttributes';
 import userStore from '../userStore';
-import Route from '../../../services/Router/Route';
+import {Route} from '../../../services/Router';
 
 jest.mock('../../../stores/userStore/userStore', () => ({
     contentLocale: 'fr',

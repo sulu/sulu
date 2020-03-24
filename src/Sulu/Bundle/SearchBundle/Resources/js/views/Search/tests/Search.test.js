@@ -7,7 +7,7 @@ import SearchContainer from '../../../containers/Search';
 
 jest.mock('sulu-admin-bundle/containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 
-jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
+jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function() {
     this.bind = jest.fn();
 }));
 
