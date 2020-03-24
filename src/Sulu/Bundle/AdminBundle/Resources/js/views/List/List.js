@@ -10,7 +10,7 @@ import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import {translate} from '../../utils/Translator';
 import ResourceStore from '../../stores/ResourceStore';
-import Route from '../../services/Router/Route';
+import {Route} from '../../services/Router';
 import listToolbarActionRegistry from './registries/listToolbarActionRegistry';
 import AbstractListToolbarAction from './toolbarActions/AbstractListToolbarAction';
 import listStyles from './list.scss';

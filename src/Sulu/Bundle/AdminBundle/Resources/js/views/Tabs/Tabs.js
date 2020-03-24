@@ -6,7 +6,7 @@ import {observer} from 'mobx-react';
 import TabsComponent from '../../components/Tabs';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import {translate} from '../../utils/Translator';
-import Route from '../../services/Router/Route';
+import {Route} from '../../services/Router';
 import tabsStyles from './tabs.scss';
 
 type Props = ViewProps & {

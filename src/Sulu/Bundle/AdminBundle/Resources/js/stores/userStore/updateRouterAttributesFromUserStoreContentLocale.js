@@ -1,7 +1,7 @@
 // @flow
 import {toJS} from 'mobx';
 import type {AttributeMap, UpdateAttributesHook} from '../../services/Router/types';
-import Route from '../../services/Router/Route';
+import {Route} from '../../services/Router';
 import userStore from './userStore';
 
 const updateRouterAttributesFromUserStoreContentLocale: UpdateAttributesHook = function(

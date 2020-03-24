@@ -14,7 +14,7 @@ import type {AttributeMap, UpdateRouteMethod} from '../../services/Router/types'
 import ResourceStore from '../../stores/ResourceStore';
 import CollaborationStore from '../../stores/CollaborationStore';
 import {translate} from '../../utils/Translator';
-import Route from '../../services/Router/Route';
+import {Route} from '../../services/Router';
 import formToolbarActionRegistry from './registries/formToolbarActionRegistry';
 import AbstractFormToolbarAction from './toolbarActions/AbstractFormToolbarAction';
 import formStyles from './form.scss';
