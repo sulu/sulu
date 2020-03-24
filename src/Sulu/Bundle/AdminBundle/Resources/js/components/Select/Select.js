@@ -20,6 +20,7 @@ type Props<T> = {|
     closeOnSelect: boolean,
     displayValue: string,
     isOptionSelected: (option: Element<typeof Option>) => boolean,
+    onClose?: () => void,
     onSelect: (value: T) => void,
     selectedVisualization?: OptionSelectedVisualization,
 |};
@@ -49,6 +50,12 @@ class Select<T> extends React.Component<Props<T>> {
     };
 
     @action closeOptionList = () => {
+        const {onClose} = this.props;
+
+        if (onClose) {
+            onClose();
+        }
+
         this.open = false;
     };
 

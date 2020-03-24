@@ -301,3 +301,33 @@ test('The component should trigger the change callback', () => {
     resourceMultiSelect.find(MultiSelectComponent).props().onChange([5, 99]);
     expect(onChangeSpy).toHaveBeenCalledWith([5, 99], expectedValues);
 });
+
+test('The component should trigger the close callback', () => {
+    // $FlowFixMe
+    ResourceListStore.mockImplementation(function() {
+        this.loading = false;
+        this.data = [
+            {
+                'id': 2,
+                'name': 'Test ABC',
+                'someOtherProperty': 'No no',
+            },
+        ];
+    });
+
+    const closeSpy = jest.fn();
+
+    const resourceMultiSelect = shallow(
+        <ResourceMultiSelect
+            displayProperty="name"
+            onChange={jest.fn()}
+            onClose={closeSpy}
+            resourceKey="test"
+            values={[99]}
+        />
+    );
+
+    expect(closeSpy).not.toBeCalled();
+    resourceMultiSelect.find(MultiSelectComponent).prop('onClose')();
+    expect(closeSpy).toBeCalled();
+});
