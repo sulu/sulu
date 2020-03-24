@@ -18,6 +18,7 @@ type Props = {|
     displayProperty: string,
     id?: string,
     idProperty: string,
+    inputRef?: (ref: ?ElementRef<'input'>) => void,
     loading: boolean,
     onChange: (value: Array<Object>) => void,
     onFinish?: () => void,
@@ -48,9 +49,15 @@ class MultiAutoComplete extends React.Component<Props> {
         }
     };
 
-    @action setInputRef = (inputRef: ?ElementRef<'input'>) => {
+    @action setInputRef = (ref: ?ElementRef<'input'>) => {
+        const {inputRef} = this.props;
+
         if (inputRef) {
-            this.inputRef = inputRef;
+            inputRef(ref);
+        }
+
+        if (ref) {
+            this.inputRef = ref;
         }
     };
 
