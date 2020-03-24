@@ -241,7 +241,7 @@ test('Should load webspace and active route attribute from listStore and userSto
     ListStore.getActiveSetting.mockReturnValueOnce('some-uuid');
 
     // $FlowFixMe
-    expect(PageList.getDerivedRouteAttributes(undefined, {webspace: 'abc'})).toEqual({active: 'some-uuid'});
+    expect(PageList.getDerivedRouteAttributes(undefined, {webspace: 'abc'})).toEqual({active: 'some-uuid', locale: 'en'});
     expect(ListStore.getActiveSetting).toBeCalledWith('pages', 'page_list_abc');
 });
 
