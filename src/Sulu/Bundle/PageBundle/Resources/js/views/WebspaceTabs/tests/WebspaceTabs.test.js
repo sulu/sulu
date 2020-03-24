@@ -3,7 +3,6 @@ import React from 'react';
 import {mount} from 'enzyme';
 import {Router, Route} from 'sulu-admin-bundle/services';
 import {userStore} from 'sulu-admin-bundle/stores';
-
 import WebspaceTabs from '../WebspaceTabs';
 import webspaceStore from '../../../stores/webspaceStore';
 
