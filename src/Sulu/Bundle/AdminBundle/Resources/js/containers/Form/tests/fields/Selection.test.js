@@ -5,7 +5,6 @@ import {mount, shallow} from 'enzyme';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import {translate} from '../../../../utils/Translator';
 import ResourceStore from '../../../../stores/ResourceStore';
-import userStore from '../../../../stores/userStore';
 import List from '../../../List';
 import Selection from '../../fields/Selection';
 import FormInspector from '../../FormInspector';
@@ -41,7 +40,13 @@ jest.mock('../../../List/stores/ListStore',
     }
 );
 
-jest.mock('../../../../stores/userStore', () => ({}));
+let mockedContentLocale = 'en';
+
+jest.mock('../../../../stores/userStore', () => ({
+    get contentLocale(): string {
+        return mockedContentLocale;
+    },
+}));
 
 jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.id = formStore.id;
@@ -195,7 +200,7 @@ test('Should pass locale from userStore to MultiSelection component if form has 
         )
     );
 
-    userStore.contentLocale = 'de';
+    mockedContentLocale = 'de';
 
     const selection = shallow(
         <Selection
@@ -860,7 +865,7 @@ test('Should pass locale from userStore to listStore if form has no locale', () 
         )
     );
 
-    userStore.contentLocale = 'en';
+    mockedContentLocale = 'en';
 
     const selection = shallow(
         <Selection
@@ -1142,7 +1147,7 @@ test('Should pass locale from userStore to MultiAutoComplete component if form h
         )
     );
 
-    userStore.contentLocale = 'de';
+    mockedContentLocale = 'de';
 
     const selection = shallow(
         <Selection

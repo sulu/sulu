@@ -1,14 +1,17 @@
 // @flow
 import updateRouterAttributesFromUserStoreContentLocale from '../updateRouterAttributesFromUserStoreContentLocale';
-import userStore from '../userStore';
 import Route from '../../../services/Router/Route';
 
+let mockedContentLocale = undefined;
+
 jest.mock('../../../stores/userStore/userStore', () => ({
-    contentLocale: undefined,
+    get contentLocale() {
+        return mockedContentLocale;
+    },
 }));
 
 test('Should not update locale attribute when route is not localized', () => {
-    userStore.contentLocale = 'fr';
+    mockedContentLocale = 'fr';
 
     const unlocalizedRoute = new Route({
         name: 'unlocalized_route',
@@ -22,7 +25,7 @@ test('Should not update locale attribute when route is not localized', () => {
 });
 
 test('Should not update locale attribute when locale was explicit set', () => {
-    userStore.contentLocale = 'fr';
+    mockedContentLocale = 'fr';
 
     const localizedRoute = new Route({
         name: 'localized_route',
@@ -41,7 +44,7 @@ test('Should not update locale attribute when locale was explicit set', () => {
 });
 
 test('Should not update locale attribute when user store locale is not available for current route', () => {
-    userStore.contentLocale = 'ru';
+    mockedContentLocale = 'ru';
 
     const localizedRoute = new Route({
         name: 'localized_route',
@@ -58,7 +61,7 @@ test('Should not update locale attribute when user store locale is not available
 });
 
 test('Should update locale attribute from user store when not explicit set', () => {
-    userStore.contentLocale = 'fr';
+    mockedContentLocale = 'fr';
 
     const localizedRoute = new Route({
         name: 'localized_route',
@@ -75,7 +78,7 @@ test('Should update locale attribute from user store when not explicit set', () 
 });
 
 test('Should update locale attribute from user store when view does not define specified locales', () => {
-    userStore.contentLocale = 'es';
+    mockedContentLocale = 'es';
 
     const localizedRouteWithoutDefaultLocales = new Route({
         name: 'localized_route_without_locales_defined',

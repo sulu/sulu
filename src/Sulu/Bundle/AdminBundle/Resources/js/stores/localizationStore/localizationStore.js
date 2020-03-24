@@ -4,7 +4,7 @@ import log from 'loglevel';
 import type {Localization} from './types';
 
 class LocalizationStore {
-    @observable localizations: Array<Localization>;
+    @observable localizations: Array<Localization> = [];
 
     setLocalizations(localizations: Array<Localization>) {
         this.localizations = localizations;

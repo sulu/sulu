@@ -4,7 +4,6 @@ import {shallow} from 'enzyme';
 import {observable} from 'mobx';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
-import userStore from '../../../../stores/userStore';
 import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import SingleSelection from '../../fields/SingleSelection';
@@ -16,7 +15,13 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey
     this.locale = locale;
 }));
 
-jest.mock('../../../../stores/userStore', () => jest.fn());
+let mockedContentLocale = 'en';
+
+jest.mock('../../../../stores/userStore', () => ({
+    get contentLocale(): string {
+        return mockedContentLocale;
+    },
+}));
 
 jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore, formKey, options) {
     this.resourceKey = resourceStore.resourceKey;
@@ -744,7 +749,7 @@ test('Throw an error if a none string was passed to field-type-options', () => {
 test('Pass content locale from user to SingleItemSelection if form has no locale', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('accounts', 5), 'test'));
 
-    userStore.contentLocale = 'en';
+    mockedContentLocale = 'en';
 
     const value = 3;
 

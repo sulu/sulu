@@ -16,7 +16,6 @@ class UserStore {
 
     @observable user: ?User = undefined;
     @observable contact: ?Contact = undefined;
-    @observable contentLocale: string = Config.fallbackLocale;
 
     @observable loggedIn: boolean = false;
     @observable loading: boolean = false;
@@ -53,6 +52,21 @@ class UserStore {
         this.forgotPasswordSuccess = forgotPasswordSuccess;
     }
 
+    @computed get contentLocale(): string {
+        const contentLocale = this.persistentSettings.get(CONTENT_LOCALE_SETTING_KEY);
+
+        if (contentLocale) {
+            return contentLocale;
+        }
+
+        const {localizations} = localizationStore;
+
+        const defaultLocalizations = localizations.filter((localization) => localization.default);
+        const fallbackLocalization = defaultLocalizations.length ? defaultLocalizations[0] : localizations[0];
+
+        return fallbackLocalization ? fallbackLocalization.locale : Config.fallbackLocale;
+    }
+
     @action setUser(user: User) {
         this.user = user;
 
@@ -60,24 +74,9 @@ class UserStore {
         Object.keys(persistentSettings).forEach((key) => {
             this.persistentSettings.set(key, persistentSettings[key]);
         });
-
-        const contentLocale = this.persistentSettings.get(CONTENT_LOCALE_SETTING_KEY);
-
-        if (contentLocale) {
-            this.contentLocale = contentLocale;
-
-            return;
-        }
-
-        // load and use first (default) localization of first webspace as content-locale for the user
-        const {localizations} = localizationStore;
-        const defaultLocalizations = localizations.filter((localization) => localization.default);
-        const fallbackLocalization = defaultLocalizations.length ? defaultLocalizations[0] : localizations[0];
-        this.contentLocale = fallbackLocalization ? fallbackLocalization.locale : this.contentLocale;
     }
 
     @action updateContentLocale(contentLocale: string) {
-        this.contentLocale = contentLocale;
         this.setPersistentSetting(CONTENT_LOCALE_SETTING_KEY, contentLocale);
     }
 
