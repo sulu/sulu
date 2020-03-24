@@ -6,7 +6,7 @@ import PageTabs from '../PageTabs';
 import webspaceStore from '../../../stores/webspaceStore';
 
 jest.mock('../../../stores/webspaceStore', () => ({
-    loadWebspace: jest.fn(),
+    getWebspace: jest.fn(),
 }));
 
 jest.mock('sulu-admin-bundle/views', () => ({
@@ -21,9 +21,7 @@ test('Pass locales from webspace and titleProperty to ResourceTabs component', (
         ],
     };
 
-    const webspacePromise = Promise.resolve(webspace);
-
-    webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
+    webspaceStore.getWebspace.mockReturnValue(webspace);
 
     const route = {
         options: {},
@@ -38,11 +36,7 @@ test('Pass locales from webspace and titleProperty to ResourceTabs component', (
 
     const pageTabs = mount(<PageTabs route={route} router={router}>{() => null}</PageTabs>);
 
-    expect(pageTabs.find(ResourceTabs).prop('locales')).toEqual([]);
-
-    return webspacePromise.then(() => {
-        pageTabs.update();
-        expect(pageTabs.find(ResourceTabs).prop('locales')).toEqual(['en', 'de']);
-        expect(pageTabs.find(ResourceTabs).prop('titleProperty')).toEqual('title');
-    });
+    expect(webspaceStore.getWebspace).toBeCalledWith('sulu');
+    expect(pageTabs.find(ResourceTabs).prop('locales')).toEqual(['en', 'de']);
+    expect(pageTabs.find(ResourceTabs).prop('titleProperty')).toEqual('title');
 });

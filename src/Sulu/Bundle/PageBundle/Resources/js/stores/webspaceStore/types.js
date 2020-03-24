@@ -2,6 +2,7 @@
 import type {Localization} from 'sulu-admin-bundle/stores';
 
 export type Webspace = {
+    _permissions: {[permission: string]: boolean},
     allLocalizations: Array<LocalizationItem>,
     customUrls: Array<CustomUrl>,
     defaultTemplates: {[type: string]: string},

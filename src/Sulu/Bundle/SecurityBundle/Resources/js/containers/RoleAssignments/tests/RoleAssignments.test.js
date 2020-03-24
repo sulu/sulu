@@ -2,7 +2,6 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import {localizationStore} from 'sulu-admin-bundle/stores';
-import type {Localization} from 'sulu-admin-bundle/stores';
 import {ResourceMultiSelect} from 'sulu-admin-bundle/containers';
 import RoleAssignments from '../RoleAssignments';
 import RoleAssignment from '../RoleAssignment';
@@ -32,7 +31,7 @@ jest.mock('sulu-admin-bundle/stores/ResourceListStore', () => jest.fn().mockImpl
 
 jest.mock('sulu-admin-bundle/stores', () => ({
     localizationStore: {
-        loadLocalizations: jest.fn(),
+        localizations: undefined,
     },
 }));
 
@@ -45,7 +44,7 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 }));
 
 test('Render component without data', () => {
-    const localizations: Array<Localization> = [
+    localizationStore.localizations = [
         {
             country: '',
             default: '1',
@@ -65,9 +64,6 @@ test('Render component without data', () => {
             xDefault: '',
         },
     ];
-    const promise = Promise.resolve(localizations);
-    localizationStore.loadLocalizations.mockReturnValueOnce(promise);
-
     const roleAssignments = mount(
         <RoleAssignments
             onChange={jest.fn()}
@@ -75,12 +71,7 @@ test('Render component without data', () => {
         />
     );
 
-    return promise.then(() => {
-        expect(localizationStore.loadLocalizations).toBeCalled();
-        roleAssignments.update();
-        expect(roleAssignments.instance().localizations).toEqual(localizations);
-        expect(roleAssignments.render()).toMatchSnapshot();
-    });
+    expect(roleAssignments.render()).toMatchSnapshot();
 });
 
 test('Render component', () => {
@@ -105,7 +96,7 @@ test('Render component', () => {
         },
     ];
 
-    const localizations: Array<Localization> = [
+    localizationStore.localizations = [
         {
             country: '',
             default: '1',
@@ -125,8 +116,6 @@ test('Render component', () => {
             xDefault: '',
         },
     ];
-    const promise = Promise.resolve(localizations);
-    localizationStore.loadLocalizations.mockReturnValueOnce(promise);
 
     const roleAssignments = mount(
         <RoleAssignments
@@ -135,11 +124,7 @@ test('Render component', () => {
         />
     );
 
-    return promise.then(() => {
-        expect(localizationStore.loadLocalizations).toBeCalled();
-        roleAssignments.update();
-        expect(roleAssignments.render()).toMatchSnapshot();
-    });
+    expect(roleAssignments.render()).toMatchSnapshot();
 });
 
 test('Render component in disabled state', () => {
@@ -164,7 +149,7 @@ test('Render component in disabled state', () => {
         },
     ];
 
-    const localizations: Array<Localization> = [
+    localizationStore.localizations = [
         {
             country: '',
             default: '1',
@@ -184,8 +169,6 @@ test('Render component in disabled state', () => {
             xDefault: '',
         },
     ];
-    const promise = Promise.resolve(localizations);
-    localizationStore.loadLocalizations.mockReturnValueOnce(promise);
 
     const roleAssignments = mount(
         <RoleAssignments
@@ -195,11 +178,7 @@ test('Render component in disabled state', () => {
         />
     );
 
-    return promise.then(() => {
-        expect(localizationStore.loadLocalizations).toBeCalled();
-        roleAssignments.update();
-        expect(roleAssignments.render()).toMatchSnapshot();
-    });
+    expect(roleAssignments.render()).toMatchSnapshot();
 });
 
 test('Should trigger onChange correctly when MultiSelect for roles changes', () => {
@@ -224,7 +203,7 @@ test('Should trigger onChange correctly when MultiSelect for roles changes', () 
         },
     ];
 
-    const localizations: Array<Localization> = [
+    localizationStore.localizations = [
         {
             country: '',
             default: '1',
@@ -244,8 +223,6 @@ test('Should trigger onChange correctly when MultiSelect for roles changes', () 
             xDefault: '',
         },
     ];
-    const promise = Promise.resolve(localizations);
-    localizationStore.loadLocalizations.mockReturnValueOnce(promise);
 
     const onChangeSpy = jest.fn();
     const roleAssignments = mount(
@@ -255,60 +232,57 @@ test('Should trigger onChange correctly when MultiSelect for roles changes', () 
         />
     );
 
-    return promise.then(() => {
-        roleAssignments.update();
-        roleAssignments.find(ResourceMultiSelect).at(0).instance().props.onChange(
-            [2, 5, 23],
-            [
-                {
-                    id: 2,
-                    name: 'Role Name 2',
-                    system: 'Sulu',
-                },
-                {
-                    id: 5,
-                    name: 'Role Name 5',
-                    system: 'Sulu',
-                },
-                {
-                    id: 23,
-                    name: 'Role Name 23',
-                    system: 'Sulu',
-                },
-            ]
-        );
-
-        const newValue: Array<Object> = [
-            {
-                id: 1,
-                role: {
-                    id: 5,
-                    name: 'Role Name 5',
-                    system: 'Sulu',
-                },
-                locales: ['de', 'en'],
-            },
+    roleAssignments.find(ResourceMultiSelect).at(0).instance().props.onChange(
+        [2, 5, 23],
+        [
             {
                 id: 2,
-                role: {
-                    id: 23,
-                    name: 'Role Name 23',
-                    system: 'Sulu',
-                },
-                locales: ['de'],
+                name: 'Role Name 2',
+                system: 'Sulu',
             },
             {
-                role: {
-                    id: 2,
-                    name: 'Role Name 2',
-                    system: 'Sulu',
-                },
-                locales: [],
+                id: 5,
+                name: 'Role Name 5',
+                system: 'Sulu',
             },
-        ];
+            {
+                id: 23,
+                name: 'Role Name 23',
+                system: 'Sulu',
+            },
+        ]
+    );
 
-        expect(onChangeSpy).toBeCalledWith(newValue);
-    });
+    const newValue: Array<Object> = [
+        {
+            id: 1,
+            role: {
+                id: 5,
+                name: 'Role Name 5',
+                system: 'Sulu',
+            },
+            locales: ['de', 'en'],
+        },
+        {
+            id: 2,
+            role: {
+                id: 23,
+                name: 'Role Name 23',
+                system: 'Sulu',
+            },
+            locales: ['de'],
+        },
+        {
+            role: {
+                id: 2,
+                name: 'Role Name 2',
+                system: 'Sulu',
+            },
+            locales: [],
+        },
+    ];
+
+    expect(onChangeSpy).toBeCalledWith(newValue);
 });
 
 test('Should trigger onChange correctly when RoleAssignment changes', () => {
@@ -333,7 +307,7 @@ test('Should trigger onChange correctly when RoleAssignment changes', () => {
         },
     ];
 
-    const localizations: Array<Localization> = [
+    localizationStore.localizations = [
         {
             country: '',
             default: '1',
@@ -353,8 +327,6 @@ test('Should trigger onChange correctly when RoleAssignment changes', () => {
             xDefault: '',
         },
     ];
-    const promise = Promise.resolve(localizations);
-    localizationStore.loadLocalizations.mockReturnValueOnce(promise);
 
     const onChangeSpy = jest.fn();
     const roleAssignments = mount(
@@ -364,29 +336,26 @@ test('Should trigger onChange correctly when RoleAssignment changes', () => {
         />
     );
 
-    return promise.then(() => {
-        roleAssignments.update();
-        const newValue: Array<Object> = [
-            {
-                id: 1,
-                role: {
-                    id: 5,
-                    name: 'Role Name 5',
-                    system: 'Sulu',
-                },
-                locales: ['de'],
+    const newValue: Array<Object> = [
+        {
+            id: 1,
+            role: {
+                id: 5,
+                name: 'Role Name 5',
+                system: 'Sulu',
             },
-            {
-                id: 2,
-                role: {
-                    id: 23,
-                    name: 'Role Name 23',
-                    system: 'Sulu',
-                },
-                locales: ['de'],
+            locales: ['de'],
+        },
+        {
+            id: 2,
+            role: {
+                id: 23,
+                name: 'Role Name 23',
+                system: 'Sulu',
             },
-        ];
-        roleAssignments.find(RoleAssignment).at(1).instance().props.onChange(newValue[0]);
-        expect(onChangeSpy).toBeCalledWith(newValue);
-    });
+            locales: ['de'],
+        },
+    ];
+    roleAssignments.find(RoleAssignment).at(1).instance().props.onChange(newValue[0]);
+    expect(onChangeSpy).toBeCalledWith(newValue);
 });

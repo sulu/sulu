@@ -31,6 +31,7 @@ use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -124,6 +125,11 @@ class AdminControllerTest extends TestCase
     private $linkProviderPool;
 
     /**
+     * @var LocalizationManagerInterface
+     */
+    private $localizationManager;
+
+    /**
      * @var string
      */
     private $environment = 'prod';
@@ -187,7 +193,9 @@ class AdminControllerTest extends TestCase
         $this->contactManager = $this->prophesize(ContactManagerInterface::class);
         $this->dataProviderPool = $this->prophesize(DataProviderPoolInterface::class);
         $this->linkProviderPool = $this->prophesize(LinkProviderPoolInterface::class);
+        $this->localizationManager = $this->prophesize(LocalizationManagerInterface::class);
 
+        $this->localizationManager->getLocalizations()->willReturn([]);
         $this->tokenStorage->getToken()->willReturn($this->token->reveal());
         $this->token->getUser()->willReturn($this->user->reveal());
 
@@ -206,6 +214,7 @@ class AdminControllerTest extends TestCase
             $this->contactManager->reveal(),
             $this->dataProviderPool->reveal(),
             $this->linkProviderPool->reveal(),
+            $this->localizationManager->reveal(),
             $this->environment,
             $this->suluVersion,
             $this->appVersion,

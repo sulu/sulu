@@ -18,11 +18,14 @@ use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Url\WebspaceUrlProviderInterface;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Extends webspace serialization process.
@@ -45,6 +48,16 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
     private $resourceLocatorStrategyPool;
 
     /**
+     * @var AccessControlManagerInterface
+     */
+    private $accessControlManager;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
      * @var string
      */
     private $environment;
@@ -53,11 +66,15 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
         WebspaceManagerInterface $webspaceManager,
         WebspaceUrlProviderInterface $webspaceUrlProvider,
         ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
+        AccessControlManagerInterface $accessControlManager,
+        TokenStorageInterface $tokenStorage,
         $environment
     ) {
         $this->webspaceManager = $webspaceManager;
         $this->webspaceUrlProvider = $webspaceUrlProvider;
         $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
+        $this->accessControlManager = $accessControlManager;
+        $this->tokenStorage = $tokenStorage;
         $this->environment = $environment;
     }
 
@@ -87,6 +104,7 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
         $this->appendCustomUrls($webspace, $context, $visitor);
         $this->appendNavigations($webspace, $context, $visitor);
         $this->appendResourceLocatorStrategy($webspace, $context, $visitor);
+        $this->appendPermissions($webspace, $context, $visitor);
 
         $allLocalizations = [];
 
@@ -206,6 +224,23 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
         $visitor->visitProperty(
             new StaticPropertyMetadata('', 'resourceLocatorStrategy', $serializedResourceLocatorStrategy),
             $serializedResourceLocatorStrategy
+        );
+    }
+
+    private function appendPermissions(
+        Webspace $webspace,
+        Context $context,
+        SerializationVisitorInterface $visitor
+    ) {
+        $permissions = $this->accessControlManager->getUserPermissions(
+            new SecurityCondition('sulu.webspaces.' . $webspace->getKey()),
+            $this->tokenStorage->getToken()->getUser()
+        );
+
+        $permissions = $context->getNavigator()->accept($permissions);
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', '_permissions', $permissions),
+            $permissions
         );
     }
 }

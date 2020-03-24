@@ -13,13 +13,24 @@ namespace Sulu\Bundle\CoreBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Symfony\Component\HttpFoundation\Response;
 
+@trigger_error(
+    sprintf(
+        'The "%s" class is deprecated since Sulu 2.0, use data from "%s" instead.',
+        LocalizationController::class,
+        AdminController::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
- * Controller which returns the localizations for the entire system.
+ * @deprecated Deprecated since Sulu 2.0, use data from Sulu\Bundle\AdminBundle\Controller\AdminController::configAction
+ * Remember deleting the resource configuration from Sulu\Bundle\AdminBundle\DependencyInjection\SuluAdminExtension.
  */
 class LocalizationController extends AbstractRestController implements ClassResourceInterface
 {

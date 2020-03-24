@@ -1,22 +1,23 @@
 // @flow
-import {ResourceRequester} from '../../services';
+import {observable} from 'mobx';
+import log from 'loglevel';
 import type {Localization} from './types';
 
 class LocalizationStore {
-    localizationPromise: Promise<Object>;
+    @observable localizations: Array<Localization>;
 
-    sendRequest(): Promise<Object> {
-        if (!this.localizationPromise) {
-            this.localizationPromise = ResourceRequester.getList('localizations');
-        }
-
-        return this.localizationPromise;
+    setLocalizations(localizations: Array<Localization>) {
+        this.localizations = localizations;
     }
 
+    // @deprecated
     loadLocalizations(): Promise<Array<Localization>> {
-        return this.sendRequest().then((response: Object) => {
-            return response._embedded.localizations;
-        });
+        log.warn(
+            'The "loadLocalizations" method is deprecated since 2.1 and will be removed. ' +
+            'Use the "localizations" property instead.'
+        );
+
+        return Promise.resolve(this.localizations);
     }
 }
 

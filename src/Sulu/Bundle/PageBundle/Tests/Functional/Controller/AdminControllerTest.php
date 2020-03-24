@@ -51,6 +51,31 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('pages', $pageConfig->teaser->pages->resourceKey);
     }
 
+    public function testWebspacesConfig()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/admin/config');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $pageConfig = $response->sulu_page;
+
+        $this->assertCount(3, (array) $pageConfig->webspaces);
+        $this->assertEquals('destination_io', $pageConfig->webspaces->destination_io->key);
+        $this->assertEquals('sulu_io', $pageConfig->webspaces->sulu_io->key);
+        $this->assertEquals('test_io', $pageConfig->webspaces->test_io->key);
+
+        $this->assertEquals('Destination CMF', $pageConfig->webspaces->destination_io->name);
+        $this->assertEquals('default', $pageConfig->webspaces->destination_io->defaultTemplates->page);
+        $this->assertEquals('overview', $pageConfig->webspaces->destination_io->defaultTemplates->homepage);
+        $this->assertEquals('main', $pageConfig->webspaces->destination_io->navigations[0]->key);
+        $this->assertEquals('footer', $pageConfig->webspaces->destination_io->navigations[1]->key);
+        $this->assertEquals('leaf', $pageConfig->webspaces->destination_io->resourceLocatorStrategy->inputType);
+        $this->assertEquals([], $pageConfig->webspaces->destination_io->customUrls);
+        $this->assertEquals([], $pageConfig->webspaces->destination_io->_permissions);
+    }
+
     public function testPagesListMetadataAction()
     {
         $client = $this->createAuthenticatedClient();

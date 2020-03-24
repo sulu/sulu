@@ -62,11 +62,10 @@ class UserStore {
 
         // TODO this code should be adjusted/removed when a proper content-locale handling is implemented
         // load and use first (default) localization of first webspace as content-locale for the user
-        localizationStore.loadLocalizations().then(action((localizations) => {
-            const defaultLocalizations = localizations.filter((localization) => localization.default);
-            const fallbackLocalization = defaultLocalizations.length ? defaultLocalizations[0] : localizations[0];
-            this.contentLocale = fallbackLocalization ? fallbackLocalization.locale : this.contentLocale;
-        }));
+        const {localizations} = localizationStore;
+        const defaultLocalizations = localizations.filter((localization) => localization.default);
+        const fallbackLocalization = defaultLocalizations.length ? defaultLocalizations[0] : localizations[0];
+        this.contentLocale = fallbackLocalization ? fallbackLocalization.locale : this.contentLocale;
     }
 
     @action setContact(contact: Contact) {

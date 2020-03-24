@@ -14,6 +14,7 @@ namespace Sulu\Bundle\PageBundle\Controller;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
@@ -27,8 +28,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
+@trigger_error(
+    sprintf(
+        'The "%s" class is deprecated since Sulu 2.0, use data from "%s" instead.',
+        WebspaceController::class,
+        AdminController::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
- * Provides webspace rest-endpoint.
+ * @deprecated Deprecated since Sulu 2.0, use data from Sulu\Bundle\AdminBundle\Controller\AdminController::configAction
+ * Remember deleting the resource configuration from Sulu\Bundle\AdminBundle\DependencyInjection\SuluAdminExtension.
  */
 class WebspaceController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {

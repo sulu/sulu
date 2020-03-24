@@ -26,7 +26,7 @@ jest.mock('sulu-admin-bundle/utils', () => ({
 
 jest.mock('sulu-page-bundle/stores', () => ({
     webspaceStore: {
-        loadWebspace: jest.fn(),
+        getWebspace: jest.fn(),
     },
 }));
 
@@ -39,13 +39,13 @@ test('Pass correct props to MultiSelect', () => {
         )
     );
 
-    const webspacePromise = Promise.resolve({
+    const webspace = {
         urls: [
             {url: '{host}/{localization}'},
             {url: '{host}'},
         ],
-    });
-    webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
+    };
+    webspaceStore.getWebspace.mockReturnValue(webspace);
 
     const analyticsDomainSelect = shallow(
         <AnalyticsDomainSelect
@@ -56,16 +56,14 @@ test('Pass correct props to MultiSelect', () => {
         />
     );
 
-    expect(webspaceStore.loadWebspace).toBeCalledWith('sulu_io');
+    expect(webspaceStore.getWebspace).toBeCalledWith('sulu_io');
 
-    return webspacePromise.then(() => {
-        expect(analyticsDomainSelect.find('MultiSelect').prop('disabled')).toEqual(true);
-        expect(analyticsDomainSelect.find('MultiSelect').prop('values')).toEqual(['{host}']);
-        expect(analyticsDomainSelect.find('Option').at(0).prop('children')).toEqual('{host}/{localization}');
-        expect(analyticsDomainSelect.find('Option').at(0).prop('value')).toEqual('{host}/{localization}');
-        expect(analyticsDomainSelect.find('Option').at(1).prop('children')).toEqual('{host}');
-        expect(analyticsDomainSelect.find('Option').at(1).prop('value')).toEqual('{host}');
-    });
+    expect(analyticsDomainSelect.find('MultiSelect').prop('disabled')).toEqual(true);
+    expect(analyticsDomainSelect.find('MultiSelect').prop('values')).toEqual(['{host}']);
+    expect(analyticsDomainSelect.find('Option').at(0).prop('children')).toEqual('{host}/{localization}');
+    expect(analyticsDomainSelect.find('Option').at(0).prop('value')).toEqual('{host}/{localization}');
+    expect(analyticsDomainSelect.find('Option').at(1).prop('children')).toEqual('{host}');
+    expect(analyticsDomainSelect.find('Option').at(1).prop('value')).toEqual('{host}');
 });
 
 test('Call onChange and onBlur if the value is changed', () => {
@@ -80,13 +78,13 @@ test('Call onChange and onBlur if the value is changed', () => {
         )
     );
 
-    const webspacePromise = Promise.resolve({
+    const webspace = {
         urls: [
             {url: '{host}/{localization}'},
             {url: '{host}'},
         ],
-    });
-    webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
+    };
+    webspaceStore.getWebspace.mockReturnValue(webspace);
 
     const analyticsDomainSelect = shallow(
         <AnalyticsDomainSelect
@@ -98,9 +96,7 @@ test('Call onChange and onBlur if the value is changed', () => {
         />
     );
 
-    return webspacePromise.then(() => {
-        analyticsDomainSelect.find('MultiSelect').prop('onChange')(['{host}', '{host}/{localization}']);
-        expect(changeSpy).toBeCalledWith(['{host}', '{host}/{localization}']);
-        expect(finishSpy).toBeCalledWith();
-    });
+    analyticsDomainSelect.find('MultiSelect').prop('onChange')(['{host}', '{host}/{localization}']);
+    expect(changeSpy).toBeCalledWith(['{host}', '{host}/{localization}']);
+    expect(finishSpy).toBeCalledWith();
 });
