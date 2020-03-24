@@ -1,17 +1,26 @@
 // @flow
 import React from 'react';
 import type {ElementRef} from 'react';
-import {autorun, computed, toJS, untracked, when} from 'mobx';
+import {action, autorun, computed, observable, toJS, untracked, when} from 'mobx';
 import equals from 'fast-deep-equal';
 import MultiSelectionStore from '../../../stores/MultiSelectionStore';
 import MultiAutoComplete from '../../MultiAutoComplete';
+import ResourceMultiSelect from '../../ResourceMultiSelect';
 import AbstractFieldFilterType from './AbstractFieldFilterType';
 import selectionFieldFilterTypeStyles from './selectionFieldFilterType.scss';
+
+const TYPE_AUTO_COMPLETE = 'auto_complete';
+const TYPE_SELECT = 'select';
 
 class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | number>> {
     selectionStore: MultiSelectionStore<string | number>;
     selectionStoreDisposer: () => void;
+    @observable selectValue: Array<string | number> = [];
     valueDisposer: () => void;
+
+    @computed get type() {
+        return this.parameters && (this.parameters.type || TYPE_AUTO_COMPLETE);
+    }
 
     constructor(
         onChange: (value: ?Array<string | number>) => void,
@@ -20,17 +29,7 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
     ) {
         super(onChange, parameters, value);
 
-        if (!parameters) {
-            throw new Error('The "SelectionFieldFilterType" needs some parameters to work!');
-        }
-
-        const {resourceKey} = parameters;
-
-        if (typeof resourceKey !== 'string') {
-            throw new Error('The "resourceKey" parameters must be a string!');
-        }
-
-        this.selectionStore = new MultiSelectionStore(resourceKey, []);
+        this.selectionStore = new MultiSelectionStore(this.resourceKey, []);
 
         this.selectionStoreDisposer = autorun(() => {
             const {onChange, selectionStore} = this;
@@ -44,10 +43,14 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
         });
 
         this.valueDisposer = autorun(() => {
-            const {value = []} = this;
+            const value = toJS(this.value || []);
 
-            if (!equals(toJS(value), untracked(() => this.selectionStore.ids))) {
+            if (!equals(value, untracked(() => this.selectionStore.ids))) {
                 this.selectionStore.loadItems(value);
+            }
+
+            if (!equals(value, untracked(() => this.selectValue))) {
+                this.setSelectValue(value);
             }
         });
     }
@@ -55,6 +58,22 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
     destroy() {
         this.selectionStoreDisposer();
         this.valueDisposer();
+    }
+
+    @computed get resourceKey() {
+        const {parameters} = this;
+
+        if (!parameters) {
+            throw new Error('The "SelectionFieldFilterType" needs some parameters to work!');
+        }
+
+        const {resourceKey} = parameters;
+
+        if (typeof resourceKey !== 'string') {
+            throw new Error('The "resourceKey" parameters must be a string!');
+        }
+
+        return resourceKey;
     }
 
     @computed get displayProperty() {
@@ -79,15 +98,38 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
         }
     }
 
+    @action setSelectValue = (values: Array<string | number>) => {
+        this.selectValue = values;
+    };
+
+    handleSelectChange = (values: Array<string | number>) => {
+        this.setSelectValue(values);
+    };
+
+    handleSelectClose = () => {
+        this.onChange(this.selectValue);
+    };
+
     getFormNode() {
         return (
             <div className={selectionFieldFilterTypeStyles.selectionFieldFilterType}>
-                <MultiAutoComplete
-                    displayProperty={this.displayProperty}
-                    inputRef={this.setInputRef}
-                    searchProperties={[this.displayProperty]}
-                    selectionStore={this.selectionStore}
-                />
+                {this.type === TYPE_AUTO_COMPLETE &&
+                    <MultiAutoComplete
+                        displayProperty={this.displayProperty}
+                        inputRef={this.setInputRef}
+                        searchProperties={[this.displayProperty]}
+                        selectionStore={this.selectionStore}
+                    />
+                }
+                {this.type === TYPE_SELECT &&
+                    <ResourceMultiSelect
+                        displayProperty={this.displayProperty}
+                        onChange={this.handleSelectChange}
+                        onClose={this.handleSelectClose}
+                        resourceKey={this.resourceKey}
+                        values={this.selectValue}
+                    />
+                }
             </div>
         );
     }

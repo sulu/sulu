@@ -37,6 +37,22 @@ test('Pass correct props to MultiAutoComplete', () => {
     }));
 });
 
+test('Pass correct props to Select', () => {
+    const selectionFieldFilterType = new SelectionFieldFilterType(
+        jest.fn(),
+        {displayProperty: 'name', resourceKey: 'accounts', type: 'select'},
+        [4, 6]
+    );
+
+    const selectionFieldFilterTypeForm = shallow(selectionFieldFilterType.getFormNode());
+
+    expect(selectionFieldFilterTypeForm.find('ResourceMultiSelect').props()).toEqual(expect.objectContaining({
+        displayProperty: 'name',
+        resourceKey: 'accounts',
+        values: [4, 6],
+    }));
+});
+
 test('Destroy should call disposers', () => {
     const selectionFieldFilterType = new SelectionFieldFilterType(
         jest.fn(),
@@ -53,16 +69,33 @@ test('Destroy should call disposers', () => {
     expect(selectionFieldFilterType.valueDisposer).toBeCalledWith();
 });
 
-test('Call onChange handler when selection changes', () => {
+test('Call onChange handler when selection changes for auto_complete type', () => {
     const changeSpy = jest.fn();
     const selectionFieldFilterType = new SelectionFieldFilterType(
         changeSpy,
-        {displayProperty: 'firstName', resourceKey: 'contacts'},
+        {displayProperty: 'firstName', resourceKey: 'contacts', type: 'multi_auto_complete'},
         undefined
     );
 
     selectionFieldFilterType.selectionStore.ids.push(4, 7);
 
+    expect(changeSpy).toBeCalledWith([4, 7]);
+});
+
+test('Call onChange handler when selection changes for select type after select is closed', () => {
+    const changeSpy = jest.fn();
+    const selectionFieldFilterType = new SelectionFieldFilterType(
+        changeSpy,
+        {displayProperty: 'firstName', resourceKey: 'contacts', type: 'select'},
+        undefined
+    );
+
+    const selectionFieldFilterTypeForm = shallow(selectionFieldFilterType.getFormNode());
+    changeSpy.mockReset();
+    selectionFieldFilterTypeForm.find('ResourceMultiSelect').prop('onChange')([4, 7]);
+
+    expect(changeSpy).not.toBeCalled();
+    selectionFieldFilterTypeForm.find('ResourceMultiSelect').prop('onClose')();
     expect(changeSpy).toBeCalledWith([4, 7]);
 });
 
