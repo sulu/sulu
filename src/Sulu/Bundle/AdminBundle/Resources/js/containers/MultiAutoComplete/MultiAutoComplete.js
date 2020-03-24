@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import type {ElementRef} from 'react';
 import {observer} from 'mobx-react';
 import MultiAutoCompleteComponent from '../../components/MultiAutoComplete';
 import SearchStore from '../../stores/SearchStore';
@@ -11,6 +12,7 @@ type Props = {|
     displayProperty: string,
     id?: string,
     idProperty: string,
+    inputRef?: (ref: ?ElementRef<'input'>) => void,
     options: Object,
     searchProperties: Array<string>,
     selectionStore: MultiSelectionStore<string | number>,
@@ -57,6 +59,7 @@ class MultiAutoComplete extends React.Component<Props> {
             displayProperty,
             id,
             idProperty,
+            inputRef,
             searchProperties,
             selectionStore,
         } = this.props;
@@ -68,6 +71,7 @@ class MultiAutoComplete extends React.Component<Props> {
                 displayProperty={displayProperty}
                 id={id}
                 idProperty={idProperty}
+                inputRef={inputRef}
                 loading={this.searchStore.loading || selectionStore.loading}
                 onChange={this.handleChange}
                 onSearch={this.handleSearch}

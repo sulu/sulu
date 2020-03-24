@@ -34,6 +34,22 @@ test('Render in loading state', () => {
     )).toMatchSnapshot();
 });
 
+test('Should assign input as ref to inputRef', () => {
+    const inputRefSpy = jest.fn();
+    const selectionStore = new MultiSelectionStore('contact', []);
+
+    const multiAutoComplete = mount(
+        <MultiAutoComplete
+            displayProperty="name"
+            inputRef={inputRefSpy}
+            searchProperties={[]}
+            selectionStore={selectionStore}
+        />
+    );
+
+    expect(inputRefSpy).toBeCalledWith(multiAutoComplete.find('input').instance());
+});
+
 test('Pass loading flag if MultiSelectionStore and SearchStore is loading', () => {
     // $FlowFixMe
     SearchStore.mockImplementation(function() {
