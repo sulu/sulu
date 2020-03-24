@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import {SingleSelect} from 'sulu-admin-bundle/components';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
@@ -7,6 +8,11 @@ import {webspaceStore} from 'sulu-page-bundle/stores';
 
 @observer
 class CustomUrlsDomainSelect extends React.Component<FieldTypeProps<string>> {
+    @computed get webspace() {
+        const {formInspector} = this.props;
+        return webspaceStore.getWebspace(formInspector.options.webspace);
+    }
+
     handleChange = (value: string) => {
         const {onChange, onFinish} = this.props;
 
@@ -15,7 +21,7 @@ class CustomUrlsDomainSelect extends React.Component<FieldTypeProps<string>> {
     };
 
     render() {
-        const {disabled, formInspector, value} = this.props;
+        const {disabled, value} = this.props;
 
         return (
             <SingleSelect
@@ -23,7 +29,7 @@ class CustomUrlsDomainSelect extends React.Component<FieldTypeProps<string>> {
                 onChange={this.handleChange}
                 value={value}
             >
-                {webspaceStore.getWebspace(formInspector.options.webspace).customUrls.map(({url}) => (
+                {this.webspace.customUrls.map(({url}) => (
                     <SingleSelect.Option key={url} value={url}>
                         {url}
                     </SingleSelect.Option>

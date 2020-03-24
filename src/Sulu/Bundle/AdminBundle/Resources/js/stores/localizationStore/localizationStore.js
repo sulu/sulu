@@ -13,7 +13,7 @@ class LocalizationStore {
     // @deprecated
     loadLocalizations(): Promise<Array<Localization>> {
         log.warn(
-            'The "loadLocalizations" method is deprecated sind 2.1 and will be removed. ' +
+            'The "loadLocalizations" method is deprecated since 2.1 and will be removed. ' +
             'Use the "localizations" property instead.'
         );
 

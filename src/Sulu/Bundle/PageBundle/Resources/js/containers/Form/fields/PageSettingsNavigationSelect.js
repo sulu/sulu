@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import {MultiSelect} from 'sulu-admin-bundle/components';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
@@ -8,6 +9,11 @@ import webspaceStore from '../../../stores/webspaceStore';
 
 @observer
 class PageSettingsNavigationSelect extends React.Component<FieldTypeProps<Array<string | number>>> {
+    @computed get webspace() {
+        const {formInspector} = this.props;
+
+        return webspaceStore.getWebspace(formInspector.options.webspace);
+    }
     handleChange = (value: Array<string | number>) => {
         const {onChange, onFinish} = this.props;
 
@@ -16,7 +22,7 @@ class PageSettingsNavigationSelect extends React.Component<FieldTypeProps<Array<
     };
 
     render() {
-        const {disabled, formInspector, value} = this.props;
+        const {disabled, value} = this.props;
 
         return (
             <MultiSelect
@@ -26,7 +32,7 @@ class PageSettingsNavigationSelect extends React.Component<FieldTypeProps<Array<
                 onChange={this.handleChange}
                 values={value || []}
             >
-                {webspaceStore.getWebspace(formInspector.options.webspace).navigations.map(({key, title}) => (
+                {this.webspace.navigations.map(({key, title}) => (
                     <MultiSelect.Option key={key} value={key}>
                         {title}
                     </MultiSelect.Option>

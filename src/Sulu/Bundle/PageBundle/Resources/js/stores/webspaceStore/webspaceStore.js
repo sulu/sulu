@@ -29,7 +29,7 @@ class WebspaceStore {
     // @deprecated
     loadWebspaces(): Promise<Array<Webspace>> {
         log.warn(
-            'The "loadWebspaces" method is deprecated sind 2.1 and will be removed. ' +
+            'The "loadWebspaces" method is deprecated since 2.1 and will be removed. ' +
             'Use the "grantedWebspaces" property instead.'
         );
 
@@ -39,7 +39,7 @@ class WebspaceStore {
     // @deprecated
     loadWebspace(webspaceKey: string): Promise<Webspace> {
         log.warn(
-            'The "loadWebspace" method is deprecated sind 2.1 and will be removed. ' +
+            'The "loadWebspace" method is deprecated since 2.1 and will be removed. ' +
             'Use the "getWebspace" method instead.'
         );
 

@@ -18,8 +18,8 @@ class AdminControllerTest extends SuluTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->initPhpcr();
         $this->purgeDatabase();
+        $this->initPhpcr();
     }
 
     public function testRulesConfig()
