@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import type {ElementRef} from 'react';
 import {autorun, computed, toJS, untracked, when} from 'mobx';
 import equals from 'fast-deep-equal';
 import MultiSelectionStore from '../../../stores/MultiSelectionStore';
@@ -72,11 +73,18 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
         return displayProperty;
     }
 
+    setInputRef(ref: ?ElementRef<'input'>) {
+        if (ref) {
+            ref.focus();
+        }
+    }
+
     getFormNode() {
         return (
             <div className={selectionFieldFilterTypeStyles.selectionFieldFilterType}>
                 <MultiAutoComplete
                     displayProperty={this.displayProperty}
+                    inputRef={this.setInputRef}
                     searchProperties={[this.displayProperty]}
                     selectionStore={this.selectionStore}
                 />
