@@ -77,7 +77,7 @@ trait DataProviderRepositoryTrait
 
         $parameter = array_merge($parameter, $this->append($queryBuilder, 'c', $locale, $options));
         if (isset($filters['dataSource'])) {
-            $includeSubFolders = $this->getBoolean($filters['includeSubFolders'] ?: false);
+            $includeSubFolders = $this->getBoolean($filters['includeSubFolders'] ?? false);
             $parameter = array_merge(
                 $parameter,
                 $this->appendDatasource($filters['dataSource'], $includeSubFolders, $queryBuilder, 'c')
