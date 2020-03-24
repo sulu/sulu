@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import type {ElementRef} from 'react';
 import DatePicker from '../../../components/DatePicker';
 import AbstractFieldFilterType from './AbstractFieldFilterType';
 import dateTimeFieldFilterTypeStyles from './dateTimeFieldFilterType.scss';
@@ -27,12 +28,22 @@ class DateTimeFieldFilterType extends AbstractFieldFilterType<?{from?: Date, to?
         this.handleChange('to', value);
     };
 
+    setInputRef = (ref: ?ElementRef<'input'>) => {
+        if (ref) {
+            ref.focus();
+        }
+    };
+
     getFormNode() {
         const {value} = this;
 
         return (
             <div className={dateTimeFieldFilterTypeStyles.dateTimeFieldFilterType}>
-                <DatePicker onChange={this.handleFromChange} value={value ? value.from : undefined} />
+                <DatePicker
+                    inputRef={this.setInputRef}
+                    onChange={this.handleFromChange}
+                    value={value ? value.from : undefined}
+                />
                 <DatePicker onChange={this.handleToChange} value={value ? value.to : undefined} />
             </div>
         );
