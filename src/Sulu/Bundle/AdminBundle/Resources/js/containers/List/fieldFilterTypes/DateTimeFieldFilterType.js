@@ -28,11 +28,11 @@ class DateTimeFieldFilterType extends AbstractFieldFilterType<?{from?: Date, to?
         this.handleChange('to', value);
     };
 
-    setInputRef = (ref: ?ElementRef<'input'>) => {
+    setInputRef(ref: ?ElementRef<'input'>) {
         if (ref) {
             ref.focus();
         }
-    };
+    }
 
     getFormNode() {
         const {value} = this;
