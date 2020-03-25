@@ -28,7 +28,7 @@ class DateTimeFieldFilterType extends AbstractFieldFilterType<?{from?: Date, to?
         this.handleChange('to', value);
     };
 
-    setInputRef(ref: ?ElementRef<'input'>) {
+    setFromInputRef(ref: ?ElementRef<'input'>) {
         if (ref) {
             ref.focus();
         }
@@ -40,7 +40,7 @@ class DateTimeFieldFilterType extends AbstractFieldFilterType<?{from?: Date, to?
         return (
             <div className={dateTimeFieldFilterTypeStyles.dateTimeFieldFilterType}>
                 <DatePicker
-                    inputRef={this.setInputRef}
+                    inputRef={this.setFromInputRef}
                     onChange={this.handleFromChange}
                     value={value ? value.from : undefined}
                 />
