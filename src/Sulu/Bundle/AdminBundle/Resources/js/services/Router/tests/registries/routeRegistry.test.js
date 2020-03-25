@@ -10,11 +10,11 @@ test('Clear routes from RouteRegistry', () => {
     routeRegistry.addCollection([
         {
             name: 'route',
-            view: 'view',
             path: '/route',
             options: {},
             attributeDefaults: {},
             rerenderAttributes: [],
+            type: 'view',
         },
     ]);
 
@@ -27,7 +27,7 @@ test('Clear routes from RouteRegistry', () => {
 test('Get routes from RouteRegistry', () => {
     const route1 = {
         name: 'route1',
-        view: 'view1',
+        type: 'view1',
         path: '/route/1',
         options: {
             test: 'value',
@@ -37,7 +37,7 @@ test('Get routes from RouteRegistry', () => {
     };
     const route2 = {
         name: 'route2',
-        view: 'view2',
+        type: 'view2',
         path: '/route/2',
         options: {
             test2: 'value2',
@@ -53,7 +53,7 @@ test('Get routes from RouteRegistry', () => {
     expect(Object.keys(routes)).toHaveLength(2);
     expect(toJS(routes.route1)).toEqual({
         name: 'route1',
-        view: 'view1',
+        type: 'view1',
         path: '/route/1',
         options: {
             test: 'value',
@@ -65,7 +65,7 @@ test('Get routes from RouteRegistry', () => {
     });
     expect(toJS(routes.route2)).toEqual({
         name: 'route2',
-        view: 'view2',
+        type: 'view2',
         path: '/route/2',
         options: {
             test2: 'value2',
@@ -80,7 +80,7 @@ test('Get routes from RouteRegistry', () => {
 test('Add a route collection to the RouteRegistry', () => {
     const route1 = {
         name: 'route1',
-        view: 'view1',
+        type: 'view1',
         path: '/route/1',
         options: {
             test: 'value',
@@ -91,7 +91,7 @@ test('Add a route collection to the RouteRegistry', () => {
 
     const route2 = {
         name: 'route2',
-        view: 'view2',
+        type: 'view2',
         path: '/route/2',
         options: {
             test2: 'value2',
@@ -104,7 +104,7 @@ test('Add a route collection to the RouteRegistry', () => {
 
     expect(toJS(routeRegistry.get('route1'))).toEqual({
         name: 'route1',
-        view: 'view1',
+        type: 'view1',
         path: '/route/1',
         options: {
             test: 'value',
@@ -116,7 +116,7 @@ test('Add a route collection to the RouteRegistry', () => {
     });
     expect(toJS(routeRegistry.get('route2'))).toEqual({
         name: 'route2',
-        view: 'view2',
+        type: 'view2',
         path: '/route/2',
         options: {
             test2: 'value2',
@@ -131,7 +131,7 @@ test('Add a route collection to the RouteRegistry', () => {
 test('Add route with existing key should throw', () => {
     const route = {
         name: 'test_route',
-        view: 'view',
+        type: 'view',
         path: '/route',
         options: {},
         attributeDefaults: {},
@@ -147,29 +147,29 @@ test('Set parent and children routes based on passed RouteConfig', () => {
     routeRegistry.addCollection([
         {
             name: 'sulu_snippet.form',
-            view: 'sulu_admin.tab',
             path: '/snippets/:uuid',
             options: {},
             attributeDefaults: {},
             rerenderAttributes: [],
+            type: 'sulu_admin.tab',
         },
         {
             name: 'sulu_snippet.form.details',
             parent: 'sulu_snippet.form',
-            view: 'sulu_admin.form',
             path: '/details',
             options: {},
             attributeDefaults: {},
             rerenderAttributes: [],
+            type: 'sulu_admin.form',
         },
         {
             name: 'sulu_snippet.form.taxonomy',
             parent: 'sulu_snippet.form',
-            view: 'sulu_admin.form',
             path: '/taxonomy',
             options: {},
             attributeDefaults: {},
             rerenderAttributes: [],
+            type: 'sulu_admin.form',
         },
     ]);
 

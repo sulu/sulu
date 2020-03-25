@@ -16,7 +16,7 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey
     this.locale = locale;
 }));
 
-jest.mock('../../../../stores/userStore', () => jest.fn());
+jest.mock('../../../../stores/userStore', () => ({}));
 
 jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore, formKey, options) {
     this.resourceKey = resourceStore.resourceKey;
@@ -744,6 +744,7 @@ test('Throw an error if a none string was passed to field-type-options', () => {
 test('Pass content locale from user to SingleItemSelection if form has no locale', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('accounts', 5), 'test'));
 
+    // $FlowFixMe
     userStore.contentLocale = 'en';
 
     const value = 3;

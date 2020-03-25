@@ -2,8 +2,7 @@
 import React from 'react';
 import type {Element} from 'react';
 import {observer} from 'mobx-react';
-import Router, {getViewKeyFromRoute} from '../../services/Router';
-import type {Route} from '../../services/Router';
+import Router, {getViewKeyFromRoute, Route} from '../../services/Router';
 import viewRegistry from './registries/viewRegistry';
 import type {View} from './types';
 

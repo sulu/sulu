@@ -45,7 +45,7 @@ jest.mock('sulu-page-bundle/stores/webspaceStore', () => ({
     grantedWebspaces: [{key: 'sulu_io'}, {key: 'example'}],
 }));
 
-jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function(history) {
+jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function(history) {
     this.history = history;
     this.attributes = {locale: 'de'};
     this.route = {options: {}};

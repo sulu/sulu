@@ -9,7 +9,7 @@ import ResourceFormStore from '../../Form/stores/ResourceFormStore';
 import ResourceStore from '../../../stores/ResourceStore';
 import blockPreviewTransformerRegistry from '../registries/blockPreviewTransformerRegistry';
 
-jest.mock('../../../services/Router', () => jest.fn());
+jest.mock('../../../services/Router/Router', () => jest.fn());
 jest.mock('../../Form/FormInspector', () => jest.fn(function() {
     this.isFieldModified = jest.fn();
     this.getSchemaEntryByPath = jest.fn();

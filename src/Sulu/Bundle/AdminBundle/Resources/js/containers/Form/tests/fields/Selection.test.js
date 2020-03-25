@@ -195,6 +195,7 @@ test('Should pass locale from userStore to MultiSelection component if form has 
         )
     );
 
+    // $FlowFixMe
     userStore.contentLocale = 'de';
 
     const selection = shallow(
@@ -860,6 +861,7 @@ test('Should pass locale from userStore to listStore if form has no locale', () 
         )
     );
 
+    // $FlowFixMe
     userStore.contentLocale = 'en';
 
     const selection = shallow(
@@ -1142,6 +1144,7 @@ test('Should pass locale from userStore to MultiAutoComplete component if form h
         )
     );
 
+    // $FlowFixMe
     userStore.contentLocale = 'de';
 
     const selection = shallow(

@@ -2,9 +2,9 @@
 import React from 'react';
 import {render, mount} from 'enzyme';
 import Navigation from '../Navigation';
-import Router from '../../../services/Router';
+import Router, {Route} from '../../../services/Router';
 
-jest.mock('../../../services/Router', () => jest.fn(function() {
+jest.mock('../../../services/Router/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
 }));
 
@@ -56,16 +56,11 @@ jest.mock('../registries/navigationRegistry', () => ({
 
 test('Should render navigation', () => {
     const router = new Router({});
-    router.route = {
+    router.route = new Route({
         name: 'sulu_admin.form_tab',
-        type: 'form_tab',
-        attributeDefaults: {},
-        children: [],
-        options: {},
-        parent: undefined,
         path: '/form',
-        rerenderAttributes: [],
-    };
+        type: 'form_tab',
+    });
 
     const navigation = render(
         <Navigation
@@ -85,16 +80,11 @@ test('Should render navigation', () => {
 
 test('Should render navigation without appVersion', () => {
     const router = new Router({});
-    router.route = {
+    router.route = new Route({
         name: 'sulu_admin.form_tab',
-        type: 'form_tab',
-        attributeDefaults: {},
-        children: [],
-        options: {},
-        parent: undefined,
         path: '/form',
-        rerenderAttributes: [],
-    };
+        type: 'form_tab',
+    });
 
     const navigation = render(
         <Navigation
@@ -114,16 +104,11 @@ test('Should render navigation without appVersion', () => {
 
 test('Should call the navigation callback, pin callback and router navigate', () => {
     const router = new Router({});
-    router.route = {
+    router.route = new Route({
         name: 'sulu_admin.form_tab',
-        type: 'form_tab',
-        attributeDefaults: {},
-        children: [],
-        options: {},
-        parent: undefined,
         path: '/form',
-        rerenderAttributes: [],
-    };
+        type: 'form_tab',
+    });
     const handleNavigate = jest.fn();
     const handlePin = jest.fn();
 

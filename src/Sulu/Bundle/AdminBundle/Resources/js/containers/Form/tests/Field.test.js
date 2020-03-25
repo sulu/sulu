@@ -8,7 +8,7 @@ import fieldRegistry from '../registries/fieldRegistry';
 import FormInspector from '../FormInspector';
 import ResourceFormStore from '../stores/ResourceFormStore';
 
-jest.mock('../../../services/Router', () => jest.fn());
+jest.mock('../../../services/Router/Router', () => jest.fn());
 jest.mock('../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../FormInspector', () => jest.fn());
 jest.mock('../stores/ResourceFormStore', () => jest.fn());

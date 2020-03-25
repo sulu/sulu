@@ -8,7 +8,7 @@ import ResourceStore from '../../../stores/ResourceStore';
 import ResourceFormStore from '../stores/ResourceFormStore';
 import metadataStore from '../stores/metadataStore';
 
-jest.mock('../../../services/Router', () => jest.fn());
+jest.mock('../../../services/Router/Router', () => jest.fn());
 
 jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,

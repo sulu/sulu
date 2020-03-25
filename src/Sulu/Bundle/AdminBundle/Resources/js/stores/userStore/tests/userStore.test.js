@@ -289,3 +289,9 @@ test('Should logout', () => {
         expect(userStore.loggedIn).toBe(false);
     });
 });
+
+test('Should update persistent settings on updateContentLocale', () => {
+    userStore.updateContentLocale('fr');
+    expect(Requester.patch).toBeCalledWith('profile_settings_url', {'sulu_admin.content_locale': 'fr'});
+    expect(userStore.contentLocale).toBe('fr');
+});

@@ -1,26 +1,17 @@
 // @flow
+import Route from './Route';
+
 export type RouteConfig = {|
-    attributeDefaults: AttributeMap,
+    attributeDefaults?: AttributeMap,
     name: string,
-    options: Object,
+    options?: Object,
     parent?: string,
     path: string,
-    rerenderAttributes: Array<string>,
-    view: string,
-|};
-
-export type Route = {|
-    attributeDefaults: AttributeMap,
-    children: Array<Route>,
-    name: string,
-    options: Object,
-    parent: ?Route,
-    path: string,
-    rerenderAttributes: Array<string>,
+    rerenderAttributes?: Array<string>,
     type: string,
 |};
 
-export type AttributeMap = {[string]: string};
+export type AttributeMap = {[string]: any };
 
 export type RouteMap = {[string]: Route};
 
