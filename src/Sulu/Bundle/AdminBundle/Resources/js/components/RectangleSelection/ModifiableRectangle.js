@@ -95,14 +95,6 @@ class ModifiableRectangle extends React.Component<Props> {
 
         return (
             <Fragment>
-                {minSizeReached &&
-                    <div
-                        className={modifiableRectangleStyles.minSizeNotification}
-                        style={{left: left + 'px', top: top + height + 'px', width: width + 'px'}}
-                    >
-                        {translate('sulu_media.min_size_notification')}
-                    </div>
-                }
                 <div
                     className={modifiableRectangleStyles.rectangle}
                     onDoubleClick={this.handleDoubleClick}
@@ -111,15 +103,23 @@ class ModifiableRectangle extends React.Component<Props> {
                     style={{left: left + 'px', top: top + 'px', width: width + 'px', height: height + 'px'}}
                 >
                     <div
+                        className={modifiableRectangleStyles.backdrop}
+                        style={{outlineWidth: this.props.backdropSize + 'px'}}
+                    />
+                    <div
                         className={modifiableRectangleStyles.resizeHandle}
                         onMouseDown={this.handleResizeMouseDown}
                         role="slider"
                     />
-                    <div
-                        className={modifiableRectangleStyles.backdrop}
-                        style={{outlineWidth: this.props.backdropSize + 'px'}}
-                    />
                 </div>
+                {minSizeReached &&
+                    <div
+                        className={modifiableRectangleStyles.minSizeNotification}
+                        style={{left: left + 'px', top: top + height + 'px', width: width + 'px'}}
+                    >
+                        {translate('sulu_media.min_size_notification')}
+                    </div>
+                }
             </Fragment>
         );
     }

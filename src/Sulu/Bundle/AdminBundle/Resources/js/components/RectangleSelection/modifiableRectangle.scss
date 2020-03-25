@@ -11,7 +11,6 @@ $minSizeNotificationColor: $white;
     border: $borderSize solid $borderColor;
     cursor: move;
     overflow: visible;
-    z-index: 1;
 }
 
 .backdrop {
@@ -34,12 +33,10 @@ $minSizeNotificationColor: $white;
     background: $borderColor;
     cursor: nwse-resize;
     box-shadow: 0 0 20px 0 rgba($black, .3);
-    z-index: 2;
 }
 
 .min-size-notification {
     position: absolute;
-    z-index: 2;
     padding: 5px 15px 0 0;
     color: $minSizeNotificationColor;
     text-align: right;

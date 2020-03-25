@@ -100,9 +100,19 @@ exports[`Render based on current route 1`] = `
     <main
       class="main"
     >
-      <header
-        class="header"
+      <div
+        class="viewContainer"
       >
+        <div>
+          <h1>
+            Test
+          </h1>
+          <h2>
+            test
+          </h2>
+        </div>
+      </div>
+      <header>
         <div
           class="snackbar error"
           role="button"
@@ -163,18 +173,6 @@ exports[`Render based on current route 1`] = `
           />
         </nav>
       </header>
-      <div
-        class="viewContainer"
-      >
-        <div>
-          <h1>
-            Test
-          </h1>
-          <h2>
-            test
-          </h2>
-        </div>
-      </div>
     </main>
   </div>
 </div>
@@ -283,9 +281,19 @@ exports[`Render based on current route with app version 1`] = `
     <main
       class="main"
     >
-      <header
-        class="header"
+      <div
+        class="viewContainer"
       >
+        <div>
+          <h1>
+            Test
+          </h1>
+          <h2>
+            test
+          </h2>
+        </div>
+      </div>
+      <header>
         <div
           class="snackbar error"
           role="button"
@@ -346,18 +354,6 @@ exports[`Render based on current route with app version 1`] = `
           />
         </nav>
       </header>
-      <div
-        class="viewContainer"
-      >
-        <div>
-          <h1>
-            Test
-          </h1>
-          <h2>
-            test
-          </h2>
-        </div>
-      </div>
     </main>
   </div>
 </div>
@@ -798,16 +794,22 @@ exports[`Render opened navigation 1`] = `
   <div
     class="content"
   >
-    <div
-      class="backdrop"
-      role="button"
-    />
     <main
       class="main"
     >
-      <header
-        class="header"
+      <div
+        class="viewContainer"
       >
+        <div>
+          <h1>
+            Test
+          </h1>
+          <h2>
+            test
+          </h2>
+        </div>
+      </div>
+      <header>
         <div
           class="snackbar error"
           role="button"
@@ -868,19 +870,11 @@ exports[`Render opened navigation 1`] = `
           />
         </nav>
       </header>
-      <div
-        class="viewContainer"
-      >
-        <div>
-          <h1>
-            Test
-          </h1>
-          <h2>
-            test
-          </h2>
-        </div>
-      </div>
     </main>
+    <div
+      class="backdrop"
+      role="button"
+    />
   </div>
 </div>
 `;
@@ -985,9 +979,10 @@ exports[`Should not fail if current route does not exist 1`] = `
     <main
       class="main"
     >
-      <header
-        class="header"
-      >
+      <div
+        class="viewContainer"
+      />
+      <header>
         <div
           class="snackbar error"
           role="button"
@@ -1048,9 +1043,6 @@ exports[`Should not fail if current route does not exist 1`] = `
           />
         </nav>
       </header>
-      <div
-        class="viewContainer"
-      />
     </main>
   </div>
 </div>

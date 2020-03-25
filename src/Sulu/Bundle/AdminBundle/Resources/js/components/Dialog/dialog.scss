@@ -22,7 +22,6 @@ $transitionDuration: 300ms;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100;
 }
 
 .dialog {
@@ -31,7 +30,6 @@ $transitionDuration: 300ms;
     opacity: 0;
     will-change: opacity;
     transition: opacity $transitionDuration;
-    z-index: 1;
     pointer-events: none;
 
     & > * {

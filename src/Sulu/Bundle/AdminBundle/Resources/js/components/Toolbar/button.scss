@@ -62,12 +62,6 @@ $successBackgroundColor: $mantis;
         cursor: default;
     }
 
-    &:not(:disabled) {
-        &.active {
-            z-index: 2;
-        }
-    }
-
     &.small {
         max-width: $smallSelectWidth;
         overflow: hidden;
