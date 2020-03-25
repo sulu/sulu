@@ -40,7 +40,7 @@ export default class Toolbar extends React.PureComponent<Props> {
                 child,
                 {
                     ...child.props,
-                    skin: skin,
+                    skin,
                 }
             );
         });

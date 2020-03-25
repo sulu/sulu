@@ -77,7 +77,7 @@ export default class Header extends React.PureComponent<Props> {
                 {
                     ...props,
                     key,
-                    children: children,
+                    children,
                 }
             );
         });

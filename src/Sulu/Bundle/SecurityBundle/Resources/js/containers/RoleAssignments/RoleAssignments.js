@@ -46,7 +46,7 @@ class RoleAssignments extends React.Component<Props> {
         for (const role of rolesToAdd) {
             newValue.push({
                 locales: [],
-                role: role,
+                role,
             });
         }
 

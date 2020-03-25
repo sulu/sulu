@@ -1873,7 +1873,7 @@ test('Should pass metadataRequestParameters options to Form View', () => {
             formKey: 'snippets',
             locales: [],
             toolbarActions: [],
-            metadataRequestParameters: metadataRequestParameters,
+            metadataRequestParameters,
         },
     };
     const router = {

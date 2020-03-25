@@ -103,7 +103,7 @@ jest.mock(
         this.resourceKey = resourceKey;
         this.id = id;
         this.data = {
-            id: id,
+            id,
             title: 'Sulu rocks',
             locale: 'de',
         };
@@ -124,7 +124,7 @@ jest.mock('../../../containers/List/registries/listFieldTransformerRegistry', ()
 }));
 
 jest.mock('../../../utils/Translator', () => ({
-    translate: function(key) {
+    translate(key) {
         switch (key) {
             case 'sulu_admin.page':
                 return 'Page';
@@ -596,7 +596,7 @@ test('Should navigate to defined route on back button click', () => {
 
     const list = mount(<List router={router} />);
     list.instance().locale = {
-        get: function() {
+        get() {
             return 'de';
         },
     };
@@ -741,7 +741,7 @@ test('Should navigate when add button is clicked and locales have been passed in
 
     const list = mount(<List router={router} />);
     list.instance().locale = {
-        get: function() {
+        get() {
             return 'de';
         },
     };
@@ -834,7 +834,7 @@ test('Should navigate when pencil button is clicked and locales have been passed
 
     const list = mount(<List router={router} />);
     list.instance().locale = {
-        get: function() {
+        get() {
             return 'de';
         },
     };
@@ -1033,7 +1033,7 @@ test('Should render the locale dropdown with the options from router', () => {
 
     const list = mount(<List router={router} />);
     list.instance().locale = {
-        get: function() {
+        get() {
             return 'de';
         },
     };
@@ -1063,7 +1063,7 @@ test('Should render the locale dropdown with the options from props', () => {
 
     const list = mount(<List locales={['en', 'de']} router={router} />);
     list.instance().locale = {
-        get: function() {
+        get() {
             return 'de';
         },
     };

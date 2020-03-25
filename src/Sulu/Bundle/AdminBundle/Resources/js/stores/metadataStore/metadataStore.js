@@ -15,8 +15,8 @@ class MetadataStore {
 
     loadMetadata(type: string, key: string, metadataOptions: Object = {}): Promise<Object> {
         const parameters = {
-            type: type,
-            key: key,
+            type,
+            key,
             ...metadataOptions,
         };
 

@@ -6,7 +6,7 @@ import Column from '../Column';
 import Item from '../Item';
 
 jest.mock('../columnList.scss', () => new Proxy({}, {
-    get: function(target, key) {
+    get(target, key) {
         if (key === '__esModule') {
             return false;
         }

@@ -48,7 +48,7 @@ module.exports = { // eslint-disable-line
     sections: [
         {
             name: 'Components',
-            components: function() {
+            components() {
                 let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
                 // filter out higher order components
                 folders = folders
@@ -65,7 +65,7 @@ module.exports = { // eslint-disable-line
         },
         {
             name: 'Containers',
-            components: function() {
+            components() {
                 let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/containers/*');
                 // filter out containers
                 folders = folders

@@ -202,7 +202,7 @@ test('Render with data and requestParameters when resourceKey props changed', ()
     );
 
     resourceMultiSelect.setProps({
-        requestParameters: requestParameters,
+        requestParameters,
         displayProperty: 'name',
         onChange: jest.fn(),
         resourceKey: 'test2',

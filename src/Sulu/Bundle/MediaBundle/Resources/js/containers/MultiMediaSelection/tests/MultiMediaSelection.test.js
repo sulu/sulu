@@ -217,7 +217,7 @@ test('Should add the selected medias to the selection store on confirm', () => {
             mimeType: 'image/png',
             size: 12345,
             url: 'http://lorempixel.com/500/500',
-            thumbnails: thumbnails,
+            thumbnails,
         },
         {
             id: 2,
@@ -225,7 +225,7 @@ test('Should add the selected medias to the selection store on confirm', () => {
             mimeType: 'image/jpeg',
             size: 54321,
             url: 'http://lorempixel.com/500/500',
-            thumbnails: thumbnails,
+            thumbnails,
         },
     ];
 

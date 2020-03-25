@@ -6,7 +6,7 @@ import InfiniteScroller from '../InfiniteScroller';
 window.getComputedStyle = jest.fn();
 
 jest.mock('../../../utils/Translator', () => ({
-    translate: function(key) {
+    translate(key) {
         switch (key) {
             case 'sulu_admin.reached_end_of_list':
                 return 'Last page reached';

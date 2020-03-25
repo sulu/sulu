@@ -58,7 +58,7 @@ class Row extends React.Component<Props> {
             item,
             {
                 ...item.props,
-                disabled: disabled,
+                disabled,
                 key: `matrix-item-${index}`,
                 onChange: this.handleChange,
                 value: values[item.props.name],

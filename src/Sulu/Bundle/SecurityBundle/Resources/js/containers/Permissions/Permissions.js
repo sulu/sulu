@@ -145,7 +145,7 @@ class Permissions extends React.Component<Props> {
                 const newContextPermission: ContextPermission = {
                     'id': undefined,
                     'context': securityContextKey,
-                    'permissions': permissions,
+                    permissions,
                 };
                 newContextPermissions.push(newContextPermission);
             });

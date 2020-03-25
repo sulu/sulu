@@ -28,6 +28,7 @@ package-lock.json
 node_modules/
 yarn.lock
 .php_cs.cache
+.eslintcache
 
 # phpunit
 .phpunit
