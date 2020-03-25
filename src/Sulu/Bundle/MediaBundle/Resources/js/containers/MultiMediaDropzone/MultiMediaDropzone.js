@@ -106,6 +106,7 @@ class MultiMediaDropzone extends React.Component<Props> {
                 ref={this.setDropzoneRef}
                 style={{}} // to disable default style
             >
+                {children}
                 <DropzoneOverlay
                     onClick={this.handleOverlayClick}
                     onClose={this.handleOverlayClose}
@@ -113,7 +114,6 @@ class MultiMediaDropzone extends React.Component<Props> {
                 >
                     {this.createMediaItems()}
                 </DropzoneOverlay>
-                {children}
             </Dropzone>
         );
     }
