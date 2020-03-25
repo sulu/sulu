@@ -67,7 +67,7 @@ class PageList extends React.Component<Props> {
             return;
         }
 
-        router.redirect(router.route.name, {...router.attributes, locale: locale});
+        router.redirect(router.route.name, {...router.attributes, locale});
     };
 
     findDefaultLocale = (localizations: Array<Localization>): ?string => {
