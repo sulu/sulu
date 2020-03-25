@@ -35,11 +35,11 @@ export default class Body<T: number | string> extends React.PureComponent<Props<
         return React.Children.map(originalRows, (row, index) => React.cloneElement(
             row,
             {
-                buttons: buttons,
+                buttons,
                 ...row.props,
                 key: `body-row-${index}`,
                 rowIndex: index,
-                selectMode: selectMode,
+                selectMode,
                 selectInFirstCell: this.props.selectInFirstCell,
                 onSelectionChange: this.props.onRowSelectionChange ? this.handleRowSelectionChange : undefined,
                 onExpand: this.handleRowExpand,

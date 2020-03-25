@@ -5,7 +5,7 @@ import {listAdapterDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import MediaCardAdapter from '../../adapters/MediaCardAdapter';
 
 jest.mock('sulu-admin-bundle/utils', () => ({
-    translate: function(key) {
+    translate(key) {
         switch (key) {
             case 'sulu_media.copy_url':
                 return 'Copy URL';
@@ -27,7 +27,7 @@ test('Render a basic Masonry view with MediaCards', () => {
             mimeType: 'image/png',
             size: 12345,
             url: 'http://lorempixel.com/500/500',
-            thumbnails: thumbnails,
+            thumbnails,
         },
         {
             ghostLocale: 'en',
@@ -36,7 +36,7 @@ test('Render a basic Masonry view with MediaCards', () => {
             mimeType: 'image/jpeg',
             size: 54321,
             url: 'http://lorempixel.com/500/500',
-            thumbnails: thumbnails,
+            thumbnails,
         },
     ];
     const mediaCardAdapter = render(
@@ -66,7 +66,7 @@ test('MediaCard should call the the appropriate handler', () => {
             mimeType: 'image/png',
             size: 12345,
             url: 'http://lorempixel.com/500/500',
-            thumbnails: thumbnails,
+            thumbnails,
         },
         {
             id: 2,
@@ -74,7 +74,7 @@ test('MediaCard should call the the appropriate handler', () => {
             mimeType: 'image/jpeg',
             size: 54321,
             url: 'http://lorempixel.com/500/500',
-            thumbnails: thumbnails,
+            thumbnails,
         },
     ];
     const mediaCardAdapter = shallow(

@@ -45,7 +45,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
                     mimeType: 'image/png',
                     size: 12345,
                     url: 'http://lorempixel.com/500/500',
-                    thumbnails: thumbnails,
+                    thumbnails,
                 },
                 {
                     id: 2,
@@ -53,7 +53,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
                     mimeType: 'image/jpeg',
                     size: 54321,
                     url: 'http://lorempixel.com/500/500',
-                    thumbnails: thumbnails,
+                    thumbnails,
                 },
             ];
 
@@ -134,7 +134,7 @@ jest.mock('sulu-admin-bundle/containers/List/registries/listAdapterRegistry', ()
     const getAllAdaptersMock = jest.fn();
 
     return {
-        getAllAdaptersMock: getAllAdaptersMock,
+        getAllAdaptersMock,
         add: jest.fn(),
         get: jest.fn((key) => getAllAdaptersMock()[key]),
         getOptions: jest.fn().mockReturnValue({}),

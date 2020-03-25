@@ -4,7 +4,7 @@
     "repository": "https://github.com/sulu/sulu.git",
     "scripts": {
         "preinstall": "node preinstall.js",
-        "lint:js": "eslint .",
+        "lint:js": "eslint . --cache",
         "lint:scss": "stylelint src/Sulu/Bundle/*/Resources/js/**/*.scss",
         "flow": "flow",
         "test": "jest",

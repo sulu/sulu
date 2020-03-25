@@ -41,7 +41,7 @@ jest.mock('../../../containers/Form/stores/ResourceFormStore', () => jest.fn(
     (resourceStore, formKey, options, metadataOptions) => {
         return {
             id: resourceStore.id,
-            metadataOptions: metadataOptions,
+            metadataOptions,
         };
     }
 ));
@@ -211,7 +211,7 @@ test('Should pass metadataRequestParameters options to Form View', () => {
             options: {
                 formKey: 'test-form-key',
                 resourceKey: 'test-resource-key',
-                metadataRequestParameters: metadataRequestParameters,
+                metadataRequestParameters,
             },
         },
     }: any);

@@ -101,7 +101,7 @@ class UserStore {
     login = (user: string, password: string) => {
         this.setLoading(true);
 
-        return Requester.post(Config.endpoints.loginCheck, {username: user, password: password})
+        return Requester.post(Config.endpoints.loginCheck, {username: user, password})
             .then(() => this.handleLogin(user))
             .catch((error) => {
                 this.setLoading(false);
@@ -118,7 +118,7 @@ class UserStore {
 
         if (this.forgotPasswordSuccess) {
             // if email was already sent use different api
-            return Requester.post(Config.endpoints.forgotPasswordResend, {user: user})
+            return Requester.post(Config.endpoints.forgotPasswordResend, {user})
                 .then(() => {
                     this.setLoading(false);
                 })
@@ -130,7 +130,7 @@ class UserStore {
                 });
         }
 
-        return Requester.post(Config.endpoints.forgotPasswordReset, {user: user})
+        return Requester.post(Config.endpoints.forgotPasswordReset, {user})
             .then(() => {
                 this.setLoading(false);
                 this.setForgotPasswordSuccess(true);

@@ -5,7 +5,7 @@ import listAdapterDefaultProps from '../../../../utils/TestHelper/listAdapterDef
 import FolderAdapter from '../../adapters/FolderAdapter';
 
 jest.mock('../../../../utils/Translator', () => ({
-    translate: function(key) {
+    translate(key) {
         switch (key) {
             case 'sulu_admin.object':
                 return 'Object';

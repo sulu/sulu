@@ -27,7 +27,7 @@ export default class Tabs extends React.PureComponent<Props> {
                 tab,
                 {
                     ...tab.props,
-                    index: index,
+                    index,
                     selected: this.isSelected(index),
                     onClick: this.handleSelectionChange,
                 }

@@ -45,7 +45,7 @@ class MediaSelectionOverlay extends React.Component<Props> {
             USER_SETTINGS_KEY,
             {
                 page: observable.box(),
-                locale: locale,
+                locale,
                 parentId: collectionId,
             }
         );
@@ -82,8 +82,8 @@ class MediaSelectionOverlay extends React.Component<Props> {
             {
                 page: observable.box(),
                 collection: collectionId,
-                excludedIds: excludedIds,
-                locale: locale,
+                excludedIds,
+                locale,
             },
             options
         );

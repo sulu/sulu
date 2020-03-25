@@ -9,7 +9,7 @@ import MediaUploadStore from '../../../stores/MediaUploadStore';
 jest.useFakeTimers();
 
 jest.mock('sulu-admin-bundle/utils', () => ({
-    translate: function(key) {
+    translate(key) {
         switch (key) {
             case 'sulu_media.drop_files_to_upload':
                 return 'Upload files by dropping them here';

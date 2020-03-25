@@ -4,7 +4,7 @@ import React from 'react';
 import Pagination from '../Pagination';
 
 jest.mock('../../../utils/Translator', () => ({
-    translate: function(key) {
+    translate(key) {
         switch (key) {
             case 'sulu_admin.page':
                 return 'Page';

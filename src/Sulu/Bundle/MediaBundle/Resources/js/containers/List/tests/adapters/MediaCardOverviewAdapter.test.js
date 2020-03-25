@@ -7,7 +7,7 @@ import MediaCardOverviewAdapter from '../../adapters/MediaCardOverviewAdapter';
 jest.mock('sulu-admin-bundle/services/initializer', () => jest.fn());
 
 jest.mock('sulu-admin-bundle/utils', () => ({
-    translate: function(key) {
+    translate(key) {
         switch (key) {
             case 'sulu_media.copy_url':
                 return 'Copy URL';
@@ -29,7 +29,7 @@ test('Render a basic Masonry view with the MediaCardOverviewAdapter', () => {
             mimeType: 'image/png',
             size: 12345,
             url: 'http://lorempixel.com/500/500',
-            thumbnails: thumbnails,
+            thumbnails,
         },
         {
             id: 2,
@@ -37,7 +37,7 @@ test('Render a basic Masonry view with the MediaCardOverviewAdapter', () => {
             mimeType: 'image/jpeg',
             size: 54321,
             url: 'http://lorempixel.com/500/500',
-            thumbnails: thumbnails,
+            thumbnails,
         },
     ];
     const mediaCardAdapter = render(

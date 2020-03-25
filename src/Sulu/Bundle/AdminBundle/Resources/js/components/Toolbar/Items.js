@@ -94,7 +94,7 @@ class Items extends React.Component<Props> {
                                 {React.cloneElement(item, {
                                     ...item.props,
                                     showText: this.showText,
-                                    skin: skin,
+                                    skin,
                                 })}
                             </li>
                         ))

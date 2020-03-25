@@ -328,7 +328,7 @@ test('Clear bindings of router when same view with a different rerender attribut
             webspace: 'sulu',
         },
         clearBindings: jest.fn(),
-        route: route,
+        route,
     };
 
     shallow(<ViewRenderer router={router} />);
