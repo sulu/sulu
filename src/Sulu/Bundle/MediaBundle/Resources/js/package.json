@@ -10,6 +10,7 @@
         "mousetrap": "^1.6.1",
         "react-clipboard.js": "^1.1.2",
         "react-dropzone": "^4.2.1",
+        "react-portal": "^4.1.0",
         "url-search-params-polyfill": "^2.0.0"
     },
     "devDependencies": {
