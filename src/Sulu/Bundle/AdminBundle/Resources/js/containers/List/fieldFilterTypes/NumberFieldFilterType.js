@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import type {ElementRef} from 'react';
 import {computed} from 'mobx';
 import Input from '../../../components/Input';
 import SingleSelect from '../../../components/SingleSelect';
@@ -51,6 +52,12 @@ class NumberFieldFilterType extends AbstractFieldFilterType<?{[string]: ?number}
         return getNumberFromValue(this.value);
     }
 
+    setInputRef(ref: ?ElementRef<'input'>) {
+        if (ref) {
+            ref.focus();
+        }
+    }
+
     handleOperatorChange = (operatorValue: ?string) => {
         if (!operatorValue) {
             throw new Error('The operator cannot be changed to undefined! This should not happen and is likely a bug.');
@@ -74,6 +81,7 @@ class NumberFieldFilterType extends AbstractFieldFilterType<?{[string]: ?number}
                     <SingleSelect.Option value="gt">{operatorMapping.gt}</SingleSelect.Option>
                 </SingleSelect>
                 <Input
+                    inputRef={this.setInputRef}
                     onChange={this.handleInputChange}
                     type="number"
                     value={this.number}
