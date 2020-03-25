@@ -39,11 +39,10 @@ class PageList extends React.Component<Props> {
     static getDerivedRouteAttributes(route: Route, attributes: AttributeMap) {
         return {
             active: ListStore.getActiveSetting(PAGES_RESOURCE_KEY, getUserSettingsKeyForWebspace(attributes.webspace)),
-            locale: userStore.contentLocale,
         };
     }
 
-    @action setDefaultLocaleForWebspace = () => {
+    @action redirectToWebspaceLocale = () => {
         const {webspace, router} = this.props;
 
         if (!webspace || !webspace.localizations) {
@@ -54,15 +53,9 @@ class PageList extends React.Component<Props> {
             return;
         }
 
-        let locale = null;
-
-        if (webspace.allLocalizations.find((localization) => localization.localization === userStore.contentLocale)) {
-            locale = userStore.contentLocale;
-        }
-
-        if (!locale) {
-            locale = this.findDefaultLocale(webspace.localizations);
-        }
+        const locale = webspace.allLocalizations.find(
+            (localization) => localization.localization === userStore.contentLocale
+        ) ? userStore.contentLocale : this.findDefaultLocale(webspace.localizations);
 
         if (!locale) {
             throw new Error(
@@ -75,8 +68,6 @@ class PageList extends React.Component<Props> {
         }
 
         router.redirect(router.route.name, {...router.attributes, locale: locale});
-
-        this.locale.set(locale);
     };
 
     findDefaultLocale = (localizations: Array<Localization>): ?string => {
@@ -109,7 +100,7 @@ class PageList extends React.Component<Props> {
         const observableOptions = {};
         const requestParameters = {webspace};
 
-        this.setDefaultLocaleForWebspace();
+        this.redirectToWebspaceLocale();
         router.bind('locale', this.locale);
 
         router.bind('page', this.page, 1);

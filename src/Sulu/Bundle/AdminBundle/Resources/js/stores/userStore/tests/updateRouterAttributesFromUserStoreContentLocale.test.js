@@ -76,7 +76,7 @@ test('Should update locale attribute from user store when not explicit set', () 
     expect(attributes.locale).toBe('fr');
 });
 
-test('Should not update locale attribute from user store when view does not define specified locales', () => {
+test('Should update locale attribute from user store when view does not define specified locales', () => {
     // $FlowFixMe
     userStore.contentLocale = 'es';
 
@@ -88,5 +88,5 @@ test('Should not update locale attribute from user store when view does not defi
 
     const attributes = updateRouterAttributesFromUserStoreContentLocale(localizedRouteWithoutDefaultLocales, {});
 
-    expect(attributes.locale).toBe(undefined);
+    expect(attributes.locale).toBe('es');
 });
