@@ -477,6 +477,16 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 [],
                 [],
             ],
+            // datasource sub folder without includeSubFolders
+            [
+                ['dataSource' => 1],
+                null,
+                0,
+                null,
+                array_slice($this->mediaData, 0, 1),
+                [],
+                [],
+            ],
             // datasource sub folder with tags
             [
                 ['dataSource' => 0, 'includeSubFolders' => true, 'tags' => [0], 'tagOperator' => 'or'],
