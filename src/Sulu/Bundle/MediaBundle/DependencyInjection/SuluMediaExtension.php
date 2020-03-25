@@ -156,9 +156,10 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $config['upload']['max_filesize']
         );
 
+        /** @deprecated This parameter is duplicated and should be removed use sulu_media.upload.max_filesize instead */
         $container->setParameter(
             'sulu_media.media.max_file_size',
-            $config['upload']['max_filesize']
+            $config['upload']['max_filesize'] . 'MB'
         );
 
         // Adobe creative sdk
