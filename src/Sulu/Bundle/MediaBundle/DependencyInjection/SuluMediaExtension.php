@@ -119,7 +119,6 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu_media.ghost_script.path', $config['ghost_script']['path']);
 
         // storage
-        $container->setParameter('sulu_media.media.max_file_size', '16MB');
         $container->setParameter(
             'sulu_media.media.blocked_file_types',
             $config['format_manager']['blocked_file_types']
@@ -155,6 +154,12 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $container->setParameter(
             'sulu_media.upload.max_filesize',
             $config['upload']['max_filesize']
+        );
+
+        /* @deprecated This parameter is duplicated and should be removed use sulu_media.upload.max_filesize instead. */
+        $container->setParameter(
+            'sulu_media.media.max_file_size',
+            $config['upload']['max_filesize'] . 'MB'
         );
 
         // Adobe creative sdk
@@ -194,5 +199,15 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         }
 
         $this->configurePersistence($config['objects'], $container);
+        $this->configureFileValidator($config, $container);
+    }
+
+    private function configureFileValidator(array $config, ContainerBuilder $container)
+    {
+        $definition = $container->getDefinition('sulu_media.file_validator');
+        $definition->addMethodCall('setMaxFileSize', [$config['upload']['max_filesize'] . 'MB']);
+
+        $blockedFileTypes = $config['format_manager']['blocked_file_types'];
+        $definition->addMethodCall('setBlockedMimeTypes', [$blockedFileTypes]);
     }
 }

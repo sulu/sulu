@@ -105,7 +105,7 @@ class Configuration implements ConfigurationInterface
                         ->prototype('scalar')->end()
                     ->end()
                     ->arrayNode('blocked_file_types')
-                        ->prototype('scalar')->end()->defaultValue(['file/exe'])
+                        ->prototype('scalar')->end()->defaultValue([])
                     ->end()
                     ->arrayNode('mime_types')
                         ->prototype('scalar')->end()->defaultValue([
