@@ -3,3 +3,10 @@ imports:
 
 framework:
     router: { resource: "%kernel.project_dir%/config/routing_website.yml" }
+
+twig:
+    paths: ['%kernel.project_dir%/templates']
+
+fos_rest:
+    zone:
+        - { path: ^/admin/* }

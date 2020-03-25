@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="{{ app.reqest.locale }}">
+<head>
+    <title>{{ content.title }}</title>
+</head>
+<body>
+    {% block content %}
+        <h1>
+            {{- content.title -}}
+        </h1>
+    {% endblock %}
+</body>
+</html>

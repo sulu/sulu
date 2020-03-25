@@ -79,6 +79,7 @@ class DefaultControllerTest extends TestCase
     public function testValidTemplate()
     {
         $this->request->getRequestFormat()->willReturn('html')->shouldBeCalled();
+        $this->request->getMimeType('html')->willReturn('text/html')->shouldBeCalled();
         $this->twigLoader->exists('pages/default.html.twig')->willReturn(true)->shouldBeCalled();
         $this->parameterResolver->resolve(Argument::any(), Argument::any(), Argument::any(), false)
             ->willReturn(['argument' => 'value'])->shouldBeCalled();
