@@ -13,6 +13,7 @@ type Props = {
     children?: ChildrenArray<Element<typeof MediaItem>>,
     onClick: () => void,
     onClose: () => void,
+    onDragLeave: () => void,
     open: boolean,
 };
 
@@ -63,6 +64,7 @@ class DropzoneOverlay extends React.Component<Props> {
 
     render() {
         const {
+            onDragLeave,
             open,
             children,
         } = this.props;
@@ -73,35 +75,38 @@ class DropzoneOverlay extends React.Component<Props> {
 
         return (
             <Portal>
-                {open &&
-                    <div className={dropzoneOverlayStyles.dropzoneOverlay} onClick={this.handleClose} role="button">
-                        <div className={dropzoneOverlayStyles.dropArea}>
-                            <div className={dropzoneOverlayStyles.uploadInfoContainer}>
-                                {children &&
-                                    <div
-                                        className={dropzoneOverlayStyles.uploadInfo}
-                                        onClick={this.handleClick}
-                                        role="button"
-                                        tabIndex="0"
-                                    >
-                                        <Icon className={dropzoneOverlayStyles.uploadIcon} name="su-upload" />
-                                        <div className={dropzoneOverlayStyles.uploadInfoHeadline}>
-                                            {translate('sulu_media.drop_files_to_upload')}
-                                        </div>
-                                        <div className={dropzoneOverlayStyles.uploadInfoSubline}>
-                                            {translate('sulu_media.click_here_to_upload')}
-                                        </div>
+                <div
+                    className={dropzoneOverlayStyles.dropzoneOverlay}
+                    onClick={this.handleClose}
+                    onDragLeave={onDragLeave}
+                    role="button"
+                >
+                    <div className={dropzoneOverlayStyles.dropArea}>
+                        <div className={dropzoneOverlayStyles.uploadInfoContainer}>
+                            {children &&
+                                <div
+                                    className={dropzoneOverlayStyles.uploadInfo}
+                                    onClick={this.handleClick}
+                                    role="button"
+                                    tabIndex="0"
+                                >
+                                    <Icon className={dropzoneOverlayStyles.uploadIcon} name="su-upload" />
+                                    <div className={dropzoneOverlayStyles.uploadInfoHeadline}>
+                                        {translate('sulu_media.drop_files_to_upload')}
                                     </div>
-                                }
-                            </div>
-                            <ul className={dropzoneOverlayStyles.mediaItems}>
-                                {children && React.Children.map(children, (mediaItem, index) => (
-                                    <li key={index}>{mediaItem}</li>
-                                ))}
-                            </ul>
+                                    <div className={dropzoneOverlayStyles.uploadInfoSubline}>
+                                        {translate('sulu_media.click_here_to_upload')}
+                                    </div>
+                                </div>
+                            }
                         </div>
+                        <ul className={dropzoneOverlayStyles.mediaItems}>
+                            {children && React.Children.map(children, (mediaItem, index) => (
+                                <li key={index}>{mediaItem}</li>
+                            ))}
+                        </ul>
                     </div>
-                }
+                </div>
             </Portal>
         );
     }

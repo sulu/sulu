@@ -101,7 +101,6 @@ class MultiMediaDropzone extends React.Component<Props> {
                 className={dropzoneStyles.dropzone}
                 disableClick={true}
                 onDragEnter={this.handleDragEnter}
-                onDragLeave={this.handleDragLeave}
                 onDrop={this.handleDrop}
                 ref={this.setDropzoneRef}
                 style={{}} // to disable default style
@@ -110,6 +109,7 @@ class MultiMediaDropzone extends React.Component<Props> {
                 <DropzoneOverlay
                     onClick={this.handleOverlayClick}
                     onClose={this.handleOverlayClose}
+                    onDragLeave={this.handleDragLeave}
                     open={open}
                 >
                     {this.createMediaItems()}
