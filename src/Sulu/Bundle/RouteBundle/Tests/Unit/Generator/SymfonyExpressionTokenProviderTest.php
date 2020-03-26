@@ -24,7 +24,7 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         $translator->setLocale()->willReturn('en')->shouldBeCalled();
         $translator->setLocale()->willReturn('de')->shouldBeCalled();
         $entity = new \stdClass();
-        $entity->getLocale = function () {
+        $entity->getLocale = function() {
             return 'en';
         };
         $entity->name = 'TEST';
@@ -40,7 +40,7 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         $translator->setLocale()->willReturn('de')->shouldBeCalled();
         $translator->trans('test-key')->willReturn('TEST');
         $entity = new \stdClass();
-        $entity->getLocale = function () {
+        $entity->getLocale = function() {
             return 'en';
         };
         $provider = new SymfonyExpressionTokenProvider($translator->reveal());
