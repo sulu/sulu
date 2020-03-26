@@ -6,7 +6,7 @@ import Search from '../Search';
 import indexStore from '../stores/indexStore';
 import searchStore from '../stores/searchStore';
 
-jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
+jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
 }));
 

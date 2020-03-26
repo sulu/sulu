@@ -11,7 +11,12 @@ import Router, {routeRegistry} from './services/Router';
 import Application from './containers/Application';
 import {updateRouterAttributesFromView, viewRegistry} from './containers/ViewRenderer';
 import CollaborationStore from './stores/CollaborationStore';
-import userStore, {logoutOnUnauthorizedResponse} from './stores/userStore';
+import localizationStore from './stores/localizationStore';
+import userStore, {
+    logoutOnUnauthorizedResponse,
+    updateUserStoreContentLocaleFromRouterAttributes,
+    updateRouterAttributesFromUserStoreContentLocale,
+} from './stores/userStore';
 import {Config, resourceRouteRegistry} from './services';
 import initializer from './services/initializer';
 import ResourceTabs from './views/ResourceTabs';
@@ -296,6 +301,7 @@ function processConfig(config: Object) {
     resourceRouteRegistry.clear();
 
     routeRegistry.addCollection(config.routes);
+    localizationStore.setLocalizations(config.localizations);
     navigationRegistry.set(config.navigation);
     resourceRouteRegistry.setEndpoints(config.resources);
     smartContentConfigStore.setConfig(config.smartContent);
@@ -305,6 +311,8 @@ function processConfig(config: Object) {
 function startAdmin() {
     const router = new Router(createHashHistory());
     router.addUpdateAttributesHook(updateRouterAttributesFromView);
+    router.addUpdateAttributesHook(updateRouterAttributesFromUserStoreContentLocale);
+    router.addUpdateRouteHook(updateUserStoreContentLocaleFromRouterAttributes, -1024);
 
     initializer.initialize(Config.initialLoginState).then(() => {
         router.reload();

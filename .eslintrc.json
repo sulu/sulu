@@ -60,6 +60,7 @@
         "comma-spacing": "error",
         "key-spacing": "error",
         "object-curly-spacing": "error",
+        "object-shorthand": "error",
         "no-alert": "error",
         "no-console": "error",
         "no-prototype-builtins": "off",

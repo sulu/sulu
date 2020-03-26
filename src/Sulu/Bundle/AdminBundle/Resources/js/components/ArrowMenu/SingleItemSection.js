@@ -34,7 +34,7 @@ export default class SingleItemSection extends React.PureComponent<Props> {
                 {
                     active: value === item.props.value,
                     onClick: this.handleItemClick,
-                    icon: icon,
+                    icon,
                 }
             );
         });

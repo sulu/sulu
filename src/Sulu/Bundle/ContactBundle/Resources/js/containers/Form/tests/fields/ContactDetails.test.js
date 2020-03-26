@@ -40,7 +40,7 @@ test('Pass props correctly to ContactDetails component', () => {
     expect(bic.props()).toEqual(expect.objectContaining({
         onBlur: finishSpy,
         onChange: changeSpy,
-        value: value,
+        value,
     }));
 });
 

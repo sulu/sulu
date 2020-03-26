@@ -8,7 +8,7 @@ jest.mock('sulu-admin-bundle/containers', () => ({
     SingleListOverlay: jest.fn(() => null),
     withToolbar: jest.fn((Component) => Component),
 }));
-jest.mock('sulu-admin-bundle/services/Router', () => jest.fn());
+jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn());
 jest.mock('sulu-admin-bundle/utils', () => ({
     translate: jest.fn((key) =>key),
 }));

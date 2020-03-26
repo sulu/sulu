@@ -6,7 +6,7 @@ routeRegistry.addCollection([
     {
         name: 'sulu_contact.list',
         path: '/contacts',
-        view: 'sulu_admin.list',
+        type: 'sulu_admin.list',
         options: {
             type: 'contacts',
         },
@@ -15,7 +15,7 @@ routeRegistry.addCollection([
     {
         name: 'sulu_contact.form',
         path: '/contacts/:locale/:id',
-        view: 'sulu_admin.form',
+        type: 'sulu_admin.form',
         options: {
             type: 'contact',
         },
@@ -27,7 +27,7 @@ routeRegistry.addCollection([
         name: 'sulu_contact.form.details',
         parent: 'sulu_contact.form',
         path: '/details',
-        view: 'sulu_admin.form',
+        type: 'sulu_admin.form',
         options: {
             tabTitle: 'Contacts',
         },
@@ -36,7 +36,7 @@ routeRegistry.addCollection([
 ]);
 ```
 
-The `name` is just a unique identifier, the `path` is the URL for the react application, the `view` defines which
+The `name` is just a unique identifier, the `path` is the URL for the react application, the `type` defines which
 component should be rendered, which will be retrieved from the [`ViewRegistry`](#viewrenderer) by the given identifier.
 Finally, `options` are additional values that can be set on the server side to influence the behavior of the react
 application.
@@ -137,7 +137,7 @@ routeRegistry.addCollection([
     {
         name: 'sulu_page.webspace_overview',
         path: '/webspace/:webspace/:locale',
-        view: 'sulu_page.webspace_overview',
+        type: 'sulu_page.webspace_overview',
         attributeDefaults: {
             webspace: 'example',
             locale: 'en',

@@ -99,13 +99,23 @@ class WebsiteSearchController
             throw new NotFoundHttpException();
         }
 
-        return new Response($this->twig->render(
+        $response = new Response($this->twig->render(
             $template,
             $this->parameterResolver->resolve(
                 ['query' => $query, 'hits' => $hits],
                 $this->requestAnalyzer
             )
         ));
+
+        // we need to set the content type ourselves here
+        // else symfony will use the accept header of the client and the page could be cached with false content-type
+        // see following symfony issue: https://github.com/symfony/symfony/issues/35694
+        $mimeType = $request->getMimeType($request->getRequestFormat());
+        if ($mimeType) {
+            $response->headers->set('Content-Type', $mimeType);
+        }
+
+        return $response;
     }
 
     /**

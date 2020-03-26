@@ -3,11 +3,11 @@ import React from 'react';
 import {action, computed, intercept, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
-import {Loader} from 'sulu-admin-bundle/components';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
-import type {AttributeMap, Route} from 'sulu-admin-bundle/services';
+import type {AttributeMap} from 'sulu-admin-bundle/services';
 import {userStore} from 'sulu-admin-bundle/stores';
 import {Tabs} from 'sulu-admin-bundle/views';
+import {Route} from 'sulu-admin-bundle/services';
 import WebspaceSelect from '../../components/WebspaceSelect';
 import webspaceStore from '../../stores/webspaceStore';
 import type {Webspace} from '../../stores/webspaceStore/types';
@@ -18,7 +18,6 @@ const USER_SETTING_WEBSPACE = [USER_SETTING_PREFIX, 'webspace'].join('.');
 
 @observer
 class WebspaceTabs extends React.Component<ViewProps> {
-    @observable webspaces: ?Array<Webspace>;
     webspaceKey: IObservableValue<string> = observable.box();
     webspaceDisposer: () => void;
     bindWebspaceToRouterDisposer: () => void;
@@ -32,22 +31,15 @@ class WebspaceTabs extends React.Component<ViewProps> {
     }
 
     @computed get webspace() {
-        if (!this.webspaces) {
-            return undefined;
-        }
-
-        return this.webspaces.find((webspace) => webspace.key === this.webspaceKey.get());
+        return webspaceStore.getWebspace(this.webspaceKey.get());
     }
 
-    componentDidMount() {
+    constructor(props: ViewProps) {
+        super(props);
+
         const {router} = this.props;
 
         this.bindWebspaceToRouter();
-
-        webspaceStore.loadWebspaces()
-            .then(action((webspaces) => {
-                this.webspaces = webspaces;
-            }));
 
         this.webspaceDisposer = intercept(this.webspaceKey, '', (change) => {
             if (!change.newValue) {
@@ -78,25 +70,23 @@ class WebspaceTabs extends React.Component<ViewProps> {
     };
 
     render() {
-        return this.webspaces
-            ? (
-                <Tabs
-                    {...this.props}
-                    childrenProps={{webspace: this.webspace, webspaceKey: this.webspaceKey}}
-                    header={
-                        <div className={webspaceTabsStyles.webspaceSelect}>
-                            <WebspaceSelect onChange={this.handleWebspaceChange} value={this.webspaceKey.get()}>
-                                {this.webspaces.map((webspace: Webspace) => (
-                                    <WebspaceSelect.Item key={webspace.key} value={webspace.key}>
-                                        {webspace.name}
-                                    </WebspaceSelect.Item>
-                                ))}
-                            </WebspaceSelect>
-                        </div>
-                    }
-                />
-            )
-            : <Loader />;
+        return (
+            <Tabs
+                {...this.props}
+                childrenProps={{webspace: this.webspace, webspaceKey: this.webspaceKey}}
+                header={
+                    <div className={webspaceTabsStyles.webspaceSelect}>
+                        <WebspaceSelect onChange={this.handleWebspaceChange} value={this.webspaceKey.get()}>
+                            {webspaceStore.grantedWebspaces.map((webspace: Webspace) => (
+                                <WebspaceSelect.Item key={webspace.key} value={webspace.key}>
+                                    {webspace.name}
+                                </WebspaceSelect.Item>
+                            ))}
+                        </WebspaceSelect>
+                    </div>
+                }
+            />
+        );
     }
 }
 

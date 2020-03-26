@@ -26,7 +26,7 @@ jest.mock('sulu-admin-bundle/utils', () => ({
 
 jest.mock('sulu-page-bundle/stores', () => ({
     webspaceStore: {
-        loadWebspace: jest.fn(),
+        getWebspace: jest.fn(),
     },
 }));
 
@@ -39,13 +39,13 @@ test('Pass correct props to MultiSelect', () => {
         )
     );
 
-    const webspacePromise = Promise.resolve({
+    const webspace = {
         allLocalizations: [
             {localization: 'de'},
             {localization: 'en'},
         ],
-    });
-    webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
+    };
+    webspaceStore.getWebspace.mockReturnValue(webspace);
 
     const customUrlsDomainSelect = shallow(
         <CustomUrlsLocaleSelect
@@ -56,16 +56,14 @@ test('Pass correct props to MultiSelect', () => {
         />
     );
 
-    expect(webspaceStore.loadWebspace).toBeCalledWith('sulu_io');
+    expect(webspaceStore.getWebspace).toBeCalledWith('sulu_io');
 
-    return webspacePromise.then(() => {
-        expect(customUrlsDomainSelect.find('SingleSelect').prop('disabled')).toEqual(true);
-        expect(customUrlsDomainSelect.find('SingleSelect').prop('value')).toEqual('en');
-        expect(customUrlsDomainSelect.find('Option').at(0).prop('children')).toEqual('de');
-        expect(customUrlsDomainSelect.find('Option').at(0).prop('value')).toEqual('de');
-        expect(customUrlsDomainSelect.find('Option').at(1).prop('children')).toEqual('en');
-        expect(customUrlsDomainSelect.find('Option').at(1).prop('value')).toEqual('en');
-    });
+    expect(customUrlsDomainSelect.find('SingleSelect').prop('disabled')).toEqual(true);
+    expect(customUrlsDomainSelect.find('SingleSelect').prop('value')).toEqual('en');
+    expect(customUrlsDomainSelect.find('Option').at(0).prop('children')).toEqual('de');
+    expect(customUrlsDomainSelect.find('Option').at(0).prop('value')).toEqual('de');
+    expect(customUrlsDomainSelect.find('Option').at(1).prop('children')).toEqual('en');
+    expect(customUrlsDomainSelect.find('Option').at(1).prop('value')).toEqual('en');
 });
 
 test('Call onChange and onBlur if the value is changed', () => {
@@ -80,13 +78,13 @@ test('Call onChange and onBlur if the value is changed', () => {
         )
     );
 
-    const webspacePromise = Promise.resolve({
+    const webspace = {
         allLocalizations: [
             {localization: 'de'},
             {localization: 'en'},
         ],
-    });
-    webspaceStore.loadWebspace.mockReturnValue(webspacePromise);
+    };
+    webspaceStore.getWebspace.mockReturnValue(webspace);
 
     const customUrlsDomainSelect = shallow(
         <CustomUrlsLocaleSelect
@@ -98,9 +96,9 @@ test('Call onChange and onBlur if the value is changed', () => {
         />
     );
 
-    return webspacePromise.then(() => {
-        customUrlsDomainSelect.find('SingleSelect').prop('onChange')('en');
-        expect(changeSpy).toBeCalledWith('en');
-        expect(finishSpy).toBeCalledWith();
-    });
+    expect(webspaceStore.getWebspace).toBeCalledWith('sulu_io');
+
+    customUrlsDomainSelect.find('SingleSelect').prop('onChange')('en');
+    expect(changeSpy).toBeCalledWith('en');
+    expect(finishSpy).toBeCalledWith();
 });

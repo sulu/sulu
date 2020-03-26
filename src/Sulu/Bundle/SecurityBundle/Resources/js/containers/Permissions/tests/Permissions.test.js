@@ -1,31 +1,19 @@
 // @flow
 import React from 'react';
 import {mount} from 'enzyme';
-import ResourceListStore from 'sulu-admin-bundle/stores/ResourceListStore';
-import {ResourceMultiSelect} from 'sulu-admin-bundle/containers';
-import {userStore} from 'sulu-admin-bundle/stores';
+import {webspaceStore} from 'sulu-page-bundle/stores';
 import Permissions from '../Permissions';
 import type {ContextPermission} from '../types';
 import type {SecurityContextGroups} from '../../../stores/securityContextStore/types';
 import securityContextStore from '../../../stores/securityContextStore/securityContextStore';
 import PermissionMatrix from '../PermissionMatrix';
 
-jest.mock('sulu-admin-bundle/stores/ResourceListStore', () => jest.fn());
+jest.mock('sulu-page-bundle/stores/webspaceStore', () => ({
+    allWebspaces: [],
+}));
 
 jest.mock('../../../stores/securityContextStore/securityContextStore', () => ({
     loadSecurityContextGroups: jest.fn(() => Promise.resolve()),
-}));
-
-jest.mock('sulu-admin-bundle/stores', () => ({
-    userStore: {
-        user: {
-            locale: 'en',
-        },
-    },
-}));
-
-jest.mock('sulu-admin-bundle/utils', () => ({
-    translate: (key) => key,
 }));
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
@@ -239,23 +227,20 @@ test('Render with empty webspace section', () => {
     securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
 
     // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'key': 'example',
-                'name': 'Example',
-            },
-            {
-                'key': 'example2',
-                'name': 'Example 2',
-            },
-            {
-                'key': 'example3',
-                'name': 'Example 3!',
-            },
-        ];
-    });
+    webspaceStore.allWebspaces = [
+        {
+            'key': 'example',
+            'name': 'Example',
+        },
+        {
+            'key': 'example2',
+            'name': 'Example 2',
+        },
+        {
+            'key': 'example3',
+            'name': 'Example 3!',
+        },
+    ];
 
     const permissions = mount(
         <Permissions
@@ -330,23 +315,20 @@ test('Render with webspace section', () => {
     securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
 
     // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'key': 'example',
-                'name': 'Example',
-            },
-            {
-                'key': 'example2',
-                'name': 'Example 2',
-            },
-            {
-                'key': 'example3',
-                'name': 'Example 3!',
-            },
-        ];
-    });
+    webspaceStore.allWebspaces = [
+        {
+            'key': 'example',
+            'name': 'Example',
+        },
+        {
+            'key': 'example2',
+            'name': 'Example 2',
+        },
+        {
+            'key': 'example3',
+            'name': 'Example 3!',
+        },
+    ];
 
     const permissions = mount(
         <Permissions
@@ -421,23 +403,20 @@ test('Should trigger onChange correctly when changing something in the webspace 
     securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
 
     // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'key': 'example',
-                'name': 'Example',
-            },
-            {
-                'key': 'example2',
-                'name': 'Example 2',
-            },
-            {
-                'key': 'example3',
-                'name': 'Example 3!',
-            },
-        ];
-    });
+    webspaceStore.allWebspaces = [
+        {
+            'key': 'example',
+            'name': 'Example',
+        },
+        {
+            'key': 'example2',
+            'name': 'Example 2',
+        },
+        {
+            'key': 'example3',
+            'name': 'Example 3!',
+        },
+    ];
 
     const onChange = jest.fn();
     const permissions = mount(
@@ -540,23 +519,20 @@ test('Should trigger onChange correctly when a webspace is added', () => {
     securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
 
     // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'key': 'example',
-                'name': 'Example',
-            },
-            {
-                'key': 'example2',
-                'name': 'Example 2',
-            },
-            {
-                'key': 'example3',
-                'name': 'Example 3!',
-            },
-        ];
-    });
+    webspaceStore.allWebspaces = [
+        {
+            'key': 'example',
+            'name': 'Example',
+        },
+        {
+            'key': 'example2',
+            'name': 'Example 2',
+        },
+        {
+            'key': 'example3',
+            'name': 'Example 3!',
+        },
+    ];
 
     const onChange = jest.fn();
     const permissions = mount(
@@ -569,7 +545,7 @@ test('Should trigger onChange correctly when a webspace is added', () => {
 
     return promise.then(() => {
         permissions.update();
-        permissions.find(ResourceMultiSelect).at(0).instance().props.onChange(['example', 'example3']);
+        permissions.find('MultiSelect').prop('onChange')(['example', 'example3']);
 
         const expectedNewValue: Array<ContextPermission> = [
             {
@@ -705,23 +681,20 @@ test('Should trigger onChange correctly when a webspace is removed', () => {
     securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
 
     // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'key': 'example',
-                'name': 'Example',
-            },
-            {
-                'key': 'example2',
-                'name': 'Example 2',
-            },
-            {
-                'key': 'example3',
-                'name': 'Example 3!',
-            },
-        ];
-    });
+    webspaceStore.allWebspaces = [
+        {
+            'key': 'example',
+            'name': 'Example',
+        },
+        {
+            'key': 'example2',
+            'name': 'Example 2',
+        },
+        {
+            'key': 'example3',
+            'name': 'Example 3!',
+        },
+    ];
 
     const onChange = jest.fn();
     const permissions = mount(
@@ -734,7 +707,7 @@ test('Should trigger onChange correctly when a webspace is removed', () => {
 
     return promise.then(() => {
         permissions.update();
-        permissions.find(ResourceMultiSelect).at(0).instance().props.onChange(['example3']);
+        permissions.find('MultiSelect').prop('onChange')(['example3']);
 
         const expectedNewValue: Array<ContextPermission> = [
             {
@@ -848,66 +821,7 @@ test('Pass disabled state to MultiSelect', () => {
 
     return promise.then(() => {
         permissions.update();
-        expect(permissions.find(ResourceMultiSelect).prop('disabled')).toEqual(true);
-    });
-});
-
-test('Pass correct requestParameters to MultiSelect', () => {
-    const securityContextGroups: SecurityContextGroups = {
-        'Webspaces': {
-            'sulu.webspaces.#webspace#': ['view'],
-        },
-    };
-    const promise = Promise.resolve(securityContextGroups);
-    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
-
-    const permissions = mount(
-        <Permissions
-            onChange={jest.fn()}
-            system="Sulu"
-            value={[]}
-        />
-    );
-
-    return promise.then(() => {
-        permissions.update();
-        expect(permissions.find(ResourceMultiSelect).prop('requestParameters')).toEqual({
-            checkForPermissions: 0,
-            locale: 'en',
-        });
-    });
-});
-
-test('Pass correct locale to MultiSelect', () => {
-    const securityContextGroups: SecurityContextGroups = {
-        'Webspaces': {
-            'sulu.webspaces.#webspace#': ['view'],
-        },
-    };
-    const promise = Promise.resolve(securityContextGroups);
-    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
-
-    userStore.user = {
-        id: 1,
-        locale: 'de',
-        settings: {},
-        username: 'Test',
-    };
-
-    const permissions = mount(
-        <Permissions
-            onChange={jest.fn()}
-            system="Sulu"
-            value={[]}
-        />
-    );
-
-    return promise.then(() => {
-        permissions.update();
-        expect(permissions.find(ResourceMultiSelect).prop('requestParameters')).toEqual({
-            checkForPermissions: 0,
-            locale: 'de',
-        });
+        expect(permissions.find('MultiSelect').prop('disabled')).toEqual(true);
     });
 });
 

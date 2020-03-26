@@ -17,7 +17,7 @@ class MetadataStore {
                 const schemaTypes = {};
                 Object.keys(types).forEach((key) => {
                     schemaTypes[key] = {
-                        key: key,
+                        key,
                         title: types[key].title || key,
                     };
                 });

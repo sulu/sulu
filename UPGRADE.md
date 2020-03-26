@@ -115,7 +115,27 @@ a `value` (instead of using the child of the node) attribute. This was necessary
 
 In the `RouteRepositoryInterface` a new remove method was introduced.
 
-## release/2.0
+## 2.0.5
+
+### Deprecation of localizationStore method
+
+The `loadLocalizations` method from the `localizationStore` has been deprecated. Use the `localizations` synchronous 
+property instead.
+
+### Deprecation of webspaceStore methods
+
+The `loadWebspaces` method from the `webspaceStore` has been deprecated. Use the `grantedWebspaces` synchronous
+property instead.
+
+### Deprecation of LocalizationController
+
+The `LocalizationController` has been deprecated. The information is now delivered via `sulu_admin.localizations` config
+in the `admin/config` endpoint. 
+
+### Deprecation of WebspaceController
+
+The `WebspacesController` has been deprecated. The information is now delivered via `sulu_page.webspaces` config
+in the `admin/config` endpoint. 
 
 ### Add position to category medias
 

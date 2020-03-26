@@ -45,7 +45,7 @@ test('Should render Form view', () => {
         },
     };
     const router = {
-        route: route,
+        route,
     };
 
     const PreviewForm = require('../PreviewForm').default;
@@ -62,7 +62,7 @@ test('Should initialize preview sidebar per default when previewCondition is not
         options: {},
     };
     const router = {
-        route: route,
+        route,
     };
 
     // require preview form to trigger call of withSidebar mock and retrieve passed function
@@ -95,7 +95,7 @@ test('Should initialize preview sidebar when previewCondition evaluates to true'
         },
     };
     const router = {
-        route: route,
+        route,
     };
 
     // require preview form to trigger call of withSidebar mock and retrieve passed function
@@ -128,7 +128,7 @@ test('Should not initialize preview sidebar when previewCondition evaluates to t
         },
     };
     const router = {
-        route: route,
+        route,
     };
 
     // require preview form to trigger call of withSidebar mock and retrieve passed function

@@ -8,8 +8,7 @@ import Overlay from '../../../components/Overlay';
 import ResourceStore from '../../../stores/ResourceStore';
 import ResourceFormStore from '../../../containers/Form/stores/ResourceFormStore';
 import Form from '../../../containers/Form';
-import Router from '../../../services/Router';
-import type {Route} from '../../../services/Router';
+import Router, {Route} from '../../../services/Router';
 import Snackbar from '../../../components/Snackbar';
 
 const React = mockReact;
@@ -41,7 +40,7 @@ jest.mock('../../../containers/Form/stores/ResourceFormStore', () => jest.fn(
     (resourceStore, formKey, options, metadataOptions) => {
         return {
             id: resourceStore.id,
-            metadataOptions: metadataOptions,
+            metadataOptions,
         };
     }
 ));
@@ -211,7 +210,7 @@ test('Should pass metadataRequestParameters options to Form View', () => {
             options: {
                 formKey: 'test-form-key',
                 resourceKey: 'test-resource-key',
-                metadataRequestParameters: metadataRequestParameters,
+                metadataRequestParameters,
             },
         },
     }: any);

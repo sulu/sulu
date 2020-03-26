@@ -23,6 +23,7 @@ use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
+use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -108,6 +109,11 @@ class AdminController
     private $linkProviderPool;
 
     /**
+     * @var LocalizationManagerInterface
+     */
+    private $localizationManager;
+
+    /**
      * @var string
      */
     private $environment;
@@ -162,6 +168,7 @@ class AdminController
         ContactManagerInterface $contactManager,
         DataProviderPoolInterface $dataProviderPool,
         LinkProviderPoolInterface $linkProviderPool,
+        LocalizationManagerInterface $localizationManager,
         string $environment,
         string $suluVersion,
         ?string $appVersion,
@@ -185,6 +192,7 @@ class AdminController
         $this->contactManager = $contactManager;
         $this->dataProviderPool = $dataProviderPool;
         $this->linkProviderPool = $linkProviderPool;
+        $this->localizationManager = $localizationManager;
         $this->environment = $environment;
         $this->suluVersion = $suluVersion;
         $this->appVersion = $appVersion;
@@ -229,12 +237,14 @@ class AdminController
     public function configAction(): Response
     {
         $user = $this->tokenStorage->getToken()->getUser();
-        $contact = $this->contactManager->getById($user->getContact()->getId(), $user->getLocale());
+        $locale = $user->getLocale();
+        $contact = $this->contactManager->getById($user->getContact()->getId(), $locale);
 
         $config = [
             'sulu_admin' => [
                 'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
                 'internalLinkTypes' => $this->linkProviderPool->getConfiguration(),
+                'localizations' => array_values($this->localizationManager->getLocalizations()),
                 'navigation' => array_map(function(NavigationItem $navigationItem) {
                     return $navigationItem->toArray();
                 }, array_values($this->navigationRegistry->getNavigationItems())),
@@ -262,6 +272,7 @@ class AdminController
 
         $context = new Context();
         $context->setGroups(['frontend', 'partialContact', 'fullView']);
+        $context->setAttribute('locale', $locale);
 
         $view->setContext($context);
         $view->setFormat('json');

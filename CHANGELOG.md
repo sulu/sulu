@@ -1,8 +1,12 @@
 CHANGELOG for Sulu
 ==================
 
-* 1.6.32 (2020-02-17)
-    * FEATURE            [MediaBundle]             Added download counter to list view of medias.
+* 1.6.32 (2020-03-26)
+    * FEATURE     #5062  [MediaBundle]             Added download counter to list view of medias.
+    * BUGFIX      #5109  [WebsiteBundle]           Fix disabled request analyzer for esi requests
+    * BUGFIX      #5087  [Rest]                    Fix aliases for joins without relations
+    * BUGFIX      #5122  [CategoryBundle]          Fix creating of media reference in categories
+    * BUGFIX      #5096  [MediaBundle]             Fix FileValidator class not being configured
 
 * 1.6.31 (2020-02-11)
     * BUGFIX      #5026  [Content]                 Add reserved property names

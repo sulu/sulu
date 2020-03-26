@@ -74,4 +74,31 @@ class DataProviderRepositoryTraitTest extends TestCase
         // this makes problems if also a limit is used
         $queryBuilder->distinct()->shouldBeCalled();
     }
+
+    public function testFindByFiltersIdsWithDatasourceWithoutIncludeSubFolders()
+    {
+        $findByFiltersIdsReflection = new \ReflectionMethod(
+            get_class($this->dataProviderRepositoryTrait),
+            'findByFiltersIds'
+        );
+        $findByFiltersIdsReflection->setAccessible(true);
+
+        $query = $this->prophesize(Query::class);
+        $query->setFirstResult(0)->willReturn($query);
+        $query->setMaxResults(Argument::any())->willReturn($query);
+        $query->getScalarResult()->willReturn([]);
+        $queryBuilder = $this->prophesize(QueryBuilder::class);
+        $queryBuilder->select(Argument::cetera())->willReturn($queryBuilder);
+        $queryBuilder->distinct(Argument::cetera())->willReturn($queryBuilder);
+        $queryBuilder->orderBy(Argument::cetera())->willReturn($queryBuilder);
+        $queryBuilder->getQuery()->willReturn($query);
+
+        $this->dataProviderRepositoryTrait->method('createQueryBuilder')->willReturn($queryBuilder->reveal());
+
+        $findByFiltersIdsReflection->invoke($this->dataProviderRepositoryTrait, ['dataSource' => 3], 1, 5, null, 'de');
+
+        // using distinct here is essential, since due to our joins multiple rows might be returned
+        // this makes problems if also a limit is used
+        $queryBuilder->distinct()->shouldBeCalled();
+    }
 }

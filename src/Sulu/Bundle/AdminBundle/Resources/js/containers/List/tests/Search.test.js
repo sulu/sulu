@@ -4,7 +4,7 @@ import React from 'react';
 import Search from '../Search';
 
 jest.mock('../../../utils/Translator', () => ({
-    translate: function(key) {
+    translate(key) {
         return key;
     },
 }));

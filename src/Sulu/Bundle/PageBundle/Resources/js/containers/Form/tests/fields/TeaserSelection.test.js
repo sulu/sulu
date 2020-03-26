@@ -58,6 +58,7 @@ test('Pass props correctly to component', () => {
 
 test('Pass disabled value from props to component', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    // $FlowFixMe
     userStore.contentLocale = 'de';
 
     const field = shallow(<TeaserSelection {...fieldTypeDefaultProps} disabled={true} formInspector={formInspector} />);
@@ -67,6 +68,7 @@ test('Pass disabled value from props to component', () => {
 
 test('Pass locale from userStore when form has no locale', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    // $FlowFixMe
     userStore.contentLocale = 'de';
 
     const field = shallow(<TeaserSelection {...fieldTypeDefaultProps} formInspector={formInspector} />);
@@ -76,6 +78,7 @@ test('Pass locale from userStore when form has no locale', () => {
 
 test('Pass presentations prop correctly to component', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    // $FlowFixMe
     userStore.contentLocale = 'de';
 
     const schemaOptions = {
@@ -104,6 +107,7 @@ test('Pass presentations prop correctly to component', () => {
 
 test('Throw error if present_as schemaOption is from wrong type', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    // $FlowFixMe
     userStore.contentLocale = 'de';
 
     const schemaOptions = {

@@ -6,7 +6,7 @@ import FieldRenderer from '../FieldRenderer';
 import {FormInspector, ResourceFormStore, Renderer} from '../../Form';
 import ResourceStore from '../../../stores/ResourceStore';
 
-jest.mock('../../../services/Router', () => jest.fn());
+jest.mock('../../../services/Router/Router', () => jest.fn());
 
 jest.mock('../../Form', () => ({
     FormInspector: jest.fn(),

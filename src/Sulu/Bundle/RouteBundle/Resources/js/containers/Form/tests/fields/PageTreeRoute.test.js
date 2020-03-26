@@ -90,7 +90,7 @@ test('Render a PageTreeRoute', () => {
     const modeResolver = jest.fn().mockImplementation(() => modePromise);
 
     const fieldTypeOptions = {
-        modeResolver: modeResolver,
+        modeResolver,
     };
 
     const value = {
@@ -143,7 +143,7 @@ test('Render a PageTreeRoute without value', () => {
     const modeResolver = jest.fn().mockImplementation(() => modePromise);
 
     const fieldTypeOptions = {
-        modeResolver: modeResolver,
+        modeResolver,
     };
 
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('pages'), 'test'));

@@ -182,7 +182,7 @@ class DatePicker extends React.Component<Props> {
         const inputProps = {
             placeholder: placeholder ? placeholder : this.getFormat(),
             valid: valid && !this.showError,
-            disabled: disabled,
+            disabled,
             icon: fieldOptions.dateFormat ? 'su-calendar' : 'su-clock',
         };
 

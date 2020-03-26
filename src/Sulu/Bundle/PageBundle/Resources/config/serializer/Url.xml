@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serializer>
+    <class name="Sulu\Component\Webspace\Url" exclusion-policy="ALL">
+        <property name="url" type="string" expose="true" groups="frontend,Default"/>
+        <property name="language" type="string" expose="true" groups="frontend,Default"/>
+        <property name="country" type="string" expose="true" groups="frontend,Default"/>
+        <property name="segment" type="string" expose="true" groups="frontend,Default"/>
+        <property name="redirect" type="string" expose="true" groups="frontend,Default"/>
+        <property name="main" type="boolean" expose="true" groups="frontend,Default"/>
+        <property name="environment" type="string" expose="true" groups="frontend,Default"/>
+    </class>
+</serializer>

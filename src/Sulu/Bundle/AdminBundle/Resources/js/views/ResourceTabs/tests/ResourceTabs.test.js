@@ -6,7 +6,7 @@ import ResourceTabs from '../ResourceTabs';
 import ResourceStore from '../../../stores/ResourceStore';
 
 jest.mock('../../../utils/Translator', () => ({
-    translate: function(key) {
+    translate(key) {
         switch (key) {
             case 'tabTitle1':
                 return 'Tab Titel 1';

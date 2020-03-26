@@ -7,7 +7,7 @@ import StringFieldTransformer from '../../fieldTransformers/StringFieldTransform
 import listFieldTransformerRegistry from '../../registries/listFieldTransformerRegistry';
 
 jest.mock('../../../../utils/Translator', () => ({
-    translate: function(key) {
+    translate(key) {
         switch (key) {
             case 'sulu_admin.page':
                 return 'Page';

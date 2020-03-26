@@ -8,7 +8,7 @@ import FormInspector from '../FormInspector';
 import ResourceFormStore from '../stores/ResourceFormStore';
 import Field from '../Field';
 
-jest.mock('../../../services/Router', () => jest.fn());
+jest.mock('../../../services/Router/Router', () => jest.fn());
 jest.mock('../FormInspector', () => jest.fn(function() {
     this.isFieldModified = jest.fn();
 }));

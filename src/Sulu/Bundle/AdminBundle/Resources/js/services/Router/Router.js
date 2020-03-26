@@ -3,10 +3,11 @@ import {action, autorun, computed, observable, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import equal from 'fast-deep-equal';
 import log from 'loglevel';
-import pathToRegexp, {compile} from 'path-to-regexp';
+import {compile} from 'path-to-regexp';
 import {transformDateForUrl} from '../../utils/Date';
-import type {AttributeMap, Route, UpdateAttributesHook, UpdateRouteHook, UpdateRouteMethod} from './types';
+import type {AttributeMap, UpdateAttributesHook, UpdateRouteHook, UpdateRouteMethod} from './types';
 import routeRegistry from './registries/routeRegistry';
+import Route from './Route';
 
 const OBJECT_DELIMITER = '.';
 
@@ -186,6 +187,16 @@ export default class Router {
         value: IObservableValue<*>,
         defaultValue: ?string | number | boolean | Object = undefined
     ) {
+        this.bindings.set(key, value);
+        this.bindingDefaults.set(key, defaultValue);
+
+        if (this.attributes[key] === undefined && value.get() === defaultValue) {
+            // when the bound parameter already has the default value set, and the passed attribute has a value of
+            // undefined, then we should not set it to undefined to set it back to the default value afterwards
+            // if we would to that, registered intercepts would be called, although nothing changed
+            return;
+        }
+
         if (key in this.attributes && value.get() !== this.attributes[key]) {
             // when the bound parameter is bound set the state of the passed observable to the current value once
             // required because otherwise the parameter will be overridden on the initial start of the application
@@ -196,9 +207,6 @@ export default class Router {
             // when the observable value is not set we want it to be the default value
             value.set(defaultValue);
         }
-
-        this.bindings.set(key, value);
-        this.bindingDefaults.set(key, defaultValue);
     }
 
     @action clearBindings() {
@@ -217,16 +225,17 @@ export default class Router {
     @action match(path: string, queryString: string) {
         for (const name in routeRegistry.getAll()) {
             const route = routeRegistry.get(name);
-            const names = [];
-            const match = pathToRegexp(route.path, names).exec(path);
+            const match = route.regexp.exec(path);
 
             if (!match) {
                 continue;
             }
 
+            const {availableAttributes} = route;
+
             const attributes = {};
             for (let i = 1; i < match.length; i++) {
-                attributes[names[i - 1].name] = tryParse(match[i]);
+                attributes[availableAttributes[i - 1]] = tryParse(match[i]);
             }
 
             const search = new URLSearchParams(queryString);
@@ -327,10 +336,6 @@ export default class Router {
             return '';
         }
 
-        const keys = [];
-        pathToRegexp(this.route.path, keys);
-        const keyNames = keys.map((key) => key.name);
-
         const attributes = toJS(this.attributes);
         for (const [key, observableValue] of this.bindings.entries()) {
             const value = observableValue.get();
@@ -339,9 +344,10 @@ export default class Router {
 
         const url = compile(this.route.path)(attributes);
         const searchParameters = new URLSearchParams();
+        const {availableAttributes} = this.route;
         Object.keys(attributes).forEach((key) => {
             const value = toJS(attributes[key]);
-            if (keyNames.includes(key) || value == this.bindingDefaults.get(key)) {
+            if (availableAttributes.includes(key) || value == this.bindingDefaults.get(key)) {
                 return;
             }
 

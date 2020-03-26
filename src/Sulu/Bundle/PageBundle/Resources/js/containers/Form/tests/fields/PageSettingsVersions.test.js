@@ -16,7 +16,7 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
     post: jest.fn(),
 }));
 
-jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
+jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
 }));
 

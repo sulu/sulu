@@ -4,11 +4,13 @@ import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import {List, ListStore, withToolbar} from 'sulu-admin-bundle/containers';
+import userStore from 'sulu-admin-bundle/stores/userStore/userStore';
 import type {Localization} from 'sulu-admin-bundle/stores';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
-import type {AttributeMap, Route} from 'sulu-admin-bundle/services';
+import type {AttributeMap} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import {CacheClearToolbarAction} from 'sulu-website-bundle/containers';
+import {Route} from 'sulu-admin-bundle/services';
 import type {Webspace} from '../../stores/webspaceStore/types';
 import pageListStyles from './pageList.scss';
 
@@ -40,8 +42,8 @@ class PageList extends React.Component<Props> {
         };
     }
 
-    @action setDefaultLocaleForWebspace = () => {
-        const {webspace} = this.props;
+    @action redirectToWebspaceLocale = () => {
+        const {webspace, router} = this.props;
 
         if (!webspace || !webspace.localizations) {
             return;
@@ -51,7 +53,9 @@ class PageList extends React.Component<Props> {
             return;
         }
 
-        const locale = this.findDefaultLocale(webspace.localizations);
+        const locale = webspace.allLocalizations.find(
+            (localization) => localization.localization === userStore.contentLocale
+        ) ? userStore.contentLocale : this.findDefaultLocale(webspace.localizations);
 
         if (!locale) {
             throw new Error(
@@ -59,7 +63,11 @@ class PageList extends React.Component<Props> {
             );
         }
 
-        this.locale.set(locale);
+        if (locale === this.locale.get()) {
+            return;
+        }
+
+        router.redirect(router.route.name, {...router.attributes, locale});
     };
 
     findDefaultLocale = (localizations: Array<Localization>): ?string => {
@@ -92,6 +100,9 @@ class PageList extends React.Component<Props> {
         const observableOptions = {};
         const requestParameters = {webspace};
 
+        this.redirectToWebspaceLocale();
+        router.bind('locale', this.locale);
+
         router.bind('page', this.page, 1);
         observableOptions.page = this.page;
 
@@ -99,9 +110,6 @@ class PageList extends React.Component<Props> {
         observableOptions['exclude-ghosts'] = this.excludeGhostsAndShadows;
         observableOptions['exclude-shadows'] = this.excludeGhostsAndShadows;
 
-        router.bind('locale', this.locale);
-
-        this.setDefaultLocaleForWebspace();
         observableOptions.locale = this.locale;
 
         this.cacheClearToolbarAction = new CacheClearToolbarAction();

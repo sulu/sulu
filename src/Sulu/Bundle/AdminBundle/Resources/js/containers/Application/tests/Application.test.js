@@ -1,10 +1,10 @@
 //@flow
 import React from 'react';
 import {render, mount} from 'enzyme';
-import Router from '../../../services/Router';
+import Router, {Route} from '../../../services/Router';
 import Application from '../Application';
 
-jest.mock('../../../services/Router', () => jest.fn(function() {
+jest.mock('../../../services/Router/Router', () => jest.fn(function() {
     this.attributes = {};
 }));
 
@@ -142,16 +142,11 @@ test('Should not fail if current route does not exist', () => {
 
 test('Render based on current route', () => {
     const router = new Router({});
-    router.route = {
+    router.route = new Route({
         name: 'test',
-        type: 'test',
-        attributeDefaults: {},
-        rerenderAttributes: [],
         path: '/webspaces',
-        children: [],
-        options: {},
-        parent: null,
-    };
+        type: 'test',
+    });
 
     const view = render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
 
@@ -160,16 +155,11 @@ test('Render based on current route', () => {
 
 test('Render based on current route with app version', () => {
     const router = new Router({});
-    router.route = {
+    router.route = new Route({
         name: 'test',
-        type: 'test',
-        attributeDefaults: {},
-        rerenderAttributes: [],
         path: '/webspaces',
-        children: [],
-        options: {},
-        parent: null,
-    };
+        type: 'test',
+    });
 
     const view = render(<Application appVersion="666" router={router} suluVersion="2.0.0-RC1" />);
 
@@ -178,16 +168,11 @@ test('Render based on current route with app version', () => {
 
 test('Render opened navigation', () => {
     const router = new Router({});
-    router.route = {
+    router.route = new Route({
         name: 'test',
-        type: 'test',
-        attributeDefaults: {},
-        rerenderAttributes: [],
         path: '/webspaces',
-        children: [],
-        options: {},
-        parent: null,
-    };
+        type: 'test',
+    });
 
     const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
     view.find('Button[icon="su-bars"]').simulate('click');
@@ -197,16 +182,11 @@ test('Render opened navigation', () => {
 
 test('Pin navigation', () => {
     const router = new Router({});
-    router.route = {
+    router.route = new Route({
         name: 'test',
-        type: 'test',
-        attributeDefaults: {},
-        rerenderAttributes: [],
         path: '/webspaces',
-        children: [],
-        options: {},
-        parent: null,
-    };
+        type: 'test',
+    });
 
     const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
     view.find('Button[icon="su-bars"]').simulate('click');
@@ -218,16 +198,11 @@ test('Pin navigation', () => {
 
 test('Pin navigation from beginning', () => {
     const router = new Router({});
-    router.route = {
+    router.route = new Route({
         name: 'test',
-        type: 'test',
-        attributeDefaults: {},
-        rerenderAttributes: [],
         path: '/webspaces',
-        children: [],
-        options: {},
-        parent: null,
-    };
+        type: 'test',
+    });
 
     mockUserStoreGetPersistentSetting.mockReturnValueOnce(true);
 
@@ -243,16 +218,11 @@ test('Pin navigation from beginning', () => {
 
 test('Do not pin navigation from beginning', () => {
     const router = new Router({});
-    router.route = {
+    router.route = new Route({
         name: 'test',
-        type: 'test',
-        attributeDefaults: {},
-        rerenderAttributes: [],
         path: '/webspaces',
-        children: [],
-        options: {},
-        parent: null,
-    };
+        type: 'test',
+    });
 
     mockUserStoreGetPersistentSetting.mockReturnValueOnce(false);
 

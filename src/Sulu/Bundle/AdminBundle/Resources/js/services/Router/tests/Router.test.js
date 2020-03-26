@@ -1,8 +1,9 @@
 // @flow
 import 'url-search-params-polyfill';
 import {createMemoryHistory} from 'history';
-import {extendObservable, observable, isObservable} from 'mobx';
+import {observable, isObservable} from 'mobx';
 import Router from '../Router';
+import Route from '../Route';
 import routeRegistry from '../registries/routeRegistry';
 
 window.addEventListener = jest.fn();
@@ -18,15 +19,14 @@ jest.mock('../registries/routeRegistry', () => {
 
 test('Navigate to route using state', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
-            type: 'form',
-            path: '/pages/:uuid',
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
-        },
+            path: '/pages/:uuid',
+            type: 'form',
+        }),
     });
 
     const history = createMemoryHistory();
@@ -44,15 +44,14 @@ test('Navigate to route using state', () => {
 
 test('Reset route using the reset method', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
-            type: 'list',
             path: '/pages',
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
-        },
+            type: 'list',
+        }),
     });
 
     const history = createMemoryHistory();
@@ -65,21 +64,19 @@ test('Reset route using the reset method', () => {
 
 test('Redirect to route using state', () => {
     routeRegistry.getAll.mockReturnValue({
-        test: {
+        test: new Route({
             name: 'test',
             type: 'test',
             path: '/test',
-            attributeDefaults: {},
-        },
-        page: {
+        }),
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -98,15 +95,14 @@ test('Redirect to route using state', () => {
 
 test('Navigate to route with search parameters using state', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -125,7 +121,7 @@ test('Navigate to route with search parameters using state', () => {
 
 test('Navigate to route with object search parameters using state', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
@@ -133,7 +129,7 @@ test('Navigate to route with object search parameters using state', () => {
                 type: 'page',
             },
             attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -155,7 +151,7 @@ test('Navigate to route with object search parameters using state', () => {
 
 test('Navigate to route with array search parameters using state', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
@@ -163,7 +159,7 @@ test('Navigate to route with array search parameters using state', () => {
                 type: 'page',
             },
             attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -185,7 +181,7 @@ test('Navigate to route with array search parameters using state', () => {
 
 test('Navigate to route with dates in array search parameters using state', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
@@ -193,7 +189,7 @@ test('Navigate to route with dates in array search parameters using state', () =
                 type: 'page',
             },
             attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -215,7 +211,7 @@ test('Navigate to route with dates in array search parameters using state', () =
 
 test('Navigate to route with array nested in object search parameters using state', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
@@ -223,7 +219,7 @@ test('Navigate to route with array nested in object search parameters using stat
                 type: 'page',
             },
             attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -245,7 +241,7 @@ test('Navigate to route with array nested in object search parameters using stat
 
 test('Navigate to route with date search parameters using state', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
@@ -253,7 +249,7 @@ test('Navigate to route with date search parameters using state', () => {
                 type: 'page',
             },
             attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -275,7 +271,7 @@ test('Navigate to route with date search parameters using state', () => {
 
 test('Navigate to route with string representing invalid date search parameters using state', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
@@ -283,7 +279,7 @@ test('Navigate to route with string representing invalid date search parameters 
                 type: 'page',
             },
             attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -305,12 +301,11 @@ test('Navigate to route with string representing invalid date search parameters 
 
 test('Navigate to route without parameters using state', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -322,14 +317,14 @@ test('Navigate to route without parameters using state', () => {
 
 test('Navigate to route with default attribute', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list/:locale',
             attributeDefaults: {
                 locale: 'en',
             },
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -342,14 +337,14 @@ test('Navigate to route with default attribute', () => {
 
 test('Navigate to route without default attribute when observable is changed', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list/:locale',
             attributeDefaults: {
                 locale: 'en',
             },
-        },
+        }),
     });
 
     const locale = observable.box();
@@ -370,7 +365,7 @@ test('Navigate to route without default attribute when observable is changed', (
 
 test('Apply updateAttributesHooks before applying default attributes but after passed attributes', () => {
     routeRegistry.getAll.mockReturnValue({
-        webspace_overview: {
+        webspace_overview: new Route({
             name: 'webspace_overview',
             type: 'webspace_overview',
             path: '/webspace/:webspace/:locale',
@@ -378,7 +373,7 @@ test('Apply updateAttributesHooks before applying default attributes but after p
                 webspace: 'webspace1',
                 sortOrder: 'desc',
             },
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -410,7 +405,7 @@ test('Apply updateAttributesHooks before applying default attributes but after p
 
 test('Apply attribute defaults if value of passed attribute is undefined', () => {
     routeRegistry.getAll.mockReturnValue({
-        webspace_overview: {
+        webspace_overview: new Route({
             name: 'webspace_overview',
             type: 'webspace_overview',
             path: '/webspace/:webspace/:locale',
@@ -418,7 +413,7 @@ test('Apply attribute defaults if value of passed attribute is undefined', () =>
                 webspace: 'webspace1',
                 sortOrder: 'desc',
             },
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -432,14 +427,14 @@ test('Apply attribute defaults if value of passed attribute is undefined', () =>
 
 test('Update observable attribute on route change', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list/:locale',
             attributeDefaults: {
                 locale: 'en',
             },
-        },
+        }),
     });
 
     const locale = observable.box();
@@ -460,12 +455,12 @@ test('Update observable attribute on route change', () => {
 
 test('Update date observable attribute on route change', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list',
             attributeDefaults: {},
-        },
+        }),
     });
 
     const date = observable.box();
@@ -484,14 +479,14 @@ test('Update date observable attribute on route change', () => {
 
 test('Update boolean observable attribute on route change', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list',
             attributeDefaults: {
                 exclude: true,
             },
-        },
+        }),
     });
 
     const exclude = observable.box();
@@ -512,14 +507,14 @@ test('Update boolean observable attribute on route change', () => {
 
 test('Update attribute containing an observable array on route change', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list',
             attributeDefaults: {
                 exclude: true,
             },
-        },
+        }),
     });
 
     const filter = observable.box({
@@ -542,15 +537,14 @@ test('Update attribute containing an observable array on route change', () => {
 
 test('Navigate to route using URL', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid/:test',
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -577,15 +571,14 @@ test('Navigate to route using non-existant URL with attributes', () => {
 
 test('Navigate to route using URL with search parameters', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid/:test',
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -604,12 +597,11 @@ test('Navigate to route using URL with search parameters', () => {
 
 test('Navigate to route changing only parameters', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -624,12 +616,11 @@ test('Navigate to route changing only parameters', () => {
 
 test('Navigate to route by adding parameters', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid/:value?',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -644,12 +635,11 @@ test('Navigate to route by adding parameters', () => {
 
 test('Navigate to route by removing parameters', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid/:value?',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -664,12 +654,11 @@ test('Navigate to route by removing parameters', () => {
 
 test('Navigate to route changing only search parameters', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -686,12 +675,11 @@ test('Navigate to route changing only search parameters', () => {
 
 test('Navigate to route by adding search parameters', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -708,12 +696,11 @@ test('Navigate to route by adding search parameters', () => {
 
 test('Navigate to route by removing search parameters', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -730,18 +717,16 @@ test('Navigate to route by removing search parameters', () => {
 
 test('Navigate to route and let history react', () => {
     routeRegistry.getAll.mockReturnValue({
-        home: {
+        home: new Route({
             name: 'home',
             type: 'home',
             path: '/',
-            attributeDefaults: {},
-        },
-        page: {
+        }),
+        page: new Route({
             name: 'page',
             type: 'page',
             path: '/page',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -754,12 +739,11 @@ test('Navigate to route and let history react', () => {
 
 test('Do not navigate if all parameters are equal', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -775,12 +759,11 @@ test('Do not navigate if all parameters are equal', () => {
 
 test('Use current route from URL', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'page',
             path: '/page',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -793,12 +776,11 @@ test('Use current route from URL', () => {
 
 test('Binding should update passed observable', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const value = observable.box();
@@ -814,12 +796,11 @@ test('Binding should update passed observable', () => {
 
 test('Binding should update state in router', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const page = observable.box(1);
@@ -837,12 +818,11 @@ test('Binding should update state in router', () => {
 
 test('Binding should set default attribute', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'page',
             path: '/page/:locale',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const locale = observable.box();
@@ -856,14 +836,40 @@ test('Binding should set default attribute', () => {
     expect(router.url).toBe('/page/en');
 });
 
+test('Binding should not touch observable value when default attribute is already set', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: new Route({
+            name: 'page',
+            type: 'page',
+            path: '/page/:locale',
+        }),
+    });
+
+    const locale = observable.box('en');
+    let observableChanged = false;
+
+    locale.intercept((change) => {
+        observableChanged = true;
+        return change;
+    });
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+    router.attributes.locale = undefined;
+
+    router.bind('locale', locale, 'en');
+    router.handleNavigation('page', {}, router.navigate);
+    expect(router.attributes.locale).toBe('en');
+    expect(observableChanged).toEqual(false);
+});
+
 test('Binding should update URL with fixed attributes', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'page',
             path: '/page/:uuid',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const uuid = observable.box(1);
@@ -882,12 +888,11 @@ test('Binding should update URL with fixed attributes', () => {
 
 test('Binding should update URL with fixed attributes as string if not a number', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'page',
             path: '/page/:uuid',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const uuid = observable.box('old-uuid');
@@ -906,12 +911,11 @@ test('Binding should update URL with fixed attributes as string if not a number'
 
 test('Binding should update state in router with other default bindings', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const page = observable.box();
@@ -931,12 +935,11 @@ test('Binding should update state in router with other default bindings', () => 
 
 test('Do not add parameter to URL if undefined', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const value = observable.box();
@@ -951,12 +954,11 @@ test('Do not add parameter to URL if undefined', () => {
 
 test('Set state to undefined if parameter is removed from URL', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const value = observable.box(5);
@@ -971,12 +973,11 @@ test('Set state to undefined if parameter is removed from URL', () => {
 
 test('Bound query should update state to default value if removed from URL', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const value = observable.box(5);
@@ -991,12 +992,11 @@ test('Bound query should update state to default value if removed from URL', () 
 
 test('Bound query should omit URL parameter if set to default value', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const value = observable.box('5');
@@ -1012,12 +1012,11 @@ test('Bound query should omit URL parameter if set to default value', () => {
 
 test('Bound query should initially not be set to undefined in URL', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const value = observable.box();
@@ -1032,12 +1031,11 @@ test('Bound query should initially not be set to undefined in URL', () => {
 
 test('Binding should be set to initial passed value from URL', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const value = observable.box();
@@ -1053,12 +1051,11 @@ test('Binding should be set to initial passed value from URL', () => {
 
 test('Binding should not be set to initial passed value from URL if values already match', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const value = {
@@ -1078,12 +1075,11 @@ test('Binding should not be set to initial passed value from URL if values alrea
 
 test('Binding should not be updated if only data type changes', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list',
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const page = jest.fn(() => ({
@@ -1106,12 +1102,12 @@ test('Binding should not be updated if only data type changes', () => {
 
 test('Binding should not be updated if the same object is set again', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list',
             attributeDefaults: {},
-        },
+        }),
     });
 
     const filter = jest.fn(() => ({
@@ -1131,12 +1127,12 @@ test('Binding should not be updated if the same object is set again', () => {
 
 test('Binding should be updated if another object is set', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list',
             attributeDefaults: {},
-        },
+        }),
     });
 
     const filter = jest.fn(() => ({
@@ -1156,12 +1152,12 @@ test('Binding should be updated if another object is set', () => {
 
 test('Binding should not be updated if the same date is set again', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list',
             attributeDefaults: {},
-        },
+        }),
     });
 
     const from = jest.fn(() => ({
@@ -1181,12 +1177,12 @@ test('Binding should not be updated if the same date is set again', () => {
 
 test('Binding should be updated if the date changes', () => {
     routeRegistry.getAll.mockReturnValue({
-        list: {
+        list: new Route({
             name: 'list',
             type: 'list',
             path: '/list',
             attributeDefaults: {},
-        },
+        }),
     });
 
     const from = jest.fn(() => ({
@@ -1205,40 +1201,36 @@ test('Binding should be updated if the date changes', () => {
 });
 
 test('Navigate to child route using state', () => {
-    const formRoute = extendObservable({}, {
+    const formRoute = new Route({
         name: 'sulu_snippet.form',
         type: 'sulu_admin.tab',
         path: '/snippets/:uuid',
         options: {
             resourceKey: 'snippet',
         },
-        attributeDefaults: {},
-        children: [],
     });
 
-    const detailsRoute = extendObservable({}, {
+    const detailsRoute = new Route({
         name: 'sulu_snippet.form.details',
-        parent: formRoute,
         type: 'sulu_admin.form',
         path: '/snippets/:uuid/details',
         options: {
             tabTitle: 'Details',
         },
-        attributeDefaults: {},
     });
 
-    const taxonomyRoute = extendObservable({}, {
+    const taxonomyRoute = new Route({
         name: 'sulu_snippet.form.taxonomy',
-        parent: formRoute,
         type: 'sulu_admin.form',
         path: '/snippets/:uuid/taxonomy',
         options: {
             tabTitle: 'Taxonomies',
         },
-        attributeDefaults: {},
     });
 
     formRoute.children = [detailsRoute, taxonomyRoute];
+    detailsRoute.parent = formRoute;
+    taxonomyRoute.parent = formRoute;
 
     routeRegistry.getAll.mockReturnValue({
         'sulu_snippet.form': formRoute,
@@ -1268,40 +1260,36 @@ test('Navigate to child route using state', () => {
 });
 
 test('Navigate to child route using URL', () => {
-    const formRoute = extendObservable({}, {
+    const formRoute = new Route({
         name: 'sulu_snippet.form',
         type: 'sulu_admin.tab',
         path: '/snippets/:uuid',
         options: {
             resourceKey: 'snippet',
         },
-        attributeDefaults: {},
-        children: [],
     });
 
-    const detailsRoute = extendObservable({}, {
+    const detailsRoute = new Route({
         name: 'sulu_snippet.form.details',
-        parent: formRoute,
         type: 'sulu_admin.form',
         path: '/snippets/:uuid/details',
         options: {
             tabTitle: 'Details',
         },
-        attributeDefaults: {},
     });
 
-    const taxonomyRoute = extendObservable({}, {
+    const taxonomyRoute = new Route({
         name: 'sulu_snippet.form.taxonomy',
-        parent: formRoute,
         type: 'sulu_admin.form',
         path: '/snippets/:uuid/taxonomy',
         options: {
             tabTitle: 'Taxonomies',
         },
-        attributeDefaults: {},
     });
 
     formRoute.children = [detailsRoute, taxonomyRoute];
+    detailsRoute.parent = formRoute;
+    taxonomyRoute.parent = formRoute;
 
     routeRegistry.getAll.mockReturnValue({
         'sulu_snippet.form': formRoute,
@@ -1332,24 +1320,22 @@ test('Navigate to child route using URL', () => {
 
 test('Navigating should store the old route information', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
-        },
-        snippet: {
+        }),
+        snippet: new Route({
             name: 'snippet',
             type: 'form',
             path: '/snippets/:uuid',
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -1381,7 +1367,7 @@ test('Navigating should store the old route information', () => {
 
 test('Navigating to route with defaults should store the old route information once', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:locale/:uuid',
@@ -1391,7 +1377,7 @@ test('Navigating to route with defaults should store the old route information o
             attributeDefaults: {
                 locale: 'en',
             },
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -1410,24 +1396,22 @@ test('Navigating to route with defaults should store the old route information o
 
 test('Restore should navigate to the given route with the stored data', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
-        },
-        snippet: {
+        }),
+        snippet: new Route({
             name: 'snippet',
             type: 'form',
             path: '/snippets/:uuid',
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -1445,24 +1429,22 @@ test('Restore should navigate to the given route with the stored data', () => {
 
 test('Restore should navigate to the given route with passed data being merged', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
-        },
-        snippet: {
+        }),
+        snippet: new Route({
             name: 'snippet',
             type: 'form',
             path: '/snippets/:uuid/:test',
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -1481,15 +1463,14 @@ test('Restore should navigate to the given route with passed data being merged',
 
 test('Restore should just navigate if no history is available', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -1503,15 +1484,14 @@ test('Restore should just navigate if no history is available', () => {
 
 test('Restore should not create a new history entry', () => {
     routeRegistry.getAll.mockReturnValue({
-        page: {
+        page: new Route({
             name: 'page',
             type: 'form',
             path: '/pages/:uuid',
             options: {
                 type: 'page',
             },
-            attributeDefaults: {},
-        },
+        }),
     });
 
     const history = createMemoryHistory();
@@ -1567,7 +1547,7 @@ test('Add and remove updateRouteHooks with different priorities', () => {
 });
 
 test('Cancel navigation if an updateRouteHook returns false', () => {
-    const webspaceOverviewRoute = {
+    const webspaceOverviewRoute = new Route({
         name: 'webspace_overview',
         type: 'webspace_overview',
         path: '/webspace/:webspace/:locale',
@@ -1575,7 +1555,7 @@ test('Cancel navigation if an updateRouteHook returns false', () => {
             sortOrder: 'desc',
             webspace: 'webspace1',
         },
-    };
+    });
 
     routeRegistry.getAll.mockReturnValue({
         webspace_overview: webspaceOverviewRoute,
@@ -1605,7 +1585,7 @@ test('Cancel navigation if an updateRouteHook returns false', () => {
 });
 
 test('Consider priority when cancelling a navigation', () => {
-    const webspaceOverviewRoute = {
+    const webspaceOverviewRoute = new Route({
         name: 'webspace_overview',
         type: 'webspace_overview',
         path: '/webspace/:webspace/:locale',
@@ -1613,7 +1593,7 @@ test('Consider priority when cancelling a navigation', () => {
             sortOrder: 'desc',
             webspace: 'webspace1',
         },
-    };
+    });
 
     routeRegistry.getAll.mockReturnValue({
         webspace_overview: webspaceOverviewRoute,
@@ -1643,14 +1623,15 @@ test('Consider priority when cancelling a navigation', () => {
 });
 
 test('Navigate if all updateRouteHooks return true', () => {
-    const webspaceOverviewRoute = {
+    const webspaceOverviewRoute = new Route({
         name: 'webspace_overview',
-        type: 'webspace_overview', path: '/webspace/:webspace/:locale',
+        type: 'webspace_overview',
+        path: '/webspace/:webspace/:locale',
         attributeDefaults: {
             sortOrder: 'desc',
             webspace: 'webspace1',
         },
-    };
+    });
 
     routeRegistry.getAll.mockReturnValue({
         webspace_overview: webspaceOverviewRoute,
@@ -1684,14 +1665,15 @@ test('Navigate if all updateRouteHooks return true', () => {
 });
 
 test('Redirect if all updateRouteHooks return true', () => {
-    const webspaceOverviewRoute = {
+    const webspaceOverviewRoute = new Route({
         name: 'webspace_overview',
-        type: 'webspace_overview', path: '/webspace/:webspace/:locale',
+        type: 'webspace_overview',
+        path: '/webspace/:webspace/:locale',
         attributeDefaults: {
             sortOrder: 'desc',
             webspace: 'webspace1',
         },
-    };
+    });
 
     routeRegistry.getAll.mockReturnValue({
         webspace_overview: webspaceOverviewRoute,
@@ -1725,14 +1707,15 @@ test('Redirect if all updateRouteHooks return true', () => {
 });
 
 test('Restore if all updateRouteHooks return true', () => {
-    const webspaceOverviewRoute = {
+    const webspaceOverviewRoute = new Route({
         name: 'webspace_overview',
-        type: 'webspace_overview', path: '/webspace/:webspace/:locale',
+        type: 'webspace_overview',
+        path: '/webspace/:webspace/:locale',
         attributeDefaults: {
             sortOrder: 'desc',
             webspace: 'webspace1',
         },
-    };
+    });
 
     routeRegistry.getAll.mockReturnValue({
         webspace_overview: webspaceOverviewRoute,

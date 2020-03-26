@@ -4,10 +4,10 @@ import {computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import jexl from 'jexl';
 import Loader from '../../components/Loader';
-import type {Route} from '../../services/Router';
 import Tabs from '../../views/Tabs';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import ResourceStore from '../../stores/ResourceStore';
+import {Route} from '../../services/Router';
 import resourceTabsStyles from './resourceTabs.scss';
 
 type Props = ViewProps & {

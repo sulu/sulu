@@ -17,7 +17,7 @@ jest.mock('../../../services/initializer', () => ({
 }));
 
 jest.mock('../../../stores/localizationStore', () => ({
-    loadLocalizations: jest.fn(() => new Promise((resolve) => resolve([]))),
+    localizations: [],
 }));
 
 beforeEach(() => {
@@ -72,12 +72,11 @@ test('Should return the fallback-locale as content-locale if the user is not set
 });
 
 test('Should load and set first default-localization as content-locale when user is set', () => {
-    const localizationsPromise = new Promise((resolve) => resolve([
-        {locale: 'cz', default: false},
-        {locale: 'ru', default: true},
-        {locale: 'de', default: false},
-    ]));
-    localizationStore.loadLocalizations.mockReturnValueOnce(localizationsPromise);
+    localizationStore.localizations = [
+        {locale: 'cz', country: '', language: 'cz', default: '', shadow: '', xDefault: ''},
+        {locale: 'ru', country: '', language: 'ru', default: 'true', shadow: '', xDefault: ''},
+        {locale: 'de', country: '', language: 'de', default: '', shadow: '', xDefault: ''},
+    ];
 
     userStore.setUser({
         id: 5,
@@ -86,19 +85,15 @@ test('Should load and set first default-localization as content-locale when user
         username: 'test',
     });
 
-    return localizationsPromise.then(() => {
-        expect(localizationStore.loadLocalizations).toBeCalled();
-        expect(userStore.contentLocale).toEqual('ru');
-    });
+    expect(userStore.contentLocale).toEqual('ru');
 });
 
 test('Should load and set first localization as content-locale if there is no default-localiztion', () => {
-    const localizationsPromise = new Promise((resolve) => resolve([
-        {locale: 'cz', default: false},
-        {locale: 'ru', default: false},
-        {locale: 'de', default: false},
-    ]));
-    localizationStore.loadLocalizations.mockReturnValueOnce(localizationsPromise);
+    localizationStore.localizations = [
+        {locale: 'cz', country: '', language: 'cz', default: '', shadow: '', xDefault: ''},
+        {locale: 'ru', country: '', language: 'ru', default: '', shadow: '', xDefault: ''},
+        {locale: 'de', country: '', language: 'de', default: '', shadow: '', xDefault: ''},
+    ];
 
     userStore.setUser({
         id: 5,
@@ -107,10 +102,7 @@ test('Should load and set first localization as content-locale if there is no de
         username: 'test',
     });
 
-    return localizationsPromise.then(() => {
-        expect(localizationStore.loadLocalizations).toBeCalled();
-        expect(userStore.contentLocale).toEqual('cz');
-    });
+    expect(userStore.contentLocale).toEqual('cz');
 });
 
 test('Should return initial persistent settings', () => {
@@ -296,4 +288,10 @@ test('Should logout', () => {
         expect(Requester.get).toBeCalledWith('logout_url');
         expect(userStore.loggedIn).toBe(false);
     });
+});
+
+test('Should update persistent settings on updateContentLocale', () => {
+    userStore.updateContentLocale('fr');
+    expect(Requester.patch).toBeCalledWith('profile_settings_url', {'sulu_admin.content_locale': 'fr'});
+    expect(userStore.contentLocale).toBe('fr');
 });

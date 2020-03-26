@@ -28,7 +28,7 @@ export default class Controls extends React.PureComponent<Props> {
                 child,
                 {
                     ...child.props,
-                    skin: skin,
+                    skin,
                 }
             );
         });

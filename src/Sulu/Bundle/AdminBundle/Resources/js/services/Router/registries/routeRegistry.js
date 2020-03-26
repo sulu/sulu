@@ -1,6 +1,6 @@
 // @flow
-import {extendObservable} from 'mobx';
-import type {Route, RouteConfig, RouteMap} from '../types';
+import type {RouteConfig, RouteMap} from '../types';
+import Route from '../Route';
 
 class RouteRegistry {
     routes: RouteMap;
@@ -19,11 +19,7 @@ class RouteRegistry {
                 throw new Error('The name "' + routeConfig.name + '" has already been used for another route');
             }
 
-            const route = extendObservable({}, {
-                ...routeConfig,
-                children: [],
-                parent: undefined,
-            });
+            const route = new Route(routeConfig);
             this.routes[route.name] = route;
         });
 

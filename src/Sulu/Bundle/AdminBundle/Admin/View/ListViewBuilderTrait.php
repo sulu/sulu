@@ -87,6 +87,10 @@ trait ListViewBuilderTrait
         $oldLocales = $route->getOption('locales');
         $newLocales = $oldLocales ? array_merge($oldLocales, $locales) : $locales;
         $route->setOption('locales', $newLocales);
+
+        if (!$route->getAttributeDefault('locale') && isset($newLocales[0])) {
+            $this->setDefaultLocaleToView($route, $newLocales[0]);
+        }
     }
 
     private function setDefaultLocaleToView(View $route, string $locale): void

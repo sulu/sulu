@@ -55,7 +55,7 @@ class Table<T: string | number> extends React.Component<Props<T>> {
         return React.cloneElement(
             originalHeader,
             {
-                allSelected: allSelected,
+                allSelected,
                 buttons: [...buttons, ...(originalHeader.props.buttons || [])],
                 onAllSelectionChange: onAllSelectionChange ? this.handleAllSelectionChange : undefined,
                 selectMode,
