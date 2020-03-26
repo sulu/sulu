@@ -602,6 +602,33 @@ test('Binding should set default attribute', () => {
     expect(router.url).toBe('/page/en');
 });
 
+test('Binding should not touch observable value when default attribute is already set', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: new Route({
+            name: 'page',
+            type: 'page',
+            path: '/page/:locale',
+        }),
+    });
+
+    const locale = observable.box('en');
+    let observableChanged = false;
+
+    locale.intercept((change) => {
+        observableChanged = true;
+        return change;
+    });
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+    router.attributes.locale = undefined;
+
+    router.bind('locale', locale, 'en');
+    router.handleNavigation('page', {}, router.navigate);
+    expect(router.attributes.locale).toBe('en');
+    expect(observableChanged).toEqual(false);
+});
+
 test('Binding should update URL with fixed attributes', () => {
     routeRegistry.getAll.mockReturnValue({
         page: new Route({
