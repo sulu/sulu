@@ -14,7 +14,7 @@ namespace Sulu\Bundle\RouteBundle\Tests\Unit\Generator;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\RouteBundle\Generator\CannotEvaluateTokenException;
 use Sulu\Bundle\RouteBundle\Generator\SymfonyExpressionTokenProvider;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class SymfonyExpressionTokenProviderTest extends TestCase
 {
