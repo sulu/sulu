@@ -68,7 +68,7 @@ test('Call onChange handler with new value', () => {
 test.each([
     [['audio', 'video'], 'Audio, Video'],
     [['image'], 'Image'],
-    [undefined, undefined],
+    [undefined, null],
 ])('Return value node with value "%s"', (value, expectedValueNode) => {
     const dropdownFieldFilterType = new DropdownFieldFilterType(
         jest.fn(),
@@ -77,11 +77,6 @@ test.each([
     );
 
     const valueNodePromise = dropdownFieldFilterType.getValueNode(value);
-
-    if (expectedValueNode === undefined) {
-        expect(valueNodePromise).toEqual(null);
-        return;
-    }
 
     if (!valueNodePromise) {
         throw new Error('The getValueNode function must return a promise!');

@@ -82,16 +82,12 @@ test('Call onChange handler with to value and existing value', () => {
 test.each([
     [{from: new Date('2018-03-07'), to: new Date('2018-08-02')}, '03/07/2018 - 08/02/2018'],
     [{from: new Date('2017-11-07'), to: new Date('2017-12-11')}, '11/07/2017 - 12/11/2017'],
-    [undefined, undefined],
+    [undefined, null],
+    [{}, null],
 ])('Return value node with value "%s"', (value, expectedValueNode) => {
     const dateTimeFieldFilterType = new DateTimeFieldFilterType(jest.fn(), {}, undefined);
 
     const valueNodePromise = dateTimeFieldFilterType.getValueNode(value);
-
-    if (expectedValueNode === undefined) {
-        expect(valueNodePromise).toEqual(null);
-        return;
-    }
 
     if (!valueNodePromise) {
         throw new Error('The getValueNode function must return a promise!');

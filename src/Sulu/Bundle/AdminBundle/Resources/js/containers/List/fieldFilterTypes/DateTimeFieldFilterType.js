@@ -40,10 +40,14 @@ class DateTimeFieldFilterType extends AbstractFieldFilterType<?{from?: Date, to?
 
     getValueNode(value: ?{from?: Date, to?: Date}) {
         if (!value) {
-            return null;
+            return Promise.resolve(null);
         }
 
         const {from, to} = value;
+
+        if (!from && !to) {
+            return Promise.resolve(null);
+        }
 
         return Promise.resolve(formatDate(from) + ' - ' + formatDate(to));
     }

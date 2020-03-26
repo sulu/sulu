@@ -29,7 +29,7 @@ export default class AbstractFieldFilterType<T> {
     }
 
     // eslint-disable-next-line no-unused-vars
-    getValueNode(value: T): ?Promise<Node> {
-        return null;
+    getValueNode(value: T): Promise<Node> {
+        return Promise.resolve(null);
     }
 }
