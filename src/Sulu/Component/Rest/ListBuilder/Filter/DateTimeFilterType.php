@@ -21,13 +21,27 @@ class DateTimeFilterType implements FilterTypeInterface
         FieldDescriptorInterface $fieldDescriptor,
         $options
     ): void {
-        if (!is_array($options) || !isset($options['from']) || !isset($options['to'])) {
+        if (!is_array($options) || (!isset($options['from']) && !isset($options['to']))) {
             throw new InvalidFilterTypeOptionsException(
-                'The DateTimeFilterType requires its options to be an array with a "from" and "to" key!'
+                'The DateTimeFilterType requires its options to be an array with a "from" or "to" key!'
             );
         }
 
-        $listBuilder->between($fieldDescriptor, [$options['from'], $options['to']]);
+        if (isset($options['from']) && isset($options['to'])) {
+            $listBuilder->between($fieldDescriptor, [$options['from'], $options['to']]);
+        } elseif (isset($options['from']) && !isset($options['to'])) {
+            $listBuilder->where(
+                $fieldDescriptor,
+                $options['from'],
+                ListBuilderInterface::WHERE_COMPARATOR_GREATER
+            );
+        } elseif (!isset($options['from']) && isset($options['to'])) {
+            $listBuilder->where(
+                $fieldDescriptor,
+                $options['to'],
+                ListBuilderInterface::WHERE_COMPARATOR_LESS
+            );
+        }
     }
 
     public static function getDefaultIndexName(): string
