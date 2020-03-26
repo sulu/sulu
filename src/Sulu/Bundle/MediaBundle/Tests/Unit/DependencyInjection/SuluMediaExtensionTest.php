@@ -65,7 +65,7 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         ]);
         $this->assertContainerBuilderHasParameter('sulu_media.format_cache.save_image', true);
         $this->assertContainerBuilderHasParameter('sulu_media.format_cache.path', '%kernel.project_dir%/public/uploads/media');
-        $this->assertContainerBuilderHasParameter('sulu_media.media.blocked_file_types', ['file/exe']);
+        $this->assertContainerBuilderHasParameter('sulu_media.media.blocked_file_types', []);
         $this->assertContainerBuilderHasParameter('sulu_media.ghost_script.path', 'gs');
         $this->assertContainerBuilderHasParameter(
             'sulu_media.format_manager.mime_types',
@@ -89,5 +89,32 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
                 'mimeTypes' => ['audio/*'],
             ],
         ]);
+    }
+
+    public function testConfigureFileValidator()
+    {
+        $this->container->setParameter('kernel.bundles', []);
+        $this->load([
+            'format_manager' => [
+                'blocked_file_types' => [
+                    'file/exe',
+                ],
+            ],
+            'upload' => [
+                'max_filesize' => 16,
+            ],
+        ]);
+
+        $this->assertContainerBuilderHasService('sulu_media.file_validator');
+        $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
+            'sulu_media.file_validator',
+            'setMaxFileSize',
+            ['16MB']
+        );
+        $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
+            'sulu_media.file_validator',
+            'setBlockedMimeTypes',
+            [['file/exe']]
+        );
     }
 }
