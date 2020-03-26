@@ -177,15 +177,13 @@ class Application extends React.Component<Props>{
                                 />
                             </nav>
                             <div className={contentClass}>
-                                <Backdrop
-                                    fixed={false}
-                                    local={true}
-                                    onClick={this.handleNavigationButtonClick}
-                                    open={this.navigationVisible && !this.navigationPinned}
-                                    visible={false}
-                                />
                                 <main className={applicationStyles.main}>
-                                    <header className={applicationStyles.header}>
+                                    <div className={applicationStyles.viewContainer}>
+                                        {router.route &&
+                                        <ViewRenderer router={router} />
+                                        }
+                                    </div>
+                                    <header>
                                         <Toolbar
                                             navigationOpen={this.navigationVisible}
                                             onNavigationButtonClick={
@@ -195,14 +193,15 @@ class Application extends React.Component<Props>{
                                             }
                                         />
                                     </header>
-                                    <div className={applicationStyles.viewContainer}>
-                                        {router.route &&
-                                        <ViewRenderer router={router} />
-                                        }
-                                    </div>
                                 </main>
                                 <Sidebar className={sidebarClass} />
-
+                                <Backdrop
+                                    fixed={false}
+                                    local={true}
+                                    onClick={this.handleNavigationButtonClick}
+                                    open={this.navigationVisible && !this.navigationPinned}
+                                    visible={false}
+                                />
                             </div>
                         </div>
                         <ProfileFormOverlay

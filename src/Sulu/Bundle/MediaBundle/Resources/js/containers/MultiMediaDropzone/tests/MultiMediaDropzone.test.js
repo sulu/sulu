@@ -47,7 +47,7 @@ test('Render a MultiMediaDropzone', () => {
     )).toMatchSnapshot();
 });
 
-test('Render a MultiMediaDropzone while the overlay is visible', () => {
+test('Render the DropzoneOverlay while the overlay is visible', () => {
     const multiMediaDropzone = shallow(
         <MultiMediaDropzone
             collectionId={3}
@@ -63,10 +63,10 @@ test('Render a MultiMediaDropzone while the overlay is visible', () => {
 
     multiMediaDropzone.update();
 
-    expect(multiMediaDropzone.render()).toMatchSnapshot();
+    expect(multiMediaDropzone.find('DropzoneOverlay')).toHaveLength(1);
 });
 
-test('Render a MultiMediaDropzone while media is uploaded', () => {
+test('Show media while it is being uploaded', () => {
     const locale = observable.box('en');
     const uploadSpy = jest.fn();
     const multiMediaDropzone = shallow(
@@ -89,7 +89,7 @@ test('Render a MultiMediaDropzone while media is uploaded', () => {
     multiMediaDropzone.instance().handleDrop(files);
     multiMediaDropzone.update();
 
-    expect(multiMediaDropzone.render()).toMatchSnapshot();
+    expect(multiMediaDropzone.find('MediaItem')).toHaveLength(2);
 });
 
 test('Should upload media when it is dropped on the dropzone', () => {

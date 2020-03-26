@@ -97,6 +97,8 @@ $textEditorUnpublishedLinkColor: $gold;
     }
 
     .ck.ck-editor {
+        z-index: 0;
+
         .ck.ck-toolbar__separator {
             background: none;
             width: $textEditorButtonMinSize;
