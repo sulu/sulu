@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\RouteBundle\Generator;
 
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Enables to use the symfony expression language in route tokens.
