@@ -50,6 +50,8 @@ class SymfonyExpressionTokenProvider implements TokenProviderInterface
             return $result;
         } catch (\Exception $e) {
             throw new CannotEvaluateTokenException($name, $entity, $e);
+        } finally {
+            $this->translator->setLocale($locale);
         }
     }
 }
