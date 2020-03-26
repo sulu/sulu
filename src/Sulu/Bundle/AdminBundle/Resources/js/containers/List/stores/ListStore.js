@@ -202,8 +202,11 @@ export default class ListStore {
                 : {};
 
             if (!equals(oldFilteredValue, newFilteredValue)) {
-                ListStore.setFilterSetting(this.listKey, this.userSettingsKey, change.newValue);
                 callResetForChangedObservable(change);
+            }
+
+            if (!equals(oldValue, newValue)) {
+                ListStore.setFilterSetting(this.listKey, this.userSettingsKey, change.newValue);
             }
 
             return change;
