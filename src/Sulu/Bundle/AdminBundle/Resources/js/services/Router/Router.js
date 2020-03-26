@@ -84,6 +84,16 @@ export default class Router {
     }
 
     @action bind(key: string, value: IObservableValue<*>, defaultValue: ?string | number | boolean = undefined) {
+        this.bindings.set(key, value);
+        this.bindingDefaults.set(key, defaultValue);
+
+        if (this.attributes[key] === undefined && value.get() === defaultValue) {
+            // when the bound parameter already has the default value set, and the passed attribute has a value of
+            // undefined, then we should not set it to undefined to set it back to the default value afterwards
+            // if we would to that, registered intercepts would be called, although nothing changed
+            return;
+        }
+
         if (key in this.attributes && value.get() !== this.attributes[key]) {
             // when the bound parameter is bound set the state of the passed observable to the current value once
             // required because otherwise the parameter will be overridden on the initial start of the application
@@ -94,9 +104,6 @@ export default class Router {
             // when the observable value is not set we want it to be the default value
             value.set(defaultValue);
         }
-
-        this.bindings.set(key, value);
-        this.bindingDefaults.set(key, defaultValue);
     }
 
     @action clearBindings() {
