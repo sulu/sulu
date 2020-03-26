@@ -86,6 +86,24 @@ test('Render the MultiAutoComplete with open suggestions list', () => {
     expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
 });
 
+test('Should assign input as ref to inputRef', () => {
+    const inputRefSpy = jest.fn();
+
+    const multiAutoComplete = mount(
+        <MultiAutoComplete
+            displayProperty="name"
+            inputRef={inputRefSpy}
+            onChange={jest.fn()}
+            onSearch={jest.fn()}
+            searchProperties={[]}
+            suggestions={[]}
+            value={[]}
+        />
+    );
+
+    expect(inputRefSpy).toBeCalledWith(multiAutoComplete.find('input').instance());
+});
+
 test('Clicking a suggestion should call onChange with value of the Suggestion and focus input afterwards', () => {
     const changeSpy = jest.fn();
 

@@ -28,6 +28,13 @@ test('DatePicker should render when disabled', () => {
     expect(datePicker.render()).toMatchSnapshot();
 });
 
+test('DatePicker should pass input to inputRef prop', () => {
+    const inputRefSpy = jest.fn();
+    const datePicker = mount(<DatePicker inputRef={inputRefSpy} onChange={jest.fn()} value={undefined} />);
+
+    expect(inputRefSpy).toBeCalledWith(datePicker.find('input').instance());
+});
+
 test('DatePicker should open overlay on icon-click', () => {
     const onChange = jest.fn();
     const datePicker = mount(<DatePicker onChange={onChange} value={null} />);
