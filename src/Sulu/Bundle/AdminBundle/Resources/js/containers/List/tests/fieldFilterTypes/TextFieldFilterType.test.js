@@ -44,3 +44,17 @@ test.each([
         expect(valueNode).toEqual(value);
     });
 });
+
+test('Return value node for null', () => {
+    const textFieldFilterType = new TextFieldFilterType(jest.fn(), {}, undefined);
+
+    const valueNodePromise = textFieldFilterType.getValueNode(null);
+
+    if (!valueNodePromise) {
+        throw new Error('The getValueNode function must return a promise!');
+    }
+
+    return valueNodePromise.then((valueNode) => {
+        expect(valueNode).toEqual(null);
+    });
+});
