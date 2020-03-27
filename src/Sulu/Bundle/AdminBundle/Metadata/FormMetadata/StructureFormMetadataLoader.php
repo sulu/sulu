@@ -41,6 +41,11 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
     /**
      * @var string[]
      */
+    private $defaultTypes;
+
+    /**
+     * @var string[]
+     */
     private $locales;
 
     /**
@@ -57,6 +62,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
         StructureMetadataFactoryInterface $structureMetadataFactory,
         FormMetadataMapper $formMetadataMapper,
         WebspaceManagerInterface $webspaceManager,
+        array $defaultTypes,
         array $locales,
         string $cacheDir,
         bool $debug
@@ -64,6 +70,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
         $this->structureMetadataFactory = $structureMetadataFactory;
         $this->formMetadataMapper = $formMetadataMapper;
         $this->webspaceManager = $webspaceManager;
+        $this->defaultTypes = $defaultTypes;
         $this->locales = $locales;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
@@ -91,6 +98,8 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
             foreach ($webspace->getExcludedTemplates() as $excludedTemplate) {
                 $form->removeForm($excludedTemplate);
             }
+        } elseif (isset($this->defaultTypes[$key])) {
+            $form->setDefaultType($this->defaultTypes[$key]);
         }
 
         return $form;
