@@ -9,7 +9,10 @@ export type SchemaType = {
     title: string,
 };
 
-export type SchemaTypes = {[key: string]: SchemaType};
+export type SchemaTypes = {
+    defaultType: ?string,
+    types: {[key: string]: SchemaType},
+};
 
 export type Tag = {
     name: string,

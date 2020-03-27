@@ -37,7 +37,7 @@ jest.mock('../../../services/ResourceRequester', () => ({
 jest.mock('../../../containers/Form/stores/metadataStore', () => ({
     getSchema: jest.fn().mockReturnValue(Promise.resolve({})),
     getJsonSchema: jest.fn().mockReturnValue(Promise.resolve({})),
-    getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve({})),
+    getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve(null)),
 }));
 
 beforeEach(() => {
@@ -1066,7 +1066,7 @@ test('Should initialize the ResourceStore with a schema', () => {
         },
     };
 
-    const schemaTypesPromise = Promise.resolve({});
+    const schemaTypesPromise = Promise.resolve(null);
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
     const schemaPromise = Promise.resolve({
         title: {},
@@ -1094,7 +1094,7 @@ test('Should save form when submitted', () => {
     const metadataStore = require('../../../containers/Form/stores/metadataStore');
     const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
 
-    const schemaTypesPromise = Promise.resolve({});
+    const schemaTypesPromise = Promise.resolve(null);
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
     const schemaPromise = Promise.resolve({});
@@ -1145,7 +1145,7 @@ test('Should save form when submitted with mapped router attributes', () => {
     const metadataStore = require('../../../containers/Form/stores/metadataStore');
     const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
 
-    const schemaTypesPromise = Promise.resolve({});
+    const schemaTypesPromise = Promise.resolve(null);
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
     const schemaPromise = Promise.resolve({});
@@ -1200,7 +1200,7 @@ test('Should save form when submitted with given requestParameters', () => {
     const metadataStore = require('../../../containers/Form/stores/metadataStore');
     const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
 
-    const schemaTypesPromise = Promise.resolve({});
+    const schemaTypesPromise = Promise.resolve(null);
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
     const schemaPromise = Promise.resolve({});
@@ -1249,7 +1249,7 @@ test('Should save form when submitted with mapped router attributes and given re
     const metadataStore = require('../../../containers/Form/stores/metadataStore');
     const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
 
-    const schemaTypesPromise = Promise.resolve({});
+    const schemaTypesPromise = Promise.resolve(null);
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
     const schemaPromise = Promise.resolve({});
@@ -1305,7 +1305,7 @@ test('Should save form when submitted with mapped named router attributes and gi
     const metadataStore = require('../../../containers/Form/stores/metadataStore');
     const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
 
-    const schemaTypesPromise = Promise.resolve({});
+    const schemaTypesPromise = Promise.resolve(null);
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
     const schemaPromise = Promise.resolve({});
@@ -1357,7 +1357,7 @@ test('Should show warning when form is submitted but already changed on the serv
     const metadataStore = require('../../../containers/Form/stores/metadataStore');
     const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
 
-    const schemaTypesPromise = Promise.resolve({});
+    const schemaTypesPromise = Promise.resolve(null);
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
     const schemaPromise = Promise.resolve({});
@@ -1428,7 +1428,7 @@ test('Should show warning when form is submitted but already changed on the serv
     const metadataStore = require('../../../containers/Form/stores/metadataStore');
     const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
 
-    const schemaTypesPromise = Promise.resolve({});
+    const schemaTypesPromise = Promise.resolve(null);
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
     const schemaPromise = Promise.resolve({});
@@ -1503,9 +1503,6 @@ test('Should set showSuccess flag after form submission', (done) => {
     const metadataStore = require('../../../containers/Form/stores/metadataStore');
     const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
 
-    const schemaTypesPromise = Promise.resolve({});
-    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
-
     const schemaPromise = Promise.resolve({});
     metadataStore.getSchema.mockReturnValue(schemaPromise);
 
@@ -1579,7 +1576,7 @@ test('Should show error if form has been tried to save although it is not valid'
     const metadataStore = require('../../../containers/Form/stores/metadataStore');
     const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
 
-    const schemaTypesPromise = Promise.resolve({});
+    const schemaTypesPromise = Promise.resolve(null);
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
     const schemaPromise = Promise.resolve({});
@@ -1631,7 +1628,7 @@ test('Should clear errors if form has been saved', () => {
     const putPromise = Promise.resolve({});
     ResourceRequester.put.mockReturnValue(putPromise);
 
-    const schemaTypesPromise = Promise.resolve({});
+    const schemaTypesPromise = Promise.resolve(null);
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
     const schemaPromise = Promise.resolve({});
@@ -1685,9 +1682,6 @@ test('Should keep errors after form submission has failed', (done) => {
     const metadataStore = require('../../../containers/Form/stores/metadataStore');
     const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
 
-    const schemaTypesPromise = Promise.resolve({});
-    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
-
     const schemaPromise = Promise.resolve({});
     metadataStore.getSchema.mockReturnValue(schemaPromise);
 
@@ -1734,7 +1728,7 @@ test('Should save form when submitted and redirect to editView', () => {
     const metadataStore = require('../../../containers/Form/stores/metadataStore');
     const resourceStore = new ResourceStore('snippets');
 
-    const schemaTypesPromise = Promise.resolve({});
+    const schemaTypesPromise = Promise.resolve(null);
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
     const schemaPromise = Promise.resolve({});
@@ -1787,7 +1781,7 @@ test('Should save form when submitted and redirect to editView', () => {
     const metadataStore = require('../../../containers/Form/stores/metadataStore');
     const resourceStore = new ResourceStore('snippets');
 
-    const schemaTypesPromise = Promise.resolve({});
+    const schemaTypesPromise = Promise.resolve(null);
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
     const schemaPromise = Promise.resolve({});

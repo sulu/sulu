@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Return available types with default type for given resourceKey 1`] = `
+Object {
+  "defaultType": "sidebar",
+  "types": Object {
+    "footer": Object {
+      "key": "footer",
+      "title": "footer",
+    },
+    "sidebar": Object {
+      "key": "sidebar",
+      "title": "Sidebar Snippet",
+    },
+  },
+}
+`;

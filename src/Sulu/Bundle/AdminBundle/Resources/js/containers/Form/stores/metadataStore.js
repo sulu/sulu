@@ -5,24 +5,26 @@ import type {RawSchema, SchemaTypes} from '../types';
 const FORM_TYPE = 'form';
 
 class MetadataStore {
-    getSchemaTypes(formKey: string, metadataOptions: ?Object): Promise<SchemaTypes> {
+    getSchemaTypes(formKey: string, metadataOptions: ?Object): Promise<?SchemaTypes> {
         return metadataStore.loadMetadata(FORM_TYPE, formKey, metadataOptions)
             .then((configuration) => {
-                const {types} = configuration;
+                const {defaultType, types} = configuration;
 
                 if (!types) {
-                    return {};
+                    return null;
                 }
 
-                const schemaTypes = {};
-                Object.keys(types).forEach((key) => {
-                    schemaTypes[key] = {
-                        key,
-                        title: types[key].title || key,
-                    };
-                });
+                return {
+                    defaultType,
+                    types: Object.keys(types).reduce((transformedTypes, key) => {
+                        transformedTypes[key] = {
+                            key,
+                            title: types[key].title || key,
+                        };
 
-                return schemaTypes;
+                        return transformedTypes;
+                    }, {}),
+                };
             });
     }
 

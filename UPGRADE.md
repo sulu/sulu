@@ -115,6 +115,13 @@ a `value` (instead of using the child of the node) attribute. This was necessary
 
 In the `RouteRepositoryInterface` a new remove method was introduced.
 
+## 2.0.6
+
+### sulu_page.templates ToolbarAction
+
+The `sulu_page.templates` ToolbarAction was removed. It did basically the same as `sulu_admin.type`, so that should be
+used as a replacement.
+
 ## 2.0.5
 
 ### Deprecation of localizationStore method

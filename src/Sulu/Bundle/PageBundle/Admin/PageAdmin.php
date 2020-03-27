@@ -116,7 +116,7 @@ class PageAdmin extends Admin
                 ]
             ),
             new ToolbarAction(
-                'sulu_page.templates',
+                'sulu_admin.type',
                 [
                     'disabled_condition' => '(_permissions && !_permissions.edit)',
                 ]
