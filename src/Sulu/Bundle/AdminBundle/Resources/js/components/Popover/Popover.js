@@ -38,19 +38,28 @@ class Popover extends React.Component<Props> {
     };
 
     @observable popoverChildRef: ElementRef<*>;
-
     @observable popoverWidth: number;
-
     @observable popoverHeight: number;
 
-    componentDidMount() {
+    mutationObserver: MutationObserver;
+
+    constructor(props: Props) {
+        super(props);
+
         window.addEventListener('blur', this.close);
         window.addEventListener('resize', this.close);
+        this.mutationObserver = new MutationObserver(() => {
+            // The size of the popover has to be reset before updating the dimensions, because otherwise the old style
+            // including width and height will still apply, and therefore the dimensions would not change
+            this.setPopoverSize(0, 0);
+            this.updateDimensions();
+        });
     }
 
     componentWillUnmount() {
         window.removeEventListener('blur', this.close);
         window.removeEventListener('resize', this.close);
+        this.mutationObserver.disconnect();
     }
 
     componentDidUpdate() {
@@ -130,6 +139,8 @@ class Popover extends React.Component<Props> {
     @action setPopoverChildRef = (ref: ElementRef<*>) => {
         if (ref) {
             this.popoverChildRef = ref;
+            this.mutationObserver.disconnect();
+            this.mutationObserver.observe(this.popoverChildRef, {childList: true, subtree: true});
         }
 
         const {popoverChildRef} = this.props;
