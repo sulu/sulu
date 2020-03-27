@@ -49,6 +49,8 @@ class Popover extends React.Component<Props> {
         window.addEventListener('blur', this.close);
         window.addEventListener('resize', this.close);
         this.mutationObserver = new MutationObserver(() => {
+            // The size of the popover has to be reset before updating the dimensions, because otherwise the old style
+            // including width and height will still apply, and therefore the dimensions would not change
             this.setPopoverSize(0, 0);
             this.updateDimensions();
         });

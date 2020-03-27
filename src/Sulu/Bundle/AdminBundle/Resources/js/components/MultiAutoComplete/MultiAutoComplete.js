@@ -176,7 +176,7 @@ class MultiAutoComplete extends React.Component<Props> {
                 <label className={multiAutoCompleteClass} ref={this.setLabelRef}>
                     <div className={multiAutoCompleteStyles.icon}>
                         {loading
-                            ? <Loader size={20} />
+                            ? <Loader size={16} />
                             : <Icon name="su-search" />
                         }
                     </div>

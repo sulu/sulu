@@ -51,7 +51,7 @@ exports[`Render in loading state 1`] = `
   >
     <div
       class="spinner"
-      style="width:20px;height:20px"
+      style="width:16px;height:16px"
     >
       <div
         class="doubleBounce1"
