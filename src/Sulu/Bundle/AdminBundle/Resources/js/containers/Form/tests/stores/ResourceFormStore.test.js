@@ -1283,13 +1283,13 @@ test('HasTypes return false when types are not set', () => {
     });
 });
 
-test('Set type to first one if data has no template set', () => {
+test.each(['sidebar', 'footer'])('Set type to given default if data has no template set', (defaultType) => {
     const schemaTypesPromise = Promise.resolve({
         types: {
             sidebar: {key: 'sidebar', title: 'Sidebar'},
             footer: {key: 'footer', title: 'Footer'},
         },
-        defaultType: 'sidebar',
+        defaultType,
     });
 
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
@@ -1298,7 +1298,7 @@ test('Set type to first one if data has no template set', () => {
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
 
     return schemaTypesPromise.then(() => {
-        expect(resourceFormStore.type).toEqual('sidebar');
+        expect(resourceFormStore.type).toEqual(defaultType);
     });
 });
 

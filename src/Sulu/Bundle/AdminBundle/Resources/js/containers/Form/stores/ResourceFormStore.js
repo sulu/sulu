@@ -53,7 +53,12 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     }
 
     @action handleSchemaTypeResponse = (schemaTypes: ?SchemaTypes) => {
-        this.types = schemaTypes ? schemaTypes.types : {};
+        const {
+            types = {},
+            defaultType,
+        } = schemaTypes || {};
+
+        this.types = types;
         this.typesLoading = false;
 
         if (this.hasTypes) {
@@ -61,8 +66,11 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
             when(
                 () => !this.resourceStore.loading,
                 (): void => {
-                    const defaultType = Object.keys(this.types)[0]; // TODO get correct default type if available
-                    this.setType(this.resourceStore.data[TYPE] ? this.resourceStore.data[TYPE] : defaultType);
+                    this.setType(
+                        this.resourceStore.data[TYPE]
+                            ? this.resourceStore.data[TYPE]
+                            : defaultType || Object.keys(this.types)[0]
+                    );
                 }
             );
         }
