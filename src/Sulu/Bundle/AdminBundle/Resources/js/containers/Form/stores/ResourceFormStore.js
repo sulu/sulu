@@ -66,11 +66,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
             when(
                 () => !this.resourceStore.loading,
                 (): void => {
-                    this.setType(
-                        this.resourceStore.data[TYPE]
-                            ? this.resourceStore.data[TYPE]
-                            : defaultType || Object.keys(this.types)[0]
-                    );
+                    this.setType(this.resourceStore.data[TYPE] || defaultType || Object.keys(this.types)[0]);
                 }
             );
         }
