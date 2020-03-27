@@ -223,6 +223,19 @@ test('Render toolbar with given toolbar class', () => {
     expect(list.find('.toolbar').prop('className')).toEqual(expect.stringContaining('test-class'));
 });
 
+test('Do not render toolbar if list is not searchable and adapter has column options but List deactivated them', () => {
+    class NewTestAdapter extends TestAdapter {
+        static hasColumnOptions = true;
+    }
+    listAdapterRegistry.get.mockReturnValue(NewTestAdapter);
+
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+
+    const list = shallow(<List adapters={['table']} searchable={false} showColumnOptions={false} store={listStore} />);
+
+    expect(list.find('.toolbar').exists()).toBeFalsy();
+});
+
 test('Do not render toolbar if list is not searchable and adapter has no column options', () => {
     class NewTestAdapter extends TestAdapter {
         static hasColumnOptions = false;
