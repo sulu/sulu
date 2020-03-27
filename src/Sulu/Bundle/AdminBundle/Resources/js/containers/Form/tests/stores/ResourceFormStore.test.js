@@ -29,7 +29,7 @@ beforeEach(() => {
     // $FlowFixMe
     metadataStore.getJsonSchema = jest.fn().mockReturnValue(Promise.resolve({}));
     // $FlowFixMe
-    metadataStore.getSchemaTypes = jest.fn().mockReturnValue(Promise.resolve({}));
+    metadataStore.getSchemaTypes = jest.fn().mockReturnValue(Promise.resolve(null));
 });
 
 test('Create data object for schema', (done) => {
@@ -47,9 +47,6 @@ test('Create data object for schema', (done) => {
             type: 'text_line',
         },
     };
-
-    const schemaTypesPromise = Promise.resolve({});
-    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
     const metadataPromise = Promise.resolve(metadata);
     metadataStore.getSchema.mockReturnValue(metadataPromise);
@@ -117,9 +114,6 @@ test('Evaluate all disabledConditions and visibleConditions for schema', () => {
             },
         },
     };
-
-    const schemaTypesPromise = Promise.resolve({});
-    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
     const metadataPromise = Promise.resolve(metadata);
     metadataStore.getSchema.mockReturnValue(metadataPromise);
@@ -243,9 +237,6 @@ test('Evaluate disabledConditions and visibleConditions for schema with locale',
         },
     };
 
-    const schemaTypesPromise = Promise.resolve({});
-    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
-
     const metadataPromise = Promise.resolve(metadata);
     metadataStore.getSchema.mockReturnValue(metadataPromise);
 
@@ -267,9 +258,6 @@ test('Evaluate disabledConditions and visibleConditions when changing locale', (
             visibleCondition: '__locale == "de"',
         },
     };
-
-    const schemaTypesPromise = Promise.resolve({});
-    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
     const metadataPromise = Promise.resolve(metadata);
     metadataStore.getSchema.mockReturnValue(metadataPromise);
@@ -348,8 +336,11 @@ test('Set template property of ResourceStore from the loaded data', () => {
     const metadata = {};
 
     const schemaTypesPromise = Promise.resolve({
-        type1: {},
-        type2: {},
+        defaultType: 'type1',
+        types: {
+            type1: {},
+            type2: {},
+        },
     });
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
@@ -394,7 +385,7 @@ test('Create data object for schema with sections', () => {
         },
     };
 
-    const schemaTypesPromise = Promise.resolve({});
+    const schemaTypesPromise = Promise.resolve(null);
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
     const metadataPromise = Promise.resolve(metadata);
@@ -429,9 +420,6 @@ test('Change schema should keep data', (done) => {
         slogan: 'Slogan',
     });
 
-    const schemaTypesPromise = Promise.resolve({});
-    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
-
     const metadataPromise = Promise.resolve(metadata);
     metadataStore.getSchema.mockReturnValue(metadataPromise);
 
@@ -450,7 +438,6 @@ test('Change schema should keep data', (done) => {
 });
 
 test('Change type should update schema and data', (done) => {
-    const schemaTypesPromise = Promise.resolve({});
     const sidebarMetadata = {
         title: {
             label: 'Title',
@@ -470,7 +457,6 @@ test('Change type should update schema and data', (done) => {
         slogan: 'Slogan',
     });
 
-    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
     metadataStore.getSchema.mockReturnValue(sidebarPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
@@ -506,7 +492,7 @@ test('types property should be returning types from server', () => {
         sidebar: {key: 'sidebar', title: 'Sidebar'},
         footer: {key: 'footer', title: 'Footer'},
     };
-    const promise = Promise.resolve(types);
+    const promise = Promise.resolve({defaultType: 'sidebar', types});
     metadataStore.getSchemaTypes.mockReturnValue(promise);
 
     const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '1'), 'snippets');
@@ -527,7 +513,10 @@ test('Type should be set from response', () => {
     });
 
     const schemaTypesPromise = Promise.resolve({
-        sidebar: {},
+        defaultType: 'sidebar',
+        types: {
+            sidebar: {},
+        },
     });
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
@@ -543,7 +532,7 @@ test('Type should not be set from response if types are not supported', () => {
         template: 'sidebar',
     });
 
-    const schemaTypesPromise = Promise.resolve({});
+    const schemaTypesPromise = Promise.resolve(null);
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
 
@@ -559,8 +548,11 @@ test('Changing type should set the appropriate property in the ResourceStore', (
     });
 
     const schemaTypesPromise = Promise.resolve({
-        sidebar: {},
-        footer: {},
+        defaultType: 'sidebar',
+        types: {
+            sidebar: {},
+            footer: {},
+        },
     });
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
@@ -582,7 +574,7 @@ test('Changing type should set the appropriate property in the ResourceStore', (
 test('Changing type should throw an exception if types are not supported', () => {
     const resourceStore = new ResourceStore('snippets', '1');
 
-    const schemaTypesPromise = Promise.resolve({});
+    const schemaTypesPromise = Promise.resolve(null);
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
@@ -1169,9 +1161,6 @@ test('Return all the values for a given tag within blocks', () => {
 });
 
 test('Return SchemaEntry for given schemaPath', (done) => {
-    const schemaTypesPromise = Promise.resolve({});
-    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
-
     const metadataPromise = Promise.resolve(
         {
             title: {
@@ -1239,8 +1228,11 @@ test('Remember fields being finished as modified fields and forget about them af
 
 test('Set new type after copying from different locale', () => {
     const schemaTypesPromise = Promise.resolve({
-        sidebar: {key: 'sidebar', title: 'Sidebar'},
-        footer: {key: 'footer', title: 'Footer'},
+        types: {
+            sidebar: {key: 'sidebar', title: 'Sidebar'},
+            footer: {key: 'footer', title: 'Footer'},
+        },
+        defaultType: 'sidebar',
     });
 
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
@@ -1262,8 +1254,10 @@ test('Set new type after copying from different locale', () => {
 
 test('HasTypes return true when types are set', () => {
     const schemaTypesPromise = Promise.resolve({
-        sidebar: {key: 'sidebar', title: 'Sidebar'},
-        footer: {key: 'footer', title: 'Footer'},
+        types: {
+            sidebar: {key: 'sidebar', title: 'Sidebar'},
+            footer: {key: 'footer', title: 'Footer'},
+        },
     });
 
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
@@ -1277,7 +1271,7 @@ test('HasTypes return true when types are set', () => {
 });
 
 test('HasTypes return false when types are not set', () => {
-    const schemaTypesPromise = Promise.resolve({});
+    const schemaTypesPromise = Promise.resolve({types: {}});
 
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
@@ -1289,10 +1283,13 @@ test('HasTypes return false when types are not set', () => {
     });
 });
 
-test('Set type to first one if data has no template set', () => {
+test.each(['sidebar', 'footer'])('Set type to given default if data has no template set', (defaultType) => {
     const schemaTypesPromise = Promise.resolve({
-        sidebar: {key: 'sidebar', title: 'Sidebar'},
-        footer: {key: 'footer', title: 'Footer'},
+        types: {
+            sidebar: {key: 'sidebar', title: 'Sidebar'},
+            footer: {key: 'footer', title: 'Footer'},
+        },
+        defaultType,
     });
 
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
@@ -1301,14 +1298,17 @@ test('Set type to first one if data has no template set', () => {
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
 
     return schemaTypesPromise.then(() => {
-        expect(resourceFormStore.type).toEqual('sidebar');
+        expect(resourceFormStore.type).toEqual(defaultType);
     });
 });
 
 test('Set type to the template value if set', () => {
     const schemaTypesPromise = Promise.resolve({
-        sidebar: {key: 'sidebar', title: 'Sidebar'},
-        footer: {key: 'footer', title: 'Footer'},
+        types: {
+            sidebar: {key: 'sidebar', title: 'Sidebar'},
+            footer: {key: 'footer', title: 'Footer'},
+        },
+        defaultType: 'footer',
     });
 
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);

@@ -4,7 +4,7 @@ import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import Ajv from 'ajv';
 import jsonpointer from 'json-pointer';
 import ResourceStore from '../../../stores/ResourceStore';
-import type {FormStoreInterface, RawSchema, SchemaEntry, SchemaTypes} from '../types';
+import type {FormStoreInterface, RawSchema, SchemaEntry, SchemaType, SchemaTypes} from '../types';
 import AbstractFormStore from './AbstractFormStore';
 import metadataStore from './metadataStore';
 
@@ -18,7 +18,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     formKey: string;
     options: Object;
     @observable type: string;
-    @observable types: SchemaTypes = {};
+    @observable types: {[key: string]: SchemaType} = {};
     @observable schemaLoading: boolean = true;
     @observable typesLoading: boolean = true;
     schemaDisposer: ?() => void;
@@ -52,7 +52,12 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         }
     }
 
-    @action handleSchemaTypeResponse = (types: SchemaTypes) => {
+    @action handleSchemaTypeResponse = (schemaTypes: ?SchemaTypes) => {
+        const {
+            types = {},
+            defaultType,
+        } = schemaTypes || {};
+
         this.types = types;
         this.typesLoading = false;
 
@@ -61,8 +66,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
             when(
                 () => !this.resourceStore.loading,
                 (): void => {
-                    const defaultType = Object.keys(this.types)[0]; // TODO get correct default type if available
-                    this.setType(this.resourceStore.data[TYPE] ? this.resourceStore.data[TYPE] : defaultType);
+                    this.setType(this.resourceStore.data[TYPE] || defaultType || Object.keys(this.types)[0]);
                 }
             );
         }
