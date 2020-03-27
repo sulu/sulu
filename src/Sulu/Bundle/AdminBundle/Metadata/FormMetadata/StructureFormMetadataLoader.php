@@ -86,6 +86,8 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
         if (isset($metadataOptions['webspace'])) {
             $webspace = $this->webspaceManager->findWebspaceByKey($metadataOptions['webspace']);
 
+            $form->setDefaultType($webspace->getDefaultTemplate($key));
+
             foreach ($webspace->getExcludedTemplates() as $excludedTemplate) {
                 $form->removeForm($excludedTemplate);
             }

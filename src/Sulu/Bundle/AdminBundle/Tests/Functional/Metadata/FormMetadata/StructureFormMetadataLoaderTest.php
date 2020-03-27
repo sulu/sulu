@@ -87,7 +87,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->assertNull($typedForm);
     }
 
-    public function testGetMetadataWithExcludedTemplates()
+    public function testGetMetadataForWebspace()
     {
         $typedForm = $this->structureFormMetadataLoader->getMetadata('page', 'de', ['webspace' => 'sulu_io']);
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
@@ -101,5 +101,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->assertCount(3, $defaultForm->getTags());
         $this->assertNotNull($defaultForm->getSchema());
         $this->assertInstanceOf(SchemaMetadata::class, $defaultForm->getSchema());
+
+        $this->assertEquals('default', $typedForm->getDefaultType());
     }
 }

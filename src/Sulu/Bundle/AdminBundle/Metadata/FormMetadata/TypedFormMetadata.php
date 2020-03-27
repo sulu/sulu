@@ -22,6 +22,11 @@ class TypedFormMetadata extends AbstractMetadata
      */
     private $forms = [];
 
+    /**
+     * @var string
+     */
+    private $defaultType;
+
     public function addForm($key, FormMetadata $form): void
     {
         $this->forms[$key] = $form;
@@ -38,5 +43,15 @@ class TypedFormMetadata extends AbstractMetadata
     public function getForms(): array
     {
         return $this->forms;
+    }
+
+    public function setDefaultType(string $defaultType): void
+    {
+        $this->defaultType = $defaultType;
+    }
+
+    public function getDefaultType(): string
+    {
+        return $this->defaultType;
     }
 }
