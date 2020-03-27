@@ -753,6 +753,7 @@ test('Should pass correct props to list component', () => {
         disabled: true,
         itemDisabledCondition: 'status == "inactive"',
         searchable: false,
+        showColumnOptions: false,
     }));
 });
 

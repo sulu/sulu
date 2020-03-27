@@ -446,6 +446,7 @@ class Selection extends React.Component<Props> {
                     disabled={!!disabled}
                     itemDisabledCondition={itemDisabledCondition}
                     searchable={false}
+                    showColumnOptions={false}
                     store={this.listStore}
                 />
             </div>

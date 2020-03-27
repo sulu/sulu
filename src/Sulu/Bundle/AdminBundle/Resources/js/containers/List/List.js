@@ -50,6 +50,7 @@ type Props = {|
     orderable: boolean,
     searchable: boolean,
     selectable: boolean,
+    showColumnOptions: boolean,
     store: ListStore,
     toolbarClassName?: string,
 |};
@@ -69,6 +70,7 @@ class List extends React.Component<Props> {
         orderable: true,
         searchable: true,
         selectable: true,
+        showColumnOptions: true,
     };
 
     @observable currentAdapterKey: string;
@@ -122,6 +124,10 @@ class List extends React.Component<Props> {
 
         // TODO do not hardcode "id", but use some kind of metadata instead
         return [...disabledIds, ...disabledItems.map((item) => item.id)];
+    }
+
+    @computed get showColumnOptions(): boolean {
+        return this.currentAdapter.hasColumnOptions && this.props.showColumnOptions;
     }
 
     constructor(props: Props) {
@@ -509,8 +515,6 @@ class List extends React.Component<Props> {
         const searchable = this.props.searchable && Adapter.searchable;
         const filterable = filterableFields && Object.keys(filterableFields).length > 0;
 
-        const {hasColumnOptions} = this.currentAdapter;
-
         if (store.forbidden) {
             return <PermissionHint />;
         }
@@ -518,7 +522,7 @@ class List extends React.Component<Props> {
         return (
             <div className={listStyles.listContainer}>
                 {header}
-                {!schemaLoading && (searchable || adapters.length > 1 || filterable || hasColumnOptions) &&
+                {!schemaLoading && (searchable || adapters.length > 1 || filterable || this.showColumnOptions) &&
                     <div className={toolbarClass}>
                         {searchable &&
                             <Search onSearch={this.handleSearch} value={store.searchTerm.get()} />
@@ -528,7 +532,7 @@ class List extends React.Component<Props> {
                             onChange={this.handleFilterChange}
                             value={store.filterOptions.get()}
                         />
-                        {hasColumnOptions &&
+                        {this.showColumnOptions &&
                             <Fragment>
                                 <ArrowMenu
                                     anchorElement={
