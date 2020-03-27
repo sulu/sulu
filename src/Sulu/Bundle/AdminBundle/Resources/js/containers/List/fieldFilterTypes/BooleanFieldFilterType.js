@@ -30,7 +30,7 @@ class BooleanFieldFilterType extends AbstractFieldFilterType<?boolean> {
 
     getValueNode(value: ?boolean) {
         if (value === undefined) {
-            return null;
+            return Promise.resolve(null);
         }
 
         return Promise.resolve(translate(value ? 'sulu_admin.yes' : 'sulu_admin.no'));

@@ -22,11 +22,15 @@ class DropdownFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
         return options;
     }
 
+    handleChange = (values: Array<string>) => {
+        this.onChange(values.length > 0 ? values : undefined);
+    };
+
     getFormNode() {
-        const {onChange, value} = this;
+        const {value} = this;
 
         return (
-            <MultiSelect onChange={onChange} values={value || []}>
+            <MultiSelect onChange={this.handleChange} values={value || []}>
                 {Object.keys(this.options).map((optionKey) => (
                     <MultiSelect.Option
                         key={optionKey}
@@ -39,9 +43,9 @@ class DropdownFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
         );
     }
 
-    getValueNode(values: ?Array<string>): ?Promise<string> {
+    getValueNode(values: ?Array<string>) {
         if (!values) {
-            return null;
+            return Promise.resolve(null);
         }
 
         return Promise.resolve(values.map((value) => translate(this.options[value])).join(', '));

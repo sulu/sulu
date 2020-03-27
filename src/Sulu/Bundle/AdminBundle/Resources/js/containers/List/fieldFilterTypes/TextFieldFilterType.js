@@ -29,10 +29,6 @@ class TextFieldFilterType extends AbstractFieldFilterType<?{eq: string}> {
     }
 
     getValueNode(value: ?{eq: string}) {
-        if (!value) {
-            return null;
-        }
-
         return Promise.resolve(value ? value.eq : null);
     }
 }

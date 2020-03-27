@@ -81,12 +81,13 @@ test('The filter value should be updated when set from the outside', () => {
         .toBeCalledWith('sulu_admin.list_store.tests.list_test.filter', {test: {eq: 'Test'}});
 });
 
-test('The filter value should not be updated when set from the outside and only an undefined value was added', () => {
+test('The filter value should be updated when set from the outside and only an undefined value was added', () => {
     const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
     expect(listStore.filterOptions.get()).toEqual({});
 
     listStore.filterOptions.set({test: undefined});
-    expect(userStore.setPersistentSetting).not.toBeCalled();
+    expect(userStore.setPersistentSetting)
+        .toBeCalledWith('sulu_admin.list_store.tests.list_test.filter', {test: undefined});
 });
 
 test('The filter value should be updated when set from the outside and only a single false value was added', () => {

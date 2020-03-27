@@ -65,10 +65,20 @@ test('Call onChange handler with new value', () => {
     expect(changeSpy).toBeCalledWith(['test']);
 });
 
+test('Call onChange handler with undefined if the new selection is empty', () => {
+    const changeSpy = jest.fn();
+    const dropdownFieldFilterType = new DropdownFieldFilterType(changeSpy, {options: {test: 'test'}}, undefined);
+    const dropdownFieldFilterTypeForm = mount(dropdownFieldFilterType.getFormNode());
+
+    dropdownFieldFilterTypeForm.find('MultiSelect').prop('onChange')([]);
+
+    expect(changeSpy).toBeCalledWith(undefined);
+});
+
 test.each([
     [['audio', 'video'], 'Audio, Video'],
     [['image'], 'Image'],
-    [undefined, undefined],
+    [undefined, null],
 ])('Return value node with value "%s"', (value, expectedValueNode) => {
     const dropdownFieldFilterType = new DropdownFieldFilterType(
         jest.fn(),
@@ -77,11 +87,6 @@ test.each([
     );
 
     const valueNodePromise = dropdownFieldFilterType.getValueNode(value);
-
-    if (expectedValueNode === undefined) {
-        expect(valueNodePromise).toEqual(null);
-        return;
-    }
 
     if (!valueNodePromise) {
         throw new Error('The getValueNode function must return a promise!');

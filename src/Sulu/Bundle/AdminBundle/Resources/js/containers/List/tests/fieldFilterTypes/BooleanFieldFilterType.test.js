@@ -41,16 +41,11 @@ test('Call onChange handler with new value', () => {
 test.each([
     [true, 'sulu_admin.yes'],
     [false, 'sulu_admin.no'],
-    [undefined, undefined],
+    [undefined, null],
 ])('Return value node with value "%s"', (value, expectedValueNode) => {
     const booleanFieldFilterType = new BooleanFieldFilterType(jest.fn(), {}, undefined);
 
     const valueNodePromise = booleanFieldFilterType.getValueNode(value);
-
-    if (expectedValueNode === undefined) {
-        expect(valueNodePromise).toEqual(null);
-        return;
-    }
 
     if (!valueNodePromise) {
         throw new Error('The getValueNode function must return a promise!');
