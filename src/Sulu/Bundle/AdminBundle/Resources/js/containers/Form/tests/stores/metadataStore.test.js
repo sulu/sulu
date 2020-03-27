@@ -296,7 +296,7 @@ test('Throw exception if no form fields for given resourceKey and type are avail
     });
 });
 
-test('Return available types for given resourceKey', () => {
+test('Return available types with default type for given resourceKey', () => {
     const snippetMetadata = {
         types: {
             sidebar: {
@@ -304,6 +304,7 @@ test('Return available types for given resourceKey', () => {
             },
             footer: {},
         },
+        defaultType: 'sidebar',
     };
     const snippetPromise = Promise.resolve(snippetMetadata);
     generalMetadataStore.loadMetadata.mockReturnValue(snippetPromise);
@@ -327,6 +328,6 @@ test('Return empty object as available types for given resourceKey if types are 
     expect(generalMetadataStore.loadMetadata).toBeCalledWith('form', 'snippets', undefined);
 
     return snippetTypesPromise.then((snippetTypes) => {
-        expect(snippetTypes).toEqual({});
+        expect(snippetTypes).toEqual(null);
     });
 });

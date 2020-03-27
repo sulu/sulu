@@ -11,7 +11,7 @@ import MediaVersionUpload from '../../fields/MediaVersionUpload';
 jest.mock('sulu-admin-bundle/containers/Form/stores/metadataStore', () => ({
     getSchema: jest.fn().mockReturnValue(Promise.resolve({})),
     getJsonSchema: jest.fn().mockReturnValue(Promise.resolve({})),
-    getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve([])),
+    getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve(null)),
 }));
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
