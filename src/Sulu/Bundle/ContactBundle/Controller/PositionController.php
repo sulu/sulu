@@ -77,10 +77,17 @@ class PositionController extends AbstractRestController implements ClassResource
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function cgetAction()
+    public function cgetAction(Request $request)
     {
+        $filter = [];
+        $ids = $request->get('ids');
+
+        if ($ids) {
+            $filter['id'] = explode(',', $ids);
+        }
+
         $list = new CollectionRepresentation(
-            $this->positionRepository->findBy([], ['position' => 'ASC']),
+            $this->positionRepository->findBy($filter, ['position' => 'ASC']),
             self::$entityKey
         );
 
