@@ -88,8 +88,6 @@ exports[`The component should open the popover when the display value is clicked
 exports[`The component should open the popover when the display value is clicked 2`] = `
 "<div>
   <div class=\\"backdrop fixed\\" role=\\"button\\"></div>
-</div>
-<div>
   <div class=\\"container\\">
     <ul class=\\"menu\\" style=\\"top: 10px; left: 10px; position: fixed; pointer-events: auto;\\">
       <li><button class=\\"option icon\\" style=\\"min-width: 210px;\\">Option 1</button></li>

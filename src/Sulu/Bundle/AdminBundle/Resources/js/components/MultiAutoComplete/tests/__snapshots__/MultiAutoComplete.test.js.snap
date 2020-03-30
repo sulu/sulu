@@ -98,8 +98,6 @@ exports[`MultiAutoComplete should render in disabled state 1`] = `
 exports[`Render the MultiAutoComplete with open suggestions list 1`] = `
 "<div>
   <div class=\\"backdrop fixed\\" role=\\"button\\"></div>
-</div>
-<div>
   <div class=\\"container\\">
     <ul class=\\"menu\\" style=\\"top: 10px; left: 10px; position: fixed; pointer-events: auto;\\">
       <li class=\\"suggestionItem\\" style=\\"min-width: -10px;\\"><button class=\\"suggestion\\"><span class=\\"column\\">Suggestion 1</span></button></li>

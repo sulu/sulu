@@ -173,10 +173,8 @@ class Popover extends React.Component<Props> {
 
         return (
             <Fragment>
-                {backdrop &&
-                    <Backdrop onClick={this.handleBackdropClick} open={true} visible={false} />
-                }
                 <Portal>
+                    {backdrop && <Backdrop local={true} onClick={this.handleBackdropClick} visible={false} />}
                     <div className={popoverStyles.container}>
                         {children &&
                             children(this.setPopoverChildRef, styles, verticalPosition, horizontalPosition)
