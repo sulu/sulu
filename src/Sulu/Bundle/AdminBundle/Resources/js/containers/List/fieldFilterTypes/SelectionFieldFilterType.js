@@ -15,6 +15,7 @@ const TYPE_SELECT = 'select';
 class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | number>> {
     selectionStore: MultiSelectionStore<string | number>;
     selectionStoreDisposer: () => void;
+    // Used to buffer the select value, because everytime the value variable changes a request is sent to load data
     @observable selectValue: Array<string | number> = [];
     valueDisposer: () => void;
 
@@ -45,7 +46,7 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
         this.valueDisposer = autorun(() => {
             const value = toJS(this.value || []);
 
-            if (!equals(value, untracked(() => this.selectionStore.ids))) {
+            if (!equals(value, untracked(() => toJS(this.selectionStore.ids)))) {
                 this.selectionStore.loadItems(value);
             }
 

@@ -69,6 +69,48 @@ test('Destroy should call disposers', () => {
     expect(selectionFieldFilterType.valueDisposer).toBeCalledWith();
 });
 
+test('Setting a new value should update the select', () => {
+    const selectionFieldFilterType = new SelectionFieldFilterType(
+        jest.fn(),
+        {displayProperty: 'name', resourceKey: 'accounts', type: 'select'},
+        [4, 6]
+    );
+
+    const selectionFieldFilterTypeForm1 = shallow(selectionFieldFilterType.getFormNode());
+    expect(selectionFieldFilterTypeForm1.find('ResourceMultiSelect').prop('values')).toEqual([4, 6]);
+
+    selectionFieldFilterType.setValue([4, 5]);
+    const selectionFieldFilterTypeForm2 = shallow(selectionFieldFilterType.getFormNode());
+    expect(selectionFieldFilterTypeForm2.find('ResourceMultiSelect').prop('values')).toEqual([4, 5]);
+});
+
+test('Setting a new value should update the selectionStore', () => {
+    const selectionFieldFilterType = new SelectionFieldFilterType(
+        jest.fn(),
+        {displayProperty: 'name', resourceKey: 'accounts', type: 'select'},
+        [4, 6]
+    );
+
+    expect(selectionFieldFilterType.selectionStore.loadItems).toBeCalledWith([4, 6]);
+    selectionFieldFilterType.setValue([4, 7]);
+    expect(selectionFieldFilterType.selectionStore.loadItems).toBeCalledWith([4, 7]);
+});
+
+test('Setting the same value should not update the selectionStore', () => {
+    const selectionFieldFilterType = new SelectionFieldFilterType(
+        jest.fn(),
+        {displayProperty: 'name', resourceKey: 'accounts', type: 'select'},
+        [4, 6]
+    );
+
+    // $FlowFixMe
+    selectionFieldFilterType.selectionStore.ids = [4, 6];
+    selectionFieldFilterType.selectionStore.loadItems.mockReset();
+
+    selectionFieldFilterType.setValue([4, 6]);
+    expect(selectionFieldFilterType.selectionStore.loadItems).not.toBeCalledWith([4, 6]);
+});
+
 test('Call onChange handler when selection changes for auto_complete type', () => {
     const changeSpy = jest.fn();
     const selectionFieldFilterType = new SelectionFieldFilterType(
