@@ -6,7 +6,7 @@
     "dependencies": {
         "classnames": "^2.2.5",
         "fast-deep-equal": "^1.0.0",
-        "url-search-params-polyfill": "^2.0.0"
+        "url-search-params-polyfill": "^8.0.0"
     },
     "devDependencies": {
         "enzyme": "^3.3.0",
