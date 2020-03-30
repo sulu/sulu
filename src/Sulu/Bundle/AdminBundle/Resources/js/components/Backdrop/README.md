@@ -1,23 +1,23 @@
 The `Backdrop` component serves as a simple solution to create a backdrop for overlays.
 
-Here is a basic example of the component. The open state of the backdrop is controlled by the `open` property.
-
 ```javascript
-intialState = {open: false};
-
-<div>
-    <button onClick={() => setState({open: true})}>Open Backdrop</button>
-    <Backdrop open={!!state.open} onClick={() => setState({open: false})} />
+<div style={{height: '200px', position: 'relative'}}>
+    <Backdrop fixed={false} />
 </div>
 ```
 
 This time the `visible` property is set to false, therefore the backdrop is invisible.
 
 ```javascript
-intialState = {open: false};
+<div style={{height: '200px', position: 'relative'}}>
+    <Backdrop fixed={false} visible={false} />
+</div>
+```
 
-<div>
-    <button onClick={() => setState({open: true})}>Open Backdrop</button>
-    <Backdrop visible={false} open={!!state.open} onClick={() => setState({open: false})} />
+The `Backdrop` also accepts an `onClick` handler.
+
+```javascript
+<div style={{height: '200px', position: 'relative'}}>
+    <Backdrop onClick={() => alert('You clicked the backdrop!')} fixed={false} />
 </div>
 ```

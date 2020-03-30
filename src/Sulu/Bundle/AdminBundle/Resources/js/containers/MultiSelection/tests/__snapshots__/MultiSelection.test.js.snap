@@ -125,8 +125,6 @@ exports[`Render with disabled item 1`] = `
 exports[`Should open an overlay 1`] = `
 "<div>
   <div class=\\"backdrop visible fixed\\" role=\\"button\\"></div>
-</div>
-<div>
   <div class=\\"container\\">
     <div class=\\"overlay large\\">
       <section class=\\"content\\">

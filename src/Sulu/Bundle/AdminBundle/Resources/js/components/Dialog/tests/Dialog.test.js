@@ -28,7 +28,6 @@ test('The component should render in body when open', () => {
     );
 
     expect(view.find('Backdrop')).toHaveLength(1);
-    expect(view.find('Backdrop').prop('open')).toEqual(true);
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
@@ -47,7 +46,6 @@ test('The component should render in body without cancel button', () => {
     );
 
     expect(view.find('Backdrop')).toHaveLength(1);
-    expect(view.find('Backdrop').prop('open')).toEqual(true);
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
@@ -70,7 +68,6 @@ test('The component should render in body with disabled confirm button', () => {
     );
 
     expect(view.find('Backdrop')).toHaveLength(1);
-    expect(view.find('Backdrop').prop('open')).toEqual(true);
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
@@ -93,7 +90,6 @@ test('The component should render in body with a large class', () => {
     );
 
     expect(view.find('Backdrop')).toHaveLength(1);
-    expect(view.find('Backdrop').prop('open')).toEqual(true);
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
@@ -116,7 +112,6 @@ test('The component should render in body with loader instead of confirm button'
     );
 
     expect(view.find('Backdrop')).toHaveLength(1);
-    expect(view.find('Backdrop').prop('open')).toEqual(true);
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 

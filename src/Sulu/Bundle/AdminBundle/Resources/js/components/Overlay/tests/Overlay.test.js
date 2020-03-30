@@ -28,7 +28,6 @@ test('The component should render in body when open', () => {
     );
 
     expect(view.find('Backdrop')).toHaveLength(1);
-    expect(view.find('Backdrop').prop('open')).toEqual(true);
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
@@ -49,7 +48,6 @@ test('The component should render with a disabled confirm button', () => {
     );
 
     expect(view.find('Backdrop')).toHaveLength(1);
-    expect(view.find('Backdrop').prop('open')).toEqual(true);
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
@@ -70,7 +68,6 @@ test('The component should render in body with loader instead of confirm button'
     );
 
     expect(view.find('Backdrop')).toHaveLength(1);
-    expect(view.find('Backdrop').prop('open')).toEqual(true);
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
@@ -95,7 +92,6 @@ test('The component should render in body with actions when open', () => {
     );
 
     expect(view.find('Backdrop')).toHaveLength(1);
-    expect(view.find('Backdrop').prop('open')).toEqual(true);
     expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
 });
 
@@ -115,27 +111,6 @@ test('The component should not render in body when closed', () => {
     ).render();
     expect(view).toMatchSnapshot();
     expect(body ? body.innerHTML : '').toBe('');
-});
-
-test('The component should request to be closed on click on backdrop', () => {
-    const closeSpy = jest.fn();
-    const view = shallow(
-        <Overlay
-            confirmText="Apply"
-            onClose={closeSpy}
-            onConfirm={jest.fn()}
-            open={true}
-            title="My overlay title"
-        >
-            <p>My overlay content</p>
-        </Overlay>
-    );
-    const backdrop = view.find('Backdrop');
-    expect(backdrop.length).toBe(1);
-
-    expect(closeSpy).not.toBeCalled();
-    backdrop.props().onClick();
-    expect(closeSpy).toBeCalled();
 });
 
 test('The component should request to be closed when the close icon is clicked', () => {

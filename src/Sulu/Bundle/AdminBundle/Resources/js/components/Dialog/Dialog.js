@@ -94,9 +94,9 @@ class Dialog extends React.Component<Props> {
 
         return (
             <Fragment>
-                <Backdrop open={visible} />
                 {visible &&
                     <Portal>
+                        <Backdrop />
                         <div
                             className={containerClass}
                             onTransitionEnd={this.handleTransitionEnd}

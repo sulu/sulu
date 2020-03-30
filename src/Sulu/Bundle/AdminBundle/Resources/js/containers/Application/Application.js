@@ -195,13 +195,13 @@ class Application extends React.Component<Props>{
                                     </header>
                                 </main>
                                 <Sidebar className={sidebarClass} />
-                                <Backdrop
-                                    fixed={false}
-                                    local={true}
-                                    onClick={this.handleNavigationButtonClick}
-                                    open={this.navigationVisible && !this.navigationPinned}
-                                    visible={false}
-                                />
+                                {this.navigationVisible && !this.navigationPinned &&
+                                    <Backdrop
+                                        fixed={false}
+                                        onClick={this.handleNavigationButtonClick}
+                                        visible={false}
+                                    />
+                                }
                             </div>
                         </div>
                         <ProfileFormOverlay

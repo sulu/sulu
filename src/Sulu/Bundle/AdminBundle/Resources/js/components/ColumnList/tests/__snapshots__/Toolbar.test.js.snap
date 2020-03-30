@@ -30,8 +30,6 @@ exports[`Should render with active 1`] = `
 exports[`Should render with active 2`] = `
 "<div>
   <div class=\\"backdrop fixed\\" role=\\"button\\"></div>
-</div>
-<div>
   <div class=\\"container\\">
     <div class=\\"arrowMenuContainer\\" style=\\"top: 20px; left: 10px; position: fixed; pointer-events: auto;\\">
       <div class=\\"arrow top right\\"></div>
