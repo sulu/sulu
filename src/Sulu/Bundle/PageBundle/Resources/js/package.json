@@ -5,7 +5,7 @@
     "repository": "https://github.com/sulu/sulu.git",
     "dependencies": {
         "classnames": "^2.2.5",
-        "fast-deep-equal": "^1.0.0",
+        "fast-deep-equal": "^3.1.1",
         "jexl": "^2.1.0",
         "loglevel": "^1.4.1",
         "textversionjs": "^1.1.3",
