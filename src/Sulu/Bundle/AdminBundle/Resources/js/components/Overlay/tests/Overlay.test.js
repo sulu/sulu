@@ -117,27 +117,6 @@ test('The component should not render in body when closed', () => {
     expect(body ? body.innerHTML : '').toBe('');
 });
 
-test('The component should request to be closed on click on backdrop', () => {
-    const closeSpy = jest.fn();
-    const view = shallow(
-        <Overlay
-            confirmText="Apply"
-            onClose={closeSpy}
-            onConfirm={jest.fn()}
-            open={true}
-            title="My overlay title"
-        >
-            <p>My overlay content</p>
-        </Overlay>
-    );
-    const backdrop = view.find('Backdrop');
-    expect(backdrop.length).toBe(1);
-
-    expect(closeSpy).not.toBeCalled();
-    backdrop.props().onClick();
-    expect(closeSpy).toBeCalled();
-});
-
 test('The component should request to be closed when the close icon is clicked', () => {
     const closeSpy = jest.fn();
     const view = shallow(

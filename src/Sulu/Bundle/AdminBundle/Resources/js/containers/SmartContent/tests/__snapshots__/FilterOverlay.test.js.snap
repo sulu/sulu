@@ -1,49 +1,207 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render with all fields 1`] = `
-<div
-  class="container isDown"
->
+Array [
   <div
-    class="overlay small"
+    class="backdrop visible fixed"
+    role="button"
+  />,
+  <div
+    class="container isDown"
   >
-    <section
-      class="content"
+    <div
+      class="overlay small"
     >
-      <header>
-        <h2>
-          Test
-        </h2>
-        <span
-          aria-label="su-times"
-          class="su-times clickable icon"
-          role="button"
-          tabindex="0"
-        />
-      </header>
-      <article>
-        <div
-          class="content"
-        >
-          <section
-            class="section"
+      <section
+        class="content"
+      >
+        <header>
+          <h2>
+            Test
+          </h2>
+          <span
+            aria-label="su-times"
+            class="su-times clickable icon"
+            role="button"
+            tabindex="0"
+          />
+        </header>
+        <article>
+          <div
+            class="content"
           >
-            <h3>
-              sulu_admin.data_source
-            </h3>
-            <div
-              class="source"
+            <section
+              class="section"
             >
-              <button
-                class="button secondary sourceButton"
-                type="button"
+              <h3>
+                sulu_admin.data_source
+              </h3>
+              <div
+                class="source"
               >
-                <span
-                  class="text"
+                <button
+                  class="button secondary sourceButton"
+                  type="button"
                 >
-                  sulu_admin.choose_data_source
-                </span>
-              </button>
+                  <span
+                    class="text"
+                  >
+                    sulu_admin.choose_data_source
+                  </span>
+                </button>
+                <label
+                  class="label"
+                >
+                  <span
+                    class="switch toggler"
+                  >
+                    <input
+                      type="checkbox"
+                      value=""
+                    />
+                    <span />
+                  </span>
+                  <div>
+                    sulu_admin.include_sub_elements
+                  </div>
+                </label>
+              </div>
+              <label
+                class="description"
+              >
+                sulu_admin.data_source: 
+              </label>
+            </section>
+            <section
+              class="section"
+            >
+              <h3>
+                sulu_admin.filter_by_categories
+              </h3>
+              <div
+                class="categories"
+              >
+                <button
+                  class="button secondary"
+                  type="button"
+                >
+                  <span
+                    class="text"
+                  >
+                    sulu_admin.choose_categories
+                  </span>
+                </button>
+                <div
+                  class="categoriesSelect"
+                >
+                  <div
+                    class="select"
+                  >
+                    <button
+                      class="displayValue default"
+                      type="button"
+                    >
+                      <div
+                        aria-label="sulu_admin.please_choose"
+                        class="croppedText"
+                        title="sulu_admin.please_choose"
+                      >
+                        <div
+                          aria-hidden="true"
+                          class="front"
+                        >
+                          sulu_admin.p
+                        </div>
+                        <div
+                          aria-hidden="true"
+                          class="back"
+                        >
+                          <span>
+                            lease_choose
+                          </span>
+                        </div>
+                        <div
+                          class="whole"
+                        >
+                          sulu_admin.please_choose
+                        </div>
+                      </div>
+                      <span
+                        aria-label="su-angle-down"
+                        class="su-angle-down toggle"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <label
+                class="description"
+              >
+                sulu_category.categories: 
+              </label>
+            </section>
+            <section
+              class="section"
+            >
+              <h3>
+                sulu_admin.filter_by_tags
+              </h3>
+              <div
+                class="tags"
+              >
+                <div
+                  class="tagsAutoComplete"
+                />
+                <div
+                  class="tagsSelect"
+                >
+                  <div
+                    class="select"
+                  >
+                    <button
+                      class="displayValue default"
+                      type="button"
+                    >
+                      <div
+                        aria-label="sulu_admin.please_choose"
+                        class="croppedText"
+                        title="sulu_admin.please_choose"
+                      >
+                        <div
+                          aria-hidden="true"
+                          class="front"
+                        >
+                          sulu_admin.p
+                        </div>
+                        <div
+                          aria-hidden="true"
+                          class="back"
+                        >
+                          <span>
+                            lease_choose
+                          </span>
+                        </div>
+                        <div
+                          class="whole"
+                        >
+                          sulu_admin.please_choose
+                        </div>
+                      </div>
+                      <span
+                        aria-label="su-angle-down"
+                        class="su-angle-down toggle"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section
+              class="section"
+            >
+              <h3>
+                sulu_admin.target_groups
+              </h3>
               <label
                 class="label"
               >
@@ -57,412 +215,266 @@ exports[`Render with all fields 1`] = `
                   <span />
                 </span>
                 <div>
-                  sulu_admin.include_sub_elements
+                  sulu_admin.use_target_groups
                 </div>
               </label>
-            </div>
-            <label
-              class="description"
+            </section>
+            <section
+              class="section"
             >
-              sulu_admin.data_source: 
-            </label>
-          </section>
-          <section
-            class="section"
-          >
-            <h3>
-              sulu_admin.filter_by_categories
-            </h3>
-            <div
-              class="categories"
-            >
-              <button
-                class="button secondary"
-                type="button"
-              >
-                <span
-                  class="text"
-                >
-                  sulu_admin.choose_categories
-                </span>
-              </button>
+              <h3>
+                sulu_admin.sort_by
+              </h3>
               <div
-                class="categoriesSelect"
+                class="sorting"
               >
                 <div
-                  class="select"
-                >
-                  <button
-                    class="displayValue default"
-                    type="button"
-                  >
-                    <div
-                      aria-label="sulu_admin.please_choose"
-                      class="croppedText"
-                      title="sulu_admin.please_choose"
-                    >
-                      <div
-                        aria-hidden="true"
-                        class="front"
-                      >
-                        sulu_admin.p
-                      </div>
-                      <div
-                        aria-hidden="true"
-                        class="back"
-                      >
-                        <span>
-                          lease_choose
-                        </span>
-                      </div>
-                      <div
-                        class="whole"
-                      >
-                        sulu_admin.please_choose
-                      </div>
-                    </div>
-                    <span
-                      aria-label="su-angle-down"
-                      class="su-angle-down toggle"
-                    />
-                  </button>
-                </div>
-              </div>
-            </div>
-            <label
-              class="description"
-            >
-              sulu_category.categories: 
-            </label>
-          </section>
-          <section
-            class="section"
-          >
-            <h3>
-              sulu_admin.filter_by_tags
-            </h3>
-            <div
-              class="tags"
-            >
-              <div
-                class="tagsAutoComplete"
-              />
-              <div
-                class="tagsSelect"
-              >
-                <div
-                  class="select"
-                >
-                  <button
-                    class="displayValue default"
-                    type="button"
-                  >
-                    <div
-                      aria-label="sulu_admin.please_choose"
-                      class="croppedText"
-                      title="sulu_admin.please_choose"
-                    >
-                      <div
-                        aria-hidden="true"
-                        class="front"
-                      >
-                        sulu_admin.p
-                      </div>
-                      <div
-                        aria-hidden="true"
-                        class="back"
-                      >
-                        <span>
-                          lease_choose
-                        </span>
-                      </div>
-                      <div
-                        class="whole"
-                      >
-                        sulu_admin.please_choose
-                      </div>
-                    </div>
-                    <span
-                      aria-label="su-angle-down"
-                      class="su-angle-down toggle"
-                    />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </section>
-          <section
-            class="section"
-          >
-            <h3>
-              sulu_admin.target_groups
-            </h3>
-            <label
-              class="label"
-            >
-              <span
-                class="switch toggler"
-              >
-                <input
-                  type="checkbox"
-                  value=""
-                />
-                <span />
-              </span>
-              <div>
-                sulu_admin.use_target_groups
-              </div>
-            </label>
-          </section>
-          <section
-            class="section"
-          >
-            <h3>
-              sulu_admin.sort_by
-            </h3>
-            <div
-              class="sorting"
-            >
-              <div
-                class="sortColumn"
-              >
-                <div
-                  class="select"
-                >
-                  <button
-                    class="displayValue default"
-                    type="button"
-                  >
-                    <div
-                      aria-label="sulu_admin.please_choose"
-                      class="croppedText"
-                      title="sulu_admin.please_choose"
-                    >
-                      <div
-                        aria-hidden="true"
-                        class="front"
-                      >
-                        sulu_admin.p
-                      </div>
-                      <div
-                        aria-hidden="true"
-                        class="back"
-                      >
-                        <span>
-                          lease_choose
-                        </span>
-                      </div>
-                      <div
-                        class="whole"
-                      >
-                        sulu_admin.please_choose
-                      </div>
-                    </div>
-                    <span
-                      aria-label="su-angle-down"
-                      class="su-angle-down toggle"
-                    />
-                  </button>
-                </div>
-              </div>
-              <div
-                class="sortOrder"
-              >
-                <div
-                  class="select"
-                >
-                  <button
-                    class="displayValue default"
-                    type="button"
-                  >
-                    <div
-                      aria-label="sulu_admin.please_choose"
-                      class="croppedText"
-                      title="sulu_admin.please_choose"
-                    >
-                      <div
-                        aria-hidden="true"
-                        class="front"
-                      >
-                        sulu_admin.p
-                      </div>
-                      <div
-                        aria-hidden="true"
-                        class="back"
-                      >
-                        <span>
-                          lease_choose
-                        </span>
-                      </div>
-                      <div
-                        class="whole"
-                      >
-                        sulu_admin.please_choose
-                      </div>
-                    </div>
-                    <span
-                      aria-label="su-angle-down"
-                      class="su-angle-down toggle"
-                    />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </section>
-          <section
-            class="section"
-          >
-            <h3>
-              sulu_admin.present_as
-            </h3>
-            <div
-              class="presentation"
-            >
-              <div
-                class="select"
-              >
-                <button
-                  class="displayValue default"
-                  type="button"
+                  class="sortColumn"
                 >
                   <div
-                    aria-label="sulu_admin.please_choose"
-                    class="croppedText"
-                    title="sulu_admin.please_choose"
+                    class="select"
+                  >
+                    <button
+                      class="displayValue default"
+                      type="button"
+                    >
+                      <div
+                        aria-label="sulu_admin.please_choose"
+                        class="croppedText"
+                        title="sulu_admin.please_choose"
+                      >
+                        <div
+                          aria-hidden="true"
+                          class="front"
+                        >
+                          sulu_admin.p
+                        </div>
+                        <div
+                          aria-hidden="true"
+                          class="back"
+                        >
+                          <span>
+                            lease_choose
+                          </span>
+                        </div>
+                        <div
+                          class="whole"
+                        >
+                          sulu_admin.please_choose
+                        </div>
+                      </div>
+                      <span
+                        aria-label="su-angle-down"
+                        class="su-angle-down toggle"
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="sortOrder"
+                >
+                  <div
+                    class="select"
+                  >
+                    <button
+                      class="displayValue default"
+                      type="button"
+                    >
+                      <div
+                        aria-label="sulu_admin.please_choose"
+                        class="croppedText"
+                        title="sulu_admin.please_choose"
+                      >
+                        <div
+                          aria-hidden="true"
+                          class="front"
+                        >
+                          sulu_admin.p
+                        </div>
+                        <div
+                          aria-hidden="true"
+                          class="back"
+                        >
+                          <span>
+                            lease_choose
+                          </span>
+                        </div>
+                        <div
+                          class="whole"
+                        >
+                          sulu_admin.please_choose
+                        </div>
+                      </div>
+                      <span
+                        aria-label="su-angle-down"
+                        class="su-angle-down toggle"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section
+              class="section"
+            >
+              <h3>
+                sulu_admin.present_as
+              </h3>
+              <div
+                class="presentation"
+              >
+                <div
+                  class="select"
+                >
+                  <button
+                    class="displayValue default"
+                    type="button"
                   >
                     <div
-                      aria-hidden="true"
-                      class="front"
+                      aria-label="sulu_admin.please_choose"
+                      class="croppedText"
+                      title="sulu_admin.please_choose"
                     >
-                      sulu_admin.p
+                      <div
+                        aria-hidden="true"
+                        class="front"
+                      >
+                        sulu_admin.p
+                      </div>
+                      <div
+                        aria-hidden="true"
+                        class="back"
+                      >
+                        <span>
+                          lease_choose
+                        </span>
+                      </div>
+                      <div
+                        class="whole"
+                      >
+                        sulu_admin.please_choose
+                      </div>
                     </div>
-                    <div
-                      aria-hidden="true"
-                      class="back"
-                    >
-                      <span>
-                        lease_choose
-                      </span>
-                    </div>
-                    <div
-                      class="whole"
-                    >
-                      sulu_admin.please_choose
-                    </div>
-                  </div>
-                  <span
-                    aria-label="su-angle-down"
-                    class="su-angle-down toggle"
-                  />
-                </button>
+                    <span
+                      aria-label="su-angle-down"
+                      class="su-angle-down toggle"
+                    />
+                  </button>
+                </div>
               </div>
-            </div>
-          </section>
-          <section
-            class="section"
-          >
-            <h3>
-              sulu_admin.limit_result_to
-            </h3>
-            <div
-              class="limit"
+            </section>
+            <section
+              class="section"
             >
-              <label
-                class="input default left"
+              <h3>
+                sulu_admin.limit_result_to
+              </h3>
+              <div
+                class="limit"
               >
-                <input
-                  type="number"
-                  value=""
-                />
-              </label>
-            </div>
-          </section>
-        </div>
-      </article>
-      <footer>
-        <div
-          class="actions"
-        >
+                <label
+                  class="input default left"
+                >
+                  <input
+                    type="number"
+                    value=""
+                  />
+                </label>
+              </div>
+            </section>
+          </div>
+        </article>
+        <footer>
+          <div
+            class="actions"
+          >
+            <button
+              class="button link"
+              type="button"
+            >
+              <span
+                class="text"
+              >
+                sulu_admin.reset
+              </span>
+            </button>
+          </div>
           <button
-            class="button link"
+            class="button primary"
             type="button"
           >
             <span
               class="text"
             >
-              sulu_admin.reset
+              sulu_admin.confirm
             </span>
           </button>
-        </div>
-        <button
-          class="button primary"
-          type="button"
-        >
-          <span
-            class="text"
-          >
-            sulu_admin.confirm
-          </span>
-        </button>
-      </footer>
-    </section>
-  </div>
-</div>
+        </footer>
+      </section>
+    </div>
+  </div>,
+]
 `;
 
 exports[`Render with no fields 1`] = `
-<div
-  class="container isDown"
->
+Array [
   <div
-    class="overlay small"
+    class="backdrop visible fixed"
+    role="button"
+  />,
+  <div
+    class="container isDown"
   >
-    <section
-      class="content"
+    <div
+      class="overlay small"
     >
-      <header>
-        <h2>
-          Test
-        </h2>
-        <span
-          aria-label="su-times"
-          class="su-times clickable icon"
-          role="button"
-          tabindex="0"
-        />
-      </header>
-      <article>
-        <div
-          class="content"
-        />
-      </article>
-      <footer>
-        <div
-          class="actions"
-        >
+      <section
+        class="content"
+      >
+        <header>
+          <h2>
+            Test
+          </h2>
+          <span
+            aria-label="su-times"
+            class="su-times clickable icon"
+            role="button"
+            tabindex="0"
+          />
+        </header>
+        <article>
+          <div
+            class="content"
+          />
+        </article>
+        <footer>
+          <div
+            class="actions"
+          >
+            <button
+              class="button link"
+              type="button"
+            >
+              <span
+                class="text"
+              >
+                sulu_admin.reset
+              </span>
+            </button>
+          </div>
           <button
-            class="button link"
+            class="button primary"
             type="button"
           >
             <span
               class="text"
             >
-              sulu_admin.reset
+              sulu_admin.confirm
             </span>
           </button>
-        </div>
-        <button
-          class="button primary"
-          type="button"
-        >
-          <span
-            class="text"
-          >
-            sulu_admin.confirm
-          </span>
-        </button>
-      </footer>
-    </section>
-  </div>
-</div>
+        </footer>
+      </section>
+    </div>
+  </div>,
+]
 `;

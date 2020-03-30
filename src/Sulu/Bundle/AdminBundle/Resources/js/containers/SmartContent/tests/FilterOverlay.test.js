@@ -212,7 +212,7 @@ test('Render with all fields', () => {
             title="Test"
         />
     );
-    expect(filterOverlay.find('Portal').at(2).render()).toMatchSnapshot();
+    expect(filterOverlay.find('Portal').at(1).render()).toMatchSnapshot();
 });
 
 test('Render with no fields', () => {
@@ -248,7 +248,7 @@ test('Render with no fields', () => {
             title="Test"
         />
     );
-    expect(filterOverlay.find('Portal').at(2).render()).toMatchSnapshot();
+    expect(filterOverlay.find('Portal').at(1).render()).toMatchSnapshot();
 });
 
 test('Fill all fields using and update SmartContentStore on confirm', () => {

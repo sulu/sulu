@@ -102,7 +102,6 @@ class Overlay extends React.Component<Props> {
             confirmDisabled,
             confirmLoading,
             confirmText,
-            onClose,
             onConfirm,
             title,
             size,
@@ -126,9 +125,9 @@ class Overlay extends React.Component<Props> {
 
         return (
             <Fragment>
-                <Backdrop onClick={onClose} open={visible} />
                 {visible &&
                     <Portal>
+                        <Backdrop local={true} />
                         <div
                             className={containerClass}
                             onTransitionEnd={this.handleTransitionEnd}
