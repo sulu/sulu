@@ -127,7 +127,7 @@ class Overlay extends React.Component<Props> {
             <Fragment>
                 {visible &&
                     <Portal>
-                        <Backdrop local={true} />
+                        <Backdrop />
                         <div
                             className={containerClass}
                             onTransitionEnd={this.handleTransitionEnd}

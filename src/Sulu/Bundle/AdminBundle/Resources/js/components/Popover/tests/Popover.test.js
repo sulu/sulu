@@ -55,7 +55,6 @@ test('The popover should render in body when open', () => {
         </Popover>
     );
     expect(view.find('Backdrop')).toHaveLength(1);
-    expect(view.find('Backdrop').prop('open')).toEqual(true);
     expect(pretty(body.innerHTML)).toMatchSnapshot();
 });
 

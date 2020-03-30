@@ -2,6 +2,21 @@
 
 ## dev-master
 
+### Backdrop component
+
+Our `Backdrop` React component does not have the `local` and `open` props anymore. It is not supported anymore to render
+the backdrop in a portal. Instead it will be rendered right where it is put in the component tree, and if you want it to
+be in a `Portal` you have to put it there. The `open` prop has also been removed, since you can use conditional
+rendering to render the `Backdrop` only if needed.
+
+```javascript
+// Before
+<Backdrop open={open} />
+
+// After
+{open && <Backdrop />}
+```
+
 ### CacheClearer service changed
 
 The CacheClearer service `sulu_website.http_cache.clearer` constructor arguments has changed. The third argument the

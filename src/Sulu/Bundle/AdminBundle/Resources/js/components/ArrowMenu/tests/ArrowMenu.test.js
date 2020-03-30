@@ -117,7 +117,7 @@ test('Render ArrowMenu open', () => {
     expect(arrowMenu.find('ArrowMenu > button').text()).toEqual('Nice button');
 
     expect(arrowMenu.find('Popover').children()).toHaveLength(1);
-    expect(arrowMenu.find('Popover Backdrop').prop('open')).toEqual(true);
+    expect(arrowMenu.find('Popover Backdrop')).toHaveLength(1);
     expect(arrowMenu.render()).toMatchSnapshot();
 });
 
@@ -171,7 +171,7 @@ test('Render ArrowMenu open with falsy values', () => {
     expect(arrowMenu.find('ArrowMenu > button').text()).toEqual('Nice button');
 
     expect(arrowMenu.find('Popover').children()).toHaveLength(1);
-    expect(arrowMenu.find('Popover Backdrop').prop('open')).toEqual(true);
+    expect(arrowMenu.find('Popover Backdrop')).toHaveLength(1);
     expect(arrowMenu.render()).toMatchSnapshot();
 });
 
