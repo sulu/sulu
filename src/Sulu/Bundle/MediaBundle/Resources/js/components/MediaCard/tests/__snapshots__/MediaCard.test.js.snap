@@ -522,6 +522,7 @@ Array [
         <button
           class=""
           data-clipboard-text="http://lorempixel.com/300/200"
+          title=""
           type="button"
         >
           <span
@@ -542,6 +543,7 @@ Array [
         <button
           class=""
           data-clipboard-text="http://lorempixel.com/600/300"
+          title=""
           type="button"
         >
           <span
@@ -562,6 +564,7 @@ Array [
         <button
           class=""
           data-clipboard-text="http://lorempixel.com/150/200"
+          title=""
           type="button"
         >
           <span

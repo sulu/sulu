@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import ReactCircularProgressbar from 'react-circular-progressbar';
+import {CircularProgressbar as ReactCircularProgressbar} from 'react-circular-progressbar';
 import circularProgressbarStyles from './circularProgressbar.scss';
 
 type Props = {
