@@ -170,6 +170,28 @@ class SuluSecurityListenerTest extends TestCase
             ->shouldHaveBeenCalled();
     }
 
+    /**
+     * @dataProvider provideInvokeMethodActionMapping
+     */
+    public function testCallableControllerPermission($method, $permission)
+    {
+        $request = $this->prophesize(Request::class);
+        $request->getMethod()->willReturn($method);
+        $request->get('id')->willReturn('1');
+
+        $controller = $this->prophesize(SecuredControllerInterface::class);
+        $controller->getSecurityContext()->willReturn('security.context');
+        $controller->getLocale(Argument::any())->willReturn('de');
+
+        $this->filterControllerEvent->getRequest()->willReturn($request->reveal());
+        $this->filterControllerEvent->getController()->willReturn($controller->reveal());
+
+        $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
+
+        $this->securityChecker->checkPermission(Argument::any(), $permission, Argument::any())
+            ->shouldHaveBeenCalled();
+    }
+
     public function testLocale()
     {
         $request = $this->prophesize(Request::class);
@@ -215,6 +237,17 @@ class SuluSecurityListenerTest extends TestCase
             ['PUT', 'putAction', 'edit'],
             ['PATCH', 'patchAction', 'edit'],
             ['DELETE', 'deleteAction', 'delete'],
+        ];
+    }
+
+    public static function provideInvokeMethodActionMapping()
+    {
+        return [
+            ['GET', 'view'],
+            ['POST', 'add'],
+            ['PUT', 'edit'],
+            ['PATCH', 'edit'],
+            ['DELETE', 'delete'],
         ];
     }
 }

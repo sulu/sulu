@@ -41,8 +41,18 @@ class SuluSecurityListener
      */
     public function onKernelController(FilterControllerEvent $event)
     {
-        $controllerDefinition = $event->getController();
-        $controller = $controllerDefinition[0];
+        $controller = $event->getController();
+        $action = '__invoke';
+
+        if (is_array($controller)) {
+            if (isset($controller[1])) {
+                $action = $controller[1];
+            }
+
+            if (isset($controller[0])) {
+                $controller = $controller[0];
+            }
+        }
 
         if (
             !$controller instanceof SecuredControllerInterface &&
@@ -61,7 +71,7 @@ class SuluSecurityListener
                 $permission = PermissionTypes::VIEW;
                 break;
             case 'POST':
-                if ('postAction' == $controllerDefinition[1]) { // means that the ClassResourceInterface has to be used
+                if (in_array($action, ['postAction', '__invoke'])) { // means that the ClassResourceInterface has to be used
                     $permission = PermissionTypes::ADD;
                 } else {
                     $permission = PermissionTypes::EDIT;
