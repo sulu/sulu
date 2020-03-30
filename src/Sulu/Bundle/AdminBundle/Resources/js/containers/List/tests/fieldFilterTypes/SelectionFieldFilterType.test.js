@@ -37,6 +37,22 @@ test('Pass correct props to MultiAutoComplete', () => {
     }));
 });
 
+test('Pass correct props to Select', () => {
+    const selectionFieldFilterType = new SelectionFieldFilterType(
+        jest.fn(),
+        {displayProperty: 'name', resourceKey: 'accounts', type: 'select'},
+        [4, 6]
+    );
+
+    const selectionFieldFilterTypeForm = shallow(selectionFieldFilterType.getFormNode());
+
+    expect(selectionFieldFilterTypeForm.find('ResourceMultiSelect').props()).toEqual(expect.objectContaining({
+        displayProperty: 'name',
+        resourceKey: 'accounts',
+        values: [4, 6],
+    }));
+});
+
 test('Destroy should call disposers', () => {
     const selectionFieldFilterType = new SelectionFieldFilterType(
         jest.fn(),
@@ -53,16 +69,75 @@ test('Destroy should call disposers', () => {
     expect(selectionFieldFilterType.valueDisposer).toBeCalledWith();
 });
 
-test('Call onChange handler when selection changes', () => {
+test('Setting a new value should update the select', () => {
+    const selectionFieldFilterType = new SelectionFieldFilterType(
+        jest.fn(),
+        {displayProperty: 'name', resourceKey: 'accounts', type: 'select'},
+        [4, 6]
+    );
+
+    const selectionFieldFilterTypeForm1 = shallow(selectionFieldFilterType.getFormNode());
+    expect(selectionFieldFilterTypeForm1.find('ResourceMultiSelect').prop('values')).toEqual([4, 6]);
+
+    selectionFieldFilterType.setValue([4, 5]);
+    const selectionFieldFilterTypeForm2 = shallow(selectionFieldFilterType.getFormNode());
+    expect(selectionFieldFilterTypeForm2.find('ResourceMultiSelect').prop('values')).toEqual([4, 5]);
+});
+
+test('Setting a new value should update the selectionStore', () => {
+    const selectionFieldFilterType = new SelectionFieldFilterType(
+        jest.fn(),
+        {displayProperty: 'name', resourceKey: 'accounts', type: 'select'},
+        [4, 6]
+    );
+
+    expect(selectionFieldFilterType.selectionStore.loadItems).toBeCalledWith([4, 6]);
+    selectionFieldFilterType.setValue([4, 7]);
+    expect(selectionFieldFilterType.selectionStore.loadItems).toBeCalledWith([4, 7]);
+});
+
+test('Setting the same value should not update the selectionStore', () => {
+    const selectionFieldFilterType = new SelectionFieldFilterType(
+        jest.fn(),
+        {displayProperty: 'name', resourceKey: 'accounts', type: 'select'},
+        [4, 6]
+    );
+
+    // $FlowFixMe
+    selectionFieldFilterType.selectionStore.ids = [4, 6];
+    selectionFieldFilterType.selectionStore.loadItems.mockReset();
+
+    selectionFieldFilterType.setValue([4, 6]);
+    expect(selectionFieldFilterType.selectionStore.loadItems).not.toBeCalledWith([4, 6]);
+});
+
+test('Call onChange handler when selection changes for auto_complete type', () => {
     const changeSpy = jest.fn();
     const selectionFieldFilterType = new SelectionFieldFilterType(
         changeSpy,
-        {displayProperty: 'firstName', resourceKey: 'contacts'},
+        {displayProperty: 'firstName', resourceKey: 'contacts', type: 'multi_auto_complete'},
         undefined
     );
 
     selectionFieldFilterType.selectionStore.ids.push(4, 7);
 
+    expect(changeSpy).toBeCalledWith([4, 7]);
+});
+
+test('Call onChange handler when selection changes for select type after select is closed', () => {
+    const changeSpy = jest.fn();
+    const selectionFieldFilterType = new SelectionFieldFilterType(
+        changeSpy,
+        {displayProperty: 'firstName', resourceKey: 'contacts', type: 'select'},
+        undefined
+    );
+
+    const selectionFieldFilterTypeForm = shallow(selectionFieldFilterType.getFormNode());
+    changeSpy.mockReset();
+    selectionFieldFilterTypeForm.find('ResourceMultiSelect').prop('onChange')([4, 7]);
+
+    expect(changeSpy).not.toBeCalled();
+    selectionFieldFilterTypeForm.find('ResourceMultiSelect').prop('onClose')();
     expect(changeSpy).toBeCalledWith([4, 7]);
 });
 

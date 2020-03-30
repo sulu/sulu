@@ -159,6 +159,26 @@ test('The component should trigger the select callback and close the popover whe
     expect(document.body.innerHTML).toBe('');
 });
 
+test('The component should call the onClose callback when it is closing', () => {
+    const closeSpy = jest.fn();
+    const isOptionSelected = jest.fn().mockReturnValue(false);
+    const select = mount(
+        <Select
+            displayValue="My text"
+            isOptionSelected={isOptionSelected}
+            onClose={closeSpy}
+            onSelect={jest.fn()}
+        >
+            <Option value="option-1">Option 1</Option>
+            <Option value="option-2">Option 2</Option>
+        </Select>
+    );
+    select.instance().handleDisplayValueClick();
+    expect(closeSpy).not.toBeCalled();
+    select.find('Popover').simulate('click');
+    expect(closeSpy).toBeCalled();
+});
+
 test('The component should pass the centered child node to the popover', () => {
     const onSelect = jest.fn();
     const isOptionSelected = jest.fn((child) => child.props.value === 'option-3');

@@ -161,3 +161,17 @@ test('The component should trigger the change callback on select with a removed 
     select.find(Select).props().onSelect('option-2');
     expect(onChangeSpy).toHaveBeenCalledWith(['option-1']);
 });
+
+test('The component should trigger the close callback when the MultiSelect is closed', () => {
+    const closeSpy = jest.fn();
+    const select = shallow(
+        <MultiSelect onChange={jest.fn()} onClose={closeSpy}>
+            <Option value="option-1">Option 1</Option>
+            <Option value="option-2">Option 2</Option>
+        </MultiSelect>
+    );
+
+    expect(closeSpy).not.toBeCalled();
+    select.find(Select).prop('onClose')();
+    expect(closeSpy).toBeCalled();
+});

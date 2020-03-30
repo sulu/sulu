@@ -15,6 +15,7 @@ type Props<T: string | number> = {|
     idProperty: string,
     noneSelectedText?: string,
     onChange: (values: Array<T>, valueObjects?: Array<Object>) => void,
+    onClose?: () => void,
     requestParameters: Object,
     resourceKey: string,
     values: Array<T>,
@@ -76,9 +77,10 @@ class ResourceMultiSelect<T: string | number> extends React.Component<Props<T>> 
         const {
             allSelectedText,
             disabled,
-            noneSelectedText,
             displayProperty,
             idProperty,
+            noneSelectedText,
+            onClose,
             values,
         } = this.props;
 
@@ -92,6 +94,7 @@ class ResourceMultiSelect<T: string | number> extends React.Component<Props<T>> 
                 disabled={disabled}
                 noneSelectedText={noneSelectedText}
                 onChange={this.handleChange}
+                onClose={onClose}
                 values={values}
             >
                 {this.resourceListStore.data.map((object, index) => ((

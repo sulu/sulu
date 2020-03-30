@@ -10,6 +10,7 @@ type Props<T: string | number> = {|
     allSelectedText?: string,
     noneSelectedText?: string,
     onChange: (values: Array<T>) => void,
+    onClose?: () => void,
     values: Array<T>,
 |};
 
@@ -81,7 +82,7 @@ export default class MultiSelect<T: string | number> extends React.PureComponent
     };
 
     render() {
-        const {children, disabled, icon, skin} = this.props;
+        const {children, disabled, icon, onClose, skin} = this.props;
 
         return (
             <Select
@@ -90,6 +91,7 @@ export default class MultiSelect<T: string | number> extends React.PureComponent
                 displayValue={this.displayValue}
                 icon={icon}
                 isOptionSelected={this.isOptionSelected}
+                onClose={onClose}
                 onSelect={this.handleSelect}
                 selectedVisualization="checkbox"
                 skin={skin}

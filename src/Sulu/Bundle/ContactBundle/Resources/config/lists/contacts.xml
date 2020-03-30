@@ -15,6 +15,17 @@
         </join>
     </joins>
 
+    <joins name="position">
+        <join>
+            <entity-name>SuluContactBundle:AccountContact</entity-name>
+            <field-name>%sulu.model.contact.class%.accountContacts</field-name>
+        </join>
+        <join>
+            <entity-name>SuluContactBundle:Position</entity-name>
+            <field-name>SuluContactBundle:AccountContact.position</field-name>
+        </join>
+    </joins>
+
     <joins name="accountContact">
         <join>
             <entity-name>SuluContactBundle:AccountContact</entity-name>
@@ -255,6 +266,21 @@
             <filter type="text" />
         </property>
 
+        <identity-property name="positionId" visibility="never" translation="sulu_contact.position">
+            <field-name>position</field-name>
+            <entity-name>SuluContactBundle:AccountContact</entity-name>
+
+            <joins ref="position"/>
+
+            <filter type="selection">
+                <params>
+                    <param name="displayProperty" value="position" />
+                    <param name="resourceKey" value="contact_positions" />
+                    <param name="type" value="select" />
+                </params>
+            </filter>
+        </identity-property>
+
         <property
             name="position"
             translation="sulu_contact.position"
@@ -263,18 +289,7 @@
             <field-name>position</field-name>
             <entity-name>SuluContactBundle:Position</entity-name>
 
-            <joins>
-                <join>
-                    <entity-name>SuluContactBundle:AccountContact</entity-name>
-                    <field-name>%sulu.model.contact.class%.accountContacts</field-name>
-                </join>
-                <join>
-                    <entity-name>SuluContactBundle:Position</entity-name>
-                    <field-name>SuluContactBundle:AccountContact.position</field-name>
-                </join>
-            </joins>
-
-            <filter type="text" />
+            <joins ref="position"/>
         </property>
 
         <group-concat-property

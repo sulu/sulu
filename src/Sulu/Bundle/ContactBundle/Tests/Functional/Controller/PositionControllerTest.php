@@ -47,6 +47,27 @@ class PositionControllerTest extends SuluTestCase
         $this->assertEquals('CFO', $positions[1]->position);
     }
 
+    public function testCgetActionWithIds()
+    {
+        $position1 = $this->createPosition('CEO');
+        $position2 = $this->createPosition('CFO');
+        $position3 = $this->createPosition('COO');
+
+        $this->em->flush();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/api/contact-positions?ids=' . $position1->getId() . ',' . $position3->getId());
+
+        $response = json_decode($client->getResponse()->getContent());
+        $positions = $response->_embedded->contact_positions;
+
+        $this->assertCount(2, $positions);
+        $this->assertEquals($position1->getId(), $positions[0]->id);
+        $this->assertEquals('CEO', $positions[0]->position);
+        $this->assertEquals($position3->getId(), $positions[1]->id);
+        $this->assertEquals('COO', $positions[1]->position);
+    }
+
     public function testCdeleteAction()
     {
         $position1 = $this->createPosition('CEO');
