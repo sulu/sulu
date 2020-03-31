@@ -1,5 +1,4 @@
 // @flow
-import 'core-js/library/fn/promise';
 import {action, observable} from 'mobx';
 import ResourceRequester from '../../services/ResourceRequester';
 

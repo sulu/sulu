@@ -1,5 +1,4 @@
 // @flow
-import 'core-js/library/fn/promise';
 import initializer from '../initializer';
 import Requester from '../../Requester';
 import {setTranslations} from '../../../utils/Translator';
