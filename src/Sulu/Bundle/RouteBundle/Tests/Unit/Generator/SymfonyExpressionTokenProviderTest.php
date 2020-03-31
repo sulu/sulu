@@ -14,6 +14,7 @@ namespace Sulu\Bundle\RouteBundle\Tests\Unit\Generator;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\RouteBundle\Generator\CannotEvaluateTokenException;
 use Sulu\Bundle\RouteBundle\Generator\SymfonyExpressionTokenProvider;
+use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class SymfonyExpressionTokenProviderTest extends TestCase
@@ -22,9 +23,10 @@ class SymfonyExpressionTokenProviderTest extends TestCase
     {
         $translator = $this->prophesize(TranslatorInterface::class);
         $translator->getLocale()->willReturn('de');
-        $translator->setLocale('en')->shouldBeCalled();
         $translator->setLocale('de')->shouldBeCalled();
-        $entity = new \stdClass();
+        $entity = $this->prophesize(RoutableInterface::class);
+        $entity->getLocale()->willReturn('en');
+
         $entity->getLocale = function() {
             return 'en';
         };
@@ -37,10 +39,11 @@ class SymfonyExpressionTokenProviderTest extends TestCase
     {
         $translator = $this->prophesize(TranslatorInterface::class);
         $translator->getLocale()->willReturn('de');
-        $translator->setLocale('en')->shouldBeCalled();
         $translator->setLocale('de')->shouldBeCalled();
         $translator->trans('test-key')->willReturn('TEST');
-        $entity = new \stdClass();
+        $entity = $this->prophesize(RoutableInterface::class);
+        $entity->getLocale()->willReturn('en');
+
         $entity->getLocale = function() {
             return 'en';
         };
