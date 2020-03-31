@@ -6,5 +6,5 @@
     flex-direction: column;
     flex-grow: 1;
     height: calc(100% - $tabMenuHeight - 8px);
-    margin-top: calc(-$webspaceTabsWebspaceSelectMargin - 38px);
+    margin-top: calc(0 - $webspaceTabsWebspaceSelectMargin - 38px);
 }
