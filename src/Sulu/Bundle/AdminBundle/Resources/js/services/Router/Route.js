@@ -1,5 +1,5 @@
 // @flow
-import pathToRegexp from 'path-to-regexp';
+import {pathToRegexp} from 'path-to-regexp';
 import {computed} from 'mobx';
 import type {AttributeMap, RouteConfig} from './types';
 

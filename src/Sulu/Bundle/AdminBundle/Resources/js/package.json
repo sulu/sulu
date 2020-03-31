@@ -31,7 +31,7 @@
         "moment": "^2.19.2",
         "mousetrap": "^1.6.1",
         "normalize.css": "^8.0.1",
-        "path-to-regexp": "^1.7.0",
+        "path-to-regexp": "^6.1.0",
         "react-circular-progressbar": "^2.0.3",
         "react-color": "^2.14.1",
         "react-datetime": "^2.11.0",
