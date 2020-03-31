@@ -82,7 +82,8 @@ exports[`Render a SingleMediaDropzone while uploading 1`] = `
       style="width:200px;height:200px"
     >
       <svg
-        class="root  "
+        class="root "
+        data-test-id="CircularProgressbar"
         viewBox="0 0 100 100"
       >
         <circle
@@ -93,31 +94,27 @@ exports[`Render a SingleMediaDropzone while uploading 1`] = `
         />
         <path
           d="
-      M 50,50 m 0,-38
-      a 38,38 0 1 1 0,76
-      a 38,38 0 1 1 0,-76
+      M 50,50
+      m 0,-46
+      a 46,46 0 1 1 0,92
+      a 46,46 0 1 1 0,-92
     "
           fill-opacity="0"
           stroke-width="8"
+          style="stroke-dasharray:289.02652413026095px 289.02652413026095px;stroke-dashoffset:0px"
         />
         <path
           class="path"
           d="
-      M 50,50 m 0,-38
-      a 38,38 0 1 1 0,76
-      a 38,38 0 1 1 0,-76
+      M 50,50
+      m 0,-46
+      a 46,46 0 1 1 0,92
+      a 46,46 0 1 1 0,-92
     "
           fill-opacity="0"
           stroke-width="8"
-          style="stroke-dasharray:238.76104167282426px 238.76104167282426px;stroke-dashoffset:119.38052083641213px"
+          style="stroke-dasharray:289.02652413026095px 289.02652413026095px;stroke-dashoffset:NaNpx"
         />
-        <text
-          class="text"
-          x="50"
-          y="50"
-        >
-          50%
-        </text>
       </svg>
     </div>
   </div>

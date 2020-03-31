@@ -1,5 +1,4 @@
 // @flow
-import 'core-js/library/fn/promise';
 import {action, computed, observable} from 'mobx';
 import debounce from 'debounce';
 import {Config, Requester} from '../../services';
