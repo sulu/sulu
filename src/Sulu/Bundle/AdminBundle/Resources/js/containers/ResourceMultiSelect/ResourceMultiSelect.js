@@ -83,7 +83,7 @@ class ResourceMultiSelect<T: string | number> extends React.Component<Props<T>> 
         } = this.props;
 
         if (this.resourceListStore.loading || !this.resourceListStore.data) {
-            return <Loader />;
+            return <Loader size={30} />;
         }
 
         return (

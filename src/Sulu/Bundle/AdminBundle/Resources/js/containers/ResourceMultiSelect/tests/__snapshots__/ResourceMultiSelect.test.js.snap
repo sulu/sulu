@@ -45,7 +45,7 @@ exports[`Render in disabled state 1`] = `
 exports[`Render in loading state 1`] = `
 <div
   class="spinner"
-  style="width:40px;height:40px"
+  style="width:30px;height:30px"
 >
   <div
     class="doubleBounce1"
