@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
-import {observer} from 'mobx-react';
+import type {ElementRef, Node} from 'react';
+import {observer, Observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import Dropzone from 'react-dropzone';
@@ -11,7 +11,7 @@ import DropzoneOverlay from './DropzoneOverlay';
 import dropzoneStyles from './dropzone.scss';
 
 type Props = {
-    children: any,
+    children: Node,
     collectionId: ?string | number,
     locale: IObservableValue<string>,
     onClose: () => void,
@@ -98,22 +98,30 @@ class MultiMediaDropzone extends React.Component<Props> {
 
         return (
             <Dropzone
-                className={dropzoneStyles.dropzone}
-                disableClick={true}
+                noClick={true}
                 onDragEnter={this.handleDragEnter}
                 onDrop={this.handleDrop}
                 ref={this.setDropzoneRef}
                 style={{}} // to disable default style
             >
-                {children}
-                <DropzoneOverlay
-                    onClick={this.handleOverlayClick}
-                    onClose={this.handleOverlayClose}
-                    onDragLeave={this.handleDragLeave}
-                    open={open}
-                >
-                    {this.createMediaItems()}
-                </DropzoneOverlay>
+                {({getInputProps, getRootProps}) => (
+                    <Observer>
+                        {() => (
+                            <div {...getRootProps({className: dropzoneStyles.dropzone})}>
+                                {children}
+                                <input {...getInputProps()} />
+                                <DropzoneOverlay
+                                    onClick={this.handleOverlayClick}
+                                    onClose={this.handleOverlayClose}
+                                    onDragLeave={this.handleDragLeave}
+                                    open={open}
+                                >
+                                    {this.createMediaItems()}
+                                </DropzoneOverlay>
+                            </div>
+                        )}
+                    </Observer>
+                )}
             </Dropzone>
         );
     }

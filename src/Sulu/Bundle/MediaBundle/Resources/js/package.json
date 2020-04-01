@@ -9,7 +9,7 @@
         "fast-deep-equal": "^3.1.1",
         "mousetrap": "^1.6.1",
         "react-clipboard.js": "^2.0.16",
-        "react-dropzone": "^4.2.1",
+        "react-dropzone": "^10.2.2",
         "react-portal": "^4.1.0",
         "url-search-params-polyfill": "^8.0.0"
     },

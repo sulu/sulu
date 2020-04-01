@@ -2,9 +2,7 @@
 
 exports[`Render a FileUploadButton 1`] = `
 <div
-  aria-disabled="false"
-  class=""
-  style="position:relative"
+  tabindex="0"
 >
   <button
     class="button secondary"
@@ -19,7 +17,8 @@ exports[`Render a FileUploadButton 1`] = `
   <input
     autocomplete="off"
     multiple=""
-    style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+    style="display:none"
+    tabindex="-1"
     type="file"
   />
 </div>
@@ -27,9 +26,7 @@ exports[`Render a FileUploadButton 1`] = `
 
 exports[`Render a FileUploadButton with other skin and icon 1`] = `
 <div
-  aria-disabled="false"
-  class=""
-  style="position:relative"
+  tabindex="0"
 >
   <button
     class="button link"
@@ -48,7 +45,8 @@ exports[`Render a FileUploadButton with other skin and icon 1`] = `
   <input
     autocomplete="off"
     multiple=""
-    style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+    style="display:none"
+    tabindex="-1"
     type="file"
   />
 </div>
@@ -56,9 +54,7 @@ exports[`Render a FileUploadButton with other skin and icon 1`] = `
 
 exports[`Render a disabled FileUploadButton 1`] = `
 <div
-  aria-disabled="false"
-  class=""
-  style="position:relative"
+  tabindex="0"
 >
   <button
     class="button secondary"
@@ -74,7 +70,8 @@ exports[`Render a disabled FileUploadButton 1`] = `
   <input
     autocomplete="off"
     multiple=""
-    style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+    style="display:none"
+    tabindex="-1"
     type="file"
   />
 </div>

@@ -2,15 +2,15 @@
 
 exports[`Render a MultiMediaDropzone 1`] = `
 <div
-  aria-disabled="false"
   class="dropzone"
-  style="position:relative"
+  tabindex="0"
 >
   <div />
   <input
     autocomplete="off"
     multiple=""
-    style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+    style="display:none"
+    tabindex="-1"
     type="file"
   />
 </div>

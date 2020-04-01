@@ -3,9 +3,8 @@
 exports[`Render a SingleMediaUpload 1`] = `
 Array [
   <div
-    aria-disabled="false"
     class="mediaContainer default"
-    style="position:relative"
+    tabindex="0"
   >
     <img
       class="thumbnail"
@@ -32,7 +31,8 @@ Array [
     </div>
     <input
       autocomplete="off"
-      style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+      style="display:none"
+      tabindex="-1"
       type="file"
     />
   </div>,
@@ -73,9 +73,7 @@ Array [
 
 exports[`Render a SingleMediaUpload in disabled state 1`] = `
 <div
-  aria-disabled="true"
   class="mediaContainer default disabled"
-  style="position:relative"
 >
   <img
     class="thumbnail"
@@ -102,8 +100,8 @@ exports[`Render a SingleMediaUpload in disabled state 1`] = `
   </div>
   <input
     autocomplete="off"
-    disabled=""
-    style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+    style="display:none"
+    tabindex="-1"
     type="file"
   />
 </div>
@@ -112,9 +110,8 @@ exports[`Render a SingleMediaUpload in disabled state 1`] = `
 exports[`Render a SingleMediaUpload with a different image size 1`] = `
 Array [
   <div
-    aria-disabled="false"
     class="mediaContainer default"
-    style="position:relative"
+    tabindex="0"
   >
     <img
       class="thumbnail"
@@ -141,7 +138,8 @@ Array [
     </div>
     <input
       autocomplete="off"
-      style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+      style="display:none"
+      tabindex="-1"
       type="file"
     />
   </div>,
@@ -182,9 +180,8 @@ Array [
 
 exports[`Render a SingleMediaUpload with an empty icon if no image is passed 1`] = `
 <div
-  aria-disabled="false"
   class="mediaContainer default"
-  style="position:relative"
+  tabindex="0"
 >
   <div
     class="emptyIndicator"
@@ -215,7 +212,8 @@ exports[`Render a SingleMediaUpload with an empty icon if no image is passed 1`]
   </div>
   <input
     autocomplete="off"
-    style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+    style="display:none"
+    tabindex="-1"
     type="file"
   />
 </div>
@@ -224,9 +222,8 @@ exports[`Render a SingleMediaUpload with an empty icon if no image is passed 1`]
 exports[`Render a SingleMediaUpload with the round skin 1`] = `
 Array [
   <div
-    aria-disabled="false"
     class="mediaContainer round"
-    style="position:relative"
+    tabindex="0"
   >
     <img
       class="thumbnail"
@@ -253,7 +250,8 @@ Array [
     </div>
     <input
       autocomplete="off"
-      style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+      style="display:none"
+      tabindex="-1"
       type="file"
     />
   </div>,
@@ -295,9 +293,8 @@ Array [
 exports[`Render a SingleMediaUpload without delete and download button 1`] = `
 Array [
   <div
-    aria-disabled="false"
     class="mediaContainer default"
-    style="position:relative"
+    tabindex="0"
   >
     <img
       class="thumbnail"
@@ -324,7 +321,8 @@ Array [
     </div>
     <input
       autocomplete="off"
-      style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+      style="display:none"
+      tabindex="-1"
       type="file"
     />
   </div>,
