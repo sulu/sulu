@@ -37,10 +37,21 @@ class SymfonyExpressionTokenProvider implements TokenProviderInterface
 
     public function provide($entity, $name)
     {
+        $locale = $this->translator->getLocale();
+
         try {
-            return $this->expressionLanguage->evaluate($name, ['object' => $entity, 'translator' => $this->translator]);
+            if (method_exists($entity, 'getLocale')) {
+                $this->translator->setLocale($entity->getLocale());
+            }
+
+            $result = $this->expressionLanguage->evaluate($name, ['object' => $entity, 'translator' => $this->translator]);
+            $this->translator->setLocale($locale);
+
+            return $result;
         } catch (\Exception $e) {
             throw new CannotEvaluateTokenException($name, $entity, $e);
+        } finally {
+            $this->translator->setLocale($locale);
         }
     }
 }
