@@ -58,7 +58,7 @@
         "eslint-plugin-jsx-a11y": "^6.2.1",
         "eslint-plugin-react": "^7.19.0",
         "file-loader": "^4.2.0",
-        "flow-bin": "^0.102.0",
+        "flow-bin": "^0.110.0",
         "glob": "^7.1.2",
         "identity-obj-proxy": "^3.0.0",
         "jest": "^25.1.0",
