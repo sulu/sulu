@@ -16,6 +16,7 @@
         "@ckeditor/ckeditor5-table": "^18.0.0",
         "@ckeditor/ckeditor5-ui": "^18.0.0",
         "ajv": "^6.1.1",
+        "array-move": "2.2.1",
         "classnames": "^2.2.5",
         "debounce": "^1.0.2",
         "fast-deep-equal": "^3.1.1",

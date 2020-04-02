@@ -2,7 +2,7 @@
 import React from 'react';
 import {action, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
-import {arrayMove} from 'react-sortable-hoc';
+import {arrayMove} from '../../utils';
 import {translate} from '../../utils/Translator';
 import Button from '../Button';
 import SortableBlockList from './SortableBlockList';
