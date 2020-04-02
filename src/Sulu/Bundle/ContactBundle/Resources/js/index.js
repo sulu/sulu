@@ -1,18 +1,19 @@
 // @flow
 import React from 'react';
 import {when} from 'mobx';
-import {CardCollection, fieldRegistry} from 'sulu-admin-bundle/containers';
+import {CardCollection, fieldRegistry, listFieldFilterTypeRegistry} from 'sulu-admin-bundle/containers';
 import {initializer} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import {listToolbarActionRegistry} from 'sulu-admin-bundle/views';
 import AddressCardPreview from './components/AddressCardPreview';
 import BankCardPreview from './components/BankCardPreview';
-import {Bic, ContactAccountSelection, ContactDetails, Iban} from './containers/Form';
 import Email from './components/ContactDetails/Email';
 import Fax from './components/ContactDetails/Fax';
 import Phone from './components/ContactDetails/Phone';
 import SocialMedia from './components/ContactDetails/SocialMedia';
 import Website from './components/ContactDetails/Website';
+import {Bic, ContactAccountSelection, ContactDetails, Iban} from './containers/Form';
+import {CountryFieldFilterType} from './containers/List';
 import AddContactToolbarAction from './views/List/toolbarActions/AddContactToolbarAction';
 import AddMediaToolbarAction from './views/List/toolbarActions/AddMediaToolbarAction';
 import DeleteMediaToolbarAction from './views/List/toolbarActions/DeleteMediaToolbarAction';
@@ -21,6 +22,8 @@ fieldRegistry.add('contact_details', ContactDetails);
 fieldRegistry.add('iban', Iban);
 fieldRegistry.add('bic', Bic);
 fieldRegistry.add('contact_account_selection', ContactAccountSelection);
+
+listFieldFilterTypeRegistry.add('country', CountryFieldFilterType);
 
 listToolbarActionRegistry.add('sulu_contact.add_contact', AddContactToolbarAction);
 listToolbarActionRegistry.add('sulu_contact.add_media', AddMediaToolbarAction);
@@ -34,6 +37,7 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: bo
     when(
         () => !!initializer.initializedTranslationsLocale,
         (): void => {
+            CountryFieldFilterType.countries = config.countries;
             Email.types = config.emailTypes
                 .map((emailType) => ({label: translate(emailType.name), value: emailType.id}));
             Fax.types = config.faxTypes

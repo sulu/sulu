@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render with value 1`] = `
+<div>
+  <label
+    class="label"
+  >
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        type="checkbox"
+        value="AT"
+      />
+      <span />
+    </span>
+    <div>
+      Austria
+    </div>
+  </label>
+  <label
+    class="label"
+  >
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        type="checkbox"
+        value="DE"
+      />
+      <span />
+    </span>
+    <div>
+      Germany
+    </div>
+  </label>
+  <label
+    class="label"
+  >
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        type="checkbox"
+        value="NL"
+      />
+      <span />
+    </span>
+    <div>
+      Netherlands
+    </div>
+  </label>
+</div>
+`;

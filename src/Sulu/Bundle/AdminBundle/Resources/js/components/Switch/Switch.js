@@ -5,15 +5,15 @@ import Icon from '../Icon';
 import type {SwitchProps} from './types';
 import switchStyles from './switch.scss';
 
-type Props = {|
-    ...SwitchProps,
+type Props<T> = {|
+    ...SwitchProps<T>,
     className?: string,
     icon?: string,
-    onChange?: (checked: boolean, value?: string | number) => void,
+    onChange?: (checked: boolean, value?: T) => void,
     type: string,
 |};
 
-export default class Switch extends React.PureComponent<Props> {
+export default class Switch<T: string | number> extends React.PureComponent<Props<T>> {
     static defaultProps = {
         checked: false,
         disabled: false,

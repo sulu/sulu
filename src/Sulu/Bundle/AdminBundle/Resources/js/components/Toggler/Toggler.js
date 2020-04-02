@@ -4,12 +4,12 @@ import Switch from '../Switch';
 import type {SwitchProps} from '../Switch';
 import togglerStyles from './toggler.scss';
 
-type Props = {|
-    ...SwitchProps,
+type Props<T> = {|
+    ...SwitchProps<T>,
     onChange?: (checked: boolean, value?: string | number) => void,
 |};
 
-export default class Toggler extends React.PureComponent<Props> {
+export default class Toggler<T: string | number> extends React.PureComponent<Props<T>> {
     static defaultProps = {
         checked: false,
         disabled: false,

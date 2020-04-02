@@ -5,8 +5,10 @@ import {
     internalLinkTypeRegistry,
 } from './CKEditor5';
 import List, {
+    AbstractFieldFilterType,
     ListStore,
     listAdapterRegistry,
+    listFieldFilterTypeRegistry,
     listFieldTransformerRegistry,
     AbstractAdapter,
     FlatStructureStrategy,
@@ -42,6 +44,7 @@ export type {
 
 export {
     AbstractAdapter,
+    AbstractFieldFilterType,
     blockPreviewTransformerRegistry,
     ckeditorConfigRegistry,
     ckeditorPluginRegistry,
@@ -50,6 +53,7 @@ export {
     List,
     ListStore,
     listAdapterRegistry,
+    listFieldFilterTypeRegistry,
     listFieldTransformerRegistry,
     fieldRegistry,
     FlatStructureStrategy,

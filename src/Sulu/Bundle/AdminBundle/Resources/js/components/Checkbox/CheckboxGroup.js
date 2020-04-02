@@ -3,20 +3,20 @@ import React from 'react';
 import type {ChildrenArray, Element} from 'react';
 import Checkbox from './Checkbox';
 
-type Props = {|
+type Props<T> = {|
     children: ChildrenArray<Element<typeof Checkbox>>,
     className?: string,
     disabled: boolean,
-    onChange: (values: Array<string | number>) => void,
-    values: Array<string | number>,
+    onChange: (values: Array<T>) => void,
+    values: Array<T>,
 |};
 
-export default class CheckboxGroup extends React.PureComponent<Props> {
+export default class CheckboxGroup<T: string | number> extends React.PureComponent<Props<T>> {
     static defaultProps = {
         disabled: false,
     };
 
-    handleChange = (checked: boolean, changedValue: ?string | number) => {
+    handleChange = (checked: boolean, changedValue: ?T) => {
         const {onChange, values} = this.props;
 
         if (checked && changedValue) {
