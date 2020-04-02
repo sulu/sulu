@@ -11,7 +11,7 @@ import OptionList from './OptionList';
 import selectStyles from './select.scss';
 
 @observer
-class Select<T: string | number> extends React.Component<SelectProps<T>> {
+class Select<T: ?string | number> extends React.Component<SelectProps<T>> {
     @observable open: boolean = false;
 
     static defaultProps = {

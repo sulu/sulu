@@ -11,7 +11,7 @@ type Props = {
     options: Array<Object>,
     size?: string,
     skin?: Skin,
-    value?: string | number,
+    value?: ?string | number,
 };
 
 export default class OptionList extends React.PureComponent<Props> {

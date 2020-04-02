@@ -49,7 +49,7 @@ export type DropdownOption = {|
     skin?: Skin,
 |};
 
-export type SelectOption<T: string | number> = {|
+export type SelectOption<T: ?string | number> = {|
     disabled?: boolean,
     label: string | number,
     skin?: Skin,
