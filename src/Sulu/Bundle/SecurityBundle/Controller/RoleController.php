@@ -21,7 +21,6 @@ use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\Exception\UniqueConstraintViolationException as SuluUniqueConstraintViolationException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
