@@ -5,9 +5,8 @@
 ### Add key property to Role entity
 
 To allow for referencing `Role` entities by a human readable string, a `key` property was added to the `Role` entity.
-Furthermore, the `key` property is used for generating the identifier of a role instead of the `name` property now.
-The following statements update the database to include the new property and set the key of each existing Role to 
-keep backwards compatibility:
+Furthermore, if the `key` is set, it is used for generating the identifier of a role instead of the `name` property.
+The following statements update the database to include the new property:
 
 ```sql
 DROP INDEX UNIQ_13B749A05E237E06 ON se_roles;
