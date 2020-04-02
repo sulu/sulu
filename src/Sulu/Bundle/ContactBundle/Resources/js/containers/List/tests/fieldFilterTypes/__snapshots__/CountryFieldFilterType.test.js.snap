@@ -5,6 +5,14 @@ Array [
   <label
     class="input default left"
   >
+    <div
+      class="prependedContainer default"
+    >
+      <span
+        aria-label="su-search"
+        class="su-search icon default"
+      />
+    </div>
     <input
       type="text"
       value=""

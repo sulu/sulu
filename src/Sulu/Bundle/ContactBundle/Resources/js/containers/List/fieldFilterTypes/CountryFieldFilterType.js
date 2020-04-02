@@ -20,7 +20,7 @@ class CountryFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
 
         return (
             <Fragment>
-                <Input onChange={this.handleSearchChange} value={this.searchValue} />
+                <Input icon="su-search" onChange={this.handleSearchChange} value={this.searchValue} />
                 <CheckboxGroup
                     className={countryFieldFilterTypeStyles.checkboxGroup}
                     onChange={onChange}
