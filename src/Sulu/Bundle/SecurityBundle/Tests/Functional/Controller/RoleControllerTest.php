@@ -59,6 +59,7 @@ class RoleControllerTest extends SuluTestCase
 
         $role = new Role();
         $role->setName('Sulu Administrator');
+        $role->setKey('sulu_administrator');
         $role->setSystem('Sulu');
         $role->setSecurityType($this->securityType1);
         $this->em->persist($role);
@@ -110,6 +111,7 @@ class RoleControllerTest extends SuluTestCase
 
         $this->assertEquals(2, count($response->_embedded->roles));
         $this->assertEquals('Sulu Administrator', $response->_embedded->roles[0]->name);
+        $this->assertEquals('sulu_administrator', $response->_embedded->roles[0]->key);
         $this->assertEquals('Sulu', $response->_embedded->roles[0]->system);
     }
 
@@ -121,6 +123,7 @@ class RoleControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Sulu Administrator', $response->name);
+        $this->assertEquals('sulu_administrator', $response->key);
         $this->assertEquals('Sulu', $response->system);
         $this->assertEquals(2, count($response->permissions));
         $this->assertEquals('context1', $response->permissions[0]->context);
@@ -151,6 +154,7 @@ class RoleControllerTest extends SuluTestCase
             '/api/roles',
             [
                 'name' => 'Portal Manager',
+                'key' => 'portal_manager',
                 'system' => 'Sulu',
                 'permissions' => [
                     [
@@ -187,6 +191,7 @@ class RoleControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Portal Manager', $response->name);
+        $this->assertEquals('portal_manager', $response->key);
         $this->assertEquals('Sulu', $response->system);
         $this->assertEquals(2, count($response->permissions));
         $this->assertEquals('portal1', $response->permissions[0]->context);
@@ -215,6 +220,7 @@ class RoleControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Portal Manager', $response->name);
+        $this->assertEquals('portal_manager', $response->key);
         $this->assertEquals('Sulu', $response->system);
         $this->assertEquals(2, count($response->permissions));
         $this->assertEquals('portal1', $response->permissions[0]->context);
@@ -245,6 +251,7 @@ class RoleControllerTest extends SuluTestCase
             '/api/roles/' . $this->role1->getId(),
             [
                 'name' => 'Portal Manager',
+                'key' => 'portal_manager',
                 'system' => 'Sulu',
                 'permissions' => [
                     [
@@ -295,6 +302,7 @@ class RoleControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Portal Manager', $response->name);
+        $this->assertEquals('portal_manager', $response->key);
         $this->assertEquals('Sulu', $response->system);
         $this->assertEquals('portal1', $response->permissions[0]->context);
         $this->assertEquals(true, $response->permissions[0]->permissions->view);
@@ -330,6 +338,7 @@ class RoleControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Portal Manager', $response->name);
+        $this->assertEquals('portal_manager', $response->key);
         $this->assertEquals('Sulu', $response->system);
         $this->assertEquals(true, $response->permissions[0]->permissions->view);
         $this->assertEquals(true, $response->permissions[0]->permissions->add);
@@ -494,7 +503,7 @@ class RoleControllerTest extends SuluTestCase
         $this->assertStringContainsString('11230', $response->message);
     }
 
-    public function testPutWithExistingName()
+    public function testPutWithExistingKey()
     {
         $client = $this->createAuthenticatedClient();
 
@@ -502,7 +511,8 @@ class RoleControllerTest extends SuluTestCase
             'PUT',
             '/api/roles/' . $this->role2->getId(),
             [
-                'name' => 'Sulu Administrator',
+                'name' => 'Sulu Administrator 2',
+                'key' => 'sulu_administrator',
                 'system' => 'Sulu',
             ]
         );
@@ -571,6 +581,9 @@ class RoleControllerTest extends SuluTestCase
 
         $this->assertEquals('Sulu Administrator', $response->_embedded->roles[0]->name);
         $this->assertEquals('Sulu Editor', $response->_embedded->roles[1]->name);
+
+        $this->assertEquals('sulu_administrator', $response->_embedded->roles[0]->key);
+        $this->assertEquals(null, $response->_embedded->roles[1]->key);
 
         $this->assertEquals('Sulu', $response->_embedded->roles[0]->system);
         $this->assertEquals('Sulu', $response->_embedded->roles[1]->system);
