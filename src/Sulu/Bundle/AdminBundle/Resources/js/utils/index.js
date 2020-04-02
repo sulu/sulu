@@ -1,5 +1,5 @@
 // @flow
-import {arrayMove} from 'react-sortable-hoc';
+import arrayMove from 'array-move';
 import {buildQueryString} from './Request';
 import {translate} from './Translator';
 
