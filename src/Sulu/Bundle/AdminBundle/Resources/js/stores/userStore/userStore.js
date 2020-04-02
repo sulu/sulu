@@ -62,7 +62,9 @@ class UserStore {
         const {localizations} = localizationStore;
 
         const defaultLocalizations = localizations.filter((localization) => localization.default);
-        const fallbackLocalization = defaultLocalizations.length ? defaultLocalizations[0] : localizations[0];
+        const fallbackLocalization = defaultLocalizations.length
+            ? defaultLocalizations[0]
+            : localizations.length > 0 ? localizations[0] : undefined;
 
         return fallbackLocalization ? fallbackLocalization.locale : Config.fallbackLocale;
     }
