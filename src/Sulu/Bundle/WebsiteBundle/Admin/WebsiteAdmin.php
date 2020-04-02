@@ -56,16 +56,23 @@ class WebsiteAdmin extends Admin
      */
     private $urlGenerator;
 
+    /**
+     * @var string
+     */
+    private $suluSecuritySystem;
+
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,
         WebspaceManagerInterface $webspaceManager,
         SecurityCheckerInterface $securityChecker,
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
+        string $suluSecuritySystem
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->webspaceManager = $webspaceManager;
         $this->securityChecker = $securityChecker;
         $this->urlGenerator = $urlGenerator;
+        $this->suluSecuritySystem = $suluSecuritySystem;
     }
 
     public function configureViews(ViewCollection $viewCollection): void
@@ -105,7 +112,7 @@ class WebsiteAdmin extends Admin
         }
 
         return [
-            'Sulu' => [
+            $this->suluSecuritySystem => [
                 'Webspaces' => $webspaceContexts,
             ],
         ];
@@ -114,7 +121,7 @@ class WebsiteAdmin extends Admin
     public function getSecurityContextsWithPlaceholder()
     {
         return [
-            'Sulu' => [
+            $this->suluSecuritySystem => [
                 'Webspaces' => [
                     self::getAnalyticsSecurityContext('#webspace#') => $this->getSecurityContextPermissions(),
                 ],

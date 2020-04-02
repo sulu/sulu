@@ -69,6 +69,8 @@
             <argument type="service" id="router"/>
             <argument type="service" id="translator"/>
             <argument>%sulu_admin.resources%</argument>
+            <argument>%sulu_security.system%</argument>
+
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
         </service>
@@ -247,6 +249,8 @@
         </service>
 
         <service id="sulu_security.build.user" class="%sulu_security.build.user.class%">
+            <argument>%sulu_security.system%</argument>
+
             <tag name="massive_build.builder" />
         </service>
 

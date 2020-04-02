@@ -57,16 +57,23 @@ class MediaAdmin extends Admin
      */
     private $urlGenerator;
 
+    /**
+     * @var string
+     */
+    private $suluSecuritySystem;
+
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,
         SecurityCheckerInterface $securityChecker,
         LocalizationManager $localizationManager,
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
+        string $suluSecuritySystem
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->localizationManager = $localizationManager;
         $this->urlGenerator = $urlGenerator;
+        $this->suluSecuritySystem = $suluSecuritySystem;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
@@ -152,7 +159,7 @@ class MediaAdmin extends Admin
     public function getSecurityContexts()
     {
         return [
-            'Sulu' => [
+            $this->suluSecuritySystem => [
                 'Media' => [
                     static::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,

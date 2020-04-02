@@ -96,7 +96,8 @@ class PageAdminTest extends TestCase
             $this->securityChecker->reveal(),
             $this->sessionManager->reveal(),
             $this->teaserProviderPool->reveal(),
-            false
+            false,
+            'sulu-security-system'
         );
 
         $viewCollection = new ViewCollection();
@@ -120,7 +121,8 @@ class PageAdminTest extends TestCase
             $this->securityChecker->reveal(),
             $this->sessionManager->reveal(),
             $this->teaserProviderPool->reveal(),
-            true
+            true,
+            'sulu-security-system'
         );
 
         $config = $admin->getConfig();
@@ -136,7 +138,8 @@ class PageAdminTest extends TestCase
             $this->securityChecker->reveal(),
             $this->sessionManager->reveal(),
             $this->teaserProviderPool->reveal(),
-            false
+            false,
+            'sulu-security-system'
         );
 
         $config = $admin->getConfig();

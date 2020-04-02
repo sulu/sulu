@@ -75,6 +75,7 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager" />
             <argument type="service" id="sulu_security.security_checker" />
             <argument type="service" id="router"/>
+            <argument>%sulu_security.system%</argument>
 
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>

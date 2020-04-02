@@ -46,14 +46,21 @@ class CategoryAdmin extends Admin
      */
     private $localizationManager;
 
+    /**
+     * @var string
+     */
+    private $suluSecuritySystem;
+
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,
         SecurityCheckerInterface $securityChecker,
-        LocalizationManagerInterface $localizationManager
+        LocalizationManagerInterface $localizationManager,
+        string $suluSecuritySystem
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->localizationManager = $localizationManager;
+        $this->suluSecuritySystem = $suluSecuritySystem;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
@@ -165,7 +172,7 @@ class CategoryAdmin extends Admin
     public function getSecurityContexts()
     {
         return [
-            'Sulu' => [
+            $this->suluSecuritySystem => [
                 'Settings' => [
                     static::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,

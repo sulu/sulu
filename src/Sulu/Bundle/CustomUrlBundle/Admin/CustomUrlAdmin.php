@@ -53,14 +53,21 @@ class CustomUrlAdmin extends Admin
      */
     private $securityChecker;
 
+    /**
+     * @var string
+     */
+    private $suluSecuritySystem;
+
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
         ViewBuilderFactoryInterface $viewBuilderFactory,
-        SecurityCheckerInterface $securityChecker
+        SecurityCheckerInterface $securityChecker,
+        string $suluSecuritySystem
     ) {
         $this->webspaceManager = $webspaceManager;
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
+        $this->suluSecuritySystem = $suluSecuritySystem;
     }
 
     public function configureViews(ViewCollection $viewCollection): void
@@ -100,7 +107,7 @@ class CustomUrlAdmin extends Admin
         }
 
         return [
-             'Sulu' => [
+             $this->suluSecuritySystem => [
                  'Webspaces' => $webspaceContexts,
              ],
          ];
@@ -109,7 +116,7 @@ class CustomUrlAdmin extends Admin
     public function getSecurityContextsWithPlaceholder()
     {
         return [
-            'Sulu' => [
+            $this->suluSecuritySystem => [
                 'Webspaces' => [
                     self::getCustomUrlSecurityContext('#webspace#') => $this->getSecurityContextPermissions(),
                 ],

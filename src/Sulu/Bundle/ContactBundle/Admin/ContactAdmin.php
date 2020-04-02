@@ -56,14 +56,21 @@ class ContactAdmin extends Admin
      */
     private $managerRegistry;
 
+    /**
+     * @var string
+     */
+    private $suluSecuritySystem;
+
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,
         SecurityCheckerInterface $securityChecker,
-        ManagerRegistry $managerRegistry
+        ManagerRegistry $managerRegistry,
+        string $suluSecuritySystem
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->managerRegistry = $managerRegistry;
+        $this->suluSecuritySystem = $suluSecuritySystem;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
@@ -297,7 +304,7 @@ class ContactAdmin extends Admin
     public function getSecurityContexts()
     {
         return [
-            'Sulu' => [
+            $this->suluSecuritySystem => [
                 'Contacts' => [
                     static::CONTACT_SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,

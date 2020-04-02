@@ -18,6 +18,16 @@ use Sulu\Bundle\CoreBundle\Build\SuluBuilder;
  */
 class UserBuilder extends SuluBuilder
 {
+    /**
+     * @var string
+     */
+    private $suluSecuritySystem;
+
+    public function __construct(string $suluSecuritySystem)
+    {
+        $this->suluSecuritySystem = $suluSecuritySystem;
+    }
+
     public function getName()
     {
         return 'user';
@@ -33,7 +43,7 @@ class UserBuilder extends SuluBuilder
         $user = 'admin';
         $password = 'admin';
         $roleName = 'User';
-        $system = 'Sulu';
+        $system = $this->suluSecuritySystem;
         $locale = 'en';
         $doctrine = $this->container->get('doctrine')->getManager();
         $userRep = $this->container->get('sulu.repository.user');

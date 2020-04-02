@@ -73,13 +73,19 @@ class PageAdmin extends Admin
      */
     private $versioningEnabled;
 
+    /**
+     * @var string
+     */
+    private $suluSecuritySystem;
+
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,
         WebspaceManagerInterface $webspaceManager,
         SecurityCheckerInterface $securityChecker,
         SessionManagerInterface $sessionManager,
         TeaserProviderPoolInterface $teaserProviderPool,
-        bool $versioningEnabled
+        bool $versioningEnabled,
+        string $suluSecuritySystem
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->webspaceManager = $webspaceManager;
@@ -87,6 +93,7 @@ class PageAdmin extends Admin
         $this->sessionManager = $sessionManager;
         $this->teaserProviderPool = $teaserProviderPool;
         $this->versioningEnabled = $versioningEnabled;
+        $this->suluSecuritySystem = $suluSecuritySystem;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
@@ -309,7 +316,7 @@ class PageAdmin extends Admin
         }
 
         return [
-            'Sulu' => [
+            $this->suluSecuritySystem => [
                 'Webspaces' => $webspaceContexts,
             ],
         ];
@@ -318,7 +325,7 @@ class PageAdmin extends Admin
     public function getSecurityContextsWithPlaceholder()
     {
         return [
-            'Sulu' => [
+            $this->suluSecuritySystem => [
                 'Webspaces' => [
                     self::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
                         PermissionTypes::VIEW,

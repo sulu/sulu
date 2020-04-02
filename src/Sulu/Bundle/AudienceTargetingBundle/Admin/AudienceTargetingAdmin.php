@@ -50,14 +50,21 @@ class AudienceTargetingAdmin extends Admin
      */
     private $ruleCollection;
 
+    /**
+     * @var string
+     */
+    private $suluSecuritySystem;
+
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,
         RuleCollectionInterface $ruleCollection,
-        SecurityCheckerInterface $securityChecker
+        SecurityCheckerInterface $securityChecker,
+        string $suluSecuritySystem
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->ruleCollection = $ruleCollection;
         $this->securityChecker = $securityChecker;
+        $this->suluSecuritySystem = $suluSecuritySystem;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
@@ -142,7 +149,7 @@ class AudienceTargetingAdmin extends Admin
     public function getSecurityContexts()
     {
         return [
-            'Sulu' => [
+            $this->suluSecuritySystem => [
                 'Settings' => [
                     self::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,

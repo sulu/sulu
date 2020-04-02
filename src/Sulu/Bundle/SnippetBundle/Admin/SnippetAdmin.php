@@ -57,6 +57,11 @@ class SnippetAdmin extends Admin
     private $defaultEnabled;
 
     /**
+     * @var string
+     */
+    private $suluSecuritySystem;
+
+    /**
      * Returns security context for default-snippets in given webspace.
      *
      * @param string $webspaceKey
@@ -72,12 +77,14 @@ class SnippetAdmin extends Admin
         ViewBuilderFactoryInterface $viewBuilderFactory,
         SecurityCheckerInterface $securityChecker,
         WebspaceManagerInterface $webspaceManager,
-        $defaultEnabled
+        $defaultEnabled,
+        string $suluSecuritySystem
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->webspaceManager = $webspaceManager;
         $this->defaultEnabled = $defaultEnabled;
+        $this->suluSecuritySystem = $suluSecuritySystem;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
@@ -198,7 +205,7 @@ class SnippetAdmin extends Admin
                 ];
             }
 
-            $contexts['Sulu']['Webspaces'] = $webspaceContexts;
+            $contexts[$this->suluSecuritySystem]['Webspaces'] = $webspaceContexts;
         }
 
         return $contexts;
@@ -214,7 +221,7 @@ class SnippetAdmin extends Admin
                 PermissionTypes::EDIT,
             ];
 
-            $contexts['Sulu']['Webspaces'] = $webspaceContexts;
+            $contexts[$this->suluSecuritySystem]['Webspaces'] = $webspaceContexts;
         }
 
         return $contexts;
@@ -223,7 +230,7 @@ class SnippetAdmin extends Admin
     private function getGlobalSnippetsSecurityContext()
     {
         return [
-            'Sulu' => [
+            $this->suluSecuritySystem => [
                 'Global' => [
                     static::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,

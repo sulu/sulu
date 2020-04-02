@@ -40,12 +40,19 @@ class TagAdmin extends Admin
      */
     private $securityChecker;
 
+    /**
+     * @var string
+     */
+    private $suluSecuritySystem;
+
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,
-        SecurityCheckerInterface $securityChecker
+        SecurityCheckerInterface $securityChecker,
+        string $suluSecuritySystem
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
+        $this->suluSecuritySystem = $suluSecuritySystem;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
@@ -126,7 +133,7 @@ class TagAdmin extends Admin
     public function getSecurityContexts()
     {
         return [
-            'Sulu' => [
+            $this->suluSecuritySystem => [
                 'Settings' => [
                     static::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,

@@ -71,18 +71,25 @@ class SecurityAdmin extends Admin
      */
     private $resources;
 
+    /**
+     * @var string
+     */
+    private $suluSecuritySystem;
+
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,
         SecurityCheckerInterface $securityChecker,
         UrlGeneratorInterface $urlGenerator,
         TranslatorInterface $translator,
-        array $resources
+        array $resources,
+        string $suluSecuritySystem
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->urlGenerator = $urlGenerator;
         $this->translator = $translator;
         $this->resources = $resources;
+        $this->suluSecuritySystem = $suluSecuritySystem;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
@@ -99,7 +106,7 @@ class SecurityAdmin extends Admin
     public function getSecurityContexts()
     {
         return [
-            'Sulu' => [
+            $this->suluSecuritySystem => [
                 'Security' => [
                     static::ROLE_SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
