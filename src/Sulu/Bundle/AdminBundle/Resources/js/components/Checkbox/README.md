@@ -30,3 +30,18 @@ const onChange = (checked) => setChecked(checked);
     <Checkbox active={false} checked={checked} onChange={onChange} />
 </div>
 ```
+
+If you want to combine multiple checkboxes and handle their values as an array it might make sense to use the
+`CheckboxGroup`:
+
+```javascript
+import CheckboxGroup from './CheckboxGroup';
+
+const [values, setValues] = React.useState([]);
+
+<CheckboxGroup onChange={setValues} values={values}>
+    <Checkbox value="value-1">Value 1</Checkbox>
+    <Checkbox value="value-2">Value 2</Checkbox>
+    <Checkbox value="value-3">Value 3</Checkbox>
+</CheckboxGroup>
+```

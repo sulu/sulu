@@ -21,8 +21,9 @@ export default class Switch extends React.PureComponent<Props> {
     };
 
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
-        if (this.props.onChange) {
-            this.props.onChange(event.currentTarget.checked, this.props.value);
+        const {onChange, value} = this.props;
+        if (onChange) {
+            onChange(event.currentTarget.checked, value);
         }
     };
 
