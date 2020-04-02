@@ -1,17 +1,13 @@
 The `WebspaceSelect` component is used in the `WebspaceOverview` view, and it's based on the `ArrowMenu` component.
 
 ```javascript
-initialState = {
-    value: 'sulu',
-};
+const [value, setValue] = React.useState('sulu');
 
 const handleWebspaceChange = (value) => {
-    setState(() => ({
-        value: value,
-    }));
+    setValue(value);
 };
 
-<WebspaceSelect value={state.value} onChange={handleWebspaceChange}>
+<WebspaceSelect value={value} onChange={handleWebspaceChange}>
     <WebspaceSelect.Item value="sulu">
         Sulu
     </WebspaceSelect.Item>

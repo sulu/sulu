@@ -85,14 +85,7 @@ const HeaderCell = Table.HeaderCell;
 
 const buttons = [{
     icon: 'fa-heart',
-    onClick: (rowId) => {
-        state.rows[rowId] = state.rows[rowId].map((cell) => 'You are awesome 😘');
-        const newRows = state.rows;
-
-        setState({
-            rows: newRows,
-        })
-    },
+    onClick: (rowId) => {},
 }];
 
 <Table buttons={buttons} placeholderText="Awwww, this little fella has no entries...">
@@ -118,23 +111,18 @@ const Row = Table.Row;
 const Cell = Table.Cell;
 const HeaderCell = Table.HeaderCell;
 
-initialState = {
-    rows: [
-        ['Boring Text', 'Boring Text', 'Boring Text', 'Boring Text', 'Boring Text'],
-        ['Boring Text', 'Boring Text', 'Boring Text', 'Boring Text', 'Boring Text'],
-        ['Boring Text', 'Boring Text', 'Boring Text', 'Boring Text', 'Boring Text'],
-    ],
-};
+
+const [rows, setRows] = React.useState([
+    ['Boring Text', 'Boring Text', 'Boring Text', 'Boring Text', 'Boring Text'],
+    ['Boring Text', 'Boring Text', 'Boring Text', 'Boring Text', 'Boring Text'],
+    ['Boring Text', 'Boring Text', 'Boring Text', 'Boring Text', 'Boring Text'],
+]);
 
 const buttons = [{
     icon: 'fa-heart',
     onClick: (rowId) => {
-        state.rows[rowId] = state.rows[rowId].map((cell) => 'You are awesome 😘');
-        const newRows = state.rows;
-
-        setState({
-            rows: newRows,
-        })
+        rows[rowId] = rows[rowId].map((cell) => 'You are awesome 😘');
+        setRows([...rows]);
     },
 }];
 
@@ -148,7 +136,7 @@ const buttons = [{
     </Header>
     <Body>
         {
-            state.rows.map((row, index) => {
+            rows.map((row, index) => {
                 return (
                     <Row key={index}>
                         {
@@ -177,22 +165,14 @@ const Row = Table.Row;
 const Cell = Table.Cell;
 const HeaderCell = Table.HeaderCell;
 
-initialState = {
-    rows: [1, 2, 3, 4, 5],
-    selectedRowId: null,
-};
+const [rows, setRows] = React.useState([1, 2, 3, 4, 5]);
+const [selectedRowId, setSelectedRowId] = React.useState(null);
 
 function isSelected(rowId) {
-    return rowId === state.selectedRowId;
+    return rowId === selectedRowId;
 }
 
-const handleRowSelectionChange = (rowId) => {
-    setState({
-        selectedRowId: rowId,
-    });
-};
-
-<Table selectMode="single" onRowSelectionChange={handleRowSelectionChange}>
+<Table selectMode="single" onRowSelectionChange={setSelectedRowId}>
     <Header>
         <HeaderCell>Column 1</HeaderCell>
         <HeaderCell>Column 2</HeaderCell>
@@ -201,7 +181,7 @@ const handleRowSelectionChange = (rowId) => {
     </Header>
     <Body>
         {
-            state.rows.map((rowId, index) => {
+            rows.map((rowId, index) => {
                 return (
                     <Row 
                         key={index}
@@ -229,36 +209,26 @@ const Row = Table.Row;
 const Cell = Table.Cell;
 const HeaderCell = Table.HeaderCell;
 
-initialState = {
-    rows: [1, 2, 3, 4, 5],
-    selectedRowIds: [],
-};
+const [rows, setRows] = React.useState([1, 2, 3, 4, 5]);
+const [selectedRowIds, setSelectedRowIds] = React.useState([]);
 
 function isSelected(rowId) {
-    return state.selectedRowIds.includes(rowId);
+    return selectedRowIds.includes(rowId);
 }
 
 const handleRowSelectionChange = (rowId, checked) => {
     if (checked) {
-        setState({
-            selectedRowIds: [...state.selectedRowIds, rowId],
-        });
+        setSelectedRowIds([...selectedRowIds, rowId]);
     } else {
-        setState({
-            selectedRowIds: state.selectedRowIds.filter((selectedRowId) => selectedRowId !== rowId),
-        });
+        setSelectedRowIds(state.selectedRowIds.filter((selectedRowId) => selectedRowId !== rowId));
     }
 };
 
 const handleAllSelectionChange = (allSelected) => {
     if (allSelected) {
-        setState({
-            selectedRowIds: [...state.rows],
-        });
+        setSelectedRowIds([...rows]);
     } else {
-        setState({
-            selectedRowIds: [],
-        });
+        setSelectedRowIds([]);
     }
 };
 
@@ -279,7 +249,7 @@ const handleAllSelectionChange = (allSelected) => {
     </Header>
     <Body>
         {
-            state.rows.map((rowId, index) => {
+            rows.map((rowId, index) => {
                 return (
                     <Row 
                         key={index}
@@ -303,8 +273,8 @@ const handleAllSelectionChange = (allSelected) => {
 ```
 
 The cells inside the table header can be made clickable by adding an `onClick` handler to the specific HeaderCell 
-component. In addition with the `sortMode` property this can be used to change the sorting order of a column.
-If the `sortMode` property is set, an indicator appears next to the header cell.
+component. In addition with the `sortOrder` property this can be used to change the sorting order of a column.
+If the `sortOrder` property is set, an indicator appears next to the header cell.
 
 ```
 const Header = Table.Header;
@@ -313,38 +283,33 @@ const Row = Table.Row;
 const Cell = Table.Cell;
 const HeaderCell = Table.HeaderCell;
 
-initialState = {
-    rows: [
-        [1, 'A', 'is Love, Content is Life!'],
-        [2, 'B', 'is needed for a good table'],
-        [3, 'C', 'of a really awesome cell'],
-    ],
-    sortMode: 'ascending',
-};
+const [rows, setRows] = React.useState([
+    [1, 'A', 'is Love, Content is Life!'],
+    [2, 'B', 'is needed for a good table'],
+    [3, 'C', 'of a really awesome cell'],
+]);
+
+const [sortOrder, setSortOrder] = React.useState('asc');
 
 const handleSortColumnA = () => {
-    if (state.sortMode === 'ascending') {
-        setState({
-            rows: state.rows.sort((a, b) => a[0] < b[0]),
-            sortMode: 'descending',
-        });
+    if (sortOrder === 'asc') {
+        setRows(rows.sort((a, b) => a[0] < b[0]));
+        setSortOrder('desc');
     } else {
-        setState({
-            rows: state.rows.sort((a, b) => a[0] > b[0]),
-            sortMode: 'ascending',
-        });
+        setRows(rows.sort((a, b) => a[0] > b[0]));
+        setSortOrder('asc');
     }
 };
 
 <Table>
     <Header>
-        <HeaderCell onClick={handleSortColumnA} sortMode={state.sortMode}>Column 1</HeaderCell>
+        <HeaderCell name="column1" onClick={handleSortColumnA} sortOrder={sortOrder}>Column 1</HeaderCell>
         <HeaderCell>Column 2</HeaderCell>
         <HeaderCell>Column 3</HeaderCell>
     </Header>
     <Body>
         {
-            state.rows.map((row, index) => {
+            rows.map((row, index) => {
                 return (
                     <Row key={index}>
                         {
@@ -369,36 +334,26 @@ const Row = Table.Row;
 const Cell = Table.Cell;
 const HeaderCell = Table.HeaderCell;
 
-initialState = {
-    rows: [1, 2, 3, 4, 5],
-    selectedRowIds: [],
-};
+const [rows, setRows] = React.useState([1, 2, 3, 4, 5]);
+const [selectedRowIds, setSelectedRowIds] = React.useState([]);
 
 function isSelected(rowId) {
-    return state.selectedRowIds.includes(rowId);
+    return selectedRowIds.includes(rowId);
 }
 
 const handleRowSelectionChange = (rowId, checked) => {
     if (checked) {
-        setState({
-            selectedRowIds: [...state.selectedRowIds, rowId],
-        });
+        setSelectedRowIds([...selectedRowIds, rowId]);
     } else {
-        setState({
-            selectedRowIds: state.selectedRowIds.filter((selectedRowId) => selectedRowId !== rowId),
-        });
+        setSelectedRowIds(selectedRowIds.filter((selectedRowId) => selectedRowId !== rowId));
     }
 };
 
 const handleAllSelectionChange = (allSelected) => {
     if (allSelected) {
-        setState({
-            selectedRowIds: [...state.rows],
-        });
+        setSelectedRowIds([...rows]);
     } else {
-        setState({
-            selectedRowIds: [],
-        });
+        setSelectedRowIds([]);
     }
 };
 
@@ -422,7 +377,7 @@ const buttons = [{
     </Header>
     <Body>
         {
-            state.rows.map((rowId, index) => {
+            rows.map((rowId, index) => {
                 return (
                     <Row 
                         key={index}

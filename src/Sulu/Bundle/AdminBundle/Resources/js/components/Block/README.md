@@ -6,12 +6,12 @@ can use the `dragHandle` property to pass JSX.
 ```javascript
 const Icon = require('../Icon').default;
 
-initialState = {expanded: true};
+const [expanded, setExpanded] = React.useState(true);
 
-const onCollapse = () => setState({expanded: false});
-const onExpand = () => setState({expanded: true});
+const onCollapse = () => setExpanded(false);
+const onExpand = () => setExpanded(true);
 
-<Block expanded={state.expanded} onCollapse={onCollapse} onExpand={onExpand} dragHandle={<Icon name="su-more" />}>
+<Block expanded={expanded} onCollapse={onCollapse} onExpand={onExpand} dragHandle={<Icon name="su-more" />}>
     That is the content of the block!
 </Block>
 ```
@@ -20,13 +20,13 @@ When the `onRemove` callback is passed, there will also be a remove icon shown, 
 clicked.
 
 ```javascript
-initialState = {expanded: true};
+const [expanded, setExpanded] = React.useState(true);
 
-const onCollapse = () => setState({expanded: false});
-const onExpand = () => setState({expanded: true});
+const onCollapse = () => setExpanded(false);
+const onExpand = () => setExpanded(true);
 const onRemove = () => alert('Remove callback was invoked!');
 
-<Block expanded={state.expanded} onCollapse={onCollapse} onExpand={onExpand} onRemove={onRemove}>
+<Block expanded={expanded} onCollapse={onCollapse} onExpand={onExpand} onRemove={onRemove}>
     That is the content of the block!
 </Block>
 ```
@@ -37,24 +37,25 @@ available. The select will call the passed callback prop named `onTypeChange`. T
 currently selected type.
 
 ```javascript
-initialState = {activeType: 'type2', expanded: true};
+const [expanded, setExpanded] = React.useState(true);
+const [activeType, setActiveType] = React.useState('type1');
 
-const onCollapse = () => setState({expanded: false});
-const onExpand = () => setState({expanded: true});
-const onTypeChange = (type) => setState({activeType: type});
+const onCollapse = () => setExpanded(false);
+const onExpand = () => setExpanded(true);
+const onTypeChange = (type) => setActiveType(type);
 const types = {
     type1: 'Type 1',
     type2: 'Type 2',
 };
 
 <Block
-    activeType={state.activeType}
-    expanded={state.expanded}
+    activeType={activeType}
+    expanded={expanded}
     onCollapse={onCollapse}
     onExpand={onExpand}
     onTypeChange={onTypeChange}
     types={types}
 >
-    That is a {state.activeType} Block!
+    That is a {activeType} Block!
 </Block>
 ```

@@ -2,10 +2,8 @@ The `MediaCard` is useful for displaying a list of selectable images. When the `
 properties are set a button will be shown in the header of the `MediaCard` which will open a list of copyable URLs on
 click.
 
-```
-initialState = {
-    selected: false,
-};
+```javascript
+const [selected, setSelected] = React.useState(false);
 
 const imageSizes = [
     {
@@ -23,15 +21,11 @@ const imageSizes = [
 ];
 
 const handleSelection = () => {
-    setState({
-        selected: !state.selected,
-    });
+    setSelected(!selected);
 };
 
 const handleClick = (id) => {
-    setState({
-        selected: !state.selected,
-    });
+    setSelected(!selected);
 };
 
 const handleDirectDownload = (url) => {
@@ -44,7 +38,7 @@ const handleDirectDownload = (url) => {
         icon="su-checkmark"
         onSelectionChange={handleSelection}
         onClick={handleClick}
-        selected={state.selected}
+        selected={selected}
         meta="image/png, 3,2 MB"
         title="This is a great title that is too too long"
         image={'http://lorempixel.com/300/200'}
@@ -55,7 +49,7 @@ const handleDirectDownload = (url) => {
         }}
         onDirectDownload={handleDirectDownload}
         downloadCopyText="Copy URL"
-        showCover={state.selected}
+        showCover={selected}
     />
 </div>
 ```

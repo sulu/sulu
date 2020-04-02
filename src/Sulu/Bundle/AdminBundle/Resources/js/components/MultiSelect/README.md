@@ -5,9 +5,9 @@ possibility to pass an `onChange` callback which gets called when the user chang
 that is called when the select is closed.
 
 ```javascript
-initialState = {contributors: []};
-const onClose = () => console.log('The overlay was closed with the selection: ' + state.contributors.join(', '));
-const onChange = (contributors) => setState({contributors});
+const [contributors, setContributors] = React.useState([]);
+const onClose = () => console.log('The overlay was closed with the selection: ' + contributors.join(', '));
+const onChange = (contributors) => setContributors(contributors);
 
 <div style={{maxWidth: '200px'}}>
     <MultiSelect
@@ -15,7 +15,7 @@ const onChange = (contributors) => setState({contributors});
         noneSelectedText="Choose contributors"
         onClose={onClose}
         onChange={onChange}
-        values={state.contributors}
+        values={contributors}
     >
         <MultiSelect.Option value="linus">Linus Torvald</MultiSelect.Option>
         <MultiSelect.Option value="dennis">Dennis Ritchie</MultiSelect.Option>

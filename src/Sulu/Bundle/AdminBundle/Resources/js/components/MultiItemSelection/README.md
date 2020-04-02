@@ -2,10 +2,10 @@ The `MultiItemSelection` component is a list used for referencing different data
 `MultiItemSelection` those references can be added and sorted. The sorting can be done by drag and drop.
 
 ```javascript
-const arrayMove = require('sulu-admin-bundle/components').arrayMove;
+const arrayMove = require('sulu-admin-bundle/utils').arrayMove;
 const Item = MultiItemSelection.Item;
 
-const items = [
+const [items, setItems] = React.useState([
     {
         id: 1,
         content: 'I am an item. Hihi :)'
@@ -18,27 +18,19 @@ const items = [
         id: 3,
         content: 'Thomas the little locomotive'
     },
-];
-
-initialState = {
-    items: items,
-};
+]);
 
 const handleItemsSorted = (oldItemIndex, newItemIndex) => {
-    setState({
-        items: arrayMove(state.items, oldItemIndex, newItemIndex),
-    });
+    setItems(arrayMove(items, oldItemIndex, newItemIndex));
 };
 
 const handleAddItem = () => {
-    state.items.push({
+    items.push({
         id: Date.now(),
         content: 'I was added :D'
     }),
 
-    setState({
-        items: state.items,
-    });
+    setItems(items);
 };
 
 <MultiItemSelection
@@ -49,7 +41,7 @@ const handleAddItem = () => {
     }}
     onItemsSorted={handleItemsSorted}
 >
-    {state.items.map((item, index) =>
+    {items.map((item, index) =>
         <Item
             key={item.id}
             id={item.id}
@@ -70,7 +62,7 @@ corresponding callback.
 const arrayMove = require('sulu-admin-bundle/components').arrayMove;
 const Item = MultiItemSelection.Item;
 
-const items = [
+const [items, setItems] = React.useState([
     {
         id: 1,
         content: 'I am an item. Hihi :)'
@@ -83,16 +75,10 @@ const items = [
         id: 3,
         content: 'Thomas the little locomotive'
     },
-];
-
-initialState = {
-    items: items,
-};
+]);
 
 const handleItemsSorted = (oldItemIndex, newItemIndex) => {
-    setState({
-        items: arrayMove(state.items, oldItemIndex, newItemIndex),
-    });
+    setItems(arrayMove(items, oldItemIndex, newItemIndex));
 };
 
 const handleEdit = (itemId) => {
@@ -100,20 +86,16 @@ const handleEdit = (itemId) => {
 };
 
 const handleRemove = (itemId) => {
-    setState({
-        items: state.items.filter((item) => item.id !== itemId),
-    });
+    setItems(items.filter((item) => item.id !== itemId));
 };
 
 const handleAddItem = () => {
-    state.items.push({
+    items.push({
         id: Date.now(),
         content: 'I was added :D'
     }),
 
-    setState({
-        items: state.items,
-    });
+    setItems(items);
 };
 
 <MultiItemSelection
@@ -126,7 +108,7 @@ const handleAddItem = () => {
     onItemsSorted={handleItemsSorted}
     onItemRemove={handleRemove}
 >
-    {state.items.map((item, index) =>
+    {items.map((item, index) =>
         <Item
             key={item.id}
             id={item.id}

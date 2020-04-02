@@ -4,22 +4,18 @@ decides which `TextEditor` should be used.
 
 ```javascript
 const CKEditor5 = require('../CKEditor5').default;
-initialState = {
-    value: '',
-}
+
+const [value, setValue] = React.useState('');
 
 const textEditorRegistry = require('./registries/textEditorRegistry').default;
 textEditorRegistry.clear();
 textEditorRegistry.add('ckeditor5', CKEditor5);
 
 const handleBlur = () => alert('Text editing finished!');
-const handleChange = (newValue) => setState({value: newValue});
 
 <div>
-    <TextEditor adapter="ckeditor5" onBlur={handleBlur} onChange={handleChange} />
+    <TextEditor adapter="ckeditor5" onBlur={handleBlur} onChange={setValue} value={value} />
 
-    <p>
-        Output: <pre>{state.value}</pre>
-    </p>
+    Output: <pre>{value}</pre>
 </div>
 ```

@@ -9,19 +9,13 @@ without distorting the image and renders a selection component on top of it.
 ```javascript
 const initialSelection = {width: 1000, height: 800, top: 200, left: 300};
 
-initialState = {
-    selection: initialSelection,
-};
-
-const handleChange = (selection) => {
-    setState({selection});
-}
+const [selection, setSelection] = React.useState(initialSelection);
 
 <div style={{width: 500, height: 500, background: '#e8e8e8'}}>
     <ImageRectangleSelection
         image="https://picsum.photos/1920/1080"
-        onChange={handleChange}
-        value={state.selection}
+        onChange={setSelection}
+        value={selection}
     />
 </div>
 ```
@@ -30,11 +24,7 @@ Like with the `RectangleSelection`, if both the `minWidth` and `minHeight` prope
 the ratio between these two is enforced on the selection.
 
 ```javascript
-initialState = {selection: undefined};
-
-const handleChange = (selection) => {
-    setState({selection});
-}
+const [selection, setSelection] = React.useState(undefined);
 
 <div>
     <div style={{width: 800, height: 300, background: '#e8e8e8'}}>
@@ -43,17 +33,17 @@ const handleChange = (selection) => {
             initialSelection={{width: 1500, height: 800, top: 200, left: 300}}
             minWidth={100}
             minHeight={60}
-            onChange={handleChange}
-            value={state.selection}
+            onChange={setSelection}
+            value={selection}
         />
     </div>
     
-    {state.selection &&
+    {selection &&
         <p>
-            Width: {state.selection.width},
-            Height: {state.selection.height},
-            Top: {state.selection.top},
-            Left: {state.selection.left}
+            Width: {selection.width},
+            Height: {selection.height},
+            Top: {selection.top},
+            Left: {selection.left}
         </p>
     }
 </div>

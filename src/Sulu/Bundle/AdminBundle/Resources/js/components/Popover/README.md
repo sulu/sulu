@@ -3,33 +3,27 @@ A good usecase example is the dropdown when a `Select` component is opened or th
 component. The `Popover` always expects to receive an anchor element as a prop, which can be any kind of HTML
 element.
 
-```
+```javascript
 const Menu = require('../Menu').default;
 const Option = require('../Select').default.Option;
 
-initialState = {
-    open: false,
-    anchorElement: null,
-};
+const [open, setOpen] = React.useState(false);
+const [anchorElement, setAnchorElement] = React.useState(null);
 
 const handleClose = () => {
-    setState({
-        open: false,
-    });
+    setOpen(false);
 };
 
 const handleOpen = (event) => {
-    setState({
-        open: true,
-        anchorElement: event.currentTarget,
-    });
+    setOpen(true);
+    setAnchorElement(event.currentTarget);
 };
 
 <div>
     <button onClick={handleOpen}>Pop me over bae!</button>
     <Popover
-        open={state.open}
-        anchorElement={state.anchorElement}
+        open={open}
+        anchorElement={anchorElement}
         onClose={handleClose}>
         {
             (setPopoverRef, styles) => (

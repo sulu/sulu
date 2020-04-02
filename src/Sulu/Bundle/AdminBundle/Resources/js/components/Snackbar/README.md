@@ -30,14 +30,12 @@ const clickHandler = () => alert('The snackbar was clicked');
 The toolbar is also animated when it (dis)appears.
 
 ```javascript
-initialState = {
-    visible: true,
-};
+const [visible, setVisible] = React.useState(true);
 
-const clickHandler = () => setState({visible: !state.visible});
+const clickHandler = () => setVisible(!visible);
 
 <div style={{overflow: 'hidden'}}>
-    <Snackbar message="Something went wrong" type="error" visible={state.visible} />
+    <Snackbar message="Something went wrong" type="error" visible={visible} />
     <button onClick={clickHandler}>Toggle Snackbar</button>
 </div>
 ```

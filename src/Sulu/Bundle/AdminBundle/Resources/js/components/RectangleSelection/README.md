@@ -6,34 +6,28 @@ size.
 ```javascript
 const initialSelection = {width: 300, height: 100, left: 50, top: 50};
 
-initialState = {
-    selection: initialSelection,
-};
-
-const handleChange = (selection) => {
-    setState({selection});
-}
+const [selection, setSelection] = React.useState(initialSelection);
 
 <div>
     <RectangleSelection
-        onChange={handleChange}
-        value={state.selection}
+        onChange={setSelection}
+        value={selection}
     >
         <div>
             <p style={{padding: '20px'}}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
         </div>
     </RectangleSelection>
 
-    {state.selection &&
+    {selection &&
         <p>
-            Width: {state.selection.width}<br />
-            Height: {state.selection.height}<br />
-            Left: {state.selection.left}<br />
-            Top: {state.selection.top}
+            Width: {selection.width}<br />
+            Height: {selection.height}<br />
+            Left: {selection.left}<br />
+            Top: {selection.top}
         </p>
     }
 
-    <button onClick={() => setState({selection: initialSelection})}>Reset to initial value</button>
+    <button onClick={() => setSelection(initialSelection)}>Reset to initial value</button>
 </div>
 ```
 
@@ -44,23 +38,28 @@ be undefined. For example when rendering images, they need to be preloaded befor
 // preload image
 let image = new Image();
 image.src = 'https://unsplash.it/800/500';
-initialState = {imageLoaded: image.complete, selection: {width: 300, height: 50, top: 10, left: 50}};
-state.imageLoaded
+
+const [imageLoaded, setImageLoaded] = React.useState(image.complete);
+const [selection, setSelection] = React.useState({width: 300, height: 50, top: 10, left: 50});
+
+image.onload = () => setImageLoaded(true);
+
+imageLoaded
     ? <div>
         <RectangleSelection
             minWidth={115}
             minHeight={100}
-            onChange={s => setState({selection: s})}
-            value={state.selection}
+            onChange={setSelection}
+            value={selection}
         >
             <img src="https://unsplash.it/800/500"/>
         </RectangleSelection>
         
         <p>
-            Width: {state.selection.width}, 
-            Height: {state.selection.height}, 
-            Top: {state.selection.top}, 
-            Left: {state.selection.left}
+            Width: {selection.width}, 
+            Height: {selection.height}, 
+            Top: {selection.top}, 
+            Left: {selection.left}
         </p>
     </div>
     : null

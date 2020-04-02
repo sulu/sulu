@@ -3,12 +3,12 @@ will be marked by a red border if the given string is not a valid IBAN. It uses 
 underneath, and also exposes the props from the `Input` making sense for this use case.
 
 ```javascript
-initialState = {value: undefined};
+const [value, setValue] = React.useState(undefined);
 
-const onChange = (value) => setState({value});
+const onChange = (value) => setValue(value);
 
 <div>
-    <Iban onChange={onChange} value={state.value} />
-    Value: {state.value}
+    <Iban onChange={onChange} value={value} />
+    Value: {value}
 </div>
 ```

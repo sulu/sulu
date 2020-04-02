@@ -1,28 +1,28 @@
 The `Dialog` component let's you display some content above everything else.
 It renders depending on the passed property and request being closed through a callback.
 
-```
-initialState = {open: false};
+```javascript
+const [open, setOpen] = React.useState(false);
 
 const onConfirm = () => {
     /* do confirm things */
-    setState({open: false});
+    setOpen(false);
 };
 
 const onCancel = () => {
     /* do cancel things */
-    setState({open: false});
+    setOpen(false);
 };
 
 <div>
-    <button onClick={() => setState({open: true})}>Open dialog</button>
+    <button onClick={() => setOpen(true)}>Open dialog</button>
     <Dialog
         title="Question?"
         onCancel={onCancel}
         onConfirm={onConfirm}
         cancelText="No"
         confirmText="Yes"
-        open={state.open}>
+        open={open}>
         You've got a question in here.
         Yes or no?
     </Dialog>
@@ -32,21 +32,21 @@ const onCancel = () => {
 The `onCancel` and `cancelText` properties are optional, so that you can also use this component to show a message that
 just need acknowleding.
 
-```
-initialState = {open: false};
+```javascript
+const [open, setOpen] = React.useState(false);
 
 const onConfirm = () => {
     /* do confirm things */
-    setState({open: false});
+    setOpen(false);
 };
 
 <div>
-    <button onClick={() => setState({open: true})}>Open dialog</button>
+    <button onClick={() => setOpen(true)}>Open dialog</button>
     <Dialog
         title="Question?"
         onConfirm={onConfirm}
         confirmText="Yes"
-        open={state.open}>
+        open={open}>
         You've got a question in here.
         Yes or no?
     </Dialog>

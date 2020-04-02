@@ -19,7 +19,7 @@ viewRegistry.add('view', Component);
 
 // instead of this mocked Router you would usually use a real one
 const route = {
-    view: 'view',
+    type: 'view',
 };
 const router = {
     addUpdateRouteHook: () => () => undefined,
@@ -60,13 +60,13 @@ viewRegistry.add('child', Child);
 
 const parentRoute = {
     name: 'Parent',
-    view: 'parent',
+    type: 'parent',
 };
 
 const childRoute = {
     name: 'Child',
     parent: parentRoute,
-    view: 'child',
+    type: 'child',
 };
 
 // instead of this mocked Router you would usually use a real one

@@ -12,16 +12,12 @@ if (!fieldRegistry.has('text_line')) {
     fieldRegistry.add('text_line', () => (<input type="text" />));
 }
 
-initialState = {
-	value: [
-		{
-    		type: 'default',
-        	text: 'Test',
-    	}
-    ]
-};
-
-const onChange = (value) => setState({value});
+const [value, setValue] = React.useState([
+    {
+        type: 'default',
+        text: 'Test',
+    }
+]);
 
 const types = {
     default: {
@@ -53,9 +49,9 @@ const formInspector = {
 <FieldBlocks
     defaultType="default"
     formInspector={formInspector}
-    onChange={onChange}
+    onChange={setValue}
     onFinish={() => alert('Some field in the block lost its focus')}
     types={types}
-    value={state.value}
+    value={value}
 />
 ```

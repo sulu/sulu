@@ -79,7 +79,7 @@
         "raw-loader": "^4.0.0",
         "react": "^16.2.0",
         "react-dom": "^16.2.0",
-        "react-styleguidist": "^9.1.16",
+        "react-styleguidist": "^11.0.5",
         "react-test-renderer": "^16.2.0",
         "regenerator-runtime": "^0.13.3",
         "style-loader": "^1.0.0",

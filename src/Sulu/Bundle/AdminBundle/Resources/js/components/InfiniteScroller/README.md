@@ -16,32 +16,26 @@ const getBackgroundColor = () => {
     return colors[Math.floor(Math.random() * colors.length)]
 };
 
-initialState = {
-    page: 1,
-    items: [1, 2, 3, 4, 5, 6, 7, 8, 9].map(() => getBackgroundColor(), []),
-    loading: false,
-};
+const [page, setPage] = React.useState(1);
+const [items, setItems] = React.useState([1, 2, 3, 4, 5, 6, 7, 8, 9].map(() => getBackgroundColor(), []))
+const [loading, setLoading] = React.useState(false);
 
 const handleLoad = (pageToLoad) => {
-    setState({
-        page: pageToLoad,
-        loading: true,
-    });
+    setPage(pageToLoad);
+    setLoading(true);
 
     setTimeout(() => {
         const newItems = [];
-        const length = state.items.length;
+        const length = items.length;
 
         for (let i = length; i < length + 5; i++) {
             newItems.push(getBackgroundColor());
         }
 
-        state.items.push(...newItems);
+        items.push(...newItems);
 
-        setState({
-            items: state.items,
-            loading: false,
-        });
+        setItems(items);
+        setLoading(false);
     }, 1000);
 };
 
@@ -63,15 +57,15 @@ const loadingContainerStyle = {
 <div style={containerStyle}>
     <InfiniteScroller
         total={10}
-        current={state.page}
+        current={page}
         onLoad={handleLoad}
     >
-        {state.items.map((value, index) => (
+        {items.map((value, index) => (
             <div key={index} style={{...itemStyle, backgroundColor: value}} />
         ))}
     </InfiniteScroller>
     <div style={loadingContainerStyle}>
-        {state.loading &&
+        {loading &&
             <Loader size={20} />
         }
     </div>

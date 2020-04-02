@@ -2,28 +2,31 @@ The custom checkbox has no internal state and has to be managed, like shown in t
 The change callback receives the value as an optional second parameter.
 
 ```javascript
-initialState = {checked1: false, checked2: true};
-onChange = (checked, value) => setState({['checked' + value]: checked});
+const [checked1, setChecked1] = React.useState(false);
+const [checked2, setChecked2] = React.useState(true);
+
 <div>
-    <Checkbox value="1" checked={state.checked1} onChange={onChange}>Save the world</Checkbox>
-    <Checkbox value="2" checked={state.checked2} onChange={onChange}>Buy groceries</Checkbox>
+    <Checkbox value="1" checked={checked1} onChange={setChecked1}>Save the world</Checkbox>
+    <Checkbox value="2" checked={checked2} onChange={setChecked2}>Buy groceries</Checkbox>
 </div>
 ```
 
 The checkbox also comes with a light skin and active attribute.
 
 ```javascript
-initialState = {checked: false};
-onChange = (checked) => setState({checked});
+const [checked, setChecked] = React.useState(false);
+
+const onChange = (checked) => setChecked(checked);
 <div style={{background: 'black', padding: '10px'}}>
-    <Checkbox skin="light" checked={state.checked} onChange={onChange} />
+    <Checkbox skin="light" checked={checked} onChange={onChange} />
 </div>
 ```
 
 ```javascript
-initialState = {checked: false};
-onChange = (checked) => setState({checked});
+const [checked, setChecked] = React.useState(false);
+
+const onChange = (checked) => setChecked(checked);
 <div style={{background: 'black', padding: '10px'}}>
-    <Checkbox active={false} checked={state.checked} onChange={onChange} />
+    <Checkbox active={false} checked={checked} onChange={onChange} />
 </div>
 ```

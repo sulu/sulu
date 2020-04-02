@@ -6,15 +6,11 @@ rendering of these `Blocks` can be affected by the passed `renderBlockContent` c
 `value` for this specific block as argument, and should return the rendered JSX.
 
 ```javascript
-initialState = {value: [{content: 'That is some content'}, {content: 'That is some more content'}]};
-
-const onChange = (value) => {
-    setState({value});
-};
+const [value, setValue] = React.useState([{content: 'That is some content'}, {content: 'That is some more content'}]);
 
 const renderBlockContent = (value) => (<p>{value.content || <i>There is no content</i>}</p>);
 
-<BlockCollection onChange={onChange} value={state.value} renderBlockContent={renderBlockContent} />
+<BlockCollection onChange={setValue} value={value} renderBlockContent={renderBlockContent} />
 ```
 
 By passing the `types` argument to the block it is possible to allow every single `Block` to be chosen a specific type.
@@ -22,11 +18,7 @@ This can also have an impact on the rendering of the block. This is enabled by h
 argument to the `renderBlockContent` callback if types are available.
 
 ```javascript
-initialState = {value: []};
-
-const onChange = (value) => {
-    setState({value});
-};
+const [value, setValue] = React.useState([]);
 
 const types = {
     type1: 'Type 1',
@@ -36,10 +28,10 @@ const types = {
 const renderBlockContent = (value, type) => 'This block does not really care about its value... But about its type, which is ' + type;
 
 <BlockCollection
-    onChange={onChange}
+    onChange={setValue}
     renderBlockContent={renderBlockContent}
     types={types}
-    value={state.value}
+    value={value}
 />
 ```
 
@@ -47,19 +39,15 @@ It is also possible to set the minimum and maximum amount of blocks on the `Bloc
 have more or less blocks.
 
 ```javascript
-initialState = {value: []};
-
-const onChange = (value) => {
-    setState({value});
-};
+const [value, setValue] = React.useState([]);
 
 const renderBlockContent = (value) => 'A not so unique block';
 
 <BlockCollection
     maxOccurs={5}
     minOccurs={2}
-    onChange={onChange}
+    onChange={setValue}
     renderBlockContent={renderBlockContent}
-    value={state.value}
+    value={value}
 />
 ```

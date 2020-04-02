@@ -3,12 +3,12 @@ a red border if the given string is not a valid BIC. It uses an [`Input` compone
 the props from the `Input` making sense for this use case.
 
 ```javascript
-initialState = {value: undefined};
+const [value, setValue] = React.useState(undefined);
 
-const onChange = (value) => setState({value});
+const onChange = (value) => setValue(value);
 
 <div>
-    <Bic onChange={onChange} value={state.value} />
-    Value: {state.value}
+    <Bic onChange={onChange} value={value} />
+    Value: {value}
 </div>
 ```
