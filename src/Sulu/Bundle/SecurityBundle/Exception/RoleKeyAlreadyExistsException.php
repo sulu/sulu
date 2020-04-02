@@ -12,22 +12,22 @@
 namespace Sulu\Bundle\SecurityBundle\Exception;
 
 /**
- * Exception is thrown when a Role is created or updated with an already existing name.
+ * Exception is thrown when a Role is created or updated with an already existing key.
  */
-class RoleNameAlreadyExistsException extends \Exception
+class RoleKeyAlreadyExistsException extends \Exception
 {
     /**
      * @var string
      */
-    private $name;
+    private $key;
 
     /**
-     * @param string $name
+     * @param string $key
      */
-    public function __construct($name)
+    public function __construct($key)
     {
-        $this->name = $name;
-        parent::__construct(sprintf('Role "%s" already exists', $name), 1101);
+        $this->key = $key;
+        parent::__construct(sprintf('Role with key "%s" already exists', $key), 1101);
     }
 
     /**
@@ -35,8 +35,8 @@ class RoleNameAlreadyExistsException extends \Exception
      *
      * @return string
      */
-    public function getName()
+    public function getKey()
     {
-        return $this->name;
+        return $this->key;
     }
 }

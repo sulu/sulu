@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
-use Sulu\Bundle\SecurityBundle\Exception\RoleNameAlreadyExistsException;
+use Sulu\Bundle\SecurityBundle\Exception\RoleKeyAlreadyExistsException;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
@@ -188,6 +188,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
     public function postAction(Request $request)
     {
         $name = $request->get('name');
+        $key = $request->get('key');
         $system = $request->get('system');
 
         try {
@@ -195,12 +196,13 @@ class RoleController extends AbstractRestController implements ClassResourceInte
                 throw new InvalidArgumentException('Role', 'name');
             }
             if (null === $system) {
-                throw new InvalidArgumentException('Role', 'name');
+                throw new InvalidArgumentException('Role', 'system');
             }
 
             /** @var RoleInterface $role */
             $role = $this->roleRepository->createNew();
             $role->setName($name);
+            $role->setKey($key);
             $role->setSystem($system);
 
             $permissions = $request->get('permissions');
@@ -221,7 +223,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
 
                 $view = $this->view($this->convertRole($role), 200);
             } catch (DoctrineUniqueConstraintViolationException $ex) {
-                throw new SuluUniqueConstraintViolationException('name', 'SuluSecurityBudle:Role');
+                throw new RoleKeyAlreadyExistsException($name);
             }
         } catch (RestException $ex) {
             $view = $this->view($ex->toArray(), 400);
@@ -242,12 +244,14 @@ class RoleController extends AbstractRestController implements ClassResourceInte
         /** @var RoleInterface $role */
         $role = $this->roleRepository->findRoleById($id);
         $name = $request->get('name');
+        $key = $request->get('key');
 
         try {
             if (!$role) {
                 throw new EntityNotFoundException($this->roleRepository->getClassName(), $id);
             } else {
                 $role->setName($name);
+                $role->setKey($key);
                 $role->setSystem($request->get('system'));
 
                 if (!$this->processPermissions($role, $request->get('permissions', []))) {
@@ -267,7 +271,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (DoctrineUniqueConstraintViolationException $e) {
-            throw new RoleNameAlreadyExistsException($name);
+            throw new RoleKeyAlreadyExistsException($name);
         } catch (RestException $re) {
             $view = $this->view($re->toArray(), 400);
         }
@@ -396,6 +400,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
     {
         $roleData['id'] = $role->getId();
         $roleData['name'] = $role->getName();
+        $roleData['key'] = $role->getKey();
         $roleData['identifier'] = $role->getIdentifier();
         $roleData['system'] = $role->getSystem();
         $roleData['permissions'] = [];

@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\DependencyInjection;
 
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
-use Sulu\Bundle\SecurityBundle\Exception\RoleNameAlreadyExistsException;
+use Sulu\Bundle\SecurityBundle\Exception\RoleKeyAlreadyExistsException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
 use Sulu\Component\HttpKernel\SuluKernel;
@@ -60,7 +60,7 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
                 [
                     'exception' => [
                         'codes' => [
-                            RoleNameAlreadyExistsException::class => 409,
+                            RoleKeyAlreadyExistsException::class => 409,
                             UsernameNotUniqueException::class => 409,
                             EmailNotUniqueException::class => 409,
                         ],
