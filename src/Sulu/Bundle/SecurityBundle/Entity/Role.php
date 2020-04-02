@@ -98,9 +98,26 @@ class Role implements RoleInterface
         return $this->id;
     }
 
+    /**
+     * @deprecated since 2.1 and will be removed in 3.0. Use "getIdentifier" instead.
+     */
+    public function getRole()
+    {
+        @trigger_error(sprintf('The "%s" method is deprecated since Sulu 2.1, use "%s" instead.', __METHOD__, 'getIdentifier'), E_USER_DEPRECATED)
+
+        return $this->getIdentifier();
+    }
+
     public function getIdentifier()
     {
-        return 'ROLE_SULU_' . strtoupper($this->getKey());
+        $key = $this->getKey();
+
+        // keep backwards compatibility as name was used for generating identifier before key was introduced
+        if (!$key) {
+            $key = $this->getName();
+        }
+
+        return 'ROLE_SULU_' . strtoupper($key);
     }
 
     /**

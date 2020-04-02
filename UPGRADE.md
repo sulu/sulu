@@ -12,14 +12,8 @@ keep backwards compatibility:
 ```sql
 DROP INDEX UNIQ_13B749A05E237E06 ON se_roles;
 ALTER TABLE se_roles ADD `role_key` VARCHAR(60) DEFAULT NULL;
-UPDATE se_roles SET `role_key` = `name` WHERE `role_key` IS NULL;
 CREATE UNIQUE INDEX UNIQ_13B749A03EF22FDB ON se_roles (role_key);
 ```
-
-### Remove getRole() method of Role entity
-
-The `getRole()` method of the `Role` class was removed as it is not part of the `RoleInterface`. 
-Use the `getIdentifier()` instead.
 
 ### Backdrop component
 
