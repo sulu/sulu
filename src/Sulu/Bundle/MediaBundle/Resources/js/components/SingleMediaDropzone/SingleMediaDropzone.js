@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {observer} from 'mobx-react';
+import {observer, Observer} from 'mobx-react';
 import {observable, action} from 'mobx';
 import classNames from 'classnames';
 import Dropzone from 'react-dropzone';
@@ -115,49 +115,62 @@ class SingleMediaDropzone extends React.Component<Props> {
 
         return (
             <Dropzone
-                className={mediaContainerClass}
-                disableClick={uploading}
                 disabled={disabled}
                 multiple={false}
+                noClick={uploading}
                 onDragEnter={this.handleDragEnter}
                 onDragLeave={this.handleDragLeave}
                 onDrop={this.handleDrop}
             >
-                {image && !this.imageError &&
-                    <Fragment>
-                        <img className={singleMediaDropzoneStyles.thumbnail} key={image} src={image} />
-                        {this.imageLoading && <Loader />}
-                    </Fragment>
-                }
-                {(!image || this.imageError) && mimeType &&
-                    <div className={singleMediaDropzoneStyles.mimeTypeIndicator}>
-                        <MimeTypeIndicator iconSize={100} mimeType={mimeType} />
-                    </div>
-                }
-                {!image && !mimeType &&
-                    <div className={singleMediaDropzoneStyles.emptyIndicator}>
-                        <Icon name={emptyIcon} />
-                    </div>
-                }
-
-                {!uploading
-                    ? <div className={singleMediaDropzoneStyles.uploadIndicatorContainer}>
-                        <div className={singleMediaDropzoneStyles.uploadIndicator}>
-                            <div>
-                                <Icon className={singleMediaDropzoneStyles.uploadIcon} name={UPLOAD_ICON} />
-                                {uploadText &&
-                                    <div className={singleMediaDropzoneStyles.uploadInfoText}>{uploadText}</div>
+                {({getInputProps, getRootProps}) => (
+                    <Observer>
+                        {() => (
+                            <div {...getRootProps({className: mediaContainerClass})}>
+                                {image && !this.imageError &&
+                                    <Fragment>
+                                        <img className={singleMediaDropzoneStyles.thumbnail} key={image} src={image} />
+                                        {this.imageLoading && <Loader />}
+                                    </Fragment>
                                 }
+                                {(!image || this.imageError) && mimeType &&
+                                    <div className={singleMediaDropzoneStyles.mimeTypeIndicator}>
+                                        <MimeTypeIndicator iconSize={100} mimeType={mimeType} />
+                                    </div>
+                                }
+                                {!image && !mimeType &&
+                                    <div className={singleMediaDropzoneStyles.emptyIndicator}>
+                                        <Icon name={emptyIcon} />
+                                    </div>
+                                }
+
+                                {!uploading
+                                    ? <div className={singleMediaDropzoneStyles.uploadIndicatorContainer}>
+                                        <div className={singleMediaDropzoneStyles.uploadIndicator}>
+                                            <div>
+                                                <Icon
+                                                    className={singleMediaDropzoneStyles.uploadIcon}
+                                                    name={UPLOAD_ICON}
+                                                />
+                                                {uploadText &&
+                                                    <div className={singleMediaDropzoneStyles.uploadInfoText}>
+                                                        {uploadText}
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    : <div className={singleMediaDropzoneStyles.progressbar}>
+                                        <CircularProgressbar
+                                            percentage={progress}
+                                            size={200}
+                                        />
+                                    </div>
+                                }
+                                <input {...getInputProps()} />
                             </div>
-                        </div>
-                    </div>
-                    : <div className={singleMediaDropzoneStyles.progressbar}>
-                        <CircularProgressbar
-                            percentage={progress}
-                            size={200}
-                        />
-                    </div>
-                }
+                        )}
+                    </Observer>
+                )}
             </Dropzone>
         );
     }

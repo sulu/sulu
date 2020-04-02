@@ -48,7 +48,7 @@ test('Render a MultiMediaDropzone', () => {
 });
 
 test('Render the DropzoneOverlay while the overlay is visible', () => {
-    const multiMediaDropzone = shallow(
+    const multiMediaDropzone = mount(
         <MultiMediaDropzone
             collectionId={3}
             locale={observable.box()}
@@ -69,7 +69,7 @@ test('Render the DropzoneOverlay while the overlay is visible', () => {
 test('Show media while it is being uploaded', () => {
     const locale = observable.box('en');
     const uploadSpy = jest.fn();
-    const multiMediaDropzone = shallow(
+    const multiMediaDropzone = mount(
         <MultiMediaDropzone
             collectionId={3}
             locale={locale}

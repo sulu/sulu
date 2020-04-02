@@ -91,7 +91,7 @@ test('Render a SingleMediaDropzone while uploading', () => {
 });
 
 test('Render img tag with key to avoid keeping old image on new upload', () => {
-    const singleMediaDropzone = shallow(
+    const singleMediaDropzone = mount(
         <SingleMediaDropzone
             image="http://lorempixel.com/400/400"
             onDrop={jest.fn()}

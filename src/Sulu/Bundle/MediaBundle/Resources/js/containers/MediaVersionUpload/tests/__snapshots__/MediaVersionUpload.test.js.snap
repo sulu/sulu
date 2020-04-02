@@ -3,9 +3,8 @@
 exports[`Render a MediaVersionUpload field for images 1`] = `
 Array [
   <div
-    aria-disabled="false"
     class="mediaContainer default"
-    style="position:relative"
+    tabindex="0"
   >
     <img
       class="thumbnail"
@@ -32,7 +31,8 @@ Array [
     </div>
     <input
       autocomplete="off"
-      style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+      style="display:none"
+      tabindex="-1"
       type="file"
     />
   </div>,
@@ -77,9 +77,8 @@ Array [
 exports[`Render a MediaVersionUpload field for videos 1`] = `
 Array [
   <div
-    aria-disabled="false"
     class="mediaContainer default"
-    style="position:relative"
+    tabindex="0"
   >
     <img
       class="thumbnail"
@@ -106,7 +105,8 @@ Array [
     </div>
     <input
       autocomplete="off"
-      style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+      style="display:none"
+      tabindex="-1"
       type="file"
     />
   </div>,
@@ -117,9 +117,7 @@ Array [
     class="buttons"
   >
     <div
-      aria-disabled="false"
-      class=""
-      style="position:relative"
+      tabindex="0"
     >
       <button
         class="button link"
@@ -138,7 +136,8 @@ Array [
       <input
         autocomplete="off"
         multiple=""
-        style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+        style="display:none"
+        tabindex="-1"
         type="file"
       />
     </div>
@@ -163,9 +162,8 @@ Array [
 exports[`Render a MediaVersionUpload field for videos without assigned preview image 1`] = `
 Array [
   <div
-    aria-disabled="false"
     class="mediaContainer default"
-    style="position:relative"
+    tabindex="0"
   >
     <img
       class="thumbnail"
@@ -192,7 +190,8 @@ Array [
     </div>
     <input
       autocomplete="off"
-      style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+      style="display:none"
+      tabindex="-1"
       type="file"
     />
   </div>,
@@ -203,9 +202,7 @@ Array [
     class="buttons"
   >
     <div
-      aria-disabled="false"
-      class=""
-      style="position:relative"
+      tabindex="0"
     >
       <button
         class="button link"
@@ -224,7 +221,8 @@ Array [
       <input
         autocomplete="off"
         multiple=""
-        style="position:absolute;top:0;right:0;bottom:0;left:0;opacity:0.00001;pointer-events:none"
+        style="display:none"
+        tabindex="-1"
         type="file"
       />
     </div>

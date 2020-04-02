@@ -1,9 +1,14 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import React from 'react';
+import React, {default as mockReact} from 'react';
 import {extendObservable as mockExtendObservable} from 'mobx';
 import {mount, render} from 'enzyme';
 import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
 import MediaCardOverviewAdapter from '../../../containers/List/adapters/MediaCardOverviewAdapter';
+
+jest.mock(
+    'react-dropzone',
+    () => mockReact.forwardRef(({children}, ref) => children({getInputProps: jest.fn(), getRootProps: jest.fn(), ref}))
+);
 
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
