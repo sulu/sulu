@@ -5,11 +5,9 @@ To display the suggestions you pass the data as the `suggestions` props to the c
 Here a basic example (Pssh, look for your favourite Harry Potter character):
 
 ```javascript
-initialState = {
-    value: '',
-    loading: false,
-    suggestions: [],
-}
+const [value, setValue] = React.useState('');
+const [loading, setLoading] = React.useState(false);
+const [suggestions, setSuggestions] = React.useState([]);
 
 const data = [
     {id: 1, name: 'Donald Duck'},
@@ -39,37 +37,31 @@ const data = [
 const handleSearch = (value) => {
     const regexp = new RegExp(value, 'gi');
 
-    setState(() => ({
-        loading: !!value,
-        suggestions: [],
-    }));
+    setLoading(!!value);
+    setSuggestions([]);
     
     if (value) {
         // Fake Request
         setTimeout(() => {
-            setState(() => ({
-                loading: false,
-                suggestions: data.filter((suggestion) => suggestion.name.match(regexp))
-            }));
+            setLoading(false);
+            setSuggestions(data.filter((suggestion) => suggestion.name.match(regexp)));
         }, 500);
     }
 };
 
 const handleChange = (value) => {
-    setState(() => ({
-        value: value,
-        suggestions: [],
-    }));
+    setValue(value);
+    setSuggestions([]);
 };
 
 <SingleAutoComplete
     displayProperty="name"
-    loading={state.loading}
+    loading={loading}
     onChange={handleChange}
     onSearch={handleSearch}
     placeholder="Enter something fun..."
     searchProperties={['name']}
-    suggestions={state.suggestions}
-    value={state.value}
+    suggestions={suggestions}
+    value={value}
 />
 ```

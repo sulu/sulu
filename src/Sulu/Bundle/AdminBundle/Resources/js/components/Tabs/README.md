@@ -1,17 +1,9 @@
 With `Tabs` you can easily switch between different views.
 
-```
-initialState = {
-    selectedIndex: 0,
-};
+```javascript
+const [selectedIndex, setSelectedIndex] = React.useState(0);
 
-const handleSelect = (selectedIndex) => {
-    setState({
-        selectedIndex: selectedIndex
-    });
-};
-
-<Tabs selectedIndex={state.selectedIndex} onSelect={handleSelect}>
+<Tabs selectedIndex={selectedIndex} onSelect={setSelectedIndex}>
     <Tabs.Tab>Cheeseburger</Tabs.Tab>
     <Tabs.Tab>Cupcakes</Tabs.Tab>
     <Tabs.Tab>Zombies</Tabs.Tab>

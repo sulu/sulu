@@ -95,16 +95,16 @@ The appearance of the `Toolbar` can be changed by passing the attribute `skin`. 
 It is also possible to show a success message.
 
 ```javascript
-initialState = {success: false};
+const [success, setSuccess] = React.useState(false);
 
 const buttonClick = () => {
-    setState({success: true});
-    setTimeout(() => setState({success: false}), 1500);
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 1500);
 };
 
 <Toolbar>
     <Toolbar.Controls>
-        <Toolbar.Button onClick={buttonClick} success={state.success}>Cause success</Toolbar.Button>
+        <Toolbar.Button onClick={buttonClick} success={success}>Cause success</Toolbar.Button>
     </Toolbar.Controls>
 </Toolbar>
 ```

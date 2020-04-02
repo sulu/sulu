@@ -2,20 +2,12 @@ A simple textarea component. The `onChange` callback is called whenever a change
 called as soon as the component loses its focus.
 
 ```javascript
-initialState = {
-    value: '',
-};
-
-const handleChange = (value) => {
-    setState({
-        value
-    });
-};
+const [value, setValue] = React.useState('');
 
 <TextArea
-    value={state.value}
+    value={value}
     placeholder="Tell me something about yourself..."
-    onChange={handleChange}
+    onChange={setValue}
     onFinish={() => alert('TextArea lost focus!')}
 />
 ```
@@ -23,19 +15,11 @@ const handleChange = (value) => {
 It is also possible to pass a `maxCharacters` prop to show a [`CharacterCounter`](#charactercounter).
 
 ```javascript
-initialState = {
-    value: '',
-};
-
-const handleChange = (value) => {
-    setState({
-        value
-    });
-};
+const [value, setValue] = React.useState('');
 
 <TextArea
     maxCharacters={10}
-    onChange={handleChange}
-    value={state.value}
+    onChange={setValue}
+    value={value}
 />
 ```

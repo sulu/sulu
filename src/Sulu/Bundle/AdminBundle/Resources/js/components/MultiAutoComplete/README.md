@@ -2,11 +2,9 @@ This component is the counterpart of the [`SingleAutoComplete`](#singleautocompl
 assigning multiple items to it.
 
 ```javascript
-initialState = {
-    value: [],
-    loading: false,
-    suggestions: [],
-}
+const [value, setValue] = React.useState([]);
+const [loading, setLoading] = React.useState(false);
+const [suggestions, setSuggestions] = React.useState([]);
 
 const data = [
     {id: 1, name: 'Donald Duck'},
@@ -36,49 +34,41 @@ const data = [
 const handleSearch = (value) => {
     const regexp = new RegExp(value, 'gi');
 
-    setState(() => ({
-        loading: !!value,
-        suggestions: [],
-    }));
+    setLoading(!!value);
+    setSuggestions([]);
 
     if (value) {
         // Fake Request
         setTimeout(() => {
-            setState(() => ({
-                loading: false,
-                suggestions: data.filter((suggestion) => suggestion.name.match(regexp))
-            }));
+            setLoading(false);
+            setSuggestions(data.filter((suggestion) => suggestion.name.match(regexp)));
         }, 500);
     }
 };
 
 const handleChange = (value) => {
-    setState(() => ({
-        value: value,
-        suggestions: [],
-    }));
+    setValue(value);
+    setSuggestions([]);
 };
 
 <MultiAutoComplete
     displayProperty="name"
-    loading={state.loading}
+    loading={loading}
     onChange={handleChange}
     onSearch={handleSearch}
     placeholder="Enter something fun..."
     searchProperties={['name']}
-    suggestions={state.suggestions}
-    value={state.value}
+    suggestions={suggestions}
+    value={value}
 />
 ```
 
 If the `allowAdd` prop is set to true, then the user can also add new items on its own.
 
 ```javascript
-initialState = {
-    value: [],
-    loading: false,
-    suggestions: [],
-}
+const [value, setValue] = React.useState([]);
+const [loading, setLoading] = React.useState(false);
+const [suggestions, setSuggestions] = React.useState([]);
 
 const data = [
     {name: 'Harry Potter'},
@@ -98,39 +88,33 @@ const data = [
 const handleSearch = (value) => {
     const regexp = new RegExp(value, 'gi');
 
-    setState(() => ({
-        loading: !!value,
-        suggestions: [],
-    }));
+    setLoading(!!value);
+    setSuggestions([]);
 
     if (value) {
         // Fake Request
         setTimeout(() => {
-            setState(() => ({
-                loading: false,
-                suggestions: data.filter((suggestion) => suggestion.name.match(regexp))
-            }));
+            setLoading(false);
+            setSuggestions(data.filter((suggestion) => suggestion.name.match(regexp)));
         }, 500);
     }
 };
 
 const handleChange = (value) => {
-    setState(() => ({
-        value: value,
-        suggestions: [],
-    }));
+    setValue(value);
+    setSuggestions([]);
 };
 
 <MultiAutoComplete
     allowAdd={true}
     displayProperty="name"
     idProperty="name"
-    loading={state.loading}
+    loading={loading}
     onChange={handleChange}
     onSearch={handleSearch}
     placeholder="Enter something fun..."
     searchProperties={['name']}
-    suggestions={state.suggestions}
-    value={state.value}
+    suggestions={suggestions}
+    value={value}
 />
 ```

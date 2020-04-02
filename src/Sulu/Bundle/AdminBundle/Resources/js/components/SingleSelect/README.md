@@ -9,11 +9,12 @@ const Action = SingleSelect.Action;
 const Option = SingleSelect.Option;
 const Divider = SingleSelect.Divider;
 
-initialState = {selectValue: 'page-1'};
-const onChange = (selectValue) => setState({selectValue});
+const [selectValue, setSelectedValue] = React.useState('page-1');
+
+const onChange = (selectValue) => setSelectedValue(selectValue);
 const onActionClick = (actionValue) => console.log('clicked action with value:', actionValue);
 
-<SingleSelect value={state.selectValue} onChange={onChange}>
+<SingleSelect value={selectValue} onChange={onChange}>
     <Option value="page-1">Page 1 of 4</Option>
     <Option value="page-2">Page 2 of 4</Option>
     <Option value="page-3">Page 3 of 4</Option>
@@ -31,10 +32,11 @@ const Action = SingleSelect.Action;
 const Option = SingleSelect.Option;
 const Divider = SingleSelect.Divider;
 
-initialState = {selectValue: undefined};
-const onChange = (value) => setState({selectValue: value});
+const [selectValue, setSelectedValue] = React.useState('page-1');
 
-<SingleSelect value={state.selectValue} onChange={onChange}>
+const onChange = (value) => setSelectedValue(value);
+
+<SingleSelect value={selectValue} onChange={onChange}>
     <Option disabled>Choose the owner</Option>
     <Option value="1">Donald Duck</Option>
     <Option value="2">Mickey Mouse</Option>

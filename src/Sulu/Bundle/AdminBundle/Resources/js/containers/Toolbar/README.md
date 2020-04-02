@@ -57,7 +57,7 @@ Here a `Toolbar` example which is using all three of them:
 ```javascript
 import withToolbar from './withToolbar';
 
-initialState = {selectVal: 1}
+const [selectValue, setSelectValue] = React.useState(1);
 
 class Page extends React.PureComponent {
     render() {
@@ -101,10 +101,10 @@ const PageWithToolbar = withToolbar(Page, function() {
             {
                 type: 'select',
                 label: 'Mrs. Select',
-                value: state.selectVal,
+                value: selectValue,
                 icon: 'fa-venus',
                 onChange: (value) => {
-                    setState({selectVal: value});
+                    setSelectValue(value);
                 },
                 options: [
                     {
@@ -141,7 +141,7 @@ Example with special control elements:
 import withToolbar from './withToolbar';
 import Icon from '../../components/Icon';
 
-initialState = {localeVal: 'en'};
+const [locale, setLocale] = React.useState('en');
 
 class Page extends React.PureComponent {
     render() {
@@ -174,9 +174,9 @@ const PageWithToolbar = withToolbar(Page, function() {
             <Icon key="fa-exclamation-circle" name="fa-exclamation-circle" />,
         ],
         locale: {
-            value: state.localeVal,
+            value: locale,
             onChange: (value) => {
-                setState({localeVal: value});
+                setLocale(value);
             },
             options: [
                 {
@@ -316,7 +316,7 @@ class Page extends React.PureComponent {
 const PageWithToolbar = withToolbar(Page, function() {
     return {
         errors: [
-            {code: 1000},
+            'Error!',
         ],
     };
 }, 'toolbar-demo-5');

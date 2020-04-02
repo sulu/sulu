@@ -3,19 +3,15 @@ This component uses the [CKEditor 5](https://ckeditor.com/ckeditor-5/) to displa
 which is called when the editor loses the focus.
 
 ```javascript
-initialState = {
-    value: '',
-}
+const [value, setValue] = React.useState('');
 
-const handleChange = (newValue) => setState({value: newValue});
+const handleChange = (newValue) => setValue(newValue);
 const handleBlur = () => alert('Text editing finished!');
 
 <div>
-    <CKEditor5 onBlur={this.handleBlur} onChange={handleChange} />
+    <CKEditor5 onBlur={this.handleBlur} onChange={handleChange} value={value} />
 
-    <p>
-        Output: <pre>{state.value}</pre>
-    </p>
+    Output: <pre>{value}</pre>
 </div>
 ```
 

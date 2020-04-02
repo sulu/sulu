@@ -1,32 +1,27 @@
 Use this component to display a value matrix.
 
 ```javascript
-initialState = {
-    values: {
-        'global.articles': {
-            'view': true,
-            'edit': true,
-            'delete': false,
-        },
-        'global.redirects': {
-            'view': true,
-        },
-        'global.settings': {
-            'view': true,
-            'edit': false,
-        },
-    }
-};
+const [value, setValue] = React.useState({
+    'global.articles': {
+        'view': true,
+        'edit': true,
+        'delete': false,
+    },
+    'global.redirects': {
+        'view': true,
+    },
+    'global.settings': {
+        'view': true,
+        'edit': false,
+    },
+});
 
-const handleChange = (newValues) => {
-    setState({values: newValues});
-};
+const onChange = (value) => setValue(value);
 
 const Row = Matrix.Row;
 const Item = Matrix.Item;
 
-
-<Matrix title="Global" onChange={handleChange} values={state.values}>
+<Matrix title="Global" onChange={onChange} values={value}>
     <Row name="global.articles">
         <Item name="view" icon="su-pen" />
         <Item name="edit" icon="su-plus" />

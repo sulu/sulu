@@ -14,42 +14,34 @@ Example with one section:
 const SingleItemSection = ArrowMenu.SingleItemSection;
 const Item = ArrowMenu.Item;
 
-initialState = {
-    value: 'sulu',
-    open: false,
-};
+const [value, setValue] = React.useState('sulu');
+const [open, setOpen] = React.useState(false);
 
 const handleChangeSection = (value) => {
-    setState(() => ({
-        value: value,
-        open: false,
-    }));
+    setValue(value);
+    setOpen(false);
 };
 
 const handleButtonClick = () => {
-    setState(() => ({
-        open: true,
-    }));
+    setOpen(true);
 };
 
 const handleClose = () => {
-    setState(() => ({
-        open: false,
-    }));
+    setOpen(false);
 };
 
-const button = (<button onClick={handleButtonClick}>{state.value}</button>);
+const button = (<button onClick={handleButtonClick}>{value}</button>);
 
 <div>
     <div>
         <h3>Current value</h3>
         <ul>
-            <li>Value: {state.value}</li>
+            <li>Value: {value}</li>
         </ul>
     </div>
     
-    <ArrowMenu open={state.open} onClose={handleClose} anchorElement={button}>
-        <SingleItemSection icon="su-webspace" title="Webspaces" value={state.value} onChange={handleChangeSection}>
+    <ArrowMenu open={open} onClose={handleClose} anchorElement={button}>
+        <SingleItemSection icon="su-webspace" title="Webspaces" value={value} onChange={handleChangeSection}>
             <Item value="sulu">Sulu</Item>
             <Item value="sulu_blog">Sulu Blog</Item>
             <Item value="sulu_doc">Sulu Doc</Item>
@@ -64,36 +56,26 @@ Example with two sections:
 const SingleItemSection = ArrowMenu.SingleItemSection;
 const Item = ArrowMenu.Item;
 
-initialState = {
-    value1: 'sulu',
-    value2: null,
-    open: false,
-};
+const [value1, setValue1] = React.useState('sulu');
+const [value2, setValue2] = React.useState(null);
+const [open, setOpen] = React.useState(false);
 
 const handleChangeSection1 = (value) => {
-    setState(() => ({
-        value1: value,
-        open: false,
-    }));
+    setValue1(value);
+    setOpen(false);
 };
 
 const handleChangeSection2 = (value) => {
-    setState(() => ({
-        value2: value,
-        open: true,
-    }));
+    setValue2(value);
+    setOpen(true);
 };
 
 const handleButtonClick = () => {
-    setState(() => ({
-        open: true,
-    }));
+    setOpen(true);
 };
 
 const handleClose = () => {
-    setState(() => ({
-        open: false,
-    }));
+    setOpen(false);
 };
 
 const button = (<button onClick={handleButtonClick}>Open ArrowMenu</button>);
@@ -102,18 +84,18 @@ const button = (<button onClick={handleButtonClick}>Open ArrowMenu</button>);
     <div>
         <h3>Current values</h3>
         <ul>
-            <li>Value 1: {state.value1}</li>
-            <li>Value 2: {state.value2}</li>
+            <li>Value 1: {value1}</li>
+            <li>Value 2: {value2}</li>
         </ul>
     </div>
     
-    <ArrowMenu open={state.open} onClose={handleClose} anchorElement={button}>
-        <SingleItemSection icon="su-webspace" title="Webspaces" value={state.value1} onChange={handleChangeSection1}>
+    <ArrowMenu open={open} onClose={handleClose} anchorElement={button}>
+        <SingleItemSection icon="su-webspace" title="Webspaces" value={value1} onChange={handleChangeSection1}>
             <Item value="sulu">Sulu</Item>
             <Item value="sulu_blog">Sulu Blog</Item>
             <Item value="sulu_doc">Sulu Doc</Item>
         </SingleItemSection>
-        <SingleItemSection icon="su-checkmark" title="Columns" value={state.value2} onChange={handleChangeSection2}>
+        <SingleItemSection icon="su-checkmark" title="Columns" value={value2} onChange={handleChangeSection2}>
             <Item value="title">Title</Item>
             <Item value="description">Description</Item>
         </SingleItemSection>
@@ -128,36 +110,26 @@ const SingleItemSection = ArrowMenu.SingleItemSection;
 const Section = ArrowMenu.Section;
 const Item = ArrowMenu.Item;
 
-initialState = {
-    value1: 'sulu',
-    value2: null,
-    open: false,
-};
+const [value1, setValue1] = React.useState('sulu');
+const [value2, setValue2] = React.useState(null);
+const [open, setOpen] = React.useState(false);
 
 const handleChangeSection1 = (value) => {
-    setState(() => ({
-        value1: value,
-        open: false,
-    }));
+    setValue1(value);
+    setOpen(false);
 };
 
 const handleChangeSection2 = (value) => {
-    setState(() => ({
-        value2: value,
-        open: true,
-    }));
+    setValue2(value);
+    setOpen(true);
 };
 
 const handleButtonClick = () => {
-    setState(() => ({
-        open: true,
-    }));
+    setOpen(true);
 };
 
 const handleClose = () => {
-    setState(() => ({
-        open: false,
-    }));
+    setOpen(false);
 };
 
 const button = (<button onClick={handleButtonClick}>Open ArrowMenu</button>);
@@ -166,21 +138,21 @@ const button = (<button onClick={handleButtonClick}>Open ArrowMenu</button>);
     <div>
         <h3>Current values</h3>
         <ul>
-            <li>Value 1: {state.value1}</li>
-            <li>Value 2: {state.value2}</li>
+            <li>Value 1: {value1}</li>
+            <li>Value 2: {value2}</li>
         </ul>
     </div>
     
-    <ArrowMenu open={state.open} onClose={handleClose} anchorElement={button}>
+    <ArrowMenu open={open} onClose={handleClose} anchorElement={button}>
         <Section title="Search Section">
             <input type="text" />
         </Section>
-        <SingleItemSection icon="su-webspace" title="Webspaces" value={state.value1} onChange={handleChangeSection1}>
+        <SingleItemSection icon="su-webspace" title="Webspaces" value={value1} onChange={handleChangeSection1}>
             <Item value="sulu">Sulu</Item>
             <Item value="sulu_blog">Sulu Blog</Item>
             <Item value="sulu_doc">Sulu Doc</Item>
         </SingleItemSection>
-        <SingleItemSection icon="su-checkmark" title="Columns" value={state.value2} onChange={handleChangeSection2}>
+        <SingleItemSection icon="su-checkmark" title="Columns" value={value2} onChange={handleChangeSection2}>
             <Item value="title">Title</Item>
             <Item value="description">Description</Item>
         </SingleItemSection>
@@ -195,50 +167,38 @@ Example with actions:
 const Action = ArrowMenu.Action;
 const Section = ArrowMenu.Section;
 
-initialState = {
-    open: false,
-};
+const [open, setOpen] = React.useState(false);
 
 const handleAction1Click = (value) => {
-    setState(() => ({
-        open: false,
-    }));
+    setOpen(false);
     alert('Action 1 clicked');
 };
 
 const handleAction2Click = (value) => {
-    setState(() => ({
-        open: true,
-    }));
+    setOpen(true);
     alert('Action 2 clicked');
 };
 
 const handleAction3Click = (value) => {
-    setState(() => ({
-        open: true,
-    }));
+    setOpen(true);
     alert('Action 3 clicked');
 };
 
 const handleButtonClick = () => {
-    setState(() => ({
-        open: true,
-    }));
+    setOpen(true);
 };
 
 const handleClose = () => {
-    setState(() => ({
-        open: false,
-    }));
+    setOpen(false);
 };
 
 const button = (<button onClick={handleButtonClick}>Open ArrowMenu</button>);
 
-<ArrowMenu open={state.open} onClose={handleClose} anchorElement={button}>
+<ArrowMenu open={open} onClose={handleClose} anchorElement={button}>
     <Section>
-        <Action onClick={this.handleAction1Click}>Action 1</Action>
-        <Action onClick={this.handleAction2Click}>Action 2</Action>
-        <Action onClick={this.handleAction3Click}>Action 3</Action>
+        <Action onClick={handleAction1Click}>Action 1</Action>
+        <Action onClick={handleAction2Click}>Action 2</Action>
+        <Action onClick={handleAction3Click}>Action 3</Action>
     </Section>
 </ArrowMenu>
 ```

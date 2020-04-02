@@ -1,21 +1,15 @@
 The number component can be used to get a number from the user in the same way as with the native browser input.
 
 ```javascript
-initialState = {value: null};
-const onChange = (newValue) => {
-    setState({value: newValue});
-};
+const [value, setValue] = React.useState(null);
 
-<Number value={state.value} onChange={onChange} />
+<Number value={value} onChange={setValue} />
 ```
 
 Use the html5 attributes to configure the component.
 
 ```javascript
-initialState = {value: null};
-const onChange = (newValue) => {
-    setState({value: newValue});
-};
+const [value, setValue] = React.useState(null);
 
-<Number min={1} max={10} step={1} value={state.value} onChange={onChange} />
+<Number min={1} max={10} step={1} value={value} onChange={setValue} />
 ```

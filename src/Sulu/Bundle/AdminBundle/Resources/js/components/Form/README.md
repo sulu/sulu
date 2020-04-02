@@ -10,17 +10,11 @@ const types = [
     {label: 'Private', value: 'private'},
 ];
 
-initialState = {
-    type: 'work',
-};
-
-const handleTypeChange = (type) => {
-    setState({type});
-};
+const [type, setType] = React.useState('work');
 
 <Form>
     <Form.Section label="Section 1" size={3}>
-        <Form.Field label="Author" onTypeChange={handleTypeChange} types={types} type={state.type}>
+        <Form.Field label="Author" onTypeChange={setType} types={types} type={type}>
             <input type="text" style={{width: '100%'}} />
         </Form.Field>
     </Form.Section>

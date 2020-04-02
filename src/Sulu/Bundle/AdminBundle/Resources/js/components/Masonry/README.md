@@ -6,14 +6,12 @@ child elements and adjusts the masonry layout appropriately.
 
 Here a basic example of the Masonry view:
 
-```
-initialState = {
-    items: [
-        { id: 1, color: '#4a86e8', height: 300 },
-        { id: 2, color: '#bb5ac4', height: 200 },
-        { id: 3, color: '#5ac4b2', height: 150 },
-    ]
-};
+```javascript
+const [items, setItems] = React.useState([
+    { id: 1, color: '#4a86e8', height: 300 },
+    { id: 2, color: '#bb5ac4', height: 200 },
+    { id: 3, color: '#5ac4b2', height: 150 },
+]);
 
 const createItems = () => {
     let id = Date.now();
@@ -26,25 +24,15 @@ const createItems = () => {
 };
 
 const prepend = () => {
-    state.items.unshift(...(createItems()));
-
-    setState({
-        items: state.items,
-    });
+    setItems([...createItems(), ...items]);
 };
 
 const append = () => {
-    state.items.push(...(createItems()));
-
-    setState({
-        items: state.items,
-    });
+    setItems([...items, ...createItems()]);
 };
 
 const remove = () => {
-    setState({
-        items: state.items.filter((item, index) => index !== 3),
-    });
+    setItems(items.filter((item, index) => index !== 3));
 };
 
 <div>
@@ -55,7 +43,7 @@ const remove = () => {
     </div>
     <Masonry>
         {
-            state.items.map((item) => {
+            items.map((item) => {
                 return (
                     <div
                         key={item.id}

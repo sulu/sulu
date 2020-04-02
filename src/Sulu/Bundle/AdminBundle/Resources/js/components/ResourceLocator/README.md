@@ -3,43 +3,34 @@ The ResourceLocator component can be used to get a URL from user input in two mo
 In the `full` mode the user can change the entire URL except for the leading slash:
 
 ```javascript
-initialState = {value: '/parent'};
-const onChange = (newValue) => {
-	setState({value: newValue});
-};
+const [value, setValue] = React.useState('/parent');
 
 <div>
-    <div style={{paddingBottom: '50px'}}>Current value: {state.value}</div>
-    <ResourceLocator onChange={onChange} value={state.value} mode="full"/>
+    <div style={{paddingBottom: '50px'}}>Current value: {value}</div>
+    <ResourceLocator onChange={setValue} value={value} mode="full"/>
 </div>
 ```
 
 In the `leaf` mode the user is only capable of editing the part after the last slash:
 
 ```javascript
-initialState = {value: '/parent/child'};
-const onChange = (newValue) => {
-	setState({value: newValue});
-};
+const [value, setValue] = React.useState('/parent/child');
 
 <div>
-    <div style={{paddingBottom: '50px'}}>Current value: {state.value}</div>
-    <ResourceLocator onChange={onChange} value={state.value} mode="leaf"/>
+    <div style={{paddingBottom: '50px'}}>Current value: {value}</div>
+    <ResourceLocator onChange={setValue} value={value} mode="leaf"/>
 </div>
 ```
 
-The ResourceLocator also calls its `onFinish` callback when the input loses focus.
+The ResourceLocator also calls its `onBlur` callback when the input loses focus.
 
 ```javascript
-initialState = {value: '/parent'};
-const onChange = (newValue) => {
-	setState({value: newValue});
-};
+const [value, setValue] = React.useState('/parent');
 
 <ResourceLocator
-    onChange={onChange}
-    onFinish={() => alert('The ResourceLocator lost its focus')}
-    value={state.value}
+    onBlur={() => alert('The ResourceLocator lost its focus')}
+    onChange={setValue}
+    value={value}
     mode="full"
 />
 ```
