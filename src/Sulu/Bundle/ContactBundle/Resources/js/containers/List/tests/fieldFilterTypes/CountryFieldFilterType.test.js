@@ -29,6 +29,22 @@ test('Filter countries using input field', () => {
     expect(countryFieldFilterTypeForm2.find('Checkbox').at(0).prop('value')).toEqual('AT');
 });
 
+test('Filter countries using input field with lowercase start', () => {
+    CountryFieldFilterType.countries = {
+        AT: 'Austria',
+        DE: 'Germany',
+        NL: 'Netherlands',
+    };
+
+    const countryFieldFilterType = new CountryFieldFilterType(jest.fn(), {}, undefined);
+    const countryFieldFilterTypeForm1 = mount(countryFieldFilterType.getFormNode());
+    countryFieldFilterTypeForm1.find('Input').prop('onChange')('aus');
+
+    const countryFieldFilterTypeForm2 = mount(countryFieldFilterType.getFormNode());
+    expect(countryFieldFilterTypeForm2.find('Checkbox')).toHaveLength(1);
+    expect(countryFieldFilterTypeForm2.find('Checkbox').at(0).prop('value')).toEqual('AT');
+});
+
 test.each([
     [['AT'], 'Austria'],
     [['DE', 'NL'], 'Germany, Netherlands'],

@@ -27,7 +27,11 @@ class CountryFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
                     values={value || []}
                 >
                     {Object.keys(countries)
-                        .filter((key) => searchValue ? countries[key].startsWith(searchValue) : true)
+                        .filter(
+                            (key) => searchValue
+                                ? countries[key].toLowerCase().startsWith(searchValue.toLowerCase())
+                                : true
+                        )
                         .map((key) => (
                             <Checkbox key={key} value={key}>{countries[key]}</Checkbox>
                         ))
