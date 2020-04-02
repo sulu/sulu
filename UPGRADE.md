@@ -2,6 +2,25 @@
 
 ## dev-master
 
+### Add key property to Role entity
+
+To allow for referencing `Role` entities by a human readable string, a `key` property was added to the `Role` entity.
+Furthermore, the `key` property is used for generating the identifier of a role instead of the `name` property now.
+The following statements update the database to include the new property and set the key of each existing Role to 
+keep backwards compatibility:
+
+```sql
+DROP INDEX UNIQ_13B749A05E237E06 ON se_roles;
+ALTER TABLE se_roles ADD `role_key` VARCHAR(60) DEFAULT NULL;
+UPDATE se_roles SET `role_key` = `name` WHERE `role_key` IS NULL;
+CREATE UNIQUE INDEX UNIQ_13B749A03EF22FDB ON se_roles (role_key);
+```
+
+### Remove getRole() method of Role entity
+
+The `getRole()` method of the `Role` class was removed as it is not part of the `RoleInterface`. 
+Use the `getIdentifier()` instead.
+
 ### Backdrop component
 
 Our `Backdrop` React component does not have the `local` and `open` props anymore. It is not supported anymore to render

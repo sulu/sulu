@@ -39,6 +39,22 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
     public function getName();
 
     /**
+     * Set key.
+     *
+     * @param string $key
+     *
+     * @return RoleInterface
+     */
+    public function setKey($key);
+
+    /**
+     * Get key.
+     *
+     * @return string
+     */
+    public function getKey();
+
+    /**
      * Set system.
      *
      * @param string $system

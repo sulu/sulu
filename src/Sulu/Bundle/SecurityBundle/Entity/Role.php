@@ -39,6 +39,11 @@ class Role implements RoleInterface
     /**
      * @var string
      */
+    private $key;
+
+    /**
+     * @var string
+     */
     private $system;
 
     /**
@@ -93,14 +98,9 @@ class Role implements RoleInterface
         return $this->id;
     }
 
-    public function getRole()
-    {
-        return 'ROLE_SULU_' . strtoupper($this->name);
-    }
-
     public function getIdentifier()
     {
-        return 'ROLE_SULU_' . strtoupper($this->getName());
+        return 'ROLE_SULU_' . strtoupper($this->getKey());
     }
 
     /**
@@ -125,6 +125,18 @@ class Role implements RoleInterface
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    public function setKey($key)
+    {
+        $this->key = $key;
+
+        return $this;
     }
 
     /**
