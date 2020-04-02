@@ -1,21 +1,39 @@
 // @flow
-import React from 'react';
-import {Checkbox, CheckboxGroup} from 'sulu-admin-bundle/components';
+import React, {Fragment} from 'react';
+import {action, observable} from 'mobx';
+import {Checkbox, CheckboxGroup, Input} from 'sulu-admin-bundle/components';
 import {AbstractFieldFilterType} from 'sulu-admin-bundle/containers';
+import countryFieldFilterTypeStyles from './countryFieldFilterType.scss';
 
 class CountryFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
     static countries: {[key: string]: string} = {};
 
+    @observable searchValue: ?string;
+
+    @action handleSearchChange = (searchValue: ?string) => {
+        this.searchValue = searchValue;
+    };
+
     getFormNode() {
         const {countries} = CountryFieldFilterType;
-        const {onChange, value} = this;
+        const {onChange, searchValue, value} = this;
 
         return (
-            <CheckboxGroup onChange={onChange} values={value || []}>
-                {Object.keys(countries).map((key) => (
-                    <Checkbox key={key} value={key}>{countries[key]}</Checkbox>
-                ))}
-            </CheckboxGroup>
+            <Fragment>
+                <Input onChange={this.handleSearchChange} value={this.searchValue} />
+                <CheckboxGroup
+                    className={countryFieldFilterTypeStyles.checkboxGroup}
+                    onChange={onChange}
+                    values={value || []}
+                >
+                    {Object.keys(countries)
+                        .filter((key) => searchValue ? countries[key].startsWith(searchValue) : true)
+                        .map((key) => (
+                            <Checkbox key={key} value={key}>{countries[key]}</Checkbox>
+                        ))
+                    }
+                </CheckboxGroup>
+            </Fragment>
         );
     }
 
