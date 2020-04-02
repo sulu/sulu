@@ -308,29 +308,57 @@ class PageAdmin extends Admin
             ];
         }
 
-        return [
-            'Sulu' => [
-                'Webspaces' => $webspaceContexts,
+        return array_merge(
+            [
+                'Sulu' => [
+                    'Webspaces' => $webspaceContexts,
+                ],
             ],
-        ];
+            $this->getWebspaceSecuritySystemContexts()
+        );
     }
 
     public function getSecurityContextsWithPlaceholder()
     {
-        return [
-            'Sulu' => [
-                'Webspaces' => [
-                    self::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
-                        PermissionTypes::VIEW,
-                        PermissionTypes::ADD,
-                        PermissionTypes::EDIT,
-                        PermissionTypes::DELETE,
-                        PermissionTypes::LIVE,
-                        PermissionTypes::SECURITY,
+        return array_merge(
+            [
+                'Sulu' => [
+                    'Webspaces' => [
+                        self::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
+                            PermissionTypes::VIEW,
+                            PermissionTypes::ADD,
+                            PermissionTypes::EDIT,
+                            PermissionTypes::DELETE,
+                            PermissionTypes::LIVE,
+                            PermissionTypes::SECURITY,
+                        ],
                     ],
                 ],
             ],
-        ];
+            $this->getWebspaceSecuritySystemContexts()
+        );
+    }
+
+    private function getWebspaceSecuritySystemContexts(): array
+    {
+        $webspaceSecuritySystemContexts = [];
+
+        /** @var Webspace $webspace */
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+            $security = $webspace->getSecurity();
+            if (!$security) {
+                continue;
+            }
+
+            $system = $security->getSystem();
+            if (!$system) {
+                continue;
+            }
+
+            $webspaceSecuritySystemContexts[$system] = [];
+        }
+
+        return $webspaceSecuritySystemContexts;
     }
 
     public function getConfigKey(): ?string
