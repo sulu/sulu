@@ -57,13 +57,13 @@ class RoleControllerTest extends SuluTestCase
         $this->securityType2->setName('Security Type 2');
         $this->em->persist($this->securityType2);
 
-        $role = new Role();
-        $role->setName('Sulu Administrator');
-        $role->setKey('sulu_administrator');
-        $role->setSystem('Sulu');
-        $role->setSecurityType($this->securityType1);
-        $this->em->persist($role);
-        $this->role1 = $role;
+        $role1 = new Role();
+        $role1->setName('Sulu Administrator');
+        $role1->setKey('sulu_administrator');
+        $role1->setSystem('Sulu');
+        $role1->setSecurityType($this->securityType1);
+        $this->em->persist($role1);
+        $this->role1 = $role1;
 
         $role2 = new Role();
         $role2->setName('Sulu Editor');
@@ -74,14 +74,14 @@ class RoleControllerTest extends SuluTestCase
         $this->em->flush();
 
         $permission1 = new Permission();
-        $permission1->setRole($role);
+        $permission1->setRole($role1);
         $permission1->setContext('context1');
         $permission1->setPermissions(15);
         $this->em->persist($permission1);
         $this->permission1 = $permission1;
 
         $permission2 = new Permission();
-        $permission2->setRole($role);
+        $permission2->setRole($role1);
         $permission2->setContext('context2');
         $permission2->setPermissions(17);
         $this->em->persist($permission2);
@@ -507,6 +507,7 @@ class RoleControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
+        // setting key to 'sulu_administrator' should return a conflict
         $client->request(
             'PUT',
             '/api/roles/' . $this->role2->getId(),
@@ -521,6 +522,22 @@ class RoleControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(409, $client->getResponse());
         $this->assertEquals(1101, $response->code);
+
+        // setting key to 'null' should work although there is another role with the key 'null'
+        $client->request(
+            'PUT',
+            '/api/roles/' . $this->role1->getId(),
+            [
+                'name' => 'Sulu Editor 2',
+                'key' => null,
+                'system' => 'Sulu',
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertEquals(null, $response->key);
     }
 
     public function testDelete()
