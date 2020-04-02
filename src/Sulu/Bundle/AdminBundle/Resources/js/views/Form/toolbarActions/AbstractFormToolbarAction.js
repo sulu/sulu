@@ -5,7 +5,7 @@ import type {ToolbarAction, ToolbarItemConfig} from '../../../containers/Toolbar
 import Router from '../../../services/Router';
 import Form from '../Form';
 
-export default class AbstractFormToolbarAction implements ToolbarAction {
+export default class AbstractFormToolbarAction implements ToolbarAction<*> {
     resourceFormStore: ResourceFormStore;
     form: Form;
     router: Router;
@@ -34,7 +34,7 @@ export default class AbstractFormToolbarAction implements ToolbarAction {
         return null;
     }
 
-    getToolbarItemConfig(): ?ToolbarItemConfig {
+    getToolbarItemConfig(): ?ToolbarItemConfig<*> {
         throw new Error('The getToolbarItemConfig method must be implemented by the sub class!');
     }
 }

@@ -6,7 +6,7 @@ import Router from '../../../services/Router';
 import List from '../../../views/List/List';
 import ListStore from '../../../containers/List/stores/ListStore';
 
-export default class AbstractListToolbarAction implements ToolbarAction {
+export default class AbstractListToolbarAction implements ToolbarAction<*> {
     listStore: ListStore;
     list: List;
     router: Router;
@@ -38,7 +38,7 @@ export default class AbstractListToolbarAction implements ToolbarAction {
         return null;
     }
 
-    getToolbarItemConfig(): ?ToolbarItemConfig {
+    getToolbarItemConfig(): ?ToolbarItemConfig<*> {
         throw new Error('The getToolbarItemConfig method must be implemented by the sub class!');
     }
 }

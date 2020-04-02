@@ -15,8 +15,8 @@ export type DropdownItemConfig = {|
     type: 'dropdown',
 |};
 
-export type SelectItemConfig = {|
-    ...Select,
+export type SelectItemConfig<T> = {|
+    ...Select<T>,
     type: 'select',
 |};
 
@@ -24,7 +24,7 @@ export type TogglerItemConfig = {|
     ...Toggler,
     type: 'toggler',
 |};
-export type ToolbarItemConfig = ButtonItemConfig | DropdownItemConfig | SelectItemConfig | TogglerItemConfig;
+export type ToolbarItemConfig<T> = ButtonItemConfig | DropdownItemConfig | SelectItemConfig<T> | TogglerItemConfig;
 
 export type ToolbarProps = {
     navigationOpen?: boolean,
@@ -37,13 +37,13 @@ export type ToolbarConfig = {
     disableAll?: boolean,
     errors?: Array<string>,
     icons?: Array<Node>,
-    items?: Array<ToolbarItemConfig>,
-    locale?: Select,
+    items?: Array<ToolbarItemConfig<*>>,
+    locale?: Select<string>,
     showSuccess?: IObservableValue<boolean>,
     warnings?: Array<string>,
 };
 
-export interface ToolbarAction {
+export interface ToolbarAction<T> {
     getNode(): Node,
-    getToolbarItemConfig(): ?ToolbarItemConfig,
+    getToolbarItemConfig(): ?ToolbarItemConfig<T>,
 }

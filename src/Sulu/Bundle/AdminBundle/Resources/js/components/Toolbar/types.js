@@ -49,11 +49,11 @@ export type DropdownOption = {|
     skin?: Skin,
 |};
 
-export type SelectOption = {|
+export type SelectOption<T: string | number> = {|
     disabled?: boolean,
     label: string | number,
     skin?: Skin,
-    value: string | number,
+    value: T,
 |};
 
 export type Dropdown = {|
@@ -67,16 +67,16 @@ export type Dropdown = {|
     skin?: Skin,
 |};
 
-export type Select = {|
+export type Select<T> = {|
     className?: string,
     disabled?: boolean,
     icon?: string,
     label?: string | number,
     loading?: boolean,
-    onChange: (optionValue: string | number) => void,
-    options: Array<SelectOption>,
+    onChange: (optionValue: T) => void,
+    options: Array<SelectOption<T>>,
     showText?: boolean,
     size?: string,
     skin?: Skin,
-    value: string | number,
+    value: T,
 |};

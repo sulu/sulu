@@ -11,7 +11,7 @@ import OptionList from './OptionList';
 import selectStyles from './select.scss';
 
 @observer
-class Select extends React.Component<SelectProps> {
+class Select<T: string | number> extends React.Component<SelectProps<T>> {
     @observable open: boolean = false;
 
     static defaultProps = {
@@ -52,7 +52,7 @@ class Select extends React.Component<SelectProps> {
         this.toggle();
     };
 
-    handleOptionClick = (option: SelectOption) => {
+    handleOptionClick = (option: SelectOption<T>) => {
         this.props.onChange(option.value);
     };
 
