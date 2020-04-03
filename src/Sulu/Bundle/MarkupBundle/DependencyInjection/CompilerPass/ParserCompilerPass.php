@@ -22,7 +22,7 @@ class ParserCompilerPass implements CompilerPassInterface
 {
     const SERVICE_IDS = [
         'sulu_markup.response_listener',
-        'sulu_markup.swift_mailer_listener'
+        'sulu_markup.swift_mailer_listener',
     ];
 
     const TAG_NAME = 'sulu_markup.parser';

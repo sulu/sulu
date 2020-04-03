@@ -1,8 +1,15 @@
 <?php
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\MarkupBundle\Listener;
-
 
 use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Swift_Events_SendEvent;
@@ -10,7 +17,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class SwiftMailerListener implements \Swift_Events_SendListener
 {
-
     /**
      * @var MarkupParserInterface[]
      */
@@ -30,10 +36,6 @@ class SwiftMailerListener implements \Swift_Events_SendListener
         $this->requestStack = $requestStack;
     }
 
-
-    /**
-     * @inheritDoc
-     */
     public function beforeSendPerformed(Swift_Events_SendEvent $event)
     {
         $message = $event->getMessage();
@@ -56,11 +58,7 @@ class SwiftMailerListener implements \Swift_Events_SendListener
         );
     }
 
-    /**
-     * @inheritDoc
-     */
     public function sendPerformed(Swift_Events_SendEvent $evt)
     {
     }
 }
-

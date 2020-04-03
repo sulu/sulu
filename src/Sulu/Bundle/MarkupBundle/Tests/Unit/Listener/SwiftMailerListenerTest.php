@@ -12,9 +12,7 @@
 namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Listener;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\MarkupBundle\Listener\MarkupListener;
 use Sulu\Bundle\MarkupBundle\Listener\SwiftMailerListener;
 use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,13 +47,13 @@ class SwiftMailerListenerTest extends TestCase
 
     protected function setUp(): void
     {
-        /** @var MarkupParserInterface|ObjectProphecy markupParser */
+        /* @var MarkupParserInterface|ObjectProphecy markupParser */
         $this->markupParser = $this->prophesize(MarkupParserInterface::class);
-        /** @var \Swift_Events_SendEvent|ObjectProphecy event */
+        /* @var \Swift_Events_SendEvent|ObjectProphecy event */
         $this->event = $this->prophesize(\Swift_Events_SendEvent::class);
-        /** @var RequestStack|ObjectProphecy requestStack */
+        /* @var RequestStack|ObjectProphecy requestStack */
         $this->requestStack = $this->prophesize(RequestStack::class);
-        /** @var \Swift_Mime_SimpleMessage|ObjectProphecy simpleMessage */
+        /* @var \Swift_Mime_SimpleMessage|ObjectProphecy simpleMessage */
         $this->simpleMessage = $this->prophesize(\Swift_Mime_SimpleMessage::class);
         $this->event->getMessage()->willReturn($this->simpleMessage->reveal());
 
