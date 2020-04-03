@@ -14,27 +14,39 @@ namespace Sulu\Bundle\RouteBundle\Tests\Unit\Generator;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\RouteBundle\Generator\CannotEvaluateTokenException;
 use Sulu\Bundle\RouteBundle\Generator\SymfonyExpressionTokenProvider;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
+use Symfony\Component\Translation\Translator;
 
 class SymfonyExpressionTokenProviderTest extends TestCase
 {
     public function testResolve()
     {
-        $translator = $this->prophesize(TranslatorInterface::class);
-        $entity = new \stdClass();
-        $entity->name = 'TEST';
+        $translator = $this->prophesize(Translator::class);
+        $translator->getLocale()->willReturn('de');
+        $translator->setLocale('de')->shouldBeCalled();
+        $entity = $this->prophesize(RoutableInterface::class);
+        $entity->getLocale()->willReturn('en');
 
+        $entity->getLocale = function() {
+            return 'en';
+        };
+        $entity->name = 'TEST';
         $provider = new SymfonyExpressionTokenProvider($translator->reveal());
         $this->assertEquals('TEST', $provider->provide($entity, 'object.name'));
     }
 
     public function testResolveTranslation()
     {
-        $translator = $this->prophesize(TranslatorInterface::class);
+        $translator = $this->prophesize(Translator::class);
+        $translator->getLocale()->willReturn('de');
+        $translator->setLocale('de')->shouldBeCalled();
         $translator->trans('test-key')->willReturn('TEST');
+        $entity = $this->prophesize(RoutableInterface::class);
+        $entity->getLocale()->willReturn('en');
 
-        $entity = new \stdClass();
-
+        $entity->getLocale = function() {
+            return 'en';
+        };
         $provider = new SymfonyExpressionTokenProvider($translator->reveal());
         $this->assertEquals('TEST', $provider->provide($entity, 'translator.trans("test-key")'));
     }
@@ -42,10 +54,8 @@ class SymfonyExpressionTokenProviderTest extends TestCase
     public function testResolveNotExists()
     {
         $this->expectException(CannotEvaluateTokenException::class);
-
-        $translator = $this->prophesize(TranslatorInterface::class);
+        $translator = $this->prophesize(Translator::class);
         $entity = new \stdClass();
-
         $provider = new SymfonyExpressionTokenProvider($translator->reveal());
         $provider->provide($entity, 'object.title');
     }

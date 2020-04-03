@@ -1,7 +1,8 @@
 // @flow
+import React from 'react';
+import type {Element} from 'react';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
-import React from 'react';
 import jsonpointer from 'json-pointer';
 import Form from '../../components/Form';
 import Router from '../../services/Router';
@@ -75,7 +76,11 @@ class Renderer extends React.Component<Props> {
         );
     }
 
-    renderItem(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
+    renderItem(
+        schemaField: SchemaEntry,
+        schemaKey: string,
+        schemaPath: string
+    ): ?Element<typeof Field | typeof Form.Section> {
         if (schemaField.visible === false) {
             return null;
         }

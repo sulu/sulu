@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import type {Element} from 'react';
+import type {ChildrenArray, Element} from 'react';
 import classNames from 'classnames';
 import type {BaseItemProps} from './types';
 import BaseItem from './BaseItem';
@@ -9,7 +9,7 @@ import sectionStyles from './section.scss';
 
 type Props = {|
     ...BaseItemProps,
-    children: Element<typeof Item | typeof Section>,
+    children: ChildrenArray<Element<typeof Item | typeof Section>>,
     className?: string,
 |};
 

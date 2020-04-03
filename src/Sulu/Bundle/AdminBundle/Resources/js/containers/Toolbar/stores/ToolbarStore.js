@@ -73,7 +73,7 @@ export default class ToolbarStore {
         return !!this.config.items && !!this.config.items.length;
     }
 
-    getItemsConfig(): Array<ToolbarItemConfig> {
+    getItemsConfig(): Array<ToolbarItemConfig<*>> {
         return this.config.items || [];
     }
 
@@ -89,7 +89,7 @@ export default class ToolbarStore {
         return !!this.config.locale;
     }
 
-    getLocaleConfig(): ?Select {
+    getLocaleConfig(): ?Select<string> {
         return this.config.locale;
     }
 }
