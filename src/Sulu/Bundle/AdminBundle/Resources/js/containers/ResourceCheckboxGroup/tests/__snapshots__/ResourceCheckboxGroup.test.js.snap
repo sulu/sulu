@@ -1,0 +1,107 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render in disabled state 1`] = `
+<div>
+  <label
+    class="label disabled"
+  >
+    <span
+      class="switch disabled checkbox dark"
+    >
+      <input
+        disabled=""
+        type="checkbox"
+        value="2"
+      />
+      <span />
+    </span>
+    <div>
+      Test ABC
+    </div>
+  </label>
+  <label
+    class="label disabled"
+  >
+    <span
+      class="switch disabled checkbox dark"
+    >
+      <input
+        disabled=""
+        type="checkbox"
+        value="5"
+      />
+      <span />
+    </span>
+    <div>
+      Test DEF
+    </div>
+  </label>
+</div>
+`;
+
+exports[`Render in loading state 1`] = `
+<div
+  class="spinner"
+  style="width:30px;height:30px"
+>
+  <div
+    class="doubleBounce1"
+  />
+  <div
+    class="doubleBounce2"
+  />
+</div>
+`;
+
+exports[`Render with data 1`] = `
+<div>
+  <label
+    class="label"
+  >
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        type="checkbox"
+        value="2"
+      />
+      <span />
+    </span>
+    <div>
+      Test ABC
+    </div>
+  </label>
+  <label
+    class="label"
+  >
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        type="checkbox"
+        value="5"
+      />
+      <span />
+    </span>
+    <div>
+      Test DEF
+    </div>
+  </label>
+  <label
+    class="label"
+  >
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        type="checkbox"
+        value="99"
+      />
+      <span />
+    </span>
+    <div>
+      Test XYZ
+    </div>
+  </label>
+</div>
+`;
