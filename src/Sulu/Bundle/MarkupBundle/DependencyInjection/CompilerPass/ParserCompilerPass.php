@@ -20,10 +20,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class ParserCompilerPass implements CompilerPassInterface
 {
-    const SERVICE_IDS = [
-        'sulu_markup.response_listener',
-        'sulu_markup.swift_mailer_listener',
-    ];
+    const SERVICE_ID = 'sulu_markup.response_listener';
 
     const TAG_NAME = 'sulu_markup.parser';
 
@@ -31,23 +28,21 @@ class ParserCompilerPass implements CompilerPassInterface
 
     public function process(ContainerBuilder $container)
     {
-        foreach (self::SERVICE_IDS as $serviceId) {
-            if (!$container->hasDefinition($serviceId)) {
-                continue;
-            }
-
-            $references = [];
-            foreach ($container->findTaggedServiceIds(self::TAG_NAME) as $id => $tags) {
-                foreach ($tags as $attributes) {
-                    $references[$attributes[self::TYPE_ATTRIBUTE]] = new Reference($id);
-                }
-            }
-
-            if (0 === count($references)) {
-                continue;
-            }
-
-            $container->getDefinition($serviceId)->replaceArgument(0, $references);
+        if (!$container->hasDefinition(self::SERVICE_ID)) {
+            return;
         }
+
+        $references = [];
+        foreach ($container->findTaggedServiceIds(self::TAG_NAME) as $id => $tags) {
+            foreach ($tags as $attributes) {
+                $references[$attributes[self::TYPE_ATTRIBUTE]] = new Reference($id);
+            }
+        }
+
+        if (0 === count($references)) {
+            return;
+        }
+
+        $container->getDefinition(self::SERVICE_ID)->replaceArgument(0, $references);
     }
 }

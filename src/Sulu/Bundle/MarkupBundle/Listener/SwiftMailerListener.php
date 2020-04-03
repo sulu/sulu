@@ -28,12 +28,15 @@ class SwiftMailerListener implements \Swift_Events_SendListener
     private $requestStack;
 
     /**
-     * @param MarkupParserInterface[] $markupParser
+     * @var string
      */
-    public function __construct(array $markupParser, RequestStack $requestStack)
+    private $defaultLocale;
+
+    public function __construct(\Traversable $markupParser, RequestStack $requestStack, string $defaultLocale)
     {
-        $this->markupParser = $markupParser;
+        $this->markupParser = iterator_to_array($markupParser);
         $this->requestStack = $requestStack;
+        $this->defaultLocale = $defaultLocale;
     }
 
     public function beforeSendPerformed(Swift_Events_SendEvent $event)
@@ -47,7 +50,12 @@ class SwiftMailerListener implements \Swift_Events_SendListener
             $format = $explodedFormat[1];
         }
 
-        $locale = $this->requestStack->getCurrentRequest()->getLocale();
+        $currentRequest = $this->requestStack->getCurrentRequest();
+        if (null !== $currentRequest) {
+            $locale = $currentRequest->getLocale();
+        } else {
+            $locale = $this->defaultLocale;
+        }
 
         if (!$body || !array_key_exists($format, $this->markupParser)) {
             return;

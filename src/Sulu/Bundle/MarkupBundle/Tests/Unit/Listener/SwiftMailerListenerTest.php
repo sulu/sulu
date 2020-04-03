@@ -41,6 +41,11 @@ class SwiftMailerListenerTest extends TestCase
     private $requestStack;
 
     /**
+     * @var string
+     */
+    private $defaultLocale;
+
+    /**
      * @var SwiftMailerListener
      */
     private $listener;
@@ -57,7 +62,14 @@ class SwiftMailerListenerTest extends TestCase
         $this->simpleMessage = $this->prophesize(\Swift_Mime_SimpleMessage::class);
         $this->event->getMessage()->willReturn($this->simpleMessage->reveal());
 
-        $this->listener = new SwiftMailerListener(['html' => $this->markupParser->reveal()], $this->requestStack->reveal());
+        $this->defaultLocale = 'en';
+        $traverseable = new \ArrayIterator(['html' => $this->markupParser->reveal()]);
+
+        $this->listener = new SwiftMailerListener(
+            $traverseable,
+            $this->requestStack->reveal(),
+            $this->defaultLocale
+        );
     }
 
     public function testReplaceMarkup(): void
@@ -71,6 +83,21 @@ class SwiftMailerListenerTest extends TestCase
         $this->simpleMessage->getBody()->willReturn('<html><sulu-link href="123-123-123"/></html>');
 
         $this->markupParser->parse('<html><sulu-link href="123-123-123"/></html>', 'de')
+            ->willReturn('<html><a href="/test">Page-Title</a></html>')->shouldBeCalled();
+
+        $this->simpleMessage->setBody('<html><a href="/test">Page-Title</a></html>')->shouldBeCalled();
+
+        $this->listener->beforeSendPerformed($this->event->reveal());
+    }
+
+    public function testReplaceMarkupWithoutRequest(): void
+    {
+        $this->requestStack->getCurrentRequest()->willReturn(null);
+
+        $this->simpleMessage->getBodyContentType()->wilLReturn('text/html');
+        $this->simpleMessage->getBody()->willReturn('<html><sulu-link href="123-123-123"/></html>');
+
+        $this->markupParser->parse('<html><sulu-link href="123-123-123"/></html>', $this->defaultLocale)
             ->willReturn('<html><a href="/test">Page-Title</a></html>')->shouldBeCalled();
 
         $this->simpleMessage->setBody('<html><a href="/test">Page-Title</a></html>')->shouldBeCalled();
