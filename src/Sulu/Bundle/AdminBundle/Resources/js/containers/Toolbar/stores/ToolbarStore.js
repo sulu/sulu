@@ -91,7 +91,7 @@ export default class ToolbarStore {
     // @deprecated
     hasIconsConfig(): boolean {
         log.warn(
-            'The "hasiconsConfig" method is deprecated since 2.1 and will be removed. ' +
+            'The "hasIconsConfig" method is deprecated since 2.1 and will be removed. ' +
             'Use the "getIconsConfig" method instead.'
         );
         return !!this.config.icons && !!this.config.icons.length;

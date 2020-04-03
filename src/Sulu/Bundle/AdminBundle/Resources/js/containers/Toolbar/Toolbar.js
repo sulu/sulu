@@ -144,14 +144,14 @@ class Toolbar extends React.Component<ToolbarProps> {
                                 success={!onNavigationButtonClick && showSuccess}
                             />
                         }
-                        {!!itemsConfig && itemsConfig.length > 0 &&
+                        {itemsConfig.length > 0 &&
                             <ToolbarComponent.Items>
                                 {this.itemsConfig.map((itemConfig, index) => getItemComponentByType(itemConfig, index))}
                             </ToolbarComponent.Items>
                         }
                     </ToolbarComponent.Controls>
                     <ToolbarComponent.Controls>
-                        {!!iconsConfig &&
+                        {iconsConfig.length > 0 &&
                             <ToolbarComponent.Icons>
                                 {iconsConfig.map((icon) => icon)}
                             </ToolbarComponent.Icons>

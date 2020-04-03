@@ -160,11 +160,7 @@ exports[`Render based on current route 1`] = `
           </div>
           <div
             class="controls light"
-          >
-            <div
-              class="icons light"
-            />
-          </div>
+          />
         </nav>
       </header>
       <div
@@ -347,11 +343,7 @@ exports[`Render based on current route with app version 1`] = `
           </div>
           <div
             class="controls light"
-          >
-            <div
-              class="icons light"
-            />
-          </div>
+          />
         </nav>
       </header>
       <div
@@ -873,11 +865,7 @@ exports[`Render opened navigation 1`] = `
           </div>
           <div
             class="controls light"
-          >
-            <div
-              class="icons light"
-            />
-          </div>
+          />
         </nav>
       </header>
       <div
@@ -1057,11 +1045,7 @@ exports[`Should not fail if current route does not exist 1`] = `
           </div>
           <div
             class="controls light"
-          >
-            <div
-              class="icons light"
-            />
-          </div>
+          />
         </nav>
       </header>
       <div
