@@ -79,7 +79,7 @@ class SwiftMailerListenerTest extends TestCase
         $request->getLocale()->willReturn('de');
         $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
 
-        $this->simpleMessage->getBodyContentType()->wilLReturn('text/html');
+        $this->simpleMessage->getBodyContentType()->willReturn('text/html');
         $this->simpleMessage->getBody()->willReturn('<html><sulu-link href="123-123-123"/></html>');
 
         $this->markupParser->parse('<html><sulu-link href="123-123-123"/></html>', 'de')
@@ -94,13 +94,31 @@ class SwiftMailerListenerTest extends TestCase
     {
         $this->requestStack->getCurrentRequest()->willReturn(null);
 
-        $this->simpleMessage->getBodyContentType()->wilLReturn('text/html');
+        $this->simpleMessage->getBodyContentType()->willReturn('text/html');
         $this->simpleMessage->getBody()->willReturn('<html><sulu-link href="123-123-123"/></html>');
 
         $this->markupParser->parse('<html><sulu-link href="123-123-123"/></html>', $this->defaultLocale)
             ->willReturn('<html><a href="/test">Page-Title</a></html>')->shouldBeCalled();
 
         $this->simpleMessage->setBody('<html><a href="/test">Page-Title</a></html>')->shouldBeCalled();
+
+        $this->listener->beforeSendPerformed($this->event->reveal());
+    }
+
+    public function testReplaceMarkupWithUnknownContentType(): void
+    {
+        /** @var Request|ObjectProphecy $request */
+        $request = $this->prophesize(Request::class);
+        $request->getLocale()->willReturn('de');
+        $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
+
+        $this->simpleMessage->getBodyContentType()->willReturn('text/plain');
+        $this->simpleMessage->getBody()->willReturn('<html><sulu-link href="123-123-123"/></html>');
+
+        $this->markupParser->parse('<html><sulu-link href="123-123-123"/></html>', $this->defaultLocale)
+            ->shouldNotBeCalled();
+
+        $this->simpleMessage->setBody('<html><a href="/test">Page-Title</a></html>')->shouldNotBeCalled();
 
         $this->listener->beforeSendPerformed($this->event->reveal());
     }
