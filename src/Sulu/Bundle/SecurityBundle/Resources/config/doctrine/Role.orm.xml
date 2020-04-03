@@ -8,7 +8,7 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="name" type="string" column="name" length="60"/>
+        <field name="name" type="string" column="name" length="60" unique="true"/>
         <field name="key" type="string" length="60" column="role_key" nullable="true" unique="true"/>
         <field name="system" type="string" column="securitySystem" length="60"/>
 

@@ -503,6 +503,25 @@ class RoleControllerTest extends SuluTestCase
         $this->assertStringContainsString('11230', $response->message);
     }
 
+    public function testPutWithExistingName()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'PUT',
+            '/api/roles/' . $this->role2->getId(),
+            [
+                'name' => 'Sulu Administrator',
+                'system' => 'Sulu',
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertHttpStatusCode(409, $client->getResponse());
+        $this->assertEquals(1101, $response->code);
+    }
+
     public function testPutWithExistingKey()
     {
         $client = $this->createAuthenticatedClient();

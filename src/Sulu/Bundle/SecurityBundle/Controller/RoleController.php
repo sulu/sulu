@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException as DoctrineUniqueConstraintViolationException;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Exception\RoleKeyAlreadyExistsException;
+use Sulu\Bundle\SecurityBundle\Exception\RoleNameAlreadyExistsException;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
@@ -221,11 +222,15 @@ class RoleController extends AbstractRestController implements ClassResourceInte
                 $this->entityManager->flush();
 
                 $view = $this->view($this->convertRole($role), 200);
-            } catch (DoctrineUniqueConstraintViolationException $ex) {
-                throw new RoleKeyAlreadyExistsException($name);
+            } catch (UniqueConstraintViolationException $e) {
+                if (strpos($e->getMessage(), 'Duplicate entry \'' . $role->getName())) {
+                    throw new RoleNameAlreadyExistsException($name);
+                } else {
+                    throw new RoleKeyAlreadyExistsException($key);
+                }
             }
-        } catch (RestException $ex) {
-            $view = $this->view($ex->toArray(), 400);
+        } catch (RestException $e) {
+            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -270,8 +275,12 @@ class RoleController extends AbstractRestController implements ClassResourceInte
             }
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
-        } catch (DoctrineUniqueConstraintViolationException $e) {
-            throw new RoleKeyAlreadyExistsException($name);
+        } catch (UniqueConstraintViolationException $e) {
+            if (strpos($e->getMessage(), 'Duplicate entry \'' . $role->getName())) {
+                throw new RoleNameAlreadyExistsException($name);
+            } else {
+                throw new RoleKeyAlreadyExistsException($key);
+            }
         } catch (RestException $re) {
             $view = $this->view($re->toArray(), 400);
         }

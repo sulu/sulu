@@ -9,8 +9,7 @@ Furthermore, if the `key` is set, it is used for generating the identifier of a 
 The following statements update the database to include the new property:
 
 ```sql
-DROP INDEX UNIQ_13B749A05E237E06 ON se_roles;
-ALTER TABLE se_roles ADD `role_key` VARCHAR(60) DEFAULT NULL;
+ALTER TABLE se_roles ADD role_key VARCHAR(60) DEFAULT NULL;
 CREATE UNIQUE INDEX UNIQ_13B749A03EF22FDB ON se_roles (role_key);
 ```
 
