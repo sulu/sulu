@@ -96,7 +96,7 @@ test('Render with data', () => {
     expect(resourceMultiSelect.render()).toMatchSnapshot();
 });
 
-test('Render with data and requestParameters', () => {
+test('Pass requestParameters', () => {
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
         this.loading = false;
@@ -121,7 +121,7 @@ test('Render with data and requestParameters', () => {
 
     const requestParameters = {'testOption': 'testValue'};
 
-    const resourceMultiSelect = mount(
+    mount(
         <ResourceMultiSelect
             displayProperty="name"
             onChange={jest.fn()}
@@ -132,10 +132,9 @@ test('Render with data and requestParameters', () => {
     );
 
     expect(ResourceListStore).toBeCalledWith('test', requestParameters);
-    expect(resourceMultiSelect.render()).toMatchSnapshot();
 });
 
-test('Render with data and requestParameters when requestParameters props changed', () => {
+test('Pass requestParameters when requestParameters props changed', () => {
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
         this.loading = false;
@@ -176,7 +175,7 @@ test('Render with data and requestParameters when requestParameters props change
     ]);
 });
 
-test('Render with data and requestParameters when resourceKey props changed', () => {
+test('Pass requestParameters when resourceKey props changed', () => {
     // $FlowFixMe
     ResourceListStore.mockImplementation(function() {
         this.loading = false;
