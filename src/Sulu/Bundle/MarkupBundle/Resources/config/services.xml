@@ -30,6 +30,13 @@
             <tag name="kernel.event_listener" event="kernel.response" method="replaceMarkup" priority="-10"/>
         </service>
 
+        <service id="sulu_markup.swift_mailer_listener" class="Sulu\Bundle\MarkupBundle\Listener\SwiftMailerListener">
+            <argument type="tagged" tag="sulu_markup.parser"/>
+            <argument type="service" id="request_stack"/>
+
+            <tag name="swiftmailer.default.plugin"/>
+        </service>
+
         <service id="sulu_markup.link_tag.provider_pool"
                  class="Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPool">
             <argument type="collection"/>
