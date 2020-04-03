@@ -5,13 +5,13 @@ import Switch from '../Switch';
 import type {SwitchProps} from '../Switch';
 import radioStyles from './radio.scss';
 
-type Props = {|
-    ...SwitchProps,
+type Props<T> = {|
+    ...SwitchProps<T>,
     onChange?: (value?: string | number) => void,
     skin: 'dark' | 'light',
 |};
 
-export default class Radio extends React.PureComponent<Props> {
+export default class Radio<T: string | number> extends React.PureComponent<Props<T>> {
     static defaultProps = {
         checked: false,
         disabled: false,

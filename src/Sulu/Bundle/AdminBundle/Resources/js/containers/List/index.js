@@ -4,6 +4,7 @@ import ListStore from './stores/ListStore';
 import listAdapterRegistry from './registries/listAdapterRegistry';
 import listFieldTransformerRegistry from './registries/listFieldTransformerRegistry';
 import listFieldFilterTypeRegistry from './registries/listFieldFilterTypeRegistry';
+import AbstractFieldFilterType from './fieldFilterTypes/AbstractFieldFilterType';
 import TextFieldFilterType from './fieldFilterTypes/TextFieldFilterType';
 import ArrayFieldTransformer from './fieldTransformers/ArrayFieldTransformer';
 import ThumbnailFieldTransformer from './fieldTransformers/ThumbnailFieldTransformer';
@@ -36,6 +37,7 @@ import type {
 export default List;
 export {
     AbstractAdapter,
+    AbstractFieldFilterType,
     BooleanFieldFilterType,
     ListStore,
     listAdapterRegistry,

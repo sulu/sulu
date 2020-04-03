@@ -5,16 +5,16 @@ import Switch from '../Switch';
 import type {SwitchProps} from '../Switch';
 import checkboxStyles from './checkbox.scss';
 
-type Props = {|
-    ...SwitchProps,
+type Props<T> = {|
+    ...SwitchProps<T>,
     className?: string,
-    onChange?: (checked: boolean, value?: string | number) => void,
+    onChange?: (checked: boolean, value?: T) => void,
     skin: 'dark' | 'light',
 |};
 
 const CHECKED_ICON = 'su-check';
 
-export default class Checkbox extends React.PureComponent<Props> {
+export default class Checkbox<T: string | number> extends React.PureComponent<Props<T>> {
     static defaultProps = {
         checked: false,
         disabled: false,

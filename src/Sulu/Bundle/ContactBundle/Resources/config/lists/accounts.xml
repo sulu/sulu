@@ -147,7 +147,7 @@
 
             <joins ref="address"/>
 
-            <filter type="text" />
+            <filter type="country" />
         </property>
 
         <concatenation-property

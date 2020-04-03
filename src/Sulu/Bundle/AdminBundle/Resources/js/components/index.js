@@ -4,7 +4,7 @@ import Backdrop from './Backdrop';
 import Breadcrumb from './Breadcrumb';
 import Button from './Button';
 import ButtonGroup from './ButtonGroup';
-import Checkbox from './Checkbox';
+import Checkbox, {CheckboxGroup} from './Checkbox';
 import CircularProgressbar from './CircularProgressbar';
 import CroppedText from './CroppedText';
 import DatePicker from './DatePicker';
@@ -46,6 +46,7 @@ export {
     Button,
     ButtonGroup,
     Checkbox,
+    CheckboxGroup,
     CircularProgressbar,
     CroppedText,
     DatePicker,

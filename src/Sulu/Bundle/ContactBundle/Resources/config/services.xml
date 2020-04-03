@@ -186,5 +186,12 @@
 
             <tag name="sulu.context" context="admin"/>
         </service>
+
+        <service
+            id="sulu_contact.country_filter_type"
+            class="Sulu\Component\Rest\ListBuilder\Filter\DropdownFilterType"
+        >
+            <tag name="sulu_core.list_builder_filter_type" alias="country" />
+        </service>
     </services>
 </container>

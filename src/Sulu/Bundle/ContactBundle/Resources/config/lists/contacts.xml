@@ -180,7 +180,7 @@
 
             <joins ref="address"/>
 
-            <filter type="text" />
+            <filter type="country" />
         </property>
 
         <property name="mainPhone" visibility="always" translation="sulu_contact.phone">

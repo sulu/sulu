@@ -1,0 +1,136 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render 1`] = `
+<div
+  class="test"
+>
+  <label
+    class="label"
+  >
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        type="checkbox"
+        value="value-1"
+      />
+      <span />
+    </span>
+    <div>
+      Value 1
+    </div>
+  </label>
+  <label
+    class="label"
+  >
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        checked=""
+        type="checkbox"
+        value="value-2"
+      />
+      <span>
+        <span
+          aria-label="su-check"
+          class="su-check"
+        />
+      </span>
+    </span>
+    <div>
+      Value 2
+    </div>
+  </label>
+  <label
+    class="label"
+  >
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        checked=""
+        type="checkbox"
+        value="value-3"
+      />
+      <span>
+        <span
+          aria-label="su-check"
+          class="su-check"
+        />
+      </span>
+    </span>
+    <div>
+      Value 3
+    </div>
+  </label>
+</div>
+`;
+
+exports[`The component should render disabled 1`] = `
+<div>
+  <label
+    class="label disabled"
+  >
+    <span
+      class="switch disabled checkbox dark"
+    >
+      <input
+        disabled=""
+        type="checkbox"
+        value="value-1"
+      />
+      <span />
+    </span>
+    <div>
+      Value 1
+    </div>
+  </label>
+  <label
+    class="label disabled"
+  >
+    <span
+      class="switch disabled checkbox dark"
+    >
+      <input
+        checked=""
+        disabled=""
+        type="checkbox"
+        value="value-2"
+      />
+      <span>
+        <span
+          aria-label="su-check"
+          class="su-check"
+        />
+      </span>
+    </span>
+    <div>
+      Value 2
+    </div>
+  </label>
+  <label
+    class="label disabled"
+  >
+    <span
+      class="switch disabled checkbox dark"
+    >
+      <input
+        checked=""
+        disabled=""
+        type="checkbox"
+        value="value-3"
+      />
+      <span>
+        <span
+          aria-label="su-check"
+          class="su-check"
+        />
+      </span>
+    </span>
+    <div>
+      Value 3
+    </div>
+  </label>
+</div>
+`;
