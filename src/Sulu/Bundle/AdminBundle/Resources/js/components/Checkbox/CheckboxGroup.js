@@ -33,7 +33,7 @@ export default class CheckboxGroup<T: string | number> extends React.PureCompone
             <div className={className}>
                 {React.Children.map(this.props.children, (child) => {
                     return React.cloneElement(child, {
-                        checked: !!values && values.includes(child.props.value),
+                        checked: values.includes(child.props.value),
                         disabled,
                         onChange: this.handleChange,
                     });
