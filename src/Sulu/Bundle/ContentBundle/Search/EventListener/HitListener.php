@@ -47,7 +47,7 @@ class HitListener
             return;
         }
 
-        if ('/' == substr($url, 0,1)) {
+        if ('/' != substr($url, 0, 1)) {
             // is absolute URL
 
             return;
