@@ -115,7 +115,7 @@ class SwiftMailerListenerTest extends TestCase
         $this->simpleMessage->getBodyContentType()->willReturn('text/plain');
         $this->simpleMessage->getBody()->willReturn('<html><sulu-link href="123-123-123"/></html>');
 
-        $this->markupParser->parse('<html><sulu-link href="123-123-123"/></html>', $this->defaultLocale)
+        $this->markupParser->parse('<html><sulu-link href="123-123-123"/></html>', 'de')
             ->shouldNotBeCalled();
 
         $this->simpleMessage->setBody('<html><a href="/test">Page-Title</a></html>')->shouldNotBeCalled();
