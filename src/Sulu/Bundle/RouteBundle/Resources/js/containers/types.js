@@ -1,9 +1,9 @@
 // @flow
 
 export type PageTreeRouteValue = {|
-    page: ?{|
+    page?: ?{|
         path?: ?string,
         uuid: ?string,
     |},
-    suffix: ?string,
+    suffix?: ?string,
 |};

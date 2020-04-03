@@ -1,6 +1,7 @@
 // @flow
 import type {Node} from 'react';
 import {action, autorun, computed, observable} from 'mobx';
+import log from 'loglevel';
 import type {Button, Select, ToolbarConfig, ToolbarItemConfig} from '../types';
 
 const SHOW_SUCCESS_DURATION = 1500;
@@ -61,7 +62,12 @@ export default class ToolbarStore {
         return this.config.showSuccess.get();
     }
 
+    // @deprecated
     hasBackButtonConfig(): boolean {
+        log.warn(
+            'The "hasBackButtonConfig" method is deprecated since 2.1 and will be removed. ' +
+            'Use the "getBackButtonConfig" method instead.'
+        );
         return !!this.config.backButton;
     }
 
@@ -69,7 +75,12 @@ export default class ToolbarStore {
         return this.config.backButton || null;
     }
 
+    // @deprecated
     hasItemsConfig(): boolean {
+        log.warn(
+            'The "hasItemsConfig" method is deprecated since 2.1 and will be removed. ' +
+            'Use the "getItemsConfig" method instead.'
+        );
         return !!this.config.items && !!this.config.items.length;
     }
 
@@ -77,7 +88,12 @@ export default class ToolbarStore {
         return this.config.items || [];
     }
 
+    // @deprecated
     hasIconsConfig(): boolean {
+        log.warn(
+            'The "hasIconsConfig" method is deprecated since 2.1 and will be removed. ' +
+            'Use the "getIconsConfig" method instead.'
+        );
         return !!this.config.icons && !!this.config.icons.length;
     }
 
@@ -85,7 +101,12 @@ export default class ToolbarStore {
         return this.config.icons || [];
     }
 
+    // @deprecated
     hasLocaleConfig(): boolean {
+        log.warn(
+            'The "hasLocaleConfig" method is deprecated since 2.1 and will be removed. ' +
+            'Use the "getLocaleConfig" method instead.'
+        );
         return !!this.config.locale;
     }
 

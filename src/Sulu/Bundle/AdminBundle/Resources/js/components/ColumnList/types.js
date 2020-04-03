@@ -1,9 +1,9 @@
 // @flow
-export type ItemButtonConfig = {
+export type ItemButtonConfig = {|
     icon: string,
     onClick: (string | number) => void,
     visible?: boolean,
-};
+|};
 
 export type ToolbarDropdownOptionConfig = {
     disabled?: boolean,

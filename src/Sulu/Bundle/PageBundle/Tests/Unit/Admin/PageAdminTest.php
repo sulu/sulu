@@ -21,6 +21,7 @@ use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authorization\SecurityChecker;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Webspace;
 
 class PageAdminTest extends TestCase
@@ -142,5 +143,58 @@ class PageAdminTest extends TestCase
         $config = $admin->getConfig();
 
         $this->assertEquals(false, $config['versioning']);
+    }
+
+    public function testGetSecurityContexts()
+    {
+        $admin = new PageAdmin(
+            $this->viewBuilderFactory,
+            $this->webspaceManager->reveal(),
+            $this->securityChecker->reveal(),
+            $this->sessionManager->reveal(),
+            $this->teaserProviderPool->reveal(),
+            true
+        );
+
+        $webspace1 = $this->prophesize(Webspace::class);
+        $webspace1->getKey()->willReturn('webspace-key-1');
+        $webspace1->getSecurity()->willReturn(null);
+
+        $webspace2Security = $this->prophesize(Security::class);
+        $webspace2Security->getSystem()->willReturn('webspace-scurity-system-2');
+
+        $webspace2 = $this->prophesize(Webspace::class);
+        $webspace2->getKey()->willReturn('webspace-key-2');
+        $webspace2->getSecurity()->willReturn($webspace2Security->reveal());
+
+        $this->webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([
+            $webspace1->reveal(),
+            $webspace2->reveal(),
+        ]));
+
+        $this->assertEquals(
+            [
+                'Sulu' => [
+                    'Webspaces' => [
+                        'sulu.webspaces.webspace-key-1' => ['view', 'add', 'edit', 'delete', 'live', 'security'],
+                        'sulu.webspaces.webspace-key-2' => ['view', 'add', 'edit', 'delete', 'live', 'security'],
+                    ],
+                ],
+                'webspace-scurity-system-2' => [],
+            ],
+            $admin->getSecurityContexts()
+        );
+
+        $this->assertEquals(
+            [
+                'Sulu' => [
+                    'Webspaces' => [
+                        'sulu.webspaces.#webspace#' => ['view', 'add', 'edit', 'delete', 'live', 'security'],
+                    ],
+                ],
+                'webspace-scurity-system-2' => [],
+            ],
+            $admin->getSecurityContextsWithPlaceholder()
+        );
     }
 }

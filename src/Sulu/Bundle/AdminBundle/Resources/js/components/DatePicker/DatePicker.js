@@ -17,10 +17,10 @@ type Props = {|
     id?: string,
     inputRef?: (ref: ?ElementRef<'input'>) => void,
     onChange: (value: ?Date) => void,
-    options: {
+    options: {|
         dateFormat?: ?string | boolean,
         timeFormat?: ?string | boolean,
-    },
+    |},
     placeholder?: string,
     valid: boolean,
     value: ?Date,
@@ -30,7 +30,10 @@ type Props = {|
 class DatePicker extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
-        options: {},
+        options: {
+            dateFormat: undefined,
+            timeFormat: undefined,
+        },
         valid: true,
     };
 

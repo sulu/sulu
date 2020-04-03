@@ -66,11 +66,11 @@ export default class MultiSelectionStore<T = string | number, U: {id: T} = Objec
 
         this.setLoading(true);
         return ResourceRequester.getList(this.resourceKey, {
+            ...this.requestParameters,
             locale: this.locale ? this.locale.get() : undefined,
             [this.idFilterParameter]: itemIds.join(','),
             limit: undefined,
             page: 1,
-            ...this.requestParameters,
         }).then(action((data) => {
             this.set(data._embedded[this.resourceKey]);
             this.setLoading(false);
