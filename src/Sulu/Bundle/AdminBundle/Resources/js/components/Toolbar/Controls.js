@@ -5,11 +5,11 @@ import classNames from 'classnames';
 import type {Group, Item, Skin} from './types';
 import controlsStyles from './controls.scss';
 
-type Props = {
+type Props = {|
     children: ChildrenArray<Item | Group | false>,
     grow?: boolean,
     skin?: Skin,
-};
+|};
 
 export default class Controls extends React.PureComponent<Props> {
     static defaultProps = {

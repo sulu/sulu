@@ -254,57 +254,59 @@ class Preview extends React.Component<Props> {
                     </div>
                 }
                 <Toolbar skin="dark">
-                    <Toolbar.Controls>
+                    <Toolbar.Controls grow={true}>
                         <Toolbar.Button
                             icon={sidebarStore.size === 'medium' ? 'su-arrow-left' : 'su-arrow-right'}
                             onClick={this.handleToggleSidebarClick}
                         />
-                        <Toolbar.Select
-                            icon="su-expand"
-                            onChange={this.handleDeviceSelectChange}
-                            options={this.availableDeviceOptions}
-                            value={this.selectedDeviceOption}
-                        />
-                        {previewWebspaceChooser &&
+                        <Toolbar.Items>
                             <Toolbar.Select
-                                icon="su-webspace"
-                                onChange={this.handleWebspaceChange}
-                                options={this.webspaceOptions}
-                                value={this.previewStore.webspace}
+                                icon="su-expand"
+                                onChange={this.handleDeviceSelectChange}
+                                options={this.availableDeviceOptions}
+                                value={this.selectedDeviceOption}
                             />
-                        }
-                        {!!this.targetGroupsStore &&
-                            <Toolbar.Select
-                                icon="su-user"
-                                loading={this.targetGroupsStore.loading}
-                                onChange={this.handleTargetGroupChange}
-                                options={
-                                    [
-                                        {label: translate('sulu_audience_targeting.no_target_group'), value: -1},
-                                        ...(this.targetGroupsStore
-                                            ? this.targetGroupsStore.data.map((targetGroup) => ({
-                                                label: targetGroup.title,
-                                                value: targetGroup.id,
-                                            }))
-                                            : []
-                                        ),
-                                    ]
-                                }
-                                value={this.previewStore && this.previewStore.targetGroup}
-                            />
-                        }
-                        <Toolbar.Button
-                            icon="su-sync"
-                            onClick={this.handleRefreshClick}
-                        >
-                            {translate('sulu_preview.reload')}
-                        </Toolbar.Button>
-                        <Toolbar.Button
-                            icon="su-link"
-                            onClick={this.handlePreviewWindowClick}
-                        >
-                            {translate('sulu_preview.open_in_window')}
-                        </Toolbar.Button>
+                            {previewWebspaceChooser &&
+                                <Toolbar.Select
+                                    icon="su-webspace"
+                                    onChange={this.handleWebspaceChange}
+                                    options={this.webspaceOptions}
+                                    value={this.previewStore.webspace}
+                                />
+                            }
+                            {!!this.targetGroupsStore &&
+                                <Toolbar.Select
+                                    icon="su-user"
+                                    loading={this.targetGroupsStore.loading}
+                                    onChange={this.handleTargetGroupChange}
+                                    options={
+                                        [
+                                            {label: translate('sulu_audience_targeting.no_target_group'), value: -1},
+                                            ...(this.targetGroupsStore
+                                                ? this.targetGroupsStore.data.map((targetGroup) => ({
+                                                    label: targetGroup.title,
+                                                    value: targetGroup.id,
+                                                }))
+                                                : []
+                                            ),
+                                        ]
+                                    }
+                                    value={this.previewStore && this.previewStore.targetGroup}
+                                />
+                            }
+                            <Toolbar.Button
+                                icon="su-sync"
+                                onClick={this.handleRefreshClick}
+                            >
+                                {translate('sulu_preview.reload')}
+                            </Toolbar.Button>
+                            <Toolbar.Button
+                                icon="su-link"
+                                onClick={this.handlePreviewWindowClick}
+                            >
+                                {translate('sulu_preview.open_in_window')}
+                            </Toolbar.Button>
+                        </Toolbar.Items>
                     </Toolbar.Controls>
                 </Toolbar>
             </div>

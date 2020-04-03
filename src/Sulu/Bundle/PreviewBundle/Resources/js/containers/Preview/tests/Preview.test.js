@@ -11,6 +11,10 @@ import Preview from '../Preview';
 
 window.open = jest.fn().mockReturnValue({addEventListener: jest.fn()});
 
+window.ResizeObserver = jest.fn(function() {
+    this.observe = jest.fn();
+});
+
 jest.mock('debounce', () => jest.fn((value) => value));
 
 jest.mock('../stores/PreviewStore', () => jest.fn(function() {
