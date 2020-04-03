@@ -67,12 +67,12 @@ class TeaserSelection extends React.Component<Props> {
     @computed get teaserItems(): Array<TeaserItem> {
         return this.props.value.items.map((teaserItem) => ({
             ...this.teaserStore.findById(teaserItem.type, teaserItem.id),
-            ...Object.keys(teaserItem).reduce((clearedTeaserItem, key) => {
+            ...((Object.keys(teaserItem).reduce((clearedTeaserItem, key) => {
                 if (teaserItem[key] !== undefined) {
                     clearedTeaserItem[key] = teaserItem[key];
                 }
                 return clearedTeaserItem;
-            }, {}),
+            }, {}): any): TeaserItem),
             edited: !!(teaserItem.description || teaserItem.mediaId || teaserItem.title),
         }));
     }

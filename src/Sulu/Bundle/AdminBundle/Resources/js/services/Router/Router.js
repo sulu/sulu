@@ -191,7 +191,7 @@ export default class Router {
         const route = routeRegistry.get(name);
 
         const updatedAttributes = {
-            ...this.updateAttributesHooks.reduce((hookAttributes, updateAttributeHook) => ({
+            ...this.updateAttributesHooks.reduce((hookAttributes: Object, updateAttributeHook) => ({
                 ...updateAttributeHook(route, attributes),
                 ...hookAttributes,
             }), {}),

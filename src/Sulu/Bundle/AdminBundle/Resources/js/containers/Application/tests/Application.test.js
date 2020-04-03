@@ -17,8 +17,7 @@ jest.mock('sulu-admin-bundle/containers/Form/stores/metadataStore', () => ({
     getJsonSchema: jest.fn(),
 }));
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/MemoryFormStore', () => jest.fn(
-    (memoryStore) =>({memoryStore})));
+jest.mock('sulu-admin-bundle/containers/Form/stores/MemoryFormStore', () => jest.fn((memoryStore) =>({memoryStore})));
 
 const mockInitializerInitialized = jest.fn();
 const mockInitializerLoading = jest.fn();

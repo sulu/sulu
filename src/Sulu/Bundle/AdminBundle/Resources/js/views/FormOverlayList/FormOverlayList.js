@@ -178,6 +178,8 @@ class FormOverlayList extends React.Component<Props> {
             },
         } = this.props;
 
+        const {formStore} = this;
+
         const overlayTitle = this.formStore && this.formStore.id
             ? translate(editOverlayTitle || 'sulu_admin.edit')
             : translate(addOverlayTitle || 'sulu_admin.create');
@@ -191,10 +193,10 @@ class FormOverlayList extends React.Component<Props> {
                     onItemClick={formKey && this.handleItemClick}
                     ref={this.setListRef}
                 />
-                {!!this.formStore &&
+                {!!formStore &&
                     <Overlay
-                        confirmDisabled={!this.formStore.dirty}
-                        confirmLoading={this.formStore.saving}
+                        confirmDisabled={!formStore.dirty}
+                        confirmLoading={formStore.saving}
                         confirmText={translate('sulu_admin.save')}
                         onClose={this.handleFormOverlayClose}
                         onConfirm={this.handleFormOverlayConfirm}
@@ -213,7 +215,7 @@ class FormOverlayList extends React.Component<Props> {
                                 onError={this.handleFormError}
                                 onSubmit={this.handleFormSubmit}
                                 ref={this.setFormRef}
-                                store={this.formStore}
+                                store={formStore}
                             />
                         </div>
                     </Overlay>
