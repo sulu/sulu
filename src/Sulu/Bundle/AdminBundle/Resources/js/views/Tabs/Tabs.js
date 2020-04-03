@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import type {Node} from 'react';
+import type {Element, Node} from 'react';
 import {autorun, computed} from 'mobx';
 import {observer} from 'mobx-react';
 import TabsComponent from '../../components/Tabs';
@@ -9,22 +9,24 @@ import {translate} from '../../utils/Translator';
 import {Route} from '../../services/Router';
 import tabsStyles from './tabs.scss';
 
-type Props = ViewProps & {
-    childrenProps: *,
+type Props<T> = {
+    ...ViewProps,
+    children?: (T) => Element<*> | null,
+    childrenProps: T,
     header?: Node,
     routeChildren?: Array<Route>,
     selectedIndex?: number,
 };
 
 @observer
-class Tabs extends React.Component<Props> {
+class Tabs<T> extends React.Component<Props<T>> {
     static defaultProps = {
         childrenProps: {},
     };
 
     redirectToRouteWithHighestPriorityDisposer: () => void;
 
-    constructor(props: Props) {
+    constructor(props: Props<T>) {
         super(props);
 
         this.redirectToRouteWithHighestPriorityDisposer = autorun(this.redirectToRouteWithHighestPriority);

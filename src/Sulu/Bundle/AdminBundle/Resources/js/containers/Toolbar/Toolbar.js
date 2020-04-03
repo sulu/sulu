@@ -104,6 +104,10 @@ class Toolbar extends React.Component<ToolbarProps> {
         const {onNavigationButtonClick, navigationOpen} = this.props;
         const {errors, showSuccess, warnings} = this.toolbarStore;
 
+        const iconsConfig = this.toolbarStore.getIconsConfig();
+        const itemsConfig = this.toolbarStore.getItemsConfig();
+        const localeConfig = this.toolbarStore.getLocaleConfig();
+
         return (
             <Fragment>
                 <Snackbar
@@ -140,23 +144,23 @@ class Toolbar extends React.Component<ToolbarProps> {
                                 success={!onNavigationButtonClick && showSuccess}
                             />
                         }
-                        {this.toolbarStore.hasItemsConfig() &&
+                        {!!itemsConfig && itemsConfig.length > 0 &&
                             <ToolbarComponent.Items>
                                 {this.itemsConfig.map((itemConfig, index) => getItemComponentByType(itemConfig, index))}
                             </ToolbarComponent.Items>
                         }
                     </ToolbarComponent.Controls>
                     <ToolbarComponent.Controls>
-                        {this.toolbarStore.hasIconsConfig() &&
+                        {!!iconsConfig &&
                             <ToolbarComponent.Icons>
-                                {this.toolbarStore.getIconsConfig().map((icon) => icon)}
+                                {iconsConfig.map((icon) => icon)}
                             </ToolbarComponent.Icons>
                         }
-                        {this.toolbarStore.hasLocaleConfig() &&
+                        {!!localeConfig &&
                             <ToolbarComponent.Select
                                 className={toolbarStyles.locale}
                                 size={LOCALE_SELECT_SIZE}
-                                {...this.toolbarStore.getLocaleConfig()}
+                                {...localeConfig}
                             />
                         }
                     </ToolbarComponent.Controls>

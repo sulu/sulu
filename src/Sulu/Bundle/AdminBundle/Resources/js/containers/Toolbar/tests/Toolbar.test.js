@@ -29,13 +29,9 @@ beforeEach(() => {
         errors: [],
         warnings: [],
         showSuccess: false,
-        hasBackButtonConfig: jest.fn(),
         getBackButtonConfig: jest.fn(),
-        hasItemsConfig: jest.fn(),
         getItemsConfig: jest.fn(),
-        hasIconsConfig: jest.fn(),
         getIconsConfig: jest.fn(),
-        hasLocaleConfig: jest.fn(),
         getLocaleConfig: jest.fn(),
     };
 });
@@ -46,10 +42,8 @@ test('Render the items and icons from the ToolbarStore', () => {
     // $FlowFixMe
     toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
 
-    toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
-    toolbarStoreMock.hasIconsConfig.mockReturnValue(true);
-    toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
-    toolbarStoreMock.hasBackButtonConfig.mockReturnValue(false);
+    toolbarStoreMock.getLocaleConfig.mockReturnValue(undefined);
+    toolbarStoreMock.getBackButtonConfig.mockReturnValue(undefined);
 
     toolbarStoreMock.getIconsConfig.mockReturnValue(
         [
@@ -104,10 +98,8 @@ test('Render the error from the ToolbarStore', () => {
     // $FlowFixMe
     toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
 
-    toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
-    toolbarStoreMock.hasIconsConfig.mockReturnValue(true);
-    toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
-    toolbarStoreMock.hasBackButtonConfig.mockReturnValue(false);
+    toolbarStoreMock.getLocaleConfig.mockReturnValue(undefined);
+    toolbarStoreMock.getBackButtonConfig.mockReturnValue(undefined);
     toolbarStoreMock.errors.push('Something went wrong');
 
     toolbarStoreMock.getIconsConfig.mockReturnValue(
@@ -130,10 +122,8 @@ test('Render the warning from the ToolbarStore', () => {
     // $FlowFixMe
     toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
 
-    toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
-    toolbarStoreMock.hasIconsConfig.mockReturnValue(true);
-    toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
-    toolbarStoreMock.hasBackButtonConfig.mockReturnValue(false);
+    toolbarStoreMock.getLocaleConfig.mockReturnValue(undefined);
+    toolbarStoreMock.getBackButtonConfig.mockReturnValue(undefined);
     toolbarStoreMock.warnings.push('Something unimportant went wrong');
 
     toolbarStoreMock.getIconsConfig.mockReturnValue(
@@ -157,10 +147,8 @@ test('Render the items as disabled if one is loading', () => {
     // $FlowFixMe
     toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
 
-    toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
-    toolbarStoreMock.hasIconsConfig.mockReturnValue(false);
-    toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
-    toolbarStoreMock.hasBackButtonConfig.mockReturnValue(true);
+    toolbarStoreMock.getIconsConfig.mockReturnValue(undefined);
+    toolbarStoreMock.getLocaleConfig.mockReturnValue(undefined);
     toolbarStoreMock.getBackButtonConfig.mockReturnValue({});
 
     toolbarStoreMock.getItemsConfig.mockReturnValue(
@@ -195,10 +183,8 @@ test('Show success message on back button for some time', () => {
     // $FlowFixMe
     toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
 
-    toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
-    toolbarStoreMock.hasIconsConfig.mockReturnValue(false);
-    toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
-    toolbarStoreMock.hasBackButtonConfig.mockReturnValue(true);
+    toolbarStoreMock.getIconsConfig.mockReturnValue(undefined);
+    toolbarStoreMock.getLocaleConfig.mockReturnValue(undefined);
     toolbarStoreMock.getBackButtonConfig.mockReturnValue({});
     toolbarStoreMock.getItemsConfig.mockReturnValue([]);
     toolbarStoreMock.showSuccess = true;
@@ -212,10 +198,8 @@ test('Show success message on navigation button for some time', () => {
     // $FlowFixMe
     toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
 
-    toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
-    toolbarStoreMock.hasIconsConfig.mockReturnValue(false);
-    toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
-    toolbarStoreMock.hasBackButtonConfig.mockReturnValue(true);
+    toolbarStoreMock.getIconsConfig.mockReturnValue(undefined);
+    toolbarStoreMock.getLocaleConfig.mockReturnValue(undefined);
     toolbarStoreMock.getBackButtonConfig.mockReturnValue({});
     toolbarStoreMock.getItemsConfig.mockReturnValue([]);
     toolbarStoreMock.showSuccess = true;
@@ -230,10 +214,8 @@ test('Click on the success message should open the navigation', () => {
     // $FlowFixMe
     toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
 
-    toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
-    toolbarStoreMock.hasIconsConfig.mockReturnValue(false);
-    toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
-    toolbarStoreMock.hasBackButtonConfig.mockReturnValue(true);
+    toolbarStoreMock.getIconsConfig.mockReturnValue(undefined);
+    toolbarStoreMock.getLocaleConfig.mockReturnValue(undefined);
     toolbarStoreMock.getBackButtonConfig.mockReturnValue({});
     toolbarStoreMock.getItemsConfig.mockReturnValue([]);
     toolbarStoreMock.showSuccess = true;
@@ -252,10 +234,8 @@ test('Click on the success message should navigate back', () => {
     // $FlowFixMe
     toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
 
-    toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
-    toolbarStoreMock.hasIconsConfig.mockReturnValue(false);
-    toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
-    toolbarStoreMock.hasBackButtonConfig.mockReturnValue(true);
+    toolbarStoreMock.getIconsConfig.mockReturnValue(undefined);
+    toolbarStoreMock.getLocaleConfig.mockReturnValue(undefined);
     toolbarStoreMock.getBackButtonConfig.mockReturnValue({
         onClick: backSpy,
     });
@@ -275,10 +255,8 @@ test('Remove last error if close button on snackbar is clicked', () => {
     // $FlowFixMe
     toolbarStorePool.createStore.mockReturnValue(toolbarStoreMock);
 
-    toolbarStoreMock.hasItemsConfig.mockReturnValue(true);
-    toolbarStoreMock.hasIconsConfig.mockReturnValue(false);
-    toolbarStoreMock.hasLocaleConfig.mockReturnValue(false);
-    toolbarStoreMock.hasBackButtonConfig.mockReturnValue(true);
+    toolbarStoreMock.getIconsConfig.mockReturnValue(undefined);
+    toolbarStoreMock.getLocaleConfig.mockReturnValue(undefined);
     toolbarStoreMock.getBackButtonConfig.mockReturnValue({});
     toolbarStoreMock.errors.push({code: 100, message: 'Something went wrong'});
 

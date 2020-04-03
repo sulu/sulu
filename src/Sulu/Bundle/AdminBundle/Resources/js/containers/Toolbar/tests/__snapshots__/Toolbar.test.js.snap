@@ -47,15 +47,7 @@ Array [
   >
     <div
       class="controls light grow"
-    >
-      <div
-        class="itemsContainer"
-      >
-        <ul
-          class="items light"
-        />
-      </div>
-    </div>
+    />
     <div
       class="controls light"
     >
@@ -277,15 +269,7 @@ Array [
   >
     <div
       class="controls light grow"
-    >
-      <div
-        class="itemsContainer"
-      >
-        <ul
-          class="items light"
-        />
-      </div>
-    </div>
+    />
     <div
       class="controls light"
     >
@@ -368,13 +352,6 @@ Array [
           class="su-check icon"
         />
       </button>
-      <div
-        class="itemsContainer"
-      >
-        <ul
-          class="items light"
-        />
-      </div>
     </div>
     <div
       class="controls light"
@@ -447,13 +424,6 @@ Array [
           class="su-angle-left icon"
         />
       </button>
-      <div
-        class="itemsContainer"
-      >
-        <ul
-          class="items light"
-        />
-      </div>
     </div>
     <div
       class="controls light"
