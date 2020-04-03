@@ -31,7 +31,7 @@
         </service>
 
         <service id="sulu_markup.swift_mailer_listener" class="Sulu\Bundle\MarkupBundle\Listener\SwiftMailerListener">
-            <argument type="tagged" tag="sulu_markup.parser" default-index-method="getType" index-by="type"/>
+            <argument type="tagged" tag="sulu_markup.parser" index-by="type"/>
             <argument type="service" id="request_stack"/>
             <argument>%kernel.default_locale%</argument>
 

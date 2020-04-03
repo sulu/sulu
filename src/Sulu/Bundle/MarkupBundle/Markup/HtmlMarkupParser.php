@@ -42,7 +42,7 @@ class HtmlMarkupParser implements MarkupParserInterface
 
         $tagMatchGroups = $this->tagExtractor->extract($content);
         foreach ($tagMatchGroups as $tagMatchGroup) {
-            $tags = $this->tagRegistry->getTag($tagMatchGroup->getTagName(), $this->getType(), $tagMatchGroup->getNamespace())
+            $tags = $this->tagRegistry->getTag($tagMatchGroup->getTagName(), 'html', $tagMatchGroup->getNamespace())
                 ->parseAll($tagMatchGroup->getTags(), $locale);
 
             $content = str_replace(array_keys($tags), array_values($tags), $content);
@@ -60,17 +60,12 @@ class HtmlMarkupParser implements MarkupParserInterface
         $result = [];
         $tagMatchGroups = $this->tagExtractor->extract($content);
         foreach ($tagMatchGroups as $tagMatchGroup) {
-            $tags = $this->tagRegistry->getTag($tagMatchGroup->getTagName(), $this->getType(), $tagMatchGroup->getNamespace())
+            $tags = $this->tagRegistry->getTag($tagMatchGroup->getTagName(), 'html', $tagMatchGroup->getNamespace())
                 ->validateAll($tagMatchGroup->getTags(), $locale);
 
             $result = array_merge($result, $tags);
         }
 
         return $result;
-    }
-
-    public function getType(): string
-    {
-        return 'html';
     }
 }
