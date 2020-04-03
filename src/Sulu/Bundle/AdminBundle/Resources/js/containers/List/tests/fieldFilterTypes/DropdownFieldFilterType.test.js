@@ -34,7 +34,7 @@ test('Render with value set by setValue', () => {
     expect(render(dropdownFieldFilterType.getFormNode())).toMatchSnapshot();
 });
 
-test('Pass correct props to MultiSelect', () => {
+test('Pass correct props to CheckboxGroup', () => {
     const dropdownFieldFilterType = new DropdownFieldFilterType(
         jest.fn(),
         {options: {audio: 'Audio', image: 'Image', video: 'Video'}},
@@ -43,16 +43,15 @@ test('Pass correct props to MultiSelect', () => {
 
     const dropdownFieldFilterTypeForm = mount(dropdownFieldFilterType.getFormNode());
 
-    expect(dropdownFieldFilterTypeForm.find('MultiSelect').prop('values')).toEqual(['audio', 'video']);
+    expect(dropdownFieldFilterTypeForm.find('CheckboxGroup').prop('values')).toEqual(['audio', 'video']);
 
-    dropdownFieldFilterTypeForm.find('DisplayValue').simulate('click');
-    expect(dropdownFieldFilterTypeForm.find('MultiSelect Option')).toHaveLength(3);
-    expect(dropdownFieldFilterTypeForm.find('MultiSelect Option').at(0).prop('value')).toEqual('audio');
-    expect(dropdownFieldFilterTypeForm.find('MultiSelect Option').at(0).text()).toEqual('Audio');
-    expect(dropdownFieldFilterTypeForm.find('MultiSelect Option').at(1).prop('value')).toEqual('image');
-    expect(dropdownFieldFilterTypeForm.find('MultiSelect Option').at(1).text()).toEqual('Image');
-    expect(dropdownFieldFilterTypeForm.find('MultiSelect Option').at(2).prop('value')).toEqual('video');
-    expect(dropdownFieldFilterTypeForm.find('MultiSelect Option').at(2).text()).toEqual('Video');
+    expect(dropdownFieldFilterTypeForm.find('Checkbox')).toHaveLength(3);
+    expect(dropdownFieldFilterTypeForm.find('Checkbox').at(0).prop('value')).toEqual('audio');
+    expect(dropdownFieldFilterTypeForm.find('Checkbox').at(0).text()).toEqual('Audio');
+    expect(dropdownFieldFilterTypeForm.find('Checkbox').at(1).prop('value')).toEqual('image');
+    expect(dropdownFieldFilterTypeForm.find('Checkbox').at(1).text()).toEqual('Image');
+    expect(dropdownFieldFilterTypeForm.find('Checkbox').at(2).prop('value')).toEqual('video');
+    expect(dropdownFieldFilterTypeForm.find('Checkbox').at(2).text()).toEqual('Video');
 });
 
 test('Call onChange handler with new value', () => {
@@ -60,7 +59,7 @@ test('Call onChange handler with new value', () => {
     const dropdownFieldFilterType = new DropdownFieldFilterType(changeSpy, {options: {test: 'test'}}, undefined);
     const dropdownFieldFilterTypeForm = mount(dropdownFieldFilterType.getFormNode());
 
-    dropdownFieldFilterTypeForm.find('MultiSelect').prop('onChange')(['test']);
+    dropdownFieldFilterTypeForm.find('CheckboxGroup').prop('onChange')(['test']);
 
     expect(changeSpy).toBeCalledWith(['test']);
 });
@@ -70,7 +69,7 @@ test('Call onChange handler with undefined if the new selection is empty', () =>
     const dropdownFieldFilterType = new DropdownFieldFilterType(changeSpy, {options: {test: 'test'}}, undefined);
     const dropdownFieldFilterTypeForm = mount(dropdownFieldFilterType.getFormNode());
 
-    dropdownFieldFilterTypeForm.find('MultiSelect').prop('onChange')([]);
+    dropdownFieldFilterTypeForm.find('CheckboxGroup').prop('onChange')([]);
 
     expect(changeSpy).toBeCalledWith(undefined);
 });
