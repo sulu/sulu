@@ -141,6 +141,15 @@ test('Do not close when esc button is pressed if initially was opened but has be
 test('Change when enter button is pressed', () => {
     const changeSpy = jest.fn();
 
+    const listFieldFilterType = jest.fn(() => ({
+        confirm: jest.fn(),
+        getValueNode: jest.fn((value) => Promise.resolve('The value is ' + value)),
+        getFormNode: jest.fn(() => <div>This is the form node</div>),
+        setValue: jest.fn(),
+    }));
+
+    listFieldFilterTypeRegistry.get.mockReturnValue(listFieldFilterType);
+
     mount(
         <FieldFilterItem
             column="salutation"
@@ -164,6 +173,15 @@ test('Change when enter button is pressed', () => {
 test('Do not change when enter button is pressed if was not opened', () => {
     const changeSpy = jest.fn();
 
+    const listFieldFilterType = jest.fn(() => ({
+        confirm: jest.fn(),
+        getValueNode: jest.fn((value) => Promise.resolve('The value is ' + value)),
+        getFormNode: jest.fn(() => <div>This is the form node</div>),
+        setValue: jest.fn(),
+    }));
+
+    listFieldFilterTypeRegistry.get.mockReturnValue(listFieldFilterType);
+
     mount(
         <FieldFilterItem
             column="salutation"
@@ -185,6 +203,15 @@ test('Do not change when enter button is pressed if was not opened', () => {
 
 test('Change when enter button is pressed if initially was closed but has been opened in the mean time', () => {
     const changeSpy = jest.fn();
+
+    const listFieldFilterType = jest.fn(() => ({
+        confirm: jest.fn(),
+        getValueNode: jest.fn((value) => Promise.resolve('The value is ' + value)),
+        getFormNode: jest.fn(() => <div>This is the form node</div>),
+        setValue: jest.fn(),
+    }));
+
+    listFieldFilterTypeRegistry.get.mockReturnValue(listFieldFilterType);
 
     const fieldFilterItem = mount(
         <FieldFilterItem
@@ -302,10 +329,12 @@ test('Update value and reset when FieldFilterItem is closed without confirming',
 
 test('Update value and call onChange when FieldFilterItem is confirmed', () => {
     const changeSpy = jest.fn();
+    const confirmSpy = jest.fn();
     const setValueSpy = jest.fn();
 
     const listFieldFilterType = jest.fn((onChange) => ({
         onChange,
+        confirm: confirmSpy,
         getValueNode: jest.fn((value) => Promise.resolve('The value is ' + value)),
         getFormNode: jest.fn(() => <input id="test-input" onChange={onChange} />),
         setValue: setValueSpy,
@@ -333,6 +362,7 @@ test('Update value and call onChange when FieldFilterItem is confirmed', () => {
     fieldFilterItem.find('Button').prop('onClick')();
 
     expect(changeSpy).toBeCalledWith('salutation', 'test-value');
+    expect(confirmSpy).toBeCalledWith();
     expect(setValueSpy).toBeCalledWith('test-value');
 });
 

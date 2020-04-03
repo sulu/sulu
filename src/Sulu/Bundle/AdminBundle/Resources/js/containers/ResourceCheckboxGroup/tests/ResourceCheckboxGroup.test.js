@@ -2,7 +2,6 @@
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
 import ResourceCheckboxGroup from '../ResourceCheckboxGroup';
-import MultiSelectComponent from '../../../components/MultiSelect';
 import ResourceListStore from '../../../stores/ResourceListStore';
 
 jest.mock('../../../stores/ResourceListStore', () => jest.fn());

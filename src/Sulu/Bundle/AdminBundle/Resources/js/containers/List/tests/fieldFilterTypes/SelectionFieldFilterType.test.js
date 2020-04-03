@@ -46,7 +46,7 @@ test('Pass correct props to Select', () => {
 
     const selectionFieldFilterTypeForm = shallow(selectionFieldFilterType.getFormNode());
 
-    expect(selectionFieldFilterTypeForm.find('ResourceMultiSelect').props()).toEqual(expect.objectContaining({
+    expect(selectionFieldFilterTypeForm.find('ResourceCheckboxGroup').props()).toEqual(expect.objectContaining({
         displayProperty: 'name',
         resourceKey: 'accounts',
         values: [4, 6],
@@ -77,11 +77,11 @@ test('Setting a new value should update the select', () => {
     );
 
     const selectionFieldFilterTypeForm1 = shallow(selectionFieldFilterType.getFormNode());
-    expect(selectionFieldFilterTypeForm1.find('ResourceMultiSelect').prop('values')).toEqual([4, 6]);
+    expect(selectionFieldFilterTypeForm1.find('ResourceCheckboxGroup').prop('values')).toEqual([4, 6]);
 
     selectionFieldFilterType.setValue([4, 5]);
     const selectionFieldFilterTypeForm2 = shallow(selectionFieldFilterType.getFormNode());
-    expect(selectionFieldFilterTypeForm2.find('ResourceMultiSelect').prop('values')).toEqual([4, 5]);
+    expect(selectionFieldFilterTypeForm2.find('ResourceCheckboxGroup').prop('values')).toEqual([4, 5]);
 });
 
 test('Setting a new value should update the selectionStore', () => {
@@ -124,7 +124,7 @@ test('Call onChange handler when selection changes for auto_complete type', () =
     expect(changeSpy).toBeCalledWith([4, 7]);
 });
 
-test('Call onChange handler when selection changes for select type after select is closed', () => {
+test('Call onChange handler when selection changes for select type after filter type is confirmed', () => {
     const changeSpy = jest.fn();
     const selectionFieldFilterType = new SelectionFieldFilterType(
         changeSpy,
@@ -134,10 +134,10 @@ test('Call onChange handler when selection changes for select type after select 
 
     const selectionFieldFilterTypeForm = shallow(selectionFieldFilterType.getFormNode());
     changeSpy.mockReset();
-    selectionFieldFilterTypeForm.find('ResourceMultiSelect').prop('onChange')([4, 7]);
+    selectionFieldFilterTypeForm.find('ResourceCheckboxGroup').prop('onChange')([4, 7]);
 
     expect(changeSpy).not.toBeCalled();
-    selectionFieldFilterTypeForm.find('ResourceMultiSelect').prop('onClose')();
+    selectionFieldFilterType.confirm();
     expect(changeSpy).toBeCalledWith([4, 7]);
 });
 
