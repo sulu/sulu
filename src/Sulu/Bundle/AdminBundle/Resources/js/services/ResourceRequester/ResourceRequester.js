@@ -25,7 +25,7 @@ export default class ResourceRequester {
     }
 
     static getList(resourceKey: string, options: ListOptions = {}) {
-        return Requester.get(resourceRouteRegistry.getListUrl(resourceKey, {flat: true, ...options}));
+        return Requester.get(resourceRouteRegistry.getListUrl(resourceKey, {...options, flat: true}));
     }
 
     static delete(resourceKey: string, parameters: ?Object) {

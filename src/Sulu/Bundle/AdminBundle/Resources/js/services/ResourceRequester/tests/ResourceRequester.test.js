@@ -80,7 +80,7 @@ test('Should send a list get request to the correct URL with page and limit para
         limit: 5,
         page: 1,
     });
-    expect(Requester.get).toHaveBeenLastCalledWith('/snippets?page=1&limit=5&flat=false');
+    expect(Requester.get).toHaveBeenLastCalledWith('/snippets?page=1&limit=5&flat=true');
 });
 
 test('Should send a put request and return the promise', () => {
