@@ -1,549 +1,378 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render in disabled state 1`] = `
-<div
-  class="multiItemSelectionClass disabled"
->
+exports[`Show with passed icon and label and open overlay 1`] = `
+Array [
   <div
-    class="header emptyList"
+    class="multiItemSelectionClass"
   >
-    <button
-      class="button left"
-      disabled=""
-      type="button"
-    >
-      <span
-        aria-label="su-plus"
-        class="su-plus icon"
-      />
-    </button>
     <div
-      class="label"
-    />
-  </div>
-  <ul
-    class="list"
-  />
-</div>
-`;
-
-exports[`Render with disabled item 1`] = `
-<div
-  class="multiItemSelectionClass"
->
-  <div
-    class="header"
-  >
-    <button
-      class="button left"
-      type="button"
+      class="header"
     >
-      <span
-        aria-label="su-plus"
-        class="su-plus icon"
-      />
-    </button>
-    <div
-      class="label"
-    />
-  </div>
-  <ul
-    class="list"
-  >
-    <li
-      class="listElement"
-    >
-      <div
-        class="item"
+      <button
+        class="button left"
+        type="button"
       >
         <span
-          class="dragHandle sortable"
+          aria-label="su-document"
+          class="su-document icon"
+        />
+      </button>
+      <div
+        class="label"
+      >
+        Select Snippets
+      </div>
+    </div>
+    <ul
+      class="list"
+    >
+      <li
+        class="listElement"
+      >
+        <div
+          class="item"
         >
           <span
-            aria-label="su-more"
-            class="su-more"
-          />
-          <span
-            class="index"
-          >
-            1
-          </span>
-        </span>
-        <div
-          class="content"
-        >
-          <div />
-        </div>
-        <div
-          class="buttons"
-        >
-          <button
-            class="button"
-            type="button"
+            class="dragHandle sortable"
           >
             <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
+              aria-label="su-more"
+              class="su-more"
             />
-          </button>
-        </div>
-      </div>
-    </li>
-    <li
-      class="listElement"
-    >
-      <div
-        class="item disabled"
-      >
-        <span
-          class="dragHandle sortable"
-        >
-          <span
-            aria-label="su-more"
-            class="su-more"
-          />
-          <span
-            class="index"
-          >
-            2
+            <span
+              class="index"
+            >
+              1
+            </span>
           </span>
-        </span>
-        <div
-          class="content"
-        >
-          <div />
+          <div
+            class="content"
+          >
+            <div>
+              <span
+                class="itemColumn"
+                style="width: 50%;"
+              >
+                <div
+                  aria-label="1"
+                  class="croppedText"
+                  title="1"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="front"
+                  >
+                    1
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="back"
+                  >
+                    <span />
+                  </div>
+                  <div
+                    class="whole"
+                  >
+                    1
+                  </div>
+                </div>
+              </span>
+              <span
+                class="itemColumn"
+                style="width: 50%;"
+              >
+                <div
+                  aria-label="Title 1"
+                  class="croppedText"
+                  title="Title 1"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="front"
+                  >
+                    Titl
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="back"
+                  >
+                    <span>
+                      e 1
+                    </span>
+                  </div>
+                  <div
+                    class="whole"
+                  >
+                    Title 1
+                  </div>
+                </div>
+              </span>
+            </div>
+          </div>
+          <div
+            class="buttons"
+          >
+            <button
+              class="button"
+              type="button"
+            >
+              <span
+                aria-label="su-trash-alt"
+                class="su-trash-alt"
+              />
+            </button>
+          </div>
         </div>
+      </li>
+      <li
+        class="listElement"
+      >
         <div
-          class="buttons"
-        />
-      </div>
-    </li>
-  </ul>
-</div>
-`;
-
-exports[`Should open an overlay 1`] = `
-"<div>
-  <div class=\\"backdrop visible fixed\\" role=\\"button\\"></div>
-</div>
-<div>
-  <div class=\\"container\\">
-    <div class=\\"overlay large\\">
-      <section class=\\"content\\">
+          class="item"
+        >
+          <span
+            class="dragHandle sortable"
+          >
+            <span
+              aria-label="su-more"
+              class="su-more"
+            />
+            <span
+              class="index"
+            >
+              2
+            </span>
+          </span>
+          <div
+            class="content"
+          >
+            <div>
+              <span
+                class="itemColumn"
+                style="width: 50%;"
+              >
+                <div
+                  aria-label="2"
+                  class="croppedText"
+                  title="2"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="front"
+                  >
+                    2
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="back"
+                  >
+                    <span />
+                  </div>
+                  <div
+                    class="whole"
+                  >
+                    2
+                  </div>
+                </div>
+              </span>
+              <span
+                class="itemColumn"
+                style="width: 50%;"
+              >
+                <div
+                  aria-label="Title 2"
+                  class="croppedText"
+                  title="Title 2"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="front"
+                  >
+                    Titl
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="back"
+                  >
+                    <span>
+                      e 2
+                    </span>
+                  </div>
+                  <div
+                    class="whole"
+                  >
+                    Title 2
+                  </div>
+                </div>
+              </span>
+            </div>
+          </div>
+          <div
+            class="buttons"
+          >
+            <button
+              class="button"
+              type="button"
+            >
+              <span
+                aria-label="su-trash-alt"
+                class="su-trash-alt"
+              />
+            </button>
+          </div>
+        </div>
+      </li>
+      <li
+        class="listElement"
+      >
+        <div
+          class="item"
+        >
+          <span
+            class="dragHandle sortable"
+          >
+            <span
+              aria-label="su-more"
+              class="su-more"
+            />
+            <span
+              class="index"
+            >
+              3
+            </span>
+          </span>
+          <div
+            class="content"
+          >
+            <div>
+              <span
+                class="itemColumn"
+                style="width: 50%;"
+              >
+                <div
+                  aria-label="5"
+                  class="croppedText"
+                  title="5"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="front"
+                  >
+                    5
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="back"
+                  >
+                    <span />
+                  </div>
+                  <div
+                    class="whole"
+                  >
+                    5
+                  </div>
+                </div>
+              </span>
+              <span
+                class="itemColumn"
+                style="width: 50%;"
+              >
+                <div
+                  aria-label="Title 5"
+                  class="croppedText"
+                  title="Title 5"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="front"
+                  >
+                    Titl
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="back"
+                  >
+                    <span>
+                      e 5
+                    </span>
+                  </div>
+                  <div
+                    class="whole"
+                  >
+                    Title 5
+                  </div>
+                </div>
+              </span>
+            </div>
+          </div>
+          <div
+            class="buttons"
+          >
+            <button
+              class="button"
+              type="button"
+            >
+              <span
+                aria-label="su-trash-alt"
+                class="su-trash-alt"
+              />
+            </button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>,
+  <div
+    class="backdrop visible fixed"
+    role="button"
+  />,
+  <div
+    class="container"
+  >
+    <div
+      class="overlay large"
+    >
+      <section
+        class="content"
+      >
         <header>
-          <h2>Selection</h2><span aria-label=\\"su-times\\" class=\\"su-times clickable icon\\" role=\\"button\\" tabindex=\\"0\\"></span>
+          <h2>
+            Selection
+          </h2>
+          <span
+            aria-label="su-times"
+            class="su-times clickable icon"
+            role="button"
+            tabindex="0"
+          />
         </header>
         <article>
-          <div class=\\"adapterContainer overlay table\\">
-            <div class=\\"list adapter table\\">
-              <div class=\\"list\\"></div>
+          <div
+            class="adapterContainer overlay table"
+          >
+            <div
+              class="list adapter table"
+            >
+              <div
+                class="list"
+              />
             </div>
           </div>
         </article>
-        <footer><button class=\\"button primary\\" disabled=\\"\\" type=\\"button\\"><span class=\\"text\\">sulu_admin.confirm</span></button></footer>
+        <footer>
+          <button
+            class="button primary"
+            type="button"
+          >
+            <span
+              class="text"
+            >
+              sulu_admin.confirm
+            </span>
+          </button>
+        </footer>
       </section>
     </div>
-  </div>
-</div>"
-`;
-
-exports[`Show with default plus icon 1`] = `
-<div
-  class="multiItemSelectionClass"
->
-  <div
-    class="header emptyList"
-  >
-    <button
-      class="button left"
-      type="button"
-    >
-      <span
-        aria-label="su-plus"
-        class="su-plus icon"
-      />
-    </button>
-    <div
-      class="label"
-    />
-  </div>
-  <ul
-    class="list"
-  />
-</div>
-`;
-
-exports[`Show with items 1`] = `
-<div
-  class="multiItemSelectionClass"
->
-  <div
-    class="header"
-  >
-    <button
-      class="button left"
-      type="button"
-    >
-      <span
-        aria-label="su-plus"
-        class="su-plus icon"
-      />
-    </button>
-    <div
-      class="label"
-    />
-  </div>
-  <ul
-    class="list"
-  >
-    <li
-      class="listElement"
-    >
-      <div
-        class="item"
-      >
-        <span
-          class="dragHandle sortable"
-        >
-          <span
-            aria-label="su-more"
-            class="su-more"
-          />
-          <span
-            class="index"
-          >
-            1
-          </span>
-        </span>
-        <div
-          class="content"
-        >
-          <div>
-            <span
-              class="itemColumn"
-              style="width:50%"
-            >
-              <div
-                aria-label="1"
-                class="croppedText"
-                title="1"
-              >
-                <div
-                  aria-hidden="true"
-                  class="front"
-                >
-                  1
-                </div>
-                <div
-                  aria-hidden="true"
-                  class="back"
-                >
-                  <span />
-                </div>
-                <div
-                  class="whole"
-                >
-                  1
-                </div>
-              </div>
-            </span>
-            <span
-              class="itemColumn"
-              style="width:50%"
-            >
-              <div
-                aria-label="Title 1"
-                class="croppedText"
-                title="Title 1"
-              >
-                <div
-                  aria-hidden="true"
-                  class="front"
-                >
-                  Titl
-                </div>
-                <div
-                  aria-hidden="true"
-                  class="back"
-                >
-                  <span>
-                    e 1
-                  </span>
-                </div>
-                <div
-                  class="whole"
-                >
-                  Title 1
-                </div>
-              </div>
-            </span>
-          </div>
-        </div>
-        <div
-          class="buttons"
-        >
-          <button
-            class="button"
-            type="button"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
-        </div>
-      </div>
-    </li>
-    <li
-      class="listElement"
-    >
-      <div
-        class="item"
-      >
-        <span
-          class="dragHandle sortable"
-        >
-          <span
-            aria-label="su-more"
-            class="su-more"
-          />
-          <span
-            class="index"
-          >
-            2
-          </span>
-        </span>
-        <div
-          class="content"
-        >
-          <div>
-            <span
-              class="itemColumn"
-              style="width:50%"
-            >
-              <div
-                aria-label="2"
-                class="croppedText"
-                title="2"
-              >
-                <div
-                  aria-hidden="true"
-                  class="front"
-                >
-                  2
-                </div>
-                <div
-                  aria-hidden="true"
-                  class="back"
-                >
-                  <span />
-                </div>
-                <div
-                  class="whole"
-                >
-                  2
-                </div>
-              </div>
-            </span>
-            <span
-              class="itemColumn"
-              style="width:50%"
-            >
-              <div
-                aria-label="Title 2"
-                class="croppedText"
-                title="Title 2"
-              >
-                <div
-                  aria-hidden="true"
-                  class="front"
-                >
-                  Titl
-                </div>
-                <div
-                  aria-hidden="true"
-                  class="back"
-                >
-                  <span>
-                    e 2
-                  </span>
-                </div>
-                <div
-                  class="whole"
-                >
-                  Title 2
-                </div>
-              </div>
-            </span>
-          </div>
-        </div>
-        <div
-          class="buttons"
-        >
-          <button
-            class="button"
-            type="button"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
-        </div>
-      </div>
-    </li>
-    <li
-      class="listElement"
-    >
-      <div
-        class="item"
-      >
-        <span
-          class="dragHandle sortable"
-        >
-          <span
-            aria-label="su-more"
-            class="su-more"
-          />
-          <span
-            class="index"
-          >
-            3
-          </span>
-        </span>
-        <div
-          class="content"
-        >
-          <div>
-            <span
-              class="itemColumn"
-              style="width:50%"
-            >
-              <div
-                aria-label="5"
-                class="croppedText"
-                title="5"
-              >
-                <div
-                  aria-hidden="true"
-                  class="front"
-                >
-                  5
-                </div>
-                <div
-                  aria-hidden="true"
-                  class="back"
-                >
-                  <span />
-                </div>
-                <div
-                  class="whole"
-                >
-                  5
-                </div>
-              </div>
-            </span>
-            <span
-              class="itemColumn"
-              style="width:50%"
-            >
-              <div
-                aria-label="Title 5"
-                class="croppedText"
-                title="Title 5"
-              >
-                <div
-                  aria-hidden="true"
-                  class="front"
-                >
-                  Titl
-                </div>
-                <div
-                  aria-hidden="true"
-                  class="back"
-                >
-                  <span>
-                    e 5
-                  </span>
-                </div>
-                <div
-                  class="whole"
-                >
-                  Title 5
-                </div>
-              </div>
-            </span>
-          </div>
-        </div>
-        <div
-          class="buttons"
-        >
-          <button
-            class="button"
-            type="button"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
-        </div>
-      </div>
-    </li>
-  </ul>
-</div>
-`;
-
-exports[`Show with passed icon 1`] = `
-<div
-  class="multiItemSelectionClass"
->
-  <div
-    class="header emptyList"
-  >
-    <button
-      class="button left"
-      type="button"
-    >
-      <span
-        aria-label="su-document"
-        class="su-document icon"
-      />
-    </button>
-    <div
-      class="label"
-    />
-  </div>
-  <ul
-    class="list"
-  />
-</div>
-`;
-
-exports[`Show with passed label 1`] = `
-<div
-  class="multiItemSelectionClass"
->
-  <div
-    class="header emptyList"
-  >
-    <button
-      class="button left"
-      type="button"
-    >
-      <span
-        aria-label="su-plus"
-        class="su-plus icon"
-      />
-    </button>
-    <div
-      class="label"
-    >
-      Select Snippets
-    </div>
-  </div>
-  <ul
-    class="list"
-  />
-</div>
+  </div>,
+]
 `;
