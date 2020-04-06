@@ -1,6 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, shallow} from 'enzyme';
-import pretty from 'pretty';
 import React from 'react';
 import Popover from '../Popover';
 
@@ -34,11 +33,8 @@ const getMockedAnchorEl = () => ({
     },
 });
 
-afterEach(() => document.body.innerHTML = '');
-
 test('The popover should render in body when open', () => {
-    const body = document.body;
-    const view = mount(
+    const popover = mount(
         <Popover
             anchorElement={getMockedAnchorEl()}
             open={true}
@@ -54,13 +50,16 @@ test('The popover should render in body when open', () => {
             }
         </Popover>
     );
-    expect(view.find('Backdrop')).toHaveLength(1);
-    expect(view.find('Backdrop').prop('open')).toEqual(true);
-    expect(pretty(body.innerHTML)).toMatchSnapshot();
+
+    popover.instance().popoverWidth = 20;
+    popover.instance().popoverHeight = 100;
+    popover.update();
+
+    expect(popover.instance().dimensions.scrollTop).toBe(4);
+    expect(popover.render()).toMatchSnapshot();
 });
 
 test('The popover should not render in body when not open', () => {
-    const body = document.body;
     const view = mount(
         <Popover
             anchorElement={getMockedAnchorEl()}
@@ -77,8 +76,8 @@ test('The popover should not render in body when not open', () => {
             }
         </Popover>
     );
-    expect(view.find('Backdrop')).toHaveLength(0);
-    expect(pretty(body.innerHTML)).toMatchSnapshot();
+
+    expect(view.children()).toHaveLength(0);
 });
 
 test('The popover should request to be closed when the backdrop is clicked', () => {
@@ -124,26 +123,6 @@ test('The popover should request to be closed when the window is blurred', () =>
     expect(windowListeners.blur).toBeDefined();
     windowListeners.blur();
     expect(onCloseSpy).toBeCalled();
-});
-
-test('The popover should take its dimensions from the positioner', () => {
-    const body = document.body;
-    const popover = mount(
-        <Popover anchorElement={getMockedAnchorEl()} open={true}>
-            {
-                (setPopoverRef, styles) => (
-                    <div ref={setPopoverRef} style={styles}>
-                        <div>My item 1</div>
-                    </div>
-                )
-            }
-        </Popover>
-    );
-    popover.instance().popoverWidth = 20;
-    popover.instance().popoverHeight = 100;
-    popover.update();
-    expect(pretty(body.innerHTML)).toMatchSnapshot();
-    expect(popover.instance().dimensions.scrollTop).toBe(4);
 });
 
 test('The popover should pass its child ref to the parent', () => {
