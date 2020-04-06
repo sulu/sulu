@@ -1,95 +1,68 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The component should not render in body when closed 1`] = `null`;
-
 exports[`The component should render in body when open 1`] = `
-"<div>
-  <div class=\\"backdrop visible fixed\\" role=\\"button\\"></div>
-</div>
-<div>
-  <div class=\\"container isDown\\">
-    <div class=\\"overlay small\\">
-      <section class=\\"content\\">
-        <header>
-          <h2>My overlay title</h2><span aria-label=\\"su-times\\" class=\\"su-times clickable icon\\" role=\\"button\\" tabindex=\\"0\\"></span>
-        </header>
-        <article>
-          <p>My overlay content</p>
-        </article>
-        <footer><button class=\\"button primary\\" type=\\"button\\"><span class=\\"text\\">Apply</span></button></footer>
-      </section>
-    </div>
+<div
+  class="container isDown"
+>
+  <div
+    class="overlay small"
+  >
+    <section
+      class="content"
+    >
+      <header>
+        <h2>
+          My overlay title
+        </h2>
+        <span
+          aria-label="su-times"
+          class="su-times clickable icon"
+          role="button"
+          tabindex="0"
+        />
+      </header>
+      <article>
+        <p>
+          My overlay content
+        </p>
+      </article>
+      <footer>
+        <div
+          class="actions"
+        >
+          <button
+            class="button link"
+            type="button"
+          >
+            <span
+              class="text"
+            >
+              Action 1
+            </span>
+          </button>
+          <button
+            class="button link"
+            type="button"
+          >
+            <span
+              class="text"
+            >
+              Action 2
+            </span>
+          </button>
+        </div>
+        <button
+          class="button primary"
+          type="button"
+        >
+          <span
+            class="text"
+          >
+            Apply
+          </span>
+        </button>
+      </footer>
+    </section>
   </div>
-</div>"
-`;
-
-exports[`The component should render in body with actions when open 1`] = `
-"<div>
-  <div class=\\"backdrop visible fixed\\" role=\\"button\\"></div>
 </div>
-<div>
-  <div class=\\"container isDown\\">
-    <div class=\\"overlay\\">
-      <section class=\\"content\\">
-        <header>
-          <h2>My overlay title</h2><span aria-label=\\"su-times\\" class=\\"su-times clickable icon\\" role=\\"button\\" tabindex=\\"0\\"></span>
-        </header>
-        <article>
-          <p>My overlay content</p>
-        </article>
-        <footer>
-          <div class=\\"actions\\"><button class=\\"button link\\" type=\\"button\\"><span class=\\"text\\">Action 1</span></button><button class=\\"button link\\" type=\\"button\\"><span class=\\"text\\">Action 2</span></button></div><button class=\\"button primary\\" type=\\"button\\"><span class=\\"text\\">Apply</span></button>
-        </footer>
-      </section>
-    </div>
-  </div>
-</div>"
-`;
-
-exports[`The component should render in body with loader instead of confirm button 1`] = `
-"<div>
-  <div class=\\"backdrop visible fixed\\" role=\\"button\\"></div>
-</div>
-<div>
-  <div class=\\"container isDown\\">
-    <div class=\\"overlay\\">
-      <section class=\\"content\\">
-        <header>
-          <h2>My overlay title</h2><span aria-label=\\"su-times\\" class=\\"su-times clickable icon\\" role=\\"button\\" tabindex=\\"0\\"></span>
-        </header>
-        <article>
-          <p>My overlay content</p>
-        </article>
-        <footer><button class=\\"button primary loading\\" disabled=\\"\\" type=\\"button\\"><span class=\\"text\\">Apply</span>
-            <div class=\\"loader\\">
-              <div class=\\"spinner\\" style=\\"width: 25px; height: 25px;\\">
-                <div class=\\"doubleBounce1\\"></div>
-                <div class=\\"doubleBounce2\\"></div>
-              </div>
-            </div></button></footer>
-      </section>
-    </div>
-  </div>
-</div>"
-`;
-
-exports[`The component should render with a disabled confirm button 1`] = `
-"<div>
-  <div class=\\"backdrop visible fixed\\" role=\\"button\\"></div>
-</div>
-<div>
-  <div class=\\"container isDown\\">
-    <div class=\\"overlay\\">
-      <section class=\\"content\\">
-        <header>
-          <h2>My overlay title</h2><span aria-label=\\"su-times\\" class=\\"su-times clickable icon\\" role=\\"button\\" tabindex=\\"0\\"></span>
-        </header>
-        <article>
-          <p>My overlay content</p>
-        </article>
-        <footer><button class=\\"button primary\\" disabled=\\"\\" type=\\"button\\"><span class=\\"text\\">Apply</span></button></footer>
-      </section>
-    </div>
-  </div>
-</div>"
 `;

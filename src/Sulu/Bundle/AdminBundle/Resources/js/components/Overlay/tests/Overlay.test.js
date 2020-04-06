@@ -2,22 +2,19 @@
 import {mount, shallow} from 'enzyme';
 import Mousetrap from 'mousetrap';
 import React from 'react';
-import pretty from 'pretty';
 import Overlay from '../Overlay';
 
-afterEach(() => {
-    if (document.body) {
-        document.body.innerHTML = '';
-    }
-});
-
 test('The component should render in body when open', () => {
-    const body = document.body;
-    const onClose = jest.fn();
+    const actions = [
+        {title: 'Action 1', onClick: () => {}},
+        {title: 'Action 2', onClick: () => {}},
+    ];
+
     const view = mount(
         <Overlay
+            actions={actions}
             confirmText="Apply"
-            onClose={onClose}
+            onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
             size="small"
@@ -29,17 +26,15 @@ test('The component should render in body when open', () => {
 
     expect(view.find('Backdrop')).toHaveLength(1);
     expect(view.find('Backdrop').prop('open')).toEqual(true);
-    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
+    expect(view.find('Overlay > Portal').at(0).render()).toMatchSnapshot();
 });
 
 test('The component should render with a disabled confirm button', () => {
-    const body = document.body;
-    const onClose = jest.fn();
     const view = mount(
         <Overlay
             confirmDisabled={true}
             confirmText="Apply"
-            onClose={onClose}
+            onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
             title="My overlay title"
@@ -48,13 +43,10 @@ test('The component should render with a disabled confirm button', () => {
         </Overlay>
     );
 
-    expect(view.find('Backdrop')).toHaveLength(1);
-    expect(view.find('Backdrop').prop('open')).toEqual(true);
-    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
+    expect(view.find('Button[children="Apply"]').prop('disabled')).toEqual(true);
 });
 
 test('The component should render in body with loader instead of confirm button', () => {
-    const body = document.body;
     const onClose = jest.fn();
     const view = mount(
         <Overlay
@@ -69,38 +61,10 @@ test('The component should render in body with loader instead of confirm button'
         </Overlay>
     );
 
-    expect(view.find('Backdrop')).toHaveLength(1);
-    expect(view.find('Backdrop').prop('open')).toEqual(true);
-    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
-});
-
-test('The component should render in body with actions when open', () => {
-    const actions = [
-        {title: 'Action 1', onClick: () => {}},
-        {title: 'Action 2', onClick: () => {}},
-    ];
-    const body = document.body;
-    const onClose = jest.fn();
-    const view = mount(
-        <Overlay
-            actions={actions}
-            confirmText="Apply"
-            onClose={onClose}
-            onConfirm={jest.fn()}
-            open={true}
-            title="My overlay title"
-        >
-            <p>My overlay content</p>
-        </Overlay>
-    );
-
-    expect(view.find('Backdrop')).toHaveLength(1);
-    expect(view.find('Backdrop').prop('open')).toEqual(true);
-    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
+    expect(view.find('Button[children="Apply"]').prop('loading')).toEqual(true);
 });
 
 test('The component should not render in body when closed', () => {
-    const body = document.body;
     const onClose = jest.fn();
     const view = mount(
         <Overlay
@@ -112,9 +76,11 @@ test('The component should not render in body when closed', () => {
         >
             <p>My overlay content</p>
         </Overlay>
-    ).render();
-    expect(view).toMatchSnapshot();
-    expect(body ? body.innerHTML : '').toBe('');
+    );
+
+    expect(view.find('Backdrop')).toHaveLength(1);
+    expect(view.find('Backdrop').prop('open')).toEqual(false);
+    expect(view.find('Overlay > Portal')).toHaveLength(0);
 });
 
 test('The component should request to be closed on click on backdrop', () => {
