@@ -30,7 +30,7 @@ trait DataProviderRepositoryTrait
             ->orderBy($alias . '.id', 'ASC');
         $this->appendJoins($queryBuilder, $alias, $locale);
 
-        if (array_key_exists('sortBy', $filters) && is_array($filters['sortBy'])) {
+        if (array_key_exists('sortBy', $filters)) {
             $sortMethod = array_key_exists('sortMethod', $filters) ? $filters['sortMethod'] : 'asc';
             $this->appendSortBy($filters['sortBy'], $sortMethod, $queryBuilder, $alias, $locale);
         }
@@ -357,13 +357,11 @@ trait DataProviderRepositoryTrait
      */
     protected function appendSortBy($sortBy, $sortMethod, QueryBuilder $queryBuilder, $alias, $locale)
     {
-        foreach ($sortBy as $column) {
-            if (!in_array(explode('.', $column)[0], $queryBuilder->getAllAliases())) {
-                $this->appendSortByJoins($queryBuilder, $alias, $locale);
-            }
-
-            $queryBuilder->orderBy($column, $sortMethod);
+        if (!in_array(explode('.', $sortBy)[0], $queryBuilder->getAllAliases())) {
+            $this->appendSortByJoins($queryBuilder, $alias, $locale);
         }
+
+        $queryBuilder->orderBy($sortBy, $sortMethod);
     }
 
     /**
