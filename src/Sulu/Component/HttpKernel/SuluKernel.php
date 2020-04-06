@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\HttpKernel;
 
+use Sulu\Bundle\PreviewBundle\SuluPreviewBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
@@ -30,6 +31,8 @@ abstract class SuluKernel extends Kernel
 
     const CONTEXT_WEBSITE = 'website';
 
+    const CONTEXT_PREVIEW = 'preview';
+
     /**
      * @var string
      */
@@ -39,6 +42,11 @@ abstract class SuluKernel extends Kernel
      * @var string
      */
     private $reversedContext = self::CONTEXT_WEBSITE;
+
+    /**
+     * @var bool
+     */
+    private $isPreview = false;
 
     /**
      * Overload the parent constructor method to add an additional
@@ -52,7 +60,13 @@ abstract class SuluKernel extends Kernel
      */
     public function __construct($environment, $debug, $suluContext = self::CONTEXT_ADMIN)
     {
-        $this->name = $suluContext;
+        $this->isPreview = false;
+
+        if ($suluContext === self::CONTEXT_PREVIEW) {
+            $this->isPreview = true;
+            $suluContext = self::CONTEXT_WEBSITE;
+        }
+
         $this->context = $suluContext;
         $this->reversedContext = self::CONTEXT_ADMIN === $this->context ? self::CONTEXT_WEBSITE : self::CONTEXT_ADMIN;
         parent::__construct($environment, $debug);
@@ -83,6 +97,23 @@ abstract class SuluKernel extends Kernel
         $this->load($loader, $confDir, '/{services}');
         $this->load($loader, $confDir, '/{services}_' . $this->context);
         $this->load($loader, $confDir, '/{services}_' . $this->environment);
+
+        if ($this->isPreview) {
+            // TODO move to preview bundle compiler pass
+            $reflection = new \ReflectionClass(SuluPreviewBundle::class);
+            $dirname = dirname($reflection->getFileName());
+
+            $loader->load(function(ContainerBuilder $container) use ($loader, $dirname) {
+                // disable web_profiler toolbar in preview if the web_profiler extension exist
+                if ($container->hasExtension('web_profiler')) {
+                    $loader->load(
+                        implode(DIRECTORY_SEPARATOR, [$dirname, 'Resources', 'config', 'config_preview_dev.yml'])
+                    );
+                }
+            });
+
+            $loader->load(implode(DIRECTORY_SEPARATOR, [$dirname, 'Resources', 'config', 'config_preview.yml']));
+        }
     }
 
     protected function configureRoutes(RouteCollectionBuilder $routes)
@@ -136,7 +167,7 @@ abstract class SuluKernel extends Kernel
         return $this->getProjectDir() . DIRECTORY_SEPARATOR
             . 'var' . DIRECTORY_SEPARATOR
             . 'cache' . DIRECTORY_SEPARATOR
-            . $this->context . DIRECTORY_SEPARATOR
+            . ($this->isPreview ? 'preview' : $this->context) . DIRECTORY_SEPARATOR
             . $this->environment;
     }
 
@@ -154,7 +185,7 @@ abstract class SuluKernel extends Kernel
         return $this->getProjectDir() . DIRECTORY_SEPARATOR
             . 'var' . DIRECTORY_SEPARATOR
             . 'log' . DIRECTORY_SEPARATOR
-            . $this->context;
+            . ($this->isPreview ? 'preview' : $this->context);
     }
 
     protected function getConfigExtensions(): string
@@ -192,6 +223,7 @@ abstract class SuluKernel extends Kernel
             [
                 'sulu.context' => $this->context,
                 'sulu.common_cache_dir' => $this->getCommonCacheDir(),
+                'sulu.preview' => $this->isPreview,
             ]
         );
     }
@@ -201,5 +233,10 @@ abstract class SuluKernel extends Kernel
         $configExtensions = $this->getConfigExtensions();
 
         return '_' . $this->reversedContext . $configExtensions;
+    }
+
+    public function createPreviewKernel(): self
+    {
+        return new static($this->environment, $this->debug, self::CONTEXT_PREVIEW);
     }
 }

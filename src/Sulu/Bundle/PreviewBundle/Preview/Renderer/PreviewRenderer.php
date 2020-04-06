@@ -200,7 +200,7 @@ class PreviewRenderer implements PreviewRendererInterface
      */
     private function handle(Request $request)
     {
-        $kernel = $this->kernelFactory->create($this->environment);
+        $kernel = $this->kernelFactory->create();
 
         try {
             return $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);

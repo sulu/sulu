@@ -19,7 +19,9 @@
 
         <!-- preview -->
         <service id="sulu_preview.preview.kernel_factory"
-                 class="Sulu\Bundle\PreviewBundle\Preview\Renderer\WebsiteKernelFactory"/>
+                 class="Sulu\Bundle\PreviewBundle\Preview\Renderer\WebsiteKernelFactory">
+            <argument type="service" id="kernel"/>
+        </service>
 
         <service id="sulu_preview.preview.renderer" class="Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRenderer">
             <argument type="service" id="sulu_route.routing.defaults_provider"/>
