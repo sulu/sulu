@@ -8,7 +8,7 @@ test('ColorPicker should render', () => {
     expect(colorPicker.render()).toMatchSnapshot();
 });
 
-test('ColorPicker should disabled Input when disabled', () => {
+test('ColorPicker should disable Input when disabled', () => {
     const colorPicker = mount(<ColorPicker disabled={true} onChange={jest.fn()} value={undefined} />);
 
     expect(colorPicker.find('Input').prop('onIconClick')).toEqual(undefined);
