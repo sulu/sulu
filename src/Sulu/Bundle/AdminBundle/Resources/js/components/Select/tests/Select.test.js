@@ -137,5 +137,6 @@ test('The component should pass the selected property to the options', () => {
         </Select>
     );
     select.instance().handleDisplayValueClick();
-    expect(document.body.querySelectorAll('.selected').length).toBe(3);
+    select.update();
+    expect(select.find('Option[selected=true]')).toHaveLength(3);
 });

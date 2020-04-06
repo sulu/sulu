@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {mount} from 'enzyme';
 import Mousetrap from 'mousetrap';
 import MultiAutoComplete from '../MultiAutoComplete';
 
