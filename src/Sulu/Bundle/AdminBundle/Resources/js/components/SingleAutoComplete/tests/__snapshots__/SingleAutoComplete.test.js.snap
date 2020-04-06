@@ -1,45 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render the SingleAutoComplete with open suggestions list 1`] = `
-<div
-  class="singleAutoComplete"
->
-  <label
-    class="input default left"
-  >
-    <div
-      class="prependedContainer default"
-    >
-      <span
-        aria-label="su-search"
-        class="su-search icon default"
-      />
-    </div>
-    <input
-      autocomplete="off"
-      class="mousetrap"
-      type="text"
-      value="Test"
-    />
-  </label>
-</div>
-`;
-
-exports[`Render the SingleAutoComplete with open suggestions list 2`] = `
-"<div>
-  <div class=\\"backdrop fixed\\" role=\\"button\\"></div>
-</div>
-<div>
-  <div class=\\"container\\">
-    <ul class=\\"menu\\" style=\\"top: 10px; left: 10px; position: fixed; pointer-events: auto;\\">
-      <li class=\\"suggestionItem\\" style=\\"min-width: -10px;\\"><button class=\\"suggestion\\"><span class=\\"column\\">Suggestion 1</span></button></li>
-      <li class=\\"suggestionItem\\" style=\\"min-width: -10px;\\"><button class=\\"suggestion\\"><span class=\\"column\\">Suggestion 2</span></button></li>
-      <li class=\\"suggestionItem\\" style=\\"min-width: -10px;\\"><button class=\\"suggestion\\"><span class=\\"column\\">Suggestion 3</span></button></li>
-    </ul>
-  </div>
-</div>"
-`;
-
 exports[`SingleAutoComplete should render 1`] = `
 <div
   class="singleAutoComplete"
@@ -65,28 +25,62 @@ exports[`SingleAutoComplete should render 1`] = `
 </div>
 `;
 
-exports[`SingleAutoComplete should render in disabled state 1`] = `
-<div
-  class="singleAutoComplete"
->
-  <label
-    class="input default left disabled"
+exports[`SingleAutoComplete should render 2`] = `
+Array [
+  <div
+    class="backdrop fixed"
+    role="button"
+  />,
+  <div
+    class="container"
   >
-    <div
-      class="prependedContainer default"
+    <ul
+      class="menu"
+      style="top: 10px; left: 10px; position: fixed; pointer-events: auto;"
     >
-      <span
-        aria-label="su-search"
-        class="su-search icon default"
-      />
-    </div>
-    <input
-      autocomplete="off"
-      class="mousetrap"
-      disabled=""
-      type="text"
-      value="Test"
-    />
-  </label>
-</div>
+      <li
+        class="suggestionItem"
+        style="min-width: -10px;"
+      >
+        <button
+          class="suggestion"
+        >
+          <span
+            class="column"
+          >
+            Suggestion 1
+          </span>
+        </button>
+      </li>
+      <li
+        class="suggestionItem"
+        style="min-width: -10px;"
+      >
+        <button
+          class="suggestion"
+        >
+          <span
+            class="column"
+          >
+            Suggestion 2
+          </span>
+        </button>
+      </li>
+      <li
+        class="suggestionItem"
+        style="min-width: -10px;"
+      >
+        <button
+          class="suggestion"
+        >
+          <span
+            class="column"
+          >
+            Suggestion 3
+          </span>
+        </button>
+      </li>
+    </ul>
+  </div>,
+]
 `;

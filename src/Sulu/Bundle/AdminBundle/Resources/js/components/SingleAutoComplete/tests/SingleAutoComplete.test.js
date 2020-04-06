@@ -1,51 +1,9 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
-import pretty from 'pretty';
+import {mount, shallow} from 'enzyme';
 import SingleAutoComplete from '../SingleAutoComplete';
 
 test('SingleAutoComplete should render', () => {
-    const suggestions = [
-        {name: 'Suggestion 1'},
-        {name: 'Suggestion 2'},
-        {name: 'Suggestion 3'},
-    ];
-
-    expect(render(
-        <SingleAutoComplete
-            displayProperty="name"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={{name: 'Test'}}
-        />
-    )).toMatchSnapshot();
-});
-
-test('SingleAutoComplete should render in disabled state', () => {
-    const suggestions = [
-        {name: 'Suggestion 1'},
-        {name: 'Suggestion 2'},
-        {name: 'Suggestion 3'},
-    ];
-
-    expect(render(
-        <SingleAutoComplete
-            disabled={true}
-            displayProperty="name"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={{name: 'Test'}}
-        />
-    )).toMatchSnapshot();
-});
-
-test('Render the SingleAutoComplete with open suggestions list', () => {
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
         {id: 2, name: 'Suggestion 2'},
@@ -65,7 +23,30 @@ test('Render the SingleAutoComplete with open suggestions list', () => {
     );
 
     expect(singleAutoComplete.render()).toMatchSnapshot();
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
+    expect(singleAutoComplete.find('AutoCompletePopover').render()).toMatchSnapshot();
+});
+
+test('SingleAutoComplete should be disabled when in disabled state', () => {
+    const suggestions = [
+        {name: 'Suggestion 1'},
+        {name: 'Suggestion 2'},
+        {name: 'Suggestion 3'},
+    ];
+
+    const singleAutoComplete = mount(
+        <SingleAutoComplete
+            disabled={true}
+            displayProperty="name"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            onSearch={jest.fn()}
+            searchProperties={['name']}
+            suggestions={suggestions}
+            value={{name: 'Test'}}
+        />
+    );
+
+    expect(singleAutoComplete.find('input').prop('disabled')).toEqual(true);
 });
 
 test('Clicking on a suggestion should call the onChange handler with the value of the selected Suggestion', () => {
