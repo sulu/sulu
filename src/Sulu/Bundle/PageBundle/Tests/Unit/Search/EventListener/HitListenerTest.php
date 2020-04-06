@@ -75,6 +75,14 @@ class HitListenerTest extends TestCase
         $this->listener->onHit($this->event->reveal());
     }
 
+    public function testOnHitNoUrl()
+    {
+        $this->document->getUrl()->willReturn(null);
+        $this->document->setUrl(Argument::any())->shouldNotBeCalled();
+
+        $this->listener->onHit($this->event->reveal());
+    }
+
     public function testOnHitAbsolute()
     {
         $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/en');

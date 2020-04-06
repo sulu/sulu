@@ -3,12 +3,6 @@ import {render, shallow} from 'enzyme';
 import React from 'react';
 import Backdrop from '../Backdrop';
 
-afterEach(() => {
-    if (document.body) {
-        document.body.innerHTML = '';
-    }
-});
-
 test('The component should render', () => {
     expect(render(<Backdrop />)).toMatchSnapshot();
 });

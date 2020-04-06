@@ -2,7 +2,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import moment from 'moment-timezone';
-import pretty from 'pretty';
+import ReactDatetime from 'react-datetime';
 import DatePicker from '../DatePicker';
 
 beforeEach(() => {
@@ -17,15 +17,16 @@ test('DatePicker should render', () => {
     const datePicker = mount(<DatePicker onChange={onChange} value={null} />);
 
     expect(datePicker.render()).toMatchSnapshot();
-    expect(pretty(datePicker.find('DateTime').html())).toMatchSnapshot();
+    expect(datePicker.find('DateTime').render()).toMatchSnapshot();
 });
 
-test('DatePicker should render when disabled', () => {
+test('DatePicker should show disabled Input when disabled', () => {
     const onChange = jest.fn();
     const value = new Date('2017-05-23');
     const datePicker = mount(<DatePicker disabled={true} onChange={onChange} value={value} />);
 
-    expect(datePicker.render()).toMatchSnapshot();
+    expect(datePicker.find('Input').prop('onIconClick')).toEqual(undefined);
+    expect(datePicker.find('Input').prop('disabled')).toEqual(true);
 });
 
 test('DatePicker should pass input to inputRef prop', () => {
@@ -57,7 +58,7 @@ test('DatePicker should render with placeholder', () => {
     const onChange = jest.fn();
     const datePicker = mount(<DatePicker onChange={onChange} placeholder="My placeholder" value={null} />);
 
-    expect(datePicker.render()).toMatchSnapshot();
+    expect(datePicker.find('Input').prop('placeholder')).toEqual('My placeholder');
 });
 
 test('DatePicker should render with value', () => {
@@ -65,7 +66,8 @@ test('DatePicker should render with value', () => {
     const value = new Date('2017-05-23');
     const datePicker = mount(<DatePicker onChange={onChange} value={value} />);
 
-    expect(datePicker.render()).toMatchSnapshot();
+    expect(datePicker.find(ReactDatetime).prop('value')).toEqual(value);
+    expect(datePicker.find('Input').prop('value')).toEqual('05/23/2017');
 });
 
 test('DatePicker should try to guess incomplete value using format on blur.', () => {
@@ -130,7 +132,7 @@ test('DatePicker should render date picker with time picker', () => {
     const datePicker = mount(<DatePicker onChange={onChange} options={options} value={null} />);
 
     expect(datePicker.render()).toMatchSnapshot();
-    expect(pretty(datePicker.find('DateTime').html())).toMatchSnapshot();
+    expect(datePicker.find('DateTime').render()).toMatchSnapshot();
 });
 
 test('DatePicker should render error', () => {

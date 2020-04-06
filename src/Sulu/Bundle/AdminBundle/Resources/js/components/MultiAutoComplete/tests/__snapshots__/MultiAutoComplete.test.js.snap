@@ -1,109 +1,96 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`MultiAutoComplete should render 1`] = `
-<label
-  class="multiAutoComplete"
->
-  <div
-    class="icon"
-  >
-    <span
-      aria-label="su-search"
-      class="su-search"
-    />
-  </div>
-  <div
-    class="items"
-  >
-    <span
-      class="chip"
-    >
-      <button
-        class="chip secondary small"
-      >
-        Test
-        <span
-          aria-label="su-times"
-          class="su-times clickable icon"
-          role="button"
-          tabindex="0"
-        />
-      </button>
-    </span>
-    <span
-      class="chip"
-    >
-      <button
-        class="chip secondary small"
-      >
-        Test 2
-        <span
-          aria-label="su-times"
-          class="su-times clickable icon"
-          role="button"
-          tabindex="0"
-        />
-      </button>
-    </span>
-    <input
-      class="input mousetrap"
-      value=""
-    />
-  </div>
-</label>
-`;
-
-exports[`MultiAutoComplete should render in disabled state 1`] = `
-<label
-  class="multiAutoComplete disabled"
->
-  <div
-    class="icon"
-  >
-    <span
-      aria-label="su-search"
-      class="su-search"
-    />
-  </div>
-  <div
-    class="items"
-  >
-    <span
-      class="chip"
-    >
-      <button
-        class="chip secondary small disabled"
-      >
-        Test
-      </button>
-    </span>
-    <span
-      class="chip"
-    >
-      <button
-        class="chip secondary small disabled"
-      >
-        Test 2
-      </button>
-    </span>
-    <input
-      class="input mousetrap"
-      disabled=""
-      value=""
-    />
-  </div>
-</label>
-`;
-
 exports[`Render the MultiAutoComplete with open suggestions list 1`] = `
-"<div>
-  <div class=\\"backdrop fixed\\" role=\\"button\\"></div>
-  <div class=\\"container\\">
-    <ul class=\\"menu\\" style=\\"top: 10px; left: 10px; position: fixed; pointer-events: auto;\\">
-      <li class=\\"suggestionItem\\" style=\\"min-width: -10px;\\"><button class=\\"suggestion\\"><span class=\\"column\\">Suggestion 1</span></button></li>
-      <li class=\\"suggestionItem\\" style=\\"min-width: -10px;\\"><button class=\\"suggestion\\"><span class=\\"column\\">Suggestion 2</span></button></li>
-      <li class=\\"suggestionItem\\" style=\\"min-width: -10px;\\"><button class=\\"suggestion\\"><span class=\\"column\\">Suggestion 3</span></button></li>
+Array [
+  <label
+    class="multiAutoComplete"
+  >
+    <div
+      class="icon"
+    >
+      <span
+        aria-label="su-search"
+        class="su-search"
+      />
+    </div>
+    <div
+      class="items"
+    >
+      <span
+        class="chip"
+      >
+        <button
+          class="chip secondary small"
+        >
+          Test
+          <span
+            aria-label="su-times"
+            class="su-times clickable icon"
+            role="button"
+            tabindex="0"
+          />
+        </button>
+      </span>
+      <input
+        class="input mousetrap"
+        value="test"
+      />
+    </div>
+  </label>,
+  <div
+    class="backdrop fixed"
+    role="button"
+  />,
+  <div
+    class="container"
+  >
+    <ul
+      class="menu"
+      style="top: 10px; left: 10px; position: fixed; pointer-events: auto;"
+    >
+      <li
+        class="suggestionItem"
+        style="min-width: -10px;"
+      >
+        <button
+          class="suggestion"
+        >
+          <span
+            class="column"
+          >
+            Suggestion 1
+          </span>
+        </button>
+      </li>
+      <li
+        class="suggestionItem"
+        style="min-width: -10px;"
+      >
+        <button
+          class="suggestion"
+        >
+          <span
+            class="column"
+          >
+            Suggestion 2
+          </span>
+        </button>
+      </li>
+      <li
+        class="suggestionItem"
+        style="min-width: -10px;"
+      >
+        <button
+          class="suggestion"
+        >
+          <span
+            class="column"
+          >
+            Suggestion 3
+          </span>
+        </button>
+      </li>
     </ul>
-  </div>
-</div>"
+  </div>,
+]
 `;

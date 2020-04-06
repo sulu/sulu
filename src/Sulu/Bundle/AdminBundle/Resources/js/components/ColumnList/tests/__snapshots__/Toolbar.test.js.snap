@@ -28,17 +28,57 @@ exports[`Should render with active 1`] = `
 `;
 
 exports[`Should render with active 2`] = `
-"<div>
-  <div class=\\"backdrop fixed\\" role=\\"button\\"></div>
-  <div class=\\"container\\">
-    <div class=\\"arrowMenuContainer\\" style=\\"top: 20px; left: 10px; position: fixed; pointer-events: auto;\\">
-      <div class=\\"arrow top right\\"></div>
-      <div class=\\"arrowMenu\\">
-        <div class=\\"section\\">
-          <div class=\\"children\\"><button class=\\"action\\">Option1</button><button class=\\"action\\" disabled=\\"\\">Option1</button></div>
+Array [
+  <button
+    class="item primary"
+  >
+    <span
+      aria-label="fa-gear"
+      class="fa fa-gear"
+    />
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down buttonArrowIcon"
+    />
+  </button>,
+  <div
+    class="backdrop fixed"
+    role="button"
+  />,
+  <div
+    class="container"
+  >
+    <div
+      class="arrowMenuContainer"
+      style="top: 20px; left: 10px; position: fixed; pointer-events: auto;"
+    >
+      <div
+        class="arrow top right"
+      />
+      <div
+        class="arrowMenu"
+      >
+        <div
+          class="section"
+        >
+          <div
+            class="children"
+          >
+            <button
+              class="action"
+            >
+              Option1
+            </button>
+            <button
+              class="action"
+              disabled=""
+            >
+              Option1
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>"
+  </div>,
+]
 `;

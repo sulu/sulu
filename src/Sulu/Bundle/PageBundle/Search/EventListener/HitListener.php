@@ -42,7 +42,13 @@ class HitListener
             return;
         }
 
-        if ('/' !== $document->getUrl()[0]) {
+        $url = $document->getUrl();
+
+        if (!$url) {
+            return;
+        }
+
+        if ('/' != substr($url, 0, 1)) {
             // is absolute URL
 
             return;
