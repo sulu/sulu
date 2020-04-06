@@ -24,6 +24,18 @@
         </property>
 
         <property
+            name="key"
+            visibility="no"
+            searchability="yes"
+            translation="sulu_admin.key"
+        >
+            <field-name>key</field-name>
+            <entity-name>%sulu.model.role.class%</entity-name>
+
+            <filter type="text" />
+        </property>
+
+        <property
             name="system"
             visibility="always"
             searchability="yes"

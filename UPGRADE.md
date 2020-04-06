@@ -2,6 +2,17 @@
 
 ## dev-master
 
+### Add key property to Role entity
+
+To allow for referencing `Role` entities by a human readable string, a `key` property was added to the `Role` entity.
+Furthermore, if the `key` is set, it is used for generating the identifier of a role instead of the `name` property.
+The following statements update the database to include the new property:
+
+```sql
+ALTER TABLE se_roles ADD role_key VARCHAR(60) DEFAULT NULL;
+CREATE UNIQUE INDEX UNIQ_13B749A03EF22FDB ON se_roles (role_key);
+```
+
 ### Backdrop component
 
 Our `Backdrop` React component does not have the `local` and `open` props anymore. It is not supported anymore to render
