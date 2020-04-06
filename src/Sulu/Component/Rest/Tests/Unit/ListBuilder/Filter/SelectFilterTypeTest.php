@@ -13,16 +13,16 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Filter;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Filter\DropdownFilterType;
 use Sulu\Component\Rest\ListBuilder\Filter\InvalidFilterTypeOptionsException;
+use Sulu\Component\Rest\ListBuilder\Filter\SelectFilterType;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 
-class DropdownFilterTypeTest extends TestCase
+class SelectFilterTypeTest extends TestCase
 {
     /**
-     * @var DropdownFilterType
+     * @var SelectFilterType
      */
-    private $dropdownFilterType;
+    private $selectFilterType;
 
     /**
      * @var ListBuilderInterface
@@ -31,7 +31,7 @@ class DropdownFilterTypeTest extends TestCase
 
     public function setUp(): void
     {
-        $this->dropdownFilterType = new DropdownFilterType();
+        $this->selectFilterType = new SelectFilterType();
         $this->listBuilder = $this->prophesize(ListBuilderInterface::class);
     }
 
@@ -49,7 +49,7 @@ class DropdownFilterTypeTest extends TestCase
     public function testFilter($fieldName, $value, $expected)
     {
         $fieldDescriptor = $this->prophesize(FieldDescriptor::class);
-        $this->dropdownFilterType->filter($this->listBuilder->reveal(), $fieldDescriptor->reveal(), $value);
+        $this->selectFilterType->filter($this->listBuilder->reveal(), $fieldDescriptor->reveal(), $value);
 
         $this->listBuilder->in($fieldDescriptor->reveal(), $expected)->shouldBeCalled();
     }
@@ -59,6 +59,6 @@ class DropdownFilterTypeTest extends TestCase
         $this->expectException(InvalidFilterTypeOptionsException::class);
 
         $fieldDescriptor = $this->prophesize(FieldDescriptor::class);
-        $this->dropdownFilterType->filter($this->listBuilder->reveal(), $fieldDescriptor->reveal(), []);
+        $this->selectFilterType->filter($this->listBuilder->reveal(), $fieldDescriptor->reveal(), []);
     }
 }

@@ -64,8 +64,8 @@
         </service>
 
         <service
-            id="sulu_core.dropdown_filter_type"
-            class="Sulu\Component\Rest\ListBuilder\Filter\DropdownFilterType"
+            id="sulu_core.select_filter_type"
+            class="Sulu\Component\Rest\ListBuilder\Filter\SelectFilterType"
         >
             <tag name="sulu_core.list_builder_filter_type" />
         </service>

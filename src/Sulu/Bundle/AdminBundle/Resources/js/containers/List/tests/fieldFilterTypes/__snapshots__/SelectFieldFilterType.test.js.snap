@@ -1,0 +1,147 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render with a value of "[ 'audio', 'video' ]" 1`] = `
+<div>
+  <label
+    class="label"
+  >
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        checked=""
+        type="checkbox"
+        value="audio"
+      />
+      <span>
+        <span
+          aria-label="su-check"
+          class="su-check"
+        />
+      </span>
+    </span>
+    <div>
+      sulu_media.audio
+    </div>
+  </label>
+  <label
+    class="label"
+  >
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        checked=""
+        type="checkbox"
+        value="video"
+      />
+      <span>
+        <span
+          aria-label="su-check"
+          class="su-check"
+        />
+      </span>
+    </span>
+    <div>
+      sulu_media.video
+    </div>
+  </label>
+</div>
+`;
+
+exports[`Render with a value of "[ 'image', 'video' ]" 1`] = `
+<div>
+  <label
+    class="label"
+  >
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        checked=""
+        type="checkbox"
+        value="image"
+      />
+      <span>
+        <span
+          aria-label="su-check"
+          class="su-check"
+        />
+      </span>
+    </span>
+    <div>
+      sulu_media.image
+    </div>
+  </label>
+  <label
+    class="label"
+  >
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        checked=""
+        type="checkbox"
+        value="video"
+      />
+      <span>
+        <span
+          aria-label="su-check"
+          class="su-check"
+        />
+      </span>
+    </span>
+    <div>
+      sulu_media.video
+    </div>
+  </label>
+</div>
+`;
+
+exports[`Render with a value of "undefined" 1`] = `
+<div>
+  <label
+    class="label"
+  >
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        type="checkbox"
+        value="image"
+      />
+      <span />
+    </span>
+    <div>
+      sulu_media.image
+    </div>
+  </label>
+</div>
+`;
+
+exports[`Render with value set by setValue 1`] = `
+<div>
+  <label
+    class="label"
+  >
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        checked=""
+        type="checkbox"
+        value="audio"
+      />
+      <span>
+        <span
+          aria-label="su-check"
+          class="su-check"
+        />
+      </span>
+    </span>
+    <div>
+      sulu_media.audio
+    </div>
+  </label>
+</div>
+`;

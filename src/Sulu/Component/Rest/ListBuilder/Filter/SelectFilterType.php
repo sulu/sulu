@@ -14,7 +14,7 @@ namespace Sulu\Component\Rest\ListBuilder\Filter;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 
-class DropdownFilterType implements FilterTypeInterface
+class SelectFilterType implements FilterTypeInterface
 {
     public function filter(
         ListBuilderInterface $listBuilder,
@@ -23,7 +23,7 @@ class DropdownFilterType implements FilterTypeInterface
     ): void {
         if (!is_string($options)) {
             throw new InvalidFilterTypeOptionsException(
-                'The DropdownFilterType requires its options to be comma-separated list of values'
+                'The SelectFilterType requires its options to be comma-separated list of values'
             );
         }
 
@@ -32,6 +32,6 @@ class DropdownFilterType implements FilterTypeInterface
 
     public static function getDefaultIndexName(): string
     {
-        return 'dropdown';
+        return 'select';
     }
 }

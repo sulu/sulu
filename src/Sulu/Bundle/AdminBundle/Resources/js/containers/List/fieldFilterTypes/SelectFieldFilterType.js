@@ -1,16 +1,16 @@
 // @flow
 import React from 'react';
 import {computed} from 'mobx';
-import MultiSelect from '../../../components/MultiSelect';
+import Checkbox, {CheckboxGroup} from '../../../components/Checkbox';
 import {translate} from '../../../utils/Translator';
 import AbstractFieldFilterType from './AbstractFieldFilterType';
 
-class DropdownFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
+class SelectFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
     @computed get options(): Object {
         const {parameters} = this;
 
         if (!parameters) {
-            throw new Error('The "DropdownFieldFilterType" needs some parameters to work!');
+            throw new Error('The "SelectFieldFilterType" needs some parameters to work!');
         }
 
         const {options} = parameters;
@@ -30,16 +30,16 @@ class DropdownFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
         const {value} = this;
 
         return (
-            <MultiSelect onChange={this.handleChange} values={value || []}>
+            <CheckboxGroup onChange={this.handleChange} values={value || []}>
                 {Object.keys(this.options).map((optionKey) => (
-                    <MultiSelect.Option
+                    <Checkbox
                         key={optionKey}
                         value={optionKey}
                     >
                         {translate(this.options[optionKey])}
-                    </MultiSelect.Option>
+                    </Checkbox>
                 ))}
-            </MultiSelect>
+            </CheckboxGroup>
         );
     }
 
@@ -52,4 +52,4 @@ class DropdownFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
     }
 }
 
-export default DropdownFieldFilterType;
+export default SelectFieldFilterType;

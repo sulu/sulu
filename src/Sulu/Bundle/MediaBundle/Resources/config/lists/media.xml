@@ -89,7 +89,7 @@
 
             <joins ref="type"/>
 
-            <filter type="dropdown">
+            <filter type="select">
                 <params>
                     <param name="options" type="collection">
                         <param name="audio" value="sulu_media.audio" />
