@@ -1,41 +1,19 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import {mount} from 'enzyme';
 import React from 'react';
-import pretty from 'pretty';
 import Select from '../Select';
 import Option from '../Option';
 
 const Divider = Select.Divider;
 
-afterEach(() => document.body.innerHTML = '');
-
-test('The component should render with the popover closed', () => {
-    const isOptionSelected = jest.fn().mockReturnValue(false);
-    const onSelect = jest.fn();
-    const select = mount(
-        <Select
-            displayValue="My text"
-            isOptionSelected={isOptionSelected}
-            onSelect={onSelect}
-        >
-            <Option value="option-1">Option 1</Option>
-            <Option value="option-2">Option 2</Option>
-            <Divider />
-            <Option value="option-3">Option 3</Option>
-        </Select>
-    );
-    expect(select.render()).toMatchSnapshot();
-    expect(document.body.innerHTML).toBe('');
-});
-
 test('The component should render with a dark skin', () => {
     const isOptionSelected = jest.fn().mockReturnValue(false);
-    const onSelect = jest.fn();
     const select = mount(
         <Select
             displayValue="My text"
+            icon="su-plus"
             isOptionSelected={isOptionSelected}
-            onSelect={onSelect}
+            onSelect={jest.fn()}
             skin="dark"
         >
             <Option value="option-1">Option 1</Option>
@@ -44,31 +22,19 @@ test('The component should render with a dark skin', () => {
             <Option value="option-3">Option 3</Option>
         </Select>
     );
+
+    select.instance().displayValueRef = {
+        getBoundingClientRect: jest.fn().mockReturnValue({
+            width: 200,
+        }),
+    };
+    select.find('.displayValue').simulate('click');
+
     expect(select.render()).toMatchSnapshot();
-    expect(document.body.innerHTML).toBe('');
+    expect(select.find('Menu').render()).toMatchSnapshot();
 });
 
-test('The component should render with an icon', () => {
-    const isOptionSelected = jest.fn().mockReturnValue(false);
-    const onSelect = jest.fn();
-    const select = mount(
-        <Select
-            displayValue="My text"
-            icon="su-plus"
-            isOptionSelected={isOptionSelected}
-            onSelect={onSelect}
-        >
-            <Option value="option-1">Option 1</Option>
-            <Option value="option-2">Option 2</Option>
-            <Divider />
-            <Option value="option-3">Option 3</Option>
-        </Select>
-    );
-    expect(select.render()).toMatchSnapshot();
-    expect(document.body.innerHTML).toBe('');
-});
-
-test('The component should render when disabled', () => {
+test('The component should show a disabled select when disabled', () => {
     const isOptionSelected = jest.fn().mockReturnValue(false);
     const onSelect = jest.fn();
     const select = mount(
@@ -85,34 +51,8 @@ test('The component should render when disabled', () => {
             <Option value="option-3">Option 3</Option>
         </Select>
     );
-    expect(select.render()).toMatchSnapshot();
-    expect(document.body.innerHTML).toBe('');
-});
 
-test('The component should open the popover when the display value is clicked', () => {
-    const isOptionSelected = jest.fn().mockReturnValue(false);
-    const onSelect = jest.fn();
-    const select = mount(
-        <Select
-            displayValue="My text"
-            isOptionSelected={isOptionSelected}
-            onSelect={onSelect}
-        >
-            <Option value="option-1">Option 1</Option>
-            <Option value="option-2">Option 2</Option>
-            <Divider />
-            <Option value="option-3">Option 3</Option>
-        </Select>
-    );
-    select.instance().displayValueRef = {
-        getBoundingClientRect: jest.fn().mockReturnValue({
-            width: 200,
-        }),
-    };
-    select.find('.displayValue').simulate('click');
-
-    expect(select.render()).toMatchSnapshot();
-    expect(pretty(document.body.innerHTML)).toMatchSnapshot();
+    expect(select.find('DisplayValue button').prop('disabled')).toEqual(true);
 });
 
 test('The component should not open the popover on display-value-click when disabled', () => {
@@ -134,8 +74,7 @@ test('The component should not open the popover on display-value-click when disa
     );
     select.find('.displayValue').simulate('click');
 
-    expect(select.render()).toMatchSnapshot();
-    expect(pretty(document.body.innerHTML)).toMatchSnapshot();
+    expect(select.find('Menu')).toHaveLength(0);
 });
 
 test('The component should trigger the select callback and close the popover when an option is clicked', () => {
@@ -154,9 +93,11 @@ test('The component should trigger the select callback and close the popover whe
         </Select>
     );
     select.instance().handleDisplayValueClick();
-    document.body.getElementsByTagName('button')[2].click();
+    select.update();
+    select.find('Option[value="option-3"] button').prop('onClick')();
     expect(onSelect).toHaveBeenCalledWith('option-3');
-    expect(document.body.innerHTML).toBe('');
+    select.update();
+    expect(select.find('Menu')).toHaveLength(0);
 });
 
 test('The component should pass the centered child node to the popover', () => {
@@ -196,5 +137,6 @@ test('The component should pass the selected property to the options', () => {
         </Select>
     );
     select.instance().handleDisplayValueClick();
-    expect(document.body.querySelectorAll('.selected').length).toBe(3);
+    select.update();
+    expect(select.find('Option[selected=true]')).toHaveLength(3);
 });

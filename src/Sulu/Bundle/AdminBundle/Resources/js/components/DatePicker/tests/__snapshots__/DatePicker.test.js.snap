@@ -27,87 +27,349 @@ exports[`DatePicker should render 1`] = `
 `;
 
 exports[`DatePicker should render 2`] = `
-"<div class=\\"rdt\\">
-  <div></div>
-  <div class=\\"rdtPicker\\">
-    <div class=\\"rdtDays\\">
+<div
+  class="rdt"
+>
+  <div />
+  <div
+    class="rdtPicker"
+  >
+    <div
+      class="rdtDays"
+    >
       <table>
         <thead>
           <tr>
-            <th class=\\"rdtPrev\\"><span>‹</span></th>
-            <th class=\\"rdtSwitch\\" colspan=\\"5\\" data-value=\\"3\\">April 2017</th>
-            <th class=\\"rdtNext\\"><span>›</span></th>
+            <th
+              class="rdtPrev"
+            >
+              <span>
+                ‹
+              </span>
+            </th>
+            <th
+              class="rdtSwitch"
+              colspan="5"
+              data-value="3"
+            >
+              April 2017
+            </th>
+            <th
+              class="rdtNext"
+            >
+              <span>
+                ›
+              </span>
+            </th>
           </tr>
           <tr>
-            <th class=\\"dow\\">Su</th>
-            <th class=\\"dow\\">Mo</th>
-            <th class=\\"dow\\">Tu</th>
-            <th class=\\"dow\\">We</th>
-            <th class=\\"dow\\">Th</th>
-            <th class=\\"dow\\">Fr</th>
-            <th class=\\"dow\\">Sa</th>
+            <th
+              class="dow"
+            >
+              Su
+            </th>
+            <th
+              class="dow"
+            >
+              Mo
+            </th>
+            <th
+              class="dow"
+            >
+              Tu
+            </th>
+            <th
+              class="dow"
+            >
+              We
+            </th>
+            <th
+              class="dow"
+            >
+              Th
+            </th>
+            <th
+              class="dow"
+            >
+              Fr
+            </th>
+            <th
+              class="dow"
+            >
+              Sa
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td data-value=\\"26\\" class=\\"rdtDay rdtOld\\">26</td>
-            <td data-value=\\"27\\" class=\\"rdtDay rdtOld\\">27</td>
-            <td data-value=\\"28\\" class=\\"rdtDay rdtOld\\">28</td>
-            <td data-value=\\"29\\" class=\\"rdtDay rdtOld\\">29</td>
-            <td data-value=\\"30\\" class=\\"rdtDay rdtOld\\">30</td>
-            <td data-value=\\"31\\" class=\\"rdtDay rdtOld\\">31</td>
-            <td data-value=\\"1\\" class=\\"rdtDay\\">1</td>
+            <td
+              class="rdtDay rdtOld"
+              data-value="26"
+            >
+              26
+            </td>
+            <td
+              class="rdtDay rdtOld"
+              data-value="27"
+            >
+              27
+            </td>
+            <td
+              class="rdtDay rdtOld"
+              data-value="28"
+            >
+              28
+            </td>
+            <td
+              class="rdtDay rdtOld"
+              data-value="29"
+            >
+              29
+            </td>
+            <td
+              class="rdtDay rdtOld"
+              data-value="30"
+            >
+              30
+            </td>
+            <td
+              class="rdtDay rdtOld"
+              data-value="31"
+            >
+              31
+            </td>
+            <td
+              class="rdtDay"
+              data-value="1"
+            >
+              1
+            </td>
           </tr>
           <tr>
-            <td data-value=\\"2\\" class=\\"rdtDay\\">2</td>
-            <td data-value=\\"3\\" class=\\"rdtDay\\">3</td>
-            <td data-value=\\"4\\" class=\\"rdtDay\\">4</td>
-            <td data-value=\\"5\\" class=\\"rdtDay\\">5</td>
-            <td data-value=\\"6\\" class=\\"rdtDay\\">6</td>
-            <td data-value=\\"7\\" class=\\"rdtDay\\">7</td>
-            <td data-value=\\"8\\" class=\\"rdtDay\\">8</td>
+            <td
+              class="rdtDay"
+              data-value="2"
+            >
+              2
+            </td>
+            <td
+              class="rdtDay"
+              data-value="3"
+            >
+              3
+            </td>
+            <td
+              class="rdtDay"
+              data-value="4"
+            >
+              4
+            </td>
+            <td
+              class="rdtDay"
+              data-value="5"
+            >
+              5
+            </td>
+            <td
+              class="rdtDay"
+              data-value="6"
+            >
+              6
+            </td>
+            <td
+              class="rdtDay"
+              data-value="7"
+            >
+              7
+            </td>
+            <td
+              class="rdtDay"
+              data-value="8"
+            >
+              8
+            </td>
           </tr>
           <tr>
-            <td data-value=\\"9\\" class=\\"rdtDay\\">9</td>
-            <td data-value=\\"10\\" class=\\"rdtDay\\">10</td>
-            <td data-value=\\"11\\" class=\\"rdtDay\\">11</td>
-            <td data-value=\\"12\\" class=\\"rdtDay\\">12</td>
-            <td data-value=\\"13\\" class=\\"rdtDay\\">13</td>
-            <td data-value=\\"14\\" class=\\"rdtDay\\">14</td>
-            <td data-value=\\"15\\" class=\\"rdtDay rdtToday\\">15</td>
+            <td
+              class="rdtDay"
+              data-value="9"
+            >
+              9
+            </td>
+            <td
+              class="rdtDay"
+              data-value="10"
+            >
+              10
+            </td>
+            <td
+              class="rdtDay"
+              data-value="11"
+            >
+              11
+            </td>
+            <td
+              class="rdtDay"
+              data-value="12"
+            >
+              12
+            </td>
+            <td
+              class="rdtDay"
+              data-value="13"
+            >
+              13
+            </td>
+            <td
+              class="rdtDay"
+              data-value="14"
+            >
+              14
+            </td>
+            <td
+              class="rdtDay rdtToday"
+              data-value="15"
+            >
+              15
+            </td>
           </tr>
           <tr>
-            <td data-value=\\"16\\" class=\\"rdtDay\\">16</td>
-            <td data-value=\\"17\\" class=\\"rdtDay\\">17</td>
-            <td data-value=\\"18\\" class=\\"rdtDay\\">18</td>
-            <td data-value=\\"19\\" class=\\"rdtDay\\">19</td>
-            <td data-value=\\"20\\" class=\\"rdtDay\\">20</td>
-            <td data-value=\\"21\\" class=\\"rdtDay\\">21</td>
-            <td data-value=\\"22\\" class=\\"rdtDay\\">22</td>
+            <td
+              class="rdtDay"
+              data-value="16"
+            >
+              16
+            </td>
+            <td
+              class="rdtDay"
+              data-value="17"
+            >
+              17
+            </td>
+            <td
+              class="rdtDay"
+              data-value="18"
+            >
+              18
+            </td>
+            <td
+              class="rdtDay"
+              data-value="19"
+            >
+              19
+            </td>
+            <td
+              class="rdtDay"
+              data-value="20"
+            >
+              20
+            </td>
+            <td
+              class="rdtDay"
+              data-value="21"
+            >
+              21
+            </td>
+            <td
+              class="rdtDay"
+              data-value="22"
+            >
+              22
+            </td>
           </tr>
           <tr>
-            <td data-value=\\"23\\" class=\\"rdtDay\\">23</td>
-            <td data-value=\\"24\\" class=\\"rdtDay\\">24</td>
-            <td data-value=\\"25\\" class=\\"rdtDay\\">25</td>
-            <td data-value=\\"26\\" class=\\"rdtDay\\">26</td>
-            <td data-value=\\"27\\" class=\\"rdtDay\\">27</td>
-            <td data-value=\\"28\\" class=\\"rdtDay\\">28</td>
-            <td data-value=\\"29\\" class=\\"rdtDay\\">29</td>
+            <td
+              class="rdtDay"
+              data-value="23"
+            >
+              23
+            </td>
+            <td
+              class="rdtDay"
+              data-value="24"
+            >
+              24
+            </td>
+            <td
+              class="rdtDay"
+              data-value="25"
+            >
+              25
+            </td>
+            <td
+              class="rdtDay"
+              data-value="26"
+            >
+              26
+            </td>
+            <td
+              class="rdtDay"
+              data-value="27"
+            >
+              27
+            </td>
+            <td
+              class="rdtDay"
+              data-value="28"
+            >
+              28
+            </td>
+            <td
+              class="rdtDay"
+              data-value="29"
+            >
+              29
+            </td>
           </tr>
           <tr>
-            <td data-value=\\"30\\" class=\\"rdtDay\\">30</td>
-            <td data-value=\\"1\\" class=\\"rdtDay rdtNew\\">1</td>
-            <td data-value=\\"2\\" class=\\"rdtDay rdtNew\\">2</td>
-            <td data-value=\\"3\\" class=\\"rdtDay rdtNew\\">3</td>
-            <td data-value=\\"4\\" class=\\"rdtDay rdtNew\\">4</td>
-            <td data-value=\\"5\\" class=\\"rdtDay rdtNew\\">5</td>
-            <td data-value=\\"6\\" class=\\"rdtDay rdtNew\\">6</td>
+            <td
+              class="rdtDay"
+              data-value="30"
+            >
+              30
+            </td>
+            <td
+              class="rdtDay rdtNew"
+              data-value="1"
+            >
+              1
+            </td>
+            <td
+              class="rdtDay rdtNew"
+              data-value="2"
+            >
+              2
+            </td>
+            <td
+              class="rdtDay rdtNew"
+              data-value="3"
+            >
+              3
+            </td>
+            <td
+              class="rdtDay rdtNew"
+              data-value="4"
+            >
+              4
+            </td>
+            <td
+              class="rdtDay rdtNew"
+              data-value="5"
+            >
+              5
+            </td>
+            <td
+              class="rdtDay rdtNew"
+              data-value="6"
+            >
+              6
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
-</div>"
+</div>
 `;
 
 exports[`DatePicker should render date format only with month 1`] = `
@@ -189,92 +451,359 @@ exports[`DatePicker should render date picker with time picker 1`] = `
 `;
 
 exports[`DatePicker should render date picker with time picker 2`] = `
-"<div class=\\"rdt\\">
-  <div></div>
-  <div class=\\"rdtPicker\\">
-    <div class=\\"rdtDays\\">
+<div
+  class="rdt"
+>
+  <div />
+  <div
+    class="rdtPicker"
+  >
+    <div
+      class="rdtDays"
+    >
       <table>
         <thead>
           <tr>
-            <th class=\\"rdtPrev\\"><span>‹</span></th>
-            <th class=\\"rdtSwitch\\" colspan=\\"5\\" data-value=\\"3\\">April 2017</th>
-            <th class=\\"rdtNext\\"><span>›</span></th>
+            <th
+              class="rdtPrev"
+            >
+              <span>
+                ‹
+              </span>
+            </th>
+            <th
+              class="rdtSwitch"
+              colspan="5"
+              data-value="3"
+            >
+              April 2017
+            </th>
+            <th
+              class="rdtNext"
+            >
+              <span>
+                ›
+              </span>
+            </th>
           </tr>
           <tr>
-            <th class=\\"dow\\">Su</th>
-            <th class=\\"dow\\">Mo</th>
-            <th class=\\"dow\\">Tu</th>
-            <th class=\\"dow\\">We</th>
-            <th class=\\"dow\\">Th</th>
-            <th class=\\"dow\\">Fr</th>
-            <th class=\\"dow\\">Sa</th>
+            <th
+              class="dow"
+            >
+              Su
+            </th>
+            <th
+              class="dow"
+            >
+              Mo
+            </th>
+            <th
+              class="dow"
+            >
+              Tu
+            </th>
+            <th
+              class="dow"
+            >
+              We
+            </th>
+            <th
+              class="dow"
+            >
+              Th
+            </th>
+            <th
+              class="dow"
+            >
+              Fr
+            </th>
+            <th
+              class="dow"
+            >
+              Sa
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td data-value=\\"26\\" class=\\"rdtDay rdtOld\\">26</td>
-            <td data-value=\\"27\\" class=\\"rdtDay rdtOld\\">27</td>
-            <td data-value=\\"28\\" class=\\"rdtDay rdtOld\\">28</td>
-            <td data-value=\\"29\\" class=\\"rdtDay rdtOld\\">29</td>
-            <td data-value=\\"30\\" class=\\"rdtDay rdtOld\\">30</td>
-            <td data-value=\\"31\\" class=\\"rdtDay rdtOld\\">31</td>
-            <td data-value=\\"1\\" class=\\"rdtDay\\">1</td>
+            <td
+              class="rdtDay rdtOld"
+              data-value="26"
+            >
+              26
+            </td>
+            <td
+              class="rdtDay rdtOld"
+              data-value="27"
+            >
+              27
+            </td>
+            <td
+              class="rdtDay rdtOld"
+              data-value="28"
+            >
+              28
+            </td>
+            <td
+              class="rdtDay rdtOld"
+              data-value="29"
+            >
+              29
+            </td>
+            <td
+              class="rdtDay rdtOld"
+              data-value="30"
+            >
+              30
+            </td>
+            <td
+              class="rdtDay rdtOld"
+              data-value="31"
+            >
+              31
+            </td>
+            <td
+              class="rdtDay"
+              data-value="1"
+            >
+              1
+            </td>
           </tr>
           <tr>
-            <td data-value=\\"2\\" class=\\"rdtDay\\">2</td>
-            <td data-value=\\"3\\" class=\\"rdtDay\\">3</td>
-            <td data-value=\\"4\\" class=\\"rdtDay\\">4</td>
-            <td data-value=\\"5\\" class=\\"rdtDay\\">5</td>
-            <td data-value=\\"6\\" class=\\"rdtDay\\">6</td>
-            <td data-value=\\"7\\" class=\\"rdtDay\\">7</td>
-            <td data-value=\\"8\\" class=\\"rdtDay\\">8</td>
+            <td
+              class="rdtDay"
+              data-value="2"
+            >
+              2
+            </td>
+            <td
+              class="rdtDay"
+              data-value="3"
+            >
+              3
+            </td>
+            <td
+              class="rdtDay"
+              data-value="4"
+            >
+              4
+            </td>
+            <td
+              class="rdtDay"
+              data-value="5"
+            >
+              5
+            </td>
+            <td
+              class="rdtDay"
+              data-value="6"
+            >
+              6
+            </td>
+            <td
+              class="rdtDay"
+              data-value="7"
+            >
+              7
+            </td>
+            <td
+              class="rdtDay"
+              data-value="8"
+            >
+              8
+            </td>
           </tr>
           <tr>
-            <td data-value=\\"9\\" class=\\"rdtDay\\">9</td>
-            <td data-value=\\"10\\" class=\\"rdtDay\\">10</td>
-            <td data-value=\\"11\\" class=\\"rdtDay\\">11</td>
-            <td data-value=\\"12\\" class=\\"rdtDay\\">12</td>
-            <td data-value=\\"13\\" class=\\"rdtDay\\">13</td>
-            <td data-value=\\"14\\" class=\\"rdtDay\\">14</td>
-            <td data-value=\\"15\\" class=\\"rdtDay rdtToday\\">15</td>
+            <td
+              class="rdtDay"
+              data-value="9"
+            >
+              9
+            </td>
+            <td
+              class="rdtDay"
+              data-value="10"
+            >
+              10
+            </td>
+            <td
+              class="rdtDay"
+              data-value="11"
+            >
+              11
+            </td>
+            <td
+              class="rdtDay"
+              data-value="12"
+            >
+              12
+            </td>
+            <td
+              class="rdtDay"
+              data-value="13"
+            >
+              13
+            </td>
+            <td
+              class="rdtDay"
+              data-value="14"
+            >
+              14
+            </td>
+            <td
+              class="rdtDay rdtToday"
+              data-value="15"
+            >
+              15
+            </td>
           </tr>
           <tr>
-            <td data-value=\\"16\\" class=\\"rdtDay\\">16</td>
-            <td data-value=\\"17\\" class=\\"rdtDay\\">17</td>
-            <td data-value=\\"18\\" class=\\"rdtDay\\">18</td>
-            <td data-value=\\"19\\" class=\\"rdtDay\\">19</td>
-            <td data-value=\\"20\\" class=\\"rdtDay\\">20</td>
-            <td data-value=\\"21\\" class=\\"rdtDay\\">21</td>
-            <td data-value=\\"22\\" class=\\"rdtDay\\">22</td>
+            <td
+              class="rdtDay"
+              data-value="16"
+            >
+              16
+            </td>
+            <td
+              class="rdtDay"
+              data-value="17"
+            >
+              17
+            </td>
+            <td
+              class="rdtDay"
+              data-value="18"
+            >
+              18
+            </td>
+            <td
+              class="rdtDay"
+              data-value="19"
+            >
+              19
+            </td>
+            <td
+              class="rdtDay"
+              data-value="20"
+            >
+              20
+            </td>
+            <td
+              class="rdtDay"
+              data-value="21"
+            >
+              21
+            </td>
+            <td
+              class="rdtDay"
+              data-value="22"
+            >
+              22
+            </td>
           </tr>
           <tr>
-            <td data-value=\\"23\\" class=\\"rdtDay\\">23</td>
-            <td data-value=\\"24\\" class=\\"rdtDay\\">24</td>
-            <td data-value=\\"25\\" class=\\"rdtDay\\">25</td>
-            <td data-value=\\"26\\" class=\\"rdtDay\\">26</td>
-            <td data-value=\\"27\\" class=\\"rdtDay\\">27</td>
-            <td data-value=\\"28\\" class=\\"rdtDay\\">28</td>
-            <td data-value=\\"29\\" class=\\"rdtDay\\">29</td>
+            <td
+              class="rdtDay"
+              data-value="23"
+            >
+              23
+            </td>
+            <td
+              class="rdtDay"
+              data-value="24"
+            >
+              24
+            </td>
+            <td
+              class="rdtDay"
+              data-value="25"
+            >
+              25
+            </td>
+            <td
+              class="rdtDay"
+              data-value="26"
+            >
+              26
+            </td>
+            <td
+              class="rdtDay"
+              data-value="27"
+            >
+              27
+            </td>
+            <td
+              class="rdtDay"
+              data-value="28"
+            >
+              28
+            </td>
+            <td
+              class="rdtDay"
+              data-value="29"
+            >
+              29
+            </td>
           </tr>
           <tr>
-            <td data-value=\\"30\\" class=\\"rdtDay\\">30</td>
-            <td data-value=\\"1\\" class=\\"rdtDay rdtNew\\">1</td>
-            <td data-value=\\"2\\" class=\\"rdtDay rdtNew\\">2</td>
-            <td data-value=\\"3\\" class=\\"rdtDay rdtNew\\">3</td>
-            <td data-value=\\"4\\" class=\\"rdtDay rdtNew\\">4</td>
-            <td data-value=\\"5\\" class=\\"rdtDay rdtNew\\">5</td>
-            <td data-value=\\"6\\" class=\\"rdtDay rdtNew\\">6</td>
+            <td
+              class="rdtDay"
+              data-value="30"
+            >
+              30
+            </td>
+            <td
+              class="rdtDay rdtNew"
+              data-value="1"
+            >
+              1
+            </td>
+            <td
+              class="rdtDay rdtNew"
+              data-value="2"
+            >
+              2
+            </td>
+            <td
+              class="rdtDay rdtNew"
+              data-value="3"
+            >
+              3
+            </td>
+            <td
+              class="rdtDay rdtNew"
+              data-value="4"
+            >
+              4
+            </td>
+            <td
+              class="rdtDay rdtNew"
+              data-value="5"
+            >
+              5
+            </td>
+            <td
+              class="rdtDay rdtNew"
+              data-value="6"
+            >
+              6
+            </td>
           </tr>
         </tbody>
         <tfoot>
           <tr>
-            <td colspan=\\"7\\" class=\\"rdtTimeToggle\\">12:00 AM</td>
+            <td
+              class="rdtTimeToggle"
+              colspan="7"
+            >
+              12:00 AM
+            </td>
           </tr>
         </tfoot>
       </table>
     </div>
   </div>
-</div>"
+</div>
 `;
 
 exports[`DatePicker should render error 1`] = `
@@ -349,83 +878,6 @@ exports[`DatePicker should render null value as empty string 1`] = `
         placeholder="MM/DD/YYYY"
         type="text"
         value=""
-      />
-    </label>
-  </div>
-</div>
-`;
-
-exports[`DatePicker should render when disabled 1`] = `
-<div>
-  <div>
-    <label
-      class="input default left disabled"
-    >
-      <div
-        class="prependedContainer default"
-      >
-        <span
-          aria-label="su-calendar"
-          class="su-calendar icon default"
-        />
-      </div>
-      <input
-        disabled=""
-        placeholder="MM/DD/YYYY"
-        type="text"
-        value="05/23/2017"
-      />
-    </label>
-  </div>
-</div>
-`;
-
-exports[`DatePicker should render with placeholder 1`] = `
-<div>
-  <div>
-    <label
-      class="input default left"
-    >
-      <div
-        class="prependedContainer default"
-      >
-        <span
-          aria-label="su-calendar"
-          class="su-calendar clickable icon default iconClickable"
-          role="button"
-          tabindex="0"
-        />
-      </div>
-      <input
-        placeholder="My placeholder"
-        type="text"
-        value=""
-      />
-    </label>
-  </div>
-</div>
-`;
-
-exports[`DatePicker should render with value 1`] = `
-<div>
-  <div>
-    <label
-      class="input default left"
-    >
-      <div
-        class="prependedContainer default"
-      >
-        <span
-          aria-label="su-calendar"
-          class="su-calendar clickable icon default iconClickable"
-          role="button"
-          tabindex="0"
-        />
-      </div>
-      <input
-        placeholder="MM/DD/YYYY"
-        type="text"
-        value="05/23/2017"
       />
     </label>
   </div>

@@ -1,25 +1,15 @@
 // @flow
 import {mount, shallow} from 'enzyme';
 import React from 'react';
-import pretty from 'pretty';
 import Dialog from '../Dialog';
 
-afterEach(() => {
-    if (document.body) {
-        document.body.innerHTML = '';
-    }
-});
-
 test('The component should render in body when open', () => {
-    const body = document.body;
-    const onCancel = jest.fn();
-    const onConfirm = jest.fn();
     const view = mount(
         <Dialog
             cancelText="Cancel"
             confirmText="Confirm"
-            onCancel={onCancel}
-            onConfirm={onConfirm}
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
             open={true}
             title="My dialog title"
         >
@@ -29,11 +19,10 @@ test('The component should render in body when open', () => {
 
     expect(view.find('Backdrop')).toHaveLength(1);
     expect(view.find('Backdrop').prop('open')).toEqual(true);
-    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
+    expect(view.find('Dialog > Portal').at(0).render()).toMatchSnapshot();
 });
 
 test('The component should render in body without cancel button', () => {
-    const body = document.body;
     const onConfirm = jest.fn();
     const view = mount(
         <Dialog
@@ -46,13 +35,11 @@ test('The component should render in body without cancel button', () => {
         </Dialog>
     );
 
-    expect(view.find('Backdrop')).toHaveLength(1);
-    expect(view.find('Backdrop').prop('open')).toEqual(true);
-    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
+    expect(view.find('Button')).toHaveLength(1);
+    expect(view.find('Button[children="Confirm"]')).toHaveLength(1);
 });
 
 test('The component should render in body with disabled confirm button', () => {
-    const body = document.body;
     const onCancel = jest.fn();
     const onConfirm = jest.fn();
     const view = mount(
@@ -69,21 +56,16 @@ test('The component should render in body with disabled confirm button', () => {
         </Dialog>
     );
 
-    expect(view.find('Backdrop')).toHaveLength(1);
-    expect(view.find('Backdrop').prop('open')).toEqual(true);
-    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
+    expect(view.find('Button[children="Confirm"]').prop('disabled')).toEqual(true);
 });
 
 test('The component should render in body with a large class', () => {
-    const body = document.body;
-    const onCancel = jest.fn();
-    const onConfirm = jest.fn();
     const view = mount(
         <Dialog
             cancelText="Cancel"
             confirmText="Confirm"
-            onCancel={onCancel}
-            onConfirm={onConfirm}
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
             open={true}
             size="large"
             title="My dialog title"
@@ -92,13 +74,10 @@ test('The component should render in body with a large class', () => {
         </Dialog>
     );
 
-    expect(view.find('Backdrop')).toHaveLength(1);
-    expect(view.find('Backdrop').prop('open')).toEqual(true);
-    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
+    expect(view.find('Dialog > Portal div.large')).toHaveLength(1);
 });
 
 test('The component should render in body with loader instead of confirm button', () => {
-    const body = document.body;
     const onCancel = jest.fn();
     const onConfirm = jest.fn();
     const view = mount(
@@ -115,30 +94,26 @@ test('The component should render in body with loader instead of confirm button'
         </Dialog>
     );
 
-    expect(view.find('Backdrop')).toHaveLength(1);
-    expect(view.find('Backdrop').prop('open')).toEqual(true);
-    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
+    expect(view.find('Button[children="Confirm"]').prop('loading')).toEqual(true);
 });
 
 test('The component should not render in body when closed', () => {
-    const body = document.body;
-    const onCancel = jest.fn();
-    const onConfirm = jest.fn();
     const view = mount(
         <Dialog
             cancelText="Cancel"
             confirmText="Confirm"
-            onCancel={onCancel}
-            onConfirm={onConfirm}
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
             open={false}
             title="My dialog title"
         >
             My dialog content
         </Dialog>
-    ).render();
+    );
 
-    expect(view).toMatchSnapshot();
-    expect(body ? body.innerHTML : '').toBe('');
+    expect(view.find('Backdrop')).toHaveLength(1);
+    expect(view.find('Backdrop').prop('open')).toEqual(false);
+    expect(view.find('Dialog > Portal')).toHaveLength(0);
 });
 
 test('The component should call the callback when the confirm button is clicked', () => {

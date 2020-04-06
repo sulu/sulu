@@ -1,7 +1,6 @@
 // @flow
 import {mount, shallow} from 'enzyme';
 import React from 'react';
-import pretty from 'pretty';
 import Select from '../../Select';
 import SingleSelect from '../../SingleSelect';
 
@@ -35,12 +34,9 @@ test('The component should render a select with dark skin', () => {
     );
 
     expect(select.render()).toMatchSnapshot();
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
-
-    select.unmount();
 });
 
-test('The component should render a select that is disabled', () => {
+test('The component should show a disabled select that is disabled', () => {
     const select = shallow(
         <SingleSelect disabled={true} skin="dark" value={undefined}>
             <Option value="option-1">Option 1</Option>
@@ -50,10 +46,7 @@ test('The component should render a select that is disabled', () => {
         </SingleSelect>
     );
 
-    expect(select.render()).toMatchSnapshot();
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
-
-    select.unmount();
+    expect(select.find('Select').prop('disabled')).toEqual(true);
 });
 
 test('The component should return the default displayValue if no valueless option is present', () => {

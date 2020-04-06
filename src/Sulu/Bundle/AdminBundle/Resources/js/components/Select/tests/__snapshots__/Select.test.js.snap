@@ -1,199 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The component should not open the popover on display-value-click when disabled 1`] = `
-<div
-  class="select"
->
-  <button
-    class="displayValue default"
-    disabled=""
-    type="button"
-  >
-    <div
-      aria-label="My text"
-      class="croppedText"
-      title="My text"
-    >
-      <div
-        aria-hidden="true"
-        class="front"
-      >
-        My t
-      </div>
-      <div
-        aria-hidden="true"
-        class="back"
-      >
-        <span>
-          ext
-        </span>
-      </div>
-      <div
-        class="whole"
-      >
-        My text
-      </div>
-    </div>
-    <span
-      aria-label="su-angle-down"
-      class="su-angle-down toggle"
-    />
-  </button>
-</div>
-`;
-
-exports[`The component should not open the popover on display-value-click when disabled 2`] = `""`;
-
-exports[`The component should open the popover when the display value is clicked 1`] = `
-<div
-  class="select"
->
-  <button
-    class="displayValue default"
-    type="button"
-  >
-    <div
-      aria-label="My text"
-      class="croppedText"
-      title="My text"
-    >
-      <div
-        aria-hidden="true"
-        class="front"
-      >
-        My t
-      </div>
-      <div
-        aria-hidden="true"
-        class="back"
-      >
-        <span>
-          ext
-        </span>
-      </div>
-      <div
-        class="whole"
-      >
-        My text
-      </div>
-    </div>
-    <span
-      aria-label="su-angle-down"
-      class="su-angle-down toggle"
-    />
-  </button>
-</div>
-`;
-
-exports[`The component should open the popover when the display value is clicked 2`] = `
-"<div>
-  <div class=\\"backdrop fixed\\" role=\\"button\\"></div>
-</div>
-<div>
-  <div class=\\"container\\">
-    <ul class=\\"menu\\" style=\\"top: 10px; left: 10px; position: fixed; pointer-events: auto;\\">
-      <li><button class=\\"option icon\\" style=\\"min-width: 210px;\\">Option 1</button></li>
-      <li><button class=\\"option icon\\" style=\\"min-width: 210px;\\">Option 2</button></li>
-      <li class=\\"divider\\"></li>
-      <li><button class=\\"option icon\\" style=\\"min-width: 210px;\\">Option 3</button></li>
-    </ul>
-  </div>
-</div>"
-`;
-
-exports[`The component should render when disabled 1`] = `
-<div
-  class="select"
->
-  <button
-    class="displayValue default hasIcon"
-    disabled=""
-    type="button"
-  >
-    <span
-      aria-label="su-plus"
-      class="su-plus frontIcon"
-    />
-    <div
-      aria-label="My text"
-      class="croppedText"
-      title="My text"
-    >
-      <div
-        aria-hidden="true"
-        class="front"
-      >
-        My t
-      </div>
-      <div
-        aria-hidden="true"
-        class="back"
-      >
-        <span>
-          ext
-        </span>
-      </div>
-      <div
-        class="whole"
-      >
-        My text
-      </div>
-    </div>
-    <span
-      aria-label="su-angle-down"
-      class="su-angle-down toggle"
-    />
-  </button>
-</div>
-`;
-
 exports[`The component should render with a dark skin 1`] = `
 <div
   class="select"
 >
   <button
-    class="displayValue dark"
-    type="button"
-  >
-    <div
-      aria-label="My text"
-      class="croppedText"
-      title="My text"
-    >
-      <div
-        aria-hidden="true"
-        class="front"
-      >
-        My t
-      </div>
-      <div
-        aria-hidden="true"
-        class="back"
-      >
-        <span>
-          ext
-        </span>
-      </div>
-      <div
-        class="whole"
-      >
-        My text
-      </div>
-    </div>
-    <span
-      aria-label="su-angle-down"
-      class="su-angle-down toggle"
-    />
-  </button>
-</div>
-`;
-
-exports[`The component should render with an icon 1`] = `
-<div
-  class="select"
->
-  <button
-    class="displayValue default hasIcon"
+    class="displayValue dark hasIcon"
     type="button"
   >
     <span
@@ -233,43 +45,37 @@ exports[`The component should render with an icon 1`] = `
 </div>
 `;
 
-exports[`The component should render with the popover closed 1`] = `
-<div
-  class="select"
+exports[`The component should render with a dark skin 2`] = `
+<ul
+  class="menu"
+  style="top: 10px; left: 10px; position: fixed; pointer-events: auto;"
 >
-  <button
-    class="displayValue default"
-    type="button"
-  >
-    <div
-      aria-label="My text"
-      class="croppedText"
-      title="My text"
+  <li>
+    <button
+      class="option icon"
+      style="min-width: 210px;"
     >
-      <div
-        aria-hidden="true"
-        class="front"
-      >
-        My t
-      </div>
-      <div
-        aria-hidden="true"
-        class="back"
-      >
-        <span>
-          ext
-        </span>
-      </div>
-      <div
-        class="whole"
-      >
-        My text
-      </div>
-    </div>
-    <span
-      aria-label="su-angle-down"
-      class="su-angle-down toggle"
-    />
-  </button>
-</div>
+      Option 1
+    </button>
+  </li>
+  <li>
+    <button
+      class="option icon"
+      style="min-width: 210px;"
+    >
+      Option 2
+    </button>
+  </li>
+  <li
+    class="divider"
+  />
+  <li>
+    <button
+      class="option icon"
+      style="min-width: 210px;"
+    >
+      Option 3
+    </button>
+  </li>
+</ul>
 `;

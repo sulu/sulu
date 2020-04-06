@@ -1,31 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The popover should not render in body when not open 1`] = `""`;
-
 exports[`The popover should render in body when open 1`] = `
-"<div>
-  <div class=\\"backdrop fixed\\" role=\\"button\\"></div>
-</div>
-<div>
-  <div class=\\"container\\">
-    <div style=\\"top: 1px; left: 2px; max-height: 30px; position: fixed; pointer-events: auto;\\">
-      <div>My item 1</div>
-      <div>My item 2</div>
-      <div>My item 3</div>
+Array [
+  <div
+    class="backdrop fixed"
+    role="button"
+  />,
+  <div
+    class="container"
+  >
+    <div
+      style="top: 1px; left: 2px; max-height: 30px; position: fixed; pointer-events: auto;"
+    >
+      <div>
+        My item 1
+      </div>
+      <div>
+        My item 2
+      </div>
+      <div>
+        My item 3
+      </div>
     </div>
-  </div>
-</div>"
-`;
-
-exports[`The popover should take its dimensions from the positioner 1`] = `
-"<div>
-  <div class=\\"backdrop fixed\\" role=\\"button\\"></div>
-</div>
-<div>
-  <div class=\\"container\\">
-    <div style=\\"top: 1px; left: 2px; max-height: 30px; position: fixed; pointer-events: auto;\\">
-      <div>My item 1</div>
-    </div>
-  </div>
-</div>"
+  </div>,
+]
 `;

@@ -1,7 +1,6 @@
 // @flow
 import {mount, shallow} from 'enzyme';
 import React from 'react';
-import pretty from 'pretty';
 import Backdrop from '../Backdrop';
 
 afterEach(() => {
@@ -11,31 +10,24 @@ afterEach(() => {
 });
 
 test('The component should render in body when open', () => {
-    const body = document.body;
-    const view = mount(<Backdrop open={true} />).render();
-    expect(view.html()).toBe('');
-    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
+    const view = mount(<Backdrop open={true} />);
+    expect(view.find('Backdrop > Portal').render()).toMatchSnapshot();
 });
 
 test('The component should render normally when local property is set', () => {
-    const body = document.body;
-    const view = mount(<Backdrop local={true} open={true} />).render();
-    expect(view).toMatchSnapshot();
-    expect(body ? body.innerHTML : '').toBe('');
+    const view = mount(<Backdrop local={true} open={true} />);
+    expect(view.find('Portal')).toHaveLength(0);
+    expect(view.render()).toMatchSnapshot();
 });
 
 test('The component should not render local when closed', () => {
-    const body = document.body;
-    const view = mount(<Backdrop local={true} open={false} />).render();
-    expect(view).toMatchSnapshot();
-    expect(body ? body.innerHTML : '').toBe('');
+    const view = mount(<Backdrop local={true} open={false} />);
+    expect(view.children()).toHaveLength(0);
 });
 
 test('The component should not render in the body when closed', () => {
-    const body = document.body;
     const view = mount(<Backdrop open={false} />).render();
-    expect(view.html()).toBe(null);
-    expect(body ? body.innerHTML : '').toBe('');
+    expect(view.children()).toHaveLength(0);
 });
 
 test('The component should call a function when clicked', () => {

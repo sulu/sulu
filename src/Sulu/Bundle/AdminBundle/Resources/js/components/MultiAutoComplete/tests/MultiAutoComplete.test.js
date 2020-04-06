@@ -1,63 +1,11 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
-import pretty from 'pretty';
+import {mount} from 'enzyme';
 import Mousetrap from 'mousetrap';
 import MultiAutoComplete from '../MultiAutoComplete';
 
 beforeEach(() => {
     Mousetrap.reset();
-});
-
-test('MultiAutoComplete should render', () => {
-    const suggestions = [
-        {name: 'Suggestion 1'},
-        {name: 'Suggestion 2'},
-        {name: 'Suggestion 3'},
-    ];
-
-    const value = [
-        {id: 1, name: 'Test'},
-        {id: 2, name: 'Test 2'},
-    ];
-
-    expect(render(
-        <MultiAutoComplete
-            displayProperty="name"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={value}
-        />
-    )).toMatchSnapshot();
-});
-
-test('MultiAutoComplete should render in disabled state', () => {
-    const suggestions = [
-        {name: 'Suggestion 1'},
-        {name: 'Suggestion 2'},
-        {name: 'Suggestion 3'},
-    ];
-
-    const value = [
-        {id: 1, name: 'Test'},
-        {id: 2, name: 'Test 2'},
-    ];
-
-    expect(render(
-        <MultiAutoComplete
-            disabled={true}
-            displayProperty="name"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSearch={jest.fn()}
-            searchProperties={['name']}
-            suggestions={suggestions}
-            value={value}
-        />
-    )).toMatchSnapshot();
 });
 
 test('Render the MultiAutoComplete with open suggestions list', () => {
@@ -82,8 +30,37 @@ test('Render the MultiAutoComplete with open suggestions list', () => {
     multiAutoComplete.instance().inputValue = 'test';
     multiAutoComplete.update();
 
-    expect(multiAutoComplete.find('.item').text()).toEqual('Test');
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
+    expect(multiAutoComplete.render()).toMatchSnapshot();
+});
+
+test('MultiAutoComplete should be disabled in disabled state', () => {
+    const suggestions = [
+        {name: 'Suggestion 1'},
+        {name: 'Suggestion 2'},
+        {name: 'Suggestion 3'},
+    ];
+
+    const value = [
+        {id: 1, name: 'Test'},
+        {id: 2, name: 'Test 2'},
+    ];
+
+    const multiAutoComplete = mount(
+        <MultiAutoComplete
+            disabled={true}
+            displayProperty="name"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            onSearch={jest.fn()}
+            searchProperties={['name']}
+            suggestions={suggestions}
+            value={value}
+        />
+    );
+
+    expect(multiAutoComplete.find('Item').at(0).prop('disabled')).toEqual(true);
+    expect(multiAutoComplete.find('Item').at(1).prop('disabled')).toEqual(true);
+    expect(multiAutoComplete.find('input').prop('disabled')).toEqual(true);
 });
 
 test('Clicking a suggestion should call onChange with value of the Suggestion and focus input afterwards', () => {

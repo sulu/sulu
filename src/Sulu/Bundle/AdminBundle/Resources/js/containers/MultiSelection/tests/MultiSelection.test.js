@@ -1,8 +1,7 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
-import pretty from 'pretty';
 import MultiSelection from '../MultiSelection';
 import MultiSelectionStore from '../../../stores/MultiSelectionStore';
 import MultiItemSelection from '../../../components/MultiItemSelection';
@@ -52,20 +51,33 @@ beforeEach(() => {
     }
 });
 
-test('Show with default plus icon', () => {
-    expect(render(
+test('Show with passed icon and label and open overlay', () => {
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [{id: 1, title: 'Title 1'}, {id: 2, title: 'Title 2'}, {id: 5, title: 'Title 5'}];
+        this.loadItems = jest.fn();
+    });
+
+    const selection = mount(
         <MultiSelection
             adapter="table"
+            displayProperties={['id', 'title']}
+            icon="su-document"
+            label="Select Snippets"
             listKey="snippets"
             onChange={jest.fn()}
             overlayTitle="Selection"
             resourceKey="snippets"
         />
-    )).toMatchSnapshot();
+    );
+
+    selection.find('Button[icon="su-document"]').simulate('click');
+
+    expect(selection.render()).toMatchSnapshot();
 });
 
-test('Render in disabled state', () => {
-    expect(render(
+test('Show disbaled in disabled state', () => {
+    const multiSelection = mount(
         <MultiSelection
             adapter="table"
             disabled={true}
@@ -74,7 +86,9 @@ test('Render in disabled state', () => {
             overlayTitle="Selection"
             resourceKey="snippets"
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(multiSelection.find('MultiItemSelection').prop('disabled')).toEqual(true);
 });
 
 test('Render with disabled item', () => {
@@ -86,7 +100,7 @@ test('Render with disabled item', () => {
         ];
     });
 
-    expect(render(
+    const multiSelection = mount(
         <MultiSelection
             adapter="table"
             disabledIds={[2, 4]}
@@ -96,55 +110,10 @@ test('Render with disabled item', () => {
             resourceKey="pages"
             value={[1, 5, 8]}
         />
-    )).toMatchSnapshot();
-});
+    );
 
-test('Show with passed label', () => {
-    expect(render(
-        <MultiSelection
-            adapter="column_list"
-            label="Select Snippets"
-            listKey="snippets"
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-        />
-    )).toMatchSnapshot();
-});
-
-test('Show with passed icon', () => {
-    expect(render(
-        <MultiSelection
-            adapter="table"
-            icon="su-document"
-            listKey="snippets"
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-        />
-    )).toMatchSnapshot();
-});
-
-test('Show with items', () => {
-    const locale = observable.box('en');
-
-    // $FlowFixMe
-    MultiSelectionStore.mockImplementationOnce(function() {
-        this.items = [{id: 1, title: 'Title 1'}, {id: 2, title: 'Title 2'}, {id: 5, title: 'Title 5'}];
-    });
-
-    expect(render(
-        <MultiSelection
-            adapter="table"
-            displayProperties={['id', 'title']}
-            listKey="snippets"
-            locale={locale}
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-            value={[1, 2, 5]}
-        />
-    )).toMatchSnapshot();
+    expect(multiSelection.find('Item').at(0).prop('disabled')).toEqual(false);
+    expect(multiSelection.find('Item').at(1).prop('disabled')).toEqual(true);
 });
 
 test('Pass locale to MultiListOverlay', () => {
@@ -284,23 +253,6 @@ test('Not reload items of MultiSelectionStore when new value of option prop is e
 
     expect(selection.instance().selectionStore.setRequestParameters).not.toBeCalled();
     expect(selection.instance().selectionStore.loadItems).not.toBeCalled();
-});
-
-test('Should open an overlay', () => {
-    const selection = mount(
-        <MultiSelection
-            adapter="table"
-            listKey="snippets"
-            onChange={jest.fn()}
-            overlayTitle="Selection"
-            resourceKey="snippets"
-        />
-    );
-
-    selection.find('Button[icon="su-plus"]').simulate('click');
-
-    const body = document.body;
-    expect(pretty(body ? body.innerHTML : null)).toMatchSnapshot();
 });
 
 test('Should not open an overlay on icon-click when disabled', () => {
