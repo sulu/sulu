@@ -1,66 +1,38 @@
 // @flow
 import React from 'react';
-import {render, mount} from 'enzyme';
-import pretty from 'pretty';
+import {mount} from 'enzyme';
 import ColorPicker from '../ColorPicker';
 
-afterEach(() => {
-    if (document.body) {
-        document.body.innerHTML = '';
-    }
-});
-
 test('ColorPicker should render', () => {
-    const onChange = jest.fn();
-    expect(render(<ColorPicker onChange={onChange} value={null} />)).toMatchSnapshot();
+    const colorPicker = mount(<ColorPicker onChange={jest.fn()} placeholder="My placeholder" value="#abc" />);
+    expect(colorPicker.render()).toMatchSnapshot();
 });
 
-test('ColorPicker should render with placeholder', () => {
-    const onChange = jest.fn();
-    expect(render(<ColorPicker onChange={onChange} placeholder="My placeholder" value={null} />)).toMatchSnapshot();
-});
+test('ColorPicker should disabled Input when disabled', () => {
+    const colorPicker = mount(<ColorPicker disabled={true} onChange={jest.fn()} value={undefined} />);
 
-test('ColorPicker should render with value', () => {
-    const onChange = jest.fn();
-    const value = '#abc';
-    expect(render(<ColorPicker onChange={onChange} value={value} />)).toMatchSnapshot();
-});
-
-test('ColorPicker should render when disabled', () => {
-    const onChange = jest.fn();
-    const value = '#abc';
-    expect(render(<ColorPicker disabled={true} onChange={onChange} value={value} />)).toMatchSnapshot();
-});
-
-test('ColorPicker should render null value as empty string', () => {
-    const onChange = jest.fn();
-    expect(render(<ColorPicker onChange={onChange} value={null} />)).toMatchSnapshot();
+    expect(colorPicker.find('Input').prop('onIconClick')).toEqual(undefined);
+    expect(colorPicker.find('Input').prop('disabled')).toEqual(true);
 });
 
 test('ColorPicker should render error', () => {
-    const onChange = jest.fn();
-    expect(render(<ColorPicker onChange={onChange} valid={false} value={null} />)).toMatchSnapshot();
+    const colorPicker = mount(<ColorPicker onChange={jest.fn()} valid={false} value={null} />);
+    expect(colorPicker.find('Input').prop('valid')).toEqual(false);
 });
 
-test('ColorPicker should render error when invalid value is set', () => {
+test('ColorPicker should show error when invalid value is set', () => {
     const onChange = jest.fn();
     const colorPicker = mount(<ColorPicker onChange={onChange} value={null} />);
 
-    // check if showError is set correctly
     colorPicker.find('Input').instance().props.onChange('xxx', {target: {value: 'xxx'}});
     colorPicker.find('Input').instance().props.onBlur();
     colorPicker.update();
-    expect(colorPicker.instance().showError).toBe(true);
+    expect(colorPicker.find('Input').prop('valid')).toEqual(false);
 
-    expect(render(colorPicker)).toMatchSnapshot();
-
-    // now add a valid value
     colorPicker.find('Input').instance().props.onChange('#ccc', {target: {value: '#ccc'}});
     colorPicker.find('Input').instance().props.onBlur();
     colorPicker.update();
-    expect(colorPicker.instance().showError).toBe(false);
-
-    expect(render(colorPicker)).toMatchSnapshot();
+    expect(colorPicker.find('Input').prop('valid')).toBe(true);
 });
 
 test('ColorPicker should trigger callbacks correctly', () => {
@@ -98,16 +70,7 @@ test('ColorPicker should render with open overlay', () => {
     const colorPicker = mount(<ColorPicker onBlur={onBlur} onChange={onChange} value={null} />);
 
     colorPicker.find('Icon').simulate('click');
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
-});
-
-test('ColorPicker should not open overlay on icon-click when disabled', () => {
-    const onChange = jest.fn();
-    const onBlur = jest.fn();
-    const colorPicker = mount(<ColorPicker disabled={true} onBlur={onBlur} onChange={onChange} value={null} />);
-
-    colorPicker.find('Icon').simulate('click');
-    expect(pretty(document.body ? document.body.innerHTML : '')).toMatchSnapshot();
+    expect(colorPicker.render()).toMatchSnapshot();
 });
 
 test('ColorPicker should call the correct callbacks when value from overlay was selected', () => {
