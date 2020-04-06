@@ -59,11 +59,12 @@ class SingleMediaSelection extends React.Component<Props> {
         );
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps: Props) {
         const newId = toJS(this.props.value.id);
+        const oldId = toJS(prevProps.value.id);
         const loadedId = this.singleMediaSelectionStore.item ? this.singleMediaSelectionStore.item.id : undefined;
 
-        if (loadedId !== newId) {
+        if (oldId !== newId && loadedId !== newId) {
             this.singleMediaSelectionStore.loadItem(newId);
         }
     }
