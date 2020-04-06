@@ -44,7 +44,7 @@ import {
     DateFieldTransformer,
     DateTimeFieldFilterType,
     DateTimeFieldTransformer,
-    DropdownFieldFilterType,
+    SelectFieldFilterType,
     FolderAdapter,
     NumberFieldFilterType,
     NumberFieldTransformer,
@@ -179,7 +179,7 @@ function registerListAdapters() {
 function registerListFieldFilterTypes() {
     listFieldFilterTypeRegistry.add('boolean', BooleanFieldFilterType);
     listFieldFilterTypeRegistry.add('datetime', DateTimeFieldFilterType);
-    listFieldFilterTypeRegistry.add('dropdown', DropdownFieldFilterType);
+    listFieldFilterTypeRegistry.add('select', SelectFieldFilterType);
     listFieldFilterTypeRegistry.add('number', NumberFieldFilterType);
     listFieldFilterTypeRegistry.add('selection', SelectionFieldFilterType);
     listFieldFilterTypeRegistry.add('text', TextFieldFilterType);

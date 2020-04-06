@@ -189,7 +189,7 @@
 
         <service
             id="sulu_contact.country_filter_type"
-            class="Sulu\Component\Rest\ListBuilder\Filter\DropdownFilterType"
+            class="Sulu\Component\Rest\ListBuilder\Filter\SelectFilterType"
         >
             <tag name="sulu_core.list_builder_filter_type" alias="country" />
         </service>

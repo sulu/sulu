@@ -5,12 +5,12 @@ import Checkbox, {CheckboxGroup} from '../../../components/Checkbox';
 import {translate} from '../../../utils/Translator';
 import AbstractFieldFilterType from './AbstractFieldFilterType';
 
-class DropdownFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
+class SelectFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
     @computed get options(): Object {
         const {parameters} = this;
 
         if (!parameters) {
-            throw new Error('The "DropdownFieldFilterType" needs some parameters to work!');
+            throw new Error('The "SelectFieldFilterType" needs some parameters to work!');
         }
 
         const {options} = parameters;
@@ -52,4 +52,4 @@ class DropdownFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
     }
 }
 
-export default DropdownFieldFilterType;
+export default SelectFieldFilterType;
