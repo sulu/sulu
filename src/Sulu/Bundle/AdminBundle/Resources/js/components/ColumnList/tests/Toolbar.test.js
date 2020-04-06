@@ -1,16 +1,10 @@
 // @flow
 import React from 'react';
 import {mount} from 'enzyme';
-import pretty from 'pretty';
 import Toolbar from '../Toolbar';
 import ToolbarDropdown from '../ToolbarDropdown';
 
 test('Should render with active', () => {
-    const body = document.body;
-    if (!body) {
-        throw new Error('Body tag should exist!');
-    }
-
     const toolbarItems = [
         {
             icon: 'fa-plus',
@@ -36,16 +30,16 @@ test('Should render with active', () => {
 
     const toolbar = mount(<Toolbar toolbarItems={toolbarItems} />);
 
-    expect(toolbar.render()).toMatchSnapshot();
     expect(toolbar.find(ToolbarDropdown).length).toBe(1);
 
     toolbar.find('.fa-plus').simulate('click');
     expect(toolbarItems[0].onClick).toBeCalledWith();
 
     // check for opened dropdown in body
-    expect(body.innerHTML).toBe('');
     toolbar.find(ToolbarDropdown).find('button').simulate('click');
-    expect(pretty(body.innerHTML)).toMatchSnapshot();
+    toolbar.update();
+    expect(toolbar.render()).toMatchSnapshot();
+    expect(toolbar.find('ArrowMenu').render()).toMatchSnapshot();
 });
 
 test('Should close dropdown when item is clicked', () => {
