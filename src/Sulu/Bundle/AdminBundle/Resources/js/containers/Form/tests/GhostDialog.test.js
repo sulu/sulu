@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import {mount} from 'enzyme';
-import pretty from 'pretty';
 import GhostDialog from '../GhostDialog';
 
 jest.mock('../../../utils/Translator', () => ({
@@ -15,11 +14,11 @@ afterEach(() => {
 });
 
 test('Should render a Dialog', () => {
-    const body = document.body;
+    const ghostDialog = mount(
+        <GhostDialog locales={['en', 'de']} onCancel={jest.fn()} onConfirm={jest.fn()} open={true} />
+    );
 
-    mount(<GhostDialog locales={['en', 'de']} onCancel={jest.fn()} onConfirm={jest.fn()} open={true} />);
-
-    expect(pretty(body ? body.innerHTML : '')).toMatchSnapshot();
+    expect(ghostDialog.render()).toMatchSnapshot();
 });
 
 test('Should call onCancel callback if user chooses not to copy content', () => {
