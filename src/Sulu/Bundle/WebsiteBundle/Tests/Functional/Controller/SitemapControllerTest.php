@@ -143,4 +143,16 @@ class SitemapControllerTest extends WebsiteTestCase
         $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
         $this->assertHttpStatusCode(404, $client->getResponse());
     }
+
+    public function testSitemapIndexFile()
+    {
+        $client = $this->createWebsiteClient();
+        $crawler = $client->request('GET', 'http://sulu.index/sitemap.xml');
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        echo $client->getResponse()->getContent();
+
+        $this->assertSame('http://sulu.index/sitemaps/test-1.xml', $crawler->filterXPath('//sitemapindex/sitemap[1]/loc[1]')->text());
+        $this->assertSame('http://sulu.index/sitemaps/pages-1.xml', $crawler->filterXPath('//sitemapindex/sitemap[2]/loc[1]')->text());
+    }
 }

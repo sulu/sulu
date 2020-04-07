@@ -86,9 +86,17 @@ class SitemapController
         if (!$response) {
             $sitemap = $this->xmlSitemapRenderer->renderIndex($request->getScheme(), $request->getHost());
             if (!$sitemap) {
-                $aliases = array_keys($this->sitemapProviderPool->getProviders());
+                $sitemapAlias = null;
 
-                return $this->sitemapPaginatedAction($request, reset($aliases), 1);
+                foreach ($this->sitemapProviderPool->getProviders() as $sitemapAlias => $provider) {
+                    if ($provider->getMaxPage($request->getScheme(), $request->getHost()) > 0) {
+                        $sitemapAlias = $provider->getAlias();
+
+                        break;
+                    }
+                }
+
+                return $this->sitemapPaginatedAction($request, $sitemapAlias, 1);
             }
 
             $response = new Response($sitemap);

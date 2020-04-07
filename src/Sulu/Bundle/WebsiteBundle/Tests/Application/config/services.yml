@@ -6,3 +6,8 @@ services:
     sulu_website_test.analytics.repository:
         alias: sulu_website.analytics.repository
         public: true
+
+    sulu_website_test.test_sitemap_provider:
+        class: Sulu\Bundle\WebsiteBundle\Tests\Application\TestSitemapProvider
+        tags:
+            - { name: sulu.sitemap.provider }
