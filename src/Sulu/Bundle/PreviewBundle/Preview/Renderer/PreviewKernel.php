@@ -44,7 +44,7 @@ class PreviewKernel extends Kernel
     }
 
     /**
-     * The "getContainerClass" need to be normalized for preview and over contexts
+     * The "getContainerClass" need to be normalized for preview and other contexts
      * as it is used by the symfony cache component as prefix.
      *
      * @see SuluKernel::getContainerClass
