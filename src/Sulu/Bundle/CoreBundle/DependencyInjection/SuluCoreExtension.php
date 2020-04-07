@@ -214,7 +214,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                 'framework',
                 [
                     'cache' => [
-                        'directory' => '%sulu.common_cache_dir%',
+                        'directory' => '%sulu.common_cache_dir%/pools',
                     ],
                 ]
             );
