@@ -11,29 +11,23 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminControllerTest extends SuluTestCase
 {
-    /**
-     * @var EntityManager
-     */
-    protected $em;
-
     public function setUp(): void
     {
         $this->client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
-        $this->initPhpcr();
-        $this->em = $this->getEntityManager();
-        $collectionType = new LoadCollectionTypes();
-        $collectionType->load($this->getEntityManager());
     }
 
     public function testGetConfig()
     {
+        $this->initPhpcr();
+        $collectionType = new LoadCollectionTypes();
+        $collectionType->load($this->getEntityManager());
+
         $client = $this->client;
         $client->request('GET', '/admin/config');
 
