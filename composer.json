@@ -110,7 +110,7 @@
         "jackalope/jackalope-doctrine-dbal": "^1.3",
         "league/flysystem": "^1.0",
         "league/flysystem-aws-s3-v3": "^1.0.1",
-        "league/flysystem-azure-blob-storage": "^0.1.6",
+        "league/flysystem-azure-blob-storage": "^0.1",
         "matthiasnoback/symfony-config-test": "^4.0",
         "matthiasnoback/symfony-dependency-injection-test": "^4.0",
         "php-ffmpeg/php-ffmpeg": "^0.13 || ^0.14",
@@ -165,7 +165,7 @@
         "handcraftedinthealps/zendsearch": "To use the PHP based Zend Search library (based on Lucene)",
         "league/flysystem": "^1.0 - Needed for remote media-storages",
         "league/flysystem-aws-s3-v3": "^1.0.1 - Needed for AWS S3 compatible storages (aws s3 or minio)",
-        "league/flysystem-azure-blob-storage": "^0.16  Needed for Azure Blob media-storage implementation",
+        "league/flysystem-azure-blob-storage": "^0.1 Needed for Azure Blob media-storage implementation",
         "superbalist/flysystem-google-storage": "^7.1 - Needed for Google-Bucket media-storage implementation",
         "php-ffmpeg/php-ffmpeg": "Needed (as in require-dev) to generate preview images for videos",
         "symfony/monolog-bundle": "^3.1"
