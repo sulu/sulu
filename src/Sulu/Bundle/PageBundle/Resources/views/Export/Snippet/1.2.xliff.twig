@@ -20,7 +20,7 @@
 
     {# view #}
     {%- block view -%}
-        {% spaceless %}
+        {% apply spaceless %}
         {% set attributes = '' %}
         {% set target = '' %}
         {%- if options.translate is defined and not options.translate -%}
@@ -30,7 +30,7 @@
         {% if type == 'text_editor' %}
             {% set attributes = attributes ~ ' datatype="html"' %}
         {% endif %}
-        {% endspaceless %}
+        {% endapply %}
         {% autoescape false %}
 
             <!-- {{ name }}: {{ type }} -->

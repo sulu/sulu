@@ -6,12 +6,12 @@
     {# Iterate over the pages #}
     {%- block pages -%}
         {%- for document in documents -%}
-            {% spaceless %}
+            {% apply spaceless %}
                 {% set settings = document.settings %}
                 {% set content = document.content %}
                 {% set extensions = document.extensions %}
                 {% set prefix = '' %}
-            {% endspaceless %}{{ block('page') }}
+            {% endapply %}{{ block('page') }}
         {%- endfor -%}
     {%- endblock pages -%}
 
@@ -65,12 +65,12 @@
 
     {# Output model #}
     {%- block model -%}
-        {% spaceless %}
+        {% apply spaceless %}
             {% set name = prefix ~ property.name %}
             {% set options = property.options|default('') %}
             {% set value = property.value %}
             {% set type = property.type|default('') %}
-        {% endspaceless %}{{- block('view') -}}
+        {% endapply %}{{- block('view') -}}
     {%- endblock model -%}
 
     {# View #}

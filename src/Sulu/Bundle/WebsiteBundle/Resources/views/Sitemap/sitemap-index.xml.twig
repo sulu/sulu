@@ -1,4 +1,4 @@
-{% spaceless %}
+{% apply spaceless %}
 <?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     {% import _self as self %}
@@ -14,7 +14,7 @@
     {% endfor %}
     {% endfor %}
 </sitemapindex>
-{% endspaceless %}
+{% endapply %}
 
 {% macro loc(alias, page, scheme, domain) %}
     {% if scheme|default() and domain|default() %}
