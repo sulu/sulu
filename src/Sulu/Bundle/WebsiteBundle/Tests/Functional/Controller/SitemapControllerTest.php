@@ -150,8 +150,6 @@ class SitemapControllerTest extends WebsiteTestCase
         $crawler = $client->request('GET', 'http://sulu.index/sitemap.xml');
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        echo $client->getResponse()->getContent();
-
         $this->assertSame('http://sulu.index/sitemaps/test-1.xml', $crawler->filterXPath('//sitemapindex/sitemap[1]/loc[1]')->text());
         $this->assertSame('http://sulu.index/sitemaps/pages-1.xml', $crawler->filterXPath('//sitemapindex/sitemap[2]/loc[1]')->text());
     }
