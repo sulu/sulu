@@ -42,7 +42,7 @@ class ValidateWebspacesCommand extends Command
     private $structureMetadataFactory;
 
     /**
-     * @var ControllerNameParser
+     * @var ControllerNameParser|null
      */
     private $controllerNameConverter;
 
@@ -74,7 +74,7 @@ class ValidateWebspacesCommand extends Command
     public function __construct(
         Environment $twig,
         StructureMetadataFactoryInterface $structureMetadataFactory,
-        ControllerNameParser $controllerNameConverter,
+        ?ControllerNameParser $controllerNameConverter,
         StructureManagerInterface $structureManager,
         WebspaceStructureProvider $structureProvider,
         WebspaceManagerInterface $webspaceManager,
@@ -334,7 +334,9 @@ class ValidateWebspacesCommand extends Command
     private function validateControllerAction($controllerAction)
     {
         try {
-            $controllerAction = $this->controllerNameConverter->parse($controllerAction);
+            if ($this->controllerNameConverter) {
+                $controllerAction = $this->controllerNameConverter->parse($controllerAction);
+            }
         } catch (\InvalidArgumentException $e) {
         }
 

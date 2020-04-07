@@ -274,7 +274,9 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu_page.seo', $config['seo']);
 
         // the service "controller_name_converter" is private use an alias to make it public
-        $container->setAlias('sulu_page.controller_name_converter', 'controller_name_converter')->setPublic(true);
+        if ($container->has('controller_name_converter')) {
+            $container->setAlias('sulu_page.controller_name_converter', 'controller_name_converter')->setPublic(true);
+        }
     }
 
     private function processSearch($config, LoaderInterface $loader, ContainerBuilder $container)
