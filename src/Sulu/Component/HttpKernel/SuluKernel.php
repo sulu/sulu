@@ -86,7 +86,7 @@ abstract class SuluKernel extends Kernel
     }
 
     /**
-     * The "getContainerClass" need to be normalized for preview and over contexts
+     * The "getContainerClass" need to be normalized for preview and other contexts
      * as its used by the symfony cache component as prefix.
      *
      * @see https://github.com/symfony/symfony/blob/v4.4.7/src/Symfony/Component/Cache/DependencyInjection/CachePoolPass.php#L56
@@ -99,7 +99,8 @@ abstract class SuluKernel extends Kernel
     /**
      * @internal
      *
-     * This is only for internal use. To get the container class use `getContainerClass` instead.
+     * This is only used to support Symfony ^4.3 and 5 at the same time.
+     * To get the container class use `getContainerClass` instead.
      *
      * This is a copy of the symfony 5.0 getContainerClass which does not include $this->name.
      *
