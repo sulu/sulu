@@ -127,8 +127,7 @@
         "symfony/phpunit-bridge": "^4.3",
         "symfony/stopwatch": "^4.3",
         "symfony/var-dumper": "^4.3",
-        "symfony/web-profiler-bundle": "^4.3",
-        "symfony/web-server-bundle": "^4.3"
+        "symfony/web-profiler-bundle": "^4.3"
     },
     "conflict": {
         "doctrine/dbal": "2.7.0",

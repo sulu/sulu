@@ -2,6 +2,16 @@
 
 ## dev-master
 
+### WebServerBundle removed
+
+The Symfony WebServerBundle has been removed.
+Use for development the [Symfony Local Webserver](https://symfony.com/doc/current/setup/symfony_server.html)
+or the internal [php web server](https://www.php.net/manual/en/features.commandline.webserver.php) instead:
+
+```bash
+php -S localhost:8000 -t public/
+```
+
 ### Add key property to Role entity
 
 To allow for referencing `Role` entities by a human readable string, a `key` property was added to the `Role` entity.
