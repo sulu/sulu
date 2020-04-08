@@ -33,14 +33,11 @@ test('Render snippet areas with loading icon', () => {
     };
 
     // $FlowFixMe
-    const route = {};
-
-    // $FlowFixMe
     SnippetAreaStore.mockImplementation(function() {
         this.loading = true;
     });
 
-    expect(render(<SnippetAreas route={route} router={router} />)).toMatchSnapshot();
+    expect(render(<SnippetAreas route={router.route} router={router} />)).toMatchSnapshot();
     expect(SnippetAreaStore).toBeCalledWith('sulu');
 });
 
@@ -52,9 +49,6 @@ test('Render snippet areas with data as table', () => {
     router.attributes = {
         webspace: 'sulu',
     };
-
-    // $FlowFixMe
-    const route = {};
 
     // $FlowFixMe
     SnippetAreaStore.mockImplementation(function() {
@@ -74,7 +68,7 @@ test('Render snippet areas with data as table', () => {
         };
     });
 
-    expect(render(<SnippetAreas route={route} router={router} />)).toMatchSnapshot();
+    expect(render(<SnippetAreas route={router.route} router={router} />)).toMatchSnapshot();
     expect(SnippetAreaStore).toBeCalledWith('sulu');
 });
 
@@ -87,9 +81,6 @@ test('Close after clicking add without choosing a snippet', () => {
     router.attributes = {
         webspace: 'sulu',
     };
-
-    // $FlowFixMe
-    const route = {};
 
     // $FlowFixMe
     SnippetAreaStore.mockImplementation(function() {
@@ -105,7 +96,7 @@ test('Close after clicking add without choosing a snippet', () => {
         this.save = jest.fn();
     });
 
-    const snippetAreas = mount(<SnippetAreas route={route} router={router} />);
+    const snippetAreas = mount(<SnippetAreas route={router.route} router={router} />);
     // $FlowFixMe
     const snippetAreaStore = SnippetAreaStore.mock.instances[0];
 
@@ -130,9 +121,6 @@ test('Save after adding a new snippet area', () => {
         webspace: 'sulu',
     };
 
-    // $FlowFixMe
-    const route = {};
-
     const savePromise = Promise.resolve();
 
     // $FlowFixMe
@@ -149,7 +137,7 @@ test('Save after adding a new snippet area', () => {
         this.save = jest.fn().mockReturnValue(savePromise);
     });
 
-    const snippetAreas = mount(<SnippetAreas route={route} router={router} />);
+    const snippetAreas = mount(<SnippetAreas route={router.route} router={router} />);
     // $FlowFixMe
     const snippetAreaStore = SnippetAreaStore.mock.instances[0];
 
@@ -177,9 +165,6 @@ test('Close after clicking delete and cancel dialog', () => {
     };
 
     // $FlowFixMe
-    const route = {};
-
-    // $FlowFixMe
     SnippetAreaStore.mockImplementation(function() {
         this.snippetAreas = {
             default: {
@@ -193,7 +178,7 @@ test('Close after clicking delete and cancel dialog', () => {
         this.save = jest.fn();
     });
 
-    const snippetAreas = mount(<SnippetAreas route={route} router={router} />);
+    const snippetAreas = mount(<SnippetAreas route={router.route} router={router} />);
     // $FlowFixMe
     const snippetAreaStore = SnippetAreaStore.mock.instances[0];
 
@@ -217,9 +202,6 @@ test('Delete after confirming the confirmation dialog', () => {
         webspace: 'sulu',
     };
 
-    // $FlowFixMe
-    const route = {};
-
     const deletePromise = Promise.resolve();
 
     // $FlowFixMe
@@ -236,7 +218,7 @@ test('Delete after confirming the confirmation dialog', () => {
         this.delete = jest.fn().mockReturnValue(deletePromise);
     });
 
-    const snippetAreas = mount(<SnippetAreas route={route} router={router} />);
+    const snippetAreas = mount(<SnippetAreas route={router.route} router={router} />);
     // $FlowFixMe
     const snippetAreaStore = SnippetAreaStore.mock.instances[0];
 
@@ -267,9 +249,6 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
     };
 
     // $FlowFixMe
-    const route = {};
-
-    // $FlowFixMe
     SnippetAreaStore.mockImplementation(function() {
         this.snippetAreas = {
             default: {
@@ -282,7 +261,7 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
     });
 
     const snippetAreas = mount(
-        <SnippetAreas route={route} router={router} />
+        <SnippetAreas route={router.route} router={router} />
     );
 
     const cacheClearToolbarAction: CacheClearToolbarAction = (CacheClearToolbarAction: any).mock.instances[0];
