@@ -2,12 +2,12 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import {webspaceStore} from 'sulu-page-bundle/stores';
+import {defaultWebspace} from 'sulu-admin-bundle/utils/TestHelper';
 import Permissions from '../Permissions';
 import type {ContextPermission} from '../types';
 import type {SecurityContextGroups} from '../../../stores/securityContextStore/types';
 import securityContextStore from '../../../stores/securityContextStore/securityContextStore';
 import PermissionMatrix from '../PermissionMatrix';
-import {defaultWebspace} from 'sulu-admin-bundle/utils/TestHelper';
 
 jest.mock('sulu-page-bundle/stores/webspaceStore', () => ({
     allWebspaces: [],
