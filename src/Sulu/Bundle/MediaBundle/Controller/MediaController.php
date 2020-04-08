@@ -203,16 +203,27 @@ class MediaController extends AbstractMediaController implements
         $listBuilder = $this->getListBuilder($request, $fieldDescriptors, $types);
         $listBuilder->setParameter('locale', $locale);
         $listResponse = $listBuilder->execute();
-        $count = $listBuilder->count();
+
+        $previewImageIds = [];
+        foreach ($listResponse as $listItem) {
+            if ($listItem['previewImageId']) {
+                $previewImageIds[] = $listItem['previewImageId'];
+            }
+        }
+        $previewImageFormats = $this->mediaManager->getFormatUrls($previewImageIds, $locale);
 
         for ($i = 0, $length = count($listResponse); $i < $length; ++$i) {
-            $format = $this->formatManager->getFormats(
-                $listResponse[$i]['previewImageId'] ?? $listResponse[$i]['id'],
-                $listResponse[$i]['name'],
-                $listResponse[$i]['version'],
-                $listResponse[$i]['subVersion'],
-                $listResponse[$i]['mimeType']
-            );
+            if ($previewImageId = $listResponse[$i]['previewImageId']) {
+                $format = $previewImageFormats[$previewImageId];
+            } else {
+                $format = $this->formatManager->getFormats(
+                    $listResponse[$i]['id'],
+                    $listResponse[$i]['name'],
+                    $listResponse[$i]['version'],
+                    $listResponse[$i]['subVersion'],
+                    $listResponse[$i]['mimeType']
+                );
+            }
 
             if (0 < count($format)) {
                 $listResponse[$i]['thumbnails'] = $format;
@@ -246,7 +257,7 @@ class MediaController extends AbstractMediaController implements
             $request->query->all(),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),
-            $count
+            $listBuilder->count()
         );
 
         $view = $this->view($list, 200);

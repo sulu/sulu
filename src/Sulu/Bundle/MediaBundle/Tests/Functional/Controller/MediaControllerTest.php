@@ -530,27 +530,42 @@ class MediaControllerTest extends SuluTestCase
 
     public function testCgetWithPreview()
     {
-        $preview1 = $this->createMedia('photo');
-        $preview2 = $this->createMedia('photo2');
-        $this->createMedia('photo', 'en-gb', 'image', $preview1);
+        $preview1 = $this->createMedia('preview-image-1');
+        $preview2 = $this->createMedia('preview-image-2');
+        $this->createMedia('photo1', 'en-gb', 'image', $preview1);
         $this->createMedia('photo2', 'en-gb', 'image', $preview2);
         $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/media?locale=en-gb'
+            '/api/media?locale=en-gb&sortBy=name'
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
+        $this->assertStringContainsString('photo1', $response->_embedded->media[0]->url);
         $this->assertStringContainsString(
-            $preview1->getId() . '-photo.jpg',
+            $preview1->getId() . '-preview-image-1.jpg',
+            $response->_embedded->media[0]->thumbnails->{'sulu-400x400'}
+        );
+
+        $this->assertStringContainsString('photo2', $response->_embedded->media[1]->url);
+        $this->assertStringContainsString(
+            $preview2->getId() . '-preview-image-2.jpg',
+            $response->_embedded->media[1]->thumbnails->{'sulu-400x400'}
+        );
+
+        $this->assertStringContainsString('preview-image-1', $response->_embedded->media[2]->url);
+        $this->assertStringContainsString(
+            $preview1->getId() . '-preview-image-1.jpg',
             $response->_embedded->media[2]->thumbnails->{'sulu-400x400'}
         );
+
+        $this->assertStringContainsString('preview-image-2', $response->_embedded->media[3]->url);
         $this->assertStringContainsString(
-            $preview2->getId() . '-photo2.jpg',
+            $preview2->getId() . '-preview-image-2.jpg',
             $response->_embedded->media[3]->thumbnails->{'sulu-400x400'}
         );
     }
