@@ -3,7 +3,7 @@ import {action, computed, observable} from 'mobx';
 import log from 'loglevel';
 import {observer} from 'mobx-react';
 import React from 'react';
-import RectangleSelection, {RoundingNormalizer} from '../RectangleSelection';
+import RectangleSelection from '../RectangleSelection';
 import type {SelectionData} from '../RectangleSelection';
 import withContainerSize from '../withContainerSize';
 import imageRectangleSelectionStyles from './imageRectangleSelection.scss';
@@ -21,7 +21,6 @@ type Props = {|
 @observer
 class ImageRectangleSelection extends React.Component<Props> {
     image: Image;
-    rounding = new RoundingNormalizer();
     @observable imageLoaded = false;
 
     naturalHorizontalToScaled = (h: number) => h * this.imageResizedWidth / this.image.naturalWidth;
@@ -80,7 +79,7 @@ class ImageRectangleSelection extends React.Component<Props> {
 
     handleRectangleSelectionChange = (data: ?SelectionData) => {
         const {onChange} = this.props;
-        onChange(data ? this.rounding.normalize(this.scaledDataToNatural(data)) : undefined);
+        onChange(data ? this.scaledDataToNatural(data) : undefined);
     };
 
     @computed get minDimensions() {
