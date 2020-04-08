@@ -206,14 +206,16 @@ class MediaController extends AbstractMediaController implements
 
         $previewImageIds = [];
         foreach ($listResponse as $listItem) {
-            if ($listItem['previewImageId']) {
-                $previewImageIds[] = $listItem['previewImageId'];
+            $previewImageId = $listItem['previewImageId'] ?? null;
+            if ($previewImageId) {
+                $previewImageIds[] = $previewImageId;
             }
         }
         $previewImageFormats = $this->mediaManager->getFormatUrls($previewImageIds, $locale);
 
         for ($i = 0, $length = count($listResponse); $i < $length; ++$i) {
-            if ($previewImageId = $listResponse[$i]['previewImageId']) {
+            $previewImageId = $listResponse[$i]['previewImageId'] ?? null;
+            if ($previewImageId) {
                 $format = $previewImageFormats[$previewImageId];
             } else {
                 $format = $this->formatManager->getFormats(
