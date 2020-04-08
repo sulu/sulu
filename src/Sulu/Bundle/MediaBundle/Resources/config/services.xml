@@ -346,6 +346,7 @@
             <argument type="service" id="sulu_media.system_collections.cache"/>
             <argument>%kernel.default_locale%</argument>
         </service>
+        <service id="Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface" alias="sulu_media.system_collections.manager"/>
 
         <service id="sulu_media.system_collections.builder" class="Sulu\Component\Media\SystemCollections\SystemCollectionBuilder">
             <tag name="massive_build.builder" />
