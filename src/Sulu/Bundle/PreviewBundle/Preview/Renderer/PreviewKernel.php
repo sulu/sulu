@@ -43,6 +43,18 @@ class PreviewKernel extends Kernel
         $loader->load(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'Resources', 'config', 'config_preview.yml']));
     }
 
+    /**
+     * The "getContainerClass" need to be normalized for preview and other contexts
+     * as it is used by the symfony cache component as prefix.
+     *
+     * @see SuluKernel::getContainerClass
+     */
+    protected function getContainerClass()
+    {
+        // use parent class to normalize the generated container class.
+        return $this->generateContainerClass(get_parent_class());
+    }
+
     public function getRootDir()
     {
         if (null === $this->rootDir) {
