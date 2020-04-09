@@ -99,7 +99,7 @@ class SecurityAdmin extends Admin
     public function getSecurityContexts()
     {
         return [
-            'Sulu' => [
+            self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Security' => [
                     static::ROLE_SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,

@@ -165,7 +165,7 @@ class CategoryAdmin extends Admin
     public function getSecurityContexts()
     {
         return [
-            'Sulu' => [
+            self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Settings' => [
                     static::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,

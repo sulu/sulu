@@ -152,7 +152,7 @@ class MediaAdmin extends Admin
     public function getSecurityContexts()
     {
         return [
-            'Sulu' => [
+            self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Media' => [
                     static::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,

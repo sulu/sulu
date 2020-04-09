@@ -310,7 +310,7 @@ class PageAdmin extends Admin
 
         return array_merge(
             [
-                'Sulu' => [
+                self::SULU_ADMIN_SECURITY_SYSTEM => [
                     'Webspaces' => $webspaceContexts,
                 ],
             ],
@@ -322,7 +322,7 @@ class PageAdmin extends Admin
     {
         return array_merge(
             [
-                'Sulu' => [
+                self::SULU_ADMIN_SECURITY_SYSTEM => [
                     'Webspaces' => [
                         self::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
                             PermissionTypes::VIEW,
