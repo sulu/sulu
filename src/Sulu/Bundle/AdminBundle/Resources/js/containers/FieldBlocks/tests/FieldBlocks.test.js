@@ -542,13 +542,11 @@ test('Call onChange on componentDidUpdate when type not longer exist', () => {
 
     expect(changeSpy).toBeCalledWith([
         {
-            __id: 11,
             text1: 'Test 1',
             text2: 'Test 2',
             type: 'new',
         },
         {
-            __id: 12,
             text1: 'Test 3',
             text2: 'Test 4',
             type: 'new',
@@ -837,7 +835,7 @@ test ('Should set nested properties in handleBlockChange and call onChange with 
             },
         },
     };
-    const value = [{__id: 1, type: 'default'}];
+    const value = [{type: 'default'}];
     formInspector.getSchemaEntryByPath.mockReturnValue({types});
 
     const changeSpy = jest.fn();
@@ -858,11 +856,11 @@ test ('Should set nested properties in handleBlockChange and call onChange with 
     fieldBlocks.find('Block').simulate('click');
     fieldBlocks.find('FieldRenderer').prop('onChange')(0, 'options/test1', 'value1');
 
-    const expectedArray1 = [{__id: 1, type: 'default', options: {test1: 'value1'}}];
+    const expectedArray1 = [{type: 'default', options: {test1: 'value1'}}];
     expect(changeSpy).toBeCalledWith(expectedArray1);
 
     fieldBlocks.find('FieldRenderer').prop('onChange')(0, 'options/test2/test3', 'value2');
-    const expectedArray2 = [{__id: 1, type: 'default', options: {test1: 'value1', test2: {test3: 'value2'}}}];
+    const expectedArray2 = [{type: 'default', options: {test1: 'value1', test2: {test3: 'value2'}}}];
     expect(changeSpy).toBeCalledWith(expectedArray2);
 });
 

@@ -30,6 +30,7 @@ class BlockCollection extends React.Component<Props> {
         value: [],
     };
 
+    @observable generatedBlockIds: Array<number> = [];
     @observable expandedBlocks: Array<boolean> = [];
 
     constructor(props: Props) {
@@ -40,15 +41,20 @@ class BlockCollection extends React.Component<Props> {
 
     fillArrays() {
         const {defaultType, onChange, minOccurs, value} = this.props;
-        const {expandedBlocks} = this;
+        const {expandedBlocks, generatedBlockIds} = this;
 
         if (!value) {
             return;
         }
 
         expandedBlocks.push(...new Array(value.length - expandedBlocks.length).fill(false));
+        generatedBlockIds.push(
+            ...new Array(value.length - generatedBlockIds.length).fill(false).map(() => ++BlockCollection.idCounter)
+        );
         if (minOccurs && value.length < minOccurs) {
             expandedBlocks.push(...new Array(minOccurs - value.length).fill(true));
+            generatedBlockIds.push(...new Array(minOccurs - value.length).map(() => ++BlockCollection.idCounter));
+
             onChange([
                 ...value,
                 ...Array.from(
@@ -68,6 +74,7 @@ class BlockCollection extends React.Component<Props> {
 
         if (value) {
             this.expandedBlocks.push(true);
+            this.generatedBlockIds.push(++BlockCollection.idCounter);
 
             onChange([...value, {type: defaultType}]);
         }
@@ -82,6 +89,7 @@ class BlockCollection extends React.Component<Props> {
 
         if (value) {
             this.expandedBlocks.splice(index, 1);
+            this.generatedBlockIds.splice(index, 1);
             onChange(value.filter((element, arrayIndex) => arrayIndex != index));
         }
     };
@@ -90,6 +98,7 @@ class BlockCollection extends React.Component<Props> {
         const {onChange, onSortEnd, value} = this.props;
 
         this.expandedBlocks = arrayMove(this.expandedBlocks, oldIndex, newIndex);
+        this.generatedBlockIds = arrayMove(this.generatedBlockIds, oldIndex, newIndex);
         onChange(arrayMove(value, oldIndex, newIndex));
 
         if (onSortEnd) {
@@ -127,12 +136,11 @@ class BlockCollection extends React.Component<Props> {
     render() {
         const {disabled, renderBlockContent, types, value} = this.props;
 
-        const identifiedValues = value.map((block) => {
-            if (!block.__id) {
-                block.__id = ++BlockCollection.idCounter;
-            }
-
-            return block;
+        const identifiedValues = value.map((block, index) => {
+            return {
+                ...block,
+                __id: this.generatedBlockIds[index],
+            };
         });
 
         return (
