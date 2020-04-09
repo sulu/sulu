@@ -5,9 +5,7 @@ const defaultWebspace = {
     allLocalizations: [],
     customUrls: [],
     defaultTemplates: {},
-    key: 'webspace-key',
     localizations: [],
-    name: 'webspace-name',
     navigations: [],
     portalInformation: [],
     resourceLocatorStrategy: {
