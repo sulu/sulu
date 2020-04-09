@@ -1,4 +1,5 @@
 // @flow
+import React from 'react';
 import {mount} from 'enzyme';
 import DateTimeFieldFilterType from '../../fieldFilterTypes/DateTimeFieldFilterType';
 
@@ -8,7 +9,7 @@ jest.mock('../../../../utils/Translator', () => ({
 
 test('Render with value of undefined', () => {
     const dateTimeFieldFilterType = new DateTimeFieldFilterType(jest.fn(), {}, undefined);
-    expect(mount(dateTimeFieldFilterType.getFormNode()).render()).toMatchSnapshot();
+    expect(mount(<div>{dateTimeFieldFilterType.getFormNode()}</div>).render()).toMatchSnapshot();
 });
 
 test.each([
@@ -20,7 +21,7 @@ test.each([
         {},
         {from, to}
     );
-    expect(mount(dateTimeFieldFilterType.getFormNode()).render()).toMatchSnapshot();
+    expect(mount(<div>{dateTimeFieldFilterType.getFormNode()}</div>).render()).toMatchSnapshot();
 });
 
 test('Render with value set by setValue', () => {
@@ -32,7 +33,7 @@ test('Render with value set by setValue', () => {
 
     dateTimeFieldFilterType.setValue({from: new Date('2017-06-03'), to: new Date('2018-03-06')});
 
-    expect(mount(dateTimeFieldFilterType.getFormNode()).render()).toMatchSnapshot();
+    expect(mount(<div>{dateTimeFieldFilterType.getFormNode()}</div>).render()).toMatchSnapshot();
 });
 
 test('Call onChange handler with only from value', () => {
