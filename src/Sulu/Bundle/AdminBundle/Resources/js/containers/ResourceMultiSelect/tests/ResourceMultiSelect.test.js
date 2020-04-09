@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import ResourceMultiSelect from '../ResourceMultiSelect';
 import MultiSelectComponent from '../../../components/MultiSelect';
 import ResourceListStore from '../../../stores/ResourceListStore';
@@ -10,55 +10,6 @@ jest.mock('../../../stores/ResourceListStore', () => jest.fn());
 jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
-
-test('Render in loading state', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = true;
-        this.data = undefined;
-    });
-
-    expect(render(
-        <ResourceMultiSelect
-            displayProperty="name"
-            onChange={jest.fn()}
-            resourceKey="test"
-            values={undefined}
-        />
-    )).toMatchSnapshot();
-});
-
-test('Render in disabled state', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'id': 2,
-                'name': 'Test ABC',
-                'someOtherProperty': 'No no',
-            },
-            {
-                'id': 5,
-                'name': 'Test DEF',
-                'someOtherProperty': 'YES YES',
-            },
-        ];
-    });
-
-    const resourceMultiSelect = mount(
-        <ResourceMultiSelect
-            disabled={true}
-            displayProperty="name"
-            onChange={jest.fn()}
-            resourceKey="test"
-            values={undefined}
-        />
-    );
-
-    expect(ResourceListStore).toBeCalledWith('test', {});
-    expect(resourceMultiSelect.render()).toMatchSnapshot();
-});
 
 test('Render with data', () => {
     // $FlowFixMe
@@ -88,12 +39,63 @@ test('Render with data', () => {
             displayProperty="name"
             onChange={jest.fn()}
             resourceKey="test"
-            values={undefined}
+            values={[5, 99]}
         />
     );
 
     expect(ResourceListStore).toBeCalledWith('test', {});
     expect(resourceMultiSelect.render()).toMatchSnapshot();
+});
+
+test('Render in disabled state', () => {
+    // $FlowFixMe
+    ResourceListStore.mockImplementation(function() {
+        this.loading = false;
+        this.data = [
+            {
+                'id': 2,
+                'name': 'Test ABC',
+                'someOtherProperty': 'No no',
+            },
+            {
+                'id': 5,
+                'name': 'Test DEF',
+                'someOtherProperty': 'YES YES',
+            },
+        ];
+    });
+
+    const resourceMultiSelect = shallow(
+        <ResourceMultiSelect
+            disabled={true}
+            displayProperty="name"
+            onChange={jest.fn()}
+            resourceKey="test"
+            values={undefined}
+        />
+    );
+
+    expect(ResourceListStore).toBeCalledWith('test', {});
+    expect(resourceMultiSelect.find('MultiSelect').prop('disabled')).toEqual(true);
+});
+
+test('Render in loading state', () => {
+    // $FlowFixMe
+    ResourceListStore.mockImplementation(function() {
+        this.loading = true;
+        this.data = undefined;
+    });
+
+    const resourceMultiSelect = shallow(
+        <ResourceMultiSelect
+            displayProperty="name"
+            onChange={jest.fn()}
+            resourceKey="test"
+            values={undefined}
+        />
+    );
+
+    expect(resourceMultiSelect.find('Loader')).toHaveLength(1);
 });
 
 test('Pass requestParameters', () => {
@@ -213,42 +215,6 @@ test('Pass requestParameters when resourceKey props changed', () => {
         ['test1', requestParameters],
         ['test2', requestParameters],
     ]);
-});
-
-test('Render with values', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'id': 2,
-                'name': 'Test ABC',
-                'someOtherProperty': 'No no',
-            },
-            {
-                'id': 5,
-                'name': 'Test DEF',
-                'someOtherProperty': 'YES YES',
-            },
-            {
-                'id': 99,
-                'name': 'Test XYZ',
-                'someOtherProperty': 'maybe maybe',
-            },
-        ];
-    });
-
-    const resourceMultiSelect = mount(
-        <ResourceMultiSelect
-            displayProperty="name"
-            onChange={jest.fn()}
-            resourceKey="test"
-            values={[5, 99]}
-        />
-    );
-
-    expect(ResourceListStore).toBeCalledWith('test', {});
-    expect(resourceMultiSelect.render()).toMatchSnapshot();
 });
 
 test('The component should trigger the change callback', () => {

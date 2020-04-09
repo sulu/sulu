@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import ResourceCheckboxGroup from '../ResourceCheckboxGroup';
 import ResourceListStore from '../../../stores/ResourceListStore';
 
@@ -9,55 +9,6 @@ jest.mock('../../../stores/ResourceListStore', () => jest.fn());
 jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
-
-test('Render in loading state', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = true;
-        this.data = undefined;
-    });
-
-    expect(render(
-        <ResourceCheckboxGroup
-            displayProperty="name"
-            onChange={jest.fn()}
-            resourceKey="test"
-            values={undefined}
-        />
-    )).toMatchSnapshot();
-});
-
-test('Render in disabled state', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'id': 2,
-                'name': 'Test ABC',
-                'someOtherProperty': 'No no',
-            },
-            {
-                'id': 5,
-                'name': 'Test DEF',
-                'someOtherProperty': 'YES YES',
-            },
-        ];
-    });
-
-    const resourceCheckboxGroup = mount(
-        <ResourceCheckboxGroup
-            disabled={true}
-            displayProperty="name"
-            onChange={jest.fn()}
-            resourceKey="test"
-            values={undefined}
-        />
-    );
-
-    expect(ResourceListStore).toBeCalledWith('test', {});
-    expect(resourceCheckboxGroup.render()).toMatchSnapshot();
-});
 
 test('Render with data', () => {
     // $FlowFixMe
@@ -93,6 +44,57 @@ test('Render with data', () => {
 
     expect(ResourceListStore).toBeCalledWith('test', {});
     expect(resourceCheckboxGroup.render()).toMatchSnapshot();
+});
+
+test('Render in disabled state', () => {
+    // $FlowFixMe
+    ResourceListStore.mockImplementation(function() {
+        this.loading = false;
+        this.data = [
+            {
+                'id': 2,
+                'name': 'Test ABC',
+                'someOtherProperty': 'No no',
+            },
+            {
+                'id': 5,
+                'name': 'Test DEF',
+                'someOtherProperty': 'YES YES',
+            },
+        ];
+    });
+
+    const resourceCheckboxGroup = shallow(
+        <ResourceCheckboxGroup
+            disabled={true}
+            displayProperty="name"
+            onChange={jest.fn()}
+            resourceKey="test"
+            values={undefined}
+        />
+    );
+
+    expect(ResourceListStore).toBeCalledWith('test', {});
+    expect(resourceCheckboxGroup.find('CheckboxGroup').prop('disabled')).toEqual(true);
+});
+
+test('Render in loading state', () => {
+    // $FlowFixMe
+    ResourceListStore.mockImplementation(function() {
+        this.loading = true;
+        this.data = undefined;
+    });
+
+    const resourceCheckboxGroup = shallow(
+        <ResourceCheckboxGroup
+            displayProperty="name"
+            onChange={jest.fn()}
+            resourceKey="test"
+            values={undefined}
+        />
+    );
+
+    expect(resourceCheckboxGroup.find('Loader')).toHaveLength(1);
 });
 
 test('Pass requestParameters', () => {
