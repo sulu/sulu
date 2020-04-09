@@ -2,6 +2,10 @@
 import {mount} from 'enzyme';
 import DateTimeFieldFilterType from '../../fieldFilterTypes/DateTimeFieldFilterType';
 
+jest.mock('../../../../utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
+
 test('Render with value of undefined', () => {
     const dateTimeFieldFilterType = new DateTimeFieldFilterType(jest.fn(), {}, undefined);
     expect(mount(dateTimeFieldFilterType.getFormNode()).render()).toMatchSnapshot();
@@ -82,6 +86,8 @@ test('Call onChange handler with to value and existing value', () => {
 test.each([
     [{from: new Date('2018-03-07'), to: new Date('2018-08-02')}, '03/07/2018 - 08/02/2018'],
     [{from: new Date('2017-11-07'), to: new Date('2017-12-11')}, '11/07/2017 - 12/11/2017'],
+    [{from: new Date('1990-11-07')}, 'sulu_admin.from 11/07/1990'],
+    [{to: new Date('1992-12-04')}, 'sulu_admin.until 12/04/1992'],
     [undefined, null],
     [{}, null],
 ])('Return value node with value "%s"', (value, expectedValueNode) => {

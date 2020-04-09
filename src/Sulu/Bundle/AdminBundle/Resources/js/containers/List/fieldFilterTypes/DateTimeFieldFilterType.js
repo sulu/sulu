@@ -2,6 +2,7 @@
 import React from 'react';
 import type {ElementRef} from 'react';
 import DatePicker from '../../../components/DatePicker';
+import {translate} from '../../../utils/Translator';
 import AbstractFieldFilterType from './AbstractFieldFilterType';
 import dateTimeFieldFilterTypeStyles from './dateTimeFieldFilterType.scss';
 
@@ -58,6 +59,14 @@ class DateTimeFieldFilterType extends AbstractFieldFilterType<?{from?: Date, to?
 
         if (!from && !to) {
             return Promise.resolve(null);
+        }
+
+        if (from && !to) {
+            return Promise.resolve(translate('sulu_admin.from') + ' ' + formatDate(from));
+        }
+
+        if (!from && to) {
+            return Promise.resolve(translate('sulu_admin.until') + ' ' + formatDate(to));
         }
 
         return Promise.resolve(formatDate(from) + ' - ' + formatDate(to));
