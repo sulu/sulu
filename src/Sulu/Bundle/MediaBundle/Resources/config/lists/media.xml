@@ -8,6 +8,23 @@
             <field-name>%sulu.model.media.class%.type</field-name>
         </join>
     </joins>
+    <joins name="previewImageFileVersion">
+        <join>
+            <entity-name>PreviewImage_%sulu.model.media.class%</entity-name>
+            <field-name>%sulu.model.media.class%.previewImage</field-name>
+        </join>
+
+        <join>
+            <entity-name>PreviewImage_SuluMediaBundle:File</entity-name>
+            <field-name>PreviewImage_%sulu.model.media.class%.files</field-name>
+        </join>
+
+        <join>
+            <entity-name>PreviewImage_SuluMediaBundle:FileVersion</entity-name>
+            <field-name>PreviewImage_SuluMediaBundle:File.fileVersions</field-name>
+            <condition>PreviewImage_SuluMediaBundle:FileVersion.version = PreviewImage_SuluMediaBundle:File.version</condition>
+        </join>
+    </joins>
     <joins name="file">
         <join>
             <entity-name>SuluMediaBundle:File</entity-name>
@@ -51,6 +68,34 @@
             <field-name>previewImage</field-name>
             <entity-name>%sulu.model.media.class%</entity-name>
         </identity-property>
+
+        <property name="previewImageName" visibility="never">
+            <field-name>name</field-name>
+            <entity-name>PreviewImage_SuluMediaBundle:FileVersion</entity-name>
+
+            <joins ref="previewImageFileVersion"/>
+        </property>
+
+        <property name="previewImageVersion" visibility="never">
+            <field-name>version</field-name>
+            <entity-name>PreviewImage_SuluMediaBundle:FileVersion</entity-name>
+
+            <joins ref="previewImageFileVersion"/>
+        </property>
+
+        <property name="previewImageSubVersion" visibility="never">
+            <field-name>subVersion</field-name>
+            <entity-name>PreviewImage_SuluMediaBundle:FileVersion</entity-name>
+
+            <joins ref="previewImageFileVersion"/>
+        </property>
+
+        <property name="previewImageMimeType" visibility="never">
+            <field-name>mimeType</field-name>
+            <entity-name>PreviewImage_SuluMediaBundle:FileVersion</entity-name>
+
+            <joins ref="previewImageFileVersion"/>
+        </property>
 
         <property name="changed" translation="sulu_admin.changed" visibility="no" type="datetime">
             <field-name>changed</field-name>

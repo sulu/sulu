@@ -204,28 +204,14 @@ class MediaController extends AbstractMediaController implements
         $listBuilder->setParameter('locale', $locale);
         $listResponse = $listBuilder->execute();
 
-        $previewImageIds = [];
-        foreach ($listResponse as $listItem) {
-            $previewImageId = $listItem['previewImageId'] ?? null;
-            if ($previewImageId) {
-                $previewImageIds[] = $previewImageId;
-            }
-        }
-        $previewImageFormats = $this->mediaManager->getFormatUrls($previewImageIds, $locale);
-
         for ($i = 0, $length = count($listResponse); $i < $length; ++$i) {
-            $previewImageId = $listResponse[$i]['previewImageId'] ?? null;
-            if ($previewImageId) {
-                $format = $previewImageFormats[$previewImageId];
-            } else {
-                $format = $this->formatManager->getFormats(
-                    $listResponse[$i]['id'],
-                    $listResponse[$i]['name'],
-                    $listResponse[$i]['version'],
-                    $listResponse[$i]['subVersion'],
-                    $listResponse[$i]['mimeType']
-                );
-            }
+            $format = $this->formatManager->getFormats(
+                $listResponse[$i]['previewImageId'] ?? $listResponse[$i]['id'],
+                $listResponse[$i]['previewImageName'] ?? $listResponse[$i]['name'],
+                $listResponse[$i]['previewImageVersion'] ?? $listResponse[$i]['version'],
+                $listResponse[$i]['previewImageSubVersion'] ?? $listResponse[$i]['subVersion'],
+                $listResponse[$i]['previewImageMimeType'] ?? $listResponse[$i]['mimeType']
+            );
 
             if (0 < count($format)) {
                 $listResponse[$i]['thumbnails'] = $format;
@@ -335,6 +321,10 @@ class MediaController extends AbstractMediaController implements
 
         // field which will be needed afterwards to generate route
         $listBuilder->addSelectField($fieldDescriptors['previewImageId']);
+        $listBuilder->addSelectField($fieldDescriptors['previewImageName']);
+        $listBuilder->addSelectField($fieldDescriptors['previewImageVersion']);
+        $listBuilder->addSelectField($fieldDescriptors['previewImageSubVersion']);
+        $listBuilder->addSelectField($fieldDescriptors['previewImageMimeType']);
         $listBuilder->addSelectField($fieldDescriptors['version']);
         $listBuilder->addSelectField($fieldDescriptors['subVersion']);
         $listBuilder->addSelectField($fieldDescriptors['name']);
