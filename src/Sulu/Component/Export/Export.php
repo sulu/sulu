@@ -236,7 +236,7 @@ class Export
 
         $templatePath = $this->formatFilePaths[$format];
 
-        if (!$this->templating->exists($templatePath)) {
+        if (!$this->templating->getLoader()->exists($templatePath)) {
             throw new \Exception(sprintf('No template file "%s" found for Snippet export', $format));
         }
 
