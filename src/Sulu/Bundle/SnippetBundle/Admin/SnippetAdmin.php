@@ -198,7 +198,7 @@ class SnippetAdmin extends Admin
                 ];
             }
 
-            $contexts['Sulu']['Webspaces'] = $webspaceContexts;
+            $contexts[self::SULU_ADMIN_SECURITY_SYSTEM]['Webspaces'] = $webspaceContexts;
         }
 
         return $contexts;
@@ -214,7 +214,7 @@ class SnippetAdmin extends Admin
                 PermissionTypes::EDIT,
             ];
 
-            $contexts['Sulu']['Webspaces'] = $webspaceContexts;
+            $contexts[self::SULU_ADMIN_SECURITY_SYSTEM]['Webspaces'] = $webspaceContexts;
         }
 
         return $contexts;
@@ -223,7 +223,7 @@ class SnippetAdmin extends Admin
     private function getGlobalSnippetsSecurityContext()
     {
         return [
-            'Sulu' => [
+            self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Global' => [
                     static::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,

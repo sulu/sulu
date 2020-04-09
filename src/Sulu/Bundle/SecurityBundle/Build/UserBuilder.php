@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\Build;
 
+use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\CoreBundle\Build\SuluBuilder;
 
 /**
@@ -33,7 +34,7 @@ class UserBuilder extends SuluBuilder
         $user = 'admin';
         $password = 'admin';
         $roleName = 'User';
-        $system = 'Sulu';
+        $system = Admin::SULU_ADMIN_SECURITY_SYSTEM;
         $locale = 'en';
         $doctrine = $this->container->get('doctrine')->getManager();
         $userRep = $this->container->get('sulu.repository.user');
