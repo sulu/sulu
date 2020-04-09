@@ -268,6 +268,26 @@ test('Should not call the onChange callback if the component props change', () =
     expect(changeSpy).not.toBeCalled();
 });
 
+test('Should not call the loadItem callback if the component props id change to same value', () => {
+    // $FlowFixMe
+    SingleSelectionStore.mockImplementationOnce(function() {
+        this.loadItem = jest.fn();
+    });
+
+    const changeSpy = jest.fn();
+
+    const singleMediaSelection = shallow(
+        <SingleMediaSelection
+            locale={observable.box('en')}
+            onChange={changeSpy}
+            value={{displayOption: undefined, id: 5}}
+        />
+    );
+
+    singleMediaSelection.setProps({value: {id: 5}});
+    expect(singleMediaSelection.instance().singleMediaSelectionStore.loadItem).not.toBeCalled();
+});
+
 test('Correct props should be passed to SingleItemSelection component', () => {
     const singleMediaSelection = shallow(
         <SingleMediaSelection
