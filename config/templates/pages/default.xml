@@ -36,10 +36,231 @@
             <tag name="sulu.rlp"/>
         </property>
 
-        <property name="article" type="text_editor">
+        <property name="text_editor" type="text_editor">
             <meta>
-                <title lang="en">Article</title>
-                <title lang="de">Artikel</title>
+                <title lang="en">Text Editor</title>
+                <title lang="de">Texteditor</title>
+            </meta>
+        </property>
+
+        <block name="blocks" default-type="editor" minOccurs="0">
+            <meta>
+                <title lang="en">Content</title>
+                <title lang="de">Inhalte</title>
+            </meta>
+            <types>
+                <type name="editor">
+                    <meta>
+                        <title lang="en">Editor</title>
+                        <title lang="de">Editor</title>
+                    </meta>
+                    <properties>
+                        <property name="text_editor" type="text_editor">
+                            <meta>
+                                <title lang="en">Text Editor</title>
+                                <title lang="de">Texteditor</title>
+                            </meta>
+                        </property>
+                    </properties>
+                </type>
+                <type name="media">
+                    <meta>
+                        <title lang="de">Media</title>
+                        <title lang="en">Media</title>
+                    </meta>
+                    <properties>
+                        <property name="media_selection" type="media_selection">
+                            <meta>
+                                <title lang="en">Media Selection</title>
+                                <title lang="de">Medienauswahl</title>
+                            </meta>
+                        </property>
+                    </properties>
+                </type>
+            </types>
+        </block>
+
+        <property name="number" type="number">
+            <meta>
+                <title lang="en">Number</title>
+                <title lang="de">Zahl</title>
+            </meta>
+        </property>
+
+        <property name="phone" type="phone">
+            <meta>
+                <title lang="en">Phone</title>
+                <title lang="de">Telefonnummer</title>
+            </meta>
+        </property>
+
+        <property name="location" type="location">
+            <meta>
+                <title lang="en">Location</title>
+                <title lang="de">Standort</title>
+            </meta>
+        </property>
+
+        <property name="tag_selection" type="tag_selection">
+            <meta>
+                <title lang="en">Tag Selection</title>
+                <title lang="de">Tag</title>
+            </meta>
+        </property>
+
+        <property name="single_select" type="single_select">
+            <meta>
+                <title lang="en">Single Select</title>
+                <title lang="de">Einzelauswahl</title>
+            </meta>
+
+            <params>
+                <param name="values" type="collection">
+                    <param name="value-1" value="Value 1" />
+                    <param name="value-2" value="Value 2" />
+                    <param name="value-3" value="Value 3" />
+                </param>
+            </params>
+        </property>
+
+        <property name="select" type="select">
+            <meta>
+                <title lang="en">Select</title>
+                <title lang="de">Auswahl</title>
+            </meta>
+
+            <params>
+                <param name="values" type="collection">
+                    <param name="value-1" value="Value 1" />
+                    <param name="value-2" value="Value 2" />
+                    <param name="value-3" value="Value 3" />
+                </param>
+            </params>
+        </property>
+
+        <property name="checkbox" type="checkbox">
+            <meta>
+                <title lang="en">Checkbox</title>
+                <title lang="de">Auswahlbox</title>
+            </meta>
+        </property>
+
+        <property name="color" type="color">
+            <meta>
+                <title lang="en">Color</title>
+                <title lang="de">Farbe</title>
+            </meta>
+        </property>
+
+        <property name="time" type="time">
+            <meta>
+                <title lang="en">Time</title>
+                <title lang="de">Zeit</title>
+            </meta>
+        </property>
+
+        <property name="date" type="date">
+            <meta>
+                <title lang="en">Date</title>
+                <title lang="de">Datum</title>
+            </meta>
+        </property>
+
+        <property name="email" type="email">
+            <meta>
+                <title lang="en">Email</title>
+                <title lang="de">E-Mail</title>
+            </meta>
+        </property>
+
+        <property name="link" type="url">
+            <meta>
+                <title lang="en">URL</title>
+                <title lang="de">URL</title>
+            </meta>
+        </property>
+
+        <property name="single_page_selection" type="single_page_selection">
+            <meta>
+                <title lang="en">Single Page Selection</title>
+                <title lang="de">Seite</title>
+            </meta>
+        </property>
+
+        <property name="page_selection" type="page_selection">
+            <meta>
+                <title lang="en">Page Selection</title>
+                <title lang="de">Seiten</title>
+            </meta>
+        </property>
+
+        <property name="teaser_selection" type="teaser_selection">
+            <meta>
+                <title lang="en">Teaser Selection</title>
+                <title lang="de">Anreiser</title>
+            </meta>
+        </property>
+
+        <property name="smart_content" type="smart_content">
+            <meta>
+                <title lang="en">Smart Content</title>
+                <title lang="de">Smart Content</title>
+            </meta>
+        </property>
+
+        <property name="snippet_selection" type="snippet_selection">
+            <meta>
+                <title lang="en">Snippet Selection</title>
+                <title lang="de">Schnipsel</title>
+            </meta>
+        </property>
+
+        <property name="category_selection" type="category_selection">
+            <meta>
+                <title lang="en">Category Selection</title>
+                <title lang="de">Kategorien</title>
+            </meta>
+        </property>
+
+        <property name="single_media_selection" type="single_media_selection">
+            <meta>
+                <title lang="en">Single Media Selection</title>
+                <title lang="de">Medium</title>
+            </meta>
+        </property>
+
+        <property name="media_selection" type="media_selection">
+            <meta>
+                <title lang="en">Media Selection</title>
+                <title lang="de">Medien</title>
+            </meta>
+        </property>
+
+        <property name="single_account_selection" type="single_account_selection">
+            <meta>
+                <title lang="en">Single Account Selection</title>
+                <title lang="de">Organisation</title>
+            </meta>
+        </property>
+
+        <property name="single_contact_selection" type="single_contact_selection">
+            <meta>
+                <title lang="en">Single Contact Selection</title>
+                <title lang="de">Kontakt</title>
+            </meta>
+        </property>
+
+        <property name="contact_account_selection" type="contact_account_selection">
+            <meta>
+                <title lang="en">Contact and Account Selection</title>
+                <title lang="de">Kontakte und Organisationen</title>
+            </meta>
+        </property>
+
+        <property name="text_area" type="text_area">
+            <meta>
+                <title lang="en">Textarea</title>
+                <title lang="de">Text</title>
             </meta>
         </property>
     </properties>
