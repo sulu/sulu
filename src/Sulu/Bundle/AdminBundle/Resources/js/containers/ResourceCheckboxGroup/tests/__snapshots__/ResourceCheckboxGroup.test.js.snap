@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render with data 1`] = `
+<div>
+  <label
+    class="label"
+  >
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        type="checkbox"
+        value="2"
+      />
+      <span />
+    </span>
+    <div>
+      Test ABC
+    </div>
+  </label>
+  <label
+    class="label"
+  >
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        type="checkbox"
+        value="5"
+      />
+      <span />
+    </span>
+    <div>
+      Test DEF
+    </div>
+  </label>
+  <label
+    class="label"
+  >
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        type="checkbox"
+        value="99"
+      />
+      <span />
+    </span>
+    <div>
+      Test XYZ
+    </div>
+  </label>
+</div>
+`;

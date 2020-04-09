@@ -124,6 +124,7 @@ class FieldFilterItem extends React.Component<Props> {
     };
 
     handleButtonClick = () => {
+        this.fieldFilterType.confirm();
         const {column, onChange} = this.props;
         onChange(column, this.value);
     };

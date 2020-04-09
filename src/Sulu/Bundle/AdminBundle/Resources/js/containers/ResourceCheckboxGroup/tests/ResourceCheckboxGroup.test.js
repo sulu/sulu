@@ -1,8 +1,7 @@
 // @flow
 import React from 'react';
 import {mount, shallow} from 'enzyme';
-import ResourceMultiSelect from '../ResourceMultiSelect';
-import MultiSelectComponent from '../../../components/MultiSelect';
+import ResourceCheckboxGroup from '../ResourceCheckboxGroup';
 import ResourceListStore from '../../../stores/ResourceListStore';
 
 jest.mock('../../../stores/ResourceListStore', () => jest.fn());
@@ -34,17 +33,17 @@ test('Render with data', () => {
         ];
     });
 
-    const resourceMultiSelect = mount(
-        <ResourceMultiSelect
+    const resourceCheckboxGroup = mount(
+        <ResourceCheckboxGroup
             displayProperty="name"
             onChange={jest.fn()}
             resourceKey="test"
-            values={[5, 99]}
+            values={undefined}
         />
     );
 
     expect(ResourceListStore).toBeCalledWith('test', {});
-    expect(resourceMultiSelect.render()).toMatchSnapshot();
+    expect(resourceCheckboxGroup.render()).toMatchSnapshot();
 });
 
 test('Render in disabled state', () => {
@@ -65,8 +64,8 @@ test('Render in disabled state', () => {
         ];
     });
 
-    const resourceMultiSelect = shallow(
-        <ResourceMultiSelect
+    const resourceCheckboxGroup = shallow(
+        <ResourceCheckboxGroup
             disabled={true}
             displayProperty="name"
             onChange={jest.fn()}
@@ -76,7 +75,7 @@ test('Render in disabled state', () => {
     );
 
     expect(ResourceListStore).toBeCalledWith('test', {});
-    expect(resourceMultiSelect.find('MultiSelect').prop('disabled')).toEqual(true);
+    expect(resourceCheckboxGroup.find('CheckboxGroup').prop('disabled')).toEqual(true);
 });
 
 test('Render in loading state', () => {
@@ -86,8 +85,8 @@ test('Render in loading state', () => {
         this.data = undefined;
     });
 
-    const resourceMultiSelect = shallow(
-        <ResourceMultiSelect
+    const resourceCheckboxGroup = shallow(
+        <ResourceCheckboxGroup
             displayProperty="name"
             onChange={jest.fn()}
             resourceKey="test"
@@ -95,7 +94,7 @@ test('Render in loading state', () => {
         />
     );
 
-    expect(resourceMultiSelect.find('Loader')).toHaveLength(1);
+    expect(resourceCheckboxGroup.find('Loader')).toHaveLength(1);
 });
 
 test('Pass requestParameters', () => {
@@ -124,7 +123,7 @@ test('Pass requestParameters', () => {
     const requestParameters = {'testOption': 'testValue'};
 
     mount(
-        <ResourceMultiSelect
+        <ResourceCheckboxGroup
             displayProperty="name"
             onChange={jest.fn()}
             requestParameters={requestParameters}
@@ -152,8 +151,8 @@ test('Pass requestParameters when requestParameters props changed', () => {
     const requestParameters1 = {};
     const requestParameters2 = {'testOption': 'testValue'};
 
-    const resourceMultiSelect = mount(
-        <ResourceMultiSelect
+    const resourceCheckboxGroup = mount(
+        <ResourceCheckboxGroup
             displayProperty="name"
             onChange={jest.fn()}
             requestParameters={requestParameters1}
@@ -162,7 +161,7 @@ test('Pass requestParameters when requestParameters props changed', () => {
         />
     );
 
-    resourceMultiSelect.setProps({
+    resourceCheckboxGroup.setProps({
         requestParameters: requestParameters2,
         displayProperty: 'name',
         onChange: jest.fn(),
@@ -192,8 +191,8 @@ test('Pass requestParameters when resourceKey props changed', () => {
 
     const requestParameters = {};
 
-    const resourceMultiSelect = mount(
-        <ResourceMultiSelect
+    const resourceCheckboxGroup = mount(
+        <ResourceCheckboxGroup
             displayProperty="name"
             onChange={jest.fn()}
             requestParameters={requestParameters}
@@ -202,7 +201,7 @@ test('Pass requestParameters when resourceKey props changed', () => {
         />
     );
 
-    resourceMultiSelect.setProps({
+    resourceCheckboxGroup.setProps({
         requestParameters,
         displayProperty: 'name',
         onChange: jest.fn(),
@@ -215,6 +214,43 @@ test('Pass requestParameters when resourceKey props changed', () => {
         ['test1', requestParameters],
         ['test2', requestParameters],
     ]);
+});
+
+test('Render with values', () => {
+    // $FlowFixMe
+    ResourceListStore.mockImplementation(function() {
+        this.loading = false;
+        this.data = [
+            {
+                'id': 2,
+                'name': 'Test ABC',
+                'someOtherProperty': 'No no',
+            },
+            {
+                'id': 5,
+                'name': 'Test DEF',
+                'someOtherProperty': 'YES YES',
+            },
+            {
+                'id': 99,
+                'name': 'Test XYZ',
+                'someOtherProperty': 'maybe maybe',
+            },
+        ];
+    });
+
+    const resourceCheckboxGroup = mount(
+        <ResourceCheckboxGroup
+            displayProperty="name"
+            onChange={jest.fn()}
+            resourceKey="test"
+            values={[5, 99]}
+        />
+    );
+
+    expect(resourceCheckboxGroup.find('Checkbox').at(0).prop('checked')).toEqual(false);
+    expect(resourceCheckboxGroup.find('Checkbox').at(1).prop('checked')).toEqual(true);
+    expect(resourceCheckboxGroup.find('Checkbox').at(2).prop('checked')).toEqual(true);
 });
 
 test('The component should trigger the change callback', () => {
@@ -241,8 +277,8 @@ test('The component should trigger the change callback', () => {
     });
 
     const onChangeSpy = jest.fn();
-    const resourceMultiSelect = shallow(
-        <ResourceMultiSelect
+    const resourceCheckboxGroup = shallow(
+        <ResourceCheckboxGroup
             displayProperty="name"
             onChange={onChangeSpy}
             resourceKey="test"
@@ -263,36 +299,6 @@ test('The component should trigger the change callback', () => {
         },
     ];
 
-    resourceMultiSelect.find(MultiSelectComponent).props().onChange([5, 99]);
+    resourceCheckboxGroup.find('CheckboxGroup').props().onChange([5, 99]);
     expect(onChangeSpy).toHaveBeenCalledWith([5, 99], expectedValues);
-});
-
-test('The component should trigger the close callback', () => {
-    // $FlowFixMe
-    ResourceListStore.mockImplementation(function() {
-        this.loading = false;
-        this.data = [
-            {
-                'id': 2,
-                'name': 'Test ABC',
-                'someOtherProperty': 'No no',
-            },
-        ];
-    });
-
-    const closeSpy = jest.fn();
-
-    const resourceMultiSelect = shallow(
-        <ResourceMultiSelect
-            displayProperty="name"
-            onChange={jest.fn()}
-            onClose={closeSpy}
-            resourceKey="test"
-            values={[99]}
-        />
-    );
-
-    expect(closeSpy).not.toBeCalled();
-    resourceMultiSelect.find(MultiSelectComponent).prop('onClose')();
-    expect(closeSpy).toBeCalled();
 });

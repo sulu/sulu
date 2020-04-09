@@ -5,7 +5,7 @@ import {action, autorun, computed, observable, toJS, untracked, when} from 'mobx
 import equals from 'fast-deep-equal';
 import MultiSelectionStore from '../../../stores/MultiSelectionStore';
 import MultiAutoComplete from '../../MultiAutoComplete';
-import ResourceMultiSelect from '../../ResourceMultiSelect';
+import ResourceCheckboxGroup from '../../ResourceCheckboxGroup';
 import AbstractFieldFilterType from './AbstractFieldFilterType';
 import selectionFieldFilterTypeStyles from './selectionFieldFilterType.scss';
 
@@ -107,7 +107,7 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
         this.setSelectValue(values);
     };
 
-    handleSelectClose = () => {
+    confirm = () => {
         this.onChange(this.selectValue);
     };
 
@@ -123,10 +123,9 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
                     />
                 }
                 {this.type === TYPE_SELECT &&
-                    <ResourceMultiSelect
+                    <ResourceCheckboxGroup
                         displayProperty={this.displayProperty}
                         onChange={this.handleSelectChange}
-                        onClose={this.handleSelectClose}
                         resourceKey={this.resourceKey}
                         values={this.selectValue}
                     />
