@@ -14,8 +14,8 @@ php -S localhost:8000 -t public/ config/router.php
 
 ### Kernel accept RoutingConfigurator
 
-To support both the new RoutingConfigurator and the deprecated RouteCollectionBuilder in the SuluKernel the following method have been changed.
-Remove the type hints if you did override this methods in your Kernel:
+To support both the new `RoutingConfigurator` and the deprecated `RouteCollectionBuilder` in the SuluKernel the following methods have been changed.
+Remove the type hints if you overwrote these methods in your `Kernel`:
 
 **before**
 
