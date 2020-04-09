@@ -57,10 +57,27 @@ class XmlSitemapRendererTest extends TestCase
         $this->providerPoolInterface->getProvider('pages')->willReturn($pagesProvider);
         $this->providerPoolInterface->getIndex('http', 'sulu.io')->willReturn($sitemaps);
 
-        $this->engine->render(
-            '@SuluWebsite/Sitemap/sitemap-index.xml.twig',
-            ['sitemaps' => $sitemaps]
-        )->willReturn('<html/>');
+        $this->assertEquals(null, $this->renderer->renderIndex('http', 'sulu.io'));
+    }
+
+    public function testRenderIndexNoNeedMultipleProviders()
+    {
+        $sitemaps = [
+            new Sitemap('test', 0),
+            new Sitemap('pages', 1),
+        ];
+
+        $pagesProvider = $this->prophesize(SitemapProviderInterface::class);
+        $testProvider = $this->prophesize(SitemapProviderInterface::class);
+        $this->providerPoolInterface->getProviders()->willReturn([
+            'test' => $testProvider->reveal(),
+            'pages' => $pagesProvider->reveal(),
+        ]);
+        $this->providerPoolInterface->hasProvider('pages')->willReturn(true);
+        $this->providerPoolInterface->hasProvider('test')->willReturn(true);
+        $this->providerPoolInterface->getProvider('pages')->willReturn($pagesProvider);
+        $this->providerPoolInterface->getProvider('test')->willReturn($testProvider);
+        $this->providerPoolInterface->getIndex('http', 'sulu.io')->willReturn($sitemaps);
 
         $this->assertEquals(null, $this->renderer->renderIndex('http', 'sulu.io'));
     }

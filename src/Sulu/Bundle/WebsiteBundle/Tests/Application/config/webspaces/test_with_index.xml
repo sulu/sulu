@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<webspace xmlns="http://schemas.sulu.io/webspace/webspace"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
+
+    <name>test CMF</name>
+    <key>test_with_index</key>
+
+    <localizations>
+        <localization language="en" default="true" />
+    </localizations>
+
+    <theme>default</theme>
+
+    <default-templates>
+        <default-template type="page">default</default-template>
+        <default-template type="homepage">overview</default-template>
+    </default-templates>
+
+    <navigation>
+        <contexts>
+            <context key="main">
+                <meta>
+                    <title lang="en">Mainnavigation</title>
+                </meta>
+            </context>
+            <context key="footer">
+                <meta>
+                    <title lang="en">Footernavigation</title>
+                </meta>
+            </context>
+        </contexts>
+    </navigation>
+
+    <resource-locator>
+        <strategy>tree_leaf_edit</strategy>
+    </resource-locator>
+
+    <portals>
+        <portal>
+            <name>test CMF</name>
+            <key>test_with_index</key>
+
+            <localizations>
+                <localization language="en" default="true"/>
+            </localizations>
+
+            <environments>
+                <environment type="prod">
+                    <urls>
+                        <url language="en">sulu.index</url>
+                    </urls>
+                </environment>
+                <environment type="dev">
+                    <urls>
+                        <url language="en">sulu.index</url>
+                    </urls>
+                </environment>
+                <environment type="test">
+                    <urls>
+                        <url language="en">sulu.index</url>
+                    </urls>
+                </environment>
+            </environments>
+        </portal>
+    </portals>
+</webspace>

@@ -6,10 +6,10 @@
     {# Iterate over the snippets #}
     {%- block snippets -%}
         {%- for document in snippetData -%}
-            {% spaceless %}
+            {% apply spaceless %}
                 {% set content = document.content %}
                 {% set prefix = '' %}
-            {% endspaceless %}{{ block('snippet') }}
+            {% endapply %}{{ block('snippet') }}
         {%- endfor -%}
     {%- endblock snippets -%}
 
@@ -44,12 +44,12 @@
 
     {# Output model #}
     {%- block model -%}
-        {% spaceless %}
+        {% apply spaceless %}
             {% set name = prefix ~ property.name %}
             {% set options = property.options|default('') %}
             {% set value = property.value %}
             {% set type = property.type|default('') %}
-        {% endspaceless %}{{- block('view') -}}
+        {% endapply %}{{- block('view') -}}
     {%- endblock model -%}
 
     {# View #}
