@@ -2,7 +2,7 @@
 import React from 'react';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
-import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/ResourceFormStore';
+import {ResourceFormStore} from 'sulu-admin-bundle/containers';
 import MediaVersionUploadComponent from '../../MediaVersionUpload';
 
 class MediaVersionUpload extends React.Component<FieldTypeProps<void>> {

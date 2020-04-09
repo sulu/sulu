@@ -161,7 +161,7 @@ class ContactDetails extends React.Component<Props> {
 
         if (emails.length === 0) {
             return [
-                (this.getEmptyEntry('emails'): any),
+                ((this.getEmptyEntry('emails'): any): EmailType),
             ];
         }
 
@@ -173,7 +173,7 @@ class ContactDetails extends React.Component<Props> {
 
         if (phones.length === 0) {
             return [
-                (this.getEmptyEntry('phones'): any),
+                ((this.getEmptyEntry('phones'): any): PhoneType),
             ];
         }
 

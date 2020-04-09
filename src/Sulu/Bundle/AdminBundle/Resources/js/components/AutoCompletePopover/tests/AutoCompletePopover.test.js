@@ -159,7 +159,8 @@ test('Pressing up should select previous item', () => {
     const suggestionElement2 = {focus: jest.fn()};
 
     Object.defineProperty(document, 'activeElement', {
-        value: (suggestionElement2: any),
+        // $FlowFixMe
+        value: suggestionElement2,
     });
 
     autoCompletePopover.instance().suggestionsRef = {
