@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Entity;
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -24,6 +25,11 @@ class ContactRepositoryTest extends SuluTestCase
      * @var EntityManager
      */
     private $em;
+
+    /**
+     * @var ContactRepository
+     */
+    private $contactRepository;
 
     /**
      * @var Contact[]
@@ -77,13 +83,13 @@ class ContactRepositoryTest extends SuluTestCase
     public function setUp(): void
     {
         $this->em = $this->getEntityManager();
+        $this->contactRepository = $this->em->getRepository(Contact::class);
+        $this->purgeDatabase();
         $this->initOrm();
     }
 
     private function initOrm()
     {
-        $this->purgeDatabase();
-
         foreach ($this->tagData as $data) {
             $this->tags[] = $this->createTag($data);
         }
@@ -361,8 +367,6 @@ class ContactRepositoryTest extends SuluTestCase
      */
     public function testFindBy($filters, $page, $pageSize, $limit, $expected, $tags = [])
     {
-        $repository = $this->em->getRepository(Contact::class);
-
         // if tags isset replace the array indexes with database id
         if (array_key_exists('tags', $filters)) {
             $filters['tags'] = array_map(
@@ -403,7 +407,7 @@ class ContactRepositoryTest extends SuluTestCase
             );
         }
 
-        $result = $repository->findByFilters($filters, $page, $pageSize, $limit, 'de');
+        $result = $this->contactRepository->findByFilters($filters, $page, $pageSize, $limit, 'de');
 
         $length = count($expected);
         $this->assertCount($length, $result);
@@ -441,9 +445,7 @@ class ContactRepositoryTest extends SuluTestCase
             }
         }
 
-        $repository = $this->em->getRepository(Contact::class);
-
-        $result = $repository->findByIds($ids);
+        $result = $this->contactRepository->findByIds($ids);
 
         $this->assertCount(count($expected), $result);
 
@@ -477,8 +479,7 @@ class ContactRepositoryTest extends SuluTestCase
      */
     public function testFindGetAll($limit, $offset, $sorting, $where, $expected)
     {
-        $repository = $this->em->getRepository(Contact::class);
-        $result = $repository->findGetAll($limit, $offset, $sorting, $where);
+        $result = $this->contactRepository->findGetAll($limit, $offset, $sorting, $where);
 
         $this->assertEquals(count($expected), count($result));
         for ($i = 0; $i < count($result); ++$i) {

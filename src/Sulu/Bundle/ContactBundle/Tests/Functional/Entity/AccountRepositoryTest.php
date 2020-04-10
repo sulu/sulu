@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Entity;
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -24,6 +25,11 @@ class AccountRepositoryTest extends SuluTestCase
      * @var EntityManager
      */
     private $em;
+
+    /**
+     * @var AccountRepository
+     */
+    private $accountRepository;
 
     /**
      * @var Account[]
@@ -77,13 +83,13 @@ class AccountRepositoryTest extends SuluTestCase
     public function setUp(): void
     {
         $this->em = $this->getEntityManager();
+        $this->accountRepository = $this->em->getRepository(Account::class);
+        $this->purgeDatabase();
         $this->initOrm();
     }
 
     private function initOrm()
     {
-        $this->purgeDatabase();
-
         foreach ($this->tagData as $name) {
             $this->tags[] = $this->createTag($name);
         }
@@ -356,8 +362,6 @@ class AccountRepositoryTest extends SuluTestCase
      */
     public function testFindBy($filters, $page, $pageSize, $limit, $expected, $tags = [], $categories = [])
     {
-        $repository = $this->em->getRepository(Account::class);
-
         // if tags isset replace the array indexes with database id
         if (array_key_exists('tags', $filters)) {
             $filters['tags'] = array_map(
@@ -398,7 +402,7 @@ class AccountRepositoryTest extends SuluTestCase
             );
         }
 
-        $result = $repository->findByFilters($filters, $page, $pageSize, $limit, 'de');
+        $result = $this->accountRepository->findByFilters($filters, $page, $pageSize, $limit, 'de');
 
         $length = count($expected);
         $this->assertCount($length, $result);
@@ -438,9 +442,7 @@ class AccountRepositoryTest extends SuluTestCase
             }
         }
 
-        $repository = $this->em->getRepository(Account::class);
-
-        $result = $repository->findByIds($ids);
+        $result = $this->accountRepository->findByIds($ids);
 
         $this->assertCount(count($expected), $result);
 
