@@ -2,6 +2,7 @@
 import React from 'react';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
+import {ResourceFormStore} from 'sulu-admin-bundle/containers';
 import MediaVersionUploadComponent from '../../MediaVersionUpload';
 
 class MediaVersionUpload extends React.Component<FieldTypeProps<void>> {
@@ -11,11 +12,12 @@ class MediaVersionUpload extends React.Component<FieldTypeProps<void>> {
         super(props);
         const {formInspector} = this.props;
 
-        // $FlowFixMe
-        if (!formInspector.formStore.resourceStore){
-            throw new Error('The formStore must provide a resourceStore!');
+        const formStore = formInspector.formStore;
+        if (!(formStore instanceof ResourceFormStore)) {
+            throw new Error('The MediaVersionUpload field needs a ResourceFormStore instance!');
         }
-        this.resourceStore = (formInspector.formStore.resourceStore: ResourceStore);
+
+        this.resourceStore = formStore.resourceStore;
 
         const locale = this.resourceStore.locale;
         if (!locale) {

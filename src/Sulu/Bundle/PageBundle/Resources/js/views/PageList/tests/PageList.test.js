@@ -3,7 +3,7 @@ import React from 'react';
 import {observable} from 'mobx';
 import {mount} from 'enzyme';
 import {Router} from 'sulu-admin-bundle/services';
-import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
+import {findWithHighOrderFunction, defaultWebspace} from 'sulu-admin-bundle/utils/TestHelper';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     FlatStructureStrategy: require(
@@ -90,8 +90,10 @@ beforeEach(() => {
 
 test('Render PageList', () => {
     const webspaceKey = observable.box('sulu');
-    // $FlowFixMe
-    const webspace = {};
+    const webspace = {
+        ...defaultWebspace,
+        localizations: undefined,
+    };
 
     const PageList = require('../PageList').default;
     const router = new Router({});
@@ -100,7 +102,13 @@ test('Render PageList', () => {
     };
 
     const webspaceOverview = mount(
-        <PageList route={router.route} router={router} webspace={webspace} webspaceKey={webspaceKey} />
+        <PageList
+            route={router.route}
+            router={router}
+            // $FlowFixMe
+            webspace={webspace}
+            webspaceKey={webspaceKey}
+        />
     );
 
     webspaceOverview.update();
@@ -114,8 +122,9 @@ test('Should show the locales from the webspace configuration for the toolbar', 
 
     const webspaceKey = observable.box('sulu');
 
-    // $FlowFixMe
     const webspace = {
+        ...defaultWebspace,
+        localizations: undefined,
         key: 'sulu',
         allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
     };
@@ -126,7 +135,13 @@ test('Should show the locales from the webspace configuration for the toolbar', 
     };
 
     const webspaceOverview = mount(
-        <PageList route={router.route} router={router} webspace={webspace} webspaceKey={webspaceKey} />
+        <PageList
+            route={router.route}
+            router={router}
+            // $FlowFixMe
+            webspace={webspace}
+            webspaceKey={webspaceKey}
+        />
     );
 
     webspaceOverview.instance().locale.set('en');
@@ -151,8 +166,9 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
 
     const webspaceKey = observable.box('sulu');
 
-    // $FlowFixMe
     const webspace = {
+        ...defaultWebspace,
+        localizations: undefined,
         allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
         key: 'sulu',
     };
@@ -163,7 +179,13 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
     };
 
     const webspaceOverview = mount(
-        <PageList route={router.route} router={router} webspace={webspace} webspaceKey={webspaceKey} />
+        <PageList
+            route={router.route}
+            router={router}
+            // $FlowFixMe
+            webspace={webspace}
+            webspaceKey={webspaceKey}
+        />
     );
 
     webspaceOverview.update();
@@ -198,8 +220,9 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
 
     const webspaceKey = observable.box('sulu');
 
-    // $FlowFixMe
     const webspace = {
+        ...defaultWebspace,
+        localizations: undefined,
         key: 'sulu',
         allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
     };
@@ -213,6 +236,7 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
         <PageList
             route={router.route}
             router={router}
+            // $FlowFixMe
             webspace={webspace}
             webspaceKey={webspaceKey}
         />
@@ -252,8 +276,9 @@ test('Destroy ListStore to avoid many requests and reset active to be set on web
 
     const webspaceKey = observable.box('sulu');
 
-    // $FlowFixMe
     const webspace = {
+        ...defaultWebspace,
+        localizations: undefined,
         key: 'sulu',
         allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
     };
@@ -264,7 +289,13 @@ test('Destroy ListStore to avoid many requests and reset active to be set on web
     };
 
     const webspaceOverview = mount(
-        <PageList route={router.route} router={router} webspace={webspace} webspaceKey={webspaceKey} />
+        <PageList
+            route={router.route}
+            router={router}
+            // $FlowFixMe
+            webspace={webspace}
+            webspaceKey={webspaceKey}
+        />
     );
 
     webspaceKey.set('sulu_blog');
@@ -277,8 +308,10 @@ test('Should bind router', () => {
     const PageList = require('../PageList').default;
 
     const webspaceKey = observable.box('sulu');
-    // $FlowFixMe
-    const webspace = {};
+    const webspace = {
+        ...defaultWebspace,
+        localizations: undefined,
+    };
 
     const router = new Router({});
     router.attributes = {
@@ -286,7 +319,13 @@ test('Should bind router', () => {
     };
 
     const webspaceOverview = mount(
-        <PageList route={router.route} router={router} webspace={webspace} webspaceKey={webspaceKey} />
+        <PageList
+            route={router.route}
+            router={router}
+            // $FlowFixMe
+            webspace={webspace}
+            webspaceKey={webspaceKey}
+        />
     );
     const page = webspaceOverview.instance().page;
     const locale = webspaceOverview.instance().locale;
@@ -302,8 +341,10 @@ test('Should call disposers on unmount', () => {
     const PageList = require('../PageList').default;
 
     const webspaceKey = observable.box('sulu');
-    // $FlowFixMe
-    const webspace = {};
+    const webspace = {
+        ...defaultWebspace,
+        localizations: undefined,
+    };
 
     const router = new Router({});
     router.attributes = {
@@ -314,6 +355,7 @@ test('Should call disposers on unmount', () => {
         <PageList
             route={router.route}
             router={router}
+            // $FlowFixMe
             webspace={webspace}
             webspaceKey={webspaceKey}
         />
