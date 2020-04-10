@@ -3,15 +3,15 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
 
-    <key>default</key>
+    <key>example</key>
 
-    <view>templates/pages/default</view>
+    <view>pages/example</view>
     <controller>SuluWebsiteBundle:Default:index</controller>
     <cacheLifetime>604800</cacheLifetime>
 
     <meta>
-        <title lang="en">Default</title>
-        <title lang="de">Standard</title>
+        <title lang="en">Example</title>
+        <title lang="de">Beispiel</title>
     </meta>
 
     <properties>
@@ -116,9 +116,24 @@
 
             <params>
                 <param name="values" type="collection">
-                    <param name="value-1" value="Value 1" />
-                    <param name="value-2" value="Value 2" />
-                    <param name="value-3" value="Value 3" />
+                    <param name="value-1">
+                        <meta>
+                            <title lang="en">Value 1</title>
+                            <title lang="de">Wert 1</title>
+                        </meta>
+                    </param>
+                    <param name="value-2" value="Value 2">
+                        <meta>
+                            <title lang="en">Value 2</title>
+                            <title lang="de">Wert 2</title>
+                        </meta>
+                    </param>
+                    <param name="value-3" value="Value 3">
+                        <meta>
+                            <title lang="en">Value 3</title>
+                            <title lang="de">Wert 3</title>
+                        </meta>
+                    </param>
                 </param>
             </params>
         </property>
@@ -131,9 +146,24 @@
 
             <params>
                 <param name="values" type="collection">
-                    <param name="value-1" value="Value 1" />
-                    <param name="value-2" value="Value 2" />
-                    <param name="value-3" value="Value 3" />
+                    <param name="value-1">
+                        <meta>
+                            <title lang="en">Value 1</title>
+                            <title lang="de">Wert 1</title>
+                        </meta>
+                    </param>
+                    <param name="value-2" value="Value 2">
+                        <meta>
+                            <title lang="en">Value 2</title>
+                            <title lang="de">Wert 2</title>
+                        </meta>
+                    </param>
+                    <param name="value-3" value="Value 3">
+                        <meta>
+                            <title lang="en">Value 3</title>
+                            <title lang="de">Wert 3</title>
+                        </meta>
+                    </param>
                 </param>
             </params>
         </property>
