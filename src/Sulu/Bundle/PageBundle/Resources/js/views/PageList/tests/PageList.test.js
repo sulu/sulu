@@ -3,7 +3,7 @@ import React from 'react';
 import {observable} from 'mobx';
 import {mount} from 'enzyme';
 import {Router} from 'sulu-admin-bundle/services';
-import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
+import {findWithHighOrderFunction, defaultWebspace} from 'sulu-admin-bundle/utils/TestHelper';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     FlatStructureStrategy: require(
@@ -90,7 +90,10 @@ beforeEach(() => {
 
 test('Render PageList', () => {
     const webspaceKey = observable.box('sulu');
-    const webspace = {};
+    const webspace = {
+        ...defaultWebspace,
+        localizations: undefined,
+    };
 
     const PageList = require('../PageList').default;
     const router = new Router({});
@@ -120,6 +123,8 @@ test('Should show the locales from the webspace configuration for the toolbar', 
     const webspaceKey = observable.box('sulu');
 
     const webspace = {
+        ...defaultWebspace,
+        localizations: undefined,
         key: 'sulu',
         allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
     };
@@ -162,6 +167,8 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
     const webspaceKey = observable.box('sulu');
 
     const webspace = {
+        ...defaultWebspace,
+        localizations: undefined,
         allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
         key: 'sulu',
     };
@@ -214,6 +221,8 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
     const webspaceKey = observable.box('sulu');
 
     const webspace = {
+        ...defaultWebspace,
+        localizations: undefined,
         key: 'sulu',
         allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
     };
@@ -268,6 +277,8 @@ test('Destroy ListStore to avoid many requests and reset active to be set on web
     const webspaceKey = observable.box('sulu');
 
     const webspace = {
+        ...defaultWebspace,
+        localizations: undefined,
         key: 'sulu',
         allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
     };
@@ -297,7 +308,10 @@ test('Should bind router', () => {
     const PageList = require('../PageList').default;
 
     const webspaceKey = observable.box('sulu');
-    const webspace = {};
+    const webspace = {
+        ...defaultWebspace,
+        localizations: undefined,
+    };
 
     const router = new Router({});
     router.attributes = {
@@ -327,7 +341,10 @@ test('Should call disposers on unmount', () => {
     const PageList = require('../PageList').default;
 
     const webspaceKey = observable.box('sulu');
-    const webspace = {};
+    const webspace = {
+        ...defaultWebspace,
+        localizations: undefined,
+    };
 
     const router = new Router({});
     router.attributes = {
