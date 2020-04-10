@@ -851,8 +851,12 @@ test('Cancel request when a second one is started before finishing the first one
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
 
-    loadingStrategy.load.mockReturnValueOnce(new RequestPromise(function(resolve){resolve();}));
-    loadingStrategy.load.mockReturnValueOnce(new RequestPromise(function(resolve){resolve();}));
+    loadingStrategy.load.mockReturnValueOnce(new RequestPromise(function(resolve){
+        resolve();
+    }));
+    loadingStrategy.load.mockReturnValueOnce(new RequestPromise(function(resolve){
+        resolve();
+    }));
 
     listStore.schema = {};
 
