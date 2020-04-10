@@ -1,10 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render with from and to value 1`] = `
-<div
-  class="dateTimeFieldFilterType"
->
-  <div>
+<div>
+  <label
+    class="label"
+  >
+    sulu_admin.from
+  </label>
+  <div
+    class="date"
+  >
     <div>
       <label
         class="input default left"
@@ -27,7 +32,14 @@ exports[`Render with from and to value 1`] = `
       </label>
     </div>
   </div>
-  <div>
+  <label
+    class="label"
+  >
+    sulu_admin.until
+  </label>
+  <div
+    class="date"
+  >
     <div>
       <label
         class="input default left"
@@ -54,10 +66,15 @@ exports[`Render with from and to value 1`] = `
 `;
 
 exports[`Render with from and to value 2`] = `
-<div
-  class="dateTimeFieldFilterType"
->
-  <div>
+<div>
+  <label
+    class="label"
+  >
+    sulu_admin.from
+  </label>
+  <div
+    class="date"
+  >
     <div>
       <label
         class="input default left"
@@ -80,7 +97,14 @@ exports[`Render with from and to value 2`] = `
       </label>
     </div>
   </div>
-  <div>
+  <label
+    class="label"
+  >
+    sulu_admin.until
+  </label>
+  <div
+    class="date"
+  >
     <div>
       <label
         class="input default left"
@@ -107,10 +131,15 @@ exports[`Render with from and to value 2`] = `
 `;
 
 exports[`Render with value of undefined 1`] = `
-<div
-  class="dateTimeFieldFilterType"
->
-  <div>
+<div>
+  <label
+    class="label"
+  >
+    sulu_admin.from
+  </label>
+  <div
+    class="date"
+  >
     <div>
       <label
         class="input default left"
@@ -133,7 +162,14 @@ exports[`Render with value of undefined 1`] = `
       </label>
     </div>
   </div>
-  <div>
+  <label
+    class="label"
+  >
+    sulu_admin.until
+  </label>
+  <div
+    class="date"
+  >
     <div>
       <label
         class="input default left"
@@ -160,10 +196,15 @@ exports[`Render with value of undefined 1`] = `
 `;
 
 exports[`Render with value set by setValue 1`] = `
-<div
-  class="dateTimeFieldFilterType"
->
-  <div>
+<div>
+  <label
+    class="label"
+  >
+    sulu_admin.from
+  </label>
+  <div
+    class="date"
+  >
     <div>
       <label
         class="input default left"
@@ -186,7 +227,14 @@ exports[`Render with value set by setValue 1`] = `
       </label>
     </div>
   </div>
-  <div>
+  <label
+    class="label"
+  >
+    sulu_admin.until
+  </label>
+  <div
+    class="date"
+  >
     <div>
       <label
         class="input default left"

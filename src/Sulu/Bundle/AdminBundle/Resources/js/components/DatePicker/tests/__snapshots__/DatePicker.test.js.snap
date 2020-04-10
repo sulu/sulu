@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DatePicker should render 1`] = `
-<div>
+<div
+  class="date-picker"
+>
   <div>
     <label
       class="input default left"

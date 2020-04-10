@@ -1,7 +1,13 @@
-.date-time-field-filter-type {
-    height: 70px;
+@import '../../../containers/Application/colors.scss';
 
-    > :not(:last-child) {
-        margin-bottom: 10px;
-    }
+$labelColor: $scorpion;
+
+.label {
+    display: block;
+    color: $labelColor;
+    margin-bottom: 5px;
+}
+
+.date {
+    margin-bottom: 10px;
 }

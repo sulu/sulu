@@ -13,6 +13,7 @@ import Popover from '../Popover';
 import './datePicker.scss';
 
 type Props = {|
+    className?: string,
     disabled: boolean,
     id?: string,
     inputRef?: (ref: ?ElementRef<'input'>) => void,
@@ -175,7 +176,7 @@ class DatePicker extends React.Component<Props> {
     };
 
     render() {
-        const {disabled, options, placeholder, valid} = this.props;
+        const {className, disabled, options, placeholder, valid} = this.props;
 
         const fieldOptions = {
             closeOnSelect: true,
@@ -192,7 +193,7 @@ class DatePicker extends React.Component<Props> {
         };
 
         return (
-            <div>
+            <div className={className}>
                 <div ref={this.setInputRef} />
                 <Popover
                     anchorElement={this.inputRef}

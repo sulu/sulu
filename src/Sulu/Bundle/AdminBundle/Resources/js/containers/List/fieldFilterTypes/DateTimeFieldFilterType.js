@@ -1,7 +1,8 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import type {ElementRef} from 'react';
 import DatePicker from '../../../components/DatePicker';
+import {translate} from '../../../utils/Translator';
 import AbstractFieldFilterType from './AbstractFieldFilterType';
 import dateTimeFieldFilterTypeStyles from './dateTimeFieldFilterType.scss';
 
@@ -38,14 +39,21 @@ class DateTimeFieldFilterType extends AbstractFieldFilterType<?{from?: Date, to?
         const {value} = this;
 
         return (
-            <div className={dateTimeFieldFilterTypeStyles.dateTimeFieldFilterType}>
+            <Fragment>
+                <label className={dateTimeFieldFilterTypeStyles.label}>{translate('sulu_admin.from')}</label>
                 <DatePicker
+                    className={dateTimeFieldFilterTypeStyles.date}
                     inputRef={this.setFromInputRef}
                     onChange={this.handleFromChange}
                     value={value ? value.from : undefined}
                 />
-                <DatePicker onChange={this.handleToChange} value={value ? value.to : undefined} />
-            </div>
+                <label className={dateTimeFieldFilterTypeStyles.label}>{translate('sulu_admin.until')}</label>
+                <DatePicker
+                    className={dateTimeFieldFilterTypeStyles.date}
+                    onChange={this.handleToChange}
+                    value={value ? value.to : undefined}
+                />
+            </Fragment>
         );
     }
 
@@ -58,6 +66,14 @@ class DateTimeFieldFilterType extends AbstractFieldFilterType<?{from?: Date, to?
 
         if (!from && !to) {
             return Promise.resolve(null);
+        }
+
+        if (from && !to) {
+            return Promise.resolve(translate('sulu_admin.from') + ' ' + formatDate(from));
+        }
+
+        if (!from && to) {
+            return Promise.resolve(translate('sulu_admin.until') + ' ' + formatDate(to));
         }
 
         return Promise.resolve(formatDate(from) + ' - ' + formatDate(to));

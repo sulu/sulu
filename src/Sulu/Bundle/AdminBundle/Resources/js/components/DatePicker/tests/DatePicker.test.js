@@ -14,7 +14,7 @@ beforeEach(() => {
 
 test('DatePicker should render', () => {
     const onChange = jest.fn();
-    const datePicker = mount(<DatePicker onChange={onChange} value={null} />);
+    const datePicker = mount(<DatePicker className="date-picker" onChange={onChange} value={null} />);
 
     expect(datePicker.render()).toMatchSnapshot();
     expect(datePicker.find('DateTime').render()).toMatchSnapshot();
