@@ -1,5 +1,6 @@
 // @flow
-import React from 'react'; import {observable} from 'mobx';
+import React from 'react';
+import {observable} from 'mobx';
 import {mount, render, shallow} from 'enzyme';
 import BlockCollection from '../BlockCollection';
 import SortableBlockList from '../SortableBlockList';

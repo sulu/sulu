@@ -136,18 +136,12 @@ class BlockCollection extends React.Component<Props> {
     render() {
         const {disabled, renderBlockContent, types, value} = this.props;
 
-        const identifiedValues = value.map((block, index) => {
-            return {
-                ...block,
-                __id: this.generatedBlockIds[index],
-            };
-        });
-
         return (
             <section className={blockCollectionStyles.blockCollection}>
                 <SortableBlockList
                     disabled={disabled}
                     expandedBlocks={this.expandedBlocks}
+                    generatedBlockIds={this.generatedBlockIds}
                     lockAxis="y"
                     onCollapse={this.handleCollapse}
                     onExpand={this.handleExpand}
@@ -157,7 +151,7 @@ class BlockCollection extends React.Component<Props> {
                     renderBlockContent={renderBlockContent}
                     types={types}
                     useDragHandle={true}
-                    value={identifiedValues}
+                    value={value}
                 />
                 <Button
                     disabled={disabled || this.hasMaximumReached()}
