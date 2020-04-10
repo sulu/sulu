@@ -12,11 +12,8 @@
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Entity;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
-use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class ContactRepositoryTest extends SuluTestCase
@@ -232,7 +229,7 @@ class ContactRepositoryTest extends SuluTestCase
                 'websiteTags' => [$tag1],
                 'websiteTagsOperator' => 'and',
                 'tags' => [$tag2],
-                'tagOperator' => 'or'
+                'tagOperator' => 'or',
             ],
             null,
             0,
@@ -261,7 +258,7 @@ class ContactRepositoryTest extends SuluTestCase
                 'websiteTags' => [$tag1, $tag3],
                 'websiteTagsOperator' => 'or',
                 'tags' => [$tag2],
-                'tagOperator' => 'or'
+                'tagOperator' => 'or',
             ],
             null,
             0,
@@ -290,7 +287,7 @@ class ContactRepositoryTest extends SuluTestCase
                 'websiteTags' => [$tag2],
                 'websiteTagsOperator' => 'or',
                 'tags' => [$tag1, $tag3],
-                'tagOperator' => 'or'
+                'tagOperator' => 'or',
             ],
             null,
             0,
@@ -305,7 +302,7 @@ class ContactRepositoryTest extends SuluTestCase
     {
         $category1 = $this->createCategory('Category 1');
         $category2 = $this->createCategory('Category 2');
-        $contact1 = $this->createContact('Max', 'Mustermann',[], [$category1]);
+        $contact1 = $this->createContact('Max', 'Mustermann', [], [$category1]);
         $contact2 = $this->createContact('Erika', 'Mustermann');
         $contact3 = $this->createContact('Georg', 'Mustermann');
         $contact4 = $this->createContact('Anne', 'Musterfrau', [], [$category2]);
@@ -410,7 +407,7 @@ class ContactRepositoryTest extends SuluTestCase
                 'websiteCategories' => [$category1],
                 'websiteCategoriesOperator' => 'and',
                 'categories' => [$category2],
-                'categoryOperator' => 'or'
+                'categoryOperator' => 'or',
             ],
             null,
             0,
@@ -439,7 +436,7 @@ class ContactRepositoryTest extends SuluTestCase
                 'websiteCategories' => [$category1, $category3],
                 'websiteCategoriesOperator' => 'or',
                 'categories' => [$category2],
-                'categoryOperator' => 'or'
+                'categoryOperator' => 'or',
             ],
             null,
             0,
@@ -468,7 +465,7 @@ class ContactRepositoryTest extends SuluTestCase
                 'websiteCategories' => [$category2],
                 'websiteCategoriesOperator' => 'or',
                 'categories' => [$category1, $category3],
-                'categoryOperator' => 'or'
+                'categoryOperator' => 'or',
             ],
             null,
             0,

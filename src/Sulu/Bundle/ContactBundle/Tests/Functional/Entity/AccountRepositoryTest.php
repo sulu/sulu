@@ -12,11 +12,8 @@
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Entity;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
-use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AccountRepositoryTest extends SuluTestCase
