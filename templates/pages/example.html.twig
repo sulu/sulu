@@ -1,0 +1,66 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+    <h1>{{ content.title }}</h1>
+    <p>{{ content.url }}</p>
+    {{ content.text_editor|raw }}
+
+    {% for block in content.blocks %}
+        {% if block.type == 'editor' %}
+            {{ content.text_editor|raw }}
+        {% elseif block.type == 'media' %}
+            {% for media in block.media_selection %}
+                <img src="{{ media.thumbnails['sulu-260x'] }}"
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+
+    <p>{{ content.number }}</p>
+    <p>{{ content.phone }}</p>
+
+    {% if content.location %}
+        <p>
+            {{ content.location.street }} {{ content.location.number }}<br />
+            {{ content.location.code }} {{ content.location.town}}
+        </p>
+    {% endif %}
+
+    <p>{{ content.tag_selection | join(', ') }}</p>
+    <p>{{ content.single_select }}</p>
+    <p>{{ content.select | join(', ') }}</p>
+    <p>{{ content.checkbox }}</p>
+    <p>{{ content.color }}</p>
+    <p>{{ content.time }}</p>
+    <p>{{ content.date }}</p>
+    <p>{{ content.email }}</p>
+    <p>{{ content.link }}</p>
+
+    {% if content.single_page_selection %}
+        <p>{{ sulu_content_load(content.single_page_selection).content.title }}</p>
+    {% endif %}
+
+    <p>{{ content.page_selection | map(page => page.title) | join(', ') }}</p>
+    <p>{{ content.teaser_selection | map(teaser => teaser.title) | join(', ') }}</p>
+    <p>{{ content.smart_content | map(page => page.title) | join(', ') }}</p>
+    <p>{{ content.snippet_selection | map(snippet => snippet.title) | join(', ') }}</p>
+    <p>{{ content.category_selection | map(category => category.name) | join(', ') }}</p>
+
+    {% if content.single_media_selection %}
+        <img src="{{ content.single_media_selection.thumbnails['sulu-260x'] }}" />
+    {% endif %}
+
+    {% for media in content.media_selection %}
+        <img src="{{ media.thumbnails['sulu-260x'] }}" />
+    {% endfor %}
+
+    {% if content.single_account_selection %}
+        <p>{{ content.single_account_selection.name }}</p>
+    {% endif %}
+
+    {% if content.single_contact_selection %}
+        <p>{{ content.single_contact_selection.fullName }}</p>
+    {% endif %}
+
+    <p>{{ content.contact_account_selection | map(contact => contact.name ?? contact.fullName) | join(', ') }}</p>
+    <p>{{ content.text_area }}</p>
+{% endblock %}

@@ -11,13 +11,13 @@
     </localizations>
 
     <default-templates>
-        <default-template type="page">default</default-template>
+        <default-template type="page">example</default-template>
         <default-template type="home">homepage</default-template>
     </default-templates>
 
     <templates>
-        <template type="search">templates/search</template>
-        <template type="error">templates/error</template>
+        <template type="search">search/search</template>
+        <template type="error">error/error</template>
     </templates>
 
     <navigation>
