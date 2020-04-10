@@ -31,77 +31,629 @@ class ContactRepositoryTest extends SuluTestCase
      */
     private $contactRepository;
 
-    /**
-     * @var Contact[]
-     */
-    private $contacts = [];
-
-    /**
-     * @var TagInterface[]
-     */
-    private $tags = [];
-
-    /**
-     * @var CategoryInterface[]
-     */
-    private $categories = [];
-
-    /**
-     * @var array
-     */
-    private $tagData = [
-        'Tag-0',
-        'Tag-1',
-        'Tag-2',
-        'Tag-3',
-    ];
-
-    /**
-     * @var array
-     */
-    private $categoryData = [
-        'Category-0',
-        'Category-1',
-        'Category-2',
-        'Category-3',
-    ];
-
-    /**
-     * @var array
-     */
-    private $contactData = [
-        ['Max', 'Mustermann', [0, 1, 2], [0, 1, 2]],
-        ['Anne', 'Mustermann', [0, 1, 3], [0, 1, 3]],
-        ['Georg', 'Musterfrau', [0, 1], [0, 1]],
-        ['Marianne', 'Musterfrau', [0, 1, 2], [0, 1, 2]],
-        ['Franz-Xaver', 'Gabler', [0], [0]],
-        ['Markus', 'Mustermann', [0], [0]],
-        ['Erika', 'Mustermann', [0], [0]],
-        ['Leon', 'Mustermann', [], []],
-    ];
-
     public function setUp(): void
     {
         $this->em = $this->getEntityManager();
         $this->contactRepository = $this->em->getRepository(Contact::class);
         $this->purgeDatabase();
-        $this->initOrm();
     }
 
-    private function initOrm()
+    public function testFindByNoPagination()
     {
-        foreach ($this->tagData as $data) {
-            $this->tags[] = $this->createTag($data);
-        }
+        $contact1 = $this->createContact('Max', 'Mustermann');
+        $contact2 = $this->createContact('Erika', 'Mustermann');
 
-        foreach ($this->categoryData as $key) {
-            $this->categories[] = $this->createCategory($key);
-        }
-
-        foreach ($this->contactData as $data) {
-            $this->contacts[] = $this->createContact($data[0], $data[1], $data[2], $data[3]);
-        }
         $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters([], null, 0, null, 'de');
+
+        $this->assertEquals([$contact1, $contact2], $result);
+    }
+
+    public function testFindByPage1NoLimit()
+    {
+        $contact1 = $this->createContact('Max', 'Mustermann');
+        $contact2 = $this->createContact('Erika', 'Mustermann');
+        $contact3 = $this->createContact('Georg', 'Mustermann');
+        $contact4 = $this->createContact('Anne', 'Musterfrau');
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters([], 1, 2, null, 'de');
+
+        // One more element is returned in order to determine if next page is available
+        $this->assertEquals([$contact1, $contact2, $contact3], $result);
+    }
+
+    public function testFindByPage2NoLimit()
+    {
+        $contact1 = $this->createContact('Max', 'Mustermann');
+        $contact2 = $this->createContact('Erika', 'Mustermann');
+        $contact3 = $this->createContact('Georg', 'Mustermann');
+        $contact4 = $this->createContact('Anne', 'Musterfrau');
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters([], 2, 2, null, 'de');
+
+        $this->assertEquals([$contact3, $contact4], $result);
+    }
+
+    public function testFindByLimit3()
+    {
+        $contact1 = $this->createContact('Max', 'Mustermann');
+        $contact2 = $this->createContact('Erika', 'Mustermann');
+        $contact3 = $this->createContact('Georg', 'Mustermann');
+        $contact4 = $this->createContact('Anne', 'Musterfrau');
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters([], null, 0, 3, 'de');
+
+        $this->assertEquals([$contact1, $contact2, $contact3], $result);
+    }
+
+    public function testFindByPage1Limit5()
+    {
+        $contact1 = $this->createContact('Max', 'Mustermann');
+        $contact2 = $this->createContact('Erika', 'Mustermann');
+        $contact3 = $this->createContact('Georg', 'Mustermann');
+        $contact4 = $this->createContact('Anne', 'Musterfrau');
+        $contact5 = $this->createContact('Gustav', 'Musterfrau');
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters([], 1, 3, 5, 'de');
+
+        $this->assertEquals([$contact1, $contact2, $contact3, $contact4], $result);
+    }
+
+    public function testFindByPage2Limit5()
+    {
+        $contact1 = $this->createContact('Max', 'Mustermann');
+        $contact2 = $this->createContact('Erika', 'Mustermann');
+        $contact3 = $this->createContact('Georg', 'Mustermann');
+        $contact4 = $this->createContact('Anne', 'Musterfrau');
+        $contact5 = $this->createContact('Gustav', 'Musterfrau');
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters([], 2, 3, 5, 'de');
+
+        $this->assertEquals([$contact4, $contact5], $result);
+    }
+
+    public function testFindByTagOr()
+    {
+        $tag1 = $this->createTag('Tag 1');
+        $tag2 = $this->createTag('Tag 2');
+        $contact1 = $this->createContact('Max', 'Mustermann', [$tag1]);
+        $contact2 = $this->createContact('Erika', 'Mustermann');
+        $contact3 = $this->createContact('Georg', 'Mustermann');
+        $contact4 = $this->createContact('Anne', 'Musterfrau', [$tag2]);
+        $contact5 = $this->createContact('Gustav', 'Musterfrau');
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters(
+            ['tags' => [$tag1->getId(), $tag2->getId()], 'tagOperator' => 'or'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$contact1, $contact4], $result);
+    }
+
+    public function testFindByTagAnd()
+    {
+        $tag1 = $this->createTag('Tag 1');
+        $tag2 = $this->createTag('Tag 2');
+        $contact1 = $this->createContact('Max', 'Mustermann', [$tag1, $tag2]);
+        $contact2 = $this->createContact('Erika', 'Mustermann', [$tag1]);
+        $contact3 = $this->createContact('Georg', 'Mustermann', [$tag2]);
+        $contact4 = $this->createContact('Anne', 'Musterfrau', [$tag2, $tag1]);
+        $contact5 = $this->createContact('Gustav', 'Musterfrau');
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters(
+            ['tags' => [$tag1->getId(), $tag2->getId()], 'tagOperator' => 'and'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$contact1, $contact4], $result);
+    }
+
+    public function testFindByWebsiteTagOr()
+    {
+        $tag1 = $this->createTag('Tag 1');
+        $tag2 = $this->createTag('Tag 2');
+        $contact1 = $this->createContact('Max', 'Mustermann', [$tag1]);
+        $contact2 = $this->createContact('Erika', 'Mustermann');
+        $contact3 = $this->createContact('Georg', 'Mustermann');
+        $contact4 = $this->createContact('Anne', 'Musterfrau', [$tag2]);
+        $contact5 = $this->createContact('Gustav', 'Musterfrau');
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters(
+            ['websiteTags' => [$tag1->getId(), $tag2->getId()], 'websiteTagsOperator' => 'or'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$contact1, $contact4], $result);
+    }
+
+    public function testFindByWebsiteTagAnd()
+    {
+        $tag1 = $this->createTag('Tag 1');
+        $tag2 = $this->createTag('Tag 2');
+        $contact1 = $this->createContact('Max', 'Mustermann', [$tag1, $tag2]);
+        $contact2 = $this->createContact('Erika', 'Mustermann', [$tag1]);
+        $contact3 = $this->createContact('Georg', 'Mustermann', [$tag2]);
+        $contact4 = $this->createContact('Anne', 'Musterfrau', [$tag2, $tag1]);
+        $contact5 = $this->createContact('Gustav', 'Musterfrau');
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters(
+            ['websiteTags' => [$tag1->getId(), $tag2->getId()], 'websiteTagsOperator' => 'and'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$contact1, $contact4], $result);
+    }
+
+    public function testFindByTagAndWebsiteTag()
+    {
+        $tag1 = $this->createTag('Tag 1');
+        $tag2 = $this->createTag('Tag 2');
+        $contact1 = $this->createContact('Max', 'Mustermann', [$tag1, $tag2]);
+        $contact2 = $this->createContact('Erika', 'Mustermann', [$tag1]);
+        $contact3 = $this->createContact('Georg', 'Mustermann', [$tag2]);
+        $contact4 = $this->createContact('Anne', 'Musterfrau', [$tag2, $tag1]);
+        $contact5 = $this->createContact('Gustav', 'Musterfrau');
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters(
+            [
+                'websiteTags' => [$tag1],
+                'websiteTagsOperator' => 'and',
+                'tags' => [$tag2],
+                'tagOperator' => 'or'
+            ],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$contact1, $contact4], $result);
+    }
+
+    public function testFindByTagAndWebsiteTagOr()
+    {
+        $tag1 = $this->createTag('Tag 1');
+        $tag2 = $this->createTag('Tag 2');
+        $tag3 = $this->createTag('Tag 3');
+        $contact1 = $this->createContact('Max', 'Mustermann', [$tag1, $tag2]);
+        $contact2 = $this->createContact('Erika', 'Mustermann', [$tag1]);
+        $contact3 = $this->createContact('Georg', 'Mustermann', [$tag2]);
+        $contact4 = $this->createContact('Anne', 'Musterfrau', [$tag2, $tag3]);
+        $contact5 = $this->createContact('Gustav', 'Musterfrau', [$tag1, $tag3]);
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters(
+            [
+                'websiteTags' => [$tag1, $tag3],
+                'websiteTagsOperator' => 'or',
+                'tags' => [$tag2],
+                'tagOperator' => 'or'
+            ],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$contact1, $contact4], $result);
+    }
+
+    public function testFindByTagOrAndWebsiteTagOr()
+    {
+        $tag1 = $this->createTag('Tag 1');
+        $tag2 = $this->createTag('Tag 2');
+        $tag3 = $this->createTag('Tag 3');
+        $contact1 = $this->createContact('Max', 'Mustermann', [$tag1, $tag2]);
+        $contact2 = $this->createContact('Erika', 'Mustermann', [$tag1]);
+        $contact3 = $this->createContact('Georg', 'Mustermann', [$tag2]);
+        $contact4 = $this->createContact('Anne', 'Musterfrau', [$tag2, $tag3]);
+        $contact5 = $this->createContact('Gustav', 'Musterfrau', [$tag1, $tag3]);
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters(
+            [
+                'websiteTags' => [$tag2],
+                'websiteTagsOperator' => 'or',
+                'tags' => [$tag1, $tag3],
+                'tagOperator' => 'or'
+            ],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$contact1, $contact4], $result);
+    }
+
+    public function testFindByCategoryOr()
+    {
+        $category1 = $this->createCategory('Category 1');
+        $category2 = $this->createCategory('Category 2');
+        $contact1 = $this->createContact('Max', 'Mustermann',[], [$category1]);
+        $contact2 = $this->createContact('Erika', 'Mustermann');
+        $contact3 = $this->createContact('Georg', 'Mustermann');
+        $contact4 = $this->createContact('Anne', 'Musterfrau', [], [$category2]);
+        $contact5 = $this->createContact('Gustav', 'Musterfrau');
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters(
+            ['categories' => [$category1->getId(), $category2->getId()], 'categoryOperator' => 'or'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$contact1, $contact4], $result);
+    }
+
+    public function testFindByCategoryAnd()
+    {
+        $category1 = $this->createCategory('Category 1');
+        $category2 = $this->createCategory('Category 2');
+        $contact1 = $this->createContact('Max', 'Mustermann', [], [$category1, $category2]);
+        $contact2 = $this->createContact('Erika', 'Mustermann', [], [$category1]);
+        $contact3 = $this->createContact('Georg', 'Mustermann', [], [$category2]);
+        $contact4 = $this->createContact('Anne', 'Musterfrau', [], [$category2, $category1]);
+        $contact5 = $this->createContact('Gustav', 'Musterfrau');
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters(
+            ['categories' => [$category1->getId(), $category2->getId()], 'categoryOperator' => 'and'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$contact1, $contact4], $result);
+    }
+
+    public function testFindByWebsiteCategoryOr()
+    {
+        $category1 = $this->createCategory('Category 1');
+        $category2 = $this->createCategory('Category 2');
+        $contact1 = $this->createContact('Max', 'Mustermann', [], [$category1]);
+        $contact2 = $this->createContact('Erika', 'Mustermann');
+        $contact3 = $this->createContact('Georg', 'Mustermann');
+        $contact4 = $this->createContact('Anne', 'Musterfrau', [], [$category2]);
+        $contact5 = $this->createContact('Gustav', 'Musterfrau');
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters(
+            ['websiteCategories' => [$category1->getId(), $category2->getId()], 'websiteCategoriesOperator' => 'or'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$contact1, $contact4], $result);
+    }
+
+    public function testFindByWebsiteCategoryAnd()
+    {
+        $category1 = $this->createCategory('Category 1');
+        $category2 = $this->createCategory('Category 2');
+        $contact1 = $this->createContact('Max', 'Mustermann', [], [$category1, $category2]);
+        $contact2 = $this->createContact('Erika', 'Mustermann', [], [$category1]);
+        $contact3 = $this->createContact('Georg', 'Mustermann', [], [$category2]);
+        $contact4 = $this->createContact('Anne', 'Musterfrau', [], [$category2, $category1]);
+        $contact5 = $this->createContact('Gustav', 'Musterfrau');
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters(
+            ['websiteCategories' => [$category1->getId(), $category2->getId()], 'websiteCategoriesOperator' => 'and'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$contact1, $contact4], $result);
+    }
+
+    public function testFindByCategoryAndWebsiteCategory()
+    {
+        $category1 = $this->createCategory('Category 1');
+        $category2 = $this->createCategory('Category 2');
+        $contact1 = $this->createContact('Max', 'Mustermann', [], [$category1, $category2]);
+        $contact2 = $this->createContact('Erika', 'Mustermann', [], [$category1]);
+        $contact3 = $this->createContact('Georg', 'Mustermann', [], [$category2]);
+        $contact4 = $this->createContact('Anne', 'Musterfrau', [], [$category2, $category1]);
+        $contact5 = $this->createContact('Gustav', 'Musterfrau');
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters(
+            [
+                'websiteCategories' => [$category1],
+                'websiteCategoriesOperator' => 'and',
+                'categories' => [$category2],
+                'categoryOperator' => 'or'
+            ],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$contact1, $contact4], $result);
+    }
+
+    public function testFindByCategoryAndWebsiteCategoryOr()
+    {
+        $category1 = $this->createCategory('Category 1');
+        $category2 = $this->createCategory('Category 2');
+        $category3 = $this->createCategory('Category 3');
+        $contact1 = $this->createContact('Max', 'Mustermann', [], [$category1, $category2]);
+        $contact2 = $this->createContact('Erika', 'Mustermann', [], [$category1]);
+        $contact3 = $this->createContact('Georg', 'Mustermann', [], [$category2]);
+        $contact4 = $this->createContact('Anne', 'Musterfrau', [], [$category2, $category3]);
+        $contact5 = $this->createContact('Gustav', 'Musterfrau', [], [$category1, $category3]);
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters(
+            [
+                'websiteCategories' => [$category1, $category3],
+                'websiteCategoriesOperator' => 'or',
+                'categories' => [$category2],
+                'categoryOperator' => 'or'
+            ],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$contact1, $contact4], $result);
+    }
+
+    public function testFindByCategoryOrAndWebsiteCategoryOr()
+    {
+        $category1 = $this->createCategory('Category 1');
+        $category2 = $this->createCategory('Category 2');
+        $category3 = $this->createCategory('Category 3');
+        $contact1 = $this->createContact('Max', 'Mustermann', [], [$category1, $category2]);
+        $contact2 = $this->createContact('Erika', 'Mustermann', [], [$category1]);
+        $contact3 = $this->createContact('Georg', 'Mustermann', [], [$category2]);
+        $contact4 = $this->createContact('Anne', 'Musterfrau', [], [$category2, $category3]);
+        $contact5 = $this->createContact('Gustav', 'Musterfrau', [], [$category1, $category3]);
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters(
+            [
+                'websiteCategories' => [$category2],
+                'websiteCategoriesOperator' => 'or',
+                'categories' => [$category1, $category3],
+                'categoryOperator' => 'or'
+            ],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$contact1, $contact4], $result);
+    }
+
+    public function testFindByCategoryAndTag()
+    {
+        $category1 = $this->createCategory('Category 1');
+        $tag1 = $this->createTag('Tag 1');
+        $contact1 = $this->createContact('Max', 'Mustermann', [], []);
+        $contact2 = $this->createContact('Erika', 'Mustermann', [], [$category1]);
+        $contact3 = $this->createContact('Georg', 'Mustermann', [$tag1], []);
+        $contact4 = $this->createContact('Anne', 'Musterfrau', [$tag1], [$category1]);
+        $contact5 = $this->createContact('Gustav', 'Musterfrau', [$tag1], [$category1]);
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters(
+            [
+                'categories' => [$category1],
+                'categoryOperator' => 'or',
+                'tags' => [$tag1],
+                'tagOperator' => 'or',
+            ],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$contact4, $contact5], $result);
+    }
+
+    public function testFindByWebsiteCategoryAndWebsiteTag()
+    {
+        $category1 = $this->createCategory('Category 1');
+        $category2 = $this->createCategory('Category 2');
+        $tag1 = $this->createTag('Tag 1');
+        $tag2 = $this->createTag('Tag 2');
+        $contact1 = $this->createContact('Max', 'Mustermann', [], []);
+        $contact2 = $this->createContact('Erika', 'Mustermann', [$tag1], [$category1]);
+        $contact3 = $this->createContact('Georg', 'Mustermann', [$tag2], [$category2]);
+        $contact4 = $this->createContact('Anne', 'Musterfrau', [$tag1], []);
+        $contact5 = $this->createContact('Gustav', 'Musterfrau', [], [$category1]);
+        $contact6 = $this->createContact('Leonard', 'Musterfrau', [$tag1, $tag2], [$category1, $category2]);
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters(
+            [
+                'categories' => [$category2],
+                'categoryOperator' => 'or',
+                'websiteCategories' => [$category1],
+                'websiteCategoriesOperator' => 'or',
+                'tags' => [$tag2],
+                'tagOperator' => 'or',
+                'websiteTags' => [$tag1],
+                'websiteTagsOperator' => 'or',
+            ],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$contact6], $result);
+    }
+
+    public function testFindByIds()
+    {
+        $contact1 = $this->createContact('Max', 'Mustermann');
+        $contact2 = $this->createContact('Anne', 'Mustermann');
+        $contact3 = $this->createContact('Georg', 'Mustermann');
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByIds([$contact1->getId(), $contact2->getId()]);
+
+        $this->assertCount(2, $result);
+        $this->assertEquals('Max', $result[0]->getFirstName());
+        $this->assertEquals('Anne', $result[1]->getFirstName());
+    }
+
+    public function testFindByNotExistingIds()
+    {
+        $result = $this->contactRepository->findByIds([15, 99]);
+
+        $this->assertCount(0, $result);
+    }
+
+    public function testFindByIdsEmpty()
+    {
+        $result = $this->contactRepository->findByIds([]);
+
+        $this->assertCount(0, $result);
+    }
+
+    public function testFindGetAllSortByIdAsc()
+    {
+        $contact1 = $this->createContact('Max', 'Mustermann');
+        $contact2 = $this->createContact('Anne', 'Mustermann');
+        $this->em->flush();
+
+        $result = $this->contactRepository->findGetAll(null, null, ['id' => 'asc'], []);
+
+        $this->assertEquals('Max', $result[0]['firstName']);
+        $this->assertEquals('Anne', $result[1]['firstName']);
+    }
+
+    public function testFindGetAllSortByFirstNameAsc()
+    {
+        $contact1 = $this->createContact('Max', 'Mustermann');
+        $contact2 = $this->createContact('Anne', 'Mustermann');
+        $contact3 = $this->createContact('Georg', 'Mustermann');
+        $this->em->flush();
+
+        $result = $this->contactRepository->findGetAll(null, null, ['firstName' => 'asc'], []);
+
+        $this->assertEquals('Anne', $result[0]['firstName']);
+        $this->assertEquals('Georg', $result[1]['firstName']);
+        $this->assertEquals('Max', $result[2]['firstName']);
+    }
+
+    public function testFindGetAllSortByFirstNameDesc()
+    {
+        $contact1 = $this->createContact('Max', 'Mustermann');
+        $contact2 = $this->createContact('Anne', 'Mustermann');
+        $contact3 = $this->createContact('Georg', 'Mustermann');
+        $this->em->flush();
+
+        $result = $this->contactRepository->findGetAll(null, null, ['firstName' => 'desc'], []);
+
+        $this->assertEquals('Max', $result[0]['firstName']);
+        $this->assertEquals('Georg', $result[1]['firstName']);
+        $this->assertEquals('Anne', $result[2]['firstName']);
+    }
+
+    public function testFindGetAllSortByIdAscWithLimit()
+    {
+        $contact1 = $this->createContact('Max', 'Mustermann');
+        $contact2 = $this->createContact('Anne', 'Mustermann');
+        $contact3 = $this->createContact('Georg', 'Mustermann');
+        $contact4 = $this->createContact('Erika', 'Mustermann');
+        $this->em->flush();
+
+        $result = $this->contactRepository->findGetAll(3, null, ['id' => 'asc'], []);
+
+        $this->assertCount(3, $result);
+        $this->assertEquals('Max', $result[0]['firstName']);
+        $this->assertEquals('Anne', $result[1]['firstName']);
+        $this->assertEquals('Georg', $result[2]['firstName']);
+    }
+
+    public function testFindGetAllSortByIdAscWithLimitAndOffset()
+    {
+        $contact1 = $this->createContact('Max', 'Mustermann');
+        $contact2 = $this->createContact('Anne', 'Mustermann');
+        $contact3 = $this->createContact('Georg', 'Mustermann');
+        $contact4 = $this->createContact('Erika', 'Mustermann');
+        $this->em->flush();
+
+        $result = $this->contactRepository->findGetAll(3, 1, ['id' => 'asc'], []);
+
+        $this->assertCount(3, $result);
+        $this->assertEquals('Anne', $result[0]['firstName']);
+        $this->assertEquals('Georg', $result[1]['firstName']);
+        $this->assertEquals('Erika', $result[2]['firstName']);
+    }
+
+    public function testFindGetAllSortByIdWithLastName()
+    {
+        $contact1 = $this->createContact('Max', 'Mustermann');
+        $contact2 = $this->createContact('Anne', 'Musterfrau');
+        $contact3 = $this->createContact('Georg', 'Mustermann');
+        $contact4 = $this->createContact('Erika', 'Musterfrau');
+        $this->em->flush();
+
+        $result = $this->contactRepository->findGetAll(1, null, ['id' => 'asc'], ['lastName' => 'Musterfrau']);
+
+        $this->assertCount(1, $result);
+        $this->assertEquals('Anne', $result[0]['firstName']);
     }
 
     private function createTag($name)
@@ -133,357 +685,15 @@ class ContactRepositoryTest extends SuluTestCase
         $contact->setFormOfAddress(0);
 
         foreach ($tags as $tag) {
-            $contact->addTag($this->tags[$tag]);
+            $contact->addTag($tag);
         }
 
         foreach ($categories as $category) {
-            $contact->addCategory($this->categories[$category]);
+            $contact->addCategory($category);
         }
 
         $this->em->persist($contact);
 
         return $contact;
-    }
-
-    public function dataProvider()
-    {
-        // when pagination is active the result count is pageSize + 1 to determine has next page
-
-        return [
-            // no pagination
-            [[], null, 0, null, $this->contactData],
-            // page 1, no limit
-            [[], 1, 3, null, array_slice($this->contactData, 0, 4)],
-            // page 2, no limit
-            [[], 2, 3, null, array_slice($this->contactData, 3, 4)],
-            // no pagination, limit 3
-            [[], null, 0, 3, array_slice($this->contactData, 0, 3)],
-            // page 1, limit 5
-            [[], 1, 3, 5, array_slice($this->contactData, 0, 4)],
-            // page 2, limit 5
-            [[], 2, 3, 5, array_slice($this->contactData, 3, 2)],
-            // no pagination, tag 0 or 1
-            [['tags' => [0, 1], 'tagOperator' => 'or'], null, 0, null, array_slice($this->contactData, 0, 7)],
-            // no pagination, tag 0 and 3
-            [['tags' => [0, 3], 'tagOperator' => 'and'], null, 0, null, [$this->contactData[1]], [0, 3]],
-            // no pagination, website-tag 0 or 1
-            [
-                ['websiteTags' => [0, 1], 'websiteTagsOperator' => 'or'],
-                null,
-                0,
-                null,
-                array_slice($this->contactData, 0, 7),
-            ],
-            // no pagination, website-tag 0 and 1
-            [
-                ['websiteTags' => [0, 1], 'websiteTagsOperator' => 'and'],
-                null,
-                0,
-                null,
-                array_slice($this->contactData, 0, 4),
-                [0, 1],
-            ],
-            // no pagination, website-tag 1, tags 3
-            [
-                ['websiteTags' => [1], 'websiteTagsOperator' => 'or', 'tags' => [3], 'tagOperator' => 'or'],
-                null,
-                0,
-                null,
-                [$this->contactData[1]],
-                [0, 3],
-            ],
-            // no pagination, website-tag 2 or 3, tags 1
-            [
-                ['websiteTags' => [2, 3], 'websiteTagsOperator' => 'or', 'tags' => [1], 'tagOperator' => 'or'],
-                null,
-                0,
-                null,
-                [$this->contactData[0], $this->contactData[1], $this->contactData[3]],
-                [0, 1],
-            ],
-            // no pagination, website-tag 1, tags 2 or 3
-            [
-                ['websiteTags' => [1], 'websiteTagsOperator' => 'or', 'tags' => [2, 3], 'tagOperator' => 'or'],
-                null,
-                0,
-                null,
-                [$this->contactData[0], $this->contactData[1], $this->contactData[3]],
-                [0, 1],
-            ],
-            // no pagination, category 0 or 1
-            [
-                ['categories' => [0, 1], 'categoryOperator' => 'or'],
-                null,
-                0,
-                null,
-                array_slice($this->contactData, 0, 7),
-            ],
-            // no pagination, category 0 and 1
-            [
-                ['categories' => [0, 1], 'categoryOperator' => 'and'],
-                null,
-                0,
-                null,
-                array_slice($this->contactData, 0, 4),
-                [0, 1],
-            ],
-            // no pagination, category 0 and 3
-            [
-                ['categories' => [0, 3], 'categoryOperator' => 'and'],
-                null,
-                0,
-                null,
-                [$this->contactData[1]],
-                [0, 3],
-                [0, 3],
-            ],
-            // page 2, no limit, category 0
-            [
-                ['categories' => [0], 'categoryOperator' => 'or'],
-                2,
-                3,
-                null,
-                array_slice($this->contactData, 3, 4),
-                [0],
-                [0],
-            ],
-            // no pagination, website-category 0 or 1
-            [
-                ['websiteCategories' => [0, 1], 'websiteCategoriesOperator' => 'or'],
-                null,
-                0,
-                null,
-                array_slice($this->contactData, 0, 7),
-            ],
-            // no pagination, website-category 0 and 1
-            [
-                ['websiteCategories' => [0, 1], 'websiteCategoriesOperator' => 'and'],
-                null,
-                0,
-                null,
-                array_slice($this->contactData, 0, 4),
-                [0, 1],
-                [0, 1],
-            ],
-            // no pagination, website-category 1, category 3
-            [
-                [
-                    'websiteCategories' => [1],
-                    'websiteCategoriesOperator' => 'or',
-                    'categories' => [3],
-                    'categoryOperator' => 'or',
-                ],
-                null,
-                0,
-                null,
-                [$this->contactData[1]],
-                [0, 3],
-                [0, 3],
-            ],
-            // no pagination, website-category 2 or 3, category 1
-            [
-                [
-                    'websiteCategories' => [2, 3],
-                    'websiteCategoriesOperator' => 'or',
-                    'categories' => [1],
-                    'categoryOperator' => 'or',
-                ],
-                null,
-                0,
-                null,
-                [$this->contactData[0], $this->contactData[1], $this->contactData[3]],
-                [0, 1],
-                [0, 1],
-            ],
-            // no pagination, website-category 1, category 2 or 3
-            [
-                [
-                    'websiteCategories' => [1],
-                    'websiteCategoriesOperator' => 'or',
-                    'categories' => [2, 3],
-                    'categoryOperator' => 'or',
-                ],
-                null,
-                0,
-                null,
-                [$this->contactData[0], $this->contactData[1], $this->contactData[3]],
-                [0, 1],
-                [0, 1],
-            ],
-            // no pagination, category 0 and tag 1
-            [
-                ['categories' => [0], 'categoryOperator' => 'or', 'tags' => [1], 'tagOperator' => 'or'],
-                null,
-                0,
-                null,
-                array_slice($this->contactData, 0, 4),
-                [0],
-            ],
-            // no pagination, website-category 0 and website-tag 1
-            [
-                [
-                    'websiteCategories' => [0],
-                    'websiteCategoriesOperator' => 'or',
-                    'websiteTags' => [1],
-                    'websiteTagsOperator' => 'or',
-                ],
-                null,
-                0,
-                null,
-                array_slice($this->contactData, 0, 4),
-                [0],
-            ],
-            // combination website/admin-category/tag
-            [
-                [
-                    'categories' => [0],
-                    'categoryOperator' => 'or',
-                    'websiteCategories' => [1],
-                    'websiteCategoriesOperator' => 'or',
-                    'tags' => [0],
-                    'tagOperator' => 'or',
-                    'websiteTags' => [1],
-                    'websiteTagsOperator' => 'or',
-                ],
-                null,
-                0,
-                null,
-                array_slice($this->contactData, 0, 4),
-                [0, 1],
-                [0, 1],
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider dataProvider
-     *
-     * @param array $filters
-     * @param int $page
-     * @param int $pageSize
-     * @param int $limit
-     * @param array $expected
-     * @param int[] $tags
-     */
-    public function testFindBy($filters, $page, $pageSize, $limit, $expected, $tags = [])
-    {
-        // if tags isset replace the array indexes with database id
-        if (array_key_exists('tags', $filters)) {
-            $filters['tags'] = array_map(
-                function($tag) {
-                    return $this->tags[$tag]->getId();
-                },
-                $filters['tags']
-            );
-        }
-
-        // if website tags isset replace the array indexes with database id
-        if (array_key_exists('websiteTags', $filters)) {
-            $filters['websiteTags'] = array_map(
-                function($tag) {
-                    return $this->tags[$tag]->getId();
-                },
-                $filters['websiteTags']
-            );
-        }
-
-        // if categories isset replace the array indexes with database id
-        if (array_key_exists('categories', $filters)) {
-            $filters['categories'] = array_map(
-                function($category) {
-                    return $this->categories[$category]->getId();
-                },
-                $filters['categories']
-            );
-        }
-
-        // if website categories isset replace the array indexes with database id
-        if (array_key_exists('websiteCategories', $filters)) {
-            $filters['websiteCategories'] = array_map(
-                function($category) {
-                    return $this->categories[$category]->getId();
-                },
-                $filters['websiteCategories']
-            );
-        }
-
-        $result = $this->contactRepository->findByFilters($filters, $page, $pageSize, $limit, 'de');
-
-        $length = count($expected);
-        $this->assertCount($length, $result);
-
-        for ($i = 0; $i < $length; ++$i) {
-            $this->assertEquals($expected[$i][0], $result[$i]->getFirstName(), $i);
-            $this->assertEquals($expected[$i][1], $result[$i]->getLastName(), $i);
-
-            foreach ($tags as $tag) {
-                $this->assertTrue($result[$i]->getTags()->contains($this->tags[$tag]));
-            }
-        }
-    }
-
-    public function findByIdsProvider()
-    {
-        return [
-            [[0, 1, 2], array_slice($this->contactData, 0, 3)],
-            [[], []],
-            [[15, 99], []],
-        ];
-    }
-
-    /**
-     * @dataProvider findByIdsProvider
-     *
-     * @param array $ids
-     * @param array $expected
-     */
-    public function testFindByIds($ids, $expected)
-    {
-        for ($i = 0; $i < count($ids); ++$i) {
-            if (isset($this->contacts[$ids[$i]])) {
-                $ids[$i] = $this->contacts[$ids[$i]]->getId();
-            }
-        }
-
-        $result = $this->contactRepository->findByIds($ids);
-
-        $this->assertCount(count($expected), $result);
-
-        for ($i = 0; $i < count($expected); ++$i) {
-            $this->assertEquals($ids[$i], $result[$i]->getId());
-            $this->assertEquals($expected[$i][0], $result[$i]->getFirstName());
-            $this->assertEquals($expected[$i][1], $result[$i]->getLastName());
-        }
-    }
-
-    public function findGetAllProvider()
-    {
-        return [
-            [null, null, ['id' => 'asc'], [], $this->contactData],
-            [3, null, ['id' => 'asc'], [], array_slice($this->contactData, 0, 3)],
-            [3, 2, ['id' => 'asc'], [], array_slice($this->contactData, 2, 3)],
-            [1, 0, ['id' => 'asc'], ['lastName' => 'Gabler'], [$this->contactData[4]]],
-            [1, 0, ['firstName' => 'asc'], [], [$this->contactData[1]]],
-            [null, 0, ['firstName' => 'desc'], ['lastName' => 'Musterfrau'], [$this->contactData[3], $this->contactData[2]]],
-        ];
-    }
-
-    /**
-     * @dataProvider findGetAllProvider
-     *
-     * @param $limit
-     * @param $offset
-     * @param $sorting
-     * @param $where
-     * @param $expected
-     */
-    public function testFindGetAll($limit, $offset, $sorting, $where, $expected)
-    {
-        $result = $this->contactRepository->findGetAll($limit, $offset, $sorting, $where);
-
-        $this->assertEquals(count($expected), count($result));
-        for ($i = 0; $i < count($result); ++$i) {
-            $this->assertEquals($expected[$i][0], $result[$i]['firstName']);
-        }
     }
 }
