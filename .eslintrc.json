@@ -43,6 +43,7 @@
             "error",
             120
         ],
+        "max-statements-per-line": "error",
         "quotes": [
             "error",
             "single"
