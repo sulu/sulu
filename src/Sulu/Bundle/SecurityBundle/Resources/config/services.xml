@@ -94,7 +94,9 @@
             <argument type="service" id="session"/>
         </service>
 
-        <service id="sulu_security.logout_success_handler" class="Sulu\Bundle\SecurityBundle\Security\LogoutSuccessHandler" />
+        <service id="sulu_security.logout_success_handler" class="Sulu\Bundle\SecurityBundle\Security\LogoutSuccessHandler">
+            <argument type="service" id="router"/>
+        </service>
 
         <service id="sulu_security.mask_converter" class="%sulu_security.mask_converter.class%" public="true">
             <argument>%permissions%</argument>
