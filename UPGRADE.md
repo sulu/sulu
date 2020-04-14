@@ -4,8 +4,11 @@
 
 ### DoctrineCacheBundle removed
 
-The doctrine cache bundle has been removed.
-Instead you now can configure in the `sulu_preview` a symfony cache adapter.
+The doctrine cache bundle requirement has been removed from sulu. The DoctrineCacheBundle is
+still required when your project is using doctrine/doctrine-bundle ^1.12.
+
+When you have configured the preview before using another cache adapter you need to change
+the configuration the following way:
 
 **before**:
 

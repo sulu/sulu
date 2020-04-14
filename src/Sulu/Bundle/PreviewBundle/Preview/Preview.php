@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\PreviewBundle\Preview;
 
 use Doctrine\Common\Cache\Cache;
-use http\Exception\RuntimeException;
 use Psr\Cache\CacheItemPoolInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
