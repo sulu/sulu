@@ -48,7 +48,7 @@ class SingleMediaSelectionTest extends TestCase
     private $node;
 
     /**
-     * @var #PropertyInterface
+     * @var PropertyInterface
      */
     private $nodeProperty;
 

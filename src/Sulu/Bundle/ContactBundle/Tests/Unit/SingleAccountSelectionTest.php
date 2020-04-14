@@ -48,7 +48,7 @@ class SingleAccountSelectionTest extends TestCase
     private $node;
 
     /**
-     * @var
+     * @var PropertyInterface
      */
     private $property;
 

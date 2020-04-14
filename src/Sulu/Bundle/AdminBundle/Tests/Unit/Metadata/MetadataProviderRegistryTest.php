@@ -19,7 +19,7 @@ use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 class MetadataProviderRegistryTest extends TestCase
 {
     /**
-     * @var MetadataProviderRegistry;
+     * @var MetadataProviderRegistry
      */
     private $metadataProviderRegistry;
 

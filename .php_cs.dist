@@ -21,7 +21,7 @@ return PhpCsFixer\Config::create()
         'concat_space' => ['spacing' => 'one'],
         'function_declaration' => ['closure_function_spacing' => 'none'],
         'header_comment' => ['header' => $header],
-        'no_superfluous_phpdoc_tags' => ['remove_inheritdoc' => true],
+        'no_superfluous_phpdoc_tags' => ['allow_mixed' => true, 'remove_inheritdoc' => true],
         'ordered_imports' => true,
         'phpdoc_align' => ['align' => 'left'],
         'phpdoc_types_order' => false,
