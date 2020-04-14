@@ -12,10 +12,8 @@
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Entity;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
-use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Bundle\TagBundle\Tag\TagInterface;
+use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AccountRepositoryTest extends SuluTestCase
@@ -26,77 +24,554 @@ class AccountRepositoryTest extends SuluTestCase
     private $em;
 
     /**
-     * @var Account[]
+     * @var AccountRepository
      */
-    private $accounts = [];
-
-    /**
-     * @var TagInterface[]
-     */
-    private $tags = [];
-
-    /**
-     * @var CategoryInterface[]
-     */
-    private $categories = [];
-
-    /**
-     * @var array
-     */
-    private $tagData = [
-        'Tag-0',
-        'Tag-1',
-        'Tag-2',
-        'Tag-3',
-    ];
-
-    /**
-     * @var array
-     */
-    private $categoryData = [
-        'Category-0',
-        'Category-1',
-        'Category-2',
-        'Category-3',
-    ];
-
-    /**
-     * @var array
-     */
-    private $accountData = [
-        ['Apple', [0, 1, 2], [0, 1, 2]],
-        ['Google', [0, 1, 3], [0, 1, 3]],
-        ['Amazon', [0, 1], [0, 1]],
-        ['Massive Art', [0, 1, 2], [0, 1, 2]],
-        ['Facebook', [0], [0]],
-        ['Sulu', [0], [0]],
-        ['Github', [0], [0]],
-        ['SensioLabs', [], []],
-    ];
+    private $accountRepository;
 
     public function setUp(): void
     {
         $this->em = $this->getEntityManager();
-        $this->initOrm();
+        $this->accountRepository = $this->em->getRepository(Account::class);
+        $this->purgeDatabase();
     }
 
-    private function initOrm()
+    public function testFindByNoPagination()
     {
-        $this->purgeDatabase();
-
-        foreach ($this->tagData as $name) {
-            $this->tags[] = $this->createTag($name);
-        }
-
-        foreach ($this->categoryData as $key) {
-            $this->categories[] = $this->createCategory($key);
-        }
-
-        foreach ($this->accountData as $data) {
-            $this->accounts[] = $this->createAccount($data[0], $data[1], $data[2]);
-        }
+        $account1 = $this->createAccount('Sulu');
+        $account2 = $this->createAccount('Sensiolabs');
 
         $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters([], null, 0, null, 'de');
+
+        $this->assertEquals([$account1, $account2], $result);
+    }
+
+    public function testFindByPage1NoLimit()
+    {
+        $account1 = $this->createAccount('Sulu');
+        $account2 = $this->createAccount('Sensiolabs');
+        $account3 = $this->createAccount('Google');
+        $account4 = $this->createAccount('Microsoft');
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters([], 1, 2, null, 'de');
+
+        // One more element is returned in order to determine if next page is available
+        $this->assertEquals([$account1, $account2, $account3], $result);
+    }
+
+    public function testFindByPage2NoLimit()
+    {
+        $account1 = $this->createAccount('Sulu');
+        $account2 = $this->createAccount('Sensiolabs');
+        $account3 = $this->createAccount('Google');
+        $account4 = $this->createAccount('Microsoft');
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters([], 2, 2, null, 'de');
+
+        $this->assertEquals([$account3, $account4], $result);
+    }
+
+    public function testFindByLimit3()
+    {
+        $account1 = $this->createAccount('Sulu');
+        $account2 = $this->createAccount('Sensiolabs');
+        $account3 = $this->createAccount('Google');
+        $account4 = $this->createAccount('Microsoft');
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters([], null, 0, 3, 'de');
+
+        $this->assertEquals([$account1, $account2, $account3], $result);
+    }
+
+    public function testFindByPage1Limit5()
+    {
+        $account1 = $this->createAccount('Sulu');
+        $account2 = $this->createAccount('Sensiolabs');
+        $account3 = $this->createAccount('Google');
+        $account4 = $this->createAccount('Microsoft');
+        $account5 = $this->createAccount('Apple');
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters([], 1, 3, 5, 'de');
+
+        $this->assertEquals([$account1, $account2, $account3, $account4], $result);
+    }
+
+    public function testFindByPage2Limit5()
+    {
+        $account1 = $this->createAccount('Sulu');
+        $account2 = $this->createAccount('Sensiolabs');
+        $account3 = $this->createAccount('Google');
+        $account4 = $this->createAccount('Microsoft');
+        $account5 = $this->createAccount('Apple');
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters([], 2, 3, 5, 'de');
+
+        $this->assertEquals([$account4, $account5], $result);
+    }
+
+    public function testFindByTagOr()
+    {
+        $tag1 = $this->createTag('Tag 1');
+        $tag2 = $this->createTag('Tag 2');
+        $account1 = $this->createAccount('Sulu', [$tag1]);
+        $account2 = $this->createAccount('Sensiolabs');
+        $account3 = $this->createAccount('Google');
+        $account4 = $this->createAccount('Microsoft', [$tag2]);
+        $account5 = $this->createAccount('Apple');
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters(
+            ['tags' => [$tag1, $tag2], 'tagOperator' => 'or'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$account1, $account4], $result);
+    }
+
+    public function testFindByTagAnd()
+    {
+        $tag1 = $this->createTag('Tag 1');
+        $tag2 = $this->createTag('Tag 2');
+        $account1 = $this->createAccount('Sulu', [$tag1, $tag2]);
+        $account2 = $this->createAccount('Sensiolabs', [$tag1]);
+        $account3 = $this->createAccount('Google', [$tag2]);
+        $account4 = $this->createAccount('Microsoft', [$tag2, $tag1]);
+        $account5 = $this->createAccount('Apple');
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters(
+            ['tags' => [$tag1, $tag2], 'tagOperator' => 'and'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$account1, $account4], $result);
+    }
+
+    public function testFindByPage1TagOr()
+    {
+        $tag1 = $this->createTag('Tag 1');
+        $account1 = $this->createAccount('Sulu', [$tag1]);
+        $account2 = $this->createAccount('Sensiolabs', [$tag1]);
+        $account3 = $this->createAccount('Google', [$tag1]);
+        $account4 = $this->createAccount('Microsoft');
+        $account5 = $this->createAccount('Apple', [$tag1]);
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters(
+            ['tags' => [$tag1], 'tagOperator' => 'or'],
+            1,
+            2,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$account1, $account2, $account3], $result);
+    }
+
+    public function testFindByWebsiteTagOr()
+    {
+        $tag1 = $this->createTag('Tag 1');
+        $tag2 = $this->createTag('Tag 2');
+        $account1 = $this->createAccount('Sulu', [$tag1]);
+        $account2 = $this->createAccount('Sensiolabs');
+        $account3 = $this->createAccount('Google');
+        $account4 = $this->createAccount('Microsoft', [$tag2]);
+        $account5 = $this->createAccount('Apple');
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters(
+            ['websiteTags' => [$tag1, $tag2], 'websiteTagsOperator' => 'or'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$account1, $account4], $result);
+    }
+
+    public function testFindByWebsiteTagAnd()
+    {
+        $tag1 = $this->createTag('Tag 1');
+        $tag2 = $this->createTag('Tag 2');
+        $account1 = $this->createAccount('Sulu', [$tag1, $tag2]);
+        $account2 = $this->createAccount('Sensiolabs', [$tag1]);
+        $account3 = $this->createAccount('Google', [$tag2]);
+        $account4 = $this->createAccount('Microsoft', [$tag2, $tag1]);
+        $account5 = $this->createAccount('Apple');
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters(
+            ['websiteTags' => [$tag1, $tag2], 'websiteTagsOperator' => 'and'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$account1, $account4], $result);
+    }
+
+    public function testFindByTagAndWebsiteTag()
+    {
+        $tag1 = $this->createTag('Tag 1');
+        $tag2 = $this->createTag('Tag 2');
+        $account1 = $this->createAccount('Sulu', [$tag1, $tag2]);
+        $account2 = $this->createAccount('Sensiolabs', [$tag1]);
+        $account3 = $this->createAccount('Google', [$tag2]);
+        $account4 = $this->createAccount('Microsoft', [$tag2, $tag1]);
+        $account5 = $this->createAccount('Apple');
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters(
+            ['websiteTags' => [$tag1], 'websiteTagsOperator' => 'and', 'tags' => [$tag2], 'tagOperator' => 'or'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$account1, $account4], $result);
+    }
+
+    public function testFindByTagAnd2WebsiteTag()
+    {
+        $tag1 = $this->createTag('Tag 1');
+        $tag2 = $this->createTag('Tag 2');
+        $tag3 = $this->createTag('Tag 3');
+        $account1 = $this->createAccount('Sulu', [$tag1, $tag2, $tag3]);
+        $account2 = $this->createAccount('Sensiolabs', [$tag1]);
+        $account3 = $this->createAccount('Google', [$tag2]);
+        $account4 = $this->createAccount('Microsoft', [$tag2, $tag1]);
+        $account5 = $this->createAccount('Apple', [$tag1, $tag3]);
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters(
+            ['websiteTags' => [$tag1, $tag3], 'websiteTagsOperator' => 'and', 'tags' => [$tag2], 'tagOperator' => 'or'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$account1], $result);
+    }
+
+    public function testFindBy2TagAndWebsiteTag()
+    {
+        $tag1 = $this->createTag('Tag 1');
+        $tag2 = $this->createTag('Tag 2');
+        $tag3 = $this->createTag('Tag 3');
+        $account1 = $this->createAccount('Sulu', [$tag1, $tag2, $tag3]);
+        $account2 = $this->createAccount('Sensiolabs', [$tag1]);
+        $account3 = $this->createAccount('Google', [$tag2]);
+        $account4 = $this->createAccount('Microsoft', [$tag2, $tag1]);
+        $account5 = $this->createAccount('Apple', [$tag1, $tag3]);
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters(
+            ['websiteTags' => [$tag1], 'websiteTagsOperator' => 'or', 'tags' => [$tag2, $tag3], 'tagOperator' => 'or'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$account1, $account4, $account5], $result);
+    }
+
+    public function testFindByCategoryOr()
+    {
+        $category1 = $this->createCategory('Category 1');
+        $category2 = $this->createCategory('Category 2');
+        $account1 = $this->createAccount('Sulu', [], [$category1]);
+        $account2 = $this->createAccount('Sensiolabs');
+        $account3 = $this->createAccount('Google');
+        $account4 = $this->createAccount('Microsoft', [], [$category2]);
+        $account5 = $this->createAccount('Apple');
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters(
+            ['categories' => [$category1, $category2], 'categoryOperator' => 'or'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$account1, $account4], $result);
+    }
+
+    public function testFindByCategoryAnd()
+    {
+        $category1 = $this->createCategory('Category 1');
+        $category2 = $this->createCategory('Category 2');
+        $account1 = $this->createAccount('Sulu', [], [$category1, $category2]);
+        $account2 = $this->createAccount('Sensiolabs', [], [$category1]);
+        $account3 = $this->createAccount('Google', [], [$category2]);
+        $account4 = $this->createAccount('Microsoft', [], [$category2, $category1]);
+        $account5 = $this->createAccount('Apple');
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters(
+            ['categories' => [$category1, $category2], 'categoryOperator' => 'and'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$account1, $account4], $result);
+    }
+
+    public function testFindByPage1CategoryOr()
+    {
+        $category1 = $this->createCategory('Category 1');
+        $account1 = $this->createAccount('Sulu', [], [$category1]);
+        $account2 = $this->createAccount('Sensiolabs', [], [$category1]);
+        $account3 = $this->createAccount('Google', [], [$category1]);
+        $account4 = $this->createAccount('Microsoft');
+        $account5 = $this->createAccount('Apple', [], [$category1]);
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters(
+            ['categories' => [$category1], 'categoryOperator' => 'or'],
+            1,
+            2,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$account1, $account2, $account3], $result);
+    }
+
+    public function testFindByWebsiteCategoryOr()
+    {
+        $category1 = $this->createCategory('Category 1');
+        $category2 = $this->createCategory('Category 2');
+        $account1 = $this->createAccount('Sulu', [], [$category1]);
+        $account2 = $this->createAccount('Sensiolabs');
+        $account3 = $this->createAccount('Google');
+        $account4 = $this->createAccount('Microsoft', [], [$category2]);
+        $account5 = $this->createAccount('Apple');
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters(
+            ['websiteCategories' => [$category1, $category2], 'websiteCategoriesOperator' => 'or'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$account1, $account4], $result);
+    }
+
+    public function testFindByWebsiteCategoryAnd()
+    {
+        $category1 = $this->createCategory('Category 1');
+        $category2 = $this->createCategory('Category 2');
+        $account1 = $this->createAccount('Sulu', [], [$category1, $category2]);
+        $account2 = $this->createAccount('Sensiolabs', [], [$category1]);
+        $account3 = $this->createAccount('Google', [], [$category2]);
+        $account4 = $this->createAccount('Microsoft', [], [$category2, $category1]);
+        $account5 = $this->createAccount('Apple');
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters(
+            ['websiteCategories' => [$category1, $category2], 'websiteCategoriesOperator' => 'and'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$account1, $account4], $result);
+    }
+
+    public function testFindByCategoryAndWebsiteCategory()
+    {
+        $category1 = $this->createCategory('Category 1');
+        $category2 = $this->createCategory('Category 2');
+        $account1 = $this->createAccount('Sulu', [], [$category1, $category2]);
+        $account2 = $this->createAccount('Sensiolabs', [], [$category1]);
+        $account3 = $this->createAccount('Google', [], [$category2]);
+        $account4 = $this->createAccount('Microsoft', [], [$category2, $category1]);
+        $account5 = $this->createAccount('Apple');
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters(
+            ['websiteCategories' => [$category1], 'websiteCategoriesOperator' => 'and', 'categories' => [$category2], 'categoryOperator' => 'or'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$account1, $account4], $result);
+    }
+
+    public function testFindByCategoryAnd2WebsiteCategory()
+    {
+        $category1 = $this->createCategory('Category 1');
+        $category2 = $this->createCategory('Category 2');
+        $category3 = $this->createCategory('Category 3');
+        $account1 = $this->createAccount('Sulu', [], [$category1, $category2, $category3]);
+        $account2 = $this->createAccount('Sensiolabs', [], [$category1]);
+        $account3 = $this->createAccount('Google', [], [$category2]);
+        $account4 = $this->createAccount('Microsoft', [], [$category2, $category1]);
+        $account5 = $this->createAccount('Apple', [], [$category1, $category3]);
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters(
+            ['websiteCategories' => [$category1, $category3], 'websiteCategoriesOperator' => 'and', 'categories' => [$category2], 'categoryOperator' => 'or'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$account1], $result);
+    }
+
+    public function testFindBy2CategoryAndWebsiteCategory()
+    {
+        $category1 = $this->createCategory('Category 1');
+        $category2 = $this->createCategory('Category 2');
+        $category3 = $this->createCategory('Category 3');
+        $account1 = $this->createAccount('Sulu', [], [$category1, $category2, $category3]);
+        $account2 = $this->createAccount('Sensiolabs', [], [$category1]);
+        $account3 = $this->createAccount('Google', [], [$category2]);
+        $account4 = $this->createAccount('Microsoft', [], [$category2, $category1]);
+        $account5 = $this->createAccount('Apple', [], [$category1, $category3]);
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters(
+            ['websiteCategories' => [$category1], 'websiteCategoriesOperator' => 'or', 'categories' => [$category2, $category3], 'categoryOperator' => 'or'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$account1, $account4, $account5], $result);
+    }
+
+    public function testFindByCategoryAndTag()
+    {
+        $category1 = $this->createCategory('Category 1');
+        $tag1 = $this->createTag('Tag 1');
+        $account1 = $this->createAccount('Sensiolabs', [$tag1], [$category1]);
+        $account2 = $this->createAccount('Google', [$tag1], []);
+        $account3 = $this->createAccount('Microsoft', [], [$category1]);
+        $account4 = $this->createAccount('Apple', [$tag1], [$category1]);
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters(
+            ['categories' => [$category1], 'categoryOperator' => 'or', 'tags' => [$tag1], 'tagOperator' => 'or'],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$account1, $account4], $result);
+    }
+
+    public function testFindByWebsiteCategoryAndWebsiteTag()
+    {
+        $category1 = $this->createCategory('Category 1');
+        $category2 = $this->createCategory('Category 2');
+        $tag1 = $this->createTag('Tag 1');
+        $tag2 = $this->createTag('Tag 2');
+        $account1 = $this->createAccount('Sensiolabs', [$tag1, $tag2], [$category1, $category2]);
+        $account2 = $this->createAccount('Google', [$tag1, $tag2], []);
+        $account3 = $this->createAccount('Microsoft', [], [$category1, $category2]);
+        $account4 = $this->createAccount('Apple', [$tag1], [$category1]);
+        $account5 = $this->createAccount('Sulu', [$tag1, $tag2], [$category1, $category2]);
+
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByFilters(
+            [
+                'categories' => [$category2],
+                'categoryOperator' => 'or',
+                'websiteCategories' => [$category1],
+                'websiteCategoriesOperator' => 'or',
+                'tags' => [$tag2],
+                'tagOperator' => 'or',
+                'websiteTags' => [$tag1],
+                'websiteTagsOperator' => 'or',
+            ],
+            null,
+            0,
+            null,
+            'de'
+        );
+
+        $this->assertEquals([$account1, $account5], $result);
+    }
+
+    public function testFindByIds()
+    {
+        $account1 = $this->createAccount('Sulu');
+        $account2 = $this->createAccount('Sensiolabs');
+        $account3 = $this->createAccount('Google');
+        $this->em->flush();
+
+        $result = $this->accountRepository->findByIds([$account1->getId(), $account2->getId()]);
+
+        $this->assertCount(2, $result);
+        $this->assertEquals('Sulu', $result[0]->getName());
+        $this->assertEquals('Sensiolabs', $result[1]->getName());
+    }
+
+    public function testFindByNotExistingIds()
+    {
+        $result = $this->accountRepository->findByIds([15, 99]);
+
+        $this->assertCount(0, $result);
+    }
+
+    public function testFindByIdsEmpty()
+    {
+        $result = $this->accountRepository->findByIds([]);
+
+        $this->assertCount(0, $result);
     }
 
     private function createTag($name)
@@ -126,327 +601,15 @@ class AccountRepositoryTest extends SuluTestCase
         $account->setName($name);
 
         foreach ($tags as $tag) {
-            $account->addTag($this->tags[$tag]);
+            $account->addTag($tag);
         }
 
         foreach ($categories as $category) {
-            $account->addCategory($this->categories[$category]);
+            $account->addCategory($category);
         }
 
         $this->em->persist($account);
 
         return $account;
-    }
-
-    public function findByProvider()
-    {
-        // when pagination is active the result count is pageSize + 1 to determine has next page
-
-        return [
-            // no pagination
-            [[], null, 0, null, $this->accountData],
-            // page 1, no limit
-            [[], 1, 3, null, array_slice($this->accountData, 0, 4)],
-            // page 2, no limit
-            [[], 2, 3, null, array_slice($this->accountData, 3, 4)],
-            // no pagination, limit 3
-            [[], null, 0, 3, array_slice($this->accountData, 0, 3)],
-            // page 1, limit 5
-            [[], 1, 3, 5, array_slice($this->accountData, 0, 4)],
-            // page 2, limit 5
-            [[], 2, 3, 5, array_slice($this->accountData, 3, 2)],
-            // no pagination, tag 0
-            [['tags' => [0], 'tagOperator' => 'or'], null, 0, null, array_slice($this->accountData, 0, 7), [0]],
-            // no pagination, tag 0 or 1
-            [['tags' => [0, 1], 'tagOperator' => 'or'], null, 0, null, array_slice($this->accountData, 0, 7)],
-            // no pagination, tag 0 and 1
-            [['tags' => [0, 1], 'tagOperator' => 'and'], null, 0, null, array_slice($this->accountData, 0, 4), [0, 1]],
-            // page 1, no limit, tag 0
-            [
-                ['tags' => [0], 'tagOperator' => 'or'],
-                1,
-                3,
-                null,
-                array_slice($this->accountData, 0, 4),
-                [0],
-            ],
-            // no pagination, website-tag 0 or 1
-            [
-                ['websiteTags' => [0, 1], 'websiteTagsOperator' => 'or'],
-                null,
-                0,
-                null,
-                array_slice($this->accountData, 0, 7),
-            ],
-            // no pagination, website-tag 0 and 1
-            [
-                ['websiteTags' => [0, 1], 'websiteTagsOperator' => 'and'],
-                null,
-                0,
-                null,
-                array_slice($this->accountData, 0, 4),
-                [0, 1],
-            ],
-            // no pagination, website-tag 1, tags 3
-            [
-                ['websiteTags' => [1], 'websiteTagsOperator' => 'or', 'tags' => [3], 'tagOperator' => 'or'],
-                null,
-                0,
-                null,
-                [$this->accountData[1]],
-                [0, 3],
-            ],
-            // no pagination, website-tag 2 or 3, tags 1
-            [
-                ['websiteTags' => [2, 3], 'websiteTagsOperator' => 'or', 'tags' => [1], 'tagOperator' => 'or'],
-                null,
-                0,
-                null,
-                [$this->accountData[0], $this->accountData[1], $this->accountData[3]],
-                [0, 1],
-            ],
-            // no pagination, website-tag 1, tags 2 or 3
-            [
-                ['websiteTags' => [1], 'websiteTagsOperator' => 'or', 'tags' => [2, 3], 'tagOperator' => 'or'],
-                null,
-                0,
-                null,
-                [$this->accountData[0], $this->accountData[1], $this->accountData[3]],
-                [0, 1],
-            ],
-            // no pagination, category 0 or 1
-            [
-                ['categories' => [0, 1], 'categoryOperator' => 'or'],
-                null,
-                0,
-                null,
-                array_slice($this->accountData, 0, 7),
-            ],
-            // no pagination, category 0 and 1
-            [
-                ['categories' => [0, 1], 'categoryOperator' => 'and'],
-                null,
-                0,
-                null,
-                array_slice($this->accountData, 0, 4),
-                [0, 1],
-            ],
-            // page 2, no limit, category 0
-            [
-                ['categories' => [0], 'categoryOperator' => 'or'],
-                2,
-                3,
-                null,
-                array_slice($this->accountData, 3, 4),
-                [0],
-                [0],
-            ],
-            // no pagination, website-category 0
-            [
-                ['websiteCategories' => [0], 'websiteCategoriesOperator' => 'or'],
-                null,
-                0,
-                null,
-                array_slice($this->accountData, 0, 7),
-                [0],
-            ],
-            // no pagination, website-category 0 or 1
-            [
-                ['websiteCategories' => [0, 1], 'websiteCategoriesOperator' => 'or'],
-                null,
-                0,
-                null,
-                array_slice($this->accountData, 0, 7),
-            ],
-            // no pagination, website-category 0 and 1
-            [
-                ['websiteCategories' => [0, 1], 'websiteCategoriesOperator' => 'and'],
-                null,
-                0,
-                null,
-                array_slice($this->accountData, 0, 4),
-                [0, 1],
-                [0, 1],
-            ],
-            // no pagination, website-category 2 or 3, category 1
-            [
-                [
-                    'websiteCategories' => [2, 3],
-                    'websiteCategoriesOperator' => 'or',
-                    'categories' => [1],
-                    'categoryOperator' => 'or',
-                ],
-                null,
-                0,
-                null,
-                [$this->accountData[0], $this->accountData[1], $this->accountData[3]],
-                [0, 1],
-                [0, 1],
-            ],
-            // no pagination, website-category 1, category 2 or 3
-            [
-                [
-                    'websiteCategories' => [1],
-                    'websiteCategoriesOperator' => 'or',
-                    'categories' => [2, 3],
-                    'categoryOperator' => 'or',
-                ],
-                null,
-                0,
-                null,
-                [$this->accountData[0], $this->accountData[1], $this->accountData[3]],
-                [0, 1],
-                [0, 1],
-            ],
-            // no pagination, category 0 and tag 1
-            [
-                ['categories' => [0], 'categoryOperator' => 'or', 'tags' => [1], 'tagOperator' => 'or'],
-                null,
-                0,
-                null,
-                array_slice($this->accountData, 0, 4),
-                [0],
-            ],
-            // no pagination, website-category 0 and website-tag 1
-            [
-                [
-                    'websiteCategories' => [0],
-                    'websiteCategoriesOperator' => 'or',
-                    'websiteTags' => [1],
-                    'websiteTagsOperator' => 'or',
-                ],
-                null,
-                0,
-                null,
-                array_slice($this->accountData, 0, 4),
-                [0],
-            ],
-            // combination website/admin-category/tag
-            [
-                [
-                    'categories' => [0],
-                    'categoryOperator' => 'or',
-                    'websiteCategories' => [1],
-                    'websiteCategoriesOperator' => 'or',
-                    'tags' => [0],
-                    'tagOperator' => 'or',
-                    'websiteTags' => [1],
-                    'websiteTagsOperator' => 'or',
-                ],
-                null,
-                0,
-                null,
-                array_slice($this->accountData, 0, 4),
-                [0, 1],
-                [0, 1],
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider findByProvider
-     *
-     * @param array $filters
-     * @param int $page
-     * @param int $pageSize
-     * @param int $limit
-     * @param array $expected
-     * @param int[] $tags
-     * @param int[] $categories
-     */
-    public function testFindBy($filters, $page, $pageSize, $limit, $expected, $tags = [], $categories = [])
-    {
-        $repository = $this->em->getRepository(Account::class);
-
-        // if tags isset replace the array indexes with database id
-        if (array_key_exists('tags', $filters)) {
-            $filters['tags'] = array_map(
-                function($tag) {
-                    return $this->tags[$tag]->getId();
-                },
-                $filters['tags']
-            );
-        }
-
-        // if tags isset replace the array indexes with database id
-        if (array_key_exists('websiteTags', $filters)) {
-            $filters['websiteTags'] = array_map(
-                function($tag) {
-                    return $this->tags[$tag]->getId();
-                },
-                $filters['websiteTags']
-            );
-        }
-
-        // if tags isset replace the array indexes with database id
-        if (array_key_exists('categories', $filters)) {
-            $filters['categories'] = array_map(
-                function($category) {
-                    return $this->categories[$category]->getId();
-                },
-                $filters['categories']
-            );
-        }
-
-        // if tags isset replace the array indexes with database id
-        if (array_key_exists('websiteCategories', $filters)) {
-            $filters['websiteCategories'] = array_map(
-                function($category) {
-                    return $this->categories[$category]->getId();
-                },
-                $filters['websiteCategories']
-            );
-        }
-
-        $result = $repository->findByFilters($filters, $page, $pageSize, $limit, 'de');
-
-        $length = count($expected);
-        $this->assertCount($length, $result);
-
-        for ($i = 0; $i < $length; ++$i) {
-            $this->assertEquals($expected[$i][0], $result[$i]->getName(), $i);
-
-            foreach ($tags as $tag) {
-                $this->assertTrue($result[$i]->getTags()->contains($this->tags[$tag]));
-            }
-            foreach ($categories as $category) {
-                $this->assertTrue($result[$i]->getCategories()->contains($this->categories[$category]));
-            }
-        }
-    }
-
-    public function findByIdsProvider()
-    {
-        return [
-            [[0, 1, 2], array_slice($this->accountData, 0, 3)],
-            [[], []],
-            [[15, 99], []],
-        ];
-    }
-
-    /**
-     * @dataProvider findByIdsProvider
-     *
-     * @param array $ids
-     * @param array $expected
-     */
-    public function testFindByIds($ids, $expected)
-    {
-        for ($i = 0; $i < count($ids); ++$i) {
-            if (isset($this->accounts[$ids[$i]])) {
-                $ids[$i] = $this->accounts[$ids[$i]]->getId();
-            }
-        }
-
-        $repository = $this->em->getRepository(Account::class);
-
-        $result = $repository->findByIds($ids);
-
-        $this->assertCount(count($expected), $result);
-
-        for ($i = 0; $i < count($expected); ++$i) {
-            $this->assertEquals($ids[$i], $result[$i]->getId());
-            $this->assertEquals($expected[$i][0], $result[$i]->getName());
-        }
     }
 }
