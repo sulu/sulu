@@ -21,7 +21,7 @@ use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
 class RowsIterator extends \IteratorIterator
 {
     /**
-     * @var string[];
+     * @var string[]
      */
     private $columns;
 

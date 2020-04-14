@@ -99,7 +99,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      * Defines whether this localization is the x-default one or not.
      * This will be used to determine the default hreflang tag.
      *
-     * @var
+     * @var bool
      */
     private $xDefault;
 
