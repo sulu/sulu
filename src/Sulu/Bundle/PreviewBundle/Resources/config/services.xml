@@ -17,6 +17,14 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <service id="sulu_preview.cache_command_subscriber" class="Sulu\Bundle\PreviewBundle\EventSubscriber\CacheCommandSubscriber">
+            <argument type="service" id="sulu_preview.preview.kernel_factory"/>
+            <argument type="string">%kernel.environment%</argument>
+
+            <tag name="kernel.event_subscriber"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <!-- preview -->
         <service id="sulu_preview.preview.kernel_factory"
                  class="Sulu\Bundle\PreviewBundle\Preview\Renderer\WebsiteKernelFactory"/>
