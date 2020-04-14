@@ -69,7 +69,7 @@ class PreviewCache
         return $this->cache->hasItem($id);
     }
 
-    public function save(string $id, string $value, int $expires): void
+    public function save(string $id, string $value, int $expires = 0): void
     {
         if ($this->cache instanceof Cache) {
             $this->cache->save($id, $value, $expires);
@@ -80,7 +80,10 @@ class PreviewCache
         /** @var CacheItemInterface $cacheItem */
         $cacheItem = $this->cache->getItem($id);
         $cacheItem->set($value);
-        $cacheItem->expiresAfter($expires);
+
+        if ($expires) {
+            $cacheItem->expiresAfter($expires);
+        }
 
         $this->cache->save($cacheItem);
     }
@@ -92,7 +95,7 @@ class PreviewCache
         }
 
         /** @var CacheItemInterface $cacheItem */
-        $cacheItem = $this->cache->get($id);
+        $cacheItem = $this->cache->getItem($id);
 
         return $cacheItem->get();
     }
