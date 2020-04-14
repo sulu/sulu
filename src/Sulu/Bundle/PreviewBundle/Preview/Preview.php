@@ -17,7 +17,6 @@ use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
-use Symfony\Component\Cache\DoctrineProvider;
 
 class Preview implements PreviewInterface
 {
@@ -34,7 +33,7 @@ class Preview implements PreviewInterface
     private $renderer;
 
     /**
-     * @var Cache
+     * @var PreviewCache
      */
     private $cache;
 
@@ -52,31 +51,9 @@ class Preview implements PreviewInterface
         PreviewRendererInterface $renderer,
         int $cacheLifeTime = 3600
     ) {
-        if ($cache instanceof CacheItemPoolInterface) {
-            $cache = new DoctrineProvider($cache);
-        } elseif ($cache instanceof Cache) {
-            @trigger_error(
-                sprintf(
-                    'To inject $cache as instance of "%s" is deprecated use a "%s" instead.',
-                    get_class($cache),
-                    CacheItemPoolInterface::class
-                ),
-                E_USER_DEPRECATED
-            );
-        } else {
-            throw new \RuntimeException(
-                sprintf(
-                    'The $cache need to be an instance of "%s" or "%s" but got "%s".',
-                    CacheItemPoolInterface::class,
-                    Cache::class,
-                    get_class($cache)
-                )
-            );
-        }
-
         $this->previewObjectProviderRegistry = $previewObjectProviderRegistry;
         $this->renderer = $renderer;
-        $this->cache = $cache;
+        $this->cache = new PreviewCache($cache);
         $this->cacheLifeTime = $cacheLifeTime;
     }
 
