@@ -120,14 +120,14 @@ class ListQueryBuilder
     /**
      * used as a storage for saving relational fields.
      *
-     * @var
+     * @var array
      */
     private $relationalFilters = [];
 
     /**
      * contains all join conditions.
      *
-     * @var
+     * @var array
      */
     private $joinConditions = [];
 
