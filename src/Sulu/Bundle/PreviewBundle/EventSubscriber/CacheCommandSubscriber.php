@@ -32,10 +32,6 @@ class CacheCommandSubscriber implements EventSubscriberInterface
     private $environment;
 
     /**
-     * Needed for testing.
-     *
-     * @see Sulu\Bundle\PreviewBundle\Tests\Unit\EventSubscriber\CacheCommandSubscriberTest
-     *
      * @var Application|null
      */
     private $application;
@@ -70,5 +66,17 @@ class CacheCommandSubscriber implements EventSubscriberInterface
 
         $application = $this->application ?: new Application($previewKernel);
         $application->run($event->getInput(), $event->getOutput());
+    }
+
+    /**
+     * @internal
+     *
+     * Needed for testing
+     *
+     * @see Sulu\Bundle\PreviewBundle\Tests\Unit\EventSubscriber\CacheCommandSubscriberTest
+     */
+    public function setApplication(Application $application): void
+    {
+        $this->application = $application;
     }
 }

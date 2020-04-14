@@ -51,11 +51,7 @@ class CacheCommandSubscriberTest extends TestCase
         $this->kernelFactory = $this->prophesize(KernelFactoryInterface::class);
         $this->cacheCommandSubscriber = new CacheCommandSubscriber($this->kernelFactory->reveal(), 'test');
 
-        $reflectionClass = new \ReflectionClass($this->cacheCommandSubscriber);
-        $reflectionProperty = $reflectionClass->getProperty('application');
-        $reflectionProperty->setAccessible('public');
-
-        $reflectionProperty->setValue($this->cacheCommandSubscriber, $this->application->reveal());
+        $this->cacheCommandSubscriber->setApplication($this->application->reveal());
     }
 
     public function testEventCacheClear(): void
