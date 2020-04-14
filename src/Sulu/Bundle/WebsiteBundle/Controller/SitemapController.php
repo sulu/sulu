@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -86,9 +87,24 @@ class SitemapController
         if (!$response) {
             $sitemap = $this->xmlSitemapRenderer->renderIndex($request->getScheme(), $request->getHost());
             if (!$sitemap) {
-                $aliases = array_keys($this->sitemapProviderPool->getProviders());
+                $sitemapAlias = null;
 
-                return $this->sitemapPaginatedAction($request, reset($aliases), 1);
+                foreach ($this->sitemapProviderPool->getProviders() as $sitemapAlias => $provider) {
+                    if ($provider->getMaxPage($request->getScheme(), $request->getHost()) > 0) {
+                        $sitemapAlias = $provider->getAlias();
+
+                        break;
+                    }
+                }
+
+                if (!$sitemapAlias) {
+                    throw new NotFoundHttpException(sprintf(
+                        'No sitemaps found for "%s".',
+                        $request->getHttpHost()
+                    ));
+                }
+
+                return $this->sitemapPaginatedAction($request, $sitemapAlias, 1);
             }
 
             $response = new Response($sitemap);

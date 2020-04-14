@@ -3,58 +3,62 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
 
-    <name>Sulu Test</name>
-    <key>sulu-test</key>
+    <name>test CMF</name>
+    <key>test_with_index</key>
 
     <localizations>
-        <localization language="en" default="true"/>
+        <localization language="en" default="true" />
     </localizations>
 
-    <default-templates>
-        <default-template type="page">example</default-template>
-        <default-template type="home">homepage</default-template>
-    </default-templates>
+    <theme>default</theme>
 
-    <templates>
-        <template type="search">search/search</template>
-        <template type="error">error/error</template>
-    </templates>
+    <default-templates>
+        <default-template type="page">default</default-template>
+        <default-template type="homepage">overview</default-template>
+    </default-templates>
 
     <navigation>
         <contexts>
             <context key="main">
                 <meta>
-                    <title lang="en">Main Navigation</title>
-                    <title lang="de">Hauptnavigation</title>
+                    <title lang="en">Mainnavigation</title>
+                </meta>
+            </context>
+            <context key="footer">
+                <meta>
+                    <title lang="en">Footernavigation</title>
                 </meta>
             </context>
         </contexts>
     </navigation>
 
+    <resource-locator>
+        <strategy>tree_leaf_edit</strategy>
+    </resource-locator>
+
     <portals>
         <portal>
-            <name>example.com</name>
-            <key>example</key>
+            <name>test CMF</name>
+            <key>test_with_index</key>
+
+            <localizations>
+                <localization language="en" default="true"/>
+            </localizations>
 
             <environments>
                 <environment type="prod">
                     <urls>
-                        <url language="en">{host}</url>
-                    </urls>
-                </environment>
-                <environment type="stage">
-                    <urls>
-                        <url language="en">{host}</url>
-                    </urls>
-                </environment>
-                <environment type="test">
-                    <urls>
-                        <url language="en">{host}</url>
+                        <url language="en">sulu.index</url>
                     </urls>
                 </environment>
                 <environment type="dev">
                     <urls>
-                        <url language="en">{host}</url>
+                        <url language="en">sulu.index</url>
+                    </urls>
+                </environment>
+                <environment type="test">
+                    <urls>
+                        <url language="en">sulu.index</url>
                     </urls>
                 </environment>
             </environments>

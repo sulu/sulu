@@ -91,8 +91,7 @@ class XmlSitemapRenderer implements XmlSitemapRendererInterface
      */
     private function needsIndex($scheme, $host)
     {
-        return 1 < count($this->sitemapProviderPool->getProviders())
-        || 1 < array_reduce(
+        return 1 < array_reduce(
             $this->sitemapProviderPool->getIndex($scheme, $host),
             function($v1, Sitemap $v2) {
                 return $v1 + $v2->getMaxPage();

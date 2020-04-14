@@ -297,7 +297,7 @@ class ContactAdmin extends Admin
     public function getSecurityContexts()
     {
         return [
-            'Sulu' => [
+            self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Contacts' => [
                     static::CONTACT_SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,

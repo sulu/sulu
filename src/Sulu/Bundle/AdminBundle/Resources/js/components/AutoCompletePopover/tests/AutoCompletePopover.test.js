@@ -158,8 +158,8 @@ test('Pressing up should select previous item', () => {
     const suggestionElement1 = {focus: jest.fn()};
     const suggestionElement2 = {focus: jest.fn()};
 
-    // $FlowFixMe
     Object.defineProperty(document, 'activeElement', {
+        // $FlowFixMe
         value: suggestionElement2,
     });
 

@@ -20,7 +20,7 @@ exports[`Dont react or update preview when data is changed during formstore is l
     class="toolbar dark"
   >
     <div
-      class="controls dark"
+      class="controls dark grow"
     >
       <button
         class="button dark"
@@ -31,68 +31,84 @@ exports[`Dont react or update preview when data is changed during formstore is l
         />
       </button>
       <div
-        class="select dark"
+        class="itemsContainer"
       >
-        <button
-          class="button dark"
+        <ul
+          class="items dark"
         >
-          <span
-            aria-label="su-expand"
-            class="su-expand icon"
-          />
-          <span
-            class="label"
-          >
-            sulu_preview.auto
-          </span>
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
+          <li>
+            <div
+              class="select dark"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="su-expand"
+                  class="su-expand icon"
+                />
+                <span
+                  class="label"
+                >
+                  sulu_preview.auto
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <div
+              class="select dark"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="su-webspace"
+                  class="su-webspace icon"
+                />
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <button
+              class="button dark"
+            >
+              <span
+                aria-label="su-sync"
+                class="su-sync icon"
+              />
+              <span
+                class="label"
+              >
+                sulu_preview.reload
+              </span>
+            </button>
+          </li>
+          <li>
+            <button
+              class="button dark"
+            >
+              <span
+                aria-label="su-link"
+                class="su-link icon"
+              />
+              <span
+                class="label"
+              >
+                sulu_preview.open_in_window
+              </span>
+            </button>
+          </li>
+        </ul>
       </div>
-      <div
-        class="select dark"
-      >
-        <button
-          class="button dark"
-        >
-          <span
-            aria-label="su-webspace"
-            class="su-webspace icon"
-          />
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
-      </div>
-      <button
-        class="button dark"
-      >
-        <span
-          aria-label="su-sync"
-          class="su-sync icon"
-        />
-        <span
-          class="label"
-        >
-          sulu_preview.reload
-        </span>
-      </button>
-      <button
-        class="button dark"
-      >
-        <span
-          aria-label="su-link"
-          class="su-link icon"
-        />
-        <span
-          class="label"
-        >
-          sulu_preview.open_in_window
-        </span>
-      </button>
     </div>
   </nav>
 </div>
@@ -121,7 +137,7 @@ exports[`Dont react or update preview when data is changed during preview-store 
     class="toolbar dark"
   >
     <div
-      class="controls dark"
+      class="controls dark grow"
     >
       <button
         class="button dark"
@@ -132,68 +148,84 @@ exports[`Dont react or update preview when data is changed during preview-store 
         />
       </button>
       <div
-        class="select dark"
+        class="itemsContainer"
       >
-        <button
-          class="button dark"
+        <ul
+          class="items dark"
         >
-          <span
-            aria-label="su-expand"
-            class="su-expand icon"
-          />
-          <span
-            class="label"
-          >
-            sulu_preview.auto
-          </span>
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
+          <li>
+            <div
+              class="select dark"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="su-expand"
+                  class="su-expand icon"
+                />
+                <span
+                  class="label"
+                >
+                  sulu_preview.auto
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <div
+              class="select dark"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="su-webspace"
+                  class="su-webspace icon"
+                />
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <button
+              class="button dark"
+            >
+              <span
+                aria-label="su-sync"
+                class="su-sync icon"
+              />
+              <span
+                class="label"
+              >
+                sulu_preview.reload
+              </span>
+            </button>
+          </li>
+          <li>
+            <button
+              class="button dark"
+            >
+              <span
+                aria-label="su-link"
+                class="su-link icon"
+              />
+              <span
+                class="label"
+              >
+                sulu_preview.open_in_window
+              </span>
+            </button>
+          </li>
+        </ul>
       </div>
-      <div
-        class="select dark"
-      >
-        <button
-          class="button dark"
-        >
-          <span
-            aria-label="su-webspace"
-            class="su-webspace icon"
-          />
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
-      </div>
-      <button
-        class="button dark"
-      >
-        <span
-          aria-label="su-sync"
-          class="su-sync icon"
-        />
-        <span
-          class="label"
-        >
-          sulu_preview.reload
-        </span>
-      </button>
-      <button
-        class="button dark"
-      >
-        <span
-          aria-label="su-link"
-          class="su-link icon"
-        />
-        <span
-          class="label"
-        >
-          sulu_preview.open_in_window
-        </span>
-      </button>
     </div>
   </nav>
 </div>
@@ -221,7 +253,7 @@ exports[`React and update preview when data is changed 1`] = `
     class="toolbar dark"
   >
     <div
-      class="controls dark"
+      class="controls dark grow"
     >
       <button
         class="button dark"
@@ -232,68 +264,84 @@ exports[`React and update preview when data is changed 1`] = `
         />
       </button>
       <div
-        class="select dark"
+        class="itemsContainer"
       >
-        <button
-          class="button dark"
+        <ul
+          class="items dark"
         >
-          <span
-            aria-label="su-expand"
-            class="su-expand icon"
-          />
-          <span
-            class="label"
-          >
-            sulu_preview.auto
-          </span>
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
+          <li>
+            <div
+              class="select dark"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="su-expand"
+                  class="su-expand icon"
+                />
+                <span
+                  class="label"
+                >
+                  sulu_preview.auto
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <div
+              class="select dark"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="su-webspace"
+                  class="su-webspace icon"
+                />
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <button
+              class="button dark"
+            >
+              <span
+                aria-label="su-sync"
+                class="su-sync icon"
+              />
+              <span
+                class="label"
+              >
+                sulu_preview.reload
+              </span>
+            </button>
+          </li>
+          <li>
+            <button
+              class="button dark"
+            >
+              <span
+                aria-label="su-link"
+                class="su-link icon"
+              />
+              <span
+                class="label"
+              >
+                sulu_preview.open_in_window
+              </span>
+            </button>
+          </li>
+        </ul>
       </div>
-      <div
-        class="select dark"
-      >
-        <button
-          class="button dark"
-        >
-          <span
-            aria-label="su-webspace"
-            class="su-webspace icon"
-          />
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
-      </div>
-      <button
-        class="button dark"
-      >
-        <span
-          aria-label="su-sync"
-          class="su-sync icon"
-        />
-        <span
-          class="label"
-        >
-          sulu_preview.reload
-        </span>
-      </button>
-      <button
-        class="button dark"
-      >
-        <span
-          aria-label="su-link"
-          class="su-link icon"
-        />
-        <span
-          class="label"
-        >
-          sulu_preview.open_in_window
-        </span>
-      </button>
     </div>
   </nav>
 </div>
@@ -325,7 +373,7 @@ exports[`Render correct preview 1`] = `
     class="toolbar dark"
   >
     <div
-      class="controls dark"
+      class="controls dark grow"
     >
       <button
         class="button dark"
@@ -336,68 +384,84 @@ exports[`Render correct preview 1`] = `
         />
       </button>
       <div
-        class="select dark"
+        class="itemsContainer"
       >
-        <button
-          class="button dark"
+        <ul
+          class="items dark"
         >
-          <span
-            aria-label="su-expand"
-            class="su-expand icon"
-          />
-          <span
-            class="label"
-          >
-            sulu_preview.auto
-          </span>
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
+          <li>
+            <div
+              class="select dark"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="su-expand"
+                  class="su-expand icon"
+                />
+                <span
+                  class="label"
+                >
+                  sulu_preview.auto
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <div
+              class="select dark"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="su-webspace"
+                  class="su-webspace icon"
+                />
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <button
+              class="button dark"
+            >
+              <span
+                aria-label="su-sync"
+                class="su-sync icon"
+              />
+              <span
+                class="label"
+              >
+                sulu_preview.reload
+              </span>
+            </button>
+          </li>
+          <li>
+            <button
+              class="button dark"
+            >
+              <span
+                aria-label="su-link"
+                class="su-link icon"
+              />
+              <span
+                class="label"
+              >
+                sulu_preview.open_in_window
+              </span>
+            </button>
+          </li>
+        </ul>
       </div>
-      <div
-        class="select dark"
-      >
-        <button
-          class="button dark"
-        >
-          <span
-            aria-label="su-webspace"
-            class="su-webspace icon"
-          />
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
-      </div>
-      <button
-        class="button dark"
-      >
-        <span
-          aria-label="su-sync"
-          class="su-sync icon"
-        />
-        <span
-          class="label"
-        >
-          sulu_preview.reload
-        </span>
-      </button>
-      <button
-        class="button dark"
-      >
-        <span
-          aria-label="su-link"
-          class="su-link icon"
-        />
-        <span
-          class="label"
-        >
-          sulu_preview.open_in_window
-        </span>
-      </button>
     </div>
   </nav>
 </div>
@@ -423,7 +487,7 @@ exports[`Render correct preview with target groups 1`] = `
     class="toolbar dark"
   >
     <div
-      class="controls dark"
+      class="controls dark grow"
     >
       <button
         class="button dark"
@@ -434,84 +498,102 @@ exports[`Render correct preview with target groups 1`] = `
         />
       </button>
       <div
-        class="select dark"
+        class="itemsContainer"
       >
-        <button
-          class="button dark"
+        <ul
+          class="items dark"
         >
-          <span
-            aria-label="su-expand"
-            class="su-expand icon"
-          />
-          <span
-            class="label"
-          >
-            sulu_preview.auto
-          </span>
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
+          <li>
+            <div
+              class="select dark"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="su-expand"
+                  class="su-expand icon"
+                />
+                <span
+                  class="label"
+                >
+                  sulu_preview.auto
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <div
+              class="select dark"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="su-webspace"
+                  class="su-webspace icon"
+                />
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <div
+              class="select dark"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="su-user"
+                  class="su-user icon"
+                />
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <button
+              class="button dark"
+            >
+              <span
+                aria-label="su-sync"
+                class="su-sync icon"
+              />
+              <span
+                class="label"
+              >
+                sulu_preview.reload
+              </span>
+            </button>
+          </li>
+          <li>
+            <button
+              class="button dark"
+            >
+              <span
+                aria-label="su-link"
+                class="su-link icon"
+              />
+              <span
+                class="label"
+              >
+                sulu_preview.open_in_window
+              </span>
+            </button>
+          </li>
+        </ul>
       </div>
-      <div
-        class="select dark"
-      >
-        <button
-          class="button dark"
-        >
-          <span
-            aria-label="su-webspace"
-            class="su-webspace icon"
-          />
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
-      </div>
-      <div
-        class="select dark"
-      >
-        <button
-          class="button dark"
-        >
-          <span
-            aria-label="su-user"
-            class="su-user icon"
-          />
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
-      </div>
-      <button
-        class="button dark"
-      >
-        <span
-          aria-label="su-sync"
-          class="su-sync icon"
-        />
-        <span
-          class="label"
-        >
-          sulu_preview.reload
-        </span>
-      </button>
-      <button
-        class="button dark"
-      >
-        <span
-          aria-label="su-link"
-          class="su-link icon"
-        />
-        <span
-          class="label"
-        >
-          sulu_preview.open_in_window
-        </span>
-      </button>
     </div>
   </nav>
 </div>
@@ -537,7 +619,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
     class="toolbar dark"
   >
     <div
-      class="controls dark"
+      class="controls dark grow"
     >
       <button
         class="button dark"
@@ -548,68 +630,84 @@ exports[`Render nothing if separate window is opened and rerender if it is close
         />
       </button>
       <div
-        class="select dark"
+        class="itemsContainer"
       >
-        <button
-          class="button dark"
+        <ul
+          class="items dark"
         >
-          <span
-            aria-label="su-expand"
-            class="su-expand icon"
-          />
-          <span
-            class="label"
-          >
-            sulu_preview.auto
-          </span>
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
+          <li>
+            <div
+              class="select dark"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="su-expand"
+                  class="su-expand icon"
+                />
+                <span
+                  class="label"
+                >
+                  sulu_preview.auto
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <div
+              class="select dark"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="su-webspace"
+                  class="su-webspace icon"
+                />
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <button
+              class="button dark"
+            >
+              <span
+                aria-label="su-sync"
+                class="su-sync icon"
+              />
+              <span
+                class="label"
+              >
+                sulu_preview.reload
+              </span>
+            </button>
+          </li>
+          <li>
+            <button
+              class="button dark"
+            >
+              <span
+                aria-label="su-link"
+                class="su-link icon"
+              />
+              <span
+                class="label"
+              >
+                sulu_preview.open_in_window
+              </span>
+            </button>
+          </li>
+        </ul>
       </div>
-      <div
-        class="select dark"
-      >
-        <button
-          class="button dark"
-        >
-          <span
-            aria-label="su-webspace"
-            class="su-webspace icon"
-          />
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
-      </div>
-      <button
-        class="button dark"
-      >
-        <span
-          aria-label="su-sync"
-          class="su-sync icon"
-        />
-        <span
-          class="label"
-        >
-          sulu_preview.reload
-        </span>
-      </button>
-      <button
-        class="button dark"
-      >
-        <span
-          aria-label="su-link"
-          class="su-link icon"
-        />
-        <span
-          class="label"
-        >
-          sulu_preview.open_in_window
-        </span>
-      </button>
     </div>
   </nav>
 </div>
@@ -635,7 +733,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
     class="toolbar dark"
   >
     <div
-      class="controls dark"
+      class="controls dark grow"
     >
       <button
         class="button dark"
@@ -646,68 +744,84 @@ exports[`Render nothing if separate window is opened and rerender if it is close
         />
       </button>
       <div
-        class="select dark"
+        class="itemsContainer"
       >
-        <button
-          class="button dark"
+        <ul
+          class="items dark"
         >
-          <span
-            aria-label="su-expand"
-            class="su-expand icon"
-          />
-          <span
-            class="label"
-          >
-            sulu_preview.auto
-          </span>
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
+          <li>
+            <div
+              class="select dark"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="su-expand"
+                  class="su-expand icon"
+                />
+                <span
+                  class="label"
+                >
+                  sulu_preview.auto
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <div
+              class="select dark"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="su-webspace"
+                  class="su-webspace icon"
+                />
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <button
+              class="button dark"
+            >
+              <span
+                aria-label="su-sync"
+                class="su-sync icon"
+              />
+              <span
+                class="label"
+              >
+                sulu_preview.reload
+              </span>
+            </button>
+          </li>
+          <li>
+            <button
+              class="button dark"
+            >
+              <span
+                aria-label="su-link"
+                class="su-link icon"
+              />
+              <span
+                class="label"
+              >
+                sulu_preview.open_in_window
+              </span>
+            </button>
+          </li>
+        </ul>
       </div>
-      <div
-        class="select dark"
-      >
-        <button
-          class="button dark"
-        >
-          <span
-            aria-label="su-webspace"
-            class="su-webspace icon"
-          />
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
-      </div>
-      <button
-        class="button dark"
-      >
-        <span
-          aria-label="su-sync"
-          class="su-sync icon"
-        />
-        <span
-          class="label"
-        >
-          sulu_preview.reload
-        </span>
-      </button>
-      <button
-        class="button dark"
-      >
-        <span
-          aria-label="su-link"
-          class="su-link icon"
-        />
-        <span
-          class="label"
-        >
-          sulu_preview.open_in_window
-        </span>
-      </button>
     </div>
   </nav>
 </div>

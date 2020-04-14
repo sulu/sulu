@@ -3,7 +3,7 @@ import {action, computed, observable} from 'mobx';
 import log from 'loglevel';
 import {observer} from 'mobx-react';
 import React from 'react';
-import RectangleSelection, {RoundingNormalizer} from '../RectangleSelection';
+import RectangleSelection from '../RectangleSelection';
 import type {SelectionData} from '../RectangleSelection';
 import withContainerSize from '../withContainerSize';
 import imageRectangleSelectionStyles from './imageRectangleSelection.scss';
@@ -21,7 +21,6 @@ type Props = {|
 @observer
 class ImageRectangleSelection extends React.Component<Props> {
     image: Image;
-    rounding = new RoundingNormalizer();
     @observable imageLoaded = false;
 
     naturalHorizontalToScaled = (h: number) => h * this.imageResizedWidth / this.image.naturalWidth;
@@ -80,22 +79,47 @@ class ImageRectangleSelection extends React.Component<Props> {
 
     handleRectangleSelectionChange = (data: ?SelectionData) => {
         const {onChange} = this.props;
-        onChange(data ? this.rounding.normalize(this.scaledDataToNatural(data)) : undefined);
+        onChange(data ? this.scaledDataToNatural(data) : undefined);
     };
+
+    @computed get minDimensions() {
+        const {minHeight, minWidth, containerHeight, containerWidth} = this.props;
+
+        let height = minHeight;
+        let width = minWidth;
+
+        if (height && height > containerHeight) {
+            height = containerHeight;
+            width = minWidth && minHeight ? height * minWidth / minHeight : undefined;
+        }
+
+        if (width && width > containerWidth) {
+            width = containerWidth;
+            height = minHeight && minWidth ? width * minHeight / minWidth : undefined;
+        }
+
+        return {width, height};
+    }
+
+    @computed get minWidth() {
+        return this.minDimensions.width;
+    }
+
+    @computed get minHeight() {
+        return this.minDimensions.height;
+    }
 
     render() {
         if (!this.imageLoaded || !this.props.containerWidth || !this.props.containerHeight) {
             return null;
         }
 
-        const minWidth = this.props.minWidth ? this.naturalHorizontalToScaled(this.props.minWidth) : null;
-        const minHeight = this.props.minHeight ? this.naturalVerticalToScaled(this.props.minHeight) : null;
         const value = this.props.value ? this.naturalDataToScaled(this.props.value) : undefined;
 
         return (
             <RectangleSelection
-                minHeight={minHeight}
-                minWidth={minWidth}
+                minHeight={this.minHeight}
+                minWidth={this.minWidth}
                 onChange={this.handleRectangleSelectionChange}
                 round={false}
                 value={value}

@@ -29,9 +29,6 @@ use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 
-/**
- * @group nodecontroller
- */
 class SmartContentItemControllerTest extends SuluTestCase
 {
     /**

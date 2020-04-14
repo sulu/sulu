@@ -20,48 +20,15 @@ sulu_search:
     type: portal
     resource: "@SuluSearchBundle/Resources/config/routing_website.yml"
 
-# The following route are necessary to get AdminController::configAction work.
-# Can be removed once its content is not hardcoded anymore.
-
-sulu_contact_api:
-    type: rest
-    resource: "@SuluContactBundle/Resources/config/routing_api.yml"
-    prefix: /admin
-
-sulu_snippet_api:
-    type: rest
-    resource: "@SuluSnippetBundle/Resources/config/routing_api.yml"
-    prefix: /admin
-
 sulu_pages_api:
     type: rest
     resource: "@SuluPageBundle/Resources/config/routing_api.yml"
-    prefix: /admin
-
-sulu_core_api:
-    type: rest
-    resource: "@SuluCoreBundle/Resources/config/routing_api.yml"
-    prefix: /admin
-
-sulu_categories_api:
-    type: rest
-    resource: "@SuluCategoryBundle/Resources/config/routing_api.yml"
-    prefix: /admin
-
-sulu_tag_api:
-    type: rest
-    resource: "@SuluTagBundle/Resources/config/routing_api.yml"
-    prefix: /admin
+    prefix: /api
 
 sulu_security_api:
     type: rest
     resource: "@SuluSecurityBundle/Resources/config/routing_api.yml"
-    prefix: /admin
-
-sulu_security:
-    type: rest
-    resource: "@SuluSecurityBundle/Resources/config/routing.yml"
-    prefix: /admin
+    prefix: /api
 
 sulu_website:
     type: rest

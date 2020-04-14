@@ -102,6 +102,7 @@
 
         <service id="sulu_security.salt_generator" class="%sulu_security.salt_generator.class%" public="true">
         </service>
+        <service id="%sulu_security.salt_generator.class%" alias="sulu_security.salt_generator"/>
 
         <service id="sulu_security.token_generator" class="%sulu_security.token_generator.class%" public="true">
         </service>

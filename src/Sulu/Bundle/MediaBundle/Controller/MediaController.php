@@ -203,15 +203,14 @@ class MediaController extends AbstractMediaController implements
         $listBuilder = $this->getListBuilder($request, $fieldDescriptors, $types);
         $listBuilder->setParameter('locale', $locale);
         $listResponse = $listBuilder->execute();
-        $count = $listBuilder->count();
 
         for ($i = 0, $length = count($listResponse); $i < $length; ++$i) {
             $format = $this->formatManager->getFormats(
                 $listResponse[$i]['previewImageId'] ?? $listResponse[$i]['id'],
-                $listResponse[$i]['name'],
-                $listResponse[$i]['version'],
-                $listResponse[$i]['subVersion'],
-                $listResponse[$i]['mimeType']
+                $listResponse[$i]['previewImageName'] ?? $listResponse[$i]['name'],
+                $listResponse[$i]['previewImageVersion'] ?? $listResponse[$i]['version'],
+                $listResponse[$i]['previewImageSubVersion'] ?? $listResponse[$i]['subVersion'],
+                $listResponse[$i]['previewImageMimeType'] ?? $listResponse[$i]['mimeType']
             );
 
             if (0 < count($format)) {
@@ -246,7 +245,7 @@ class MediaController extends AbstractMediaController implements
             $request->query->all(),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),
-            $count
+            $listBuilder->count()
         );
 
         $view = $this->view($list, 200);
@@ -322,6 +321,10 @@ class MediaController extends AbstractMediaController implements
 
         // field which will be needed afterwards to generate route
         $listBuilder->addSelectField($fieldDescriptors['previewImageId']);
+        $listBuilder->addSelectField($fieldDescriptors['previewImageName']);
+        $listBuilder->addSelectField($fieldDescriptors['previewImageVersion']);
+        $listBuilder->addSelectField($fieldDescriptors['previewImageSubVersion']);
+        $listBuilder->addSelectField($fieldDescriptors['previewImageMimeType']);
         $listBuilder->addSelectField($fieldDescriptors['version']);
         $listBuilder->addSelectField($fieldDescriptors['subVersion']);
         $listBuilder->addSelectField($fieldDescriptors['name']);

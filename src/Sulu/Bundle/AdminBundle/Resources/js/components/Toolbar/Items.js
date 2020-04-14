@@ -8,10 +8,10 @@ import debounce from 'debounce';
 import type {Item, Skin} from './types';
 import itemsStyles from './items.scss';
 
-type Props = {
-    children: ChildrenArray<Item>,
+type Props = {|
+    children: ChildrenArray<false | Item>,
     skin?: Skin,
-};
+|};
 
 const DEBOUNCE_TIME = 200;
 
@@ -90,7 +90,7 @@ class Items extends React.Component<Props> {
                 <ul className={itemsClass} ref={this.setChildRef}>
                     {children &&
                         React.Children.map(children, (item, index) => (
-                            <li key={index}>
+                            item && <li key={index}>
                                 {React.cloneElement(item, {
                                     ...item.props,
                                     showText: this.showText,

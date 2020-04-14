@@ -87,9 +87,42 @@ abstract class SuluKernel extends Kernel
     }
 
     /**
-     * @param RouteCollectionBuilder|RoutingConfigurator $routes Is a RouteCollectionBuilder for Symfony <= 4.4
+     * The "getContainerClass" need to be normalized for preview and other contexts
+     * as its used by the symfony cache component as prefix.
+     *
+     * @see https://github.com/symfony/symfony/blob/v4.4.7/src/Symfony/Component/Cache/DependencyInjection/CachePoolPass.php#L56
      */
-    protected function configureRoutes($routes)
+    protected function getContainerClass()
+    {
+        return $this->generateContainerClass(static::class);
+    }
+
+    /**
+     * @internal
+     *
+     * This is only used to support Symfony ^4.3 and 5 at the same time.
+     * To get the container class use `getContainerClass` instead.
+     *
+     * This is a copy of the symfony 5.0 getContainerClass which does not include $this->name.
+     *
+     * @see https://github.com/symfony/symfony/blob/v5.0.7/src/Symfony/Component/HttpKernel/Kernel.php#L394
+     *
+     * @param string $class
+     *
+     * @return string The container class
+     */
+    protected function generateContainerClass($class)
+    {
+        $class = false !== strpos($class, "@anonymous\0") ? get_parent_class($class) . str_replace('.', '_', ContainerBuilder::hash($class)) : $class;
+        $class = str_replace('\\', '_', $class) . ucfirst($this->environment) . ($this->debug ? 'Debug' : '') . 'Container';
+        if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $class)) {
+            throw new \InvalidArgumentException(sprintf('The environment "%s" contains invalid characters, it can only contain characters allowed in PHP class names.', $this->environment));
+        }
+
+        return $class;
+    }
+
+    protected function configureRoutes(RouteCollectionBuilder $routes)
     {
         $confDir = $this->getProjectDir() . '/config';
 

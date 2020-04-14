@@ -95,13 +95,14 @@
         "symfony/security-http": "^4.3",
         "symfony/string": "^5.0",
         "symfony/swiftmailer-bundle": "^3.1.4",
+        "swiftmailer/swiftmailer": "^6.1.3",
         "symfony/translation": "^4.3",
         "symfony/translation-contracts": "^1.0 || ^2.0",
         "symfony/twig-bundle": "^4.3",
         "symfony/validator": "^4.3",
         "symfony/yaml": "^4.3",
         "toflar/psr6-symfony-http-cache-store": "^1.1 || ^2.0",
-        "twig/twig": "^1.41 || ^2.0 || ^3.0"
+        "twig/twig": "^1.41 || ^2.10 || ^3.0"
     },
     "require-dev": {
         "contao/imagine-svg": "^0.2.2",

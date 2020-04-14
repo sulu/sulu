@@ -142,7 +142,7 @@ class AudienceTargetingAdmin extends Admin
     public function getSecurityContexts()
     {
         return [
-            'Sulu' => [
+            self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Settings' => [
                     self::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,

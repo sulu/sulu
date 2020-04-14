@@ -161,9 +161,7 @@ class ContactDetails extends React.Component<Props> {
 
         if (emails.length === 0) {
             // $FlowFixMe
-            return [
-                this.getEmptyEntry('emails'),
-            ];
+            return [this.getEmptyEntry('emails')];
         }
 
         return emails;
@@ -174,9 +172,7 @@ class ContactDetails extends React.Component<Props> {
 
         if (phones.length === 0) {
             // $FlowFixMe
-            return [
-                this.getEmptyEntry('phones'),
-            ];
+            return [this.getEmptyEntry('phones')];
         }
 
         return phones;

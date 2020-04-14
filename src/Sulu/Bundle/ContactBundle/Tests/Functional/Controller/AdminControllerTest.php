@@ -25,32 +25,12 @@ class AdminControllerTest extends SuluTestCase
 {
     public function setUp(): void
     {
-        $this->initPhpcr();
         $this->purgeDatabase();
-        $em = $this->getEntityManager();
-        //
-        // force id = 1
-        $metadata = $em->getClassMetaData(CollectionType::class);
-        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
-        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-
-        $collectionType1 = new CollectionType();
-        $collectionType1->setId(1);
-        $collectionType1->setName('Default Collection Type');
-        $collectionType1->setKey('collection.default');
-
-        $collectionType2 = new CollectionType();
-        $collectionType2->setId(2);
-        $collectionType2->setName('System Collections');
-        $collectionType2->setKey('collection.system');
-
-        $em->persist($collectionType1);
-        $em->persist($collectionType2);
-        $em->flush();
     }
 
     public function testContactsConfig()
     {
+        $this->initPhpcr();
         $em = $this->getEntityManager();
 
         $addressType1 = new AddressType();
@@ -174,6 +154,7 @@ class AdminControllerTest extends SuluTestCase
 
     public function testContactFormMetadataAction()
     {
+        $this->createCollectionTypes();
         $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/admin/metadata/form/contact_details');
@@ -193,6 +174,7 @@ class AdminControllerTest extends SuluTestCase
 
     public function testAccountFormMetadataAction()
     {
+        $this->createCollectionTypes();
         $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/admin/metadata/form/account_details');
@@ -208,5 +190,27 @@ class AdminControllerTest extends SuluTestCase
         $schema = $response->schema;
 
         $this->assertEquals(['name'], $schema->required);
+    }
+
+    private function createCollectionTypes()
+    {
+        $em = $this->getEntityManager();
+        $metadata = $em->getClassMetaData(CollectionType::class);
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
+        $collectionType1 = new CollectionType();
+        $collectionType1->setId(1);
+        $collectionType1->setName('Default Collection Type');
+        $collectionType1->setKey('collection.default');
+
+        $collectionType2 = new CollectionType();
+        $collectionType2->setId(2);
+        $collectionType2->setName('System Collections');
+        $collectionType2->setKey('collection.system');
+
+        $em->persist($collectionType1);
+        $em->persist($collectionType2);
+        $em->flush();
     }
 }

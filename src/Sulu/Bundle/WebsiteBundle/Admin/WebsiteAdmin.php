@@ -105,7 +105,7 @@ class WebsiteAdmin extends Admin
         }
 
         return [
-            'Sulu' => [
+            self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Webspaces' => $webspaceContexts,
             ],
         ];
@@ -114,7 +114,7 @@ class WebsiteAdmin extends Admin
     public function getSecurityContextsWithPlaceholder()
     {
         return [
-            'Sulu' => [
+            self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Webspaces' => [
                     self::getAnalyticsSecurityContext('#webspace#') => $this->getSecurityContextPermissions(),
                 ],

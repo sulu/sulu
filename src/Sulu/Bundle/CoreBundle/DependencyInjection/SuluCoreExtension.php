@@ -210,6 +210,17 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                 ]
             );
         }
+
+        if ($container->hasExtension('framework')) {
+            $container->prependExtensionConfig(
+                'framework',
+                [
+                    'cache' => [
+                        'directory' => '%sulu.common_cache_dir%/pools',
+                    ],
+                ]
+            );
+        }
     }
 
     public function load(array $configs, ContainerBuilder $container)

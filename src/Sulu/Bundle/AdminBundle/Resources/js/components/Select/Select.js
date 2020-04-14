@@ -19,7 +19,7 @@ type Props<T> = {|
     ...SelectProps<T>,
     closeOnSelect: boolean,
     displayValue: string,
-    isOptionSelected: (option: Element<typeof Option>) => boolean,
+    isOptionSelected: (option: Element<Class<Option<T>>>) => boolean,
     onClose?: () => void,
     onSelect: (value: T) => void,
     selectedVisualization?: OptionSelectedVisualization,
@@ -71,7 +71,7 @@ class Select<T> extends React.Component<Props<T>> {
         }
     };
 
-    cloneOption(originalOption: Element<typeof Option>) {
+    cloneOption(originalOption: Element<Class<Option<T>>>): Element<Class<Option<T>>> {
         const anchorWidth = this.displayValueRef ? this.displayValueRef.getBoundingClientRect().width : 0;
 
         return React.cloneElement(originalOption, {
@@ -97,7 +97,6 @@ class Select<T> extends React.Component<Props<T>> {
 
             switch (child.type) {
                 case Option:
-                    // $FlowFixMe
                     return this.cloneOption(child);
                 case Action:
                     return this.cloneAction(child);
