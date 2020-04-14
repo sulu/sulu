@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PreviewBundle\Preview;
 
 use Doctrine\Common\Cache\Cache;
+use http\Exception\RuntimeException;
 use Psr\Cache\CacheItemPoolInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
@@ -54,6 +55,24 @@ class Preview implements PreviewInterface
     ) {
         if ($cache instanceof CacheItemPoolInterface) {
             $cache = new DoctrineProvider($cache);
+        } elseif ($cache instanceof Cache) {
+            @trigger_error(
+                sprintf(
+                    'To inject $cache as instance of "%s" is deprecated use a "%s" instead.',
+                    get_class($cache),
+                    CacheItemPoolInterface::class
+                ),
+                E_USER_DEPRECATED
+            );
+        } else {
+            throw new \RuntimeException(
+                sprintf(
+                    'The $cache need to be an instance of "%s" or "%s" but got "%s".',
+                    CacheItemPoolInterface::class,
+                    Cache::class,
+                    get_class($cache)
+                )
+            );
         }
 
         $this->previewObjectProviderRegistry = $previewObjectProviderRegistry;
