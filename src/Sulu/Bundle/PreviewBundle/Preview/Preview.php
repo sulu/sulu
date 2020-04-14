@@ -12,10 +12,12 @@
 namespace Sulu\Bundle\PreviewBundle\Preview;
 
 use Doctrine\Common\Cache\Cache;
+use Psr\Cache\CacheItemPoolInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
+use Symfony\Component\Cache\DoctrineProvider;
 
 class Preview implements PreviewInterface
 {
@@ -41,12 +43,19 @@ class Preview implements PreviewInterface
      */
     private $cacheLifeTime;
 
+    /**
+     * @param CacheItemPoolInterface|Cache $cache
+     */
     public function __construct(
         PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry,
-        Cache $cache,
+        $cache,
         PreviewRendererInterface $renderer,
         int $cacheLifeTime = 3600
     ) {
+        if ($cache instanceof CacheItemPoolInterface) {
+            $cache = new DoctrineProvider($cache);
+        }
+
         $this->previewObjectProviderRegistry = $previewObjectProviderRegistry;
         $this->renderer = $renderer;
         $this->cache = $cache;

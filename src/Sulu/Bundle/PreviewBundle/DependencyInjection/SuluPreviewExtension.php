@@ -36,10 +36,12 @@ class SuluPreviewExtension extends Extension implements PrependExtensionInterfac
 
     public function prepend(ContainerBuilder $container)
     {
-        if ($container->hasExtension('doctrine_cache')) {
-            $configs = $container->getExtensionConfig($this->getAlias());
-            $config = $this->processConfiguration(new Configuration(), $configs);
+        $configs = $container->getExtensionConfig($this->getAlias());
+        $config = $this->processConfiguration(new Configuration(), $configs);
 
+        $cacheAdapter = $config['cache_adapter'];
+
+        if ($config['cache']['type'] && $container->hasExtension('doctrine_cache')) {
             $container->prependExtensionConfig('doctrine_cache',
                 [
                     'aliases' => [
@@ -47,6 +49,18 @@ class SuluPreviewExtension extends Extension implements PrependExtensionInterfac
                     ],
                     'providers' => [
                         'sulu_preview' => $config['cache'],
+                    ],
+                ]
+            );
+        } else {
+            $container->prependExtensionConfig('framework',
+                [
+                    'cache' => [
+                        'pools' => [
+                            'sulu_preview.preview.cache' => [
+                                'adapter' => $cacheAdapter,
+                            ],
+                        ],
                     ],
                 ]
             );
