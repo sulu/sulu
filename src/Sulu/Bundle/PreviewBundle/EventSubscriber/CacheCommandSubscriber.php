@@ -63,7 +63,7 @@ class CacheCommandSubscriber implements EventSubscriberInterface
         }
 
         // avoid to clear cache for preview if no \App\Kernel exists
-        // this can happens in test kernels of bundles
+        // can cause an error in test kernels of bundles
         // this can be removed when https://github.com/sulu/sulu/issues/4782 is fixed
         if (!class_exists(\App\Kernel::class)) {
             return;
