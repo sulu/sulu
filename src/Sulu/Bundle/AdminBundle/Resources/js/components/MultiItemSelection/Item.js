@@ -8,18 +8,20 @@ import itemStyles from './item.scss';
 
 const DRAG_ICON = 'su-more';
 
-type Props<T> = {
+type Props<T, U> = {
     allowRemoveWhileDisabled: boolean,
     children: Node,
     disabled: boolean,
     id: T,
     index: number,
+    onClick?: (id: T, value: ?U) => void,
     onEdit?: (id: T) => void,
     onRemove?: (id: T) => void,
     sortable: boolean,
+    value?: U,
 };
 
-export default class Item<T> extends React.PureComponent<Props<T>> {
+export default class Item<T, U> extends React.PureComponent<Props<T, U>> {
     static defaultProps = {
         allowRemoveWhileDisabled: false,
         disabled: false,
@@ -56,12 +58,21 @@ export default class Item<T> extends React.PureComponent<Props<T>> {
         }
     };
 
+    handleClick = () => {
+        const {id, onClick, value} = this.props;
+
+        if (onClick) {
+            onClick(id, value);
+        }
+    };
+
     render() {
         const {
             allowRemoveWhileDisabled,
             children,
             disabled,
             index,
+            onClick,
             onEdit,
             onRemove,
             sortable,
@@ -73,6 +84,13 @@ export default class Item<T> extends React.PureComponent<Props<T>> {
             itemStyles.item,
             {
                 [itemStyles.disabled]: disabled,
+            }
+        );
+
+        const itemContentClass = classNames(
+            itemStyles.content,
+            {
+                [itemStyles.clickable]: onClick,
             }
         );
 
@@ -89,7 +107,7 @@ export default class Item<T> extends React.PureComponent<Props<T>> {
                     {sortable && <Icon name={DRAG_ICON} />}
                     <span className={itemStyles.index}>{index}</span>
                 </DragHandle>
-                <div className={itemStyles.content}>
+                <div className={itemContentClass} onClick={this.handleClick} role="button">
                     {children}
                 </div>
                 <div className={itemStyles.buttons}>

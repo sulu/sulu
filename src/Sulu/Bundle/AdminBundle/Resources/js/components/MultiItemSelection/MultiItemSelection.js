@@ -8,12 +8,13 @@ import Header from './Header';
 import Item from './Item';
 import multiItemSelectionStyles from './multiItemSelection.scss';
 
-type Props<T, U, V> = {|
+type Props<T, U, V, W> = {|
     children?: ChildrenArray<Element<typeof Item>>,
     disabled: boolean,
     label?: string,
     leftButton?: Button<U>,
     loading: boolean,
+    onItemClick?: (itemId: T, value: ?W) => void,
     onItemEdit?: (itemId: T) => void,
     onItemRemove?: (itemId: T) => void,
     onItemsSorted?: (oldIndex: number, newIndex: number) => void,
@@ -37,7 +38,7 @@ const ListWrapper = ({children}: Object) => (
 
 const SortableListWrapper = SortableContainer(ListWrapper);
 
-class MultiItemSelection<T, U: string | number, V: string | number> extends React.PureComponent<Props<T, U, V>> {
+class MultiItemSelection<T, U: string | number, V: string | number, W> extends React.PureComponent<Props<T, U, V, W>> {
     static defaultProps = {
         disabled: false,
         loading: false,
@@ -76,10 +77,12 @@ class MultiItemSelection<T, U: string | number, V: string | number> extends Reac
             leftButton,
             loading,
             rightButton,
+            onItemClick,
             onItemEdit,
             onItemRemove,
             sortable,
         } = this.props;
+
         const emptyList = !React.Children.count(children);
         const ItemWrapperComponent = sortable ? SortableItemWrapper : ItemWrapper;
         const ListWrapperComponent = sortable ? SortableListWrapper : ListWrapper;
@@ -114,6 +117,7 @@ class MultiItemSelection<T, U: string | number, V: string | number> extends Reac
                                     item,
                                     {
                                         ...item.props,
+                                        onClick: onItemClick,
                                         onEdit: onItemEdit ? this.handleItemEdit : item.props.onEdit,
                                         onRemove: onItemRemove ? this.handleItemRemove : item.props.onRemove,
                                         sortable,

@@ -82,6 +82,7 @@ exports[`Render ContactAccountSelection with data 1`] = `
         </span>
         <div
           class="content"
+          role="button"
         >
           <div
             class="item"
@@ -125,6 +126,7 @@ exports[`Render ContactAccountSelection with data 1`] = `
         </span>
         <div
           class="content"
+          role="button"
         >
           <div
             class="item"
@@ -168,6 +170,7 @@ exports[`Render ContactAccountSelection with data 1`] = `
         </span>
         <div
           class="content"
+          role="button"
         >
           <div
             class="item"

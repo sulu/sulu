@@ -55,6 +55,7 @@ exports[`Clicking the left and right button inside the header should call the ri
         </span>
         <div
           class="content"
+          role="button"
         >
           Child 1
         </div>
@@ -84,6 +85,7 @@ exports[`Clicking the left and right button inside the header should call the ri
         </span>
         <div
           class="content"
+          role="button"
         >
           Child 2
         </div>
@@ -113,6 +115,7 @@ exports[`Clicking the left and right button inside the header should call the ri
         </span>
         <div
           class="content"
+          role="button"
         >
           Child 3
         </div>
@@ -174,6 +177,7 @@ exports[`Render a button on the right with options and a value 1`] = `
         </span>
         <div
           class="content"
+          role="button"
         >
           Child 1
         </div>
@@ -203,6 +207,7 @@ exports[`Render a button on the right with options and a value 1`] = `
         </span>
         <div
           class="content"
+          role="button"
         >
           Child 2
         </div>
@@ -232,6 +237,7 @@ exports[`Render a button on the right with options and a value 1`] = `
         </span>
         <div
           class="content"
+          role="button"
         >
           Child 3
         </div>
@@ -293,6 +299,7 @@ exports[`Render a button on the right with options including icons and a value 1
         </span>
         <div
           class="content"
+          role="button"
         >
           Child 1
         </div>
@@ -322,6 +329,7 @@ exports[`Render a button on the right with options including icons and a value 1
         </span>
         <div
           class="content"
+          role="button"
         >
           Child 2
         </div>
@@ -351,6 +359,7 @@ exports[`Render a button on the right with options including icons and a value 1
         </span>
         <div
           class="content"
+          role="button"
         >
           Child 3
         </div>
@@ -400,6 +409,7 @@ exports[`Render a disabled MultiItemSelection with children 1`] = `
         </span>
         <div
           class="content"
+          role="button"
         >
           Child 1
         </div>
@@ -429,6 +439,7 @@ exports[`Render a disabled MultiItemSelection with children 1`] = `
         </span>
         <div
           class="content"
+          role="button"
         >
           Child 2
         </div>
@@ -458,6 +469,7 @@ exports[`Render a disabled MultiItemSelection with children 1`] = `
         </span>
         <div
           class="content"
+          role="button"
         >
           Child 3
         </div>
@@ -503,6 +515,7 @@ exports[`Render a not sortable MultiItemSelection with children 1`] = `
         </span>
         <div
           class="content"
+          role="button"
         >
           Child 1
         </div>
@@ -528,6 +541,7 @@ exports[`Render a not sortable MultiItemSelection with children 1`] = `
         </span>
         <div
           class="content"
+          role="button"
         >
           Child 2
         </div>
@@ -553,6 +567,7 @@ exports[`Render a not sortable MultiItemSelection with children 1`] = `
         </span>
         <div
           class="content"
+          role="button"
         >
           Child 3
         </div>
@@ -635,6 +650,7 @@ exports[`Render an MultiItemSelection with children 1`] = `
         </span>
         <div
           class="content"
+          role="button"
         >
           Child 1
         </div>
@@ -664,6 +680,7 @@ exports[`Render an MultiItemSelection with children 1`] = `
         </span>
         <div
           class="content"
+          role="button"
         >
           Child 2
         </div>
@@ -712,6 +729,7 @@ exports[`Render an MultiItemSelection with children 1`] = `
         </span>
         <div
           class="content"
+          role="button"
         >
           Child 3 (disabled)
         </div>
@@ -741,6 +759,7 @@ exports[`Render an MultiItemSelection with children 1`] = `
         </span>
         <div
           class="content"
+          role="button"
         >
           Child 4 (disabled with remove button)
         </div>

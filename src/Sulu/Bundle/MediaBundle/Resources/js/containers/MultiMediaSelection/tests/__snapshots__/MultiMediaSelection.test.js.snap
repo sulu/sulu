@@ -47,6 +47,7 @@ Array [
           </span>
           <div
             class="content"
+            role="button"
           >
             <div
               class="mediaItem"
@@ -123,6 +124,7 @@ Array [
           </span>
           <div
             class="content"
+            role="button"
           >
             <div
               class="mediaItem"
@@ -199,6 +201,7 @@ Array [
           </span>
           <div
             class="content"
+            role="button"
           >
             <div
               class="mediaItem"
@@ -322,6 +325,7 @@ Array [
           </span>
           <div
             class="content"
+            role="button"
           >
             <div
               class="mediaItem"
@@ -445,6 +449,7 @@ Array [
           </span>
           <div
             class="content"
+            role="button"
           >
             <div
               class="mediaItem"
@@ -555,6 +560,7 @@ Array [
           </span>
           <div
             class="content"
+            role="button"
           >
             <div
               class="mediaItem"
@@ -635,6 +641,7 @@ Array [
           </span>
           <div
             class="content"
+            role="button"
           >
             <div
               class="mediaItem"
@@ -715,6 +722,7 @@ Array [
           </span>
           <div
             class="content"
+            role="button"
           >
             <div
               class="mediaItem"
