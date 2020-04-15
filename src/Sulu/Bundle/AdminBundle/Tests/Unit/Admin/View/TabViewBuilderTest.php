@@ -29,10 +29,26 @@ class TabViewBuilderTest extends TestCase
             [
                 'sulu_category.add_form',
                 '/categories/add',
+                ['webspace'],
+                null,
             ],
             [
                 'sulu_tag.edit_form',
                 '/tags/:id',
+                ['sortColumn', 'sortOrder'],
+                ['page', 'limit'],
+            ],
+            [
+                'sulu_category.add_form',
+                '/categories/add',
+                null,
+                null,
+            ],
+            [
+                'sulu_category.add_form',
+                '/categories/add',
+                null,
+                ['sortColumn', 'sortOrder'],
             ],
         ];
     }
@@ -42,14 +58,33 @@ class TabViewBuilderTest extends TestCase
      */
     public function testBuildTabView(
         string $name,
-        string $path
+        string $path,
+        ?array $routerAttributesToBlacklist1,
+        ?array $routerAttributesToBlacklist2
     ) {
-        $viewBuilder = (new TabViewBuilder($name, $path));
+        $viewBuilder = new TabViewBuilder($name, $path);
+
+        $expectedRouterAttributesToBlacklist = [];
+
+        if ($routerAttributesToBlacklist1) {
+            $viewBuilder->addRouterAttributesToBlacklist($routerAttributesToBlacklist1);
+            $expectedRouterAttributesToBlacklist = array_merge($expectedRouterAttributesToBlacklist, $routerAttributesToBlacklist1 ?? []);
+        }
+
+        if ($routerAttributesToBlacklist2) {
+            $viewBuilder->addRouterAttributesToBlacklist($routerAttributesToBlacklist2);
+            $expectedRouterAttributesToBlacklist = array_merge($expectedRouterAttributesToBlacklist, $routerAttributesToBlacklist2 ?? []);
+        }
+
         $view = $viewBuilder->getView();
 
         $this->assertSame($name, $view->getName());
         $this->assertSame($path, $view->getPath());
         $this->assertSame('sulu_admin.tabs', $view->getType());
+        $this->assertSame(
+            $view->getOption('routerAttributesToBlacklist'),
+            !empty($expectedRouterAttributesToBlacklist) ? $expectedRouterAttributesToBlacklist : null
+        );
     }
 
     public function testBuildFormWithParent()

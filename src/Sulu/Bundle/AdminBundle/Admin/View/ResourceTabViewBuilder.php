@@ -56,7 +56,7 @@ class ResourceTabViewBuilder implements ResourceTabViewBuilderInterface
 
     public function addRouterAttributesToBlacklist(
         array $routerAttributesToBlacklist
-    ): ResourceTabViewBuilderInterface {
+    ): TabViewBuilderInterface {
         $oldRouterAttributesToBlacklist = $this->view->getOption('routerAttributesToBlacklist');
         $newRouterAttributesToBlacklist = $oldRouterAttributesToBlacklist
             ? array_merge($oldRouterAttributesToBlacklist, $routerAttributesToBlacklist)

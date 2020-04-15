@@ -26,4 +26,17 @@ class TabViewBuilder implements TabViewBuilderInterface
     {
         return clone $this->view;
     }
+
+    public function addRouterAttributesToBlacklist(
+        array $routerAttributesToBlacklist
+    ): TabViewBuilderInterface {
+        $oldRouterAttributesToBlacklist = $this->view->getOption('routerAttributesToBlacklist');
+        $newRouterAttributesToBlacklist = $oldRouterAttributesToBlacklist
+            ? array_merge($oldRouterAttributesToBlacklist, $routerAttributesToBlacklist)
+            : $routerAttributesToBlacklist;
+
+        $this->view->setOption('routerAttributesToBlacklist', $newRouterAttributesToBlacklist);
+
+        return $this;
+    }
 }
