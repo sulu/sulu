@@ -19,10 +19,21 @@ type Props = ViewProps & {
 class ResourceTabs extends React.Component<Props> {
     resourceStore: ResourceStore;
     reloadResourceStoreOnRouteChangeDisposer: () => void;
+    resourceStoreDisposer: () => void;
 
     constructor(props: Props) {
         super(props);
 
+        const {router} = this.props;
+
+        this.createResourceStore();
+
+        this.reloadResourceStoreOnRouteChangeDisposer = router.addUpdateRouteHook(
+            this.reloadResourceStoreOnRouteChange
+        );
+    }
+
+    createResourceStore = () => {
         const {router, route} = this.props;
         const {
             attributes: {
@@ -35,22 +46,18 @@ class ResourceTabs extends React.Component<Props> {
             },
         } = route;
 
-        if (!resourceKey) {
-            throw new Error('The route does not define the mandatory "resourceKey" option');
-        }
-
         const options = {};
         if (this.locales) {
             options.locale = observable.box();
             router.bind('locale', options.locale);
         }
 
-        this.resourceStore = new ResourceStore(resourceKey, id, options);
+        if (!resourceKey) {
+            throw new Error('The route does not define the mandatory "resourceKey" option');
+        }
 
-        this.reloadResourceStoreOnRouteChangeDisposer = router.addUpdateRouteHook(
-            this.reloadResourceStoreOnRouteChange
-        );
-    }
+        this.resourceStore = new ResourceStore(resourceKey, id, options);
+    };
 
     reloadResourceStoreOnRouteChange = (route: ?Route) => {
         const {router, route: viewRoute} = this.props;

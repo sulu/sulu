@@ -47,16 +47,9 @@ class Form extends React.Component<Props> {
     checkFormStoreDirtyStateBeforeNavigationDisposer: () => void;
 
     @computed get hasOwnResourceStore() {
-        const {
-            resourceStore,
-            route: {
-                options: {
-                    resourceKey,
-                },
-            },
-        } = this.props;
+        const {resourceStore} = this.props;
 
-        return resourceKey && resourceStore.resourceKey !== resourceKey;
+        return this.resourceKey && resourceStore.resourceKey !== this.resourceKey;
     }
 
     @computed get locales() {
@@ -72,25 +65,114 @@ class Form extends React.Component<Props> {
         return routeLocales ? routeLocales : propsLocales;
     }
 
-    constructor(props: Props) {
-        super(props);
+    @computed get id() {
+        const {
+            router: {
+                attributes: {
+                    id,
+                },
+            },
+        } = this.props;
 
-        const {resourceStore, router} = this.props;
+        return id;
+    }
+
+    @computed get resourceKey() {
+        const {
+            route: {
+                options: {
+                    resourceKey,
+                },
+            },
+        } = this.props;
+
+        return resourceKey;
+    }
+
+    @computed get formKey() {
+        const {
+            route: {
+                options: {
+                    formKey,
+                },
+            },
+        } = this.props;
+
+        if (!formKey) {
+            throw new Error('The route does not define the mandatory "formKey" option');
+        }
+
+        return formKey;
+    }
+
+    @computed get formStoreOptions() {
         const {
             attributes,
             route: {
                 options: {
                     requestParameters = {},
-                    formKey,
-                    idQueryParameter,
-                    resourceKey,
-                    routerAttributesToFormMetadata = {},
                     routerAttributesToFormRequest = {},
+                },
+            },
+        } = this.props.router;
+
+        const formStoreOptions = requestParameters ? requestParameters : {};
+        Object.keys(toJS(routerAttributesToFormRequest)).forEach((key) => {
+            const formOptionKey = routerAttributesToFormRequest[key];
+            const attributeName = isNaN(key) ? key : toJS(routerAttributesToFormRequest[key]);
+
+            formStoreOptions[formOptionKey] = attributes[attributeName];
+        });
+
+        return formStoreOptions;
+    }
+
+    @computed get metadataOptions() {
+        const {
+            attributes,
+            route: {
+                options: {
+                    routerAttributesToFormMetadata = {},
                     metadataRequestParameters = {},
                 },
             },
+        } = this.props.router;
+
+        const metadataOptions = {...metadataRequestParameters};
+
+        Object.keys(toJS(routerAttributesToFormMetadata)).forEach((key) => {
+            const listOptionKey = routerAttributesToFormMetadata[key];
+            const attributeName = isNaN(key) ? key : toJS(routerAttributesToFormMetadata[key]);
+
+            metadataOptions[listOptionKey] = attributes[attributeName];
+        });
+
+        return metadataOptions;
+    }
+
+    constructor(props: Props) {
+        super(props);
+
+        const {router} = this.props;
+
+        this.createResourceFormStore();
+        this.createCollaborationStore();
+
+        this.checkFormStoreDirtyStateBeforeNavigationDisposer = router.addUpdateRouteHook(
+            this.checkFormStoreDirtyStateBeforeNavigation,
+            FORM_STORE_UPDATE_ROUTE_HOOK_PRIORITY
+        );
+    }
+
+    createResourceFormStore = () => {
+        const {resourceStore, router} = this.props;
+        const {
+            route: {
+                options: {
+                    idQueryParameter,
+                },
+            },
         } = router;
-        const {id} = attributes;
 
         if (!resourceStore) {
             throw new Error(
@@ -99,16 +181,6 @@ class Form extends React.Component<Props> {
             );
         }
 
-        if (!formKey) {
-            throw new Error('The route does not define the mandatory "formKey" option');
-        }
-
-        const formStoreOptions = this.buildFormStoreOptions(
-            requestParameters,
-            attributes,
-            routerAttributesToFormRequest
-        );
-
         if (this.hasOwnResourceStore) {
             let locale = resourceStore.locale;
             if (!locale && this.locales) {
@@ -116,40 +188,37 @@ class Form extends React.Component<Props> {
             }
 
             if (idQueryParameter) {
-                this.resourceStore = new ResourceStore(resourceKey, id, {locale}, formStoreOptions, idQueryParameter);
+                this.resourceStore = new ResourceStore(
+                    this.resourceKey,
+                    this.id,
+                    {locale},
+                    this.formStoreOptions,
+                    idQueryParameter
+                );
             } else {
-                this.resourceStore = new ResourceStore(resourceKey, id, {locale}, formStoreOptions);
+                this.resourceStore = new ResourceStore(this.resourceKey, this.id, {locale}, this.formStoreOptions);
             }
         } else {
             this.resourceStore = resourceStore;
         }
 
-        const metadataOptions = this.buildMetadataOptions(
-            attributes,
-            routerAttributesToFormMetadata,
-            metadataRequestParameters
-        );
-
         this.resourceFormStore = new ResourceFormStore(
             this.resourceStore,
-            formKey,
-            formStoreOptions,
-            metadataOptions
+            this.formKey,
+            this.formStoreOptions,
+            this.metadataOptions
         );
 
         if (this.resourceStore.locale) {
             router.bind('locale', this.resourceStore.locale);
         }
+    };
 
-        this.checkFormStoreDirtyStateBeforeNavigationDisposer = router.addUpdateRouteHook(
-            this.checkFormStoreDirtyStateBeforeNavigation,
-            FORM_STORE_UPDATE_ROUTE_HOOK_PRIORITY
-        );
-
-        if (resourceKey && id) {
-            this.collaborationStore = new CollaborationStore(resourceKey, id);
+    createCollaborationStore = () => {
+        if (this.resourceKey && this.id) {
+            this.collaborationStore = new CollaborationStore(this.resourceKey, this.id);
         }
-    }
+    };
 
     @action checkFormStoreDirtyStateBeforeNavigation = (
         route: ?Route,
@@ -183,42 +252,6 @@ class Form extends React.Component<Props> {
 
         return false;
     };
-
-    buildFormStoreOptions(
-        requestParameters: Object,
-        attributes: Object,
-        routerAttributesToFormRequest: {[string | number]: string}
-    ) {
-        const formStoreOptions = requestParameters ? requestParameters : {};
-
-        routerAttributesToFormRequest = toJS(routerAttributesToFormRequest);
-        Object.keys(routerAttributesToFormRequest).forEach((key) => {
-            const formOptionKey = routerAttributesToFormRequest[key];
-            const attributeName = isNaN(key) ? key : routerAttributesToFormRequest[key];
-
-            formStoreOptions[formOptionKey] = attributes[attributeName];
-        });
-
-        return formStoreOptions;
-    }
-
-    buildMetadataOptions(
-        attributes: Object,
-        routerAttributesToFormMetadata: {[string | number]: string},
-        metadataRequestParameters: {[string | number]: string}
-    ) {
-        const metadataOptions = {...metadataRequestParameters};
-        routerAttributesToFormMetadata = toJS(routerAttributesToFormMetadata);
-
-        Object.keys(routerAttributesToFormMetadata).forEach((key) => {
-            const listOptionKey = routerAttributesToFormMetadata[key];
-            const attributeName = isNaN(key) ? key : routerAttributesToFormMetadata[key];
-
-            metadataOptions[listOptionKey] = attributes[attributeName];
-        });
-
-        return metadataOptions;
-    }
 
     @action componentDidMount() {
         const {router} = this.props;
