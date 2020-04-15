@@ -362,6 +362,41 @@ test('Should not call the onChange callback when items have not changed', () => 
     expect(changeSpy).not.toBeCalled();
 });
 
+test('Should call the onItemClick callback when an item was clicked', () => {
+    const itemClickSpy = jest.fn();
+
+    const item1 = {id: 1, title: 'Title 1'};
+    const item2 = {id: 2, title: 'Title 2'};
+
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [
+            item1,
+            item2,
+        ];
+        this.loadItems = jest.fn();
+    });
+
+    const selection = mount(
+        <MultiSelection
+            adapter="table"
+            displayProperties={['id', 'title']}
+            icon="su-document"
+            label="Select Snippets"
+            listKey="snippets"
+            onChange={jest.fn()}
+            onItemClick={itemClickSpy}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+        />
+    );
+
+    selection.find('.content').at(0).simulate('click');
+    expect(itemClickSpy).toHaveBeenLastCalledWith(1, item1);
+    selection.find('.content').at(1).simulate('click');
+    expect(itemClickSpy).toHaveBeenLastCalledWith(2, item2);
+});
+
 test('Should load the items if value prop changes', () => {
     const changeSpy = jest.fn();
     const selection = mount(
