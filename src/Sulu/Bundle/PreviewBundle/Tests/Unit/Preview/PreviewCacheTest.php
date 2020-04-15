@@ -22,23 +22,23 @@ class PreviewCacheTest extends TestCase
     {
         $previewCache = new PreviewCache(new ArrayAdapter());
 
-        $this->assertFalse($previewCache->hasItem('id'));
+        $this->assertFalse($previewCache->contains('id'));
         $previewCache->save('id', 'test');
-        $this->assertTrue($previewCache->hasItem('id'));
+        $this->assertTrue($previewCache->contains('id'));
         $this->assertSame('test', $previewCache->fetch('id'));
         $previewCache->delete('id');
-        $this->assertFalse($previewCache->hasItem('id'));
+        $this->assertFalse($previewCache->contains('id'));
     }
 
     public function testLegacyPreviewCache()
     {
         $previewCache = new PreviewCache(new ArrayCache());
 
-        $this->assertFalse($previewCache->hasItem('id'));
+        $this->assertFalse($previewCache->contains('id'));
         $previewCache->save('id', 'test');
-        $this->assertTrue($previewCache->hasItem('id'));
+        $this->assertTrue($previewCache->contains('id'));
         $this->assertSame('test', $previewCache->fetch('id'));
         $previewCache->delete('id');
-        $this->assertFalse($previewCache->hasItem('id'));
+        $this->assertFalse($previewCache->contains('id'));
     }
 }
