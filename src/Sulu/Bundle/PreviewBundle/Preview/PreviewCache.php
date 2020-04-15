@@ -60,7 +60,7 @@ class PreviewCache
         $this->cache->delete($id);
     }
 
-    public function hasItem(string $id): bool
+    public function contains(string $id): bool
     {
         if ($this->cache instanceof Cache) {
             return $this->cache->contains($id);
