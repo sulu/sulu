@@ -81,7 +81,7 @@ exports[`Render ContactAccountSelection with data 1`] = `
           </span>
         </span>
         <div
-          class="content"
+          class="content clickable"
           role="button"
         >
           <div
@@ -125,7 +125,7 @@ exports[`Render ContactAccountSelection with data 1`] = `
           </span>
         </span>
         <div
-          class="content"
+          class="content clickable"
           role="button"
         >
           <div
@@ -169,7 +169,7 @@ exports[`Render ContactAccountSelection with data 1`] = `
           </span>
         </span>
         <div
-          class="content"
+          class="content clickable"
           role="button"
         >
           <div

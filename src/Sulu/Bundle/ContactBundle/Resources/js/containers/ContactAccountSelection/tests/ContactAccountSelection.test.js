@@ -207,6 +207,34 @@ test('Close account overlay if close button is clicked', () => {
     expect(contactAccountSelection.find(MultiListOverlay).find('[listKey="accounts"]').prop('open')).toEqual(false);
 });
 
+test('Call onItemClick callback when an item is clicked', () => {
+    // $FlowFixMe
+    ContactAccountSelectionStore.mockImplementation(function() {
+        this.loadItems = jest.fn();
+        this.move = jest.fn((oldItemIndex, newItemIndex) => {
+            this.items = arrayMove(this.items, oldItemIndex, newItemIndex);
+        });
+        this.items = [
+            {id: 'c2', fullName: 'Max Mustermann'},
+            {id: 'a3', name: 'Sulu'},
+            {id: 'c3', fullName: 'Erika Mustermann'},
+        ];
+    });
+
+    const itemClickSpy = jest.fn();
+
+    const contactAccountSelection = mount(
+        <ContactAccountSelection onChange={jest.fn()} onItemClick={itemClickSpy} value={['c2', 'a3', 'c3']} />
+    );
+
+    contactAccountSelection.find('MultiItemSelection .content').at(0).simulate('click');
+    expect(itemClickSpy).toHaveBeenLastCalledWith('c2', {id: 'c2', fullName: 'Max Mustermann'});
+    contactAccountSelection.find('MultiItemSelection .content').at(1).simulate('click');
+    expect(itemClickSpy).toHaveBeenLastCalledWith('a3', {id: 'a3', name: 'Sulu'});
+    contactAccountSelection.find('MultiItemSelection .content').at(2).simulate('click');
+    expect(itemClickSpy).toHaveBeenLastCalledWith('c3', {id: 'c3', fullName: 'Erika Mustermann'});
+});
+
 test('Change order of items', () => {
     // $FlowFixMe
     ContactAccountSelectionStore.mockImplementation(function() {
