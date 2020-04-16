@@ -1,20 +1,40 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {extendObservable as mockExtendObservable, observable} from 'mobx';
+import {mount, shallow} from 'enzyme';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import FormInspector from 'sulu-admin-bundle/containers/Form/FormInspector';
 import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/ResourceFormStore';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
-import {observable} from 'mobx';
+import Router from 'sulu-admin-bundle/services/Router';
 import MediaSelection from '../../fields/MediaSelection';
 import MultiMediaSelection from '../../../MultiMediaSelection';
 
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions) {
     this.locale = observableOptions.locale;
+    this.destroy = jest.fn();
 }));
 
 jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.locale = resourceStore.locale;
+}));
+
+jest.mock('sulu-admin-bundle/stores/MultiSelectionStore', () => jest.fn(function() {
+    this.loadItems = jest.fn();
+
+    mockExtendObservable(this, {
+        items: [],
+    });
+}));
+
+jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(function() {
+    this.selections = [];
+    this.destroy = jest.fn();
+    this.clear = jest.fn();
+}));
+
+jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
+    this.navigate = jest.fn();
 }));
 
 jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(function(formStore) {
@@ -190,6 +210,44 @@ test('Should call onChange and onFinish if the selection changes', () => {
 
     expect(changeSpy).toBeCalledWith({ids: [33, 44]});
     expect(finishSpy).toBeCalled();
+});
+
+test('Should navigate to media if a media is clicked', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    const router = new Router();
+
+    const mediaSelection = mount(
+        <MediaSelection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            router={router}
+            value={{displayOption: undefined, ids: [55, 66]}}
+        />
+    );
+
+    mediaSelection.find('MultiMediaSelection').instance().mediaSelectionStore.items = [
+        {id: 55, locale: 'en', mimeType: 'application/pdf'},
+        {id: 66, locale: 'en', mimeType: 'application/pdf'},
+    ];
+
+    mediaSelection.update();
+
+    mediaSelection.find('MultiItemSelection .content').at(0).simulate('click');
+    expect(router.navigate).toHaveBeenLastCalledWith('sulu_media.form', {id: 55, locale: 'en'});
+    mediaSelection.find('MultiItemSelection .content').at(1).simulate('click');
+    expect(router.navigate).toHaveBeenLastCalledWith('sulu_media.form', {id: 66, locale: 'en'});
 });
 
 test('Should throw an error if displayOptions schemaOption is given but not an array', () => {

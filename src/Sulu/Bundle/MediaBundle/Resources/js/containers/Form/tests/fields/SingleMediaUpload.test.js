@@ -296,6 +296,7 @@ test('Create a MediaUploadStore when constructed with data', () => {
     );
     const data = {
         id: 1,
+        locale: 'en',
         title: 'test title',
         mimeType: 'image/jpeg',
         thumbnails: {},

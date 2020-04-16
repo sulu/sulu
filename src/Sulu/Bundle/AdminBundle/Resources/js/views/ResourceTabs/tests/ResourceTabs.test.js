@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {mount, shallow} from 'enzyme';
+import {mount} from 'enzyme';
 import {extendObservable, observable} from 'mobx';
 import React from 'react';
 import ResourceTabs from '../ResourceTabs';

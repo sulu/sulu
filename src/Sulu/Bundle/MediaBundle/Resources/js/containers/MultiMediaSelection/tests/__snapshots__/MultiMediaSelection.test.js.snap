@@ -46,7 +46,7 @@ Array [
             </span>
           </span>
           <div
-            class="content"
+            class="content clickable"
             role="button"
           >
             <div
@@ -123,7 +123,7 @@ Array [
             </span>
           </span>
           <div
-            class="content"
+            class="content clickable"
             role="button"
           >
             <div
@@ -200,7 +200,7 @@ Array [
             </span>
           </span>
           <div
-            class="content"
+            class="content clickable"
             role="button"
           >
             <div
@@ -324,7 +324,7 @@ Array [
             </span>
           </span>
           <div
-            class="content"
+            class="content clickable"
             role="button"
           >
             <div
@@ -448,7 +448,7 @@ Array [
             </span>
           </span>
           <div
-            class="content"
+            class="content clickable"
             role="button"
           >
             <div
@@ -559,7 +559,7 @@ Array [
             </span>
           </span>
           <div
-            class="content"
+            class="content clickable"
             role="button"
           >
             <div
@@ -640,7 +640,7 @@ Array [
             </span>
           </span>
           <div
-            class="content"
+            class="content clickable"
             role="button"
           >
             <div
@@ -721,7 +721,7 @@ Array [
             </span>
           </span>
           <div
-            class="content"
+            class="content clickable"
             role="button"
           >
             <div

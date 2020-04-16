@@ -10,6 +10,7 @@ import {
     validateDisplayOption,
 } from '../../../utils/MediaSelectionHelper';
 import MultiMediaSelection from '../../MultiMediaSelection';
+import type {Media} from '../../../types';
 import type {Value} from '../../MultiMediaSelection';
 
 @observer
@@ -48,6 +49,18 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
         onFinish();
     };
 
+    handleItemClick = (itemId: string | number, item: ?Media) => {
+        const {router} = this.props;
+
+        if (!router || !item) {
+            return;
+        }
+
+        const {id, locale} = item;
+
+        router.navigate('sulu_media.form', {id, locale});
+    };
+
     render() {
         const {disabled, formInspector, schemaOptions, value} = this.props;
         const {
@@ -79,6 +92,7 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
                 displayOptions={displayOptionValues}
                 locale={locale}
                 onChange={this.handleChange}
+                onItemClick={this.handleItemClick}
                 types={mediaTypeValues}
                 value={value ? value : undefined}
             />
