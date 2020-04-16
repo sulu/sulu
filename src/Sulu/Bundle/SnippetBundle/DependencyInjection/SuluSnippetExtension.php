@@ -58,6 +58,13 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                             'snippet_selection' => [
                                 'default_type' => 'list_overlay',
                                 'resource_key' => 'snippets',
+                                'view' => [
+                                    'name' => 'sulu_snippet.edit_form',
+                                    'result_to_view' => [
+                                        'id' => 'id',
+                                        'locale' => 'locale',
+                                    ],
+                                ],
                                 'types' => [
                                     'list_overlay' => [
                                         'adapter' => 'table',
