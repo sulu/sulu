@@ -52,7 +52,7 @@ class Form extends React.Component<Props> {
         return this.resourceKey && resourceStore.resourceKey !== this.resourceKey;
     }
 
-    @computed get locales() {
+    @computed.struct get locales() {
         const {
             locales: propsLocales,
             route: {

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, observable, toJS} from 'mobx';
+import {autorun, computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import jexl from 'jexl';
 import Loader from '../../components/Loader';
@@ -8,6 +8,7 @@ import Tabs from '../../views/Tabs';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import ResourceStore from '../../stores/ResourceStore';
 import {Route} from '../../services/Router';
+import type {AttributeMap} from '../../services/Router';
 import resourceTabsStyles from './resourceTabs.scss';
 
 type Props = ViewProps & {
@@ -19,50 +20,60 @@ type Props = ViewProps & {
 class ResourceTabs extends React.Component<Props> {
     resourceStore: ResourceStore;
     reloadResourceStoreOnRouteChangeDisposer: () => void;
-    resourceStoreDisposer: () => void;
+    createResourceStoreDisposer: () => void;
+
+    @computed get router() {
+        return this.props.router;
+    }
+
+    @computed get route() {
+        return this.props.route;
+    }
+
+    @computed get id() {
+        return this.router.attributes.id;
+    }
+
+    @computed get resourceKey() {
+        return this.route.options.resourceKey;
+    }
 
     constructor(props: Props) {
         super(props);
 
-        const {router} = this.props;
+        this.createResourceStoreDisposer = autorun(this.createResourceStore);
 
-        this.createResourceStore();
-
-        this.reloadResourceStoreOnRouteChangeDisposer = router.addUpdateRouteHook(
+        this.reloadResourceStoreOnRouteChangeDisposer = this.router.addUpdateRouteHook(
             this.reloadResourceStoreOnRouteChange
         );
     }
 
     createResourceStore = () => {
-        const {router, route} = this.props;
-        const {
-            attributes: {
-                id,
-            },
-        } = router;
-        const {
-            options: {
-                resourceKey,
-            },
-        } = route;
-
         const options = {};
         if (this.locales) {
             options.locale = observable.box();
-            router.bind('locale', options.locale);
+            this.router.bind('locale', options.locale);
         }
 
-        if (!resourceKey) {
+        if (!this.resourceKey) {
             throw new Error('The route does not define the mandatory "resourceKey" option');
         }
 
-        this.resourceStore = new ResourceStore(resourceKey, id, options);
+        if (this.resourceStore) {
+            this.resourceStore.destroy();
+        }
+
+        this.resourceStore = new ResourceStore(this.resourceKey, this.id, options);
     };
 
-    reloadResourceStoreOnRouteChange = (route: ?Route) => {
-        const {router, route: viewRoute} = this.props;
+    reloadResourceStoreOnRouteChange = (route: ?Route, attributes: ?AttributeMap) => {
+        const {route: viewRoute} = this.props;
 
-        if (router.route === viewRoute || router.route === route) {
+        if (attributes && (this.id !== attributes.id || this.resourceKey !== attributes.resourceKey)) {
+            return true;
+        }
+
+        if (this.router.route === viewRoute || this.router.route === route) {
             return true;
         }
 
@@ -76,9 +87,10 @@ class ResourceTabs extends React.Component<Props> {
     componentWillUnmount() {
         this.resourceStore.destroy();
         this.reloadResourceStoreOnRouteChangeDisposer();
+        this.createResourceStoreDisposer();
     }
 
-    @computed get locales() {
+    @computed.struct get locales() {
         const {
             locales: propsLocales,
             route: {

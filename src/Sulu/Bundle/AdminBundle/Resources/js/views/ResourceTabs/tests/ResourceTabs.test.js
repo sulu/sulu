@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {mount, render} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import {extendObservable, observable} from 'mobx';
 import React from 'react';
 import ResourceTabs from '../ResourceTabs';
@@ -1151,6 +1151,87 @@ test('Should create a ResourceStore on mount and destroy it on unmount', () => {
     expect(ResourceStore.mock.instances[0].destroy).toBeCalled();
 });
 
+test('Should create a new ResourceStore if the resourceKey changes', () => {
+    ResourceStore.mockImplementation(function() {
+        this.destroy = jest.fn();
+        this.initialized = true;
+        extendObservable(this, {data: {}});
+    });
+
+    const route = {
+        children: [],
+        options: {
+            resourceKey: 'snippets',
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {
+            id: 5,
+        },
+    };
+
+    router.addUpdateRouteHook.mockImplementationOnce(() => jest.fn());
+    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
+
+    expect(ResourceStore).toHaveBeenLastCalledWith('snippets', 5, {});
+
+    resourceTabs.setProps(
+        {
+            route: {
+                children: [],
+                options: {
+                    resourceKey: 'contacts',
+                },
+            },
+        }
+    );
+
+    resourceTabs.update();
+
+    expect(ResourceStore.mock.instances[0].destroy).toBeCalled();
+    expect(ResourceStore).toHaveBeenLastCalledWith('contacts', 5, {});
+
+    resourceTabs.unmount();
+});
+
+test('Should create a new ResourceStore if the ID changes', () => {
+    ResourceStore.mockImplementation(function() {
+        this.destroy = jest.fn();
+        this.initialized = true;
+        extendObservable(this, {data: {}});
+    });
+
+    const route = {
+        children: [],
+        options: {
+            resourceKey: 'snippets',
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        route,
+    };
+
+    extendObservable(router, {attributes: {id: 5}});
+
+    router.addUpdateRouteHook.mockImplementationOnce(() => jest.fn());
+    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => null}</ResourceTabs>);
+
+    expect(ResourceStore).toHaveBeenLastCalledWith('snippets', 5, {});
+
+    router.attributes = {
+        id: 6,
+    };
+
+    resourceTabs.update();
+
+    expect(ResourceStore.mock.instances[0].destroy).toBeCalled();
+    expect(ResourceStore).toHaveBeenLastCalledWith('snippets', 6, {});
+
+    resourceTabs.unmount();
+});
+
 test('Should create a ResourceStore with locale on mount if locales have been passed in route options', () => {
     ResourceStore.mockImplementation(function() {
         this.destroy = jest.fn();
@@ -1289,19 +1370,4 @@ test('Should pass locales from route options instead of props to child component
 
     expect(ChildComponent.mock.calls[0][0].resourceStore).toBe(resourceTabs.resourceStore);
     expect(ChildComponent.mock.calls[0][0].locales).toEqual(['de', 'en']);
-});
-
-test('Should throw an error when no resourceKey is defined in the route options', () => {
-    const route = {
-        options: {},
-    };
-
-    const router = {
-        route,
-        attributes: {
-            id: 5,
-        },
-    };
-
-    expect(() => render(<ResourceTabs route={route} router={router} />)).toThrow(/mandatory "resourceKey" option/);
 });
