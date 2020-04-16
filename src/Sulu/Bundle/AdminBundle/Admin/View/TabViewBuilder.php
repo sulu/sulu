@@ -14,6 +14,7 @@ namespace Sulu\Bundle\AdminBundle\Admin\View;
 class TabViewBuilder implements TabViewBuilderInterface
 {
     use ViewBuilderTrait;
+    use TabViewBuilderTrait;
 
     const TYPE = 'sulu_admin.tabs';
 

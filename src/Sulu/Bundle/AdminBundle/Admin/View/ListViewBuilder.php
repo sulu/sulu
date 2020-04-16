@@ -15,7 +15,7 @@ class ListViewBuilder implements ListViewBuilderInterface
 {
     use ViewBuilderTrait;
     use ListViewBuilderTrait;
-    use TabViewBuilderTrait;
+    use TabViewChildBuilderTrait;
 
     const TYPE = 'sulu_admin.list';
 

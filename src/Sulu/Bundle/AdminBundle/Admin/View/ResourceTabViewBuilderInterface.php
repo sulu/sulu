@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\View;
 
-interface ResourceTabViewBuilderInterface extends TabViewBuilderInterface
+interface ResourceTabViewBuilderInterface extends ViewBuilderInterface
 {
     public function setResourceKey(string $resourceKey): self;
 
@@ -28,4 +28,9 @@ interface ResourceTabViewBuilderInterface extends TabViewBuilderInterface
     public function addRouterAttributesToBackView(array $routerAttributesToBackView): self;
 
     public function setTitleProperty(string $titleProperty): self;
+
+    /**
+     * @param string[] $routerAttributesToBlacklist
+     */
+    public function addRouterAttributesToBlacklist(array $routerAttributesToBlacklist): self;
 }

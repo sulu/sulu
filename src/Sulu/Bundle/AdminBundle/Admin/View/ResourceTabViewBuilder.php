@@ -15,6 +15,7 @@ class ResourceTabViewBuilder implements ResourceTabViewBuilderInterface
 {
     use ViewBuilderTrait;
     use FormViewBuilderTrait;
+    use TabViewBuilderTrait;
 
     const TYPE = 'sulu_admin.resource_tabs';
 
