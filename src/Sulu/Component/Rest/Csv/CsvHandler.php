@@ -18,6 +18,7 @@ use Goodby\CSV\Export\Standard\Exporter;
 use Goodby\CSV\Export\Standard\ExporterConfig;
 use JMS\Serializer\SerializationContext;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Serializer\ArraySerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -70,7 +71,7 @@ class CsvHandler
      */
     public function createResponse(ViewHandler $handler, View $view, Request $request, $format)
     {
-        if (!$view->getData() instanceof ListRepresentation) {
+        if (!$view->getData() instanceof PaginatedRepresentation) {
             throw new ObjectNotSupportedException($view);
         }
 
