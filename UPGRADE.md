@@ -2,6 +2,39 @@
 
 ## dev-master
 
+### DoctrineCacheBundle removed
+
+The doctrine cache bundle requirement has been removed from sulu. The DoctrineCacheBundle is
+still required when your project is using doctrine/doctrine-bundle ^1.12.
+
+When you have configured the preview before using another cache adapter you need to change
+the configuration the following way:
+
+**before**:
+
+```yaml
+sulu_preview:
+    cache:
+        type: redis
+        redis:
+            host: "localhost"
+```
+
+**after**
+
+```yaml
+sulu_preview:
+    cache_adapter: "cache.adapter.redis" # default here is `cache.app`
+
+framework:
+    default_redis_provider: 'redis://localhost' # this is default and not needed
+```
+
+Read more about symfony cache adapters [here](https://symfony.com/doc/4.4/cache.html#configuring-cache-with-frameworkbundle).
+
+If you still want to use DoctrineCacheBundle you would need to require it in your `composer.json`.
+Keep in mind that the DoctrineCacheBundle is deprecated and will not support Symfony 5.
+
 ### WebServerBundle removed
 
 The Symfony WebServerBundle has been removed.

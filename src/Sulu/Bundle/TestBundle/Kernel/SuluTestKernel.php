@@ -38,7 +38,6 @@ class SuluTestKernel extends SuluKernel
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Symfony\Bundle\TwigBundle\TwigBundle(),
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
-            new \Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
             new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle(),
             new \DTL\Bundle\PhpcrMigrations\PhpcrMigrationsBundle(),
@@ -71,6 +70,10 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\MarkupBundle\SuluMarkupBundle(),
             new \Sulu\Bundle\AudienceTargetingBundle\SuluAudienceTargetingBundle(),
         ];
+
+        if (class_exists(\Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle::class)) {
+            $bundles[] = new \Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle();
+        }
 
         if (class_exists(\Symfony\Bundle\MonologBundle\MonologBundle::class)) {
             $bundles[] = new \Symfony\Bundle\MonologBundle\MonologBundle();
