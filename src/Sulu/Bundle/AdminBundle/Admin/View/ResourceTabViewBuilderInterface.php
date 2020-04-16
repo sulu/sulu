@@ -27,10 +27,10 @@ interface ResourceTabViewBuilderInterface extends ViewBuilderInterface
      */
     public function addRouterAttributesToBackView(array $routerAttributesToBackView): self;
 
-    public function setTitleProperty(string $titleProperty): self;
-
     /**
      * @param string[] $routerAttributesToBlacklist
      */
     public function addRouterAttributesToBlacklist(array $routerAttributesToBlacklist): self;
+
+    public function setTitleProperty(string $titleProperty): self;
 }

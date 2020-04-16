@@ -64,7 +64,7 @@ trait TabViewBuilderTrait
         $this->parentSetTabPriorityToView($view, $tabPriority);
     }
 
-    public function addRouterAttributesToBlacklist(array $routerAttributesToBlacklist): ViewBuilderInterface
+    public function addRouterAttributesToBlacklistToView(array $routerAttributesToBlacklist): void
     {
         $oldRouterAttributesToBlacklist = $this->view->getOption('routerAttributesToBlacklist');
         $newRouterAttributesToBlacklist = $oldRouterAttributesToBlacklist
@@ -72,7 +72,5 @@ trait TabViewBuilderTrait
             : $routerAttributesToBlacklist;
 
         $this->view->setOption('routerAttributesToBlacklist', $newRouterAttributesToBlacklist);
-
-        return $this;
     }
 }

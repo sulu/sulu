@@ -62,6 +62,13 @@ class ResourceTabViewBuilder implements ResourceTabViewBuilderInterface
         return $this;
     }
 
+    public function addRouterAttributesToBlacklist(array $routerAttributesToBlacklist): ResourceTabViewBuilderInterface
+    {
+        $this->addRouterAttributesToBlacklistToView($routerAttributesToBlacklist);
+
+        return $this;
+    }
+
     public function getView(): View
     {
         if (!$this->view->getOption('resourceKey')) {
