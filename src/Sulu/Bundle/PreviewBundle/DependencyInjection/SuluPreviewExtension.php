@@ -39,8 +39,6 @@ class SuluPreviewExtension extends Extension implements PrependExtensionInterfac
         $configs = $container->getExtensionConfig($this->getAlias());
         $config = $this->processConfiguration(new Configuration(), $configs);
 
-        $cacheAdapter = $config['cache_adapter'];
-
         if ($config['cache']['type'] && $container->hasExtension('doctrine_cache')) {
             $container->prependExtensionConfig('doctrine_cache',
                 [
@@ -58,7 +56,7 @@ class SuluPreviewExtension extends Extension implements PrependExtensionInterfac
                     'cache' => [
                         'pools' => [
                             'sulu_preview.preview.cache' => [
-                                'adapter' => $cacheAdapter,
+                                'adapter' => $config['cache_adapter'],
                             ],
                         ],
                     ],
