@@ -2,6 +2,26 @@
 
 ## dev-master
 
+### Import of dev error routes changed
+
+The `config/routes/packages/dev/sulu_website.yaml` need to be changed to import the correct error routes based on your symfony version:
+
+**before**
+
+```yaml
+_portal_errors:
+    resource: "@SuluWebsiteBundle/Resources/config/routing_error.yml"
+    type: portal
+```
+
+**after**
+
+```yaml
+_portal_errors:
+    resource: "@SuluWebsiteBundle/Resources/config/routing_error.php"
+    type: portal
+```
+
 ### DoctrineCacheBundle removed
 
 The doctrine cache bundle requirement has been removed from sulu. The DoctrineCacheBundle is

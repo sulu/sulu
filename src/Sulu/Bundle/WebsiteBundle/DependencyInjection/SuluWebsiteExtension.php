@@ -13,10 +13,12 @@ namespace Sulu\Bundle\WebsiteBundle\DependencyInjection;
 
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderInterface;
 use Sulu\Component\HttpKernel\SuluKernel;
+use Symfony\Bundle\TwigBundle\Controller\ExceptionController;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\HttpKernel\Controller\ErrorController;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -28,9 +30,15 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
 {
     public function prepend(ContainerBuilder $container)
     {
-        $container->prependExtensionConfig('twig', [
-            'exception_controller' => 'sulu_website.exception.controller:showAction',
-        ]);
+        if ($container->hasExtension('framework') && class_exists(ErrorController::class)) {
+            $container->prependExtensionConfig('framework', [
+                'error_controller' => 'sulu_website.error_controller::showAction',
+            ]);
+        } elseif ($container->hasExtension('twig') && class_exists(ExceptionController::class)) {
+            $container->prependExtensionConfig('twig', [
+                'exception_controller' => 'sulu_website.exception.controller::showAction',
+            ]);
+        }
 
         if ($container->hasExtension('sulu_admin')) {
             $container->prependExtensionConfig(
@@ -120,6 +128,14 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
 
             // default local provider
             $container->setAlias('sulu_website.default_locale.provider', $config['default_locale']['provider_service_id']);
+        }
+
+        if (class_exists(ErrorController::class)) {
+            $loader->load('error_controller.xml');
+        }
+
+        if (class_exists(ExceptionController::class)) {
+            $loader->load('exception_controller.xml');
         }
     }
 }

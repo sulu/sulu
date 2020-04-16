@@ -18,7 +18,6 @@
         <parameter key="sulu_website.twig.seo.class">Sulu\Bundle\WebsiteBundle\Twig\Seo\SeoTwigExtension</parameter>
         <parameter key="sulu_website.twig.util.class">Sulu\Bundle\WebsiteBundle\Twig\Core\UtilTwigExtension</parameter>
         <parameter key="sulu_website.routing.portal_loader.class">Sulu\Bundle\WebsiteBundle\Routing\PortalLoader</parameter>
-        <parameter key="sulu_website.exception.controller.class">Sulu\Bundle\WebsiteBundle\Controller\ExceptionController</parameter>
         <parameter key="sulu_website.resolver.request_analyzer.class">Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolver</parameter>
         <parameter key="sulu_website.resolver.structure.class">Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver</parameter>
         <parameter key="sulu_website.resolver.parameter.class">Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolver</parameter>
@@ -224,21 +223,6 @@
             <argument type="service" id="sulu_core.webspace.request_analyzer" />
             <tag name="kernel.event_listener" event="kernel.request" method="onRequest" priority="31" />
         </service>
-
-        <!-- exception controller -->
-        <service id="sulu_website.exception_controller"
-                 decorates="twig.controller.exception"
-                 class="Sulu\Bundle\WebsiteBundle\Controller\ExceptionController">
-            <argument type="service" id="sulu_website.exception_controller.inner"/>
-            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
-            <argument type="service" id="sulu_website.resolver.parameter" />
-            <argument type="service" id="twig" />
-            <argument>%kernel.debug%</argument>
-
-            <tag name="sulu.context" context="website"/>
-        </service>
-
-        <service id="sulu_website.exception.controller" alias="twig.controller.exception" public="true" />
 
         <!-- cache clearer -->
         <service id="sulu_website.http_cache.clearer" class="Sulu\Bundle\WebsiteBundle\Cache\CacheClearer" public="true">

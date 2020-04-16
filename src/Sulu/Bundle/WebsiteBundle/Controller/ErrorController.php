@@ -11,41 +11,34 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
-use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Symfony\Bundle\TwigBundle\Controller\ExceptionController as BaseExceptionController;
-use Symfony\Component\Debug\Exception\FlattenException;
+use Sulu\Bundle\WebsiteBundle\Resolver\TemplateAttributeResolverInterface;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\ErrorHandler\ErrorRenderer\ErrorRendererInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Twig\Environment;
 
 /**
  * Custom exception controller.
- *
- * @deprecated use ErrorController instead.
  */
-class ExceptionController
+class ErrorController
 {
     /**
-     * @var BaseExceptionController
+     * @var TemplateAttributeResolverInterface
      */
-    private $exceptionController;
-
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    /**
-     * @var ParameterResolverInterface
-     */
-    private $parameterResolver;
+    private $templateAttributeResolver;
 
     /**
      * @var Environment
      */
     private $twig;
+
+    /**
+     * @var ErrorRendererInterface|null
+     */
+    private $errorRenderer;
 
     /**
      * @var bool
@@ -56,37 +49,24 @@ class ExceptionController
      * @param bool $debug
      */
     public function __construct(
-        BaseExceptionController $exceptionController,
-        RequestAnalyzerInterface $requestAnalyzer,
-        ParameterResolverInterface $parameterResolver,
+        TemplateAttributeResolverInterface $templateAttributeResolver,
         Environment $twig,
-        $debug
+        ?ErrorRendererInterface $errorRenderer,
+        $debug = false
     ) {
-        @trigger_error(
-            'The "ExceptionController" since sulu 2.1 use "ErrorController" instead.',
-            E_USER_DEPRECATED
-        );
-
-        $this->exceptionController = $exceptionController;
-        $this->requestAnalyzer = $requestAnalyzer;
-        $this->parameterResolver = $parameterResolver;
+        $this->errorRenderer = $errorRenderer;
+        $this->templateAttributeResolver = $templateAttributeResolver;
         $this->twig = $twig;
         $this->debug = $debug;
     }
 
-    /**
-     * {@see BaseExceptionController::showAction()}.
-     *
-     * @param FlattenException $exception
-     */
-    public function showAction(
-        Request $request,
-        $exception,
-        DebugLoggerInterface $logger = null
-    ) {
+    public function showAction(Request $request, HttpException $exception)
+    {
         $code = $exception->getStatusCode();
+        $webspace = $this->getWebspace($request);
+
         $template = null;
-        if ($webspace = $this->requestAnalyzer->getWebspace()) {
+        if ($webspace) {
             $template = $webspace->getTemplate('error-' . $code, $request->getRequestFormat());
 
             if (null === $template) {
@@ -96,17 +76,19 @@ class ExceptionController
 
         $showException = $request->attributes->get('showException', $this->debug);
         if ($showException || null === $template || !$this->twig->getLoader()->exists($template)) {
-            return $this->exceptionController->showAction($request, $exception, $logger);
+            return new Response(
+                $this->errorRenderer->render($exception),
+                $code
+            );
         }
 
-        $context = $this->parameterResolver->resolve(
+        $context = $this->templateAttributeResolver->resolve(
             [
                 'status_code' => $code,
                 'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
                 'exception' => $exception,
                 'currentContent' => $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1)),
-            ],
-            $this->requestAnalyzer
+            ]
         );
 
         return new Response(
@@ -134,5 +116,17 @@ class ExceptionController
         Response::closeOutputBuffers($startObLevel + 1, true);
 
         return ob_get_clean();
+    }
+
+    private function getWebspace(Request $request): Webspace
+    {
+        /** @var RequestAttributes $suluAttributes */
+        $suluRequestAttributes = $request->attributes->get('_sulu');
+
+        if (!$suluRequestAttributes) {
+            return null;
+        }
+
+        return $suluRequestAttributes->getAttribute('webspace');
     }
 }
