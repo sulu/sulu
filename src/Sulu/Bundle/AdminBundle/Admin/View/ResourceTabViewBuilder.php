@@ -55,19 +55,6 @@ class ResourceTabViewBuilder implements ResourceTabViewBuilderInterface
         return $this;
     }
 
-    public function addRouterAttributesToBlacklist(
-        array $routerAttributesToBlacklist
-    ): TabViewBuilderInterface {
-        $oldRouterAttributesToBlacklist = $this->view->getOption('routerAttributesToBlacklist');
-        $newRouterAttributesToBlacklist = $oldRouterAttributesToBlacklist
-            ? array_merge($oldRouterAttributesToBlacklist, $routerAttributesToBlacklist)
-            : $routerAttributesToBlacklist;
-
-        $this->view->setOption('routerAttributesToBlacklist', $newRouterAttributesToBlacklist);
-
-        return $this;
-    }
-
     public function setTitleProperty(string $titleProperty): ResourceTabViewBuilderInterface
     {
         $this->view->setOption('titleProperty', $titleProperty);
