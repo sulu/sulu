@@ -17,7 +17,6 @@ use Goodby\CSV\Export\Standard\Collection\CallbackCollection;
 use Goodby\CSV\Export\Standard\Exporter;
 use Goodby\CSV\Export\Standard\ExporterConfig;
 use JMS\Serializer\SerializationContext;
-use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Serializer\ArraySerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
