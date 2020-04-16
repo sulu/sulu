@@ -39,7 +39,6 @@ class SuluPreviewExtension extends Extension implements PrependExtensionInterfac
         $configs = $container->getExtensionConfig($this->getAlias());
         $config = $this->processConfiguration(new Configuration(), $configs);
 
-
         if ($config['cache']['type']) {
             if (!$container->hasExtension('doctrine_cache')) {
                 throw new \RuntimeException(
