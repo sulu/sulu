@@ -13,11 +13,14 @@
     <a href="https://github.com/sulu/sulu/releases" target="_blank">
         <img src="https://img.shields.io/github/tag/sulu/sulu.svg" alt="GitHub tag (latest SemVer)">
     </a>
-    <a href="https://travis-ci.org/sulu/sulu" target="_blank">
-        <img src="https://img.shields.io/travis/sulu/sulu.svg?label=travis" alt="Travis build">
+    <a href="https://github.com/sulu/sulu/actions" target="_blank">
+        <img src="https://img.shields.io/github/workflow/status/sulu/sulu/Test%20application/master.svg?label=github-actions" alt="GitHub actions status">
+    </a>
+    <a href="https://travis-ci.org/sulu/sulu/branches" target="_blank">
+        <img src="https://img.shields.io/travis/sulu/sulu/master.svg?label=travis" alt="Travis build">
     </a>
     <a href="https://circleci.com/gh/sulu/sulu/tree/master" target="_blank">
-        <img src="https://circleci.com/gh/sulu/sulu/tree/master.svg?style=shield" alt="CircleCI build">
+        <img src="https://img.shields.io/circleci/build/github/sulu/sulu/master.svg?label=circleci" alt="CircleCI build">
     </a>
     <a href="https://github.com/sulu/sulu/commits/master" target="_blank">
         <img src="https://img.shields.io/github/commit-activity/y/sulu/sulu.svg" alt="GitHub commit activity">
