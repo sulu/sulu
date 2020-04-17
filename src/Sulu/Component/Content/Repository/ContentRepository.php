@@ -249,7 +249,13 @@ class ContentRepository implements ContentRepositoryInterface
         }
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
-        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
+        $result = $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
+
+        usort($result, function($a, $b) use($uuids) {
+            return array_search($a->getId(), $uuids) < array_search($b->getId(), $uuids) ? -1 : 1;
+        });
+
+        return $result;
     }
 
     public function findAll($locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null)

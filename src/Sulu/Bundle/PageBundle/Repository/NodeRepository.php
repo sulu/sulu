@@ -20,6 +20,7 @@ use Sulu\Component\Content\Exception\InvalidOrderPositionException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
+use Sulu\Component\Content\Repository\ContentRepository;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Rest\Exception\RestException;
@@ -28,6 +29,15 @@ use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
+@trigger_error(
+    sprintf(
+        'The "%s" class is deprecated since Sulu 2.0, use data from "%s" instead.',
+        NodeRepository::class,
+        ContentRepository::class
+    ),
+    E_USER_DEPRECATED
+);
 
 /**
  * repository for node objects.
