@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\PreviewBundle\Preview\Events;
 
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * This event is thrown right before a preview will be rendered.

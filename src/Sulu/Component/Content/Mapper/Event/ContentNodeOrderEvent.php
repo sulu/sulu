@@ -12,7 +12,7 @@
 namespace Sulu\Component\Content\Mapper\Event;
 
 use PHPCR\NodeInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Event class for the ContentEvents::NODE_ORDER event.

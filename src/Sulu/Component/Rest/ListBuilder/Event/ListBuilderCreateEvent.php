@@ -12,7 +12,7 @@
 namespace Sulu\Component\Rest\ListBuilder\Event;
 
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * An object of this class is emitted along with the listbuilder.create event.
