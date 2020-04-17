@@ -166,7 +166,7 @@ class SnippetControllerTest extends SuluTestCase
         $result = json_decode($response->getContent(), true);
         $result = reset($result['_embedded']['snippets']);
         $this->assertEquals($this->hotel1->getUuid(), $result['id']);
-        $this->assertEquals('Hôtel', $result['localizedTemplate']);
+        $this->assertEquals('Hotel', $result['localizedTemplate']);
     }
 
     public function testGetMultipleWithNotExistingIds()
