@@ -129,6 +129,28 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals('Hotel', $result['localizedTemplate']);
     }
 
+    public function testGetManyWithGhosts()
+    {
+        $this->client->request('GET', sprintf(
+            '/api/snippets?ids=%s,%s&locale=en',
+            $this->hotel1->getUuid(),
+            $this->hotel2->getUuid()
+        ));
+
+        $response = $this->client->getResponse();
+
+        $result = json_decode($response->getContent(), true);
+        $this->assertHttpStatusCode(200, $response);
+
+        $this->assertCount(2, $result['_embedded']['snippets']);
+
+        $results = $result['_embedded']['snippets'];
+        $this->assertEquals('The Grand Budapest', $results[0]['title']);
+        $this->assertArrayNotHasKey('ghostLocale', $results[0]);
+        $this->assertEquals('L\'Hôtel New Hampshire', $results[1]['title']);
+        $this->assertEquals('de', $results[1]['ghostLocale']);
+    }
+
     public function testGetManyLocalizedTemplate()
     {
         $this->client->request(

@@ -162,7 +162,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
 
         if ($idsString) {
             $ids = explode(',', $idsString);
-            $snippets = $this->snippetRepository->getSnippetsByUuids($ids, $locale);
+            $snippets = $this->snippetRepository->getSnippetsByUuids($ids, $locale, true);
             $total = count($snippets);
         } else {
             $snippets = $this->snippetRepository->getSnippets(
