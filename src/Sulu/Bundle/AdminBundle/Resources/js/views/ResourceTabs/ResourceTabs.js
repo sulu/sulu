@@ -20,6 +20,7 @@ type Props = ViewProps & {
 class ResourceTabs extends React.Component<Props> {
     resourceStore: ResourceStore;
     reloadResourceStoreOnRouteChangeDisposer: () => void;
+    disposeCreateResourceStoreOnRouteChangeDisposer: () => void;
     createResourceStoreDisposer: () => void;
 
     @computed get router() {
@@ -42,6 +43,10 @@ class ResourceTabs extends React.Component<Props> {
         super(props);
 
         this.createResourceStoreDisposer = autorun(this.createResourceStore);
+
+        this.disposeCreateResourceStoreOnRouteChangeDisposer = this.router.addUpdateRouteHook(
+            this.disposeCreateResourceStoreOnRouteChange
+        );
 
         this.reloadResourceStoreOnRouteChangeDisposer = this.router.addUpdateRouteHook(
             this.reloadResourceStoreOnRouteChange
@@ -66,18 +71,28 @@ class ResourceTabs extends React.Component<Props> {
         this.resourceStore = new ResourceStore(this.resourceKey, this.id, options);
     };
 
+    disposeCreateResourceStoreOnRouteChange = (route: ?Route) => {
+        // This only works for the first level of childs
+        if (!this.route.children.includes(route) && this.route !== route) {
+            // Avoid loading data for the old resourceKey with the new ID when switching to a different form
+            this.createResourceStoreDisposer();
+        }
+
+        return true;
+    };
+
     reloadResourceStoreOnRouteChange = (route: ?Route, attributes: ?AttributeMap) => {
-        const {route: viewRoute} = this.props;
-
-        if (attributes && (this.id !== attributes.id || this.resourceKey !== attributes.resourceKey)) {
+        if (attributes && this.id !== attributes.id) {
+            // No reload necessary, because if the ID changes the resourceStore itself will reload
             return true;
         }
 
-        if (this.router.route === viewRoute || this.router.route === route) {
+        if (this.router.route === this.route || this.router.route === route) {
             return true;
         }
 
-        if (viewRoute.children.includes(route) || viewRoute === route) {
+        // This only works for the first level of childs
+        if (this.route.children.includes(route) || this.route === route) {
             this.resourceStore.reload();
         }
 
@@ -88,6 +103,7 @@ class ResourceTabs extends React.Component<Props> {
         this.resourceStore.destroy();
         this.reloadResourceStoreOnRouteChangeDisposer();
         this.createResourceStoreDisposer();
+        this.disposeCreateResourceStoreOnRouteChangeDisposer();
     }
 
     @computed.struct get locales() {
