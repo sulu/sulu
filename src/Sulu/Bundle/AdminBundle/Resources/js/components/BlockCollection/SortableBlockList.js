@@ -11,6 +11,7 @@ type Props = {|
     blockTypes: Array<string>,
     disabled: boolean,
     expandedBlocks: Array<boolean>,
+    generatedBlockIds: Array<number>,
     onCollapse: (index: number) => void,
     onExpand: (index: number) => void,
     onRemove: (index: number) => void,
@@ -50,7 +51,7 @@ class SortableBlockList extends React.Component<Props> {
     };
 
     render() {
-        const {disabled, expandedBlocks, onRemove, renderBlockContent, types, value} = this.props;
+        const {disabled, expandedBlocks, generatedBlockIds, onRemove, renderBlockContent, types, value} = this.props;
 
         const sortableBlockListClass = classNames(
             sortableBlockListStyles.sortableBlockList,
@@ -66,7 +67,7 @@ class SortableBlockList extends React.Component<Props> {
                         activeType={block.type}
                         expanded={!disabled && expandedBlocks[index]}
                         index={index}
-                        key={block.__id}
+                        key={generatedBlockIds[index]}
                         onCollapse={this.handleCollapse}
                         onExpand={this.handleExpand}
                         onRemove={onRemove ? this.handleRemove : undefined}
