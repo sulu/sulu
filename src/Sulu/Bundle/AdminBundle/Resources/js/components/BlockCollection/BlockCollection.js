@@ -53,7 +53,9 @@ class BlockCollection extends React.Component<Props> {
         );
         if (minOccurs && value.length < minOccurs) {
             expandedBlocks.push(...new Array(minOccurs - value.length).fill(true));
-            generatedBlockIds.push(...new Array(minOccurs - value.length).map(() => ++BlockCollection.idCounter));
+            generatedBlockIds.push(
+                ...new Array(minOccurs - value.length).fill(false).map(() => ++BlockCollection.idCounter)
+            );
 
             onChange([
                 ...value,
