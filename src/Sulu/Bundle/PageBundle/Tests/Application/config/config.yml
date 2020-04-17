@@ -3,7 +3,7 @@ sulu_core:
         structure:
              paths:
                  internal:
-                     path: "%kernel.root_dir%/../../src/Sulu/Bundle/CoreBundle/Content/templates"
+                     path: "%kernel.project_dir%/../../src/Sulu/Bundle/CoreBundle/Content/templates"
                      type: "page"
 
 services:
