@@ -157,7 +157,7 @@ class PageControllerTest extends SuluTestCase
 
         $this->client->request(
             'GET',
-            '/api/pages?locale=de&flat=true&ids=' . $ghostDocument->getUuid() . ',' .  $shadowDocument->getUuid()
+            '/api/pages?locale=de&flat=true&ids=' . $ghostDocument->getUuid() . ',' . $shadowDocument->getUuid()
         );
 
         $response = json_decode($this->client->getResponse()->getContent());

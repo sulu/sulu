@@ -251,7 +251,7 @@ class ContentRepository implements ContentRepositoryInterface
 
         $result = $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
 
-        usort($result, function($a, $b) use($uuids) {
+        usort($result, function($a, $b) use ($uuids) {
             return array_search($a->getId(), $uuids) < array_search($b->getId(), $uuids) ? -1 : 1;
         });
 
