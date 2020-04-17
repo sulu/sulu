@@ -164,13 +164,17 @@ class PageControllerTest extends SuluTestCase
         $childPages = $response->_embedded->pages[0]->_embedded->pages;
 
         $this->assertEquals('ghost_test_en', $childPages[0]->title);
+        $this->assertEquals('de', $childPages[0]->locale);
         $this->assertEquals('en', $childPages[0]->ghostLocale);
+        $this->assertEquals('sulu_io', $childPages[0]->webspaceKey);
         $this->assertObjectNotHasAttribute('shadowLocale', $childPages[0]);
         $this->assertEquals('ghost', $childPages[0]->type->name);
         $this->assertEquals('en', $childPages[0]->type->value);
 
         $this->assertEquals('shadow_test_en', $childPages[1]->title);
+        $this->assertEquals('de', $childPages[1]->locale);
         $this->assertEquals('en', $childPages[1]->shadowLocale);
+        $this->assertEquals('sulu_io', $childPages[1]->webspaceKey);
         $this->assertObjectNotHasAttribute('ghostLocale', $childPages[1]);
         $this->assertEquals('shadow', $childPages[1]->type->name);
         $this->assertEquals('en', $childPages[1]->type->value);
