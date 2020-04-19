@@ -7,7 +7,7 @@
     <key>template_block_types</key>
 
     <view>ClientWebsiteBundle:Website:complex.html.twig</view>
-    <controller>SuluWebsiteBundle:Default:index</controller>
+    <controller>Sulu\Bundle\WebsiteBundle\Controller\DefaultController::indexAction</controller>
     <cacheLifetime>4800</cacheLifetime>
 
     <properties>

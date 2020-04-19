@@ -8,7 +8,7 @@
     <key>section</key>
 
     <view>ClientWebsiteBundle:templates:animals</view>
-    <controller>SuluWebsiteBundle:Default:index</controller>
+    <controller>Sulu\Bundle\WebsiteBundle\Controller\DefaultController::indexAction</controller>
     <cacheLifetime>2400</cacheLifetime>
 
     <meta>

@@ -24,7 +24,7 @@ class DefaultStructureCache extends \Sulu\Component\Content\Metadata
 {
     public function __construct()
     {
-        parent::__construct('default', 'ClientWebsiteBundle:templates:default.html.twig', 'SuluWebsiteBundle:Default:index', '2400');
+        parent::__construct('default', 'ClientWebsiteBundle:templates:default.html.twig', 'Sulu\Bundle\WebsiteBundle\Controller\DefaultController::indexAction', '2400');
 
         $prop1 = new Property(
             'title',
