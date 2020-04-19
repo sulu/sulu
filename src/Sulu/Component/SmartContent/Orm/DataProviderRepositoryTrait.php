@@ -67,7 +67,14 @@ trait DataProviderRepositoryTrait
 
         if (array_key_exists('sortBy', $filters)) {
             $sortMethod = array_key_exists('sortMethod', $filters) ? $filters['sortMethod'] : 'asc';
-            $this->appendSortBy($filters['sortBy'], $sortMethod, $queryBuilder, 'c', $locale);
+            $sortColumn = $filters['sortBy'];
+
+            if ($sortColumn === explode('.', $sortColumn)[0]) {
+                $sortColumn = 'c.' . $sortColumn;
+            }
+
+            $queryBuilder->addSelect($sortColumn);
+            $this->appendSortBy($sortColumn, $sortMethod, $queryBuilder, 'c', $locale);
         }
 
         $parameter = array_merge($parameter, $this->append($queryBuilder, 'c', $locale, $options));
@@ -374,8 +381,7 @@ trait DataProviderRepositoryTrait
             $this->appendSortByJoins($queryBuilder, $alias, $locale);
         }
 
-        $queryBuilder->addSelect($alias . '.' . $sortBy);
-        $queryBuilder->orderBy($alias . '.' . $sortBy, $sortMethod);
+        $queryBuilder->orderBy($sortBy, $sortMethod);
     }
 
     /**
