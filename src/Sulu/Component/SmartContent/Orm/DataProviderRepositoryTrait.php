@@ -58,21 +58,16 @@ trait DataProviderRepositoryTrait
     {
         $parameter = [];
 
-        $queryBuilder = $this->createQueryBuilder('c')
-            ->select('c.id')
-            ->distinct()
-            ->orderBy('c.id', 'ASC');
+        $queryBuilder = $this->createQueryBuilder('c');
+
+        $parameter = array_merge($parameter, $this->appendSelect($queryBuilder, 'c', $locale, $options));
 
         $tagRelation = $this->appendTagsRelation($queryBuilder, 'c');
         $categoryRelation = $this->appendCategoriesRelation($queryBuilder, 'c');
 
-        if (array_key_exists('sortBy', $filters) && is_array($filters['sortBy'])) {
+        if (array_key_exists('sortBy', $filters)) {
             $sortMethod = array_key_exists('sortMethod', $filters) ? $filters['sortMethod'] : 'asc';
             $this->appendSortBy($filters['sortBy'], $sortMethod, $queryBuilder, 'c', $locale);
-
-            foreach ($filters['sortBy'] as $sortColumn) {
-                $queryBuilder->addSelect($sortColumn);
-            }
         }
 
         $parameter = array_merge($parameter, $this->append($queryBuilder, 'c', $locale, $options));
@@ -284,6 +279,7 @@ trait DataProviderRepositoryTrait
     /**
      * Append additional condition to query builder for "findByFilters" function.
      *
+     * @param string $alias
      * @param string $locale
      * @param array $options
      *
@@ -292,6 +288,25 @@ trait DataProviderRepositoryTrait
     protected function append(QueryBuilder $queryBuilder, $alias, $locale, $options = [])
     {
         // empty implementation can be overwritten by repository
+        return [];
+    }
+
+    /**
+     * Append select to query builder for "findByFilters" function.
+     *
+     * @param string $alias
+     * @param string $locale
+     * @param array $options
+     *
+     * @return array parameters for query
+     */
+    protected function appendSelect(QueryBuilder $queryBuilder, $alias, $locale, $options = [])
+    {
+        $queryBuilder
+            ->select($alias . '.id')
+            ->distinct()
+            ->orderBy($alias . '.id', 'ASC');
+
         return [];
     }
 
@@ -348,12 +363,10 @@ trait DataProviderRepositoryTrait
     /**
      * Extension point to append order.
      *
-     * @param array $sortBy
+     * @param string $sortBy
      * @param string $sortMethod
      * @param string $alias
      * @param string $locale
-     *
-     * @return array parameters for query
      */
     protected function appendSortBy($sortBy, $sortMethod, QueryBuilder $queryBuilder, $alias, $locale)
     {
@@ -361,7 +374,8 @@ trait DataProviderRepositoryTrait
             $this->appendSortByJoins($queryBuilder, $alias, $locale);
         }
 
-        $queryBuilder->orderBy($sortBy, $sortMethod);
+        $queryBuilder->addSelect($alias . '.' . $sortBy);
+        $queryBuilder->orderBy($alias . '.' . $sortBy, $sortMethod);
     }
 
     /**
