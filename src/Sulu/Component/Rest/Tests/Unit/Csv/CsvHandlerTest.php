@@ -16,6 +16,7 @@ use FOS\RestBundle\View\ViewHandler;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\Csv\CsvHandler;
 use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
+use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Serializer\ArraySerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,6 +64,50 @@ class CsvHandlerTest extends TestCase
         $request->get('newLine', '\\n')->willReturn('\\n');
 
         $view->getData()->willReturn($listRepresentation->reveal());
+
+        $handler = new CsvHandler($serializer->reveal());
+
+        ob_start();
+        $response = $handler->createResponse($viewHandler->reveal(), $view->reveal(), $request->reveal(), $format);
+        $content = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertInstanceOf(StreamedResponse::class, $response);
+        $this->assertEquals($response->headers->get('Content-Type'), 'text/csv');
+        $this->assertEquals(
+            str_replace('"', '', $response->headers->get('Content-Disposition')),
+            'attachment; filename=contacts.csv'
+        );
+
+        $this->assertEquals(
+            "id;fullName;birthday;enabled\n1;\"Max Mustermann\";1976-02-01T00:00:00+01:00;1\n2;\"Erika Mustermann\";1964-08-12T00:00:00+01:00;0\n",
+            $content
+        );
+    }
+
+    public function testCollectionRepresentation()
+    {
+        $collectionRepresentation = $this->prophesize(CollectionRepresentation::class);
+        $collectionRepresentation->getRel()->willReturn('contacts');
+        $collectionRepresentation->getData()->willReturn(
+            [
+                ['id' => 1, 'fullName' => 'Max Mustermann', 'birthday' => new \DateTime('1976-02-01T00:00:00+01:00'), 'enabled' => true],
+                ['id' => 2, 'fullName' => 'Erika Mustermann', 'birthday' => new \DateTime('1964-08-12T00:00:00+01:00'), 'enabled' => false],
+            ]
+        );
+
+        $viewHandler = $this->prophesize(ViewHandler::class);
+        $view = $this->prophesize(View::class);
+        $request = $this->prophesize(Request::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
+        $format = 'csv';
+
+        $request->get('delimiter', ';')->willReturn(';');
+        $request->get('enclosure', '"')->willReturn('"');
+        $request->get('escape', '\\')->willReturn('\\');
+        $request->get('newLine', '\\n')->willReturn('\\n');
+
+        $view->getData()->willReturn($collectionRepresentation->reveal());
 
         $handler = new CsvHandler($serializer->reveal());
 
