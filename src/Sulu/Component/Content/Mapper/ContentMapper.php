@@ -472,6 +472,7 @@ class ContentMapper implements ContentMapperInterface
             );
             $destDocument->setLocale($destLocale);
             $destDocument->setTitle($document->getTitle());
+            $destDocument->setStructureType($document->getStructureType());
             $destDocument->getStructure()->bind($document->getStructure()->toArray());
 
             if ($document instanceof WorkflowStageBehavior) {
