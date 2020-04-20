@@ -100,7 +100,7 @@ abstract class SuluKernel extends Kernel
     /**
      * @internal
      *
-     * This is only used to support Symfony ^4.3 and 5 at the same time.
+     * This is only used to support Symfony ^4.4 and 5 at the same time.
      * To get the container class use `getContainerClass` instead.
      *
      * This is a copy of the symfony 5.0 getContainerClass which does not include $this->name.
