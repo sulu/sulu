@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Security\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * This event is dispatched when the permissions of an object have been updated.

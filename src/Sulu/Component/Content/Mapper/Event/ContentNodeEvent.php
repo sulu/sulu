@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Mapper\Event;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * An instance of this class is thrown along with the sulu.content.node.save event.

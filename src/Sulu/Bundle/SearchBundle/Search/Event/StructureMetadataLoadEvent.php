@@ -13,7 +13,7 @@ namespace Sulu\Bundle\SearchBundle\Search\Event;
 
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Sulu\Component\Content\Compat\StructureInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Event which is fired when the Sulu Structure metadata driver

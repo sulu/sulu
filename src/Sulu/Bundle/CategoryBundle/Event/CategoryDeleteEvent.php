@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\CategoryBundle\Event;
 
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * An object of this class is thrown along with the category.delete event.

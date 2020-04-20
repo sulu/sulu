@@ -74,6 +74,7 @@
         "symfony/dependency-injection": "^4.4",
         "symfony/dom-crawler": "^4.4",
         "symfony/event-dispatcher": "^4.4",
+        "symfony/event-dispatcher-contracts": "^1.0 || ^2.0",
         "symfony/expression-language": "^4.4",
         "symfony/filesystem": "^4.4",
         "symfony/finder": "^4.4",

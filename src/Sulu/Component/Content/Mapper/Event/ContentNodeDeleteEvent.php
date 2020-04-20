@@ -15,8 +15,8 @@ use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Util\SuluNodeHelper;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Validator\Mapping\MetadataInterface;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * This event is thrown when a node is deleted.

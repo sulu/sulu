@@ -13,7 +13,7 @@ namespace Sulu\Bundle\TagBundle\Event;
 
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * An object of this class is thrown along with the tag.delete event.
