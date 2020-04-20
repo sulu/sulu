@@ -14,7 +14,6 @@ namespace Sulu\Bundle\SecurityBundle\EventListener;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Translation\TranslatorInterface as LegacyTranslatorInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -35,12 +34,11 @@ class UserLocaleListener
 
     public function __construct(TokenStorageInterface $tokenStorage, TranslatorInterface $translator)
     {
-        if (!$translator instanceof LocaleAwareInterface && !$translator instanceof LegacyTranslatorInterface) {
+        if (!$translator instanceof LocaleAwareInterface) {
             throw new \LogicException(sprintf(
-                'Expected "translator" in "%s" to be instance of "%s" or "%s" but "%s" given.',
+                'Expected "translator" in "%s" to be instance of "%s" but "%s" given.',
                 __CLASS__,
                 LocaleAwareInterface::class,
-                LegacyTranslatorInterface::class,
                 get_class($translator)
             ));
         }
