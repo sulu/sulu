@@ -24,7 +24,7 @@ class SuluCollector extends DataCollector
         return $this->data[$key];
     }
 
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, ?\Throwable $exception = null)
     {
         if (!$request->attributes->has('_sulu')) {
             return;
