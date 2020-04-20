@@ -22,7 +22,8 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -50,17 +51,15 @@ class AppendAnalyticsListenerTest extends TestCase
             'prod'
         );
 
-        $event = $this->prophesize(FilterResponseEvent::class);
         $request = $this->prophesize(Request::class);
-        $event->getRequest()->willReturn($request->reveal());
         $request->getRequestFormat()->willReturn($format);
         $response = $this->prophesize(Response::class);
         $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/plain']);
         $response->getContent()->shouldNotBeCalled();
         $requestAnalyzer->getPortalInformation()->shouldNotBeCalled();
-        $event->getResponse()->willReturn($response->reveal());
+        $event = $this->createResponseEvent($request->reveal(), $response->reveal());
 
-        $listener->onResponse($event->reveal());
+        $listener->onResponse($event);
 
         $engine->render(Argument::any(), Argument::any())->shouldNotBeCalled();
         $response->setContent(Argument::any())->shouldNotBeCalled();
@@ -78,17 +77,15 @@ class AppendAnalyticsListenerTest extends TestCase
             'prod'
         );
 
-        $event = $this->prophesize(FilterResponseEvent::class);
         $request = $this->prophesize(Request::class);
-        $event->getRequest()->willReturn($request->reveal());
         $request->getRequestFormat()->willReturn('html');
         $response = $this->prophesize(BinaryFileResponse::class);
         $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
         $response->getContent()->willReturn(false)->shouldBeCalled();
         $requestAnalyzer->getPortalInformation()->shouldNotBeCalled();
-        $event->getResponse()->willReturn($response->reveal());
+        $event = $this->createResponseEvent($request->reveal(), $response->reveal());
 
-        $listener->onResponse($event->reveal());
+        $listener->onResponse($event);
 
         $engine->render(Argument::any(), Argument::any())->shouldNotBeCalled();
         $response->setContent(Argument::any())->shouldNotBeCalled();
@@ -118,13 +115,11 @@ class AppendAnalyticsListenerTest extends TestCase
             'prod'
         );
 
-        $event = $this->prophesize(FilterResponseEvent::class);
         $request = $this->prophesize(Request::class);
-        $event->getRequest()->willReturn($request->reveal());
         $request->getRequestFormat()->willReturn('html');
         $response = $this->prophesize(Response::class);
         $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
-        $event->getResponse()->willReturn($response->reveal());
+        $event = $this->createResponseEvent($request->reveal(), $response->reveal());
 
         $loader = $this->prophesize(FilesystemLoader::class);
         $engine->getLoader()->shouldBeCalled()->willReturn($loader->reveal());
@@ -149,7 +144,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $response->setContent(
             '<html><head><title>Test</title><script>var i = 0;</script></head><body><h1>Title</h1></body></html>'
         )->shouldBeCalled();
-        $listener->onResponse($event->reveal());
+        $listener->onResponse($event);
     }
 
     public function testAppendWildcard()
@@ -176,15 +171,13 @@ class AppendAnalyticsListenerTest extends TestCase
             'prod'
         );
 
-        $event = $this->prophesize(FilterResponseEvent::class);
         $request = $this->prophesize(Request::class);
-        $event->getRequest()->willReturn($request->reveal());
         $request->getRequestFormat()->willReturn('html');
         $request->getHost()->willReturn('1.sulu.lo');
         $request->getRequestUri()->willReturn('/2');
         $response = $this->prophesize(Response::class);
         $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
-        $event->getResponse()->willReturn($response->reveal());
+        $event = $this->createResponseEvent($request->reveal(), $response->reveal());
 
         $loader = $this->prophesize(FilesystemLoader::class);
         $engine->getLoader()->shouldBeCalled()->willReturn($loader->reveal());
@@ -210,7 +203,7 @@ class AppendAnalyticsListenerTest extends TestCase
             '<html><head><title>Test</title><script>var i = 0;</script></head><body><h1>Title</h1></body></html>'
         )->shouldBeCalled();
 
-        $listener->onResponse($event->reveal());
+        $listener->onResponse($event);
     }
 
     public function testAppendGoogleTagManager()
@@ -237,13 +230,11 @@ class AppendAnalyticsListenerTest extends TestCase
             'prod'
         );
 
-        $event = $this->prophesize(FilterResponseEvent::class);
         $request = $this->prophesize(Request::class);
-        $event->getRequest()->willReturn($request->reveal());
         $request->getRequestFormat()->willReturn('html');
         $response = $this->prophesize(Response::class);
         $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
-        $event->getResponse()->willReturn($response->reveal());
+        $event = $this->createResponseEvent($request->reveal(), $response->reveal());
 
         $loader = $this->prophesize(FilesystemLoader::class);
         $engine->getLoader()->shouldBeCalled()->willReturn($loader->reveal());
@@ -269,7 +260,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $response->setContent(
             '<html><head><script>var i = 0;</script><title>Test</title></head><body class="test"><noscript><div>Blabla</div></noscript><h1>Title</h1></body></html>'
         )->shouldBeCalled();
-        $listener->onResponse($event->reveal());
+        $listener->onResponse($event);
     }
 
     public function testAppendPiwik()
@@ -296,13 +287,11 @@ class AppendAnalyticsListenerTest extends TestCase
             'prod'
         );
 
-        $event = $this->prophesize(FilterResponseEvent::class);
         $request = $this->prophesize(Request::class);
-        $event->getRequest()->willReturn($request->reveal());
         $request->getRequestFormat()->willReturn('html');
         $response = $this->prophesize(Response::class);
         $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
-        $event->getResponse()->willReturn($response->reveal());
+        $event = $this->createResponseEvent($request->reveal(), $response->reveal());
 
         $loader = $this->prophesize(FilesystemLoader::class);
         $engine->getLoader()->shouldBeCalled()->willReturn($loader->reveal());
@@ -328,7 +317,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $response->setContent(
             '<html><head><title>Test</title><script>var i = 0;</script></head><body class="test"><noscript><div>Blabla</div></noscript><h1>Title</h1></body></html>'
         )->shouldBeCalled();
-        $listener->onResponse($event->reveal());
+        $listener->onResponse($event);
     }
 
     public function testAppendCustom()
@@ -355,13 +344,11 @@ class AppendAnalyticsListenerTest extends TestCase
             'prod'
         );
 
-        $event = $this->prophesize(FilterResponseEvent::class);
         $request = $this->prophesize(Request::class);
-        $event->getRequest()->willReturn($request->reveal());
         $request->getRequestFormat()->willReturn('html');
         $response = $this->prophesize(Response::class);
         $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
-        $event->getResponse()->willReturn($response->reveal());
+        $event = $this->createResponseEvent($request->reveal(), $response->reveal());
 
         $loader = $this->prophesize(FilesystemLoader::class);
         $engine->getLoader()->shouldBeCalled()->willReturn($loader->reveal());
@@ -387,7 +374,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $response->setContent(
             '<html><head maybe-a-attribute-here="true"><script>var nice_var = false;</script><title>Test</title></head><body><header><h1>Title</h1></header></body></html>'
         )->shouldBeCalled();
-        $listener->onResponse($event->reveal());
+        $listener->onResponse($event);
     }
 
     public function testAppendPreview()
@@ -405,10 +392,24 @@ class AppendAnalyticsListenerTest extends TestCase
             true
         );
 
-        $event = $this->prophesize(FilterResponseEvent::class);
-        $event->getRequest()->shouldNotBeCalled();
-        $event->getResponse()->shouldNotBeCalled();
+        $request = $this->prophesize(Request::class);
+        $request->getRequestFormat()->shouldNotBeCalled();
+        $response = $this->prophesize(Response::class);
+        $response->getContent()->shouldNotBeCalled();
+        $event = $this->createResponseEvent($request->reveal(), $response->reveal());
 
-        $listener->onResponse($event->reveal());
+        $listener->onResponse($event);
+    }
+
+    private function createResponseEvent(Request $request, Response $response): ResponseEvent
+    {
+        $kernel = $this->prophesize(HttpKernelInterface::class);
+
+        return new ResponseEvent(
+            $kernel->reveal(),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST,
+            $response
+        );
     }
 }

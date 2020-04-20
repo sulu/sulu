@@ -23,8 +23,9 @@ use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Twig\Environment;
 
 class TargetGroupSubscriberTest extends TestCase
@@ -49,8 +50,14 @@ class TargetGroupSubscriberTest extends TestCase
      */
     private $targetGroupRepository;
 
+    /**
+     * @var HttpKernelInterface
+     */
+    private $kernel;
+
     public function setUp(): void
     {
+        $this->kernel = $this->prophesize(HttpKernelInterface::class);
         $this->twig = $this->prophesize(Environment::class);
         $this->targetGroupStore = $this->prophesize(TargetGroupStoreInterface::class);
         $this->targetGroupEvaluator = $this->prophesize(TargetGroupEvaluatorInterface::class);
@@ -75,18 +82,16 @@ class TargetGroupSubscriberTest extends TestCase
             'visitor-session'
         );
 
-        $event = $this->prophesize(GetResponseEvent::class);
         $request = new Request();
-
         $request->headers->set('X-Sulu-Target-Group', '1');
         $request->cookies->set('sulu-visitor-target-group', '2');
 
-        $event->getRequest()->willReturn($request);
+        $event = $this->createRequestEvent($request);
 
         $this->targetGroupStore->setTargetGroupId('1')->shouldBeCalled();
         $this->targetGroupStore->updateTargetGroupId(Argument::any())->shouldNotBeCalled();
 
-        $targetGroupSubscriber->setTargetGroup($event->reveal());
+        $targetGroupSubscriber->setTargetGroup($event);
     }
 
     /**
@@ -113,19 +118,18 @@ class TargetGroupSubscriberTest extends TestCase
             'visitor-session'
         );
 
-        $event = $this->prophesize(GetResponseEvent::class);
         $request = new Request();
 
         if ($headerTargetGroup) {
             $request->headers->set($targetGroupHeader, $headerTargetGroup);
         }
 
-        $event->getRequest()->willReturn($request);
+        $event = $this->createRequestEvent($request);
 
         $this->targetGroupStore->setTargetGroupId($result)->shouldBeCalled();
         $this->targetGroupStore->updateTargetGroupId(Argument::any())->shouldNotBeCalled();
 
-        $targetGroupSubscriber->setTargetGroup($event->reveal());
+        $targetGroupSubscriber->setTargetGroup($event);
     }
 
     public function provideSetTargetGroupFromHeader()
@@ -165,7 +169,6 @@ class TargetGroupSubscriberTest extends TestCase
             $visitorSessionCookie
         );
 
-        $event = $this->prophesize(GetResponseEvent::class);
         $request = new Request();
 
         if ($cookieTargetGroup) {
@@ -184,7 +187,7 @@ class TargetGroupSubscriberTest extends TestCase
                 ->willReturn($targetGroup->reveal());
         }
 
-        $event->getRequest()->willReturn($request);
+        $event = $this->createRequestEvent($request);
 
         if ($resultUpdate) {
             $this->targetGroupStore->setTargetGroupId(Argument::any())->shouldNotBeCalled();
@@ -194,7 +197,7 @@ class TargetGroupSubscriberTest extends TestCase
             $this->targetGroupStore->updateTargetGroupId(Argument::any())->shouldNotBeCalled();
         }
 
-        $targetGroupSubscriber->setTargetGroup($event->reveal());
+        $targetGroupSubscriber->setTargetGroup($event);
     }
 
     public function provideSetTargetGroupFromCookie()
@@ -228,16 +231,15 @@ class TargetGroupSubscriberTest extends TestCase
             'visitor-session'
         );
 
-        $event = $this->prophesize(GetResponseEvent::class);
         $request = new Request();
-        $event->getRequest()->willReturn($request);
+        $event = $this->createRequestEvent($request);
 
         $this->targetGroupEvaluator->evaluate()->willReturn($evaluatedTargetGroup);
 
         $this->targetGroupStore->setTargetGroupId(Argument::any())->shouldNotBeCalled();
         $this->targetGroupStore->updateTargetGroupId($result)->shouldBeCalled();
 
-        $targetGroupSubscriber->setTargetGroup($event->reveal());
+        $targetGroupSubscriber->setTargetGroup($event);
 
         $this->assertCount(0, $request->headers->all());
     }
@@ -275,16 +277,15 @@ class TargetGroupSubscriberTest extends TestCase
             'visitor-session'
         );
 
-        $event = $this->prophesize(GetResponseEvent::class);
         $request = Request::create('/_target_group');
-        $event->getRequest()->willReturn($request);
+        $event = $this->createRequestEvent($request);
 
         $this->targetGroupEvaluator->evaluate()->shouldNotBeCalled();
 
         $this->targetGroupStore->setTargetGroupId(Argument::any())->shouldNotBeCalled();
         $this->targetGroupStore->updateTargetGroupId(Argument::any())->shouldNotBeCalled();
 
-        $targetGroupSubscriber->setTargetGroup($event->reveal());
+        $targetGroupSubscriber->setTargetGroup($event);
     }
 
     /**
@@ -307,14 +308,13 @@ class TargetGroupSubscriberTest extends TestCase
             'sulu-visitor-target-group',
             'visitor-session'
         );
-        $event = $this->prophesize(FilterResponseEvent::class);
         $request = new Request([], [], [], [], [], ['REQUEST_URI' => $requestUrl]);
         $response = new Response();
-        $event->getRequest()->willReturn($request);
-        $event->getResponse()->willReturn($response);
+
+        $event = $this->createResponseEvent($request, $response);
         $this->targetGroupStore->hasInfluencedContent()->willReturn($hasInfluencedContent);
 
-        $targetGroupSubscriber->addVaryHeader($event->reveal());
+        $targetGroupSubscriber->addVaryHeader($event);
 
         $this->assertEquals($varyHeaders, $response->getVary());
     }
@@ -354,13 +354,11 @@ class TargetGroupSubscriberTest extends TestCase
         $this->targetGroupStore->hasChangedTargetGroup()->willReturn($hasChanged);
         $this->targetGroupStore->getTargetGroupId(true)->willReturn($cookieValue);
 
-        $event = $this->prophesize(FilterResponseEvent::class);
         $request = Request::create($url);
-        $event->getRequest()->willReturn($request);
         $response = new Response();
-        $event->getResponse()->willReturn($response);
+        $event = $this->createResponseEvent($request, $response);
 
-        $targetGroupSubscriber->addSetCookieHeader($event->reveal());
+        $targetGroupSubscriber->addSetCookieHeader($event);
 
         if ($cookieValue) {
             $targetGroupResponseCookie = $response->headers->getCookies()[0];
@@ -409,20 +407,17 @@ class TargetGroupSubscriberTest extends TestCase
             'sulu-visitor-target-group',
             'visitor-session'
         );
-
-        $event = $this->prophesize(FilterResponseEvent::class);
-
         $request = new Request();
         if ($uuid) {
             $structureBridge = $this->prophesize(StructureBridge::class);
             $structureBridge->getUuid()->willReturn($uuid);
             $request->attributes->set('structure', $structureBridge->reveal());
         }
-        $event->getRequest()->willReturn($request);
 
         $response = new Response('<body></body>');
         $response->headers->set('Content-Type', 'text/html');
-        $event->getResponse()->willReturn($response);
+
+        $event = $this->createResponseEvent($request, $response);
 
         $this->twig->render('@SuluAudienceTargeting/Template/hit-script.html.twig', [
             'url' => $targetGroupHitUrl,
@@ -432,7 +427,7 @@ class TargetGroupSubscriberTest extends TestCase
             'uuid' => $uuid,
         ])->willReturn('<script></script>');
 
-        $targetGroupSubscriber->addTargetGroupHitScript($event->reveal());
+        $targetGroupSubscriber->addTargetGroupHitScript($event);
 
         $this->assertEquals('<body><script></script></body>', $response->getContent());
     }
@@ -464,17 +459,15 @@ class TargetGroupSubscriberTest extends TestCase
             'visitor-session'
         );
 
-        $event = $this->prophesize(FilterResponseEvent::class);
         $request = new Request();
         $request->setMethod(Request::METHOD_GET);
-        $event->getRequest()->willReturn($request);
         $response = new Response();
         $response->headers->set('Content-Type', 'text/html');
-        $event->getResponse()->willReturn($response);
+        $event = $this->createResponseEvent($request, $response);
 
         $this->twig->render(Argument::cetera())->shouldNotBeCalled();
 
-        $targetGroupSubscriber->addTargetGroupHitScript($event->reveal());
+        $targetGroupSubscriber->addTargetGroupHitScript($event);
 
         $this->assertEquals('', $response->getContent());
     }
@@ -497,16 +490,14 @@ class TargetGroupSubscriberTest extends TestCase
             'visitor-session'
         );
 
-        $event = $this->prophesize(FilterResponseEvent::class);
         $request = new Request();
         $request->setMethod(Request::METHOD_GET);
-        $event->getRequest()->willReturn($request);
         $response = new JsonResponse();
-        $event->getResponse()->willReturn($response);
+        $event = $this->createResponseEvent($request, $response);
 
         $this->twig->render(Argument::cetera())->shouldNotBeCalled();
 
-        $targetGroupSubscriber->addTargetGroupHitScript($event->reveal());
+        $targetGroupSubscriber->addTargetGroupHitScript($event);
 
         $this->assertEquals('{}', $response->getContent());
     }
@@ -529,17 +520,15 @@ class TargetGroupSubscriberTest extends TestCase
             'visitor-session'
         );
 
-        $event = $this->prophesize(FilterResponseEvent::class);
         $request = new Request();
         $request->setMethod(Request::METHOD_GET);
-        $event->getRequest()->willReturn($request);
         $response = new Response('<body></body>');
         $response->headers->set('Content-Type', 'text/html; charset=UTF-8');
-        $event->getResponse()->willReturn($response);
+        $event = $this->createResponseEvent($request, $response);
 
         $this->twig->render(Argument::cetera())->willReturn('<script></script>');
 
-        $targetGroupSubscriber->addTargetGroupHitScript($event->reveal());
+        $targetGroupSubscriber->addTargetGroupHitScript($event);
 
         $this->assertEquals('<body><script></script></body>', $response->getContent());
     }
@@ -562,18 +551,35 @@ class TargetGroupSubscriberTest extends TestCase
             'visitor-session'
         );
 
-        $event = $this->prophesize(FilterResponseEvent::class);
         $request = new Request();
         $request->setMethod(Request::METHOD_POST);
-        $event->getRequest()->willReturn($request);
         $response = new Response();
         $response->headers->set('Content-Type', 'text/html');
-        $event->getResponse()->willReturn($response);
+        $event = $this->createResponseEvent($request, $response);
 
         $this->twig->render(Argument::cetera())->shouldNotBeCalled();
 
-        $targetGroupSubscriber->addTargetGroupHitScript($event->reveal());
+        $targetGroupSubscriber->addTargetGroupHitScript($event);
 
         $this->assertEquals('', $response->getContent());
+    }
+
+    private function createResponseEvent(Request $request, Response $response): ResponseEvent
+    {
+        return new ResponseEvent(
+            $this->kernel->reveal(),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST,
+            $response
+        );
+    }
+
+    private function createRequestEvent(Request $request): RequestEvent
+    {
+        return new RequestEvent(
+            $this->kernel->reveal(),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST
+        );
     }
 }

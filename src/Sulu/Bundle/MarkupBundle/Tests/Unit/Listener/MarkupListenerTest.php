@@ -18,7 +18,8 @@ use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class MarkupListenerTest extends TestCase
 {
@@ -28,7 +29,7 @@ class MarkupListenerTest extends TestCase
     private $markupParser;
 
     /**
-     * @var FilterResponseEvent
+     * @var ResponseEvent
      */
     private $event;
 
@@ -52,10 +53,16 @@ class MarkupListenerTest extends TestCase
      */
     private $listener;
 
+    /**
+     * @var HttpKernelInterface
+     */
+    private $kernel;
+
     protected function setUp(): void
     {
         $this->markupParser = $this->prophesize(MarkupParserInterface::class);
-        $this->event = $this->prophesize(FilterResponseEvent::class);
+
+        $this->kernel = $this->prophesize(HttpKernelInterface::class);
 
         $this->request = $this->prophesize(Request::class);
         $this->response = $this->prophesize(Response::class);
@@ -63,8 +70,12 @@ class MarkupListenerTest extends TestCase
         $this->responseHeaders = $this->prophesize(HeaderBag::class);
         $this->response->reveal()->headers = $this->responseHeaders->reveal();
 
-        $this->event->getRequest()->willReturn($this->request->reveal());
-        $this->event->getResponse()->willReturn($this->response->reveal());
+        $this->event = new ResponseEvent(
+            $this->kernel->reveal(),
+            $this->request->reveal(),
+            HttpKernelInterface::MASTER_REQUEST,
+            $this->response->reveal()
+        );
 
         $this->listener = new MarkupListener(['html' => $this->markupParser->reveal()], ['text/html' => 'html']);
     }
@@ -80,7 +91,7 @@ class MarkupListenerTest extends TestCase
 
         $this->response->setContent('<html><a href="/test">Page-Title</a></html>')->shouldBeCalled();
 
-        $this->listener->replaceMarkup($this->event->reveal());
+        $this->listener->replaceMarkup($this->event);
     }
 
     public function testReplaceMarkupWithEmptyContent()
@@ -92,6 +103,6 @@ class MarkupListenerTest extends TestCase
         $this->markupParser->parse(false, 'de')->willReturn(false);
 
         $this->response->setContent(Argument::any())->shouldNotBeCalled();
-        $this->listener->replaceMarkup($this->event->reveal());
+        $this->listener->replaceMarkup($this->event);
     }
 }

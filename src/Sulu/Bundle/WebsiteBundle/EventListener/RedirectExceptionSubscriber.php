@@ -19,7 +19,7 @@ use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -75,9 +75,9 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
     /**
      * Redirect trailing slashes or ".html".
      */
-    public function redirectTrailingSlashOrHtml(GetResponseForExceptionEvent $event)
+    public function redirectTrailingSlashOrHtml(ExceptionEvent $event)
     {
-        if (!$event->getException() instanceof NotFoundHttpException) {
+        if (!$event->getThrowable() instanceof NotFoundHttpException) {
             return;
         }
 
@@ -106,9 +106,9 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
     /**
      * Redirect partial and redirect matches.
      */
-    public function redirectPartialMatch(GetResponseForExceptionEvent $event)
+    public function redirectPartialMatch(ExceptionEvent $event)
     {
-        if (!$event->getException() instanceof NotFoundHttpException) {
+        if (!$event->getThrowable() instanceof NotFoundHttpException) {
             return;
         }
 
