@@ -2,6 +2,12 @@
 
 ## dev-master
 
+### Event classes changed
+
+The Sulu `Event` classes extend now from the new `Symfony\Contracts\EventDispatcher\Event`
+class instead of the deprecated `Symfony\Component\EventDispatcher\Event`.
+If you have code depending on the old class you need to update it.
+
 ### DoctrineCacheBundle removed
 
 The doctrine cache bundle requirement has been removed from sulu. The DoctrineCacheBundle is
