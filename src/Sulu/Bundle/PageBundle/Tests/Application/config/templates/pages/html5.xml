@@ -6,7 +6,7 @@
     <key>html5</key>
 
     <view>html5</view>
-    <controller>SuluWebsiteBundle:Default:index</controller>
+    <controller>Sulu\Bundle\WebsiteBundle\Controller\DefaultController::indexAction</controller>
     <cacheLifetime>2400</cacheLifetime>
 
     <properties>
