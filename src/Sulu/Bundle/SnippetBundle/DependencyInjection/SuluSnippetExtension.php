@@ -62,7 +62,6 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                                     'name' => 'sulu_snippet.edit_form',
                                     'result_to_view' => [
                                         'id' => 'id',
-                                        'locale' => 'locale',
                                     ],
                                 ],
                                 'types' => [

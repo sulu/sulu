@@ -81,7 +81,6 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                                     'name' => 'sulu_page.page_edit_form',
                                     'result_to_view' => [
                                         'id' => 'id',
-                                        'locale' => 'locale',
                                         'webspaceKey' => 'webspace',
                                     ],
                                 ],
