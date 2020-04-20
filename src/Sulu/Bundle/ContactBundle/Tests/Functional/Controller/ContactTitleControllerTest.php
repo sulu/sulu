@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class ContactTitleControllerTest extends SuluTestCase
 {
@@ -21,8 +22,14 @@ class ContactTitleControllerTest extends SuluTestCase
      */
     private $em;
 
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $this->em = $this->getEntityManager();
         $this->purgeDatabase();
     }
@@ -34,10 +41,9 @@ class ContactTitleControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/contact-titles');
+        $this->client->request('GET', '/api/contact-titles');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $contactTitles = $response->_embedded->contact_titles;
 
         $this->assertCount(2, $contactTitles);
@@ -55,15 +61,14 @@ class ContactTitleControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'DELETE',
             '/api/contact-titles?ids=' . $contactTitle1->getId() . ',' . $contactTitle3->getId()
         );
 
-        $client->request('GET', '/api/contact-titles');
+        $this->client->request('GET', '/api/contact-titles');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $contactTitles = $response->_embedded->contact_titles;
 
         $this->assertCount(1, $contactTitles);
@@ -78,15 +83,14 @@ class ContactTitleControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('PATCH', '/api/contact-titles', [
+        $this->client->request('PATCH', '/api/contact-titles', [
             ['id' => $contactTitle1->getId(), 'title' => 'BA'],
             ['title' => 'MA'],
         ]);
 
-        $client->request('GET', '/api/contact-titles');
+        $this->client->request('GET', '/api/contact-titles');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $contactTitles = $response->_embedded->contact_titles;
 
         $this->assertCount(3, $contactTitles);

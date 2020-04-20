@@ -11,34 +11,32 @@
 
 namespace Sulu\Bundle\CoreBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class LocalizationControllerTest extends SuluTestCase
 {
     /**
-     * @var EntityManager
+     * @var KernelBrowser
      */
-    private $em;
+    private $client;
 
     public function setUp(): void
     {
-        $this->em = $this->getEntityManager();
+        $this->client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
     }
 
     public function testCgetAction()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             '/admin/api/localizations'
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $data = json_decode($client->getResponse()->getContent(), true);
+        $data = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertCount(4, $data['_embedded']['localizations']);
     }

@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class KeywordControllerTest extends SuluTestCase
 {
@@ -33,8 +34,14 @@ class KeywordControllerTest extends SuluTestCase
      */
     private $category2;
 
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $this->entityManager = $this->getEntityManager();
 
         $this->initOrm();
@@ -74,15 +81,14 @@ class KeywordControllerTest extends SuluTestCase
         $this->testPost('keyword1', 'de', $this->category1->getId());
         $this->testPost('keyword2', 'de', $this->category1->getId());
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/categories/' . $this->category1->getId() . '/keywords?locale=de'
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(2, $response->total);
 
         usort($response->_embedded->category_keywords, function($key1, $key2) {
@@ -97,41 +103,38 @@ class KeywordControllerTest extends SuluTestCase
     {
         $keyword = $this->testPost('keyword1', 'de', $this->category1->getId());
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $keyword['id'] . '?locale=de'
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('keyword1', $response->keyword);
     }
 
     public function testGetNotExisting()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/categories/' . $this->category1->getId() . '/keywords/1?locale=de'
         );
 
-        $this->assertHttpStatusCode(404, $client->getResponse());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
     public function testPost($keyword = 'Test', $locale = 'de', $categoryId = null)
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/categories/' . ($categoryId ?: $this->category1->getId()) . '/keywords',
             ['locale' => $locale, 'keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -144,15 +147,14 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPost($keyword, $locale);
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/categories/' . $this->category1->getId() . '/keywords',
             ['locale' => $locale, 'keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -161,15 +163,14 @@ class KeywordControllerTest extends SuluTestCase
 
     public function testPostWithNotExistingCategoryTranslation()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/categories/' . $this->category1->getId() . '/keywords',
             ['locale' => 'it', 'keyword' => 'my-keyword']
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals('my-keyword', $result['keyword']);
         $this->assertEquals('it', $result['locale']);
@@ -180,15 +181,14 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPost($keyword, $locale);
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/categories/' . $this->category2->getId() . '/keywords',
             ['locale' => $locale, 'keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -201,15 +201,14 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPost('Test', $locale);
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/categories/' . $this->category2->getId() . '/keywords',
             ['locale' => $locale, 'keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -221,15 +220,14 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPost('Test', $locale);
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id'],
             ['keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -240,15 +238,14 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPost('Test', $locale);
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id'] . '?force=overwrite',
             ['keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -259,15 +256,14 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPost('Test', $locale);
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id'] . '?force=detach',
             ['keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -283,15 +279,14 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPostExistingOtherCategory('Test', $locale);
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id'],
             ['keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(409, $client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
         $this->assertEquals(2002, $result['code']);
     }
 
@@ -299,15 +294,14 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPostExistingOtherCategory('Test', $locale);
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id'] . '?force=overwrite',
             ['keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -318,15 +312,14 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPostExistingOtherCategory('Test', $locale);
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id'] . '?force=detach',
             ['keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -342,15 +335,14 @@ class KeywordControllerTest extends SuluTestCase
         $data1 = $this->testPost($keyword1, $locale, $this->category1->getId());
         $data2 = $this->testPost($keyword2, $locale, $this->category2->getId());
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/categories/' . $this->category2->getId() . '/keywords/' . $data2['id'],
             ['keyword' => $data1['keyword']]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(409, $client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
         $this->assertEquals(2001, $result['code']);
     }
 
@@ -359,15 +351,14 @@ class KeywordControllerTest extends SuluTestCase
         $data1 = $this->testPost($keyword1, $locale, $this->category1->getId());
         $data2 = $this->testPost($keyword2, $locale, $this->category2->getId());
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/categories/' . $this->category2->getId() . '/keywords/' . $data2['id'] . '?force=merge',
             ['keyword' => $data1['keyword']]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals($keyword1, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -378,13 +369,12 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPost($keyword, $locale);
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'DELETE',
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id']
         );
 
-        $this->assertHttpStatusCode(204, $client->getResponse());
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
         $this->assertNull($this->entityManager->find(KeywordInterface::class, $first['id']));
     }
 
@@ -392,13 +382,12 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPostExistingOtherCategory($keyword, $locale);
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'DELETE',
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id']
         );
 
-        $this->assertHttpStatusCode(204, $client->getResponse());
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
         $this->assertNotNull($this->entityManager->find(KeywordInterface::class, $first['id']));
     }
 }

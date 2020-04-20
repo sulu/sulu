@@ -17,6 +17,7 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class ResettingControllerTest extends SuluTestCase
 {
@@ -35,8 +36,14 @@ class ResettingControllerTest extends SuluTestCase
      */
     private $role;
 
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $this->em = $this->getEntityManager();
         $this->purgeDatabase();
 
@@ -62,27 +69,27 @@ class ResettingControllerTest extends SuluTestCase
         $this->em->persist($this->createUserRole($user, $this->role));
 
         $this->em->flush();
+        $this->em->clear();
     }
 
     public function testSendEmailAction()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->enableProfiler();
+        $this->client->enableProfiler();
 
-        $client->request('GET', '/security/reset/email', [
+        $this->client->request('GET', '/security/reset/email', [
             'user' => $this->users[0]->getEmail(),
         ]);
 
-        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         // asserting response
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertEquals($this->users[0]->getEmail(), $response->email);
 
         // asserting user properties
-        $user = $client->getContainer()->get('doctrine')->getManager()->find(
+        $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
             'SuluSecurityBundle:User',
             $this->users[0]->getId()
         );
@@ -90,7 +97,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertGreaterThan(new \DateTime(), $user->getPasswordResetTokenExpiresAt());
 
         // asserting sent mail
-        $expectedEmailData = $this->getExpectedEmailData($client, $user);
+        $expectedEmailData = $this->getExpectedEmailData($this->client, $user);
 
         $this->assertEquals(1, $mailCollector->getMessageCount());
         $message = $mailCollector->getMessages()[0];
@@ -103,23 +110,22 @@ class ResettingControllerTest extends SuluTestCase
 
     public function testSendEmailActionWithUsername()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->enableProfiler();
+        $this->client->enableProfiler();
 
-        $client->request('GET', '/security/reset/email', [
+        $this->client->request('GET', '/security/reset/email', [
             'user' => $this->users[0]->getUsername(),
         ]);
 
-        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         // asserting response
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertEquals($this->users[0]->getEmail(), $response->email);
 
         // asserting user properties
-        $user = $client->getContainer()->get('doctrine')->getManager()->find(
+        $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
                 'SuluSecurityBundle:User',
                 $this->users[0]->getId()
             );
@@ -128,7 +134,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals(1, $user->getPasswordResetTokenEmailsSent());
 
         // asserting sent mail
-        $expectedEmailData = $this->getExpectedEmailData($client, $user);
+        $expectedEmailData = $this->getExpectedEmailData($this->client, $user);
 
         $this->assertEquals(1, $mailCollector->getMessageCount());
         $message = $mailCollector->getMessages()[0];
@@ -141,23 +147,22 @@ class ResettingControllerTest extends SuluTestCase
 
     public function testSendEmailActionWithUserWithoutEmail()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->enableProfiler();
+        $this->client->enableProfiler();
 
-        $client->request('GET', '/security/reset/email', [
+        $this->client->request('GET', '/security/reset/email', [
             'user' => $this->users[1]->getUsername(),
         ]);
 
-        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         // asserting response
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertEquals('installation.email@sulu.test', $response->email);
 
         // asserting user properties
-        $user = $client->getContainer()->get('doctrine')->getManager()->find(
+        $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
                 'SuluSecurityBundle:User',
                 $this->users[1]->getId()
             );
@@ -166,7 +171,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals(1, $user->getPasswordResetTokenEmailsSent());
 
         // asserting sent mail
-        $expectedEmailData = $this->getExpectedEmailData($client, $user);
+        $expectedEmailData = $this->getExpectedEmailData($this->client, $user);
 
         $this->assertEquals(1, $mailCollector->getMessageCount());
         $message = $mailCollector->getMessages()[0];
@@ -179,23 +184,22 @@ class ResettingControllerTest extends SuluTestCase
 
     public function testResendEmailAction()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->enableProfiler();
+        $this->client->enableProfiler();
 
-        $client->request('GET', '/security/reset/email/resend', [
+        $this->client->request('GET', '/security/reset/email/resend', [
             'user' => $this->users[2]->getEmail(),
         ]);
 
-        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         // asserting response
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertEquals($this->users[2]->getEmail(), $response->email);
 
         // asserting user properties
-        $user = $client->getContainer()->get('doctrine')->getManager()->find(
+        $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
                 'SuluSecurityBundle:User',
                 $this->users[2]->getId()
             );
@@ -204,7 +208,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals(2, $user->getPasswordResetTokenEmailsSent());
 
         // asserting sent mail
-        $expectedEmailData = $this->getExpectedEmailData($client, $user);
+        $expectedEmailData = $this->getExpectedEmailData($this->client, $user);
 
         $this->assertEquals(1, $mailCollector->getMessageCount());
         $message = $mailCollector->getMessages()[0];
@@ -217,38 +221,37 @@ class ResettingControllerTest extends SuluTestCase
 
     public function testResendEmailActionTooMuch()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->enableProfiler();
+        $this->client->enableProfiler();
 
         // these request should all work (starting counter at 1 - because user3 already has one sent email)
         $counter = 1;
         $maxNumberEmails = $this->getContainer()->getParameter('sulu_security.reset_password.mail.token_send_limit');
         for (; $counter < $maxNumberEmails; ++$counter) {
-            $client->request('GET', '/security/reset/email/resend', [
+            $this->client->request('GET', '/security/reset/email/resend', [
                 'user' => $this->users[2]->getEmail(),
             ]);
 
-            $mailCollector = $client->getProfile()->getCollector('swiftmailer');
-            $response = json_decode($client->getResponse()->getContent());
+            $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+            $response = json_decode($this->client->getResponse()->getContent());
 
-            $this->assertHttpStatusCode(200, $client->getResponse());
+            $this->assertHttpStatusCode(200, $this->client->getResponse());
             $this->assertEquals($this->users[2]->getEmail(), $response->email);
             $this->assertEquals(1, $mailCollector->getMessageCount());
         }
 
         // now this request should fail
-        $client->request('GET', '/security/reset/email/resend', [
+        $this->client->request('GET', '/security/reset/email/resend', [
             'user' => $this->users[2]->getEmail(),
         ]);
 
-        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
-        $response = json_decode($client->getResponse()->getContent());
-        $user = $client->getContainer()->get('doctrine')->getManager()->find(
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        $response = json_decode($this->client->getResponse()->getContent());
+        $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
                 'SuluSecurityBundle:User',
                 $this->users[2]->getId()
             );
 
-        $this->assertHttpStatusCode(400, $client->getResponse());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
         $this->assertEquals(1007, $response->code);
         $this->assertEquals(0, $mailCollector->getMessageCount());
         $this->assertEquals($counter, $user->getPasswordResetTokenEmailsSent());
@@ -256,79 +259,75 @@ class ResettingControllerTest extends SuluTestCase
 
     public function testSendEmailActionWithMissingUser()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->enableProfiler();
+        $this->client->enableProfiler();
 
-        $client->request('GET', '/security/reset/email');
+        $this->client->request('GET', '/security/reset/email');
 
-        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertHttpStatusCode(400, $client->getResponse());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
         $this->assertEquals(0, $response->code);
         $this->assertEquals(0, $mailCollector->getMessageCount());
     }
 
     public function testSendEmailActionWithNotExistingUser()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->enableProfiler();
+        $this->client->enableProfiler();
 
-        $client->request('GET', '/security/reset/email', [
+        $this->client->request('GET', '/security/reset/email', [
             'user' => 'lord.voldemort@askab.an',
         ]);
 
-        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertHttpStatusCode(400, $client->getResponse());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
         $this->assertEquals(0, $response->code);
         $this->assertEquals(0, $mailCollector->getMessageCount());
     }
 
     public function testSendEmailActionMultipleTimes()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->enableProfiler();
+        $this->client->enableProfiler();
 
-        $client->request('GET', '/security/reset/email', [
+        $this->client->request('GET', '/security/reset/email', [
             'user' => $this->users[0]->getUsername(),
         ]);
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         // asserting response
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertEquals($this->users[0]->getEmail(), $response->email);
 
         // second request should be blocked
-        $client->request('GET', '/security/reset/email', [
+        $this->client->request('GET', '/security/reset/email', [
             'user' => $this->users[0]->getUsername(),
         ]);
-        $response = json_decode($client->getResponse()->getContent());
-        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+        $response = json_decode($this->client->getResponse()->getContent());
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
         // asserting response
-        $this->assertHttpStatusCode(400, $client->getResponse());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
         $this->assertEquals(1003, $response->code);
         $this->assertEquals(0, $mailCollector->getMessageCount());
     }
 
     public function testResetAction()
     {
-        $client = $this->createAuthenticatedClient();
         $newPassword = 'anewpasswordishouldremeber';
 
-        $client->request('GET', '/security/reset', [
+        $this->client->request('GET', '/security/reset', [
             'token' => 'thisisasupersecrettoken',
             'password' => $newPassword,
         ]);
-        $response = json_decode($client->getResponse()->getContent());
-        $user = $client->getContainer()->get('doctrine')->getManager()->find(
+        $response = json_decode($this->client->getResponse()->getContent());
+        $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
                 'SuluSecurityBundle:User',
                 $this->users[2]->getId()
             );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $encoder = $this->getContainer()->get('sulu_security.encoder_factory')->getEncoder($user);
         $this->assertEquals($encoder->encodePassword($newPassword, $user->getSalt()), $user->getPassword());
@@ -338,33 +337,31 @@ class ResettingControllerTest extends SuluTestCase
 
     public function testResetActionWithoutToken()
     {
-        $client = $this->createAuthenticatedClient();
         $passwordBefore = $this->users[2]->getPassword();
 
-        $client->request('GET', '/security/reset', [
+        $this->client->request('GET', '/security/reset', [
             'password' => 'thispasswordshouldnotbeapplied',
         ]);
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $user = $this->em->find('SuluSecurityBundle:User', $this->users[2]->getId());
 
-        $this->assertHttpStatusCode(400, $client->getResponse());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
         $this->assertEquals(1005, $response->code);
         $this->assertEquals($passwordBefore, $user->getPassword());
     }
 
     public function testResetActionWithInvalidToken()
     {
-        $client = $this->createAuthenticatedClient();
         $passwordBefore = $this->users[2]->getPassword();
 
-        $client->request('GET', '/security/reset', [
+        $this->client->request('GET', '/security/reset', [
             'token' => 'thistokendoesnotexist',
             'password' => 'thispasswordshouldnotbeapplied',
         ]);
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $user = $this->em->find('SuluSecurityBundle:User', $this->users[2]->getId());
 
-        $this->assertHttpStatusCode(400, $client->getResponse());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
         $this->assertEquals(1005, $response->code);
         $this->assertEquals($passwordBefore, $user->getPassword());
     }
@@ -375,13 +372,12 @@ class ResettingControllerTest extends SuluTestCase
         $this->em->persist($user);
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/security/reset/email', [
+        $this->client->request('GET', '/security/reset/email', [
             'user' => $user->getUsername(),
         ]);
-        $this->assertHttpStatusCode(400, $client->getResponse());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(1009, $response['code']);
     }
 
@@ -399,13 +395,12 @@ class ResettingControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/security/reset/email', [
+        $this->client->request('GET', '/security/reset/email', [
             'user' => $user->getUsername(),
         ]);
-        $this->assertHttpStatusCode(400, $client->getResponse());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(1009, $response['code']);
     }
 

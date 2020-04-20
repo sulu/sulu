@@ -13,15 +13,20 @@ namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadMediaTypes;
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class MediaStreamControllerTest extends SuluTestCase
+class MediaStreamControllerTest extends WebsiteTestCase
 {
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
-        parent::setUp();
-
+        $this->client = $this->createWebsiteClient();
         $this->purgeDatabase();
 
         $collectionTypes = new LoadCollectionTypes();
@@ -34,9 +39,9 @@ class MediaStreamControllerTest extends SuluTestCase
     {
         $filePath = $this->createMediaFile('test.jpg');
         $media = $this->createMedia($filePath, 'file-without-extension');
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', $media->getUrl());
-        $response = $client->getResponse();
+
+        $this->client->request('GET', $media->getUrl());
+        $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
     }
 
@@ -44,9 +49,9 @@ class MediaStreamControllerTest extends SuluTestCase
     {
         $filePath = $this->createMediaFile('test.jpg');
         $media = $this->createMedia($filePath, 'file-without-extension');
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', str_replace('v=1', 'v=99', $media->getUrl()));
-        $response = $client->getResponse();
+
+        $this->client->request('GET', str_replace('v=1', 'v=99', $media->getUrl()));
+        $response = $this->client->getResponse();
         $this->assertHttpStatusCode(404, $response);
     }
 
@@ -55,9 +60,9 @@ class MediaStreamControllerTest extends SuluTestCase
         $filePath = $this->createMediaFile('test.jpg');
         $oldMedia = $this->createMedia($filePath, 'file-without-extension');
         $newMedia = $this->createMediaVersion($oldMedia->getId(), $filePath, 'new-file-without-extension');
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', $oldMedia->getUrl());
-        $response = $client->getResponse();
+
+        $this->client->request('GET', $oldMedia->getUrl());
+        $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
         $this->assertEquals(
             sprintf(
@@ -76,9 +81,9 @@ class MediaStreamControllerTest extends SuluTestCase
     {
         $filePath = $this->createMediaFile('file-without-extension');
         $media = $this->createMedia($filePath, 'File without Extension');
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', $media->getUrl());
-        $response = $client->getResponse();
+
+        $this->client->request('GET', $media->getUrl());
+        $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
     }
 
@@ -86,9 +91,9 @@ class MediaStreamControllerTest extends SuluTestCase
     {
         $filePath = $this->createMediaFile('fitness-seasons.agency--C-&-C--Rodach,-Johannes');
         $media = $this->createMedia($filePath, 'fitness-seasons.agency--C-&-C--Rodach,-Johannes');
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', $media->getUrl());
-        $response = $client->getResponse();
+
+        $this->client->request('GET', $media->getUrl());
+        $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
 
         $this->assertEquals(
@@ -99,41 +104,37 @@ class MediaStreamControllerTest extends SuluTestCase
 
     public function testGetImageActionForNonExistingMedia()
     {
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('GET', '/uploads/media/sulu-400x400/01/test.jpg?v=1');
 
-        $client->request('GET', '/uploads/media/sulu-400x400/01/test.jpg?v=1');
-
-        $this->assertHttpStatusCode(404, $client->getResponse());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
     public function testGetImageAction()
     {
-        $client = $this->createAuthenticatedClient();
         $filePath = $this->createMediaFile('test.jpg');
         $media = $this->createMedia($filePath, 'Test jpg');
 
-        $client->request('GET', $media->getFormats()['small-inset']);
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $this->assertSame('image/jpeg', $client->getResponse()->headers->get('Content-Type'));
+        $this->client->request('GET', $media->getFormats()['small-inset']);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertSame('image/jpeg', $this->client->getResponse()->headers->get('Content-Type'));
 
-        $client->request('GET', $media->getFormats()['small-inset.gif']);
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $this->assertSame('image/gif', $client->getResponse()->headers->get('Content-Type'));
+        $this->client->request('GET', $media->getFormats()['small-inset.gif']);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertSame('image/gif', $this->client->getResponse()->headers->get('Content-Type'));
     }
 
     public function testGetImageActionSvg()
     {
-        $client = $this->createAuthenticatedClient();
         $filePath = $this->createMediaFile('test.svg', 'sulu.svg');
         $media = $this->createMedia($filePath, 'Test svg');
 
-        $client->request('GET', $media->getFormats()['small-inset']);
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $this->assertSame('image/svg+xml', $client->getResponse()->headers->get('Content-Type'));
+        $this->client->request('GET', $media->getFormats()['small-inset']);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertSame('image/svg+xml', $this->client->getResponse()->headers->get('Content-Type'));
 
-        $client->request('GET', $media->getFormats()['small-inset.svg']);
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $this->assertSame('image/svg+xml', $client->getResponse()->headers->get('Content-Type'));
+        $this->client->request('GET', $media->getFormats()['small-inset.svg']);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertSame('image/svg+xml', $this->client->getResponse()->headers->get('Content-Type'));
     }
 
     public function testGetImageActionSvgAsJpg()
@@ -144,22 +145,19 @@ class MediaStreamControllerTest extends SuluTestCase
             return;
         }
 
-        $client = $this->createAuthenticatedClient();
         $filePath = $this->createMediaFile('test.svg', 'sulu.svg');
         $media = $this->createMedia($filePath, 'Test svg');
 
-        $client->request('GET', $media->getFormats()['small-inset.jpg']);
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $this->assertSame('image/jpeg', $client->getResponse()->headers->get('Content-Type'));
+        $this->client->request('GET', $media->getFormats()['small-inset.jpg']);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertSame('image/jpeg', $this->client->getResponse()->headers->get('Content-Type'));
     }
 
     public function testDownloadActionForNonExistingMedia()
     {
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('GET', '/media/999/download/test.jpg?v=1');
 
-        $client->request('GET', '/media/999/download/test.jpg?v=1');
-
-        $this->assertHttpStatusCode(404, $client->getResponse());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
     private function createUploadedFile($path)

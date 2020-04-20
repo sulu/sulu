@@ -14,6 +14,7 @@ namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Category;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManager;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
@@ -77,6 +78,8 @@ class CategoryManagerTest extends TestCase
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $this->eventDispatcher->dispatch(Argument::any(), Argument::any())
+            ->willReturnArgument(0);
         $this->keywordManager = $this->prophesize(KeywordManagerInterface::class);
 
         $this->categoryManager = new CategoryManager(

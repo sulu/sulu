@@ -16,39 +16,42 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class WebsiteControllerTest extends WebsiteTestCase
 {
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
+        $this->client = $this->createWebsiteClient();
         $this->initPhpcr();
     }
 
     public function testPage()
     {
-        /** @var KernelBrowser $client */
-        $client = $this->createWebsiteClient();
+        /* @var KernelBrowser $client */
 
-        $client->request('GET', 'http://sulu.lo/');
+        $this->client->request('GET', 'http://sulu.lo/');
 
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
     }
 
     public function testPage406ForNotExistFormat()
     {
-        $client = $this->createWebsiteClient();
-        $client->request('GET', 'http://sulu.lo/.xml');
+        $this->client->request('GET', 'http://sulu.lo/.xml');
 
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
         $this->assertHttpStatusCode(406, $response);
     }
 
     public function testPageClientAcceptHeaderNotUsed()
     {
-        $client = $this->createWebsiteClient();
-        $client->request('GET', 'http://sulu.lo/', [], [], [
+        $this->client->request('GET', 'http://sulu.lo/', [], [], [
             'HTTP_ACCEPT' => 'text/plain',
         ]);
 
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
 
         // The accept header need to ignore so the http cache will have the correct content type in it

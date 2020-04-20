@@ -36,6 +36,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class AccountControllerTest extends SuluTestCase
 {
@@ -46,8 +47,14 @@ class AccountControllerTest extends SuluTestCase
      */
     private $em;
 
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
         $this->em = $this->getEntityManager();
     }
@@ -71,8 +78,8 @@ class AccountControllerTest extends SuluTestCase
         );
 
         // Make get request on flat api.
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+
+        $this->client->request(
             'GET',
             '/api/accounts?flat=true',
             [
@@ -80,8 +87,8 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertCount($amount, $response->_embedded->accounts);
     }
 
@@ -102,8 +109,8 @@ class AccountControllerTest extends SuluTestCase
         );
 
         // Make get request on flat api.
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+
+        $this->client->request(
             'GET',
             '/api/accounts?flat=true',
             [
@@ -113,8 +120,8 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertCount(1, $response->_embedded->accounts);
     }
 
@@ -124,15 +131,13 @@ class AccountControllerTest extends SuluTestCase
         $contact = $this->createContact($account, 'Vorname', 'Nachname');
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/accounts'
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertArrayNotHasKey('account', $response['_embedded']['accounts'][0]['accountContacts'][0]['contact']);
         $this->assertArrayNotHasKey('account', $response['_embedded']['accounts'][0]['contacts'][0]);
@@ -189,16 +194,14 @@ class AccountControllerTest extends SuluTestCase
         );
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/accounts/' . $account->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals('Company', $response->name);
         $this->assertEquals('http://www.company.example', $response->contactDetails->websites[0]->website);
@@ -238,15 +241,14 @@ class AccountControllerTest extends SuluTestCase
 
     public function testGetByIdNotExisting()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/accounts/11230'
         );
 
-        $this->assertHttpStatusCode(404, $client->getResponse());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, $response->code);
         $this->assertTrue(isset($response->message));
     }
@@ -259,11 +261,10 @@ class AccountControllerTest extends SuluTestCase
         $this->em->persist($account);
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/accounts/' . $account->getId() . '/contacts?flat=true');
+        $this->client->request('GET', '/api/accounts/' . $account->getId() . '/contacts?flat=true');
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals(0, $response->total);
         $this->assertCount(0, $response->_embedded->account_contacts);
@@ -314,14 +315,13 @@ class AccountControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/accounts/' . $account->getId() . '/contacts?flat=true&fields=firstName&sortBy=firstName'
         );
 
-        $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals(2, $response['total']);
         $this->assertCount(2, $response['_embedded']['account_contacts']);
@@ -364,14 +364,13 @@ class AccountControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/accounts/' . $account->getId() . '/contacts?search=Max&searchFields=fullName&flat=true&fields=fullName'
         );
 
-        $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals(1, $response['total']);
         $this->assertCount(1, $response['_embedded']['account_contacts']);
@@ -398,9 +397,7 @@ class AccountControllerTest extends SuluTestCase
         $category2 = $this->createCategory('second-category-key', 'en', 'Second Category', 'Description of second Category');
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/accounts',
             [
@@ -477,8 +474,8 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals('ExampleCompany', $response->name);
         $this->assertEquals('A small notice', $response->note);
@@ -521,8 +518,7 @@ class AccountControllerTest extends SuluTestCase
 
     public function testPostWithNullContactDetails()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/accounts',
             [
@@ -531,15 +527,14 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('ExampleCompany', $response->name);
     }
 
     public function testPostWithNullLogo()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/accounts',
             [
@@ -552,8 +547,8 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('ExampleCompany', $response->name);
     }
 
@@ -564,8 +559,7 @@ class AccountControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/accounts',
             [
@@ -582,11 +576,11 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(400, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertStringContainsString('15', $response->message);
 
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/accounts',
             [
@@ -607,11 +601,11 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(400, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertStringContainsString('16', $response->message);
 
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/accounts',
             [
@@ -632,11 +626,11 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(400, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertStringContainsString('17', $response->message);
 
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/accounts',
             [
@@ -656,11 +650,11 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(400, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertStringContainsString('18', $response->message);
 
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/accounts',
             [
@@ -674,15 +668,14 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(400, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertStringContainsString('19', $response->message);
     }
 
     public function testPostWithNotExistingUrlType()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/accounts',
             [
@@ -698,15 +691,14 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(404, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertTrue(isset($response->message));
     }
 
     public function testPostWithNotExistingEmailType()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/accounts',
             [
@@ -726,8 +718,8 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(404, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertTrue(isset($response->message));
     }
 
@@ -736,8 +728,7 @@ class AccountControllerTest extends SuluTestCase
         $phoneType = $this->createPhoneType('Private');
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/accounts',
             [
@@ -757,15 +748,14 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(404, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertTrue(isset($response->message));
     }
 
     public function testPostWithNotExistingAddressType()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/accounts',
             [
@@ -784,15 +774,14 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(404, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertTrue(isset($response->message));
     }
 
     public function testPostWithNotExistingFaxType()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/accounts',
             [
@@ -808,15 +797,14 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(404, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertTrue(isset($response->message));
     }
 
     public function testPostWithNotExistingCountry()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/accounts',
             [
@@ -835,8 +823,8 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(404, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertTrue(isset($response->message));
     }
 
@@ -848,9 +836,8 @@ class AccountControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/accounts?flat=true');
-        $response = json_decode($client->getResponse()->getContent());
+        $this->client->request('GET', '/api/accounts?flat=true');
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(3, $response->total);
 
@@ -863,15 +850,14 @@ class AccountControllerTest extends SuluTestCase
         $this->createAccount('Something');
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/accounts?flat=true&search=Nothing&searchFields=name');
-        $response = json_decode($client->getResponse()->getContent());
+        $this->client->request('GET', '/api/accounts?flat=true&search=Nothing&searchFields=name');
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(0, $response->total);
         $this->assertEquals(0, count($response->_embedded->accounts));
 
-        $client->request('GET', '/api/accounts?flat=true&search=Comp&searchFields=name');
-        $response = json_decode($client->getResponse()->getContent());
+        $this->client->request('GET', '/api/accounts?flat=true&search=Comp&searchFields=name');
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
         $this->assertEquals(1, count($response->_embedded->accounts));
@@ -916,8 +902,7 @@ class AccountControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/accounts/' . $account->getId(),
             [
@@ -1008,8 +993,8 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals('ExampleCompany', $response->name);
         $this->assertEquals('A small notice', $response->note);
@@ -1146,8 +1131,7 @@ class AccountControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/accounts/' . $account->getId(),
             [
@@ -1163,8 +1147,8 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('ExampleCompany', $response->name);
         $this->assertEquals(null, $response->uid);
@@ -1211,8 +1195,7 @@ class AccountControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/accounts/' . $account->getId(),
             [
@@ -1221,8 +1204,8 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('ExampleCompany', $response->name);
     }
@@ -1235,8 +1218,7 @@ class AccountControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/accounts/' . $account->getId() . '/contacts/' . $contact->getId(),
             [
@@ -1244,11 +1226,11 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $client->request('GET', '/api/accounts/' . $account->getId() . '/contacts?flat=true');
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->client->request('GET', '/api/accounts/' . $account->getId() . '/contacts?flat=true');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $accountContacts = $response->_embedded->account_contacts;
         $this->assertCount(1, $accountContacts);
@@ -1277,8 +1259,7 @@ class AccountControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/accounts/' . $account->getId(),
             [
@@ -1287,17 +1268,15 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(null, $response->mainContact);
     }
 
     public function testPutNotExisting()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/accounts/4711',
             [
@@ -1305,14 +1284,12 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(404, $client->getResponse());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
     public function testPatchNotExisting()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'PATCH',
             '/api/accounts/101',
             [
@@ -1320,7 +1297,7 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(404, $client->getResponse());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
     public function testPatchAssignedMedias()
@@ -1335,14 +1312,12 @@ class AccountControllerTest extends SuluTestCase
         $media2 = $this->createMedia('media2.jpeg', 'image/jpeg', $mediaType, $collection);
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request('GET', '/api/accounts/' . $account->getId());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->client->request('GET', '/api/accounts/' . $account->getId());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, count($response->medias));
 
         // add two medias
-        $client->request(
+        $this->client->request(
             'PATCH',
             '/api/accounts/' . $account->getId(),
             [
@@ -1353,11 +1328,11 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertCount(2, $response->medias);
 
         // remove medias
-        $client->request(
+        $this->client->request(
             'PATCH',
             '/api/accounts/' . $account->getId(),
             [
@@ -1365,11 +1340,11 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, count($response->medias));
 
         // missing media
-        $client->request(
+        $this->client->request(
             'PATCH',
             '/api/accounts/' . $account->getId(),
             [
@@ -1380,10 +1355,10 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(404, $client->getResponse());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
 
-        $client->request('GET', '/api/accounts/' . $account->getId());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->client->request('GET', '/api/accounts/' . $account->getId());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, count($response->medias));
     }
 
@@ -1392,10 +1367,8 @@ class AccountControllerTest extends SuluTestCase
         $account = $this->createAccount('Company');
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request('DELETE', '/api/accounts/' . $account->getId());
-        $this->assertHttpStatusCode(204, $client->getResponse());
+        $this->client->request('DELETE', '/api/accounts/' . $account->getId());
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
     }
 
     public function testDeleteParentById()
@@ -1404,12 +1377,10 @@ class AccountControllerTest extends SuluTestCase
         $childAccount = $this->createAccount('Company', $parentAccount);
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('DELETE', '/api/accounts/' . $parentAccount->getId());
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
 
-        $client->request('DELETE', '/api/accounts/' . $parentAccount->getId());
-        $this->assertHttpStatusCode(409, $client->getResponse());
-
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($parentAccount->getId(), $response->id);
         $this->assertEquals('Company', $response->items[0]->name);
@@ -1423,19 +1394,17 @@ class AccountControllerTest extends SuluTestCase
         $account = $this->createAccount('Company', null, null, $address);
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request('GET', '/api/accounts/' . $account->getId() . '/addresses');
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->client->request('GET', '/api/accounts/' . $account->getId() . '/addresses');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $address = $response->_embedded->addresses[0];
         $this->assertEquals('Musterstraße', $address->street);
         $this->assertEquals('1', $address->number);
 
-        $client->request('GET', '/api/accounts/' . $account->getId() . '/addresses?flat=true');
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->client->request('GET', '/api/accounts/' . $account->getId() . '/addresses?flat=true');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
 
@@ -1450,21 +1419,19 @@ class AccountControllerTest extends SuluTestCase
         $contact = $this->createContact($account, 'Vorname', 'Nachname');
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'DELETE',
             '/api/accounts/' . $account->getId(),
             [
                 'removeContacts' => 'false',
             ]
         );
-        $this->assertHttpStatusCode(204, $client->getResponse());
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
 
         // check if contacts are still there
-        $client->request('GET', '/api/contacts?flat=true');
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->client->request('GET', '/api/contacts?flat=true');
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertEquals(2, $response->total);
     }
 
@@ -1487,9 +1454,7 @@ class AccountControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'DELETE',
             '/api/accounts/' . $account->getId(),
             [
@@ -1497,19 +1462,17 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
         // check if contacts are still there
-        $this->assertHttpStatusCode(204, $client->getResponse());
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        $client->request('GET', '/api/contacts?flat=true');
-        $response = json_decode($client->getResponse()->getContent());
+        $this->client->request('GET', '/api/contacts?flat=true');
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, $response->total);
     }
 
     public function testDeleteByIdNotExisting()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request('DELETE', '/api/accounts/4711');
-        $this->assertHttpStatusCode(404, $client->getResponse());
+        $this->client->request('DELETE', '/api/accounts/4711');
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
     /**
@@ -1553,8 +1516,7 @@ class AccountControllerTest extends SuluTestCase
         // get number of contacts from both accounts
         $numContacts = $account->getAccountContacts()->count() + $acc->getAccountContacts()->count();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/accounts/multipledeleteinfo',
             [
@@ -1564,8 +1526,8 @@ class AccountControllerTest extends SuluTestCase
 
         // asserts
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         // return full number of contacts related to account
         $this->assertEquals($numContacts, $response->numContacts);
@@ -1601,12 +1563,10 @@ class AccountControllerTest extends SuluTestCase
 
         $numContacts = $account->getAccountContacts()->count();
 
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('GET', '/api/accounts/' . $account->getId() . '/deleteinfo');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $client->request('GET', '/api/accounts/' . $account->getId() . '/deleteinfo');
-        $this->assertHttpStatusCode(200, $client->getResponse());
-
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         // number of returned contacts has to be less or equal 3
         $this->assertEquals(3, count($response->contacts));
@@ -1630,16 +1590,17 @@ class AccountControllerTest extends SuluTestCase
             $childAccount = new Account();
             $childAccount->setName('child num#' . $i);
             $childAccount->setParent($account);
+            $account->addChildren($childAccount);
 
             $this->em->persist($childAccount);
         }
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
+        $accountId = $account->getId();
 
-        $client->request('GET', '/api/accounts/' . $account->getId() . '/deleteinfo');
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->client->request('GET', '/api/accounts/' . $accountId . '/deleteinfo');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         // deletion not allowed if children existent
         $this->assertGreaterThan(0, $response->numChildren);
@@ -1650,9 +1611,8 @@ class AccountControllerTest extends SuluTestCase
 
     public function testGetDeleteInfoByIdNotExisting()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/accounts/4711/deleteinfo');
-        $this->assertHttpStatusCode(404, $client->getResponse());
+        $this->client->request('GET', '/api/accounts/4711/deleteinfo');
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
     public function testPutRemovedParentAccount()
@@ -1665,9 +1625,7 @@ class AccountControllerTest extends SuluTestCase
         $account = $this->createAccount('Company', null);
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/accounts',
             [
@@ -1722,8 +1680,8 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals('ExampleCompany', $response->name);
         $this->assertEquals($account->getId(), $response->parent->id);
@@ -1746,7 +1704,7 @@ class AccountControllerTest extends SuluTestCase
 
         $account2Id = $response->id;
 
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/accounts/' . $account2Id,
             [
@@ -1806,8 +1764,8 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals('ExampleCompany 222', $response->name);
         $this->assertNull($response->parent);
@@ -1837,9 +1795,7 @@ class AccountControllerTest extends SuluTestCase
         $account = $this->createAccount('Company', null);
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/accounts',
             [
@@ -1898,14 +1854,14 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals(false, $response->addresses[0]->primaryAddress);
         $this->assertEquals(true, $response->addresses[1]->primaryAddress);
 
-        $client->request('GET', '/api/accounts/' . $response->id);
-        $response = json_decode($client->getResponse()->getContent());
+        $this->client->request('GET', '/api/accounts/' . $response->id);
+        $response = json_decode($this->client->getResponse()->getContent());
 
         if (1 == $response->addresses[0]->number) {
             $this->assertEquals(false, $response->addresses[0]->primaryAddress);
@@ -1926,8 +1882,7 @@ class AccountControllerTest extends SuluTestCase
         $account = $this->createAccount('Company', null, $url, $address);
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/accounts/' . $account->getId(),
             [
@@ -2002,21 +1957,21 @@ class AccountControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         usort($response->addresses, $this->sortAddressesPrimaryLast());
 
         $this->assertEquals(false, $response->addresses[0]->primaryAddress);
         $this->assertEquals(false, $response->addresses[1]->primaryAddress);
         $this->assertEquals(true, $response->addresses[2]->primaryAddress);
 
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/accounts/' . $account->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         usort($response->addresses, $this->sortAddressesPrimaryLast());
 
         $this->assertEquals(false, $response->addresses[0]->primaryAddress);
@@ -2042,15 +1997,13 @@ class AccountControllerTest extends SuluTestCase
         $this->createAccount('Account 2.1', $account2);
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/accounts?flat=true&hasNoParent=true'
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertEquals(2, $response->total);
     }
 

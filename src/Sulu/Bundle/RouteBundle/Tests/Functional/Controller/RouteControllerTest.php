@@ -48,6 +48,7 @@ class RouteControllerTest extends SuluTestCase
 
     public function testCGetAction()
     {
+        $client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
 
         $routes = [
@@ -58,7 +59,6 @@ class RouteControllerTest extends SuluTestCase
         $this->createRoute('/test-1-1', $routes[0]);
         $this->createRoute('/test-2-1', $routes[1]);
 
-        $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
             sprintf(
@@ -81,9 +81,9 @@ class RouteControllerTest extends SuluTestCase
 
     public function testCGetActionNotExistingResourceKey()
     {
+        $client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
 
-        $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
             sprintf(
@@ -100,6 +100,7 @@ class RouteControllerTest extends SuluTestCase
 
     public function testCGetActionHistory()
     {
+        $client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
 
         $targetRoute = $this->createRoute('/test');
@@ -109,7 +110,6 @@ class RouteControllerTest extends SuluTestCase
             $this->createRoute('/test-4', $targetRoute),
         ];
 
-        $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
             sprintf(
@@ -142,6 +142,7 @@ class RouteControllerTest extends SuluTestCase
 
     public function testDelete()
     {
+        $client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
 
         $targetRoute = $this->createRoute('/test');
@@ -151,8 +152,11 @@ class RouteControllerTest extends SuluTestCase
             $this->createRoute('/test-4', $targetRoute),
         ];
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('DELETE', '/api/routes?ids=' . $targetRoute->getId());
+        $this->getEntityManager()->clear();
+
+        $targetRouteId = $targetRoute->getId();
+
+        $client->request('DELETE', '/api/routes?ids=' . $targetRouteId);
         $this->assertHttpStatusCode(204, $client->getResponse());
 
         $client->request(
@@ -171,6 +175,7 @@ class RouteControllerTest extends SuluTestCase
 
     public function testDeleteHistory()
     {
+        $client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
 
         $targetRoute = $this->createRoute('/test');
@@ -180,11 +185,9 @@ class RouteControllerTest extends SuluTestCase
             $this->createRoute('/test-4', $targetRoute),
         ];
 
-        $client = $this->createAuthenticatedClient();
         $client->request('DELETE', '/api/routes?ids=' . $routes[0]->getId());
         $this->assertHttpStatusCode(204, $client->getResponse());
 
-        $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
             sprintf(

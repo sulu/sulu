@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\CustomUrlBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class CustomUrlRouteControllerTest extends SuluTestCase
 {
@@ -20,8 +21,14 @@ class CustomUrlRouteControllerTest extends SuluTestCase
      */
     private $contentDocument;
 
-    protected function setUp(): void
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
+    public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $this->initPhpcr();
         $this->contentDocument = $this->getContainer()->get('sulu_document_manager.document_manager')
             ->find('/cmf/sulu_io/contents', 'en');
@@ -107,27 +114,25 @@ class CustomUrlRouteControllerTest extends SuluTestCase
         $statusCode = 204,
         $restErrorCode = null
     ) {
-        $client = $this->createAuthenticatedClient();
-
         foreach ($before as $beforeData) {
             $beforeData['targetDocument'] = $this->contentDocument->getUuid();
-            $client->request('POST', '/api/webspaces/sulu_io/custom-urls', $beforeData);
+            $this->client->request('POST', '/api/webspaces/sulu_io/custom-urls', $beforeData);
         }
 
         $data['targetDocument'] = $this->contentDocument->getUuid();
 
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
         $responseData = json_decode($response->getContent(), true);
         $uuid = $responseData['id'];
 
-        $client->request('PUT', '/api/webspaces/sulu_io/custom-urls/' . $uuid, $data);
+        $this->client->request('PUT', '/api/webspaces/sulu_io/custom-urls/' . $uuid, $data);
 
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
         $responseData = json_decode($response->getContent(), true);
         $uuid = $responseData['id'];
 
-        $client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid . '/routes');
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid . '/routes');
+        $response = json_decode($this->client->getResponse()->getContent(), true);
 
         $customUrlRoutes = $response['_embedded']['custom_url_routes'];
 
@@ -142,12 +147,12 @@ class CustomUrlRouteControllerTest extends SuluTestCase
             }
         }
 
-        $client->request(
+        $this->client->request(
             'DELETE',
             '/api/webspaces/sulu_io/custom-urls/' . $uuid . '/routes?ids=' . implode(',', $uuids)
         );
 
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
         $this->assertHttpStatusCode($statusCode, $response);
 
         if ($restErrorCode) {
@@ -157,13 +162,13 @@ class CustomUrlRouteControllerTest extends SuluTestCase
             return;
         }
 
-        $client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
-        $customUrl = json_decode($client->getResponse()->getContent(), true);
+        $this->client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
+        $customUrl = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals($url, $customUrl['customUrl']);
 
-        $client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid . '/routes');
-        $customUrlRoutes = json_decode($client->getResponse()->getContent(), true);
+        $this->client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid . '/routes');
+        $customUrlRoutes = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals(
             $excpected,

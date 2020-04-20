@@ -12,11 +12,19 @@
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class VersionControllerTest extends SuluTestCase
 {
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
+
         if (!$this->getContainer()->getParameter('sulu_document_manager.versioning.enabled')) {
             // If versioning is disabled controller should not be available
             $this->assertFalse($this->getContainer()->has('sulu_page.version_controller'));
@@ -44,15 +52,13 @@ class VersionControllerTest extends SuluTestCase
         $documentManager->publish($document, 'de');
         $documentManager->flush();
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/pages/' . $document->getUuid() . '/versions/1_0?action=restore&locale=de&webspace=sulu_io'
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals('first title', $response['title']);
     }
 
@@ -67,14 +73,12 @@ class VersionControllerTest extends SuluTestCase
         $documentManager->publish($document, 'de');
         $documentManager->flush();
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/pages/' . $document->getUuid() . '/versions/2_0?action=restore&locale=de&webspace=sulu_io'
         );
 
-        $this->assertHttpStatusCode(404, $client->getResponse());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
     public function testCGet()
@@ -94,15 +98,13 @@ class VersionControllerTest extends SuluTestCase
         $documentManager->publish($document, 'de');
         $documentManager->flush();
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/pages/' . $document->getUuid() . '/versions?locale=de&webspace=sulu_io'
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals(2, $response['total']);
 

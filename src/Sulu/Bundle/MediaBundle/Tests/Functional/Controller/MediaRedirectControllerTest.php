@@ -22,6 +22,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class MediaRedirectControllerTest extends SuluTestCase
 {
@@ -80,9 +81,14 @@ class MediaRedirectControllerTest extends SuluTestCase
      */
     protected $mediaDefaultDescription = 'description';
 
-    protected function setUp(): void
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
+    public function setUp(): void
     {
-        parent::setUp();
+        $this->client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
         $this->em = $this->getEntityManager();
         $this->cleanImage();
@@ -306,12 +312,12 @@ class MediaRedirectControllerTest extends SuluTestCase
     public function testRedirect()
     {
         $media = $this->createMedia('photo');
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/redirect/media/' . $media->getId() . '?locale=en-gb');
+
+        $this->client->request('GET', '/redirect/media/' . $media->getId() . '?locale=en-gb');
 
         $this->assertEquals(
             '/media/' . $media->getId() . '/download/photo.jpeg?v=1',
-            $client->getResponse()->headers->get('location')
+            $this->client->getResponse()->headers->get('location')
         );
     }
 
@@ -321,12 +327,12 @@ class MediaRedirectControllerTest extends SuluTestCase
     public function testRedirectFormat()
     {
         $media = $this->createMedia('photo');
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/redirect/media/' . $media->getId() . '?locale=en-gb&format=sulu-50x50');
+
+        $this->client->request('GET', '/redirect/media/' . $media->getId() . '?locale=en-gb&format=sulu-50x50');
 
         $this->assertRegExp(
             '/\/uploads\/media\/sulu-50x50\/\d{2}\/' . $media->getId() . '-photo.jpg\?v=1-0/',
-            $client->getResponse()->headers->get('location')
+            $this->client->getResponse()->headers->get('location')
         );
     }
 

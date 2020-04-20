@@ -34,9 +34,15 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class AccountMediaControllerTest extends SuluTestCase
 {
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     /**
      * @var Account
      */
@@ -54,6 +60,7 @@ class AccountMediaControllerTest extends SuluTestCase
 
     public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $this->em = $this->getEntityManager();
         $this->purgeDatabase();
         $this->initOrm();
@@ -157,6 +164,7 @@ class AccountMediaControllerTest extends SuluTestCase
         $this->em->persist($contact);
 
         $this->em->flush();
+        $this->em->clear();
     }
 
     public function setUpMediaEntities()
@@ -278,9 +286,8 @@ class AccountMediaControllerTest extends SuluTestCase
 
     public function testGetList()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/accounts/' . $this->account->getId() . '/medias?flat=true');
-        $response = json_decode($client->getResponse()->getContent());
+        $this->client->request('GET', '/api/accounts/' . $this->account->getId() . '/medias?flat=true');
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
         $this->assertEquals($this->media2->getId(), $response->_embedded->account_media[0]->id);
@@ -291,17 +298,15 @@ class AccountMediaControllerTest extends SuluTestCase
 
     public function testAccountMediaPost()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/accounts/' . $this->account->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($response->medias));
 
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/accounts/' . $this->account->getId() . '/medias',
             [
@@ -309,15 +314,15 @@ class AccountMediaControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertNotNull($response->id);
 
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/accounts/' . $this->account->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(2, count($response->medias));
         $this->assertIsInt($response->medias[0]);
         $this->assertIsInt($response->medias[1]);
@@ -325,17 +330,15 @@ class AccountMediaControllerTest extends SuluTestCase
 
     public function testAccountMediaPostNotExistingMedia()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/accounts/' . $this->account->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($response->medias));
 
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/accounts/' . $this->account->getId() . '/medias',
             [
@@ -343,53 +346,50 @@ class AccountMediaControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(404, $client->getResponse());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
 
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/accounts/' . $this->account->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($response->medias));
     }
 
     public function testAccountMediaDelete()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'DELETE',
             '/api/accounts/' . $this->account->getId() . '/medias/' . $this->media2->getId()
         );
 
-        $this->assertHttpStatusCode(204, $client->getResponse());
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/accounts/' . $this->account->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, count($response->medias));
     }
 
     public function testAccountMediaDeleteNotExistingRelation()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'DELETE',
             '/api/accounts/' . $this->account->getId() . '/medias/99'
         );
 
-        $this->assertHttpStatusCode(404, $client->getResponse());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
 
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/accounts/' . $this->account->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($response->medias));
     }
 }

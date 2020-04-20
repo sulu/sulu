@@ -14,6 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Controller;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManagerInterface;
 use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class AnalyticsControllerTest extends SuluTestCase
 {
@@ -27,8 +28,14 @@ class AnalyticsControllerTest extends SuluTestCase
      */
     private $entities = [];
 
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $this->analyticsManager = $this->getContainer()->get('sulu_website.analytics.manager');
 
         $this->purgeDatabase();
@@ -37,24 +44,20 @@ class AnalyticsControllerTest extends SuluTestCase
 
     public function testListEmptyResponse()
     {
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('GET', '/api/webspaces/test/analytics');
 
-        $client->request('GET', '/api/webspaces/test/analytics');
-
-        $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEmpty($response['_embedded']['analytics']);
     }
 
     public function testListWithAllDomains()
     {
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('GET', '/api/webspaces/blog_sulu_io/analytics');
 
-        $client->request('GET', '/api/webspaces/blog_sulu_io/analytics');
-
-        $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $items = $response['_embedded']['analytics'];
         $this->assertCount(1, $items);
@@ -67,12 +70,10 @@ class AnalyticsControllerTest extends SuluTestCase
 
     public function testList()
     {
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('GET', '/api/webspaces/sulu_io/analytics');
 
-        $client->request('GET', '/api/webspaces/sulu_io/analytics');
-
-        $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $items = $response['_embedded']['analytics'];
         $this->assertCount(4, $items);
@@ -104,12 +105,10 @@ class AnalyticsControllerTest extends SuluTestCase
 
     public function testGet()
     {
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('GET', '/api/webspaces/sulu_io/analytics/' . $this->entities[0]->getId());
 
-        $client->request('GET', '/api/webspaces/sulu_io/analytics/' . $this->entities[0]->getId());
-
-        $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals('test-1', $response['title']);
         $this->assertEquals('google', $response['type']);
@@ -120,9 +119,7 @@ class AnalyticsControllerTest extends SuluTestCase
 
     public function testPost()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/webspaces/sulu_io/analytics',
             [
@@ -133,8 +130,8 @@ class AnalyticsControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertNotNull($response['id']);
         $this->assertEquals('test-1', $response['title']);
@@ -146,9 +143,7 @@ class AnalyticsControllerTest extends SuluTestCase
 
     public function testPut()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/webspaces/sulu_io/analytics',
             [
@@ -160,8 +155,8 @@ class AnalyticsControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertNotNull($response['id']);
         $this->assertEquals('test-10', $response['title']);
@@ -174,22 +169,18 @@ class AnalyticsControllerTest extends SuluTestCase
 
     public function testDelete()
     {
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('DELETE', '/api/webspaces/test_io/analytics/' . $this->entities[4]->getId());
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        $client->request('DELETE', '/api/webspaces/test_io/analytics/' . $this->entities[4]->getId());
-        $this->assertHttpStatusCode(204, $client->getResponse());
-
-        $client->request('GET', '/api/webspaces/test_io/analytics');
-        $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->client->request('GET', '/api/webspaces/test_io/analytics');
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEmpty($response['_embedded']['analytics']);
     }
 
     public function testDeleteMultiple()
     {
-        $client = $this->createAuthenticatedClient();
-
         $ids = [
             $this->entities[0]->getId(),
             $this->entities[1]->getId(),
@@ -197,12 +188,12 @@ class AnalyticsControllerTest extends SuluTestCase
             $this->entities[3]->getId(),
         ];
 
-        $client->request('DELETE', '/api/webspaces/sulu_io/analytics?ids=' . implode(',', $ids));
-        $this->assertHttpStatusCode(204, $client->getResponse());
+        $this->client->request('DELETE', '/api/webspaces/sulu_io/analytics?ids=' . implode(',', $ids));
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        $client->request('GET', '/api/webspaces/sulu_io/analytics');
-        $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->client->request('GET', '/api/webspaces/sulu_io/analytics');
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEmpty($response['_embedded']['analytics']);
     }

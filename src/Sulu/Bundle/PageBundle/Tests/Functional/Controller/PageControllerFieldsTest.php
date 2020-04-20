@@ -16,6 +16,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class PageControllerFieldsTest extends SuluTestCase
 {
@@ -29,8 +30,14 @@ class PageControllerFieldsTest extends SuluTestCase
      */
     private $sessionManager;
 
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->initPhpcr();
@@ -42,12 +49,10 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
 
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
-        $client->request('GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
-
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
 
         $homepage = $result['_embedded']['pages'][0];
         $items = $homepage['_embedded']['pages'];
@@ -68,11 +73,9 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
 
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
-        $client->request('GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
-
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = json_decode($this->client->getResponse()->getContent(), true);
 
         $homepage = $result['_embedded']['pages'][0];
         $items = $homepage['_embedded']['pages'];
@@ -90,15 +93,13 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/pages',
             ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-shadows' => true]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = json_decode($this->client->getResponse()->getContent(), true);
 
         $homepage = $result['_embedded']['pages'][0];
         $items = $homepage['_embedded']['pages'];
@@ -115,11 +116,9 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
 
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
-        $client->request('GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
-
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = json_decode($this->client->getResponse()->getContent(), true);
 
         $homepage = $result['_embedded']['pages'][0];
         $items = $homepage['_embedded']['pages'];
@@ -137,15 +136,13 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/pages',
             ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-ghosts' => true]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = json_decode($this->client->getResponse()->getContent(), true);
 
         $homepage = $result['_embedded']['pages'][0];
         $items = $homepage['_embedded']['pages'];
@@ -162,11 +159,9 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->createShadowPage('test-2', 'en', 'de');
         $this->createPage('test-3', 'de');
 
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
-        $client->request('GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
-
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = json_decode($this->client->getResponse()->getContent(), true);
 
         $homepage = $result['_embedded']['pages'][0];
         $items = $homepage['_embedded']['pages'];
@@ -184,15 +179,13 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->createShadowPage('test-2', 'en', 'de');
         $this->createPage('test-3', 'de');
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/pages',
             ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-ghosts' => true, 'exclude-shadows' => true]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = json_decode($this->client->getResponse()->getContent(), true);
 
         $homepage = $result['_embedded']['pages'][0];
         $items = $homepage['_embedded']['pages'];
@@ -207,14 +200,12 @@ class PageControllerFieldsTest extends SuluTestCase
         $link = $this->createPage('test-1', 'en');
         $page = $this->createInternalLinkPage('test-2', 'en', $link);
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             sprintf('/api/pages/%s', $page->getUuid()),
             ['webspace' => 'sulu_io', 'language' => 'en', 'fields' => 'title']
         );
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('internal', $result['linked']);
     }
@@ -223,14 +214,12 @@ class PageControllerFieldsTest extends SuluTestCase
     {
         $page = $this->createExternalLinkPage('test-2', 'en', 'http://www.google.at');
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             sprintf('/api/pages/%s', $page->getUuid()),
             ['webspace' => 'sulu_io', 'language' => 'en', 'fields' => 'title']
         );
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('external', $result['linked']);
     }
@@ -239,14 +228,12 @@ class PageControllerFieldsTest extends SuluTestCase
     {
         $page = $this->createShadowPage('test-2', 'en', 'de');
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             sprintf('/api/pages/%s', $page->getUuid()),
             ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']
         );
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('shadow', $result['type']['name']);
         $this->assertEquals('en', $result['type']['value']);

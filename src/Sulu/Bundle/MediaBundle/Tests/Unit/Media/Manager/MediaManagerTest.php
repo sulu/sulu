@@ -297,7 +297,7 @@ class MediaManagerTest extends TestCase
     public function testSpecialCharacterFileName($fileName, $cleanUpArgument, $cleanUpResult, $extension)
     {
         /** @var UploadedFile $uploadedFile */
-        $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith(['', 1, null, null, 1, true]);
+        $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith([__DIR__ . DIRECTORY_SEPARATOR . 'test.txt', 1, null, null, 1, true]);
         $uploadedFile->getClientOriginalName()->willReturn($fileName);
         $uploadedFile->getPathname()->willReturn('');
         $uploadedFile->getSize()->willReturn('123');
@@ -328,7 +328,7 @@ class MediaManagerTest extends TestCase
     {
         $this->expectException(InvalidMediaTypeException::class);
 
-        $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith(['', 1, null, null, 1, true]);
+        $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith([__DIR__ . DIRECTORY_SEPARATOR . 'test.txt', 1, null, null, 1, true]);
         $uploadedFile->getClientOriginalName()->willReturn('test.pdf');
         $uploadedFile->getPathname()->willReturn('');
         $uploadedFile->getSize()->willReturn('123');
@@ -431,7 +431,7 @@ class MediaManagerTest extends TestCase
 
     public function testVideoUploadWithoutFFmpeg()
     {
-        $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith(['', 1, null, null, 1, true]);
+        $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith([__DIR__ . DIRECTORY_SEPARATOR . 'test.txt', 1, null, null, 1, true]);
         $uploadedFile->getClientOriginalName()->willReturn('test.ogg');
         $uploadedFile->getPathname()->willReturn('');
         $uploadedFile->getSize()->willReturn('123');

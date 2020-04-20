@@ -33,11 +33,18 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class ContactMediaControllerTest extends SuluTestCase
 {
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $this->em = $this->getEntityManager();
         $this->initOrm();
     }
@@ -152,6 +159,7 @@ class ContactMediaControllerTest extends SuluTestCase
         $this->em->persist($note);
 
         $this->em->flush();
+        $this->em->clear();
     }
 
     public function setUpMediaEntities($contact)
@@ -273,9 +281,8 @@ class ContactMediaControllerTest extends SuluTestCase
 
     public function testGetList()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/contacts/' . $this->contact->getId() . '/medias?flat=true');
-        $response = json_decode($client->getResponse()->getContent());
+        $this->client->request('GET', '/api/contacts/' . $this->contact->getId() . '/medias?flat=true');
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
         $this->assertEquals($this->media2->getId(), $response->_embedded->contact_media[0]->id);
@@ -286,17 +293,15 @@ class ContactMediaControllerTest extends SuluTestCase
 
     public function testContactMediaPost()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/contacts/' . $this->contact->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($response->medias));
 
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/contacts/' . $this->contact->getId() . '/medias',
             [
@@ -304,15 +309,15 @@ class ContactMediaControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertNotNull($response->id);
 
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/contacts/' . $this->contact->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(2, count($response->medias));
 
         $this->assertIsInt($response->medias[0]);
@@ -321,17 +326,15 @@ class ContactMediaControllerTest extends SuluTestCase
 
     public function testContactMediaPostNotExistingMedia()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/contacts/' . $this->contact->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($response->medias));
 
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/contacts/' . $this->contact->getId() . '/medias',
             [
@@ -339,53 +342,50 @@ class ContactMediaControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertHttpStatusCode(404, $client->getResponse());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
 
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/contacts/' . $this->contact->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($response->medias));
     }
 
     public function testContactMediaDelete()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'DELETE',
             '/api/contacts/' . $this->contact->getId() . '/medias/' . $this->media2->getId()
         );
 
-        $this->assertHttpStatusCode(204, $client->getResponse());
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/contacts/' . $this->contact->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, count($response->medias));
     }
 
     public function testContactMediaDeleteNotExistingRelation()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'DELETE',
             '/api/contacts/' . $this->contact->getId() . '/medias/99'
         );
 
-        $this->assertHttpStatusCode(404, $client->getResponse());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
 
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/contacts/' . $this->contact->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($response->medias));
     }
 }

@@ -15,6 +15,7 @@ sulu_media:
 
 framework:
     assets: ~
+    router: { resource: '%kernel.project_dir%/config/routing_admin.yml' }
 
 # Doctrine Configuration
 doctrine:

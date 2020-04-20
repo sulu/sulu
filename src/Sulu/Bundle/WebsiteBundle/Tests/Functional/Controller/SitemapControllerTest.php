@@ -12,20 +12,26 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class SitemapControllerTest extends WebsiteTestCase
 {
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
+        $this->client = $this->createWebsiteClient();
         $this->initPhpcr();
     }
 
     public function testIndexSingleLanguage()
     {
-        $client = $this->createWebsiteClient();
-        $crawler = $client->request('GET', 'http://sulu.lo/sitemap.xml');
+        $crawler = $this->client->request('GET', 'http://sulu.lo/sitemap.xml');
         $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertCount(1, $crawler->filterXPath('//x:urlset/x:url'));
         $this->assertCount(1, $crawler->filterXPath('//x:urlset/x:url/x:loc'));
@@ -36,10 +42,9 @@ class SitemapControllerTest extends WebsiteTestCase
 
     public function testIndexMultipleLanguage()
     {
-        $client = $this->createWebsiteClient();
-        $crawler = $client->request('GET', 'http://test.lo/sitemap.xml');
+        $crawler = $this->client->request('GET', 'http://test.lo/sitemap.xml');
         $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertCount(2, $crawler->filterXPath('//x:urlset/x:url'));
 
@@ -100,8 +105,7 @@ class SitemapControllerTest extends WebsiteTestCase
 
     public function testIndexMultipleTlds()
     {
-        $client = $this->createWebsiteClient();
-        $crawler = $client->request('GET', 'http://sulu.com/sitemap.xml');
+        $crawler = $this->client->request('GET', 'http://sulu.com/sitemap.xml');
         $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
 
         $this->assertCount(1, $crawler->filterXPath('//x:urlset/x:url'));
@@ -110,17 +114,15 @@ class SitemapControllerTest extends WebsiteTestCase
 
     public function testProvider()
     {
-        $client = $this->createWebsiteClient();
-        $client->request('GET', 'http://sulu.lo/sitemaps/pages.xml');
-        $this->assertHttpStatusCode(301, $client->getResponse());
+        $this->client->request('GET', 'http://sulu.lo/sitemaps/pages.xml');
+        $this->assertHttpStatusCode(301, $this->client->getResponse());
     }
 
     public function testPaginated()
     {
-        $client = $this->createWebsiteClient();
-        $crawler = $client->request('GET', 'http://sulu.lo/sitemaps/pages-1.xml');
+        $crawler = $this->client->request('GET', 'http://sulu.lo/sitemaps/pages-1.xml');
         $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertCount(1, $crawler->filterXPath('//x:urlset/x:url'));
         $this->assertCount(1, $crawler->filterXPath('//x:urlset/x:url/x:loc'));
@@ -130,25 +132,22 @@ class SitemapControllerTest extends WebsiteTestCase
 
     public function testPaginatedOverMax()
     {
-        $client = $this->createWebsiteClient();
-        $crawler = $client->request('GET', 'http://sulu.lo/sitemaps/pages-2.xml');
+        $crawler = $this->client->request('GET', 'http://sulu.lo/sitemaps/pages-2.xml');
         $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
-        $this->assertHttpStatusCode(404, $client->getResponse());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
     public function testNotExistingProvider()
     {
-        $client = $this->createWebsiteClient();
-        $crawler = $client->request('GET', 'http://sulu.lo/sitemaps/test-2.xml');
+        $crawler = $this->client->request('GET', 'http://sulu.lo/sitemaps/test-2.xml');
         $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
-        $this->assertHttpStatusCode(404, $client->getResponse());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
     public function testSitemapIndexFile()
     {
-        $client = $this->createWebsiteClient();
-        $crawler = $client->request('GET', 'http://sulu.index/sitemap.xml');
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $crawler = $this->client->request('GET', 'http://sulu.index/sitemap.xml');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertSame('http://sulu.index/sitemaps/test-1.xml', $crawler->filterXPath('//sitemapindex/sitemap[1]/loc[1]')->text());
         $this->assertSame('http://sulu.index/sitemaps/pages-1.xml', $crawler->filterXPath('//sitemapindex/sitemap[2]/loc[1]')->text());

@@ -27,6 +27,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\Form\FormFactoryInterface;
 
 class SmartContentItemControllerTest extends SuluTestCase
@@ -86,8 +87,14 @@ class SmartContentItemControllerTest extends SuluTestCase
      */
     private $inspector;
 
-    protected function setUp(): void
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
+    public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $this->em = $this->getEntityManager();
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
@@ -243,17 +250,15 @@ class SmartContentItemControllerTest extends SuluTestCase
 
     public function testGetItems()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
             '&provider=pages&excluded=' . $this->team->getUuid()
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(
             [
                 'id' => $this->team->getUuid(),
@@ -293,17 +298,15 @@ class SmartContentItemControllerTest extends SuluTestCase
 
     public function testGetItemsExcluded()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
             '&provider=pages&excluded=' . $this->johannes->getUuid()
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(
             [
                 'id' => $this->team->getUuid(),
@@ -336,9 +339,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
     public function testGetItemsMultipleExcluded()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource='
             . $this->team->getUuid()
@@ -348,9 +349,9 @@ class SmartContentItemControllerTest extends SuluTestCase
             . $this->daniel->getUuid()
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(
             [
                 'id' => $this->team->getUuid(),
@@ -376,9 +377,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
     public function testGetItemsWithParams()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
             '&provider=pages&excluded=' . $this->johannes->getUuid() .
@@ -386,9 +385,9 @@ class SmartContentItemControllerTest extends SuluTestCase
             '"properties":{"value":{"title":{"value":"title","type":"string"}},"type":"collection"}}'
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(
             [
                 'id' => $this->team->getUuid(),
@@ -421,9 +420,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
     public function testGetItemsWithParamsAndNoType()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
             '&provider=pages&excluded=' . $this->johannes->getUuid() .
@@ -431,9 +428,9 @@ class SmartContentItemControllerTest extends SuluTestCase
             '"properties":{"value":{"title":{"value":"title","type":"string"}},"type":"collection"}}'
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(
             [
                 'id' => $this->team->getUuid(),
@@ -466,17 +463,15 @@ class SmartContentItemControllerTest extends SuluTestCase
 
     public function testGetItemsLimit()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
             '&provider=pages&excluded=' . $this->team->getUuid() . '&limitResult=2'
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(
             [
                 'id' => $this->team->getUuid(),
@@ -509,17 +504,15 @@ class SmartContentItemControllerTest extends SuluTestCase
 
     public function testGetItemsTags()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
             '&provider=pages&excluded=' . $this->team->getUuid() . '&limitResult=2&tags=' . $this->tag1->getName()
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(
             [
                 'id' => $this->team->getUuid(),

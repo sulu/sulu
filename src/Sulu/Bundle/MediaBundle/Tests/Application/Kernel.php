@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Application;
 
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
+use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
 class Kernel extends SuluTestKernel
@@ -20,6 +21,10 @@ class Kernel extends SuluTestKernel
     {
         parent::registerContainerConfiguration($loader);
 
-        $loader->load(__DIR__ . '/config/config.yml');
+        if (SuluKernel::CONTEXT_WEBSITE === $this->getContext()) {
+            $loader->load(__DIR__ . '/config/config_website.yml');
+        } else {
+            $loader->load(__DIR__ . '/config/config.yml');
+        }
     }
 }
