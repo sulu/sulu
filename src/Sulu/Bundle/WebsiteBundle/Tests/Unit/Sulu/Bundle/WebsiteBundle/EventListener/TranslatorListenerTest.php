@@ -16,27 +16,47 @@ use Sulu\Bundle\WebsiteBundle\EventListener\TranslatorListener;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Translation\Translator;
 
 class TranslatorListenerTest extends TestCase
 {
+    /**
+     * @var HttpKernelInterface
+     */
+    private $kernel;
+
+    public function setUp(): void
+    {
+        $this->kernel = $this->prophesize(HttpKernelInterface::class);
+    }
+
     public function testOnKernelRequest()
     {
         $translator = $this->prophesize(Translator::class);
-        $responseEvent = $this->prophesize(GetResponseEvent::class);
         $request = new Request();
         $localization = new Localization('de', 'at');
         $requestAttributes = new RequestAttributes([
             'localization' => $localization,
         ]);
         $request->attributes->set('_sulu', $requestAttributes);
-        $responseEvent->getRequest()->willReturn($request);
+
+        $event = $this->createRequestEvent($request);
 
         $eventListener = new TranslatorListener($translator->reveal());
 
         $translator->setLocale('de_AT')->shouldBeCalled();
 
-        $eventListener->onKernelRequest($responseEvent->reveal());
+        $eventListener->onKernelRequest($event);
+    }
+
+    private function createRequestEvent(Request $request): RequestEvent
+    {
+        return new RequestEvent(
+            $this->kernel->reveal(),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST
+        );
     }
 }

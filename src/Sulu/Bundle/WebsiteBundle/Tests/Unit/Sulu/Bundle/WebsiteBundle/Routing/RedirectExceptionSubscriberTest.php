@@ -25,8 +25,9 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\Route;
@@ -69,12 +70,18 @@ class RedirectExceptionSubscriberTest extends TestCase
     private $request;
 
     /**
-     * @var GetResponseForExceptionEvent
+     * @var ExceptionEvent
      */
     private $event;
 
+    /**
+     * @var HttpKernelInterface
+     */
+    private $kernel;
+
     protected function setUp(): void
     {
+        $this->kernel = $this->prophesize(HttpKernelInterface::class);
         $this->router = $this->prophesize(RequestMatcherInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
@@ -92,9 +99,13 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->request->getUri()->willReturn('sulu.lo');
         $this->request->getSchemeAndHttpHost()->willReturn('http://sulu.lo');
         $this->request->reveal()->attributes = new ParameterBag(['_sulu' => $this->attributes->reveal()]);
-        $this->event = $this->prophesize(GetResponseForExceptionEvent::class);
-        $this->event->getRequest()->willReturn($this->request->reveal());
-        $this->event->getException()->willReturn(new NotFoundHttpException());
+
+        $this->event = new ExceptionEvent(
+            $this->kernel->reveal(),
+            $this->request->reveal(),
+            HttpKernelInterface::MASTER_REQUEST,
+            new NotFoundHttpException()
+        );
     }
 
     public function testRedirectTrailingSlash()
@@ -109,15 +120,11 @@ class RedirectExceptionSubscriberTest extends TestCase
             $this->prophesize(Route::class)->reveal()
         );
 
-        $this->event->setResponse(
-            Argument::that(
-                function(RedirectResponse $response) {
-                    return '/de/test' === $response->getTargetUrl();
-                }
-            )
-        )->shouldBeCalled();
+        $this->exceptionListener->redirectTrailingSlashOrHtml($this->event);
 
-        $this->exceptionListener->redirectTrailingSlashOrHtml($this->event->reveal());
+        $redirectResponse = $this->event->getResponse();
+        $this->assertInstanceOf(RedirectResponse::class, $redirectResponse);
+        $this->assertSame('/de/test', $redirectResponse->getTargetUrl());
     }
 
     public function testRedirectSlashToHomepage()
@@ -132,15 +139,11 @@ class RedirectExceptionSubscriberTest extends TestCase
             $this->prophesize(Route::class)->reveal()
         );
 
-        $this->event->setResponse(
-            Argument::that(
-                function(RedirectResponse $response) {
-                    return '/' === $response->getTargetUrl();
-                }
-            )
-        )->shouldBeCalled();
+        $this->exceptionListener->redirectTrailingSlashOrHtml($this->event);
 
-        $this->exceptionListener->redirectTrailingSlashOrHtml($this->event->reveal());
+        $redirectResponse = $this->event->getResponse();
+        $this->assertInstanceOf(RedirectResponse::class, $redirectResponse);
+        $this->assertSame('/', $redirectResponse->getTargetUrl());
     }
 
     public function testRedirectDoubleSlashToHomepage()
@@ -155,17 +158,11 @@ class RedirectExceptionSubscriberTest extends TestCase
             $this->prophesize(Route::class)->reveal()
         );
 
-        $this->event->setResponse(
-            Argument::that(
-                function(RedirectResponse $response) {
-                    echo '"' . $response->getTargetUrl() . '"';
+        $this->exceptionListener->redirectTrailingSlashOrHtml($this->event);
 
-                    return '/' === $response->getTargetUrl();
-                }
-            )
-        )->shouldBeCalled();
-
-        $this->exceptionListener->redirectTrailingSlashOrHtml($this->event->reveal());
+        $redirectResponse = $this->event->getResponse();
+        $this->assertInstanceOf(RedirectResponse::class, $redirectResponse);
+        $this->assertSame('/', $redirectResponse->getTargetUrl());
     }
 
     public function testRedirectTrailingHtml()
@@ -180,15 +177,11 @@ class RedirectExceptionSubscriberTest extends TestCase
             $this->prophesize(Route::class)->reveal()
         );
 
-        $this->event->setResponse(
-            Argument::that(
-                function(RedirectResponse $response) {
-                    return '/de/test' === $response->getTargetUrl();
-                }
-            )
-        )->shouldBeCalled();
+        $this->exceptionListener->redirectTrailingSlashOrHtml($this->event);
 
-        $this->exceptionListener->redirectTrailingSlashOrHtml($this->event->reveal());
+        $redirectResponse = $this->event->getResponse();
+        $this->assertInstanceOf(RedirectResponse::class, $redirectResponse);
+        $this->assertSame('/de/test', $redirectResponse->getTargetUrl());
     }
 
     public function testRedirectJson()
@@ -203,9 +196,9 @@ class RedirectExceptionSubscriberTest extends TestCase
             $this->prophesize(Route::class)->reveal()
         );
 
-        $this->event->setResponse(Argument::any())->shouldNotBeCalled();
+        $this->exceptionListener->redirectTrailingSlashOrHtml($this->event);
 
-        $this->exceptionListener->redirectTrailingSlashOrHtml($this->event->reveal());
+        $this->assertNull($this->event->getResponse());
     }
 
     public function testRedirectTrailingHtmlNotExists()
@@ -217,9 +210,10 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->request->getRequestFormat()->willReturn('html');
 
         $this->router->matchRequest(Argument::type(Request::class))->willThrow(new ResourceNotFoundException());
-        $this->event->setResponse(Argument::any())->shouldNotBeCalled();
 
-        $this->exceptionListener->redirectTrailingSlashOrHtml($this->event->reveal());
+        $this->exceptionListener->redirectTrailingSlashOrHtml($this->event);
+
+        $this->assertNull($this->event->getResponse());
     }
 
     public function testRedirectPartialMatchNoLocalization()
@@ -247,15 +241,11 @@ class RedirectExceptionSubscriberTest extends TestCase
             $this->prophesize(Route::class)->reveal()
         );
 
-        $this->event->setResponse(
-            Argument::that(
-                function(RedirectResponse $response) {
-                    return 'http://sulu.lo' === $response->getTargetUrl();
-                }
-            )
-        )->shouldBeCalled();
+        $this->exceptionListener->redirectPartialMatch($this->event);
 
-        $this->exceptionListener->redirectPartialMatch($this->event->reveal());
+        $redirectResponse = $this->event->getResponse();
+        $this->assertInstanceOf(RedirectResponse::class, $redirectResponse);
+        $this->assertSame('http://sulu.lo', $redirectResponse->getTargetUrl());
     }
 
     public function testRedirectPartialMatchNoLocalizationRedirect()
@@ -283,15 +273,11 @@ class RedirectExceptionSubscriberTest extends TestCase
             $this->prophesize(Route::class)->reveal()
         );
 
-        $this->event->setResponse(
-            Argument::that(
-                function(RedirectResponse $response) {
-                    return 'http://sulu.lo' === $response->getTargetUrl();
-                }
-            )
-        )->shouldBeCalled();
+        $this->exceptionListener->redirectPartialMatch($this->event);
 
-        $this->exceptionListener->redirectPartialMatch($this->event->reveal());
+        $redirectResponse = $this->event->getResponse();
+        $this->assertInstanceOf(RedirectResponse::class, $redirectResponse);
+        $this->assertSame('http://sulu.lo', $redirectResponse->getTargetUrl());
     }
 
     public function testRedirectPartialMatchSlashOnly()
@@ -323,15 +309,11 @@ class RedirectExceptionSubscriberTest extends TestCase
             $this->prophesize(Route::class)->reveal()
         );
 
-        $this->event->setResponse(
-            Argument::that(
-                function(RedirectResponse $response) {
-                    return 'http://sulu.lo/de' === $response->getTargetUrl();
-                }
-            )
-        )->shouldBeCalled();
+        $this->exceptionListener->redirectPartialMatch($this->event);
 
-        $this->exceptionListener->redirectPartialMatch($this->event->reveal());
+        $redirectResponse = $this->event->getResponse();
+        $this->assertInstanceOf(RedirectResponse::class, $redirectResponse);
+        $this->assertSame('http://sulu.lo/de', $redirectResponse->getTargetUrl());
     }
 
     public function testRedirectPartialMatch()
@@ -374,15 +356,11 @@ class RedirectExceptionSubscriberTest extends TestCase
             $this->prophesize(Route::class)->reveal()
         );
 
-        $this->event->setResponse(
-            Argument::that(
-                function(RedirectResponse $response) {
-                    return 'http://sulu.lo/de-at' === $response->getTargetUrl();
-                }
-            )
-        )->shouldBeCalled();
+        $this->exceptionListener->redirectPartialMatch($this->event);
 
-        $this->exceptionListener->redirectPartialMatch($this->event->reveal());
+        $redirectResponse = $this->event->getResponse();
+        $this->assertInstanceOf(RedirectResponse::class, $redirectResponse);
+        $this->assertSame('http://sulu.lo/de-at', $redirectResponse->getTargetUrl());
     }
 
     public function testRedirectPartialMatchNotExists()
@@ -416,9 +394,10 @@ class RedirectExceptionSubscriberTest extends TestCase
         );
 
         $this->router->matchRequest(Argument::type(Request::class))->willThrow(new ResourceNotFoundException());
-        $this->event->setResponse(Argument::any())->shouldNotBeCalled();
 
-        $this->exceptionListener->redirectPartialMatch($this->event->reveal());
+        $this->exceptionListener->redirectPartialMatch($this->event);
+
+        $this->assertNull($this->event->getResponse());
     }
 
     public function testRedirectPartialMatchForRedirect()
@@ -448,15 +427,11 @@ class RedirectExceptionSubscriberTest extends TestCase
             $this->prophesize(Route::class)->reveal()
         );
 
-        $this->event->setResponse(
-            Argument::that(
-                function(RedirectResponse $response) {
-                    return 'http://sulu.lo' === $response->getTargetUrl();
-                }
-            )
-        )->shouldBeCalled();
+        $this->exceptionListener->redirectPartialMatch($this->event);
 
-        $this->exceptionListener->redirectPartialMatch($this->event->reveal());
+        $redirectResponse = $this->event->getResponse();
+        $this->assertInstanceOf(RedirectResponse::class, $redirectResponse);
+        $this->assertSame('http://sulu.lo', $redirectResponse->getTargetUrl());
     }
 
     public function testRedirectPartialMatchWithDoubleSlashOnly()
@@ -479,15 +454,11 @@ class RedirectExceptionSubscriberTest extends TestCase
             $this->prophesize(Route::class)->reveal()
         );
 
-        $this->event->setResponse(
-            Argument::that(
-                function(RedirectResponse $response) {
-                    return 'http://sulu.lo/de-at' === $response->getTargetUrl();
-                }
-            )
-        )->shouldBeCalled();
+        $this->exceptionListener->redirectPartialMatch($this->event);
 
-        $this->exceptionListener->redirectPartialMatch($this->event->reveal());
+        $redirectResponse = $this->event->getResponse();
+        $this->assertInstanceOf(RedirectResponse::class, $redirectResponse);
+        $this->assertSame('http://sulu.lo/de-at', $redirectResponse->getTargetUrl());
     }
 
     public function provideResolveData()
@@ -561,14 +532,10 @@ class RedirectExceptionSubscriberTest extends TestCase
             $this->prophesize(Route::class)->reveal()
         );
 
-        $this->event->setResponse(
-            Argument::that(
-                function(RedirectResponse $response) use ($expectedTargetUrl) {
-                    return $response->getTargetUrl() === $expectedTargetUrl;
-                }
-            )
-        )->shouldBeCalled();
+        $this->exceptionListener->redirectPartialMatch($this->event);
 
-        $this->exceptionListener->redirectPartialMatch($this->event->reveal());
+        $redirectResponse = $this->event->getResponse();
+        $this->assertInstanceOf(RedirectResponse::class, $redirectResponse);
+        $this->assertSame($expectedTargetUrl, $redirectResponse->getTargetUrl());
     }
 }

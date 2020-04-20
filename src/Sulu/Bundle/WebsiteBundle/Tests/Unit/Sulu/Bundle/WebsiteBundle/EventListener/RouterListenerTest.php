@@ -15,8 +15,9 @@ use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\WebsiteBundle\EventListener\RouterListener;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\EventListener\RouterListener as BaseRouteListener;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class RouterListenerTest extends TestCase
 {
@@ -36,60 +37,68 @@ class RouterListenerTest extends TestCase
     private $routerListener;
 
     /**
-     * @var GetResponseEvent
+     * @var HttpKernelInterface
      */
-    private $event;
+    private $kernel;
 
     public function setUp(): void
     {
+        $this->kernel = $this->prophesize(HttpKernelInterface::class);
         $this->baseRouteListener = $this->prophesize(BaseRouteListener::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->routerListener = new RouterListener($this->baseRouteListener->reveal(), $this->requestAnalyzer->reveal());
-
-        $this->event = $this->prophesize(GetResponseEvent::class);
     }
 
     public function testAnalyzeRequest()
     {
         $request = new Request([], [], ['_requestAnalyzer' => true]);
-        $this->event->getRequest()->willReturn($request);
+        $event = $this->createRequestEvent($request);
 
         $this->requestAnalyzer->analyze($request)->shouldBeCalled();
         $this->requestAnalyzer->validate($request)->shouldBeCalled();
 
-        $this->routerListener->onKernelRequest($this->event->reveal());
+        $this->routerListener->onKernelRequest($event);
     }
 
     public function testAnalyzeRequestDisabled()
     {
         $request = new Request([], [], ['_requestAnalyzer' => false]);
-        $this->event->getRequest()->willReturn($request);
+        $event = $this->createRequestEvent($request);
 
         $this->requestAnalyzer->analyze($request)->shouldBeCalled();
         $this->requestAnalyzer->validate($request)->shouldNotBeCalled();
 
-        $this->routerListener->onKernelRequest($this->event->reveal());
+        $this->routerListener->onKernelRequest($event);
     }
 
     public function testAnalyzeRequestDisabledByEsiInProdEnv()
     {
         $request = new Request([], [], ['_requestAnalyzer' => '0']);
-        $this->event->getRequest()->willReturn($request);
+        $event = $this->createRequestEvent($request);
 
         $this->requestAnalyzer->analyze($request)->shouldBeCalled();
         $this->requestAnalyzer->validate($request)->shouldNotBeCalled();
 
-        $this->routerListener->onKernelRequest($this->event->reveal());
+        $this->routerListener->onKernelRequest($event);
     }
 
     public function testAnalyzeRequestDefault()
     {
         $request = new Request();
-        $this->event->getRequest()->willReturn($request);
+        $event = $this->createRequestEvent($request);
 
         $this->requestAnalyzer->analyze($request)->shouldBeCalled();
         $this->requestAnalyzer->validate($request)->shouldBeCalled();
 
-        $this->routerListener->onKernelRequest($this->event->reveal());
+        $this->routerListener->onKernelRequest($event);
+    }
+
+    private function createRequestEvent(Request $request): RequestEvent
+    {
+        return new RequestEvent(
+            $this->kernel->reveal(),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST
+        );
     }
 }

@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\MarkupBundle\Listener;
 
 use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 /**
  * Parses content of response and set the replaced html as new content.
@@ -35,7 +35,7 @@ class MarkupListener
     /**
      * Parses content of response and set the replaced html as new content.
      */
-    public function replaceMarkup(FilterResponseEvent $event)
+    public function replaceMarkup(ResponseEvent $event)
     {
         $request = $event->getRequest();
         $response = $event->getResponse();

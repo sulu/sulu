@@ -18,8 +18,8 @@ use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Twig\Environment;
 
@@ -149,7 +149,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
      * Evaluates the cookie holding the target group information. This has only an effect if there is no cache used,
      * since in that case the cache already did it.
      */
-    public function setTargetGroup(GetResponseEvent $event)
+    public function setTargetGroup(RequestEvent $event)
     {
         $request = $event->getRequest();
 
@@ -187,7 +187,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
     /**
      * Adds the vary header on the response, so that the cache takes the target group into account.
      */
-    public function addVaryHeader(FilterResponseEvent $event)
+    public function addVaryHeader(ResponseEvent $event)
     {
         $request = $event->getRequest();
         $response = $event->getResponse();
@@ -201,7 +201,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
      * Adds the SetCookie header for the target group, if the user context has changed. In addition to that a second
      * cookie without a lifetime is set, whose expiration marks a new session.
      */
-    public function addSetCookieHeader(FilterResponseEvent $event)
+    public function addSetCookieHeader(ResponseEvent $event)
     {
         if (!$this->targetGroupStore->hasChangedTargetGroup()
             || $event->getRequest()->getPathInfo() === $this->targetGroupUrl
@@ -230,7 +230,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
     /**
      * Adds a script for triggering an ajax request, which updates the target group on every hit.
      */
-    public function addTargetGroupHitScript(FilterResponseEvent $event)
+    public function addTargetGroupHitScript(ResponseEvent $event)
     {
         $request = $event->getRequest();
         $response = $event->getResponse();

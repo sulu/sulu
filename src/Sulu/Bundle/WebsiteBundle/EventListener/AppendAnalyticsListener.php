@@ -14,7 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\EventListener;
 use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Twig\Environment;
 
 /**
@@ -86,7 +86,7 @@ class AppendAnalyticsListener
     /**
      * Appends analytics scripts into body.
      */
-    public function onResponse(FilterResponseEvent $event)
+    public function onResponse(ResponseEvent $event)
     {
         if ($this->preview) {
             return;

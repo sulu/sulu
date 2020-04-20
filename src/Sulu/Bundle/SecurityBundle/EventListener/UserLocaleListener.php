@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\EventListener;
 
 use Sulu\Component\Security\Authentication\UserInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -50,7 +50,7 @@ class UserLocaleListener
     /**
      * Sets the locale of the current User to the request, if a User is logged in.
      */
-    public function copyUserLocaleToRequest(GetResponseEvent $event)
+    public function copyUserLocaleToRequest(RequestEvent $event)
     {
         $token = $this->tokenStorage->getToken();
         if (!$token) {

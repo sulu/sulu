@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Routing\RouterInterface;
 
 class RequestListener
@@ -33,7 +33,7 @@ class RequestListener
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
-    public function onRequest(GetResponseEvent $event)
+    public function onRequest(RequestEvent $event)
     {
         $context = $this->router->getContext();
         $portalInformation = $this->requestAnalyzer->getPortalInformation();

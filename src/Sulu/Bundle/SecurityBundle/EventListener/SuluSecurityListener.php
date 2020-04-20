@@ -16,7 +16,7 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -39,7 +39,7 @@ class SuluSecurityListener
      *
      * @throws AccessDeniedException
      */
-    public function onKernelController(FilterControllerEvent $event)
+    public function onKernelController(ControllerEvent $event)
     {
         $controller = $event->getController();
         $action = '__invoke';

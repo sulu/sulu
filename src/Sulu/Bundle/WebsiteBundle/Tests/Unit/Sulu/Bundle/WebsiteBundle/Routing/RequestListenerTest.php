@@ -15,7 +15,9 @@ use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\WebsiteBundle\Routing\RequestListener;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\PortalInformation;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -41,15 +43,20 @@ class RequestListenerTest extends TestCase
      */
     private $requestContext;
 
+    /**
+     * @var HttpKernelInterface
+     */
+    private $kernel;
+
     public function setUp(): void
     {
         parent::setUp();
 
+        $this->kernel = $this->prophesize(HttpKernelInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->router = $this->prophesize(RouterInterface::class);
         $this->portalInformation = $this->prophesize(PortalInformation::class);
         $this->requestContext = $this->prophesize(RequestContext::class);
-        $this->event = $this->prophesize(GetResponseEvent::class);
     }
 
     public function testRequestAnalyzer()
@@ -66,7 +73,18 @@ class RequestListenerTest extends TestCase
 
         $this->router->getContext()->willReturn($this->requestContext);
 
+        $event = $this->createRequestEvent(new Request());
+
         $requestListener = new RequestListener($this->router->reveal(), $this->requestAnalyzer->reveal());
-        $requestListener->onRequest($this->event->reveal());
+        $requestListener->onRequest($event);
+    }
+
+    private function createRequestEvent(Request $request): RequestEvent
+    {
+        return new RequestEvent(
+            $this->kernel->reveal(),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST
+        );
     }
 }

@@ -16,7 +16,8 @@ use Prophecy\Argument;
 use Sulu\Bundle\SecurityBundle\EventListener\UserLocaleListener;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Translation\Translator;
@@ -44,7 +45,7 @@ class UserLocaleListenerTest extends TestCase
     private $request;
 
     /**
-     * @var GetResponseEvent
+     * @var RequestEvent
      */
     private $event;
 
@@ -53,11 +54,21 @@ class UserLocaleListenerTest extends TestCase
      */
     private $userLocaleListener;
 
+    /**
+     * @var HttpKernelInterface
+     */
+    private $kernel;
+
     public function setUp(): void
     {
+        $this->kernel = $this->prophesize(HttpKernelInterface::class);
         $this->request = $this->prophesize(Request::class);
-        $this->event = $this->prophesize(GetResponseEvent::class);
-        $this->event->getRequest()->willReturn($this->request->reveal());
+
+        $this->event = new RequestEvent(
+            $this->kernel->reveal(),
+            $this->request->reveal(),
+            HttpKernelInterface::MASTER_REQUEST
+        );
 
         $this->token = $this->prophesize(TokenInterface::class);
 
@@ -72,7 +83,7 @@ class UserLocaleListenerTest extends TestCase
     public function testCopyUserLocaleToRequestWithoutUser()
     {
         $this->request->setLocale(Argument::any())->shouldNotBeCalled();
-        $this->userLocaleListener->copyUserLocaleToRequest($this->event->reveal());
+        $this->userLocaleListener->copyUserLocaleToRequest($this->event);
         $this->translator->setLocale(Argument::any())->shouldNotBeCalled();
     }
 
@@ -84,6 +95,6 @@ class UserLocaleListenerTest extends TestCase
 
         $this->request->setLocale('de')->shouldBeCalled();
         $this->translator->setLocale('de')->shouldBeCalled();
-        $this->userLocaleListener->copyUserLocaleToRequest($this->event->reveal());
+        $this->userLocaleListener->copyUserLocaleToRequest($this->event);
     }
 }

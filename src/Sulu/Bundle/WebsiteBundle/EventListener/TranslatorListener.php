@@ -14,7 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\EventListener;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Translation\Translator;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
@@ -31,7 +31,7 @@ class TranslatorListener implements EventSubscriberInterface
         $this->translator = $translator;
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
         $attributes = $event->getRequest()->attributes->get('_sulu');
 
