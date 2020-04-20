@@ -39,7 +39,6 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
     public function testLoad()
     {
         $this->executableFinder->find(Argument::any())->willReturn(true);
-        $this->container->setParameter('kernel.root_dir', __DIR__);
         $this->container->setParameter('kernel.bundles', []);
 
         $this->load(

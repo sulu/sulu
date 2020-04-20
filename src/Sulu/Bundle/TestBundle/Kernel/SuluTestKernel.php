@@ -113,7 +113,8 @@ class SuluTestKernel extends SuluKernel
     public function getProjectDir()
     {
         if (null === $this->projectDir) {
-            $this->projectDir = $this->rootDir;
+            $r = new \ReflectionObject($this);
+            $this->projectDir = \dirname($r->getFileName());
         }
 
         return $this->projectDir;

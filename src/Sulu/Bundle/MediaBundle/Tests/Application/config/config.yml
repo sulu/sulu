@@ -8,7 +8,7 @@ sulu_media:
         response_headers:
             Expires: "+1 month"
     image_format_files:
-        - "%kernel.root_dir%/config/image-formats.xml"
+        - "%kernel.project_dir%/config/image-formats.xml"
     ffmpeg:
         ffmpeg_binary: '/usr/local/bin/ffmpeg'
         ffprobe_binary: '/usr/local/bin/ffmprobe'
