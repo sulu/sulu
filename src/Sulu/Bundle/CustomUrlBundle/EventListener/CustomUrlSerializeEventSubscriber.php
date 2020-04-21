@@ -86,7 +86,8 @@ class CustomUrlSerializeEventSubscriber implements EventSubscriberInterface
         );
 
         $creatorFullName = null;
-        if ($creator = $customUrl->getCreator()) {
+        $creator = $customUrl->getCreator()
+        if ($creator) {
             $creatorFullName = $this->userManager->getFullNameByUserId($creator);
         }
 
@@ -96,7 +97,8 @@ class CustomUrlSerializeEventSubscriber implements EventSubscriberInterface
         );
 
         $changerFullName = null;
-        if ($changer = $customUrl->getChanger()) {
+        $changer = $customUrl->getChanger();
+        if ($changer) {
             $changerFullName = $this->userManager->getFullNameByUserId($changer);
         }
         $visitor->visitProperty(
