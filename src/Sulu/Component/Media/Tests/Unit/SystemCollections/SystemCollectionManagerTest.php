@@ -345,17 +345,29 @@ class SystemCollectionManagerTest extends TestCase
         $collectionManager = $this->getCollectionManager($existingCollections, $notExistingCollections);
 
         $entityManager = $this->prophesize(EntityManagerInterface::class);
-        $cache = $this->prophesize(CacheInterface::class);
-        $cache->isFresh()->shouldBeCalled()->willReturn(false);
-        $cache->write($data)->shouldBeCalled();
-        $cache->read()->shouldBeCalled()->willReturn($data);
+        $cache = $this->createMock(CacheInterface::class);
+
+        $cache
+            ->expects($this->exactly(2))
+            ->method('isFresh')
+            ->willReturnOnConsecutiveCalls(false, false);
+
+        $cache
+            ->expects($this->once())
+            ->method('write')
+            ->with($data);
+
+        $cache
+            ->expects($this->once())
+            ->method('read')
+            ->willReturn($data);
 
         $manager = new SystemCollectionManager(
             $config,
             $collectionManager->reveal(),
             $entityManager->reveal(),
             $tokenStorage->reveal(),
-            $cache->reveal(),
+            $cache,
             'en'
         );
 
@@ -371,17 +383,33 @@ class SystemCollectionManagerTest extends TestCase
         $collectionManager = $this->getCollectionManager($existingCollections, $notExistingCollections, false);
 
         $entityManager = $this->prophesize(EntityManagerInterface::class);
-        $cache = $this->prophesize(CacheInterface::class);
-        $cache->isFresh()->shouldBeCalled()->willReturn(true);
-        $cache->write($data)->shouldNotBeCalled();
-        $cache->read()->shouldBeCalled()->willReturn($data);
+        $cache = $this->createMock(CacheInterface::class);
+
+        $cache
+            ->expects($this->exactly(2))
+            ->method('isFresh')
+            ->willReturnOnConsecutiveCalls(true, false);
+
+        $cache
+            ->expects($this->once())
+            ->method('invalidate');
+
+        $cache
+            ->expects($this->once())
+            ->method('write')
+            ->with($data);
+
+        $cache
+            ->expects($this->once())
+            ->method('read')
+            ->willReturn($data);
 
         $manager = new SystemCollectionManager(
             $config,
             $collectionManager->reveal(),
             $entityManager->reveal(),
             $tokenStorage->reveal(),
-            $cache->reveal(),
+            $cache,
             'en'
         );
 
