@@ -62,9 +62,14 @@ class RequestAnalyzer implements RequestAnalyzerInterface
         }
     }
 
+    public function getCurrentRequest()
+    {
+        return $this->requestStack->getCurrentRequest();
+    }
+
     public function getAttribute($name, $default = null)
     {
-        $request = $this->requestStack->getCurrentRequest();
+        $request = $this->getCurrentRequest();
 
         if (null === $request) {
             return $default;

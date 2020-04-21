@@ -141,4 +141,11 @@ interface RequestAnalyzerInterface
      * @param mixed|null $default
      */
     public function getAttribute($name, $default = null);
+
+    /**
+     * Returns the current request.
+     *
+     * @return Request|null
+     */
+    public function getCurrentRequest();
 }
