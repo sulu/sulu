@@ -86,7 +86,7 @@ class CustomUrlSerializeEventSubscriber implements EventSubscriberInterface
         );
 
         $creatorFullName = null;
-        $creator = $customUrl->getCreator()
+        $creator = $customUrl->getCreator();
         if ($creator) {
             $creatorFullName = $this->userManager->getFullNameByUserId($creator);
         }
