@@ -154,4 +154,53 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
             return 'changerFullName' === $metadata->name;
         }), 'test2')->shouldBeCalled();
     }
+
+    public function testOnPostSerializeNoCreatorAndChanger()
+    {
+        $generator = $this->prophesize(GeneratorInterface::class);
+        $userManager = $this->prophesize(UserManagerInterface::class);
+        $subscriber = new CustomUrlSerializeEventSubscriber($generator->reveal(), $userManager->reveal());
+
+        $event = $this->prophesize(ObjectEvent::class);
+        $document = $this->prophesize(CustomUrlDocument::class);
+        $visitor = $this->prophesize(SerializationVisitorInterface::class);
+        $pageDocument = $this->prophesize(PageDocument::class);
+        $pageDocument->getUuid()->willReturn('some-uuid');
+        $pageDocument->getTitle()->willReturn('test');
+        $document->getTargetDocument()->willReturn($pageDocument->reveal());
+        $document->getBaseDomain()->willReturn('*.sulu.io');
+        $document->getDomainParts()->willReturn(['prefix' => 'test', 'suffix' => []]);
+        $document->getCreator()->willReturn(null);
+        $document->getChanger()->willReturn(null);
+
+        $userManager->getFullNameByUserId(Argument::any())->shouldNotBeCalled();
+        $userManager->getFullNameByUserId(Argument::any())->shouldNotBeCalled();
+
+        $generator->generate('*.sulu.io', ['prefix' => 'test', 'suffix' => []])->willReturn('test.sulu.io');
+
+        $event->getObject()->willReturn($document->reveal());
+        $event->getVisitor()->willReturn($visitor->reveal());
+
+        $subscriber->onPostSerialize($event->reveal());
+
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'targetDocument' === $metadata->name;
+        }), 'some-uuid')->shouldBeCalled();
+
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'targetTitle' === $metadata->name;
+        }), 'test')->shouldBeCalled();
+
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'customUrl' === $metadata->name;
+        }), 'test.sulu.io')->shouldBeCalled();
+
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'creatorFullName' === $metadata->name;
+        }), null)->shouldBeCalled();
+
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'changerFullName' === $metadata->name;
+        }), null)->shouldBeCalled();
+    }
 }
