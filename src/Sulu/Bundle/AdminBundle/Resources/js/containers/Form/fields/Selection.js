@@ -485,7 +485,7 @@ class Selection extends React.Component<Props> {
             return;
         }
 
-        if (!equals(toJS(value), toJS(selectedIds))) {
+        if (!equals(toJS(value) || [], toJS(selectedIds))) {
             onChange(selectedIds);
             onFinish();
         }
