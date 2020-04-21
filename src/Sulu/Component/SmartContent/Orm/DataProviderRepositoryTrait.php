@@ -26,8 +26,8 @@ trait DataProviderRepositoryTrait
         $alias = 'entity';
         $queryBuilder = $this->createQueryBuilder($alias)
             ->addSelect($alias)
-            ->where($alias . '.id IN (:ids)')
-            ->orderBy($alias . '.id', 'ASC');
+            ->andWhere($alias . '.id IN (:ids)')
+            ->addOrderBy($alias . '.id', 'ASC');
         $this->appendJoins($queryBuilder, $alias, $locale);
 
         if (array_key_exists('sortBy', $filters)) {
@@ -56,11 +56,9 @@ trait DataProviderRepositoryTrait
      */
     private function findByFiltersIds($filters, $page, $pageSize, $limit, $locale, $options = [])
     {
-        $parameter = [];
-
         $queryBuilder = $this->createQueryBuilder('c');
 
-        $parameter = array_merge($parameter, $this->appendSelect($queryBuilder, 'c', $locale, $options));
+        $parameter = $this->appendSelect($queryBuilder, 'c', $locale, $options);
 
         $tagRelation = $this->appendTagsRelation($queryBuilder, 'c');
         $categoryRelation = $this->appendCategoriesRelation($queryBuilder, 'c');
@@ -310,9 +308,9 @@ trait DataProviderRepositoryTrait
     protected function appendSelect(QueryBuilder $queryBuilder, $alias, $locale, $options = [])
     {
         $queryBuilder
-            ->select($alias . '.id')
+            ->addSelect($alias . '.id')
             ->distinct()
-            ->orderBy($alias . '.id', 'ASC');
+            ->addOrderBy($alias . '.id', 'ASC');
 
         return [];
     }
