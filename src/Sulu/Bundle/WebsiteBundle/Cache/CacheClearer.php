@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Cache;
 
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
+use Sulu\Bundle\WebsiteBundle\Event\CacheClearEvent;
 use Sulu\Bundle\WebsiteBundle\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -78,7 +79,7 @@ class CacheClearer implements CacheClearerInterface
 
             $this->cacheManager->invalidateDomain($request->getHost());
 
-            $this->eventDispatcher->dispatch(Events::CACHE_CLEAR);
+            $this->eventDispatcher->dispatch(new CacheClearEvent(), Events::CACHE_CLEAR);
 
             return;
         }
@@ -93,6 +94,6 @@ class CacheClearer implements CacheClearerInterface
             $this->filesystem->remove($path);
         }
 
-        $this->eventDispatcher->dispatch(Events::CACHE_CLEAR);
+        $this->eventDispatcher->dispatch(new CacheClearEvent(), Events::CACHE_CLEAR);
     }
 }
