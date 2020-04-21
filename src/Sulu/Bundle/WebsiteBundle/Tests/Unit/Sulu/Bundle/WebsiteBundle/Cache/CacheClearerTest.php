@@ -40,11 +40,6 @@ class CacheClearerTest extends TestCase
     private $request;
 
     /**
-     * @var CacheManager|null
-     */
-    private $cacheManager;
-
-    /**
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
@@ -52,7 +47,6 @@ class CacheClearerTest extends TestCase
     public function setUp(): void
     {
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
-        $this->cacheManager = $this->prophesize(CacheManager::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
         $this->request = $this->prophesize(Request::class);
         $this->filesystem = $this->prophesize(Filesystem::class);
@@ -94,10 +88,11 @@ class CacheClearerTest extends TestCase
     {
         $this->requestStack->getCurrentRequest()->shouldBeCalled();
 
-        $this->cacheManager->supportsInvalidate()->willReturn(true);
-        $this->cacheManager->invalidateDomain(Argument::any())->shouldNotBeCalled();
+        $cacheManager = $this->prophesize(CacheManager::class);
+        $cacheManager->supportsInvalidate()->willReturn(true);
+        $cacheManager->invalidateDomain(Argument::any())->shouldNotBeCalled();
 
-        $cacheClearer = $this->createCacheClearer(true);
+        $cacheClearer = $this->createCacheClearer($cacheManager->reveal());
         $cacheClearer->clear();
     }
 
@@ -111,26 +106,21 @@ class CacheClearerTest extends TestCase
             ->willReturn('sulu.io')
             ->shouldBeCalled();
 
-        $this->cacheManager->supportsInvalidate()->willReturn(true);
-        $this->cacheManager->invalidateDomain('sulu.io')->shouldBeCalled();
+        $cacheManager = $this->prophesize(CacheManager::class);
+        $cacheManager->supportsInvalidate()->willReturn(true);
+        $cacheManager->invalidateDomain('sulu.io')->shouldBeCalled();
 
         $this->eventDispatcher->dispatch(
             Argument::type(CacheClearEvent::class),
             Events::CACHE_CLEAR
         )->shouldBeCalled();
 
-        $cacheClearer = $this->createCacheClearer(true);
+        $cacheClearer = $this->createCacheClearer($cacheManager->reveal());
         $cacheClearer->clear();
     }
 
-    private function createCacheClearer(bool $withCacheManager = false): CacheClearer
+    private function createCacheClearer(?CacheManager $cacheManager = null): CacheClearer
     {
-        $cacheManager = null;
-
-        if ($withCacheManager) {
-            $cacheManager = $this->cacheManager->reveal();
-        }
-
         return new CacheClearer(
             $this->filesystem->reveal(),
             'test',
