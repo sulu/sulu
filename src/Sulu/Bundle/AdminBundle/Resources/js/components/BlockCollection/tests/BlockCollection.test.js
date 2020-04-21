@@ -241,6 +241,7 @@ test('Should allow to reorder blocks by using drag and drop', () => {
     blockCollection.find('Block').at(0).simulate('click');
 
     expect(blockCollection.instance().expandedBlocks.toJS()).toEqual([true, false, false]);
+    expect(blockCollection.instance().generatedBlockIds.toJS()).toEqual([1, 2, 3]);
 
     blockCollection.find(SortableBlockList).prop('onSortEnd')({newIndex: 2, oldIndex: 0});
     expect(changeSpy).toBeCalledWith([
@@ -251,6 +252,7 @@ test('Should allow to reorder blocks by using drag and drop', () => {
     expect(sortEndSpy).toBeCalledWith(0, 2);
 
     expect(blockCollection.instance().expandedBlocks.toJS()).toEqual([false, false, true]);
+    expect(blockCollection.instance().generatedBlockIds.toJS()).toEqual([2, 3, 1]);
 });
 
 test('Should allow to add a new block', () => {

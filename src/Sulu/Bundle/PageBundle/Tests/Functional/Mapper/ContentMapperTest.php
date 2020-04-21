@@ -1445,6 +1445,39 @@ class ContentMapperTest extends SuluTestCase
         );
     }
 
+    public function testLanguageCopyStructureType()
+    {
+        $data = [
+            'title' => 'Page-1',
+            'url' => '/page-1',
+            'ext' => [
+                'test1' => [
+                    'a' => 'That´s a test',
+                    'b' => 'That´s a second test',
+                ],
+            ],
+        ];
+
+        $deData = $this->save($data, 'overview', 'sulu_io', 'de', 1, true, null);
+        $enData = $this->save($data, 'default', 'sulu_io', 'en', 1, true, $deData->getUuid());
+
+        $this->mapper->copyLanguage($deData->getUuid(), 1, 'sulu_io', 'de', 'en');
+
+        $result = $this->mapper->load($enData->getUuid(), 'sulu_io', 'en');
+
+        $this->assertEquals('Page-1', $result->title);
+        $this->assertEquals('/page-1', $result->url);
+        $this->assertEquals(
+            [
+                'a' => 'That´s a test',
+                'b' => 'That´s a second test',
+            ],
+            $result->getExt()['test1']
+        );
+
+        $this->assertEquals('overview', $result->getDocument()->getStructureType());
+    }
+
     public function testLanguageCopyPublishedDocument()
     {
         $data = $this->prepareSinglePageTestData(WorkflowStage::PUBLISHED);

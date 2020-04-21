@@ -2,7 +2,6 @@
 import type {Node} from 'react';
 
 export type BlockEntry = {
-    __id?: number,
     type: string,
 };
 

@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* release/1.6
+    * BUGFIX      #5240  [Content]                 Fix copy language with different template
+
 * 1.6.32 (2020-03-26)
     * FEATURE     #5062  [MediaBundle]             Added download counter to list view of medias.
     * BUGFIX      #5109  [WebsiteBundle]           Fix disabled request analyzer for esi requests

@@ -85,12 +85,22 @@ class CustomUrlSerializeEventSubscriber implements EventSubscriberInterface
             $customUrlProperty
         );
 
-        $creatorFullName = $this->userManager->getFullNameByUserId($customUrl->getCreator());
+        $creatorFullName = null;
+        $creator = $customUrl->getCreator();
+        if ($creator) {
+            $creatorFullName = $this->userManager->getFullNameByUserId($creator);
+        }
+
         $visitor->visitProperty(
             new StaticPropertyMetadata('', 'creatorFullName', $creatorFullName),
             $creatorFullName
         );
-        $changerFullName = $this->userManager->getFullNameByUserId($customUrl->getChanger());
+
+        $changerFullName = null;
+        $changer = $customUrl->getChanger();
+        if ($changer) {
+            $changerFullName = $this->userManager->getFullNameByUserId($changer);
+        }
         $visitor->visitProperty(
             new StaticPropertyMetadata('', 'changerFullName', $changerFullName),
             $changerFullName
