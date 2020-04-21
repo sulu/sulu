@@ -78,8 +78,6 @@ class RoleControllerTest extends SuluTestCase
         $this->em->persist($role2);
         $this->role2 = $role2;
 
-        $this->em->flush();
-
         $permission1 = new Permission();
         $permission1->setRole($role1);
         $permission1->setContext('context1');

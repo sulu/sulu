@@ -2136,6 +2136,7 @@ class ContactControllerTest extends SuluTestCase
         $addressType = $this->createAddressType('Private');
         $account = $this->createAccount('Musterfirma');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'POST',

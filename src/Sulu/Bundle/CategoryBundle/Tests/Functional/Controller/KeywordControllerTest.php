@@ -74,6 +74,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->entityManager->persist($categoryTranslation1);
         $this->entityManager->persist($categoryTranslation2);
         $this->entityManager->flush();
+        $this->entityManager->clear();
     }
 
     public function testCget()

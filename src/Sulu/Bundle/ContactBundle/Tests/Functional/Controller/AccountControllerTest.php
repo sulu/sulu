@@ -68,6 +68,7 @@ class AccountControllerTest extends SuluTestCase
 
         $accounts = $this->createMultipleMinimalAccounts($amount);
         $this->em->flush();
+        $this->em->clear();
 
         // Get ids of new accounts.
         $ids = array_map(
@@ -99,6 +100,7 @@ class AccountControllerTest extends SuluTestCase
     {
         $accounts = $this->createMultipleMinimalAccounts(11);
         $this->em->flush();
+        $this->em->clear();
 
         // Get ids of new accounts.
         $ids = array_map(
@@ -130,6 +132,7 @@ class AccountControllerTest extends SuluTestCase
         $account = $this->createAccount('Company');
         $contact = $this->createContact($account, 'Vorname', 'Nachname');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -193,6 +196,7 @@ class AccountControllerTest extends SuluTestCase
             $logo
         );
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -260,6 +264,7 @@ class AccountControllerTest extends SuluTestCase
 
         $this->em->persist($account);
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request('GET', '/api/accounts/' . $account->getId() . '/contacts?flat=true');
 
@@ -314,6 +319,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->persist($accountContact);
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -363,6 +369,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->persist($accountContact);
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -396,6 +403,7 @@ class AccountControllerTest extends SuluTestCase
         $category1 = $this->createCategory('first-category-key', 'en', 'First Category', 'Description of Category');
         $category2 = $this->createCategory('second-category-key', 'en', 'Second Category', 'Description of second Category');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'POST',
@@ -558,6 +566,7 @@ class AccountControllerTest extends SuluTestCase
         $urlType = $this->createUrlType('Private');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'POST',
@@ -727,6 +736,7 @@ class AccountControllerTest extends SuluTestCase
     {
         $phoneType = $this->createPhoneType('Private');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'POST',
@@ -835,6 +845,7 @@ class AccountControllerTest extends SuluTestCase
         $this->createAccount('Child', $parent);
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request('GET', '/api/accounts?flat=true');
         $response = json_decode($this->client->getResponse()->getContent());
@@ -849,6 +860,7 @@ class AccountControllerTest extends SuluTestCase
         $this->createAccount('Company');
         $this->createAccount('Something');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request('GET', '/api/accounts?flat=true&search=Nothing&searchFields=name');
         $response = json_decode($this->client->getResponse()->getContent());
@@ -901,6 +913,7 @@ class AccountControllerTest extends SuluTestCase
         $contact = $this->createContact($account, 'Vorname', 'Nachname');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'PUT',
@@ -1130,6 +1143,7 @@ class AccountControllerTest extends SuluTestCase
         $account->setNote('Test Note');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'PUT',
@@ -1194,6 +1208,7 @@ class AccountControllerTest extends SuluTestCase
         $account = $this->createAccount('Company', null, $url, $address, $email, $phone, $fax, $note);
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'PUT',
@@ -1217,6 +1232,7 @@ class AccountControllerTest extends SuluTestCase
         $position = $this->createPosition('CEO');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'PUT',
@@ -1258,6 +1274,7 @@ class AccountControllerTest extends SuluTestCase
         );
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'PUT',
@@ -1306,11 +1323,13 @@ class AccountControllerTest extends SuluTestCase
         $mediaType = $this->createMediaType('image');
         $collectionType = $this->createCollectionType('My collection type');
         $collection = $this->createCollection($collectionType);
+
         $this->em->flush();
 
         $media1 = $this->createMedia('media1.jpeg', 'image/jpeg', $mediaType, $collection);
         $media2 = $this->createMedia('media2.jpeg', 'image/jpeg', $mediaType, $collection);
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request('GET', '/api/accounts/' . $account->getId());
         $response = json_decode($this->client->getResponse()->getContent());
@@ -1366,6 +1385,7 @@ class AccountControllerTest extends SuluTestCase
     {
         $account = $this->createAccount('Company');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request('DELETE', '/api/accounts/' . $account->getId());
         $this->assertHttpStatusCode(204, $this->client->getResponse());
@@ -1376,6 +1396,7 @@ class AccountControllerTest extends SuluTestCase
         $parentAccount = $this->createAccount('Parent Company');
         $childAccount = $this->createAccount('Company', $parentAccount);
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request('DELETE', '/api/accounts/' . $parentAccount->getId());
         $this->assertHttpStatusCode(409, $this->client->getResponse());
@@ -1393,6 +1414,7 @@ class AccountControllerTest extends SuluTestCase
         $address = $this->createAddress($addressType, 'Musterstraße', '1', '0000', 'Musterstadt', 'Musterland', 'ML', true, true, false, 'Dornbirn', '6850', '4711', 47.4048346, 9.7602198);
         $account = $this->createAccount('Company', null, null, $address);
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request('GET', '/api/accounts/' . $account->getId() . '/addresses');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -1418,6 +1440,7 @@ class AccountControllerTest extends SuluTestCase
         $account = $this->createAccount('Company');
         $contact = $this->createContact($account, 'Vorname', 'Nachname');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'DELETE',
@@ -1453,6 +1476,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->persist($accountContact);
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'DELETE',
@@ -1512,6 +1536,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->persist($subacc);
 
         $this->em->flush();
+        $this->em->clear();
 
         // get number of contacts from both accounts
         $numContacts = $account->getAccountContacts()->count() + $acc->getAccountContacts()->count();
@@ -1560,6 +1585,7 @@ class AccountControllerTest extends SuluTestCase
         }
 
         $this->em->flush();
+        $this->em->clear();
 
         $numContacts = $account->getAccountContacts()->count();
 
@@ -1595,6 +1621,7 @@ class AccountControllerTest extends SuluTestCase
             $this->em->persist($childAccount);
         }
         $this->em->flush();
+        $this->em->clear();
 
         $accountId = $account->getId();
 
@@ -1624,6 +1651,7 @@ class AccountControllerTest extends SuluTestCase
         $addressType = $this->createAddressType('Private');
         $account = $this->createAccount('Company', null);
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'POST',
@@ -1794,6 +1822,7 @@ class AccountControllerTest extends SuluTestCase
         $addressType = $this->createAddressType('Private');
         $account = $this->createAccount('Company', null);
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'POST',
@@ -1881,6 +1910,7 @@ class AccountControllerTest extends SuluTestCase
         $address = $this->createAddress($addressType);
         $account = $this->createAccount('Company', null, $url, $address);
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'PUT',
@@ -1996,6 +2026,7 @@ class AccountControllerTest extends SuluTestCase
         $account2 = $this->createAccount('Account 2');
         $this->createAccount('Account 2.1', $account2);
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',

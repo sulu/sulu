@@ -11,8 +11,10 @@
 
 namespace Sulu\Bundle\RouteBundle\Tests\Functional\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\RouteBundle\Entity\Route;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class RouteControllerTest extends SuluTestCase
 {
@@ -24,10 +26,26 @@ class RouteControllerTest extends SuluTestCase
 
     const TEST_LOCALE = 'de';
 
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
+    public function setUp(): void
+    {
+        $this->client = $this->createAuthenticatedClient();
+        $this->entityManager = $this->getEntityManager();
+        $this->purgeDatabase();
+    }
+
     public function testGenerate()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/routes?action=generate',
             [
@@ -40,17 +58,14 @@ class RouteControllerTest extends SuluTestCase
             ]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals($result['resourcelocator'], '/prefix/2019/test');
     }
 
     public function testCGetAction()
     {
-        $client = $this->createAuthenticatedClient();
-        $this->purgeDatabase();
-
         $routes = [
             $this->createRoute('/test-1'),
             $this->createRoute('/test-2', null, self::TEST_ENTITY, 2),
@@ -59,7 +74,10 @@ class RouteControllerTest extends SuluTestCase
         $this->createRoute('/test-1-1', $routes[0]);
         $this->createRoute('/test-2-1', $routes[1]);
 
-        $client->request(
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        $this->client->request(
             'GET',
             sprintf(
                 '/api/routes?resourceKey=%s&id=%s&locale=%s',
@@ -69,8 +87,8 @@ class RouteControllerTest extends SuluTestCase
             )
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertCount(1, $result['_embedded']['routes']);
 
@@ -81,10 +99,7 @@ class RouteControllerTest extends SuluTestCase
 
     public function testCGetActionNotExistingResourceKey()
     {
-        $client = $this->createAuthenticatedClient();
-        $this->purgeDatabase();
-
-        $client->request(
+        $this->client->request(
             'GET',
             sprintf(
                 '/api/routes?resourceKey=%s&id=%s&locale=%s',
@@ -94,15 +109,12 @@ class RouteControllerTest extends SuluTestCase
             )
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(404, $client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
     public function testCGetActionHistory()
     {
-        $client = $this->createAuthenticatedClient();
-        $this->purgeDatabase();
-
         $targetRoute = $this->createRoute('/test');
         $routes = [
             $this->createRoute('/test-2', $targetRoute),
@@ -110,7 +122,10 @@ class RouteControllerTest extends SuluTestCase
             $this->createRoute('/test-4', $targetRoute),
         ];
 
-        $client->request(
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        $this->client->request(
             'GET',
             sprintf(
                 '/api/routes?history=true&resourceKey=%s&id=%s&locale=%s',
@@ -120,8 +135,8 @@ class RouteControllerTest extends SuluTestCase
             )
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertCount(3, $result['_embedded']['routes']);
 
@@ -142,9 +157,6 @@ class RouteControllerTest extends SuluTestCase
 
     public function testDelete()
     {
-        $client = $this->createAuthenticatedClient();
-        $this->purgeDatabase();
-
         $targetRoute = $this->createRoute('/test');
         $routes = [
             $this->createRoute('/test-2', $targetRoute),
@@ -152,14 +164,15 @@ class RouteControllerTest extends SuluTestCase
             $this->createRoute('/test-4', $targetRoute),
         ];
 
-        $this->getEntityManager()->clear();
+        $this->entityManager->flush();
+        $this->entityManager->clear();
 
         $targetRouteId = $targetRoute->getId();
 
-        $client->request('DELETE', '/api/routes?ids=' . $targetRouteId);
-        $this->assertHttpStatusCode(204, $client->getResponse());
+        $this->client->request('DELETE', '/api/routes?ids=' . $targetRouteId);
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        $client->request(
+        $this->client->request(
             'GET',
             sprintf(
                 '/api/routes?history=true&resourceKey=%s&id=%s&locale=%s',
@@ -168,16 +181,13 @@ class RouteControllerTest extends SuluTestCase
                 self::TEST_LOCALE
             )
         );
-        $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertCount(0, $result['_embedded']['routes']);
     }
 
     public function testDeleteHistory()
     {
-        $client = $this->createAuthenticatedClient();
-        $this->purgeDatabase();
-
         $targetRoute = $this->createRoute('/test');
         $routes = [
             $this->createRoute('/test-2', $targetRoute),
@@ -185,10 +195,13 @@ class RouteControllerTest extends SuluTestCase
             $this->createRoute('/test-4', $targetRoute),
         ];
 
-        $client->request('DELETE', '/api/routes?ids=' . $routes[0]->getId());
-        $this->assertHttpStatusCode(204, $client->getResponse());
+        $this->entityManager->flush();
+        $this->entityManager->clear();
 
-        $client->request(
+        $this->client->request('DELETE', '/api/routes?ids=' . $routes[0]->getId());
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
+
+        $this->client->request(
             'GET',
             sprintf(
                 '/api/routes?history=true&resourceKey=%s&id=%s&locale=%s',
@@ -198,8 +211,8 @@ class RouteControllerTest extends SuluTestCase
             )
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertCount(2, $result['_embedded']['routes']);
 
@@ -223,16 +236,13 @@ class RouteControllerTest extends SuluTestCase
         $entityClass = self::TEST_ENTITY,
         $entityId = self::TEST_ID
     ) {
-        $entityManager = $this->getEntityManager();
-
         $route = new Route($path, $entityId, $entityClass, self::TEST_LOCALE);
         if ($target) {
             $route->setTarget($target);
             $route->setHistory(true);
         }
 
-        $entityManager->persist($route);
-        $entityManager->flush();
+        $this->entityManager->persist($route);
 
         return $route;
     }

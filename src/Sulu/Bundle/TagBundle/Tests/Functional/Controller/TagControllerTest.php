@@ -59,6 +59,7 @@ class TagControllerTest extends SuluTestCase
     {
         $tag = $this->createTag('tag1');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -78,6 +79,7 @@ class TagControllerTest extends SuluTestCase
         $this->createTag('tag1');
         $this->createTag('tag2');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -98,6 +100,7 @@ class TagControllerTest extends SuluTestCase
         $tag2 = $this->createTag('tag2');
         $this->createTag('tag3');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -116,6 +119,7 @@ class TagControllerTest extends SuluTestCase
         $this->createTag('tag1');
         $this->createTag('tag2');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -134,6 +138,7 @@ class TagControllerTest extends SuluTestCase
         $this->createTag('tag1');
         $this->createTag('tag2');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -191,6 +196,7 @@ class TagControllerTest extends SuluTestCase
     {
         $this->createTag('tag1');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'POST',
@@ -209,6 +215,7 @@ class TagControllerTest extends SuluTestCase
     {
         $tag = $this->createTag('tag1');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'PUT',
@@ -238,6 +245,7 @@ class TagControllerTest extends SuluTestCase
         $tag1 = $this->createTag('tag1');
         $tag2 = $this->createTag('tag2');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'PUT',
@@ -267,6 +275,7 @@ class TagControllerTest extends SuluTestCase
     {
         $tag1 = $this->createTag('tag1');
         $this->em->flush();
+        $this->em->clear();
 
         $tag1Id = $tag1->getId();
 
@@ -307,6 +316,7 @@ class TagControllerTest extends SuluTestCase
         $tag3 = $this->createTag('tag3');
         $tag4 = $this->createTag('tag4');
         $this->em->flush();
+        $this->em->clear();
 
         $tag1Id = $tag1->getId();
         $tag2Id = $tag2->getId();
@@ -360,6 +370,7 @@ class TagControllerTest extends SuluTestCase
     {
         $tag1 = $this->createTag('tag1');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'POST',
@@ -379,6 +390,7 @@ class TagControllerTest extends SuluTestCase
         $this->createTag('tag1');
         $this->createTag('tag2');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'PATCH',
@@ -428,6 +440,7 @@ class TagControllerTest extends SuluTestCase
         $this->createTag('tag1');
         $this->createTag('tag2');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'PATCH',
@@ -454,6 +467,7 @@ class TagControllerTest extends SuluTestCase
         $tag1 = $this->createTag('tag1');
         $this->createTag('tag2');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'PATCH',

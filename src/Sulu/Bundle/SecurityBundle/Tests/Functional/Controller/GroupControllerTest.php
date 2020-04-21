@@ -77,6 +77,7 @@ class GroupControllerTest extends SuluTestCase
         $this->group2 = $group2;
 
         $this->em->flush();
+        $this->em->clear();
     }
 
     public function testList()

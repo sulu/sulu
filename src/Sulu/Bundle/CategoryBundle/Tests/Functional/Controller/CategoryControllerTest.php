@@ -49,6 +49,7 @@ class CategoryControllerTest extends SuluTestCase
         $categoryMeta1 = $this->createCategoryMeta($category1, 'en', 'description', 'Description of Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -75,6 +76,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category2, 'en', 'Second Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -96,6 +98,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category1, 'en', 'First Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -134,6 +137,7 @@ class CategoryControllerTest extends SuluTestCase
 
         $this->em->persist($category);
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -172,6 +176,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category5, 'de', 'Fünfte Kategorie');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -220,6 +225,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category4, 'en', 'Fourth Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -252,6 +258,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category4, 'de', 'Vierte Kategorie');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -304,6 +311,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category4, 'en', 'Third Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -356,6 +364,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category4, 'en', 'Fourth Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -411,6 +420,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category4, 'en', 'Fourth Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -453,6 +463,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category4, 'en', 'Fourth Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -503,6 +514,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category4, 'en', 'Fourth Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -538,6 +550,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category4, 'en', 'Fourth Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -573,6 +586,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category4, 'en', 'Fourth Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         // search for existing third category
 
@@ -643,6 +657,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category4, 'en', 'Fourth Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -683,6 +698,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category4, 'de', 'Vierte Kategorie');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -737,6 +753,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category3, 'de', 'Dritte Kategorie');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -768,6 +785,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category2, 'de', 'Zweite Kategorie');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -797,6 +815,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category3, 'en', 'Third Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -848,6 +867,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category3, 'en', 'Third Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -897,6 +917,9 @@ class CategoryControllerTest extends SuluTestCase
             $this->createMedia('test-2', $type, $collection),
             $this->createMedia('test-3', $type, $collection),
         ];
+
+        $this->em->flush();
+        $this->em->clear();
 
         $ids = array_map(
             function(Media $media) {
@@ -991,6 +1014,7 @@ class CategoryControllerTest extends SuluTestCase
     {
         $this->createCategory('first-category-key', 'en');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'POST',
@@ -1025,6 +1049,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category2, 'en', 'Second Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -1069,6 +1094,7 @@ class CategoryControllerTest extends SuluTestCase
         $categoryMeta1 = $this->createCategoryMeta($category1, 'en', 'description', 'Description of Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'PUT',
@@ -1144,6 +1170,7 @@ class CategoryControllerTest extends SuluTestCase
         $categoryTranslation->setMedias([$media1, $media2]);
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'GET',
@@ -1204,6 +1231,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category1, 'en', 'First Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'PUT',
@@ -1223,6 +1251,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category1, 'en', 'First Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'PUT',
@@ -1261,6 +1290,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category1, 'en', 'First Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'PUT',
@@ -1286,6 +1316,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category2, 'en', 'Second Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'PUT',
@@ -1324,6 +1355,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category, 'en', 'First Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'PATCH',
@@ -1359,6 +1391,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category2, 'en', 'Second Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'PATCH',
@@ -1390,6 +1423,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category, 'en', 'First Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $categoryId = $category->getId();
 
@@ -1430,6 +1464,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category4, 'en', 'Fourth Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $category1Id = $category1->getId();
         $category4Id = $category4->getId();
@@ -1469,6 +1504,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category4, 'en', 'Fourth Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'POST',
@@ -1501,6 +1537,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category4, 'en', 'Fourth Category');
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'POST',
@@ -1528,7 +1565,6 @@ class CategoryControllerTest extends SuluTestCase
         $imageType->setDescription('This is an image');
 
         $this->em->persist($imageType);
-        $this->em->flush();
 
         return $imageType;
     }
@@ -1635,7 +1671,6 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->persist($file);
         $this->em->persist($fileVersionMeta);
         $this->em->persist($fileVersion);
-        $this->em->flush();
 
         return $media;
     }

@@ -371,6 +371,7 @@ class ResettingControllerTest extends SuluTestCase
         $user = $this->createUser(4);
         $this->em->persist($user);
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request('GET', '/security/reset/email', [
             'user' => $user->getUsername(),
@@ -385,7 +386,6 @@ class ResettingControllerTest extends SuluTestCase
     {
         $role = $this->createRole('Website');
         $this->em->persist($role);
-        $this->em->flush();
 
         $user = $this->createUser(4);
         $this->em->persist($user);
@@ -394,6 +394,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->em->persist($userRole);
 
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request('GET', '/security/reset/email', [
             'user' => $user->getUsername(),
