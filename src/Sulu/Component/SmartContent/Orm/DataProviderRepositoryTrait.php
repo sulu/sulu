@@ -67,7 +67,7 @@ trait DataProviderRepositoryTrait
             $sortMethod = array_key_exists('sortMethod', $filters) ? $filters['sortMethod'] : 'asc';
             $sortColumn = $filters['sortBy'];
 
-            if ($sortColumn === explode('.', $sortColumn)[0]) {
+            if (false === strpos($sortColumn, '.')) {
                 $sortColumn = 'c.' . $sortColumn;
             }
 
