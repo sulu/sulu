@@ -339,77 +339,24 @@ class SystemCollectionManagerTest extends TestCase
     /**
      * @dataProvider configProvider
      */
-    public function testWarmUpNotFresh($config, $existingCollections, $notExistingCollections, $data)
+    public function testWarmUp($config, $existingCollections, $notExistingCollections, $data)
     {
         $tokenStorage = $this->getTokenStorage();
         $collectionManager = $this->getCollectionManager($existingCollections, $notExistingCollections);
 
         $entityManager = $this->prophesize(EntityManagerInterface::class);
-        $cache = $this->createMock(CacheInterface::class);
-
-        $cache
-            ->expects($this->exactly(2))
-            ->method('isFresh')
-            ->willReturnOnConsecutiveCalls(false, false);
-
-        $cache
-            ->expects($this->once())
-            ->method('write')
-            ->with($data);
-
-        $cache
-            ->expects($this->once())
-            ->method('read')
-            ->willReturn($data);
+        $cache = $this->prophesize(CacheInterface::class);
+        $cache->invalidate()->shouldBeCalled();
+        $cache->isFresh()->shouldBeCalled()->willReturn(false);
+        $cache->write($data)->shouldBeCalled();
+        $cache->read()->shouldBeCalled()->willReturn($data);
 
         $manager = new SystemCollectionManager(
             $config,
             $collectionManager->reveal(),
             $entityManager->reveal(),
             $tokenStorage->reveal(),
-            $cache,
-            'en'
-        );
-
-        $manager->warmUp();
-    }
-
-    /**
-     * @dataProvider configProvider
-     */
-    public function testWarmUpFresh($config, $existingCollections, $notExistingCollections, $data)
-    {
-        $tokenStorage = $this->getTokenStorage();
-        $collectionManager = $this->getCollectionManager($existingCollections, $notExistingCollections, false);
-
-        $entityManager = $this->prophesize(EntityManagerInterface::class);
-        $cache = $this->createMock(CacheInterface::class);
-
-        $cache
-            ->expects($this->exactly(2))
-            ->method('isFresh')
-            ->willReturnOnConsecutiveCalls(true, false);
-
-        $cache
-            ->expects($this->once())
-            ->method('invalidate');
-
-        $cache
-            ->expects($this->once())
-            ->method('write')
-            ->with($data);
-
-        $cache
-            ->expects($this->once())
-            ->method('read')
-            ->willReturn($data);
-
-        $manager = new SystemCollectionManager(
-            $config,
-            $collectionManager->reveal(),
-            $entityManager->reveal(),
-            $tokenStorage->reveal(),
-            $cache,
+            $cache->reveal(),
             'en'
         );
 
