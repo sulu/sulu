@@ -23,6 +23,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MediaPreviewControllerTest extends SuluTestCase
@@ -47,9 +48,14 @@ class MediaPreviewControllerTest extends SuluTestCase
      */
     private $collection;
 
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
-        parent::setUp();
+        $this->client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
         $this->em = $this->getEntityManager();
 
@@ -108,31 +114,29 @@ class MediaPreviewControllerTest extends SuluTestCase
         $media = $this->createMedia('photo');
         $preview = new UploadedFile($this->getImagePath(), 'preview.jpeg', 'image/jpeg');
 
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/media/' . $media->getId() . '/preview?locale=en',
             [],
             ['previewImage' => $preview]
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($media->getId(), $response->id);
         $this->assertEquals('photo', $response->title);
         $this->assertStringContainsString('preview.jpg?v=1-0', $response->thumbnails->{'sulu-400x400'});
 
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/media/' . $media->getId() . '/preview?locale=en',
             [],
             ['previewImage' => $preview]
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($media->getId(), $response->id);
         $this->assertEquals('photo', $response->title);
@@ -143,15 +147,14 @@ class MediaPreviewControllerTest extends SuluTestCase
     {
         $preview = $this->createMedia('preview');
         $media = $this->createMedia('photo', 'en-gb', 'image', $preview);
+        $mediaId = $media->getId();
 
         $this->assertEquals($preview, $media->getPreviewImage());
 
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('DELETE', '/api/media/' . $mediaId . '/preview?locale=en');
 
-        $client->request('DELETE', '/api/media/' . $media->getId() . '/preview?locale=en');
-
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($media->getId(), $response->id);
         $this->assertEquals('photo', $response->title);

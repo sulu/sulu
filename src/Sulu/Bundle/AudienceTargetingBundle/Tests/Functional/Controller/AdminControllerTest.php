@@ -12,11 +12,18 @@
 namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class AdminControllerTest extends SuluTestCase
 {
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         parent::setUp();
         $this->purgeDatabase();
         $this->initPhpcr();
@@ -24,11 +31,10 @@ class AdminControllerTest extends SuluTestCase
 
     public function testRulesConfig()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/admin/config');
+        $this->client->request('GET', '/admin/config');
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $audienceTargetingConfig = $response->sulu_audience_targeting;
 
@@ -40,12 +46,10 @@ class AdminControllerTest extends SuluTestCase
 
     public function testTargetGroupsListMetadataAction()
     {
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('GET', '/admin/metadata/list/target_groups');
 
-        $client->request('GET', '/admin/metadata/list/target_groups');
-
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertObjectHasAttribute('id', $response);
         $this->assertObjectHasAttribute('title', $response);
@@ -56,12 +60,10 @@ class AdminControllerTest extends SuluTestCase
 
     public function testTargetGroupsFormMetadataAction()
     {
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('GET', '/admin/metadata/form/target_group_details');
 
-        $client->request('GET', '/admin/metadata/form/target_group_details');
-
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $form = $response->form;
 

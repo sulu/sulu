@@ -1,0 +1,7 @@
+framework:
+    assets: ~
+    router: { resource: '%kernel.project_dir%/config/routing_website.yml' }
+
+fos_rest:
+    zone:
+        - { path: ^/admin/* }

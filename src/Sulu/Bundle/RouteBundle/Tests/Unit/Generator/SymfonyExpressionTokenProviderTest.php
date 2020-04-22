@@ -55,6 +55,8 @@ class SymfonyExpressionTokenProviderTest extends TestCase
     {
         $this->expectException(CannotEvaluateTokenException::class);
         $translator = $this->prophesize(Translator::class);
+        $translator->getLocale()->willReturn('en');
+        $translator->setLocale('en')->shouldBeCalled();
         $entity = new \stdClass();
         $provider = new SymfonyExpressionTokenProvider($translator->reveal());
         $provider->provide($entity, 'object.title');

@@ -43,9 +43,8 @@ class SearchControllerTest extends SuluTestCase
 
     public function setUp(): void
     {
-        parent::setUp();
-        $this->purgeDatabase();
         $this->client = $this->createAuthenticatedClient();
+        $this->purgeDatabase();
         $this->searchManager = $this->client->getContainer()->get('massive_search.search_manager');
         $this->entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
         $this->createUser();

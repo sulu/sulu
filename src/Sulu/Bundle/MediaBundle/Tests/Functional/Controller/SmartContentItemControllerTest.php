@@ -20,6 +20,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class SmartContentItemControllerTest extends SuluTestCase
 {
@@ -28,8 +29,14 @@ class SmartContentItemControllerTest extends SuluTestCase
      */
     protected $em;
 
-    protected function setUp(): void
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
+    public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $this->em = $this->getEntityManager();
 
         $this->purgeDatabase();
@@ -50,16 +57,15 @@ class SmartContentItemControllerTest extends SuluTestCase
         $this->em->persist($media4);
         $this->em->persist($media3);
         $this->em->flush();
-        $client = $this->createAuthenticatedClient();
 
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/items?provider=media&locale=en&dataSource=' . $collection->getId()
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertCount(4, $result['_embedded']['items']);
         $this->assertEquals($media2->getId(), $result['_embedded']['items'][0]['id']);
         $this->assertEquals($media1->getId(), $result['_embedded']['items'][1]['id']);
@@ -82,16 +88,15 @@ class SmartContentItemControllerTest extends SuluTestCase
         $this->em->persist($media4);
         $this->em->persist($media3);
         $this->em->flush();
-        $client = $this->createAuthenticatedClient();
 
-        $client->request(
+        $this->client->request(
             'GET',
             '/api/items?provider=media&sortBy=fileVersionMeta.title&locale=en&dataSource=' . $collection->getId()
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertCount(4, $result['_embedded']['items']);
         $this->assertEquals($media1->getId(), $result['_embedded']['items'][0]['id']);
         $this->assertEquals($media2->getId(), $result['_embedded']['items'][1]['id']);

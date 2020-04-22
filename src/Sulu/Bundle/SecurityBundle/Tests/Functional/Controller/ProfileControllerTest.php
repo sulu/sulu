@@ -12,26 +12,32 @@
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class ProfileControllerTest extends SuluTestCase
 {
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
     }
 
     public function testPatchSettings()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'PATCH',
             '/api/profile/settings',
             ['setting-key' => 'setting-value']
         );
 
-        $userSetting = $client->getContainer()->get('sulu_security.user_setting_repository')->findOneBy(
+        $userSetting = $this->client->getContainer()->get('sulu_security.user_setting_repository')->findOneBy(
             [
-                'user' => $client->getContainer()->get('security.token_storage')->getToken()->getUser(),
+                'user' => $this->client->getContainer()->get('security.token_storage')->getToken()->getUser(),
                 'key' => 'setting-key',
             ]
         );
@@ -42,13 +48,11 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testGet()
     {
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('GET', '/api/profile');
 
-        $client->request('GET', '/api/profile');
+        $response = json_decode($this->client->getResponse()->getContent());
 
-        $response = json_decode($client->getResponse()->getContent());
-
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertEquals('test', $response->username);
         $this->assertEquals('', $response->email);
         $this->assertObjectNotHasAttribute('password', $response);
@@ -59,9 +63,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPut()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/profile',
             [
@@ -74,8 +76,8 @@ class ProfileControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertEquals('Hans', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
         $this->assertEquals('hansi', $response->username);
@@ -85,9 +87,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutEmailNotUnique()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/profile',
             [
@@ -100,8 +100,8 @@ class ProfileControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(409, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
         $this->assertEquals(
             'The email "" is not unique!',
             $response->message
@@ -110,9 +110,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutUsernameNotUnique()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/profile',
             [
@@ -125,8 +123,8 @@ class ProfileControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(409, $client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
         $this->assertEquals(
             'a username has to be unique!',
             $response->message
@@ -135,9 +133,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutWithoutFirstName()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/profile',
             [
@@ -148,9 +144,9 @@ class ProfileControllerTest extends SuluTestCase
                 'locale' => 'de',
             ]
         );
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertHttpStatusCode(400, $client->getResponse());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
         $this->assertEquals(
             'The "Sulu\Bundle\ContactBundle\Entity\Contact"-entity requires a "firstName"-argument',
             $response->message
@@ -159,9 +155,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutWithoutLastName()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/profile',
             [
@@ -173,9 +167,9 @@ class ProfileControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertHttpStatusCode(400, $client->getResponse());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
         $this->assertEquals(
             'The "Sulu\Bundle\ContactBundle\Entity\Contact"-entity requires a "lastName"-argument',
             $response->message
@@ -184,9 +178,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutWithoutUsername()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/profile',
             [
@@ -198,9 +190,9 @@ class ProfileControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertHttpStatusCode(400, $client->getResponse());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
         $this->assertEquals(
             'The "Sulu\Bundle\SecurityBundle\Entity\User"-entity requires a "username"-argument',
             $response->message
@@ -209,9 +201,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutWithoutEmail()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/profile',
             [
@@ -223,9 +213,9 @@ class ProfileControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertHttpStatusCode(400, $client->getResponse());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
         $this->assertEquals(
             'The "Sulu\Bundle\SecurityBundle\Entity\User"-entity requires a "email"-argument',
             $response->message
@@ -234,9 +224,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutWithoutLocale()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/profile',
             [
@@ -248,9 +236,9 @@ class ProfileControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertHttpStatusCode(400, $client->getResponse());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
         $this->assertEquals(
             'The "Sulu\Bundle\SecurityBundle\Entity\User"-entity requires a "locale"-argument',
             $response->message
@@ -259,9 +247,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutWithoutPassword()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/profile',
             [
@@ -273,23 +259,22 @@ class ProfileControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
     }
 
     public function testDeleteSettings()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'PATCH',
             '/api/profile/settings',
             ['setting-key' => 'setting-value']
         );
 
-        $userSetting = $client->getContainer()->get('sulu_security.user_setting_repository')->findOneBy(
+        $userSetting = $this->client->getContainer()->get('sulu_security.user_setting_repository')->findOneBy(
             [
-                'user' => $client->getContainer()->get('security.token_storage')->getToken()->getUser(),
+                'user' => $this->client->getContainer()->get('security.token_storage')->getToken()->getUser(),
                 'key' => 'setting-key',
             ]
         );
@@ -297,15 +282,15 @@ class ProfileControllerTest extends SuluTestCase
         $this->assertEquals('setting-key', $userSetting->getKey());
         $this->assertEquals('setting-value', json_decode($userSetting->getValue()));
 
-        $client->request(
+        $this->client->request(
             'DELETE',
             '/api/profile/settings',
             ['key' => 'setting-key']
         );
 
-        $userSetting = $client->getContainer()->get('sulu_security.user_setting_repository')->findOneBy(
+        $userSetting = $this->client->getContainer()->get('sulu_security.user_setting_repository')->findOneBy(
             [
-                'user' => $client->getContainer()->get('security.token_storage')->getToken()->getUser(),
+                'user' => $this->client->getContainer()->get('security.token_storage')->getToken()->getUser(),
                 'key' => 'setting-key',
             ]
         );

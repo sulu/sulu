@@ -13,24 +13,30 @@ namespace Sulu\Bundle\AdminBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\AdminBundle\Entity\Collaboration;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class CollaborationControllerTest extends SuluTestCase
 {
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $collaborations = $this->getContainer()->get('cache.global_clearer')->clear('');
     }
 
     public function testPostWithSingleUser()
     {
-        $client = $this->createAuthenticatedClient();
-        $session = $client->getContainer()->get('session');
+        $session = $this->client->getContainer()->get('session');
         $session->start();
-        $client->request('PUT', '/admin/api/collaborations?id=4&resourceKey=page');
+        $this->client->request('PUT', '/admin/api/collaborations?id=4&resourceKey=page');
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEmpty($response->_embedded->collaborations);
 
@@ -45,7 +51,6 @@ class CollaborationControllerTest extends SuluTestCase
 
     public function testPostWithMultipleUsers()
     {
-        $client = $this->createAuthenticatedClient();
         $cache = $this->getContainer()->get('sulu_admin.collaboration_cache');
 
         $cacheItem = $cache->getItem('page_4')->set([
@@ -55,11 +60,11 @@ class CollaborationControllerTest extends SuluTestCase
 
         $cache->save($cacheItem);
 
-        $client->request('PUT', '/admin/api/collaborations?id=4&resourceKey=page');
+        $this->client->request('PUT', '/admin/api/collaborations?id=4&resourceKey=page');
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertCount(2, $response->_embedded->collaborations);
 
@@ -81,8 +86,7 @@ class CollaborationControllerTest extends SuluTestCase
 
     public function testDelete()
     {
-        $client = $this->createAuthenticatedClient();
-        $session = $client->getContainer()->get('session');
+        $session = $this->client->getContainer()->get('session');
         $session->start();
         $cache = $this->getContainer()->get('sulu_admin.collaboration_cache');
 
@@ -93,13 +97,13 @@ class CollaborationControllerTest extends SuluTestCase
 
         $cache->save($cacheItem);
 
-        $client->request('PUT', '/admin/api/collaborations?id=4&resourceKey=page');
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->client->request('PUT', '/admin/api/collaborations?id=4&resourceKey=page');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertCount(3, $cache->getItem('page_4')->get());
 
-        $client->request('DELETE', '/admin/api/collaborations?id=4&resourceKey=page');
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->client->request('DELETE', '/admin/api/collaborations?id=4&resourceKey=page');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertCount(2, $cache->getItem('page_4')->get());
     }
 }

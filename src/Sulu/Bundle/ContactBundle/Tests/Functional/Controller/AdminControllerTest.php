@@ -20,11 +20,18 @@ use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfileType;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class AdminControllerTest extends SuluTestCase
 {
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
     }
 
@@ -77,11 +84,10 @@ class AdminControllerTest extends SuluTestCase
         $em->persist($faxType2);
         $em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/admin/config');
+        $this->client->request('GET', '/admin/config');
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $contactConfig = $response->sulu_contact;
 
@@ -118,12 +124,10 @@ class AdminControllerTest extends SuluTestCase
 
     public function testContactsListMetadataAction()
     {
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('GET', '/admin/metadata/list/contacts');
 
-        $client->request('GET', '/admin/metadata/list/contacts');
-
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('id', $response);
         $this->assertArrayHasKey('title', $response);
@@ -139,12 +143,10 @@ class AdminControllerTest extends SuluTestCase
 
     public function testAccountsListMetadataAction()
     {
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('GET', '/admin/metadata/list/accounts');
 
-        $client->request('GET', '/admin/metadata/list/accounts');
-
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertObjectHasAttribute('id', $response);
         $this->assertObjectHasAttribute('name', $response);
@@ -155,12 +157,11 @@ class AdminControllerTest extends SuluTestCase
     public function testContactFormMetadataAction()
     {
         $this->createCollectionTypes();
-        $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/admin/metadata/form/contact_details');
+        $this->client->request('GET', '/admin/metadata/form/contact_details');
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $form = $response->form;
 
@@ -175,12 +176,11 @@ class AdminControllerTest extends SuluTestCase
     public function testAccountFormMetadataAction()
     {
         $this->createCollectionTypes();
-        $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/admin/metadata/form/account_details');
+        $this->client->request('GET', '/admin/metadata/form/account_details');
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $form = $response->form;
 

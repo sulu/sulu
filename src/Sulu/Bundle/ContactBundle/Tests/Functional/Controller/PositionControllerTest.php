@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class PositionControllerTest extends SuluTestCase
 {
@@ -21,8 +22,14 @@ class PositionControllerTest extends SuluTestCase
      */
     private $em;
 
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $this->em = $this->getEntityManager();
         $this->purgeDatabase();
     }
@@ -34,10 +41,9 @@ class PositionControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/contact-positions');
+        $this->client->request('GET', '/api/contact-positions');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $positions = $response->_embedded->contact_positions;
 
         $this->assertCount(2, $positions);
@@ -55,10 +61,9 @@ class PositionControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/contact-positions?ids=' . $position1->getId() . ',' . $position3->getId());
+        $this->client->request('GET', '/api/contact-positions?ids=' . $position1->getId() . ',' . $position3->getId());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $positions = $response->_embedded->contact_positions;
 
         $this->assertCount(2, $positions);
@@ -76,15 +81,14 @@ class PositionControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'DELETE',
             '/api/contact-positions?ids=' . $position1->getId() . ',' . $position3->getId()
         );
 
-        $client->request('GET', '/api/contact-positions');
+        $this->client->request('GET', '/api/contact-positions');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $positions = $response->_embedded->contact_positions;
 
         $this->assertCount(1, $positions);
@@ -99,15 +103,14 @@ class PositionControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('PATCH', '/api/contact-positions', [
+        $this->client->request('PATCH', '/api/contact-positions', [
             ['id' => $position1->getId(), 'position' => 'CE'],
             ['position' => 'CIO'],
         ]);
 
-        $client->request('GET', '/api/contact-positions');
+        $this->client->request('GET', '/api/contact-positions');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
         $positions = $response->_embedded->contact_positions;
 
         $this->assertCount(3, $positions);

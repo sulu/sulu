@@ -13,9 +13,15 @@ namespace Sulu\Bundle\AdminBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class AdminControllerTest extends SuluTestCase
 {
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
         $this->client = $this->createAuthenticatedClient();
@@ -28,12 +34,11 @@ class AdminControllerTest extends SuluTestCase
         $collectionType = new LoadCollectionTypes();
         $collectionType->load($this->getEntityManager());
 
-        $client = $this->client;
-        $client->request('GET', '/admin/config');
+        $this->client->request('GET', '/admin/config');
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertObjectHasAttribute('sulu_admin', $response);
         $this->assertObjectHasAttribute('navigation', $response->sulu_admin);
@@ -53,9 +58,8 @@ class AdminControllerTest extends SuluTestCase
 
     public function testGetNotExistingMetdata()
     {
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/admin/metadata/test1/test');
+        $this->client->request('GET', '/admin/metadata/test1/test');
 
-        $this->assertHttpStatusCode(404, $client->getResponse());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 }

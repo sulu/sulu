@@ -19,20 +19,13 @@ class ResourcelocatorControllerTest extends SuluTestCase
     /**
      * @var KernelBrowser
      */
-    protected $client;
+    private $client;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
         $this->initPhpcr();
-        $this->client = $this->createClient(
-            [],
-            [
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            ]
-        );
-
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
     }
 

@@ -17,13 +17,14 @@ use Sulu\Bundle\TestBundle\Testing\PHPCRImporter;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class PageControllerTest extends SuluTestCase
 {
     /**
-     * @var Client
+     * @var KernelBrowser
      */
-    protected $client;
+    private $client;
 
     /**
      * @var SessionInterface
@@ -42,7 +43,6 @@ class PageControllerTest extends SuluTestCase
 
     public function setUp(): void
     {
-        parent::setUp();
         $this->client = $this->createAuthenticatedClient();
         $this->initPhpcr();
         $this->session = $this->getContainer()->get('sulu_document_manager.default_session');

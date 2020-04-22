@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
  * Handles snippet types and defaults.
@@ -24,8 +25,14 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
      */
     protected $contentMapper;
 
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
         $this->initPhpcr();
         $this->loadFixtures();
@@ -33,12 +40,10 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
 
     public function testCGet()
     {
-        $client = $this->createAuthenticatedClient();
+        $this->client->request('GET', '/api/snippet-areas?webspace=sulu_io');
 
-        $client->request('GET', '/api/snippet-areas?webspace=sulu_io');
-
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent(), true);
 
         $data = $response['_embedded']['areas'];
         $this->assertEquals(2, $response['total']);
@@ -54,26 +59,24 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
 
     public function testPutDefault()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'PUT',
             '/api/snippet-areas/car',
             ['webspace' => 'sulu_io', 'defaultUuid' => $this->car1->getUuid()]
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('car', $response['template']);
         $this->assertEquals('Car', $response['title']);
         $this->assertEquals($this->car1->getUuid(), $response['defaultUuid']);
         $this->assertEquals($this->car1->getTitle(), $response['defaultTitle']);
 
-        $client->request('GET', '/api/snippet-areas?webspace=sulu_io');
+        $this->client->request('GET', '/api/snippet-areas?webspace=sulu_io');
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent(), true);
         $data = $response['_embedded']['areas'];
 
         $this->assertEquals(2, $response['total']);
@@ -92,26 +95,24 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
      */
     public function testDeleteDefault()
     {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
+        $this->client->request(
             'DELETE',
             '/api/snippet-areas/car',
             ['webspace' => 'sulu_io']
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('car', $response['template']);
         $this->assertEquals('Car', $response['title']);
         $this->assertEquals(null, $response['defaultUuid']);
         $this->assertEquals(null, $response['defaultTitle']);
 
-        $client->request('GET', '/api/snippet-areas?webspace=sulu_io');
+        $this->client->request('GET', '/api/snippet-areas?webspace=sulu_io');
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent(), true);
         $data = $response['_embedded']['areas'];
 
         $this->assertEquals(2, $response['total']);

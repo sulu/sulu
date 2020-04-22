@@ -22,9 +22,10 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
-class MediaWebsiteControllerTest extends SuluTestCase
+class MediaWebsiteControllerTest extends WebsiteTestCase
 {
     /**
      * @var EntityManager
@@ -71,9 +72,14 @@ class MediaWebsiteControllerTest extends SuluTestCase
      */
     protected $mediaDefaultDescription = 'description';
 
-    protected function setUp(): void
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
+    public function setUp(): void
     {
-        parent::setUp();
+        $this->client = $this->createWebsiteClient();
         $this->purgeDatabase();
         $this->em = $this->getEntityManager();
         $this->cleanImage();
@@ -226,13 +232,13 @@ class MediaWebsiteControllerTest extends SuluTestCase
         $media = $this->createMedia('photo');
         $date = new DateTime();
         $date->modify('+1 month');
-        $client = $this->createWebsiteClient();
-        $client->request(
+
+        $this->client->request(
             'GET',
             '/uploads/media/sulu-50x50/01/' . $media->getId() . '-photo.jpeg'
         );
 
-        $expiresDate = new \DateTime($client->getResponse()->headers->get('Expires'));
+        $expiresDate = new \DateTime($this->client->getResponse()->headers->get('Expires'));
         $expiresDate->modify('+1 second');
         $this->assertGreaterThanOrEqual(new \DateTime(), $expiresDate);
     }

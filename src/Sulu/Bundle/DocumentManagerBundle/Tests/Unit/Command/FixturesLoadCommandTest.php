@@ -81,6 +81,7 @@ class FixturesLoadCommandTest extends TestCase
         $this->kernel->getBundles()->willReturn([
             $this->bundle->reveal(),
         ]);
+
         $this->kernel->getRootDir()->willReturn(__DIR__ . '/NoFixtures');
         $this->bundle->getPath()->willReturn(
             __DIR__ . '/fixtures'

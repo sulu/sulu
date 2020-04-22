@@ -22,6 +22,7 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class UserRepositoryTest extends SuluTestCase
 {
@@ -30,8 +31,14 @@ class UserRepositoryTest extends SuluTestCase
      */
     private $em;
 
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     public function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $this->em = $this->getEntityManager();
         $this->purgeDatabase();
 
@@ -147,9 +154,7 @@ class UserRepositoryTest extends SuluTestCase
         $user2 = $this->prepareUser('Sulu2', 'erika', 'erika');
         $user3 = $this->prepareUser('Sulu3', 'john', 'john');
 
-        $client = $this->createAuthenticatedClient();
-
-        $userRepository = $client->getContainer()->get('sulu_security.user_repository');
+        $userRepository = $this->client->getContainer()->get('sulu_security.user_repository');
 
         $users = $userRepository->findUsersById([$user1->getId(), $user2->getId()]);
 
@@ -168,10 +173,8 @@ class UserRepositoryTest extends SuluTestCase
     {
         $this->prepareUser('Sulu', 'sulu', 'sulu');
 
-        $client = $this->createAuthenticatedClient();
-
         /** @var UserRepository $userRepository */
-        $userRepository = $client->getContainer()->get('sulu_security.user_repository');
+        $userRepository = $this->client->getContainer()->get('sulu_security.user_repository');
 
         $user = $userRepository->findUserByEmail('user2@test.com');
 
@@ -183,10 +186,8 @@ class UserRepositoryTest extends SuluTestCase
     {
         $this->prepareUser('Sulu', 'sulu', 'sulu');
 
-        $client = $this->createAuthenticatedClient();
-
         /** @var UserRepository $userRepository */
-        $userRepository = $client->getContainer()->get('sulu_security.user_repository');
+        $userRepository = $this->client->getContainer()->get('sulu_security.user_repository');
 
         $userByMail = $userRepository->findUserByIdentifier('user2@test.com');
         $userByUsername = $userRepository->findUserByIdentifier('test');
@@ -201,10 +202,8 @@ class UserRepositoryTest extends SuluTestCase
     {
         $this->prepareUser('Sulu', 'sulu', 'sulu');
 
-        $client = $this->createAuthenticatedClient();
-
         /** @var UserRepository $userRepository */
-        $userRepository = $client->getContainer()->get('sulu_security.user_repository');
+        $userRepository = $this->client->getContainer()->get('sulu_security.user_repository');
 
         $user = $userRepository->findUserByToken('mySuperSecretToken');
 
@@ -217,9 +216,8 @@ class UserRepositoryTest extends SuluTestCase
         $this->prepareUser('Sulu Role 2', 'sulu', 'sulu');
         $this->prepareUser('Client Role', 'client', 'client', true, false, 'Client');
 
-        $client = $this->createAuthenticatedClient();
         /** @var UserRepository $userRepository */
-        $userRepository = $client->getContainer()->get('sulu_security.user_repository');
+        $userRepository = $this->client->getContainer()->get('sulu_security.user_repository');
 
         $suluUsers = $userRepository->findUserBySystem('Sulu');
         $this->assertCount(2, $suluUsers);
