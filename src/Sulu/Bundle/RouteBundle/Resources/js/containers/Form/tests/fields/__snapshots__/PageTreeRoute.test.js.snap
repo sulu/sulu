@@ -24,6 +24,7 @@ exports[`Render a PageTreeRoute 1`] = `
       >
         <div
           class="item"
+          role="button"
         >
           <div
             class="empty"
@@ -58,6 +59,7 @@ exports[`Render a PageTreeRoute 2`] = `
   >
     <div
       class="item"
+      role="button"
     >
       <div>
         <span
@@ -105,6 +107,7 @@ exports[`Render a PageTreeRoute without value 1`] = `
       >
         <div
           class="item"
+          role="button"
         >
           <div
             class="empty"

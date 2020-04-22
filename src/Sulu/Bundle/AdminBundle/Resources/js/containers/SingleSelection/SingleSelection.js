@@ -23,6 +23,7 @@ type Props = {|
     listOptions?: Object,
     locale?: ?IObservableValue<string>,
     onChange: (selectedIds: ?string | number, selectedItem: ?Object) => void,
+    onItemClick?: (id: ?number | string, item: ?Object) => void,
     overlayTitle: string,
     resourceKey: string,
     value: ?string | number,
@@ -117,6 +118,7 @@ class SingleSelection extends React.Component<Props> {
             itemDisabledCondition,
             locale,
             listOptions,
+            onItemClick,
             overlayTitle,
             resourceKey,
         } = this.props;
@@ -132,13 +134,16 @@ class SingleSelection extends React.Component<Props> {
                     allowRemoveWhileItemDisabled={allowDeselectForDisabledItems}
                     disabled={disabled}
                     emptyText={emptyText}
+                    id={item && item.id}
                     itemDisabled={itemDisabled}
                     leftButton={{
                         icon,
                         onClick: this.handleOverlayOpen,
                     }}
                     loading={loading}
-                    onRemove={this.singleSelectionStore.item ? this.handleRemove : undefined}
+                    onItemClick={onItemClick}
+                    onRemove={item ? this.handleRemove : undefined}
+                    value={item}
                 >
                     {item &&
                         <div>

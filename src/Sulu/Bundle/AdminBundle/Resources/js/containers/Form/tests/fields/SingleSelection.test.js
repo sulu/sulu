@@ -1,20 +1,30 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import {observable} from 'mobx';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
+import Router from '../../../../services/Router';
 import ResourceStore from '../../../../stores/ResourceStore';
+import SingleSelectionStore from '../../../../stores/SingleSelectionStore';
 import userStore from '../../../../stores/userStore';
 import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import SingleSelection from '../../fields/SingleSelection';
 import SingleSelectionComponent from '../../../../containers/SingleSelection';
 
+jest.mock('../../../../containers/SingleListOverlay', () => jest.fn(() => null));
+
+jest.mock('../../../../services/Router', () => jest.fn(function() {
+    this.navigate = jest.fn();
+}));
+
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, locale) {
     this.resourceKey = resourceKey;
     this.id = id;
     this.locale = locale;
 }));
+
+jest.mock('../../../../stores/SingleSelectionStore', () => jest.fn());
 
 jest.mock('../../../../stores/userStore', () => ({}));
 
@@ -893,6 +903,102 @@ test('Call onChange and onFinish when SingleSelection changes', () => {
 
     expect(changeSpy).toBeCalledWith(undefined);
     expect(finishSpy).toBeCalledWith();
+});
+
+test('Should not fail when SingleItemSelection item is clicked without configured view', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const value = 6;
+
+    const router = new Router();
+
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'accounts',
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                display_properties: ['name'],
+                empty_text: 'sulu_contact.nothing',
+                icon: 'su-account',
+                overlay_title: 'sulu_contact.overlay_title',
+            },
+        },
+    };
+
+    // $FlowFixMe
+    SingleSelectionStore.mockImplementation(function() {
+        this.item = {id: 6};
+    });
+
+    const singleSelection = mount(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            router={router}
+            value={value}
+        />
+    );
+
+    singleSelection.find('SingleItemSelection .item').simulate('click');
+
+    expect(router.navigate).not.toBeCalled();
+});
+
+test('Navigate when SingleItemSelection item is clicked with configured view', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const value = 6;
+
+    const router = new Router();
+
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'accounts',
+        view: {
+            name: 'sulu_contact.account_edit_form',
+            result_to_view: {
+                id: 'id',
+            },
+        },
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                display_properties: ['name'],
+                empty_text: 'sulu_contact.nothing',
+                icon: 'su-account',
+                overlay_title: 'sulu_contact.overlay_title',
+            },
+        },
+    };
+
+    // $FlowFixMe
+    SingleSelectionStore.mockImplementation(function() {
+        this.item = {id: 6};
+    });
+
+    const singleSelection = mount(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            router={router}
+            value={value}
+        />
+    );
+
+    singleSelection.find('SingleItemSelection .item').simulate('click');
+
+    expect(router.navigate).toBeCalledWith('sulu_contact.account_edit_form', {id: 6});
 });
 
 test('Should throw an error if "types" schema option is not a string', () => {

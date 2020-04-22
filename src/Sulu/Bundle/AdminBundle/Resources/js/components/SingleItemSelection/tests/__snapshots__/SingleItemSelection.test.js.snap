@@ -19,6 +19,7 @@ exports[`Render in disabled state 1`] = `
   >
     <div
       class="item"
+      role="button"
     >
       Test Item
     </div>
@@ -44,6 +45,7 @@ exports[`Render in invalid state 1`] = `
   >
     <div
       class="item"
+      role="button"
     >
       Test Item
     </div>
@@ -70,6 +72,7 @@ exports[`Render in item-disabled state with remove button 1`] = `
   >
     <div
       class="item"
+      role="button"
     >
       Test Item
     </div>
@@ -105,6 +108,7 @@ exports[`Render in item-disabled state without remove button 1`] = `
   >
     <div
       class="item"
+      role="button"
     >
       Test Item
     </div>
@@ -130,6 +134,7 @@ exports[`Render in loading state 1`] = `
   >
     <div
       class="item"
+      role="button"
     >
       Test Item
     </div>
@@ -166,6 +171,7 @@ exports[`Render in loading state with no children 1`] = `
   >
     <div
       class="item"
+      role="button"
     >
       <div
         class="empty"
@@ -206,6 +212,7 @@ exports[`Render with emptyText if no children have been passed 1`] = `
   >
     <div
       class="item"
+      role="button"
     >
       <div
         class="empty"
@@ -244,6 +251,7 @@ exports[`Render with given children prop 1`] = `
   >
     <div
       class="item"
+      role="button"
     >
       Test Item
     </div>
@@ -269,6 +277,7 @@ exports[`Render with given onRemove prop 1`] = `
   >
     <div
       class="item"
+      role="button"
     >
       Test Item
     </div>
@@ -303,6 +312,7 @@ exports[`Render with right button 1`] = `
   >
     <div
       class="item"
+      role="button"
     >
       Test Item
     </div>
@@ -337,6 +347,7 @@ exports[`Render with right button with options 1`] = `
   >
     <div
       class="item"
+      role="button"
     >
       Test Item
     </div>

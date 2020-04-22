@@ -30,6 +30,10 @@ $singleItemSelectionDisabledColor: $gray;
             flex-grow: 1;
         }
 
+        .clickable {
+            cursor: pointer;
+        }
+
         .empty {
             color: $singleItemSelectionEmptyColor;
         }
