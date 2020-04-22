@@ -4,6 +4,7 @@ import {computed, observable, intercept, toJS, reaction} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import equals from 'fast-deep-equal';
 import {observer} from 'mobx-react';
+import jsonpointer from 'json-pointer';
 import FormInspector from '../FormInspector';
 import List from '../../../containers/List';
 import ListStore from '../../../containers/List/stores/ListStore';
@@ -274,6 +275,48 @@ class Selection extends React.Component<Props> {
         return requestOptions;
     }
 
+    @computed get viewName() {
+        const {
+            fieldTypeOptions: {
+                view: {
+                    name,
+                } = {},
+            },
+        } = this.props;
+
+        return name;
+    }
+
+    @computed get resultToView() {
+        const {
+            fieldTypeOptions: {
+                view: {
+                    result_to_view: resultToView,
+                } = {},
+            },
+        } = this.props;
+
+        return resultToView;
+    }
+
+    handleItemClick = (itemId: string | number, item: Object) => {
+        const {router} = this.props;
+
+        const {resultToView, viewName} = this;
+
+        if (!router) {
+            return;
+        }
+
+        router.navigate(
+            viewName,
+            Object.keys(resultToView).reduce((parameters, resultPath) => {
+                parameters[resultToView[resultPath]] = jsonpointer.get(item, '/' + resultPath);
+                return parameters;
+            }, {})
+        );
+    };
+
     render() {
         if (this.type === 'list_overlay') {
             return this.renderListOverlay();
@@ -355,6 +398,7 @@ class Selection extends React.Component<Props> {
                 listKey={listKey || resourceKey}
                 locale={this.locale}
                 onChange={this.handleMultiSelectionChange}
+                onItemClick={this.viewName && this.resultToView && this.handleItemClick}
                 options={options}
                 overlayTitle={translate(overlayTitle)}
                 resourceKey={resourceKey}

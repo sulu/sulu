@@ -332,6 +332,34 @@ test('Should not call onChange callback if an unrelated observable that is acces
     expect(changeSpy).toHaveBeenCalledTimes(1);
 });
 
+test('Should call the onItemClick handler if an item is clicked', () => {
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementationOnce(function(resourceKey, selectedIds) {
+        mockExtendObservable(this, {
+            items: selectedIds.map((id) => {
+                return {id, mimeType: 'image/jpeg', thumbnails: {}};
+            }),
+        });
+    });
+
+    const itemClickSpy = jest.fn();
+
+    const mediaSelection = mount(
+        <MultiMediaSelection
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            onItemClick={itemClickSpy}
+            value={{displayOption: undefined, ids: [55, 99]}}
+        />
+    );
+
+    mediaSelection.find('MultiItemSelection .content').at(0).simulate('click');
+    expect(itemClickSpy).toHaveBeenLastCalledWith(55, {id: 55, mimeType: 'image/jpeg', thumbnails: {}});
+
+    mediaSelection.find('MultiItemSelection .content').at(1).simulate('click');
+    expect(itemClickSpy).toHaveBeenLastCalledWith(99, {id: 99, mimeType: 'image/jpeg', thumbnails: {}});
+});
+
 test('Pass correct props to MultiItemSelection component', () => {
     const mediaSelection = mount(
         <MultiMediaSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} />

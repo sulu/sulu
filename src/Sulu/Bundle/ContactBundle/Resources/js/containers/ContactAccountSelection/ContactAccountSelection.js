@@ -12,6 +12,7 @@ import contactAccountSelectionStyles from './contactAccountSelection.scss';
 type Props = {|
     disabled: boolean,
     onChange: (value: Array<Object>) => void,
+    onItemClick?: (itemId: string, item: Object) => void,
     value: Array<Object>,
 |};
 
@@ -96,6 +97,16 @@ class ContactAccountSelection extends React.Component<Props> {
         this.callChange();
     };
 
+    handleItemClick = (itemId: string, item: ?Object) => {
+        const {onItemClick} = this.props;
+
+        if (!onItemClick) {
+            return;
+        }
+
+        onItemClick(itemId, item);
+    };
+
     render() {
         const {disabled, value} = this.props;
 
@@ -113,6 +124,7 @@ class ContactAccountSelection extends React.Component<Props> {
                         ],
                     }}
                     loading={this.store.loading}
+                    onItemClick={this.handleItemClick}
                     onItemsSorted={this.handleSorted}
                 >
                     {this.store.items.map((item, index) => (
@@ -121,6 +133,7 @@ class ContactAccountSelection extends React.Component<Props> {
                             index={index + 1}
                             key={item.id}
                             onRemove={this.handleRemove}
+                            value={item}
                         >
                             <div className={contactAccountSelectionStyles.item}>
                                 {item.fullName || item.name}

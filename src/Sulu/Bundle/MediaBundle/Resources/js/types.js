@@ -1,6 +1,7 @@
 // @flow
 export type Media = {|
     id: number,
+    locale: string,
     mimeType: string,
     thumbnails: {[key: string]: string},
     title: string,

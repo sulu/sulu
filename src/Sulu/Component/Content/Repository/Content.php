@@ -28,11 +28,15 @@ class Content implements \ArrayAccess
 {
     /**
      * @var string
+     *
+     * @Expose
      */
     private $locale;
 
     /**
      * @var string
+     *
+     * @Expose
      */
     private $webspaceKey;
 

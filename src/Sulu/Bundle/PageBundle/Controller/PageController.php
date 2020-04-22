@@ -426,11 +426,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
 
     public function cgetAction(Request $request)
     {
-        $ids = $request->get('ids');
-        if ($ids) {
-            return $this->getNodesByIds($request, $ids);
-        }
-
+        $ids = preg_split('/[,]/', $request->get('ids'), -1, PREG_SPLIT_NO_EMPTY);
         $parent = $request->get('parentId');
         $properties = array_filter(explode(',', $request->get('fields', 'title,published')));
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
@@ -484,36 +480,26 @@ class PageController extends AbstractRestController implements ClassResourceInte
 
         $contents = [];
 
-        if ($parent) {
-            $contents = $contentRepository->findByParentUuid($parent, $locale, $webspaceKey, $mapping, $user);
-        } elseif ($webspaceKey) {
-            $contents = $contentRepository->findByWebspaceRoot($locale, $webspaceKey, $mapping, $user);
-        }
+        if ($ids) {
+            $contents = $contentRepository->findByUuids($ids, $locale, $mapping, $user);
+        } else {
+            if ($parent) {
+                $contents = $contentRepository->findByParentUuid($parent, $locale, $webspaceKey, $mapping, $user);
+            } elseif ($webspaceKey) {
+                $contents = $contentRepository->findByWebspaceRoot($locale, $webspaceKey, $mapping, $user);
+            }
 
-        if ($webspaceNodes === static::WEBSPACE_NODES_ALL) {
-            $contents = $this->getWebspaceNodes($mapping, $contents, $locale, $user);
-        } elseif ($webspaceNodes === static::WEBSPACE_NODE_SINGLE) {
-            $contents = $this->getWebspaceNode($mapping, $contents, $webspaceKey, $locale, $user);
+            if ($webspaceNodes === static::WEBSPACE_NODES_ALL) {
+                $contents = $this->getWebspaceNodes($mapping, $contents, $locale, $user);
+            } elseif ($webspaceNodes === static::WEBSPACE_NODE_SINGLE) {
+                $contents = $this->getWebspaceNode($mapping, $contents, $webspaceKey, $locale, $user);
+            }
         }
 
         $list = new CollectionRepresentation($contents, static::$relationName);
         $view = $this->view($list);
 
         return $this->handleView($view);
-    }
-
-    private function getNodesByIds(Request $request, string $ids): Response
-    {
-        $locale = $this->getLocale($request);
-        $webspace = $this->getWebspace($request, false);
-
-        $result = $this->nodeRepository->getNodesByIds(
-            preg_split('/[,]/', $ids, -1, PREG_SPLIT_NO_EMPTY),
-            $webspace,
-            $locale
-        );
-
-        return $this->handleView($this->view($result));
     }
 
     private function getTreeContent(

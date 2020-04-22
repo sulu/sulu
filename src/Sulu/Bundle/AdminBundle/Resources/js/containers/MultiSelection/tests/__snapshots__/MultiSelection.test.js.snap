@@ -47,6 +47,7 @@ Array [
           </span>
           <div
             class="content"
+            role="button"
           >
             <div>
               <span
@@ -145,6 +146,7 @@ Array [
           </span>
           <div
             class="content"
+            role="button"
           >
             <div>
               <span
@@ -243,6 +245,7 @@ Array [
           </span>
           <div
             class="content"
+            role="button"
           >
             <div>
               <span

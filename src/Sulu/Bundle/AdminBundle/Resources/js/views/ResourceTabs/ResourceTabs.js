@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, observable, toJS} from 'mobx';
+import {autorun, computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import jexl from 'jexl';
 import Loader from '../../components/Loader';
@@ -8,6 +8,7 @@ import Tabs from '../../views/Tabs';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import ResourceStore from '../../stores/ResourceStore';
 import {Route} from '../../services/Router';
+import type {AttributeMap} from '../../services/Router';
 import resourceTabsStyles from './resourceTabs.scss';
 
 type Props = ViewProps & {
@@ -19,47 +20,79 @@ type Props = ViewProps & {
 class ResourceTabs extends React.Component<Props> {
     resourceStore: ResourceStore;
     reloadResourceStoreOnRouteChangeDisposer: () => void;
+    disposeCreateResourceStoreOnRouteChangeDisposer: () => void;
+    createResourceStoreDisposer: () => void;
+
+    @computed get router() {
+        return this.props.router;
+    }
+
+    @computed get route() {
+        return this.props.route;
+    }
+
+    @computed get id() {
+        return this.router.attributes.id;
+    }
+
+    @computed get resourceKey() {
+        return this.route.options.resourceKey;
+    }
 
     constructor(props: Props) {
         super(props);
 
-        const {router, route} = this.props;
-        const {
-            attributes: {
-                id,
-            },
-        } = router;
-        const {
-            options: {
-                resourceKey,
-            },
-        } = route;
+        this.createResourceStoreDisposer = autorun(this.createResourceStore);
 
-        if (!resourceKey) {
-            throw new Error('The route does not define the mandatory "resourceKey" option');
-        }
+        this.disposeCreateResourceStoreOnRouteChangeDisposer = this.router.addUpdateRouteHook(
+            this.disposeCreateResourceStoreOnRouteChange
+        );
 
-        const options = {};
-        if (this.locales) {
-            options.locale = observable.box();
-            router.bind('locale', options.locale);
-        }
-
-        this.resourceStore = new ResourceStore(resourceKey, id, options);
-
-        this.reloadResourceStoreOnRouteChangeDisposer = router.addUpdateRouteHook(
+        this.reloadResourceStoreOnRouteChangeDisposer = this.router.addUpdateRouteHook(
             this.reloadResourceStoreOnRouteChange
         );
     }
 
-    reloadResourceStoreOnRouteChange = (route: ?Route) => {
-        const {router, route: viewRoute} = this.props;
+    createResourceStore = () => {
+        const options = {};
+        if (this.locales) {
+            options.locale = observable.box();
+            this.router.bind('locale', options.locale);
+        }
 
-        if (router.route === viewRoute || router.route === route) {
+        if (!this.resourceKey) {
+            throw new Error('The route does not define the mandatory "resourceKey" option');
+        }
+
+        if (this.resourceStore) {
+            this.resourceStore.destroy();
+        }
+
+        this.resourceStore = new ResourceStore(this.resourceKey, this.id, options);
+    };
+
+    disposeCreateResourceStoreOnRouteChange = (route: ?Route) => {
+        // This only works for the first level of childs
+        if (!this.route.children.includes(route) && this.route !== route) {
+            // Avoid loading data for the old resourceKey with the new ID when switching to a different form
+            this.createResourceStoreDisposer();
+        }
+
+        return true;
+    };
+
+    reloadResourceStoreOnRouteChange = (route: ?Route, attributes: ?AttributeMap) => {
+        if (attributes && this.id !== attributes.id) {
+            // No reload necessary, because if the ID changes the resourceStore itself will reload
             return true;
         }
 
-        if (viewRoute.children.includes(route) || viewRoute === route) {
+        if (this.router.route === this.route || this.router.route === route) {
+            return true;
+        }
+
+        // This only works for the first level of childs
+        if (this.route.children.includes(route) || this.route === route) {
             this.resourceStore.reload();
         }
 
@@ -69,9 +102,11 @@ class ResourceTabs extends React.Component<Props> {
     componentWillUnmount() {
         this.resourceStore.destroy();
         this.reloadResourceStoreOnRouteChangeDisposer();
+        this.createResourceStoreDisposer();
+        this.disposeCreateResourceStoreOnRouteChangeDisposer();
     }
 
-    @computed get locales() {
+    @computed.struct get locales() {
         const {
             locales: propsLocales,
             route: {

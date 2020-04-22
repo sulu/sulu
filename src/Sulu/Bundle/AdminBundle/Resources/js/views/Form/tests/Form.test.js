@@ -2087,15 +2087,17 @@ test('Should throw an error if no formKey is passed', () => {
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippets', 12);
 
+    const route = {
+        options: {
+            toolbarActions: [],
+        },
+    };
+
     const router = {
         addUpdateRouteHook: jest.fn(),
         attributes: {},
-        route: {
-            options: {
-                toolbarActions: [],
-            },
-        },
+        route,
     };
     const Form = require('../Form').default;
-    expect(() => shallow(<Form resourceStore={resourceStore} router={router} />)).toThrow(/"formKey"/);
+    expect(() => shallow(<Form resourceStore={resourceStore} route={route} router={router} />)).toThrow(/"formKey"/);
 });

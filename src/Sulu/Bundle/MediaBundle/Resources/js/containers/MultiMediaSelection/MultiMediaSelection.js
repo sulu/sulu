@@ -19,6 +19,7 @@ type Props = {|
     displayOptions: Array<DisplayOption>,
     locale: IObservableValue<string>,
     onChange: (selectedIds: Value) => void,
+    onItemClick?: (itemId: number, value: ?Media) => void,
     types: Array<string>,
     value: Value,
 |}
@@ -118,6 +119,16 @@ class MultiMediaSelection extends React.Component<Props> {
         onChange({...value, displayOption});
     };
 
+    handleItemClick = (itemId: number, item: ?Media) => {
+        const {onItemClick} = this.props;
+
+        if (!onItemClick) {
+            return;
+        }
+
+        onItemClick(itemId, item);
+    };
+
     render() {
         const {locale, disabled, displayOptions, types, value} = this.props;
 
@@ -146,6 +157,7 @@ class MultiMediaSelection extends React.Component<Props> {
                         onClick: this.handleOverlayOpen,
                     }}
                     loading={loading}
+                    onItemClick={this.handleItemClick}
                     onItemRemove={this.handleRemove}
                     onItemsSorted={this.handleSorted}
                     rightButton={rightButton}
@@ -156,6 +168,7 @@ class MultiMediaSelection extends React.Component<Props> {
                                 id={media.id}
                                 index={index + 1}
                                 key={media.id}
+                                value={media}
                             >
                                 <div className={multiMediaSelectionStyle.mediaItem}>
                                     {media.thumbnails && media.thumbnails[THUMBNAIL_SIZE]

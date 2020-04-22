@@ -323,3 +323,35 @@ test('Clicking on the edit button inside an item should call the edit handler on
     multiItemSelection.find('Icon[name="su-pen"]').at(0).parent().prop('onClick')();
     expect(editHandler).toHaveBeenCalledWith(clickedItemId);
 });
+
+test('Clicking on an item should call its onClick handler', () => {
+    const clickHandler = jest.fn();
+    const multiItemSelection = mount(
+        <MultiItemSelection
+            label="I have handler"
+            onItemClick={clickHandler}
+            onItemEdit={jest.fn()}
+        >
+            <MultiItemSelection.Item
+                id={6}
+                index={1}
+                value="value1"
+            >
+                Child 1
+            </MultiItemSelection.Item>
+            <MultiItemSelection.Item
+                id={3}
+                index={2}
+                value="value2"
+            >
+                Child 2
+            </MultiItemSelection.Item>
+        </MultiItemSelection>
+    );
+
+    multiItemSelection.find('.content').at(0).prop('onClick')();
+    expect(clickHandler).toHaveBeenLastCalledWith(6, 'value1');
+
+    multiItemSelection.find('.content').at(1).prop('onClick')();
+    expect(clickHandler).toHaveBeenLastCalledWith(3, 'value2');
+});

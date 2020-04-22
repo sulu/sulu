@@ -8,6 +8,7 @@
 
     <localizations>
         <localization language="en" default="true"/>
+        <localization language="de"/>
     </localizations>
 
     <default-templates>

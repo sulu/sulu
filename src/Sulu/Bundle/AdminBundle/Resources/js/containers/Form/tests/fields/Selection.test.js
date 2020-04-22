@@ -7,6 +7,7 @@ import {translate} from '../../../../utils/Translator';
 import MultiSelectionStore from '../../../../stores/MultiSelectionStore';
 import ResourceStore from '../../../../stores/ResourceStore';
 import userStore from '../../../../stores/userStore';
+import Router from '../../../../services/Router';
 import List from '../../../List';
 import Selection from '../../fields/Selection';
 import FormInspector from '../../FormInspector';
@@ -25,6 +26,10 @@ jest.mock('../../../../stores/MultiSelectionStore', () => jest.fn(
         });
     })
 );
+
+jest.mock('../../../../services/Router', () => jest.fn(() => ({
+    navigate: jest.fn(),
+})));
 
 jest.mock('../../../List', () => jest.fn(() => null));
 
@@ -49,6 +54,8 @@ jest.mock('../../../List/stores/ListStore',
         this.destroy = jest.fn();
         this.sendRequestDisposer = jest.fn();
         this.reset = jest.fn();
+        this.clearSelection = jest.fn();
+        this.select = jest.fn();
 
         mockExtendObservable(this, {
             selectionIds: [],
@@ -490,6 +497,101 @@ test('Should call onChange and onFinish callback when MultiSelection component f
     expect(finishSpy).toBeCalledWith();
 });
 
+test('Should not fail when MultiSelection item is clicked without configured view', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const fieldOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'pages',
+        types: {
+            list_overlay: {
+                adapter: 'column_list',
+                label: 'sulu_page.selection_label',
+            },
+        },
+    };
+
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+
+    const router = new Router();
+
+    const selection = mount(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldOptions}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            router={router}
+            value={[1, 2]}
+        />
+    );
+
+    selection.find('MultiSelection').instance().selectionStore.items = [
+        {id: 1, locale: 'de', title: 'Test'},
+        {id: 2, locale: 'de', title: 'Impressum'},
+    ];
+
+    selection.update();
+
+    expect(selection.find('MultiSelection').prop('onItemClick')).toEqual(undefined);
+
+    selection.find('MultiItemSelection Item .content').at(0).prop('onClick')();
+    selection.find('MultiItemSelection Item .content').at(1).prop('onClick')();
+    expect(router.navigate).not.toBeCalled();
+});
+
+test('Should navigate to view when MultiSelection item is clicked with configured view', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const fieldOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'pages',
+        view: {
+            name: 'sulu_page.page_edit_form',
+            result_to_view: {
+                'properties/locale': 'locale',
+                id: 'uuid',
+            },
+        },
+        types: {
+            list_overlay: {
+                adapter: 'column_list',
+                label: 'sulu_page.selection_label',
+            },
+        },
+    };
+
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+
+    const router = new Router();
+
+    const selection = mount(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldOptions}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            router={router}
+            value={[1, 2]}
+        />
+    );
+
+    selection.find('MultiSelection').instance().selectionStore.items = [
+        {id: 1, properties: {locale: 'de', title: 'Test'}},
+        {id: 2, properties: {locale: 'de', title: 'Impressum'}},
+    ];
+
+    selection.update();
+
+    selection.find('MultiItemSelection Item .content').at(0).prop('onClick')();
+    expect(router.navigate).toHaveBeenLastCalledWith('sulu_page.page_edit_form', {locale: 'de', uuid: 1});
+    selection.find('MultiItemSelection Item .content').at(1).prop('onClick')();
+    expect(router.navigate).toHaveBeenLastCalledWith('sulu_page.page_edit_form', {locale: 'de', uuid: 2});
+});
 test('Should throw an error if "types" schema option is not a string', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
     const fieldTypeOptions = {

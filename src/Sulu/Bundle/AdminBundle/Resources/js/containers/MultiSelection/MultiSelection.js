@@ -24,6 +24,7 @@ type Props = {|
     listKey: string,
     locale?: ?IObservableValue<string>,
     onChange: (selectedIds: Array<string | number>) => void,
+    onItemClick?: (id: number | string, item: Object) => void,
     options: Object,
     overlayTitle: string,
     resourceKey: string,
@@ -134,9 +135,10 @@ class MultiSelection extends React.Component<Props> {
             itemDisabledCondition,
             label,
             locale,
-            resourceKey,
+            onItemClick,
             options,
             overlayTitle,
+            resourceKey,
         } = this.props;
 
         const {items, loading} = this.selectionStore;
@@ -152,6 +154,7 @@ class MultiSelection extends React.Component<Props> {
                         onClick: this.handleOverlayOpen,
                     }}
                     loading={loading}
+                    onItemClick={onItemClick}
                     onItemRemove={this.handleRemove}
                     onItemsSorted={this.handleSorted}
                 >
@@ -173,6 +176,7 @@ class MultiSelection extends React.Component<Props> {
                                 id={item.id}
                                 index={index + 1}
                                 key={item.id}
+                                value={item}
                             >
                                 <div>
                                     {displayProperties.map((displayProperty) => (

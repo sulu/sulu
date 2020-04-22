@@ -105,11 +105,74 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('Homepage', $page1->title);
         $this->assertEquals('test_io', $page1->webspaceKey);
         $this->assertObjectHasAttribute('id', $page1);
-        $this->assertObjectHasAttribute('uuid', $page1);
         $this->assertEquals('Homepage', $page2->title);
         $this->assertEquals('sulu_io', $page2->webspaceKey);
         $this->assertObjectHasAttribute('id', $page2);
-        $this->assertObjectHasAttribute('uuid', $page2);
+    }
+
+    public function testGetFlatResponseWithGhostIds()
+    {
+        $ghostDocument = $this->createPageDocument();
+        $ghostDocument->setTitle('ghost_test_en');
+        $ghostDocument->setResourceSegment('/test_en');
+        $ghostDocument->setStructureType('default');
+        $ghostDocument->getStructure()->bind([
+            'tags' => [
+                'tag1',
+                'tag2',
+            ],
+            'article' => 'Test English',
+        ]);
+
+        $this->documentManager->persist($ghostDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+
+        $shadowDocument = $this->createPageDocument();
+        $shadowDocument->setTitle('shadow_test_en');
+        $shadowDocument->setResourceSegment('/test_en');
+        $shadowDocument->setStructureType('default');
+        $shadowDocument->getStructure()->bind([
+            'tags' => [
+                'tag1',
+                'tag2',
+            ],
+            'article' => 'Test English',
+        ]);
+        $this->documentManager->persist($shadowDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
+
+        $shadowDocument->setTitle('shadow_test_de');
+        $shadowDocument->setResourceSegment('/test_de');
+        $shadowDocument->setStructureType('default');
+        $shadowDocument->getStructure()->bind([
+            'tags' => [
+                'tag1',
+                'tag2',
+            ],
+            'article' => 'Test German',
+        ]);
+        $shadowDocument->setShadowLocaleEnabled(true);
+        $shadowDocument->setShadowLocale('en');
+        $this->documentManager->persist($shadowDocument, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
+
+        $this->client->request(
+            'GET',
+            '/api/pages?locale=de&flat=true&ids=' . $ghostDocument->getUuid() . ',' . $shadowDocument->getUuid()
+        );
+
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertCount(2, $response->_embedded->pages);
+
+        $page1 = $response->_embedded->pages[0];
+        $page2 = $response->_embedded->pages[1];
+        $this->assertEquals('ghost_test_en', $page1->title);
+        $this->assertEquals('de', $page1->locale);
+        $this->assertEquals('en', $page1->ghostLocale);
+        $this->assertEquals('sulu_io', $page1->webspaceKey);
+        $this->assertEquals('shadow_test_en', $page2->title);
+        $this->assertEquals('de', $page2->locale);
+        $this->assertEquals('en', $page2->shadowLocale);
+        $this->assertEquals('sulu_io', $page2->webspaceKey);
     }
 
     public function testGetFlatResponseWithShadowAndGhostContent()
@@ -164,13 +227,17 @@ class PageControllerTest extends SuluTestCase
         $childPages = $response->_embedded->pages[0]->_embedded->pages;
 
         $this->assertEquals('ghost_test_en', $childPages[0]->title);
+        $this->assertEquals('de', $childPages[0]->locale);
         $this->assertEquals('en', $childPages[0]->ghostLocale);
+        $this->assertEquals('sulu_io', $childPages[0]->webspaceKey);
         $this->assertObjectNotHasAttribute('shadowLocale', $childPages[0]);
         $this->assertEquals('ghost', $childPages[0]->type->name);
         $this->assertEquals('en', $childPages[0]->type->value);
 
         $this->assertEquals('shadow_test_en', $childPages[1]->title);
+        $this->assertEquals('de', $childPages[1]->locale);
         $this->assertEquals('en', $childPages[1]->shadowLocale);
+        $this->assertEquals('sulu_io', $childPages[1]->webspaceKey);
         $this->assertObjectNotHasAttribute('ghostLocale', $childPages[1]);
         $this->assertEquals('shadow', $childPages[1]->type->name);
         $this->assertEquals('en', $childPages[1]->type->value);
