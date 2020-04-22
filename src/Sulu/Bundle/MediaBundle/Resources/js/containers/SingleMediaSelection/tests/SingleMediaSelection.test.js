@@ -268,6 +268,48 @@ test('Should not call the onChange callback if the component props change', () =
     expect(changeSpy).not.toBeCalled();
 });
 
+test('Should not call the onItemClick callback if no item is available', () => {
+    // $FlowFixMe
+    SingleSelectionStore.mockImplementationOnce(function() {
+        this.item = undefined;
+    });
+
+    const itemClickSpy = jest.fn();
+
+    const singleMediaSelection = mount(
+        <SingleMediaSelection
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            onItemClick={itemClickSpy}
+            value={{displayOption: undefined, id: 5}}
+        />
+    );
+
+    singleMediaSelection.find('SingleItemSelection .item').simulate('click');
+    expect(itemClickSpy).not.toBeCalled();
+});
+
+test('Should call the onItemClick callback if the item is clicked', () => {
+    // $FlowFixMe
+    SingleSelectionStore.mockImplementationOnce(function() {
+        this.item = {id: 6, mimeType: 'image/jpeg'};
+    });
+
+    const itemClickSpy = jest.fn();
+
+    const singleMediaSelection = mount(
+        <SingleMediaSelection
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            onItemClick={itemClickSpy}
+            value={{displayOption: undefined, id: 5}}
+        />
+    );
+
+    singleMediaSelection.find('SingleItemSelection .item').simulate('click');
+    expect(itemClickSpy).toBeCalledWith(6, {id: 6, mimeType: 'image/jpeg'});
+});
+
 test('Should not call the loadItem callback if the component props id change to same value', () => {
     // $FlowFixMe
     SingleSelectionStore.mockImplementationOnce(function() {
