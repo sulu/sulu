@@ -221,7 +221,7 @@ test('Should throw an error if given value is not an object', () => {
         <MediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            value={true}
+            value={(true: any)}
         />
     )).toThrow(/expects an object/);
 });
@@ -238,7 +238,7 @@ test('Should throw an error if given value does not have an ids property', () =>
         <MediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
-            value={{unrelatedProperty: 123}}
+            value={({unrelatedProperty: 123}: any)}
         />
     )).toThrow(/"ids" property/);
 });

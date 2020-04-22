@@ -25,7 +25,7 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
             } = {},
         } = schemaOptions;
 
-        if (value !== undefined && (typeof value !== 'object' || !Array.isArray(value.ids))) {
+        if (value != null && (typeof value !== 'object' || !Array.isArray(value.ids))) {
             throw new Error('The "MediaSelection" field expects an object with an "ids" property as value.');
         }
 
