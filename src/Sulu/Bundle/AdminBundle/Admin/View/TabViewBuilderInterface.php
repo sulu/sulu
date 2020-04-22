@@ -13,4 +13,8 @@ namespace Sulu\Bundle\AdminBundle\Admin\View;
 
 interface TabViewBuilderInterface extends ViewBuilderInterface
 {
+    /**
+     * @param string[] $routerAttributesToBlacklist
+     */
+    public function addRouterAttributesToBlacklist(array $routerAttributesToBlacklist): self;
 }

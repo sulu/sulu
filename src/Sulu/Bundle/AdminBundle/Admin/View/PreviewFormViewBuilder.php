@@ -15,7 +15,7 @@ class PreviewFormViewBuilder implements PreviewFormViewBuilderInterface
 {
     use ViewBuilderTrait;
     use FormViewBuilderTrait;
-    use TabViewBuilderTrait;
+    use TabViewChildBuilderTrait;
 
     const TYPE = 'sulu_admin.preview_form';
 

@@ -43,6 +43,7 @@ class ResourceTabViewBuilderTest extends TestCase
                 'sulu_category.list',
                 null,
                 ['webspace'],
+                null,
                 'title',
             ],
             [
@@ -52,6 +53,7 @@ class ResourceTabViewBuilderTest extends TestCase
                 null,
                 null,
                 ['sortColumn', 'sortOrder'],
+                ['page', 'limit'],
                 null,
             ],
             [
@@ -61,6 +63,7 @@ class ResourceTabViewBuilderTest extends TestCase
                 'sulu_category.list',
                 ['webspace'],
                 null,
+                null,
                 'title',
             ],
             [
@@ -69,6 +72,7 @@ class ResourceTabViewBuilderTest extends TestCase
                 'categories',
                 'sulu_category.list',
                 ['webspace', 'active' => 'id'],
+                null,
                 ['sortColumn', 'sortOrder'],
                 'title',
             ],
@@ -84,7 +88,8 @@ class ResourceTabViewBuilderTest extends TestCase
         string $resourceKey,
         ?string $backView,
         ?array $routerAttributesToBackView,
-        ?array $routerAttributesToBlacklist,
+        ?array $routerAttributesToBlacklist1,
+        ?array $routerAttributesToBlacklist2,
         ?string $titleProperty
     ) {
         $viewBuilder = (new ResourceTabViewBuilder($name, $path))
@@ -102,6 +107,18 @@ class ResourceTabViewBuilderTest extends TestCase
             $viewBuilder->setTitleProperty($titleProperty);
         }
 
+        $expectedRouterAttributesToBlacklist = [];
+
+        if ($routerAttributesToBlacklist1) {
+            $viewBuilder->addRouterAttributesToBlacklist($routerAttributesToBlacklist1);
+            $expectedRouterAttributesToBlacklist = array_merge($expectedRouterAttributesToBlacklist, $routerAttributesToBlacklist1 ?? []);
+        }
+
+        if ($routerAttributesToBlacklist2) {
+            $viewBuilder->addRouterAttributesToBlacklist($routerAttributesToBlacklist2);
+            $expectedRouterAttributesToBlacklist = array_merge($expectedRouterAttributesToBlacklist, $routerAttributesToBlacklist2 ?? []);
+        }
+
         $view = $viewBuilder->getView();
 
         $this->assertSame($name, $view->getName());
@@ -111,6 +128,10 @@ class ResourceTabViewBuilderTest extends TestCase
         $this->assertSame($routerAttributesToBackView, $view->getOption('routerAttributesToBackView'));
         $this->assertSame($titleProperty, $view->getOption('titleProperty'));
         $this->assertSame('sulu_admin.resource_tabs', $view->getType());
+        $this->assertSame(
+            $view->getOption('routerAttributesToBlacklist'),
+            !empty($expectedRouterAttributesToBlacklist) ? $expectedRouterAttributesToBlacklist : null
+        );
     }
 
     public function testBuildFormWithParent()

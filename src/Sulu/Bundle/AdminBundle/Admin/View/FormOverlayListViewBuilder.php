@@ -22,7 +22,7 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
         ListViewBuilderTrait::addToolbarActionsToView insteadof FormViewBuilderTrait;
         ListViewBuilderTrait::addRequestParametersToView insteadof FormViewBuilderTrait;
     }
-    use TabViewBuilderTrait;
+    use TabViewChildBuilderTrait;
 
     const TYPE = 'sulu_admin.form_overlay_list';
 

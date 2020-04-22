@@ -14,6 +14,7 @@ namespace Sulu\Bundle\AdminBundle\Admin\View;
 class TabViewBuilder implements TabViewBuilderInterface
 {
     use ViewBuilderTrait;
+    use TabViewBuilderTrait;
 
     const TYPE = 'sulu_admin.tabs';
 
@@ -25,5 +26,12 @@ class TabViewBuilder implements TabViewBuilderInterface
     public function getView(): View
     {
         return clone $this->view;
+    }
+
+    public function addRouterAttributesToBlacklist(array $routerAttributesToBlacklist): TabViewBuilderInterface
+    {
+        $this->addRouterAttributesToBlacklistToView($routerAttributesToBlacklist);
+
+        return $this;
     }
 }
