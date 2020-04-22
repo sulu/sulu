@@ -1554,6 +1554,42 @@ test('Should call onChange and onFinish callback when content of selectionStore 
     expect(finishSpy).toBeCalledWith();
 });
 
+test('Should not call onChange and onFinish callback when content of selectionStore is empty and undefined', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const fieldOptions = {
+        default_type: 'auto_complete',
+        resource_key: 'pages',
+        types: {
+            auto_complete: {
+                allow_add: true,
+                display_property: 'name',
+                filter_parameter: 'names',
+                id_property: 'uuid',
+                search_properties: ['name'],
+            },
+        },
+    };
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+
+    const selection = mount(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldOptions}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+        />
+    );
+
+    selection.instance().autoCompleteSelectionStore.dataLoading = false;
+    selection.instance().autoCompleteSelectionStore.items = [];
+
+    expect(changeSpy).not.toBeCalled();
+    expect(finishSpy).not.toBeCalled();
+});
+
 test('Should pass allowAdd prop to MultiAutoComplete component', () => {
     const value = [1, 6, 8];
 
