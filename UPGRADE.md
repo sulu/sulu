@@ -2,6 +2,11 @@
 
 ## dev-master
 
+### Added webspace as reserved property name
+
+The term `webspace` cannot be used as name in XML templates anymore, because we need the page API to return the
+webspace of the page now, in order to create a deep link for them.
+
 ### Event classes changed
 
 The Sulu `Event` classes extend now from the new `Symfony\Contracts\EventDispatcher\Event`
