@@ -506,6 +506,7 @@ class PageControllerTest extends SuluTestCase
         $response = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('test_en', $response['title']);
+        $this->assertEquals('sulu_io', $response['webspace']);
         $this->assertEquals('/test-en', $response['path']);
         $this->assertEquals(['tag1', 'tag2'], $response['tags']);
         $this->assertEquals('/test_en', $response['url']);
@@ -515,6 +516,7 @@ class PageControllerTest extends SuluTestCase
         $response = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('test_de', $response['title']);
+        $this->assertEquals('sulu_io', $response['webspace']);
         $this->assertEquals('/test-en', $response['path']);
         $this->assertEquals(['tag1', 'tag2'], $response['tags']);
         $this->assertEquals('/test_de', $response['url']);

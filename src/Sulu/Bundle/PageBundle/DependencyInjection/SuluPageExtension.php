@@ -100,6 +100,13 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                             'single_page_selection' => [
                                 'default_type' => 'list_overlay',
                                 'resource_key' => 'pages',
+                                'view' => [
+                                    'name' => 'sulu_page.page_edit_form',
+                                    'result_to_view' => [
+                                        'id' => 'id',
+                                        'webspace' => 'webspace',
+                                    ],
+                                ],
                                 'types' => [
                                     'list_overlay' => [
                                         'adapter' => 'column_list',

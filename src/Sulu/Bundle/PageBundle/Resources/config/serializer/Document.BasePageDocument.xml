@@ -24,7 +24,7 @@
         <property name="locale" type="string" groups="preview"/>
         <property name="path" exclude="true"/>
         <property name="internal" type="boolean" groups="defaultPage"/>
-        <property name="webspaceName" type="string"/>
+        <property name="webspaceName" serialized-name="webspace" type="string" groups="defaultPage"/>
         <property name="extensions" serialized-name="ext" type="Sulu\Component\Content\Document\Extension\ExtensionContainer" groups="defaultPage,preview"/>
         <property name="structure" type="Sulu\Component\Content\Document\Structure\Structure" groups="preview"/>
         <property name="children" exclude="true" type="Sulu\Component\DocumentManager\Collection\ChildrenCollection"/>
