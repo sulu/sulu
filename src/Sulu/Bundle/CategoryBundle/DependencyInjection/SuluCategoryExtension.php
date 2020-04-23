@@ -123,6 +123,12 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                             'single_category_selection' => [
                                 'default_type' => 'list_overlay',
                                 'resource_key' => 'categories',
+                                'view' => [
+                                    'name' => 'sulu_category.edit_form',
+                                    'result_to_view' => [
+                                        'id' => 'id',
+                                    ],
+                                ],
                                 'types' => [
                                     'list_overlay' => [
                                         'adapter' => 'tree_table_slim',

@@ -211,6 +211,38 @@ test('Call onClick callback if right button is clicked', () => {
     expect(rightButton.onClick).toBeCalledWith();
 });
 
+test('Call onItemClick callback should not be called if item is clicked but no id is given', () => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
+
+    const itemClickSpy = jest.fn();
+    const singleItemSelection = shallow(<SingleItemSelection leftButton={leftButton} onItemClick={itemClickSpy} />);
+
+    singleItemSelection.find('.item').prop('onClick')();
+
+    expect(itemClickSpy).not.toBeCalled();
+});
+
+test('Call onItemClick callback should not be called if item is clicked', () => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
+
+    const value = {id: 5};
+
+    const itemClickSpy = jest.fn();
+    const singleItemSelection = shallow(
+        <SingleItemSelection id={5} leftButton={leftButton} onItemClick={itemClickSpy} value={value} />
+    );
+
+    singleItemSelection.find('.item').prop('onClick')();
+
+    expect(itemClickSpy).toBeCalledWith(5, value);
+});
+
 test('Call onRemove callback if remove button is clicked', () => {
     const leftButton = {
         icon: 'su-document',

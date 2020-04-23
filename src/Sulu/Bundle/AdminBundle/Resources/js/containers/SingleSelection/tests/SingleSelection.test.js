@@ -371,6 +371,29 @@ test('Should load the item if value prop changes', () => {
     expect(singleSelection.instance().singleSelectionStore.loadItem).toBeCalledWith(3);
 });
 
+test('Should call the onItemClick callback when an item when the item is clicked', () => {
+    const itemClickSpy = jest.fn();
+
+    const singleSelection = mount(
+        <SingleSelection
+            adapter="table"
+            displayProperties={[]}
+            emptyText="nothing"
+            listKey="snippets"
+            onChange={jest.fn()}
+            onItemClick={itemClickSpy}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={1}
+        />
+    );
+
+    singleSelection.instance().singleSelectionStore.item = {id: 1};
+    singleSelection.find('SingleItemSelection .item').simulate('click');
+
+    expect(itemClickSpy).toBeCalledWith(1, {id: 1});
+});
+
 test('Should remove an item when the remove button is clicked', () => {
     const singleSelection = shallow(
         <SingleSelection

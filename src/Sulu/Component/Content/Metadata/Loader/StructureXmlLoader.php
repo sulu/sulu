@@ -65,6 +65,7 @@ class StructureXmlLoader extends AbstractLoader
         'authored',
         'type',
         'id',
+        'webspace',
     ];
 
     /**

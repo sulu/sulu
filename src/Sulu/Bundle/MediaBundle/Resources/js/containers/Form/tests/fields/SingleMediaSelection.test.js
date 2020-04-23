@@ -1,17 +1,25 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import FormInspector from 'sulu-admin-bundle/containers/Form/FormInspector';
 import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/ResourceFormStore';
+import Router from 'sulu-admin-bundle/services/Router';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
+import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
 import {observable} from 'mobx';
 import SingleMediaSelectionComponent from '../../../SingleMediaSelection';
 import SingleMediaSelection from '../../fields/SingleMediaSelection';
 
+jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
+    this.navigate = jest.fn();
+}));
+
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions) {
     this.locale = observableOptions.locale;
 }));
+
+jest.mock('sulu-admin-bundle/stores/SingleSelectionStore', () => jest.fn());
 
 jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.locale = resourceStore.locale;
@@ -28,6 +36,8 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     contentLocale: 'userContentLocale',
 }));
+
+jest.mock('../../../SingleMediaSelectionOverlay', () => jest.fn(() => null));
 
 test('Pass correct props to SingleMediaSelection component', () => {
     const formInspector = new FormInspector(
@@ -189,6 +199,36 @@ test('Should call onChange and onFinish if the selection changes', () => {
 
     expect(changeSpy).toBeCalledWith({id: 44});
     expect(finishSpy).toBeCalled();
+});
+
+test('Should call onItemClick if item is clicked', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    const router = new Router();
+
+    // $FlowFixMe
+    SingleSelectionStore.mockImplementation(function() {
+        this.item = {id: 6, locale: 'de', title: 'Test', mimeType: 'image/jpeg'};
+    });
+
+    const mediaSelection = mount(
+        <SingleMediaSelection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            formInspector={formInspector}
+            router={router}
+            value={{displayOption: undefined, id: 55}}
+        />
+    );
+
+    mediaSelection.find('SingleItemSelection .item').simulate('click');
+
+    expect(router.navigate).toBeCalledWith('sulu_media.form', {id: 6, locale: 'de'});
 });
 
 test('Should throw an error if displayOptions schemaOption is given but not an array', () => {

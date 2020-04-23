@@ -2,6 +2,7 @@
 import React from 'react';
 import {computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
+import jsonpointer from 'json-pointer';
 import type {FieldTypeProps} from '../../../types';
 import ResourceSingleSelect from '../../../containers/ResourceSingleSelect';
 import SingleAutoComplete from '../../../containers/SingleAutoComplete';
@@ -57,6 +58,48 @@ export default class SingleSelection extends React.Component<Props>
 
         return formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
     }
+
+    @computed get viewName() {
+        const {
+            fieldTypeOptions: {
+                view: {
+                    name,
+                } = {},
+            },
+        } = this.props;
+
+        return name;
+    }
+
+    @computed get resultToView() {
+        const {
+            fieldTypeOptions: {
+                view: {
+                    result_to_view: resultToView,
+                } = {},
+            },
+        } = this.props;
+
+        return resultToView;
+    }
+
+    handleItemClick = (itemId: ?string | number, item: ?Object) => {
+        const {router} = this.props;
+
+        const {resultToView, viewName} = this;
+
+        if (!router) {
+            return;
+        }
+
+        router.navigate(
+            viewName,
+            Object.keys(resultToView).reduce((parameters, resultPath) => {
+                parameters[resultToView[resultPath]] = jsonpointer.get(item, '/' + resultPath);
+                return parameters;
+            }, {})
+        );
+    };
 
     render() {
         if (this.type === 'list_overlay') {
@@ -185,6 +228,7 @@ export default class SingleSelection extends React.Component<Props>
                 listOptions={listOptions}
                 locale={this.locale}
                 onChange={this.handleChange}
+                onItemClick={this.viewName && this.resultToView && this.handleItemClick}
                 overlayTitle={translate(overlayTitle)}
                 resourceKey={resourceKey}
                 value={value}

@@ -8,26 +8,37 @@ import singleItemSelectionStyles from './singleItemSelection.scss';
 import Button from './Button';
 import type {Button as ButtonConfig} from './types';
 
-type Props = {|
+type Props<T, U> = {|
     allowRemoveWhileItemDisabled: boolean,
     children?: Node,
     disabled: boolean,
     emptyText?: string,
+    id?: T,
     itemDisabled: boolean,
     leftButton: ButtonConfig<*>,
     loading: boolean,
+    onItemClick?: (itemId: T, value: ?U) => void,
     onRemove?: () => void,
     rightButton?: ButtonConfig<*>,
     valid: boolean,
+    value?: U,
 |};
 
-export default class SingleItemSelection extends React.Component<Props> {
+export default class SingleItemSelection<T: ?string | number, U> extends React.Component<Props<T, U>> {
     static defaultProps = {
         allowRemoveWhileItemDisabled: false,
         disabled: false,
         itemDisabled: false,
         loading: false,
         valid: true,
+    };
+
+    handleItemClick = () => {
+        const {id, onItemClick, value} = this.props;
+
+        if (onItemClick && id) {
+            onItemClick(id, value);
+        }
     };
 
     render() {
@@ -39,6 +50,7 @@ export default class SingleItemSelection extends React.Component<Props> {
             emptyText,
             leftButton,
             loading,
+            onItemClick,
             onRemove,
             rightButton,
             valid,
@@ -49,6 +61,13 @@ export default class SingleItemSelection extends React.Component<Props> {
             {
                 [singleItemSelectionStyles.error]: !valid,
                 [singleItemSelectionStyles.disabled]: disabled || itemDisabled,
+            }
+        );
+
+        const itemClass = classNames(
+            singleItemSelectionStyles.item,
+            {
+                [singleItemSelectionStyles.clickable]: !!onItemClick,
             }
         );
 
@@ -67,7 +86,7 @@ export default class SingleItemSelection extends React.Component<Props> {
                     location="left"
                 />
                 <div className={itemContainerClass}>
-                    <div className={singleItemSelectionStyles.item}>
+                    <div className={itemClass} onClick={this.handleItemClick} role="button">
                         {children
                             ? children
                             : <div className={singleItemSelectionStyles.empty}>

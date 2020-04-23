@@ -18,6 +18,7 @@ type Props = {|
     displayOptions: Array<DisplayOption>,
     locale: IObservableValue<string>,
     onChange: (selectedId: Value, media: ?Media) => void,
+    onItemClick?: (itemId: ?number, value: ?Media) => void,
     types: Array<string>,
     valid: boolean,
     value: Value,
@@ -104,6 +105,16 @@ class SingleMediaSelection extends React.Component<Props> {
         onChange({...value, displayOption});
     };
 
+    handleItemClick = (itemId: ?number, item: ?Media) => {
+        const {onItemClick} = this.props;
+
+        if (!onItemClick) {
+            return;
+        }
+
+        onItemClick(itemId, item);
+    };
+
     render() {
         const {disabled, displayOptions, locale, types, valid, value} = this.props;
         const {loading, item: media} = this.singleMediaSelectionStore;
@@ -125,14 +136,17 @@ class SingleMediaSelection extends React.Component<Props> {
                 <SingleItemSelection
                     disabled={disabled}
                     emptyText={translate('sulu_media.select_media_singular')}
+                    id={media && media.id}
                     leftButton={{
                         icon: 'su-image',
                         onClick: this.handleOverlayOpen,
                     }}
                     loading={loading}
+                    onItemClick={this.handleItemClick}
                     onRemove={media ? this.handleRemove : undefined}
                     rightButton={rightButton}
                     valid={valid}
+                    value={media}
                 >
                     {media &&
                         <div className={singleMediaSelectionStyle.mediaItem}>

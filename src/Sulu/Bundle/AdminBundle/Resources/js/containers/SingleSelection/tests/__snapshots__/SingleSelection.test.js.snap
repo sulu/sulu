@@ -18,6 +18,7 @@ exports[`Render with selected item 1`] = `
   >
     <div
       class="item"
+      role="button"
     >
       <div>
         <span
@@ -66,6 +67,7 @@ exports[`Render with selected item in disabled state 1`] = `
   >
     <div
       class="item"
+      role="button"
     >
       <div>
         <span
@@ -105,6 +107,7 @@ Array [
     >
       <div
         class="item"
+        role="button"
       >
         <div
           class="empty"
