@@ -3,7 +3,7 @@ import React from 'react';
 import {observer} from 'mobx-react';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import userStore from 'sulu-admin-bundle/stores/userStore';
-import {observable} from 'mobx';
+import {isArrayLike, observable} from 'mobx';
 import {
     convertDisplayOptionsFromParams,
     convertMediaTypesFromParams,
@@ -25,8 +25,11 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
             } = {},
         } = schemaOptions;
 
-        if (value !== undefined && value !== null && (typeof value !== 'object' || !Array.isArray(value.ids))) {
-            throw new Error('The "MediaSelection" field expects an object with an "ids" property as value.');
+        if (value !== undefined && value !== null && (typeof value !== 'object' || !isArrayLike(value.ids))) {
+            throw new Error(
+                'The "MediaSelection" field expects an object with an "ids" property and '
+                + 'an optional "displayOption" property as value.'
+            );
         }
 
         if (!defaultDisplayOption) {
