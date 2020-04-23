@@ -76,6 +76,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
 
     public function warmUp()
     {
+        $this->cache->invalidate();
         $this->getSystemCollections();
     }
 

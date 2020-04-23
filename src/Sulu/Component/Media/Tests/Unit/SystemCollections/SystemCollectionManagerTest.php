@@ -339,41 +339,16 @@ class SystemCollectionManagerTest extends TestCase
     /**
      * @dataProvider configProvider
      */
-    public function testWarmUpNotFresh($config, $existingCollections, $notExistingCollections, $data)
+    public function testWarmUp($config, $existingCollections, $notExistingCollections, $data)
     {
         $tokenStorage = $this->getTokenStorage();
         $collectionManager = $this->getCollectionManager($existingCollections, $notExistingCollections);
 
         $entityManager = $this->prophesize(EntityManagerInterface::class);
         $cache = $this->prophesize(CacheInterface::class);
+        $cache->invalidate()->shouldBeCalled();
         $cache->isFresh()->shouldBeCalled()->willReturn(false);
         $cache->write($data)->shouldBeCalled();
-        $cache->read()->shouldBeCalled()->willReturn($data);
-
-        $manager = new SystemCollectionManager(
-            $config,
-            $collectionManager->reveal(),
-            $entityManager->reveal(),
-            $tokenStorage->reveal(),
-            $cache->reveal(),
-            'en'
-        );
-
-        $manager->warmUp();
-    }
-
-    /**
-     * @dataProvider configProvider
-     */
-    public function testWarmUpFresh($config, $existingCollections, $notExistingCollections, $data)
-    {
-        $tokenStorage = $this->getTokenStorage();
-        $collectionManager = $this->getCollectionManager($existingCollections, $notExistingCollections, false);
-
-        $entityManager = $this->prophesize(EntityManagerInterface::class);
-        $cache = $this->prophesize(CacheInterface::class);
-        $cache->isFresh()->shouldBeCalled()->willReturn(true);
-        $cache->write($data)->shouldNotBeCalled();
         $cache->read()->shouldBeCalled()->willReturn($data);
 
         $manager = new SystemCollectionManager(
