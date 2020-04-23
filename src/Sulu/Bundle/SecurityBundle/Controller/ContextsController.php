@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\RouteResource;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
+use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Component\Rest\AbstractRestController;
 use Symfony\Component\HttpFoundation\Request;

@@ -24,10 +24,6 @@ sulu_security:
     checker:
         enabled: true
 
-fos_rest:
-    routing_loader:
-        default_format: json
-
 sulu_document_manager:
     default_session: default
     live_session: live

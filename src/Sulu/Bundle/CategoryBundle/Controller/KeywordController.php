@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\CategoryBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;

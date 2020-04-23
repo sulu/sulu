@@ -13,9 +13,9 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
 use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
@@ -92,7 +92,7 @@ class ProfileController implements ClassResourceInterface
     /**
      * Gets the profile information of a user.
      *
-     * @return Response\
+     * @return Response
      */
     public function getAction()
     {

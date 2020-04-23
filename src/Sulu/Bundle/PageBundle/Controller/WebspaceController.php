@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\PageBundle\Controller;
 
 use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Rest\AbstractRestController;

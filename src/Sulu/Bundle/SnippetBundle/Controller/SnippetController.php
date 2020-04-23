@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\SnippetBundle\Controller;
 
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
+use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;

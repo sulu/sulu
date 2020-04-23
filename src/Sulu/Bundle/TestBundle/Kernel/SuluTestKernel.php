@@ -45,6 +45,7 @@ class SuluTestKernel extends SuluKernel
             new \JMS\SerializerBundle\JMSSerializerBundle(),
             new \Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new \FOS\RestBundle\FOSRestBundle(),
+            new \HandcraftedInTheAlps\RestRoutingBundle\RestRoutingBundle(),
 
             // Massive
             new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),

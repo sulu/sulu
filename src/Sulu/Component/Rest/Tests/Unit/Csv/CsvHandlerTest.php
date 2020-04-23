@@ -12,7 +12,7 @@
 namespace Sulu\Component\Rest\Tests\Unit\Csv;
 
 use FOS\RestBundle\View\View;
-use FOS\RestBundle\View\ViewHandler;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\Csv\CsvHandler;
 use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
@@ -29,16 +29,14 @@ class CsvHandlerTest extends TestCase
         $this->expectException(ObjectNotSupportedException::class);
         $object = new \stdClass();
 
-        $viewHandler = $this->prophesize(ViewHandler::class);
-        $view = $this->prophesize(View::class);
+        $viewHandler = $this->prophesize(ViewHandlerInterface::class);
+        $view = new View($object);
         $request = $this->prophesize(Request::class);
         $serializer = $this->prophesize(ArraySerializerInterface::class);
         $format = 'csv';
 
-        $view->getData()->willReturn($object);
-
         $handler = new CsvHandler($serializer->reveal());
-        $handler->createResponse($viewHandler->reveal(), $view->reveal(), $request->reveal(), $format);
+        $handler->createResponse($viewHandler->reveal(), $view, $request->reveal(), $format);
     }
 
     public function testListRepresentation()
@@ -52,8 +50,8 @@ class CsvHandlerTest extends TestCase
             ]
         );
 
-        $viewHandler = $this->prophesize(ViewHandler::class);
-        $view = $this->prophesize(View::class);
+        $viewHandler = $this->prophesize(ViewHandlerInterface::class);
+        $view = new View($listRepresentation->reveal());
         $request = $this->prophesize(Request::class);
         $serializer = $this->prophesize(ArraySerializerInterface::class);
         $format = 'csv';
@@ -63,12 +61,10 @@ class CsvHandlerTest extends TestCase
         $request->get('escape', '\\')->willReturn('\\');
         $request->get('newLine', '\\n')->willReturn('\\n');
 
-        $view->getData()->willReturn($listRepresentation->reveal());
-
         $handler = new CsvHandler($serializer->reveal());
 
         \ob_start();
-        $response = $handler->createResponse($viewHandler->reveal(), $view->reveal(), $request->reveal(), $format);
+        $response = $handler->createResponse($viewHandler->reveal(), $view, $request->reveal(), $format);
         $content = \ob_get_contents();
         \ob_end_clean();
 
@@ -96,8 +92,8 @@ class CsvHandlerTest extends TestCase
             ]
         );
 
-        $viewHandler = $this->prophesize(ViewHandler::class);
-        $view = $this->prophesize(View::class);
+        $viewHandler = $this->prophesize(ViewHandlerInterface::class);
+        $view = new View($collectionRepresentation->reveal());
         $request = $this->prophesize(Request::class);
         $serializer = $this->prophesize(ArraySerializerInterface::class);
         $format = 'csv';
@@ -107,12 +103,10 @@ class CsvHandlerTest extends TestCase
         $request->get('escape', '\\')->willReturn('\\');
         $request->get('newLine', '\\n')->willReturn('\\n');
 
-        $view->getData()->willReturn($collectionRepresentation->reveal());
-
         $handler = new CsvHandler($serializer->reveal());
 
         \ob_start();
-        $response = $handler->createResponse($viewHandler->reveal(), $view->reveal(), $request->reveal(), $format);
+        $response = $handler->createResponse($viewHandler->reveal(), $view, $request->reveal(), $format);
         $content = \ob_get_contents();
         \ob_end_clean();
 
@@ -140,8 +134,8 @@ class CsvHandlerTest extends TestCase
             ]
         );
 
-        $viewHandler = $this->prophesize(ViewHandler::class);
-        $view = $this->prophesize(View::class);
+        $viewHandler = $this->prophesize(ViewHandlerInterface::class);
+        $view = new View($listRepresentation->reveal());
         $request = $this->prophesize(Request::class);
         $serializer = $this->prophesize(ArraySerializerInterface::class);
         $format = 'csv';
@@ -151,12 +145,10 @@ class CsvHandlerTest extends TestCase
         $request->get('escape', '\\')->willReturn('"');
         $request->get('newLine', '\\n')->willReturn('\\r\\n');
 
-        $view->getData()->willReturn($listRepresentation->reveal());
-
         $handler = new CsvHandler($serializer->reveal());
 
         \ob_start();
-        $response = $handler->createResponse($viewHandler->reveal(), $view->reveal(), $request->reveal(), $format);
+        $response = $handler->createResponse($viewHandler->reveal(), $view, $request->reveal(), $format);
         $content = \ob_get_contents();
         \ob_end_clean();
 
@@ -184,8 +176,8 @@ class CsvHandlerTest extends TestCase
             ]
         );
 
-        $viewHandler = $this->prophesize(ViewHandler::class);
-        $view = $this->prophesize(View::class);
+        $viewHandler = $this->prophesize(ViewHandlerInterface::class);
+        $view = new View($listRepresentation->reveal());
         $request = $this->prophesize(Request::class);
         $serializer = $this->prophesize(ArraySerializerInterface::class);
         $format = 'csv';
@@ -195,12 +187,10 @@ class CsvHandlerTest extends TestCase
         $request->get('escape', '\\')->willReturn('\\');
         $request->get('newLine', '\\n')->willReturn('\\n');
 
-        $view->getData()->willReturn($listRepresentation->reveal());
-
         $handler = new CsvHandler($serializer->reveal());
 
         \ob_start();
-        $response = $handler->createResponse($viewHandler->reveal(), $view->reveal(), $request->reveal(), $format);
+        $response = $handler->createResponse($viewHandler->reveal(), $view, $request->reveal(), $format);
         $content = \ob_get_contents();
         \ob_end_clean();
 
@@ -223,8 +213,8 @@ class CsvHandlerTest extends TestCase
         $listRepresentation->getRel()->willReturn('contacts');
         $listRepresentation->getData()->willReturn([]);
 
-        $viewHandler = $this->prophesize(ViewHandler::class);
-        $view = $this->prophesize(View::class);
+        $viewHandler = $this->prophesize(ViewHandlerInterface::class);
+        $view = new View($listRepresentation->reveal());
         $request = $this->prophesize(Request::class);
         $serializer = $this->prophesize(ArraySerializerInterface::class);
         $format = 'csv';
@@ -234,12 +224,10 @@ class CsvHandlerTest extends TestCase
         $request->get('escape', '\\')->willReturn('\\');
         $request->get('newLine', '\\n')->willReturn('\\n');
 
-        $view->getData()->willReturn($listRepresentation->reveal());
-
         $handler = new CsvHandler($serializer->reveal());
 
         \ob_start();
-        $response = $handler->createResponse($viewHandler->reveal(), $view->reveal(), $request->reveal(), $format);
+        $response = $handler->createResponse($viewHandler->reveal(), $view, $request->reveal(), $format);
         $content = \ob_get_contents();
         \ob_end_clean();
 

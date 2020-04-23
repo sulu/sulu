@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\SnippetBundle\Controller;
 
-use FOS\RestBundle\Routing\ClassResourceInterface;
+use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;

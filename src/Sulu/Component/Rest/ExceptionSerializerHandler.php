@@ -16,7 +16,9 @@ use FOS\RestBundle\Util\ExceptionValueMap;
 use JMS\Serializer\Context;
 
 /**
- * Our handler for thrown exceptions in REST controllers.
+ * @internal the following class is only for internal use don't use it in your project
+ *
+ * Our handler for thrown exceptions in REST controllers
  */
 class ExceptionSerializerHandler extends ExceptionHandler
 {
