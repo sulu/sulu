@@ -741,3 +741,17 @@ test('Call onChange with new values after items are sorted', () => {
         }
     );
 });
+
+test('Call destroy of TeaserStore when unmounted', () => {
+    // $FlowFixMe
+    TeaserStore.mockImplementation(function() {
+        this.destroy = jest.fn();
+    });
+
+    const teaserSelection = mount(<TeaserSelection locale={observable.box('en')} onChange={jest.fn()} />);
+
+    const teaserStore = teaserSelection.instance().teaserStore;
+    teaserSelection.unmount();
+
+    expect(teaserStore.destroy).toBeCalledWith();
+});

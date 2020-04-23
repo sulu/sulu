@@ -15,6 +15,7 @@ class ResourceTabViewBuilder implements ResourceTabViewBuilderInterface
 {
     use ViewBuilderTrait;
     use FormViewBuilderTrait;
+    use TabViewBuilderTrait;
 
     const TYPE = 'sulu_admin.resource_tabs';
 
@@ -54,22 +55,16 @@ class ResourceTabViewBuilder implements ResourceTabViewBuilderInterface
         return $this;
     }
 
-    public function addRouterAttributesToBlacklist(
-        array $routerAttributesToBlacklist
-    ): ResourceTabViewBuilderInterface {
-        $oldRouterAttributesToBlacklist = $this->view->getOption('routerAttributesToBlacklist');
-        $newRouterAttributesToBlacklist = $oldRouterAttributesToBlacklist
-            ? array_merge($oldRouterAttributesToBlacklist, $routerAttributesToBlacklist)
-            : $routerAttributesToBlacklist;
-
-        $this->view->setOption('routerAttributesToBlacklist', $newRouterAttributesToBlacklist);
+    public function setTitleProperty(string $titleProperty): ResourceTabViewBuilderInterface
+    {
+        $this->view->setOption('titleProperty', $titleProperty);
 
         return $this;
     }
 
-    public function setTitleProperty(string $titleProperty): ResourceTabViewBuilderInterface
+    public function addRouterAttributesToBlacklist(array $routerAttributesToBlacklist): ResourceTabViewBuilderInterface
     {
-        $this->view->setOption('titleProperty', $titleProperty);
+        $this->addRouterAttributesToBlacklistToView($routerAttributesToBlacklist);
 
         return $this;
     }

@@ -64,6 +64,10 @@ class TeaserSelection extends React.Component<Props> {
         })();
     }
 
+    componentWillUnmount() {
+        this.teaserStore.destroy();
+    }
+
     @computed get teaserItems(): Array<TeaserItem> {
         return this.props.value.items.map((teaserItem) => ({
             ...this.teaserStore.findById(teaserItem.type, teaserItem.id),

@@ -15,7 +15,7 @@ class FormViewBuilder implements FormViewBuilderInterface
 {
     use ViewBuilderTrait;
     use FormViewBuilderTrait;
-    use TabViewBuilderTrait;
+    use TabViewChildBuilderTrait;
 
     const TYPE = 'sulu_admin.form';
 
