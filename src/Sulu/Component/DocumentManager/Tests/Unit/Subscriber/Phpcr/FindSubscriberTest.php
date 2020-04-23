@@ -93,6 +93,8 @@ class FindSubscriberTest extends TestCase
             ->dispatch(Argument::type(HydrateEvent::class), Events::HYDRATE)
             ->will(function($args) {
                 $args[0]->setDocument(new \stdClass());
+
+                return $args[0];
             });
 
         $event = new FindEvent($path, $locale, $options);

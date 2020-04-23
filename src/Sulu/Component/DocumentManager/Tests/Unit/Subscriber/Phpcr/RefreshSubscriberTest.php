@@ -13,6 +13,7 @@ namespace Sulu\Comonent\DocumentManager\tests\Unit\Subscriber\Phpcr;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\RefreshEvent;
@@ -60,8 +61,11 @@ class RefreshSubscriberTest extends TestCase
         $node->revert()->shouldBeCalled();
         $this->documentRegistry->getLocaleForDocument($document)->willReturn('fr');
 
-        $event = new HydrateEvent($node->reveal(), 'fr');
-        $this->eventDispatcher->dispatch($event, Events::REFRESH);
+        $this->eventDispatcher->dispatch(Argument::that(function(HydrateEvent $event) use ($node) {
+            return $node->reveal() === $event->getNode()
+                && 'fr' === $event->getLocale();
+        }), Events::HYDRATE)
+            ->willReturnArgument(0);
 
         $this->refreshSubscriber->refreshDocument($refreshEvent->reveal());
     }
