@@ -136,7 +136,7 @@ class ProxyFactoryTest extends TestCase
                 }
             ),
             'sulu_document_manager.hydrate'
-        )->shouldBeCalled();
+        )->shouldBeCalled()->willReturnArgument(0);
 
         // hydrate
         $proxy->getTitle();
@@ -158,7 +158,7 @@ class ProxyFactoryTest extends TestCase
                 }
             ),
             Events::HYDRATE
-        )->shouldBeCalled();
+        )->shouldBeCalled()->willReturnArgument(0);
 
         $this->assertEquals('Hello', $proxy->getTitle());
     }
