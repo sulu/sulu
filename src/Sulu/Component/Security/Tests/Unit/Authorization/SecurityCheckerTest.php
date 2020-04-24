@@ -52,7 +52,7 @@ class SecurityCheckerTest extends TestCase
     public function testIsGrantedContext()
     {
         $this->authorizationChecker->isGranted(
-            ['view'],
+            'view',
             Argument::which('getSecurityContext', 'sulu.media.collection')
         )->willReturn(true);
 
@@ -66,7 +66,7 @@ class SecurityCheckerTest extends TestCase
         $object = new \stdClass();
 
         $this->authorizationChecker->isGranted(
-            ['view'],
+            'view',
             $object
         )->willReturn(true);
 
@@ -91,7 +91,7 @@ class SecurityCheckerTest extends TestCase
         );
 
         $this->authorizationChecker->isGranted(
-            ['view'],
+            'view',
             Argument::which('getSecurityContext', 'sulu.media.collection')
         )->willReturn(false);
 
