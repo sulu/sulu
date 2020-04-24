@@ -209,6 +209,40 @@ test('Should throw an error if displayOptions schemaOption is given but not an a
     )).toThrow(/"displayOptions"/);
 });
 
+test('Should throw an error if given value is not an object', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    expect(() => shallow(
+        <MediaSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            value={(true: any)}
+        />
+    )).toThrow(/expects an object/);
+});
+
+test('Should throw an error if given value does not have an ids property', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    expect(() => shallow(
+        <MediaSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            value={({unrelatedProperty: 123}: any)}
+        />
+    )).toThrow(/"ids" property/);
+});
+
 test('Should throw an error if displayOptions schemaOption is given but not an array', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(
