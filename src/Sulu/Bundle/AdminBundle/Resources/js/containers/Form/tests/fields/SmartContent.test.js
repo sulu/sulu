@@ -246,6 +246,7 @@ test('Pass correct props to SmartContent component', () => {
     ]);
     expect(smartContent.find('SmartContent').prop('fieldLabel')).toEqual('Test');
     expect(smartContent.find('SmartContent').prop('disabled')).toEqual(true);
+    expect(smartContent.find('SmartContent').prop('onItemClick')).toEqual(undefined);
 });
 
 test('Should not call the onChange and onFinish callbacks if SmartContentStore is still loading', () => {

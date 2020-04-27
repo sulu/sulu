@@ -227,7 +227,7 @@ class SmartContent extends React.Component<Props> {
                 defaultValue={this.defaultValue}
                 disabled={!!disabled}
                 fieldLabel={label}
-                onItemClick={this.handleItemClick}
+                onItemClick={this.viewName && this.resultToView ? this.handleItemClick : undefined}
                 presentations={this.presentations}
                 store={this.smartContentStore}
             />
