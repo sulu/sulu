@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import {extendObservable as mockExtendObservable} from 'mobx';
-import {shallow} from 'enzyme';
+import {mount, shallow} from 'enzyme';
+import Router from '../../../../services/Router';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
@@ -11,9 +12,19 @@ import SmartContentStore from '../../../SmartContent/stores/SmartContentStore';
 import smartContentConfigStore from '../../../SmartContent/stores/smartContentConfigStore';
 import smartContentStorePool from '../../fields/smartContentStorePool';
 
+jest.mock('../../../../containers/MultiListOverlay', () => jest.fn(() => null));
+
+jest.mock('../../../../services/Router', () => jest.fn(function() {
+    this.navigate = jest.fn();
+}));
+
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id) {
     this.resourceKey = resourceKey;
     this.id = id;
+}));
+
+jest.mock('../../../../utils/Translator', () => ({
+    translate: jest.fn((key) => key),
 }));
 
 jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
@@ -31,11 +42,11 @@ jest.mock('../../../SmartContent/stores/SmartContentStore', () => jest.fn(functi
     this.destroy = jest.fn();
     this.start = jest.fn();
 
-    mockExtendObservable(this, {itemsLoading: false, filterCriteria: {}});
+    mockExtendObservable(this, {items: [], itemsLoading: false, filterCriteria: {}});
 }));
 
 jest.mock('../../../SmartContent/stores/smartContentConfigStore', () => ({
-    getConfig: jest.fn().mockReturnValue({}),
+    getConfig: jest.fn(),
     getDefaultValue: jest.fn().mockReturnValue({audienceTargeting: false}),
 }));
 
@@ -46,6 +57,10 @@ jest.mock('../../fields/smartContentStorePool', () => ({
     remove: jest.fn(),
     updateExcludedIds: jest.fn(),
 }));
+
+beforeEach(() => {
+    smartContentConfigStore.getConfig.mockReturnValue({});
+});
 
 test('Should correctly initialize SmartContentStore', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test', 1), 'test'));
@@ -397,6 +412,42 @@ test('Should not call the onChange and onFinish callbacks if tags only differ in
 
     expect(changeSpy).not.toBeCalled();
     expect(finishSpy).not.toBeCalled();
+});
+
+test('Should navigate to view if item is clicked', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const schemaOptions = {
+        provider: {
+            name: 'provider',
+            value: 'media',
+        },
+    };
+
+    smartContentConfigStore.getConfig.mockReturnValue({sorting: [], view: 'sulu_media.form', resultToView: {id: 'id'}});
+
+    const router = new Router();
+
+    const smartContent = mount(
+        <SmartContent
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            router={router}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    smartContent.instance().smartContentStore.items = [
+        {id: 1},
+        {id: 3},
+        {id: 2},
+    ];
+    smartContent.update();
+
+    smartContent.find('MultiItemSelection .content').at(0).simulate('click');
+    expect(router.navigate).toHaveBeenLastCalledWith('sulu_media.form', {id: 1});
+    smartContent.find('MultiItemSelection .content').at(1).simulate('click');
+    expect(router.navigate).toHaveBeenLastCalledWith('sulu_media.form', {id: 3});
 });
 
 test('Should call destroy on SmartContentStore when unmounted', () => {

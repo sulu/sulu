@@ -2,6 +2,7 @@
 import React from 'react';
 import {computed, toJS, reaction, when} from 'mobx';
 import equals from 'fast-deep-equal';
+import jsonpointer from 'json-pointer';
 import type {FieldTypeProps} from '../../../types';
 import SmartContentComponent, {smartContentConfigStore, SmartContentStore} from '../../SmartContent';
 import type {FilterCriteria, Presentation} from '../../SmartContent/types';
@@ -79,6 +80,14 @@ class SmartContent extends React.Component<Props> {
             this.provider,
             this.presentations
         );
+    }
+
+    @computed get viewName() {
+        return smartContentConfigStore.getConfig(this.provider).view;
+    }
+
+    @computed get resultToView() {
+        return smartContentConfigStore.getConfig(this.provider).resultToView;
     }
 
     constructor(props: Props) {
@@ -179,6 +188,24 @@ class SmartContent extends React.Component<Props> {
         smartContentStorePool.updateExcludedIds();
     };
 
+    handleItemClick = (itemId: string | number, item: Object) => {
+        const {router} = this.props;
+
+        const {resultToView, viewName} = this;
+
+        if (!router || !viewName || !resultToView) {
+            return;
+        }
+
+        router.navigate(
+            viewName,
+            Object.keys(resultToView).reduce((parameters, resultPath) => {
+                parameters[resultToView[resultPath]] = jsonpointer.get(item, '/' + resultPath);
+                return parameters;
+            }, {})
+        );
+    };
+
     render() {
         const {
             disabled,
@@ -200,6 +227,7 @@ class SmartContent extends React.Component<Props> {
                 defaultValue={this.defaultValue}
                 disabled={!!disabled}
                 fieldLabel={label}
+                onItemClick={this.handleItemClick}
                 presentations={this.presentations}
                 store={this.smartContentStore}
             />
