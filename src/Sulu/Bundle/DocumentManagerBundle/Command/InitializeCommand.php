@@ -48,7 +48,7 @@ class InitializeCommand extends Command
         $this
             ->setDescription('Initialize the content repository/repositories.')
             ->addOption('purge', null, InputOption::VALUE_NONE, 'Purge the content repository before initialization.')
-            ->addOption('force', null, InputOption::VALUE_NONE, 'Do not ask for confiration.')
+            ->addOption('force', null, InputOption::VALUE_NONE, 'Do not ask for confirmation.')
             ->setHelp(<<<'EOT'
 Initialize the PHPCR content repository. This command
 will call registered initializers.
