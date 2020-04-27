@@ -83,4 +83,16 @@ interface ProviderConfigurationInterface
      * Indicates pagination is possible.
      */
     public function hasPagination(): bool;
+
+    /**
+     * Returns the name of the view to navigate to when a smart content item in the UI is clicked.
+     */
+    public function getView(): string;
+
+    /**
+     * Returns the mapping from smart content item properties to view.
+     *
+     * @return string[]
+     */
+    public function getResultToView(): array;
 }

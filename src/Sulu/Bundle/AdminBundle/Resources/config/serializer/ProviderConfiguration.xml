@@ -10,5 +10,7 @@
         <property name="sorting" type="array" expose="true" groups="frontend"/>
         <property name="limit" type="boolean" expose="true" groups="frontend"/>
         <property name="presentAs" type="boolean" expose="true" groups="frontend"/>
+        <property name="view" type="string" expose="true" groups="frontend"/>
+        <property name="resultToView" type="array" expose="true" groups="frontend"/>
     </class>
 </serializer>

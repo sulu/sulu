@@ -68,6 +68,16 @@ class ProviderConfiguration implements ProviderConfigurationInterface
      */
     private $paginated = false;
 
+    /**
+     * @var string
+     */
+    private $view;
+
+    /**
+     * @var string[]
+     */
+    private $resultToView;
+
     public function hasDatasource(): bool
     {
         return null !== $this->datasourceResourceKey && false !== $this->datasourceResourceKey;
@@ -176,5 +186,25 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     public function setPaginated(bool $paginated)
     {
         $this->paginated = $paginated;
+    }
+
+    public function getView(): string
+    {
+        return $this->view;
+    }
+
+    public function setView(string $view)
+    {
+        $this->view = $view;
+    }
+
+    public function getResultToView(): array
+    {
+        return $this->resultToView;
+    }
+
+    public function setResultToView(array $resultToView)
+    {
+        $this->resultToView = $resultToView;
     }
 }

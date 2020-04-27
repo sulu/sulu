@@ -103,6 +103,14 @@ class Builder implements BuilderInterface
         return $this;
     }
 
+    public function enableView(string $view, array $resultToView)
+    {
+        $this->configuration->setView($view);
+        $this->configuration->setResultToView($resultToView);
+
+        return $this;
+    }
+
     public function getConfiguration(): ProviderConfigurationInterface
     {
         return $this->configuration;
