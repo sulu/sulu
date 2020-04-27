@@ -42,5 +42,7 @@
                 <title lang="de">Seiten</title>
             </meta>
         </property>
+
+        <property name="teaser" type="teaser_selection" />
     </properties>
 </template>

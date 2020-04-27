@@ -742,6 +742,49 @@ test('Call onChange with new values after items are sorted', () => {
     );
 });
 
+test('Call onItemClick when an item is clicked', () => {
+    const itemClickSpy = jest.fn();
+
+    const item1 = {
+        description: 'Description',
+        edited: true,
+        id: 2,
+        title: 'Title',
+        type: 'pages',
+    };
+
+    const item2 = {
+        description: 'Description 2',
+        edited: true,
+        id: 6,
+        title: 'Title 2',
+        type: 'pages',
+    };
+
+    const value = {
+        presentAs: '',
+        items: [
+            item1,
+            item2,
+        ],
+    };
+
+    // $FlowFixMe
+    TeaserStore.mockImplementation(function() {
+        this.add = jest.fn();
+        this.findById = jest.fn();
+    });
+
+    const teaserSelection = mount(
+        <TeaserSelection locale={observable.box('en')} onChange={jest.fn()} onItemClick={itemClickSpy} value={value} />
+    );
+
+    teaserSelection.find('MultiItemSelection .content.clickable').at(0).simulate('click');
+    expect(itemClickSpy).toHaveBeenLastCalledWith('pages;2', item1);
+    teaserSelection.find('MultiItemSelection .content.clickable').at(1).simulate('click');
+    expect(itemClickSpy).toHaveBeenLastCalledWith('pages;6', item2);
+});
+
 test('Call destroy of TeaserStore when unmounted', () => {
     // $FlowFixMe
     TeaserStore.mockImplementation(function() {

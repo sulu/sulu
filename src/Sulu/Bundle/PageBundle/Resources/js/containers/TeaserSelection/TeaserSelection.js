@@ -15,6 +15,7 @@ type Props = {|
     disabled: boolean,
     locale: IObservableValue<string>,
     onChange: (TeaserSelectionValue) => void,
+    onItemClick?: (id: number | string, item: Object) => void,
     presentations?: Array<PresentationItem>,
     value: TeaserSelectionValue,
 |};
@@ -197,7 +198,7 @@ class TeaserSelection extends React.Component<Props> {
     };
 
     render() {
-        const {disabled, locale, value} = this.props;
+        const {disabled, locale, onItemClick, value} = this.props;
 
         const addButtonOptions = teaserProviderRegistry.keys.map((teaserProviderKey) => {
             const teaserProvider = teaserProviderRegistry.get(teaserProviderKey);
@@ -227,6 +228,7 @@ class TeaserSelection extends React.Component<Props> {
                         options: addButtonOptions,
                     }}
                     loading={this.teaserStore.loading}
+                    onItemClick={onItemClick}
                     onItemsSorted={this.handleSorted}
                     rightButton={rightButton}
                 >
@@ -240,6 +242,7 @@ class TeaserSelection extends React.Component<Props> {
                                 key={teaserId}
                                 onEdit={this.editIds.includes(teaserId) ? undefined : this.handleEdit}
                                 onRemove={this.handleRemove}
+                                value={teaserItem}
                             >
                                 <Item
                                     description={teaserItem.description}
