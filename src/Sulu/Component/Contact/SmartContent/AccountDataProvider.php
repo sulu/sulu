@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Contact\SmartContent;
 
+use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\SmartContent\Orm\BaseDataProvider;
@@ -31,6 +32,7 @@ class AccountDataProvider extends BaseDataProvider
             ->enableLimit()
             ->enablePagination()
             ->enablePresentAs()
+            ->enableView(ContactAdmin::ACCOUNT_EDIT_FORM_VIEW, ['id' => 'id'])
             ->getConfiguration();
     }
 

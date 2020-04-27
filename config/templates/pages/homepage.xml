@@ -42,5 +42,41 @@
                 <title lang="de">Seiten</title>
             </meta>
         </property>
+
+        <property name="snippet" type="smart_content">
+            <meta>
+                <title lang="en">Snippets</title>
+            </meta>
+            <params>
+                <param name="provider" value="snippets" />
+            </params>
+        </property>
+
+        <property name="media" type="smart_content">
+            <meta>
+                <title lang="en">Media</title>
+            </meta>
+            <params>
+                <param name="provider" value="media" />
+            </params>
+        </property>
+
+        <property name="accounts" type="smart_content">
+            <meta>
+                <title lang="en">Accounts</title>
+            </meta>
+            <params>
+                <param name="provider" value="accounts" />
+            </params>
+        </property>
+
+        <property name="contacts" type="smart_content">
+            <meta>
+                <title lang="en">Contacts</title>
+            </meta>
+            <params>
+                <param name="provider" value="contacts" />
+            </params>
+        </property>
     </properties>
 </template>

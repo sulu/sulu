@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Content;
 
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
+use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
@@ -99,6 +100,7 @@ class SnippetDataProvider implements DataProviderInterface
                         ['column' => 'changed', 'title' => 'sulu_admin.changed'],
                     ]
                 )
+                ->enableView(SnippetAdmin::EDIT_FORM_VIEW, ['id' => 'id'])
                 ->getConfiguration();
         }
 
