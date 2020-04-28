@@ -25,9 +25,17 @@ class DocumentFixtureLoader
      */
     private $container;
 
-    public function __construct(ContainerInterface $container)
-    {
+    /**
+     * @var DocumentFixtureInterface[]
+     */
+    private $fixtures;
+
+    public function __construct(
+        ContainerInterface $container,
+        \Traversable $fixtures = null
+    ) {
         $this->container = $container;
+        $this->fixtures = $fixtures ? iterator_to_array($fixtures) : [];
     }
 
     /**
@@ -51,6 +59,17 @@ class DocumentFixtureLoader
             $fixtureClass = array_pop($declaredClassesDiff);
 
             if (!$fixtureClass) {
+                // check if fixture was loaded over DI and use then that one instead of throwing an error
+                foreach ($this->fixtures as $fixture) {
+                    $reflectionClass = new \ReflectionClass(get_class($fixture));
+
+                    if ($file->getPathname() === $reflectionClass->getFileName()) {
+                        $fixtures[] = $fixture;
+
+                        continue 2;
+                    }
+                }
+
                 throw new \InvalidArgumentException(sprintf(
                     'Could not determine class from included file "%s". Class detection will only work once per request.',
                     $file

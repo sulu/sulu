@@ -17,6 +17,7 @@ use Sulu\Bundle\DocumentManagerBundle\Command\FixturesLoadCommand;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureLoader;
+use Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Command\bundle\DataFixtures\Document\FooFixture;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -61,6 +62,11 @@ class FixturesLoadCommandTest extends TestCase
      */
     private $commandTester;
 
+    /**
+     * @var \ArrayObject
+     */
+    private $fixtures;
+
     public function setUp(): void
     {
         $this->loader = $this->prophesize(DocumentFixtureLoader::class);
@@ -68,12 +74,14 @@ class FixturesLoadCommandTest extends TestCase
         $this->kernel = $this->prophesize(KernelInterface::class);
         $this->bundle = $this->prophesize(BundleInterface::class);
         $this->fixture1 = $this->prophesize(DocumentFixtureInterface::class);
+        $this->fixtures = new \ArrayObject([]);
 
         $application = new Application();
         $application->add(new FixturesLoadCommand(
             $this->loader->reveal(),
             $this->executor->reveal(),
-            $this->kernel->reveal()
+            $this->kernel->reveal(),
+            $this->fixtures
         ));
         $this->command = $application->find('sulu:document:fixtures:load');
         $this->commandTester = new CommandTester($this->command);
@@ -83,9 +91,10 @@ class FixturesLoadCommandTest extends TestCase
         ]);
 
         $this->kernel->getRootDir()->willReturn(__DIR__ . '/NoFixtures');
-        $this->bundle->getPath()->willReturn(
-            __DIR__ . '/fixtures'
-        );
+        if (method_exists(KernelInterface::class, 'getRootDir')) {
+            $this->kernel->getRootDir()->willReturn(__DIR__ . '/NoFixtures');
+        }
+        $this->bundle->getPath()->willReturn(__DIR__ . '/NoFixtures');
     }
 
     /**
@@ -106,13 +115,37 @@ class FixturesLoadCommandTest extends TestCase
     /**
      * It should load fixtures.
      */
-    public function testLoadFixtures()
+    public function testLegacyLoadFixtures()
     {
+        $this->bundle->getPath()->willReturn(
+            __DIR__ . '/fixtures'
+        );
+
         $this->loader->load([
             __DIR__ . '/fixtures/DataFixtures/Document',
         ])->willReturn([
             $this->fixture1->reveal(),
-        ]);
+        ])->shouldBeCalled();
+
+        $this->executor->execute(
+            [
+                $this->fixture1->reveal(),
+            ],
+            true,
+            true,
+            Argument::type(OutputInterface::class)
+        )->shouldBeCalled();
+
+        $tester = $this->execute([]);
+        $this->assertEquals(0, $tester->getStatusCode());
+    }
+
+    /**
+     * It should load fixtures.
+     */
+    public function testLoadFixtures()
+    {
+        $this->fixtures->append($this->fixture1->reveal());
 
         $this->executor->execute(
             [
@@ -130,8 +163,15 @@ class FixturesLoadCommandTest extends TestCase
     /**
      * It should load fixtures from kernel root dir.
      */
-    public function testLoadFixturesFromKernelRootDir()
+    public function testLegacyLoadFixturesFromKernelRootDir()
     {
+        if (!method_exists(KernelInterface::class, 'getRootDir')) {
+            $this->markTestSkipped();
+        }
+
+        $dirs = [];
+        $rootDir = __DIR__ . '/fixtures';
+        $dirs[] = $rootDir;
         $this->kernel->getRootDir()->willReturn(__DIR__ . '/fixtures');
         $this->kernel->getBundles()->willReturn([]);
 
@@ -139,7 +179,7 @@ class FixturesLoadCommandTest extends TestCase
             __DIR__ . '/fixtures/DataFixtures/Document',
         ])->willReturn([
             $this->fixture1->reveal(),
-        ]);
+        ])->shouldBeCalled();
 
         $this->executor->execute(
             [
@@ -157,13 +197,40 @@ class FixturesLoadCommandTest extends TestCase
     /**
      * It should not purge the database when --append is given.
      */
-    public function testLoadFixturesAppend()
+    public function testLegacyLoadFixturesAppend()
     {
+        $this->bundle->getPath()->willReturn(
+            __DIR__ . '/fixtures'
+        );
+
         $this->loader->load([
             __DIR__ . '/fixtures/DataFixtures/Document',
         ])->willReturn([
             $this->fixture1->reveal(),
+        ])->shouldBeCalled();
+
+        $this->executor->execute(
+            [
+                $this->fixture1->reveal(),
+            ],
+            false,
+            true,
+            Argument::type(OutputInterface::class)
+        )->shouldBeCalled();
+
+        $tester = $this->execute([
+            '--append' => true,
         ]);
+        $this->assertEquals(0, $tester->getStatusCode());
+    }
+
+    /**
+     * It should not purge the database when --append is given.
+     */
+    public function testLoadFixturesAppend()
+    {
+        $this->fixtures->append($this->fixture1->reveal());
+
         $this->executor->execute(
             [
                 $this->fixture1->reveal(),
@@ -182,13 +249,39 @@ class FixturesLoadCommandTest extends TestCase
     /**
      * It should not initialize when --no-initialize is specified.
      */
-    public function testLoadFixturesNoInitialize()
+    public function testLegacyLoadFixturesNoInitialize()
     {
+        $this->bundle->getPath()->willReturn(
+            __DIR__ . '/fixtures'
+        );
+
         $this->loader->load([
             __DIR__ . '/fixtures/DataFixtures/Document',
         ])->willReturn([
             $this->fixture1->reveal(),
+        ])->shouldBeCalled();
+        $this->executor->execute(
+            [
+                $this->fixture1->reveal(),
+            ],
+            true,
+            false,
+            Argument::type(OutputInterface::class)
+        )->shouldBeCalled();
+
+        $tester = $this->execute([
+            '--no-initialize' => true,
         ]);
+        $this->assertEquals(0, $tester->getStatusCode());
+    }
+
+    /**
+     * It should not initialize when --no-initialize is specified.
+     */
+    public function testLoadFixturesNoInitialize()
+    {
+        $this->fixtures->append($this->fixture1->reveal());
+
         $this->executor->execute(
             [
                 $this->fixture1->reveal(),
@@ -207,7 +300,7 @@ class FixturesLoadCommandTest extends TestCase
     /**
      * It should load specified fixtures.
      */
-    public function testLoadSpecified()
+    public function testLegacyLoadSpecified()
     {
         $this->loader->load([
             __DIR__ . '/foo',
@@ -226,6 +319,31 @@ class FixturesLoadCommandTest extends TestCase
 
         $tester = $this->execute([
             '--fixtures' => [__DIR__ . '/foo'],
+        ]);
+        $this->assertEquals(0, $tester->getStatusCode());
+    }
+
+    /**
+     * It should load specified fixtures.
+     */
+    public function testLoadSpecified()
+    {
+        require_once __DIR__ . '/fixtures/DataFixtures/Document/FooFixture.php';
+
+        $fooFixture = new FooFixture();
+        $this->fixtures->append($fooFixture);
+
+        $this->executor->execute(
+            [
+                $fooFixture,
+            ],
+            true,
+            true,
+            Argument::type(OutputInterface::class)
+        )->shouldBeCalled();
+
+        $tester = $this->execute([
+            '--fixtures' => [FooFixture::class],
         ]);
         $this->assertEquals(0, $tester->getStatusCode());
     }

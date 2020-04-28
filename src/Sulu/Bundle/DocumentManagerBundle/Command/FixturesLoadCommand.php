@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\DocumentManagerBundle\Command;
 
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
+use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureLoader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -41,16 +42,23 @@ class FixturesLoadCommand extends Command
      */
     private $kernel;
 
+    /**
+     * @var \Traversable<DocumentFixtureInterface>
+     */
+    private $fixtures;
+
     public function __construct(
         DocumentFixtureLoader $loader,
         DocumentExecutor $executor,
-        KernelInterface $kernel
+        KernelInterface $kernel,
+        \Traversable $fixtures = null
     ) {
         parent::__construct();
 
         $this->loader = $loader;
         $this->executor = $executor;
         $this->kernel = $kernel;
+        $this->fixtures = $fixtures ?: new \ArrayObject([]);
     }
 
     protected function configure()
@@ -102,10 +110,31 @@ EOT
             }
         }
 
-        $paths = $input->getOption('fixtures');
+        $fixturesOption = $input->getOption('fixtures');
+
+        $fixtures = [];
+        if (!$fixturesOption) {
+            $fixtures = iterator_to_array($this->fixtures);
+        } else {
+            // if specific fixture given use class name as identicator
+            foreach ($this->fixtures as $fixture) {
+                if (in_array(get_class($fixture), $fixturesOption)) {
+                    $fixtures[] = $fixture;
+                }
+            }
+        }
+
+        $legacyPaths = [];
+
+        // if specific fixture given but no classes found the given fixtures should be handled as legacy paths
+        if ($fixturesOption && empty($fixtures)) {
+            $legacyPaths = $fixturesOption;
+        }
 
         $candidatePaths = [];
-        if (!$paths) {
+
+        // load all legacy paths if no fixtures option is given
+        if (!$fixturesOption) {
             $directories = array_map(
                 function(BundleInterface $bundle) {
                     return $bundle->getPath();
@@ -113,34 +142,71 @@ EOT
                 $this->kernel->getBundles()
             );
 
-            $directories[] = $this->kernel->getRootDir();
-            $paths = [];
+            if (method_exists($this->kernel, 'getRootDir')) {
+                $directories[] = $this->kernel->getRootDir();
+            }
 
             foreach ($directories as $directory) {
                 $candidatePath = $directory . '/DataFixtures/Document';
                 $candidatePaths[] = $candidatePath;
                 if (file_exists($candidatePath)) {
-                    $paths[] = $candidatePath;
+                    $legacyPaths[] = $candidatePath;
                 }
             }
         }
 
-        if (empty($paths)) {
+        if (empty($legacyPaths) && empty($fixtures)) {
             $output->writeln(
                 '<info>Could not find any candidate fixture paths.</info>'
             );
 
             if ($input->getOption('verbose')) {
                 $output->writeln(sprintf('Looked for: </comment>%s<comment>"</comment>',
-                   implode('"<comment>", "</comment>', $candidatePaths)
-               ));
+                    implode('"<comment>", "</comment>', $candidatePaths)
+                ));
+
+                $output->writeln(sprintf('Looked for classes: </comment>%s<comment>"</comment>',
+                    implode('"<comment>", "</comment>', array_map(function($fixture) {
+                        return get_class($fixture);
+                    }, iterator_to_array($this->fixtures)))
+                ));
             }
 
             return 0;
         }
 
-        $fixtures = $this->loader->load($paths);
+        if (!empty($legacyPaths)) {
+            $legacyFixtures = $this->loader->load($legacyPaths);
+
+            foreach ($legacyFixtures as $key => $fixture) {
+                foreach ($this->fixtures as $existFixture) {
+                    // remove legacy fixtures which are correctly injected
+                    if (get_class($fixture) === get_class($existFixture)) {
+                        unset($legacyFixtures[$key]);
+
+                        continue 2;
+                    }
+                }
+
+                @trigger_error(
+                    sprintf(
+                        'Loading fixtures out of folders is deprecated since sulu/sulu 2.1,' . PHP_EOL .
+                        'tag "%s" as a service with "sulu.document_manager_fixture" instead.',
+                        get_class($fixture)
+                    ),
+                    E_USER_DEPRECATED
+                );
+            }
+
+            // merge legacy and exist fixtures together
+            $fixtures = array_merge(
+                $fixtures,
+                $legacyFixtures
+            );
+        }
+
         $this->executor->execute($fixtures, false === $append, false === $noInitialize, $output);
+
         $output->writeln('');
         $output->writeln(sprintf(
             '<info>Done. Executed </info>%s</info><info> fixtures.</info>',

@@ -2,6 +2,11 @@
 
 ## dev-master
 
+### DocumentFixtures changed
+
+The document fixtures should be changed to services and be tagged with `sulu.document_manager_fixture`.
+When using the symfony autoconfigure feature this is done automatically.
+
 ### Added webspace as reserved property name
 
 The term `webspace` cannot be used as name in XML templates anymore, because we need the page API to return the
