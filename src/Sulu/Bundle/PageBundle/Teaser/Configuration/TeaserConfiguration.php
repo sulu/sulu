@@ -45,17 +45,33 @@ class TeaserConfiguration
      */
     private $overlayTitle;
 
+    /**
+     * @var ?string
+     * @Groups({"frontend"})
+     */
+    private $view;
+
+    /**
+     * @var ?string[]
+     * @Groups({"frontend"})
+     */
+    private $resultToView;
+
     public function __construct(
         string $title,
         string $resourceKey,
         string $listAdapter,
         array $displayProperties,
-        string $overlayTitle
+        string $overlayTitle,
+        ?string $view = null,
+        ?array $resultToView = null
     ) {
         $this->title = $title;
         $this->resourceKey = $resourceKey;
         $this->listAdapter = $listAdapter;
         $this->displayProperties = $displayProperties;
         $this->overlayTitle = $overlayTitle;
+        $this->view = $view;
+        $this->resultToView = $resultToView;
     }
 }

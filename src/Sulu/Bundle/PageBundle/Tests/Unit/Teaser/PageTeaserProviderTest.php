@@ -17,6 +17,7 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Massive\Bundle\SearchBundle\Search\SearchQueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Sulu\Bundle\PageBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\PageBundle\Teaser\PageTeaserProvider;
 use Sulu\Bundle\PageBundle\Teaser\Teaser;
 use Sulu\Bundle\SearchBundle\Search\Document;
@@ -50,9 +51,28 @@ class PageTeaserProviderTest extends TestCase
         $this->search = $this->prophesize(SearchQueryBuilder::class);
         $this->translator = $this->prophesize(TranslatorInterface::class);
 
+        $this->translator->trans(Argument::cetera())->willReturnArgument(0);
+
         $this->searchManager->getIndexNames()->willReturn(['page_sulu_io_published']);
 
         $this->pageTeaserProvider = new PageTeaserProvider($this->searchManager->reveal(), $this->translator->reveal());
+    }
+
+    public function testConfiguration()
+    {
+        $configuration = $this->pageTeaserProvider->getConfiguration();
+
+        $viewProperty = new \ReflectionProperty(TeaserConfiguration::class, 'view');
+        $viewProperty->setAccessible(true);
+
+        $resultToViewProperty = new \ReflectionProperty(TeaserConfiguration::class, 'resultToView');
+        $resultToViewProperty->setAccessible(true);
+
+        $this->assertEquals('sulu_page.page_edit_form', $viewProperty->getValue($configuration));
+        $this->assertEquals(
+            ['id' => 'id', 'attributes/webspaceKey' => 'webspace'],
+            $resultToViewProperty->getValue($configuration)
+        );
     }
 
     public function testFind()
@@ -67,6 +87,7 @@ class PageTeaserProviderTest extends TestCase
                 'excerptImages' => json_encode(['ids' => [1, 2, 3]]),
                 '_structure_type' => 'default',
                 '_teaser_description' => '',
+                'webspace_key' => 'sulu_test',
             ],
             '456-456-456' => [
                 'title' => 'Test 2',
@@ -77,6 +98,7 @@ class PageTeaserProviderTest extends TestCase
                 'excerptImages' => json_encode([]),
                 '_structure_type' => 'overview',
                 '_teaser_description' => '',
+                'webspace_key' => 'sulu_blog',
             ],
         ];
         $ids = array_keys($data);
@@ -137,7 +159,10 @@ class PageTeaserProviderTest extends TestCase
         $this->assertEquals($this->getMedia(json_decode($expected['excerptImages'], true)), $teaser->getMediaId());
         $this->assertEquals($expected['__url'], $teaser->getUrl());
 
-        $this->assertEquals(['structureType' => $expected['_structure_type']], $teaser->getAttributes());
+        $this->assertEquals(
+            ['structureType' => $expected['_structure_type'], 'webspaceKey' => $expected['webspace_key']],
+            $teaser->getAttributes()
+        );
     }
 
     private function getMedia(array $data)

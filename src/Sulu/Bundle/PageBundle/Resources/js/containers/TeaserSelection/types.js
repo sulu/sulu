@@ -6,7 +6,9 @@ export type TeaserProviderOptions = {|
     listAdapter: string,
     overlayTitle: string,
     resourceKey: string,
+    resultToView: ?{[string]: string},
     title: string,
+    view: ?string,
 |};
 
 export type TeaserItem = {|

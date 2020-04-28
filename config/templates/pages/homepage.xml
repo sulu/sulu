@@ -43,6 +43,8 @@
             </meta>
         </property>
 
+        <property name="teaser" type="teaser_selection" />
+
         <property name="snippet" type="smart_content">
             <meta>
                 <title lang="en">Snippets</title>

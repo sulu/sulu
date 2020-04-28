@@ -48,6 +48,8 @@ class StructureProvider implements ProviderInterface
 
     const FIELD_TEASER_MEDIA = '_teaser_media';
 
+    const FIELD_WEBSPACE_KEY = 'webspace_key';
+
     /**
      * @var Factory
      */
@@ -232,7 +234,7 @@ EOT;
         if ($class->isSubclassOf(WebspaceBehavior::class)) {
             // index the webspace
             $indexMeta->addFieldMapping(
-                'webspace_key',
+                static::FIELD_WEBSPACE_KEY,
                 [
                     'type' => 'string',
                     'field' => $this->factory->createMetadataProperty('webspaceName'),
