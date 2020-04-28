@@ -266,6 +266,98 @@ test('The user store should be called correctly when changing the schema', () =>
     });
 });
 
+test('The userSchema should include schema properties that are not present in the schemaSetting of the user', () => {
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    const page = observable.box(1);
+    const locale = observable.box();
+    const additionalValue = observable.box(5);
+
+    const schemaSetting = [
+        {
+            'schemaKey': 'id',
+            'visibility': 'no',
+        },
+        {
+            'schemaKey': 'title',
+            'visibility': 'no',
+        },
+    ];
+    userStore.getPersistentSetting.mockReturnValueOnce(schemaSetting);
+
+    const listStore = new ListStore(
+        'tests',
+        'tests',
+        'list_test',
+        {
+            page,
+            locale,
+            additionalValue,
+        },
+        {
+            test: 'value',
+        },
+        {
+            id: 1,
+        }
+    );
+
+    listStore.updateLoadingStrategy(loadingStrategy);
+    listStore.updateStructureStrategy(structureStrategy);
+    listStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        newSchemaProperty: {
+            label: 'New Schema Property',
+            name: 'newSchemaProperty',
+            sortable: true,
+            type: 'string',
+            visibility: 'always',
+        },
+    };
+
+    expect(listStore.userSchema).toEqual(
+        {
+            id: {
+                label: 'ID',
+                name: 'id',
+                sortable: true,
+                type: 'string',
+                visibility: 'no',
+            },
+            title: {
+                label: 'Title',
+                name: 'title',
+                sortable: true,
+                type: 'string',
+                visibility: 'no',
+            },
+            newSchemaProperty: {
+                label: 'New Schema Property',
+                name: 'newSchemaProperty',
+                sortable: true,
+                type: 'string',
+                visibility: 'always',
+            },
+        }
+    );
+    expect((userStore).getPersistentSetting).toBeCalledWith('sulu_admin.list_store.tests.list_test.schema');
+
+    listStore.destroy();
+});
+
 test('The loading strategy should be called with a different resourceKey when a request is sent', () => {
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();

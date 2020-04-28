@@ -228,20 +228,16 @@ export default class ListStore {
             return {};
         }
 
-        const schemaSettings = ListStore.getSchemaSetting(this.listKey, this.userSettingsKey);
-        const schema = this.schema;
-        if (!schemaSettings) {
-            return schema;
-        }
+        const schemaSettings = ListStore.getSchemaSetting(this.listKey, this.userSettingsKey) || [];
 
-        const userSchema = {};
+        const userSchema = {...this.schema};
         for (const schemaSettingsEntry of schemaSettings) {
-            if (!schema.hasOwnProperty(schemaSettingsEntry.schemaKey)) {
+            if (!userSchema.hasOwnProperty(schemaSettingsEntry.schemaKey)) {
                 continue;
             }
 
             userSchema[schemaSettingsEntry.schemaKey] = {
-                ...schema[schemaSettingsEntry.schemaKey],
+                ...userSchema[schemaSettingsEntry.schemaKey],
                 visibility: schemaSettingsEntry.visibility,
             };
         }
