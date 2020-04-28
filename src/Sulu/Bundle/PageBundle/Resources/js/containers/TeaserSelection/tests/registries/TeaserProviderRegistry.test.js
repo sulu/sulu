@@ -6,7 +6,9 @@ const defaultTeaserProviderOptions = {
     listAdapter: '',
     overlayTitle: '',
     resourceKey: '',
+    resultToView: null,
     title: '',
+    view: null,
 };
 
 beforeEach(() => {

@@ -15,7 +15,7 @@ type Props = {|
     disabled: boolean,
     locale: IObservableValue<string>,
     onChange: (TeaserSelectionValue) => void,
-    onItemClick?: (id: number | string, item: Object) => void,
+    onItemClick?: (id: number | string, item: ?TeaserItem) => void,
     presentations?: Array<PresentationItem>,
     value: TeaserSelectionValue,
 |};

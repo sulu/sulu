@@ -3,10 +3,11 @@ import React from 'react';
 import {computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
+import jsonpointer from 'json-pointer';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import {userStore} from 'sulu-admin-bundle/stores';
-import TeaserSelectionComponent from '../../TeaserSelection';
-import type {TeaserSelectionValue} from '../../TeaserSelection/types';
+import TeaserSelectionComponent, {teaserProviderRegistry} from '../../TeaserSelection';
+import type {TeaserItem, TeaserSelectionValue} from '../../TeaserSelection/types';
 
 @observer
 class TeaserSelection extends React.Component<FieldTypeProps<TeaserSelectionValue>> {
@@ -15,6 +16,28 @@ class TeaserSelection extends React.Component<FieldTypeProps<TeaserSelectionValu
 
         return formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
     }
+
+    handleItemClick = (itemId: string | number, item: ?TeaserItem) => {
+        if (!item) {
+            return;
+        }
+
+        const {router} = this.props;
+
+        const {resultToView, view} = teaserProviderRegistry.get(item.type);
+
+        if (!router || !resultToView || !view) {
+            return;
+        }
+
+        router.navigate(
+            view,
+            Object.keys(resultToView).reduce((parameters, resultPath) => {
+                parameters[resultToView[resultPath]] = jsonpointer.get(item, '/' + resultPath);
+                return parameters;
+            }, {})
+        );
+    };
 
     render() {
         const {disabled, onChange, schemaOptions = {}, value} = this.props;
@@ -53,6 +76,7 @@ class TeaserSelection extends React.Component<FieldTypeProps<TeaserSelectionValu
                 disabled={disabled === null ? undefined : disabled}
                 locale={this.locale}
                 onChange={onChange}
+                onItemClick={this.handleItemClick}
                 presentations={presentations.length > 0 ? presentations : undefined}
                 value={value === null ? undefined : value}
             />

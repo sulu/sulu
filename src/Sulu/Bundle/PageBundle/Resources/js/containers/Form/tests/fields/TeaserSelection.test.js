@@ -1,12 +1,15 @@
 // @flow
 import React from 'react';
 import {observable} from 'mobx';
-import {shallow} from 'enzyme';
+import {mount, shallow} from 'enzyme';
+import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore, userStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
-import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
+import {Router} from 'sulu-admin-bundle/services';
 import TeaserSelection from '../../fields/TeaserSelection';
 import TeaserSelectionComponent from '../../../../containers/TeaserSelection';
+import teaserProviderRegistry from '../../../../containers/TeaserSelection/registries/teaserProviderRegistry';
+import TeaserStore from '../../../../containers/TeaserSelection/stores/TeaserStore';
 
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions = {}) {
     this.locale = observableOptions.locale;
@@ -20,7 +23,21 @@ jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(funct
     this.locale = formStore.locale;
 }));
 
+jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
+    this.navigate = jest.fn();
+}));
+
 jest.mock('sulu-admin-bundle/stores/userStore', () => ({}));
+
+jest.mock('../../../../containers/TeaserSelection/stores/TeaserStore', () => jest.fn(function() {
+    this.add = jest.fn();
+    this.findById = jest.fn();
+}));
+
+jest.mock('../../../../containers/TeaserSelection/registries/teaserProviderRegistry', () => ({
+    get: jest.fn(),
+    keys: [],
+}));
 
 test('Pass props correctly to component', () => {
     const changeSpy = jest.fn();
@@ -103,6 +120,62 @@ test('Pass presentations prop correctly to component', () => {
         {label: 'Test 1', value: 'test-1'},
         {label: 'Test 2', value: 'test-2'},
     ]);
+});
+
+test('Navigate to item when item is clicked', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    // $FlowFixMe
+    userStore.contentLocale = 'de';
+
+    teaserProviderRegistry.get.mockReturnValue({
+        resultToView: {'attributes/webspaceKey': 'webspace', id: 'id'},
+        title: 'Pages',
+        view: 'sulu_page.page_edit_form',
+    });
+
+    const value = {
+        presentAs: '',
+        items: [
+            {
+                id: 5,
+                type: 'pages',
+            },
+            {
+                id: 2,
+                type: 'pages',
+            },
+        ],
+    };
+
+    const router = new Router();
+
+    // $FlowFixMe
+    TeaserStore.mockImplementation(function() {
+        this.add = jest.fn();
+        this.findById = jest.fn((type, id) => {
+            if (id === 5) {
+                return {attributes: {webspaceKey: 'sulu_io'}, title: 'Test 1'};
+            }
+
+            if (id === 2) {
+                return {attributes: {webspaceKey: 'sulu_blog'}, title: 'Test 2'};
+            }
+        });
+    });
+
+    const field = mount(
+        <TeaserSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            router={router}
+            value={value}
+        />
+    );
+
+    field.find('MultiItemSelection .content.clickable').at(0).simulate('click');
+    expect(router.navigate).toHaveBeenLastCalledWith('sulu_page.page_edit_form', {id: 5, webspace: 'sulu_io'});
+    field.find('MultiItemSelection .content.clickable').at(1).simulate('click');
+    expect(router.navigate).toHaveBeenLastCalledWith('sulu_page.page_edit_form', {id: 2, webspace: 'sulu_blog'});
 });
 
 test('Throw error if present_as schemaOption is from wrong type', () => {
