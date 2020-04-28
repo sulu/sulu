@@ -172,4 +172,16 @@ class BuilderTest extends TestCase
         $this->assertEquals('collections', $configuration->getDatasourceListKey());
         $this->assertEquals('column_list', $configuration->getDatasourceAdapter());
     }
+
+    public function testView()
+    {
+        $builder = Builder::create();
+
+        $this->assertEquals($builder, $builder->enableView('edit_form', ['id' => 'id']));
+
+        $configuration = $builder->getConfiguration();
+
+        $this->assertEquals('edit_form', $configuration->getView());
+        $this->assertEquals(['id' => 'id'], $configuration->getResultToView());
+    }
 }

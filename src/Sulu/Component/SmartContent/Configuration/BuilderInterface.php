@@ -87,6 +87,11 @@ interface BuilderInterface
     public function enableSorting(array $sorting);
 
     /**
+     * Defines where the deep link when clicking on a smart content item should navigate to.
+     */
+    public function enableView(string $view, array $resultToView);
+
+    /**
      * Returns build configuration.
      */
     public function getConfiguration(): ProviderConfigurationInterface;

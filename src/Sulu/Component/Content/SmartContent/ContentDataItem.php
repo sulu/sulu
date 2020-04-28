@@ -80,6 +80,18 @@ class ContentDataItem extends ArrayAccessItem implements ItemInterface, PublishI
         return $this->get('url');
     }
 
+    /**
+     * Returns the webspace of the content item.
+     *
+     * @return string
+     *
+     * @VirtualProperty
+     */
+    public function getWebspace()
+    {
+        return $this->get('webspaceKey');
+    }
+
     public function getImage()
     {
         return;

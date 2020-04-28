@@ -15,6 +15,7 @@ use PHPCR\ItemNotFoundException;
 use PHPCR\SessionInterface;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
+use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
@@ -126,6 +127,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
                     ['column' => 'authored', 'title' => 'sulu_admin.authored'],
                 ]
             )
+            ->enableView(PageAdmin::EDIT_FORM_VIEW, ['id' => 'id', 'webspace' => 'webspace'])
             ->getConfiguration();
 
         return $this->configuration;

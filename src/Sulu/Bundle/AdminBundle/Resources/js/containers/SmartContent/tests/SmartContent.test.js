@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import {translate} from '../../../utils/Translator';
 import SmartContentStore from '../stores/SmartContentStore';
 import smartContentConfigStore from '../stores/smartContentConfigStore';
@@ -9,9 +9,12 @@ import SmartContent from '../SmartContent';
 jest.mock('../stores/SmartContentStore', () => jest.fn(function() {
     this.items = [];
 }));
+
 jest.mock('../stores/smartContentConfigStore', () => ({
     getConfig: jest.fn().mockReturnValue({}),
 }));
+
+jest.mock('../../MultiListOverlay', () => jest.fn(() => null));
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -190,6 +193,30 @@ test('Show items in a SmartContentItem', () => {
     expect(smartContent.find('SmartContentItem')).toHaveLength(2);
     expect(smartContent.find('SmartContentItem').at(0).prop('item')).toEqual({title: 'Homepage'});
     expect(smartContent.find('SmartContentItem').at(1).prop('item')).toEqual({title: 'About us'});
+});
+
+test('Call onItemClick when an item in the SmartContent is clicked', () => {
+    const itemClickSpy = jest.fn();
+    const smartContentStore = new SmartContentStore('content');
+    smartContentStore.items = [
+        {id: 1, title: 'Homepage'},
+        {id: 2, title: 'About us'},
+    ];
+
+    const smartContent = mount(
+        <SmartContent
+            defaultValue={defaultValue}
+            fieldLabel="Test"
+            onItemClick={itemClickSpy}
+            store={smartContentStore}
+        />
+    );
+
+    smartContent.find('MultiItemSelection .content').at(0).simulate('click');
+    expect(itemClickSpy).toHaveBeenLastCalledWith(1, {id: 1, title: 'Homepage'});
+
+    smartContent.find('MultiItemSelection .content').at(1).simulate('click');
+    expect(itemClickSpy).toHaveBeenLastCalledWith(2, {id: 2, title: 'About us'});
 });
 
 test('Pass the loading prop to the MultiItemSelection if items are still loading', () => {

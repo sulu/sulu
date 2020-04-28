@@ -51,6 +51,24 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('pages', $pageConfig->teaser->pages->resourceKey);
     }
 
+    public function testSmartContentConfig()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/admin/config');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $adminConfig = $response->sulu_admin;
+
+        $this->assertObjectHasAttribute('pages', $adminConfig->smartContent);
+        $this->assertEquals('sulu_page.page_edit_form', $adminConfig->smartContent->pages->view);
+        $this->assertEquals(
+            ['id' => 'id', 'webspace' => 'webspace'],
+            (array) $adminConfig->smartContent->pages->resultToView
+        );
+    }
+
     public function testWebspacesConfig()
     {
         $client = $this->createAuthenticatedClient();

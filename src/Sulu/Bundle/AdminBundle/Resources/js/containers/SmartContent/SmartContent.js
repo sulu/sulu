@@ -15,6 +15,7 @@ type Props = {|
     defaultValue: FilterCriteria,
     disabled: boolean,
     fieldLabel: ?string,
+    onItemClick?: (id: number | string, item: ?Object) => void,
     presentations: Array<Presentation>,
     store: SmartContentStore,
 |};
@@ -79,7 +80,7 @@ class SmartContent extends React.Component<Props> {
     };
 
     render() {
-        const {categoryRootKey, defaultValue, disabled, fieldLabel, store} = this.props;
+        const {categoryRootKey, defaultValue, disabled, fieldLabel, onItemClick, store} = this.props;
 
         const presentations = this.props.presentations.reduce((presentations, presentation) => {
             presentations[presentation.name] = presentation.value;
@@ -96,10 +97,11 @@ class SmartContent extends React.Component<Props> {
                         onClick: this.handleFilterClick,
                     }}
                     loading={store.itemsLoading || store.loading}
+                    onItemClick={onItemClick}
                     sortable={false}
                 >
                     {store.items.map((item, index) => (
-                        <MultiItemSelection.Item id={item.id} index={index + 1} key={index}>
+                        <MultiItemSelection.Item id={item.id} index={index + 1} key={index} value={item}>
                             <SmartContentItem item={item} />
                         </MultiItemSelection.Item>
                     ))}

@@ -276,6 +276,7 @@ class SmartContentItemControllerTest extends SuluTestCase
                     'publishedState' => false,
                     'url' => '/team/johannes',
                     'published' => null,
+                    'webspace' => 'sulu_io',
                 ],
                 [
                     'id' => $this->daniel->getUuid(),
@@ -283,6 +284,7 @@ class SmartContentItemControllerTest extends SuluTestCase
                     'publishedState' => false,
                     'url' => '/team/daniel',
                     'published' => null,
+                    'webspace' => 'sulu_io',
                 ],
                 [
                     'id' => $this->thomas->getUuid(),
@@ -290,6 +292,7 @@ class SmartContentItemControllerTest extends SuluTestCase
                     'publishedState' => false,
                     'url' => '/team/thomas',
                     'published' => null,
+                    'webspace' => 'sulu_io',
                 ],
             ],
             $result['_embedded']['items']
@@ -324,6 +327,7 @@ class SmartContentItemControllerTest extends SuluTestCase
                     'publishedState' => false,
                     'url' => '/team/daniel',
                     'published' => null,
+                    'webspace' => 'sulu_io',
                 ],
                 [
                     'id' => $this->thomas->getUuid(),
@@ -331,6 +335,7 @@ class SmartContentItemControllerTest extends SuluTestCase
                     'publishedState' => false,
                     'url' => '/team/thomas',
                     'published' => null,
+                    'webspace' => 'sulu_io',
                 ],
             ],
             $result['_embedded']['items']
@@ -369,6 +374,7 @@ class SmartContentItemControllerTest extends SuluTestCase
                     'publishedState' => false,
                     'url' => '/team/thomas',
                     'published' => null,
+                    'webspace' => 'sulu_io',
                 ],
             ],
             $result['_embedded']['items']
@@ -405,6 +411,7 @@ class SmartContentItemControllerTest extends SuluTestCase
                     'publishedState' => false,
                     'url' => '/team/daniel',
                     'published' => null,
+                    'webspace' => 'sulu_io',
                 ],
                 [
                     'id' => $this->thomas->getUuid(),
@@ -412,6 +419,7 @@ class SmartContentItemControllerTest extends SuluTestCase
                     'publishedState' => false,
                     'url' => '/team/thomas',
                     'published' => null,
+                    'webspace' => 'sulu_io',
                 ],
             ],
             $result['_embedded']['items']
@@ -448,6 +456,7 @@ class SmartContentItemControllerTest extends SuluTestCase
                     'publishedState' => false,
                     'url' => '/team/daniel',
                     'published' => null,
+                    'webspace' => 'sulu_io',
                 ],
                 [
                     'id' => $this->thomas->getUuid(),
@@ -455,6 +464,7 @@ class SmartContentItemControllerTest extends SuluTestCase
                     'publishedState' => false,
                     'url' => '/team/thomas',
                     'published' => null,
+                    'webspace' => 'sulu_io',
                 ],
             ],
             $result['_embedded']['items']
@@ -489,6 +499,7 @@ class SmartContentItemControllerTest extends SuluTestCase
                     'publishedState' => false,
                     'url' => '/team/johannes',
                     'published' => null,
+                    'webspace' => 'sulu_io',
                 ],
                 [
                     'id' => $this->daniel->getUuid(),
@@ -496,6 +507,7 @@ class SmartContentItemControllerTest extends SuluTestCase
                     'publishedState' => false,
                     'url' => '/team/daniel',
                     'published' => null,
+                    'webspace' => 'sulu_io',
                 ],
             ],
             $result['_embedded']['items']
@@ -530,6 +542,7 @@ class SmartContentItemControllerTest extends SuluTestCase
                     'publishedState' => false,
                     'url' => '/team/johannes',
                     'published' => null,
+                    'webspace' => 'sulu_io',
                 ],
             ],
             $result['_embedded']['items']
