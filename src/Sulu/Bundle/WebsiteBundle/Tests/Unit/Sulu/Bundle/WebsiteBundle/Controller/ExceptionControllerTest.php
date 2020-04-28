@@ -9,11 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Controller;
+namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\WebsiteBundle\Controller\ExceptionController;
 use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;

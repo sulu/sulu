@@ -14,6 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\DependencyInjection;
 use Sulu\Bundle\WebsiteBundle\Controller\DefaultController;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderInterface;
 use Sulu\Component\HttpKernel\SuluKernel;
+use Symfony\Bundle\TwigBundle\Controller\ExceptionController;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -29,9 +30,11 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
 {
     public function prepend(ContainerBuilder $container)
     {
-        $container->prependExtensionConfig('twig', [
-            'exception_controller' => 'sulu_website.exception.controller:showAction',
-        ]);
+        if ($container->hasExtension('twig') && class_exists(ExceptionController::class)) {
+            $container->prependExtensionConfig('twig', [
+                'exception_controller' => null,
+            ]);
+        }
 
         if ($container->hasExtension('sulu_admin')) {
             $container->prependExtensionConfig(

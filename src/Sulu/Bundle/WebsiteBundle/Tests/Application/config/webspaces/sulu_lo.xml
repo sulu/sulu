@@ -17,6 +17,11 @@
         <default-template type="homepage">overview</default-template>
     </default-templates>
 
+    <templates>
+        <template type="error">error/error</template>
+        <template type="error-404">error/error-404</template>
+    </templates>
+
     <navigation>
         <contexts>
             <context key="main">

@@ -22,6 +22,8 @@ use Twig\Environment;
 
 /**
  * Custom exception controller.
+ *
+ * @deprecated the "ExceptionController" is deprecated use the "ErrorController" instead
  */
 class ExceptionController
 {
@@ -60,6 +62,8 @@ class ExceptionController
         Environment $twig,
         $debug
     ) {
+        @trigger_error(__CLASS__ . ' is deprecated since version sulu/sulu 2.0 and will be removed in 3.0. Use the ErrorController instead.', E_USER_DEPRECATED);
+
         $this->exceptionController = $exceptionController;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->parameterResolver = $parameterResolver;
