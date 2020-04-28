@@ -67,6 +67,7 @@ class PageTeaserProviderTest extends TestCase
                 'excerptImages' => json_encode(['ids' => [1, 2, 3]]),
                 '_structure_type' => 'default',
                 '_teaser_description' => '',
+                'webspace_key' => 'sulu_test',
             ],
             '456-456-456' => [
                 'title' => 'Test 2',
@@ -77,6 +78,7 @@ class PageTeaserProviderTest extends TestCase
                 'excerptImages' => json_encode([]),
                 '_structure_type' => 'overview',
                 '_teaser_description' => '',
+                'webspace_key' => 'sulu_blog',
             ],
         ];
         $ids = array_keys($data);
@@ -137,7 +139,10 @@ class PageTeaserProviderTest extends TestCase
         $this->assertEquals($this->getMedia(json_decode($expected['excerptImages'], true)), $teaser->getMediaId());
         $this->assertEquals($expected['__url'], $teaser->getUrl());
 
-        $this->assertEquals(['structureType' => $expected['_structure_type']], $teaser->getAttributes());
+        $this->assertEquals(
+            ['structureType' => $expected['_structure_type'], 'webspaceKey' => $expected['webspace_key']],
+            $teaser->getAttributes()
+        );
     }
 
     private function getMedia(array $data)

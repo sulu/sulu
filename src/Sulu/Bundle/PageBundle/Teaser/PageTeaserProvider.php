@@ -152,6 +152,7 @@ class PageTeaserProvider implements TeaserProviderInterface
     {
         return [
             'structureType' => $document->getField(StructureProvider::FIELD_STRUCTURE_TYPE)->getValue(),
+            'webspaceKey' => $document->getField(StructureProvider::FIELD_WEBSPACE_KEY)->getValue(),
         ];
     }
 }
