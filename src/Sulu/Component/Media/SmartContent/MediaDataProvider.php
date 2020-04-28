@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Media\SmartContent;
 
+use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
@@ -58,6 +59,7 @@ class MediaDataProvider extends BaseDataProvider
                     ['column' => 'fileVersionMeta.title', 'title' => 'sulu_admin.title'],
                 ]
             )
+            ->enableView(MediaAdmin::EDIT_FORM_VIEW, ['id' => 'id'])
             ->getConfiguration();
 
         $this->requestStack = $requestStack;

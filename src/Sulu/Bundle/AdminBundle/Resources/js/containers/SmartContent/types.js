@@ -42,8 +42,10 @@ export type SmartContentConfig = {
     datasourceResourceKey?: string,
     limit: boolean,
     presentAs: boolean,
+    resultToView?: {[string]: string},
     sorting: Array<Sorting>,
     tags: boolean,
+    view?: string,
 };
 
 export type SmartContentConfigs = {[key: string]: SmartContentConfig};
