@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 class FixturesLoadCommand extends Command
 {
@@ -115,6 +116,21 @@ EOT
             }
 
             return 0;
+        }
+
+        // check for deprecated document fixtures using the container directly
+        foreach ($fixtures as $fixture) {
+            if ($fixture instanceof ContainerAwareInterface) {
+                @trigger_error(
+                    sprintf(
+                        'Document fixtures with the "%s" are deprecated since sulu/sulu 2.1,' . PHP_EOL .
+                        'use dependency injection for the "%s" service instead.',
+                        ContainerAwareInterface::class,
+                        get_class($fixture)
+                    ),
+                    E_USER_DEPRECATED
+                );
+            }
         }
 
         $this->executor->execute($fixtures, false === $append, false === $noInitialize, $output);
