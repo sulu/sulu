@@ -179,7 +179,7 @@ EOT
             $legacyFixtures = $this->loader->load($legacyPaths);
 
             foreach ($legacyFixtures as $key => $fixture) {
-                foreach ($this->fixtures as $existFixture) {
+                foreach ($fixtures as $existFixture) {
                     // remove legacy fixtures which are correctly injected
                     if (get_class($fixture) === get_class($existFixture)) {
                         unset($legacyFixtures[$key]);
