@@ -4,8 +4,8 @@
 
 ### Deprecated ExceptionController changed to ErrorController
 
-Sulu will not longer use the deprecated TwigBundle ExceptionController.
-Instead it decorates now the Framework ErrorController and does not longer contain the `currentContent` variable in error templates.
+Sulu will not longer use the deprecated TwigBundle `ExceptionController`.
+Instead it decorates now the Framework `ErrorController` and does not longer contain the `currentContent` variable in error templates.
 
 ### DocumentFixtures changed
 

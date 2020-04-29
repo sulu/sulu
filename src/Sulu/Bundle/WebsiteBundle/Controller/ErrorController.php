@@ -56,7 +56,6 @@ class ErrorController
 
     public function __invoke(Request $request, \Throwable $exception): Response
     {
-        // call base error controller on debug and when showException is true
         if ($this->debug && $request->attributes->getBoolean('showException', true)) {
             return $this->symfonyErrorController->__invoke($exception);
         }
