@@ -5,7 +5,11 @@
 ### DocumentFixtures changed
 
 The document fixtures should be changed to services and be tagged with `sulu.document_manager_fixture`.
-When using the symfony autoconfigure feature this is done automatically.
+When using the symfony autoconfigure feature this is done automatically,
+but you need to make sure the `DataFixtures\Document` folder is not excluded in the `services.yaml`.
+
+Also the `--fixture` was replaced with a `--group` option on the `sulu:document:fixtures:load` command.
+Which accept the classname like `AppFixture` or a specified group using the `DocumentFixtureGroupInterface` interface.
 
 ### Added webspace as reserved property name
 

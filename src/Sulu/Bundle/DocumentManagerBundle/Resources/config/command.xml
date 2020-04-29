@@ -6,9 +6,7 @@
 
     <services>
         <service id="sulu_document_manager.command.fixtures_load" class="Sulu\Bundle\DocumentManagerBundle\Command\FixturesLoadCommand" >
-            <argument type="service" id="sulu_document_manager.data_fixtures.loader" />
             <argument type="service" id="sulu_document_manager.data_fixtures.executor" />
-            <argument type="service" id="kernel" />
             <argument type="tagged_iterator" tag="sulu.document_manager_fixture"/>
             <tag name="console.command" />
         </service>
