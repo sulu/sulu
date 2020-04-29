@@ -106,14 +106,12 @@ EOT
             $output->writeln('<info>Could not find any fixtures.</info>');
 
             if ($input->getOption('verbose')) {
-                foreach ($this->fixtures as $fixture) {
-                    $output->writeln(sprintf(
-                        'Found fixtures: </comment>%s<comment>"</comment>',
-                            implode('"<comment>", "</comment>', array_map(function($fixture) {
-                                return get_class($fixture);
-                            }, iterator_to_array($this->fixtures)))
-                    ));
-                }
+                $output->writeln(sprintf(
+                    'Found fixtures: <comment>"</comment>%s<comment>"</comment>',
+                        implode('<comment>", "</comment>', array_map(function($fixture) {
+                            return get_class($fixture);
+                        }, iterator_to_array($this->fixtures)))
+                ));
             }
 
             return 0;
