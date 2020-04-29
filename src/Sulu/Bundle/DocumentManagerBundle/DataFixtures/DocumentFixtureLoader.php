@@ -63,7 +63,7 @@ class DocumentFixtureLoader
                 foreach ($this->fixtures as $fixture) {
                     $reflectionClass = new \ReflectionClass(get_class($fixture));
 
-                    if ($file->getPathname() === $reflectionClass->getFileName()) {
+                    if (realpath($file->getPathname()) === $reflectionClass->getFileName()) {
                         $fixtures[] = $fixture;
 
                         continue 2;
