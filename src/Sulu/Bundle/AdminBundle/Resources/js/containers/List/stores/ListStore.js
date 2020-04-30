@@ -229,10 +229,6 @@ export default class ListStore {
         }
 
         const schemaSettings = ListStore.getSchemaSetting(this.listKey, this.userSettingsKey) || [];
-        if (!schemaSettings) {
-            return this.schema;
-        }
-
         const userSchema = {};
 
         for (const schemaSettingsEntry of schemaSettings) {
