@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle;
 
+use Sulu\Bundle\DocumentManagerBundle\DependencyInjection\Compiler\DocumentFixturePass;
 use Sulu\Bundle\DocumentManagerBundle\DependencyInjection\Compiler\InitializerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
@@ -27,5 +28,6 @@ class SuluDocumentManagerBundle extends Bundle
             'sulu_document_manager.event_listener',
             'sulu_document_manager.event_subscriber'
         ));
+        $container->addCompilerPass(new DocumentFixturePass());
     }
 }

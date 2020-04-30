@@ -12,24 +12,19 @@
 namespace Sulu\Bundle\DocumentManagerBundle\Command;
 
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
-use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureLoader;
+use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureGroupInterface;
+use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 class FixturesLoadCommand extends Command
 {
     protected static $defaultName = 'sulu:document:fixtures:load';
-
-    /**
-     * @var DocumentFixtureLoader
-     */
-    private $loader;
 
     /**
      * @var DocumentExecutor
@@ -37,39 +32,37 @@ class FixturesLoadCommand extends Command
     private $executor;
 
     /**
-     * @var KernelInterface
+     * @var \Traversable<DocumentFixtureInterface>
      */
-    private $kernel;
+    private $fixtures;
 
     public function __construct(
-        DocumentFixtureLoader $loader,
         DocumentExecutor $executor,
-        KernelInterface $kernel
+        \Traversable $fixtures = null
     ) {
         parent::__construct();
 
-        $this->loader = $loader;
         $this->executor = $executor;
-        $this->kernel = $kernel;
+        $this->fixtures = $fixtures ?: new \ArrayObject([]);
     }
 
     protected function configure()
     {
         $this
-            ->setDescription('Loads data fixtures from your bundles DataFixtures/Document directory.')
-            ->addOption('fixtures', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The directory or file to load data fixtures from.')
+            ->setDescription('Loads data fixtures services tagged with "sulu.document_manager_fixture".')
+            ->addOption('group', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The group which should be loaded.')
             ->addOption('append', null, InputOption::VALUE_NONE, 'Append the data fixtures to the existing data - will not purge the workspace.')
             ->addOption('no-initialize', null, InputOption::VALUE_NONE, 'Do not run the repository initializers after purging the repository.')
             ->setHelp(<<<'EOT'
-The <info>sulu:document:fixtures:load</info> command loads data fixtures from
-your bundles DataFixtures/Document directory:
+The <info>sulu:document:fixtures:load</info> command loads data fixtures services
+tagged with "sulu.document_manager_fixture":
 
   <info>%command.full_name%</info>
 
-You can also optionally specify the path to fixtures with the
-<info>--fixtures</info> option:
+You can also optionally specify the group of fixtures to load
+<info>--group</info> option:
 
-  <info>%command.full_name% --fixtures=/path/to/fixtures1 --fixtures=/path/to/fixtures2</info>
+  <info>%command.full_name% --group=GROUP1 --group=MyFixture</info>
 
 If you want to append the fixtures instead of flushing the database first you
 can use the <info>--append</info> option:
@@ -102,45 +95,46 @@ EOT
             }
         }
 
-        $paths = $input->getOption('fixtures');
+        $groups = $input->getOption('group');
 
-        $candidatePaths = [];
-        if (!$paths) {
-            $directories = array_map(
-                function(BundleInterface $bundle) {
-                    return $bundle->getPath();
-                },
-                $this->kernel->getBundles()
-            );
-
-            $directories[] = $this->kernel->getRootDir();
-            $paths = [];
-
-            foreach ($directories as $directory) {
-                $candidatePath = $directory . '/DataFixtures/Document';
-                $candidatePaths[] = $candidatePath;
-                if (file_exists($candidatePath)) {
-                    $paths[] = $candidatePath;
-                }
-            }
+        if (empty($groups)) {
+            $fixtures = iterator_to_array($this->fixtures);
+        } else {
+            $fixtures = $this->getFixturesByGroups($groups);
         }
 
-        if (empty($paths)) {
-            $output->writeln(
-                '<info>Could not find any candidate fixture paths.</info>'
-            );
+        if (empty($fixtures)) {
+            $output->writeln('<info>Could not find any fixtures.</info>');
 
             if ($input->getOption('verbose')) {
-                $output->writeln(sprintf('Looked for: </comment>%s<comment>"</comment>',
-                   implode('"<comment>", "</comment>', $candidatePaths)
-               ));
+                $output->writeln(sprintf(
+                    'Found fixtures: <comment>"</comment>%s<comment>"</comment>',
+                        implode('<comment>", "</comment>', array_map(function($fixture) {
+                            return get_class($fixture);
+                        }, iterator_to_array($this->fixtures)))
+                ));
             }
 
             return 0;
         }
 
-        $fixtures = $this->loader->load($paths);
+        // check for deprecated document fixtures using the container directly
+        foreach ($fixtures as $fixture) {
+            if ($fixture instanceof ContainerAwareInterface) {
+                @trigger_error(
+                    sprintf(
+                        'Document fixtures with the "%s" are deprecated since sulu/sulu 2.1,' . PHP_EOL .
+                        'use dependency injection for the "%s" service instead.',
+                        ContainerAwareInterface::class,
+                        get_class($fixture)
+                    ),
+                    E_USER_DEPRECATED
+                );
+            }
+        }
+
         $this->executor->execute($fixtures, false === $append, false === $noInitialize, $output);
+
         $output->writeln('');
         $output->writeln(sprintf(
             '<info>Done. Executed </info>%s</info><info> fixtures.</info>',
@@ -148,5 +142,39 @@ EOT
         ));
 
         return 0;
+    }
+
+    /**
+     * @param string[] $groups
+     *
+     * @return DocumentFixtureInterface[]
+     */
+    private function getFixturesByGroups(array $groups): array
+    {
+        $fixtures = [];
+
+        foreach ($this->fixtures as $fixture) {
+            // similar to the doctrine fixture bundle the class name is used also as a group
+            $fixtureGroups = [$this->getClassGroup($fixture)];
+            if ($fixture instanceof DocumentFixtureGroupInterface) {
+                $fixtureGroups = array_merge($fixtureGroups, $fixture->getGroups());
+            }
+
+            // add to fixtures when one of the provided groups match
+            if (count(array_intersect($groups, $fixtureGroups))) {
+                $fixtures[] = $fixture;
+
+                continue;
+            }
+        }
+
+        return $fixtures;
+    }
+
+    private function getClassGroup(DocumentFixtureInterface $fixture): string
+    {
+        $path = explode('\\', get_class($fixture));
+
+        return array_pop($path);
     }
 }

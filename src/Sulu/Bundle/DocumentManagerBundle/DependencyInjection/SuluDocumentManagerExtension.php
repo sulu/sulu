@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\DependencyInjection;
 
+use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
 use Sulu\Bundle\DocumentManagerBundle\Session\Session;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\FileLocator;
@@ -182,6 +183,9 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         );
 
         $container->setParameter('sulu_document_manager.slugifier', $config['slugifier']);
+
+        $container->registerForAutoconfiguration(DocumentFixtureInterface::class)
+            ->addTag('sulu.document_manager_fixture');
     }
 
     private function configurePathSegmentRegistry($config, ContainerBuilder $container)

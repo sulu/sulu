@@ -16,35 +16,20 @@ use Prophecy\Argument;
 use Sulu\Bundle\DocumentManagerBundle\Command\FixturesLoadCommand;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
-use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureLoader;
+use Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Command\DataFixtures\FooFixture;
+use Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Command\DataFixtures\GroupBarFixture;
+use Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Command\DataFixtures\GroupFooFixture;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 class FixturesLoadCommandTest extends TestCase
 {
     /**
-     * @var DocumentFixtureLoader
-     */
-    private $loader;
-
-    /**
      * @var DocumentExecutor
      */
     private $executor;
-
-    /**
-     * @var KernelInterface
-     */
-    private $kernel;
-
-    /**
-     * @var BundleInterface
-     */
-    private $bundle;
 
     /**
      * @var DocumentFixtureInterface
@@ -61,31 +46,24 @@ class FixturesLoadCommandTest extends TestCase
      */
     private $commandTester;
 
+    /**
+     * @var \ArrayObject
+     */
+    private $fixtures;
+
     public function setUp(): void
     {
-        $this->loader = $this->prophesize(DocumentFixtureLoader::class);
         $this->executor = $this->prophesize(DocumentExecutor::class);
-        $this->kernel = $this->prophesize(KernelInterface::class);
-        $this->bundle = $this->prophesize(BundleInterface::class);
         $this->fixture1 = $this->prophesize(DocumentFixtureInterface::class);
+        $this->fixtures = new \ArrayObject([]);
 
         $application = new Application();
         $application->add(new FixturesLoadCommand(
-            $this->loader->reveal(),
             $this->executor->reveal(),
-            $this->kernel->reveal()
+            $this->fixtures
         ));
         $this->command = $application->find('sulu:document:fixtures:load');
         $this->commandTester = new CommandTester($this->command);
-
-        $this->kernel->getBundles()->willReturn([
-            $this->bundle->reveal(),
-        ]);
-
-        $this->kernel->getRootDir()->willReturn(__DIR__ . '/NoFixtures');
-        $this->bundle->getPath()->willReturn(
-            __DIR__ . '/fixtures'
-        );
     }
 
     /**
@@ -93,14 +71,11 @@ class FixturesLoadCommandTest extends TestCase
      */
     public function testNoFixtures()
     {
-        $this->kernel->getBundles()->willReturn([
-            $this->bundle->reveal(),
-        ]);
-        $this->kernel->getBundles()->willReturn([]);
         $tester = $this->execute([
             '--no-interaction' => true,
         ]);
-        $this->assertStringContainsString('Could not find any candidate fixture paths', $tester->getDisplay());
+
+        $this->assertStringContainsString('Could not find any fixtures', $tester->getDisplay());
     }
 
     /**
@@ -108,38 +83,7 @@ class FixturesLoadCommandTest extends TestCase
      */
     public function testLoadFixtures()
     {
-        $this->loader->load([
-            __DIR__ . '/fixtures/DataFixtures/Document',
-        ])->willReturn([
-            $this->fixture1->reveal(),
-        ]);
-
-        $this->executor->execute(
-            [
-                $this->fixture1->reveal(),
-            ],
-            true,
-            true,
-            Argument::type(OutputInterface::class)
-        )->shouldBeCalled();
-
-        $tester = $this->execute([]);
-        $this->assertEquals(0, $tester->getStatusCode());
-    }
-
-    /**
-     * It should load fixtures from kernel root dir.
-     */
-    public function testLoadFixturesFromKernelRootDir()
-    {
-        $this->kernel->getRootDir()->willReturn(__DIR__ . '/fixtures');
-        $this->kernel->getBundles()->willReturn([]);
-
-        $this->loader->load([
-            __DIR__ . '/fixtures/DataFixtures/Document',
-        ])->willReturn([
-            $this->fixture1->reveal(),
-        ]);
+        $this->fixtures->append($this->fixture1->reveal());
 
         $this->executor->execute(
             [
@@ -159,11 +103,8 @@ class FixturesLoadCommandTest extends TestCase
      */
     public function testLoadFixturesAppend()
     {
-        $this->loader->load([
-            __DIR__ . '/fixtures/DataFixtures/Document',
-        ])->willReturn([
-            $this->fixture1->reveal(),
-        ]);
+        $this->fixtures->append($this->fixture1->reveal());
+
         $this->executor->execute(
             [
                 $this->fixture1->reveal(),
@@ -184,11 +125,8 @@ class FixturesLoadCommandTest extends TestCase
      */
     public function testLoadFixturesNoInitialize()
     {
-        $this->loader->load([
-            __DIR__ . '/fixtures/DataFixtures/Document',
-        ])->willReturn([
-            $this->fixture1->reveal(),
-        ]);
+        $this->fixtures->append($this->fixture1->reveal());
+
         $this->executor->execute(
             [
                 $this->fixture1->reveal(),
@@ -209,15 +147,12 @@ class FixturesLoadCommandTest extends TestCase
      */
     public function testLoadSpecified()
     {
-        $this->loader->load([
-            __DIR__ . '/foo',
-        ])->willReturn([
-            $this->fixture1->reveal(),
-        ]);
+        $fooFixture = new FooFixture();
+        $this->fixtures->append($fooFixture);
 
         $this->executor->execute(
             [
-                $this->fixture1->reveal(),
+                $fooFixture,
             ],
             true,
             true,
@@ -225,7 +160,33 @@ class FixturesLoadCommandTest extends TestCase
         )->shouldBeCalled();
 
         $tester = $this->execute([
-            '--fixtures' => [__DIR__ . '/foo'],
+            '--group' => ['FooFixture'],
+        ]);
+        $this->assertEquals(0, $tester->getStatusCode());
+    }
+
+    /**
+     * It should load a specified group.
+     */
+    public function testLoadGroup()
+    {
+        $fooFixture = new GroupBarFixture();
+        $fooFixture2 = new GroupFooFixture();
+        $this->fixtures->append($fooFixture);
+        $this->fixtures->append($fooFixture2);
+
+        $this->executor->execute(
+            [
+                $fooFixture,
+                $fooFixture2,
+            ],
+            true,
+            true,
+            Argument::type(OutputInterface::class)
+        )->shouldBeCalled();
+
+        $tester = $this->execute([
+            '--group' => ['Group 1'],
         ]);
         $this->assertEquals(0, $tester->getStatusCode());
     }
@@ -242,9 +203,8 @@ class FixturesLoadCommandTest extends TestCase
 
         $this->command->getHelperSet()->set($helper->reveal(), 'question');
 
-        $this->kernel->getBundles()->willReturn([]);
         $tester = $this->execute([], true);
-        $this->assertStringContainsString('Could not find any candidate fixture paths', $tester->getDisplay());
+        $this->assertStringContainsString('Could not find any fixtures', $tester->getDisplay());
     }
 
     private function execute(array $args, $interactive = false)

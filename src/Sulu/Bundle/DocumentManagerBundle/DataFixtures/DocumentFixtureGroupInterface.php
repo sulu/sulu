@@ -9,8 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Command\bundle\DataFixtures\Document;
+namespace Sulu\Bundle\DocumentManagerBundle\DataFixtures;
 
-class FooFixture
+interface DocumentFixtureGroupInterface
 {
+    /**
+     * @param string[]
+     */
+    public function getGroups(): array;
 }
