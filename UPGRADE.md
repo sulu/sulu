@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-master
+## 2.1.0-RC1
 
 ### Deprecated ExceptionController changed to ErrorController
 
