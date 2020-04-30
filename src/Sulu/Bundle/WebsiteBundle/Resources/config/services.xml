@@ -242,6 +242,17 @@
 
         <service id="sulu_website.exception.controller" alias="twig.controller.exception" public="true" />
 
+        <service id="sulu_website.error_controller"
+                 decorates="error_controller"
+                 class="Sulu\Bundle\WebsiteBundle\Controller\ErrorController">
+            <argument type="service" id="sulu_website.error_controller.inner"/>
+            <argument type="service" id="sulu_website.resolver.template_attribute"/>
+            <argument type="service" id="twig"/>
+            <argument>%kernel.debug%</argument>
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+
         <!-- cache clearer -->
         <service id="sulu_website.http_cache.clearer" class="Sulu\Bundle\WebsiteBundle\Cache\CacheClearer" public="true">
             <argument type="service" id="filesystem"/>
