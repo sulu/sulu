@@ -270,8 +270,6 @@ test('The userSchema should include schema properties that are not present in th
     const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
     const page = observable.box(1);
-    const locale = observable.box();
-    const additionalValue = observable.box(5);
 
     const schemaSetting = [
         {
@@ -291,8 +289,6 @@ test('The userSchema should include schema properties that are not present in th
         'list_test',
         {
             page,
-            locale,
-            additionalValue,
         },
         {
             test: 'value',
@@ -353,6 +349,63 @@ test('The userSchema should include schema properties that are not present in th
             },
         }
     );
+    expect((userStore).getPersistentSetting).toBeCalledWith('sulu_admin.list_store.tests.list_test.schema');
+
+    listStore.destroy();
+});
+
+test('The userSchema should reflect the order of the schemaSetting of the user', () => {
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    const page = observable.box(1);
+
+    const schemaSetting = [
+        {
+            'schemaKey': 'title',
+            'visibility': 'no',
+        },
+        {
+            'schemaKey': 'id',
+            'visibility': 'no',
+        },
+    ];
+    userStore.getPersistentSetting.mockReturnValueOnce(schemaSetting);
+
+    const listStore = new ListStore(
+        'tests',
+        'tests',
+        'list_test',
+        {
+            page,
+        },
+        {
+            test: 'value',
+        },
+        {
+            id: 1,
+        }
+    );
+
+    listStore.updateLoadingStrategy(loadingStrategy);
+    listStore.updateStructureStrategy(structureStrategy);
+    listStore.schema = {
+        id: {
+            label: 'ID',
+            name: 'id',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+        title: {
+            label: 'Title',
+            name: 'title',
+            sortable: true,
+            type: 'string',
+            visibility: 'no',
+        },
+    };
+
+    expect(Object.keys(listStore.userSchema)).toEqual(['title', 'id']);
     expect((userStore).getPersistentSetting).toBeCalledWith('sulu_admin.list_store.tests.list_test.schema');
 
     listStore.destroy();
