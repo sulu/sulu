@@ -83,6 +83,12 @@ sub sulu_backend_response {
 }
 
 sub sulu_deliver {
+    if (!resp.http.X-Cache-Debug) {
+        unset resp.http.x-url;
+        unset resp.http.x-host;
+        unset resp.http.x-cache-tags;
+    }
+
     # Add X-Cache header if debugging is enabled
     if (resp.http.X-Cache-Debug) {
         if (obj.hits > 0) {
