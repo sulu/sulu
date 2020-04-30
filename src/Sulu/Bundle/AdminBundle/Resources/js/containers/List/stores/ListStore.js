@@ -228,22 +228,24 @@ export default class ListStore {
             return {};
         }
 
-        const schemaSettings = ListStore.getSchemaSetting(this.listKey, this.userSettingsKey);
-        const schema = this.schema;
-        if (!schemaSettings) {
-            return schema;
-        }
-
+        const schemaSettings = ListStore.getSchemaSetting(this.listKey, this.userSettingsKey) || [];
         const userSchema = {};
+
         for (const schemaSettingsEntry of schemaSettings) {
-            if (!schema.hasOwnProperty(schemaSettingsEntry.schemaKey)) {
+            if (!this.schema.hasOwnProperty(schemaSettingsEntry.schemaKey)) {
                 continue;
             }
 
             userSchema[schemaSettingsEntry.schemaKey] = {
-                ...schema[schemaSettingsEntry.schemaKey],
+                ...this.schema[schemaSettingsEntry.schemaKey],
                 visibility: schemaSettingsEntry.visibility,
             };
+        }
+
+        for (const schemaKey of Object.keys(this.schema)) {
+            if (!userSchema.hasOwnProperty(schemaKey)) {
+                userSchema[schemaKey] = this.schema[schemaKey];
+            }
         }
 
         return userSchema;
