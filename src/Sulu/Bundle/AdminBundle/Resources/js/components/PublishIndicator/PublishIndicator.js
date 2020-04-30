@@ -1,5 +1,6 @@
 // @flow
-import React, {Fragment} from 'react';
+import React from 'react';
+import classNames from 'classnames';
 import publishIndicatorStyles from './publishIndicator.scss';
 
 type Props = {
@@ -16,11 +17,19 @@ export default class PublishIndicator extends React.Component<Props> {
     render() {
         const {draft, published} = this.props;
 
+        const publishIndicatorClass = classNames(
+            publishIndicatorStyles.publishIndicator,
+            {
+                [publishIndicatorStyles.hasPublished]: published,
+                [publishIndicatorStyles.hasDraft]: draft,
+            }
+        );
+
         return (
-            <Fragment>
+            <div className={publishIndicatorClass}>
                 {published && <span className={publishIndicatorStyles.published} />}
                 {draft && <span className={publishIndicatorStyles.draft} />}
-            </Fragment>
+            </div>
         );
     }
 }

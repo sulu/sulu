@@ -83,7 +83,11 @@ exports[`Render data with disabled items 1`] = `
             </span>
             <span
               class="indicator"
-            />
+            >
+              <div
+                class="publishIndicator"
+              />
+            </span>
             <span
               class="children"
             >
@@ -143,7 +147,11 @@ exports[`Render data with disabled items 1`] = `
             </span>
             <span
               class="indicator"
-            />
+            >
+              <div
+                class="publishIndicator"
+              />
+            </span>
             <span
               class="children"
             />
@@ -235,7 +243,11 @@ exports[`Render data with loading column 1`] = `
             </span>
             <span
               class="indicator"
-            />
+            >
+              <div
+                class="publishIndicator"
+              />
+            </span>
             <span
               class="children"
             >
@@ -283,7 +295,11 @@ exports[`Render data with loading column 1`] = `
             </span>
             <span
               class="indicator"
-            />
+            >
+              <div
+                class="publishIndicator"
+              />
+            </span>
             <span
               class="children"
             />
@@ -370,7 +386,11 @@ exports[`Render data with name as fallback for title 1`] = `
             </span>
             <span
               class="indicator"
-            />
+            >
+              <div
+                class="publishIndicator"
+              />
+            </span>
             <span
               class="children"
             />
@@ -465,7 +485,11 @@ exports[`Render data with selection 1`] = `
             </span>
             <span
               class="indicator"
-            />
+            >
+              <div
+                class="publishIndicator"
+              />
+            </span>
             <span
               class="children"
             >
@@ -558,7 +582,11 @@ exports[`Render data without edit button 1`] = `
             </span>
             <span
               class="indicator"
-            />
+            >
+              <div
+                class="publishIndicator"
+              />
+            </span>
             <span
               class="children"
             >
@@ -667,9 +695,13 @@ exports[`Render different kind of data with edit button 1`] = `
             <span
               class="indicator"
             >
-              <span
-                class="draft"
-              />
+              <div
+                class="publishIndicator hasDraft"
+              >
+                <span
+                  class="draft"
+                />
+              </div>
             </span>
             <span
               class="children"
@@ -726,12 +758,16 @@ exports[`Render different kind of data with edit button 1`] = `
             <span
               class="indicator"
             >
-              <span
-                class="published"
-              />
-              <span
-                class="draft"
-              />
+              <div
+                class="publishIndicator hasPublished hasDraft"
+              >
+                <span
+                  class="published"
+                />
+                <span
+                  class="draft"
+                />
+              </div>
             </span>
             <span
               class="children"
@@ -791,12 +827,16 @@ exports[`Render different kind of data with edit button 1`] = `
             <span
               class="indicator"
             >
-              <span
-                class="published"
-              />
-              <span
-                class="draft"
-              />
+              <div
+                class="publishIndicator hasPublished hasDraft"
+              >
+                <span
+                  class="published"
+                />
+                <span
+                  class="draft"
+                />
+              </div>
             </span>
             <span
               class="children"
@@ -1038,12 +1078,16 @@ exports[`Render different kind of data with edit button 1`] = `
             <span
               class="indicator"
             >
-              <span
-                class="published"
-              />
-              <span
-                class="draft"
-              />
+              <div
+                class="publishIndicator hasPublished hasDraft"
+              >
+                <span
+                  class="published"
+                />
+                <span
+                  class="draft"
+                />
+              </div>
             </span>
             <span
               class="children"
@@ -1163,9 +1207,13 @@ exports[`Render different kind of data with edit button 1`] = `
             <span
               class="indicator"
             >
-              <span
-                class="draft"
-              />
+              <div
+                class="publishIndicator hasDraft"
+              >
+                <span
+                  class="draft"
+                />
+              </div>
             </span>
             <span
               class="children"

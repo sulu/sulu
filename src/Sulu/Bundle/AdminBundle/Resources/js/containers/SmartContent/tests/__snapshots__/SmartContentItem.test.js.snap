@@ -140,12 +140,16 @@ exports[`Render item with title and draft with published state 1`] = `
     <div
       class="publishIndicator"
     >
-      <span
-        class="published"
-      />
-      <span
-        class="draft"
-      />
+      <div
+        class="publishIndicator hasPublished hasDraft"
+      >
+        <span
+          class="published"
+        />
+        <span
+          class="draft"
+        />
+      </div>
     </div>
     <div
       aria-label="Draft and published"

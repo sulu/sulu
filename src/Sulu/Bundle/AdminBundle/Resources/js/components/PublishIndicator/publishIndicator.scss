@@ -4,6 +4,15 @@ $indicatorDraftBackgroundColor: $gold;
 $indicatorPublishedBackgroundColor: $mantis;
 $indicatorBorderColor: $white;
 $indicatorDimension: 18px;
+$indicatorOverlap: 10px;
+
+.publish-indicator {
+    min-width: $indicatorDimension;
+
+    &.has-published.has-draft {
+        min-width: calc($indicatorDimension * 2 - $indicatorOverlap);
+    }
+}
 
 .published,
 .draft {
@@ -16,7 +25,7 @@ $indicatorDimension: 18px;
 }
 
 .published + .draft {
-    margin-left: -10px;
+    margin-left: -$indicatorOverlap;
 }
 
 .draft {
