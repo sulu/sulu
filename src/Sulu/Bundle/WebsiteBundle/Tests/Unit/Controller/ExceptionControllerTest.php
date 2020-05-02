@@ -57,6 +57,10 @@ class ExceptionControllerTest extends TestCase
 
     public function setUp(): void
     {
+        if (!class_exists(BaseExceptionController::class)) {
+            $this->markTestSkipped();
+        }
+
         $this->twig = $this->prophesize(Environment::class);
         $this->loader = $this->prophesize(FilesystemLoader::class);
         $this->twig->getLoader()->willReturn($this->loader->reveal());
