@@ -8,7 +8,6 @@
     </parameters>
 
     <services>
-        <!-- exception controller -->
         <service id="sulu_website.exception_controller"
                  decorates="twig.controller.exception"
                  class="Sulu\Bundle\WebsiteBundle\Controller\ExceptionController">
