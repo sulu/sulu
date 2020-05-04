@@ -125,7 +125,7 @@ function exec_sf_cmd($cmd, $echo = true, $checkForError = true)
 
 function exec_cmd($cmdLine, $echo = true, $checkForError = true)
 {
-    $process = new Process($cmdLine);
+    $process = Process::fromShellCommandline($cmdLine);
     $process->setTimeout(null);
     $process->run(function ($type, $out) use ($echo) {
         if (!$echo) {
