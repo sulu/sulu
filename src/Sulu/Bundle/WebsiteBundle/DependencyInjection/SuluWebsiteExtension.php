@@ -129,7 +129,7 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
             $container->setAlias(DefaultController::class, 'sulu_website.default_controller')
                 ->setPublic(true);
 
-            if ($container->hasExtension('twig') && class_exists(ExceptionController::class)) {
+            if (class_exists(ExceptionController::class)) {
                 $loader->load('exception_controller.xml');
             }
         }
