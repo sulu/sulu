@@ -7,17 +7,12 @@ $indicatorDimension: 18px;
 $indicatorOverlap: 10px;
 
 .publish-indicator {
-    min-width: $indicatorDimension;
-
-    &.has-published.has-draft {
-        min-width: calc($indicatorDimension * 2 - $indicatorOverlap);
-    }
+    white-space: nowrap;
 }
 
 .published,
 .draft {
-    display: block;
-    float: left;
+    display: inline-block;
     border: 2px $indicatorBorderColor solid;
     border-radius: 50%;
     height: $indicatorDimension;

@@ -696,7 +696,7 @@ exports[`Render different kind of data with edit button 1`] = `
               class="indicator"
             >
               <div
-                class="publishIndicator hasDraft"
+                class="publishIndicator"
               >
                 <span
                   class="draft"
@@ -759,7 +759,7 @@ exports[`Render different kind of data with edit button 1`] = `
               class="indicator"
             >
               <div
-                class="publishIndicator hasPublished hasDraft"
+                class="publishIndicator"
               >
                 <span
                   class="published"
@@ -828,7 +828,7 @@ exports[`Render different kind of data with edit button 1`] = `
               class="indicator"
             >
               <div
-                class="publishIndicator hasPublished hasDraft"
+                class="publishIndicator"
               >
                 <span
                   class="published"
@@ -1079,7 +1079,7 @@ exports[`Render different kind of data with edit button 1`] = `
               class="indicator"
             >
               <div
-                class="publishIndicator hasPublished hasDraft"
+                class="publishIndicator"
               >
                 <span
                   class="published"
@@ -1208,7 +1208,7 @@ exports[`Render different kind of data with edit button 1`] = `
               class="indicator"
             >
               <div
-                class="publishIndicator hasDraft"
+                class="publishIndicator"
               >
                 <span
                   class="draft"

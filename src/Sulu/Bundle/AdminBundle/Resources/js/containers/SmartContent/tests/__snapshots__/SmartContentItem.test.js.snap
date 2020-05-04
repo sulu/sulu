@@ -141,7 +141,7 @@ exports[`Render item with title and draft with published state 1`] = `
       class="publishIndicator"
     >
       <div
-        class="publishIndicator hasPublished hasDraft"
+        class="publishIndicator"
       >
         <span
           class="published"
