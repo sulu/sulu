@@ -21,7 +21,14 @@ import {viewRegistry} from './ViewRenderer';
 import Sidebar, {sidebarStore, sidebarRegistry} from './Sidebar';
 import type {ViewProps} from './ViewRenderer';
 import {withToolbar} from './Toolbar';
-import Form, {CardCollection, fieldRegistry, FormInspector, ResourceFormStore, ResourceLocator} from './Form';
+import Form, {
+    CardCollection,
+    conditionDataProviderRegistry,
+    fieldRegistry,
+    FormInspector,
+    ResourceFormStore,
+    ResourceLocator,
+} from './Form';
 import type {SchemaOption} from './Form/types';
 import ResourceLocatorHistory from './ResourceLocatorHistory';
 import ResourceMultiSelect from './ResourceMultiSelect';
@@ -49,6 +56,7 @@ export {
     ckeditorConfigRegistry,
     ckeditorPluginRegistry,
     CardCollection,
+    conditionDataProviderRegistry,
     internalLinkTypeRegistry,
     List,
     ListStore,

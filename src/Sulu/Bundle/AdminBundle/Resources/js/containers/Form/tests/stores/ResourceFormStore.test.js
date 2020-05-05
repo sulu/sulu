@@ -3,6 +3,11 @@ import {isObservable, observable, observable as mockObservable, toJS, when} from
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import ResourceStore from '../../../../stores/ResourceStore';
 import metadataStore from '../../stores/metadataStore';
+import conditionDataProviderRegistry from '../../registries/conditionDataProviderRegistry';
+
+beforeEach(() => {
+    conditionDataProviderRegistry.clear();
+});
 
 jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, options) {
     this.id = id;
@@ -277,6 +282,32 @@ test('Evaluate disabledConditions and visibleConditions when changing locale', (
             done();
         });
     });
+});
+
+test('Evaluate disabledConditions and visibleConditions for schema with locale', (done) => {
+    const metadata = {
+        item: {
+            type: 'text_line',
+            disabledCondition: '__test == "value1"',
+            visibleCondition: '__test == "value2"',
+        },
+    };
+
+    conditionDataProviderRegistry.add((data) => ({__test: data.test}));
+
+    const metadataPromise = Promise.resolve(metadata);
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+
+    resourceStore.data = observable({test: 'value1'});
+
+    setTimeout(() => {
+        expect(resourceFormStore.schema.item.disabled).toEqual(true);
+        expect(resourceFormStore.schema.item.visible).toEqual(false);
+        done();
+    }, 0);
 });
 
 test('Read resourceKey from ResourceStore', () => {

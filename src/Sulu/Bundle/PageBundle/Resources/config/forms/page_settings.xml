@@ -105,7 +105,7 @@
                 </property>
             </properties>
         </section>
-        <section name="shadowPage">
+        <section name="shadowPage" visibleCondition="__webspace.allLocalizations.length &gt; 1">
             <meta>
                 <title>sulu_page.shadow_page</title>
             </meta>
