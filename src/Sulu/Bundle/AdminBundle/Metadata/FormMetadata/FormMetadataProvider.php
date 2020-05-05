@@ -50,10 +50,10 @@ class FormMetadataProvider implements MetadataProviderInterface
         }
 
         if ($form instanceof FormMetadata) {
-            $this->evaluateFormItemExpressions($form->getItems());
+            $this->evaluateFormItemExpressions($form->getItems(), $metadataOptions);
         } elseif ($form instanceof TypedFormMetadata) {
             foreach ($form->getForms() as $formType) {
-                $this->evaluateFormItemExpressions($formType->getItems());
+                $this->evaluateFormItemExpressions($formType->getItems(), $metadataOptions);
             }
 
             if (\array_key_exists('tags', $metadataOptions)) {
@@ -108,21 +108,21 @@ class FormMetadataProvider implements MetadataProviderInterface
     /**
      * @param ItemMetadata[] $items
      */
-    private function evaluateFormItemExpressions(array $items)
+    private function evaluateFormItemExpressions(array $items, array $metadataOptions)
     {
         foreach ($items as $item) {
             if ($item instanceof SectionMetadata) {
-                $this->evaluateFormItemExpressions($item->getItems());
+                $this->evaluateFormItemExpressions($item->getItems(), $metadataOptions);
             }
 
             if ($item instanceof FieldMetadata) {
                 foreach ($item->getTypes() as $type) {
-                    $this->evaluateFormItemExpressions($type->getItems());
+                    $this->evaluateFormItemExpressions($type->getItems(), $metadataOptions);
                 }
 
                 foreach ($item->getOptions() as $option) {
                     if (OptionMetadata::TYPE_EXPRESSION === $option->getType()) {
-                        $option->setValue($this->expressionLanguage->evaluate($option->getValue()));
+                        $option->setValue($this->expressionLanguage->evaluate($option->getValue(), $metadataOptions));
                     }
                 }
             }

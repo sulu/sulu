@@ -44,6 +44,18 @@ class FormMetadataProviderTest extends KernelTestCase
         $this->assertCount(2, \array_keys($schema));
     }
 
+    public function testGetMetadataWithExpressions()
+    {
+        $form = $this->formMetadataProvider->getMetadata(
+            'form_with_webspace_expression_param',
+            'en',
+            ['webspace' => 'sulu_io']
+        );
+        $this->assertInstanceOf(FormMetadata::class, $form);
+
+        $this->assertEquals('sulu_io', $form->getItems()['name']->getOptions()['id']->getValue());
+    }
+
     public function testGetMetadataFromStructureLoader()
     {
         $typedForm = $this->formMetadataProvider->getMetadata('page', 'en');
