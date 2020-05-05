@@ -16,6 +16,10 @@ class WebspaceStore {
         });
     }
 
+    hasWebspace(webspaceKey: string): boolean {
+        return !!this.allWebspaces.find((webspace) => webspace.key === webspaceKey);
+    }
+
     getWebspace(webspaceKey: string): Webspace {
         const webspace = this.allWebspaces.find((webspace) => webspace.key === webspaceKey);
 
