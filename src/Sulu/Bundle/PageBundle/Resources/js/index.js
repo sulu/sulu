@@ -1,6 +1,12 @@
 // @flow
 import {initializer, Config} from 'sulu-admin-bundle/services';
-import {fieldRegistry, viewRegistry, ResourceLocator} from 'sulu-admin-bundle/containers';
+import {
+    conditionDataProviderRegistry,
+    fieldRegistry,
+    viewRegistry,
+    ResourceLocator,
+} from 'sulu-admin-bundle/containers';
+import webspaceConditionDataProvider from './containers/Form/conditionDataProviders/webspaceConditionDataProvider';
 import SearchResult from './containers/Form/fields/SearchResult';
 import TeaserSelection from './containers/Form/fields/TeaserSelection';
 import {teaserProviderRegistry} from './containers/TeaserSelection';
@@ -29,6 +35,8 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
     fieldRegistry.add('page_settings_shadow_locale_select', PageSettingsShadowLocaleSelect);
     fieldRegistry.add('search_result', SearchResult);
     fieldRegistry.add('teaser_selection', TeaserSelection);
+
+    conditionDataProviderRegistry.add(webspaceConditionDataProvider);
 
     fieldRegistry.add(
         'resource_locator',

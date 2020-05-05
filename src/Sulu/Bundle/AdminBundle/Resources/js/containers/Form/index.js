@@ -1,6 +1,7 @@
 // @flow
 import Form from './Form';
 import FormInspector from './FormInspector';
+import conditionDataProviderRegistry from './registries/conditionDataProviderRegistry';
 import fieldRegistry from './registries/fieldRegistry';
 import ResourceFormStore from './stores/ResourceFormStore';
 import MemoryFormStore from './stores/MemoryFormStore';
@@ -27,6 +28,7 @@ import Url from './fields/Url';
 import type {Schema, Types} from './types';
 
 export {
+    conditionDataProviderRegistry,
     fieldRegistry,
     Selection,
     CardCollection,

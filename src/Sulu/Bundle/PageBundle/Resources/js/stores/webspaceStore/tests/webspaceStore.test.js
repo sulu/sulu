@@ -10,6 +10,48 @@ beforeEach(() => {
     webspaceStore.setWebspaces([]);
 });
 
+test('Has webspace', () => {
+    const webspace1 = {
+        _permissions: {
+            view: true,
+        },
+        name: 'sulu',
+        key: 'sulu',
+        allLocalizations: [],
+        customUrls: [],
+        defaultTemplates: {},
+        localizations: [],
+        navigations: [],
+        portalInformation: [],
+        resourceLocatorStrategy: {inputType: 'leaf'},
+        urls: [],
+    };
+
+    const webspace2 = {
+        _permissions: {
+            view: false,
+        },
+        name: 'Sulu Blog',
+        key: 'sulu_blog',
+        allLocalizations: [],
+        customUrls: [],
+        defaultTemplates: {},
+        localizations: [],
+        navigations: [],
+        portalInformation: [],
+        resourceLocatorStrategy: {inputType: 'leaf'},
+        urls: [],
+    };
+
+    const webspaces = [webspace1, webspace2];
+
+    webspaceStore.setWebspaces(webspaces);
+
+    expect(webspaceStore.hasWebspace('sulu')).toEqual(true);
+    expect(webspaceStore.hasWebspace('sulu_blog')).toEqual(true);
+    expect(webspaceStore.hasWebspace('not_existing')).toEqual(false);
+});
+
 test('Load granted webspaces', () => {
     const webspace1 = {
         _permissions: {

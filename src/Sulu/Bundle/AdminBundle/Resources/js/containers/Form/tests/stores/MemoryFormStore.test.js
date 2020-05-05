@@ -1,6 +1,11 @@
 // @flow
 import {observable} from 'mobx';
 import MemoryFormStore from '../../stores/MemoryFormStore';
+import conditionDataProviderRegistry from '../../registries/conditionDataProviderRegistry';
+
+beforeEach(() => {
+    conditionDataProviderRegistry.clear();
+});
 
 test('Create data object for schema', () => {
     const schema = {
@@ -291,6 +296,27 @@ test('Evaluate disabledConditions and visibleConditions when changing locale', (
             done();
         }, 0);
     }, 0);
+});
+
+test('Evaluate disabledConditions and visibleConditions for schema with conditionDataProvider', (done) => {
+    const schema = {
+        item: {
+            type: 'text_line',
+            disabledCondition: '__test == "value1"',
+            visibleCondition: '__test == "value2"',
+        },
+    };
+
+    conditionDataProviderRegistry.add((data) => ({__test: data.test}));
+
+    const memoryFormStore = new MemoryFormStore({test: 'value1'}, schema, {}, observable.box('en'));
+
+    setTimeout(() => {
+        expect(memoryFormStore.schema.item.disabled).toEqual(true);
+        expect(memoryFormStore.schema.item.visible).toEqual(false);
+        memoryFormStore.destroy();
+        done();
+    });
 });
 
 test('Asking for resourceKey should return undefined', () => {

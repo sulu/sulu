@@ -5,6 +5,7 @@ import jexl from 'jexl';
 import jsonpointer from 'json-pointer';
 import log from 'loglevel';
 import type {RawSchema, RawSchemaEntry, Schema, SchemaEntry} from '../types';
+import conditionDataProviderRegistry from '../registries/conditionDataProviderRegistry';
 
 const SECTION_TYPE = 'section';
 
@@ -49,13 +50,18 @@ function transformRawSchemaEntry(
     locale: ?string,
     path: string
 ): SchemaEntry {
-    const evaluationData = {...data, __locale: locale};
+    const conditionData = conditionDataProviderRegistry.getAll().reduce(
+        function(data, conditionDataProvider) {
+            return {...data, ...conditionDataProvider(data)};
+        },
+        {...data, __locale: locale}
+    );
 
     return Object.keys(rawSchemaEntry).reduce((schemaEntry, schemaEntryKey) => {
         if (schemaEntryKey === 'disabledCondition' && rawSchemaEntry[schemaEntryKey]) {
-            schemaEntry.disabled = jexl.evalSync(rawSchemaEntry[schemaEntryKey], evaluationData);
+            schemaEntry.disabled = jexl.evalSync(rawSchemaEntry[schemaEntryKey], conditionData);
         } else if (schemaEntryKey === 'visibleCondition' && rawSchemaEntry[schemaEntryKey]) {
-            schemaEntry.visible = jexl.evalSync(rawSchemaEntry[schemaEntryKey], evaluationData);
+            schemaEntry.visible = jexl.evalSync(rawSchemaEntry[schemaEntryKey], conditionData);
         } else if (schemaEntryKey === 'items' && rawSchemaEntry.items) {
             schemaEntry.items = transformRawSchema(rawSchemaEntry.items, data, path);
         } else if (schemaEntryKey === 'types' && rawSchemaEntry.types) {
