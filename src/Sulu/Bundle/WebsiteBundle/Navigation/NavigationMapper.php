@@ -52,20 +52,37 @@ class NavigationMapper implements NavigationMapperInterface
      */
     private $permissions;
 
+    /**
+     * @var array
+     */
+    private $enabledTwigAttributes = [];
+
     public function __construct(
         ContentMapperInterface $contentMapper,
         ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $queryBuilder,
         SessionManagerInterface $sessionManager,
         Stopwatch $stopwatch = null,
-        $permissions = null
+        $permissions = null,
+        array $enabledTwigAttributes = [
+            'path' => true,
+        ]
     ) {
         $this->contentMapper = $contentMapper;
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->queryBuilder = $queryBuilder;
         $this->sessionManager = $sessionManager;
         $this->stopwatch = $stopwatch;
+<<<<<<< HEAD
         $this->permissions = $permissions;
+=======
+
+        if ($enabledTwigAttributes['path']) {
+            @trigger_error('Enable the path parameter is deprecated since sulu/sulu 2.1.', E_USER_DEPRECATED);
+        }
+
+        $this->enabledTwigAttributes = $enabledTwigAttributes;
+>>>>>>> e312527aab... Remove the path attribute from twig templates
     }
 
     public function getNavigation(
@@ -93,6 +110,7 @@ class NavigationMapper implements NavigationMapperInterface
                 'segmentKey' => $segmentKey,
             ]
         );
+<<<<<<< HEAD
         $result = $this->contentQueryExecutor->execute(
             $webspaceKey,
             [$locale],
@@ -110,6 +128,10 @@ class NavigationMapper implements NavigationMapperInterface
                 $item['children'] = [];
             }
         }
+=======
+        $result = $this->contentQuery->execute($webspaceKey, [$locale], $this->queryBuilder, $flat, $depth);
+        $result = $this->normalizeResult($result);
+>>>>>>> e312527aab... Remove the path attribute from twig templates
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('NavigationMapper::getNavigation');
@@ -131,6 +153,7 @@ class NavigationMapper implements NavigationMapperInterface
             $this->stopwatch->start('NavigationMapper::getRootNavigation.query');
         }
 
+<<<<<<< HEAD
         $this->queryBuilder->init(['context' => $context, 'excerpt' => $loadExcerpt, 'segmentKey' => $segmentKey]);
         $result = $this->contentQueryExecutor->execute(
             $webspaceKey,
@@ -149,6 +172,11 @@ class NavigationMapper implements NavigationMapperInterface
                 $result[$i]['children'] = [];
             }
         }
+=======
+        $this->queryBuilder->init(['context' => $context, 'excerpt' => $loadExcerpt]);
+        $result = $this->contentQuery->execute($webspaceKey, [$locale], $this->queryBuilder, $flat, $depth);
+        $result = $this->normalizeResult($result);
+>>>>>>> e312527aab... Remove the path attribute from twig templates
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('NavigationMapper::getRootNavigation.query');
@@ -269,5 +297,24 @@ class NavigationMapper implements NavigationMapperInterface
 
         // do not show
         return false;
+    }
+
+    private function normalizeResult(array $result)
+    {
+        foreach ($result as $key => $item) {
+            if (isset($item['children'])) {
+                $item['children'] = $this->normalizeResult($item['children']);
+            } else {
+                $item['children'] = [];
+            }
+
+            if (!$this->enabledTwigAttributes['path']) {
+                unset($item['path']);
+            }
+
+            $result[$key] = $item;
+        }
+
+        return $result;
     }
 }

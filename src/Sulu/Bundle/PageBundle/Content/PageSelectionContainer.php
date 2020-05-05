@@ -89,6 +89,11 @@ class PageSelectionContainer implements ArrayableInterface
      */
     private $permission;
 
+    /**
+     * @var array
+     */
+    private $enabledTwigAttributes = [];
+
     public function __construct(
         $ids,
         ContentQueryExecutorInterface $contentQueryExecutor,
@@ -97,7 +102,10 @@ class PageSelectionContainer implements ArrayableInterface
         $webspaceKey,
         $languageCode,
         $showDrafts,
-        $permission = null
+        $permission = null,
+        array $enabledTwigAttributes = [
+            'path' => true,
+        ]
     ) {
         $this->ids = $ids;
         $this->contentQueryExecutor = $contentQueryExecutor;
@@ -107,6 +115,12 @@ class PageSelectionContainer implements ArrayableInterface
         $this->params = $params;
         $this->showDrafts = $showDrafts;
         $this->permission = $permission;
+
+        if ($enabledTwigAttributes['path']) {
+            @trigger_error('Enable the path parameter is deprecated since sulu/sulu 2.1.', E_USER_DEPRECATED);
+        }
+
+        $this->enabledTwigAttributes = $enabledTwigAttributes;
     }
 
     /**
@@ -154,6 +168,10 @@ class PageSelectionContainer implements ArrayableInterface
 
             // map pages
             foreach ($pages as $page) {
+                if (!$this->enabledTwigAttributes['path']) {
+                    unset($page['path']);
+                }
+
                 $map[$page['id']] = $page;
             }
 

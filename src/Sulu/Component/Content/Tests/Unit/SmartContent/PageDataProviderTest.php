@@ -549,7 +549,7 @@ class PageDataProviderTest extends TestCase
 
     public function testResolveDatasource()
     {
-        $data = ['id' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'];
+        $data = ['id' => '123-123-123', 'title' => 'My-Page', 'path' => null];
 
         $provider = new PageDataProvider(
             $this->getContentQueryBuilder(

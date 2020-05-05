@@ -55,6 +55,17 @@ class Configuration implements ConfigurationInterface
                                     })
                                 ->end()
                             ->end()
+                            ->booleanNode('path')
+                                ->defaultTrue()
+                                ->beforeNormalization()
+                                    ->ifTrue(function($v) { return false !== $v; })
+                                    ->then(function($v) {
+                                        @trigger_error('Enable the path parameter is deprecated since sulu/sulu 2.1.', E_USER_DEPRECATED);
+
+                                        return $v;
+                                    })
+                                ->end()
+                            ->end()
                         ->end()
                     ->end()
                     ->arrayNode('navigation')
