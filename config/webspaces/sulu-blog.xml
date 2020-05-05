@@ -7,9 +7,7 @@
     <key>sulu-blog</key>
 
     <localizations>
-        <localization language="nl" default="true"/>
-        <localization language="bg"/>
-        <localization language="en"/>
+        <localization language="en" default="true"/>
     </localizations>
 
     <default-templates>
@@ -41,22 +39,22 @@
             <environments>
                 <environment type="prod">
                     <urls>
-                        <url language="nl">{host}</url>
+                        <url language="en">{host}</url>
                     </urls>
                 </environment>
                 <environment type="stage">
                     <urls>
-                        <url language="nl">{host}</url>
+                        <url language="en">{host}</url>
                     </urls>
                 </environment>
                 <environment type="test">
                     <urls>
-                        <url language="nl">{host}</url>
+                        <url language="en">{host}</url>
                     </urls>
                 </environment>
                 <environment type="dev">
                     <urls>
-                        <url language="nl">{host}</url>
+                        <url language="en">{host}</url>
                     </urls>
                 </environment>
             </environments>
