@@ -84,6 +84,13 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('sulu_io', $pageConfig->webspaces->sulu_io->key);
         $this->assertEquals('test_io', $pageConfig->webspaces->test_io->key);
 
+        $this->assertEquals('w', $pageConfig->webspaces->test_io->segments[0]->key);
+        $this->assertEquals('winter', $pageConfig->webspaces->test_io->segments[0]->name);
+        $this->assertEquals(false, $pageConfig->webspaces->test_io->segments[0]->default);
+        $this->assertEquals('s', $pageConfig->webspaces->test_io->segments[1]->key);
+        $this->assertEquals('summer', $pageConfig->webspaces->test_io->segments[1]->name);
+        $this->assertEquals(true, $pageConfig->webspaces->test_io->segments[1]->default);
+
         $this->assertEquals('Destination CMF', $pageConfig->webspaces->destination_io->name);
         $this->assertEquals('default', $pageConfig->webspaces->destination_io->defaultTemplates->page);
         $this->assertEquals('overview', $pageConfig->webspaces->destination_io->defaultTemplates->homepage);
@@ -231,7 +238,7 @@ class AdminControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/admin/metadata/form/page_settings');
+        $client->request('GET', '/admin/metadata/form/page_settings?webspace=sulu_io');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());

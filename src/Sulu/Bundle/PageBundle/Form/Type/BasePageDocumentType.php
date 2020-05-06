@@ -48,6 +48,7 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
                 'allow_delete' => true,
             ]
         );
+        $builder->add('segment', TextType::class);
         $builder->add('redirectType', IntegerType::class);
         $builder->add('redirectTarget', DocumentObjectType::class);
         $builder->add('redirectExternal', TextType::class);

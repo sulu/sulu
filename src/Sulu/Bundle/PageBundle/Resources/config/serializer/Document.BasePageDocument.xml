@@ -12,6 +12,7 @@
         <property name="changed" type="DateTime" groups="defaultPage,preview"/>
         <property name="resourceSegment" exclude="true"/>
         <property name="navigationContexts" type="array" serialized-name="navContexts" groups="defaultPage,smallPage"/>
+        <property name="segment" type="string" serialized-name="segment" groups="defaultPage,smallPage"/>
         <property name="redirectType" type="integer" serialized-name="nodeType" groups="defaultPage,smallPage"/>
         <property name="redirectTarget" type="sulu_document"/>
         <property name="redirectExternal" type="string"/>

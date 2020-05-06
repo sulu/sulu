@@ -159,7 +159,7 @@ class PageAdmin extends Admin
         ];
 
         $routerAttributesToFormRequest = ['parentId', 'webspace'];
-        $routerAttributesToFormMetdata = ['webspace'];
+        $routerAttributesToFormMetadata = ['webspace'];
 
         $previewCondition = 'nodeType == 1';
 
@@ -202,7 +202,7 @@ class PageAdmin extends Admin
                     ->addRouterAttributesToEditView(['webspace'])
                     ->addToolbarActions($formToolbarActionsWithType)
                     ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
-                    ->addRouterAttributesToFormMetadata($routerAttributesToFormMetdata)
+                    ->addRouterAttributesToFormMetadata($routerAttributesToFormMetadata)
                     ->setParent(static::ADD_FORM_VIEW)
             );
             $viewCollection->add(
@@ -226,7 +226,7 @@ class PageAdmin extends Admin
                     ->setTabCondition('nodeType == 1 && shadowOn == false')
                     ->addToolbarActions($formToolbarActionsWithType)
                     ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
-                    ->addRouterAttributesToFormMetadata($routerAttributesToFormMetdata)
+                    ->addRouterAttributesToFormMetadata($routerAttributesToFormMetadata)
                     ->setPreviewCondition($previewCondition)
                     ->setTabOrder(1024)
                     ->setParent(static::EDIT_FORM_VIEW)
@@ -271,6 +271,7 @@ class PageAdmin extends Admin
                     ->setTabPriority(512)
                     ->addToolbarActions($formToolbarActionsWithoutType)
                     ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
+                    ->addRouterAttributesToFormMetadata($routerAttributesToFormMetadata)
                     ->setPreviewCondition($previewCondition)
                     ->setTitleVisible(true)
                     ->setTabOrder(4096)

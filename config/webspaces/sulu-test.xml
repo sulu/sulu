@@ -32,6 +32,11 @@
         </contexts>
     </navigation>
 
+    <segments>
+        <segment key="w" default="true">winter</segment>
+        <segment key="s">summer</segment>
+    </segments>
+
     <portals>
         <portal>
             <name>example.com</name>

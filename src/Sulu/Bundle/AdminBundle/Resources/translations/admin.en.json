@@ -151,5 +151,6 @@
     "sulu_admin.from": "from",
     "sulu_admin.until": "until",
     "sulu_admin.block_settings": "Block settings",
-    "sulu_admin.hide_block": "Hide this block on website"
+    "sulu_admin.hide_block": "Hide this block on website",
+    "sulu_admin.segments": "Segments"
 }

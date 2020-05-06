@@ -211,6 +211,11 @@ class PortalInformation implements ArrayableInterface
         return $this->segment;
     }
 
+    public function getSegmentKey()
+    {
+        return $this->segment ? $this->segment->getKey() : null;
+    }
+
     /**
      * Sets the match type of this PortalInformation.
      *

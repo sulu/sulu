@@ -39,5 +39,6 @@ class SnippetType extends AbstractStructureBehaviorType
         $builder->add('resourceSegment', TextType::class, ['mapped' => false]);
         $builder->add('navigationContexts', TextType::class, ['mapped' => false]);
         $builder->add('shadowLocaleEnabled', TextType::class, ['mapped' => false]);
+        $builder->add('segment', TextType::class, ['mapped' => false]);
     }
 }

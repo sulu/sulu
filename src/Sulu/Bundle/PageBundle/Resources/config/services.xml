@@ -198,5 +198,14 @@
 
             <tag name="sulu.sitemap.provider"/>
         </service>
+
+        <service
+            id="sulu_page.segment_select_helper"
+            class="Sulu\Bundle\PageBundle\Admin\Helper\SegmentSelect"
+            public="true"
+        >
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="translator"/>
+        </service>
     </services>
 </container>

@@ -151,5 +151,6 @@
     "sulu_admin.from": "ab",
     "sulu_admin.until": "bis",
     "sulu_admin.block_settings": "Block Einstellungen",
-    "sulu_admin.hide_block": "Verstecke diesen Block auf der Webseite"
+    "sulu_admin.hide_block": "Verstecke diesen Block auf der Webseite",
+    "sulu_admin.segments": "Segmente"
 }
