@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<webspace xmlns="http://schemas.sulu.io/webspace/webspace"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
+
+    <name>sulu.io</name>
+    <key>sulu_io</key>
+
+    <localizations>
+        <localization language="en" country="us" default="true"/>
+        <localization language="de" country="at"/>
+    </localizations>
+
+    <theme>default</theme>
+
+    <default-templates>
+        <default-template type="page">default</default-template>
+        <default-template type="homepage">overview</default-template>
+    </default-templates>
+
+    <templates>
+        <template type="error">ClientWebsiteBundle:views:error.html.twig</template>
+        <template type="error-404">ClientWebsiteBundle:views:error404.html.twig</template>
+    </templates>
+
+    <navigation>
+        <contexts>
+            <context key="main">
+                <meta>
+                    <title lang="de">Hauptnavigation</title>
+                    <title lang="en">Mainnavigation</title>
+                </meta>
+            </context>
+        </contexts>
+    </navigation>
+
+    <resource-locator>
+        <strategy>tree_leaf_edit</strategy>
+    </resource-locator>
+
+    <portals>
+        <portal>
+            <name>sulu.io</name>
+            <key>sulu_io</key>
+
+            <environments>
+                <environment type="prod">
+                    <urls>
+                        <url language="de" country="at">austria.sulu.io/{language}</url>
+                        <url language="en" country="us">usa.sulu.io/{language}</url>
+                    </urls>
+                </environment>
+                <environment type="stage">
+                    <urls>
+                        <url language="de" country="at">austria.sulu.io/{language}</url>
+                        <url language="en" country="us">usa.sulu.io/{language}</url>
+                    </urls>
+                </environment>
+                <environment type="dev">
+                    <urls>
+                        <url language="de" country="at">austria.sulu.io/{language}</url>
+                        <url language="en" country="us">usa.sulu.io/{language}</url>
+                    </urls>
+                </environment>
+            </environments>
+        </portal>
+    </portals>
+</webspace>
