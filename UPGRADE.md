@@ -1,5 +1,12 @@
 # Upgrade
 
+## unreleased
+
+### The `sulu_content_path` and `sulu_content_root_path` are deprecated
+
+The `sulu_content_path` and `sulu_content_root_path` are deprecated use instead the
+new `sulu_content_url` and `sulu_content_root_url` twig extension.
+
 ## 2.1.0-RC1
 
 ### Deprecated ExceptionController changed to ErrorController

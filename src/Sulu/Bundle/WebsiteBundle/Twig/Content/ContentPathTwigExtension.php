@@ -49,12 +49,21 @@ class ContentPathTwigExtension extends AbstractExtension implements ContentPathI
     public function getFunctions()
     {
         return [
+            new TwigFunction('sulu_content_url', [$this, 'getContentUrl']),
+            new TwigFunction('sulu_content_root_url', [$this, 'getContentRootUrl']),
             new TwigFunction('sulu_content_path', [$this, 'getContentPath']),
             new TwigFunction('sulu_content_root_path', [$this, 'getContentRootPath']),
         ];
     }
 
     public function getContentPath($route, $webspaceKey = null, $locale = null, $domain = null, $scheme = null, $withoutDomain = true)
+    {
+        @trigger_error('The usage of the "sulu_content_path" is deprecated since sulu/sulu 2.1 use "sulu_content_url" instead.', E_USER_DEPRECATED);
+
+        return $this->getContentUrl($route, $webspaceKey, $locale, $domain, $scheme, $withoutDomain);
+    }
+
+    public function getContentUrl($route, $webspaceKey = null, $locale = null, $domain = null, $scheme = null, $withoutDomain = true)
     {
         // if the request analyzer null or a route is passed which is relative or inclusive a domain nothing should be
         // done (this is important for external-links in navigations)
@@ -106,6 +115,13 @@ class ContentPathTwigExtension extends AbstractExtension implements ContentPathI
 
     public function getContentRootPath($full = false)
     {
-        return $this->getContentPath('/');
+        @trigger_error('The usage of the "sulu_content_root_path" is deprecated since sulu/sulu 2.1 use "sulu_content_root_url" instead.', E_USER_DEPRECATED);
+
+        return $this->getContentUrl('/');
+    }
+
+    public function getContentRootUrl($webspaceKey = null, $locale = null, $domain = null, $scheme = null, $withoutDomain = true)
+    {
+        return $this->getContentUrl('/', $webspaceKey, $locale, $domain, $scheme, $withoutDomain);
     }
 }
