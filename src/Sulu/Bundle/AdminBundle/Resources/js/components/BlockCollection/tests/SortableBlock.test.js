@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {mount, render, shallow} from 'enzyme';
 import SortableBlock from '../SortableBlock';
 
 jest.mock('react-sortable-hoc', () => ({
@@ -27,39 +27,6 @@ test('Render collapsed sortable block', () => {
     )).toMatchSnapshot();
 });
 
-test('Render expanded sortable block', () => {
-    const renderBlockContent = jest.fn().mockImplementation((value) => 'Test for ' + value.content);
-
-    expect(render(
-        <SortableBlock
-            activeType="editor"
-            expanded={true}
-            onCollapse={jest.fn()}
-            onExpand={jest.fn()}
-            onRemove={jest.fn()}
-            renderBlockContent={renderBlockContent}
-            sortIndex={1}
-            value={{content: 'Test Content'}}
-        />
-    )).toMatchSnapshot();
-});
-
-test('Render expanded sortable block without remove icon', () => {
-    const renderBlockContent = jest.fn().mockImplementation((value) => 'Test for ' + value.content);
-
-    expect(render(
-        <SortableBlock
-            activeType="editor"
-            expanded={true}
-            onCollapse={jest.fn()}
-            onExpand={jest.fn()}
-            renderBlockContent={renderBlockContent}
-            sortIndex={1}
-            value={{content: 'Test Content'}}
-        />
-    )).toMatchSnapshot();
-});
-
 test('Render expanded sortable block with types', () => {
     const renderBlockContent = jest.fn().mockImplementation(
         (value, type) => 'Test for ' + value.content + (type ? ' and type ' + type : '')
@@ -72,12 +39,62 @@ test('Render expanded sortable block with types', () => {
             onCollapse={jest.fn()}
             onExpand={jest.fn()}
             onRemove={jest.fn()}
+            onSettingsClick={jest.fn()}
             renderBlockContent={renderBlockContent}
             sortIndex={1}
             types={{type1: 'Type 1', type2: 'Type 2'}}
             value={{content: 'Test Content'}}
         />
     )).toMatchSnapshot();
+});
+
+test('Should not show block types if only a single block is passed', () => {
+    const sortableBlock = mount(
+        <SortableBlock
+            activeType="editor"
+            expanded={true}
+            onCollapse={jest.fn()}
+            onExpand={jest.fn()}
+            onRemove={jest.fn()}
+            renderBlockContent={jest.fn()}
+            sortIndex={1}
+            value={{content: 'Test Content'}}
+        />
+    );
+
+    expect(sortableBlock.find('SingleSelect')).toHaveLength(0);
+});
+
+test('Should not show remove icon if no onRemove callback is passed', () => {
+    const sortableBlock = mount(
+        <SortableBlock
+            activeType="editor"
+            expanded={true}
+            onCollapse={jest.fn()}
+            onExpand={jest.fn()}
+            renderBlockContent={jest.fn()}
+            sortIndex={1}
+            value={{content: 'Test Content'}}
+        />
+    );
+
+    expect(sortableBlock.find('Icon[name="su-trash-alt"]')).toHaveLength(0);
+});
+
+test('Should not show the settings icon if no onSettingsClick callback is passed', () => {
+    const sortableBlock = mount(
+        <SortableBlock
+            activeType="editor"
+            expanded={true}
+            onCollapse={jest.fn()}
+            onExpand={jest.fn()}
+            renderBlockContent={jest.fn()}
+            sortIndex={1}
+            value={{content: 'Test Content'}}
+        />
+    );
+
+    expect(sortableBlock.find('Icon[name="su-cog"]')).toHaveLength(0);
 });
 
 test('Should call onCollapse when the block is being collapsed', () => {
@@ -153,6 +170,31 @@ test('Should call onRemove when the block is being removed', () => {
     expect(collapseSpy).not.toBeCalled();
     expect(expandSpy).not.toBeCalled();
     expect(removeSpy).toBeCalledWith(1);
+});
+
+test('Should call onSettingClick when the block setting icon is clicked', () => {
+    const collapseSpy = jest.fn();
+    const expandSpy = jest.fn();
+    const settingsClickSpy = jest.fn();
+
+    const sortableBlock = shallow(
+        <SortableBlock
+            activeType="editor"
+            expanded={true}
+            onCollapse={collapseSpy}
+            onExpand={expandSpy}
+            onSettingsClick={settingsClickSpy}
+            renderBlockContent={jest.fn()}
+            sortIndex={1}
+            value={{content: 'Test Content'}}
+        />
+    );
+
+    sortableBlock.find('Block').prop('onSettingsClick')();
+
+    expect(collapseSpy).not.toBeCalled();
+    expect(expandSpy).not.toBeCalled();
+    expect(settingsClickSpy).toBeCalledWith(1);
 });
 
 test('Should call onTypeChange when the block has changed its type', () => {

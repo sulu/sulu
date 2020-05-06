@@ -14,7 +14,8 @@ type Props = {|
     generatedBlockIds: Array<number>,
     onCollapse: (index: number) => void,
     onExpand: (index: number) => void,
-    onRemove: (index: number) => void,
+    onRemove?: (index: number) => void,
+    onSettingsClick?: (index: number) => void,
     onTypeChange?: (type: string | number, index: number) => void,
     renderBlockContent: RenderBlockContentCallback,
     types?: {[key: string]: string},
@@ -39,7 +40,18 @@ class SortableBlockList extends React.Component<Props> {
 
     handleRemove = (index: number) => {
         const {onRemove} = this.props;
-        onRemove(index);
+
+        if (onRemove) {
+            onRemove(index);
+        }
+    };
+
+    handleSettingsClick = (index: number) => {
+        const {onSettingsClick} = this.props;
+
+        if (onSettingsClick) {
+            onSettingsClick(index);
+        }
     };
 
     handleTypeChange = (type: string | number, index: number) => {
@@ -51,7 +63,16 @@ class SortableBlockList extends React.Component<Props> {
     };
 
     render() {
-        const {disabled, expandedBlocks, generatedBlockIds, onRemove, renderBlockContent, types, value} = this.props;
+        const {
+            disabled,
+            expandedBlocks,
+            generatedBlockIds,
+            onRemove,
+            onSettingsClick,
+            renderBlockContent,
+            types,
+            value,
+        } = this.props;
 
         const sortableBlockListClass = classNames(
             sortableBlockListStyles.sortableBlockList,
@@ -71,6 +92,7 @@ class SortableBlockList extends React.Component<Props> {
                         onCollapse={this.handleCollapse}
                         onExpand={this.handleExpand}
                         onRemove={onRemove ? this.handleRemove : undefined}
+                        onSettingsClick={onSettingsClick ? this.handleSettingsClick : undefined}
                         onTypeChange={this.handleTypeChange}
                         renderBlockContent={renderBlockContent}
                         sortIndex={index}

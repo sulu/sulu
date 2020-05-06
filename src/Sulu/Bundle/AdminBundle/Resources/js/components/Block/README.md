@@ -17,16 +17,23 @@ const onExpand = () => setExpanded(true);
 ```
 
 When the `onRemove` callback is passed, there will also be a remove icon shown, which calls this callback when being
-clicked.
+clicked. The `onSettingsClick` callback behaves the same but shows a settings icon.
 
 ```javascript
 const [expanded, setExpanded] = React.useState(true);
 
 const onCollapse = () => setExpanded(false);
+const onSettingsClick = () => alert('Settings callback was invoked!');
 const onExpand = () => setExpanded(true);
 const onRemove = () => alert('Remove callback was invoked!');
 
-<Block expanded={expanded} onCollapse={onCollapse} onExpand={onExpand} onRemove={onRemove}>
+<Block
+    expanded={expanded}
+    onSettingsClick={onSettingsClick}
+    onCollapse={onCollapse}
+    onExpand={onExpand}
+    onRemove={onRemove}
+>
     That is the content of the block!
 </Block>
 ```
