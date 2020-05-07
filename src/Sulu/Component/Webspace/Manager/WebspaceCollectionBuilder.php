@@ -330,11 +330,17 @@ class WebspaceCollectionBuilder
             $country = $url->getCountry();
             $locale = $language . ($country ? '_' . $country : '');
 
+            $replacers = [
+                ReplacerInterface::REPLACER_LANGUAGE => $language,
+                ReplacerInterface::REPLACER_COUNTRY => $country,
+                ReplacerInterface::REPLACER_LOCALIZATION => $locale,
+            ];
+
             $this->buildUrlFullMatch(
                 $portal,
                 $environment,
                 $segments,
-                [],
+                $replacers,
                 $urlAddress,
                 $portal->getLocalization($locale),
                 $urlAnalyticsKey,
@@ -363,14 +369,15 @@ class WebspaceCollectionBuilder
                     $url
                 );
             }
-            $this->buildUrlPartialMatch(
-                $portal,
-                $environment,
-                $urlAddress,
-                $urlAnalyticsKey,
-                $url
-            );
         }
+
+        $this->buildUrlPartialMatch(
+            $portal,
+            $environment,
+            $urlAddress,
+            $urlAnalyticsKey,
+            $url
+        );
     }
 
     /**
