@@ -244,7 +244,11 @@ export default withToolbar(MediaOverview, function() {
 
     const items = [];
 
-    const {permissions: collectionPermissions = {}} = this.collectionStore;
+    const {
+        permissions: collectionPermissions = {},
+        loading: collectionLoading,
+        locked: collectionLocked,
+    } = this.collectionStore;
 
     const addPermission = collectionPermissions.add !== undefined ? collectionPermissions.add : routeAddPermission;
     const deletePermission = collectionPermissions.delete !== undefined
@@ -254,7 +258,7 @@ export default withToolbar(MediaOverview, function() {
 
     if (addPermission) {
         items.push({
-            disabled: !this.collectionId.get(),
+            disabled: !this.collectionId.get() || collectionLoading || collectionLocked,
             icon: 'su-upload',
             label: translate('sulu_media.upload'),
             onClick: action(() => {

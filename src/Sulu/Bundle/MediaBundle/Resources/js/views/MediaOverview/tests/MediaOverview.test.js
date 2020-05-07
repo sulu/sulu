@@ -108,12 +108,13 @@ jest.mock('sulu-admin-bundle/containers', () => {
 jest.mock('sulu-admin-bundle/stores', () => ({
     ResourceStore: jest.fn(function() {
         this.destroy = jest.fn();
-        this.loading = false;
         this.id = 1;
 
         mockExtendObservable(this, {
+            loading: false,
             data: {
                 id: 1,
+                locked: false,
                 _embedded: {
                     parent: {
                         id: 1,
@@ -365,7 +366,7 @@ test('Should delete selected items when delete button is clicked', () => {
     expect(mediaOverview.find('Dialog').at(5).prop('open')).toEqual(true);
 });
 
-test('Upload button should be disabled if nothing is selected', () => {
+test('Upload button should be disabled if no collection is selected', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const MediaOverview = require('../MediaOverview').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
@@ -392,6 +393,68 @@ test('Upload button should be disabled if nothing is selected', () => {
 
     mediaOverview.collectionId.set(4);
     expect(toolbarFunction.call(mediaOverview).items[0].disabled).toEqual(false);
+});
+
+test('Upload button should be disabled if collection is loading', () => {
+    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const MediaOverview = require('../MediaOverview').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
+
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: ['de'],
+                permissions: {
+                    add: true,
+                    delete: true,
+                    edit: true,
+                },
+            },
+        },
+    };
+    const mediaOverview = mount(<MediaOverview router={router} />).at(0).instance();
+    mediaOverview.locale.set('de');
+    mediaOverview.collectionId.set(4);
+
+    mediaOverview.collectionStore.resourceStore.loading = true;
+    expect(toolbarFunction.call(mediaOverview).items[0].label).toEqual('sulu_media.upload');
+    expect(toolbarFunction.call(mediaOverview).items[0].disabled).toBeTruthy();
+
+    mediaOverview.collectionStore.resourceStore.loading = false;
+    expect(toolbarFunction.call(mediaOverview).items[0].disabled).toBeFalsy();
+});
+
+test('Upload button should be disabled if collection is locked', () => {
+    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const MediaOverview = require('../MediaOverview').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
+
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: ['de'],
+                permissions: {
+                    add: true,
+                    delete: true,
+                    edit: true,
+                },
+            },
+        },
+    };
+    const mediaOverview = mount(<MediaOverview router={router} />).at(0).instance();
+    mediaOverview.locale.set('de');
+    mediaOverview.collectionId.set(4);
+
+    mediaOverview.collectionStore.resourceStore.data.locked = true;
+    expect(toolbarFunction.call(mediaOverview).items[0].label).toEqual('sulu_media.upload');
+    expect(toolbarFunction.call(mediaOverview).items[0].disabled).toBeTruthy();
+
+    mediaOverview.collectionStore.resourceStore.data.locked = false;
+    expect(toolbarFunction.call(mediaOverview).items[0].disabled).toBeFalsy();
 });
 
 test('Upload overlay should be opened and closed as it requests', () => {
