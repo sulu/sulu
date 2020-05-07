@@ -176,15 +176,6 @@ test('Return no dialog if no id is set', () => {
     expect(setUnpublishedToolbarAction.getNode()).toEqual(null);
 });
 
-test('Throw error if no locale is given', () => {
-    const setUnpublishedToolbarAction = createSetUnpublishedToolbarAction();
-    setUnpublishedToolbarAction.resourceFormStore.resourceStore.id = 3;
-    // $FlowFixMe
-    setUnpublishedToolbarAction.resourceFormStore.resourceStore.locale = undefined;
-
-    expect(() => setUnpublishedToolbarAction.getNode()).toThrow('locale');
-});
-
 test('Close dialog when onClose from unpublish dialog is called', () => {
     const setUnpublishedToolbarAction = createSetUnpublishedToolbarAction();
     setUnpublishedToolbarAction.resourceFormStore.resourceStore.id = 3;
