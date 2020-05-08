@@ -46,16 +46,11 @@ export default class SetUnpublishedToolbarAction extends AbstractFormToolbarActi
         const {
             resourceFormStore: {
                 id,
-                locale,
             },
         } = this;
 
         if (!id) {
             return null;
-        }
-
-        if (!locale) {
-            throw new Error('The SetUnpublishedToolbarAction only works with locale!');
         }
 
         return (
