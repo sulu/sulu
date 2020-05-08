@@ -21,11 +21,6 @@
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
-        <service id="sulu_navigationContext.document.subscriber.segment"
-                 class="Sulu\Component\Content\Document\Subscriber\SegmentSubscriber">
-            <tag name="sulu_document_manager.event_subscriber" />
-        </service>
-
         <service id="sulu_redirect_type.document.subscriber.redirect_type"
                  class="Sulu\Component\Content\Document\Subscriber\RedirectTypeSubscriber">
             <tag name="sulu_document_manager.event_subscriber" />

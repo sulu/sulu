@@ -61,7 +61,6 @@ class DataNormalizer
             'redirectTarget' => self::getAndUnsetValue($data, 'internal_link'),
             'redirectExternal' => self::getAndUnsetValue($data, 'external'),
             'navigationContexts' => self::getAndUnsetValue($data, 'navContexts'),
-            'segment' => self::getAndUnsetValue($data, 'segment'),
             'shadowLocale' => self::getAndUnsetValue($data, 'shadowBaseLanguage'),
             'structureType' => self::getAndUnsetValue($data, 'template'),
             'shadowLocaleEnabled' => self::getAndUnsetValue($data, 'shadowOn') ? true : false,
@@ -73,7 +72,7 @@ class DataNormalizer
         ];
 
         foreach ($normalized as $key => $value) {
-            if (null === $value && 'segment' !== $key) {
+            if (null === $value) {
                 unset($normalized[$key]);
             }
         }

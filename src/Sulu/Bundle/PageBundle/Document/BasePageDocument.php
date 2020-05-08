@@ -20,7 +20,6 @@ use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
-use Sulu\Component\Content\Document\Behavior\SegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
@@ -47,7 +46,6 @@ class BasePageDocument implements
     ResourceSegmentBehavior,
     NavigationContextBehavior,
     RedirectTypeBehavior,
-    SegmentBehavior,
     WorkflowStageBehavior,
     ShadowLocaleBehavior,
     UuidBehavior,
@@ -115,11 +113,6 @@ class BasePageDocument implements
      * @var string[]
      */
     protected $navigationContexts = [];
-
-    /**
-     * @var ?string
-     */
-    protected $segment;
 
     /**
      * Type of redirection.
@@ -515,15 +508,5 @@ class BasePageDocument implements
     public function setAuthor($author)
     {
         $this->author = $author;
-    }
-
-    public function setSegment(?string $segment = null)
-    {
-        $this->segment = $segment;
-    }
-
-    public function getSegment(): ?string
-    {
-        return $this->segment;
     }
 }

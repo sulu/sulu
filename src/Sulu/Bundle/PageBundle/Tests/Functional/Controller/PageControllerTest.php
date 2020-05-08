@@ -314,7 +314,6 @@ class PageControllerTest extends SuluTestCase
         $this->assertArrayHasKey('publishedState', $response);
         $this->assertArrayHasKey('published', $response);
         $this->assertArrayHasKey('navContexts', $response);
-        $this->assertArrayHasKey('segment', $response);
         $this->assertArrayNotHasKey('article', $response);
         $this->assertArrayNotHasKey('tags', $response);
         $this->assertArrayNotHasKey('ext', $response);
@@ -790,7 +789,6 @@ class PageControllerTest extends SuluTestCase
             'title' => 'Testtitle',
             'template' => 'default',
             'url' => '/test',
-            'segment' => 's',
         ];
 
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
@@ -811,7 +809,6 @@ class PageControllerTest extends SuluTestCase
                 'url' => '/test-de',
                 'authored' => '2017-11-20T13:15:00',
                 'author' => 1,
-                'segment' => 's',
             ]
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -824,7 +821,6 @@ class PageControllerTest extends SuluTestCase
                 'url' => '/test-en',
                 'authored' => '2017-11-20T13:15:00',
                 'author' => 1,
-                'segment' => null,
             ]
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -840,7 +836,6 @@ class PageControllerTest extends SuluTestCase
 
         $this->assertEquals('2017-11-20T13:15:00', $response['authored']);
         $this->assertEquals(1, $response['author']);
-        $this->assertEquals('s', $response['segment']);
 
         $this->client->request('GET', '/api/pages/' . $response['id'] . '?language=en');
         $response = \json_decode($this->client->getResponse()->getContent(), true);
@@ -853,7 +848,6 @@ class PageControllerTest extends SuluTestCase
 
         $this->assertEquals('2017-11-20T13:15:00', $response['authored']);
         $this->assertEquals(1, $response['author']);
-        $this->assertEquals(null, $response['segment']);
 
         $this->assertFalse(
             $this->liveSession->getNode('/cmf/sulu_io/contents/testtitle-en')->hasProperty('i18n:en-changed')
@@ -1899,7 +1893,6 @@ class PageControllerTest extends SuluTestCase
             ],
             'url' => '/test1',
             'article' => 'Test',
-            'segment' => 's',
         ];
 
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
@@ -1916,7 +1909,6 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('/test1', $data['path']);
         $this->assertEquals(1, $data['nodeState']);
         $this->assertFalse($data['publishedState']);
-        $this->assertEquals('s', $data['segment']);
         $this->assertFalse($data['hasSub']);
 
         $this->client->request('GET', '/api/pages/' . $data['id'] . '?webspace=sulu_io&language=en');
@@ -1927,7 +1919,6 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('test1', $response['title']);
         $this->assertEquals('/test1', $response['path']);
         $this->assertFalse($response['publishedState']);
-        $this->assertEquals('s', $data['segment']);
         $this->assertFalse($response['hasSub']);
     }
 

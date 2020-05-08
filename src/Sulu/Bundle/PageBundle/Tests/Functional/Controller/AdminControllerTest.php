@@ -218,7 +218,7 @@ class AdminControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/admin/metadata/form/page_excerpt');
+        $client->request('GET', '/admin/metadata/form/page_excerpt?webspace=sulu_io');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());
@@ -228,6 +228,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('ext/excerpt/title', $form);
         $this->assertObjectHasAttribute('ext/excerpt/more', $form);
         $this->assertObjectHasAttribute('ext/excerpt/description', $form);
+        $this->assertObjectHasAttribute('ext/excerpt/segment', $form);
 
         $schema = $response->schema;
 
@@ -238,7 +239,7 @@ class AdminControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/admin/metadata/form/page_settings?webspace=sulu_io');
+        $client->request('GET', '/admin/metadata/form/page_settings');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());
