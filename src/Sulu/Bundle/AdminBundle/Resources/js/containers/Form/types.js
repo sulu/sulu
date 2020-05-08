@@ -53,7 +53,7 @@ export type SchemaOption = {
     value?: ?string | number | boolean | Array<SchemaOption>,
 };
 
-export type SchemaOptions = {[key: string]: SchemaOption};
+export type SchemaOptions = {[key: string]: SchemaOption | typeof undefined};
 
 type BaseSchemaEntry = {
     colSpan?: ColSpan,

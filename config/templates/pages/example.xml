@@ -48,6 +48,11 @@
                 <title lang="en">Content</title>
                 <title lang="de">Inhalte</title>
             </meta>
+
+            <params>
+                <param name="settings_form" value="page_block_settings" />
+            </params>
+
             <types>
                 <type name="editor">
                     <meta>

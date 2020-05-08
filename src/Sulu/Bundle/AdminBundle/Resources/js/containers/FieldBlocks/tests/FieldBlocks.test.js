@@ -898,6 +898,80 @@ test('Should call onFinish when the order of the blocks has changed', () => {
     expect(finishSpy).toBeCalledWith();
 });
 
+test('Should open and close block settings overlay close button is clicked', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
+    const value = [{type: 'default'}];
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            formInspector={formInspector}
+            schemaOptions={{settings_form: {name: 'settings_form', value: 'page_block_settings'}}}
+            types={types}
+            value={value}
+        />
+    );
+
+    expect(fieldBlocks.find('Overlay').prop('open')).toEqual(false);
+    fieldBlocks.find('Block').at(0).simulate('click');
+    fieldBlocks.find('Block').at(0).find('Icon[name="su-cog"]').simulate('click');
+    expect(fieldBlocks.find('Overlay').prop('open')).toEqual(true);
+
+    fieldBlocks.find('Overlay Icon[name="su-times"]').simulate('click');
+    expect(fieldBlocks.find('Overlay').prop('open')).toEqual(false);
+});
+
+test('Should open and close block settings overlay when confirm button is clicked', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
+    const value = [{type: 'default'}];
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            formInspector={formInspector}
+            schemaOptions={{settings_form: {name: 'settings_form', value: 'page_block_settings'}}}
+            types={types}
+            value={value}
+        />
+    );
+
+    expect(fieldBlocks.find('Overlay').prop('open')).toEqual(false);
+    fieldBlocks.find('Block').at(0).simulate('click');
+    fieldBlocks.find('Block').at(0).find('Icon[name="su-cog"]').simulate('click');
+    expect(fieldBlocks.find('Overlay').prop('open')).toEqual(true);
+
+    fieldBlocks.find('Overlay Button[children="sulu_admin.apply"]').simulate('click');
+    expect(fieldBlocks.find('Overlay').prop('open')).toEqual(false);
+});
+
 test('Throw error if no default type are passed', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     expect(() => shallow(
@@ -929,4 +1003,32 @@ test('Throw error if empty type array is passed', () => {
             value={[]}
         />
     )).toThrow('The "block" field type needs at least one type to be configured!');
+});
+
+test('Throw error if passed settings_form schema option is not a string', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                nothing: {
+                    label: 'Nothing',
+                    type: 'phone',
+                    visible: true,
+                },
+            },
+        },
+    };
+
+    expect(() => shallow(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            formInspector={formInspector}
+            schemaOptions={{settings_form: {name: 'settings_form', value: []}}}
+            types={types}
+            value={[]}
+        />
+    )).toThrow('The "block" field types only accepts strings as "settings_form" schema option!');
 });
