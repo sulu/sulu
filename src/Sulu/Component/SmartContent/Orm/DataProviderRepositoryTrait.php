@@ -56,9 +56,12 @@ trait DataProviderRepositoryTrait
      */
     private function findByFiltersIds($filters, $page, $pageSize, $limit, $locale, $options = [])
     {
-        $queryBuilder = $this->createQueryBuilder('c');
+        $parameter = [];
 
-        $parameter = $this->appendSelect($queryBuilder, 'c', $locale, $options);
+        $queryBuilder = $this->createQueryBuilder('c')
+            ->addSelect('c.id')
+            ->distinct()
+            ->addOrderBy('c.id', 'ASC');
 
         $tagRelation = $this->appendTagsRelation($queryBuilder, 'c');
         $categoryRelation = $this->appendCategoriesRelation($queryBuilder, 'c');
@@ -293,25 +296,6 @@ trait DataProviderRepositoryTrait
     protected function append(QueryBuilder $queryBuilder, $alias, $locale, $options = [])
     {
         // empty implementation can be overwritten by repository
-        return [];
-    }
-
-    /**
-     * Append select to query builder for "findByFilters" function.
-     *
-     * @param string $alias
-     * @param string $locale
-     * @param array $options
-     *
-     * @return array parameters for query
-     */
-    protected function appendSelect(QueryBuilder $queryBuilder, $alias, $locale, $options = [])
-    {
-        $queryBuilder
-            ->addSelect($alias . '.id')
-            ->distinct()
-            ->addOrderBy($alias . '.id', 'ASC');
-
         return [];
     }
 
