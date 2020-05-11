@@ -7,10 +7,9 @@ import type {IObservableValue} from 'mobx';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import Overlay from '../../components/Overlay';
 import {translate} from '../../utils/Translator';
-import Form from '../../containers/Form';
+import Form, {ResourceFormStore, resourceFormStoreFactory} from '../../containers/Form';
 import ResourceStore from '../../stores/ResourceStore';
 import List from '../List';
-import ResourceFormStore from '../../containers/Form/stores/ResourceFormStore';
 import Snackbar from '../../components/Snackbar';
 import formOverlayListStyles from './formOverlayList.scss';
 
@@ -108,7 +107,12 @@ class FormOverlayList extends React.Component<Props> {
         );
 
         const resourceStore = new ResourceStore(resourceKey, itemId, observableOptions, formStoreOptions);
-        this.formStore = new ResourceFormStore(resourceStore, formKey, formStoreOptions, metadataRequestParameters);
+        this.formStore = resourceFormStoreFactory.createFromResourceStore(
+            resourceStore,
+            formKey,
+            formStoreOptions,
+            metadataRequestParameters
+        );
     };
 
     @action destroyFormOverlay = () => {

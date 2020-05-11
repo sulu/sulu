@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {Form, ResourceFormStore} from 'sulu-admin-bundle/containers';
+import {Form, resourceFormStoreFactory} from 'sulu-admin-bundle/containers';
+import type {FormStoreInterface} from 'sulu-admin-bundle/containers';
 import {Overlay} from 'sulu-admin-bundle/components';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -20,7 +21,7 @@ const API_OPTIONS = {resourceKey: 'media'};
 class PermissionFormOverlay extends React.Component<Props> {
     formRef: ?Form;
     resourceStore: ResourceStore;
-    formStore: ResourceFormStore;
+    formStore: FormStoreInterface;
 
     constructor(props: Props) {
         super(props);
@@ -44,7 +45,11 @@ class PermissionFormOverlay extends React.Component<Props> {
     createFormStore() {
         const {collectionId} = this.props;
         this.resourceStore = new ResourceStore('permissions', collectionId, {}, API_OPTIONS);
-        this.formStore = new ResourceFormStore(this.resourceStore, 'permission_details', API_OPTIONS);
+        this.formStore = resourceFormStoreFactory.createFromResourceStore(
+            this.resourceStore,
+            'permission_details',
+            API_OPTIONS
+        );
     }
 
     destroyFormStore() {

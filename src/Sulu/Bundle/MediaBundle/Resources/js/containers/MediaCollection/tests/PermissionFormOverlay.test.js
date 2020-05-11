@@ -36,7 +36,8 @@ test('Create new ResourceFormStore when collectionId has changed', () => {
         // $FlowFixMe
         ResourceStore.mock.instances[0],
         'permission_details',
-        {resourceKey: 'media'}
+        {resourceKey: 'media'},
+        undefined
     );
 
     permissionFormOverlay.setProps({collectionId: 3});
@@ -51,7 +52,8 @@ test('Create new ResourceFormStore when collectionId has changed', () => {
         // $FlowFixMe
         ResourceStore.mock.instances[1],
         'permission_details',
-        {resourceKey: 'media'}
+        {resourceKey: 'media'},
+        undefined
     );
 });
 

@@ -11,6 +11,28 @@ const COLLECTIONS_RESOURCE_KEY = 'collections';
 const SETTINGS_KEY = 'media_collection_test';
 const USER_SETTINGS_KEY = 'media_overview';
 
+jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () =>jest.fn(function(resourceStore) {
+    switch (resourceStore.resourceKey) {
+        case 'collections':
+            this.schema = {
+                title: {
+                    type: 'text_line',
+                },
+                description: {
+                    type: 'text_line',
+                },
+            };
+            break;
+        default:
+            this.schema = {};
+    }
+
+    this.data = resourceStore.data;
+    this.isFieldModified = jest.fn();
+    this.validate = jest.fn().mockReturnValue(true);
+    this.destroy = jest.fn();
+}));
+
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
         AbstractAdapter: require('sulu-admin-bundle/containers/List/adapters/AbstractAdapter').default,
@@ -100,27 +122,7 @@ jest.mock('sulu-admin-bundle/containers', () => {
             'sulu-admin-bundle/containers/List/structureStrategies/FlatStructureStrategy'
         ).default,
         Form: require('sulu-admin-bundle/containers/Form').default,
-        ResourceFormStore: jest.fn(function(resourceStore) {
-            switch (resourceStore.resourceKey) {
-                case 'collections':
-                    this.schema = {
-                        title: {
-                            type: 'text_line',
-                        },
-                        description: {
-                            type: 'text_line',
-                        },
-                    };
-                    break;
-                default:
-                    this.schema = {};
-            }
-
-            this.data = resourceStore.data;
-            this.isFieldModified = jest.fn();
-            this.validate = jest.fn().mockReturnValue(true);
-            this.destroy = jest.fn();
-        }),
+        resourceFormStoreFactory: require('sulu-admin-bundle/containers/Form/stores/resourceFormStoreFactory').default,
         InfiniteLoadingStrategy: require(
             'sulu-admin-bundle/containers/List/loadingStrategies/InfiniteLoadingStrategy'
         ).default,

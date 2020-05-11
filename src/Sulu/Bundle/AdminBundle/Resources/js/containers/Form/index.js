@@ -3,8 +3,10 @@ import Form from './Form';
 import FormInspector from './FormInspector';
 import conditionDataProviderRegistry from './registries/conditionDataProviderRegistry';
 import fieldRegistry from './registries/fieldRegistry';
-import ResourceFormStore from './stores/ResourceFormStore';
 import MemoryFormStore from './stores/MemoryFormStore';
+import memoryFormStoreFactory from './stores/memoryFormStoreFactory';
+import ResourceFormStore from './stores/ResourceFormStore';
+import resourceFormStoreFactory from './stores/resourceFormStoreFactory';
 import ChangelogLine from './fields/ChangelogLine';
 import CardCollection from './fields/CardCollection';
 import Selection from './fields/Selection';
@@ -25,7 +27,7 @@ import SmartContent from './fields/SmartContent';
 import TextArea from './fields/TextArea';
 import TextEditor from './fields/TextEditor';
 import Url from './fields/Url';
-import type {Schema, Types} from './types';
+import type {FormStoreInterface, Schema, Types} from './types';
 
 export {
     conditionDataProviderRegistry,
@@ -39,8 +41,10 @@ export {
     Email,
     Input,
     FormInspector,
-    ResourceFormStore,
     MemoryFormStore,
+    memoryFormStoreFactory,
+    ResourceFormStore,
+    resourceFormStoreFactory,
     Number,
     PasswordConfirmation,
     Phone,
@@ -54,5 +58,5 @@ export {
     TextEditor,
     Url,
 };
-export type {Schema, Types};
+export type {FormStoreInterface, Schema, Types};
 export default Form;

@@ -36,7 +36,7 @@ jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.addFinishFieldHandler = jest.fn();
     this.getPathsByTag = jest.fn();
     this.getValueByPath = jest.fn();
-    this.getSchemaEntryByPath = jest.fn().mockReturnValue({});
+    this.getSchemaEntryByPath = jest.fn().mockReturnValue(undefined);
     this.isFieldModified = jest.fn().mockReturnValue(false);
 }));
 

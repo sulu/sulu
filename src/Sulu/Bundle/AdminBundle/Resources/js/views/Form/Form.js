@@ -7,7 +7,7 @@ import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import Dialog from '../../components/Dialog';
 import PublishIndicator from '../../components/PublishIndicator';
-import {default as FormContainer, ResourceFormStore} from '../../containers/Form';
+import {default as FormContainer, ResourceFormStore, resourceFormStoreFactory} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import type {AttributeMap, UpdateRouteMethod} from '../../services/Router/types';
@@ -202,7 +202,7 @@ class Form extends React.Component<Props> {
             this.resourceStore = resourceStore;
         }
 
-        this.resourceFormStore = new ResourceFormStore(
+        this.resourceFormStore = resourceFormStoreFactory.createFromResourceStore(
             this.resourceStore,
             this.formKey,
             this.formStoreOptions,

@@ -10,13 +10,17 @@ jest.mock(
     () => mockReact.forwardRef(({children}, ref) => children({getInputProps: jest.fn(), getRootProps: jest.fn(), ref}))
 );
 
+jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(function() {
+    this.destroy = jest.fn();
+}));
+
 jest.mock('sulu-admin-bundle/containers', () => {
     return {
         withToolbar: jest.fn((Component) => Component),
         Form: jest.fn(() => null),
-        ResourceFormStore: jest.fn(function() {
-            this.destroy = jest.fn();
-        }),
+        resourceFormStoreFactory: require.requireActual(
+            'sulu-admin-bundle/containers/Form/stores/resourceFormStoreFactory'
+        ).default,
         AbstractAdapter: require('sulu-admin-bundle/containers/List/adapters/AbstractAdapter').default,
         List: require('sulu-admin-bundle/containers/List/List').default,
         ListStore: jest.fn(function(resourceKey, observableOptions) {

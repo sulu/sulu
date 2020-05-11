@@ -6,19 +6,13 @@ import CollectionFormOverlay from '../CollectionFormOverlay';
 
 jest.mock('sulu-admin-bundle/services/initializer', () => jest.fn());
 
-jest.mock('sulu-admin-bundle/containers', () => ({
-    ResourceFormStore: jest.fn(),
-    // $FlowFixMe
-    Form: require.requireActual('sulu-admin-bundle/containers').Form,
-}));
+jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn());
 
-jest.mock('sulu-admin-bundle/utils', () => ({
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('sulu-admin-bundle/stores', () => ({
-    ResourceStore: jest.fn(),
-}));
+jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn());
 
 test('Render as overlay', () => {
     const resourceStore = new ResourceStore('test');
