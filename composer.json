@@ -130,6 +130,7 @@
     },
     "conflict": {
         "doctrine/dbal": "2.7.0",
+        "doctrine/inflector": "1.4.0 || 2.0.0",
         "doctrine/lexer": "1.0.0",
         "jackalope/jackalope": "< 1.3.4",
         "jackalope/jackalope-doctrine-dbal": "< 1.3.0",

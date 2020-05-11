@@ -249,4 +249,29 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $this->assertEquals('sulu.lo/*', $prod->getCustomUrls()[0]->getUrl());
         $this->assertEquals('*.sulu.lo', $prod->getCustomUrls()[1]->getUrl());
     }
+
+    public function testLanguageSpecificPartial()
+    {
+        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
+            $this->loader,
+            new Replacer(),
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/language-specific'
+        );
+
+        $webspaceCollection = $webspaceCollectionBuilder->build();
+
+        $portalInformations = $webspaceCollection->getPortalInformations('dev');
+
+        $this->assertSame([
+            'austria.sulu.io/de',
+            'austria.sulu.io',
+            'usa.sulu.io/en',
+            'usa.sulu.io',
+        ], array_keys($portalInformations));
+
+        $this->assertSame($portalInformations['austria.sulu.io/de']->getPriority(), 10);
+        $this->assertSame($portalInformations['austria.sulu.io']->getPriority(), 9);
+        $this->assertSame($portalInformations['usa.sulu.io/en']->getPriority(), 10);
+        $this->assertSame($portalInformations['usa.sulu.io']->getPriority(), 9);
+    }
 }
