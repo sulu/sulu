@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * release/1.6
+    * BUGFIX      #5284  [MediaBundle]             Conflict doctrine/inflector 1.4.0 and 2.0.0 version to fix media routes
     * BUGFIX      #5240  [Content]                 Fix copy language with different template
 
 * 1.6.32 (2020-03-26)
