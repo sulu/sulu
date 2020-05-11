@@ -3,7 +3,7 @@ import {action, computed, observable} from 'mobx';
 import type {FormStoreInterface, RawSchema, Schema, SchemaEntry} from '../types';
 import metadataStore from './metadataStore';
 
-export default class SchemaFormStore implements FormStoreInterface {
+export default class SchemaFormStoreDecorator implements FormStoreInterface {
     @observable innerFormStore: ?FormStoreInterface;
 
     constructor(initializer: (schema: RawSchema, jsonSchema: Object) => FormStoreInterface, formKey: string) {

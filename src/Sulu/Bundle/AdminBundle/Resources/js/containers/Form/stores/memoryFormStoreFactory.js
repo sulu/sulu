@@ -2,11 +2,11 @@
 import type {IObservableValue} from 'mobx';
 import type {RawSchema} from '../types';
 import MemoryFormStore from './MemoryFormStore';
-import SchemaFormStore from './SchemaFormStore';
+import SchemaFormStoreDecorator from './SchemaFormStoreDecorator';
 
 class MemoryFormStoreFactory {
     createFromFormKey(formKey: string, data: Object = {}, locale: ?IObservableValue<string>) {
-        return new SchemaFormStore(
+        return new SchemaFormStoreDecorator(
             (schema, jsonSchema) => new MemoryFormStore(data, schema, jsonSchema, locale),
             formKey
         );

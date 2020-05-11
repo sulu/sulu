@@ -1,6 +1,6 @@
 // @flow
 import metadataStore from '../../stores/metadataStore';
-import SchemaFormStore from '../../stores/SchemaFormStore';
+import SchemaFormStoreDecorator from '../../stores/SchemaFormStoreDecorator';
 
 jest.mock('../../stores/metadataStore', () => ({
     getJsonSchema: jest.fn(),
@@ -26,7 +26,7 @@ test('Initialize a SchemaFormStore', () => {
     };
     // $FlowFixMe
     const initializerSpy = jest.fn().mockReturnValue(store);
-    const schemaFormStore = new SchemaFormStore(initializerSpy, 'test');
+    const schemaFormStore = new SchemaFormStoreDecorator(initializerSpy, 'test');
 
     return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
         expect(initializerSpy).toBeCalledWith(schema, jsonSchema);
