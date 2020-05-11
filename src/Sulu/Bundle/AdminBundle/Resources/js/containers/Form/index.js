@@ -3,9 +3,10 @@ import Form from './Form';
 import FormInspector from './FormInspector';
 import conditionDataProviderRegistry from './registries/conditionDataProviderRegistry';
 import fieldRegistry from './registries/fieldRegistry';
-import ResourceFormStore from './stores/ResourceFormStore';
 import MemoryFormStore from './stores/MemoryFormStore';
 import memoryFormStoreFactory from './stores/memoryFormStoreFactory';
+import ResourceFormStore from './stores/ResourceFormStore';
+import resourceFormStoreFactory from './stores/resourceFormStoreFactory';
 import ChangelogLine from './fields/ChangelogLine';
 import CardCollection from './fields/CardCollection';
 import Selection from './fields/Selection';
@@ -40,9 +41,10 @@ export {
     Email,
     Input,
     FormInspector,
-    ResourceFormStore,
     MemoryFormStore,
     memoryFormStoreFactory,
+    ResourceFormStore,
+    resourceFormStoreFactory,
     Number,
     PasswordConfirmation,
     Phone,

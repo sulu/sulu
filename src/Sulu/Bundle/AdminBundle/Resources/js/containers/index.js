@@ -26,10 +26,12 @@ import Form, {
     conditionDataProviderRegistry,
     fieldRegistry,
     FormInspector,
+    memoryFormStoreFactory,
     ResourceFormStore,
+    resourceFormStoreFactory,
     ResourceLocator,
 } from './Form';
-import type {SchemaOption} from './Form/types';
+import type {FormStoreInterface, SchemaOption} from './Form/types';
 import ResourceLocatorHistory from './ResourceLocatorHistory';
 import ResourceMultiSelect from './ResourceMultiSelect';
 import ResourceSingleSelect from './ResourceSingleSelect';
@@ -42,6 +44,7 @@ import SingleSelection from './SingleSelection';
 import TextEditor, {textEditorRegistry} from './TextEditor';
 
 export type {
+    FormStoreInterface,
     ListAdapterProps,
     LoadingStrategyInterface,
     SchemaOption,
@@ -72,7 +75,9 @@ export {
     MultiSelection,
     InfiniteLoadingStrategy,
     PaginatedLoadingStrategy,
+    memoryFormStoreFactory,
     ResourceFormStore,
+    resourceFormStoreFactory,
     ResourceLocator,
     ResourceLocatorHistory,
     ResourceMultiSelect,

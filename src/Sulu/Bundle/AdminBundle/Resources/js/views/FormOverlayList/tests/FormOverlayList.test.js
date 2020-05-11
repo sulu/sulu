@@ -19,7 +19,7 @@ jest.mock('../../List', () => class ListMock extends mockReact.Component<*> {
     }
 });
 
-jest.mock('../../../containers/Form', () => class ListMock extends mockReact.Component<*> {
+jest.mock('../../../containers/Form/Form', () => class ListMock extends mockReact.Component<*> {
     render() {
         return <div>form container mock</div>;
     }
