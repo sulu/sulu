@@ -35,7 +35,7 @@ jest.mock('sulu-admin-bundle/containers/Form/stores/metadataStore', () => ({
 }));
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester/ResourceRequester', () => ({
-    get: jest.fn(),
+    get: jest.fn().mockReturnValue(Promise.resolve()),
     put: jest.fn(),
 }));
 

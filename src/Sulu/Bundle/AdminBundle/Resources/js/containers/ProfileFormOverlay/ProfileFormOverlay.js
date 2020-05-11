@@ -5,12 +5,11 @@ import React from 'react';
 import Loader from '../../components/Loader/Loader';
 import Overlay from '../../components/Overlay';
 import Form from '../../containers/Form';
+import type {FormStoreInterface} from '../../containers/Form/types';
 import ResourceRequester from '../../services/ResourceRequester';
 import userStore from '../../stores/userStore';
 import {translate} from '../../utils/Translator';
-import MemoryFormStore from '../Form/stores/MemoryFormStore';
-import metadataStore from '../Form/stores/metadataStore';
-import type {RawSchema} from '../Form/types';
+import memoryFormStoreFactory from '../Form/stores/memoryFormStoreFactory';
 import profileFormOverlayStyles from './profileFormOverlay.scss';
 
 type Props = {
@@ -25,21 +24,17 @@ const RESOURCE_KEY = 'profile';
 class ProfileFormOverlay extends React.Component<Props> {
     formRef: ?Form;
     title: string;
-    @observable formStore: MemoryFormStore;
+    @observable formStore: FormStoreInterface;
     saving: boolean = false;
 
     constructor(props: Props) {
         super(props);
 
-        Promise.all([
-            metadataStore.getSchema(FORM_KEY),
-            metadataStore.getJsonSchema(FORM_KEY),
-            ResourceRequester.get(RESOURCE_KEY),
-        ]).then(this.handleResponse);
+        ResourceRequester.get(RESOURCE_KEY).then(this.handleResponse);
     }
 
-    @action handleResponse = ([schema, jsonSchema, data]: [RawSchema, Object, Object]) => {
-        this.formStore = new MemoryFormStore(data, schema, jsonSchema);
+    @action handleResponse = (data: Object) => {
+        this.formStore = memoryFormStoreFactory.createFromFormKey(FORM_KEY, data);
     };
 
     setFormRef = (formRef: ?Form) => {
