@@ -80,7 +80,7 @@ class ContentPathTwigExtensionTest extends TestCase
         );
     }
 
-    public function testGetContentPath()
+    public function testLegacyGetContentPath()
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.sulu.io');
         $this->requestAnalyzer->getAttribute('port')->willReturn(80);
@@ -96,7 +96,55 @@ class ContentPathTwigExtensionTest extends TestCase
         $this->assertEquals('www.sulu.io/de/test', $this->extension->getContentPath('/test'));
     }
 
-    public function testGetContentPathWithPort()
+    public function testLegacyGetContentRootPath()
+    {
+        $this->requestAnalyzer->getAttribute('host')->willReturn('www.sulu.io');
+        $this->requestAnalyzer->getAttribute('port')->willReturn(80);
+        $this->webspaceManager->findUrlByResourceLocator(
+            '/',
+            $this->environment,
+            'de',
+            'sulu_io',
+            'www.sulu.io',
+            'http'
+        )->willReturn('www.sulu.io/de')->shouldBeCalledTimes(1);
+
+        $this->assertEquals('www.sulu.io/de', $this->extension->getContentRootPath());
+    }
+
+    public function testGetContentRootUrl()
+    {
+        $this->requestAnalyzer->getAttribute('host')->willReturn('www.sulu.io');
+        $this->requestAnalyzer->getAttribute('port')->willReturn(80);
+        $this->webspaceManager->findUrlByResourceLocator(
+            '/',
+            $this->environment,
+            'de',
+            'sulu_io',
+            'www.sulu.io',
+            'http'
+        )->willReturn('www.sulu.io/de')->shouldBeCalledTimes(1);
+
+        $this->assertEquals('www.sulu.io/de', $this->extension->getContentRootUrl());
+    }
+
+    public function testGetContentUrl()
+    {
+        $this->requestAnalyzer->getAttribute('host')->willReturn('www.sulu.io');
+        $this->requestAnalyzer->getAttribute('port')->willReturn(80);
+        $this->webspaceManager->findUrlByResourceLocator(
+            '/test',
+            $this->environment,
+            'de',
+            'sulu_io',
+            'www.sulu.io',
+            'http'
+        )->willReturn('www.sulu.io/de/test')->shouldBeCalledTimes(1);
+
+        $this->assertEquals('www.sulu.io/de/test', $this->extension->getContentUrl('/test'));
+    }
+
+    public function testGetContentUrlWithPort()
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.sulu.io');
         $this->requestAnalyzer->getAttribute('port')->willReturn(8000);
@@ -109,10 +157,10 @@ class ContentPathTwigExtensionTest extends TestCase
             'http'
         )->willReturn('www.sulu.io/de/test')->shouldBeCalledTimes(1);
 
-        $this->assertEquals('www.sulu.io:8000/de/test', $this->extension->getContentPath('/test'));
+        $this->assertEquals('www.sulu.io:8000/de/test', $this->extension->getContentUrl('/test'));
     }
 
-    public function testGetContentPathWithHttpsPort()
+    public function testGetContentUrlWithHttpsPort()
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.sulu.io');
         $this->requestAnalyzer->getAttribute('scheme')->willReturn('https');
@@ -126,10 +174,10 @@ class ContentPathTwigExtensionTest extends TestCase
             'https'
         )->willReturn('www.sulu.io/de/test')->shouldBeCalledTimes(1);
 
-        $this->assertEquals('www.sulu.io:444/de/test', $this->extension->getContentPath('/test'));
+        $this->assertEquals('www.sulu.io:444/de/test', $this->extension->getContentUrl('/test'));
     }
 
-    public function testGetContentPathWithDefaultHttpsPort()
+    public function testGetContentUrlWithDefaultHttpsPort()
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.sulu.io');
         $this->requestAnalyzer->getAttribute('scheme')->willReturn('https');
@@ -143,10 +191,10 @@ class ContentPathTwigExtensionTest extends TestCase
             'https'
         )->willReturn('www.sulu.io/de/test')->shouldBeCalledTimes(1);
 
-        $this->assertEquals('www.sulu.io/de/test', $this->extension->getContentPath('/test'));
+        $this->assertEquals('www.sulu.io/de/test', $this->extension->getContentUrl('/test'));
     }
 
-    public function testGetContentPathWithLocaleForDifferentDomain()
+    public function testGetContentUrlWithLocaleForDifferentDomain()
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('en.sulu.io');
         $this->requestAnalyzer->getAttribute('port')->willReturn(80);
@@ -159,10 +207,10 @@ class ContentPathTwigExtensionTest extends TestCase
             'http'
         )->willReturn('de.sulu.io/test');
         $this->suluWebspace->hasDomain('en.sulu.io', 'prod', 'de')->willReturn(false);
-        $this->assertEquals('de.sulu.io/test', $this->extension->getContentPath('/test', null, 'de'));
+        $this->assertEquals('de.sulu.io/test', $this->extension->getContentUrl('/test', null, 'de'));
     }
 
-    public function testGetContentPathWithWebspaceKey()
+    public function testGetContentUrlWithWebspaceKey()
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.test.io');
         $this->requestAnalyzer->getAttribute('port')->willReturn(80);
@@ -175,10 +223,10 @@ class ContentPathTwigExtensionTest extends TestCase
             'http'
         )->willReturn('www.sulu.io/de/test')->shouldBeCalledTimes(1);
 
-        $this->assertEquals('www.sulu.io/de/test', $this->extension->getContentPath('/test', 'test_io'));
+        $this->assertEquals('www.sulu.io/de/test', $this->extension->getContentUrl('/test', 'test_io'));
     }
 
-    public function testGetContentPathWithWebspaceKeyNotFoundForDomain()
+    public function testGetContentUrlWithWebspaceKeyNotFoundForDomain()
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.test.io');
         $this->requestAnalyzer->getAttribute('port')->willReturn(80);
@@ -196,10 +244,10 @@ class ContentPathTwigExtensionTest extends TestCase
             'http'
         )->willReturn('www.test.io/de/test')->shouldBeCalledTimes(1);
 
-        $this->assertEquals('www.test.io/de/test', $this->extension->getContentPath('/test', 'test_io'));
+        $this->assertEquals('www.test.io/de/test', $this->extension->getContentUrl('/test', 'test_io'));
     }
 
-    public function testGetContentPathWithWebspaceKeyHostNotWebspace()
+    public function testGetContentUrlWithWebspaceKeyHostNotWebspace()
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.xy.io');
         $this->requestAnalyzer->getAttribute('port')->willReturn(80);
@@ -213,10 +261,10 @@ class ContentPathTwigExtensionTest extends TestCase
             'http'
         )->willReturn('www.test.io/de/test')->shouldBeCalledTimes(1);
 
-        $this->assertEquals('www.test.io/de/test', $this->extension->getContentPath('/test', 'test_io'));
+        $this->assertEquals('www.test.io/de/test', $this->extension->getContentUrl('/test', 'test_io'));
     }
 
-    public function testGetContentPathWithWebspaceKeyAndDomain()
+    public function testGetContentUrlWithWebspaceKeyAndDomain()
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.sulu.io');
         $this->requestAnalyzer->getAttribute('port')->willReturn(80);
@@ -231,11 +279,11 @@ class ContentPathTwigExtensionTest extends TestCase
 
         $this->assertEquals(
             '/test',
-            $this->extension->getContentPath('/test', 'test_io', 'en', 'www.test.io')
+            $this->extension->getContentUrl('/test', 'test_io', 'en', 'www.test.io')
         );
     }
 
-    public function testGetContentPathExternalUrl()
+    public function testGetContentUrlExternalUrl()
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.sulu.io');
         $this->webspaceManager->findUrlByResourceLocator(

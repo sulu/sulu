@@ -29,7 +29,7 @@
 {% set seoCanonical = seo.canonicalUrl|default() %}
 
 {%- if not seoCanonical and shadowBaseLocale and urls[shadowBaseLocale]|default() %}
-    {% set seoCanonical = sulu_content_path(urls[shadowBaseLocale], null, shadowBaseLocale) %}
+    {% set seoCanonical = sulu_content_url(urls[shadowBaseLocale], null, shadowBaseLocale) %}
 {%- endif -%}
 
 {#- render blocks -#}
@@ -63,9 +63,9 @@
     {%- if urls|length > 1 -%}
         {%- for locale, url in urls -%}
             {%- if defaultLocale == locale -%}
-                <link rel="alternate" href="{{ sulu_content_path(url, null, locale) }}" hreflang="x-default"/>
+                <link rel="alternate" href="{{ sulu_content_url(url, null, locale) }}" hreflang="x-default"/>
             {%- endif -%}
-            <link rel="alternate" href="{{ sulu_content_path(url, null, locale) }}" hreflang="{{ locale|replace({'_': '-'}) }}"/>
+            <link rel="alternate" href="{{ sulu_content_url(url, null, locale) }}" hreflang="{{ locale|replace({'_': '-'}) }}"/>
         {%- endfor -%}
     {%- endif -%}
 {%- endblock -%}

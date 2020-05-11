@@ -6,7 +6,7 @@
     <ul>
         {% for page in content.pages  %}
             <li>
-                <a href="{{sulu_content_path(page.url)}}">{{ page.title }}</a>
+                <a href="{{sulu_content_url(page.url)}}">{{ page.title }}</a>
             </li>
         {% endfor %}
     </ul>

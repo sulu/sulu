@@ -23,12 +23,12 @@
             <nav>
                 <ul>
                     <li>
-                        <a href="{{ sulu_content_root_path() }}">Homepage</a>
+                        <a href="{{ sulu_content_root_url() }}">Homepage</a>
                     </li>
 
                     {% for item in sulu_navigation_root_tree('main') %}
                         <li>
-                            <a href="{{ sulu_content_path(item.url, item.webspaceKey) }}"
+                            <a href="{{ sulu_content_url(item.url, item.webspaceKey) }}"
                                title="{{ item.title }}">{{ item.title }}</a>
                         </li>
                     {% endfor %}
