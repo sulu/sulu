@@ -267,7 +267,7 @@ export default class AbstractFormStore
         return this.pathsByTag[tagName];
     }
 
-    getSchemaEntryByPath(schemaPath: string): SchemaEntry {
+    getSchemaEntryByPath(schemaPath: string): ?SchemaEntry {
         return jsonpointer.get(this.schema, schemaPath);
     }
 
