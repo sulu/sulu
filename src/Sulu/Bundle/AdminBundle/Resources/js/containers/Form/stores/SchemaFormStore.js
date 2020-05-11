@@ -29,6 +29,12 @@ export default class SchemaFormStore implements FormStoreInterface {
         return {};
     }
 
+    destroy() {
+        if (this.innerFormStore) {
+            this.innerFormStore.destroy();
+        }
+    }
+
     set dirty(dirty: boolean) {
         if (this.innerFormStore) {
             this.innerFormStore.dirty = dirty;

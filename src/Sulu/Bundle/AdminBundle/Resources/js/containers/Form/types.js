@@ -99,6 +99,7 @@ export interface FormStoreInterface {
     // Only exists in one implementation, therefore optional. Maybe we can remove that definition one day...
     +copyFromLocale?: (string) => Promise<*>,
     +data: Object,
+    +destroy: () => void,
     dirty: boolean,
     +errors: Object,
     +finishField: (dataPath: string) => void,

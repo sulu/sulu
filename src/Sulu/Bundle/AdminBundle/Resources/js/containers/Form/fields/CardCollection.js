@@ -5,7 +5,8 @@ import {action, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import CardCollectionComponent from '../../../components/CardCollection';
 import Overlay from '../../../components/Overlay';
-import Form, {MemoryFormStore} from '../../../containers/Form';
+import Form, {memoryFormStoreFactory} from '../../../containers/Form';
+import type {FormStoreInterface} from '../../../containers/Form';
 import {translate} from '../../../utils/Translator';
 import type {FieldTypeProps} from '../../../types';
 import cardCollectionStyles from './cardCollection.scss';
@@ -13,7 +14,7 @@ import cardCollectionStyles from './cardCollection.scss';
 @observer
 class CardCollection extends React.Component<FieldTypeProps<Array<Object>>> {
     @observable overlayIndex: number | typeof undefined = undefined;
-    @observable formStore: ?MemoryFormStore = undefined;
+    @observable formStore: ?FormStoreInterface = undefined;
     formRef: ?ElementRef<typeof Form>;
 
     constructor(props: FieldTypeProps<Array<Object>>) {
@@ -48,7 +49,7 @@ class CardCollection extends React.Component<FieldTypeProps<Array<Object>>> {
         } = this.props;
 
         this.overlayIndex = undefined;
-        this.formStore = new MemoryFormStore({}, schema, jsonSchema);
+        this.formStore = memoryFormStoreFactory.createFromSchema(schema, jsonSchema);
     };
 
     @action handleEdit = (index: number) => {
@@ -65,7 +66,7 @@ class CardCollection extends React.Component<FieldTypeProps<Array<Object>>> {
         }
 
         this.overlayIndex = index;
-        this.formStore = new MemoryFormStore(toJS(value[index]), schema, jsonSchema);
+        this.formStore = memoryFormStoreFactory.createFromSchema(schema, jsonSchema, toJS(value[index]));
     };
 
     @action handleRemove = (index: number) => {
