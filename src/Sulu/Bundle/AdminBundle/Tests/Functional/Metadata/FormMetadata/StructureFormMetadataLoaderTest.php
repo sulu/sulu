@@ -39,7 +39,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->assertInstanceOf(FormMetadata::class, $overviewForm);
         $this->assertEquals('overview', $overviewForm->getName());
         $this->assertEquals('Overview', $overviewForm->getTitle());
-        $this->assertCount(6, $overviewForm->getItems());
+        $this->assertCount(7, $overviewForm->getItems());
         $this->assertCount(1, $overviewForm->getTags());
         $this->assertNotNull($overviewForm->getSchema());
         $this->assertInstanceOf(SchemaMetadata::class, $overviewForm->getSchema());
@@ -64,7 +64,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->assertInstanceOf(FormMetadata::class, $overviewForm);
         $this->assertEquals('overview', $overviewForm->getName());
         $this->assertEquals('Overview', $overviewForm->getTitle());
-        $this->assertCount(6, $overviewForm->getItems());
+        $this->assertCount(7, $overviewForm->getItems());
         $this->assertCount(1, $overviewForm->getTags());
         $this->assertNotNull($overviewForm->getSchema());
         $this->assertInstanceOf(SchemaMetadata::class, $overviewForm->getSchema());
@@ -77,6 +77,19 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->assertCount(3, $defaultForm->getTags());
         $this->assertNotNull($defaultForm->getSchema());
         $this->assertInstanceOf(SchemaMetadata::class, $defaultForm->getSchema());
+    }
+
+    public function testGetBlockMetadata()
+    {
+        $typedForm = $this->structureFormMetadataLoader->getMetadata('page', 'de');
+        $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
+        $this->assertCount(2, $typedForm->getForms());
+
+        $overviewForm = $typedForm->getForms()['overview'];
+        $this->assertEquals(
+            'page_block_settings',
+            $overviewForm->getItems()['blocks']->getOptions()['settings_form_key']->getValue()
+        );
     }
 
     public function testGetMetadataWhichDoesNotExist()

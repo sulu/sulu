@@ -53,20 +53,20 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         }
     }
 
-    @computed get settingsForm() {
+    @computed get settingsFormKey() {
         const {
             schemaOptions: {
-                settings_form: {
-                    value: settingsForm,
+                settings_form_key: {
+                    value: settingsFormKey,
                 } = {},
             },
         } = this.props;
 
-        if (settingsForm !== undefined && typeof settingsForm !== 'string') {
-            throw new Error('The "block" field types only accepts strings as "settings_form" schema option!');
+        if (settingsFormKey !== undefined && typeof settingsFormKey !== 'string') {
+            throw new Error('The "block" field types only accepts strings as "settings_form_key" schema option!');
         }
 
-        return settingsForm;
+        return settingsFormKey;
     }
 
     handleBlockChange = (index: number, name: string, value: Object) => {
@@ -265,13 +265,13 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
                     maxOccurs={maxOccurs}
                     minOccurs={minOccurs}
                     onChange={onChange}
-                    onSettingsClick={this.settingsForm ? this.handleSettingsClick : undefined}
+                    onSettingsClick={this.settingsFormKey ? this.handleSettingsClick : undefined}
                     onSortEnd={this.handleSortEnd}
                     renderBlockContent={this.renderBlockContent}
                     types={blockTypes}
                     value={value || []}
                 />
-                {this.settingsForm &&
+                {this.settingsFormKey &&
                     <Overlay
                         confirmText={translate('sulu_admin.apply')}
                         onClose={this.handleSettingsOverlayClose}

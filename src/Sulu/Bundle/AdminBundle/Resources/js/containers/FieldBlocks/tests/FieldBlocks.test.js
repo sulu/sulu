@@ -920,7 +920,7 @@ test('Should open and close block settings overlay close button is clicked', () 
             {...fieldTypeDefaultProps}
             defaultType="editor"
             formInspector={formInspector}
-            schemaOptions={{settings_form: {name: 'settings_form', value: 'page_block_settings'}}}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
             types={types}
             value={value}
         />
@@ -957,7 +957,7 @@ test('Should open and close block settings overlay when confirm button is clicke
             {...fieldTypeDefaultProps}
             defaultType="editor"
             formInspector={formInspector}
-            schemaOptions={{settings_form: {name: 'settings_form', value: 'page_block_settings'}}}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
             types={types}
             value={value}
         />
@@ -1005,7 +1005,7 @@ test('Throw error if empty type array is passed', () => {
     )).toThrow('The "block" field type needs at least one type to be configured!');
 });
 
-test('Throw error if passed settings_form schema option is not a string', () => {
+test('Throw error if passed settings_form_key schema option is not a string', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const types = {
@@ -1026,9 +1026,9 @@ test('Throw error if passed settings_form schema option is not a string', () => 
             {...fieldTypeDefaultProps}
             defaultType="editor"
             formInspector={formInspector}
-            schemaOptions={{settings_form: {name: 'settings_form', value: []}}}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: []}}}
             types={types}
             value={[]}
         />
-    )).toThrow('The "block" field types only accepts strings as "settings_form" schema option!');
+    )).toThrow('The "block" field types only accepts strings as "settings_form_key" schema option!');
 });

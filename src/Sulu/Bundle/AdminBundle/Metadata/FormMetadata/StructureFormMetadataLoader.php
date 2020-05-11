@@ -147,10 +147,32 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
             $form->setItems($this->formMetadataMapper->mapChildren($structureMetadata->getChildren(), $locale));
             $form->setSchema($this->formMetadataMapper->mapSchema($structureMetadata->getProperties()));
 
+            $this->enhanceBlockMetadata($form->getItems());
+
             $typedForm->addForm($structureMetadata->getName(), $form);
         }
 
         return $typedForm;
+    }
+
+    private function enhanceBlockMetadata(array $itemsMetadata)
+    {
+        foreach ($itemsMetadata as $itemMetadata) {
+            if ('block' === $itemMetadata->getType()) {
+                $optionMetadata = new OptionMetadata();
+                $optionMetadata->setName('settings_form_key');
+                $optionMetadata->setValue('page_block_settings');
+                $itemMetadata->addOption($optionMetadata);
+
+                foreach ($itemMetadata->getTypes() as $type) {
+                    $this->enhanceBlockMetadata($type->getItems());
+                }
+            }
+
+            if ($itemMetadata instanceof SectionMetadata) {
+                $this->enhanceBlockMetadata($itemMetadata->getItems());
+            }
+        }
     }
 
     public function isOptional()
