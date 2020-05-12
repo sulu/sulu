@@ -16,7 +16,7 @@ const ajv = new Ajv({allErrors: true, jsonPointers: true});
 export default class ResourceFormStore extends AbstractFormStore implements FormStoreInterface {
     resourceStore: ResourceStore;
     formKey: string;
-    options: Object;
+    options: {[string]: any};
     @observable type: string;
     @observable types: {[key: string]: SchemaType} = {};
     @observable schemaLoading: boolean = true;
@@ -24,7 +24,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     schemaDisposer: ?() => void;
     typeDisposer: ?() => void;
     updateFieldPathEvaluationsDisposer: ?() => void;
-    metadataOptions: ?Object;
+    metadataOptions: ?{[string]: any};
 
     constructor(resourceStore: ResourceStore, formKey: string, options: Object = {}, metadataOptions: ?Object) {
         super();

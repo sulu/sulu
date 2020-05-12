@@ -92,13 +92,17 @@ export type FinishFieldHandler = (dataPath: string, schemaPath: string) => void;
 
 export type SaveHandler = (action: ?string) => void;
 
-export type ConditionDataProvider = (data: {[string]: any}) => {[string]: any};
+export type ConditionDataProvider = (
+    data: {[string]: any},
+    options: {[string]: any},
+    metadataOptions: ?{[string]: any}
+) => {[string]: any};
 
 export interface FormStoreInterface {
     +change: (name: string, value: mixed) => void,
     // Only exists in one implementation, therefore optional. Maybe we can remove that definition one day...
     +copyFromLocale?: (string) => Promise<*>,
-    +data: Object,
+    +data: {[string]: any},
     +destroy: () => void,
     dirty: boolean,
     +errors: Object,
@@ -112,6 +116,7 @@ export interface FormStoreInterface {
     +isFieldModified: (dataPath: string) => boolean,
     +loading: boolean,
     +locale: ?IObservableValue<string>,
+    +metadataOptions: ?{[string]: any},
     +options: SchemaOptions,
     +resourceKey: ?string,
     +schema: Object,

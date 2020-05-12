@@ -284,7 +284,7 @@ test('Evaluate disabledConditions and visibleConditions when changing locale', (
     });
 });
 
-test('Evaluate disabledConditions and visibleConditions for schema with locale', (done) => {
+test('Evaluate disabledConditions and visibleConditions for schema from data', (done) => {
     const metadata = {
         item: {
             type: 'text_line',
@@ -302,6 +302,56 @@ test('Evaluate disabledConditions and visibleConditions for schema with locale',
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
 
     resourceStore.data = observable({test: 'value1'});
+
+    setTimeout(() => {
+        expect(resourceFormStore.schema.item.disabled).toEqual(true);
+        expect(resourceFormStore.schema.item.visible).toEqual(false);
+        done();
+    }, 0);
+});
+
+test('Evaluate disabledConditions and visibleConditions for schema from options', (done) => {
+    const metadata = {
+        item: {
+            type: 'text_line',
+            disabledCondition: '__test == "value1"',
+            visibleCondition: '__test == "value2"',
+        },
+    };
+
+    conditionDataProviderRegistry.add((data, options) => ({__test: options.test}));
+
+    const metadataPromise = Promise.resolve(metadata);
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets', {test: 'value1'});
+
+    setTimeout(() => {
+        expect(resourceFormStore.schema.item.disabled).toEqual(true);
+        expect(resourceFormStore.schema.item.visible).toEqual(false);
+        done();
+    }, 0);
+});
+
+test('Evaluate disabledConditions and visibleConditions for schema from metadatOptions', (done) => {
+    const metadata = {
+        item: {
+            type: 'text_line',
+            disabledCondition: '__test == "value1"',
+            visibleCondition: '__test == "value2"',
+        },
+    };
+
+    conditionDataProviderRegistry.add(
+        (data, options, metadataOptions) => ({__test: metadataOptions && metadataOptions.test})
+    );
+
+    const metadataPromise = Promise.resolve(metadata);
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets', {}, {test: 'value1'});
 
     setTimeout(() => {
         expect(resourceFormStore.schema.item.disabled).toEqual(true);

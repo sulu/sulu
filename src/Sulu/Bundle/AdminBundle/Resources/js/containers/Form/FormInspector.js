@@ -24,6 +24,10 @@ export default class FormInspector {
         return this.formStore.options;
     }
 
+    @computed get metadataOptions(): Object {
+        return this.formStore.metadataOptions;
+    }
+
     @computed get errors(): Object {
         return this.formStore.errors;
     }

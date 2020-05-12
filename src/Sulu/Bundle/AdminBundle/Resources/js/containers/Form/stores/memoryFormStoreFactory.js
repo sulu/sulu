@@ -5,10 +5,11 @@ import MemoryFormStore from './MemoryFormStore';
 import SchemaFormStoreDecorator from './SchemaFormStoreDecorator';
 
 class MemoryFormStoreFactory {
-    createFromFormKey(formKey: string, data: Object = {}, locale: ?IObservableValue<string>) {
+    createFromFormKey(formKey: string, data: Object = {}, locale: ?IObservableValue<string>, metadataOptions: ?Object) {
         return new SchemaFormStoreDecorator(
-            (schema, jsonSchema) => new MemoryFormStore(data, schema, jsonSchema, locale),
-            formKey
+            (schema, jsonSchema) => new MemoryFormStore(data, schema, jsonSchema, locale, metadataOptions),
+            formKey,
+            metadataOptions
         );
     }
 

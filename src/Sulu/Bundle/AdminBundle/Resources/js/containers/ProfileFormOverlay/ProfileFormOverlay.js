@@ -2,14 +2,13 @@
 import {observable, action} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
-import Loader from '../../components/Loader/Loader';
+import Loader from '../../components/Loader';
 import Overlay from '../../components/Overlay';
-import Form from '../../containers/Form';
+import Form, {memoryFormStoreFactory} from '../Form';
 import type {FormStoreInterface} from '../../containers/Form/types';
 import ResourceRequester from '../../services/ResourceRequester';
 import userStore from '../../stores/userStore';
 import {translate} from '../../utils/Translator';
-import memoryFormStoreFactory from '../Form/stores/memoryFormStoreFactory';
 import profileFormOverlayStyles from './profileFormOverlay.scss';
 
 type Props = {

@@ -39,7 +39,7 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester/ResourceRequester', () =
     put: jest.fn(),
 }));
 
-jest.mock('sulu-admin-bundle/containers/Form', () => class Form extends mockReact.Component<*> {
+jest.mock('sulu-admin-bundle/containers/Form/Form', () => class Form extends mockReact.Component<*> {
     render() {
         return <div>form container mock</div>;
     }

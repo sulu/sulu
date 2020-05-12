@@ -6,10 +6,14 @@ import metadataStore from './metadataStore';
 export default class SchemaFormStoreDecorator implements FormStoreInterface {
     @observable innerFormStore: ?FormStoreInterface;
 
-    constructor(initializer: (schema: RawSchema, jsonSchema: Object) => FormStoreInterface, formKey: string) {
+    constructor(
+        initializer: (schema: RawSchema, jsonSchema: Object) => FormStoreInterface,
+        formKey: string,
+        metadataOptions: ?{[string]: any}
+    ) {
         Promise.all([
-            metadataStore.getSchema(formKey),
-            metadataStore.getJsonSchema(formKey),
+            metadataStore.getSchema(formKey, undefined, metadataOptions),
+            metadataStore.getJsonSchema(formKey, undefined, metadataOptions),
         ]).then(action(([schema, jsonSchema]) => {
             this.innerFormStore = initializer(schema, jsonSchema);
         }));
@@ -136,6 +140,14 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
     @computed get locale() {
         if (this.innerFormStore) {
             return this.innerFormStore.locale;
+        }
+
+        return undefined;
+    }
+
+    @computed get metadataOptions() {
+        if (this.innerFormStore) {
+            return this.innerFormStore.metadataOptions;
         }
 
         return undefined;

@@ -1,10 +1,15 @@
 // @flow
 import webspaceStore from '../../../stores/webspaceStore';
 
-export default function(data: {[string]: any}): {[string]: any} {
-    if (!data.webspace || !webspaceStore.hasWebspace(data.webspace)) {
+export default function(
+    data: {[string]: any},
+    options: {[string]: any},
+    metadataOptions: ?{[string]: any}
+): {[string]: any} {
+    const webspaceKey = data.webspace || options.webspace || (metadataOptions && metadataOptions.webspace);
+    if (!webspaceKey || !webspaceStore.hasWebspace(webspaceKey)) {
         return {};
     }
 
-    return {__webspace: webspaceStore.getWebspace(data.webspace)};
+    return {__webspace: webspaceStore.getWebspace(webspaceKey)};
 }
