@@ -61,6 +61,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
 
             // init properties
             $typeProperty = new Property('type', '', 'text_line');
+            $settingsProperty = new Property('settings', '', 'text_line');
             $lengthProperty = new Property('length', '', 'text_line');
 
             // load length
@@ -89,7 +90,17 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
                     continue;
                 }
 
+                $contentType = $this->contentTypeManager->get($settingsProperty->getContentTypeName());
+                $contentType->read(
+                    $node,
+                    new BlockPropertyWrapper($settingsProperty, $property, $i),
+                    $webspaceKey,
+                    $languageCode,
+                    $segmentKey
+                );
+
                 $blockPropertyType = $blockProperty->initProperties($i, $typeProperty->getValue());
+                $blockPropertyType->setSettings(\json_decode($settingsProperty->getValue(), true));
 
                 /** @var PropertyInterface $subProperty */
                 foreach ($blockPropertyType->getChildProperties() as $subProperty) {
@@ -183,6 +194,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
 
             // init properties
             $typeProperty = new Property('type', '', 'text_line');
+            $settingsProperty = new Property('settings', '', 'text_line');
             $lengthProperty = new Property('length', '', 'text_line');
 
             //save length
@@ -200,11 +212,23 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
             for ($i = 0; $i < $len; ++$i) {
                 $blockPropertyType = $blockProperty->getProperties($i);
 
-                // save type property
                 $this->writeProperty(
                     $typeProperty,
                     $property,
                     $blockPropertyType->getName(),
+                    $i,
+                    $node,
+                    $userId,
+                    $webspaceKey,
+                    $languageCode,
+                    $segmentKey,
+                    $isImport
+                );
+
+                $this->writeProperty(
+                    $settingsProperty,
+                    $property,
+                    \json_encode($blockPropertyType->getSettings()),
                     $i,
                     $node,
                     $userId,
@@ -331,7 +355,10 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
 
             if ($returnType) {
                 $type = $blockPropertyType->getName();
-                $data[$i] = ['type' => $type];
+                $data[$i] = [
+                    'type' => $type,
+                    'settings' => $blockPropertyType->getSettings(),
+                ];
             }
 
             foreach ($blockPropertyType->getChildProperties() as $childProperty) {

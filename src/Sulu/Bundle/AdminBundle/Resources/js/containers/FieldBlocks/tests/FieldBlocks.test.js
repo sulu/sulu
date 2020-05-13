@@ -5,6 +5,7 @@ import Router from '../../../services/Router';
 import fieldTypeDefaultProps from '../../../utils/TestHelper/fieldTypeDefaultProps';
 import FieldBlocks from '../FieldBlocks';
 import FormInspector from '../../Form/FormInspector';
+import metadataStore from '../../Form/stores/metadataStore';
 import ResourceFormStore from '../../Form/stores/ResourceFormStore';
 import ResourceStore from '../../../stores/ResourceStore';
 import blockPreviewTransformerRegistry from '../registries/blockPreviewTransformerRegistry';
@@ -14,12 +15,20 @@ jest.mock('../../Form/FormInspector', () => jest.fn(function() {
     this.isFieldModified = jest.fn();
     this.getSchemaEntryByPath = jest.fn();
 }));
+jest.mock('../../Form/stores/metadataStore', () => ({
+    getSchema: jest.fn().mockReturnValue(Promise.resolve({})),
+    getJsonSchema: jest.fn().mockReturnValue(Promise.resolve({})),
+}));
 jest.mock('../../Form/stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../../stores/ResourceStore', () => jest.fn());
 
 jest.mock('../../Form/registries/fieldRegistry', () => ({
     get: jest.fn((type) => {
         switch (type) {
+            case 'checkbox':
+                return function Checkbox({value}) {
+                    return <input type="checkbox" value={value} />;
+                };
             case 'text_line':
                 return function TextLine({error, value}) {
                     return <input className={error && error.keyword} defaultValue={value} type="text" />;
@@ -936,6 +945,7 @@ test('Should open and close block settings overlay close button is clicked', () 
 });
 
 test('Should open and close block settings overlay when confirm button is clicked', () => {
+    const changeSpy = jest.fn();
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const types = {
         default: {
@@ -949,14 +959,27 @@ test('Should open and close block settings overlay when confirm button is clicke
             },
         },
     };
-    const value = [{type: 'default'}];
+    const value = [
+        {type: 'default'},
+        {type: 'default'},
+    ];
     formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const schemaPromise = Promise.resolve({
+        setting: {
+            type: 'checkbox',
+        },
+    });
+    const jsonSchemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
     const fieldBlocks = mount(
         <FieldBlocks
             {...fieldTypeDefaultProps}
             defaultType="editor"
             formInspector={formInspector}
+            onChange={changeSpy}
             schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
             types={types}
             value={value}
@@ -964,12 +987,22 @@ test('Should open and close block settings overlay when confirm button is clicke
     );
 
     expect(fieldBlocks.find('Overlay').prop('open')).toEqual(false);
-    fieldBlocks.find('Block').at(0).simulate('click');
-    fieldBlocks.find('Block').at(0).find('Icon[name="su-cog"]').simulate('click');
+    fieldBlocks.find('Block').at(1).simulate('click');
+    fieldBlocks.find('Block').at(1).find('Icon[name="su-cog"]').simulate('click');
     expect(fieldBlocks.find('Overlay').prop('open')).toEqual(true);
+    expect(metadataStore.getSchema).toBeCalledWith('page_block_settings');
+    expect(metadataStore.getJsonSchema).toBeCalledWith('page_block_settings');
 
-    fieldBlocks.find('Overlay Button[children="sulu_admin.apply"]').simulate('click');
-    expect(fieldBlocks.find('Overlay').prop('open')).toEqual(false);
+    return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
+        fieldBlocks.update();
+        expect(changeSpy).not.toBeCalled();
+
+        fieldBlocks.find('Checkbox[dataPath="/setting"]').prop('onChange')(true);
+
+        fieldBlocks.find('Overlay Button[children="sulu_admin.apply"]').simulate('click');
+        expect(fieldBlocks.find('Overlay').prop('open')).toEqual(false);
+        expect(changeSpy).toBeCalledWith([{type: 'default'}, {settings: {setting: true}, type: 'default'}]);
+    });
 });
 
 test('Throw error if no default type are passed', () => {

@@ -2,6 +2,7 @@
 import type {Node} from 'react';
 
 export type BlockEntry = {
+    settings?: {[string]: any},
     type: string,
 };
 

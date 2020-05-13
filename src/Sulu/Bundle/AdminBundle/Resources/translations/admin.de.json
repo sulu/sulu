@@ -150,5 +150,6 @@
     "sulu_admin.form_used_by": "Dieses Formular wird momentan benutzt von",
     "sulu_admin.from": "ab",
     "sulu_admin.until": "bis",
-    "sulu_admin.block_settings": "Block Einstellungen"
+    "sulu_admin.block_settings": "Block Einstellungen",
+    "sulu_admin.hide_block": "Verstecke diesen Block auf der Webseite"
 }

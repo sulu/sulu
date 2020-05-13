@@ -158,11 +158,13 @@ class QueryBuilderTest extends SuluTestCase
                         'title' => 'Block Title ' . $i,
                         'article' => 'Blockarticle ' . $i,
                         'type' => 'test',
+                        'settings' => [],
                     ],
                     [
                         'title' => 'Block Title 2 ' . $i,
                         'article' => 'Blockarticle2 ' . $i,
                         'type' => 'test',
+                        'settings' => [],
                     ],
                 ];
             } elseif ($i > $max / 3) {

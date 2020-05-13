@@ -8,16 +8,21 @@ import BlockCollection from '../../components/BlockCollection';
 import type {BlockEntry} from '../../components/BlockCollection/types';
 import Overlay from '../../components/Overlay';
 import {translate} from '../../utils/Translator';
-import type {BlockError, FieldTypeProps} from '../Form/types';
+import Form, {memoryFormStoreFactory} from '../Form';
+import type {BlockError, FieldTypeProps, FormStoreInterface} from '../Form/types';
 import blockPreviewTransformerRegistry from './registries/blockPreviewTransformerRegistry';
 import FieldRenderer from './FieldRenderer';
+import fieldBlocksStyles from './fieldBlocks.scss';
 
 const MISSING_BLOCK_ERROR_MESSAGE = 'The "block" field type needs at least one type to be configured!';
 const BLOCK_PREVIEW_TAG = 'sulu.block_preview';
+const SETTINGS_KEY = 'settings';
 
 @observer
 class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
-    @observable blockSettingsOpen: ?number = undefined;
+    formRef: ?Form;
+    @observable blockSettingsOpen: number | typeof undefined = undefined;
+    @observable blockSettingsFormStore: FormStoreInterface | typeof undefined;
 
     componentDidUpdate(prevProps: FieldTypeProps<Array<BlockEntry>>) {
         const {defaultType, onChange, types, value} = this.props;
@@ -68,6 +73,10 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
         return settingsFormKey;
     }
+
+    setFormRef = (formRef: ?Form) => {
+        this.formRef = formRef;
+    };
 
     handleBlockChange = (index: number, name: string, value: Object) => {
         const {onChange, value: oldValues} = this.props;
@@ -226,7 +235,18 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     };
 
     @action handleSettingsClick = (index: number) => {
+        const {value = []} = this.props;
+
+        if (!this.settingsFormKey || !value) {
+            return;
+        }
+
         this.blockSettingsOpen = index;
+        this.blockSettingsFormStore = memoryFormStoreFactory.createFromFormKey(
+            this.settingsFormKey,
+            value[index][SETTINGS_KEY],
+            undefined
+        );
     };
 
     @action handleSettingsOverlayClose = () => {
@@ -234,11 +254,30 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     };
 
     @action handleSettingsOverlayConfirm = () => {
+        this.formRef?.submit();
         this.closeSettingsOverlay();
     };
 
     @action closeSettingsOverlay = () => {
         this.blockSettingsOpen = undefined;
+        this.blockSettingsFormStore?.destroy();
+        this.blockSettingsFormStore = undefined;
+    };
+
+    handleSettingsSubmit = () => {
+        const {onChange, value = []} = this.props;
+
+        const {blockSettingsFormStore, blockSettingsOpen} = this;
+
+        if (!blockSettingsFormStore || blockSettingsOpen === undefined || !value) {
+            return;
+        }
+
+        onChange([
+            ...value.slice(0, blockSettingsOpen),
+            {...value[blockSettingsOpen], [SETTINGS_KEY]: blockSettingsFormStore.data},
+            ...value.slice(blockSettingsOpen + 1),
+        ]);
     };
 
     render() {
@@ -280,7 +319,15 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
                         size="small"
                         title={translate('sulu_admin.block_settings')}
                     >
-                        Block settings overlay content
+                        {!!this.blockSettingsFormStore &&
+                            <div className={fieldBlocksStyles.settingsOverlay}>
+                                <Form
+                                    onSubmit={this.handleSettingsSubmit}
+                                    ref={this.setFormRef}
+                                    store={this.blockSettingsFormStore}
+                                />
+                            </div>
+                        }
                     </Overlay>
                 }
             </>

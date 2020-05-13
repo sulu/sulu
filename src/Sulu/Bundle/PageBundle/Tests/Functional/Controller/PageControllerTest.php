@@ -471,6 +471,50 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(409, $this->client->getResponse());
     }
 
+    public function testPostWithBlockSettings()
+    {
+        $data = [
+            'title' => 'Block',
+            'template' => 'block',
+            'url' => '/block',
+            'article' => [
+                [
+                    'type' => 'test',
+                    'title' => 'Block 1',
+                    'article' => 'Block 1 Article',
+                    'settings' => ['segment' => 's'],
+                ],
+                [
+                    'type' => 'test',
+                    'title' => 'Block 2',
+                    'article' => 'Block 2 Article',
+                    'settings' => ['segment' => 'w'],
+                ],
+            ],
+        ];
+
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $this->client->request(
+            'POST',
+            '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en&action=publish',
+            $data
+        );
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = \json_decode($this->client->getResponse()->getContent());
+
+        $this->client->request(
+            'GET',
+            '/api/pages/' . $response->id . '?webspace=sulu_io&language=en'
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $response = \json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals('s', $response->article[0]->settings->segment);
+        $this->assertEquals('w', $response->article[1]->settings->segment);
+    }
+
     public function testGet()
     {
         $document = $this->createPageDocument();
