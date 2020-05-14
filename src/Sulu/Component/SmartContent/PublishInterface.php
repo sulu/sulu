@@ -19,7 +19,7 @@ interface PublishInterface extends ResourceItemInterface
     /**
      * Returns the date at which the content was published.
      *
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
     public function getPublished();
 
