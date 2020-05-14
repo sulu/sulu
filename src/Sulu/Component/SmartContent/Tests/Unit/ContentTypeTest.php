@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\SmartContent\Tests\Unit;
 
+use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
@@ -28,13 +29,10 @@ use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\Exception\PageOutOfBoundsException;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Segment;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-
-//FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
-interface MyNodeInterface extends \PHPCR\NodeInterface, \Iterator
-{
-}
 
 /**
  * @group unit
@@ -91,6 +89,11 @@ class ContentTypeTest extends TestCase
      */
     private $tagReferenceStore;
 
+    /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
     public function setUp(): void
     {
         $this->pageDataProvider = $this->prophesize(DataProviderInterface::class);
@@ -145,6 +148,8 @@ class ContentTypeTest extends TestCase
 
         $this->categoryReferenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $this->tagReferenceStore = $this->prophesize(ReferenceStoreInterface::class);
+
+        $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
     }
 
     private function getProviderConfiguration()
@@ -168,11 +173,13 @@ class ContentTypeTest extends TestCase
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
             $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal()
+            $this->tagReferenceStore->reveal(),
+            null,
+            $this->requestAnalyzer->reveal()
         );
 
         $node = $this->getMockForAbstractClass(
-            MyNodeInterface::class,
+            NodeInterface::class,
             [],
             '',
             true,
@@ -232,7 +239,9 @@ class ContentTypeTest extends TestCase
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
             $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal()
+            $this->tagReferenceStore->reveal(),
+            null,
+            $this->requestAnalyzer->reveal()
         );
 
         $config = [
@@ -241,7 +250,7 @@ class ContentTypeTest extends TestCase
         ];
 
         $node = $this->getMockForAbstractClass(
-            MyNodeInterface::class,
+            NodeInterface::class,
             [],
             '',
             true,
@@ -287,7 +296,9 @@ class ContentTypeTest extends TestCase
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
             $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal()
+            $this->tagReferenceStore->reveal(),
+            null,
+            $this->requestAnalyzer->reveal()
         );
 
         $property = $this->getMockForAbstractClass(
@@ -391,7 +402,9 @@ class ContentTypeTest extends TestCase
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
             $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal()
+            $this->tagReferenceStore->reveal(),
+            null,
+            $this->requestAnalyzer->reveal()
         );
 
         $property = $this->getContentDataProperty(
@@ -436,7 +449,9 @@ class ContentTypeTest extends TestCase
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
             $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal()
+            $this->tagReferenceStore->reveal(),
+            null,
+            $this->requestAnalyzer->reveal()
         );
 
         $property = $this->getContentDataProperty(
@@ -471,7 +486,9 @@ class ContentTypeTest extends TestCase
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
             $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal()
+            $this->tagReferenceStore->reveal(),
+            null,
+            $this->requestAnalyzer->reveal()
         );
 
         $property = $this->getMockForAbstractClass(
@@ -596,7 +613,9 @@ class ContentTypeTest extends TestCase
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
             $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal()
+            $this->tagReferenceStore->reveal(),
+            null,
+            $this->requestAnalyzer->reveal()
         );
 
         if ($exception) {
@@ -708,7 +727,9 @@ class ContentTypeTest extends TestCase
             $this->tagRequestHandler->reveal(),
             $this->categoryRequestHandler->reveal(),
             $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal()
+            $this->tagReferenceStore->reveal(),
+            null,
+            $this->requestAnalyzer->reveal()
         );
 
         if ($exception) {
@@ -929,7 +950,8 @@ class ContentTypeTest extends TestCase
             $this->categoryRequestHandler->reveal(),
             $this->categoryReferenceStore->reveal(),
             $this->tagReferenceStore->reveal(),
-            $this->targetGroupStore->reveal()
+            $this->targetGroupStore->reveal(),
+            $this->requestAnalyzer->reveal()
         );
 
         $property = $this->prophesize(PropertyInterface::class);
@@ -968,7 +990,8 @@ class ContentTypeTest extends TestCase
             $this->categoryRequestHandler->reveal(),
             $this->categoryReferenceStore->reveal(),
             $this->tagReferenceStore->reveal(),
-            $this->targetGroupStore->reveal()
+            $this->targetGroupStore->reveal(),
+            $this->requestAnalyzer->reveal()
         );
 
         $property = $this->prophesize(PropertyInterface::class);
@@ -992,6 +1015,47 @@ class ContentTypeTest extends TestCase
 
         $property->setValue(Argument::that(function($value) {
             return !\array_key_exists('targetGroupId', $value);
+        }))->shouldBeCalled();
+
+        $smartContent->getContentData($property->reveal());
+    }
+
+    public function testGetContentDataWithSegmentKey()
+    {
+        $smartContent = new SmartContent(
+            $this->dataProviderPool,
+            $this->tagManager,
+            $this->requestStack,
+            $this->tagRequestHandler->reveal(),
+            $this->categoryRequestHandler->reveal(),
+            $this->categoryReferenceStore->reveal(),
+            $this->tagReferenceStore->reveal(),
+            $this->targetGroupStore->reveal(),
+            $this->requestAnalyzer->reveal()
+        );
+
+        $segment = new Segment();
+        $segment->setKey('s');
+        $this->requestAnalyzer->getSegment()->willReturn($segment);
+
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getParams()->willReturn([
+            'provider' => new PropertyParameter('provider', 'pages'),
+        ]);
+        $property->getValue()->willReturn([]);
+
+        $structure = $this->prophesize(StructureInterface::class);
+        $property->getStructure()->willReturn($structure->reveal());
+
+        $this->pageDataProvider->resolveResourceItems(
+            Argument::that(function($value) {
+                return 's' === $value['segmentKey'];
+            }),
+            Argument::cetera()
+        )->willReturn(new DataProviderResult([], false));
+
+        $property->setValue(Argument::that(function($value) {
+            return 's' === $value['segmentKey'];
         }))->shouldBeCalled();
 
         $smartContent->getContentData($property->reveal());
