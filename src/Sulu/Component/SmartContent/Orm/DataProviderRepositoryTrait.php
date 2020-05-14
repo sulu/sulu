@@ -31,7 +31,7 @@ trait DataProviderRepositoryTrait
         $this->appendJoins($queryBuilder, $alias, $locale);
 
         if (isset($filters['sortBy'])) {
-            $sortMethod = isset($filters['sortMethod']) ? $filters['sortMethod'] : 'asc';
+            $sortMethod = $filters['sortMethod'] ?? 'asc';
             $this->appendSortBy($filters['sortBy'], $sortMethod, $queryBuilder, $alias, $locale);
         }
 
