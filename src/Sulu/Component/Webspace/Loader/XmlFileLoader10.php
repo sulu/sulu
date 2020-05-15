@@ -576,13 +576,9 @@ class XmlFileLoader10 extends BaseXmlFileLoader
             || (false !== \strpos($urlNode->nodeValue, '{language}'))
             || $hasLocalization;
 
-        $hasSegment = (0 == \count($this->webspace->getSegments()))
-            || (null != $urlNode->attributes->getNamedItem('segment'))
-            || (false !== \strpos($urlNode->nodeValue, '{segment}'));
-
         $hasRedirect = (null != $urlNode->attributes->getNamedItem('redirect'));
 
-        return ($hasLanguage && $hasSegment) || $hasRedirect;
+        return $hasLanguage || $hasRedirect;
     }
 
     /**

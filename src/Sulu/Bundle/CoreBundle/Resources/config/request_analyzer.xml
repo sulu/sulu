@@ -45,5 +45,10 @@
             <tag name="sulu.context" context="website"/>
             <tag name="sulu.request_attributes" priority="-128"/>
         </service>
+        <service id="sulu_core.request_processor.segment"
+                 class="Sulu\Component\Webspace\Analyzer\Attributes\SegmentRequestProcessor">
+            <tag name="sulu.context" context="website"/>
+            <tag name="sulu.request_attributes" priority="-64"/>
+        </service>
     </services>
 </container>

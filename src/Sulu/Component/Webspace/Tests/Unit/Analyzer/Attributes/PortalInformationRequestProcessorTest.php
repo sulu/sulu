@@ -79,7 +79,6 @@ class PortalInformationRequestProcessorTest extends TestCase
         $this->assertEquals('de_at', $attributes->getAttribute('localization'));
         $this->assertEquals('sulu', $attributes->getAttribute('webspace')->getKey());
         $this->assertEquals('sulu', $attributes->getAttribute('portal')->getKey());
-        $this->assertNull($attributes->getAttribute('segment'));
 
         $this->assertEquals($expected['portal_url'], $attributes->getAttribute('portalUrl'));
         $this->assertEquals($expected['redirect'], $attributes->getAttribute('redirect'));
@@ -135,7 +134,6 @@ class PortalInformationRequestProcessorTest extends TestCase
         $this->assertEquals('it_ch', $attributes->getAttribute('localization'));
         $this->assertEquals('sulu', $attributes->getAttribute('webspace')->getKey());
         $this->assertEquals('sulu', $attributes->getAttribute('portal')->getKey());
-        $this->assertNull($attributes->getAttribute('segment'));
 
         $this->assertEquals($expected['portal_url'], $attributes->getAttribute('portalUrl'));
         $this->assertEquals($expected['redirect'], $attributes->getAttribute('redirect'));
@@ -191,7 +189,6 @@ class PortalInformationRequestProcessorTest extends TestCase
         $this->assertEquals('de_at', $attributes->getAttribute('localization'));
         $this->assertEquals('sulu', $attributes->getAttribute('webspace')->getKey());
         $this->assertEquals('sulu', $attributes->getAttribute('portal')->getKey());
-        $this->assertNull($attributes->getAttribute('segment'));
 
         $this->assertEquals($expected['portal_url'], $attributes->getAttribute('portalUrl'));
         $this->assertEquals($expected['redirect'], $attributes->getAttribute('redirect'));

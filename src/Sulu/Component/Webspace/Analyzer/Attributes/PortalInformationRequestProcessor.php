@@ -55,8 +55,6 @@ class PortalInformationRequestProcessor implements RequestProcessorInterface
             $request->setLocale($localization->getLocale());
         }
 
-        $attributes['segment'] = $portalInformation->getSegment();
-
         list($resourceLocator, $format) = $this->getResourceLocatorFromRequest(
             $portalInformation,
             $request,

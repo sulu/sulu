@@ -144,12 +144,12 @@ class WebspaceManagerTest extends WebspaceTestCase
         $environmentProd = $portal->getEnvironment('prod');
         $this->assertEquals('prod', $environmentProd->getType());
         $this->assertCount(1, $environmentProd->getUrls());
-        $this->assertEquals('{language}.massiveart.{country}/{segment}', $environmentProd->getUrls()[0]->getUrl());
+        $this->assertEquals('{language}.massiveart.{country}', $environmentProd->getUrls()[0]->getUrl());
 
         $environmentDev = $portal->getEnvironment('dev');
         $this->assertEquals('dev', $environmentDev->getType());
         $this->assertCount(1, $environmentDev->getUrls());
-        $this->assertEquals('massiveart.lo/{localization}/{segment}', $environmentDev->getUrls()[0]->getUrl());
+        $this->assertEquals('massiveart.lo/{localization}', $environmentDev->getUrls()[0]->getUrl());
 
         $portal = $webspace->getPortals()[1];
 
@@ -168,8 +168,8 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $environmentProd = $portal->getEnvironment('prod');
         $this->assertEquals('prod', $environmentProd->getType());
-        $this->assertEquals(2, \count($environmentProd->getUrls()));
-        $this->assertEquals('{language}.massiveart.{country}/{segment}', $environmentProd->getUrls()[0]->getUrl());
+        $this->assertEquals(2, count($environmentProd->getUrls()));
+        $this->assertEquals('{language}.massiveart.{country}', $environmentProd->getUrls()[0]->getUrl());
         $this->assertEquals(null, $environmentProd->getUrls()[0]->getLanguage());
         $this->assertEquals(null, $environmentProd->getUrls()[0]->getCountry());
         $this->assertEquals(null, $environmentProd->getUrls()[0]->getSegment());
@@ -177,13 +177,12 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('www.massiveart.com', $environmentProd->getUrls()[1]->getUrl());
         $this->assertEquals('en', $environmentProd->getUrls()[1]->getLanguage());
         $this->assertEquals('ca', $environmentProd->getUrls()[1]->getCountry());
-        $this->assertEquals('s', $environmentProd->getUrls()[1]->getSegment());
         $this->assertEquals(null, $environmentProd->getUrls()[1]->getRedirect());
 
         $environmentProd = $portal->getEnvironment('dev');
         $this->assertEquals('dev', $environmentProd->getType());
         $this->assertCount(1, $environmentProd->getUrls());
-        $this->assertEquals('massiveart.lo/{localization}/{segment}', $environmentProd->getUrls()[0]->getUrl());
+        $this->assertEquals('massiveart.lo/{localization}', $environmentProd->getUrls()[0]->getUrl());
     }
 
     public function testFindWebspaceByKey()
@@ -524,45 +523,6 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('de_at', $portalInformation->getLocale());
     }
 
-    public function testFindPortalInformationByUrlWithSegment()
-    {
-        $portalInformation = $this->webspaceManager->findPortalInformationByUrl('en.massiveart.us/w/about-us', 'prod');
-        $this->assertEquals('en_us', $portalInformation->getLocalization()->getLocale());
-        $this->assertEquals('winter', $portalInformation->getSegment()->getName());
-
-        /** @var Portal $portal */
-        $portal = $portalInformation->getPortal();
-
-        $this->assertEquals('Massive Art US', $portal->getName());
-        $this->assertEquals('massiveart_us', $portal->getKey());
-
-        $this->assertEquals(4, \count($portal->getLocalizations()));
-        $this->assertEquals('en', $portal->getLocalizations()[0]->getLanguage());
-        $this->assertEquals('us', $portal->getLocalizations()[0]->getCountry());
-        $this->assertEquals(false, $portal->getLocalizations()[0]->getShadow());
-        $this->assertEquals('en', $portal->getLocalizations()[1]->getLanguage());
-        $this->assertEquals('ca', $portal->getLocalizations()[1]->getCountry());
-        $this->assertEquals(false, $portal->getLocalizations()[1]->getShadow());
-        $this->assertEquals('fr', $portal->getLocalizations()[2]->getLanguage());
-        $this->assertEquals('ca', $portal->getLocalizations()[2]->getCountry());
-        $this->assertEquals(false, $portal->getLocalizations()[2]->getShadow());
-        $this->assertEquals('de', $portal->getLocalizations()[3]->getLanguage());
-        $this->assertEquals(null, $portal->getLocalizations()[3]->getCountry());
-        $this->assertEquals(false, $portal->getLocalizations()[3]->getShadow());
-
-        $this->assertCount(2, $portal->getEnvironments());
-
-        $environmentProd = $portal->getEnvironment('prod');
-        $this->assertEquals('prod', $environmentProd->getType());
-        $this->assertCount(1, $environmentProd->getUrls());
-        $this->assertEquals('{language}.massiveart.{country}/{segment}', $environmentProd->getUrls()[0]->getUrl());
-
-        $environmentDev = $portal->getEnvironment('dev');
-        $this->assertEquals('dev', $environmentDev->getType());
-        $this->assertCount(1, $environmentDev->getUrls());
-        $this->assertEquals('massiveart.lo/{localization}/{segment}', $environmentDev->getUrls()[0]->getUrl());
-    }
-
     public function testLoadMultiple()
     {
         $this->webspaceManager = new WebspaceManager(
@@ -653,9 +613,8 @@ class WebspaceManagerTest extends WebspaceTestCase
     {
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'en_us', 'massiveart');
 
-        $this->assertCount(2, $result);
-        $this->assertContains('http://massiveart.lo/en-us/w/test', $result);
-        $this->assertContains('http://massiveart.lo/en-us/s/test', $result);
+        $this->assertCount(1, $result);
+        $this->assertContains('http://massiveart.lo/en-us/test', $result);
 
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io');
         $this->assertEquals(['http://sulu.lo/test'], $result);
@@ -672,9 +631,8 @@ class WebspaceManagerTest extends WebspaceTestCase
             'https'
         );
 
-        $this->assertCount(2, $result);
-        $this->assertContains('https://massiveart.lo/en-us/w/test', $result);
-        $this->assertContains('https://massiveart.lo/en-us/s/test', $result);
+        $this->assertCount(1, $result);
+        $this->assertContains('https://massiveart.lo/en-us/test', $result);
 
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io', null, 'https');
         $this->assertEquals(['https://sulu.lo/test'], $result);
@@ -691,9 +649,8 @@ class WebspaceManagerTest extends WebspaceTestCase
             null
         );
 
-        $this->assertCount(2, $result);
-        $this->assertContains('http://massiveart.lo/en-us/w/test', $result);
-        $this->assertContains('http://massiveart.lo/en-us/s/test', $result);
+        $this->assertCount(1, $result);
+        $this->assertContains('http://massiveart.lo/en-us/test', $result);
 
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io', null, null);
         $this->assertEquals(['http://sulu.lo/test'], $result);
@@ -703,9 +660,8 @@ class WebspaceManagerTest extends WebspaceTestCase
     {
         $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'dev', 'en_us', 'massiveart');
 
-        $this->assertCount(2, $result);
-        $this->assertContains('http://massiveart.lo/en-us/w', $result);
-        $this->assertContains('http://massiveart.lo/en-us/s', $result);
+        $this->assertCount(1, $result);
+        $this->assertContains('http://massiveart.lo/en-us', $result);
 
         $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'dev', 'de_at', 'sulu_io');
         $this->assertEquals(['http://sulu.lo/'], $result);
@@ -715,9 +671,8 @@ class WebspaceManagerTest extends WebspaceTestCase
     {
         $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'dev', 'en_us', 'massiveart', null, 'https');
 
-        $this->assertCount(2, $result);
-        $this->assertContains('https://massiveart.lo/en-us/w', $result);
-        $this->assertContains('https://massiveart.lo/en-us/s', $result);
+        $this->assertCount(1, $result);
+        $this->assertContains('https://massiveart.lo/en-us', $result);
 
         $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'dev', 'de_at', 'sulu_io', null, 'https');
         $this->assertEquals(['https://sulu.lo/'], $result);
@@ -766,38 +721,30 @@ class WebspaceManagerTest extends WebspaceTestCase
     {
         $urls = $this->webspaceManager->getUrls('dev');
 
-        $this->assertCount(13, $urls);
+        $this->assertCount(9, $urls);
         $this->assertContains('sulu.lo', $urls);
         $this->assertContains('sulu-single-language.lo', $urls);
         $this->assertContains('sulu-without.lo', $urls);
         $this->assertContains('massiveart.lo', $urls);
-        $this->assertContains('massiveart.lo/en-us/w', $urls);
-        $this->assertContains('massiveart.lo/en-us/s', $urls);
-        $this->assertContains('massiveart.lo/en-ca/w', $urls);
-        $this->assertContains('massiveart.lo/en-ca/s', $urls);
-        $this->assertContains('massiveart.lo/fr-ca/w', $urls);
-        $this->assertContains('massiveart.lo/fr-ca/s', $urls);
-        $this->assertContains('massiveart.lo/de/w', $urls);
-        $this->assertContains('massiveart.lo/de/s', $urls);
+        $this->assertContains('massiveart.lo/en-us', $urls);
+        $this->assertContains('massiveart.lo/en-ca', $urls);
+        $this->assertContains('massiveart.lo/fr-ca', $urls);
+        $this->assertContains('massiveart.lo/de', $urls);
     }
 
     public function testGetPortalInformations()
     {
         $portalInformations = $this->webspaceManager->getPortalInformations('dev');
 
-        $this->assertCount(13, $portalInformations);
+        $this->assertCount(9, $portalInformations);
         $this->assertArrayHasKey('sulu.lo', $portalInformations);
         $this->assertArrayHasKey('sulu-single-language.lo', $portalInformations);
         $this->assertArrayHasKey('sulu-without.lo', $portalInformations);
         $this->assertArrayHasKey('massiveart.lo', $portalInformations);
-        $this->assertArrayHasKey('massiveart.lo/en-us/w', $portalInformations);
-        $this->assertArrayHasKey('massiveart.lo/en-us/s', $portalInformations);
-        $this->assertArrayHasKey('massiveart.lo/en-ca/w', $portalInformations);
-        $this->assertArrayHasKey('massiveart.lo/en-ca/s', $portalInformations);
-        $this->assertArrayHasKey('massiveart.lo/fr-ca/w', $portalInformations);
-        $this->assertArrayHasKey('massiveart.lo/fr-ca/s', $portalInformations);
-        $this->assertArrayHasKey('massiveart.lo/de/w', $portalInformations);
-        $this->assertArrayHasKey('massiveart.lo/de/s', $portalInformations);
+        $this->assertArrayHasKey('massiveart.lo/en-us', $portalInformations);
+        $this->assertArrayHasKey('massiveart.lo/en-ca', $portalInformations);
+        $this->assertArrayHasKey('massiveart.lo/fr-ca', $portalInformations);
+        $this->assertArrayHasKey('massiveart.lo/de', $portalInformations);
     }
 
     public function testGetAllLocalizations()

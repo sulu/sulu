@@ -34,7 +34,7 @@
 
     <segments>
         <segment key="w" default="true">winter</segment>
-        <segment key="s">summer</segment>
+        <segment key="s" default="false">summer</segment>
     </segments>
 
     <portals>
