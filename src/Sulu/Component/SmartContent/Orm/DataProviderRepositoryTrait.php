@@ -30,8 +30,8 @@ trait DataProviderRepositoryTrait
             ->orderBy($alias . '.id', 'ASC');
         $this->appendJoins($queryBuilder, $alias, $locale);
 
-        if (array_key_exists('sortBy', $filters)) {
-            $sortMethod = array_key_exists('sortMethod', $filters) ? $filters['sortMethod'] : 'asc';
+        if (isset($filters['sortBy'])) {
+            $sortMethod = $filters['sortMethod'] ?? 'asc';
             $this->appendSortBy($filters['sortBy'], $sortMethod, $queryBuilder, $alias, $locale);
         }
 

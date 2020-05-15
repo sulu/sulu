@@ -101,4 +101,64 @@ class DataProviderRepositoryTraitTest extends TestCase
         // this makes problems if also a limit is used
         $queryBuilder->distinct()->shouldBeCalled();
     }
+
+    public function testFindByFiltersWithSorting()
+    {
+        $query = $this->prophesize(Query::class);
+
+        $query = $this->prophesize(Query::class);
+        $query->setParameter(Argument::cetera())->willReturn($query);
+        $query->setFirstResult(0)->willReturn($query);
+        $query->setMaxResults(Argument::any())->willReturn($query);
+        $query->getScalarResult()->willReturn([]);
+        $query->getResult()->willReturn([]);
+        $queryBuilder = $this->prophesize(QueryBuilder::class);
+        $queryBuilder->addSelect(Argument::cetera())->willReturn($queryBuilder);
+        $queryBuilder->select(Argument::cetera())->willReturn($queryBuilder);
+        $queryBuilder->where(Argument::cetera())->willReturn($queryBuilder);
+        $queryBuilder->orderBy(Argument::cetera())->willReturn($queryBuilder);
+        $queryBuilder->distinct(Argument::cetera())->willReturn($queryBuilder);
+        $queryBuilder->getAllAliases()->willReturn([]);
+        $queryBuilder->getQuery()->willReturn($query);
+        $this->dataProviderRepositoryTrait->method('createQueryBuilder')->willReturn($queryBuilder->reveal());
+        $this->dataProviderRepositoryTrait->findByFilters(
+            ['sortBy' => 'test', 'sortMethod' => 'asc'],
+            1,
+            5,
+            null,
+            'de'
+        );
+
+        $queryBuilder->orderBy('test', 'asc')->shouldBeCalled();
+    }
+
+    public function testFindByFiltersWithoutSorting()
+    {
+        $query = $this->prophesize(Query::class);
+
+        $query = $this->prophesize(Query::class);
+        $query->setParameter(Argument::cetera())->willReturn($query);
+        $query->setFirstResult(0)->willReturn($query);
+        $query->setMaxResults(Argument::any())->willReturn($query);
+        $query->getScalarResult()->willReturn([]);
+        $query->getResult()->willReturn([]);
+        $queryBuilder = $this->prophesize(QueryBuilder::class);
+        $queryBuilder->addSelect(Argument::cetera())->willReturn($queryBuilder);
+        $queryBuilder->select(Argument::cetera())->willReturn($queryBuilder);
+        $queryBuilder->where(Argument::cetera())->willReturn($queryBuilder);
+        $queryBuilder->orderBy(Argument::cetera())->willReturn($queryBuilder);
+        $queryBuilder->distinct(Argument::cetera())->willReturn($queryBuilder);
+        $queryBuilder->getAllAliases()->willReturn([]);
+        $queryBuilder->getQuery()->willReturn($query);
+        $this->dataProviderRepositoryTrait->method('createQueryBuilder')->willReturn($queryBuilder->reveal());
+        $this->dataProviderRepositoryTrait->findByFilters(
+            ['sortBy' => null, 'sortMethod' => 'asc'],
+            1,
+            5,
+            null,
+            'de'
+        );
+
+        $queryBuilder->orderBy(null, 'asc')->shouldNotBeCalled();
+    }
 }
