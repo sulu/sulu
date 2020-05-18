@@ -6,6 +6,7 @@ import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/ResourceFormStore';
 import Router from 'sulu-admin-bundle/services/Router';
 import ResourceRequester from 'sulu-admin-bundle/services/ResourceRequester';
+import {webspaceStore} from 'sulu-page-bundle/stores';
 import PreviewStore from '../stores/PreviewStore';
 import Preview from '../Preview';
 
@@ -22,6 +23,7 @@ jest.mock('../stores/PreviewStore', () => jest.fn(function() {
     this.update = jest.fn().mockReturnValue(Promise.resolve());
     this.updateContext = jest.fn().mockReturnValue(Promise.resolve());
     this.stop = jest.fn().mockReturnValue(Promise.resolve());
+    this.setSegment = jest.fn();
     this.setWebspace = jest.fn();
     this.setTargetGroup = jest.fn();
 
@@ -47,6 +49,7 @@ jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn());
 
 jest.mock('sulu-page-bundle/stores/webspaceStore', () => ({
     grantedWebspaces: [{key: 'sulu_io'}, {key: 'example'}],
+    getWebspace: jest.fn(),
 }));
 
 jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function(history) {
@@ -64,6 +67,8 @@ beforeEach(() => {
 
     Preview.mode = 'on_request';
     Preview.audienceTargeting = false;
+
+    webspaceStore.getWebspace.mockReturnValue({segments: []});
 });
 
 test('Render correct preview', () => {
@@ -203,10 +208,39 @@ test('Change webspace in PreviewStore when selection of webspace has changed', (
     preview.instance().handleStartClick();
 
     return startPromise.then(() => {
-        expect(PreviewStore).toBeCalledWith(undefined, undefined, 'de', 'sulu_io');
+        expect(PreviewStore).toBeCalledWith(undefined, undefined, 'de', 'sulu_io', undefined);
 
         preview.find('Select').at(1).prop('onChange')('example');
         expect(previewStore.setWebspace).toBeCalledWith('example');
+    });
+});
+
+test('Change segment in PreviewStore when selection of segment has changed', () => {
+    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    const router = new Router({});
+
+    webspaceStore.getWebspace.mockReturnValue({
+        segments: [
+            {key: 's', name: 'Summer', default: false},
+            {key: 'w', name: 'Winter', default: true},
+        ],
+    });
+
+    const preview = shallow(<Preview formStore={formStore} router={router} />);
+
+    const startPromise = Promise.resolve();
+    const previewStore = preview.instance().previewStore;
+    previewStore.start.mockReturnValue(startPromise);
+    previewStore.starting = false;
+
+    preview.instance().handleStartClick();
+
+    return startPromise.then(() => {
+        expect(PreviewStore).toBeCalledWith(undefined, undefined, 'de', 'sulu_io', 'w');
+
+        preview.find('Select').at(2).prop('onChange')('s');
+        expect(previewStore.setSegment).toBeCalledWith('s');
     });
 });
 
@@ -411,7 +445,7 @@ test('Change target group in PreviewStore when selection of target group has cha
     preview.instance().handleStartClick();
 
     return startPromise.then(() => {
-        expect(PreviewStore).toBeCalledWith(undefined, undefined, 'de', 'sulu_io');
+        expect(PreviewStore).toBeCalledWith(undefined, undefined, 'de', 'sulu_io', undefined);
 
         preview.find('Select').at(2).prop('onChange')(4);
         expect(previewStore.setTargetGroup).toBeCalledWith(4);

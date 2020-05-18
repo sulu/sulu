@@ -69,12 +69,13 @@ class PreviewController
         $webspace = $this->getRequestParameter($request, 'webspace', true, null);
         $locale = $this->getRequestParameter($request, 'locale', true, null);
         $targetGroup = $this->getRequestParameter($request, 'targetGroup', false, null);
+        $segment = $this->getRequestParameter($request, 'segment', false, null);
 
         if (!$this->preview->exists($token)) {
             $token = $this->preview->start($provider, $id, $locale, $this->getUserId());
         }
 
-        $content = $this->preview->render($token, $webspace, $locale, $targetGroup);
+        $content = $this->preview->render($token, $webspace, $locale, $targetGroup, $segment);
 
         $this->disableProfiler();
 
@@ -90,12 +91,13 @@ class PreviewController
         $locale = $this->getRequestParameter($request, 'locale', true, null);
         $webspace = $this->getRequestParameter($request, 'webspace', true);
         $targetGroup = $this->getRequestParameter($request, 'targetGroup', false, null);
+        $segment = $this->getRequestParameter($request, 'segment', false, null);
 
         if (!$this->preview->exists($token)) {
             $token = $this->preview->start($provider, $id, $locale, $this->getUserId());
         }
 
-        $content = $this->preview->update($token, $webspace, $data, $targetGroup);
+        $content = $this->preview->update($token, $webspace, $data, $targetGroup, $segment);
 
         return new JsonResponse(['content' => $content]);
     }
@@ -109,6 +111,7 @@ class PreviewController
         $locale = $this->getRequestParameter($request, 'locale', true, null);
         $webspace = $this->getRequestParameter($request, 'webspace', true);
         $targetGroup = $this->getRequestParameter($request, 'targetGroup', false, null);
+        $segment = $this->getRequestParameter($request, 'segment', false, null);
 
         if (!$this->preview->exists($token)) {
             $token = $this->preview->start($provider, $id, $locale, $this->getUserId());

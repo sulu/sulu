@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable, reaction, toJS, when} from 'mobx';
+import {action, computed, observable, reaction, toJS, when} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import classNames from 'classnames';
@@ -45,14 +45,10 @@ class Preview extends React.Component<Props> {
     typeDisposer: () => mixed;
     dataDisposer: () => mixed;
 
-    constructor(props: Props) {
-        super(props);
-
+    @computed get webspaceKey() {
         const {
-            formStore,
             router: {
                 attributes: {
-                    locale,
                     webspace,
                 },
             },
@@ -61,6 +57,29 @@ class Preview extends React.Component<Props> {
         if (webspace !== undefined && typeof webspace !== 'string') {
             throw new Error('The "webspace" router attribute must be a string if set!');
         }
+
+        return webspace;
+    }
+
+    @computed get segments() {
+        if (!this.webspaceKey) {
+            return [];
+        }
+
+        return webspaceStore.getWebspace(this.webspaceKey).segments;
+    }
+
+    constructor(props: Props) {
+        super(props);
+
+        const {
+            formStore,
+            router: {
+                attributes: {
+                    locale,
+                },
+            },
+        } = this.props;
 
         if (locale !== undefined && typeof locale !== 'string') {
             throw new Error('The "locale" router attribute must be a string if set!');
@@ -80,7 +99,8 @@ class Preview extends React.Component<Props> {
             formStore.resourceKey,
             formStore.id,
             locale,
-            webspace || this.webspaceOptions[0].value
+            this.webspaceKey || this.webspaceOptions[0].value,
+            this.segments.find((segment) => segment.default === true)?.key
         );
 
         if (Preview.mode === 'auto') {
@@ -207,6 +227,13 @@ class Preview extends React.Component<Props> {
         this.updatePreview(toJS(formStore.data));
     };
 
+    handleSegmentChange = (segmentKey: ?string) => {
+        const {formStore} = this.props;
+
+        this.previewStore.setSegment(segmentKey);
+        this.updatePreview(toJS(formStore.data));
+    };
+
     @action handleRefreshClick = () => {
         // We can not reload the iframe here as safari and firefox
         // resets the location.href to another url on previewDocument.open
@@ -300,6 +327,19 @@ class Preview extends React.Component<Props> {
                                         ]
                                     }
                                     value={this.previewStore && this.previewStore.targetGroup}
+                                />
+                            }
+                            {this.segments.length > 0 &&
+                                <Toolbar.Select
+                                    icon="su-focus"
+                                    onChange={this.handleSegmentChange}
+                                    options={
+                                        this.segments.map((segment) => ({
+                                            label: segment.name,
+                                            value: segment.key,
+                                        }))
+                                    }
+                                    value={this.previewStore && this.previewStore.segment}
                                 />
                             }
                             <Toolbar.Button

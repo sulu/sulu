@@ -339,6 +339,17 @@ class Webspace implements ArrayableInterface
         return $this->segments;
     }
 
+    public function getSegment(string $segmentKey): ?Segment
+    {
+        foreach ($this->segments as $segment) {
+            if ($segment->getKey() === $segmentKey) {
+                return $segment;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Sets the default segment of this webspace.
      *
