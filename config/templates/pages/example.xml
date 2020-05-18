@@ -252,6 +252,13 @@
             </meta>
         </property>
 
+        <property name="single_category_selection" type="single_category_selection">
+            <meta>
+                <title lang="en">Single Category Selection</title>
+                <title lang="de">Einzelkategorien</title>
+            </meta>
+        </property>
+
         <property name="single_media_selection" type="single_media_selection">
             <meta>
                 <title lang="en">Single Media Selection</title>
