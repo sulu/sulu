@@ -44,6 +44,7 @@
     <p>{{ content.smart_content | map(page => page.title) | join(', ') }}</p>
     <p>{{ content.snippet_selection | map(snippet => snippet.title) | join(', ') }}</p>
     <p>{{ content.category_selection | map(category => category.name) | join(', ') }}</p>
+    <p>{{ content.single_category_selection ? content.single_category_selection.name : ''}}
 
     {% if content.single_media_selection %}
         <img src="{{ content.single_media_selection.thumbnails['sulu-260x'] }}" />
