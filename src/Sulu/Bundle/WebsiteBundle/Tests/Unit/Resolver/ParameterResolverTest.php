@@ -21,6 +21,10 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Segment;
+use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class ParameterResolverTest extends TestCase
 {
@@ -38,6 +42,16 @@ class ParameterResolverTest extends TestCase
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
+
+    /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestStack;
+
+    /**
+     * @var Request
+     */
+    private $request;
 
     /**
      * @var RequestAnalyzerInterface
@@ -62,6 +76,16 @@ class ParameterResolverTest extends TestCase
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->structure = $this->prophesize(PageBridge::class);
         $this->portal = $this->prophesize(Portal::class);
+        $this->requestStack = $this->prophesize(RequestStack::class);
+        $this->request = $this->prophesize(Request::class);
+        $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $this->structure = $this->prophesize(PageBridge::class);
+        $this->portal = $this->prophesize(Portal::class);
+        $this->webspace = $this->prophesize(Webspace::class);
+        $this->localization = $this->prophesize(Localization::class);
+
+        $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
+        $this->requestAnalyzer->getWebspace()->willReturn($this->webspace->reveal());
     }
 
     public function testResolve()
@@ -69,7 +93,9 @@ class ParameterResolverTest extends TestCase
         $parameterResolver = new ParameterResolver(
             $this->structureResolver->reveal(),
             $this->requestAnalyzerResolver->reveal(),
-            $this->webspaceManager->reveal()
+            $this->webspaceManager->reveal(),
+            $this->requestStack->reveal(),
+            '_sulu_segment_switch'
         );
 
         $localization1 = $this->prophesize(Localization::class);
@@ -96,9 +122,16 @@ class ParameterResolverTest extends TestCase
             ->willReturn(['webspaceKey' => 'sulu']);
         $this->webspaceManager->findUrlByResourceLocator('/test', null, 'en')->willReturn('/en/test');
         $this->webspaceManager->findUrlByResourceLocator('/test', null, 'de')->willReturn('/de/test');
+        $this->request->getUri()->willReturn('/test');
         $this->requestAnalyzer->getPortal()->willReturn($this->portal->reveal())->shouldBeCalledTimes(1);
         $this->portal->getLocalizations()
             ->willReturn([$localization1->reveal(), $localization2->reveal()])->shouldBeCalledTimes(1);
+
+        $segment1 = new Segment();
+        $segment1->setKey('s');
+        $segment2 = new Segment();
+        $segment2->setKey('w');
+        $this->webspace->getSegments()->willReturn([$segment1, $segment2]);
 
         $resolvedData = $parameterResolver->resolve(
             [
@@ -131,6 +164,10 @@ class ParameterResolverTest extends TestCase
                 ],
             ],
             'webspaceKey' => 'sulu',
+            'segmentUrls' => [
+                's' => '_sulu_segment_switch?segment=s&url=/test',
+                'w' => '_sulu_segment_switch?segment=w&url=/test',
+            ],
         ], $resolvedData);
     }
 
@@ -140,6 +177,8 @@ class ParameterResolverTest extends TestCase
             $this->structureResolver->reveal(),
             $this->requestAnalyzerResolver->reveal(),
             $this->webspaceManager->reveal(),
+            $this->requestStack->reveal(),
+            '_sulu_segment_switch',
             ['urls' => false]
         );
 
@@ -171,6 +210,8 @@ class ParameterResolverTest extends TestCase
         $this->portal->getLocalizations()
             ->willReturn([$localization1->reveal(), $localization2->reveal()])->shouldBeCalledTimes(1);
 
+        $this->webspace->getSegments()->willReturn([]);
+
         $resolvedData = $parameterResolver->resolve(
             [
                 'testKey' => 'testValue',
@@ -198,6 +239,7 @@ class ParameterResolverTest extends TestCase
                 ],
             ],
             'webspaceKey' => 'sulu',
+            'segmentUrls' => [],
         ], $resolvedData);
     }
 }

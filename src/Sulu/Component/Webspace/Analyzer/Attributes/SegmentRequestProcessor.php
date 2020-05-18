@@ -15,14 +15,31 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SegmentRequestProcessor implements RequestProcessorInterface
 {
-    const SEGMENT_COOKIE = '_ss';
+    /**
+     * @var string
+     */
+    private $segmentCookieName;
+
+    public function __construct(string $segmentCookieName)
+    {
+        $this->segmentCookieName = $segmentCookieName;
+    }
 
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
         $attributes = [];
-
         $webspace = $requestAttributes->getAttribute('portalInformation')->getWebspace();
-        $attributes['segment'] = $webspace->getDefaultSegment();
+
+        $segmentKey = $request->cookies->get($this->segmentCookieName);
+        $cookieSegment = null;
+        foreach ($webspace->getSegments() as $segment) {
+            if ($segment->getKey() === $segmentKey) {
+                $cookieSegment = $segment;
+                break;
+            }
+        }
+
+        $attributes['segment'] = $cookieSegment ?? $webspace->getDefaultSegment();
 
         return new RequestAttributes($attributes);
     }

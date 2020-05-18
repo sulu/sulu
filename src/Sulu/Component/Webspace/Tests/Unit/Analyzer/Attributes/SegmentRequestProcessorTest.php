@@ -29,7 +29,7 @@ class SegmentRequestProcessorTest extends TestCase
 
     public function setUp(): void
     {
-        $this->segmentRequestProcessor = new SegmentRequestProcessor();
+        $this->segmentRequestProcessor = new SegmentRequestProcessor('_ss');
     }
 
     public function testProcessWithoutSegmentValue()
@@ -53,21 +53,30 @@ class SegmentRequestProcessorTest extends TestCase
     public function provideProcessWithDefaultSegmentValue()
     {
         return [
-            ['s'],
-            ['w'],
+            [null, 's', 's'],
+            [null, 'w', 'w'],
+            ['w', 'w', 'w'],
+            ['s', 'w', 's'],
         ];
     }
 
     /**
      * @dataProvider provideProcessWithDefaultSegmentValue
      */
-    public function testProcessWithDefaultSegmentValue($segmentKey)
+    public function testProcessWithDefaultSegmentValue($cookieSegmentKey, $defaultSegmentKey, $expectedSegmentKey)
     {
         $request = new Request();
-
         $webspace = new Webspace();
+
+        if ($cookieSegmentKey) {
+            $request->cookies->set('_ss', $cookieSegmentKey);
+            $cookieSegment = new Segment();
+            $cookieSegment->setKey($cookieSegmentKey);
+            $webspace->addSegment($cookieSegment);
+        }
+
         $segment = new Segment();
-        $segment->setKey($segmentKey);
+        $segment->setKey($defaultSegmentKey);
         $webspace->setDefaultSegment($segment);
         $portalInformation = new PortalInformation(
             RequestAnalyzerInterface::MATCH_TYPE_FULL,
@@ -79,6 +88,6 @@ class SegmentRequestProcessorTest extends TestCase
             new RequestAttributes(['portalInformation' => $portalInformation])
         );
 
-        $this->assertEquals($segmentKey, $attributes->getAttribute('segment')->getKey());
+        $this->assertEquals($expectedSegmentKey, $attributes->getAttribute('segment')->getKey());
     }
 }

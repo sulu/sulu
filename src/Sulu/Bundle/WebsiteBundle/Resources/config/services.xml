@@ -216,6 +216,8 @@
             <argument type="service" id="sulu_website.resolver.structure"/>
             <argument type="service" id="sulu_website.resolver.request_analyzer"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager" />
+            <argument type="service" id="request_stack"/>
+            <argument>%sulu_website.segment_switch_url%</argument>
             <argument>%sulu_website.enabled_twig_attributes%</argument>
         </service>
 
@@ -235,6 +237,17 @@
             <argument type="service" id="sulu_website.resolver.template_attribute"/>
             <argument type="service" id="twig"/>
             <argument>%kernel.debug%</argument>
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+
+        <service
+            id="sulu_website.segment_controller"
+            class="Sulu\Bundle\WebsiteBundle\Controller\SegmentController"
+            public="true"
+        >
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument>%sulu_website.segment_cookie_name%</argument>
 
             <tag name="sulu.context" context="website"/>
         </service>
