@@ -14,7 +14,10 @@ use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtension;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Segment;
+use Sulu\Component\Webspace\Webspace;
 
 class NavigationTwigExtensionTest extends TestCase
 {
@@ -58,12 +61,11 @@ class NavigationTwigExtensionTest extends TestCase
             $requestAnalyzer->reveal()
         );
 
-        $webspace = $this->prophesize(\Sulu\Component\Webspace\Webspace::class);
-        $webspace->getKey()->willReturn('sulu_io');
-        $requestAnalyzer->getWebspace()->willReturn($webspace->reveal());
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+        $requestAnalyzer->getWebspace()->willReturn($webspace);
 
-        $localization = $this->prophesize(\Sulu\Component\Localization\Localization::class);
-        $localization->getLocale()->willReturn('de');
+        $localization = new Localization('de');
         $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
 
         $navigationMapper->getBreadcrumb('123-123-123', 'sulu_io', 'de')->willThrow(new DocumentNotFoundException());
@@ -82,15 +84,18 @@ class NavigationTwigExtensionTest extends TestCase
             $requestAnalyzer->reveal()
         );
 
-        $webspace = $this->prophesize(\Sulu\Component\Webspace\Webspace::class);
-        $webspace->getKey()->willReturn('sulu_io');
-        $requestAnalyzer->getWebspace()->willReturn($webspace->reveal());
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+        $requestAnalyzer->getWebspace()->willReturn($webspace);
 
-        $localization = $this->prophesize(\Sulu\Component\Localization\Localization::class);
-        $localization->getLocale()->willReturn('de');
+        $segment = new Segment();
+        $segment->setKey('s');
+        $requestAnalyzer->getSegment()->willReturn($segment);
+
+        $localization = new Localization('de');
         $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
 
-        $navigationMapper->getNavigation('123-123-123', 'sulu_io', 'de', 1, true, null, false)
+        $navigationMapper->getNavigation('123-123-123', 'sulu_io', 'de', 1, true, null, false, 's')
             ->willThrow(new DocumentNotFoundException());
 
         $this->assertEquals([], $extension->flatNavigationFunction('123-123-123'));
@@ -107,15 +112,18 @@ class NavigationTwigExtensionTest extends TestCase
             $requestAnalyzer->reveal()
         );
 
-        $webspace = $this->prophesize(\Sulu\Component\Webspace\Webspace::class);
-        $webspace->getKey()->willReturn('sulu_io');
-        $requestAnalyzer->getWebspace()->willReturn($webspace->reveal());
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+        $requestAnalyzer->getWebspace()->willReturn($webspace);
 
-        $localization = $this->prophesize(\Sulu\Component\Localization\Localization::class);
-        $localization->getLocale()->willReturn('de');
+        $segment = new Segment();
+        $segment->setKey('w');
+        $requestAnalyzer->getSegment()->willReturn($segment);
+
+        $localization = new Localization('de');
         $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
 
-        $navigationMapper->getNavigation('123-123-123', 'sulu_io', 'de', 1, false, null, false)
+        $navigationMapper->getNavigation('123-123-123', 'sulu_io', 'de', 1, false, null, false, 'w')
             ->willThrow(new DocumentNotFoundException());
 
         $this->assertEquals([], $extension->treeNavigationFunction('123-123-123'));

@@ -62,22 +62,37 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
 
     public function flatRootNavigationFunction($context = null, $depth = 1, $loadExcerpt = false)
     {
-        $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
-        $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
+        $segment = $this->requestAnalyzer->getSegment();
 
-        return $this->navigationMapper->getRootNavigation($webspaceKey, $locale, $depth, true, $context, $loadExcerpt);
+        return $this->navigationMapper->getRootNavigation(
+            $this->requestAnalyzer->getWebspace()->getKey(),
+            $this->requestAnalyzer->getCurrentLocalization()->getLocale(),
+            $depth,
+            true,
+            $context,
+            $loadExcerpt,
+            $segment ? $segment->getKey() : null
+        );
     }
 
     public function treeRootNavigationFunction($context = null, $depth = 1, $loadExcerpt = false)
     {
-        $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
-        $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
+        $segment = $this->requestAnalyzer->getSegment();
 
-        return $this->navigationMapper->getRootNavigation($webspaceKey, $locale, $depth, false, $context, $loadExcerpt);
+        return $this->navigationMapper->getRootNavigation(
+            $this->requestAnalyzer->getWebspace()->getKey(),
+            $this->requestAnalyzer->getCurrentLocalization()->getLocale(),
+            $depth,
+            false,
+            $context,
+            $loadExcerpt,
+            $segment ? $segment->getKey() : null
+        );
     }
 
     public function flatNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null)
     {
+        $segment = $this->requestAnalyzer->getSegment();
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
 
@@ -97,7 +112,16 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
         }
 
         try {
-            return $this->navigationMapper->getNavigation($uuid, $webspaceKey, $locale, $depth, true, $context, $loadExcerpt);
+            return $this->navigationMapper->getNavigation(
+                $uuid,
+                $webspaceKey,
+                $locale,
+                $depth,
+                true,
+                $context,
+                $loadExcerpt,
+                $segment ? $segment->getKey() : null
+            );
         } catch (DocumentNotFoundException $exception) {
             return [];
         }
@@ -105,6 +129,7 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
 
     public function treeNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null)
     {
+        $segment = $this->requestAnalyzer->getSegment();
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
 
@@ -131,7 +156,8 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
                 $depth,
                 false,
                 $context,
-                $loadExcerpt
+                $loadExcerpt,
+                $segment ? $segment->getKey() : null
             );
         } catch (DocumentNotFoundException $exception) {
             return [];
