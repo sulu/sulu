@@ -13,7 +13,6 @@ namespace Sulu\Bundle\HttpCacheBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -43,23 +42,21 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
             ];
         }
 
-        if ($this->shouldCache($container)) {
-            if ($config['proxy_client']['symfony']['enabled']) {
-                $symfonyProxyClient = $config['proxy_client']['symfony'];
-                $fosHttpCacheConfig['proxy_client']['symfony']['http']['servers'] =
-                    count($symfonyProxyClient['servers']) ? $symfonyProxyClient['servers'] : ['127.0.0.1'];
-            }
+        if ($config['proxy_client']['symfony']['enabled']) {
+            $symfonyProxyClient = $config['proxy_client']['symfony'];
+            $fosHttpCacheConfig['proxy_client']['symfony']['http']['servers'] =
+                count($symfonyProxyClient['servers']) ? $symfonyProxyClient['servers'] : ['127.0.0.1'];
+        }
 
-            if ($config['proxy_client']['varnish']['enabled']) {
-                $varnishProxyClient = $config['proxy_client']['varnish'];
+        if ($config['proxy_client']['varnish']['enabled']) {
+            $varnishProxyClient = $config['proxy_client']['varnish'];
 
-                $fosHttpCacheConfig['proxy_client']['varnish']['http']['servers'] =
-                    count($varnishProxyClient['servers']) ? $varnishProxyClient['servers'] : ['127.0.0.1'];
-            }
+            $fosHttpCacheConfig['proxy_client']['varnish']['http']['servers'] =
+                count($varnishProxyClient['servers']) ? $varnishProxyClient['servers'] : ['127.0.0.1'];
+        }
 
-            if (array_key_exists('proxy_client', $fosHttpCacheConfig)) {
-                $fosHttpCacheConfig['tags']['enabled'] = $config['tags']['enabled'];
-            }
+        if (array_key_exists('proxy_client', $fosHttpCacheConfig)) {
+            $fosHttpCacheConfig['tags']['enabled'] = $config['tags']['enabled'];
         }
 
         $container->prependExtensionConfig('fos_http_cache', $fosHttpCacheConfig);
@@ -82,10 +79,6 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
         $container->setParameter('sulu_http_cache.cache.max_age', $config['cache']['max_age']);
         $container->setParameter('sulu_http_cache.cache.shared_max_age', $config['cache']['shared_max_age']);
 
-        if (!$this->shouldCache($container)) {
-            return;
-        }
-
         $proxyClientAvailable = false;
         if (array_key_exists('proxy_client', $config)) {
             foreach ($config['proxy_client'] as $proxyClient) {
@@ -104,13 +97,5 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
                 $loader->load('tags.xml');
             }
         }
-    }
-
-    /**
-     * Returns boolean if system should cache in current environment.
-     */
-    private function shouldCache(ContainerInterface $container): bool
-    {
-        return !in_array($container->getParameter('kernel.environment'), ['dev', 'test']);
     }
 }

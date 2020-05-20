@@ -1,5 +1,13 @@
 # Upgrade
 
+## dev-master
+
+The `sulu_http_cache` configuration behaved differently based on the configured environment. Since this behavior was
+causing some configuration to be ignored in the `dev` and `test` environment, it was very hard to understand. Therefore
+we removed this behavior, and if e.g. the `dev` environment should not use the HTTP cache, it has to be configured
+appropriately. This can be done by moving the `config/packages/sulu_http_cache.yaml` file to
+`config/packages/prod/sulu_http_cache.yaml`.
+
 ## 2.1.0-RC1
 
 ### Deprecated ExceptionController changed to ErrorController

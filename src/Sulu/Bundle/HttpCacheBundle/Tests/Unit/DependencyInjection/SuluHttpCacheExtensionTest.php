@@ -92,18 +92,6 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
         ];
     }
 
-    public function provideEnvConfig()
-    {
-        return [
-            [true, 'test', false],
-            [false, 'test', false],
-            [true, 'dev', false],
-            [false, 'dev', false],
-            [true, 'prod', true],
-            [false, 'prod', true],
-        ];
-    }
-
     public function testDefaultConfig()
     {
         $this->load();
@@ -130,53 +118,5 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
 
         $this->assertContainerBuilderHasParameter('sulu_http_cache.cache.max_age', 520);
         $this->assertContainerBuilderHasParameter('sulu_http_cache.cache.shared_max_age', 340);
-    }
-
-    /**
-     * @dataProvider provideEnvConfig
-     */
-    public function testVarnishConfig(bool $debug, string $env, bool $expected)
-    {
-        $this->container->setParameter('kernel.debug', $debug);
-        $this->container->setParameter('kernel.environment', $env);
-
-        $config = [
-            'proxy_client' => [
-                'varnish' => [
-                    'enabled' => true,
-                ],
-            ],
-        ];
-
-        $this->load($config);
-        $this->compile();
-
-        $this->assertEquals($expected, $this->container->has('sulu_http_cache.cache_manager'));
-        $this->assertContainerBuilderHasParameter('sulu_http_cache.cache.max_age', 240);
-        $this->assertContainerBuilderHasParameter('sulu_http_cache.cache.shared_max_age', 240);
-    }
-
-    /**
-     * @dataProvider provideEnvConfig
-     */
-    public function testSymfonyConfig(bool $debug, string $env, bool $expected)
-    {
-        $this->container->setParameter('kernel.debug', $debug);
-        $this->container->setParameter('kernel.environment', $env);
-
-        $config = [
-            'proxy_client' => [
-                'symfony' => [
-                    'enabled' => true,
-                ],
-            ],
-        ];
-
-        $this->load($config);
-        $this->compile();
-
-        $this->assertEquals($expected, $this->container->has('sulu_http_cache.cache_manager'));
-        $this->assertContainerBuilderHasParameter('sulu_http_cache.cache.max_age', 240);
-        $this->assertContainerBuilderHasParameter('sulu_http_cache.cache.shared_max_age', 240);
     }
 }
