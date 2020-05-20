@@ -29,10 +29,21 @@ class SegmentControllerTest extends WebsiteTestCase
     {
         $this->assertNull($this->client->getCookieJar()->get('_ss'));
 
+        $this->client->request('GET', 'http://sulu.lo/_sulu_segment_switch?segment=s&url=http://sulu.lo/test');
+        $response = $this->client->getResponse();
+
+        $this->assertEquals('s', $this->client->getCookieJar()->get('_ss')->getValue());
+        $this->assertEquals('http://sulu.lo/test', $response->getTargetUrl());
+    }
+
+    public function testSwitchDefault()
+    {
+        $this->assertNull($this->client->getCookieJar()->get('_ss'));
+
         $this->client->request('GET', 'http://sulu.lo/_sulu_segment_switch?segment=w&url=http://sulu.lo/test');
         $response = $this->client->getResponse();
 
-        $this->assertEquals('w', $this->client->getCookieJar()->get('_ss')->getValue());
+        $this->assertNull($this->client->getCookieJar()->get('_ss'));
         $this->assertEquals('http://sulu.lo/test', $response->getTargetUrl());
     }
 }

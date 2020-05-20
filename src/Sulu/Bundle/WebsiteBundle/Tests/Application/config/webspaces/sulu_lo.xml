@@ -37,6 +37,11 @@
         </contexts>
     </navigation>
 
+    <segments>
+        <segment key="w" default="true">winter</segment>
+        <segment key="s" default="false">summer</segment>
+    </segments>
+
     <resource-locator>
         <strategy>tree_leaf_edit</strategy>
     </resource-locator>

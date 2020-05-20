@@ -38,12 +38,18 @@ class SegmentController
     {
         $webspace = $this->requestAnalyzer->getWebspace();
         $segments = $webspace->getSegments();
+        $defaultSegment = $webspace->getDefaultSegment();
 
         $url = $request->query->get('url');
         $segmentKey = $request->query->get('segment');
 
         $response = new RedirectResponse($url);
-        $response->headers->setCookie(Cookie::create($this->segmentCookieName, $segmentKey));
+        $response->headers->setCookie(
+            Cookie::create(
+                $this->segmentCookieName,
+                $defaultSegment && $defaultSegment->getKey() === $segmentKey ? null : $segmentKey
+            )
+        );
 
         return $response;
     }
