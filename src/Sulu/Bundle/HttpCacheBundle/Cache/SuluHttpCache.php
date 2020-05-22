@@ -19,6 +19,7 @@ use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
 use FOS\HttpCache\SymfonyCache\PurgeListener;
 use FOS\HttpCache\SymfonyCache\PurgeTagsListener;
 use FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter;
+use Sulu\Bundle\WebsiteBundle\EventListener\SegmentCacheListener;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,6 +50,7 @@ class SuluHttpCache extends HttpCache implements CacheInvalidation
         $this->addSubscriber(new CustomTtlListener(static::HEADER_REVERSE_PROXY_TTL));
         $this->addSubscriber(new PurgeListener());
         $this->addSubscriber(new PurgeTagsListener());
+        $this->addSubscriber(new SegmentCacheListener());
 
         if (!$kernel->isDebug()) {
             $this->addSubscriber(new CleanupCacheTagsListener());

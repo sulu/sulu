@@ -48,6 +48,10 @@ sub sulu_recv {
     if (req.http.Authorization) {
         return (pass);
     }
+
+    if (req.http.Cookie ~ "_ss") {
+        set req.http.X-Sulu-Segment = regsub(req.http.Cookie, ".*_ss=([^;]+).*", "\1");
+    }
 }
 
 sub sulu_backend_response {

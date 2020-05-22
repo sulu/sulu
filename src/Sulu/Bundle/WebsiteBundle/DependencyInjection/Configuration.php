@@ -35,6 +35,7 @@ class Configuration implements ConfigurationInterface
                 ->children()
                     ->scalarNode('switch_url')->defaultValue('/_sulu_segment_switch')->end()
                     ->scalarNode('cookie')->defaultValue('_ss')->end()
+                    ->scalarNode('header')->defaultValue('X-Sulu-Segment')->end()
                 ->end()
             ->end()
             ->arrayNode('twig')

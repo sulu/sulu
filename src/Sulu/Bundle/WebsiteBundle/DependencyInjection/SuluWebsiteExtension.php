@@ -119,6 +119,10 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
             'sulu_website.segment_cookie_name',
             $config['segments']['cookie']
         );
+        $container->setParameter(
+            'sulu_website.segment_header',
+            $config['segments']['header']
+        );
         $container->registerForAutoconfiguration(SitemapProviderInterface::class)
             ->addTag('sulu.sitemap.provider');
 
