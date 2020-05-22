@@ -1,2 +1,0 @@
-imports:
-    - { resource: '../prod/sulu_http_cache.yaml' }
