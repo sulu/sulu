@@ -124,7 +124,7 @@ class PageTeaserProvider implements TeaserProviderInterface
     {
         $images = json_decode($document->getField($field)->getValue(), true);
 
-        if (!array_key_exists('ids', $images) || 0 === count($images['ids'])) {
+        if (!$images || !array_key_exists('ids', $images) || 0 === count($images['ids'])) {
             return;
         }
 
