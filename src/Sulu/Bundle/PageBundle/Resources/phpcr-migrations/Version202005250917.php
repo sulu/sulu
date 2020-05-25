@@ -16,7 +16,7 @@ use PHPCR\SessionInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-class Version202005191116 implements VersionInterface, ContainerAwareInterface
+class Version202005250917 implements VersionInterface, ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
@@ -45,7 +45,7 @@ class Version202005191116 implements VersionInterface, ContainerAwareInterface
     {
         $queryManager = $session->getWorkspace()->getQueryManager();
 
-        $query = 'SELECT * FROM [nt:unstructured] WHERE ([jcr:mixinTypes] = "sulu:snippet")';
+        $query = 'SELECT * FROM [nt:unstructured] WHERE ([jcr:mixinTypes] = "sulu:snippet" or [jcr:mixinTypes] = "sulu:page")';
         $rows = $queryManager->createQuery($query, 'JCR-SQL2')->execute();
 
         foreach ($rows as $row) {
@@ -54,11 +54,10 @@ class Version202005191116 implements VersionInterface, ContainerAwareInterface
             foreach ($node->getProperties() as $property) {
                 if (\is_string($property->getValue())) {
                     $propertyValue = json_decode($property->getValue(), true);
-                    if (\is_array($propertyValue) && \array_key_exists('items', $propertyValue)) {
-                        foreach ($propertyValue['items'] as &$item) {
-                            if (isset($item['type']) && 'content' === $item['type']) {
-                                $item['type'] = 'pages';
-                            }
+                    if (\is_array($propertyValue) && \array_key_exists('presentAs', $propertyValue) &&
+                        \array_key_exists('limitResult', $propertyValue) && \array_key_exists('sortBy', $propertyValue)) {
+                        if (is_array($propertyValue['sortBy'])) {
+                            $propertyValue['sortBy'] = \count($propertyValue['sortBy']) > 0 ? $propertyValue['sortBy'][0] : null;
                         }
 
                         $property->setValue(json_encode($propertyValue));
@@ -72,7 +71,7 @@ class Version202005191116 implements VersionInterface, ContainerAwareInterface
     {
         $queryManager = $session->getWorkspace()->getQueryManager();
 
-        $query = 'SELECT * FROM [nt:unstructured] WHERE ([jcr:mixinTypes] = "sulu:snippet")';
+        $query = 'SELECT * FROM [nt:unstructured] WHERE ([jcr:mixinTypes] = "sulu:snippet" or [jcr:mixinTypes] = "sulu:page")';
         $rows = $queryManager->createQuery($query, 'JCR-SQL2')->execute();
 
         foreach ($rows as $row) {
@@ -81,11 +80,10 @@ class Version202005191116 implements VersionInterface, ContainerAwareInterface
             foreach ($node->getProperties() as $property) {
                 if (\is_string($property->getValue())) {
                     $propertyValue = json_decode($property->getValue(), true);
-                    if (\is_array($propertyValue) && \array_key_exists('items', $propertyValue)) {
-                        foreach ($propertyValue['items'] as &$item) {
-                            if (isset($item['type']) && 'pages' === $item['type']) {
-                                $item['type'] = 'content';
-                            }
+                    if (\is_array($propertyValue) && \array_key_exists('presentAs', $propertyValue) &&
+                        \array_key_exists('limitResult', $propertyValue) && \array_key_exists('sortBy', $propertyValue)) {
+                        if (is_array($propertyValue['sortBy'])) {
+                            $propertyValue['sortBy'] = [$propertyValue['sortBy']];
                         }
 
                         $property->setValue(json_encode($propertyValue));
