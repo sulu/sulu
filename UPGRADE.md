@@ -4,9 +4,21 @@
 
 The `sulu_http_cache` configuration behaved differently based on the configured environment. Since this behavior was
 causing some configuration to be ignored in the `dev` and `test` environment, it was very hard to understand. Therefore
-we removed this behavior, and if e.g. the `dev` environment should not use the HTTP cache, it has to be configured
+we removed this behavior. In order to imitate the old behavior, the `sulu_http_cache` has to be configured
 appropriately. This can be done by moving the `config/packages/sulu_http_cache.yaml` file to
-`config/packages/prod/sulu_http_cache.yaml`.
+`config/packages/prod/sulu_http_cache.yaml`:
+
+```bash
+git mv config/packages/sulu_http_cache.yaml config/packages/prod/sulu_http_cache.yaml
+```
+
+Additionally a `sulu_http_cache` configuration for the `stage` environment should also be created:
+
+```yaml
+# config/packages/stage/sulu_http_cache.yaml
+imports:
+    - { resource: '../prod/sulu_http_cache.yaml' }
+```
 
 ## 2.1.0-RC1
 
