@@ -22,14 +22,11 @@ class Configuration implements ConfigurationInterface
     private $debug;
 
     /**
-     * @var string
+     * @param bool $debug Whether to use the debug mode
      */
-    private $environment;
-
-    public function __construct(bool $debug, string $environment)
+    public function __construct($debug)
     {
         $this->debug = $debug;
-        $this->environment = $environment;
     }
 
     public function getConfigTreeBuilder()
@@ -39,9 +36,6 @@ class Configuration implements ConfigurationInterface
 
         $root
             ->children()
-                ->scalarNode('enabled')
-                    ->defaultValue(in_array($this->environment, ['dev', 'test']) ? false : true)
-                ->end()
                 ->arrayNode('tags')
                     ->canBeDisabled()
                 ->end()

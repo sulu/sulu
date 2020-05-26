@@ -42,23 +42,21 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
             ];
         }
 
-        if ($config['enabled']) {
-            if ($config['proxy_client']['symfony']['enabled']) {
-                $symfonyProxyClient = $config['proxy_client']['symfony'];
-                $fosHttpCacheConfig['proxy_client']['symfony']['http']['servers'] =
-                    count($symfonyProxyClient['servers']) ? $symfonyProxyClient['servers'] : ['127.0.0.1'];
-            }
+        if ($config['proxy_client']['symfony']['enabled']) {
+            $symfonyProxyClient = $config['proxy_client']['symfony'];
+            $fosHttpCacheConfig['proxy_client']['symfony']['http']['servers'] =
+                count($symfonyProxyClient['servers']) ? $symfonyProxyClient['servers'] : ['127.0.0.1'];
+        }
 
-            if ($config['proxy_client']['varnish']['enabled']) {
-                $varnishProxyClient = $config['proxy_client']['varnish'];
+        if ($config['proxy_client']['varnish']['enabled']) {
+            $varnishProxyClient = $config['proxy_client']['varnish'];
 
-                $fosHttpCacheConfig['proxy_client']['varnish']['http']['servers'] =
-                    count($varnishProxyClient['servers']) ? $varnishProxyClient['servers'] : ['127.0.0.1'];
-            }
+            $fosHttpCacheConfig['proxy_client']['varnish']['http']['servers'] =
+                count($varnishProxyClient['servers']) ? $varnishProxyClient['servers'] : ['127.0.0.1'];
+        }
 
-            if (array_key_exists('proxy_client', $fosHttpCacheConfig)) {
-                $fosHttpCacheConfig['tags']['enabled'] = $config['tags']['enabled'];
-            }
+        if (array_key_exists('proxy_client', $fosHttpCacheConfig)) {
+            $fosHttpCacheConfig['tags']['enabled'] = $config['tags']['enabled'];
         }
 
         $container->prependExtensionConfig('fos_http_cache', $fosHttpCacheConfig);
@@ -66,10 +64,7 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
 
     public function getConfiguration(array $config, ContainerBuilder $container)
     {
-        return new Configuration(
-            $container->getParameter('kernel.debug'),
-            $container->getParameter('kernel.environment')
-        );
+        return new Configuration($container->getParameter('kernel.debug'));
     }
 
     public function load(array $configs, ContainerBuilder $container)
@@ -83,10 +78,6 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
 
         $container->setParameter('sulu_http_cache.cache.max_age', $config['cache']['max_age']);
         $container->setParameter('sulu_http_cache.cache.shared_max_age', $config['cache']['shared_max_age']);
-
-        if (!$config['enabled']) {
-            return;
-        }
 
         $proxyClientAvailable = false;
         if (array_key_exists('proxy_client', $config)) {
