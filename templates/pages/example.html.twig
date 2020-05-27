@@ -5,12 +5,23 @@
     <p>{{ content.url }}</p>
     {{ content.text_editor|raw }}
 
+
     {% for block in content.blocks %}
         {% if block.type == 'editor' %}
-            {{ content.text_editor|raw }}
+            {{ block.text_editor|raw }}
         {% elseif block.type == 'media' %}
             {% for media in block.media_selection %}
-                <img src="{{ media.thumbnails['sulu-260x'] }}"
+                <img src="{{ media.thumbnails['sulu-260x'] }}" />
+            {% endfor %}
+        {% elseif block.type == 'block' %}
+            {% for subblock in block.blocks %}
+                {% if subblock.type == 'editor' %}
+                    {{ subblock.text_editor|raw }}
+                {% elseif subblock.type == 'media' %}
+                    {% for media in subblock.media_selection %}
+                        <img src="{{ media.thumbnails['sulu-260x'] }}" />
+                    {% endfor %}
+                {% endif %}
             {% endfor %}
         {% endif %}
     {% endfor %}

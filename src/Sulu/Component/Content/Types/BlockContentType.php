@@ -352,12 +352,17 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         $data = [];
         for ($i = 0; $i < $blockProperty->getLength(); ++$i) {
             $blockPropertyType = $blockProperty->getProperties($i);
+            $blockPropertyTypeSettings = $blockPropertyType->getSettings();
+
+            if (isset($blockPropertyTypeSettings['hidden']) && $blockPropertyTypeSettings['hidden']) {
+                continue;
+            }
 
             if ($returnType) {
                 $type = $blockPropertyType->getName();
                 $data[$i] = [
                     'type' => $type,
-                    'settings' => $blockPropertyType->getSettings(),
+                    'settings' => $blockPropertyTypeSettings,
                 ];
             }
 

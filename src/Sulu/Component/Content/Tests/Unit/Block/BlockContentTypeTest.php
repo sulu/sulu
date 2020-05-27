@@ -88,7 +88,7 @@ class BlockContentTypeTest extends TestCase
         $type1->addChild(new Property('article', '', 'text_area', false, true));
         $this->blockProperty->addType($type1);
 
-        $this->subBlockProperty = new BlockProperty('sub-block', '', 'subType1', false, true);
+        $this->subBlockProperty = new BlockProperty('sub-block', '', 'subType1', false, true, 999, 1);
         $subType1 = new BlockPropertyType('subType1', '');
         $subType1->addChild(new Property('title', '', 'text_line', false, true));
         $subType1->addChild(new Property('article', '', 'text_area', false, true));
@@ -572,10 +572,12 @@ class BlockContentTypeTest extends TestCase
                     'Test-Article-1-2',
                 ],
                 'sub-block' => [
-                    'type' => 'subType1',
-                    'title' => 'Test-Title-Sub-1',
-                    'article' => 'Test-Article-Sub-1',
-                    'settings' => [],
+                    [
+                        'type' => 'subType1',
+                        'title' => 'Test-Title-Sub-1',
+                        'article' => 'Test-Article-Sub-1',
+                        'settings' => [],
+                    ],
                 ],
                 'settings' => [],
             ],
@@ -590,5 +592,77 @@ class BlockContentTypeTest extends TestCase
         $result = $this->blockContentType->getContentData($this->blockProperty);
 
         $this->assertEquals($data, $result);
+    }
+
+    public function testGetContentDataWithHiddenBlocks()
+    {
+        $this->prepareSingleBlockProperty();
+
+        $data = [
+            [
+                'type' => 'type1',
+                'title' => 'Test-Title-1',
+                'article' => [
+                    'Test-Article-1-1',
+                    'Test-Article-1-2',
+                ],
+                'sub-block' => [
+                    [
+                        'type' => 'subType1',
+                        'title' => 'Test-Title-Sub-1',
+                        'article' => 'Test-Article-Sub-1',
+                        'settings' => [],
+                    ],
+                    [
+                        'type' => 'subType1',
+                        'title' => 'Test-Title-Sub-1',
+                        'article' => 'Test-Article-Sub-1',
+                        'settings' => ['hidden' => true],
+                    ],
+                ],
+                'settings' => [],
+            ],
+            [
+                'type' => 'type2',
+                'name' => 'Test-Name-2',
+                'settings' => [],
+            ],
+            [
+                'type' => 'type2',
+                'name' => 'Test-Name-3',
+                'settings' => ['hidden' => true],
+            ],
+        ];
+        $this->blockProperty->setValue($data);
+
+        $result = $this->blockContentType->getContentData($this->blockProperty);
+
+        $this->assertEquals(
+            [
+                [
+                    'type' => 'type1',
+                    'title' => 'Test-Title-1',
+                    'article' => [
+                        'Test-Article-1-1',
+                        'Test-Article-1-2',
+                    ],
+                    'sub-block' => [
+                        [
+                            'type' => 'subType1',
+                            'title' => 'Test-Title-Sub-1',
+                            'article' => 'Test-Article-Sub-1',
+                            'settings' => [],
+                        ],
+                    ],
+                    'settings' => [],
+                ],
+                [
+                    'type' => 'type2',
+                    'name' => 'Test-Name-2',
+                    'settings' => [],
+                ],
+            ],
+            $result
+        );
     }
 }
