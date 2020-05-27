@@ -51,7 +51,7 @@ class MediaImageExtractor implements MediaImageExtractorInterface
     public function extract($content)
     {
         $finfo = new \finfo();
-        $mimeType = $finfo->buffer($content, FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($content, \FILEINFO_MIME_TYPE);
 
         if ('application/pdf' === $mimeType) {
             return $this->convertPdfToImage($content);

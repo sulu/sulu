@@ -774,7 +774,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             ],
             ['webspaceKey' => 'sulu_io', 'locale' => 'de'],
             $limitResult,
-            $page < 1 ? 1 : ($page > PHP_INT_MAX ? PHP_INT_MAX : $page),
+            $page < 1 ? 1 : ($page > \PHP_INT_MAX ? \PHP_INT_MAX : $page),
             $pageSize
         )->willReturn(new DataProviderResult($expectedData, $hasNextPage));
 

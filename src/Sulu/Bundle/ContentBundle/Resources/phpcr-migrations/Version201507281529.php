@@ -78,7 +78,7 @@ class Version201507281529 implements VersionInterface, ContainerAwareInterface
                             $node->setProperty($templatePropertyName, 'external-link');
                         }
                     } catch (\Exception $e) {
-                        echo $e->getMessage() . PHP_EOL;
+                        echo $e->getMessage() . \PHP_EOL;
                     }
                 }
             }

@@ -488,7 +488,7 @@ class CategoryManager implements CategoryManagerInterface
     {
         @trigger_error(
             __METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenByParentId() instead.',
-            E_USER_DEPRECATED
+            \E_USER_DEPRECATED
         );
 
         if ($parent && !$this->categoryRepository->isCategoryId($parent)) {
@@ -502,7 +502,7 @@ class CategoryManager implements CategoryManagerInterface
     {
         @trigger_error(
             __METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenByParentKey() instead.',
-            E_USER_DEPRECATED
+            \E_USER_DEPRECATED
         );
 
         return $this->categoryRepository->findChildren($key, $sortBy, $sortOrder);

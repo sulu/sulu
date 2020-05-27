@@ -60,7 +60,7 @@ class Initializer
             $initializer = $this->container->get($initializerId);
             $initializer->initialize($output, $purge);
         }
-        $output->write(PHP_EOL);
+        $output->write(\PHP_EOL);
         $output->writeln('<comment>*</> Legend: [+] Added [*] Updated [-] Purged [ ] No change');
     }
 }

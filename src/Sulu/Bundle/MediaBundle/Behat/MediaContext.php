@@ -148,10 +148,10 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
         if ($this->getMinkParameter('files_path')) {
             $fullPath = rtrim(
                     realpath($this->getMinkParameter('files_path')),
-                    DIRECTORY_SEPARATOR
-                ) . DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR);
+                    \DIRECTORY_SEPARATOR
+                ) . \DIRECTORY_SEPARATOR . ltrim($path, \DIRECTORY_SEPARATOR);
         } else {
-            $fullPath = __DIR__ . DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR);
+            $fullPath = __DIR__ . \DIRECTORY_SEPARATOR . ltrim($path, \DIRECTORY_SEPARATOR);
         }
 
         if (!is_file($fullPath)) {

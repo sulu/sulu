@@ -85,7 +85,7 @@ class MetaTwigExtension extends \Twig_Extension
             }
         }
 
-        return implode(PHP_EOL, $result);
+        return implode(\PHP_EOL, $result);
     }
 
     /**
@@ -130,7 +130,7 @@ class MetaTwigExtension extends \Twig_Extension
         $result[] = $this->getMeta('keywords', $seo['keywords']);
         $result[] = $this->getMeta('robots', strtoupper(implode(', ', $robots)));
 
-        return implode(PHP_EOL, $result);
+        return implode(\PHP_EOL, $result);
     }
 
     /**

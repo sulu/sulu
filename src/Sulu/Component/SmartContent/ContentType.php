@@ -389,7 +389,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         }
 
         $page = $this->requestStack->getCurrentRequest()->get($pageParameter, 1);
-        if ($page < 1 || $page > PHP_INT_MAX) {
+        if ($page < 1 || $page > \PHP_INT_MAX) {
             throw new PageOutOfBoundsException($page);
         }
 

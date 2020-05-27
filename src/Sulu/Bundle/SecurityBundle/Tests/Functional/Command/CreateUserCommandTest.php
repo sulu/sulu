@@ -47,7 +47,7 @@ class CreateUserCommandTest extends SuluTestCase
     {
         $this->createRole('test');
         $this->createUser('sulu', 'test');
-        $this->assertEquals('Created user "sulu" in role "test"' . PHP_EOL, $this->tester->getDisplay());
+        $this->assertEquals('Created user "sulu" in role "test"' . \PHP_EOL, $this->tester->getDisplay());
     }
 
     public function testCreateUserAlreadyExists()
@@ -63,7 +63,7 @@ class CreateUserCommandTest extends SuluTestCase
     {
         $this->createRole('test');
         $this->createUser('sulu', 'testfoobar');
-        $this->assertEquals('Role "testfoobar" not found. The following roles are available: "test"' . PHP_EOL, $this->tester->getDisplay());
+        $this->assertEquals('Role "testfoobar" not found. The following roles are available: "test"' . \PHP_EOL, $this->tester->getDisplay());
     }
 
     public function testCreateUserNonExistingLocale()

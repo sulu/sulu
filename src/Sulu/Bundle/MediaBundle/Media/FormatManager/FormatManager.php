@@ -125,7 +125,7 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
             $status = 200;
             $setExpireHeaders = true;
 
-            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $finfo = new \finfo(\FILEINFO_MIME_TYPE);
             $mimeType = $finfo->buffer($responseContent);
 
             // Save image.

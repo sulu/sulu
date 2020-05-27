@@ -209,8 +209,8 @@ abstract class KernelTestCase extends \PHPUnit_Framework_TestCase
             $message = $response->getContent();
 
             if ($json = json_decode($message, true)) {
-                $message = explode(PHP_EOL, json_encode($json, JSON_PRETTY_PRINT));
-                $message = implode(PHP_EOL, array_slice($message, 0, $debugLength));
+                $message = explode(\PHP_EOL, json_encode($json, \JSON_PRETTY_PRINT));
+                $message = implode(\PHP_EOL, array_slice($message, 0, $debugLength));
                 $message = sprintf(
                     'HTTP status code %s is not expected %s, showing %s lines of the response body: %s',
                     $httpCode,

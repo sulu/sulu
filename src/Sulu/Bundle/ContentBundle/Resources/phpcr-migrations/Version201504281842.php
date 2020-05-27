@@ -74,7 +74,7 @@ EOT;
                             $node->setProperty($internalLinkName, $internalNodeUuid);
                         }
                     } catch (\Exception $e) {
-                        echo $e->getMessage() . PHP_EOL;
+                        echo $e->getMessage() . \PHP_EOL;
                     }
                 }
             }

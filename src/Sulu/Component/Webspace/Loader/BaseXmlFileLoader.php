@@ -27,7 +27,7 @@ abstract class BaseXmlFileLoader extends FileLoader
 
     public function supports($resource, $type = null)
     {
-        if (!is_string($resource) || 'xml' !== pathinfo($resource, PATHINFO_EXTENSION)) {
+        if (!is_string($resource) || 'xml' !== pathinfo($resource, \PATHINFO_EXTENSION)) {
             return false;
         }
 

@@ -173,7 +173,7 @@ class ListToTreeConverter
         $returnArr = [];
         foreach ($array as $key => $val) {
             // Get parent parts and the current leaf
-            $parts = preg_split($splitRE, $key, -1, PREG_SPLIT_NO_EMPTY);
+            $parts = preg_split($splitRE, $key, -1, \PREG_SPLIT_NO_EMPTY);
             $leafPart = array_pop($parts);
 
             // Build parent structure

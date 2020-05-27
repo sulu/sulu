@@ -86,7 +86,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
         $cachePath = sprintf(
             '%s%s%s%s',
             $this->cachePath,
-            DIRECTORY_SEPARATOR,
+            \DIRECTORY_SEPARATOR,
             Inflector::camelize($type),
             Inflector::camelize($structureType)
         );

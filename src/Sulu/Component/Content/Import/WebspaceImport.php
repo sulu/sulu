@@ -246,9 +246,9 @@ class WebspaceImport extends Import implements WebspaceImportInterface
                 sprintf(
                     '<info>%s</info>%s: <error>%s</error>%s',
                     $uuid,
-                    PHP_EOL . get_class($e),
+                    \PHP_EOL . get_class($e),
                     $e->getMessage(),
-                    PHP_EOL . $e->getTraceAsString()
+                    \PHP_EOL . $e->getTraceAsString()
                 )
             );
 

@@ -18,8 +18,8 @@ class IndexComparator implements IndexComparatorInterface
 {
     public function compare($a, $b, array $ids)
     {
-        $indexA = ($index = array_search($a, $ids)) > -1 ? $index : PHP_INT_MAX;
-        $indexB = ($index = array_search($b, $ids)) > -1 ? $index : PHP_INT_MAX;
+        $indexA = ($index = array_search($a, $ids)) > -1 ? $index : \PHP_INT_MAX;
+        $indexB = ($index = array_search($b, $ids)) > -1 ? $index : \PHP_INT_MAX;
 
         return strnatcmp($indexA, $indexB);
     }

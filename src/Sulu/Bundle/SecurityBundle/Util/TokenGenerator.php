@@ -25,7 +25,7 @@ class TokenGenerator implements TokenGeneratorInterface
     public function __construct()
     {
         // determine whether to use OpenSSL
-        if (defined('PHP_WINDOWS_VERSION_BUILD') && version_compare(PHP_VERSION, '5.3.4', '<')) {
+        if (defined('PHP_WINDOWS_VERSION_BUILD') && version_compare(\PHP_VERSION, '5.3.4', '<')) {
             $this->useOpenSsl = false;
         } elseif (!function_exists('openssl_random_pseudo_bytes')) {
             $this->useOpenSsl = false;

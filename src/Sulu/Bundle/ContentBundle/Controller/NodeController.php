@@ -336,7 +336,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $webspace = $this->getWebspace($request, false);
 
         $result = $this->getRepository()->getNodesByIds(
-            preg_split('/[,]/', $idString, -1, PREG_SPLIT_NO_EMPTY),
+            preg_split('/[,]/', $idString, -1, \PREG_SPLIT_NO_EMPTY),
             $webspace,
             $language
         );

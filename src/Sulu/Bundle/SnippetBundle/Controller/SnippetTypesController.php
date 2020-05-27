@@ -42,7 +42,7 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
         $defaults = $this->getBooleanRequestParameter($request, 'defaults');
         $webspaceKey = $this->getRequestParameter($request, 'webspace', $defaults);
         if ($defaults) {
-            @trigger_error('Load default snippets over the cgetAction is deprecated and will be removed in 2.0 use SnippetAreaController::cgetAction instead', E_USER_DEPRECATED);
+            @trigger_error('Load default snippets over the cgetAction is deprecated and will be removed in 2.0 use SnippetAreaController::cgetAction instead', \E_USER_DEPRECATED);
 
             $this->get('sulu_security.security_checker')->checkPermission(
                 new SecurityCondition(SnippetAdmin::getDefaultSnippetsSecurityContext($webspaceKey)),
@@ -92,7 +92,7 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
      */
     public function putDefaultAction(Request $request, $key)
     {
-        @trigger_error('Set default snippets over the putDefaultAction is deprecated and will be removed in 2.0 use SnippetAreaController::putAction instead', E_USER_DEPRECATED);
+        @trigger_error('Set default snippets over the putDefaultAction is deprecated and will be removed in 2.0 use SnippetAreaController::putAction instead', \E_USER_DEPRECATED);
 
         return $this->forward('SuluSnippetBundle:SnippetArea:put', $request->attributes->all(), $request->query->all());
     }
@@ -106,7 +106,7 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
      */
     public function deleteDefaultAction(Request $request, $key)
     {
-        @trigger_error('Remove default snippets over the deleteDefaultAction is deprecated and will be removed in 2.0 use SnippetAreaController::deleteAction instead', E_USER_DEPRECATED);
+        @trigger_error('Remove default snippets over the deleteDefaultAction is deprecated and will be removed in 2.0 use SnippetAreaController::deleteAction instead', \E_USER_DEPRECATED);
 
         return $this->forward('SuluSnippetBundle:SnippetArea:delete', $request->attributes->all(), $request->query->all());
     }

@@ -57,7 +57,7 @@ class VideoThumbnailService implements VideoThumbnailServiceInterface
         if (null !== $this->ffmpeg) {
             $failed = [];
             foreach ($times as $time) {
-                $filename = $destinationPath . DIRECTORY_SEPARATOR . $time . '.jpg';
+                $filename = $destinationPath . \DIRECTORY_SEPARATOR . $time . '.jpg';
                 $success = $this->generate($video, $time, $filename);
 
                 if (!$success) {

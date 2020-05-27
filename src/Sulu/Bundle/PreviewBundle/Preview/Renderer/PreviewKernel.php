@@ -31,11 +31,11 @@ class PreviewKernel extends \WebsiteKernel
 
         if (in_array($this->getEnvironment(), ['dev', 'test'])) {
             $loader->load(
-                implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'Resources', 'config', 'config_preview_dev.yml'])
+                implode(\DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'Resources', 'config', 'config_preview_dev.yml'])
             );
         }
 
-        $loader->load(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'Resources', 'config', 'config_preview.yml']));
+        $loader->load(implode(\DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'Resources', 'config', 'config_preview.yml']));
     }
 
     public function getRootDir()
