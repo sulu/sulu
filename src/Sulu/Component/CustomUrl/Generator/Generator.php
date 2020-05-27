@@ -36,13 +36,13 @@ class Generator implements GeneratorInterface
     public function generate($baseDomain, $domainParts, Localization $locale = null)
     {
         $domain = $baseDomain;
-        if (preg_match(self::PREFIX_REGEX, $baseDomain)) {
-            $domain = preg_replace('/\*/', $domainParts['prefix'], $domain, 1);
+        if (\preg_match(self::PREFIX_REGEX, $baseDomain)) {
+            $domain = \preg_replace('/\*/', $domainParts['prefix'], $domain, 1);
         }
 
         $optionalSuffix = false;
-        if (!preg_match(self::POSTFIX_REGEX, $baseDomain)) {
-            $domain = rtrim($domain, '/') . '/*';
+        if (!\preg_match(self::POSTFIX_REGEX, $baseDomain)) {
+            $domain = \rtrim($domain, '/') . '/*';
             $optionalSuffix = true;
         }
 
@@ -51,14 +51,14 @@ class Generator implements GeneratorInterface
                 continue;
             }
 
-            $domain = preg_replace('/\*/', $suffix, $domain, 1);
+            $domain = \preg_replace('/\*/', $suffix, $domain, 1);
         }
 
         if ($optionalSuffix) {
-            $domain = rtrim($domain, '/*');
+            $domain = \rtrim($domain, '/*');
         }
 
-        if (strpos($domain, '*') > -1) {
+        if (\strpos($domain, '*') > -1) {
             throw new MissingDomainPartException($baseDomain, $domainParts, $domain);
         }
 
@@ -66,7 +66,7 @@ class Generator implements GeneratorInterface
             $domain = $this->localizeDomain($domain, $locale);
         }
 
-        return rtrim($domain, '/');
+        return \rtrim($domain, '/');
     }
 
     /**

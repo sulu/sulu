@@ -99,7 +99,7 @@ class DumpSitemapCommand extends ContainerAwareCommand
     private function dumpWebspace(Webspace $webspace)
     {
         foreach ($webspace->getAllLocalizations() as $localization) {
-            $this->output->writeln(sprintf(' - %s (%s)', $webspace->getKey(), $localization->getLocale()));
+            $this->output->writeln(\sprintf(' - %s (%s)', $webspace->getKey(), $localization->getLocale()));
             $this->dumpPortalInformations(
                 $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale(
                     $webspace->getKey(),
@@ -133,6 +133,6 @@ class DumpSitemapCommand extends ContainerAwareCommand
      */
     private function clear()
     {
-        $this->filesystem->remove(rtrim($this->baseDirectory, '/') . '/' . $this->scheme);
+        $this->filesystem->remove(\rtrim($this->baseDirectory, '/') . '/' . $this->scheme);
     }
 }

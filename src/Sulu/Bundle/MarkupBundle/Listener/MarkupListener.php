@@ -42,7 +42,7 @@ class MarkupListener
         $format = $request->getRequestFormat();
         $content = $response->getContent();
 
-        if (!$content || !array_key_exists($format, $this->markupParser)) {
+        if (!$content || !\array_key_exists($format, $this->markupParser)) {
             return;
         }
 

@@ -38,7 +38,7 @@ class TagNotFoundException extends \Exception
      */
     public function __construct($namespace, $tagName, $type)
     {
-        parent::__construct(sprintf('Tag "%s:%s" for type "%s" not found', $namespace, $tagName, $type));
+        parent::__construct(\sprintf('Tag "%s:%s" for type "%s" not found', $namespace, $tagName, $type));
 
         $this->namespace = $namespace;
         $this->tagName = $tagName;

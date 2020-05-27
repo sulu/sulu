@@ -40,6 +40,6 @@ class JsConfigPool
      */
     public function addConfigParams(JsConfigInterface $params)
     {
-        $this->pool = array_merge($this->pool, [$params->getName() => $params->getParameters()]);
+        $this->pool = \array_merge($this->pool, [$params->getName() => $params->getParameters()]);
     }
 }

@@ -21,7 +21,7 @@ class VirtualPropertyMetadataTest extends \PHPUnit_Framework_TestCase
         $metadata = new VirtualPropertyMetadata(PropertyMetadataTestTestClass::class, 'test');
         $metadata->addMetadata('Test', new BasePropertyMetadata(PropertyMetadataTestTestClass::class, 'test'));
 
-        $this->assertEquals($metadata, unserialize(serialize($metadata)));
+        $this->assertEquals($metadata, \unserialize(\serialize($metadata)));
     }
 }
 

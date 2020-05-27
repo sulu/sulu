@@ -38,12 +38,12 @@ class SnippetInitializer implements InitializerInterface
         $snippetPath = $this->pathBuilder->build(['%base%', '%snippet%']);
 
         if (true === $this->nodeManager->has($snippetPath)) {
-            $output->writeln(sprintf('  [ ] <info>snippet path:</info>: %s ', $snippetPath));
+            $output->writeln(\sprintf('  [ ] <info>snippet path:</info>: %s ', $snippetPath));
 
             return;
         }
 
-        $output->writeln(sprintf('  [+] <info>snippet path:</info>: %s ', $snippetPath));
+        $output->writeln(\sprintf('  [+] <info>snippet path:</info>: %s ', $snippetPath));
 
         $this->nodeManager->createPath($snippetPath);
         $this->nodeManager->save();

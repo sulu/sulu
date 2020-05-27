@@ -37,7 +37,7 @@ class LinkProviderPoolTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->pool = new LinkProviderPool(
-            array_map(
+            \array_map(
                 function($provider) {
                     return $provider->reveal();
                 },

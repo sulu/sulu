@@ -80,7 +80,7 @@ class PageRule implements RuleInterface
 
         $uuid = $request->headers->get($this->uuidHeader);
         if (!$uuid) {
-            if ('/' === substr($this->requestAnalyzer->getResourceLocator(), -1)) {
+            if ('/' === \substr($this->requestAnalyzer->getResourceLocator(), -1)) {
                 return false;
             }
 

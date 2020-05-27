@@ -28,7 +28,7 @@ class RequiredTagNotFoundException extends InvalidXmlException
         $this->tagName = $tagName;
         parent::__construct(
             $template,
-            sprintf(
+            \sprintf(
                 'The tag with the name "%s" is required, but was not found in the template "%s"',
                 $this->tagName,
                 $template

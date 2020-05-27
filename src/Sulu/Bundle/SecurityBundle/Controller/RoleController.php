@@ -130,7 +130,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
     public function getFieldsAction()
     {
         // default contacts list
-        return $this->handleView($this->view(array_values($this->getFieldDescriptors()), 200));
+        return $this->handleView($this->view(\array_values($this->getFieldDescriptors()), 200));
     }
 
     /**
@@ -165,7 +165,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
             $convertedRoles = [];
             if (null != $roles) {
                 foreach ($roles as $role) {
-                    array_push($convertedRoles, $this->convertRole($role));
+                    \array_push($convertedRoles, $this->convertRole($role));
                 }
             }
             $list = new CollectionRepresentation($convertedRoles, static::$entityKey);

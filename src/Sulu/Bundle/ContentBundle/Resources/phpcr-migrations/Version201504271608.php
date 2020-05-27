@@ -53,7 +53,7 @@ class Version201504271608 implements VersionInterface, ContainerAwareInterface
         $webspaces = $webspaceManager->getWebspaceCollection();
 
         foreach ($webspaces as $webspace) {
-            $webspacePath = sprintf('/%s/%s', $pathRegistry->getPathSegment('base'), $webspace->getKey());
+            $webspacePath = \sprintf('/%s/%s', $pathRegistry->getPathSegment('base'), $webspace->getKey());
             $homeNodeName = $pathRegistry->getPathSegment('content');
             $webspace = $session->getNode($webspacePath);
 

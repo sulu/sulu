@@ -78,18 +78,18 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
 
     protected function decodeValue($value)
     {
-        return json_decode($value, true);
+        return \json_decode($value, true);
     }
 
     protected function encodeValue($value)
     {
-        return json_encode($value);
+        return \json_encode($value);
     }
 
     public function getContentData(PropertyInterface $property)
     {
         $items = $this->getItems($property);
-        if (0 === count($items)) {
+        if (0 === \count($items)) {
             return [];
         }
 
@@ -136,7 +136,7 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
         $segmentKey = null
     ) {
         if (!empty($value)) {
-            $value = json_decode($value);
+            $value = \json_decode($value);
         }
 
         parent::importData($node, $property, $value, $userId, $webspaceKey, $languageCode, $segmentKey);
@@ -161,7 +161,7 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
     private function getItems(PropertyInterface $property)
     {
         $value = $this->getValue($property);
-        if (!is_array($value['items']) || 0 === count($value['items'])) {
+        if (!\is_array($value['items']) || 0 === \count($value['items'])) {
             return [];
         }
 
@@ -176,10 +176,10 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
     private function getValue(PropertyInterface $property)
     {
         $default = ['presentAs' => null, 'items' => []];
-        if (!is_array($property->getValue())) {
+        if (!\is_array($property->getValue())) {
             return $default;
         }
 
-        return array_merge($default, $property->getValue());
+        return \array_merge($default, $property->getValue());
     }
 }

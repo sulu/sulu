@@ -165,7 +165,7 @@ class SnippetDataProvider implements DataProviderInterface
      */
     private function decorateDataItems(array $data, $locale)
     {
-        return array_map(
+        return \array_map(
             function($item) use ($locale) {
                 return new ContentDataItem($item, $this->getResource($item['uuid'], $locale));
             },
@@ -182,7 +182,7 @@ class SnippetDataProvider implements DataProviderInterface
      */
     private function decorateResourceItems(array $data, $locale)
     {
-        return array_map(
+        return \array_map(
             function($item) use ($locale) {
                 $this->referenceStore->add($item['uuid']);
 
@@ -229,23 +229,23 @@ class SnippetDataProvider implements DataProviderInterface
     private function resolveFilters(array $filters, array $propertyParameter, array $options, $limit, $page, $pageSize)
     {
         $filters['dataSource'] = $this->nodeHelper->getBaseSnippetUuid(
-            array_key_exists('type', $propertyParameter) ? $propertyParameter['type'] : null
+            \array_key_exists('type', $propertyParameter) ? $propertyParameter['type'] : null
         );
         $filters['includeSubFolders'] = true;
 
-        $properties = array_key_exists('properties', $propertyParameter)
+        $properties = \array_key_exists('properties', $propertyParameter)
             ? $propertyParameter['properties']->getValue() : [];
 
         $excluded = [];
 
-        if (array_key_exists('excluded', $filters) && is_array($filters['excluded'])) {
+        if (\array_key_exists('excluded', $filters) && \is_array($filters['excluded'])) {
             $excluded = $filters['excluded'];
         }
 
-        if (array_key_exists('exclude_duplicates', $propertyParameter)
+        if (\array_key_exists('exclude_duplicates', $propertyParameter)
             && $propertyParameter['exclude_duplicates']->getValue()
         ) {
-            $excluded = array_merge($excluded, $this->referenceStore->getAll());
+            $excluded = \array_merge($excluded, $this->referenceStore->getAll());
         }
 
         $this->snippetQueryBuilder->init(
@@ -283,8 +283,8 @@ class SnippetDataProvider implements DataProviderInterface
 
         $hasNextPage = false;
         if (null !== $pageSize) {
-            $hasNextPage = (count($items) > $pageSize);
-            $items = array_splice($items, 0, $pageSize);
+            $hasNextPage = (\count($items) > $pageSize);
+            $items = \array_splice($items, 0, $pageSize);
         }
 
         return [$items, $hasNextPage];

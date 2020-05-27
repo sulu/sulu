@@ -130,7 +130,7 @@ class TestUserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return is_subclass_of($class, UserInterface::class);
+        return \is_subclass_of($class, UserInterface::class);
     }
 
     /**

@@ -150,8 +150,8 @@ class SnippetImportTest extends SuluTestCase
         try {
             $fs->copy($this->distPath, $this->path);
 
-            $distContent = file_get_contents($this->path, true);
-            $newContent = str_replace([
+            $distContent = \file_get_contents($this->path, true);
+            $newContent = \str_replace([
                 '%uuid_snippet_0%',
                 '%uuid_snippet_1%',
             ], [
@@ -159,7 +159,7 @@ class SnippetImportTest extends SuluTestCase
                 $this->snippets[1]->getUuid(),
             ], $distContent);
 
-            file_put_contents($this->path, $newContent);
+            \file_put_contents($this->path, $newContent);
         } catch (IOExceptionInterface $e) {
             echo 'An error occurred while creating your directory at ' . $e->getPath();
         }

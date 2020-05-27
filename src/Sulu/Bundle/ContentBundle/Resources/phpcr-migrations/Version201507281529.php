@@ -55,7 +55,7 @@ class Version201507281529 implements VersionInterface, ContainerAwareInterface
                 $locale = $localization->getLocale();
 
                 $query = $queryManager->createQuery(
-                    sprintf(
+                    \sprintf(
                         'SELECT * FROM [nt:base] WHERE [%s] = 4 AND [jcr:mixinTypes] = "sulu:page"',
                         $propertyEncoder->localizedSystemName('nodeType', $locale)
                     ),

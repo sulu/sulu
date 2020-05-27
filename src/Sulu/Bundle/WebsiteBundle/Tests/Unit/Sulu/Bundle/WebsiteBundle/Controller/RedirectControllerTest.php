@@ -133,14 +133,14 @@ class RedirectControllerTest extends \PHPUnit_Framework_TestCase
 
         $attributes = $this->prophesize(ParameterBag::class);
         $attributes->get('_route_params')->willReturn(
-            array_merge($attributesData, ['route' => $route, 'permanent' => $permanent])
+            \array_merge($attributesData, ['route' => $route, 'permanent' => $permanent])
         );
 
         $query = $this->prophesize(ParameterBag::class);
         $query->all()->willReturn($queryData);
 
         $router = $this->prophesize(RouterInterface::class);
-        $router->generate($route, array_merge($attributesData, $queryData), UrlGeneratorInterface::ABSOLUTE_URL)->willReturn('/test-route');
+        $router->generate($route, \array_merge($attributesData, $queryData), UrlGeneratorInterface::ABSOLUTE_URL)->willReturn('/test-route');
 
         $container = $this->prophesize(ContainerInterface::class);
         $container->get('router')->willReturn($router->reveal());

@@ -42,8 +42,8 @@ abstract class SuluTestCase extends KernelTestCase
         // enables garbage collector because symfony/phpunit-bridge disables it. see:
         // see: https://github.com/symfony/symfony/pull/13398/files#diff-81bfee6017752d99d3119f4ddb1a09edR1
         // see: https://github.com/symfony/symfony/pull/13398 (feature list)
-        if (!gc_enabled()) {
-            gc_enable();
+        if (!\gc_enabled()) {
+            \gc_enable();
         }
     }
 
@@ -195,13 +195,13 @@ abstract class SuluTestCase extends KernelTestCase
         $initializerDump = $this->getInitializerDumpFilePath($workspace);
 
         $filesystem = new Filesystem();
-        if (!$filesystem->exists(dirname($initializerDump))) {
-            $filesystem->mkdir(dirname($initializerDump));
+        if (!$filesystem->exists(\dirname($initializerDump))) {
+            $filesystem->mkdir(\dirname($initializerDump));
         }
 
-        $handle = fopen($initializerDump, 'w');
+        $handle = \fopen($initializerDump, 'w');
         $session->exportSystemView('/cmf', $handle, false, false);
-        fclose($handle);
+        \fclose($handle);
     }
 
     /**
@@ -223,7 +223,7 @@ abstract class SuluTestCase extends KernelTestCase
                 $initializerDump = __DIR__ . '/../Resources/app/cache/initial.xml';
                 break;
             default:
-                throw new \InvalidArgumentException(sprintf('Workspace "%s" is not a valid option', $workspace));
+                throw new \InvalidArgumentException(\sprintf('Workspace "%s" is not a valid option', $workspace));
         }
 
         return $initializerDump;

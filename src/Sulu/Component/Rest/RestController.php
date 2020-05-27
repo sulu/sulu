@@ -187,18 +187,18 @@ abstract class RestController extends FOSRestController
             $fields = $listHelper->getAllFields(self::$entityName);
 
             // excluded fields
-            $fields = array_diff($fields, $this->fieldsExcluded);
+            $fields = \array_diff($fields, $this->fieldsExcluded);
             // relations
-            $fields = array_merge($fields, $this->fieldsRelations);
+            $fields = \array_merge($fields, $this->fieldsRelations);
             // hide
-            $fields = array_diff($fields, $this->fieldsHidden);
+            $fields = \array_diff($fields, $this->fieldsHidden);
             // put at last position
-            $fields = array_merge($fields, $this->fieldsHidden);
+            $fields = \array_merge($fields, $this->fieldsHidden);
             // apply sort order
-            $fields = array_diff($fields, $this->fieldsSortOrder);
+            $fields = \array_diff($fields, $this->fieldsSortOrder);
 
             foreach ($this->fieldsSortOrder as $key => $value) {
-                array_splice($fields, $key, 0, $value);
+                \array_splice($fields, $key, 0, $value);
             }
 
             // parsing final array and sets to Default
@@ -254,13 +254,13 @@ abstract class RestController extends FOSRestController
             $fieldsArray[] = [
                 'id' => $field,
                 'translation' => $translationKey,
-                'disabled' => in_array($field, $fieldsHidden) ? true : false,
-                'default' => in_array($field, $this->fieldsDefault) ? true : null,
-                'editable' => in_array($field, $this->fieldsEditable) ? true : null,
+                'disabled' => \in_array($field, $fieldsHidden) ? true : false,
+                'default' => \in_array($field, $this->fieldsDefault) ? true : null,
+                'editable' => \in_array($field, $this->fieldsEditable) ? true : null,
                 'width' => (null != $fieldWidth) ? $fieldWidth : null,
-                'minWidth' => array_key_exists($field, $this->fieldsMinWidth) ? $this->fieldsMinWidth[$field] : null,
+                'minWidth' => \array_key_exists($field, $this->fieldsMinWidth) ? $this->fieldsMinWidth[$field] : null,
                 'type' => $type,
-                'validation' => array_key_exists($field, $this->fieldsValidation) ?
+                'validation' => \array_key_exists($field, $this->fieldsValidation) ?
                         $this->fieldsValidation[$field] : null,
             ];
         }
@@ -283,23 +283,23 @@ abstract class RestController extends FOSRestController
     public function replaceOrAddUrlString($url, $key, $value, $add = true)
     {
         if ($value) {
-            if ($pos = strpos($url, $key)) {
-                return preg_replace('/(.*' . $key . ')([\,|\w]*)(\&*.*)/', '${1}' . $value . '${3}', $url);
+            if ($pos = \strpos($url, $key)) {
+                return \preg_replace('/(.*' . $key . ')([\,|\w]*)(\&*.*)/', '${1}' . $value . '${3}', $url);
             } else {
                 if ($add) {
-                    $and = (false === strpos($url, '?')) ? '?' : '&';
+                    $and = (false === \strpos($url, '?')) ? '?' : '&';
 
                     return $url . $and . $key . $value;
                 }
             }
         } else {
             // remove if key exists
-            if ($pos = strpos($url, $key)) {
-                $result = preg_replace('/(.*)([\\?|\&]{1}' . $key . ')([\,|\w]*)(\&*.*)/', '${1}${4}', $url);
+            if ($pos = \strpos($url, $key)) {
+                $result = \preg_replace('/(.*)([\\?|\&]{1}' . $key . ')([\,|\w]*)(\&*.*)/', '${1}${4}', $url);
 
                 // if was first variable, redo questionmark
-                if (strpos($url, '?' . $key)) {
-                    $result = preg_replace('/&/', '?', $result, 1);
+                if (\strpos($url, '?' . $key)) {
+                    $result = \preg_replace('/&/', '?', $result, 1);
                 }
 
                 return $result;
@@ -419,7 +419,7 @@ abstract class RestController extends FOSRestController
         // FIXME: this is just a hack to avoid relations that start with index != 0
         // FIXME: otherwise deserialization process will parse relations as object instead of an array
         // reindex entities
-        if (count($entities) > 0 && method_exists($entities, 'getValues')) {
+        if (\count($entities) > 0 && \method_exists($entities, 'getValues')) {
             $newEntities = $entities->getValues();
             $entities->clear();
             foreach ($newEntities as $value) {

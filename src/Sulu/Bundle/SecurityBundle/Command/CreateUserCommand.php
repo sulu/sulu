@@ -74,20 +74,20 @@ class CreateUserCommand extends ContainerAwareCommand
         $em = $doctrine->getManager();
         $user = $this->getUser();
 
-        $existing = $doctrine->getRepository(get_class($user))->findOneBy(['username' => $username]);
+        $existing = $doctrine->getRepository(\get_class($user))->findOneBy(['username' => $username]);
 
         if ($existing) {
-            $output->writeln(sprintf('<error>User "%s" already exists</error>',
+            $output->writeln(\sprintf('<error>User "%s" already exists</error>',
                 $username
             ));
 
             return 1;
         }
 
-        if (!in_array($locale, $userLocales)) {
-            $output->writeln(sprintf(
+        if (!\in_array($locale, $userLocales)) {
+            $output->writeln(\sprintf(
                 'Given locale "%s" is invalid, must be one of "%s"',
-                $locale, implode('", "', $userLocales)
+                $locale, \implode('", "', $userLocales)
             ));
 
             return 1;
@@ -116,9 +116,9 @@ class CreateUserCommand extends ContainerAwareCommand
         $role = $roleRepository->findOneBy(['name' => $roleName]);
 
         if (!$role) {
-            $output->writeln(sprintf('<error>Role "%s" not found. The following roles are available: "%s"</error>',
+            $output->writeln(\sprintf('<error>Role "%s" not found. The following roles are available: "%s"</error>',
                 $roleName,
-                implode('", "', $this->getRoleNames())
+                \implode('", "', $this->getRoleNames())
             ));
 
             return 1;
@@ -127,14 +127,14 @@ class CreateUserCommand extends ContainerAwareCommand
         $userRole = new UserRole();
         $userRole->setRole($role);
         $userRole->setUser($user);
-        $userRole->setLocale(json_encode($locales)); // set all locales
+        $userRole->setLocale(\json_encode($locales)); // set all locales
         $em->persist($userRole);
 
         $em->persist($user);
         $em->flush();
 
         $output->writeln(
-            sprintf('Created user "<comment>%s</comment>" in role "<comment>%s</comment>"', $username, $roleName)
+            \sprintf('Created user "<comment>%s</comment>" in role "<comment>%s</comment>"', $username, $roleName)
         );
     }
 
@@ -174,8 +174,8 @@ class CreateUserCommand extends ContainerAwareCommand
                     }
 
                     $users = $userRepository->findBy(['username' => $username]);
-                    if (count($users) > 0) {
-                        throw new \InvalidArgumentException(sprintf('Username "%s" is not unique', $username));
+                    if (\count($users) > 0) {
+                        throw new \InvalidArgumentException(\sprintf('Username "%s" is not unique', $username));
                     }
 
                     return $username;
@@ -227,8 +227,8 @@ class CreateUserCommand extends ContainerAwareCommand
                     }
                     if (null !== $email) {
                         $users = $userRepository->findBy(['email' => $email]);
-                        if (count($users) > 0) {
-                            throw new \InvalidArgumentException(sprintf('Email "%s" is not unique', $email));
+                        if (\count($users) > 0) {
+                            throw new \InvalidArgumentException(\sprintf('Email "%s" is not unique', $email));
                         }
                     }
 
@@ -311,7 +311,7 @@ class CreateUserCommand extends ContainerAwareCommand
         $roleNames = $this->getContainer()->get('sulu.repository.role')->getRoleNames();
 
         if (empty($roleNames)) {
-            throw new \RuntimeException(sprintf(
+            throw new \RuntimeException(\sprintf(
                 'The system currently has no roles. Use the "sulu:security:role:create" command to create roles.'
             ));
         }

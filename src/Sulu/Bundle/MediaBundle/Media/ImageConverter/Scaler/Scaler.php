@@ -93,7 +93,7 @@ class Scaler implements ScalerInterface
             }
         }
 
-        return [(int) round($newWidth), (int) round($newHeight)];
+        return [(int) \round($newWidth), (int) \round($newHeight)];
     }
 
     /**

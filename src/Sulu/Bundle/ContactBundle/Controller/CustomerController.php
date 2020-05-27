@@ -30,7 +30,7 @@ class CustomerController extends RestController implements ClassResourceInterfac
      */
     public function cgetAction(Request $request)
     {
-        $ids = array_filter(explode(',', $request->get('ids', '')));
+        $ids = \array_filter(\explode(',', $request->get('ids', '')));
 
         $result = $this->getCustomerManager()->findByIds($ids);
 

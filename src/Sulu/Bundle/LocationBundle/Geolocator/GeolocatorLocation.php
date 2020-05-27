@@ -191,7 +191,7 @@ class GeolocatorLocation
             'longitude',
             'latitude',
         ] as $propertyName) {
-            $res[$propertyName] = $this->{'get' . ucfirst($propertyName)}();
+            $res[$propertyName] = $this->{'get' . \ucfirst($propertyName)}();
         }
 
         $res['name'] = TextUtils::truncate($this->getDisplayTitle(), 75);

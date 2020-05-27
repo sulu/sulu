@@ -28,7 +28,7 @@ class ContentNavigationPass implements CompilerPassInterface
         foreach ($taggedServices as $id => $attributes) {
             if (!isset($attributes[0]['alias'])) {
                 throw new \InvalidArgumentException(
-                    sprintf(
+                    \sprintf(
                         'No "alias" specified for content navigation provider with service ID: "%s"',
                         $id
                     )

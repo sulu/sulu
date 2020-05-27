@@ -72,9 +72,9 @@ class NavigationMapper implements NavigationMapperInterface
         if ($this->stopwatch) {
             $this->stopwatch->start('NavigationMapper::getNavigation');
         }
-        $rootDepth = substr_count($this->sessionManager->getContentNode($webspaceKey)->getPath(), '/');
+        $rootDepth = \substr_count($this->sessionManager->getContentNode($webspaceKey)->getPath(), '/');
         $parent = $this->sessionManager->getSession()->getNodeByIdentifier($parent)->getPath();
-        $depth = $depth + substr_count($parent, '/') - $rootDepth;
+        $depth = $depth + \substr_count($parent, '/') - $rootDepth;
 
         $this->queryBuilder->init(
             [
@@ -113,7 +113,7 @@ class NavigationMapper implements NavigationMapperInterface
         $this->queryBuilder->init(['context' => $context, 'excerpt' => $loadExcerpt]);
         $result = $this->contentQuery->execute($webspaceKey, [$locale], $this->queryBuilder, $flat, $depth);
 
-        for ($i = 0; $i < count($result); ++$i) {
+        for ($i = 0; $i < \count($result); ++$i) {
             if (!isset($result[$i]['children'])) {
                 $result[$i]['children'] = [];
             }
@@ -178,11 +178,11 @@ class NavigationMapper implements NavigationMapperInterface
                         $content->getUuid(),
                         $content->getNodeType()
                     );
-                    $result = array_merge($result, $children);
+                    $result = \array_merge($result, $children);
                 }
             } elseif (true === $flat) {
                 $children = $recursive ? $this->generateChildNavigation($content, $webspace, $language, $flat, $context) : [];
-                $result = array_merge($result, $children);
+                $result = \array_merge($result, $children);
             } elseif ($breakOnNotInNavigation) {
                 break;
             }
@@ -202,7 +202,7 @@ class NavigationMapper implements NavigationMapperInterface
         $context = null
     ) {
         $children = [];
-        if (is_array($content->getChildren()) && count($content->getChildren()) > 0) {
+        if (\is_array($content->getChildren()) && \count($content->getChildren()) > 0) {
             $children = $this->generateNavigation(
                 $content->getChildren(),
                 $webspace,
@@ -231,7 +231,7 @@ class NavigationMapper implements NavigationMapperInterface
             return false;
         }
 
-        if (is_array($contexts) && (null === $context || in_array($context, $contexts))) {
+        if (\is_array($contexts) && (null === $context || \in_array($context, $contexts))) {
             // all contexts or content has context
             return true;
         }

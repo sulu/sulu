@@ -118,7 +118,7 @@ class TagTwigExtensionTest extends \PHPUnit_Framework_TestCase
         );
         $result = $tagExtension->appendTagUrlFunction($tag, $tagsParameter);
 
-        $this->assertEquals($url . '?' . $tagsParameter . '=' . urlencode($expected), $result);
+        $this->assertEquals($url . '?' . $tagsParameter . '=' . \urlencode($expected), $result);
     }
 
     public function setProvider()
@@ -161,7 +161,7 @@ class TagTwigExtensionTest extends \PHPUnit_Framework_TestCase
         );
         $result = $tagExtension->setTagUrlFunction($tag, $tagsParameter);
 
-        $this->assertEquals($url . '?' . $tagsParameter . '=' . urlencode($expected), $result);
+        $this->assertEquals($url . '?' . $tagsParameter . '=' . \urlencode($expected), $result);
     }
 
     public function clearProvider()

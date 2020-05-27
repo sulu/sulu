@@ -516,7 +516,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     public function getTagNameArray()
     {
         $tags = [];
-        if (!is_null($this->getTags())) {
+        if (!\is_null($this->getTags())) {
             foreach ($this->getTags() as $tag) {
                 $tags[] = $tag->getName();
             }
@@ -593,7 +593,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
         $accountAddresses = $this->getAccountAddresses();
         $addresses = [];
 
-        if (!is_null($accountAddresses)) {
+        if (!\is_null($accountAddresses)) {
             /* @var ContactAddress $contactAddress */
             foreach ($accountAddresses as $accountAddress) {
                 $address = $accountAddress->getAddress();
@@ -612,7 +612,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     {
         $accountAddresses = $this->getAccountAddresses();
 
-        if (!is_null($accountAddresses)) {
+        if (!\is_null($accountAddresses)) {
             /** @var AccountAddress $accountAddress */
             foreach ($accountAddresses as $accountAddress) {
                 if ($accountAddress->getMain()) {
@@ -634,7 +634,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
         $accountContacts = $this->getAccountContacts();
         $contacts = [];
 
-        if (!is_null($accountContacts)) {
+        if (!\is_null($accountContacts)) {
             /** @var AccountContact $accountContact */
             foreach ($accountContacts as $accountContact) {
                 $contacts[] = $accountContact->getContact();

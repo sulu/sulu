@@ -71,7 +71,7 @@ abstract class BaseContext extends RawMinkContext implements Context, KernelAwar
     {
         $kernel = $this->kernel;
 
-        array_unshift($args, $command);
+        \array_unshift($args, $command);
         $input = new ArrayInput($args);
 
         $application = new Application($kernel);
@@ -81,14 +81,14 @@ abstract class BaseContext extends RawMinkContext implements Context, KernelAwar
         $application->setCatchExceptions(false);
         $command = $application->find($command);
 
-        $output = new StreamOutput(fopen('php://memory', 'w', false));
+        $output = new StreamOutput(\fopen('php://memory', 'w', false));
         $exitCode = $application->run($input, $output);
 
         if (0 !== $exitCode) {
-            rewind($output->getStream());
-            $output = stream_get_contents($output->getStream());
+            \rewind($output->getStream());
+            $output = \stream_get_contents($output->getStream());
 
-            throw new \Exception(sprintf(
+            throw new \Exception(\sprintf(
                 'Command in BaseContext exited with code "%s": "%s"',
                 $exitCode, $output
             ));
@@ -189,7 +189,7 @@ var f = function () {
 f();
 EOT;
 
-        $script = sprintf($script, $type, $selector, $itemTitle);
+        $script = \sprintf($script, $type, $selector, $itemTitle);
 
         $this->getSession()->executeScript($script);
     }
@@ -227,7 +227,7 @@ EOT;
      */
     protected function waitForText($text, $time = 10000)
     {
-        $script = sprintf('$("*:contains(\\"%s\\")").length', $text);
+        $script = \sprintf('$("*:contains(\\"%s\\")").length', $text);
         $this->getSession()->wait($time, $script);
     }
 
@@ -242,11 +242,11 @@ EOT;
     protected function waitForTextAndAssert($text)
     {
         $this->waitForText($text);
-        $script = sprintf('$("*:contains(\\"%s\\")").length', $text);
+        $script = \sprintf('$("*:contains(\\"%s\\")").length', $text);
         $res = $this->getSession()->evaluateScript($script);
 
         if (!$res) {
-            throw new \Exception(sprintf('Page does not contain text "%s"', $text));
+            throw new \Exception(\sprintf('Page does not contain text "%s"', $text));
         }
     }
 
@@ -261,7 +261,7 @@ EOT;
         $actual = $this->getSession()->evaluateScript('$("' . $selector . '").length');
 
         if ($actual != $count) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Expected "%s" items but got "%s"', $count, $actual
             ));
         }
@@ -279,7 +279,7 @@ EOT;
         $res = $this->getSession()->evaluateScript('$("' . $selector . '").length');
 
         if (!$res) {
-            throw new \Exception(sprintf(
+            throw new \Exception(\sprintf(
                 'Failed asserting selector "%s" exists on page',
                 $selector
             ));
@@ -297,7 +297,7 @@ EOT;
     {
         $res = $this->getSession()->evaluateScript('$("' . $selector . '").css("display") === "none"');
         if (!$res) {
-            throw new \Exception(sprintf(
+            throw new \Exception(\sprintf(
                 'Asserting selector "%s" is not hidden on page',
                 $selector
             ));
@@ -321,8 +321,8 @@ EOT;
             }
         }
 
-        throw new \Exception(sprintf('Could not find any of the selectors: "%s"',
-            implode('", "', $selectors)
+        throw new \Exception(\sprintf('Could not find any of the selectors: "%s"',
+            \implode('", "', $selectors)
         ));
     }
 
@@ -333,7 +333,7 @@ EOT;
      */
     protected function fillSelector($selector, $value)
     {
-        $this->getSession()->executeScript(sprintf(<<<'EOT'
+        $this->getSession()->executeScript(\sprintf(<<<'EOT'
 var els = document.querySelectorAll("%s");
 for (var i in els) {
     var el = els[i];
@@ -352,26 +352,26 @@ EOT
     protected function waitForAuraEvents($eventNames, $time = self::MEDIUM_WAIT_TIME)
     {
         $script = [];
-        $uniq = uniqid();
+        $uniq = \uniqid();
         $varNames = [];
 
-        foreach (array_keys($eventNames) as $i) {
+        foreach (\array_keys($eventNames) as $i) {
             $varName = 'document.__behatvar' . $uniq . $i;
             $varNames[$i] = $varName;
-            $script[] = sprintf('%s = false;', $varName);
+            $script[] = \sprintf('%s = false;', $varName);
         }
 
         foreach ($eventNames as $i => $eventName) {
             $varName = $varNames[$i];
-            $script[] = sprintf("app.sandbox.on('%s', function () { %s = true; });",
+            $script[] = \sprintf("app.sandbox.on('%s', function () { %s = true; });",
                 $eventName,
                 $varName
             );
             $script[] = 'console.log("' . $eventName . '");';
         }
 
-        $script = implode("\n", $script);
-        $assertion = implode(' && ', $varNames);
+        $script = \implode("\n", $script);
+        $assertion = \implode(' && ', $varNames);
 
         $this->getSession()->executeScript($script);
         $this->getSession()->wait($time, $assertion);
@@ -398,10 +398,10 @@ EOT
                 // Ignore exception & do nothing.
             }
 
-            sleep(1);
+            \sleep(1);
         }
 
-        $backtrace = debug_backtrace();
+        $backtrace = \debug_backtrace();
 
         throw new \Exception('Timeout thrown by ' . $backtrace[1]['class'] . '::' . $backtrace[1]['function']);
     }

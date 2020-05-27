@@ -70,11 +70,11 @@ class ListRestHelperTest extends \PHPUnit_Framework_TestCase
         $this->requestStack->getCurrentRequest()->willReturn($request);
         $helper = new ListRestHelper($this->requestStack->reveal());
 
-        $this->assertEquals(explode(',', $request->get('fields')), $helper->getFields());
+        $this->assertEquals(\explode(',', $request->get('fields')), $helper->getFields());
         $this->assertEquals($request->get('sortBy'), $helper->getSortColumn());
         $this->assertEquals($request->get('sortOrder', 'asc'), $helper->getSortOrder());
         $this->assertEquals($request->get('search'), $helper->getSearchPattern());
-        $this->assertEquals(explode(',', $request->get('searchFields')), $helper->getSearchFields());
+        $this->assertEquals(\explode(',', $request->get('searchFields')), $helper->getSearchFields());
         $this->assertEquals($request->get('limit'), $helper->getLimit());
         $this->assertEquals($request->get('limit') * ($request->get('page') - 1), $helper->getOffset());
     }

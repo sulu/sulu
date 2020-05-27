@@ -45,7 +45,7 @@ class MediaStreamControllerTest extends SuluTestCase
         $filePath = $this->createMediaFile('test.jpg');
         $media = $this->createMedia($filePath, 'file-without-extension');
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', str_replace('v=1', 'v=99', $media->getUrl()));
+        $client->request('GET', \str_replace('v=1', 'v=99', $media->getUrl()));
         $response = $client->getResponse();
         $this->assertHttpStatusCode(404, $response);
     }
@@ -60,7 +60,7 @@ class MediaStreamControllerTest extends SuluTestCase
         $response = $client->getResponse();
         $this->assertHttpStatusCode(200, $response);
         $this->assertEquals(
-            sprintf(
+            \sprintf(
                 '<%s>; rel="canonical"',
                 $newMedia->getUrl()
             ),
@@ -117,7 +117,7 @@ class MediaStreamControllerTest extends SuluTestCase
 
     private function createUploadedFile($path)
     {
-        return new UploadedFile($path, basename($path), mime_content_type($path), filesize($path));
+        return new UploadedFile($path, \basename($path), \mime_content_type($path), \filesize($path));
     }
 
     private function createCollection($title = 'Test')
@@ -173,8 +173,8 @@ class MediaStreamControllerTest extends SuluTestCase
 
     private function createMediaFile($name)
     {
-        $filePath = sys_get_temp_dir() . '/' . $name;
-        copy(__DIR__ . '/../../app/Resources/images/photo.jpeg', $filePath);
+        $filePath = \sys_get_temp_dir() . '/' . $name;
+        \copy(__DIR__ . '/../../app/Resources/images/photo.jpeg', $filePath);
 
         return $filePath;
     }

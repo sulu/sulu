@@ -99,7 +99,7 @@ class ProfileController implements ClassResourceInterface
             $user = $this->tokenStorage->getToken()->getUser();
 
             // encode before persist
-            $data = json_encode($value);
+            $data = \json_encode($value);
 
             // get setting
             // TODO: move this logic into own service (UserSettingManager?)

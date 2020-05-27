@@ -33,10 +33,10 @@ class MissingClassMappingConfigurationException extends \Exception
     public function __construct($className, array $available)
     {
         parent::__construct(
-            sprintf(
+            \sprintf(
                 'Missing class mapping configuration for "%s". Available classes: ["%s"]',
                 $className,
-                implode('", "', $available)
+                \implode('", "', $available)
             )
         );
         $this->className = $className;

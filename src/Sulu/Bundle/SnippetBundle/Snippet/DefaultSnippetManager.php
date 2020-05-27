@@ -59,7 +59,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         $this->documentManager = $documentManager;
         $this->webspaceManager = $webspaceManager;
         $this->registry = $registry;
-        $this->areas = new FrozenParameterBag(array_change_key_case($areas));
+        $this->areas = new FrozenParameterBag(\array_change_key_case($areas));
     }
 
     public function save($webspaceKey, $type, $uuid, $locale)
@@ -113,7 +113,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             $settings = $this->settingsManager->loadStringByWildcard($webspace->getKey(), 'snippets-*');
 
-            if (in_array($uuid, $settings)) {
+            if (\in_array($uuid, $settings)) {
                 return true;
             }
         }
@@ -126,13 +126,13 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             $settings = $this->settingsManager->loadStringByWildcard($webspace->getKey(), 'snippets-*');
 
-            if (in_array(!$uuid, $settings)) {
+            if (\in_array(!$uuid, $settings)) {
                 continue;
             }
 
-            $index = array_search($uuid, $settings);
+            $index = \array_search($uuid, $settings);
 
-            return substr($index, 9);
+            return \substr($index, 9);
         }
 
         return null;
@@ -141,7 +141,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
     public function loadIdentifier($webspaceKey, $type)
     {
         // TODO remove strtolower as soon as lowest Symfony version is 3.4
-        $area = $this->areas->get(strtolower($type));
+        $area = $this->areas->get(\strtolower($type));
 
         return $this->settingsManager->loadString($webspaceKey, 'snippets-' . $area['key']);
     }
@@ -157,7 +157,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
     private function checkTemplate($document, $type)
     {
         // TODO remove strtolower as soon as lowest Symfony version is 3.4
-        $area = $this->areas->get(strtolower($type));
+        $area = $this->areas->get(\strtolower($type));
 
         return $document->getStructureType() === $area['template'];
     }

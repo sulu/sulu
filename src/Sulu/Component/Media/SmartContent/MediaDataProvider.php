@@ -102,19 +102,19 @@ class MediaDataProvider extends BaseDataProvider
 
         $queryOptions = [];
 
-        if (array_key_exists('mimetype_parameter', $propertyParameter)) {
+        if (\array_key_exists('mimetype_parameter', $propertyParameter)) {
             $queryOptions['mimetype'] = $request->get($propertyParameter['mimetype_parameter']->getValue());
         }
-        if (array_key_exists('type_parameter', $propertyParameter)) {
+        if (\array_key_exists('type_parameter', $propertyParameter)) {
             $queryOptions['type'] = $request->get($propertyParameter['type_parameter']->getValue());
         }
 
-        return array_merge($options, array_filter($queryOptions));
+        return \array_merge($options, \array_filter($queryOptions));
     }
 
     protected function decorateDataItems(array $data)
     {
-        return array_map(
+        return \array_map(
             function($item) {
                 return new MediaDataItem($item);
             },

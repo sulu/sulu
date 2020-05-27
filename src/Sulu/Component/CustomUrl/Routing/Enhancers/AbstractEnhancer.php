@@ -23,13 +23,13 @@ abstract class AbstractEnhancer implements RouteEnhancerInterface
 {
     public function enhance(array $defaults, Request $request)
     {
-        if ((array_key_exists('_finalized', $defaults) && true === $defaults['_finalized'])
+        if ((\array_key_exists('_finalized', $defaults) && true === $defaults['_finalized'])
             || !$this->supports($defaults['_custom_url'])
         ) {
             return $defaults;
         }
 
-        return array_merge(
+        return \array_merge(
             $defaults,
             $this->doEnhance($defaults['_custom_url'], $defaults['_webspace'], $defaults, $request)
         );

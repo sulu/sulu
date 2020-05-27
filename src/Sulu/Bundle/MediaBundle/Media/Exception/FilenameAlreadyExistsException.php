@@ -18,6 +18,6 @@ class FilenameAlreadyExistsException extends MediaException
      */
     public function __construct($path)
     {
-        parent::__construct('A File with the name "' . basename($path) . ' exists in "' . dirname($path) . '"', self::EXCEPTION_FILENAME_ALREADY_EXISTS);
+        parent::__construct('A File with the name "' . \basename($path) . ' exists in "' . \dirname($path) . '"', self::EXCEPTION_FILENAME_ALREADY_EXISTS);
     }
 }

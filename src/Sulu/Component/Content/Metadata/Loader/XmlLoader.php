@@ -82,10 +82,10 @@ class XmlLoader extends XmlLegacyLoader
 
         if (!$this->contentTypeManager->has($propertyData['type'])) {
             if ('ignore' !== $propertyData['onInvalid']) {
-                throw new \InvalidArgumentException(sprintf(
+                throw new \InvalidArgumentException(\sprintf(
                     'Content type with alias "%s" has not been registered. Known content types are: "%s"',
                     $propertyData['type'],
-                    implode('", "', array_keys($this->contentTypeManager->getAll() ?: []))
+                    \implode('", "', \array_keys($this->contentTypeManager->getAll() ?: []))
                 ));
             }
 
@@ -164,15 +164,15 @@ class XmlLoader extends XmlLegacyLoader
         $property->colSpan = $data['colspan'];
         $property->cssClass = $data['cssClass'];
         $property->tags = $data['tags'];
-        $property->minOccurs = null !== $data['minOccurs'] ? intval($data['minOccurs']) : null;
-        $property->maxOccurs = $data['maxOccurs'] ? intval($data['maxOccurs']) : null;
+        $property->minOccurs = null !== $data['minOccurs'] ? \intval($data['minOccurs']) : null;
+        $property->maxOccurs = $data['maxOccurs'] ? \intval($data['maxOccurs']) : null;
         $property->parameters = $data['params'];
         $this->mapMeta($property, $data['meta']);
     }
 
     private function normalizePropertyData($data)
     {
-        $data = array_replace_recursive(
+        $data = \array_replace_recursive(
             [
                 'type' => null,
                 'multilingual' => true,
@@ -190,7 +190,7 @@ class XmlLoader extends XmlLegacyLoader
 
     private function normalizeStructureData($data)
     {
-        $data = array_replace_recursive(
+        $data = \array_replace_recursive(
             [
                 'key' => null,
                 'view' => null,
@@ -207,7 +207,7 @@ class XmlLoader extends XmlLegacyLoader
 
     private function normalizeItem($data)
     {
-        $data = array_merge_recursive(
+        $data = \array_merge_recursive(
             [
                 'meta' => [
                     'title' => [],

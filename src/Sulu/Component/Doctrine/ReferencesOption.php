@@ -121,13 +121,13 @@ class ReferencesOption implements EventSubscriber
 
             $referencesOptions = $mapping['_custom']['references'];
 
-            $unknownOptions = array_diff_key($referencesOptions, array_flip(self::$knownOptions));
+            $unknownOptions = \array_diff_key($referencesOptions, \array_flip(self::$knownOptions));
 
             if (\count($unknownOptions) > 0) {
                 throw new RuntimeException(
-                    sprintf(
+                    \sprintf(
                         'Unknown options "%s" in the "references" option in the Doctrine schema of %s::%s.',
-                        implode('", "', array_keys($unknownOptions)),
+                        \implode('", "', \array_keys($unknownOptions)),
                         $classMetadata->getReflectionClass()->getName(),
                         $fieldName
                     )
@@ -136,7 +136,7 @@ class ReferencesOption implements EventSubscriber
 
             if (!isset($referencesOptions['entity'])) {
                 throw new RuntimeException(
-                    sprintf(
+                    \sprintf(
                         'Missing option "entity" in the "references" option in the Doctrine schema of %s::%s.',
                         $classMetadata->getReflectionClass()->getName(),
                         $fieldName
@@ -146,7 +146,7 @@ class ReferencesOption implements EventSubscriber
 
             if (!isset($referencesOptions['field'])) {
                 throw new RuntimeException(
-                    sprintf(
+                    \sprintf(
                         'Missing option "field" in the "references" option in the Doctrine schema of %s::%s.',
                         $classMetadata->getReflectionClass()->getName(),
                         $fieldName
@@ -158,7 +158,7 @@ class ReferencesOption implements EventSubscriber
 
             // we need to use the actual class if the entity is an interface that is mapped by the SuluPersistenceBundle
             $targetEntity = $referencesOptions['entity'];
-            if (array_key_exists($targetEntity, $this->targetEntityMapping)) {
+            if (\array_key_exists($targetEntity, $this->targetEntityMapping)) {
                 $targetEntity = $this->targetEntityMapping[$targetEntity];
             }
 

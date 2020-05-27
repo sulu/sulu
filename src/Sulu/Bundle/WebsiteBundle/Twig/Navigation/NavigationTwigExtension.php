@@ -160,7 +160,7 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
             return true;
         }
 
-        return preg_match(sprintf('/%s([\/]|$)/', preg_quote($itemPath, '/')), $requestPath);
+        return \preg_match(\sprintf('/%s([\/]|$)/', \preg_quote($itemPath, '/')), $requestPath);
     }
 
     public function getName()

@@ -186,9 +186,9 @@ class ContentMapper implements ContentMapperInterface
 
         if (!$document instanceof ExtensionBehavior) {
             throw new \RuntimeException(
-                sprintf(
+                \sprintf(
                     'Document of class "%s" must implement the ExtensionableBehavior if it is to be extended',
-                    get_class($document)
+                    \get_class($document)
                 )
             );
         }
@@ -257,7 +257,7 @@ class ContentMapper implements ContentMapperInterface
                         $ignoreExceptions,
                         $excludeGhosts
                     );
-                    $children = array_merge($children, $childChildren);
+                    $children = \array_merge($children, $childChildren);
                 }
             }
         }
@@ -359,7 +359,7 @@ class ContentMapper implements ContentMapperInterface
         }
 
         throw new \RuntimeException(
-            sprintf(
+            \sprintf(
                 'Did not traverse an instance of HomeDocument when searching for desendants of document "%s"',
                 $uuid
             )
@@ -430,7 +430,7 @@ class ContentMapper implements ContentMapperInterface
             );
         }
 
-        $items = array_reverse($items);
+        $items = \array_reverse($items);
 
         return $items;
     }
@@ -450,7 +450,7 @@ class ContentMapper implements ContentMapperInterface
         $destLocales,
         $structureType = LegacyStructure::TYPE_PAGE
     ) {
-        if (!is_array($destLocales)) {
+        if (!\is_array($destLocales)) {
             $destLocales = [$destLocales];
         }
 
@@ -529,13 +529,13 @@ class ContentMapper implements ContentMapperInterface
         $parentDocument = $this->inspector->getParent($document);
         $siblingDocuments = $this->inspector->getChildren($parentDocument);
 
-        $siblings = array_values($siblingDocuments->toArray()); // get indexed array
-        $countSiblings = count($siblings);
-        $currentPosition = array_search($document, $siblings) + 1;
+        $siblings = \array_values($siblingDocuments->toArray()); // get indexed array
+        $countSiblings = \count($siblings);
+        $currentPosition = \array_search($document, $siblings) + 1;
 
         if ($countSiblings < $position || $position <= 0) {
             throw new InvalidOrderPositionException(
-                sprintf(
+                \sprintf(
                     'Cannot order node "%s" at out-of-range position "%s", must be >= 0 && < %d"',
                     $this->inspector->getPath($document),
                     $position,
@@ -612,17 +612,17 @@ class ContentMapper implements ContentMapperInterface
         $maxDepth,
         $onlyPublished = true
     ) {
-        $rootDepth = substr_count($this->sessionManager->getContentPath($webspaceKey), '/');
+        $rootDepth = \substr_count($this->sessionManager->getContentPath($webspaceKey), '/');
 
         $result = [];
         foreach ($locales as $locale) {
             foreach ($queryResult->getRows() as $row) {
-                $pageDepth = substr_count($row->getPath('page'), '/') - $rootDepth;
+                $pageDepth = \substr_count($row->getPath('page'), '/') - $rootDepth;
 
                 if (null === $maxDepth || $maxDepth < 0 || ($maxDepth > 0 && $pageDepth <= $maxDepth)) {
                     $item = $this->rowToArray($row, $locale, $webspaceKey, $fields, $onlyPublished);
 
-                    if (false === $item || in_array($item, $result)) {
+                    if (false === $item || \in_array($item, $result)) {
                         continue;
                     }
 
@@ -743,7 +743,7 @@ class ContentMapper implements ContentMapperInterface
             $documentData['order'] = $document->getSuluOrder();
         }
 
-        return array_merge($documentData, $fieldsData);
+        return \array_merge($documentData, $fieldsData);
     }
 
     /**
@@ -894,7 +894,7 @@ class ContentMapper implements ContentMapperInterface
             return false;
         }
 
-        $options = array_merge(
+        $options = \array_merge(
             [
                 'exclude_ghost' => true,
                 'exclude_shadow' => true,

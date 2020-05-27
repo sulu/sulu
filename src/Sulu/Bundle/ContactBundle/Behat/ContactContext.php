@@ -48,7 +48,7 @@ class ContactContext extends BaseContext implements SnippetAcceptingContext
             ->findOneByName($typeName);
 
         if (!$type) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'No email type "%s" found', $typeName
             ));
         }
@@ -81,7 +81,7 @@ class ContactContext extends BaseContext implements SnippetAcceptingContext
             ]);
 
         if ($contact) {
-            throw new \Exception(sprintf('Contact with firstname "%s" and lastname "%s" should NOT exist', $firstName, $lastName));
+            throw new \Exception(\sprintf('Contact with firstname "%s" and lastname "%s" should NOT exist', $firstName, $lastName));
         }
     }
 
@@ -97,7 +97,7 @@ class ContactContext extends BaseContext implements SnippetAcceptingContext
             ]);
 
         if (!$contact) {
-            throw new \Exception(sprintf('Contact with firstname "%s" and lastname "%s" should exist', $firstName, $lastName));
+            throw new \Exception(\sprintf('Contact with firstname "%s" and lastname "%s" should exist', $firstName, $lastName));
         }
     }
 
@@ -131,7 +131,7 @@ class ContactContext extends BaseContext implements SnippetAcceptingContext
             f();
 EOT;
 
-        $script = sprintf($script, $text);
+        $script = \sprintf($script, $text);
         $this->getSession()->executeScript($script);
     }
 }

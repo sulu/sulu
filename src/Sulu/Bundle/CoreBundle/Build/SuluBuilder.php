@@ -53,9 +53,9 @@ abstract class SuluBuilder implements ContainerAwareInterface, BuilderInterface
         $this->output->getFormatter()->setIndentLevel(1);
 
         if (!empty($args)) {
-            $this->output->writeln(sprintf('<comment>%s </comment> (%s)', $command, json_encode($args)));
+            $this->output->writeln(\sprintf('<comment>%s </comment> (%s)', $command, \json_encode($args)));
         } else {
-            $this->output->writeln(sprintf('<comment>%s</comment>', $command));
+            $this->output->writeln(\sprintf('<comment>%s</comment>', $command));
         }
         $this->output->writeln('');
 

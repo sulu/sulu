@@ -76,13 +76,13 @@ class SnippetAreaController extends Controller implements ClassResourceInterface
             $dataList[$key] = $areaData;
         }
 
-        ksort($dataList);
+        \ksort($dataList);
 
         $data = [
             '_embedded' => [
-                'areas' => array_values($dataList),
+                'areas' => \array_values($dataList),
             ],
-            'total' => count($dataList),
+            'total' => \count($dataList),
         ];
 
         return new JsonResponse($data);

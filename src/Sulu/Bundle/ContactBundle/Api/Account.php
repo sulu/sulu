@@ -916,7 +916,7 @@ class Account extends ApiWrapper
         $accountAddresses = $this->entity->getAccountAddresses();
         $addresses = [];
 
-        if (!is_null($accountAddresses)) {
+        if (!\is_null($accountAddresses)) {
             /** @var ContactAddress $accountAddress */
             foreach ($accountAddresses as $accountAddress) {
                 $address = $accountAddress->getAddress();
@@ -939,7 +939,7 @@ class Account extends ApiWrapper
     {
         $accountAddresses = $this->entity->getAccountAddresses();
 
-        if (!is_null($accountAddresses)) {
+        if (!\is_null($accountAddresses)) {
             /** @var AccountAddressEntity $accountAddress */
             foreach ($accountAddresses as $accountAddress) {
                 if ($accountAddress->getMain()) {
@@ -964,7 +964,7 @@ class Account extends ApiWrapper
         $accountContacts = $this->entity->getAccountContacts();
         $contacts = [];
 
-        if (!is_null($accountContacts)) {
+        if (!\is_null($accountContacts)) {
             /** @var AccountContactEntity $accountContact */
             foreach ($accountContacts as $accountContact) {
                 $contacts[] = new Contact($accountContact->getContact(), $this->locale);

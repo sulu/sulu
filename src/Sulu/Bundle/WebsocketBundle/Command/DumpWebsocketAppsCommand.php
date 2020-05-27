@@ -44,7 +44,7 @@ class DumpWebsocketAppsCommand extends ContainerAwareCommand
                 [
                     $app['name'],
                     $app['route'],
-                    print_r($app['allowedOrigins'], true),
+                    \print_r($app['allowedOrigins'], true),
                     $manager->getHttpHost(),
                 ]
             );

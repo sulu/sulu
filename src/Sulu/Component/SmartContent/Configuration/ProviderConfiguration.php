@@ -127,7 +127,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
 
     public function hasSorting()
     {
-        return count($this->sorting) > 0;
+        return \count($this->sorting) > 0;
     }
 
     /**

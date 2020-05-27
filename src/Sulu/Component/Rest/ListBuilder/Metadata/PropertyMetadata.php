@@ -57,12 +57,12 @@ class PropertyMetadata extends BasePropertyMetadata
      */
     public function has($name)
     {
-        return array_key_exists($name, $this->metadata);
+        return \array_key_exists($name, $this->metadata);
     }
 
     public function serialize()
     {
-        return serialize(
+        return \serialize(
             [
                 $this->class,
                 $this->name,
@@ -75,7 +75,7 @@ class PropertyMetadata extends BasePropertyMetadata
     {
         list($this->class,
             $this->name,
-            $this->metadata) = unserialize($str);
+            $this->metadata) = \unserialize($str);
 
         $this->reflection = new \ReflectionProperty($this->class, $this->name);
         $this->reflection->setAccessible(true);

@@ -47,11 +47,11 @@ class LocalizationProvider implements LocalizationProviderInterface
      */
     private function parse($locale)
     {
-        $parts = explode('_', $locale);
+        $parts = \explode('_', $locale);
 
         $localization = new Localization();
         $localization->setLanguage($parts[0]);
-        if (count($parts) > 1) {
+        if (\count($parts) > 1) {
             $localization->setCountry($parts[1]);
         }
 

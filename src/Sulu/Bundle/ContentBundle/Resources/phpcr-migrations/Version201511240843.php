@@ -101,12 +101,12 @@ class Version201511240843 implements VersionInterface, ContainerAwareInterface
         $properties = [];
 
         // find templates containing date fields
-        $structureMetadatas = array_merge(
+        $structureMetadatas = \array_merge(
             $this->structureMetadataFactory->getStructures('page'),
             $this->structureMetadataFactory->getStructures('snippet')
         );
 
-        $structureMetadatas = array_filter(
+        $structureMetadatas = \array_filter(
             $structureMetadatas,
             function(StructureMetadata $structureMetadata) use (&$properties) {
                 $structureName = $structureMetadata->getName();
@@ -163,12 +163,12 @@ class Version201511240843 implements VersionInterface, ContainerAwareInterface
                 }
             }
 
-            if (count($componentResult['children']) > 0) {
+            if (\count($componentResult['children']) > 0) {
                 $result['components'][$component->getName()] = $componentResult;
             }
         }
 
-        if (count($result['components']) > 0) {
+        if (\count($result['components']) > 0) {
             $properties[$structureName][] = $result;
         }
     }
@@ -184,7 +184,7 @@ class Version201511240843 implements VersionInterface, ContainerAwareInterface
     {
         foreach ($this->localizationManager->getLocalizations() as $localization) {
             $rows = $this->session->getWorkspace()->getQueryManager()->createQuery(
-                sprintf(
+                \sprintf(
                     'SELECT * FROM [nt:unstructured] WHERE [%s] = "%s" OR [%s] = "%s"',
                     $this->propertyEncoder->localizedSystemName('template', $localization->getLocale()),
                     $structureMetadata->getName(),
@@ -214,7 +214,7 @@ class Version201511240843 implements VersionInterface, ContainerAwareInterface
         $document = $this->documentManager->find($node->getIdentifier(), $locale);
         $documentLocales = $this->documentInspector->getLocales($document);
 
-        if (!in_array($locale, $documentLocales)) {
+        if (!\in_array($locale, $documentLocales)) {
             return;
         }
 
@@ -242,25 +242,25 @@ class Version201511240843 implements VersionInterface, ContainerAwareInterface
         $locale,
         $up
     ) {
-        $componentNames = array_map(
+        $componentNames = \array_map(
             function($item) {
                 return $item['component']->getName();
             },
             $components
         );
 
-        $lengthName = sprintf('i18n:%s-%s-length', $locale, $blockProperty->getName());
+        $lengthName = \sprintf('i18n:%s-%s-length', $locale, $blockProperty->getName());
         $length = $node->getPropertyValue($lengthName);
 
         for ($i = 0; $i < $length; ++$i) {
-            $type = $node->getPropertyValue(sprintf('i18n:%s-%s-type#%s', $locale, $blockProperty->getName(), $i));
+            $type = $node->getPropertyValue(\sprintf('i18n:%s-%s-type#%s', $locale, $blockProperty->getName(), $i));
 
-            if (!in_array($type, $componentNames)) {
+            if (!\in_array($type, $componentNames)) {
                 continue;
             }
 
             foreach ($components[$type]['children'] as $child) {
-                $name = sprintf('i18n:%s-%s-%s#%s', $locale, $blockProperty->getName(), $child->getName(), $i);
+                $name = \sprintf('i18n:%s-%s-%s#%s', $locale, $blockProperty->getName(), $child->getName(), $i);
                 if (!$node->hasProperty($name)) {
                     continue;
                 }
@@ -285,7 +285,7 @@ class Version201511240843 implements VersionInterface, ContainerAwareInterface
      */
     private function upgradeProperty(PropertyMetadata $property, NodeInterface $node, $locale, $up)
     {
-        $name = sprintf('i18n:%s-%s', $locale, $property->getName());
+        $name = \sprintf('i18n:%s-%s', $locale, $property->getName());
         if (!$node->hasProperty($name)) {
             return;
         }

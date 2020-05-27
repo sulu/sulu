@@ -78,7 +78,7 @@ class GroupControllerTest extends SuluTestCase
 
         $client->request('GET', '/api/groups?flat=true');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(2, $response->total);
         $this->assertEquals('Group1', $response->_embedded->groups[0]->name);
@@ -90,7 +90,7 @@ class GroupControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/groups/' . $this->group1->getId());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Group1', $response->name);
         $this->assertCount(2, $response->roles);
@@ -119,7 +119,7 @@ class GroupControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Group3', $response->name);
         $this->assertEquals($this->group1->getId(), $response->parent->id);
@@ -132,7 +132,7 @@ class GroupControllerTest extends SuluTestCase
             '/api/groups/' . $response->id
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Group3', $response->name);
         $this->assertEquals('Group1', $response->parent->name);
@@ -159,7 +159,7 @@ class GroupControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Updated Group1', $response->name);
         $this->assertEquals($this->group2->getId(), $response->parent->id);
@@ -183,9 +183,9 @@ class GroupControllerTest extends SuluTestCase
             '/api/groups'
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $this->assertEquals(2, count($response->_embedded->groups));
+        $this->assertEquals(2, \count($response->_embedded->groups));
 
         $client->request(
             'DELETE',
@@ -199,8 +199,8 @@ class GroupControllerTest extends SuluTestCase
             '/api/groups'
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $this->assertEquals(1, count($response->_embedded->groups));
+        $this->assertEquals(1, \count($response->_embedded->groups));
     }
 }

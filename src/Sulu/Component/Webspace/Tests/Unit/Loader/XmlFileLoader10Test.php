@@ -80,7 +80,7 @@ class XmlFileLoader10Test extends WebspaceTestCase
             $webspace->getDefaultTemplates()
         );
 
-        $this->assertEquals(2, count($webspace->getPortals()[0]->getLocalizations()));
+        $this->assertEquals(2, \count($webspace->getPortals()[0]->getLocalizations()));
         $this->assertEquals('en', $webspace->getPortals()[0]->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $webspace->getPortals()[0]->getLocalizations()[0]->getCountry());
         $this->assertEquals('de', $webspace->getPortals()[0]->getLocalizations()[1]->getLanguage());
@@ -89,11 +89,11 @@ class XmlFileLoader10Test extends WebspaceTestCase
 
         $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocale());
 
-        $this->assertEquals(3, count($webspace->getPortals()[0]->getEnvironments()));
+        $this->assertEquals(3, \count($webspace->getPortals()[0]->getEnvironments()));
 
         $environmentProd = $webspace->getPortals()[0]->getEnvironment('prod');
         $this->assertEquals('prod', $environmentProd->getType());
-        $this->assertEquals(2, count($environmentProd->getUrls()));
+        $this->assertEquals(2, \count($environmentProd->getUrls()));
         $this->assertEquals('sulu.at', $environmentProd->getUrls()[0]->getUrl());
         $this->assertTrue($environmentProd->getUrls()[0]->isMain());
         $this->assertEquals('de', $environmentProd->getUrls()[0]->getLanguage());
@@ -109,13 +109,13 @@ class XmlFileLoader10Test extends WebspaceTestCase
 
         $environmentDev = $webspace->getPortals()[0]->getEnvironment('dev');
         $this->assertEquals('dev', $environmentDev->getType());
-        $this->assertEquals(1, count($environmentDev->getUrls()));
+        $this->assertEquals(1, \count($environmentDev->getUrls()));
         $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
         $this->assertTrue($environmentProd->getUrls()[0]->isMain());
 
         $environmentMain = $webspace->getPortals()[0]->getEnvironment('main');
         $this->assertEquals('main', $environmentMain->getType());
-        $this->assertEquals(3, count($environmentMain->getUrls()));
+        $this->assertEquals(3, \count($environmentMain->getUrls()));
         $this->assertEquals('sulu.lo', $environmentMain->getUrls()[0]->getUrl());
         $this->assertFalse($environmentMain->getUrls()[0]->isMain());
         $this->assertEquals('sulu.at', $environmentMain->getUrls()[1]->getUrl());

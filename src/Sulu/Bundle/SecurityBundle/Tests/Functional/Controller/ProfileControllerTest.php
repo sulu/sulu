@@ -46,7 +46,7 @@ class ProfileControllerTest extends SuluTestCase
         );
 
         $this->assertEquals('setting-key', $userSetting->getKey());
-        $this->assertEquals('setting-value', json_decode($userSetting->getValue()));
+        $this->assertEquals('setting-value', \json_decode($userSetting->getValue()));
     }
 
     public function testDeleteSettings()
@@ -66,7 +66,7 @@ class ProfileControllerTest extends SuluTestCase
         );
 
         $this->assertEquals('setting-key', $userSetting->getKey());
-        $this->assertEquals('setting-value', json_decode($userSetting->getValue()));
+        $this->assertEquals('setting-value', \json_decode($userSetting->getValue()));
 
         $client->request(
             'DELETE',

@@ -38,7 +38,7 @@ class RoleSettingRepository extends EntityRepository
             ->setParameters(['roleId' => $roleId, 'key' => $key]);
 
         try {
-            return json_decode($queryBuilder->getQuery()->getSingleScalarResult(), true);
+            return \json_decode($queryBuilder->getQuery()->getSingleScalarResult(), true);
         } catch (NoResultException $e) {
             return;
         }

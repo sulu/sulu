@@ -76,7 +76,7 @@ class PageLinkProvider implements LinkProviderInterface
         }
 
         $contents = $this->contentRepository->findByUuids(
-            array_unique(array_values($hrefs)),
+            \array_unique(\array_values($hrefs)),
             $locale,
             MappingBuilder::create()
                 ->setResolveUrl(true)
@@ -86,7 +86,7 @@ class PageLinkProvider implements LinkProviderInterface
                 ->getMapping()
         );
 
-        return array_map(
+        return \array_map(
             function(Content $content) use ($locale, $scheme) {
                 return $this->getLinkItem($content, $locale, $scheme);
             },

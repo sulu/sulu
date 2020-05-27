@@ -41,7 +41,7 @@ class DoctrineConjunctionExpression extends AbstractDoctrineExpression implement
      */
     public function __construct($conjunction, array $expressions)
     {
-        if (count($expressions) < 2) {
+        if (\count($expressions) < 2) {
             throw new InsufficientExpressionsException($expressions);
         }
 
@@ -56,7 +56,7 @@ class DoctrineConjunctionExpression extends AbstractDoctrineExpression implement
             $statements[] = $expression->getStatement($queryBuilder);
         }
 
-        return implode(' ' . $this->conjunction . ' ', $statements);
+        return \implode(' ' . $this->conjunction . ' ', $statements);
     }
 
     public function getExpressions()
@@ -69,7 +69,7 @@ class DoctrineConjunctionExpression extends AbstractDoctrineExpression implement
         $result = [];
         foreach ($this->expressions as $expression) {
             if ($expression instanceof ConjunctionExpressionInterface) {
-                $result = array_merge($result, $expression->getFieldNames());
+                $result = \array_merge($result, $expression->getFieldNames());
             } elseif ($expression instanceof BasicExpressionInterface) {
                 $result[] = $expression->getFieldName();
             }

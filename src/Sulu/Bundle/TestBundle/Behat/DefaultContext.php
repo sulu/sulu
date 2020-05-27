@@ -82,11 +82,11 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
     public function iClickOnTheIn($selector, $containerSelector)
     {
         $session = $this->getSession(); // get the mink session
-        $element = $session->getPage()->find('css', sprintf('%s a:contains("%s")', $containerSelector, $selector)); // runs the actual query and returns the element
+        $element = $session->getPage()->find('css', \sprintf('%s a:contains("%s")', $containerSelector, $selector)); // runs the actual query and returns the element
 
         // errors must not pass silently
         if (null === $element) {
-            throw new \InvalidArgumentException(sprintf('Could not find link for: "%s"', $selector));
+            throw new \InvalidArgumentException(\sprintf('Could not find link for: "%s"', $selector));
         }
 
         // ok, let's click on it
@@ -100,7 +100,7 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
     public function pause()
     {
         while (true) {
-            sleep(5);
+            \sleep(5);
         }
     }
 
@@ -110,7 +110,7 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
      */
     public function waitASecond()
     {
-        sleep(1);
+        \sleep(1);
     }
 
     /**
@@ -158,7 +158,7 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
     public function iWaitAndShouldSeeNbElements($num, $element)
     {
         $this->spin(function(RawMinkContext $context) use ($num, $element) {
-            $context->assertSession()->elementsCount('css', $element, intval($num));
+            $context->assertSession()->elementsCount('css', $element, \intval($num));
 
             return true;
         });
@@ -204,7 +204,7 @@ e.keyCode = 13;
 $('%s').trigger(e);
 EOT;
 
-        $this->getSession()->executeScript(sprintf($script, $selector));
+        $this->getSession()->executeScript(\sprintf($script, $selector));
     }
 
     /**

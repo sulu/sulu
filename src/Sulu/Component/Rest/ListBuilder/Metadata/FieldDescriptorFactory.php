@@ -62,14 +62,14 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
 
     public function getFieldDescriptorForClass($className, $options = [], $type = null)
     {
-        $cacheKey = md5(json_encode($options));
+        $cacheKey = \md5(\json_encode($options));
 
         $cache = new ConfigCache(
-            sprintf(
+            \sprintf(
                 '%s/%s-%s-%s.php',
                 $this->cachePath,
-                str_replace('\\', '-', $className),
-                str_replace('\\', '-', $type),
+                \str_replace('\\', '-', $className),
+                \str_replace('\\', '-', $type),
                 $cacheKey
             ),
             $this->debug
@@ -89,7 +89,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
 
             if (!$propertyMetadata->has(DoctrinePropertyMetadata::class)) {
                 $fieldDescriptor = $this->getGeneralFieldDescriptor($generalMetadata, $options);
-                if (!$type || is_a($fieldDescriptor, $type)) {
+                if (!$type || \is_a($fieldDescriptor, $type)) {
                     $fieldDescriptors[$generalMetadata->getName()] = $fieldDescriptor;
                 }
 
@@ -138,14 +138,14 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             }
 
             if (null !== $fieldDescriptor
-                && (!$type || is_a($fieldDescriptor, $type))
+                && (!$type || \is_a($fieldDescriptor, $type))
             ) {
                 $fieldDescriptor->setMetadata($propertyMetadata);
                 $fieldDescriptors[$generalMetadata->getName()] = $fieldDescriptor;
             }
         }
 
-        $cache->write('<?php return unserialize(' . var_export(serialize($fieldDescriptors), true) . ');');
+        $cache->write('<?php return unserialize(' . \var_export(\serialize($fieldDescriptors), true) . ');');
 
         return $fieldDescriptors;
     }
@@ -238,7 +238,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
         $options
     ) {
         return new DoctrineConcatenationFieldDescriptor(
-            array_map(
+            \array_map(
                 function(FieldMetadata $fieldMetadata) use ($generalMetadata, $options) {
                     return $this->getFieldDescriptor($generalMetadata, $fieldMetadata, $options);
                 },
@@ -390,7 +390,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
     private function resolveOptions($string, array $options)
     {
         foreach ($options as $key => $value) {
-            $string = str_replace(':' . $key, $value, $string);
+            $string = \str_replace(':' . $key, $value, $string);
         }
 
         return $string;
@@ -427,7 +427,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
      */
     private function isDisabled(GeneralPropertyMetadata $generalMetadata)
     {
-        return in_array(
+        return \in_array(
             $generalMetadata->getDisplay(),
             [GeneralPropertyMetadata::DISPLAY_NEVER, GeneralPropertyMetadata::DISPLAY_NO]
         );

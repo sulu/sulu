@@ -38,7 +38,7 @@ class Select implements RuleTypeInterface
                 <div data-condition-name="' . $this->name . '"
                     data-rule-type="select"
                     data-aura-component="select@husky"
-                    data-aura-data=\'' . json_encode($this->options) . '\'
+                    data-aura-data=\'' . \json_encode($this->options) . '\'
                     ></div>
             </div>';
     }

@@ -48,8 +48,8 @@ class MediaStreamController extends Controller
     public function getImageAction(Request $request)
     {
         try {
-            if (ob_get_length()) {
-                ob_end_clean();
+            if (\ob_get_length()) {
+                \ob_end_clean();
             }
 
             $url = $request->getPathInfo();
@@ -70,8 +70,8 @@ class MediaStreamController extends Controller
     public function downloadAction(Request $request, $id)
     {
         try {
-            if (ob_get_length()) {
-                ob_end_clean();
+            if (\ob_get_length()) {
+                \ob_end_clean();
             }
 
             $version = $request->get('v', null);
@@ -140,7 +140,7 @@ class MediaStreamController extends Controller
 
             $response->headers->set(
                 'Link',
-                sprintf(
+                \sprintf(
                     '<%s>; rel="canonical"',
                     $this->getMediaManager()->getUrl(
                         $file->getMedia()->getId(),
@@ -208,7 +208,7 @@ class MediaStreamController extends Controller
      */
     private function cleanUpFileName($fileName, $locale, $extension)
     {
-        $pathInfo = pathinfo($fileName);
+        $pathInfo = \pathinfo($fileName);
         $cleanedFileName = $this->get('sulu.content.path_cleaner')->cleanup($pathInfo['filename'], $locale);
         if ($extension) {
             $cleanedFileName .= '.' . $extension;

@@ -43,7 +43,7 @@ class MediaRedirectController extends Controller
             return $this->redirect($media->getUrl());
         }
 
-        if (!array_key_exists($format, $media->getFormats())) {
+        if (!\array_key_exists($format, $media->getFormats())) {
             throw $this->createNotFoundException();
         }
 

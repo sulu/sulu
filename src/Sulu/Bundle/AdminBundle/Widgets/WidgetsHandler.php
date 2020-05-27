@@ -66,7 +66,7 @@ class WidgetsHandler implements WidgetsHandlerInterface
      */
     public function renderWidgetGroup($groupAlias, $parameters = [])
     {
-        if (array_key_exists($groupAlias, $this->widgetGroups)) {
+        if (\array_key_exists($groupAlias, $this->widgetGroups)) {
             return $this->render($this->widgetGroups[$groupAlias]['mappings'], $parameters);
         } else {
             throw new WidgetGroupNotFoundException('Widget group not found', $groupAlias);
@@ -75,7 +75,7 @@ class WidgetsHandler implements WidgetsHandlerInterface
 
     public function hasWidgetGroup($groupAlias)
     {
-        return array_key_exists($groupAlias, $this->widgetGroups) && count($this->widgetGroups[$groupAlias]) > 0;
+        return \array_key_exists($groupAlias, $this->widgetGroups) && \count($this->widgetGroups[$groupAlias]) > 0;
     }
 
     /**
@@ -98,7 +98,7 @@ class WidgetsHandler implements WidgetsHandlerInterface
             ];
         }
 
-        if (count($widgets) > 0) {
+        if (\count($widgets) > 0) {
             // render template
             return $this->templateEngine->render(
                 $this->template,

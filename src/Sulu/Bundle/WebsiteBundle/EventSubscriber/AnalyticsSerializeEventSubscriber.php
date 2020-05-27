@@ -53,7 +53,7 @@ class AnalyticsSerializeEventSubscriber implements EventSubscriberInterface
         // depended on the type of analytics.
         // see issue: https://github.com/sulu/sulu/issues/3088
         $content = $analytics->getContent();
-        if (!is_string($content)) {
+        if (!\is_string($content)) {
             $content = $event->getContext()->accept($content);
         }
         $event->getVisitor()->addData('content', $content);

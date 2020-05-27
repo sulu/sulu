@@ -33,20 +33,20 @@ class ContentNavigationRegistry implements ContentNavigationRegistryInterface
 
     public function getNavigationItems($alias, array $options = [])
     {
-        if (!array_key_exists($alias, $this->providers)) {
-            throw new ContentNavigationAliasNotFoundException($alias, array_keys($this->providers));
+        if (!\array_key_exists($alias, $this->providers)) {
+            throw new ContentNavigationAliasNotFoundException($alias, \array_keys($this->providers));
         }
 
         $navigationItems = [];
 
         foreach ($this->providers[$alias] as $providerId) {
-            $navigationItems = array_merge(
+            $navigationItems = \array_merge(
                 $navigationItems,
                 $this->container->get($providerId)->getNavigationItems($options)
             );
         }
 
-        usort(
+        \usort(
             $navigationItems,
             function(ContentNavigationItem $a, ContentNavigationItem $b) {
                 $aPosition = $a->getPosition() ?: \PHP_INT_MAX;
@@ -61,7 +61,7 @@ class ContentNavigationRegistry implements ContentNavigationRegistryInterface
 
     public function addContentNavigationProvider($alias, $id)
     {
-        if (!array_key_exists($alias, $this->providers)) {
+        if (!\array_key_exists($alias, $this->providers)) {
             $this->providers[$alias] = [];
         }
 

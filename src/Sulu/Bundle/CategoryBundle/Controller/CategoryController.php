@@ -61,7 +61,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
         unset($fieldDescriptors['locale']);
         unset($fieldDescriptors['defaultLocale']);
 
-        return $this->handleView($this->view(array_values($fieldDescriptors), 200));
+        return $this->handleView($this->view(\array_values($fieldDescriptors), 200));
     }
 
     /**
@@ -124,7 +124,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
 
         if ('true' == $request->get('flat')) {
             $rootId = ($rootKey) ? $this->getCategoryManager()->findByKey($rootKey)->getId() : null;
-            $expandIds = array_filter(explode(',', $request->get('expandIds')));
+            $expandIds = \array_filter(\explode(',', $request->get('expandIds')));
             $list = $this->getListRepresentation($request, $locale, $rootId, $expandIds);
         } else {
             $entities = $this->getCategoryManager()->findChildrenByParentKey($rootKey);
@@ -154,7 +154,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
                     return $this->move($id, $request);
                     break;
                 default:
-                    throw new RestException(sprintf('Unrecognized action: "%s"', $action));
+                    throw new RestException(\sprintf('Unrecognized action: "%s"', $action));
             }
         } catch (RestException $ex) {
             $view = $this->view($ex->toArray(), 400);
@@ -255,7 +255,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
     {
         $mediasData = $request->get('medias', []);
         $medias = null;
-        if (array_key_exists('ids', $mediasData)) {
+        if (\array_key_exists('ids', $mediasData)) {
             $medias = $mediasData['ids'];
         }
 
@@ -299,11 +299,11 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $parentIdsToExpand = [$parentId];
         if ($expandIds) {
             $pathIds = $this->get('sulu.repository.category')->findCategoryIdsBetween([$parentId], $expandIds);
-            $parentIdsToExpand = array_merge($parentIdsToExpand, $pathIds);
+            $parentIdsToExpand = \array_merge($parentIdsToExpand, $pathIds);
         }
 
         if ('csv' === $request->getRequestFormat()) {
-            $parentIdsToExpand = array_filter($parentIdsToExpand);
+            $parentIdsToExpand = \array_filter($parentIdsToExpand);
         }
 
         // generate expressions for collected parent-categories
@@ -318,9 +318,9 @@ class CategoryController extends RestController implements ClassResourceInterfac
 
         if (!$request->get('search')) {
             // expand collected parents if search is not set
-            if (count($parentExpressions) >= 2) {
+            if (\count($parentExpressions) >= 2) {
                 $listBuilder->addExpression($listBuilder->createOrExpression($parentExpressions));
-            } elseif (count($parentExpressions) >= 1) {
+            } elseif (\count($parentExpressions) >= 1) {
                 $listBuilder->addExpression($parentExpressions[0]);
             }
         } elseif ($request->get('search') && $parentId && !$expandIds) {

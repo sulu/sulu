@@ -222,7 +222,7 @@ class PagesSitemapProviderTest extends \PHPUnit_Framework_TestCase
         $content = new Content(
             'de',
             $this->portalKey,
-            uniqid('test-'),
+            \uniqid('test-'),
             $url,
             WorkflowStage::PUBLISHED,
             $redirectTarget,

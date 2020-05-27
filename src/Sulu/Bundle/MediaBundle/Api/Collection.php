@@ -279,8 +279,8 @@ class Collection extends ApiWrapper
      */
     public function setStyle($style)
     {
-        if (!is_string($style)) {
-            $style = json_encode($style);
+        if (!\is_string($style)) {
+            $style = \json_encode($style);
         }
         $this->entity->setStyle($style);
 
@@ -295,7 +295,7 @@ class Collection extends ApiWrapper
      */
     public function getStyle()
     {
-        return json_decode($this->entity->getStyle(), true);
+        return \json_decode($this->entity->getStyle(), true);
     }
 
     /**

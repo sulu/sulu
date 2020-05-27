@@ -98,8 +98,8 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
      */
     public function __get($property)
     {
-        if (method_exists($this, 'get' . ucfirst($property))) {
-            return $this->{'get' . ucfirst($property)}();
+        if (\method_exists($this, 'get' . \ucfirst($property))) {
+            return $this->{'get' . \ucfirst($property)}();
         } else {
             return;
         }
@@ -127,7 +127,7 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
 
     public function exportData($propertyValue)
     {
-        if (is_bool($propertyValue)) {
+        if (\is_bool($propertyValue)) {
             if ($propertyValue) {
                 return '1';
             }
@@ -135,15 +135,15 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
             return '';
         }
 
-        if (is_string($propertyValue)) {
+        if (\is_string($propertyValue)) {
             return $propertyValue;
         }
 
-        if (is_string($this->defaultValue)) {
+        if (\is_string($this->defaultValue)) {
             return $this->defaultValue;
         }
 
-        if (is_bool($this->defaultValue)) {
+        if (\is_bool($this->defaultValue)) {
             if ($this->defaultValue) {
                 return '1';
             }
@@ -151,8 +151,8 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
             return '';
         }
 
-        if (is_array($propertyValue)) {
-            return json_encode($propertyValue);
+        if (\is_array($propertyValue)) {
+            return \json_encode($propertyValue);
         }
 
         return '';
@@ -181,7 +181,7 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
      */
     protected function removeIllegalCharacters($content)
     {
-        return preg_replace(NodeProcessor::VALIDATE_STRING, '', $content);
+        return \preg_replace(NodeProcessor::VALIDATE_STRING, '', $content);
     }
 
     /**

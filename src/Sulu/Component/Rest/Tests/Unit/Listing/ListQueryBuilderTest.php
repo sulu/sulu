@@ -27,7 +27,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
             []
         );
 
-        $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
+        $dql = \str_replace(' ,', ',', \trim(\preg_replace('/\s+/', ' ', $builder->find())));
 
         $this->assertEquals('SELECT u FROM SuluCoreBundle:Example u', $dql);
     }
@@ -44,7 +44,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
             []
         );
 
-        $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
+        $dql = \str_replace(' ,', ',', \trim(\preg_replace('/\s+/', ' ', $builder->find())));
 
         $this->assertEquals('SELECT u.field1, u.field2, u.field3 FROM SuluCoreBundle:Example u', $dql);
     }
@@ -61,7 +61,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
             []
         );
 
-        $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
+        $dql = \str_replace(' ,', ',', \trim(\preg_replace('/\s+/', ' ', $builder->find())));
 
         $this->assertEquals('SELECT u FROM SuluCoreBundle:Example u ORDER BY u.sortField ASC', $dql);
     }
@@ -78,7 +78,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
             []
         );
 
-        $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
+        $dql = \str_replace(' ,', ',', \trim(\preg_replace('/\s+/', ' ', $builder->find())));
 
         $this->assertEquals('SELECT u FROM SuluCoreBundle:Example u WHERE u.field1 = 1 AND u.field2 = 2', $dql);
     }
@@ -95,7 +95,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
             ['field']
         );
 
-        $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
+        $dql = \str_replace(' ,', ',', \trim(\preg_replace('/\s+/', ' ', $builder->find())));
 
         $this->assertEquals('SELECT u FROM SuluCoreBundle:Example u WHERE (u.field LIKE :search)', $dql);
     }
@@ -112,7 +112,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
             ['field']
         );
 
-        $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
+        $dql = \str_replace(' ,', ',', \trim(\preg_replace('/\s+/', ' ', $builder->find())));
 
         $this->assertEquals(
             'SELECT u FROM SuluCoreBundle:Example u WHERE u.field1 = 1 AND u.field2 = 2 AND (u.field LIKE :search)',
@@ -133,7 +133,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
             ['field2', 'field3']
         );
 
-        $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
+        $dql = \str_replace(' ,', ',', \trim(\preg_replace('/\s+/', ' ', $builder->find())));
 
         $this->assertEquals(
             'SELECT u FROM SuluCoreBundle:Example u WHERE u.field1 = 1 AND u.field2 = 2 AND (u.field1 LIKE :search OR u.field2 = :strictSearch OR u.field3 = :strictSearch)',
@@ -153,7 +153,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
             []
         );
 
-        $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
+        $dql = \str_replace(' ,', ',', \trim(\preg_replace('/\s+/', ' ', $builder->find())));
 
         $this->assertEquals(
             'SELECT object.field1 object_field1, object.field2 object_field2, otherobject.field3 otherobject_field3 ' .
@@ -176,7 +176,7 @@ class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
 
         $builder->justCount('u.id', 'total');
 
-        $dql = str_replace(' ,', ',', trim(preg_replace('/\s+/', ' ', $builder->find())));
+        $dql = \str_replace(' ,', ',', \trim(\preg_replace('/\s+/', ' ', $builder->find())));
 
         $this->assertEquals('SELECT COUNT(u.id) as total FROM SuluCoreBundle:Example u', $dql);
     }

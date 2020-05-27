@@ -80,7 +80,7 @@ class TargetGroupEvaluatorTest extends \PHPUnit_Framework_TestCase
         foreach ($ruleWhitelists as $ruleName => $ruleWhitelist) {
             $rules[$ruleName] = $this->prophesize(RuleInterface::class);
             $rules[$ruleName]->evaluate(Argument::any())->will(function($arguments) use ($ruleWhitelist) {
-                return in_array($arguments[0], $ruleWhitelist);
+                return \in_array($arguments[0], $ruleWhitelist);
             });
         }
         $this->ruleCollection->getRule(Argument::any())->will(function($arguments) use ($rules) {

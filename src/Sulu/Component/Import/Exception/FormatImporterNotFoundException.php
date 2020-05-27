@@ -22,7 +22,7 @@ class FormatImporterNotFoundException extends \Exception
         \Exception $previous = null
     ) {
         parent::__construct(
-            sprintf('Webspace import for "%s" was not found.', $message),
+            \sprintf('Webspace import for "%s" was not found.', $message),
             $code,
             $previous
         );

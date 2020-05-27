@@ -136,10 +136,10 @@ class OperatorControllerTest extends SuluTestCase
             '/api/operators?locale=de'
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
-        $this->assertEquals(3, count($response->_embedded->items));
+        $this->assertEquals(3, \count($response->_embedded->items));
     }
 
     public function testCgetWithNoLocale()

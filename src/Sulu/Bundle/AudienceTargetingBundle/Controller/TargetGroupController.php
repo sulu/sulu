@@ -83,8 +83,8 @@ class TargetGroupController extends RestController implements ClassResourceInter
         // If webspaces are concatinated we need to group by id. This happens
         // when no fields are supplied at all OR webspaces are requested as field.
         $fieldsParam = $request->get('fields');
-        $fields = explode(',', $fieldsParam);
-        if (null === $fieldsParam || false !== array_search('webspaceKeys', $fields)) {
+        $fields = \explode(',', $fieldsParam);
+        if (null === $fieldsParam || false !== \array_search('webspaceKeys', $fields)) {
             $listBuilder->addGroupBy($fieldDescriptors['id']);
         }
 
@@ -129,9 +129,9 @@ class TargetGroupController extends RestController implements ClassResourceInter
      */
     public function postAction(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
+        $data = \json_decode($request->getContent(), true);
         $data = $this->convertFromRequest($data);
-        $targetGroup = $this->deserializeData(json_encode($data));
+        $targetGroup = $this->deserializeData(\json_encode($data));
         $targetGroup = $this->getTargetGroupRepository()->save($targetGroup);
 
         $this->getEntityManager()->flush();
@@ -149,14 +149,14 @@ class TargetGroupController extends RestController implements ClassResourceInter
     public function putAction(Request $request, $id)
     {
         $jsonData = $request->getContent();
-        $data = json_decode($jsonData, true);
+        $data = \json_decode($jsonData, true);
 
         // Id should be taken of request uri.
         $data['id'] = $id;
 
         $data = $this->convertFromRequest($data);
 
-        $targetGroup = $this->deserializeData(json_encode($data));
+        $targetGroup = $this->deserializeData(\json_encode($data));
         $targetGroup = $this->getTargetGroupRepository()->save($targetGroup);
         $this->getEntityManager()->flush();
 
@@ -190,9 +190,9 @@ class TargetGroupController extends RestController implements ClassResourceInter
     public function cdeleteAction(Request $request)
     {
         $idsData = $request->get('ids');
-        $ids = explode(',', $idsData);
+        $ids = \explode(',', $idsData);
 
-        if (!count($ids)) {
+        if (!\count($ids)) {
             throw new MissingParameterException('TargetGroupController', 'ids');
         }
 
@@ -237,11 +237,11 @@ class TargetGroupController extends RestController implements ClassResourceInter
     private function convertFromRequest($data)
     {
         // Unset IDs of Conditions, otherwise they won't be able to save as id is null.
-        if (array_key_exists('rules', $data)) {
+        if (\array_key_exists('rules', $data)) {
             foreach ($data['rules'] as $ruleKey => &$rule) {
-                if (array_key_exists('conditions', $rule)) {
+                if (\array_key_exists('conditions', $rule)) {
                     foreach ($rule['conditions'] as $key => &$condition) {
-                        if (array_key_exists('id', $condition) && is_null($condition['id'])) {
+                        if (\array_key_exists('id', $condition) && \is_null($condition['id'])) {
                             unset($condition['id']);
                         }
                     }

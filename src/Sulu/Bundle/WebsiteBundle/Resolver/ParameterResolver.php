@@ -61,14 +61,14 @@ class ParameterResolver implements ParameterResolverInterface
             $allLocalizations = $requestAnalyzer->getWebspace()->getLocalizations();
         }
 
-        $pageUrls = array_key_exists('urls', $structureData) ? $structureData['urls'] : [];
+        $pageUrls = \array_key_exists('urls', $structureData) ? $structureData['urls'] : [];
         $urls = [];
 
         foreach ($allLocalizations as $localization) {
             /* @var Localization $localization */
             $locale = $localization->getLocale();
 
-            if (array_key_exists($locale, $pageUrls)) {
+            if (\array_key_exists($locale, $pageUrls)) {
                 $urls[$locale] = $pageUrls[$locale];
             } else {
                 $urls[$locale] = '/';
@@ -77,7 +77,7 @@ class ParameterResolver implements ParameterResolverInterface
 
         $structureData['urls'] = $urls;
 
-        return array_merge(
+        return \array_merge(
             $parameter,
             $structureData,
             $requestAnalyzerData

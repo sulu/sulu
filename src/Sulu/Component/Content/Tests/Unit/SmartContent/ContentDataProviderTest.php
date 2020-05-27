@@ -93,7 +93,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
      */
     private function getProxyFactory()
     {
-        $writer = new FileWriterGeneratorStrategy(new FileLocator(sys_get_temp_dir()));
+        $writer = new FileWriterGeneratorStrategy(new FileLocator(\sys_get_temp_dir()));
 
         $configuration = new Configuration();
         $configuration->setGeneratorStrategy($writer);
@@ -518,7 +518,7 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(DataProviderResult::class, $result);
 
         $items = $result->getItems();
-        for ($i = 0, $length = count($items); $i < $length; ++$i) {
+        for ($i = 0, $length = \count($items); $i < $length; ++$i) {
             $this->assertEquals($data[$i]['uuid'], $items[$i]->getId());
             $this->assertEquals($data[$i], $items[$i]->jsonSerialize());
 

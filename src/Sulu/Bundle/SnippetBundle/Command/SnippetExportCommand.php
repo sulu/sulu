@@ -36,6 +36,6 @@ class SnippetExportCommand extends ContainerAwareCommand
         $exporter = $this->getContainer()->get('sulu_snippet.export.snippet');
         $file = $exporter->export($locale, $output, '1.2.xliff');
 
-        file_put_contents($target, $file);
+        \file_put_contents($target, $file);
     }
 }

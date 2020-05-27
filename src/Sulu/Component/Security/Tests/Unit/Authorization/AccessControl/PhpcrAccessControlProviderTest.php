@@ -50,7 +50,7 @@ class PhpcrAccessControlProviderTest extends \PHPUnit_Framework_TestCase
         $this->documentManager->flush()->shouldBeCalled();
 
         $this->phpcrAccessControlProvider->setPermissions(
-            get_class($document),
+            \get_class($document),
             '1',
             ['role' => ['view' => true, 'edit' => false]]
         );
@@ -66,7 +66,7 @@ class PhpcrAccessControlProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             [1 => ['view' => true, 'edit' => true, 'delete' => false]],
-            $this->phpcrAccessControlProvider->getPermissions(get_class($document), '1')
+            $this->phpcrAccessControlProvider->getPermissions(\get_class($document), '1')
         );
     }
 

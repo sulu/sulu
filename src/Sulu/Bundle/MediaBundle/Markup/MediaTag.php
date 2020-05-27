@@ -63,7 +63,7 @@ class MediaTag implements TagInterface
 
         $result = [];
         foreach ($attributesByTag as $tag => $attributes) {
-            if (!array_key_exists($attributes['id'], $medias)) {
+            if (!\array_key_exists($attributes['id'], $medias)) {
                 $result[$tag] = self::VALIDATE_REMOVED;
             }
         }
@@ -81,11 +81,11 @@ class MediaTag implements TagInterface
      */
     private function createMarkupForAttributes($attributes, $medias)
     {
-        if (!array_key_exists($attributes['id'], $medias)) {
-            if (array_key_exists('content', $attributes)) {
+        if (!\array_key_exists($attributes['id'], $medias)) {
+            if (\array_key_exists('content', $attributes)) {
                 return $attributes['content'];
             }
-            if (array_key_exists('title', $attributes)) {
+            if (\array_key_exists('title', $attributes)) {
                 return $attributes['title'];
             }
 
@@ -100,7 +100,7 @@ class MediaTag implements TagInterface
             $title = $media['defaultTitle'];
         }
 
-        return sprintf(
+        return \sprintf(
             '<a href="%s" title="%s">%s</a>',
             $media['url'],
             $title,
@@ -118,9 +118,9 @@ class MediaTag implements TagInterface
      */
     private function preloadMedias($attributesByTag, $locale)
     {
-        $ids = array_unique(
-            array_values(
-                array_map(
+        $ids = \array_unique(
+            \array_values(
+                \array_map(
                     function($attributes) {
                         return $attributes['id'];
                     },

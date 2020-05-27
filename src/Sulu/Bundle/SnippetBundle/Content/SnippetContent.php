@@ -100,20 +100,20 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         $values = $property->getValue();
 
         $snippetReferences = [];
-        $values = is_array($values) ? $values : [];
+        $values = \is_array($values) ? $values : [];
 
         foreach ($values as $value) {
             if ($value instanceof SnippetBridge) {
                 $snippetReferences[] = $value->getUuid();
-            } elseif (is_array($value) && array_key_exists('uuid', $value) && UUIDHelper::isUUID($value['uuid'])) {
+            } elseif (\is_array($value) && \array_key_exists('uuid', $value) && UUIDHelper::isUUID($value['uuid'])) {
                 $snippetReferences[] = $value['uuid'];
             } elseif (UUIDHelper::isUUID($value)) {
                 $snippetReferences[] = $value;
             } else {
                 throw new \InvalidArgumentException(
-                    sprintf(
+                    \sprintf(
                         'Property value must either be a UUID or a Snippet, "%s" given.',
-                        gettype($value)
+                        \gettype($value)
                     )
                 );
             }
@@ -206,7 +206,7 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
      */
     private function getUuids($data)
     {
-        return is_array($data) ? $data : [];
+        return \is_array($data) ? $data : [];
     }
 
     /**
@@ -218,7 +218,7 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
      */
     private function getParameterValue(array $parameter, $name, $default = null)
     {
-        if (!array_key_exists($name, $parameter)) {
+        if (!\array_key_exists($name, $parameter)) {
             return $default;
         }
 
@@ -233,7 +233,7 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
             return '';
         }
 
-        return json_encode($this->getUuids($propertyValue));
+        return \json_encode($this->getUuids($propertyValue));
     }
 
     public function importData(
@@ -245,7 +245,7 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         $languageCode,
         $segmentKey = null
     ) {
-        $property->setValue(json_decode($value));
+        $property->setValue(\json_decode($value));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 

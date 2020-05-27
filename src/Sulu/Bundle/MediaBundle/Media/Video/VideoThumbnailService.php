@@ -46,7 +46,7 @@ class VideoThumbnailService implements VideoThumbnailServiceInterface
             // there will be no image file - so nothing to do here
         }
 
-        return file_exists($destination);
+        return \file_exists($destination);
     }
 
     public function batchGenerate(
@@ -78,7 +78,7 @@ class VideoThumbnailService implements VideoThumbnailServiceInterface
      */
     protected function normalizeFilename($filename)
     {
-        $filename = str_replace(':', '.', $filename);
+        $filename = \str_replace(':', '.', $filename);
 
         return $filename;
     }

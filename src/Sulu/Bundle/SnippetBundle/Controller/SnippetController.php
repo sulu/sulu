@@ -150,9 +150,9 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $uuidsString = $request->get('ids');
 
         if ($uuidsString) {
-            $uuids = explode(',', $uuidsString);
+            $uuids = \explode(',', $uuidsString);
             $snippets = $this->snippetRepository->getSnippetsByUuids($uuids, $locale);
-            $total = count($snippets);
+            $total = \count($snippets);
         } else {
             $snippets = $this->snippetRepository->getSnippets(
                 $locale,
@@ -260,7 +260,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
 
         $references = $this->snippetRepository->getReferences($uuid);
 
-        if (count($references) > 0) {
+        if (\count($references) > 0) {
             $force = $request->headers->get('SuluForceRemove', false);
             if ($force) {
                 $this->contentMapper->delete($uuid, $webspaceKey, true);
@@ -294,7 +294,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         try {
             switch ($action) {
                 case 'copy-locale':
-                    $destLocales = explode(',', $this->getRequestParameter($request, 'dest', true));
+                    $destLocales = \explode(',', $this->getRequestParameter($request, 'dest', true));
 
                     // call repository method
                     $snippet = $this->snippetRepository->copyLocale(
@@ -417,7 +417,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      */
     private function decorateSnippet(array $snippet, $locale)
     {
-        return array_merge(
+        return \array_merge(
             $snippet,
             [
                 '_links' => [

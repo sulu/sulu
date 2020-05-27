@@ -89,7 +89,7 @@ class FilterListBuilder implements FilterListBuilderInterface
      */
     protected function handleCreatedExpressions(array $expressions, $conjunction)
     {
-        $expressionCounter = count($expressions);
+        $expressionCounter = \count($expressions);
         switch ($expressionCounter) {
             case 0: // no expressions - nothing to do
                 break;
@@ -114,7 +114,7 @@ class FilterListBuilder implements FilterListBuilderInterface
     protected function createConjunctionExpression(array $expressions, $conjunction)
     {
         // create the appropriate expression
-        if (ListBuilderInterface::CONJUNCTION_AND === strtoupper($conjunction)) {
+        if (ListBuilderInterface::CONJUNCTION_AND === \strtoupper($conjunction)) {
             return $this->listBuilder->createAndExpression($expressions);
         }
 
@@ -136,9 +136,9 @@ class FilterListBuilder implements FilterListBuilderInterface
             throw new ConditionFieldNotFoundException($condition->getField());
         }
 
-        if (1 === count($conditionGroup->getConditions())) {
+        if (1 === \count($conditionGroup->getConditions())) {
             $this->createExpression($condition, $fieldDescriptor);
-        } elseif (count($conditionGroup->getConditions()) > 1) {
+        } elseif (\count($conditionGroup->getConditions()) > 1) {
             // TODO implement if needed
             throw new FeatureNotImplementedException('Multiple condition handling not yet implemented!');
         }
@@ -182,8 +182,8 @@ class FilterListBuilder implements FilterListBuilderInterface
             case DataTypes::AUTO_COMPLETE_TYPE:
                 return $value;
             case DataTypes::NUMBER_TYPE:
-                if (is_numeric($value)) {
-                    return floatval($value);
+                if (\is_numeric($value)) {
+                    return \floatval($value);
                 }
 
                 throw new ConditionTypeMismatchException($condition->getId(), $value, $type);

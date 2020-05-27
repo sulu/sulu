@@ -56,7 +56,7 @@ class CreateUserCommandTest extends SuluTestCase
         $this->createUser('sulu', 'test');
         $this->createUser('sulu', 'test');
 
-        $this->assertEquals('User "sulu" already exists', trim($this->tester->getDisplay()));
+        $this->assertEquals('User "sulu" already exists', \trim($this->tester->getDisplay()));
     }
 
     public function testCreateUserNonExistingRole()

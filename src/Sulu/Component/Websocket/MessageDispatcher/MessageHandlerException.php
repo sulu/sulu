@@ -32,7 +32,7 @@ class MessageHandlerException extends \Exception
         return [
             'code' => $this->getPrevious()->getCode(),
             'message' => $this->getPrevious()->getMessage(),
-            'type' => get_class($this->getPrevious()),
+            'type' => \get_class($this->getPrevious()),
         ];
     }
 }

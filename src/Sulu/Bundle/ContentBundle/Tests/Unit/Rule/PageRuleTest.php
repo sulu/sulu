@@ -95,7 +95,7 @@ class PageRuleTest extends \PHPUnit_Framework_TestCase
 
             $resourceLocatorStrategy = $this->prophesize(ResourceLocatorStrategyInterface::class);
 
-            if ('/' === substr($urlValue, -1)) {
+            if ('/' === \substr($urlValue, -1)) {
                 $resourceLocatorStrategy->loadByResourceLocator(Argument::cetera())->shouldNotBeCalled();
             } elseif (true === $urlExists) {
                 $resourceLocatorStrategy->loadByResourceLocator(

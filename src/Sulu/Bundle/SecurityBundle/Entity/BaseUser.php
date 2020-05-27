@@ -118,7 +118,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
      */
     public function __construct()
     {
-        $this->apiKey = md5(uniqid());
+        $this->apiKey = \md5(\uniqid());
     }
 
     /**
@@ -288,7 +288,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
      */
     public function serialize()
     {
-        return serialize(
+        return \serialize(
             [
                 $this->id,
                 $this->password,
@@ -311,7 +311,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     {
         list(
             $this->id, $this->password, $this->salt, $this->username, $this->locked, $this->enabled
-        ) = unserialize($serialized);
+        ) = \unserialize($serialized);
     }
 
     /**

@@ -27,7 +27,7 @@ class ExtensionManager implements ExtensionManagerInterface
         }
 
         if (isset($this->extensions[$structureType])) {
-            $extensions = array_merge($extensions, $this->extensions[$structureType]);
+            $extensions = \array_merge($extensions, $this->extensions[$structureType]);
         }
 
         return $extensions;
@@ -50,9 +50,9 @@ class ExtensionManager implements ExtensionManagerInterface
         $extensions = $this->getExtensions($structureType);
 
         if (!isset($extensions[$name])) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Extension "%s" has not been registered for structure type "%s", registred extensions: "%s"',
-                $name, $structureType, implode('", "', array_keys($extensions))
+                $name, $structureType, \implode('", "', \array_keys($extensions))
             ));
         }
 

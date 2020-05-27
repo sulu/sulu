@@ -661,7 +661,7 @@ class Media extends ApiWrapper
         $tags = [];
         foreach ($this->getFileVersion()->getTags() as $tag) {
             /* @var TagInterface $tag */
-            array_push($tags, $tag->getName());
+            \array_push($tags, $tag->getName());
         }
 
         return $tags;
@@ -722,7 +722,7 @@ class Media extends ApiWrapper
      */
     public function setChanged($changed)
     {
-        if (is_string($changed)) {
+        if (\is_string($changed)) {
             $changed = new \DateTime($changed);
         }
         $this->getFileVersion()->setChanged($changed);
@@ -841,7 +841,7 @@ class Media extends ApiWrapper
         foreach ($this->getEntity()->getFiles() as $file) {
             /** @var FileVersion $fileVersion */
             foreach ($file->getFileVersions() as $fileVersion) {
-                $downloadCounter += intval($fileVersion->getDownloadCounter());
+                $downloadCounter += \intval($fileVersion->getDownloadCounter());
             }
         }
 
@@ -1005,7 +1005,7 @@ class Media extends ApiWrapper
         $categories = $fileVersion->getCategories();
 
         // return Category API item
-        if (count($categories)) {
+        if (\count($categories)) {
             foreach ($categories as $category) {
                 $apiCategories[] = new Category($category, $this->locale);
             }

@@ -89,7 +89,7 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
             ]);
 
         if ($role) {
-            throw new \Exception(sprintf('Role with name "%s" should NOT exist', $name));
+            throw new \Exception(\sprintf('Role with name "%s" should NOT exist', $name));
         }
     }
 
@@ -104,7 +104,7 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
             ]);
 
         if (!$role) {
-            throw new \Exception(sprintf('Role with name "%s" should exist', $name));
+            throw new \Exception(\sprintf('Role with name "%s" should exist', $name));
         }
     }
 

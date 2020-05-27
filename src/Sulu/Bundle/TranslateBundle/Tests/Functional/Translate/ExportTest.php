@@ -64,14 +64,14 @@ class ExportTest extends SuluTestCase
 
     public function tearDown()
     {
-        if (file_exists(self::$fixturePath . '/sulu-test.en.xlf')) {
-            unlink(self::$fixturePath . '/sulu-test.en.xlf');
+        if (\file_exists(self::$fixturePath . '/sulu-test.en.xlf')) {
+            \unlink(self::$fixturePath . '/sulu-test.en.xlf');
         }
-        if (file_exists(self::$fixturePath . '/sulu-test.frontend.en.xlf')) {
-            unlink(self::$fixturePath . '/sulu-test.frontend.en.xlf');
+        if (\file_exists(self::$fixturePath . '/sulu-test.frontend.en.xlf')) {
+            \unlink(self::$fixturePath . '/sulu-test.frontend.en.xlf');
         }
-        if (file_exists(self::$fixturePath . '/sulu-test.en.json')) {
-            unlink(self::$fixturePath . '/sulu-test.en.json');
+        if (\file_exists(self::$fixturePath . '/sulu-test.en.json')) {
+            \unlink(self::$fixturePath . '/sulu-test.en.json');
         }
     }
 
@@ -83,8 +83,8 @@ class ExportTest extends SuluTestCase
         $this->export->setPath(self::$fixturePath . '/');
         $this->export->execute();
 
-        $expectedHash = file_get_contents(self::$fixturePath . '/shouldbes/sulu-test.en.xlf');
-        $actualHash = file_get_contents(self::$fixturePath . '/sulu-test.en.xlf');
+        $expectedHash = \file_get_contents(self::$fixturePath . '/shouldbes/sulu-test.en.xlf');
+        $actualHash = \file_get_contents(self::$fixturePath . '/sulu-test.en.xlf');
         $actualHash = $this->removeTranslationIds($actualHash);
 
         $this->assertSame($expectedHash, $actualHash);
@@ -98,8 +98,8 @@ class ExportTest extends SuluTestCase
         $this->export->setPath(self::$fixturePath . '/');
         $this->export->execute();
 
-        $expectedHash = file_get_contents(self::$fixturePath . '/shouldbes/sulu-test.en.json');
-        $actualHash = file_get_contents(self::$fixturePath . '/sulu-test.en.json');
+        $expectedHash = \file_get_contents(self::$fixturePath . '/shouldbes/sulu-test.en.json');
+        $actualHash = \file_get_contents(self::$fixturePath . '/sulu-test.en.json');
 
         $this->assertSame($expectedHash, $actualHash);
     }
@@ -113,8 +113,8 @@ class ExportTest extends SuluTestCase
         $this->export->setPath(self::$fixturePath . '/');
         $this->export->execute();
 
-        $expectedHash = file_get_contents(self::$fixturePath . '/shouldbes/sulu-test.frontend.en.xlf');
-        $actualHash = file_get_contents(self::$fixturePath . '/sulu-test.frontend.en.xlf');
+        $expectedHash = \file_get_contents(self::$fixturePath . '/shouldbes/sulu-test.frontend.en.xlf');
+        $actualHash = \file_get_contents(self::$fixturePath . '/sulu-test.frontend.en.xlf');
         $actualHash = $this->removeTranslationIds($actualHash);
 
         $this->assertSame($expectedHash, $actualHash);
@@ -122,6 +122,6 @@ class ExportTest extends SuluTestCase
 
     private function removeTranslationIds($hash)
     {
-        return preg_replace('/ id="(\w+)" /', ' ', $hash);
+        return \preg_replace('/ id="(\w+)" /', ' ', $hash);
     }
 }

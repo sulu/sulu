@@ -27,7 +27,7 @@ class RoleNameAlreadyExistsException extends \Exception
     public function __construct($name)
     {
         $this->name = $name;
-        $this->message = sprintf('Role "%s" already exists', $name);
+        $this->message = \sprintf('Role "%s" already exists', $name);
         $this->code = 1101;
     }
 

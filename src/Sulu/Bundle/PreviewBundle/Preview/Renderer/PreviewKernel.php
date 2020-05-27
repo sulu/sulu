@@ -29,20 +29,20 @@ class PreviewKernel extends \WebsiteKernel
     {
         parent::registerContainerConfiguration($loader);
 
-        if (in_array($this->getEnvironment(), ['dev', 'test'])) {
+        if (\in_array($this->getEnvironment(), ['dev', 'test'])) {
             $loader->load(
-                implode(\DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'Resources', 'config', 'config_preview_dev.yml'])
+                \implode(\DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'Resources', 'config', 'config_preview_dev.yml'])
             );
         }
 
-        $loader->load(implode(\DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'Resources', 'config', 'config_preview.yml']));
+        $loader->load(\implode(\DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'Resources', 'config', 'config_preview.yml']));
     }
 
     public function getRootDir()
     {
         if (null === $this->rootDir) {
             $reflectionClass = new \ReflectionClass(\WebsiteKernel::class);
-            $this->rootDir = dirname($reflectionClass->getFileName());
+            $this->rootDir = \dirname($reflectionClass->getFileName());
         }
 
         return $this->rootDir;
@@ -52,12 +52,12 @@ class PreviewKernel extends \WebsiteKernel
     {
         if (null === $this->projectDir) {
             $reflectionClass = new \ReflectionClass(\WebsiteKernel::class);
-            $dir = $rootDir = dirname($reflectionClass->getFileName());
-            while (!file_exists($dir . '/composer.json')) {
-                if ($dir === dirname($dir)) {
+            $dir = $rootDir = \dirname($reflectionClass->getFileName());
+            while (!\file_exists($dir . '/composer.json')) {
+                if ($dir === \dirname($dir)) {
                     return $this->projectDir = $rootDir;
                 }
-                $dir = dirname($dir);
+                $dir = \dirname($dir);
             }
             $this->projectDir = $dir;
         }
@@ -91,7 +91,7 @@ class PreviewKernel extends \WebsiteKernel
 
     public function getKernelParameters()
     {
-        return array_merge(
+        return \array_merge(
             parent::getKernelParameters(),
             ['sulu.preview' => true]
         );

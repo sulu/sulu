@@ -62,7 +62,7 @@ class LocationContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->phpcrNode->expects($this->once())
             ->method('getPropertyValueWithDefault')
             ->with('foobar', '{}')
-            ->will($this->returnValue(json_encode($data)));
+            ->will($this->returnValue(\json_encode($data)));
 
         $this->suluProperty->expects($this->once())
             ->method('getName')
@@ -92,7 +92,7 @@ class LocationContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $this->phpcrNode->expects($this->once())
             ->method('setProperty')
-            ->with('myname', json_encode($data));
+            ->with('myname', \json_encode($data));
 
         $this->locationContent->write(
             $this->phpcrNode,

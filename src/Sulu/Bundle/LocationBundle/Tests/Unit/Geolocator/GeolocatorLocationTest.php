@@ -38,7 +38,7 @@ class GeolocatorLocationTest extends \PHPUnit_Framework_TestCase
         ];
 
         foreach ($data as $propName => $value) {
-            $this->location->{'set' . ucfirst($propName)}($value);
+            $this->location->{'set' . \ucfirst($propName)}($value);
         }
 
         $res = $this->location->toArray();

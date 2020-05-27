@@ -78,7 +78,7 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
 
     public function testAdmins()
     {
-        $this->assertEquals(2, count($this->adminPool->getAdmins()));
+        $this->assertEquals(2, \count($this->adminPool->getAdmins()));
         $this->assertSame($this->admin1->reveal(), $this->adminPool->getAdmins()[0]);
         $this->assertSame($this->admin2->reveal(), $this->adminPool->getAdmins()[1]);
     }

@@ -244,8 +244,8 @@ class WebspaceImportTest extends SuluTestCase
         try {
             $fs->copy(__DIR__ . $this->distPath, __DIR__ . $this->path);
 
-            $distContent = file_get_contents(__DIR__ . $this->path, true);
-            $newContent = str_replace([
+            $distContent = \file_get_contents(__DIR__ . $this->path, true);
+            $newContent = \str_replace([
                 '%uuid_page_0%',
                 '%uuid_page_1%',
             ], [
@@ -253,7 +253,7 @@ class WebspaceImportTest extends SuluTestCase
                 $this->pages[1]->getUuid(),
             ], $distContent);
 
-            file_put_contents(__DIR__ . $this->path, $newContent);
+            \file_put_contents(__DIR__ . $this->path, $newContent);
         } catch (IOExceptionInterface $e) {
             echo 'An error occurred while creating your directory at ' . $e->getPath();
         }
@@ -261,8 +261,8 @@ class WebspaceImportTest extends SuluTestCase
         try {
             $fs->copy(__DIR__ . $this->distPathRU, __DIR__ . $this->pathRU);
 
-            $distContent = file_get_contents(__DIR__ . $this->pathRU, true);
-            $newContent = str_replace([
+            $distContent = \file_get_contents(__DIR__ . $this->pathRU, true);
+            $newContent = \str_replace([
                 '%uuid_page_0%',
                 '%uuid_page_1%',
             ], [
@@ -270,7 +270,7 @@ class WebspaceImportTest extends SuluTestCase
                 $this->pages[1]->getUuid(),
             ], $distContent);
 
-            file_put_contents(__DIR__ . $this->pathRU, $newContent);
+            \file_put_contents(__DIR__ . $this->pathRU, $newContent);
         } catch (IOExceptionInterface $e) {
             echo 'An error occurred while creating your directory at ' . $e->getPath();
         }

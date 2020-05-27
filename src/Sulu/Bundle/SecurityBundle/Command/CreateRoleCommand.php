@@ -54,7 +54,7 @@ class CreateRoleCommand extends ContainerAwareCommand
         $role = $repository->findOneByName($name);
 
         if ($role) {
-            $output->writeln(sprintf(
+            $output->writeln(\sprintf(
                 '<error>Role "%s" already exists.</error>',
                 $name
             ));
@@ -75,7 +75,7 @@ class CreateRoleCommand extends ContainerAwareCommand
 
         foreach ($securityContexts['Sulu'] as $section => $contexts) {
             foreach ($contexts as $context => $permissionTypes) {
-                if (is_array($permissionTypes)) {
+                if (\is_array($permissionTypes)) {
                     $securityContextsFlat[] = $context;
                 } else {
                     // FIXME here for BC reasons, because the array used to only contain values without permission types
@@ -96,7 +96,7 @@ class CreateRoleCommand extends ContainerAwareCommand
         $em->flush();
 
         $output->writeln(
-            sprintf(
+            \sprintf(
                 'Created role "<comment>%s</comment>" in system "<comment>%s</comment>".',
                 $role->getName(),
                 $role->getSystem()
@@ -114,7 +114,7 @@ class CreateRoleCommand extends ContainerAwareCommand
 
         $pool = $this->getContainer()->get('sulu_admin.admin_pool');
         $contexts = $pool->getSecurityContexts();
-        $systems = array_keys($contexts);
+        $systems = \array_keys($contexts);
 
         if (!$input->getArgument('name')) {
             $question = new Question('Please choose a rolename: ');
@@ -125,8 +125,8 @@ class CreateRoleCommand extends ContainerAwareCommand
                     }
 
                     $roles = $this->getContainer()->get('sulu.repository.role')->findBy(['name' => $name]);
-                    if (count($roles) > 0) {
-                        throw new \InvalidArgumentException(sprintf('Rolename "%s" is not unique', $name));
+                    if (\count($roles) > 0) {
+                        throw new \InvalidArgumentException(\sprintf('Rolename "%s" is not unique', $name));
                     }
 
                     return $name;

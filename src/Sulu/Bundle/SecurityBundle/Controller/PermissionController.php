@@ -103,7 +103,7 @@ class PermissionController implements ClassResourceInterface
                 throw new MissingParameterException(static::class, 'class');
             }
 
-            if (!is_array($permissions)) {
+            if (!\is_array($permissions)) {
                 throw new RestException('The "permissions" must be passed as an array');
             }
 
@@ -113,7 +113,7 @@ class PermissionController implements ClassResourceInterface
 
             // transfer all permission strings to booleans
             foreach ($permissions as &$permission) {
-                array_walk($permission, function(&$permissionLine) {
+                \array_walk($permission, function(&$permissionLine) {
                     $permissionLine = 'true' === $permissionLine || true === $permissionLine;
                 });
             }

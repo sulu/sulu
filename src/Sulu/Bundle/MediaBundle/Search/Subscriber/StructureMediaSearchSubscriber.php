@@ -117,7 +117,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
         } else {
             if (!isset($data['ids'])) {
                 throw new \RuntimeException(
-                    sprintf('Was expecting media value to contain array key "ids", got: "%s"', print_r($data, true))
+                    \sprintf('Was expecting media value to contain array key "ids", got: "%s"', \print_r($data, true))
                 );
             }
 
@@ -131,7 +131,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $media = current($medias);
+        $media = \current($medias);
 
         if (!$media) {
             return;
@@ -141,7 +141,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
 
         if (!isset($formats[$this->searchImageFormat])) {
             throw new \InvalidArgumentException(
-                sprintf('Search image format "%s" is not known', $this->searchImageFormat)
+                \sprintf('Search image format "%s" is not known', $this->searchImageFormat)
             );
         }
 

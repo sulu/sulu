@@ -26,7 +26,7 @@ class TokenNotFoundException extends PreviewException
      */
     public function __construct($token)
     {
-        parent::__construct(sprintf('Token "%s" not found', $token));
+        parent::__construct(\sprintf('Token "%s" not found', $token));
 
         $this->token = $token;
     }

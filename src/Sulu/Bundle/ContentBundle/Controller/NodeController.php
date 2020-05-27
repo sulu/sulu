@@ -144,7 +144,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      */
     private function getContent(Request $request, $uuid)
     {
-        $properties = array_filter(explode(',', $request->get('fields', '')));
+        $properties = \array_filter(\explode(',', $request->get('fields', '')));
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
         $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
         $webspaceNodes = $this->getRequestParameter($request, 'webspace-nodes');
@@ -198,8 +198,8 @@ class NodeController extends RestController implements ClassResourceInterface, S
         MappingInterface $mapping,
         UserInterface $user
     ) {
-        if (!in_array($webspaceNodes, [static::WEBSPACE_NODE_SINGLE, static::WEBSPACE_NODES_ALL, null])) {
-            throw new ParameterDataTypeException(get_class($this), 'webspace-nodes');
+        if (!\in_array($webspaceNodes, [static::WEBSPACE_NODE_SINGLE, static::WEBSPACE_NODES_ALL, null])) {
+            throw new ParameterDataTypeException(\get_class($this), 'webspace-nodes');
         }
 
         try {
@@ -336,7 +336,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $webspace = $this->getWebspace($request, false);
 
         $result = $this->getRepository()->getNodesByIds(
-            preg_split('/[,]/', $idString, -1, \PREG_SPLIT_NO_EMPTY),
+            \preg_split('/[,]/', $idString, -1, \PREG_SPLIT_NO_EMPTY),
             $webspace,
             $language
         );
@@ -400,7 +400,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
         $parentUuid = $request->get('parent');
         $depth = $request->get('depth', 1);
-        $depth = intval($depth);
+        $depth = \intval($depth);
         $flat = $request->get('flat', 'true');
         $flat = ('true' === $flat);
 
@@ -430,7 +430,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
     private function cgetContent(Request $request)
     {
         $parent = $request->get('parent');
-        $properties = array_filter(explode(',', $request->get('fields', '')));
+        $properties = \array_filter(\explode(',', $request->get('fields', '')));
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
         $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
         $webspaceNodes = $this->getRequestParameter($request, 'webspace-nodes');
@@ -438,11 +438,11 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $webspaceKey = $this->getRequestParameter($request, 'webspace', false);
 
         if (!$webspaceKey && !$webspaceNodes) {
-            throw new MissingParameterChoiceException(get_class($this), ['webspace', 'webspace-nodes']);
+            throw new MissingParameterChoiceException(\get_class($this), ['webspace', 'webspace-nodes']);
         }
 
-        if (!in_array($webspaceNodes, [self::WEBSPACE_NODE_SINGLE, static::WEBSPACE_NODES_ALL, null])) {
-            throw new ParameterDataTypeException(get_class($this), 'webspace-nodes');
+        if (!\in_array($webspaceNodes, [self::WEBSPACE_NODE_SINGLE, static::WEBSPACE_NODES_ALL, null])) {
+            throw new ParameterDataTypeException(\get_class($this), 'webspace-nodes');
         }
 
         $contentRepository = $this->get('sulu_content.content_repository');
@@ -505,7 +505,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $tagManager = $this->get('sulu_tag.tag_manager');
 
         if (isset($tagNames)) {
-            $tags = explode(',', $tagNames);
+            $tags = \explode(',', $tagNames);
             foreach ($tags as $tag) {
                 $resolvedTag = $tagManager->findByName($tag);
                 if ($resolvedTag) {
@@ -517,7 +517,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         // get sort columns
         $sortColumns = [];
         if (isset($sortBy)) {
-            $columns = explode(',', $sortBy);
+            $columns = \explode(',', $sortBy);
             foreach ($columns as $column) {
                 if ($column) {
                     $sortColumns[] = $column;
@@ -576,7 +576,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
             ]
         );
 
-        $formType = $this->getMetadataFactory()->getMetadataForClass(get_class($document))->getFormType();
+        $formType = $this->getMetadataFactory()->getMetadataForClass(\get_class($document))->getFormType();
 
         $this->get('sulu_hash.request_hash_checker')->checkHash($request, $document, $document->getUuid());
 
@@ -637,14 +637,14 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $force = $this->getBooleanRequestParameter($request, 'force', false, false);
 
         if (!$force) {
-            $references = array_filter(
+            $references = \array_filter(
                 $this->getRepository()->getReferences($uuid),
                 function(PropertyInterface $reference) {
                     return $reference->getParent()->isNodeType('sulu:page');
                 }
             );
 
-            if (count($references) > 0) {
+            if (\count($references) > 0) {
                 $data = [
                     'structures' => [],
                     'other' => [],
@@ -735,7 +735,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
                     $webspace = $this->getWebspace($request);
 
                     // call repository method
-                    $data = $repository->copyLocale($uuid, $userId, $webspace, $language, explode(',', $destLocale));
+                    $data = $repository->copyLocale($uuid, $userId, $webspace, $language, \explode(',', $destLocale));
                     break;
                 case 'unpublish':
                     $document = $this->getDocumentManager()->find($uuid, $language);
@@ -900,7 +900,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         UserInterface $user
     ) {
         $webspaceKey = null;
-        if ($firstContent = reset($contents)) {
+        if ($firstContent = \reset($contents)) {
             $webspaceKey = $firstContent->getWebspaceKey();
         }
 
@@ -951,7 +951,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         );
         $form->submit($data, false);
 
-        if (array_key_exists('author', $data) && null === $data['author']) {
+        if (\array_key_exists('author', $data) && null === $data['author']) {
             $document->setAuthor(null);
         }
 

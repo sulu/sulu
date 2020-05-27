@@ -239,7 +239,7 @@ class NodeRepository implements NodeRepositoryInterface
         $session = $this->sessionManager->getSession();
         $node = $session->getNodeByIdentifier($uuid);
 
-        return iterator_to_array($node->getReferences());
+        return \iterator_to_array($node->getReferences());
     }
 
     public function getNodes(
@@ -271,7 +271,7 @@ class NodeRepository implements NodeRepositoryInterface
             $excludeGhosts,
             $flat ? 1 : $depth
         );
-        $result['total'] = count($result['_embedded']['nodes']);
+        $result['total'] = \count($result['_embedded']['nodes']);
 
         return $result;
     }
@@ -297,14 +297,14 @@ class NodeRepository implements NodeRepositoryInterface
             );
 
             $result = $container->getData();
-            $idString = implode(',', $ids);
+            $idString = \implode(',', $ids);
         }
 
         return [
             '_embedded' => [
                 'nodes' => $result,
             ],
-            'total' => count($result),
+            'total' => \count($result),
             '_links' => [
                 'self' => ['href' => $this->apiBasePath . '?ids=' . $idString],
             ],
@@ -436,7 +436,7 @@ class NodeRepository implements NodeRepositoryInterface
             $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, false);
 
             $result['_embedded']['nodes'] = $data;
-            $result['total'] = count($result['_embedded']['nodes']);
+            $result['total'] = \count($result['_embedded']['nodes']);
         } else {
             $result = $data;
         }
@@ -562,7 +562,7 @@ class NodeRepository implements NodeRepositoryInterface
             $excludeGhosts,
             $excludeShadows
         );
-        $descendants = array_reverse($descendants);
+        $descendants = \array_reverse($descendants);
 
         $childTiers = [];
         foreach ($descendants as $descendant) {
@@ -590,7 +590,7 @@ class NodeRepository implements NodeRepositoryInterface
                 );
             }
         }
-        $result = array_shift($childTiers);
+        $result = \array_shift($childTiers);
 
         $this->iterateTiers($childTiers, $result);
 
@@ -605,12 +605,12 @@ class NodeRepository implements NodeRepositoryInterface
      */
     private function iterateTiers($tiers, &$result)
     {
-        reset($tiers);
-        $uuid = key($tiers);
-        $tier = array_shift($tiers);
+        \reset($tiers);
+        $uuid = \key($tiers);
+        $tier = \array_shift($tiers);
 
         $found = false;
-        if (is_array($result)) {
+        if (\is_array($result)) {
             foreach ($result as &$node) {
                 if ($node['id'] === $uuid) {
                     $node['_embedded']['nodes'] = $tier;
@@ -626,7 +626,7 @@ class NodeRepository implements NodeRepositoryInterface
 
         if (!$found) {
             throw new \RuntimeException(
-                sprintf(
+                \sprintf(
                     'Could not find target node in with UUID "%s" in tier. This should not happen.',
                     $uuid
                 )

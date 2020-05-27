@@ -31,7 +31,7 @@ class CustomUrlSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $events = $subscriber->getSubscribedEvents();
 
-        $reflection = new \ReflectionClass(get_class($subscriber));
+        $reflection = new \ReflectionClass(\get_class($subscriber));
 
         foreach ($events as $event) {
             $this->assertTrue($reflection->hasMethod($event['method']));

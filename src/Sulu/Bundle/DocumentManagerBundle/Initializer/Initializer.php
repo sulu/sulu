@@ -53,10 +53,10 @@ class Initializer
     {
         $output = $output ?: new NullOutput();
 
-        arsort($this->initializerMap);
+        \arsort($this->initializerMap);
 
-        foreach (array_keys($this->initializerMap) as $initializerId) {
-            $output->writeln(sprintf('<comment>%s</>', $initializerId));
+        foreach (\array_keys($this->initializerMap) as $initializerId) {
+            $output->writeln(\sprintf('<comment>%s</>', $initializerId));
             $initializer = $this->container->get($initializerId);
             $initializer->initialize($output, $purge);
         }

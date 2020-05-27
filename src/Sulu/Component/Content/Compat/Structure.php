@@ -269,7 +269,7 @@ abstract class Structure implements StructureInterface
     protected function addPropertyTags(PropertyInterface $property)
     {
         foreach ($property->getTags() as $tag) {
-            if (!array_key_exists($tag->getName(), $this->tags)) {
+            if (!\array_key_exists($tag->getName(), $this->tags)) {
                 $this->tags[$tag->getName()] = [
                     'tag' => $tag,
                     'properties' => [$tag->getPriority() => $property],
@@ -472,7 +472,7 @@ abstract class Structure implements StructureInterface
      */
     public function getPropertyByTagName($tagName, $highest = true)
     {
-        if (array_key_exists($tagName, $this->tags)) {
+        if (\array_key_exists($tagName, $this->tags)) {
             return $this->tags[$tagName][true === $highest ? 'highest' : 'lowest'];
         } else {
             throw new NoSuchPropertyException($tagName);
@@ -490,7 +490,7 @@ abstract class Structure implements StructureInterface
      */
     public function getPropertiesByTagName($tagName)
     {
-        if (array_key_exists($tagName, $this->tags)) {
+        if (\array_key_exists($tagName, $this->tags)) {
             return $this->tags[$tagName]['properties'];
         } else {
             throw new NoSuchPropertyException($tagName);
@@ -680,7 +680,7 @@ abstract class Structure implements StructureInterface
             $result = [];
             foreach ($this->properties as $property) {
                 if ($property instanceof SectionPropertyInterface) {
-                    $result = array_merge($result, $property->getChildProperties());
+                    $result = \array_merge($result, $property->getChildProperties());
                 } else {
                     $result[] = $property;
                 }
@@ -697,7 +697,7 @@ abstract class Structure implements StructureInterface
      */
     public function getPropertyNames()
     {
-        return array_keys($this->properties);
+        return \array_keys($this->properties);
     }
 
     /**
@@ -765,12 +765,12 @@ abstract class Structure implements StructureInterface
 
     public function hasTag($tag)
     {
-        return array_key_exists($tag, $this->tags);
+        return \array_key_exists($tag, $this->tags);
     }
 
     public function getLocalizedTitle($languageCode)
     {
-        $default = ucfirst($this->key);
+        $default = \ucfirst($this->key);
         if ($this->metaData) {
             return $this->metaData->get('title', $languageCode, $default);
         } else {
@@ -787,8 +787,8 @@ abstract class Structure implements StructureInterface
      */
     public function __get($property)
     {
-        if (method_exists($this, 'get' . ucfirst($property))) {
-            return $this->{'get' . ucfirst($property)}();
+        if (\method_exists($this, 'get' . \ucfirst($property))) {
+            return $this->{'get' . \ucfirst($property)}();
         } else {
             return $this->getProperty($property)->getValue();
         }
@@ -946,7 +946,7 @@ abstract class Structure implements StructureInterface
      */
     public function getConcreteLanguages()
     {
-        return array_values($this->concreteLanguages);
+        return \array_values($this->concreteLanguages);
     }
 
     /**
@@ -990,7 +990,7 @@ abstract class Structure implements StructureInterface
     public function getStructureTag($name)
     {
         if (!isset($this->structureTags[$name])) {
-            throw new \InvalidArgumentException(sprintf('Trying to get undefined structure StructureTag "%s"', $name));
+            throw new \InvalidArgumentException(\sprintf('Trying to get undefined structure StructureTag "%s"', $name));
         }
 
         return $this->structureTags[$name];

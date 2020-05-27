@@ -16,7 +16,7 @@ class AppKernel extends SuluTestKernel
 {
     public function registerBundles()
     {
-        return array_merge(
+        return \array_merge(
             parent::registerBundles(),
             [
                 new \Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),

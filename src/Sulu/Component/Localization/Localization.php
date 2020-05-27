@@ -38,16 +38,16 @@ class Localization implements \JsonSerializable, ArrayableInterface
     public static function createFromString($locale, $format = self::UNDERSCORE)
     {
         $delimiter = '-';
-        if (in_array($format, [self::UNDERSCORE, self::LCID])) {
+        if (\in_array($format, [self::UNDERSCORE, self::LCID])) {
             $delimiter = '_';
         }
 
-        $parts = explode($delimiter, $locale);
+        $parts = \explode($delimiter, $locale);
 
         $localization = new self();
-        $localization->setLanguage(strtolower($parts[0]));
-        if (count($parts) > 1) {
-            $localization->setCountry(strtolower($parts[1]));
+        $localization->setLanguage(\strtolower($parts[0]));
+        if (\count($parts) > 1) {
+            $localization->setCountry(\strtolower($parts[1]));
         }
 
         return $localization;
@@ -211,7 +211,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      */
     public function getLocalization($delimiter = '_')
     {
-        @trigger_error(__METHOD__ . '() is deprecated since version 1.2 and will be removed in 2.0. Use getLocale() instead.', \E_USER_DEPRECATED);
+        @\trigger_error(__METHOD__ . '() is deprecated since version 1.2 and will be removed in 2.0. Use getLocale() instead.', \E_USER_DEPRECATED);
 
         $localization = $this->getLanguage();
         if (null != $this->getCountry()) {
@@ -231,10 +231,10 @@ class Localization implements \JsonSerializable, ArrayableInterface
      */
     public function getLocale($format = self::UNDERSCORE)
     {
-        $localization = strtolower($this->getLanguage());
+        $localization = \strtolower($this->getLanguage());
 
         if (null != $this->getCountry()) {
-            $country = strtolower($this->getCountry());
+            $country = \strtolower($this->getCountry());
             $delimiter = '-';
 
             switch ($format) {
@@ -242,11 +242,11 @@ class Localization implements \JsonSerializable, ArrayableInterface
                     $delimiter = '_';
                     break;
                 case self::ISO6391:
-                    $country = strtoupper($country);
+                    $country = \strtoupper($country);
                     break;
                 case self::LCID:
                     $delimiter = '_';
-                    $country = strtoupper($country);
+                    $country = \strtoupper($country);
                     break;
             }
 
@@ -348,10 +348,10 @@ class Localization implements \JsonSerializable, ArrayableInterface
     public function getAllLocalizations()
     {
         $localizations = [];
-        if (null !== $this->getChildren() && count($this->getChildren()) > 0) {
+        if (null !== $this->getChildren() && \count($this->getChildren()) > 0) {
             foreach ($this->getChildren() as $child) {
                 $localizations[] = $child;
-                $localizations = array_merge($localizations, $child->getAllLocalizations());
+                $localizations = \array_merge($localizations, $child->getAllLocalizations());
             }
         }
 

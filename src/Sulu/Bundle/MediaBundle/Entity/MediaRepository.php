@@ -129,7 +129,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             ) = $this->extractFilterVars($filter);
 
         // if empty array of ids is requested return empty array of medias
-        if (null !== $ids && 0 === count($ids)) {
+        if (null !== $ids && 0 === \count($ids)) {
             return [];
         }
 
@@ -230,7 +230,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         );
         $result = $query->getSingleResult()[1];
 
-        return intval($result);
+        return \intval($result);
     }
 
     /**
@@ -240,13 +240,13 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      */
     private function extractFilterVars(array $filter)
     {
-        $collection = array_key_exists('collection', $filter) ? $filter['collection'] : null;
-        $systemCollections = array_key_exists('systemCollections', $filter) ? $filter['systemCollections'] : true;
-        $types = array_key_exists('types', $filter) ? $filter['types'] : null;
-        $search = array_key_exists('search', $filter) ? $filter['search'] : null;
-        $orderBy = array_key_exists('orderBy', $filter) ? $filter['orderBy'] : null;
-        $orderSort = array_key_exists('orderSort', $filter) ? $filter['orderSort'] : null;
-        $ids = array_key_exists('ids', $filter) ? $filter['ids'] : null;
+        $collection = \array_key_exists('collection', $filter) ? $filter['collection'] : null;
+        $systemCollections = \array_key_exists('systemCollections', $filter) ? $filter['systemCollections'] : true;
+        $types = \array_key_exists('types', $filter) ? $filter['types'] : null;
+        $search = \array_key_exists('search', $filter) ? $filter['search'] : null;
+        $orderBy = \array_key_exists('orderBy', $filter) ? $filter['orderBy'] : null;
+        $orderSort = \array_key_exists('orderSort', $filter) ? $filter['orderSort'] : null;
+        $ids = \array_key_exists('ids', $filter) ? $filter['ids'] : null;
 
         return [$collection, $systemCollections, $types, $search, $orderBy, $orderSort, $ids];
     }
@@ -274,7 +274,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             ->setParameter('collectionId', $collectionId);
         $result = $queryBuilder->getQuery()->getResult();
 
-        if (count($result) > 0) {
+        if (\count($result) > 0) {
             return $result[0];
         }
 
@@ -350,7 +350,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         if (!$systemCollections) {
             $queryBuilder->leftJoin('collection.type', 'collectionType');
             $queryBuilder->andWhere(
-                sprintf('collectionType.key != \'%s\'', SystemCollectionManagerInterface::COLLECTION_TYPE)
+                \sprintf('collectionType.key != \'%s\'', SystemCollectionManagerInterface::COLLECTION_TYPE)
             );
         }
 

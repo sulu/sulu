@@ -30,7 +30,7 @@ class TeaserManager implements TeaserManagerInterface
 
     public function find(array $items, $locale)
     {
-        if (0 === count($items)) {
+        if (0 === \count($items)) {
             return [];
         }
 
@@ -41,9 +41,9 @@ class TeaserManager implements TeaserManagerInterface
             $result = $this->sortTeasers($teasers, $result, $positions, $items);
         }
 
-        ksort($result);
+        \ksort($result);
 
-        return array_values($result);
+        return \array_values($result);
     }
 
     /**
@@ -56,11 +56,11 @@ class TeaserManager implements TeaserManagerInterface
     private function sortTeasers(array $teasers, array $result, array $positions, array $items)
     {
         foreach ($teasers as $teaser) {
-            $index = $positions[sprintf('%s;%s', $teaser->getType(), $teaser->getId())];
+            $index = $positions[\sprintf('%s;%s', $teaser->getType(), $teaser->getId())];
             $result[$index] = $teaser;
 
             $item = $items[$index];
-            if (['type', 'id'] !== array_keys($item)) {
+            if (['type', 'id'] !== \array_keys($item)) {
                 $result[$index] = $result[$index]->merge($item);
             }
         }
@@ -81,11 +81,11 @@ class TeaserManager implements TeaserManagerInterface
         $positions = [];
         $index = 0;
         foreach ($items as $item) {
-            if (!array_key_exists($item['type'], $ids)) {
+            if (!\array_key_exists($item['type'], $ids)) {
                 $ids[$item['type']] = [];
             }
             $ids[$item['type']][] = $item['id'];
-            $positions[sprintf('%s;%s', $item['type'], $item['id'])] = $index++;
+            $positions[\sprintf('%s;%s', $item['type'], $item['id'])] = $index++;
         }
 
         return [$ids, $positions];

@@ -216,17 +216,17 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             // no pagination
             [['dataSource' => 'root'], null, 0, null, $this->mediaData],
             // page 1, no limit
-            [['dataSource' => 'root'], 1, 3, null, array_slice($this->mediaData, 0, 4)],
+            [['dataSource' => 'root'], 1, 3, null, \array_slice($this->mediaData, 0, 4)],
             // page 2, no limit
-            [['dataSource' => 'root'], 2, 3, null, array_slice($this->mediaData, 3, 4)],
+            [['dataSource' => 'root'], 2, 3, null, \array_slice($this->mediaData, 3, 4)],
             // page 3, no limit
-            [['dataSource' => 'root'], 3, 3, null, array_slice($this->mediaData, 6, 2)],
+            [['dataSource' => 'root'], 3, 3, null, \array_slice($this->mediaData, 6, 2)],
             // no pagination, limit 3
-            [['dataSource' => 'root'], null, 0, 3, array_slice($this->mediaData, 0, 3)],
+            [['dataSource' => 'root'], null, 0, 3, \array_slice($this->mediaData, 0, 3)],
             // page 1, limit 5
-            [['dataSource' => 'root'], 1, 3, 5, array_slice($this->mediaData, 0, 4)],
+            [['dataSource' => 'root'], 1, 3, 5, \array_slice($this->mediaData, 0, 4)],
             // page 2, limit 5
-            [['dataSource' => 'root'], 2, 3, 5, array_slice($this->mediaData, 3, 2)],
+            [['dataSource' => 'root'], 2, 3, 5, \array_slice($this->mediaData, 3, 2)],
             // page 3, limit 5
             [['dataSource' => 'root'], 3, 3, 5, []],
             // no pagination, tag 0
@@ -235,7 +235,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->mediaData, 0, 7),
+                \array_slice($this->mediaData, 0, 7),
                 [0],
             ],
             // no pagination, tag 0 or 1
@@ -244,7 +244,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->mediaData, 0, 7),
+                \array_slice($this->mediaData, 0, 7),
             ],
             // no pagination, tag 0 and 1
             [
@@ -252,7 +252,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->mediaData, 0, 4),
+                \array_slice($this->mediaData, 0, 4),
                 [0, 1],
             ],
             // no pagination, tag 0 and 3
@@ -270,7 +270,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 1,
                 3,
                 null,
-                array_slice($this->mediaData, 0, 4),
+                \array_slice($this->mediaData, 0, 4),
                 [0],
             ],
             // page 2, no limit, tag 0
@@ -279,7 +279,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 2,
                 3,
                 null,
-                array_slice($this->mediaData, 3, 4),
+                \array_slice($this->mediaData, 3, 4),
                 [0],
             ],
             // page 3, no limit, tag 0
@@ -288,7 +288,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 3,
                 3,
                 null,
-                array_slice($this->mediaData, 6, 1),
+                \array_slice($this->mediaData, 6, 1),
                 [0],
             ],
             // no pagination, website-tag 0
@@ -297,7 +297,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->mediaData, 0, 7),
+                \array_slice($this->mediaData, 0, 7),
                 [0],
             ],
             // no pagination, website-tag 0 or 1
@@ -306,7 +306,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->mediaData, 0, 7),
+                \array_slice($this->mediaData, 0, 7),
             ],
             // no pagination, website-tag 0 and 1
             [
@@ -314,7 +314,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->mediaData, 0, 4),
+                \array_slice($this->mediaData, 0, 4),
                 [0, 1],
             ],
             // no pagination, website-tag 1, tags 3
@@ -374,7 +374,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->mediaData, 0, 4),
+                \array_slice($this->mediaData, 0, 4),
                 [0, 1],
             ],
             // options mimetype
@@ -383,7 +383,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->mediaData, 0, 2),
+                \array_slice($this->mediaData, 0, 2),
                 [],
                 ['mimetype' => 'image/jpg'],
             ],
@@ -393,7 +393,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->mediaData, 5, 2),
+                \array_slice($this->mediaData, 5, 2),
                 [],
                 ['mimetype' => 'application/pdf'],
             ],
@@ -403,7 +403,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->mediaData, 5, 2),
+                \array_slice($this->mediaData, 5, 2),
                 [],
                 ['mimetype' => 'application/pdf'],
             ],
@@ -413,7 +413,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->mediaData, 0, 3),
+                \array_slice($this->mediaData, 0, 3),
                 [],
                 ['type' => 'image'],
             ],
@@ -423,7 +423,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->mediaData, 5, 2),
+                \array_slice($this->mediaData, 5, 2),
                 [],
                 ['type' => 'document'],
             ],
@@ -433,7 +433,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->mediaData, 5, 3),
+                \array_slice($this->mediaData, 5, 3),
                 [],
                 ['mimetype' => 'application/pdf', 'type' => 'document'],
             ],
@@ -443,7 +443,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->mediaData, 0, 1),
+                \array_slice($this->mediaData, 0, 1),
                 [],
                 [],
             ],
@@ -453,7 +453,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->mediaData, 0, 1),
+                \array_slice($this->mediaData, 0, 1),
                 [],
                 [],
             ],
@@ -463,7 +463,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->mediaData, 0, 4),
+                \array_slice($this->mediaData, 0, 4),
                 [],
                 [],
             ],
@@ -473,7 +473,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->mediaData, 0, 4),
+                \array_slice($this->mediaData, 0, 4),
                 [],
                 [],
             ],
@@ -483,7 +483,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->mediaData, 4, 3),
+                \array_slice($this->mediaData, 4, 3),
                 [],
                 [],
             ],
@@ -509,7 +509,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 1,
                 null,
                 null,
-                array_reverse($this->mediaData),
+                \array_reverse($this->mediaData),
             ],
         ];
     }
@@ -543,13 +543,13 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         $repository = $this->getContainer()->get('sulu_media.smart_content.data_provider.media.repository');
 
         // if data-source isset replace the index with the id
-        if (array_key_exists('dataSource', $filters) && 'root' !== $filters['dataSource']) {
+        if (\array_key_exists('dataSource', $filters) && 'root' !== $filters['dataSource']) {
             $filters['dataSource'] = $this->collections[$filters['dataSource']]->getId();
         }
 
         // if tags isset replace the array indexes with database id
-        if (array_key_exists('tags', $filters)) {
-            $filters['tags'] = array_map(
+        if (\array_key_exists('tags', $filters)) {
+            $filters['tags'] = \array_map(
                 function($tag) {
                     return $this->tags[$tag]->getId();
                 },
@@ -558,8 +558,8 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         }
 
         // if tags isset replace the array indexes with database id
-        if (array_key_exists('websiteTags', $filters)) {
-            $filters['websiteTags'] = array_map(
+        if (\array_key_exists('websiteTags', $filters)) {
+            $filters['websiteTags'] = \array_map(
                 function($tag) {
                     return $this->tags[$tag]->getId();
                 },
@@ -569,7 +569,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
 
         $result = $repository->findByFilters($filters, $page, $pageSize, $limit, 'de', $options);
 
-        $length = count($expected);
+        $length = \count($expected);
         $this->assertCount($length, $result);
 
         for ($i = 0; $i < $length; ++$i) {
@@ -625,11 +625,11 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             ->get('sulu_media.smart_content.data_provider.media.repository')
             ->findByFilters($filters, 1, 100, 100, 'de');
 
-        $mediaIds = array_map(function(MediaApi $media) {
+        $mediaIds = \array_map(function(MediaApi $media) {
             return $media->getId();
         }, $mediaResults);
 
-        $expectedMediaIds = array_map(function($expectedIndex) use ($medias) {
+        $expectedMediaIds = \array_map(function($expectedIndex) use ($medias) {
             return $medias[$expectedIndex]->getId();
         }, $expectedIndexes);
 

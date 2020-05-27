@@ -222,7 +222,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
         $response->headers->setCookie(
             new Cookie(
                 $this->visitorSessionCookie,
-                time()
+                \time()
             )
         );
     }
@@ -236,7 +236,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
         $response = $event->getResponse();
 
         if ($this->preview
-            || 0 !== strpos($response->headers->get('Content-Type'), 'text/html')
+            || 0 !== \strpos($response->headers->get('Content-Type'), 'text/html')
             || Request::METHOD_GET !== $request->getMethod()
         ) {
             return;
@@ -250,7 +250,7 @@ class TargetGroupSubscriber implements EventSubscriberInterface
             'uuid' => $request->attributes->has('structure') ? $request->attributes->get('structure')->getUuid() : null,
         ]);
 
-        $response->setContent(str_replace(
+        $response->setContent(\str_replace(
             '</body>',
             $script . '</body>',
             $response->getContent()

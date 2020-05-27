@@ -25,7 +25,7 @@ class ResourceLocatorNotValidException extends Exception
 
     public function __construct($resourceLocator)
     {
-        parent::__construct(sprintf("ResourceLocator '%s' is not valid", $resourceLocator));
+        parent::__construct(\sprintf("ResourceLocator '%s' is not valid", $resourceLocator));
 
         $this->resourceLocator = $resourceLocator;
     }

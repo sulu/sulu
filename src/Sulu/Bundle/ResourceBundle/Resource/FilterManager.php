@@ -216,7 +216,7 @@ class FilterManager implements FilterManagerInterface
         $filter->setChanger($user);
         $filter->setName($this->getProperty($data, 'name', $filter->getName()));
 
-        if (array_key_exists('context', $data)) {
+        if (\array_key_exists('context', $data)) {
             if ($this->hasContext($data['context'])) {
                 $filter->setContext($data['context']);
             } else {
@@ -224,7 +224,7 @@ class FilterManager implements FilterManagerInterface
             }
         }
 
-        if (array_key_exists('private', $data) && true === $data['private']) {
+        if (\array_key_exists('private', $data) && true === $data['private']) {
             $filter->setPrivate($data['private']);
             $filter->setUser($user);
         } else {
@@ -283,10 +283,10 @@ class FilterManager implements FilterManagerInterface
      */
     protected function updateConditionGroup(ConditionGroupEntity $conditionGroup, $matchedEntry)
     {
-        if (array_key_exists('id', $matchedEntry) && isset($matchedEntry['conditions'])) {
+        if (\array_key_exists('id', $matchedEntry) && isset($matchedEntry['conditions'])) {
             $conditionIds = [];
             foreach ($matchedEntry['conditions'] as $conditionData) {
-                if (array_key_exists('id', $conditionData)) {
+                if (\array_key_exists('id', $conditionData)) {
                     /** @var ConditionEntity $conditionEntity */
                     $conditionEntity = $this->conditionRepository->findById($conditionData['id']);
 
@@ -342,7 +342,7 @@ class FilterManager implements FilterManagerInterface
     protected function getValueForCondition($value, $type)
     {
         // check if date and not a relative value like -1 week
-        if (DataTypes::DATETIME_TYPE === $type && !preg_match('/[A-Za-z]{3,}/', $value)) {
+        if (DataTypes::DATETIME_TYPE === $type && !\preg_match('/[A-Za-z]{3,}/', $value)) {
             return (new \DateTime($value))->format(\DateTime::ISO8601);
         }
 
@@ -362,14 +362,14 @@ class FilterManager implements FilterManagerInterface
      */
     protected function addConditionGroup(Filter $filter, $conditionGroupData)
     {
-        if (array_key_exists('id', $conditionGroupData)) {
+        if (\array_key_exists('id', $conditionGroupData)) {
             throw new EntityIdAlreadySetException(self::$conditionGroupEntityName, $conditionGroupData['id']);
-        } elseif (array_key_exists('conditions', $conditionGroupData)) {
+        } elseif (\array_key_exists('conditions', $conditionGroupData)) {
             $conditionGroup = new ConditionGroupEntity();
             $conditionGroup->setFilter($filter->getEntity());
 
             foreach ($conditionGroupData['conditions'] as $conditionData) {
-                if (array_key_exists('id', $conditionData)) {
+                if (\array_key_exists('id', $conditionData)) {
                     throw new EntityIdAlreadySetException(self::$conditionEntityName, $conditionData['id']);
                 } elseif ($this->isValidConditionData($conditionData)) {
                     $condition = new ConditionEntity();
@@ -403,7 +403,7 @@ class FilterManager implements FilterManagerInterface
      */
     protected function getProperty(array $data, $key, $default = null)
     {
-        return array_key_exists($key, $data) ? $data[$key] : $default;
+        return \array_key_exists($key, $data) ? $data[$key] : $default;
     }
 
     /**
@@ -432,7 +432,7 @@ class FilterManager implements FilterManagerInterface
      */
     protected function checkDataSet(array $data, $key, $create)
     {
-        $keyExists = array_key_exists($key, $data);
+        $keyExists = \array_key_exists($key, $data);
         if (($create && !($keyExists && null !== $data[$key])) || (!$keyExists || null === $data[$key])) {
             throw new MissingFilterAttributeException($key);
         }
@@ -451,16 +451,16 @@ class FilterManager implements FilterManagerInterface
      */
     protected function isValidConditionData($data)
     {
-        if (!array_key_exists('field', $data)) {
+        if (!\array_key_exists('field', $data)) {
             throw new MissingConditionAttributeException('field');
         }
-        if (!array_key_exists('operator', $data)) {
+        if (!\array_key_exists('operator', $data)) {
             throw new MissingConditionAttributeException('operator');
         }
-        if (!array_key_exists('type', $data)) {
+        if (!\array_key_exists('type', $data)) {
             throw new MissingConditionAttributeException('type');
         }
-        if (!array_key_exists('value', $data)) {
+        if (!\array_key_exists('value', $data)) {
             throw new MissingConditionAttributeException('value');
         }
 
@@ -486,7 +486,7 @@ class FilterManager implements FilterManagerInterface
      */
     public function getFeaturesForContext($context)
     {
-        if ($this->contextConfiguration && array_key_exists($context, $this->contextConfiguration)) {
+        if ($this->contextConfiguration && \array_key_exists($context, $this->contextConfiguration)) {
             return $this->contextConfiguration[$context]['features'];
         }
 
@@ -504,7 +504,7 @@ class FilterManager implements FilterManagerInterface
         $conditionIds
     ) {
         foreach ($conditionGroup->getConditions() as $condition) {
-            if ($condition->getId() && !in_array($condition->getId(), $conditionIds)) {
+            if ($condition->getId() && !\in_array($condition->getId(), $conditionIds)) {
                 $conditionGroup->removeCondition($condition);
                 $this->em->remove($condition);
             }
@@ -520,7 +520,7 @@ class FilterManager implements FilterManagerInterface
      */
     public function hasContext($context)
     {
-        if ($this->contextConfiguration && array_key_exists($context, $this->contextConfiguration)) {
+        if ($this->contextConfiguration && \array_key_exists($context, $this->contextConfiguration)) {
             return true;
         }
 
@@ -538,7 +538,7 @@ class FilterManager implements FilterManagerInterface
     public function isFeatureEnabled($context, $feature)
     {
         if ($this->hasContext($context) &&
-            false !== array_search($feature, $this->getFeaturesForContext($context))
+            false !== \array_search($feature, $this->getFeaturesForContext($context))
         ) {
             return true;
         }
@@ -559,7 +559,7 @@ class FilterManager implements FilterManagerInterface
     public function findFiltersForUserAndContext($context, $userId, $locale)
     {
         $filters = $this->filterRepository->findByUserAndContextAndLocale($locale, $context, $userId);
-        array_walk(
+        \array_walk(
             $filters,
             function(&$filter) use ($locale) {
                 $filter = new Filter($filter, $locale);

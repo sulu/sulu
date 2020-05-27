@@ -93,9 +93,9 @@ class XmlLegacyLoader implements LoaderInterface
 
         $schemaPath = __DIR__ . static::SCHEME_PATH;
 
-        $cwd = getcwd();
+        $cwd = \getcwd();
         // Necessary only for Windows, no effect on linux. Mute errors for PHP with chdir disabled to avoid E_WARNINGs
-        @chdir(dirname($resource));
+        @\chdir(\dirname($resource));
 
         // read file
         $xmlDocument = XmlUtils::loadFile(
@@ -109,7 +109,7 @@ class XmlLegacyLoader implements LoaderInterface
         );
 
         // Necessary only for Windows, no effect on linux. Mute errors for PHP with chdir disabled to avoid E_WARNINGs
-        @chdir($cwd);
+        @\chdir($cwd);
 
         // generate xpath for file
         $xpath = new \DOMXPath($xmlDocument);
@@ -124,7 +124,7 @@ class XmlLegacyLoader implements LoaderInterface
         // check if required properties are existing
         foreach ($this->requiredPropertyNames as $requiredPropertyName) {
             $requiredPropertyNameFound = false;
-            if (array_key_exists($requiredPropertyName, $result['properties'])) {
+            if (\array_key_exists($requiredPropertyName, $result['properties'])) {
                 $requiredPropertyNameFound = true;
             }
 
@@ -132,7 +132,7 @@ class XmlLegacyLoader implements LoaderInterface
             foreach ($result['properties'] as $property) {
                 if (!$requiredPropertyNameFound
                     && 'section' == $property['type']
-                    && array_key_exists($requiredPropertyName, $property['properties'])
+                    && \array_key_exists($requiredPropertyName, $property['properties'])
                 ) {
                     $requiredPropertyNameFound = true;
                 }
@@ -145,10 +145,10 @@ class XmlLegacyLoader implements LoaderInterface
 
         // FIXME until excerpt-template is no page template anymore
         // - https://github.com/sulu-io/sulu/issues/1220#issuecomment-110704259
-        if (!array_key_exists('internal', $result) || !$result['internal']) {
+        if (!\array_key_exists('internal', $result) || !$result['internal']) {
             if (isset($this->requiredTagNames[$type])) {
                 foreach ($this->requiredTagNames[$type] as $requiredTagName) {
-                    if (!array_key_exists($requiredTagName, $tags)) {
+                    if (!\array_key_exists($requiredTagName, $tags)) {
                         throw new RequiredTagNotFoundException($result['key'], $requiredTagName);
                     }
                 }
@@ -175,7 +175,7 @@ class XmlLegacyLoader implements LoaderInterface
                 'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
             ];
 
-            $result = array_filter(
+            $result = \array_filter(
                 $result,
                 function($value) {
                     return null !== $value;
@@ -186,7 +186,7 @@ class XmlLegacyLoader implements LoaderInterface
                 if (!isset($result[$requiredProperty])) {
                     throw new InvalidXmlException(
                         $type,
-                        sprintf(
+                        \sprintf(
                             'Property "%s" is required in XML template file "%s"',
                             $requiredProperty,
                             $resource
@@ -205,14 +205,14 @@ class XmlLegacyLoader implements LoaderInterface
                 'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
             ];
 
-            $result = array_filter(
+            $result = \array_filter(
                 $result,
                 function($value) {
                     return null !== $value;
                 }
             );
 
-            if (count($result) < 1) {
+            if (\count($result) < 1) {
                 throw new InvalidXmlException($result['key']);
             }
         }
@@ -255,7 +255,7 @@ class XmlLegacyLoader implements LoaderInterface
             ['name', 'type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass']
         );
 
-        if (in_array($result['name'], $this->reservedPropertyNames, false)) {
+        if (\in_array($result['name'], $this->reservedPropertyNames, false)) {
             throw new ReservedPropertyNameException($templateKey, $result['name']);
         }
 
@@ -356,7 +356,7 @@ class XmlLegacyLoader implements LoaderInterface
         $value = $node->nodeValue;
         if (!$this->cacheLifetimeResolver->supports($type, $value)) {
             throw new \InvalidArgumentException(
-                sprintf('CacheLifetime "%s" with type "%s" not supported.', $value, $type)
+                \sprintf('CacheLifetime "%s" with type "%s" not supported.', $value, $type)
             );
         }
 
@@ -387,7 +387,7 @@ class XmlLegacyLoader implements LoaderInterface
             ];
 
             foreach ($node->attributes as $key => $attr) {
-                if (in_array($key, ['name'])) {
+                if (\in_array($key, ['name'])) {
                     $tag[$key] = $attr->value;
                 } else {
                     $tag['attributes'][$key] = $attr->value;
@@ -429,7 +429,7 @@ class XmlLegacyLoader implements LoaderInterface
         ];
 
         foreach ($node->attributes as $key => $attr) {
-            if (in_array($key, ['name', 'priority'])) {
+            if (\in_array($key, ['name', 'priority'])) {
                 $tag[$key] = $attr->value;
             } else {
                 $tag['attributes'][$key] = $attr->value;
@@ -457,7 +457,7 @@ class XmlLegacyLoader implements LoaderInterface
             $area = [];
 
             foreach ($node->attributes as $key => $attr) {
-                if (in_array($key, ['key'])) {
+                if (\in_array($key, ['key'])) {
                     $area[$key] = $attr->value;
                 } else {
                     $area['attributes'][$key] = $attr->value;

@@ -50,9 +50,9 @@ class ValidatePagesCommand extends ContainerAwareCommand
             $select .= '[i18n:' . $localization->getLocale() . '-template] as ' . $localization->getLocale() . ',';
             $headers[] = $localization->getLocale();
         }
-        $select = rtrim($select, ',');
+        $select = \rtrim($select, ',');
 
-        $sql2 = sprintf(
+        $sql2 = \sprintf(
             "SELECT %s FROM [nt:unstructured] as page WHERE page.[jcr:mixinTypes] = 'sulu:page' AND (isdescendantnode(page, '/cmf/%s/contents') OR issamenode(page, '/cmf/%s/contents'))",
             $select,
             $webspaceKey,
@@ -73,7 +73,7 @@ class ValidatePagesCommand extends ContainerAwareCommand
         $query = $queryManager->createQuery($sql2, 'JCR-SQL2');
         $queryResult = $query->execute();
 
-        $completeHeader = array_merge(['invalid', 'path'], $headers, ['description']);
+        $completeHeader = \array_merge(['invalid', 'path'], $headers, ['description']);
 
         $table = new Table($output);
         $table->setHeaders($completeHeader);
@@ -90,14 +90,14 @@ class ValidatePagesCommand extends ContainerAwareCommand
             foreach ($headers as $header) {
                 $template = $row->getValue($header);
                 $tableRow[] = $template;
-                if ('' !== $template && !in_array($template, $structures)) {
+                if ('' !== $template && !\in_array($template, $structures)) {
                     $tableRow[0] = 'X';
-                    $descriptions[] = sprintf('Language "%s" contains a not existing xml-template', $header);
+                    $descriptions[] = \sprintf('Language "%s" contains a not existing xml-template', $header);
                     ++$result;
                 }
-                if ('' !== $template && !in_array($template, $availableStructureKeys)) {
+                if ('' !== $template && !\in_array($template, $availableStructureKeys)) {
                     $tableRow[0] = 'X';
-                    $descriptions[] = sprintf(
+                    $descriptions[] = \sprintf(
                         'Language "%s" contains a not implemented xml-template in webspace "%s"',
                         $header,
                         $webspaceKey
@@ -106,8 +106,8 @@ class ValidatePagesCommand extends ContainerAwareCommand
                 }
             }
 
-            $messages = array_merge($messages, $descriptions);
-            $tableRow[] = implode(', ', $descriptions);
+            $messages = \array_merge($messages, $descriptions);
+            $tableRow[] = \implode(', ', $descriptions);
 
             $table->addRow($tableRow);
         }
@@ -122,9 +122,9 @@ class ValidatePagesCommand extends ContainerAwareCommand
         $output->writeln('');
 
         if ($result > 0) {
-            $output->writeln(sprintf("<error>%s Errors found: \r\n  - %s</error>", $result, implode("\r\n  - ", $messages)));
+            $output->writeln(\sprintf("<error>%s Errors found: \r\n  - %s</error>", $result, \implode("\r\n  - ", $messages)));
         } else {
-            $output->writeln(sprintf('<ok>%s Errors found</ok>', $result));
+            $output->writeln(\sprintf('<ok>%s Errors found</ok>', $result));
         }
     }
 }

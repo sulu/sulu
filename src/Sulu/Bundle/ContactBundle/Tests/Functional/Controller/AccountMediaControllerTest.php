@@ -249,7 +249,7 @@ class AccountMediaControllerTest extends SuluTestCase
             'color' => '#ffcc00',
         ];
 
-        $collection->setStyle(json_encode($style));
+        $collection->setStyle(\json_encode($style));
 
         // Create Collection Type
         $collectionType = new CollectionType();
@@ -286,13 +286,13 @@ class AccountMediaControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/accounts/' . $this->account->getId() . '/medias?flat=true');
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
         $this->assertEquals($this->media2->getId(), $response->_embedded->media[0]->id);
         $this->assertObjectHasAttribute('thumbnails', $response->_embedded->media[0]);
         $this->assertObjectHasAttribute('sulu-100x100', $response->_embedded->media[0]->thumbnails);
-        $this->assertTrue(is_string($response->_embedded->media[0]->thumbnails->{'sulu-100x100'}));
+        $this->assertTrue(\is_string($response->_embedded->media[0]->thumbnails->{'sulu-100x100'}));
     }
 
     public function testAccountMediaPost()
@@ -304,8 +304,8 @@ class AccountMediaControllerTest extends SuluTestCase
             '/api/accounts/' . $this->account->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, count($response->medias));
+        $response = \json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, \count($response->medias));
 
         $client->request(
             'POST',
@@ -315,7 +315,7 @@ class AccountMediaControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertNotNull($response->id);
 
         $client->request(
@@ -323,8 +323,8 @@ class AccountMediaControllerTest extends SuluTestCase
             '/api/accounts/' . $this->account->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(2, count($response->medias));
+        $response = \json_decode($client->getResponse()->getContent());
+        $this->assertEquals(2, \count($response->medias));
         $this->assertNotNull($response->medias[0]->id);
         $this->assertNotNull($response->medias[1]->id);
     }
@@ -338,8 +338,8 @@ class AccountMediaControllerTest extends SuluTestCase
             '/api/accounts/' . $this->account->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, count($response->medias));
+        $response = \json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, \count($response->medias));
 
         $client->request(
             'POST',
@@ -356,8 +356,8 @@ class AccountMediaControllerTest extends SuluTestCase
             '/api/accounts/' . $this->account->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, count($response->medias));
+        $response = \json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, \count($response->medias));
     }
 
     public function testAccountMediaDelete()
@@ -376,8 +376,8 @@ class AccountMediaControllerTest extends SuluTestCase
             '/api/accounts/' . $this->account->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(0, count($response->medias));
+        $response = \json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, \count($response->medias));
     }
 
     public function testAccountMediaDeleteNotExistingRelation()
@@ -395,7 +395,7 @@ class AccountMediaControllerTest extends SuluTestCase
             '/api/accounts/' . $this->account->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, count($response->medias));
+        $response = \json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, \count($response->medias));
     }
 }

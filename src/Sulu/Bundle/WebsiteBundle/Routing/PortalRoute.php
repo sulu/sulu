@@ -23,6 +23,6 @@ class PortalRoute extends Route
      */
     public function getPath()
     {
-        return ltrim(parent::getPath(), '/');
+        return \ltrim(parent::getPath(), '/');
     }
 }

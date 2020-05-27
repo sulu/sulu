@@ -1245,7 +1245,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         $resolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())->willReturn(true);
         $templateReader = new XmlLegacyLoader($resolver->reveal());
         $result = $templateReader->load(
-            implode(
+            \implode(
                 \DIRECTORY_SEPARATOR,
                 [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_missing_rlp_tag.xml']
             ),
@@ -1259,7 +1259,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         $resolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())->willReturn(true);
         $templateReader = new XmlLegacyLoader($resolver->reveal());
         $result = $templateReader->load(
-            implode(
+            \implode(
                 \DIRECTORY_SEPARATOR,
                 [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_missing_rlp_tag_internal.xml']
             ),
@@ -1281,7 +1281,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         $resolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())->willReturn(true);
         $templateReader = new XmlLegacyLoader($resolver->reveal());
         $result = $templateReader->load(
-            implode(
+            \implode(
                 \DIRECTORY_SEPARATOR,
                 [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_missing_rlp_tag.xml']
             ),
@@ -1295,7 +1295,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         $resolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())->willReturn(true);
         $templateReader = new XmlLegacyLoader($resolver->reveal());
         $result = $templateReader->load(
-            implode(
+            \implode(
                 \DIRECTORY_SEPARATOR,
                 [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_missing_rlp_tag_internal.xml']
             ),
@@ -1312,7 +1312,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         $resolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())->willReturn(true);
         $templateReader = new XmlLegacyLoader($resolver->reveal());
         $result = $templateReader->load(
-            implode(
+            \implode(
                 \DIRECTORY_SEPARATOR,
                 [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_missing_rlp_tag.xml']
             ),
@@ -1338,7 +1338,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         $resolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())->willReturn(true);
         $templateReader = new XmlLegacyLoader($resolver->reveal());
         $result = $templateReader->load(
-            implode(
+            \implode(
                 \DIRECTORY_SEPARATOR,
                 [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_missing_rlp_tag_internal.xml']
             ),
@@ -1412,7 +1412,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         $resolver->supports(CacheLifetimeResolverInterface::TYPE_EXPRESSION, '@daily')->willReturn(true);
         $xmlLegacyLoader = new XmlLegacyLoader($resolver->reveal());
         $result = $xmlLegacyLoader->load(
-            implode(
+            \implode(
                 \DIRECTORY_SEPARATOR,
                 [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_expression.xml']
             ),
@@ -1433,7 +1433,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         $resolver->supports(CacheLifetimeResolverInterface::TYPE_EXPRESSION, 'test')->willReturn(false);
         $xmlLegacyLoader = new XmlLegacyLoader($resolver->reveal());
         $result = $xmlLegacyLoader->load(
-            implode(
+            \implode(
                 \DIRECTORY_SEPARATOR,
                 [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_invalid_expression.xml']
             ),
@@ -1447,7 +1447,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         $resolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())->willReturn(true);
         $xmlLegacyLoader = new XmlLegacyLoader($resolver->reveal());
         $result = $xmlLegacyLoader->load(
-            implode(\DIRECTORY_SEPARATOR, [$this->getResourceDirectory(), 'DataFixtures', 'Page', $name]),
+            \implode(\DIRECTORY_SEPARATOR, [$this->getResourceDirectory(), 'DataFixtures', 'Page', $name]),
             $type
         );
 
@@ -1456,7 +1456,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
     private function getResourceDirectory()
     {
-        return implode(
+        return \implode(
             \DIRECTORY_SEPARATOR,
             [__DIR__, '..', '..', '..', '..', '..', '..', '..', '..', 'tests', 'Resources']
         );

@@ -23,7 +23,7 @@ class HandlerNotFoundException extends \Exception
 
     public function __construct($name)
     {
-        parent::__construct(sprintf('Handler "%s" not found', $name));
+        parent::__construct(\sprintf('Handler "%s" not found', $name));
 
         $this->name = $name;
     }

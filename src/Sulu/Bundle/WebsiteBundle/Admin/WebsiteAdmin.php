@@ -31,7 +31,7 @@ class WebsiteAdmin extends Admin
      */
     public static function getAnalyticsSecurityContext($webspaceKey)
     {
-        return sprintf('%s%s.%s', ContentAdmin::SECURITY_SETTINGS_CONTEXT_PREFIX, $webspaceKey, 'analytics');
+        return \sprintf('%s%s.%s', ContentAdmin::SECURITY_SETTINGS_CONTEXT_PREFIX, $webspaceKey, 'analytics');
     }
 
     /**

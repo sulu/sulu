@@ -223,7 +223,7 @@ class AccessControlManager implements AccessControlManagerInterface
                 continue;
             }
 
-            $hasLocale = null == $locale || in_array($locale, $userRole->getLocales());
+            $hasLocale = null == $locale || \in_array($locale, $userRole->getLocales());
 
             if (!$hasLocale) {
                 continue;
@@ -232,7 +232,7 @@ class AccessControlManager implements AccessControlManagerInterface
             if ($checkPermissionType) {
                 $userPermission = $this->maskConverter->convertPermissionsToArray($permission->getPermissions());
             } else {
-                array_walk($userPermission, function(&$permission) {
+                \array_walk($userPermission, function(&$permission) {
                     $permission = true;
                 });
             }

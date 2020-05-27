@@ -63,7 +63,7 @@ class CustomerControllerTest extends SuluTestCase
 
     public function testCGet()
     {
-        $ids = sprintf(
+        $ids = \sprintf(
             'c%s,a%s,c%s,a%s',
             $this->contacts[0]->getId(),
             $this->accounts[0]->getId(),
@@ -74,7 +74,7 @@ class CustomerControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/customers?ids=' . $ids);
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('c' . $this->contacts[0]->getId(), $response['_embedded']['customers'][0]['id']);
         $this->assertEquals($this->contacts[0]->getFullName(), $response['_embedded']['customers'][0]['name']);

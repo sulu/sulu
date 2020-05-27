@@ -131,7 +131,7 @@ class ResourceLocatorRepositoryTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->repository->getHistory($uuid, $webspace, $locale);
         $this->assertEquals(3, $result['total']);
-        $this->assertEquals(3, count($result['_embedded']['resourcelocators']));
+        $this->assertEquals(3, \count($result['_embedded']['resourcelocators']));
         $this->assertEquals('/test1', $result['_embedded']['resourcelocators'][0]['resourceLocator']);
         $this->assertEquals('/test3', $result['_embedded']['resourcelocators'][2]['resourceLocator']);
     }

@@ -48,7 +48,7 @@ class MessageDispatcher implements MessageDispatcherInterface
         array $options,
         ConnectionContextInterface $context
     ) {
-        if (!array_key_exists($name, $this->handlers)) {
+        if (!\array_key_exists($name, $this->handlers)) {
             throw new HandlerNotFoundException($name);
         }
 

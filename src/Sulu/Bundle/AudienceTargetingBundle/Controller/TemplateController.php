@@ -44,7 +44,7 @@ class TemplateController extends Controller
     public function ruleOverlayAction()
     {
         $frequencies = [];
-        foreach (array_flip($this->getParameter('sulu_audience_targeting.frequencies')) as $name => $value) {
+        foreach (\array_flip($this->getParameter('sulu_audience_targeting.frequencies')) as $name => $value) {
             $frequencies[] = [
                 'id' => $value,
                 'name' => $this->get('translator')->trans('sulu_audience_targeting.frequencies.' . $name, [], 'backend'),
@@ -83,7 +83,7 @@ class TemplateController extends Controller
      */
     public function conditionTypesAction()
     {
-        $ruleTemplates = array_map(function(RuleInterface $rule) {
+        $ruleTemplates = \array_map(function(RuleInterface $rule) {
             return $rule->getType()->getTemplate();
         }, $this->get('sulu_audience_targeting.rules_collection')->getRules());
 

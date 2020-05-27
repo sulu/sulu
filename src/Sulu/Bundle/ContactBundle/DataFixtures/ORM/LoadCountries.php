@@ -27,14 +27,14 @@ class LoadCountries implements FixtureInterface, OrderedFixtureInterface
         $existingCountries = $qb->getQuery()->getResult();
 
         // load xml
-        $file = dirname(__FILE__) . '/../countries.xml';
+        $file = \dirname(__FILE__) . '/../countries.xml';
         $doc = new \DOMDocument();
         $doc->load($file);
 
         $xpath = new \DOMXpath($doc);
         $elements = $xpath->query('/Countries/Country');
 
-        if (!is_null($elements)) {
+        if (!\is_null($elements)) {
             /** @var $element DOMNode */
             foreach ($elements as $element) {
                 /** @var $child DOMNode */
@@ -49,7 +49,7 @@ class LoadCountries implements FixtureInterface, OrderedFixtureInterface
                     }
                 }
 
-                $country = (array_key_exists($countryCode, $existingCountries)) ? $existingCountries[$countryCode] : new Country();
+                $country = (\array_key_exists($countryCode, $existingCountries)) ? $existingCountries[$countryCode] : new Country();
                 $country->setName($countryName);
                 $country->setCode($countryCode);
                 $manager->persist($country);

@@ -75,7 +75,7 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
         $data = [];
         foreach ($properties as $key => $property) {
             $value = $property;
-            if (is_bool($value)) {
+            if (\is_bool($value)) {
                 $value = (int) $value;
             }
 
@@ -104,7 +104,7 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
 
         $translate = true;
 
-        if (in_array(
+        if (\in_array(
             $key,
             $this->seoAttributes
         )) {

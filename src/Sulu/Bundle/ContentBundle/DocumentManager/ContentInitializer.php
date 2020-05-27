@@ -62,13 +62,13 @@ class ContentInitializer implements InitializerInterface
             'settings' => 'http://sulu.io/phpcr/settings',
             $this->languageNamespace => 'http://sulu.io/phpcr/locale',
         ] as $prefix => $uri) {
-            if (in_array($prefix, $existingPrefixes)) {
-                $output->writeln(sprintf('  [ ] %s:%s', $prefix, $uri));
+            if (\in_array($prefix, $existingPrefixes)) {
+                $output->writeln(\sprintf('  [ ] %s:%s', $prefix, $uri));
 
                 continue;
             }
 
-            $output->writeln(sprintf('  [+] %s:%s', $prefix, $uri));
+            $output->writeln(\sprintf('  [+] %s:%s', $prefix, $uri));
 
             $namespaceRegistry->registerNamespace($prefix, $uri);
         }
@@ -86,7 +86,7 @@ class ContentInitializer implements InitializerInterface
             new PageNodeType(),
             new HomeNodeType(),
         ] as $nodeType) {
-            $output->writeln(sprintf('  [*] %s', $nodeType->getName()));
+            $output->writeln(\sprintf('  [*] %s', $nodeType->getName()));
             $workspace->getNodeTypeManager()->registerNodeType($nodeType, true);
         }
     }

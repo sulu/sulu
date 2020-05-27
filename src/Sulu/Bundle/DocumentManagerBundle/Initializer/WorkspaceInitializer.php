@@ -37,9 +37,9 @@ class WorkspaceInitializer implements InitializerInterface
 
             try {
                 $workspace->createWorkspace($workspace->getName());
-                $output->writeln(sprintf('  [+] <info>workspace</info>: "%s"', $workspace->getName()));
+                $output->writeln(\sprintf('  [+] <info>workspace</info>: "%s"', $workspace->getName()));
             } catch (RepositoryException $e) {
-                $output->writeln(sprintf('  [ ] <info>workspace</info>: "%s"', $workspace->getName()));
+                $output->writeln(\sprintf('  [ ] <info>workspace</info>: "%s"', $workspace->getName()));
             }
         }
     }

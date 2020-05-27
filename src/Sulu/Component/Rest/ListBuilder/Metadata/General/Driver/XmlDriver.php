@@ -124,7 +124,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         $parameters = [];
         foreach ($xpath->query('x:filter-type-parameters/x:parameter', $propertyNode) as $parameterNode) {
             $key = XmlUtil::getValueFromXPath('@key', $xpath, $parameterNode);
-            $parameters[$key] = $this->parameterBag->resolveValue(trim($parameterNode->nodeValue));
+            $parameters[$key] = $this->parameterBag->resolveValue(\trim($parameterNode->nodeValue));
         }
 
         return $parameters;

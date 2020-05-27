@@ -107,7 +107,7 @@ class ContentMapperSubscriber implements EventSubscriberInterface
         }
 
         $event = $this->getDeleteEvent($document);
-        $this->deleteEvents[spl_object_hash($document)] = $event;
+        $this->deleteEvents[\spl_object_hash($document)] = $event;
         $this->eventDispatcher->dispatch(
             ContentEvents::NODE_PRE_DELETE,
             $event
@@ -125,7 +125,7 @@ class ContentMapperSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $oid = spl_object_hash($document);
+        $oid = \spl_object_hash($document);
         $event = $this->deleteEvents[$oid];
 
         $this->eventDispatcher->dispatch(

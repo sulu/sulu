@@ -96,13 +96,13 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      */
     public function getByIds($ids, $locale)
     {
-        if (!is_array($ids) || 0 === count($ids)) {
+        if (!\is_array($ids) || 0 === \count($ids)) {
             return [];
         }
 
         $contacts = $this->contactRepository->findByIds($ids);
 
-        return array_map(
+        return \array_map(
             function($contact) use ($locale) {
                 return $this->getApiObject($contact, $locale);
             },
@@ -283,7 +283,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
 
         if (!$patch || $this->getProperty($data, 'formOfAddress')) {
             $formOfAddress = $this->getProperty($data, 'formOfAddress');
-            if (!is_null($formOfAddress) && is_array($formOfAddress) && array_key_exists('id', $formOfAddress)) {
+            if (!\is_null($formOfAddress) && \is_array($formOfAddress) && \array_key_exists('id', $formOfAddress)) {
                 $contact->setFormOfAddress($formOfAddress['id']);
             }
         }
@@ -527,7 +527,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     private function setAvatar(Contact $contact, $avatar)
     {
         $mediaEntity = null;
-        if (is_array($avatar) && $this->getProperty($avatar, 'id')) {
+        if (\is_array($avatar) && $this->getProperty($avatar, 'id')) {
             $mediaId = $this->getProperty($avatar, 'id');
             $mediaEntity = $this->mediaRepository->findMediaById($mediaId);
 
@@ -548,7 +548,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      */
     private function setMedias(Contact $contact, $medias)
     {
-        $mediaIds = array_map(
+        $mediaIds = \array_map(
             function($media) {
                 return $media['id'];
             },
@@ -556,15 +556,15 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
         );
 
         $foundMedias = $this->mediaRepository->findById($mediaIds);
-        $foundMediaIds = array_map(
+        $foundMediaIds = \array_map(
             function($mediaEntity) {
                 return $mediaEntity->getId();
             },
             $foundMedias
         );
 
-        if ($missingMediaIds = array_diff($mediaIds, $foundMediaIds)) {
-            throw new EntityNotFoundException($this->mediaRepository->getClassName(), reset($missingMediaIds));
+        if ($missingMediaIds = \array_diff($mediaIds, $foundMediaIds)) {
+            throw new EntityNotFoundException($this->mediaRepository->getClassName(), \reset($missingMediaIds));
         }
 
         $contact->getMedias()->clear();
@@ -603,7 +603,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      */
     private function getProperty($data, $key, $default = null)
     {
-        if (array_key_exists($key, $data)) {
+        if (\array_key_exists($key, $data)) {
             return $data[$key];
         }
 
@@ -616,7 +616,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      */
     public function setTitleOnContact($contact, $titleId)
     {
-        if ($titleId && is_numeric($titleId)) {
+        if ($titleId && \is_numeric($titleId)) {
             $title = $this->contactTitleRepository->find($titleId);
             if ($title) {
                 $contact->setTitle($title);
@@ -640,7 +640,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     {
         $entities = $this->contactRepository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options);
 
-        return array_map(
+        return \array_map(
             function($contact) use ($locale) {
                 return $this->getApiObject($contact, $locale);
             },

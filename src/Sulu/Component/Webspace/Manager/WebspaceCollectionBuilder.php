@@ -105,14 +105,14 @@ class WebspaceCollectionBuilder
             $this->buildPortals($webspace);
         }
 
-        $environments = array_keys($this->portalInformations);
+        $environments = \array_keys($this->portalInformations);
 
         foreach ($environments as $environment) {
             // sort all portal informations by length
-            uksort(
+            \uksort(
                 $this->portalInformations[$environment],
                 function($a, $b) {
-                    return strlen($a) < strlen($b);
+                    return \strlen($a) < \strlen($b);
                 }
             );
         }
@@ -389,9 +389,9 @@ class WebspaceCollectionBuilder
     {
         return
             // only valid if there is no full match already
-            !array_key_exists($urlResult, $this->portalInformations[$environment->getType()])
+            !\array_key_exists($urlResult, $this->portalInformations[$environment->getType()])
             // check if last character is no dot
-            && '.' != substr($urlResult, -1);
+            && '.' != \substr($urlResult, -1);
     }
 
     /**

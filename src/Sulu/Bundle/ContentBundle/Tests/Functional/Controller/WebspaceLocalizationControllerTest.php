@@ -20,15 +20,15 @@ class WebspaceLocalizationControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/webspace/localizations?webspace=sulu_io');
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
 
         $data = $response['_embedded']['localizations'];
 
         $filterKeys = ['localization'];
 
-        $filteredData = array_map(
+        $filteredData = \array_map(
             function($value) use ($filterKeys) {
-                return array_intersect_key($value, array_flip($filterKeys));
+                return \array_intersect_key($value, \array_flip($filterKeys));
             },
             $data
         );
@@ -44,7 +44,7 @@ class WebspaceLocalizationControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/webspace/localizations?webspace=sulu_lo');
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(0, $response->code);
         $this->assertEquals('No webspace found for key \'sulu_lo\'', $response->message);

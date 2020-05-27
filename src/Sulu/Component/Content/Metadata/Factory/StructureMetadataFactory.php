@@ -83,7 +83,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
             return;
         }
 
-        $cachePath = sprintf(
+        $cachePath = \sprintf(
             '%s%s%s%s',
             $this->cachePath,
             \DIRECTORY_SEPARATOR,
@@ -97,17 +97,17 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
             $paths = $this->getPaths($type);
 
             // reverse paths, so that the last path overrides previous ones
-            $fileLocator = new FileLocator(array_reverse($paths));
+            $fileLocator = new FileLocator(\array_reverse($paths));
 
             try {
-                $filePath = $fileLocator->locate(sprintf('%s.xml', $structureType));
+                $filePath = $fileLocator->locate(\sprintf('%s.xml', $structureType));
             } catch (\InvalidArgumentException $e) {
                 throw new Exception\StructureTypeNotFoundException(
-                    sprintf(
+                    \sprintf(
                         'Could not load structure type "%s" for document type "%s", looked in "%s"',
                         $structureType,
                         $type,
-                        implode('", "', $paths)
+                        \implode('", "', $paths)
                     ), null, $e
                 );
             }
@@ -117,12 +117,12 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
             $resources = [new FileResource($filePath)];
 
             $cache->write(
-                serialize($metadata),
+                \serialize($metadata),
                 $resources
             );
         }
 
-        $structure = unserialize(file_get_contents($cachePath));
+        $structure = \unserialize(\file_get_contents($cachePath));
 
         $this->cache[$cacheKey] = $structure;
 
@@ -163,7 +163,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
             $structurePath = $pathConfig['path'];
 
             // Ignore not-existing paths
-            if (!file_exists($structurePath)) {
+            if (!\file_exists($structurePath)) {
                 continue;
             }
 
@@ -191,10 +191,10 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     {
         if (!isset($this->typePaths[$type])) {
             throw new Exception\DocumentTypeNotFoundException(
-                sprintf(
+                \sprintf(
                     'Structure path for document type "%s" is not mapped. Mapped structure types: "%s"',
                     $type,
-                    implode('", "', array_keys($this->typePaths))
+                    \implode('", "', \array_keys($this->typePaths))
                 )
             );
         }

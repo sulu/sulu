@@ -92,7 +92,7 @@ class SearchController
 
         $page = $this->listRestHelper->getPage();
         $limit = $this->listRestHelper->getLimit();
-        $startTime = microtime(true);
+        $startTime = \microtime(true);
 
         $indexes = $index ? [$index] : $this->getAllowedIndexes();
 
@@ -105,9 +105,9 @@ class SearchController
         $query->indexes($indexes);
         $query->setLimit($limit);
 
-        $time = microtime(true) - $startTime;
+        $time = \microtime(true) - $startTime;
 
-        $adapter = new ArrayAdapter(iterator_to_array($query->execute()));
+        $adapter = new ArrayAdapter(\iterator_to_array($query->execute()));
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage($limit);
         $pager->setCurrentPage($page);
@@ -128,7 +128,7 @@ class SearchController
             false,
             $adapter->getNbResults(),
             $this->getIndexTotals($adapter->getArray()),
-            number_format($time, 8)
+            \number_format($time, 8)
         );
 
         $view = View::create($representation);
@@ -149,7 +149,7 @@ class SearchController
     {
         return $this->viewHandler->handle(
             View::create(
-                array_map(
+                \array_map(
                     function($indexName) {
                         $indexConfiguration = $this->indexConfigurationProvider->getIndexConfiguration($indexName);
 
@@ -171,9 +171,9 @@ class SearchController
     private function getIndexTotals($hits)
     {
         $indexNames = $this->searchManager->getIndexNames();
-        $indexCount = array_combine(
+        $indexCount = \array_combine(
             $indexNames,
-            array_fill(0, count($indexNames), 0)
+            \array_fill(0, \count($indexNames), 0)
         );
 
         foreach ($hits as $hit) {
@@ -202,7 +202,7 @@ class SearchController
             $contexts = $indexConfiguration->getContexts();
 
             if ($this->securityChecker->hasPermission($indexConfiguration->getSecurityContext(), PermissionTypes::VIEW)
-                && (empty($contexts) || false !== array_search('admin', $contexts))
+                && (empty($contexts) || false !== \array_search('admin', $contexts))
             ) {
                 $allowedIndexNames[] = $indexName;
             }

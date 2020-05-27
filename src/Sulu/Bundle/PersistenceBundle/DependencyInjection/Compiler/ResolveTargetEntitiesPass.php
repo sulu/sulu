@@ -56,7 +56,7 @@ class ResolveTargetEntitiesPass implements CompilerPassInterface
         if ($container->hasDefinition('sulu_core.doctrine.references')) {
             $doctrineReference = $container->findDefinition('sulu_core.doctrine.references');
             $oldTargetEntityMapping = $doctrineReference->getArgument(1);
-            $doctrineReference->replaceArgument(1, array_merge($oldTargetEntityMapping, $interfaceMapping));
+            $doctrineReference->replaceArgument(1, \array_merge($oldTargetEntityMapping, $interfaceMapping));
         }
     }
 
@@ -73,12 +73,12 @@ class ResolveTargetEntitiesPass implements CompilerPassInterface
             return $container->getParameter($key);
         }
 
-        if (class_exists($key)) {
+        if (\class_exists($key)) {
             return $key;
         }
 
         throw new \InvalidArgumentException(
-            sprintf('The class %s does not exist.', $key)
+            \sprintf('The class %s does not exist.', $key)
         );
     }
 }

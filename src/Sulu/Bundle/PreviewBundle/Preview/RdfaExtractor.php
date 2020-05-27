@@ -65,7 +65,7 @@ class RdfaExtractor
         if (1 < $path->getLength()) {
             foreach ($path as $item) {
                 // is not integer
-                if (!ctype_digit(strval($item))) {
+                if (!\ctype_digit(\strval($item))) {
                     $before = $item;
                     $nodes = $nodes->filter('*[property="' . $item . '"]');
                 } else {

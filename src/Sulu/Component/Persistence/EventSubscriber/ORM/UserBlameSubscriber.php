@@ -121,7 +121,7 @@ class UserBlameSubscriber implements EventSubscriber
         $manager = $event->getEntityManager();
         $unitOfWork = $manager->getUnitOfWork();
 
-        $entities = array_merge(
+        $entities = \array_merge(
             $unitOfWork->getScheduledEntityInsertions(),
             $unitOfWork->getScheduledEntityUpdates()
         );
@@ -140,7 +140,7 @@ class UserBlameSubscriber implements EventSubscriber
                 }
             }
 
-            $meta = $manager->getClassMetadata(get_class($blameEntity));
+            $meta = $manager->getClassMetadata(\get_class($blameEntity));
 
             $changeset = $unitOfWork->getEntityChangeSet($blameEntity);
             $recompute = false;

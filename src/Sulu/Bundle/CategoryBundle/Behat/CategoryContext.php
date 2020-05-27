@@ -49,7 +49,7 @@ class CategoryContext extends BaseContext implements SnippetAcceptingContext
         $category = $this->getContainer()->get('sulu.repository.category')->findOneByKey($name);
 
         if ($category) {
-            throw new \Exception(sprintf('Category with key "%s" should NOT exist', $name));
+            throw new \Exception(\sprintf('Category with key "%s" should NOT exist', $name));
         }
     }
 
@@ -61,7 +61,7 @@ class CategoryContext extends BaseContext implements SnippetAcceptingContext
         $category = $this->getContainer()->get('sulu.repository.category')->findOneByKey($name);
 
         if (!$category) {
-            throw new \Exception(sprintf('Category with key "%s" should exist', $name));
+            throw new \Exception(\sprintf('Category with key "%s" should exist', $name));
         }
     }
 

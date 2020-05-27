@@ -25,7 +25,7 @@ trait OrderByTrait
     {
         foreach ($sortBy as $field => $order) {
             // if no relation is defined add alias by default
-            if (false === strpos($field, '.')) {
+            if (false === \strpos($field, '.')) {
                 $field = $alias . '.' . $field;
             }
 

@@ -41,7 +41,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
         $list = new RouteAwareRepresentation(
             new CollectionRepresentation($entities, self::RESULT_KEY),
             'cget_webspace_analytics',
-            array_merge($request->request->all(), ['webspaceKey' => $webspaceKey])
+            \array_merge($request->request->all(), ['webspaceKey' => $webspaceKey])
         );
 
         return $this->handleView($this->view($list, 200));
@@ -121,7 +121,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
      */
     public function cdeleteAction(Request $request, $webspaceKey)
     {
-        $ids = array_filter(explode(',', $request->get('ids', '')));
+        $ids = \array_filter(\explode(',', $request->get('ids', '')));
 
         $this->get('sulu_website.analytics.manager')->removeMultiple($ids);
         $this->get('doctrine.orm.entity_manager')->flush();

@@ -120,7 +120,7 @@ class CollaborationMessageHandler implements MessageHandlerInterface
      */
     private function execute(ConnectionInterface $conn, MessageHandlerContext $context, array $msg)
     {
-        if (!array_key_exists('command', $msg)) {
+        if (!\array_key_exists('command', $msg)) {
             throw new MissingParameterException('command');
         }
         $command = $msg['command'];
@@ -137,7 +137,7 @@ class CollaborationMessageHandler implements MessageHandlerInterface
                 $result = $this->leave($context, $msg);
                 break;
             default:
-                throw new \InvalidArgumentException(sprintf('Command "%s" not known', $command));
+                throw new \InvalidArgumentException(\sprintf('Command "%s" not known', $command));
                 break;
         }
 
@@ -223,17 +223,17 @@ class CollaborationMessageHandler implements MessageHandlerInterface
         /** @var Collaboration[] $connectionCollaborations */
         $connectionCollaborations = $this->collaborationsConnectionCache->fetch($connectionId) ?: [];
 
-        if (!array_key_exists($connectionId, $this->connections)) {
+        if (!\array_key_exists($connectionId, $this->connections)) {
             $this->connections[$connectionId] = $conn;
         }
 
-        if (array_key_exists($identifier, $entityCollaborations)) {
-            $entityCollaborations[$identifier]->setChanged(time());
+        if (\array_key_exists($identifier, $entityCollaborations)) {
+            $entityCollaborations[$identifier]->setChanged(\time());
             $entityCollaborationUpdated = true;
         }
 
-        if (array_key_exists($connectionId, $connectionCollaborations)) {
-            $connectionCollaborations[$connectionId]->setChanged(time());
+        if (\array_key_exists($connectionId, $connectionCollaborations)) {
+            $connectionCollaborations[$connectionId]->setChanged(\time());
             $connectionCollaborationUpdated = true;
         }
 
@@ -270,7 +270,7 @@ class CollaborationMessageHandler implements MessageHandlerInterface
         $identifier = $this->getUniqueCollaborationKey($type, $id);
 
         $entityCollaborations = $this->collaborationsEntityCache->fetch($identifier) ?: [];
-        if (array_key_exists($connectionId, $entityCollaborations)) {
+        if (\array_key_exists($connectionId, $entityCollaborations)) {
             unset($entityCollaborations[$connectionId]);
         }
 
@@ -281,7 +281,7 @@ class CollaborationMessageHandler implements MessageHandlerInterface
         }
 
         $connectionCollaborations = $this->collaborationsConnectionCache->fetch($connectionId) ?: [];
-        if (array_key_exists($identifier, $connectionCollaborations)) {
+        if (\array_key_exists($identifier, $connectionCollaborations)) {
             unset($connectionCollaborations[$identifier]);
         }
 
@@ -317,7 +317,7 @@ class CollaborationMessageHandler implements MessageHandlerInterface
         $entityCollaborations = $this->collaborationsEntityCache->fetch($identifier) ?: [];
         foreach ($entityCollaborations as $collaboration) {
             /** @var $collaboration Collaboration */
-            if (!array_key_exists($collaboration->getConnectionId(), $this->connections)) {
+            if (!\array_key_exists($collaboration->getConnectionId(), $this->connections)) {
                 // necessary because it has also to work with the ajax fallback, which does not store connections
                 continue;
             }
@@ -342,11 +342,11 @@ class CollaborationMessageHandler implements MessageHandlerInterface
             $this->getUniqueCollaborationKey($type, $id)
         ) ?: [];
 
-        $time = time() - ($this->interval / 1000) - ($this->threshold / 1000);
+        $time = \time() - ($this->interval / 1000) - ($this->threshold / 1000);
 
-        return array_values(
-            array_filter(
-                array_map(
+        return \array_values(
+            \array_filter(
+                \array_map(
                     function(Collaboration $collaboration) use ($time) {
                         if ($collaboration->getChanged() < $time) {
                             $this->removeCollaboration(

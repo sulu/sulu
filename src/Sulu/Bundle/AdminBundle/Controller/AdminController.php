@@ -163,7 +163,7 @@ class AdminController
             $template,
             [
                 'name' => $this->adminName,
-                'locales' => array_keys($this->localizationManager->getLocalizations()),
+                'locales' => \array_keys($this->localizationManager->getLocalizations()),
                 'translated_locales' => $this->translatedLocales,
                 'translations' => $this->translations,
                 'fallback_locale' => $this->fallbackLocale,
@@ -239,7 +239,7 @@ class AdminController
      */
     private function addContext(array &$mappedContexts, $system, $section, $context, $permissionTypes)
     {
-        if (is_array($permissionTypes)) {
+        if (\is_array($permissionTypes)) {
             $mappedContexts[$system][$section][$context] = $permissionTypes;
         } else {
             $mappedContexts[$system][$section][$permissionTypes] = [

@@ -156,6 +156,6 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
 
         $array = $this->item2->toArray();
 
-        $this->assertNotContains('header', array_keys($array));
+        $this->assertNotContains('header', \array_keys($array));
     }
 }

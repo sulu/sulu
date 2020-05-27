@@ -82,7 +82,7 @@ class CategoryRequestHandlerTest extends \PHPUnit_Framework_TestCase
         $handler = new CategoryRequestHandler($requestStack->reveal());
         $result = $handler->appendCategoryToUrl($category, $parameter);
 
-        $this->assertEquals($url . '?' . $parameter . '=' . urlencode($expected), $result);
+        $this->assertEquals($url . '?' . $parameter . '=' . \urlencode($expected), $result);
     }
 
     public function setProvider()
@@ -118,7 +118,7 @@ class CategoryRequestHandlerTest extends \PHPUnit_Framework_TestCase
         $handler = new CategoryRequestHandler($requestStack->reveal());
         $result = $handler->setCategoryToUrl($category, $parameter);
 
-        $this->assertEquals($url . '?' . $parameter . '=' . urlencode($expected), $result);
+        $this->assertEquals($url . '?' . $parameter . '=' . \urlencode($expected), $result);
     }
 
     public function removeProvider()

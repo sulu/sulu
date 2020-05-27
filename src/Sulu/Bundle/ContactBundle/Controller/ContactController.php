@@ -178,11 +178,11 @@ class ContactController extends RestController implements ClassResourceInterface
     public function fieldsAction(Request $request)
     {
         if ((bool) $request->get('accountContacts')) {
-            return $this->handleView($this->view(array_values($this->getAccountContactFieldDescriptors()), 200));
+            return $this->handleView($this->view(\array_values($this->getAccountContactFieldDescriptors()), 200));
         }
 
         // default contacts list
-        return $this->handleView($this->view(array_values($this->getFieldDescriptors()), 200));
+        return $this->handleView($this->view(\array_values($this->getFieldDescriptors()), 200));
     }
 
     /**
@@ -206,7 +206,7 @@ class ContactController extends RestController implements ClassResourceInterface
                 $contacts = $this->getDoctrine()->getRepository(
                     $this->container->getParameter('sulu.model.contact.class')
                 )->findAll();
-                $serializationGroups = array_merge(
+                $serializationGroups = \array_merge(
                     $serializationGroups,
                     static::$contactSerializationGroups
                 );
@@ -218,7 +218,7 @@ class ContactController extends RestController implements ClassResourceInterface
             }
 
             $exclusion = null;
-            if (count($serializationGroups) > 0) {
+            if (\count($serializationGroups) > 0) {
                 $exclusion = new Exclusion($serializationGroups);
             }
 
@@ -228,7 +228,7 @@ class ContactController extends RestController implements ClassResourceInterface
         $view = $this->view($list, 200);
 
         // set serialization groups
-        if (count($serializationGroups) > 0) {
+        if (\count($serializationGroups) > 0) {
             $view->setSerializationContext(
                 SerializationContext::create()->setGroups(
                     $serializationGroups
@@ -280,8 +280,8 @@ class ContactController extends RestController implements ClassResourceInterface
     private function prepareListResponse(Request $request, DoctrineListBuilder $listBuilder, $locale)
     {
         $idsParameter = $request->get('ids');
-        $ids = array_filter(explode(',', $idsParameter));
-        if (null !== $idsParameter && 0 === count($ids)) {
+        $ids = \array_filter(\explode(',', $idsParameter));
+        if (null !== $idsParameter && 0 === \count($ids)) {
             return [];
         }
 
@@ -295,7 +295,7 @@ class ContactController extends RestController implements ClassResourceInterface
         if (null !== $idsParameter) {
             $comparator = $this->getComparator();
             // the @ is necessary in case of a PHP bug https://bugs.php.net/bug.php?id=50688
-            @usort(
+            @\usort(
                 $listResponse,
                 function($a, $b) use ($comparator, $ids) {
                     return $comparator->compare($a['id'], $b['id'], $ids);
@@ -491,12 +491,12 @@ class ContactController extends RestController implements ClassResourceInterface
      */
     private function addAvatars($contacts, $locale)
     {
-        $ids = array_filter(array_column($contacts, 'avatar'));
+        $ids = \array_filter(\array_column($contacts, 'avatar'));
         $avatars = $this->get('sulu_media.media_manager')->getFormatUrls($ids, $locale);
         foreach ($contacts as $key => $contact) {
-            if (array_key_exists('avatar', $contact)
+            if (\array_key_exists('avatar', $contact)
                 && $contact['avatar']
-                && array_key_exists($contact['avatar'], $avatars)
+                && \array_key_exists($contact['avatar'], $avatars)
             ) {
                 $contacts[$key]['avatar'] = $avatars[$contact['avatar']];
             }

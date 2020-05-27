@@ -18,7 +18,7 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
         $tokenGenerator = new TokenGenerator();
         $token = $tokenGenerator->generateToken();
 
-        $this->assertTrue(is_string($token));
-        $this->assertGreaterThan(0, strlen($token));
+        $this->assertTrue(\is_string($token));
+        $this->assertGreaterThan(0, \strlen($token));
     }
 }

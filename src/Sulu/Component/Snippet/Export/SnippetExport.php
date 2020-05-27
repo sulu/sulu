@@ -55,7 +55,7 @@ class SnippetExport extends Export implements SnippetExportInterface
     public function export($locale, $output = null, $format = '1.2.xliff')
     {
         if (!$locale) {
-            throw new \Exception(sprintf('Invalid parameters for export "%s"', $locale));
+            throw new \Exception(\sprintf('Invalid parameters for export "%s"', $locale));
         }
 
         $this->exportLocale = $locale;
@@ -84,7 +84,7 @@ class SnippetExport extends Export implements SnippetExportInterface
         $snippets = $this->getSnippets();
         $snippetsData = [];
 
-        $progress = new ProgressBar($this->output, count($snippets));
+        $progress = new ProgressBar($this->output, \count($snippets));
         $progress->start();
 
         /*

@@ -56,39 +56,39 @@ class PathCleanup implements PathCleanupInterface
         $replacers = $this->replacers['default'];
 
         if (null !== $languageCode) {
-            $replacers = array_merge(
+            $replacers = \array_merge(
                 $replacers,
                 (isset($this->replacers[$languageCode]) ? $this->replacers[$languageCode] : [])
             );
         }
 
-        if (count($replacers) > 0) {
+        if (\count($replacers) > 0) {
             foreach ($replacers as $key => $value) {
-                $dirty = str_replace($key, $value, $dirty);
+                $dirty = \str_replace($key, $value, $dirty);
             }
         }
 
-        $clean = strtolower($dirty);
+        $clean = \strtolower($dirty);
 
         // Inspired by ZOOLU
         // delete problematic characters
-        $clean = str_replace('%2F', '/', urlencode(preg_replace('/([^A-za-z0-9\s\-_\/])/', '', $clean)));
+        $clean = \str_replace('%2F', '/', \urlencode(\preg_replace('/([^A-za-z0-9\s\-_\/])/', '', $clean)));
 
         // replace multiple dash with one
-        $clean = preg_replace('/([-]+)/', '-', $clean);
+        $clean = \preg_replace('/([-]+)/', '-', $clean);
 
         // remove dash before slash
-        $clean = preg_replace('/[-]+\//', '/', $clean);
+        $clean = \preg_replace('/[-]+\//', '/', $clean);
 
         // remove dash after slash
-        $clean = preg_replace('/\/[-]+/', '/', $clean);
+        $clean = \preg_replace('/\/[-]+/', '/', $clean);
 
         // delete dash at the beginning or end
-        $clean = preg_replace('/^([-])/', '', $clean);
-        $clean = preg_replace('/([-])$/', '', $clean);
+        $clean = \preg_replace('/^([-])/', '', $clean);
+        $clean = \preg_replace('/([-])$/', '', $clean);
 
         // remove double slashes
-        $clean = str_replace('//', '/', $clean);
+        $clean = \str_replace('//', '/', $clean);
 
         return $clean;
     }
@@ -102,6 +102,6 @@ class PathCleanup implements PathCleanupInterface
      */
     public function validate($path)
     {
-        return '/' === $path || 1 === preg_match($this->pattern, $path);
+        return '/' === $path || 1 === \preg_match($this->pattern, $path);
     }
 }

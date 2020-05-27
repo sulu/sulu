@@ -105,7 +105,7 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
             '_links' => [
                 'self' => $this->getBasePath($uuid) . '/history?language=' . $languageCode . '&webspace=' . $webspaceKey,
             ],
-            'total' => count($result),
+            'total' => \count($result),
         ];
     }
 
@@ -126,7 +126,7 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     private function getBasePath($uuid = null, $default = 1)
     {
         if (null !== $uuid) {
-            return str_replace('{uuid}', $uuid, $this->apiBasePath[2]);
+            return \str_replace('{uuid}', $uuid, $this->apiBasePath[2]);
         } else {
             return $this->apiBasePath[$default];
         }
@@ -142,11 +142,11 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         $title = '';
         // concat rlp parts in sort of priority
         foreach ($structure->getPropertiesByTagName('sulu.rlp.part') as $property) {
-            if (array_key_exists($property->getName(), $parts)) {
+            if (\array_key_exists($property->getName(), $parts)) {
                 $title = $parts[$property->getName()] . $separator . $title;
             }
         }
-        $title = substr($title, 0, -1);
+        $title = \substr($title, 0, -1);
 
         return $title;
     }

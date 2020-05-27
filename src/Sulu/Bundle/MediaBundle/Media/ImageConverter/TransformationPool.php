@@ -40,12 +40,12 @@ class TransformationPool implements TransformationPoolInterface
      */
     public function get($name)
     {
-        if (array_key_exists($name, $this->transformations)) {
+        if (\array_key_exists($name, $this->transformations)) {
             return $this->transformations[$name];
         }
 
         throw new \InvalidArgumentException(
-            sprintf(
+            \sprintf(
                 'A image transformation transformation named "%s" does not exist.',
                 $name
             )

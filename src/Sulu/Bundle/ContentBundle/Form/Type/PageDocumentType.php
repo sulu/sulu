@@ -86,7 +86,7 @@ class PageDocumentType extends BasePageDocumentType
 
         if (null === $parent) {
             throw new \InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     'Could not determine parent for document with title "%s" in webspace "%s"',
                     $document->getTitle(),
                     $webspaceKey

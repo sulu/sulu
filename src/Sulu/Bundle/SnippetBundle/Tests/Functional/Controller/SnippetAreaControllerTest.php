@@ -36,7 +36,7 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
         $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/snippet-areas?webspace=sulu_io');
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
 
         $data = $response['_embedded']['areas'];
         $this->assertEquals(2, $response['total']);
@@ -60,7 +60,7 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
             ['webspace' => 'sulu_io', 'default' => $this->car1->getUuid()]
         );
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('car', $response['template']);
         $this->assertEquals('Car', $response['title']);
@@ -68,7 +68,7 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
         $this->assertEquals($this->car1->getTitle(), $response['defaultTitle']);
 
         $client->request('GET', '/snippet-areas?webspace=sulu_io');
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
         $data = $response['_embedded']['areas'];
 
         $this->assertEquals(2, $response['total']);
@@ -95,7 +95,7 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
             ['webspace' => 'sulu_io', 'default' => $this->car1->getUuid()]
         );
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('car', $response['template']);
         $this->assertEquals('Car', $response['title']);
@@ -104,7 +104,7 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
 
         $client->request('GET', '/snippet-areas?webspace=sulu_io');
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
         $data = $response['_embedded']['areas'];
 
         $this->assertEquals(2, $response['total']);

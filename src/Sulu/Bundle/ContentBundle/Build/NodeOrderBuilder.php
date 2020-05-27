@@ -108,7 +108,7 @@ class NodeOrderBuilder implements BuilderInterface
         $i = 10;
         foreach ($node->getNodes() as $childNode) {
             $childNode->setProperty($this->propertyName, $i);
-            $this->context->getOutput()->writeln(sprintf(
+            $this->context->getOutput()->writeln(\sprintf(
                 '<info>[+]</info> Setting order "<comment>%s</comment>" on <comment>%s</comment>',
                 $i,
                 $childNode->getPath()

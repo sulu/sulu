@@ -41,8 +41,8 @@ class WebspaceExportCommand extends ContainerAwareCommand
     {
         $webspaceKey = $input->getArgument('webspace');
         $target = $input->getArgument('target');
-        if (0 === !strpos($target, '/')) {
-            $target = getcwd() . '/' . $target;
+        if (0 === !\strpos($target, '/')) {
+            $target = \getcwd() . '/' . $target;
         }
         $locale = $input->getArgument('locale');
         $format = $input->getOption('format');
@@ -76,10 +76,10 @@ class WebspaceExportCommand extends ContainerAwareCommand
 
         $ignoredNodes = $input->getOption('ignored-nodes');
         if ($nodes) {
-            $nodes = explode(',', $nodes);
+            $nodes = \explode(',', $nodes);
         }
         if ($ignoredNodes) {
-            $ignoredNodes = explode(',', $ignoredNodes);
+            $ignoredNodes = \explode(',', $ignoredNodes);
         }
 
         /** @var WebspaceInterface $webspaceExporter */
@@ -95,7 +95,7 @@ class WebspaceExportCommand extends ContainerAwareCommand
             $ignoredNodes
         );
 
-        file_put_contents($target, $file);
+        \file_put_contents($target, $file);
 
         return 0;
     }

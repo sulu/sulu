@@ -67,18 +67,18 @@ final class SortUtils
         $values = (array) $values;
         $paths = (array) $paths;
 
-        usort($values, function($a, $b) use ($accessor, $paths) {
+        \usort($values, function($a, $b) use ($accessor, $paths) {
             foreach ($paths as $i => $path) {
                 $aOrder = $accessor->getValue($a, $path);
                 $bOrder = $accessor->getValue($b, $path);
 
-                if (is_string($aOrder)) {
-                    $aOrder = strtolower($aOrder);
-                    $bOrder = strtolower($bOrder);
+                if (\is_string($aOrder)) {
+                    $aOrder = \strtolower($aOrder);
+                    $bOrder = \strtolower($bOrder);
                 }
 
                 if ($aOrder == $bOrder) {
-                    if (count($paths) == ($i + 1)) {
+                    if (\count($paths) == ($i + 1)) {
                         return 0;
                     } else {
                         continue;
@@ -89,8 +89,8 @@ final class SortUtils
             }
         });
 
-        if ('DESC' == strtoupper($direction)) {
-            $values = array_reverse($values);
+        if ('DESC' == \strtoupper($direction)) {
+            $values = \array_reverse($values);
         }
 
         return $values;

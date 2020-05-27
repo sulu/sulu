@@ -97,7 +97,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
      */
     public function getFieldsAction()
     {
-        return $this->handleView($this->view(array_values($this->getManager()->getFieldDescriptors())));
+        return $this->handleView($this->view(\array_values($this->getManager()->getFieldDescriptors())));
     }
 
     /**
@@ -138,8 +138,8 @@ class TagController extends RestController implements ClassResourceInterface, Se
             $fieldDescriptors = $this->getManager()->getFieldDescriptors();
             $listBuilder = $factory->create(self::$entityName);
 
-            $ids = array_filter(explode(',', $request->get('ids', '')));
-            if (count($ids) > 0) {
+            $ids = \array_filter(\explode(',', $request->get('ids', '')));
+            if (\count($ids) > 0) {
                 $listBuilder->in($fieldDescriptors['id'], $ids);
             }
 
@@ -277,7 +277,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
     public function postMergeAction(Request $request)
     {
         try {
-            $srcTagIds = explode(',', $request->get('src'));
+            $srcTagIds = \explode(',', $request->get('src'));
             $destTagId = $request->get('dest');
 
             $destTag = $this->getManager()->merge($srcTagIds, $destTagId);

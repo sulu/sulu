@@ -54,7 +54,7 @@ class KeywordController extends RestController implements ClassResourceInterface
      */
     public function fieldsAction($categoryId)
     {
-        return $this->handleView($this->view(array_values($this->getFieldDescriptors())));
+        return $this->handleView($this->view(\array_values($this->getFieldDescriptors())));
     }
 
     /**
@@ -96,7 +96,7 @@ class KeywordController extends RestController implements ClassResourceInterface
             $listResponse,
             self::$entityKey,
             'get_category_keywords',
-            array_merge(['categoryId' => $categoryId], $request->query->all()),
+            \array_merge(['categoryId' => $categoryId], $request->query->all()),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),
             $listBuilder->count()
@@ -189,7 +189,7 @@ class KeywordController extends RestController implements ClassResourceInterface
     {
         $category = $this->getCategoryRepository()->findCategoryById($categoryId);
 
-        $ids = array_filter(explode(',', $request->get('ids')));
+        $ids = \array_filter(\explode(',', $request->get('ids')));
         foreach ($ids as $id) {
             $keyword = $this->getKeywordRepository()->findById($id);
             $this->getKeywordManager()->delete($keyword, $category);

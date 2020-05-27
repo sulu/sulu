@@ -25,9 +25,9 @@ class TokenGenerator implements TokenGeneratorInterface
     public function __construct()
     {
         // determine whether to use OpenSSL
-        if (defined('PHP_WINDOWS_VERSION_BUILD') && version_compare(\PHP_VERSION, '5.3.4', '<')) {
+        if (\defined('PHP_WINDOWS_VERSION_BUILD') && \version_compare(\PHP_VERSION, '5.3.4', '<')) {
             $this->useOpenSsl = false;
-        } elseif (!function_exists('openssl_random_pseudo_bytes')) {
+        } elseif (!\function_exists('openssl_random_pseudo_bytes')) {
             $this->useOpenSsl = false;
         } else {
             $this->useOpenSsl = true;
@@ -41,7 +41,7 @@ class TokenGenerator implements TokenGeneratorInterface
      */
     public function generateToken()
     {
-        return rtrim(strtr(base64_encode($this->getRandomNumber()), '+/', '-_'), '=');
+        return \rtrim(\strtr(\base64_encode($this->getRandomNumber()), '+/', '-_'), '=');
     }
 
     private function getRandomNumber()
@@ -49,12 +49,12 @@ class TokenGenerator implements TokenGeneratorInterface
         $nbBytes = 32;
         // try OpenSSL
         if ($this->useOpenSsl) {
-            $bytes = openssl_random_pseudo_bytes($nbBytes, $strong);
+            $bytes = \openssl_random_pseudo_bytes($nbBytes, $strong);
             if (false !== $bytes && true === $strong) {
                 return $bytes;
             }
         }
 
-        return hash('sha256', uniqid(mt_rand(), true), true);
+        return \hash('sha256', \uniqid(\mt_rand(), true), true);
     }
 }

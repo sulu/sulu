@@ -53,7 +53,7 @@ class WidgetsPass implements CompilerPassInterface
         // add each widget for each tag
         foreach ($taggedServices as $id => $tagAttributes) {
             foreach ($tagAttributes as $tagAttribute) {
-                if (array_key_exists('alias', $tagAttribute)) {
+                if (\array_key_exists('alias', $tagAttribute)) {
                     $widgetsHandler->addMethodCall(
                         'addWidget',
                         [new Reference($id), $tagAttribute['alias']]

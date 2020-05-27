@@ -71,7 +71,7 @@ class AdminPool
         $contexts = [];
         foreach ($this->pool as $admin) {
             /* @var Admin $admin */
-            $contexts = array_merge_recursive($contexts, $admin->getSecurityContexts());
+            $contexts = \array_merge_recursive($contexts, $admin->getSecurityContexts());
         }
 
         return $contexts;

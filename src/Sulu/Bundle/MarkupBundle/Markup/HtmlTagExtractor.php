@@ -37,30 +37,30 @@ class HtmlTagExtractor implements TagExtractorInterface
 
     public function count($html)
     {
-        return preg_match_all(sprintf(self::COUNT_REGEX, $this->namespace), $html, $matches);
+        return \preg_match_all(\sprintf(self::COUNT_REGEX, $this->namespace), $html, $matches);
     }
 
     public function extract($html)
     {
-        if (!preg_match_all(sprintf(self::TAG_REGEX, $this->namespace), $html, $matches)) {
+        if (!\preg_match_all(\sprintf(self::TAG_REGEX, $this->namespace), $html, $matches)) {
             return [];
         }
 
         /** @var TagMatchGroup[] $sortedTags */
         $sortedTags = [];
-        for ($i = 0, $length = count($matches['name']); $i < $length; ++$i) {
+        for ($i = 0, $length = \count($matches['name']); $i < $length; ++$i) {
             $tag = $matches['tag'][$i];
             $name = $matches['name'][$i];
             $content = $matches['content'][$i];
-            if (!array_key_exists($name, $sortedTags)) {
+            if (!\array_key_exists($name, $sortedTags)) {
                 $sortedTags[$name] = new TagMatchGroup($this->namespace, $name);
             }
 
             $attributes = $this->getAttributes($matches['attributes'][$i]);
-            $sortedTags[$name]->addTag($tag, array_filter(array_merge($attributes, ['content' => $content])));
+            $sortedTags[$name]->addTag($tag, \array_filter(\array_merge($attributes, ['content' => $content])));
         }
 
-        return array_values($sortedTags);
+        return \array_values($sortedTags);
     }
 
     /**
@@ -72,16 +72,16 @@ class HtmlTagExtractor implements TagExtractorInterface
      */
     private function getAttributes($tag)
     {
-        if (!preg_match_all(self::ATTRIBUTE_REGEX, $tag, $matches)) {
+        if (!\preg_match_all(self::ATTRIBUTE_REGEX, $tag, $matches)) {
             return [];
         }
 
         $attributes = [];
-        for ($i = 0, $length = count($matches['name']); $i < $length; ++$i) {
+        for ($i = 0, $length = \count($matches['name']); $i < $length; ++$i) {
             $value = $matches['value'][$i];
 
             if ('true' === $value || 'false' === $value) {
-                $value = filter_var($value, \FILTER_VALIDATE_BOOLEAN);
+                $value = \filter_var($value, \FILTER_VALIDATE_BOOLEAN);
             }
 
             $attributes[$matches['name'][$i]] = $value;

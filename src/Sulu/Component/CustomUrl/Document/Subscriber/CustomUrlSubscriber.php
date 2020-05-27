@@ -107,7 +107,7 @@ class CustomUrlSubscriber implements EventSubscriberInterface
             $this->getRoutesPath($webspaceKey)
         );
 
-        if (!array_key_exists($domain, $oldRoutes)) {
+        if (!\array_key_exists($domain, $oldRoutes)) {
             $document->addRoute($domain, $route);
         }
 
@@ -148,7 +148,7 @@ class CustomUrlSubscriber implements EventSubscriberInterface
         $persistedLocale,
         $routesPath
     ) {
-        $path = sprintf('%s/%s', $routesPath, $domain);
+        $path = \sprintf('%s/%s', $routesPath, $domain);
         $routeDocument = $this->findOrCreateRoute($path, $persistedLocale, $document, $domain);
         $routeDocument->setTargetDocument($document);
         $routeDocument->setLocale($locale->getLocale());
@@ -248,7 +248,7 @@ class CustomUrlSubscriber implements EventSubscriberInterface
 
                 $routes[$path] = $routeDocument;
                 $tmp = $this->findReferrer($routeDocument, $webspaceKey);
-                $routes = array_merge($routes, $tmp);
+                $routes = \array_merge($routes, $tmp);
             }
         }
 

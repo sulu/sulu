@@ -38,13 +38,13 @@ abstract class AbstractImageFormatCompilerPass implements CompilerPassInterface
 
         $files = $this->getFiles($container);
         foreach ($files as $file) {
-            if (file_exists($file)) {
+            if (\file_exists($file)) {
                 $this->loadFormatsFromFile($file, $formats);
             }
         }
 
         if ($container->hasParameter('sulu_media.image.formats')) {
-            $formats = array_merge($container->getParameter('sulu_media.image.formats'), $formats);
+            $formats = \array_merge($container->getParameter('sulu_media.image.formats'), $formats);
         }
 
         $container->setParameter('sulu_media.image.formats', $formats);
@@ -64,8 +64,8 @@ abstract class AbstractImageFormatCompilerPass implements CompilerPassInterface
      */
     private function loadFormatsFromFile($path, array &$formats)
     {
-        $folder = dirname($path);
-        $file = basename($path);
+        $folder = \dirname($path);
+        $file = \basename($path);
 
         $locator = new FileLocator($folder);
 
@@ -79,9 +79,9 @@ abstract class AbstractImageFormatCompilerPass implements CompilerPassInterface
 
         $fileFormats = $loader->load($file);
         foreach ($fileFormats as $format) {
-            if (array_key_exists($format['key'], $formats) && $formats[$format['key']] !== $format) {
+            if (\array_key_exists($format['key'], $formats) && $formats[$format['key']] !== $format) {
                 throw new InvalidArgumentException(
-                    sprintf('Media format with key "%s" already exists!', $format['key'])
+                    \sprintf('Media format with key "%s" already exists!', $format['key'])
                 );
             }
 

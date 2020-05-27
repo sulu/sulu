@@ -86,12 +86,12 @@ class StructureSubscriber implements EventSubscriberInterface
                 )
             );
 
-            if (false !== array_search('defaultPage', $context->attributes->get('groups')->getOrElse([]))) {
+            if (false !== \array_search('defaultPage', $context->attributes->get('groups')->getOrElse([]))) {
                 $this->addStructureProperties($structureMetadata, $document, $visitor);
             }
 
             // create bread crumbs
-            if (false !== array_search('breadcrumbPage', $context->attributes->get('groups')->getOrElse([]))) {
+            if (false !== \array_search('breadcrumbPage', $context->attributes->get('groups')->getOrElse([]))) {
                 $this->addBreadcrumb($document, $visitor);
             }
         }
@@ -109,7 +109,7 @@ class StructureSubscriber implements EventSubscriberInterface
         $structure = $document->getStructure();
         $data = $structure->toArray();
         foreach ($structureMetadata->getProperties() as $name => $property) {
-            if ('title' === $name || !array_key_exists($name, $data) || $property->hasTag('sulu.rlp')) {
+            if ('title' === $name || !\array_key_exists($name, $data) || $property->hasTag('sulu.rlp')) {
                 continue;
             }
 
@@ -137,9 +137,9 @@ class StructureSubscriber implements EventSubscriberInterface
             $parentDocument = $this->inspector->getParent($parentDocument);
         }
 
-        $items = array_reverse($items);
+        $items = \array_reverse($items);
 
-        array_walk(
+        \array_walk(
             $items,
             function(&$item, $index) {
                 $item['depth'] = $index;

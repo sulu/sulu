@@ -43,7 +43,7 @@ class CacheClearCommand extends BaseCacheClearCommand
             $kernelFactory = $this->getContainer()->get('sulu_preview.preview.kernel_factory');
             $previewKernel = $kernelFactory->create($kernel->getEnvironment());
 
-            $applicationKernelReflection = new \ReflectionProperty(get_class($this->getApplication()), 'kernel');
+            $applicationKernelReflection = new \ReflectionProperty(\get_class($this->getApplication()), 'kernel');
             $applicationKernelReflection->setAccessible(true);
 
             // set preview container
@@ -51,25 +51,25 @@ class CacheClearCommand extends BaseCacheClearCommand
             $applicationKernelReflection->setValue($this->getApplication(), $previewKernel);
             $this->setContainer($previewKernel->getContainer());
 
-            $io->comment(sprintf('Clearing the <info>preview cache</info> for the <info>%s</info> environment with debug <info>%s</info>',
-                $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
+            $io->comment(\sprintf('Clearing the <info>preview cache</info> for the <info>%s</info> environment with debug <info>%s</info>',
+                $kernel->getEnvironment(), \var_export($kernel->isDebug(), true)));
 
             parent::execute($input, $nullOutput);
 
-            $io->success(sprintf('Preview cache for the "%s" environment (debug=%s) was successfully cleared.',
-                $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
+            $io->success(\sprintf('Preview cache for the "%s" environment (debug=%s) was successfully cleared.',
+                $kernel->getEnvironment(), \var_export($kernel->isDebug(), true)));
 
             // set back to previous container
             $applicationKernelReflection->setValue($this->getApplication(), $kernel);
             $this->setContainer($container);
         }
 
-        $io->comment(sprintf('Clearing the <info>%s cache</info> for the <info>%s</info> environment with debug <info>%s</info>',
-            $context, $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
+        $io->comment(\sprintf('Clearing the <info>%s cache</info> for the <info>%s</info> environment with debug <info>%s</info>',
+            $context, $kernel->getEnvironment(), \var_export($kernel->isDebug(), true)));
 
         parent::execute($input, $nullOutput);
 
-        $io->success(sprintf('%s cache for the "%s" environment (debug=%s) was successfully cleared.',
-            ucfirst($context), $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
+        $io->success(\sprintf('%s cache for the "%s" environment (debug=%s) was successfully cleared.',
+            \ucfirst($context), $kernel->getEnvironment(), \var_export($kernel->isDebug(), true)));
     }
 }

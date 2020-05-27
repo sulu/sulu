@@ -131,7 +131,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
 
         $this->processTemplates($container, $config);
 
-        if (array_key_exists('SuluSearchBundle', $bundles)) {
+        if (\array_key_exists('SuluSearchBundle', $bundles)) {
             $this->processSearch($config, $loader, $container);
         }
 
@@ -150,11 +150,11 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $loader->load('command.xml');
         $loader->load('link-tag.xml');
 
-        if (array_key_exists('SuluAutomationBundle', $bundles)) {
+        if (\array_key_exists('SuluAutomationBundle', $bundles)) {
             $loader->load('automation.xml');
         }
 
-        if (array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
+        if (\array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
             $loader->load('rule.xml');
         }
 

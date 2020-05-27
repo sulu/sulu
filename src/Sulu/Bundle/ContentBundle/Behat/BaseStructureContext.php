@@ -38,8 +38,8 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
             return;
         }
 
-        foreach (array_keys($this->templatePaths) as $templatePath) {
-            unlink($templatePath);
+        foreach (\array_keys($this->templatePaths) as $templatePath) {
+            \unlink($templatePath);
         }
 
         $this->templatePaths = [];
@@ -67,7 +67,7 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
     protected function createStructures($type, $data)
     {
         foreach ($data as $structureData) {
-            $structureData = array_merge([
+            $structureData = \array_merge([
                 'title' => null,
                 'url' => null,
                 'template' => null,
@@ -87,7 +87,7 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
 
             $propertyData = [];
             if ($structureData['data']) {
-                $propertyData = json_decode($structureData['data'], true);
+                $propertyData = \json_decode($structureData['data'], true);
                 if (null === $propertyData) {
                     throw new \Exception('Could not decode json string: "%s"', $structureData['data']);
                 }
@@ -152,7 +152,7 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
         $paths = $this->getContainer()->getParameter('sulu.content.structure.paths');
 
         if (!isset($paths[$type])) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Unknown structure type, "%s" in behat test',
                 $type
             ));
@@ -160,8 +160,8 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
 
         $paths = $paths[$type];
 
-        if (0 == count($paths)) {
-            throw new \Exception(sprintf(
+        if (0 == \count($paths)) {
+            throw new \Exception(\sprintf(
                 'No "%s" paths configured in container parameter "sulu.content.structure.paths',
                 $type
             ));
@@ -170,11 +170,11 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
         if (isset($paths[0])) {
             $path = $paths[0];
         } else {
-            $path = reset($paths);
+            $path = \reset($paths);
         }
 
         $templatePath = $path['path'] . '/' . $name . '.xml';
         $this->templatePaths[$templatePath] = true;
-        file_put_contents($templatePath, $template);
+        \file_put_contents($templatePath, $template);
     }
 }

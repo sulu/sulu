@@ -38,7 +38,7 @@ class MessageBuilderTest extends \PHPUnit_Framework_TestCase
                 ],
                 'error' => false,
             ],
-            json_decode($this->messageBuilder->build('sulu', ['key' => 'value'], ['option' => 'value']), true)
+            \json_decode($this->messageBuilder->build('sulu', ['key' => 'value'], ['option' => 'value']), true)
         );
     }
 }

@@ -182,7 +182,7 @@ class Category extends ApiEntityWrapper
         if (null !== $this->entity->getMeta()) {
             foreach ($this->entity->getMeta() as $meta) {
                 if (!$meta->getLocale() || $meta->getLocale() === $this->locale) {
-                    array_push(
+                    \array_push(
                         $arrReturn,
                         [
                             'id' => $meta->getId(),
@@ -433,7 +433,7 @@ class Category extends ApiEntityWrapper
     private function getUserFullName($user)
     {
         $strReturn = '';
-        if ($user && method_exists($user, 'getContact')) {
+        if ($user && \method_exists($user, 'getContact')) {
             $strReturn = $user->getContact()->getFirstName() . ' ' . $user->getContact()->getLastName();
         }
 

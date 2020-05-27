@@ -39,7 +39,7 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
         $this->messageBuilder = $this->prophesize(MessageBuilderInterface::class);
         $this->messageBuilder->build(Argument::any(), Argument::any(), Argument::any(), Argument::any())->will(
             function($arguments) {
-                return json_encode(
+                return \json_encode(
                     [
                         'handler' => $arguments[0],
                         'message' => $arguments[1],
@@ -84,7 +84,7 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
 
         $this->messageDispatcher->add('test', $handler->reveal());
 
-        $result = json_decode(
+        $result = \json_decode(
             $this->messageDispatcher->dispatch(
                 $conn->reveal(),
                 'test',
@@ -121,7 +121,7 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
 
         $this->messageDispatcher->add('test', $handler->reveal());
 
-        $result = json_decode(
+        $result = \json_decode(
             $this->messageDispatcher->dispatch($conn->reveal(), 'test', $message, ['id' => 'test'], $context->reveal()),
             true
         );
@@ -152,7 +152,7 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
 
         $this->messageDispatcher->add('test', $handler->reveal());
 
-        $result = json_decode(
+        $result = \json_decode(
             $this->messageDispatcher->dispatch(
                 $conn->reveal(),
                 'test',

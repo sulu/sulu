@@ -36,7 +36,7 @@ class RunWebsocketCommand extends ContainerAwareCommand
         $manager = $this->getContainer()->get(self::MANAGER_ID);
 
         $output->writeln(
-            sprintf(
+            \sprintf(
                 'Websocket server started: "ws://%s:%s/<route>" bound to IP %s',
                 $manager->getHttpHost(),
                 $manager->getPort(),

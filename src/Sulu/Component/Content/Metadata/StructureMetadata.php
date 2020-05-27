@@ -74,11 +74,11 @@ class StructureMetadata extends ItemMetadata
     {
         if (!isset($this->properties[$name])) {
             throw new \InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     'Unknown model property "%s", in structure "%s". Known model properties: "%s". Loaded from "%s"',
                     $name,
                     $this->getName(),
-                    implode('", "', array_keys($this->properties)),
+                    \implode('", "', \array_keys($this->properties)),
                     $this->resource
                 )
             );
@@ -115,7 +115,7 @@ class StructureMetadata extends ItemMetadata
         $properties = [];
         foreach ($this->children as $child) {
             if ($child instanceof SectionMetadata) {
-                $properties = array_merge($properties, $child->getChildren());
+                $properties = \array_merge($properties, $child->getChildren());
 
                 continue;
             }
@@ -133,7 +133,7 @@ class StructureMetadata extends ItemMetadata
      */
     public function hasProperty($name)
     {
-        return array_key_exists($name, $this->properties);
+        return \array_key_exists($name, $this->properties);
     }
 
     /**
@@ -150,7 +150,7 @@ class StructureMetadata extends ItemMetadata
 
         if (!$properties) {
             throw new \InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     'No property with tag "%s" exists. In structure "%s" loaded from "%s"',
                     $tagName,
                     $this->name,
@@ -159,7 +159,7 @@ class StructureMetadata extends ItemMetadata
             );
         }
 
-        return reset($properties);
+        return \reset($properties);
     }
 
     /**
@@ -172,7 +172,7 @@ class StructureMetadata extends ItemMetadata
      */
     public function hasPropertyWithTagName($tagName)
     {
-        return (bool) count($this->getPropertiesByTagName($tagName));
+        return (bool) \count($this->getPropertiesByTagName($tagName));
     }
 
     /**

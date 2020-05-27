@@ -101,7 +101,7 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
     {
         foreach ($this->localizationManager->getLocalizations() as $localization) {
             $rows = $this->session->getWorkspace()->getQueryManager()->createQuery(
-                sprintf(
+                \sprintf(
                     'SELECT * FROM [nt:unstructured] WHERE [%s] = "%s"',
                     $this->propertyEncoder->localizedSystemName('nodeType', $localization->getLocale()),
                     RedirectType::EXTERNAL
@@ -135,12 +135,12 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
         $properties = [];
 
         // find templates containing URL fields
-        $structureMetadatas = array_merge(
+        $structureMetadatas = \array_merge(
             $this->structureMetadataFactory->getStructures('page'),
             $this->structureMetadataFactory->getStructures('snippet')
         );
 
-        $structureMetadatas = array_filter(
+        $structureMetadatas = \array_filter(
             $structureMetadatas,
             function(StructureMetadata $structureMetadata) use (&$properties) {
                 $structureName = $structureMetadata->getName();
@@ -197,12 +197,12 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
                 }
             }
 
-            if (count($componentResult['children']) > 0) {
+            if (\count($componentResult['children']) > 0) {
                 $result['components'][$component->getName()] = $componentResult;
             }
         }
 
-        if (count($result['components']) > 0) {
+        if (\count($result['components']) > 0) {
             $properties[$structureName][] = $result;
         }
     }
@@ -218,7 +218,7 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
     {
         foreach ($this->localizationManager->getLocalizations() as $localization) {
             $rows = $this->session->getWorkspace()->getQueryManager()->createQuery(
-                sprintf(
+                \sprintf(
                     'SELECT * FROM [nt:unstructured] WHERE [%s] = "%s" OR [%s] = "%s"',
                     $this->propertyEncoder->localizedSystemName('template', $localization->getLocale()),
                     $structureMetadata->getName(),
@@ -248,7 +248,7 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
         $document = $this->documentManager->find($node->getIdentifier(), $locale);
         $documentLocales = $this->documentInspector->getLocales($document);
 
-        if (!in_array($locale, $documentLocales)) {
+        if (!\in_array($locale, $documentLocales)) {
             return;
         }
 
@@ -276,7 +276,7 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
         PropertyValue $propertyValue,
         $addScheme
     ) {
-        $componentNames = array_map(
+        $componentNames = \array_map(
             function($item) {
                 return $item['component']->getName();
             },
@@ -285,7 +285,7 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
 
         $value = $propertyValue->getValue();
         foreach ($value as &$item) {
-            if (!in_array($item['type'], $componentNames)) {
+            if (!\in_array($item['type'], $componentNames)) {
                 continue;
             }
 
@@ -333,12 +333,12 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
     private function upgradeUrl(&$value)
     {
         if (!empty($value)
-            && false === strpos($value, 'http://')
-            && false === strpos($value, 'https://')
-            && false === strpos($value, 'ftp://')
-            && false === strpos($value, 'ftps://')
-            && false === strpos($value, 'mailto:')
-            && false === strpos($value, '//')
+            && false === \strpos($value, 'http://')
+            && false === \strpos($value, 'https://')
+            && false === \strpos($value, 'ftp://')
+            && false === \strpos($value, 'ftps://')
+            && false === \strpos($value, 'mailto:')
+            && false === \strpos($value, '//')
         ) {
             $value = 'http://' . $value;
         }
@@ -355,8 +355,8 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
      */
     private function downgradeUrl(&$value)
     {
-        if (0 === strpos($value, 'http://')) {
-            $value = substr($value, 7);
+        if (0 === \strpos($value, 'http://')) {
+            $value = \substr($value, 7);
         }
 
         return $value;

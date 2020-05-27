@@ -106,7 +106,7 @@ class RouteProvider implements RouteProviderInterface
 
         $prefix = $attributes->getAttribute('resourceLocatorPrefix');
 
-        if (!empty($prefix) && 0 === strpos($path, $prefix)) {
+        if (!empty($prefix) && 0 === \strpos($path, $prefix)) {
             $path = PathHelper::relativizePath($path, $prefix);
         }
 
@@ -118,7 +118,7 @@ class RouteProvider implements RouteProviderInterface
         $path = $this->stripFormatExtension($path, $format);
 
         $route = $this->findRouteByPath($path, $request->getLocale());
-        if ($route && array_key_exists($route->getId(), $this->symfonyRouteCache)) {
+        if ($route && \array_key_exists($route->getId(), $this->symfonyRouteCache)) {
             $collection->add(
                 self::ROUTE_PREFIX . $route->getId(),
                 $this->symfonyRouteCache[$route->getId()]
@@ -153,8 +153,8 @@ class RouteProvider implements RouteProviderInterface
      */
     private function findRouteByPath($path, $locale)
     {
-        $path = '/' . ltrim($path, '/');
-        if (!array_key_exists($path, $this->routeCache)) {
+        $path = '/' . \ltrim($path, '/');
+        if (!\array_key_exists($path, $this->routeCache)) {
             $this->routeCache[$path] = $this->routeRepository->findByPath($path, $locale);
         }
 
@@ -163,7 +163,7 @@ class RouteProvider implements RouteProviderInterface
 
     public function getRouteByName($name)
     {
-        if (0 !== strpos($name, self::ROUTE_PREFIX)) {
+        if (0 !== \strpos($name, self::ROUTE_PREFIX)) {
             throw new RouteNotFoundException();
         }
 
@@ -175,8 +175,8 @@ class RouteProvider implements RouteProviderInterface
             throw new RouteNotFoundException();
         }
 
-        $routeId = substr($name, strlen(self::ROUTE_PREFIX));
-        if (array_key_exists($routeId, $this->symfonyRouteCache)) {
+        $routeId = \substr($name, \strlen(self::ROUTE_PREFIX));
+        if (\array_key_exists($routeId, $this->symfonyRouteCache)) {
             return $this->symfonyRouteCache[$routeId];
         }
 
@@ -262,7 +262,7 @@ class RouteProvider implements RouteProviderInterface
             return '';
         }
 
-        return '/' . ltrim(rawurldecode($pathInfo), '/');
+        return '/' . \ltrim(\rawurldecode($pathInfo), '/');
     }
 
     /**
@@ -276,8 +276,8 @@ class RouteProvider implements RouteProviderInterface
     private function stripFormatExtension($path, $format)
     {
         $extension = '.' . $format;
-        if (substr($path, -strlen($extension)) === $extension) {
-            $path = substr($path, 0, strlen($path) - strlen($extension));
+        if (\substr($path, -\strlen($extension)) === $extension) {
+            $path = \substr($path, 0, \strlen($path) - \strlen($extension));
         }
 
         return $path;

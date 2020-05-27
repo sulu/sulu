@@ -442,8 +442,8 @@ class UserManager implements UserManagerInterface
         }
 
         $userRole->setRole($role);
-        if (array_key_exists('locales', $userRoleData)) {
-            $userRole->setLocale(json_encode($userRoleData['locales']));
+        if (\array_key_exists('locales', $userRoleData)) {
+            $userRole->setLocale(\json_encode($userRoleData['locales']));
         } else {
             $userRole->setLocale($userRoleData['locale']);
         }
@@ -482,7 +482,7 @@ class UserManager implements UserManagerInterface
             $userRole = new UserRole();
             $userRole->setUser($user);
             $userRole->setRole($role);
-            $userRole->setLocale(json_encode($userRoleData['locales']));
+            $userRole->setLocale(\json_encode($userRoleData['locales']));
             $this->em->persist($userRole);
 
             $user->addUserRole($userRole);
@@ -511,7 +511,7 @@ class UserManager implements UserManagerInterface
         $userGroup = new UserGroup();
         $userGroup->setUser($user);
         $userGroup->setGroup($group);
-        $userGroup->setLocale(json_encode($userGroupData['locales']));
+        $userGroup->setLocale(\json_encode($userGroupData['locales']));
         $this->em->persist($userGroup);
 
         $user->addUserGroup($userGroup);
@@ -537,8 +537,8 @@ class UserManager implements UserManagerInterface
         }
 
         $userGroup->setGroup($group);
-        if (array_key_exists('locales', $userGroupData)) {
-            $userGroup->setLocale(json_encode($userGroupData['locales']));
+        if (\array_key_exists('locales', $userGroupData)) {
+            $userGroup->setLocale(\json_encode($userGroupData['locales']));
         } else {
             $userGroup->setLocale($userGroupData['locale']);
         }
@@ -608,7 +608,7 @@ class UserManager implements UserManagerInterface
      */
     private function getProperty($data, $key, $default = null)
     {
-        if (array_key_exists($key, $data)) {
+        if (\array_key_exists($key, $data)) {
             return $data[$key];
         }
 
@@ -628,7 +628,7 @@ class UserManager implements UserManagerInterface
         if ($contact) {
             // if no email passed try to use the contact's first email
             if (null === $email &&
-                array_key_exists('emails', $contact) && count($contact['emails']) > 0 &&
+                \array_key_exists('emails', $contact) && \count($contact['emails']) > 0 &&
                 $this->isEmailUnique($contact['emails'][0]['email'])
             ) {
                 $email = $contact['emails'][0]['email'];
@@ -684,7 +684,7 @@ class UserManager implements UserManagerInterface
      */
     private function resetIndexOfSubentites($entities)
     {
-        if (count($entities) > 0 && method_exists($entities, 'getValues')) {
+        if (\count($entities) > 0 && \method_exists($entities, 'getValues')) {
             $newEntities = $entities->getValues();
             $entities->clear();
             foreach ($newEntities as $value) {

@@ -59,10 +59,10 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerInvalid
     {
         $reference = $id;
         if (!Uuid::isValid($id)) {
-            $reference = sprintf('%s-%s', $alias, $id);
+            $reference = \sprintf('%s-%s', $alias, $id);
         }
 
-        if (in_array($reference, $this->referencesToInvalidate)) {
+        if (\in_array($reference, $this->referencesToInvalidate)) {
             return;
         }
 
@@ -71,21 +71,21 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerInvalid
 
     public function updateResponse(Response $response, StructureInterface $structure)
     {
-        $tags = array_merge([$structure->getUuid()], $this->getTags());
+        $tags = \array_merge([$structure->getUuid()], $this->getTags());
 
-        $response->headers->set(self::TAGS_HEADER, implode(',', $tags));
+        $response->headers->set(self::TAGS_HEADER, \implode(',', $tags));
     }
 
     public function flush()
     {
-        if (0 === count($this->referencesToInvalidate)) {
+        if (0 === \count($this->referencesToInvalidate)) {
             return false;
         }
 
         foreach ($this->referencesToInvalidate as $reference) {
             $this->proxyClient->ban(
                 [
-                    self::TAGS_HEADER => sprintf('(%s)(,.+)?$', preg_quote($reference)),
+                    self::TAGS_HEADER => \sprintf('(%s)(,.+)?$', \preg_quote($reference)),
                 ]
             );
         }
@@ -105,7 +105,7 @@ class TagsHandler implements HandlerInvalidateStructureInterface, HandlerInvalid
     {
         $tags = [];
         foreach ($this->referenceStorePool->getStores() as $alias => $referenceStore) {
-            $tags = array_merge($tags, $this->getTagsFromStore($alias, $referenceStore));
+            $tags = \array_merge($tags, $this->getTagsFromStore($alias, $referenceStore));
         }
 
         return $tags;

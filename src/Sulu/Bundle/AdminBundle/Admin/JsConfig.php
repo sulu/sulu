@@ -60,10 +60,10 @@ class JsConfig implements JsConfigInterface
      */
     public function addParameters(array $params)
     {
-        if (!is_array($params)) {
+        if (!\is_array($params)) {
             throw new \InvalidArgumentException('$params has to be an array');
         }
-        $this->parameters = array_merge($this->parameters, $params);
+        $this->parameters = \array_merge($this->parameters, $params);
     }
 
     /**

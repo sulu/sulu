@@ -41,12 +41,12 @@ class SecurityContextVoter implements VoterInterface
 
     public function supportsAttribute($attribute)
     {
-        return in_array($attribute, array_keys($this->permissions));
+        return \in_array($attribute, \array_keys($this->permissions));
     }
 
     public function supportsClass($class)
     {
-        return SecurityCondition::class === $class || is_subclass_of($class, SecurityCondition::class);
+        return SecurityCondition::class === $class || \is_subclass_of($class, SecurityCondition::class);
     }
 
     public function vote(TokenInterface $token, $object, array $attributes)
@@ -54,14 +54,14 @@ class SecurityContextVoter implements VoterInterface
         /** @var User $user */
         $user = $token->getUser();
 
-        if (!is_object($object) ||
-            !$this->supportsClass(get_class($object))
+        if (!\is_object($object) ||
+            !$this->supportsClass(\get_class($object))
         ) {
             return VoterInterface::ACCESS_ABSTAIN;
         }
 
         $userPermissions = $this->accessControlManager->getUserPermissions($object, $user);
-        if (0 === count($userPermissions)) {
+        if (0 === \count($userPermissions)) {
             return VoterInterface::ACCESS_DENIED;
         }
 

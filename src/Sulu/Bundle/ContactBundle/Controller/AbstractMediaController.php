@@ -176,7 +176,7 @@ abstract class AbstractMediaController extends RestController
                     $listResponse,
                     self::$mediaEntityKey,
                     $routeName,
-                    array_merge(['id' => $id], $request->query->all()),
+                    \array_merge(['id' => $id], $request->query->all()),
                     $listBuilder->getCurrentPage(),
                     $listBuilder->getLimit(),
                     $listBuilder->count()
@@ -202,7 +202,7 @@ abstract class AbstractMediaController extends RestController
      */
     protected function getFieldsView($entityName)
     {
-        return $this->handleView($this->view(array_values($this->getFieldDescriptors($entityName, null)), 200));
+        return $this->handleView($this->view(\array_values($this->getFieldDescriptors($entityName, null)), 200));
     }
 
     /**
@@ -422,12 +422,12 @@ abstract class AbstractMediaController extends RestController
      */
     private function addThumbnails($entities, $locale)
     {
-        $ids = array_filter(array_column($entities, 'thumbnails'));
+        $ids = \array_filter(\array_column($entities, 'thumbnails'));
         $thumbnails = $this->getMediaManager()->getFormatUrls($ids, $locale);
         foreach ($entities as $key => $entity) {
-            if (array_key_exists('thumbnails', $entity)
+            if (\array_key_exists('thumbnails', $entity)
                 && $entity['thumbnails']
-                && array_key_exists($entity['thumbnails'], $thumbnails)
+                && \array_key_exists($entity['thumbnails'], $thumbnails)
             ) {
                 $entities[$key]['thumbnails'] = $thumbnails[$entity['thumbnails']];
             }
@@ -446,7 +446,7 @@ abstract class AbstractMediaController extends RestController
      */
     private function addUrls($entities, $locale)
     {
-        $ids = array_filter(array_column($entities, 'id'));
+        $ids = \array_filter(\array_column($entities, 'id'));
         $apiEntities = $this->getMediaManager()->getByIds($ids, $locale);
         $i = 0;
         foreach ($entities as $key => $entity) {

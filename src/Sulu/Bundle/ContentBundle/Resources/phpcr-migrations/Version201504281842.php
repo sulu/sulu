@@ -52,7 +52,7 @@ class Version201504281842 implements VersionInterface, ContainerAwareInterface
 SELECT * FROM [nt:unstructured] WHERE %s = 2
 EOT;
 
-                $query = $queryManager->createQuery(sprintf($sql, '[' . $propertyEncoder->localizedSystemName('nodeType', $locale) . ']'), 'JCR-SQL2');
+                $query = $queryManager->createQuery(\sprintf($sql, '[' . $propertyEncoder->localizedSystemName('nodeType', $locale) . ']'), 'JCR-SQL2');
                 $rows = $query->execute();
 
                 foreach ($rows as $row) {

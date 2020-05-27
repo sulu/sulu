@@ -117,7 +117,7 @@ class ContentNavigationRegistryTest extends \PHPUnit_Framework_TestCase
         foreach ($contentNavigationData as $service => $items) {
             $contentNavigationProvider = $this->prophesize(ContentNavigationProviderInterface::class);
 
-            $items = array_map(
+            $items = \array_map(
                 function($item) use (&$pos) {
                     $navigationItem = new ContentNavigationItem($item[0]);
                     $navigationItem->setAction($item[0]);
@@ -139,7 +139,7 @@ class ContentNavigationRegistryTest extends \PHPUnit_Framework_TestCase
 
             $this->assertEquals(
                 $result,
-                array_map(
+                \array_map(
                     function(ContentNavigationItem $item) {
                         return [$item->getAction()];
                     },

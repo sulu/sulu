@@ -195,10 +195,10 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
         $format = $this->formats[$formatKey];
         $title = $format['key'];
 
-        if (array_key_exists($locale, $format['meta']['title'])) {
+        if (\array_key_exists($locale, $format['meta']['title'])) {
             $title = $format['meta']['title'][$locale];
-        } elseif (count($format['meta']['title']) > 0) {
-            $title = array_values($format['meta']['title'])[0];
+        } elseif (\count($format['meta']['title']) > 0) {
+            $title = \array_values($format['meta']['title'])[0];
         }
 
         $formatArray = [
@@ -217,7 +217,7 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
 
         foreach ($this->formats as $format) {
             $options = [];
-            if (array_key_exists($format['key'], $formatOptions)) {
+            if (\array_key_exists($format['key'], $formatOptions)) {
                 $options = $formatOptions[$format['key']];
             }
             $definitionsArray[$format['key']] = $this->getFormatDefinition($format['key'], $locale, $options);
@@ -244,7 +244,7 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
             return $headers;
         }
 
-        $headers = array_merge(
+        $headers = \array_merge(
             $headers,
             $this->responseHeaders
         );
@@ -270,7 +270,7 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
      */
     protected function replaceExtension($filename, $mimeType)
     {
-        $info = pathinfo($filename);
+        $info = \pathinfo($filename);
 
         switch ($mimeType) {
             case 'image/png':
@@ -317,7 +317,7 @@ class FormatManager implements FormatManagerInterface, LoggerAwareInterface
     private function checkMimeTypeSupported($mimeType)
     {
         foreach ($this->supportedMimeTypes as $supportedMimeType) {
-            if (fnmatch($supportedMimeType, $mimeType)) {
+            if (\fnmatch($supportedMimeType, $mimeType)) {
                 return true;
             }
         }

@@ -36,7 +36,7 @@ class ExceptionWrapperHandler implements ExceptionWrapperHandlerInterface
     {
         $data['status_code'] = $data['exception']->getCode();
 
-        if (in_array($this->environment, ['dev', 'test'])) {
+        if (\in_array($this->environment, ['dev', 'test'])) {
             $data['errors'] = [$data['exception']];
         }
 

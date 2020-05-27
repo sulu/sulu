@@ -33,10 +33,10 @@ class ProviderNotFoundException extends \Exception
     public function __construct($name, array $available)
     {
         parent::__construct(
-            sprintf(
+            \sprintf(
                 'Provider "%s" does not exists. Available providers are: ["%s"]',
                 $name,
-                implode('", "', $available)
+                \implode('", "', $available)
             )
         );
 

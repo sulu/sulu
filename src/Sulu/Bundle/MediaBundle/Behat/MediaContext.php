@@ -50,7 +50,7 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
             ->findOneByTitle($name);
 
         if (!$meta) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Collection "%s" should exist'
             ));
         }
@@ -66,7 +66,7 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
             ->findOneByTitle($name);
 
         if ($meta) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Collection "%s" should not exist'
             ));
         }
@@ -87,8 +87,8 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
             'locale' => 'en',
             'type' => $mediaType->getId(),
             'collection' => $collection->getId(),
-            'name' => basename($name),
-            'title' => basename($name),
+            'name' => \basename($name),
+            'title' => \basename($name),
         ];
 
         $this->getMediaManager()->save($file, $data, $this->getUserId());
@@ -134,7 +134,7 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
         $actual = $this->getSession()->evaluateScript('$(".husky-thumbnails .item").length');
 
         if ($actual != $count) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Expected "%s" items but got "%s"', $count, $actual
             ));
         }
@@ -146,26 +146,26 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
     public function iAttachTheFileToTheCurrentDropZone($path)
     {
         if ($this->getMinkParameter('files_path')) {
-            $fullPath = rtrim(
-                    realpath($this->getMinkParameter('files_path')),
+            $fullPath = \rtrim(
+                    \realpath($this->getMinkParameter('files_path')),
                     \DIRECTORY_SEPARATOR
-                ) . \DIRECTORY_SEPARATOR . ltrim($path, \DIRECTORY_SEPARATOR);
+                ) . \DIRECTORY_SEPARATOR . \ltrim($path, \DIRECTORY_SEPARATOR);
         } else {
-            $fullPath = __DIR__ . \DIRECTORY_SEPARATOR . ltrim($path, \DIRECTORY_SEPARATOR);
+            $fullPath = __DIR__ . \DIRECTORY_SEPARATOR . \ltrim($path, \DIRECTORY_SEPARATOR);
         }
 
-        if (!is_file($fullPath)) {
-            throw new \InvalidArgumentException(sprintf('File doesn\'t exist (%s)', $fullPath));
+        if (!\is_file($fullPath)) {
+            throw new \InvalidArgumentException(\sprintf('File doesn\'t exist (%s)', $fullPath));
         }
 
         $fields = $this->getSession()->getPage()->findAll('css', 'input[type="file"]');
 
-        if (0 == count($fields)) {
+        if (0 == \count($fields)) {
             throw new ElementNotFoundException($this->getSession(), 'drop-zone upload field');
         }
 
         /** @var NodeElement $field */
-        $field = end($fields);
+        $field = \end($fields);
         $field->attachFile($fullPath);
     }
 

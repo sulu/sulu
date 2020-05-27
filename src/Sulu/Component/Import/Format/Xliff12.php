@@ -75,7 +75,7 @@ class Xliff12 implements FormatImportInterface
     private function getChildPropertyDatas($child)
     {
         $childProperties = [];
-        foreach (array_keys($child) as $childKey) {
+        foreach (\array_keys($child) as $childKey) {
             $childProperties[$childKey] = $this->getPropertyData($childKey, $child, $contentTypeName = null, $extension = null);
         }
 
@@ -89,8 +89,8 @@ class Xliff12 implements FormatImportInterface
      */
     protected function extractData(\DOMDocument $dom, $locale)
     {
-        $xml = simplexml_import_dom($dom);
-        $encoding = strtoupper($dom->encoding);
+        $xml = \simplexml_import_dom($dom);
+        $encoding = \strtoupper($dom->encoding);
         $xml->registerXPathNamespace('xliff', 'urn:oasis:names:tc:xliff:document:1.2');
 
         $documents = [];
@@ -145,7 +145,7 @@ class Xliff12 implements FormatImportInterface
             $name = (string) $attributes['resname'];
             $value = $this->utf8ToCharset((string) $translation->target, $encoding);
 
-            if (false === strpos($name, '#')) {
+            if (false === \strpos($name, '#')) {
                 $property = [
                     'name' => $name,
                     'value' => $value,
@@ -156,9 +156,9 @@ class Xliff12 implements FormatImportInterface
                 continue;
             }
 
-            $names = explode('#', $name, 2);
+            $names = \explode('#', $name, 2);
             $blockName = $names[0];
-            $names = explode('-', $names[1], 2);
+            $names = \explode('-', $names[1], 2);
             $blockNr = $names[0];
             $name = $names[1];
 
@@ -192,12 +192,12 @@ class Xliff12 implements FormatImportInterface
     private function utf8ToCharset($content, $encoding = null)
     {
         if ('UTF-8' !== $encoding && !empty($encoding)) {
-            if (function_exists('mb_convert_encoding')) {
-                return mb_convert_encoding($content, $encoding, 'UTF-8');
+            if (\function_exists('mb_convert_encoding')) {
+                return \mb_convert_encoding($content, $encoding, 'UTF-8');
             }
 
-            if (function_exists('iconv')) {
-                return iconv('UTF-8', $encoding, $content);
+            if (\function_exists('iconv')) {
+                return \iconv('UTF-8', $encoding, $content);
             }
 
             throw new \RuntimeException('No suitable convert encoding function (use UTF-8 as your encoding or install the iconv or mbstring extension).');

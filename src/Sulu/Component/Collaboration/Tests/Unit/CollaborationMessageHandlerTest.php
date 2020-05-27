@@ -106,7 +106,7 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
         $this->messageBuilder = $this->prophesize(MessageBuilderInterface::class);
         $this->messageBuilder->build(Argument::any(), Argument::any(), Argument::any(), Argument::any())->will(
             function($arguments) {
-                return json_encode(
+                return \json_encode(
                     [
                         'handler' => $arguments[0],
                         'message' => $arguments[1],
@@ -337,7 +337,7 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
         $oldCollaboration2 = $this->collaborationsEntityCache->fetch('page_a')[1];
 
         // Required to test if the changed date has really changed
-        sleep(1);
+        \sleep(1);
 
         $this->collaborationMessageHandler->handle(
             $this->connection1->reveal(),
@@ -377,12 +377,12 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
 
         /** @var Collaboration[] $connectionCollaborations */
         $connectionCollaborations = $this->collaborationsConnectionCache->fetch(1);
-        $connectionCollaborations['page_a']->setChanged(time() - 20);
+        $connectionCollaborations['page_a']->setChanged(\time() - 20);
         $this->collaborationsConnectionCache->save(1, $connectionCollaborations);
 
         /** @var Collaboration[] $entityCollaborations */
         $entityCollaborations = $this->collaborationsEntityCache->fetch('page_a');
-        $entityCollaborations[1]->setChanged(time() - 20);
+        $entityCollaborations[1]->setChanged(\time() - 20);
         $this->collaborationsEntityCache->save(1, $entityCollaborations);
 
         $this->connection2->send(

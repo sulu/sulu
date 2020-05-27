@@ -75,7 +75,7 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
 
         $this->proxyCache->ban(
             [
-                TagsHandler::TAGS_HEADER => '(' . preg_quote($uuid) . ')(,.+)?$',
+                TagsHandler::TAGS_HEADER => '(' . \preg_quote($uuid) . ')(,.+)?$',
             ]
         )->shouldBeCalled();
         $this->proxyCache->flush()->shouldBeCalled();
@@ -89,7 +89,7 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $this->proxyCache->ban(
             [
-                TagsHandler::TAGS_HEADER => '(' . preg_quote('test-1') . ')(,.+)?$',
+                TagsHandler::TAGS_HEADER => '(' . \preg_quote('test-1') . ')(,.+)?$',
             ]
         )->shouldBeCalled();
         $this->proxyCache->flush()->shouldBeCalled();
@@ -103,7 +103,7 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $this->proxyCache->ban(
             [
-                TagsHandler::TAGS_HEADER => '(' . preg_quote('test-1') . ')(,.+)?$',
+                TagsHandler::TAGS_HEADER => '(' . \preg_quote('test-1') . ')(,.+)?$',
             ]
         )->shouldBeCalledTimes(1);
         $this->proxyCache->flush()->shouldBeCalled();
@@ -132,7 +132,7 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
             ['article' => $articleStore->reveal(), 'contact' => $contactStore->reveal()]
         );
 
-        $this->parameterBag->set('X-Cache-Tags', implode(',', array_merge([$id], $articles, ['contact-1'])))
+        $this->parameterBag->set('X-Cache-Tags', \implode(',', \array_merge([$id], $articles, ['contact-1'])))
             ->shouldBeCalled();
 
         $this->handler->updateResponse($this->response->reveal(), $this->structure->reveal());

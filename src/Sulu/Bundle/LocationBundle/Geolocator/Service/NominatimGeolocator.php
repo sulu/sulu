@@ -60,7 +60,7 @@ class NominatimGeolocator implements GeolocatorInterface
         if (200 != $response->getStatusCode()) {
             throw new HttpException(
                 $response->getStatusCode(),
-                sprintf(
+                \sprintf(
                     'Server at "%s" returned HTTP "%s". Body: ',
                     $this->baseUrl,
                     $response->getStatusCode()
@@ -68,7 +68,7 @@ class NominatimGeolocator implements GeolocatorInterface
             );
         }
 
-        $results = json_decode($response->getBody(), true);
+        $results = \json_decode($response->getBody(), true);
         $response = new GeolocatorResponse();
         foreach ($results as $result) {
             $location = new GeolocatorLocation();

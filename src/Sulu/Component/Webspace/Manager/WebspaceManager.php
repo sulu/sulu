@@ -94,7 +94,7 @@ class WebspaceManager implements WebspaceManagerInterface
 
     public function findPortalInformationsByUrl($url, $environment)
     {
-        return array_filter(
+        return \array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
             function(PortalInformation $portalInformation) use ($url) {
                 return $this->matchUrl($url, $portalInformation->getUrl());
@@ -104,7 +104,7 @@ class WebspaceManager implements WebspaceManagerInterface
 
     public function findPortalInformationsByWebspaceKeyAndLocale($webspaceKey, $locale, $environment)
     {
-        return array_filter(
+        return \array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
             function(PortalInformation $portalInformation) use ($webspaceKey, $locale) {
                 return $portalInformation->getWebspace()->getKey() === $webspaceKey
@@ -115,7 +115,7 @@ class WebspaceManager implements WebspaceManagerInterface
 
     public function findPortalInformationsByPortalKeyAndLocale($portalKey, $locale, $environment)
     {
-        return array_filter(
+        return \array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
             function(PortalInformation $portalInformation) use ($portalKey, $locale) {
                 return $portalInformation->getPortal()
@@ -176,14 +176,14 @@ class WebspaceManager implements WebspaceManagerInterface
             $url = $this->createResourceLocatorUrl($scheme, $portalInformation->getUrl(), $resourceLocator);
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
                 if ($portalInformation->isMain()) {
-                    array_unshift($urls, $url);
+                    \array_unshift($urls, $url);
                 } else {
                     $urls[] = $url;
                 }
             }
         }
 
-        return reset($urls);
+        return \reset($urls);
     }
 
     public function getPortals()
@@ -209,7 +209,7 @@ class WebspaceManager implements WebspaceManagerInterface
 
     public function getPortalInformationsByWebspaceKey($environment, $webspaceKey)
     {
-        return array_filter(
+        return \array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
             function(PortalInformation $portal) use ($webspaceKey) {
                 return $portal->getWebspaceKey() === $webspaceKey;
@@ -240,7 +240,7 @@ class WebspaceManager implements WebspaceManagerInterface
             $defaultLocale = $webspace->getDefaultLocalization();
             $locales[$defaultLocale->getLocale()] = $defaultLocale;
             foreach ($webspace->getAllLocalizations() as $localization) {
-                if (!array_key_exists($localization->getLocale(), $locales)) {
+                if (!\array_key_exists($localization->getLocale(), $locales)) {
                     $locales[$localization->getLocale()] = $localization;
                 }
             }
@@ -307,7 +307,7 @@ class WebspaceManager implements WebspaceManagerInterface
         ];
 
         // overwrite the default values with the given options
-        $this->options = array_merge($this->options, $options);
+        $this->options = \array_merge($this->options, $options);
     }
 
     /**
@@ -324,13 +324,13 @@ class WebspaceManager implements WebspaceManagerInterface
             return true;
         }
 
-        $parsedUrl = parse_url($url);
+        $parsedUrl = \parse_url($url);
         // if domain or subdomain
         if (
             isset($parsedUrl['host'])
             && (
                 $parsedUrl['host'] == $domain
-                || fnmatch('*.' . $domain, $parsedUrl['host'])
+                || \fnmatch('*.' . $domain, $parsedUrl['host'])
             )
         ) {
             return true;
@@ -363,11 +363,11 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     private function createResourceLocatorUrl($scheme, $portalUrl, $resourceLocator)
     {
-        if (false !== strpos($portalUrl, '/')) {
+        if (false !== \strpos($portalUrl, '/')) {
             // trim slash when resourceLocator is not domain root
-            $resourceLocator = rtrim($resourceLocator, '/');
+            $resourceLocator = \rtrim($resourceLocator, '/');
         }
 
-        return rtrim(sprintf('%s://%s', $scheme, $portalUrl), '/') . $resourceLocator;
+        return \rtrim(\sprintf('%s://%s', $scheme, $portalUrl), '/') . $resourceLocator;
     }
 }

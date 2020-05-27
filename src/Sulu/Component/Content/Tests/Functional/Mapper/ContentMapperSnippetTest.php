@@ -210,7 +210,7 @@ class ContentMapperSnippetTest extends SuluTestCase
         if ($multiple) {
             $contents = $referrer->getStructure()->getProperty('animals')->getValue();
             $this->assertCount(1, $contents);
-            $content = reset($contents);
+            $content = \reset($contents);
             $this->assertEquals($this->snippet2->getUuid(), $content);
         } else {
             $contents = $referrer->getStructure()->getProperty('animals')->getValue();

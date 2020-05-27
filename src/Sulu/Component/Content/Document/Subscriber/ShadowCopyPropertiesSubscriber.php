@@ -83,9 +83,9 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
             if ($property->getValue() === $document->getLocale()) {
                 $locale = $this->getLocale($property->getName());
 
-                $node->setProperty(sprintf(self::TAGS_PROPERTY, $locale), $tags);
-                $node->setProperty(sprintf(self::CATEGORIES_PROPERTY, $locale), $categories);
-                $node->setProperty(sprintf(self::NAVIGATION_CONTEXT_PROPERTY, $locale), $navigationContext);
+                $node->setProperty(\sprintf(self::TAGS_PROPERTY, $locale), $tags);
+                $node->setProperty(\sprintf(self::CATEGORIES_PROPERTY, $locale), $categories);
+                $node->setProperty(\sprintf(self::NAVIGATION_CONTEXT_PROPERTY, $locale), $navigationContext);
             }
         }
     }
@@ -103,9 +103,9 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
         $categories = $this->getCategories($node, $shadowLocale);
         $navigationContext = $this->getNavigationContext($node, $shadowLocale);
 
-        $node->setProperty(sprintf(self::TAGS_PROPERTY, $document->getLocale()), $tags);
-        $node->setProperty(sprintf(self::CATEGORIES_PROPERTY, $document->getLocale()), $categories);
-        $node->setProperty(sprintf(self::NAVIGATION_CONTEXT_PROPERTY, $document->getLocale()), $navigationContext);
+        $node->setProperty(\sprintf(self::TAGS_PROPERTY, $document->getLocale()), $tags);
+        $node->setProperty(\sprintf(self::CATEGORIES_PROPERTY, $document->getLocale()), $categories);
+        $node->setProperty(\sprintf(self::NAVIGATION_CONTEXT_PROPERTY, $document->getLocale()), $navigationContext);
     }
 
     /**
@@ -118,7 +118,7 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
     private function getTags(NodeInterface $node, $locale)
     {
         return $node->getPropertyValueWithDefault(
-            sprintf(self::TAGS_PROPERTY, $locale),
+            \sprintf(self::TAGS_PROPERTY, $locale),
             []
         );
     }
@@ -133,7 +133,7 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
     private function getCategories(NodeInterface $node, $locale)
     {
         return $node->getPropertyValueWithDefault(
-            sprintf(self::CATEGORIES_PROPERTY, $locale),
+            \sprintf(self::CATEGORIES_PROPERTY, $locale),
             []
         );
     }
@@ -148,14 +148,14 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
     private function getNavigationContext(NodeInterface $node, $locale)
     {
         return $node->getPropertyValueWithDefault(
-            sprintf(self::NAVIGATION_CONTEXT_PROPERTY, $locale),
+            \sprintf(self::NAVIGATION_CONTEXT_PROPERTY, $locale),
             []
         );
     }
 
     private function getLocale($propertyName)
     {
-        preg_match('/i18n:(?P<locale>.+)-shadow-base/', $propertyName, $match);
+        \preg_match('/i18n:(?P<locale>.+)-shadow-base/', $propertyName, $match);
 
         return $match['locale'];
     }

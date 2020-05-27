@@ -185,7 +185,7 @@ class UserBlameSubscriberTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo($this->userBlameObject->reveal()))
             ->willReturn($changeset);
 
-        $this->entityManager->getClassMetadata(get_class($entity))->willReturn($this->classMetadata);
+        $this->entityManager->getClassMetadata(\get_class($entity))->willReturn($this->classMetadata);
 
         foreach (['creator', 'changer'] as $field) {
             $prophecy = $this->classMetadata->setFieldValue(
@@ -194,7 +194,7 @@ class UserBlameSubscriberTest extends \PHPUnit_Framework_TestCase
                 $this->user->reveal()
             );
 
-            if (in_array($field, $expectedFields)) {
+            if (\in_array($field, $expectedFields)) {
                 $prophecy->shouldBeCalled();
 
                 continue;
@@ -203,7 +203,7 @@ class UserBlameSubscriberTest extends \PHPUnit_Framework_TestCase
             $prophecy->shouldNotBeCalled();
         }
 
-        if (count($expectedFields)) {
+        if (\count($expectedFields)) {
             $this->unitOfWork->method('recomputeSingleEntityChangeSet')
                 ->with(
                     $this->equalTo($this->classMetadata->reveal()),
@@ -236,7 +236,7 @@ class UserBlameSubscriberTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo($this->userBlameObject->reveal()))
             ->willReturn($changeset);
 
-        $this->entityManager->getClassMetadata(get_class($entity))->willReturn($this->classMetadata);
+        $this->entityManager->getClassMetadata(\get_class($entity))->willReturn($this->classMetadata);
 
         foreach (['creator', 'changer'] as $field) {
             $prophecy = $this->classMetadata->setFieldValue(

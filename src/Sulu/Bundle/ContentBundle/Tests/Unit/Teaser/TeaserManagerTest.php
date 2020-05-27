@@ -96,7 +96,7 @@ class TeaserManagerTest extends \PHPUnit_Framework_TestCase
 
     private function getTeaserMocks(array $items)
     {
-        return array_map(
+        return \array_map(
             function($item) {
                 $teaser = $this->prophesize(Teaser::class);
                 $teaser->getType()->willReturn($item['type']);

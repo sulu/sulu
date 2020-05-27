@@ -73,10 +73,10 @@ class StructureManager implements StructureManagerInterface
     {
         if (!isset($this->typeMap[$type])) {
             throw new \InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     'Invalid legacy type "%s", known types: "%s"',
                     $type,
-                    implode('", "', array_keys($this->typeMap))
+                    \implode('", "', \array_keys($this->typeMap))
                 )
             );
         }

@@ -32,7 +32,7 @@ class LocalizationController extends FOSRestController implements ClassResourceI
         $localizationManager = $this->get('sulu.core.localization_manager');
 
         $representation = new CollectionRepresentation(
-            array_values($localizationManager->getLocalizations()),
+            \array_values($localizationManager->getLocalizations()),
             'localizations'
         );
 

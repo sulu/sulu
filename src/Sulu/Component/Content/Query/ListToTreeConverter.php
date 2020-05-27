@@ -47,28 +47,28 @@ class ListToTreeConverter
         $map = [];
         $minDepth = 99;
         foreach ($data as $item) {
-            $path = rtrim('/root' . $item['path'], '/');
+            $path = \rtrim('/root' . $item['path'], '/');
             $map[$path] = $item;
 
-            $parts = explode('/', $path);
-            $parts = array_filter($parts);
-            $depth = count($parts);
+            $parts = \explode('/', $path);
+            $parts = \array_filter($parts);
+            $depth = \count($parts);
             if ($minDepth > $depth) {
                 $minDepth = $depth;
             }
         }
 
-        uksort(
+        \uksort(
             $map,
             function($a, $b) use ($map) {
-                $depthDifference = substr_count($a, '/') - substr_count($b, '/');
+                $depthDifference = \substr_count($a, '/') - \substr_count($b, '/');
                 if ($depthDifference > 0) {
                     return 1;
                 } elseif ($depthDifference < 0) {
                     return -1;
                 } else {
-                    $aPosition = array_search($a, array_keys($map));
-                    $bPosition = array_search($b, array_keys($map));
+                    $aPosition = \array_search($a, \array_keys($map));
+                    $bPosition = \array_search($b, \array_keys($map));
 
                     return ($aPosition < $bPosition) ? -1 : 1;
                 }
@@ -78,8 +78,8 @@ class ListToTreeConverter
         $tree = $this->explodeTree($map, '/');
 
         for ($i = 0; $i < $minDepth - 1; ++$i) {
-            $tree['children'] = array_values($tree['children']);
-            if (!array_key_exists('children', $tree) || !array_key_exists(0, $tree['children'])) {
+            $tree['children'] = \array_values($tree['children']);
+            if (!\array_key_exists('children', $tree) || !\array_key_exists(0, $tree['children'])) {
                 return [];
             }
 
@@ -94,23 +94,23 @@ class ListToTreeConverter
     private function toArray($tree)
     {
         if (isset($tree['children'])) {
-            $tree['children'] = array_values($tree['children']);
+            $tree['children'] = \array_values($tree['children']);
 
             // search for empty nodes
-            for ($i = 0; $i < count($tree['children']); ++$i) {
-                if (array_keys($tree['children'][$i]) === ['children']) {
+            for ($i = 0; $i < \count($tree['children']); ++$i) {
+                if (\array_keys($tree['children'][$i]) === ['children']) {
                     if ($this->moveUp) {
-                        array_splice($tree['children'], $i + 1, 0, $tree['children'][$i]['children']);
+                        \array_splice($tree['children'], $i + 1, 0, $tree['children'][$i]['children']);
                     }
 
                     unset($tree['children'][$i]);
                 }
             }
 
-            $tree['children'] = array_values($tree['children']);
+            $tree['children'] = \array_values($tree['children']);
 
             // recursive to array
-            for ($i = 0; $i < count($tree['children']); ++$i) {
+            for ($i = 0; $i < \count($tree['children']); ++$i) {
                 $tree['children'][$i] = $this->toArray($tree['children'][$i]);
             }
         } else {
@@ -166,22 +166,22 @@ class ListToTreeConverter
      */
     private function explodeTree($array, $delimiter = '_', $baseval = false)
     {
-        if (!is_array($array)) {
+        if (!\is_array($array)) {
             return false;
         }
-        $splitRE = '/' . preg_quote($delimiter, '/') . '/';
+        $splitRE = '/' . \preg_quote($delimiter, '/') . '/';
         $returnArr = [];
         foreach ($array as $key => $val) {
             // Get parent parts and the current leaf
-            $parts = preg_split($splitRE, $key, -1, \PREG_SPLIT_NO_EMPTY);
-            $leafPart = array_pop($parts);
+            $parts = \preg_split($splitRE, $key, -1, \PREG_SPLIT_NO_EMPTY);
+            $leafPart = \array_pop($parts);
 
             // Build parent structure
             // Might be slow for really deep and large structures
             $parentArr = &$returnArr;
             foreach ($parts as $part) {
                 if (isset($parentArr['children'][$part])) {
-                    if (!is_array($parentArr['children'][$part])) {
+                    if (!\is_array($parentArr['children'][$part])) {
                         if ($baseval) {
                             $parentArr['children'][$part] = ['__base_val' => $parentArr[$part]];
                         } else {
@@ -198,10 +198,10 @@ class ListToTreeConverter
             // Add the final part to the structure
             if (empty($parentArr['children'][$leafPart])) {
                 $parentArr['children'][$leafPart] = $val;
-            } elseif ($baseval && is_array($parentArr['children'][$leafPart])) {
+            } elseif ($baseval && \is_array($parentArr['children'][$leafPart])) {
                 $parentArr['children'][$leafPart]['__base_val'] = $val;
             } else {
-                $parentArr['children'][$leafPart] = array_merge($val, $parentArr['children'][$leafPart]);
+                $parentArr['children'][$leafPart] = \array_merge($val, $parentArr['children'][$leafPart]);
             }
         }
 

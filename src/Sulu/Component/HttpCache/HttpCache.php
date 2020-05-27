@@ -70,7 +70,7 @@ class HttpCache extends AbstractHttpCache
             $this->setTargetGroupCookie($response, $request);
         }
 
-        if ($this->hasAudienceTargeting && in_array(static::TARGET_GROUP_HEADER, $response->getVary())) {
+        if ($this->hasAudienceTargeting && \in_array(static::TARGET_GROUP_HEADER, $response->getVary())) {
             $response->setMaxAge(0);
             $response->setSharedMaxAge(0);
         }
@@ -176,7 +176,7 @@ class HttpCache extends AbstractHttpCache
         $response->headers->setCookie(
             new Cookie(
                 static::VISITOR_SESSION_COOKIE,
-                time()
+                \time()
             )
         );
     }

@@ -57,7 +57,7 @@ class RouteGeneratorCompilerPassTest extends \PHPUnit_Framework_TestCase
             1,
             Argument::that(
                 function($argument) use ($generatorAlias, $serviceId) {
-                    return 1 === count($argument) && $argument[$generatorAlias]->__toString() === $serviceId;
+                    return 1 === \count($argument) && $argument[$generatorAlias]->__toString() === $serviceId;
                 }
             )
         )->shouldBeCalled();
@@ -115,7 +115,7 @@ class RouteGeneratorCompilerPassTest extends \PHPUnit_Framework_TestCase
             1,
             Argument::that(
                 function($argument) use ($serviceId) {
-                    return 0 === count($argument);
+                    return 0 === \count($argument);
                 }
             )
         )->shouldBeCalled();

@@ -75,7 +75,7 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
 
     public function resolve($customParameters = [])
     {
-        $parameters = array_merge(
+        $parameters = \array_merge(
             $this->getDefaultParameters(),
             $this->requestAnalyzerResolver->resolve($this->requestAnalyzer)
         );
@@ -85,7 +85,7 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
             $customParameters['urls'] = $this->getUrls();
         }
 
-        return array_merge(
+        return \array_merge(
             $parameters,
             $customParameters
         );

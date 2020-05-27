@@ -42,7 +42,7 @@ class GeolocatorControllerTest extends \PHPUnit_Framework_TestCase
         $response = $controller->queryAction($request->reveal());
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(['_embedded' => ['locations' => ['test']]], json_decode($response->getContent(), true));
+        $this->assertEquals(['_embedded' => ['locations' => ['test']]], \json_decode($response->getContent(), true));
     }
 
     public function testQueryNotExistingProvider()

@@ -26,7 +26,7 @@ class ProviderNotFoundException extends PreviewException
      */
     public function __construct($objectClass)
     {
-        parent::__construct(sprintf('No provider found for object class "%s"', $objectClass), 9900);
+        parent::__construct(\sprintf('No provider found for object class "%s"', $objectClass), 9900);
 
         $this->objectClass = $objectClass;
     }

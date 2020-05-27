@@ -182,14 +182,14 @@ class AnalyticsManagerTest extends BaseFunctional
             $this->assertEquals($value, $accessor->getValue($result, $key));
         }
 
-        for ($i = 0; $i < count($result->getDomains()); ++$i) {
+        for ($i = 0; $i < \count($result->getDomains()); ++$i) {
             $this->assertEquals($data['domains'][0]['url'], $result->getDomains()[0]->getUrl());
             $this->assertEquals($data['domains'][0]['environment'], $result->getDomains()[0]->getEnvironment());
         }
 
         $this->assertCount(
             1,
-            array_filter(
+            \array_filter(
                 $this->analyticsManager->findAll($webspaceKey),
                 function(Analytics $analytics) use ($result) {
                     return $analytics->getId() === $result->getId();
@@ -214,14 +214,14 @@ class AnalyticsManagerTest extends BaseFunctional
             $this->assertEquals($value, $accessor->getValue($result, $key));
         }
 
-        for ($i = 0; $i < count($result->getDomains()); ++$i) {
+        for ($i = 0; $i < \count($result->getDomains()); ++$i) {
             $this->assertEquals($data['domains'][0]['url'], $result->getDomains()[0]->getUrl());
             $this->assertEquals($data['domains'][0]['environment'], $result->getDomains()[0]->getEnvironment());
         }
 
         $this->assertCount(
             1,
-            array_filter(
+            \array_filter(
                 $this->analyticsManager->findAll('sulu_io'),
                 function(Analytics $analytics) use ($result) {
                     return $analytics->getTitle() === $result->getTitle();
@@ -292,7 +292,7 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
 
         $this->assertEmpty(
-            array_filter(
+            \array_filter(
                 $this->analyticsManager->findAll('sulu_io'),
                 function(Analytics $analytics) {
                     return $analytics->getId() === $this->entities[0]->getId();
@@ -308,10 +308,10 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
 
         $this->assertEmpty(
-            array_filter(
+            \array_filter(
                 $this->analyticsManager->findAll('sulu_io'),
                 function(Analytics $analytics) use ($ids) {
-                    return in_array($analytics->getId(), $ids);
+                    return \in_array($analytics->getId(), $ids);
                 }
             )
         );

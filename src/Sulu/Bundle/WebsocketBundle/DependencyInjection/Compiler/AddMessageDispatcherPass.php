@@ -42,7 +42,7 @@ class AddMessageDispatcherPass implements CompilerPassInterface
                 $dispatcherName = $attributes['dispatcher'];
                 $alias = $attributes['alias'];
 
-                if (array_key_exists($dispatcherName, $dispatchers)) {
+                if (\array_key_exists($dispatcherName, $dispatchers)) {
                     $dispatchers[$dispatcherName]->addMethodCall('add', [$alias, $handler]);
                 }
             }

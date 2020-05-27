@@ -59,10 +59,10 @@ class AggregateHandler implements
             }
 
             $this->logger->debug(
-                sprintf(
+                \sprintf(
                     '[CACHE] INVALIDATING [%s]: %s (%s)',
-                    get_class($handler),
-                    get_class($structure),
+                    \get_class($handler),
+                    \get_class($structure),
                     $structure->getUuid()
                 )
             );
@@ -78,9 +78,9 @@ class AggregateHandler implements
             }
 
             $this->logger->debug(
-                sprintf(
+                \sprintf(
                     '[CACHE] INVALIDATING [%s]: %s (%s)',
-                    get_class($handler),
+                    \get_class($handler),
                     $alias,
                     $id
                 )
@@ -96,9 +96,9 @@ class AggregateHandler implements
                 continue;
             }
 
-            $this->logger->debug(sprintf(
+            $this->logger->debug(\sprintf(
                 '[CACHE] INVALIDATING [%s]: %s',
-                get_class($handler),
+                \get_class($handler),
                 $path
             ));
             $handler->invalidatePath($path);
@@ -112,10 +112,10 @@ class AggregateHandler implements
                 continue;
             }
 
-            $this->logger->debug(sprintf(
+            $this->logger->debug(\sprintf(
                 '[CACHE] UPDATING RESPONSE [%s]: %s (%s)',
-                get_class($handler),
-                get_class($structure),
+                \get_class($handler),
+                \get_class($structure),
                 $structure->getUuid()
             ));
             $handler->updateResponse($response, $structure);
@@ -132,15 +132,15 @@ class AggregateHandler implements
             try {
                 $res = $handler->flush();
                 if ($res) {
-                    $this->logger->debug(sprintf(
+                    $this->logger->debug(\sprintf(
                         '[CACHE] FLUSH OK [%s]',
-                        get_class($handler)
+                        \get_class($handler)
                     ));
                 }
             } catch (\Exception $e) {
-                $this->logger->error(sprintf(
+                $this->logger->error(\sprintf(
                     '[CACHE] FLUSH ERROR [%s] %s',
-                    get_class($e),
+                    \get_class($e),
                     $e->getMessage()
                 ));
             }
