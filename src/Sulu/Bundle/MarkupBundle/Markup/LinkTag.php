@@ -40,7 +40,9 @@ class LinkTag implements TagInterface
         $result = [];
         foreach ($attributesByTag as $tag => $attributes) {
             $provider = $this->getValue($attributes, 'provider', self::DEFAULT_PROVIDER);
-            if (!array_key_exists($provider . '-' . $attributes['href'], $contents)) {
+            if (!isset($attributes['href'])
+                || !array_key_exists($provider . '-' . $attributes['href'], $contents)
+            ) {
                 $result[$tag] = $this->getContent($attributes);
 
                 continue;
@@ -80,7 +82,9 @@ class LinkTag implements TagInterface
         $result = [];
         foreach ($attributesByTag as $tag => $attributes) {
             $provider = $this->getValue($attributes, 'provider', self::DEFAULT_PROVIDER);
-            if (!array_key_exists($provider . '-' . $attributes['href'], $items)) {
+            if (!isset($attributes['href'])
+                || !array_key_exists($provider . '-' . $attributes['href'], $items)
+            ) {
                 $result[$tag] = self::VALIDATE_REMOVED;
             } elseif (!$items[$provider . '-' . $attributes['href']]->isPublished()) {
                 $result[$tag] = self::VALIDATE_UNPUBLISHED;
@@ -108,7 +112,9 @@ class LinkTag implements TagInterface
                 $hrefsByType[$provider] = [];
             }
 
-            $hrefsByType[$provider][] = $attributes['href'];
+            if (isset($attributes['href'])) {
+                $hrefsByType[$provider][] = $attributes['href'];
+            }
         }
 
         $result = [];

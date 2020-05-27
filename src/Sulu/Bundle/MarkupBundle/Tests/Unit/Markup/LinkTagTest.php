@@ -300,7 +300,7 @@ class LinkTagTest extends TestCase
 
     public function testParseAllValidationState()
     {
-        $this->providers['article']->preload(['123-123-123'], 'de', true)
+        $this->providers['article']->preload(['123-123-123', '456-789-123'], 'de', true)
             ->willReturn(
                 [
                     new LinkItem('123-123-123', 'Page-Title 1', '/de/test-1', true),
@@ -308,7 +308,8 @@ class LinkTagTest extends TestCase
             );
 
         $tag1 = '<sulu-link href="123-123-123" title="Test-Title" target="_blank" provider="article" sulu-validation-state="unpublished">Test-Content</sulu-link>';
-        $tag2 = '<sulu-link href="123-123-123" title="Test-Title" target="_blank" provider="article" sulu-validation-state="removed">Test-Content</sulu-link>';
+        $tag2 = '<sulu-link href="456-789-123" title="Test-Title" target="_blank" provider="article" sulu-validation-state="removed">Test-Content</sulu-link>';
+        $tag3 = '<sulu-link provider="article" sulu-validation-state="removed">Test-Content</sulu-link>';
 
         $result = $this->linkTag->parseAll(
             [
@@ -321,11 +322,16 @@ class LinkTagTest extends TestCase
                     'validation-state' => 'unpublished',
                 ],
                 $tag2 => [
-                    'href' => '123-123-123',
+                    'href' => '456-789-123',
                     'title' => 'Test-Title',
                     'target' => '_blank',
                     'content' => 'Test-Content',
                     'provider' => 'article',
+                    'validation-state' => 'removed',
+                ],
+                $tag3 => [
+                    'provider' => 'article',
+                    'content' => 'Test-Content',
                     'validation-state' => 'removed',
                 ],
             ],
@@ -335,7 +341,8 @@ class LinkTagTest extends TestCase
         $this->assertEquals(
             [
                 $tag1 => '<a href="/de/test-1" title="Test-Title" target="_blank">Test-Content</a>',
-                $tag2 => '<a href="/de/test-1" title="Test-Title" target="_blank">Test-Content</a>',
+                $tag2 => 'Test-Content',
+                $tag3 => 'Test-Content',
             ],
             $result
         );
