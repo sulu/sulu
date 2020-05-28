@@ -1163,13 +1163,13 @@ class ContentMapperTest extends SuluTestCase
                     'type' => 'default',
                     'title' => 'Block-name-1',
                     'article' => 'Block-Article-1',
-                    'settings' => [],
+                    'settings' => new \stdClass(),
                 ],
                 [
                     'type' => 'default',
                     'title' => 'Block-name-2',
                     'article' => 'Block-Article-2',
-                    'settings' => [],
+                    'settings' => new \stdClass(),
                 ],
             ],
         ];

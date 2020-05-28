@@ -100,7 +100,9 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
                 );
 
                 $blockPropertyType = $blockProperty->initProperties($i, $typeProperty->getValue());
-                $blockPropertyType->setSettings(\json_decode($settingsProperty->getValue(), true));
+
+                $settings = \json_decode($settingsProperty->getValue(), true);
+                $blockPropertyType->setSettings(\count($settings) > 0 ? $settings : new \stdClass());
 
                 /** @var PropertyInterface $subProperty */
                 foreach ($blockPropertyType->getChildProperties() as $subProperty) {
@@ -354,7 +356,11 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
             $blockPropertyType = $blockProperty->getProperties($i);
             $blockPropertyTypeSettings = $blockPropertyType->getSettings();
 
-            if (isset($blockPropertyTypeSettings['hidden']) && $blockPropertyTypeSettings['hidden']) {
+            if (
+                \is_array($blockPropertyTypeSettings)
+                && isset($blockPropertyTypeSettings['hidden'])
+                && $blockPropertyTypeSettings['hidden']
+            ) {
                 continue;
             }
 

@@ -160,6 +160,58 @@ class BlockContentTypeTest extends TestCase
                         'type' => 'subType1',
                         'title' => 'Test-Sub-Title',
                         'article' => 'Test-Sub-Article',
+                        'settings' => new \stdClass(),
+                    ],
+                ],
+                'settings' => new \stdClass(),
+            ],
+        ];
+
+        $valueMap = [
+            'i18n:de-block1-length' => 1,
+            'i18n:de-block1-type#0' => $data[0]['type'],
+            'i18n:de-block1-title#0' => $data[0]['title'],
+            'i18n:de-block1-article#0' => $data[0]['article'],
+            'i18n:de-block1-sub-block#0-length' => 1,
+            'i18n:de-block1-sub-block#0-type#0' => $data[0]['sub-block'][0]['type'],
+            'i18n:de-block1-sub-block#0-title#0' => $data[0]['sub-block'][0]['title'],
+            'i18n:de-block1-sub-block#0-article#0' => $data[0]['sub-block'][0]['article'],
+            'i18n:de-block1-settings#0' => '[]',
+            'i18n:de-block1-sub-block#0-settings#0' => '{}',
+        ];
+
+        $this->node = $this->prophesize(Node::class);
+        foreach ($valueMap as $name => $value) {
+            $this->node->getPropertyValue($name)->willReturn($value);
+            $this->node->hasProperty($name)->willReturn(true);
+        }
+
+        $this->blockContentType->read(
+            $this->node->reveal(),
+            new TranslatedProperty($this->blockProperty, 'de', 'i18n'),
+            'default',
+            'de',
+            ''
+        );
+
+        // check resulted structure
+        $this->assertEquals($data, $this->blockProperty->getValue());
+    }
+
+    public function testReadWithEmptySettings()
+    {
+        $this->prepareSingleBlockProperty();
+
+        $data = [
+            [
+                'type' => 'type1',
+                'title' => 'Test-Title',
+                'article' => 'Test-Article',
+                'sub-block' => [
+                    [
+                        'type' => 'subType1',
+                        'title' => 'Test-Sub-Title',
+                        'article' => 'Test-Sub-Article',
                         'settings' => [],
                     ],
                 ],
@@ -195,7 +247,25 @@ class BlockContentTypeTest extends TestCase
         );
 
         // check resulted structure
-        $this->assertEquals($data, $this->blockProperty->getValue());
+        $this->assertEquals(
+            [
+                [
+                    'type' => 'type1',
+                    'title' => 'Test-Title',
+                    'article' => 'Test-Article',
+                    'sub-block' => [
+                        [
+                            'type' => 'subType1',
+                            'title' => 'Test-Sub-Title',
+                            'article' => 'Test-Sub-Article',
+                            'settings' => new \stdClass(),
+                        ],
+                    ],
+                    'settings' => new \stdClass(),
+                ],
+            ],
+            $this->blockProperty->getValue()
+        );
     }
 
     public function testWrite()
@@ -276,7 +346,7 @@ class BlockContentTypeTest extends TestCase
                         'type' => 'subType1',
                         'title' => 'Test-Title-Sub-1',
                         'article' => 'Test-Article-Sub-1',
-                        'settings' => [],
+                        'settings' => new \stdClass(),
                     ],
                 ],
                 'settings' => ['segment' => 'w'],
@@ -290,10 +360,10 @@ class BlockContentTypeTest extends TestCase
                         'type' => 'subType1',
                         'title' => 'Test-Title-Sub-2',
                         'article' => 'Test-Article-Sub-2',
-                        'settings' => [],
+                        'settings' => new \stdClass(),
                     ],
                 ],
-                'settings' => [],
+                'settings' => new \stdClass(),
             ],
         ];
 
@@ -441,15 +511,15 @@ class BlockContentTypeTest extends TestCase
                         'type' => 'subType1',
                         'title' => 'Test-Title-Sub-1',
                         'article' => 'Test-Article-Sub-1',
-                        'settings' => [],
+                        'settings' => new \stdClass(),
                     ],
                 ],
-                'settings' => [],
+                'settings' => new \stdClass(),
             ],
             [
                 'type' => 'type2',
                 'name' => 'Test-Name-2',
-                'settings' => [],
+                'settings' => new \stdClass(),
             ],
         ];
 
