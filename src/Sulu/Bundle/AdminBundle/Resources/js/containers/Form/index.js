@@ -15,6 +15,7 @@ import Checkbox from './fields/Checkbox';
 import ColorPicker from './fields/ColorPicker';
 import DatePicker from './fields/DatePicker';
 import Email from './fields/Email';
+import Heading from './fields/Heading';
 import Input from './fields/Input';
 import Number from './fields/Number';
 import PasswordConfirmation from './fields/PasswordConfirmation';
@@ -39,6 +40,7 @@ export {
     ChangelogLine,
     DatePicker,
     Email,
+    Heading,
     Input,
     FormInspector,
     MemoryFormStore,

@@ -73,6 +73,7 @@ import {
     DatePicker,
     Email,
     fieldRegistry,
+    Heading,
     Input,
     Select,
     Number,
@@ -124,6 +125,7 @@ const FIELD_TYPE_COLOR = 'color';
 const FIELD_TYPE_DATE = 'date';
 const FIELD_TYPE_DATE_TIME = 'datetime';
 const FIELD_TYPE_EMAIL = 'email';
+const FIELD_TYPE_HEADING = 'heading';
 const FIELD_TYPE_NUMBER = 'number';
 const FIELD_TYPE_PASSWORD_CONFIRMATION = 'password_confirmation';
 const FIELD_TYPE_PHONE = 'phone';
@@ -212,6 +214,7 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add(FIELD_TYPE_DATE, DatePicker, {dateFormat: true, timeFormat: false});
     fieldRegistry.add(FIELD_TYPE_DATE_TIME, DatePicker, {dateFormat: true, timeFormat: true});
     fieldRegistry.add(FIELD_TYPE_EMAIL, Email);
+    fieldRegistry.add(FIELD_TYPE_HEADING, Heading);
     fieldRegistry.add(FIELD_TYPE_SELECT, Select);
     fieldRegistry.add(FIELD_TYPE_NUMBER, Number);
     fieldRegistry.add(FIELD_TYPE_PASSWORD_CONFIRMATION, PasswordConfirmation);

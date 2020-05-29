@@ -1,0 +1,28 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$checkboxHeadingLineColor: $scorpion;
+$headingDescriptionColor: $gray;
+
+.line {
+    display: flex;
+    color: $checkboxHeadingLineColor;
+}
+
+.icon {
+    font-size: 20px;
+    margin-right: 15px;
+}
+
+.label {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: bold;
+    flex-grow: 1;
+}
+
+.description {
+    color: $headingDescriptionColor;
+    font-size: 12px;
+    line-height: 18px;
+    padding-top: 5px;
+}

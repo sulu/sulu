@@ -7,10 +7,19 @@
 
     <properties>
         <property name="hidden" type="checkbox">
-            <meta>
-                <title>sulu_admin.hide_block</title>
-            </meta>
             <params>
+                <param name="description">
+                    <meta>
+                        <title>sulu_page.hide_block_description</title>
+                    </meta>
+                </param>
+                <param name="icon" value="su-eye" />
+                <param name="label">
+                    <meta>
+                        <title>sulu_page.hide_block_label</title>
+                    </meta>
+                </param>
+                <param name="skin" value="heading" />
                 <param name="type" value="toggler" />
             </params>
         </property>

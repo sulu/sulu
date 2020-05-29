@@ -1,10 +1,30 @@
 // @flow
 import React from 'react';
+import {computed} from 'mobx';
+import {observer} from 'mobx-react';
 import CheckboxComponent from '../../../components/Checkbox';
 import Toggler from '../../../components/Toggler';
 import type {FieldTypeProps} from '../../../types';
+import Heading from './Heading';
 
-export default class Checkbox extends React.Component<FieldTypeProps<boolean>> {
+@observer
+class Checkbox extends React.Component<FieldTypeProps<boolean>> {
+    @computed get schemaOptions() {
+        return this.props.schemaOptions;
+    }
+
+    @computed get label() {
+        return this.schemaOptions.label?.title;
+    }
+
+    @computed get skin() {
+        return this.schemaOptions.skin?.value;
+    }
+
+    @computed get type() {
+        return this.schemaOptions.type?.value;
+    }
+
     constructor(props: FieldTypeProps<boolean>) {
         super(props);
 
@@ -35,40 +55,48 @@ export default class Checkbox extends React.Component<FieldTypeProps<boolean>> {
         onFinish();
     };
 
+    handleHeadingChange = () => {};
+
     render() {
         const {
             disabled,
-            schemaOptions: {
-                label: {
-                    title: label,
-                } = {},
-                type: {
-                    value: type,
-                } = {},
-            } = {},
             value,
         } = this.props;
 
-        if (type === 'toggler') {
-            return (
+        const field = this.type === 'toggler'
+            ? (
                 <Toggler
                     checked={!!value}
                     disabled={!!disabled}
                     onChange={this.handleChange}
                 >
-                    {label}
+                    {this.skin !== 'heading' && this.label}
                 </Toggler>
+            )
+            : (
+                <CheckboxComponent
+                    checked={!!value}
+                    disabled={!!disabled}
+                    onChange={this.handleChange}
+                >
+                    {this.skin !== 'heading' && this.label}
+                </CheckboxComponent>
+            );
+
+        if (this.skin === 'heading') {
+            return (
+                <Heading
+                    {...this.props}
+                    onChange={this.handleHeadingChange}
+                    value={undefined}
+                >
+                    {field}
+                </Heading>
             );
         }
 
-        return (
-            <CheckboxComponent
-                checked={!!value}
-                disabled={!!disabled}
-                onChange={this.handleChange}
-            >
-                {label}
-            </CheckboxComponent>
-        );
+        return field;
     }
 }
+
+export default Checkbox;
