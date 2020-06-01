@@ -25,6 +25,11 @@ class PreviewKernel extends Kernel
     /**
      * @var string
      */
+    protected $rootDir;
+
+    /**
+     * @var string
+     */
     private $projectDir;
 
     public function registerContainerConfiguration(LoaderInterface $loader)
@@ -55,8 +60,12 @@ class PreviewKernel extends Kernel
         return $this->generateContainerClass(\get_parent_class());
     }
 
-    public function getRootDir()
+    public function getRootDir(/* $triggerDeprecation = true */)
     {
+        if (0 === \func_num_args() || func_get_arg(0)) {
+            @trigger_error(sprintf('The "%s()" method is deprecated since Symfony 4.2, use getProjectDir() instead.', __METHOD__), E_USER_DEPRECATED);
+        }
+
         if (null === $this->rootDir) {
             $reflectionClass = new \ReflectionClass(Kernel::class);
             $this->rootDir = \dirname($reflectionClass->getFileName());

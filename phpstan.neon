@@ -25,5 +25,12 @@ parameters:
         - %currentWorkingDirectory%/*/vendor/*
         - %currentWorkingDirectory%/bin/console
         - %currentWorkingDirectory%/src/Sulu/Bundle/TestBundle/Resources/app/config/config.php
+        # the following files are excluded because of autoloader error which cant be add to ignoreErrors
+        - %currentWorkingDirectory%/src/Sulu/Component/Rest/RestController.php
+        - %currentWorkingDirectory%/src/Sulu/Component/Rest/ExceptionSerializerHandler.php
+        - %currentWorkingDirectory%/src/Sulu/Bundle/CoreBundle/DependencyInjection/Compiler/ExceptionHandlerCompilerPass.php
         # The following should be removed at some point
         - %currentWorkingDirectory%/*/Tests/*
+    ignoreErrors:
+        - '#has invalid typehint type Symfony\\Bundle\\FrameworkBundle\\Controller\\ControllerNameParser#'
+        - '#has invalid typehint type Symfony\\Bundle\\TwigBundle\\Controller\\ExceptionController#'
