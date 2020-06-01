@@ -85,6 +85,7 @@
         "symfony/http-foundation": "^4.4 || ^5.0",
         "symfony/http-kernel": "^4.4 || ^5.0",
         "symfony/intl": "^4.4 || ^5.0",
+        "symfony/mime": "^4.4 || ^5.0",
         "symfony/options-resolver": "^4.4 || ^5.0",
         "symfony/polyfill-mbstring": "^1.0",
         "symfony/polyfill-php72": "^1.0",
