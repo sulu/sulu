@@ -39,6 +39,10 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
         this.dirty = true;
     }
 
+    @action setMultiple(data: Object) {
+        this.data = data;
+    }
+
     destroy() {
         if (this.updateFieldPathEvaluationsDisposer) {
             this.updateFieldPathEvaluationsDisposer();

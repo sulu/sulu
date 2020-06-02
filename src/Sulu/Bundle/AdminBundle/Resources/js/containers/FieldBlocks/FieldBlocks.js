@@ -22,7 +22,17 @@ const SETTINGS_KEY = 'settings';
 class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     formRef: ?Form;
     @observable blockSettingsOpen: number | typeof undefined = undefined;
-    @observable blockSettingsFormStore: FormStoreInterface | typeof undefined;
+    @observable blockSettingsFormStore: FormStoreInterface;
+
+    @action componentDidMount() {
+        if (this.settingsFormKey) {
+            this.blockSettingsFormStore = memoryFormStoreFactory.createFromFormKey(
+                this.settingsFormKey,
+                {},
+                undefined
+            );
+        }
+    }
 
     componentDidUpdate(prevProps: FieldTypeProps<Array<BlockEntry>>) {
         const {defaultType, onChange, types, value} = this.props;
@@ -56,6 +66,10 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         if (!equals(toJS(value), newValue)) {
             onChange(newValue);
         }
+    }
+
+    componentWillUnmount() {
+        this.blockSettingsFormStore?.destroy();
     }
 
     @computed get settingsFormKey() {
@@ -235,18 +249,15 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     };
 
     @action handleSettingsClick = (index: number) => {
-        const {value = []} = this.props;
+        const {value} = this.props;
 
         if (!this.settingsFormKey || !value) {
             return;
         }
 
         this.blockSettingsOpen = index;
-        this.blockSettingsFormStore = memoryFormStoreFactory.createFromFormKey(
-            this.settingsFormKey,
-            value[index][SETTINGS_KEY],
-            undefined
-        );
+        this.blockSettingsFormStore.setMultiple(value[index][SETTINGS_KEY] ?? {});
+        this.blockSettingsFormStore.dirty = false;
     };
 
     @action handleSettingsOverlayClose = () => {
@@ -260,8 +271,6 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
     @action closeSettingsOverlay = () => {
         this.blockSettingsOpen = undefined;
-        this.blockSettingsFormStore?.destroy();
-        this.blockSettingsFormStore = undefined;
     };
 
     handleSettingsSubmit = () => {

@@ -115,6 +115,7 @@ export interface FormStoreInterface {
     +options: SchemaOptions,
     +resourceKey: ?string,
     +schema: Object,
+    +setMultiple: (data: Object) => void,
     +validate: () => boolean,
 }
 

@@ -29,6 +29,12 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         return {};
     }
 
+    setMultiple(data: Object) {
+        if (this.innerFormStore) {
+            this.innerFormStore.setMultiple(data);
+        }
+    }
+
     destroy() {
         if (this.innerFormStore) {
             this.innerFormStore.destroy();

@@ -997,12 +997,105 @@ test('Should open and close block settings overlay when confirm button is clicke
         fieldBlocks.update();
         expect(changeSpy).not.toBeCalled();
 
+        fieldBlocks.find('Overlay Button[children="sulu_admin.apply"]').simulate('click');
+        expect(fieldBlocks.find('Overlay').prop('open')).toEqual(false);
+        expect(changeSpy).toBeCalledWith([{type: 'default'}, {settings: {}, type: 'default'}]);
+    });
+});
+
+test('Should open and close block settings overlay when confirm button is clicked with changed data', () => {
+    const changeSpy = jest.fn();
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
+    const value = [
+        {type: 'default'},
+        {type: 'default'},
+    ];
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const schemaPromise = Promise.resolve({
+        setting: {
+            type: 'checkbox',
+        },
+    });
+    const jsonSchemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
+            types={types}
+            value={value}
+        />
+    );
+
+    expect(fieldBlocks.find('Overlay').prop('open')).toEqual(false);
+    fieldBlocks.find('Block').at(1).simulate('click');
+    fieldBlocks.find('Block').at(1).find('Icon[name="su-cog"]').simulate('click');
+    expect(fieldBlocks.find('Overlay').prop('open')).toEqual(true);
+    expect(metadataStore.getSchema).toBeCalledWith('page_block_settings');
+    expect(metadataStore.getJsonSchema).toBeCalledWith('page_block_settings');
+
+    return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
+        fieldBlocks.update();
+        expect(changeSpy).not.toBeCalled();
+
         fieldBlocks.find('Checkbox[dataPath="/setting"]').prop('onChange')(true);
 
         fieldBlocks.find('Overlay Button[children="sulu_admin.apply"]').simulate('click');
         expect(fieldBlocks.find('Overlay').prop('open')).toEqual(false);
         expect(changeSpy).toBeCalledWith([{type: 'default'}, {settings: {setting: true}, type: 'default'}]);
     });
+});
+
+test('Destroy store on unmount', () => {
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
+
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            formInspector={formInspector}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
+            types={types}
+        />
+    );
+
+    const destroySpy = jest.fn();
+    fieldBlocks.instance().blockSettingsFormStore.destroy = destroySpy;
+
+    fieldBlocks.unmount();
+
+    expect(destroySpy).toBeCalledWith();
 });
 
 test('Throw error if no default type are passed', () => {
