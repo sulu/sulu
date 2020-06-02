@@ -126,7 +126,7 @@ class SnippetAreas extends React.Component<ViewProps> {
                     onClose={this.handleListOverlayClose}
                     onConfirm={this.handleListOverlayConfirm}
                     open={!!this.openedAreaKey}
-                    options={{type: this.openedAreaKey}}
+                    options={{types: this.openedAreaKey}}
                     resourceKey="snippets"
                     title={translate('sulu_snippet.selection_overlay_title')}
                 />
