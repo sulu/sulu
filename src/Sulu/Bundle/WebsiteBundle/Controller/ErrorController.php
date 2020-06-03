@@ -61,7 +61,7 @@ class ErrorController
         }
 
         $flattenException = FlattenException::createFromThrowable($exception);
-        $code = $exception->getStatusCode();
+        $code = $flattenException->getStatusCode();
         $errorTemplate = $this->getErrorTemplate($request, $code);
 
         // render the default twig error template when no webspace template found
@@ -100,6 +100,10 @@ class ErrorController
         $template = $webspace->getTemplate('error-' . $code, $request->getRequestFormat());
         if (null === $template) {
             $template = $webspace->getTemplate('error', $request->getRequestFormat());
+        }
+
+        if (false === $this->twig->getLoader()->exists($template)) {
+            return null;
         }
 
         return $template;
