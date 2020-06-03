@@ -66,10 +66,10 @@ class CsvHandlerTest extends \PHPUnit_Framework_TestCase
 
         $handler = new CsvHandler($serializer->reveal());
 
-        ob_start();
+        \ob_start();
         $response = $handler->createResponse($viewHandler->reveal(), $view->reveal(), $request->reveal(), $format);
-        $content = ob_get_contents();
-        ob_end_clean();
+        $content = \ob_get_contents();
+        \ob_end_clean();
 
         $this->assertInstanceOf(StreamedResponse::class, $response);
         $this->assertEquals($response->headers->get('Content-Type'), 'text/csv');
@@ -107,10 +107,10 @@ class CsvHandlerTest extends \PHPUnit_Framework_TestCase
 
         $handler = new CsvHandler($serializer->reveal());
 
-        ob_start();
+        \ob_start();
         $response = $handler->createResponse($viewHandler->reveal(), $view->reveal(), $request->reveal(), $format);
-        $content = ob_get_contents();
-        ob_end_clean();
+        $content = \ob_get_contents();
+        \ob_end_clean();
 
         $this->assertInstanceOf(StreamedResponse::class, $response);
         $this->assertEquals($response->headers->get('Content-Type'), 'text/csv');
@@ -148,10 +148,10 @@ class CsvHandlerTest extends \PHPUnit_Framework_TestCase
 
         $handler = new CsvHandler($serializer->reveal());
 
-        ob_start();
+        \ob_start();
         $response = $handler->createResponse($viewHandler->reveal(), $view->reveal(), $request->reveal(), $format);
-        $content = ob_get_contents();
-        ob_end_clean();
+        $content = \ob_get_contents();
+        \ob_end_clean();
 
         $this->assertInstanceOf(StreamedResponse::class, $response);
         $this->assertEquals($response->headers->get('Content-Type'), 'text/csv');
@@ -184,10 +184,10 @@ class CsvHandlerTest extends \PHPUnit_Framework_TestCase
 
         $handler = new CsvHandler($serializer->reveal());
 
-        ob_start();
+        \ob_start();
         $response = $handler->createResponse($viewHandler->reveal(), $view->reveal(), $request->reveal(), $format);
-        $content = ob_get_contents();
-        ob_end_clean();
+        $content = \ob_get_contents();
+        \ob_end_clean();
 
         $this->assertInstanceOf(StreamedResponse::class, $response);
         $this->assertEquals($response->headers->get('Content-Type'), 'text/csv');

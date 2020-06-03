@@ -80,7 +80,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
         $this->assertEquals('short', $webspace->getResourceLocatorStrategy());
 
-        $this->assertEquals(2, count($webspace->getPortals()[0]->getLocalizations()));
+        $this->assertEquals(2, \count($webspace->getPortals()[0]->getLocalizations()));
         $this->assertEquals('en', $webspace->getPortals()[0]->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $webspace->getPortals()[0]->getLocalizations()[0]->getCountry());
         $this->assertEquals('de', $webspace->getPortals()[0]->getLocalizations()[1]->getLanguage());
@@ -89,11 +89,11 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
         $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocale());
 
-        $this->assertEquals(3, count($webspace->getPortals()[0]->getEnvironments()));
+        $this->assertEquals(3, \count($webspace->getPortals()[0]->getEnvironments()));
 
         $environmentProd = $webspace->getPortals()[0]->getEnvironment('prod');
         $this->assertEquals('prod', $environmentProd->getType());
-        $this->assertEquals(2, count($environmentProd->getUrls()));
+        $this->assertEquals(2, \count($environmentProd->getUrls()));
         $this->assertEquals('sulu.at', $environmentProd->getUrls()[0]->getUrl());
         $this->assertTrue($environmentProd->getUrls()[0]->isMain());
         $this->assertEquals('de', $environmentProd->getUrls()[0]->getLanguage());
@@ -109,13 +109,13 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
         $environmentDev = $webspace->getPortals()[0]->getEnvironment('dev');
         $this->assertEquals('dev', $environmentDev->getType());
-        $this->assertEquals(1, count($environmentDev->getUrls()));
+        $this->assertEquals(1, \count($environmentDev->getUrls()));
         $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
         $this->assertTrue($environmentProd->getUrls()[0]->isMain());
 
         $environmentMain = $webspace->getPortals()[0]->getEnvironment('main');
         $this->assertEquals('main', $environmentMain->getType());
-        $this->assertEquals(3, count($environmentMain->getUrls()));
+        $this->assertEquals(3, \count($environmentMain->getUrls()));
         $this->assertEquals('sulu.lo', $environmentMain->getUrls()[0]->getUrl());
         $this->assertFalse($environmentMain->getUrls()[0]->isMain());
         $this->assertEquals('sulu.at', $environmentMain->getUrls()[1]->getUrl());
@@ -138,7 +138,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('auto', $webspace->getLocalizations()[0]->getShadow());
         $this->assertEquals(false, $webspace->getLocalizations()[0]->isDefault());
 
-        $this->assertEquals(1, count($webspace->getLocalizations()[0]->getChildren()));
+        $this->assertEquals(1, \count($webspace->getLocalizations()[0]->getChildren()));
         $this->assertEquals('en', $webspace->getLocalizations()[0]->getChildren()[0]->getLanguage());
         $this->assertEquals('ca', $webspace->getLocalizations()[0]->getChildren()[0]->getCountry());
         $this->assertEquals(null, $webspace->getLocalizations()[0]->getChildren()[0]->getShadow());
@@ -166,7 +166,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
         $this->assertEquals('tree_leaf_edit', $webspace->getResourceLocatorStrategy());
 
-        $this->assertEquals(4, count($webspace->getPortals()[0]->getLocalizations()));
+        $this->assertEquals(4, \count($webspace->getPortals()[0]->getLocalizations()));
         $this->assertEquals('en', $webspace->getPortals()[0]->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $webspace->getPortals()[0]->getLocalizations()[0]->getCountry());
         $this->assertEquals(false, $webspace->getPortals()[0]->getLocalizations()[0]->isDefault());
@@ -178,7 +178,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals(null, $webspace->getPortals()[0]->getLocalizations()[3]->getCountry());
         $this->assertEquals(true, $webspace->getPortals()[0]->getLocalizations()[3]->isDefault());
 
-        $this->assertEquals(2, count($webspace->getNavigation()->getContexts()));
+        $this->assertEquals(2, \count($webspace->getNavigation()->getContexts()));
 
         $this->assertEquals('main', $webspace->getNavigation()->getContexts()[0]->getKey());
         $this->assertEquals('Hauptnavigation', $webspace->getNavigation()->getContexts()[0]->getTitle('de'));
@@ -194,7 +194,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
         $this->assertEquals('Massive Art US', $webspace->getPortals()[0]->getName());
 
-        $this->assertEquals(2, count($webspace->getPortals()[0]->getEnvironments()));
+        $this->assertEquals(2, \count($webspace->getPortals()[0]->getEnvironments()));
 
         $environmentProd = $webspace->getPortals()[0]->getEnvironment('prod');
         $this->assertEquals('prod', $environmentProd->getType());
@@ -215,7 +215,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('Massive Art CA', $webspace->getPortals()[1]->getName());
         $this->assertEquals('tree_leaf_edit', $webspace->getResourceLocatorStrategy());
 
-        $this->assertEquals(2, count($webspace->getPortals()[1]->getLocalizations()));
+        $this->assertEquals(2, \count($webspace->getPortals()[1]->getLocalizations()));
         $this->assertEquals('en', $webspace->getPortals()[1]->getLocalizations()[0]->getLanguage());
         $this->assertEquals('ca', $webspace->getPortals()[1]->getLocalizations()[0]->getCountry());
         $this->assertEquals(true, $webspace->getPortals()[1]->getLocalizations()[0]->isDefault());
@@ -225,7 +225,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
         $this->assertEquals('en_ca', $webspace->getPortals()[1]->getDefaultLocalization()->getLocale());
 
-        $this->assertEquals(2, count($webspace->getPortals()[1]->getEnvironments()));
+        $this->assertEquals(2, \count($webspace->getPortals()[1]->getEnvironments()));
 
         $environmentProd = $webspace->getPortals()[1]->getEnvironment('prod');
         $this->assertEquals('prod', $environmentProd->getType());
@@ -297,7 +297,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
         $this->assertEquals('short', $webspace->getResourceLocatorStrategy());
 
-        $this->assertEquals(3, count($webspace->getPortals()[0]->getLocalizations()));
+        $this->assertEquals(3, \count($webspace->getPortals()[0]->getLocalizations()));
         $this->assertEquals('en', $webspace->getPortals()[0]->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $webspace->getPortals()[0]->getLocalizations()[0]->getCountry());
         $this->assertEquals('auto', $webspace->getPortals()[0]->getLocalizations()[0]->getShadow());
@@ -393,7 +393,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('us', $localizations[0]->getCountry());
         $this->assertEquals('auto', $localizations[0]->getShadow());
 
-        $this->assertEquals(1, count($localizations[0]->getChildren()));
+        $this->assertEquals(1, \count($localizations[0]->getChildren()));
         $this->assertEquals('en', $localizations[0]->getChildren()[0]->getLanguage());
         $this->assertEquals('ca', $localizations[0]->getChildren()[0]->getCountry());
         $this->assertEquals(null, $localizations[0]->getChildren()[0]->getShadow());
@@ -462,7 +462,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
         $environmentDev = $webspace->getPortals()[0]->getEnvironment('dev');
         $this->assertEquals('dev', $environmentDev->getType());
-        $this->assertEquals(2, count($environmentDev->getUrls()));
+        $this->assertEquals(2, \count($environmentDev->getUrls()));
         $this->assertEquals('sulu-without-slash.lo', $environmentDev->getUrls()[0]->getUrl());
         $this->assertEquals('sulu-with-slash.lo', $environmentDev->getUrls()[1]->getUrl());
     }

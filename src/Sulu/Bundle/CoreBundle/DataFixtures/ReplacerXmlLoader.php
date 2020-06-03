@@ -29,7 +29,7 @@ class ReplacerXmlLoader extends FileLoader
 
     public function supports($resource, $type = null)
     {
-        return 'xml' === pathinfo($resource, PATHINFO_EXTENSION);
+        return 'xml' === \pathinfo($resource, \PATHINFO_EXTENSION);
     }
 
     private function parseXml($path)
@@ -41,7 +41,7 @@ class ReplacerXmlLoader extends FileLoader
         $result = [];
 
         foreach ($xpath->query('/replacers/item') as $node) {
-            $locale = strtolower($xpath->query('column[@name="locale"]', $node)->item(0)->nodeValue);
+            $locale = \strtolower($xpath->query('column[@name="locale"]', $node)->item(0)->nodeValue);
             $from = $xpath->query('column[@name="from"]', $node)->item(0)->nodeValue;
             $to = $xpath->query('column[@name="to"]', $node)->item(0)->nodeValue;
 

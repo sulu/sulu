@@ -182,10 +182,10 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
             $tag = $property->getTag('sulu.search.field');
             $tagAttributes = $tag->getAttributes();
 
-            $mappings['excerpt' . ucfirst($property->getName())] = [
+            $mappings['excerpt' . \ucfirst($property->getName())] = [
                 'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
                 'field' => $this->factory->createMetadataExpression(
-                    sprintf('object.getExtensionsData()["excerpt"]["%s"]', $property->getName())
+                    \sprintf('object.getExtensionsData()["excerpt"]["%s"]', $property->getName())
                 ),
             ];
         }

@@ -23,7 +23,7 @@ class ReferenceStore implements ReferenceStoreInterface
 
     public function add($id)
     {
-        if (in_array($id, $this->ids)) {
+        if (\in_array($id, $this->ids)) {
             return;
         }
 

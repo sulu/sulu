@@ -214,7 +214,7 @@ class Export
      */
     public function getPath()
     {
-        return (null != $this->path) ? $this->path : getcwd();
+        return (null != $this->path) ? $this->path : \getcwd();
     }
 
     /**
@@ -229,10 +229,10 @@ class Export
         $catalogue = $this->translator->getCatalogue($this->getLocale());
 
         if ($this->backend) {
-            $messages = array_merge($messages, $this->getMessagesForDomain($catalogue, self::BACKEND_DOMAIN));
+            $messages = \array_merge($messages, $this->getMessagesForDomain($catalogue, self::BACKEND_DOMAIN));
         }
         if ($this->frontend) {
-            $messages = array_merge($messages, $this->getMessagesForDomain($catalogue, self::FRONTEND_DOMAIN));
+            $messages = \array_merge($messages, $this->getMessagesForDomain($catalogue, self::FRONTEND_DOMAIN));
         }
 
         $this->writeMessagesFile($messages);
@@ -250,7 +250,7 @@ class Export
     {
         $messages = $catalogue->all($domain);
         while ($catalogue = $catalogue->getFallbackCatalogue()) {
-            $messages = array_replace_recursive($catalogue->all($domain), $messages);
+            $messages = \array_replace_recursive($catalogue->all($domain), $messages);
         }
 
         return $messages;
@@ -278,9 +278,9 @@ class Export
         );
 
         $this->output->writeln(
-            sprintf(
+            \sprintf(
                 '<info>Exported %d translations to %s for locale %s</info>',
-                count($messages),
+                \count($messages),
                 $this->getPath(),
                 $this->getLocale()
             )

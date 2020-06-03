@@ -58,7 +58,7 @@ class SuluResourceExtension extends Extension
         $filesystem = new Filesystem();
 
         $directory = $container->getParameterBag()->resolveValue($directory);
-        if (!file_exists($directory)) {
+        if (!\file_exists($directory)) {
             $filesystem->mkdir($directory);
         }
 
@@ -72,9 +72,9 @@ class SuluResourceExtension extends Extension
      */
     private function setDefaultForFilterConditionsConjunction(&$config)
     {
-        if (!array_key_exists('filters', $config) ||
-            !array_key_exists('conjunctions', $config['filters']) ||
-            0 === count($config['filters']['conjunctions'])
+        if (!\array_key_exists('filters', $config) ||
+            !\array_key_exists('conjunctions', $config['filters']) ||
+            0 === \count($config['filters']['conjunctions'])
         ) {
             $config['filters'] = [];
             $config['filters']['conjunctions'] = [

@@ -68,10 +68,10 @@ class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
 
         $request = $this->prophesize(Request::class);
         $request->getHost()->willReturn($host);
-        $request->getRequestUri()->willReturn('/' . rawurlencode($requestedUri));
-        $request->getPathInfo()->willReturn('/' . rawurlencode($requestedUri));
+        $request->getRequestUri()->willReturn('/' . \rawurlencode($requestedUri));
+        $request->getPathInfo()->willReturn('/' . \rawurlencode($requestedUri));
         $request->getScheme()->willReturn('http');
-        $request->getUri()->willReturn('http://' . $host . '/' . rawurlencode($requestedUri));
+        $request->getUri()->willReturn('http://' . $host . '/' . \rawurlencode($requestedUri));
         $request->reveal()->query = new ParameterBag();
         $request->reveal()->request = new ParameterBag();
 

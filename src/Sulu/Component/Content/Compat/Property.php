@@ -267,7 +267,7 @@ class Property implements PropertyInterface, \JsonSerializable
      */
     public function getTitle($languageCode)
     {
-        return $this->metadata->get('title', $languageCode, ucfirst($this->name));
+        return $this->metadata->get('title', $languageCode, \ucfirst($this->name));
     }
 
     /**
@@ -363,7 +363,7 @@ class Property implements PropertyInterface, \JsonSerializable
         $minOccurs = $this->getMinOccurs();
         $maxOccurs = $this->getMaxOccurs();
 
-        if (is_null($minOccurs) && is_null($maxOccurs)) {
+        if (\is_null($minOccurs) && \is_null($maxOccurs)) {
             // if no occurs attributes are set it defaults to false
             return false;
         }
@@ -415,8 +415,8 @@ class Property implements PropertyInterface, \JsonSerializable
      */
     public function __get($property)
     {
-        if (method_exists($this, 'get' . ucfirst($property))) {
-            return $this->{'get' . ucfirst($property)}();
+        if (\method_exists($this, 'get' . \ucfirst($property))) {
+            return $this->{'get' . \ucfirst($property)}();
         } else {
             return;
         }
@@ -448,7 +448,7 @@ class Property implements PropertyInterface, \JsonSerializable
     public function __clone()
     {
         $value = $this->getValue();
-        if (is_object($value)) {
+        if (\is_object($value)) {
             $value = clone $value;
         }
         $this->setValue($value);

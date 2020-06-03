@@ -31,7 +31,7 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
     private function getGetRequestParameterReflection()
     {
         $getRequestParameterReflection = new \ReflectionMethod(
-            get_class($this->requestParametersTrait),
+            \get_class($this->requestParametersTrait),
             'getRequestParameter'
         );
 
@@ -43,7 +43,7 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
     private function getGetBooleanRequestParameterReflection()
     {
         $getBooleanRequestParameterReflection = new \ReflectionMethod(
-            get_class($this->requestParametersTrait),
+            \get_class($this->requestParametersTrait),
             'getBooleanRequestParameter'
         );
 

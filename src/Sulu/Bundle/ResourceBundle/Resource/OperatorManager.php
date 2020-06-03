@@ -35,7 +35,7 @@ class OperatorManager implements OperatorManagerInterface
         $operators = $this->operatorRepo->findAllByLocale($locale);
 
         if ($operators) {
-            array_walk(
+            \array_walk(
                 $operators,
                 function(&$operator) use ($locale) {
                     $operator = new Operator($operator, $locale);

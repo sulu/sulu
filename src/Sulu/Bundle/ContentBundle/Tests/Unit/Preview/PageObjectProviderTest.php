@@ -106,7 +106,7 @@ class PageObjectProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->serializer->deserialize(
             '{"title": "test"}',
-            get_class($object->reveal()),
+            \get_class($object->reveal()),
             'json',
             Argument::that(
                 function(DeserializationContext $context) {
@@ -118,7 +118,7 @@ class PageObjectProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             $object->reveal(),
-            $this->provider->deserialize('{"title": "test"}', get_class($object->reveal()))
+            $this->provider->deserialize('{"title": "test"}', \get_class($object->reveal()))
         );
     }
 }

@@ -36,13 +36,13 @@ class FallbackControllerTest extends \PHPUnit_Framework_TestCase
         $app->onMessage(Argument::type('Ratchet\ConnectionInterface'), ['test' => 1])->will(
             function($args) {
                 $return = ['test' => $args[1]['test'] + 1];
-                $args[0]->send(json_encode($return));
+                $args[0]->send(\json_encode($return));
             }
         );
 
         $controller = new FallbackController($appManager->reveal());
         $response = $controller->send('test', $request->reveal());
 
-        $this->assertEquals(['test' => 2], json_decode($response->getContent(), true));
+        $this->assertEquals(['test' => 2], \json_decode($response->getContent(), true));
     }
 }

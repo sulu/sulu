@@ -51,7 +51,7 @@ class CategoryList extends ComplexContentType implements ContentTypeExportInterf
     public function getContentData(PropertyInterface $property)
     {
         $ids = $property->getValue();
-        if (!is_array($ids) || empty($ids)) {
+        if (!\is_array($ids) || empty($ids)) {
             return [];
         }
 
@@ -84,7 +84,7 @@ class CategoryList extends ComplexContentType implements ContentTypeExportInterf
         }
 
         foreach ($value as $category) {
-            if (is_numeric($category)) {
+            if (\is_numeric($category)) {
                 // int value for id
                 $categoryIds[] = $category;
             } else {
@@ -116,8 +116,8 @@ class CategoryList extends ComplexContentType implements ContentTypeExportInterf
 
     public function exportData($propertyValue)
     {
-        if (is_array($propertyValue) && count($propertyValue) > 0) {
-            return json_encode($propertyValue);
+        if (\is_array($propertyValue) && \count($propertyValue) > 0) {
+            return \json_encode($propertyValue);
         }
 
         return '';
@@ -132,7 +132,7 @@ class CategoryList extends ComplexContentType implements ContentTypeExportInterf
         $languageCode,
         $segmentKey = null
     ) {
-        $property->setValue(json_decode($value));
+        $property->setValue(\json_decode($value));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

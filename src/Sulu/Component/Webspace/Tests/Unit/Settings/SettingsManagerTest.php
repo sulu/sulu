@@ -66,7 +66,7 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
         $this->sessionManager->setNodeProperty(
             '/cmf/' . $webspaceKey,
             'settings:' . $key,
-            (!($data instanceof NodeInterface) ? json_encode($data) : $data)
+            (!($data instanceof NodeInterface) ? \json_encode($data) : $data)
         );
 
         $this->sessionManager->flush();
@@ -104,9 +104,9 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->deprecatedSessionManager->getWebspaceNode($webspaceKey)->willReturn($node->reveal());
 
-        $node->getPropertyValueWithDefault('settings:' . $key, json_encode(null))
+        $node->getPropertyValueWithDefault('settings:' . $key, \json_encode(null))
             ->shouldBeCalledTimes(1)
-            ->willReturn((!($data instanceof NodeInterface) ? json_encode($data) : $data));
+            ->willReturn((!($data instanceof NodeInterface) ? \json_encode($data) : $data));
 
         $result = $this->settingsManager->load($webspaceKey, $key);
 
@@ -153,7 +153,7 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
         $property1->getValue()->willReturn($referencedNode->reveal());
         $property2 = $this->prophesize(PropertyInterface::class);
         $property2->getName()->willReturn('settings:test-2');
-        $property2->getValue()->willReturn(json_encode(['test1' => 'test1']));
+        $property2->getValue()->willReturn(\json_encode(['test1' => 'test1']));
 
         $this->deprecatedSessionManager->getWebspaceNode('sulu_io')->willReturn($node->reveal());
 

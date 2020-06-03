@@ -21,7 +21,7 @@ class EmailNotUniqueException extends SecurityException
     public function __construct($email)
     {
         $this->email = $email;
-        parent::__construct(sprintf('The email "%s" is not unique!', $email), 1004);
+        parent::__construct(\sprintf('The email "%s" is not unique!', $email), 1004);
     }
 
     public function getEmail()

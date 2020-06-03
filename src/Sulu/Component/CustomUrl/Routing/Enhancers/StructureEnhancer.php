@@ -22,14 +22,14 @@ class StructureEnhancer implements RouteEnhancerInterface
 {
     public function enhance(array $defaults, Request $request)
     {
-        if (!array_key_exists('_structure', $defaults)) {
+        if (!\array_key_exists('_structure', $defaults)) {
             return $defaults;
         }
 
         /** @var PageBridge $structure */
         $structure = $defaults['_structure'];
 
-        return array_merge($defaults, [
+        return \array_merge($defaults, [
             '_controller' => $structure->getController(),
             'structure' => $structure,
         ]);

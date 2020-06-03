@@ -56,7 +56,7 @@ class GeolocatorManager
     {
         if (!isset($this->geolocators[$name])) {
             throw new GeolocatorNotFoundException(
-                sprintf(
+                \sprintf(
                     'Attempt to retrieve unknown geolocator "%s"',
                     $name
                 )

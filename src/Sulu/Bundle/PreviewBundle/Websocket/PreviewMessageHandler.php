@@ -56,7 +56,7 @@ class PreviewMessageHandler implements MessageHandlerInterface
 
     protected function execute(MessageHandlerContext $context, $message)
     {
-        if (!array_key_exists('command', $message)) {
+        if (!\array_key_exists('command', $message)) {
             throw new MissingParameterException('command');
         }
 
@@ -80,7 +80,7 @@ class PreviewMessageHandler implements MessageHandlerInterface
                 $result = $this->render($context, $message);
                 break;
             default:
-                throw new \InvalidArgumentException(sprintf('Command "%s" not known', $command));
+                throw new \InvalidArgumentException(\sprintf('Command "%s" not known', $command));
                 break;
         }
 
@@ -158,7 +158,7 @@ class PreviewMessageHandler implements MessageHandlerInterface
             $message['webspaceKey'],
             $context->get('locale'),
             $message['data'],
-            array_key_exists('targetGroupId', $message) ? $message['targetGroupId'] : null
+            \array_key_exists('targetGroupId', $message) ? $message['targetGroupId'] : null
         );
 
         return ['command' => 'update', 'data' => $changes, 'msg' => 'OK'];
@@ -180,7 +180,7 @@ class PreviewMessageHandler implements MessageHandlerInterface
             $context->get('locale'),
             $message['context'],
             $message['data'],
-            array_key_exists('targetGroupId', $message) ? $message['targetGroupId'] : null
+            \array_key_exists('targetGroupId', $message) ? $message['targetGroupId'] : null
         );
 
         return ['command' => 'update-context', 'response' => $response, 'msg' => 'OK'];
@@ -192,7 +192,7 @@ class PreviewMessageHandler implements MessageHandlerInterface
             $context->get('previewToken'),
             $message['webspaceKey'],
             $context->get('locale'),
-            array_key_exists('targetGroupId', $message) ? $message['targetGroupId'] : null
+            \array_key_exists('targetGroupId', $message) ? $message['targetGroupId'] : null
         );
 
         return ['command' => 'render', 'response' => $response, 'msg' => 'OK'];

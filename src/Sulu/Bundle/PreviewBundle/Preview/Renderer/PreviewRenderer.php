@@ -120,7 +120,7 @@ class PreviewRenderer implements PreviewRendererInterface
 
     public function render($object, $id, $webspaceKey, $locale, $partial = false, $targetGroupId = null)
     {
-        if (!$this->routeDefaultsProvider->supports(get_class($object))) {
+        if (!$this->routeDefaultsProvider->supports(\get_class($object))) {
             throw new RouteDefaultsProviderNotFoundException($object, $id, $webspaceKey, $locale);
         }
 
@@ -131,7 +131,7 @@ class PreviewRenderer implements PreviewRendererInterface
         );
 
         /** @var PortalInformation $portalInformation */
-        $portalInformation = reset($portalInformations);
+        $portalInformation = \reset($portalInformations);
 
         if (!$portalInformation) {
             $portalInformation = $this->createPortalInformation($object, $id, $webspaceKey, $locale);
@@ -148,7 +148,7 @@ class PreviewRenderer implements PreviewRendererInterface
             $request = $currentRequest->request->all();
         }
 
-        $attributes = $this->routeDefaultsProvider->getByEntity(get_class($object), $id, $locale, $object);
+        $attributes = $this->routeDefaultsProvider->getByEntity(\get_class($object), $id, $locale, $object);
         $attributes['preview'] = true;
         $attributes['partial'] = $partial;
 
@@ -185,7 +185,7 @@ class PreviewRenderer implements PreviewRendererInterface
         } catch (\Twig_Error $e) {
             // dev/test only: display also the file and line which was causing the error
             // for better debugging and faster development
-            if (in_array($this->environment, ['dev', 'test'])) {
+            if (\in_array($this->environment, ['dev', 'test'])) {
                 $e->appendMessage(' (' . $e->getFile() . ' line ' . $e->getLine() . ')');
             }
 
@@ -243,7 +243,7 @@ class PreviewRenderer implements PreviewRendererInterface
         }
 
         $portalUrl = $scheme . '://' . $this->replacer->replaceHost($portalInformation->getUrl(), $host);
-        $portalUrlParts = parse_url($portalUrl);
+        $portalUrlParts = \parse_url($portalUrl);
 
         $serverName = null;
         $httpHost = null;
@@ -256,7 +256,7 @@ class PreviewRenderer implements PreviewRendererInterface
         if (isset($portalUrlParts['host'])) {
             $serverName = $portalUrlParts['host'];
             $httpHost = $serverName;
-            if (!in_array($port, [80, 443])) {
+            if (!\in_array($port, [80, 443])) {
                 $httpHost .= ':' . $port;
             }
         }

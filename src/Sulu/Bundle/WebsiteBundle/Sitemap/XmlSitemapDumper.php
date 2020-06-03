@@ -64,9 +64,9 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
 
     public function getIndexDumpPath($scheme, $webspaceKey, $locale, $url)
     {
-        return sprintf(
+        return \sprintf(
             '%s/%s/%s/%s/%s/sitemap.xml',
-            rtrim($this->baseDirectory, '/'),
+            \rtrim($this->baseDirectory, '/'),
             $scheme,
             $webspaceKey,
             $locale,
@@ -76,9 +76,9 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
 
     public function getDumpPath($scheme, $webspaceKey, $locale, $url, $alias, $page)
     {
-        return sprintf(
+        return \sprintf(
             '%s/%s/%s/%s/%s/sitemaps/%s-%s.xml',
-            rtrim($this->baseDirectory, '/'),
+            \rtrim($this->baseDirectory, '/'),
             $scheme,
             $webspaceKey,
             $locale,
@@ -90,12 +90,12 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
 
     public function dumpPortalInformation(PortalInformation $portalInformation, $scheme)
     {
-        if (false !== strpos($portalInformation->getUrl(), '{host}')) {
+        if (false !== \strpos($portalInformation->getUrl(), '{host}')) {
             if (!$this->defaultHost) {
                 throw new \InvalidArgumentException('When using host replacer a default_host has to be set.');
             }
 
-            $portalInformation->setUrl(str_replace('{host}', $this->defaultHost, $portalInformation->getUrl()));
+            $portalInformation->setUrl(\str_replace('{host}', $this->defaultHost, $portalInformation->getUrl()));
         }
 
         $dumpPath = $this->getIndexDumpPath(
@@ -106,11 +106,11 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
         );
         $sitemap = $this->sitemapRenderer->renderIndex($portalInformation->getHost(), $scheme);
         if (!$sitemap) {
-            $aliases = array_keys($this->sitemapProviderPool->getProviders());
+            $aliases = \array_keys($this->sitemapProviderPool->getProviders());
             $this->dumpFile(
                 $dumpPath,
                 $this->sitemapRenderer->renderSitemap(
-                    reset($aliases),
+                    \reset($aliases),
                     1,
                     $portalInformation->getLocale(),
                     $portalInformation->getPortal(),

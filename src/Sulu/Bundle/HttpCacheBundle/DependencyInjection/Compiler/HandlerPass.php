@@ -35,7 +35,7 @@ class HandlerPass implements CompilerPassInterface
         foreach ($taggedHandlers as $id => $attributes) {
             if (!isset($attributes[0]['alias'])) {
                 throw new \InvalidArgumentException(
-                    sprintf(
+                    \sprintf(
                         'No "alias" specified for cache handler service ID: "%s"',
                         $id
                     )
@@ -45,7 +45,7 @@ class HandlerPass implements CompilerPassInterface
             $alias = $attributes[0]['alias'];
 
             if (isset($knownHandlers[$alias])) {
-                throw new \InvalidArgumentException(sprintf(
+                throw new \InvalidArgumentException(\sprintf(
                     'Cache handler with alias "%s" has already been registered',
                     $alias
                 ));
@@ -65,14 +65,14 @@ class HandlerPass implements CompilerPassInterface
             }
         }
 
-        if (count($handlers) !== count($configuredAliases)) {
-            throw new \InvalidArgumentException(sprintf(
+        if (\count($handlers) !== \count($configuredAliases)) {
+            throw new \InvalidArgumentException(\sprintf(
                 'Could not find the following cache handlers: "%s"',
-                implode('", "', array_diff($configuredAliases, array_keys($handlers)))
+                \implode('", "', \array_diff($configuredAliases, \array_keys($handlers)))
             ));
         }
 
-        $aggregateHandler->replaceArgument(0, array_values($handlers));
+        $aggregateHandler->replaceArgument(0, \array_values($handlers));
     }
 
     /**
@@ -86,7 +86,7 @@ class HandlerPass implements CompilerPassInterface
         $reflection = new \ReflectionClass($container->getParameterBag()->resolveValue($definition->getClass()));
 
         if (!$reflection->implementsInterface('Sulu\Component\HttpCache\HandlerInterface')) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Service ID "%s" was tagged as a cache handler, but it does not implement the "HandlerInterface"', $id));
         }
     }

@@ -70,13 +70,13 @@ class TemplateController extends Controller
             }
         }
 
-        usort($templates, function($a, $b) {
-            return strcmp($a['title'], $b['title']);
+        \usort($templates, function($a, $b) {
+            return \strcmp($a['title'], $b['title']);
         });
 
         $data = [
             '_embedded' => $templates,
-            'total' => count($templates),
+            'total' => \count($templates),
         ];
 
         return new JsonResponse($data);
@@ -124,7 +124,7 @@ class TemplateController extends Controller
                 'templateKey' => $key,
                 'fireEvent' => $fireEvent,
                 'excludedProperties' => $request->query->has('excludedProperties')
-                    ? explode(',', $request->query->get('excludedProperties')) : [],
+                    ? \explode(',', $request->query->get('excludedProperties')) : [],
             ]
         );
     }

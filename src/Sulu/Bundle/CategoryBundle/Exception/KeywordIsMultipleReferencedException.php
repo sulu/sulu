@@ -27,7 +27,7 @@ class KeywordIsMultipleReferencedException extends RestException
     public function __construct(KeywordInterface $keyword)
     {
         parent::__construct(
-            sprintf('The keyword "%s" is used in multiple categories or translations.', $keyword->getKeyword()),
+            \sprintf('The keyword "%s" is used in multiple categories or translations.', $keyword->getKeyword()),
             2002
         );
 

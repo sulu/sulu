@@ -89,7 +89,7 @@ class AccountController extends RestController implements ClassResourceInterface
     public function fieldsAction()
     {
         // Default contacts list.
-        return $this->handleView($this->view(array_values($this->getFieldDescriptors()), 200));
+        return $this->handleView($this->view(\array_values($this->getFieldDescriptors()), 200));
     }
 
     /**
@@ -101,7 +101,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     public function getAction($id, Request $request)
     {
-        $includes = explode(',', $request->get('include'));
+        $includes = \explode(',', $request->get('include'));
         $accountManager = $this->getAccountManager();
         $locale = $this->getUser()->getLocale();
 
@@ -173,7 +173,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 $values,
                 'contacts',
                 'get_account_contacts',
-                array_merge(['id' => $id], $request->query->all()),
+                \array_merge(['id' => $id], $request->query->all()),
                 $listBuilder->getCurrentPage(),
                 $listBuilder->getLimit(),
                 $listBuilder->count()
@@ -218,7 +218,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 $values,
                 'addresses',
                 'get_account_addresses',
-                array_merge(['id' => $id], $request->query->all()),
+                \array_merge(['id' => $id], $request->query->all()),
                 $listBuilder->getCurrentPage(),
                 $listBuilder->getLimit(),
                 $listBuilder->count()
@@ -338,7 +338,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $account = $accountContact->getAccount();
 
             // Remove main contact when relation with main was removed.
-            if ($account->getMainContact() && strval($account->getMainContact()->getId()) === $contactId) {
+            if ($account->getMainContact() && \strval($account->getMainContact()->getId()) === $contactId) {
                 $account->setMainContact(null);
             }
 
@@ -431,16 +431,16 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected function applyRequestParameters(Request $request, $filter, $listBuilder)
     {
-        if (json_decode($request->get('hasNoParent', null))) {
+        if (\json_decode($request->get('hasNoParent', null))) {
             $listBuilder->where($this->getFieldDescriptorForNoParent(), null);
         }
 
-        if (json_decode($request->get('hasEmail', null))) {
+        if (\json_decode($request->get('hasEmail', null))) {
             $listBuilder->whereNot($this->getFieldDescriptors()['mainEmail'], null);
         }
 
         foreach ($filter as $key => $value) {
-            if (is_array($value)) {
+            if (\is_array($value)) {
                 $listBuilder->in($this->getFieldDescriptors()[$key], $value);
             } else {
                 $listBuilder->where($this->getFieldDescriptors()[$key], $value);
@@ -522,7 +522,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $account->setUid($request->get('uid'));
         }
 
-        if (array_key_exists('id', $request->get('logo', []))) {
+        if (\array_key_exists('id', $request->get('logo', []))) {
             $accountManager->setLogo($account, $request->get('logo')['id']);
         }
 
@@ -600,7 +600,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $account->setUid($request->get('uid'));
         }
 
-        if (array_key_exists('id', $request->get('logo', []))) {
+        if (\array_key_exists('id', $request->get('logo', []))) {
             $accountManager->setLogo($account, $request->get('logo')['id']);
         }
 
@@ -707,7 +707,7 @@ class AccountController extends RestController implements ClassResourceInterface
         if (null !== $request->get('placeOfJurisdiction')) {
             $account->setPlaceOfJurisdiction($request->get('placeOfJurisdiction'));
         }
-        if (array_key_exists('id', $request->get('logo', []))) {
+        if (\array_key_exists('id', $request->get('logo', []))) {
             $accountManager->setLogo($account, $request->get('logo')['id']);
         }
         if (null !== $request->get('medias')) {
@@ -839,7 +839,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 foreach ($accountContacts as $accountContact) {
                     /* @var AccountContactEntity $accountContact */
                     $contactId = $accountContact->getContact()->getId();
-                    if (!array_key_exists($contactId, $slicedContacts)) {
+                    if (!\array_key_exists($contactId, $slicedContacts)) {
                         if ($numContacts++ < 3) {
                             $slicedContacts[$contactId] = $accountContact->getContact();
                         }
@@ -1235,10 +1235,10 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     private function addLogos($accounts, $locale)
     {
-        $ids = array_filter(array_column($accounts, 'logo'));
+        $ids = \array_filter(\array_column($accounts, 'logo'));
         $logos = $this->get('sulu_media.media_manager')->getFormatUrls($ids, $locale);
         foreach ($accounts as $key => $account) {
-            if (array_key_exists('logo', $account) && $account['logo'] && array_key_exists($account['logo'], $logos)) {
+            if (\array_key_exists('logo', $account) && $account['logo'] && \array_key_exists($account['logo'], $logos)) {
                 $accounts[$key]['logo'] = $logos[$account['logo']];
             }
         }
@@ -1260,11 +1260,11 @@ class AccountController extends RestController implements ClassResourceInterface
         $count = 0;
 
         if ($ids) {
-            if (is_string($ids)) {
-                $ids = explode(',', $ids);
+            if (\is_string($ids)) {
+                $ids = \explode(',', $ids);
             }
 
-            $count = count($ids);
+            $count = \count($ids);
             $filter['id'] = $ids;
         }
 

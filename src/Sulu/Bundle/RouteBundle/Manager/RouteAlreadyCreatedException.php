@@ -26,10 +26,10 @@ class RouteAlreadyCreatedException extends \Exception
     public function __construct(RoutableInterface $entity)
     {
         parent::__construct(
-            sprintf(
+            \sprintf(
                 'Route "%s" for entity of type "%s" and identifier "%s" has already been created.',
                 $entity->getRoute()->getPath(),
-                get_class($entity),
+                \get_class($entity),
                 $entity->getId()
             )
         );

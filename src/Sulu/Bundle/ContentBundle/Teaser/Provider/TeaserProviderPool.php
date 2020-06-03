@@ -32,7 +32,7 @@ class TeaserProviderPool implements TeaserProviderPoolInterface
     public function getProvider($name)
     {
         if (!$this->hasProvider($name)) {
-            throw new ProviderNotFoundException($name, array_keys($this->providers));
+            throw new ProviderNotFoundException($name, \array_keys($this->providers));
         }
 
         return $this->providers[$name];
@@ -40,7 +40,7 @@ class TeaserProviderPool implements TeaserProviderPoolInterface
 
     public function hasProvider($name)
     {
-        return array_key_exists($name, $this->providers);
+        return \array_key_exists($name, $this->providers);
     }
 
     public function getConfiguration()

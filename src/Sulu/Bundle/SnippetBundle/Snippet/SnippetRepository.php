@@ -68,7 +68,7 @@ class SnippetRepository
         $session = $this->sessionManager->getSession();
         $node = $session->getNodeByIdentifier($uuid);
 
-        return iterator_to_array($node->getReferences());
+        return \iterator_to_array($node->getReferences());
     }
 
     /**
@@ -158,7 +158,7 @@ class SnippetRepository
         $query = $this->getSnippetsQuery($locale, $type, null, null, $search, $sortBy, $sortOrder);
         $result = $query->execute();
 
-        return count(iterator_to_array($result->getRows()));
+        return \count(\iterator_to_array($result->getRows()));
     }
 
     /**
@@ -253,7 +253,7 @@ class SnippetRepository
         }
 
         if (null !== $search) {
-            $search = str_replace('*', '%', $search);
+            $search = \str_replace('*', '%', $search);
             $searchConstraint = $qf->orConstraint(
                 $qf->comparison(
                     $qf->propertyValue('a', 'i18n:' . $locale . '-title'),
@@ -272,12 +272,12 @@ class SnippetRepository
         // Title is a mandatory property for snippets
         // NOTE: Prefixing the language code and namespace here is bad. But the solution is
         //       refactoring (i.e. a node property name translator service).
-        $sortOrder = (null !== $sortOrder ? strtoupper($sortOrder) : 'ASC');
+        $sortOrder = (null !== $sortOrder ? \strtoupper($sortOrder) : 'ASC');
         $sortBy = (null !== $sortBy ? $sortBy : 'title');
 
         $qb->orderBy(
             $qb->qomf()->propertyValue('a', 'i18n:' . $locale . '-' . $sortBy),
-            null !== $sortOrder ? strtoupper($sortOrder) : 'ASC'
+            null !== $sortOrder ? \strtoupper($sortOrder) : 'ASC'
         );
 
         return $qb->getQuery();

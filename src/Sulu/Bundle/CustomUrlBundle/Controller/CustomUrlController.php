@@ -52,7 +52,7 @@ class CustomUrlController extends RestController implements SecuredControllerInt
         $list = new RouteAwareRepresentation(
             new CollectionRepresentation($result, self::$relationName),
             'cget_webspace_custom-urls',
-            array_merge($request->request->all(), ['webspaceKey' => $webspaceKey])
+            \array_merge($request->request->all(), ['webspaceKey' => $webspaceKey])
         );
 
         return $this->handleView($this->view($list));
@@ -163,7 +163,7 @@ class CustomUrlController extends RestController implements SecuredControllerInt
      */
     public function cdeleteAction($webspaceKey, Request $request)
     {
-        $uuids = array_filter(explode(',', $request->get('ids', '')));
+        $uuids = \array_filter(\explode(',', $request->get('ids', '')));
 
         $manager = $this->get('sulu_custom_urls.manager');
         foreach ($uuids as $uuid) {
@@ -185,7 +185,7 @@ class CustomUrlController extends RestController implements SecuredControllerInt
      */
     public function cdeleteRoutesAction($webspaceKey, $customUrlUuid, Request $request)
     {
-        $uuids = array_filter(explode(',', $request->get('ids', '')));
+        $uuids = \array_filter(\explode(',', $request->get('ids', '')));
 
         $manager = $this->get('sulu_custom_urls.manager');
         foreach ($uuids as $uuid) {

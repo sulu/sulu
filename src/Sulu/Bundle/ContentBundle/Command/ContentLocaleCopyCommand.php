@@ -162,7 +162,7 @@ EOT
             $this->output->writeln('<info>Processing: </info>' . $structure->getPath());
         } catch (ResourceLocatorAlreadyExistsException $e) {
             $this->output->writeln(
-                sprintf(
+                \sprintf(
                     '<info>Processing aborted: </info> %s <comment>Resource Locator "%s" already exists',
                     $structure->getPath(),
                     $structure->getResourceLocator()

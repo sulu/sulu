@@ -70,7 +70,7 @@ class VideoThumbnailServiceTest extends \PHPUnit_Framework_TestCase
 
             $this->ffmpeg->open('1.mp4')->willReturn($this->video->reveal())->shouldBeCalled();
             $this->video->frame($timecode)->willReturn($this->frame->reveal())->shouldBeCalled();
-            $this->frame->save(str_replace(':', '.', DIRECTORY_SEPARATOR . $time . '.jpg'))->shouldBeCalled();
+            $this->frame->save(\str_replace(':', '.', \DIRECTORY_SEPARATOR . $time . '.jpg'))->shouldBeCalled();
         }
 
         $this->videoThumbnailService->batchGenerate('1.mp4', $times, '');

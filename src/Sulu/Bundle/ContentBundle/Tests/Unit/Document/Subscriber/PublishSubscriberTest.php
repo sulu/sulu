@@ -186,7 +186,7 @@ class PublishSubscriberTest extends \PHPUnit_Framework_TestCase
         $document = $this->prophesize(PathBehavior::class);
         $document->getPath()->willReturn('/cmf/sulu');
 
-        $this->metadataFactory->getMetadataForClass(get_class($document->reveal()))->willReturn($metadata->reveal());
+        $this->metadataFactory->getMetadataForClass(\get_class($document->reveal()))->willReturn($metadata->reveal());
 
         $event = $this->prophesize(RemoveEvent::class);
         $event->getDocument()->willReturn($document->reveal());
@@ -205,7 +205,7 @@ class PublishSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $document = $this->prophesize(PathBehavior::class);
 
-        $this->metadataFactory->getMetadataForClass(get_class($document->reveal()))->willReturn($metadata->reveal());
+        $this->metadataFactory->getMetadataForClass(\get_class($document->reveal()))->willReturn($metadata->reveal());
 
         $event = $this->prophesize(RemoveEvent::class);
         $event->getDocument()->willReturn($document->reveal());

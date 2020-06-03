@@ -59,7 +59,7 @@ class TimestampableSubscriberTest extends \PHPUnit_Framework_TestCase
         $entity = $this->timestampableObject->reveal();
         $this->lifecycleEvent->getObject()->willReturn($this->timestampableObject->reveal());
         $this->lifecycleEvent->getObjectManager()->willReturn($this->entityManager->reveal());
-        $this->entityManager->getClassMetadata(get_class($entity))->willReturn($this->classMetadata);
+        $this->entityManager->getClassMetadata(\get_class($entity))->willReturn($this->classMetadata);
 
         $this->classMetadata->getFieldValue($entity, 'created')->willReturn($created);
 

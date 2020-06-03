@@ -35,7 +35,7 @@ class AdminControllerTest extends SuluTestCase
 
         $userSetting = new UserSetting();
         $userSetting->setKey('test');
-        $userSetting->setValue(json_encode(['key' => 'value']));
+        $userSetting->setValue(\json_encode(['key' => 'value']));
         $userSetting->setUser($this->getTestUser());
         $this->em->persist($userSetting);
         $this->em->flush();

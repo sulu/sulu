@@ -23,7 +23,7 @@ class SnippetNotFoundException extends \Exception
 
     public function __construct($uuid)
     {
-        parent::__construct(sprintf('Snippet with uuid "%s" not found.', $uuid));
+        parent::__construct(\sprintf('Snippet with uuid "%s" not found.', $uuid));
 
         $this->uuid = $uuid;
     }

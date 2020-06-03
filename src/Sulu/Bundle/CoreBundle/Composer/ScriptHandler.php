@@ -24,12 +24,12 @@ class ScriptHandler
      */
     public static function removeComposerLockFromGitIgnore()
     {
-        if (!file_exists(static::GIT_IGNORE_FILE)) {
+        if (!\file_exists(static::GIT_IGNORE_FILE)) {
             return;
         }
 
-        $gitignore = file_get_contents(static::GIT_IGNORE_FILE);
-        $gitignore = str_replace("composer.lock\n", '', $gitignore);
-        file_put_contents(static::GIT_IGNORE_FILE, $gitignore);
+        $gitignore = \file_get_contents(static::GIT_IGNORE_FILE);
+        $gitignore = \str_replace("composer.lock\n", '', $gitignore);
+        \file_put_contents(static::GIT_IGNORE_FILE, $gitignore);
     }
 }

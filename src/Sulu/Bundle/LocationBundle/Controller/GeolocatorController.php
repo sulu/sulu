@@ -46,7 +46,7 @@ class GeolocatorController
             $geolocator = $this->geolocatorManager->get($geolocatorName);
         } catch (GeolocatorNotFoundException $e) {
             throw new NotFoundHttpException(
-                sprintf(
+                \sprintf(
                     'Wrapped "%s"',
                     $e->getMessage()
                 ),

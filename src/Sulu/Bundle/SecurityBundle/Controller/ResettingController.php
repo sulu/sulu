@@ -145,7 +145,7 @@ class ResettingController extends Controller
         $constraint = new EmailConstraint();
         $result = $this->get('validator')->validate($email, $constraint);
 
-        return 0 === count($result);
+        return 0 === \count($result);
     }
 
     /**
@@ -189,7 +189,7 @@ class ResettingController extends Controller
             throw new EmailTemplateException($template);
         }
 
-        return trim(
+        return \trim(
             $this->renderView(
                 $template,
                 [

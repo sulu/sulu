@@ -175,7 +175,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         if ('auto' === $config['adapter']) {
             $container->setAlias(
                 'sulu_media.adapter',
-                'sulu_media.adapter.' . (class_exists('Imagick') ? 'imagick' : 'gd')
+                'sulu_media.adapter.' . (\class_exists('Imagick') ? 'imagick' : 'gd')
             );
         } else {
             // set used adapter for imagine
@@ -184,7 +184,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
 
         // enable search
         if (true === $config['search']['enabled']) {
-            if (!class_exists('Sulu\Bundle\SearchBundle\SuluSearchBundle')) {
+            if (!\class_exists('Sulu\Bundle\SearchBundle\SuluSearchBundle')) {
                 throw new \InvalidArgumentException(
                     'You have enabled sulu search integration for the SuluMediaBundle, ' .
                     'but the SuluSearchBundle must be installed'
@@ -194,7 +194,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $loader->load('search.xml');
         }
 
-        if (array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
+        if (\array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
             $loader->load('audience_targeting.xml');
         }
 

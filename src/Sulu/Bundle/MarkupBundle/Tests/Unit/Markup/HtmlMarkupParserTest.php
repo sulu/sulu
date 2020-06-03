@@ -134,7 +134,7 @@ EOT;
 
         $response = $this->parser->parse($content, 'de');
 
-        $this->assertEquals(2, preg_match_all('/<a href="\/test" title="test">page title<\/a>/', $response));
+        $this->assertEquals(2, \preg_match_all('/<a href="\/test" title="test">page title<\/a>/', $response));
         $this->assertNotContains('<sulu:link href="123-123-123" title="test" />', $response);
     }
 

@@ -106,9 +106,9 @@ class RoleControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/roles?flat=true');
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(2, count($response->_embedded->roles));
+        $this->assertEquals(2, \count($response->_embedded->roles));
         $this->assertEquals('Sulu Administrator', $response->_embedded->roles[0]->name);
         $this->assertEquals('Sulu', $response->_embedded->roles[0]->system);
     }
@@ -118,11 +118,11 @@ class RoleControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/roles/' . $this->role1->getId());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Sulu Administrator', $response->name);
         $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals(2, count($response->permissions));
+        $this->assertEquals(2, \count($response->permissions));
         $this->assertEquals('context1', $response->permissions[0]->context);
         $this->assertEquals(false, $response->permissions[0]->permissions->view);
         $this->assertEquals(false, $response->permissions[0]->permissions->add);
@@ -184,11 +184,11 @@ class RoleControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals(2, count($response->permissions));
+        $this->assertEquals(2, \count($response->permissions));
         $this->assertEquals('portal1', $response->permissions[0]->context);
         $this->assertEquals(false, $response->permissions[0]->permissions->view);
         $this->assertEquals(false, $response->permissions[0]->permissions->add);
@@ -212,11 +212,11 @@ class RoleControllerTest extends SuluTestCase
             '/api/roles/' . $response->id
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals(2, count($response->permissions));
+        $this->assertEquals(2, \count($response->permissions));
         $this->assertEquals('portal1', $response->permissions[0]->context);
         $this->assertEquals(false, $response->permissions[0]->permissions->view);
         $this->assertEquals(false, $response->permissions[0]->permissions->add);
@@ -292,7 +292,7 @@ class RoleControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
@@ -327,7 +327,7 @@ class RoleControllerTest extends SuluTestCase
             '/api/roles/' . $this->role1->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
@@ -410,7 +410,7 @@ class RoleControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
@@ -445,7 +445,7 @@ class RoleControllerTest extends SuluTestCase
             '/api/roles/' . $this->role1->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
@@ -488,7 +488,7 @@ class RoleControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(404, $client->getResponse());
         $this->assertContains('11230', $response->message);
@@ -507,7 +507,7 @@ class RoleControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(409, $client->getResponse());
         $this->assertEquals(1101, $response->code);
@@ -522,9 +522,9 @@ class RoleControllerTest extends SuluTestCase
             '/api/roles'
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $this->assertEquals(2, count($response->_embedded->roles));
+        $this->assertEquals(2, \count($response->_embedded->roles));
 
         $client->request(
             'DELETE',
@@ -538,9 +538,9 @@ class RoleControllerTest extends SuluTestCase
             '/api/roles'
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $this->assertEquals(1, count($response->_embedded->roles));
+        $this->assertEquals(1, \count($response->_embedded->roles));
     }
 
     public function testDeleteNotExisting()
@@ -552,7 +552,7 @@ class RoleControllerTest extends SuluTestCase
             '/api/roles/11230'
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(404, $client->getResponse());
         $this->assertContains('11230', $response->message);
@@ -564,10 +564,10 @@ class RoleControllerTest extends SuluTestCase
 
         $client->request('GET', '/api/roles');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $this->assertEquals(2, count($response->_embedded->roles));
+        $this->assertEquals(2, \count($response->_embedded->roles));
 
         $this->assertEquals('Sulu Administrator', $response->_embedded->roles[0]->name);
         $this->assertEquals('Sulu Editor', $response->_embedded->roles[1]->name);

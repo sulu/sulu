@@ -141,7 +141,7 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
      */
     public function findByIds($ids)
     {
-        if (0 === count($ids)) {
+        if (0 === \count($ids)) {
             return [];
         }
 

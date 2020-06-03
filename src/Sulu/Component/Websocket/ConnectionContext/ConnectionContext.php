@@ -58,7 +58,7 @@ class ConnectionContext implements ConnectionContextInterface
             $this->session = $conn->Session;
         }
 
-        $sessionName = ini_get('session.name');
+        $sessionName = \ini_get('session.name');
 
         if (isset($this->request) && isset($this->request->getCookies()[$sessionName])) {
             $this->id = $this->request->getCookies()[$sessionName];
@@ -87,7 +87,7 @@ class ConnectionContext implements ConnectionContextInterface
     public function getToken($firewall)
     {
         if (null !== $this->session) {
-            return unserialize($this->session->get('_security_' . $firewall));
+            return \unserialize($this->session->get('_security_' . $firewall));
         }
 
         return;

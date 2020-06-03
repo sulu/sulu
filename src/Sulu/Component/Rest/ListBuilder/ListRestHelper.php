@@ -115,7 +115,7 @@ class ListRestHelper implements ListRestHelperInterface
     {
         $fields = $this->getRequest()->get('fields');
 
-        return (null != $fields) ? explode(',', $fields) : null;
+        return (null != $fields) ? \explode(',', $fields) : null;
     }
 
     /**
@@ -135,6 +135,6 @@ class ListRestHelper implements ListRestHelperInterface
     {
         $searchFields = $this->getRequest()->get('searchFields');
 
-        return (null != $searchFields) ? explode(',', $searchFields) : [];
+        return (null != $searchFields) ? \explode(',', $searchFields) : [];
     }
 }

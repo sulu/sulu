@@ -63,7 +63,7 @@ class MetadataSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->parentObject = $this->prophesize('\stdClass');
         $this->object = $this->prophesize('\stdClass')
-            ->willExtend(get_class($this->parentObject->reveal()));
+            ->willExtend(\get_class($this->parentObject->reveal()));
 
         $objects = [
             'sulu' => [
@@ -75,7 +75,7 @@ class MetadataSubscriberTest extends \PHPUnit_Framework_TestCase
                     'model' => '\Closure',
                 ],
                 'user' => [
-                    'model' => get_class($this->object->reveal()),
+                    'model' => \get_class($this->object->reveal()),
                 ],
             ],
         ];
@@ -119,7 +119,7 @@ class MetadataSubscriberTest extends \PHPUnit_Framework_TestCase
     public function testLoadClassMetadataWithoutParent()
     {
         $this->loadClassMetadataEvent->getClassMetadata()->willReturn($this->classMetadata->reveal());
-        $this->classMetadata->getName()->willReturn(get_class($this->object->reveal()));
+        $this->classMetadata->getName()->willReturn(\get_class($this->object->reveal()));
 
         $this->classMetadata
             ->setCustomRepositoryClass('Sulu\Bundle\ContactBundle\Entity\ContactRepository')
@@ -132,9 +132,9 @@ class MetadataSubscriberTest extends \PHPUnit_Framework_TestCase
         /** @var \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver $mappingDriver */
         $mappingDriver = $this->prophesize('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver');
         $this->configuration->getMetadataDriverImpl()->willReturn($mappingDriver->reveal());
-        $mappingDriver->getAllClassNames()->willReturn([get_class($this->parentObject->reveal())]);
+        $mappingDriver->getAllClassNames()->willReturn([\get_class($this->parentObject->reveal())]);
         $mappingDriver->loadMetadataForClass(
-            get_class($this->parentObject->reveal()),
+            \get_class($this->parentObject->reveal()),
             Argument::type('Doctrine\ORM\Mapping\ClassMetadata')
         )->shouldBeCalled();
 

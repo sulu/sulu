@@ -37,8 +37,8 @@ class SmartContentItemController extends RestController
         // prepare filters and options
         $providerAlias = $this->getRequestParameter($request, 'provider', true);
         $filters = $request->query->all();
-        $filters['excluded'] = array_filter(explode(',', $this->getRequestParameter($request, 'excluded', true)));
-        $filters = array_filter($filters);
+        $filters['excluded'] = \array_filter(\explode(',', $this->getRequestParameter($request, 'excluded', true)));
+        $filters = \array_filter($filters);
         $options = [
             'webspaceKey' => $this->getRequestParameter($request, 'webspace'),
             'locale' => $this->getLocale($request),
@@ -53,9 +53,9 @@ class SmartContentItemController extends RestController
         $dataProviderPool = $this->get('sulu_content.smart_content.data_provider_pool');
         $provider = $dataProviderPool->get($providerAlias);
 
-        $params = array_merge(
+        $params = \array_merge(
             $provider->getDefaultPropertyParameter(),
-            $this->getParams(json_decode($request->get('params', '{}'), true))
+            $this->getParams(\json_decode($request->get('params', '{}'), true))
         );
 
         // resolve datasource and items

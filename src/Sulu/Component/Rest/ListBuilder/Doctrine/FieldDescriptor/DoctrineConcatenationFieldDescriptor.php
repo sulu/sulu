@@ -78,7 +78,7 @@ class DoctrineConcatenationFieldDescriptor extends AbstractDoctrineFieldDescript
         $joins = [];
 
         foreach ($this->fieldDescriptors as $fieldDescriptor) {
-            $joins = array_merge($joins, $fieldDescriptor->getJoins());
+            $joins = \array_merge($joins, $fieldDescriptor->getJoins());
         }
 
         return $joins;

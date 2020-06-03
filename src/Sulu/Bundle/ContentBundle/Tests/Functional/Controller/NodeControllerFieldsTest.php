@@ -47,7 +47,7 @@ class NodeControllerFieldsTest extends SuluTestCase
         $client->request('GET', '/api/nodes', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $items = $result['_embedded']['nodes'];
 
@@ -71,7 +71,7 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $client->request('GET', '/api/nodes', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $items = $result['_embedded']['nodes'];
 
@@ -96,7 +96,7 @@ class NodeControllerFieldsTest extends SuluTestCase
             ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-shadows' => true]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $items = $result['_embedded']['nodes'];
 
@@ -116,7 +116,7 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $client->request('GET', '/api/nodes', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $items = $result['_embedded']['nodes'];
 
@@ -141,7 +141,7 @@ class NodeControllerFieldsTest extends SuluTestCase
             ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-ghosts' => true]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $items = $result['_embedded']['nodes'];
 
@@ -161,7 +161,7 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $client->request('GET', '/api/nodes', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $items = $result['_embedded']['nodes'];
 
@@ -186,7 +186,7 @@ class NodeControllerFieldsTest extends SuluTestCase
             ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-ghosts' => true, 'exclude-shadows' => true]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $items = $result['_embedded']['nodes'];
 
@@ -204,10 +204,10 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/nodes/%s', $page1->getUuid()),
+            \sprintf('/api/nodes/%s', $page1->getUuid()),
             ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']
         );
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals($page1->getUuid(), $result['id']);
         $this->assertTrue($result['hasChildren']);
@@ -233,10 +233,10 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/nodes/%s', $page10->getUuid()),
+            \sprintf('/api/nodes/%s', $page10->getUuid()),
             ['webspace' => 'sulu_io', 'language' => 'de', 'tree' => true, 'fields' => 'title']
         );
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $layer = $result['_embedded']['nodes'];
         $this->assertCount(2, $layer);
@@ -284,10 +284,10 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/nodes/%s', $page->getUuid()),
+            \sprintf('/api/nodes/%s', $page->getUuid()),
             ['webspace' => 'sulu_io', 'language' => 'en', 'fields' => 'title']
         );
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('internal', $result['linked']);
     }
@@ -300,10 +300,10 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/nodes/%s', $page->getUuid()),
+            \sprintf('/api/nodes/%s', $page->getUuid()),
             ['webspace' => 'sulu_io', 'language' => 'en', 'fields' => 'title']
         );
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('external', $result['linked']);
     }
@@ -316,10 +316,10 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/nodes/%s', $page->getUuid()),
+            \sprintf('/api/nodes/%s', $page->getUuid()),
             ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']
         );
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('ghost', $result['type']['name']);
         $this->assertEquals('en', $result['type']['value']);
@@ -333,10 +333,10 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/nodes/%s', $page->getUuid()),
+            \sprintf('/api/nodes/%s', $page->getUuid()),
             ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']
         );
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('shadow', $result['type']['name']);
         $this->assertEquals('en', $result['type']['value']);
@@ -356,7 +356,7 @@ class NodeControllerFieldsTest extends SuluTestCase
             '/api/nodes',
             ['webspace' => 'sulu_io', 'language' => 'de', 'webspace-nodes' => 'single', 'fields' => 'title']
         );
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $layer = $result['_embedded']['nodes'];
         $this->assertCount(1, $layer);
@@ -391,11 +391,11 @@ class NodeControllerFieldsTest extends SuluTestCase
             '/api/nodes',
             ['webspace' => 'sulu_io', 'language' => 'de', 'webspace-nodes' => 'all', 'fields' => 'title']
         );
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $layer = $result['_embedded']['nodes'];
 
-        usort($layer, function($layer1, $layer2) {
-            return strcmp($layer1['title'], $layer2['title']);
+        \usort($layer, function($layer1, $layer2) {
+            return \strcmp($layer1['title'], $layer2['title']);
         });
 
         $this->assertCount(3, $layer);
@@ -441,11 +441,11 @@ class NodeControllerFieldsTest extends SuluTestCase
                 'fields' => 'title',
             ]
         );
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $layer = $result['_embedded']['nodes'];
-        usort($layer, function($layer1, $layer2) {
-            return strcmp($layer1['title'], $layer2['title']);
+        \usort($layer, function($layer1, $layer2) {
+            return \strcmp($layer1['title'], $layer2['title']);
         });
 
         $this->assertCount(1, $layer);
@@ -493,11 +493,11 @@ class NodeControllerFieldsTest extends SuluTestCase
                 'fields' => 'title',
             ]
         );
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $layer = $result['_embedded']['nodes'];
-        usort($layer, function($layer1, $layer2) {
-            return strcmp($layer1['title'], $layer2['title']);
+        \usort($layer, function($layer1, $layer2) {
+            return \strcmp($layer1['title'], $layer2['title']);
         });
         $this->assertCount(3, $layer);
         $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[1]['id']);
@@ -590,7 +590,7 @@ class NodeControllerFieldsTest extends SuluTestCase
         );
 
         $document->setShadowLocaleEnabled(true);
-        $document->setTitle(strrev($title));
+        $document->setTitle(\strrev($title));
         $document->setShadowLocale($locale);
         $document->setLocale($shadowedLocale);
         $document->setResourceSegment($document1->getResourceSegment());

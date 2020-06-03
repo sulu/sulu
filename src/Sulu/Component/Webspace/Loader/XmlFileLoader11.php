@@ -53,9 +53,9 @@ class XmlFileLoader11 extends XmlFileLoader10
             }
         }
 
-        $found = array_keys($webspace->getDefaultTemplates());
+        $found = \array_keys($webspace->getDefaultTemplates());
         foreach ($expected as $item) {
-            if (!in_array($item, $found)) {
+            if (!\in_array($item, $found)) {
                 throw new ExpectedDefaultTemplatesNotFound($this->webspace->getKey(), $expected, $found);
             }
         }

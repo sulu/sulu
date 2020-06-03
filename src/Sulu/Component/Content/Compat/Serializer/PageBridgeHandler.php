@@ -77,7 +77,7 @@ class PageBridgeHandler implements SubscribingHandlerInterface
         $context->accept(
             [
                 'document' => $bridge->getDocument(),
-                'documentClass' => get_class($bridge->getDocument()),
+                'documentClass' => \get_class($bridge->getDocument()),
                 'structure' => $bridge->getStructure()->getName(),
             ]
         );

@@ -85,8 +85,8 @@ class QueryBuilder extends ContentQueryBuilder
         // build where clause for datasource
         if ($this->hasConfig('dataSource')) {
             $sql2Where[] = $this->buildDatasourceWhere();
-        } elseif (0 === count($this->ids)) {
-            $sql2Where[] = sprintf(
+        } elseif (0 === \count($this->ids)) {
+            $sql2Where[] = \sprintf(
                 'ISDESCENDANTNODE(page, "/cmf/%s/contents")',
                 $webspaceKey
             );
@@ -139,44 +139,44 @@ class QueryBuilder extends ContentQueryBuilder
             );
         }
 
-        if (count($this->ids) > 0) {
+        if (\count($this->ids) > 0) {
             $sql2Where[] = $this->buildPageSelector();
         }
 
-        if (count($this->excluded) > 0) {
-            $sql2Where = array_merge($sql2Where, $this->buildPageExclude());
+        if (\count($this->excluded) > 0) {
+            $sql2Where = \array_merge($sql2Where, $this->buildPageExclude());
         }
 
-        $sql2Where = array_filter($sql2Where);
+        $sql2Where = \array_filter($sql2Where);
 
-        return implode(' AND ', $sql2Where);
+        return \implode(' AND ', $sql2Where);
     }
 
     protected function buildSelect($webspaceKey, $locale, &$additionalFields)
     {
         $select = [];
 
-        if (count($this->propertiesConfig) > 0) {
+        if (\count($this->propertiesConfig) > 0) {
             $this->buildPropertiesSelect($locale, $additionalFields);
         }
 
-        return implode(', ', $select);
+        return \implode(', ', $select);
     }
 
     protected function buildOrder($webspaceKey, $locale)
     {
-        $sortOrder = (isset($this->config['sortMethod']) && 'desc' === strtolower($this->config['sortMethod']))
+        $sortOrder = (isset($this->config['sortMethod']) && 'desc' === \strtolower($this->config['sortMethod']))
             ? 'DESC' : 'ASC';
 
         $sql2Order = [];
         $sortBy = $this->getConfig('sortBy', []);
 
-        if (!empty($sortBy) && is_array($sortBy)) {
+        if (!empty($sortBy) && \is_array($sortBy)) {
             foreach ($sortBy as $sortColumn) {
                 // TODO implement more generic
                 $order = 'page.[i18n:' . $locale . '-' . $sortColumn . '] ';
-                if (!in_array($sortColumn, ['published', 'created', 'changed', 'authored'])) {
-                    $order = sprintf('lower(%s)', $order);
+                if (!\in_array($sortColumn, ['published', 'created', 'changed', 'authored'])) {
+                    $order = \sprintf('lower(%s)', $order);
                 }
 
                 $sql2Order[] = $order . ' ' . $sortOrder;
@@ -185,7 +185,7 @@ class QueryBuilder extends ContentQueryBuilder
             $sql2Order[] = 'page.[sulu:order] ' . $sortOrder;
         }
 
-        return implode(', ', $sql2Order);
+        return \implode(', ', $sql2Order);
     }
 
     public function init(array $options)
@@ -206,8 +206,8 @@ class QueryBuilder extends ContentQueryBuilder
             $alias = $parameter->getName();
             $propertyName = $parameter->getValue();
 
-            if (false !== strpos($propertyName, '.')) {
-                $parts = explode('.', $propertyName);
+            if (false !== \strpos($propertyName, '.')) {
+                $parts = \explode('.', $propertyName);
 
                 $this->buildExtensionSelect($alias, $parts[0], $parts[1], $locale, $additionalFields);
             } else {
@@ -307,8 +307,8 @@ class QueryBuilder extends ContentQueryBuilder
                 $sql2Where[] = 'page.[' . $property->getName() . '] = ' . $tag;
             }
 
-            if (count($sql2Where) > 0) {
-                return '(' . implode(' ' . strtoupper($operator) . ' ', $sql2Where) . ')';
+            if (\count($sql2Where) > 0) {
+                return '(' . \implode(' ' . \strtoupper($operator) . ' ', $sql2Where) . ')';
             }
         }
 
@@ -334,8 +334,8 @@ class QueryBuilder extends ContentQueryBuilder
                 $sql2Where[] = 'page.[' . $property->getName() . '] = ' . $category;
             }
 
-            if (count($sql2Where) > 0) {
-                return '(' . implode(' ' . strtoupper($operator) . ' ', $sql2Where) . ')';
+            if (\count($sql2Where) > 0) {
+                return '(' . \implode(' ' . \strtoupper($operator) . ' ', $sql2Where) . ')';
             }
         }
 
@@ -377,10 +377,10 @@ class QueryBuilder extends ContentQueryBuilder
     {
         $idsWhere = [];
         foreach ($this->ids as $id) {
-            $idsWhere[] = sprintf("page.[jcr:uuid] = '%s'", $id);
+            $idsWhere[] = \sprintf("page.[jcr:uuid] = '%s'", $id);
         }
 
-        return '(' . implode(' OR ', $idsWhere) . ')';
+        return '(' . \implode(' OR ', $idsWhere) . ')';
     }
 
     /**
@@ -390,7 +390,7 @@ class QueryBuilder extends ContentQueryBuilder
     {
         $idsWhere = [];
         foreach ($this->excluded as $id) {
-            $idsWhere[] = sprintf("(NOT page.[jcr:uuid] = '%s')", $id);
+            $idsWhere[] = \sprintf("(NOT page.[jcr:uuid] = '%s')", $id);
         }
 
         return $idsWhere;

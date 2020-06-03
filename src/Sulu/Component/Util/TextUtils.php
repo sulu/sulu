@@ -27,11 +27,11 @@ class TextUtils
      */
     public static function truncate($text, $length, $suffix = '...')
     {
-        $strlen = mb_strlen($text, 'UTF-8');
+        $strlen = \mb_strlen($text, 'UTF-8');
 
         if ($strlen > $length) {
-            $truncatedLength = $length - strlen($suffix);
-            $text = mb_substr($text, 0, $truncatedLength, 'UTF-8') . $suffix;
+            $truncatedLength = $length - \strlen($suffix);
+            $text = \mb_substr($text, 0, $truncatedLength, 'UTF-8') . $suffix;
         }
 
         return $text;

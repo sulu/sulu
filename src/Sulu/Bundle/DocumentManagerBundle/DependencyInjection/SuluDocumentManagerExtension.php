@@ -141,7 +141,7 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
 
         $realMapping = [];
         foreach ($config['mapping'] as $alias => $mapping) {
-            $realMapping[] = array_merge([
+            $realMapping[] = \array_merge([
                 'alias' => $alias,
             ], $mapping);
         }
@@ -186,7 +186,7 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
 
     private function configurePathSegmentRegistry($config, ContainerBuilder $container)
     {
-        $pathSegments = array_merge(
+        $pathSegments = \array_merge(
             $config['path_segments'],
             [
                 'base' => $container->getParameter('sulu.content.node_names.base'),
@@ -208,6 +208,6 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
      */
     private function getSessionServiceId($session)
     {
-        return sprintf('doctrine_phpcr.%s_session', $session);
+        return \sprintf('doctrine_phpcr.%s_session', $session);
     }
 }

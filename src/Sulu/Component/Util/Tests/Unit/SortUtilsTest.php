@@ -127,7 +127,7 @@ class SortUtilsTest extends \PHPUnit_Framework_TestCase
         $res = SortUtils::multisort($data, $methodName, $direction);
 
         foreach ($expectedOrder as $expected) {
-            $object = array_shift($res);
+            $object = \array_shift($res);
             $this->assertEquals($expected, $accessor->getValue($object, $checkField));
         }
     }

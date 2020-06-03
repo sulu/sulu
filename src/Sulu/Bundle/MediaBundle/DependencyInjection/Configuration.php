@@ -27,7 +27,7 @@ class Configuration implements ConfigurationInterface
                 ->defaultValue('auto')
                 ->validate()
                     ->ifTrue(function($v) {
-                        return !in_array($v, ['auto', 'gd', 'imagick', 'gmagick']);
+                        return !\in_array($v, ['auto', 'gd', 'imagick', 'gmagick']);
                     })
                     ->thenInvalid('Invalid imagine adapted specified: %s')
                 ->end()

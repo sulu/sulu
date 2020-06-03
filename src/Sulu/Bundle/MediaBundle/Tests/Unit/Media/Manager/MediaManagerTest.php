@@ -185,7 +185,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->formatManager->getFormats(Argument::cetera())->willReturn(null);
         $medias = $this->mediaManager->getByIds($ids, 'en');
 
-        for ($i = 0; $i < count($medias); ++$i) {
+        for ($i = 0; $i < \count($medias); ++$i) {
             $this->assertEquals($result[$i]->getId(), $medias[$i]->getId());
         }
     }
@@ -253,7 +253,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $fileVersion->getId()->willReturn(1);
         $fileVersion->getName()->willReturn('test');
         $fileVersion->getMimeType()->willReturn('image/png');
-        $fileVersion->getStorageOptions()->willReturn(json_encode(['segment' => '01', 'fileName' => 'test.jpg']));
+        $fileVersion->getStorageOptions()->willReturn(\json_encode(['segment' => '01', 'fileName' => 'test.jpg']));
 
         $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
         $fileVersion->getMeta()->willReturn([$fileVersionMeta->reveal()]);
@@ -267,7 +267,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
             1,
             'test',
             'image/png',
-            json_encode(['segment' => '01', 'fileName' => 'test.jpg'])
+            \json_encode(['segment' => '01', 'fileName' => 'test.jpg'])
         )->shouldBeCalled();
 
         $this->mediaRepository->findMediaById(1)->willReturn($media);
@@ -276,7 +276,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
             'delete'
         )->shouldBeCalled();
 
-        $this->storage->remove(json_encode(['segment' => '01', 'fileName' => 'test.jpg']))->shouldBeCalled();
+        $this->storage->remove(\json_encode(['segment' => '01', 'fileName' => 'test.jpg']))->shouldBeCalled();
 
         $this->em->remove($media->reveal())->shouldBeCalled();
         $this->em->remove($fileVersionMeta->reveal())->shouldBeCalled();

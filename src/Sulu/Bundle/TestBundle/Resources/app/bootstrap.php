@@ -9,8 +9,8 @@
  * with this source code in the file LICENSE.
  */
 
-$file = getcwd() . '/vendor/autoload.php';
-if (!file_exists($file)) {
+$file = \getcwd() . '/vendor/autoload.php';
+if (!\file_exists($file)) {
     throw new RuntimeException('Install dependencies to run test suite.');
 }
 

@@ -34,7 +34,7 @@ class WidgetGroupsController extends Controller
     public function groupAction($groupAlias, Request $request)
     {
         $widgetHandler = $this->getWidgetsHandler();
-        $groupAlias = str_replace('-', '_', $groupAlias);
+        $groupAlias = \str_replace('-', '_', $groupAlias);
 
         if (!$widgetHandler->hasWidgetGroup($groupAlias)) {
             return new Response('', 404);

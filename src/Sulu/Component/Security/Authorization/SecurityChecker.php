@@ -47,7 +47,7 @@ class SecurityChecker extends AbstractSecurityChecker
 
         $attributes = [$permission];
 
-        if (is_string($subject)) {
+        if (\is_string($subject)) {
             $subject = new SecurityCondition($subject);
         }
 

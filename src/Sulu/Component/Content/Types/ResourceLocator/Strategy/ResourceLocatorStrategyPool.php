@@ -39,8 +39,8 @@ class ResourceLocatorStrategyPool implements ResourceLocatorStrategyPoolInterfac
 
     public function getStrategy($name)
     {
-        if (!array_key_exists($name, $this->strategies)) {
-            throw new ResourceLocatorStrategyNotFoundException($name, array_keys($this->strategies));
+        if (!\array_key_exists($name, $this->strategies)) {
+            throw new ResourceLocatorStrategyNotFoundException($name, \array_keys($this->strategies));
         }
 
         return $this->strategies[$name];

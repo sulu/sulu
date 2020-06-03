@@ -258,7 +258,7 @@ class StructureSubscriber implements EventSubscriberInterface
      */
     private function getDefaultStructureTypeFromConfig($alias)
     {
-        if (!array_key_exists($alias, $this->defaultTypes)) {
+        if (!\array_key_exists($alias, $this->defaultTypes)) {
             return;
         }
 
@@ -310,7 +310,7 @@ class StructureSubscriber implements EventSubscriberInterface
 
         if (!$metadata) {
             throw new \RuntimeException(
-                sprintf(
+                \sprintf(
                     'Metadata for Structure Type "%s" was not found, does the file "%s.xml" exists?',
                     $document->getStructureType(),
                     $document->getStructureType()
@@ -328,7 +328,7 @@ class StructureSubscriber implements EventSubscriberInterface
 
             if (false === $ignoreRequired && $structureProperty->isRequired() && null === $value) {
                 throw new MandatoryPropertyException(
-                    sprintf(
+                    \sprintf(
                         'Property "%s" in structure "%s" is required but no value was given. Loaded from "%s"',
                         $propertyName,
                         $metadata->getName(),

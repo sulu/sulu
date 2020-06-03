@@ -154,7 +154,7 @@ class CategoryManager implements CategoryManagerInterface
                         'translation' => new DoctrineJoinDescriptor(
                             'translation',
                             self::$categoryEntityName . '.translations',
-                            sprintf('translation.locale = \'%s\'', $locale)
+                            \sprintf('translation.locale = \'%s\'', $locale)
                         ),
                     ]
                 ),
@@ -165,7 +165,7 @@ class CategoryManager implements CategoryManagerInterface
                         'defaultTranslation' => new DoctrineJoinDescriptor(
                             'defaultTranslation',
                             self::$categoryEntityName . '.translations',
-                            sprintf('defaultTranslation.locale = %s.defaultLocale', self::$categoryEntityName)
+                            \sprintf('defaultTranslation.locale = %s.defaultLocale', self::$categoryEntityName)
                         ),
                     ]
                 ),
@@ -186,7 +186,7 @@ class CategoryManager implements CategoryManagerInterface
                         'translation' => new DoctrineJoinDescriptor(
                             'translation',
                             self::$categoryEntityName . '.translations',
-                            sprintf('translation.locale = \'%s\'', $locale)
+                            \sprintf('translation.locale = \'%s\'', $locale)
                         ),
                     ]
                 ),
@@ -197,7 +197,7 @@ class CategoryManager implements CategoryManagerInterface
                         'defaultTranslation' => new DoctrineJoinDescriptor(
                             'defaultTranslation',
                             self::$categoryEntityName . '.translations',
-                            sprintf('defaultTranslation.locale = %s.defaultLocale', self::$categoryEntityName)
+                            \sprintf('defaultTranslation.locale = %s.defaultLocale', self::$categoryEntityName)
                         ),
                     ]
                 ),
@@ -339,7 +339,7 @@ class CategoryManager implements CategoryManagerInterface
         if (!$patch || $this->getProperty($data, 'medias')) {
             $translationEntity = $this->findOrCreateCategoryTranslation($categoryEntity, $categoryWrapper, $locale);
             $translationEntity->setMedias(
-                array_map(
+                \array_map(
                     function($item) {
                         return $this->em->getReference(MediaInterface::class, $item);
                     },
@@ -353,7 +353,7 @@ class CategoryManager implements CategoryManagerInterface
             $categoryWrapper->setKey($key);
         }
         if (!$patch || $this->getProperty($data, 'meta')) {
-            $metaData = (is_array($this->getProperty($data, 'meta'))) ? $this->getProperty($data, 'meta') : [];
+            $metaData = (\is_array($this->getProperty($data, 'meta'))) ? $this->getProperty($data, 'meta') : [];
 
             $metaEntities = [];
             foreach ($metaData as $meta) {
@@ -461,7 +461,7 @@ class CategoryManager implements CategoryManagerInterface
      */
     public function getApiObjects($entities, $locale)
     {
-        return array_map(
+        return \array_map(
             function($entity) use ($locale) {
                 return $this->getApiObject($entity, $locale);
             },
@@ -481,14 +481,14 @@ class CategoryManager implements CategoryManagerInterface
      */
     private function getProperty($data, $key, $default = null)
     {
-        return (array_key_exists($key, $data) && null !== $data[$key]) ? $data[$key] : $default;
+        return (\array_key_exists($key, $data) && null !== $data[$key]) ? $data[$key] : $default;
     }
 
     public function find($parent = null, $depth = null, $sortBy = null, $sortOrder = null)
     {
-        @trigger_error(
+        @\trigger_error(
             __METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenByParentId() instead.',
-            E_USER_DEPRECATED
+            \E_USER_DEPRECATED
         );
 
         if ($parent && !$this->categoryRepository->isCategoryId($parent)) {
@@ -500,9 +500,9 @@ class CategoryManager implements CategoryManagerInterface
 
     public function findChildren($key, $sortBy = null, $sortOrder = null)
     {
-        @trigger_error(
+        @\trigger_error(
             __METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenByParentKey() instead.',
-            E_USER_DEPRECATED
+            \E_USER_DEPRECATED
         );
 
         return $this->categoryRepository->findChildren($key, $sortBy, $sortOrder);

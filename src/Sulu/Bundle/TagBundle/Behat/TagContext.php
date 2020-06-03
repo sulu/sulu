@@ -44,7 +44,7 @@ class TagContext extends BaseContext implements SnippetAcceptingContext
             ->findOneByName($name);
 
         if (!$tag) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'The tag "%s" should exist, but it does not.',
                 $name
             ));

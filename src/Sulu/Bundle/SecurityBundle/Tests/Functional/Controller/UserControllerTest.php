@@ -157,19 +157,19 @@ class UserControllerTest extends SuluTestCase
         $userRole1 = new UserRole();
         $userRole1->setRole($role1);
         $userRole1->setUser($user);
-        $userRole1->setLocale(json_encode(['de', 'en']));
+        $userRole1->setLocale(\json_encode(['de', 'en']));
         $this->em->persist($userRole1);
 
         $userRole2 = new UserRole();
         $userRole2->setRole($role2);
         $userRole2->setUser($user);
-        $userRole2->setLocale(json_encode(['de', 'en']));
+        $userRole2->setLocale(\json_encode(['de', 'en']));
         $this->em->persist($userRole2);
 
         $userRole3 = new UserRole();
         $userRole3->setRole($role2);
         $userRole3->setUser($user);
-        $userRole3->setLocale(json_encode(['de', 'en']));
+        $userRole3->setLocale(\json_encode(['de', 'en']));
         $this->em->persist($userRole3);
 
         $permission1 = new Permission();
@@ -210,9 +210,9 @@ class UserControllerTest extends SuluTestCase
 
         $client->request('GET', '/api/users?flat=true');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(3, count($response->_embedded->users));
+        $this->assertEquals(3, \count($response->_embedded->users));
         $this->assertEquals('admin', $response->_embedded->users[0]->username);
         $this->assertEquals('admin@test.com', $response->_embedded->users[0]->email);
         $this->assertEquals('de', $response->_embedded->users[0]->locale);
@@ -224,7 +224,7 @@ class UserControllerTest extends SuluTestCase
 
         $client->request('GET', '/api/users/' . $this->user1->getId());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('admin', $response->username);
         $this->assertEquals('admin@test.com', $response->email);
@@ -240,7 +240,7 @@ class UserControllerTest extends SuluTestCase
 
         $client->request('GET', '/api/users/1120');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(404, $client->getResponse());
         $this->assertContains('1120', $response->message);
@@ -292,7 +292,7 @@ class UserControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
         $this->assertEquals('manager@test.com', $response->email);
@@ -314,7 +314,7 @@ class UserControllerTest extends SuluTestCase
             '/api/users/' . $response->id
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
         $this->assertEquals('manager@test.com', $response->email);
@@ -358,7 +358,7 @@ class UserControllerTest extends SuluTestCase
                 ],
             ]
         );
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(400, $client->getResponse());
         $this->assertContains('username', $response->message);
@@ -390,7 +390,7 @@ class UserControllerTest extends SuluTestCase
                 ],
             ]
         );
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(400, $client->getResponse());
         $this->assertContains('password', $response->message);
@@ -421,10 +421,10 @@ class UserControllerTest extends SuluTestCase
                 ],
             ]
         );
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(409, $client->getResponse());
-        $this->assertContains('email', strtolower($response->message));
+        $this->assertContains('email', \strtolower($response->message));
         $this->assertEquals(1004, $response->code);
     }
 
@@ -455,7 +455,7 @@ class UserControllerTest extends SuluTestCase
                 ],
             ]
         );
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals('hikari', $response->username);
@@ -533,7 +533,7 @@ class UserControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
         $this->assertEquals($this->contact1->getId(), $response->contact->id);
@@ -556,7 +556,7 @@ class UserControllerTest extends SuluTestCase
             '/api/users/' . $this->user1->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
         $this->assertEquals($this->contact1->getId(), $response->contact->id);
@@ -592,7 +592,7 @@ class UserControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(409, $client->getResponse());
         $this->assertEquals('admin', $response->username);
@@ -629,7 +629,7 @@ class UserControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(409, $client->getResponse());
         $this->assertEquals('admin', $response->username);
@@ -647,7 +647,7 @@ class UserControllerTest extends SuluTestCase
                 'locale' => 'en',
             ]
         );
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertEquals('en', $response->locale);
 
         $client->request(
@@ -657,7 +657,7 @@ class UserControllerTest extends SuluTestCase
                 'username' => 'newusername',
             ]
         );
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertEquals('newusername', $response->username);
 
         $client->request(
@@ -669,14 +669,14 @@ class UserControllerTest extends SuluTestCase
                 ],
             ]
         );
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertEquals($this->contact1->getId(), $response->contact->id);
 
         $client->request(
             'GET',
             '/api/users/' . $this->user1->getId()
         );
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('en', $response->locale);
         $this->assertEquals('newusername', $response->username);
@@ -708,7 +708,7 @@ class UserControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(409, $client->getResponse());
         $this->assertEquals('admin', $response->username);
@@ -744,7 +744,7 @@ class UserControllerTest extends SuluTestCase
                 ],
             ]
         );
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(400, $client->getResponse());
         $this->assertContains('username', $response->message);
@@ -780,7 +780,7 @@ class UserControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals('manager', $response->username);
@@ -800,7 +800,7 @@ class UserControllerTest extends SuluTestCase
             '/api/users?contactId=' . $this->contact2->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -834,9 +834,9 @@ class UserControllerTest extends SuluTestCase
             '/api/users'
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(3, count($response->_embedded->users));
+        $this->assertEquals(3, \count($response->_embedded->users));
         $this->assertEquals('admin', $response->_embedded->users[0]->username);
         $this->assertEquals('de', $response->_embedded->users[0]->locale);
     }
@@ -850,7 +850,7 @@ class UserControllerTest extends SuluTestCase
             '/api/users'
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $users = $response->_embedded->users;
         $user = $users[0];
@@ -902,7 +902,7 @@ class UserControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
         $this->assertEquals($this->contact1->getId(), $response->contact->id);
@@ -935,7 +935,7 @@ class UserControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
         $this->assertEquals($this->contact1->getId(), $response->contact->id);
@@ -944,7 +944,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
         $this->assertEquals('en', $response->userRoles[0]->locales[1]);
 
-        $this->assertEquals(1, count($response->userRoles));
+        $this->assertEquals(1, \count($response->userRoles));
     }
 
     public function testPostWithEmptyPassword()
@@ -978,7 +978,7 @@ class UserControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1002, $response->code);
         $this->assertHttpStatusCode(400, $client->getResponse());
@@ -1017,7 +1017,7 @@ class UserControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
         $this->assertEquals($this->contact1->getId(), $response->contact->id);
@@ -1041,7 +1041,7 @@ class UserControllerTest extends SuluTestCase
             '/api/users/' . $this->user2->getId() . '?action=enable'
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(true, $response->enabled);
     }

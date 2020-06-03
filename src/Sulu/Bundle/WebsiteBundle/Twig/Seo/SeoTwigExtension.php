@@ -74,7 +74,7 @@ class SeoTwigExtension extends \Twig_Extension
     ) {
         $template = 'SuluWebsiteBundle:Extension:seo.html.twig';
 
-        @trigger_error(sprintf(
+        @\trigger_error(\sprintf(
             'This twig extension is deprecated and should not be used anymore, include the "%s".',
             $template
         ));

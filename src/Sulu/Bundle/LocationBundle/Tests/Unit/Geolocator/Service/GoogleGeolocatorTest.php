@@ -60,8 +60,8 @@ class GoogleGeolocatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testLocate($query, $expectedCount, $expectationMap)
     {
-        $fixtureName = __DIR__ . '/google-responses/' . md5($query) . '.json';
-        $fixture = file_get_contents($fixtureName);
+        $fixtureName = __DIR__ . '/google-responses/' . \md5($query) . '.json';
+        $fixture = \file_get_contents($fixtureName);
         $mockHandler = new MockHandler([new Response(200, [], $fixture)]);
 
         $client = new Client(['handler' => HandlerStack::create($mockHandler)]);
@@ -70,11 +70,11 @@ class GoogleGeolocatorTest extends \PHPUnit_Framework_TestCase
         $results = $geolocator->locate($query);
         $this->assertCount($expectedCount, $results);
 
-        if (0 == count($results)) {
+        if (0 == \count($results)) {
             return;
         }
 
-        $result = current($results->toArray());
+        $result = \current($results->toArray());
 
         foreach ($expectationMap as $field => $expectation) {
             $this->assertEquals($expectation, $result[$field]);

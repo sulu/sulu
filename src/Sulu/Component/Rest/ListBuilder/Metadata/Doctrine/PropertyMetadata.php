@@ -37,7 +37,7 @@ class PropertyMetadata extends BasePropertyMetadata
 
     public function serialize()
     {
-        return serialize(
+        return \serialize(
             [
                 $this->class,
                 $this->name,
@@ -51,6 +51,6 @@ class PropertyMetadata extends BasePropertyMetadata
         list(
             $this->class,
             $this->name,
-            $this->type) = unserialize($str);
+            $this->type) = \unserialize($str);
     }
 }

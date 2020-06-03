@@ -77,12 +77,12 @@ class TemplateControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
 
         for ($i = 0; $i < $response['total'] - 1; ++$i) {
             $this->assertLessThan(
                 0,
-                strcmp($response['_embedded'][$i]['title'], $response['_embedded'][$i + 1]['title'])
+                \strcmp($response['_embedded'][$i]['title'], $response['_embedded'][$i + 1]['title'])
             );
         }
     }

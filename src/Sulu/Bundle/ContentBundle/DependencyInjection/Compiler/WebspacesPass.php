@@ -22,7 +22,7 @@ class WebspacesPass implements CompilerPassInterface
     {
         $directory = $container->getParameter('sulu_core.webspace.config_dir');
 
-        if (!$container->hasExtension('sulu_search') || !file_exists($directory)) {
+        if (!$container->hasExtension('sulu_search') || !\file_exists($directory)) {
             return;
         }
 
@@ -33,7 +33,7 @@ class WebspacesPass implements CompilerPassInterface
 
         foreach ($finder as $file) {
             /** @var SplFileInfo $file */
-            $webspaceConfig = simplexml_load_file($file->getPathName());
+            $webspaceConfig = \simplexml_load_file($file->getPathName());
             $webspaceConfig->registerXPathNamespace('x', 'http://schemas.sulu.io/webspace/webspace');
             $webspaceKey = (string) $webspaceConfig->xpath('/x:webspace/x:key')[0];
             $webspaceName = (string) $webspaceConfig->xpath('/x:webspace/x:name')[0];

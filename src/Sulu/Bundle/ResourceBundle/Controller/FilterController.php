@@ -252,8 +252,8 @@ class FilterController extends RestController implements ClassResourceInterface
      */
     public function cdeleteAction(Request $request)
     {
-        $ids = explode(',', $request->get('ids'));
-        if ($ids && count($ids) > 0) {
+        $ids = \explode(',', $request->get('ids'));
+        if ($ids && \count($ids) > 0) {
             try {
                 $this->getManager()->batchDelete($ids);
                 $view = $this->view($ids, 204);
@@ -277,7 +277,7 @@ class FilterController extends RestController implements ClassResourceInterface
         $locale = $this->getRequestParameter($request, 'locale', true);
 
         return $this->handleView(
-            $this->view(array_values($this->getManager()->getFieldDescriptors($locale)), 200)
+            $this->view(\array_values($this->getManager()->getFieldDescriptors($locale)), 200)
         );
     }
 

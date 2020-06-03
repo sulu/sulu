@@ -185,7 +185,7 @@ class User extends BaseUser
     {
         $userSettingValues = [];
         foreach ($this->userSettings as $userSetting) {
-            $userSettingValues[$userSetting->getKey()] = json_decode($userSetting->getValue(), true);
+            $userSettingValues[$userSetting->getKey()] = \json_decode($userSetting->getValue(), true);
         }
 
         return $userSettingValues;

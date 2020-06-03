@@ -56,7 +56,7 @@ class ContentTeaserProviderTest extends \PHPUnit_Framework_TestCase
                 'excerptDescription' => 'This is a test',
                 'excerptMore' => 'Read more ...',
                 '__url' => '/test/1',
-                'excerptImages' => json_encode(['ids' => [1, 2, 3]]),
+                'excerptImages' => \json_encode(['ids' => [1, 2, 3]]),
                 '_structure_type' => 'default',
                 '_teaser_description' => '',
             ],
@@ -66,18 +66,18 @@ class ContentTeaserProviderTest extends \PHPUnit_Framework_TestCase
                 'excerptDescription' => '',
                 'excerptMore' => '',
                 '__url' => '/test/2',
-                'excerptImages' => json_encode([]),
+                'excerptImages' => \json_encode([]),
                 '_structure_type' => 'overview',
                 '_teaser_description' => '',
             ],
         ];
-        $ids = array_keys($data);
+        $ids = \array_keys($data);
 
         $this->searchManager->createSearch(
             Argument::that(
                 function($searchQuery) use ($ids) {
-                    return 0 <= strpos($searchQuery, sprintf('__id:"%s"', $ids[0]))
-                        && 0 <= strpos($searchQuery, sprintf('__id:"%s"', $ids[1]));
+                    return 0 <= \strpos($searchQuery, \sprintf('__id:"%s"', $ids[0]))
+                        && 0 <= \strpos($searchQuery, \sprintf('__id:"%s"', $ids[1]));
                 }
             )
         )->willReturn($this->search->reveal())->shouldBeCalled();
@@ -108,7 +108,7 @@ class ContentTeaserProviderTest extends \PHPUnit_Framework_TestCase
 
         $document->hasField(Argument::any())->will(
             function($arguments) use ($data) {
-                return in_array($arguments[0], array_keys($data));
+                return \in_array($arguments[0], \array_keys($data));
             }
         );
 
@@ -126,7 +126,7 @@ class ContentTeaserProviderTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals($expected['excerptDescription'], $teaser->getDescription());
         $this->assertEquals($expected['excerptMore'], $teaser->getMoreText());
-        $this->assertEquals($this->getMedia(json_decode($expected['excerptImages'], true)), $teaser->getMediaId());
+        $this->assertEquals($this->getMedia(\json_decode($expected['excerptImages'], true)), $teaser->getMediaId());
         $this->assertEquals($expected['__url'], $teaser->getUrl());
 
         $this->assertEquals(['structureType' => $expected['_structure_type']], $teaser->getAttributes());
@@ -134,10 +134,10 @@ class ContentTeaserProviderTest extends \PHPUnit_Framework_TestCase
 
     private function getMedia(array $data)
     {
-        if (!array_key_exists('ids', $data)) {
+        if (!\array_key_exists('ids', $data)) {
             return;
         }
 
-        return reset($data['ids']) ?: null;
+        return \reset($data['ids']) ?: null;
     }
 }

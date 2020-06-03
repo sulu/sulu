@@ -59,10 +59,10 @@ class LocalStorage implements StorageInterface
         $this->storageOption = new stdClass();
 
         if ($storageOption) {
-            $oldStorageOption = json_decode($storageOption);
+            $oldStorageOption = \json_decode($storageOption);
             $segment = $oldStorageOption->segment;
         } else {
-            $segment = sprintf('%0' . strlen($this->segments) . 'd', rand(1, $this->segments));
+            $segment = \sprintf('%0' . \strlen($this->segments) . 'd', \rand(1, $this->segments));
         }
 
         $segmentPath = $this->uploadPath . '/' . $segment;
@@ -84,12 +84,12 @@ class LocalStorage implements StorageInterface
         $this->addStorageOption('segment', $segment);
         $this->addStorageOption('fileName', $fileName);
 
-        return json_encode($this->storageOption);
+        return \json_encode($this->storageOption);
     }
 
     public function load($fileName, $version, $storageOption)
     {
-        $this->storageOption = json_decode($storageOption);
+        $this->storageOption = \json_decode($storageOption);
 
         $segment = $this->getStorageOption('segment');
         $fileName = $this->getStorageOption('fileName');
@@ -105,16 +105,16 @@ class LocalStorage implements StorageInterface
     {
         $path = $this->load($fileName, $version, $storageOption);
 
-        if (!$path || !file_exists($path)) {
-            throw new ImageProxyMediaNotFoundException(sprintf('Original media at path "%s" not found', $path));
+        if (!$path || !\file_exists($path)) {
+            throw new ImageProxyMediaNotFoundException(\sprintf('Original media at path "%s" not found', $path));
         }
 
-        return file_get_contents($path);
+        return \file_get_contents($path);
     }
 
     public function remove($storageOption)
     {
-        $this->storageOption = json_decode($storageOption);
+        $this->storageOption = \json_decode($storageOption);
 
         $segment = $this->getStorageOption('segment');
         $fileName = $this->getStorageOption('fileName');
@@ -146,7 +146,7 @@ class LocalStorage implements StorageInterface
         $newFileName = $fileName;
 
         if ($counter > 0) {
-            $fileNameParts = explode('.', $fileName, 2);
+            $fileNameParts = \explode('.', $fileName, 2);
             $newFileName = $fileNameParts[0] . '-' . $counter;
 
             if (isset($fileNameParts[1])) {
@@ -175,7 +175,7 @@ class LocalStorage implements StorageInterface
      */
     private function getPathByFolderAndFileName($folder, $fileName)
     {
-        return rtrim($folder, '/') . '/' . ltrim($fileName, '/');
+        return \rtrim($folder, '/') . '/' . \ltrim($fileName, '/');
     }
 
     /**

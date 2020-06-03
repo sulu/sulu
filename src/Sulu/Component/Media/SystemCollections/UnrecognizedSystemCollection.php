@@ -29,10 +29,10 @@ class UnrecognizedSystemCollection extends \Exception
     public function __construct($key, array $recognizedSystemCollections)
     {
         parent::__construct(
-            sprintf(
+            \sprintf(
                 'Unrecognized system collection "%s" available collections: [%s]',
                 $key,
-                implode(', ', $recognizedSystemCollections)
+                \implode(', ', $recognizedSystemCollections)
             )
         );
 

@@ -35,7 +35,7 @@ class ChainProviderTest extends \PHPUnit_Framework_TestCase
         $result = $provider->getMetadataForClass(self::class);
         $this->assertInstanceOf(ClassMetadata::class, $result);
 
-        $this->assertEquals(['test', 'test1'], array_keys($result->propertyMetadata));
+        $this->assertEquals(['test', 'test1'], \array_keys($result->propertyMetadata));
         $this->assertInstanceOf(PropertyMetadata::class, $result->propertyMetadata['test']);
         $this->assertInstanceOf(VirtualPropertyMetadata::class, $result->propertyMetadata['test1']);
     }

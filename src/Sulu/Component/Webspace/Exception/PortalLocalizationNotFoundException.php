@@ -26,7 +26,7 @@ class PortalLocalizationNotFoundException extends PortalException
     public function __construct(Portal $portal, $locale)
     {
         parent::__construct(
-            sprintf('The locale "%s" could not be found in the portal "%s".', $locale, $portal->getKey())
+            \sprintf('The locale "%s" could not be found in the portal "%s".', $locale, $portal->getKey())
         );
 
         $this->portal = $portal;

@@ -85,12 +85,12 @@ class TagList extends ComplexContentType implements ContentTypeExportInterface
 
     public function exportData($propertyValue)
     {
-        if (false === is_array($propertyValue)) {
+        if (false === \is_array($propertyValue)) {
             return '';
         }
 
         foreach ($propertyValue as &$propertyValueItem) {
-            if (is_string($propertyValueItem)) {
+            if (\is_string($propertyValueItem)) {
                 $tag = $this->tagManager->findByName($propertyValueItem);
                 if ($tag) {
                     $propertyValueItem = $tag->getId();
@@ -99,7 +99,7 @@ class TagList extends ComplexContentType implements ContentTypeExportInterface
         }
 
         if (!empty($propertyValue)) {
-            return json_encode($propertyValue);
+            return \json_encode($propertyValue);
         }
 
         return '';
@@ -115,7 +115,7 @@ class TagList extends ComplexContentType implements ContentTypeExportInterface
         $segmentKey = null
     ) {
         $tagNames = [];
-        $tagIds = json_decode($value);
+        $tagIds = \json_decode($value);
         if (!empty($tagIds)) {
             $tagNames = $this->tagManager->resolveTagIds($tagIds);
         }

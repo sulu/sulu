@@ -40,19 +40,19 @@ class ContentTeaserProvider implements TeaserProviderInterface
 
     public function find(array $ids, $locale)
     {
-        $statements = array_map(
+        $statements = \array_map(
             function($item) {
-                return sprintf('__id:"%s"', $item);
+                return \sprintf('__id:"%s"', $item);
             },
             $ids
         );
 
         $result = [];
         $searchResult = $this->searchManager
-            ->createSearch(implode(' OR ', $statements))
+            ->createSearch(\implode(' OR ', $statements))
             ->indexes($this->getPageIndexes())
             ->locale($locale)
-            ->setLimit(count($ids))
+            ->setLimit(\count($ids))
             ->execute();
 
         /** @var QueryHit $item */
@@ -111,9 +111,9 @@ class ContentTeaserProvider implements TeaserProviderInterface
      */
     private function getMedia(Document $document, $field)
     {
-        $images = json_decode($document->getField($field)->getValue(), true);
+        $images = \json_decode($document->getField($field)->getValue(), true);
 
-        if (!array_key_exists('ids', $images) || 0 === count($images['ids'])) {
+        if (!\array_key_exists('ids', $images) || 0 === \count($images['ids'])) {
             return;
         }
 
@@ -127,10 +127,10 @@ class ContentTeaserProvider implements TeaserProviderInterface
      */
     private function getPageIndexes()
     {
-        return array_filter(
+        return \array_filter(
             $this->searchManager->getIndexNames(),
             function($index) {
-                return preg_match('/page_(.*)_published/', $index) > 0;
+                return \preg_match('/page_(.*)_published/', $index) > 0;
             }
         );
     }

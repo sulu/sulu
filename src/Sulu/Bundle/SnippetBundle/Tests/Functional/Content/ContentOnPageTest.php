@@ -142,7 +142,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
         }
 
         $hotels = $page->getPropertyValue('hotels');
-        $this->assertCount(count($data['hotels']), $hotels);
+        $this->assertCount(\count($data['hotels']), $hotels);
 
         $this->assertEquals($data['hotels'], $hotels);
     }

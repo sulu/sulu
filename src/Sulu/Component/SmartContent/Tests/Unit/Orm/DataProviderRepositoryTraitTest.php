@@ -50,7 +50,7 @@ class DataProviderRepositoryTraitTest extends \PHPUnit_Framework_TestCase
     public function testFindByFiltersIds()
     {
         $findByFiltersIdsReflection = new \ReflectionMethod(
-            get_class($this->dataProviderRepositoryTrait),
+            \get_class($this->dataProviderRepositoryTrait),
             'findByFiltersIds'
         );
         $findByFiltersIdsReflection->setAccessible(true);

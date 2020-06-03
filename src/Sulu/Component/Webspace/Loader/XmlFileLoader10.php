@@ -145,7 +145,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
             return XmlUtils::loadFile($file, __DIR__ . static::SCHEMA_LOCATION);
         } catch (\InvalidArgumentException $e) {
             throw new InvalidWebspaceException(
-                sprintf(
+                \sprintf(
                     'Could not parse webspace XML file "%s"',
                     $file
                 ),
@@ -424,9 +424,9 @@ class XmlFileLoader10 extends BaseXmlFileLoader
             }
         }
 
-        $found = array_keys($webspace->getDefaultTemplates());
+        $found = \array_keys($webspace->getDefaultTemplates());
         foreach ($expected as $item) {
-            if (!in_array($item, $found)) {
+            if (!\in_array($item, $found)) {
                 throw new ExpectedDefaultTemplatesNotFound($this->webspace->getKey(), $expected, $found);
             }
         }
@@ -512,7 +512,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
             /** @var \DOMNode $urlNode */
             $url = new Url();
 
-            $url->setUrl(rtrim($urlNode->nodeValue, '/'));
+            $url->setUrl(\rtrim($urlNode->nodeValue, '/'));
 
             // set optional nodes
             $url->setLanguage($this->getOptionalNodeAttribute($urlNode, 'language'));
@@ -539,9 +539,9 @@ class XmlFileLoader10 extends BaseXmlFileLoader
             /** @var \DOMNode $urlNode */
             $url = new CustomUrl();
 
-            $url->setUrl(rtrim($urlNode->nodeValue, '/'));
+            $url->setUrl(\rtrim($urlNode->nodeValue, '/'));
 
-            if (false === strpos($url->getUrl(), '*')) {
+            if (false === \strpos($url->getUrl(), '*')) {
                 throw new InvalidCustomUrlException($this->webspace, $url->getUrl());
             }
 
@@ -572,15 +572,15 @@ class XmlFileLoader10 extends BaseXmlFileLoader
     protected function checkUrlNode(\DOMNode $urlNode)
     {
         $hasLocalization = (null != $urlNode->attributes->getNamedItem('localization'))
-            || (false !== strpos($urlNode->nodeValue, '{localization}'));
+            || (false !== \strpos($urlNode->nodeValue, '{localization}'));
 
         $hasLanguage = (null != $urlNode->attributes->getNamedItem('language'))
-            || (false !== strpos($urlNode->nodeValue, '{language}'))
+            || (false !== \strpos($urlNode->nodeValue, '{language}'))
             || $hasLocalization;
 
-        $hasSegment = (0 == count($this->webspace->getSegments()))
+        $hasSegment = (0 == \count($this->webspace->getSegments()))
             || (null != $urlNode->attributes->getNamedItem('segment'))
-            || (false !== strpos($urlNode->nodeValue, '{segment}'));
+            || (false !== \strpos($urlNode->nodeValue, '{segment}'));
 
         $hasRedirect = (null != $urlNode->attributes->getNamedItem('redirect'));
 

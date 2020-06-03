@@ -41,7 +41,7 @@ class WebspaceLocalizationController extends RestController implements ClassReso
             $localizations = new CollectionRepresentation($webspace->getAllLocalizations(), 'localizations');
             $view = $this->view($localizations, 200);
         } else {
-            $error = new RestException(sprintf('No webspace found for key \'%s\'', $webspaceKey));
+            $error = new RestException(\sprintf('No webspace found for key \'%s\'', $webspaceKey));
             $view = $this->view($error->toArray(), 400);
         }
 

@@ -185,9 +185,9 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
                 $data = [$data];
             }
 
-            $data = array_filter($data);
+            $data = \array_filter($data);
 
-            $len = count($data);
+            $len = \count($data);
 
             // init properties
             $typeProperty = new Property('type', '', 'text_line');
@@ -353,7 +353,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
             }
         }
 
-        if (!$property->getIsMultiple() && count($data) > 0) {
+        if (!$property->getIsMultiple() && \count($data) > 0) {
             $data = $data[0];
         }
 

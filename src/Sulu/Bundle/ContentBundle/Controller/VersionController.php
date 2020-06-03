@@ -48,18 +48,18 @@ class VersionController extends FOSRestController implements
         $locale = $this->getRequestParameter($request, 'language', true);
 
         $document = $this->get('sulu_document_manager.document_manager')->find($uuid, $request->query->get('language'));
-        $versions = array_reverse(array_filter($document->getVersions(), function($version) use ($locale) {
+        $versions = \array_reverse(\array_filter($document->getVersions(), function($version) use ($locale) {
             /* @var Version $version */
             return $version->getLocale() === $locale;
         }));
-        $total = count($versions);
+        $total = \count($versions);
 
         $listRestHelper = $this->get('sulu_core.list_rest_helper');
         $limit = $listRestHelper->getLimit();
 
-        $versions = array_slice($versions, $listRestHelper->getOffset(), $limit);
+        $versions = \array_slice($versions, $listRestHelper->getOffset(), $limit);
 
-        $userIds = array_unique(array_map(function($version) {
+        $userIds = \array_unique(\array_map(function($version) {
             /* @var Version $version */
             return $version->getAuthor();
         }, $versions));
@@ -73,9 +73,9 @@ class VersionController extends FOSRestController implements
         $versionData = [];
         foreach ($versions as $version) {
             $versionData[] = [
-                'id' => str_replace('.', '_', $version->getId()),
+                'id' => \str_replace('.', '_', $version->getId()),
                 'locale' => $version->getLocale(),
-                'author' => array_key_exists($version->getAuthor(), $fullNamesByIds)
+                'author' => \array_key_exists($version->getAuthor(), $fullNamesByIds)
                     ? $fullNamesByIds[$version->getAuthor()] : '',
                 'authored' => $version->getAuthored(),
             ];
@@ -117,7 +117,7 @@ class VersionController extends FOSRestController implements
                 $this->getDocumentManager()->restore(
                     $document,
                     $language,
-                    str_replace('_', '.', $version)
+                    \str_replace('_', '.', $version)
                 );
                 $this->getDocumentManager()->flush();
 

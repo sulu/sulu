@@ -62,7 +62,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             ['id', 'firstName', 'lastName', 'avatar', 'fullName'],
-            array_keys($result->propertyMetadata)
+            \array_keys($result->propertyMetadata)
         );
 
         $this->assertMetadata(
@@ -131,7 +131,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('stdClass', $result->name);
         $this->assertCount(3, $result->propertyMetadata);
 
-        $this->assertEquals(['id', 'firstName', 'lastName'], array_keys($result->propertyMetadata));
+        $this->assertEquals(['id', 'firstName', 'lastName'], \array_keys($result->propertyMetadata));
 
         $this->assertMetadata(
             [
@@ -170,7 +170,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             ['tags'],
-            array_keys($result->propertyMetadata)
+            \array_keys($result->propertyMetadata)
         );
 
         $this->assertMetadata(
@@ -194,7 +194,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             ['tags'],
-            array_keys($result->propertyMetadata)
+            \array_keys($result->propertyMetadata)
         );
 
         $this->assertMetadata(
@@ -222,7 +222,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             ['tags'],
-            array_keys($result->propertyMetadata)
+            \array_keys($result->propertyMetadata)
         );
 
         $this->assertMetadata(
@@ -241,7 +241,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
     private function assertMetadata($expected, PropertyMetadata $metadata)
     {
-        $expected = array_merge(
+        $expected = \array_merge(
             [
                 'instance' => PropertyMetadata::class,
                 'name' => null,
@@ -276,7 +276,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
     private function loadMetadataFromFile(XmlDriver $driver, $file)
     {
-        $reflectionMethod = new \ReflectionMethod(get_class($driver), 'loadMetadataFromFile');
+        $reflectionMethod = new \ReflectionMethod(\get_class($driver), 'loadMetadataFromFile');
         $reflectionMethod->setAccessible(true);
 
         return $reflectionMethod->invokeArgs(

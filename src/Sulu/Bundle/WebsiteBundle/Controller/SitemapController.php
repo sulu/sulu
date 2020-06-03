@@ -36,9 +36,9 @@ class SitemapController extends WebsiteController
 
         $sitemap = $this->get('sulu_website.sitemap.xml_renderer')->renderIndex();
         if (!$sitemap) {
-            $aliases = array_keys($this->get('sulu_website.sitemap.pool')->getProviders());
+            $aliases = \array_keys($this->get('sulu_website.sitemap.pool')->getProviders());
 
-            return $this->sitemapPaginatedAction($request, reset($aliases), 1);
+            return $this->sitemapPaginatedAction($request, \reset($aliases), 1);
         }
 
         return $this->setCacheLifetime(new Response($sitemap));

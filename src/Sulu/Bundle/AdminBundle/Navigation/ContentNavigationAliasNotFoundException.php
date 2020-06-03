@@ -31,10 +31,10 @@ class ContentNavigationAliasNotFoundException extends \Exception
         $this->alias = $alias;
         $this->availableAliases = $availableAliases;
         parent::__construct(
-            sprintf(
+            \sprintf(
                 'The content navigation alias "%s" does not exist, registered aliases: "%s"',
                 $this->alias,
-                implode('", "', $this->availableAliases)
+                \implode('", "', $this->availableAliases)
             )
         );
     }

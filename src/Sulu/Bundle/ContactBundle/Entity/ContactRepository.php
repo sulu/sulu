@@ -94,7 +94,7 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
 
     public function findByIds($ids)
     {
-        if (0 === count($ids)) {
+        if (0 === \count($ids)) {
             return [];
         }
 
@@ -258,7 +258,7 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
         $qb = $this->addPagination($qb, $offset, $limit);
 
         // If needed add where statements
-        if (is_array($where) && count($where) > 0) {
+        if (\is_array($where) && \count($where) > 0) {
             $qb = $this->addWhere($qb, $where, 'u');
         }
 
@@ -284,7 +284,7 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
         $qb->join('accountContacts.account', 'account', 'WITH', 'account.id = :accountId')
             ->setParameter('accountId', $accountId);
 
-        if (!is_null($excludeContactId)) {
+        if (!\is_null($excludeContactId)) {
             $qb->where('c.id != :excludeId')
                 ->setParameter('excludeId', $excludeContactId);
         }
@@ -377,11 +377,11 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
             $qb->andWhere('contact.lastName= :lastName');
             $qb->setParameter('lastName', $where['lastName']);
         }
-        if (!is_null($email)) {
+        if (!\is_null($email)) {
             $qb->join('contact.emails', 'emails', 'WITH', 'emails.email = :email');
             $qb->setParameter('email', $email);
         }
-        if (!is_null($phone)) {
+        if (!\is_null($phone)) {
             $qb->join('contact.phones', 'phones', 'WITH', 'phones.phone = :phone');
             $qb->setParameter('phone', $phone);
         }

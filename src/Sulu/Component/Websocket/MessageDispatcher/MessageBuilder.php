@@ -18,7 +18,7 @@ class MessageBuilder implements MessageBuilderInterface
 {
     public function build($handlerName, array $message, array $options, $error = false)
     {
-        return json_encode(
+        return \json_encode(
             [
                 'handler' => $handlerName,
                 'message' => $message,

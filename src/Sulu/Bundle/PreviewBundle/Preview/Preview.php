@@ -62,9 +62,9 @@ class Preview implements PreviewInterface
     {
         $provider = $this->getProvider($objectClass);
         $object = $provider->getObject($id, $locale);
-        $token = md5(sprintf('%s.%s.%s', $id, $locale, $userId));
+        $token = \md5(\sprintf('%s.%s.%s', $id, $locale, $userId));
 
-        if (0 !== count($data)) {
+        if (0 !== \count($data)) {
             $provider->setValues($object, $locale, $data);
         }
 
@@ -89,12 +89,12 @@ class Preview implements PreviewInterface
 
     public function update($token, $webspaceKey, $locale, array $data, $targetGroupId = null)
     {
-        if (0 === count($data)) {
+        if (0 === \count($data)) {
             return [];
         }
 
         $object = $this->fetch($token);
-        $provider = $this->getProvider(get_class($object));
+        $provider = $this->getProvider(\get_class($object));
         $provider->setValues($object, $locale, $data);
         $this->save($token, $object);
 
@@ -103,14 +103,14 @@ class Preview implements PreviewInterface
 
         $extractor = new RdfaExtractor($html);
 
-        return $extractor->getPropertyValues(array_keys($data));
+        return $extractor->getPropertyValues(\array_keys($data));
     }
 
     public function updateContext($token, $webspaceKey, $locale, array $context, array $data, $targetGroupId = null)
     {
         $object = $this->fetch($token);
-        $provider = $this->getProvider(get_class($object));
-        if (0 === count($context)) {
+        $provider = $this->getProvider(\get_class($object));
+        if (0 === \count($context)) {
             $id = $provider->getId($object);
 
             return $this->renderer->render($object, $id, $webspaceKey, $locale, false, $targetGroupId);
@@ -120,7 +120,7 @@ class Preview implements PreviewInterface
         $object = $provider->setContext($object, $locale, $context);
         $id = $provider->getId($object);
 
-        if (0 < count($data)) {
+        if (0 < \count($data)) {
             // data
             $provider->setValues($object, $locale, $data);
         }
@@ -133,7 +133,7 @@ class Preview implements PreviewInterface
     public function render($token, $webspaceKey, $locale, $targetGroupId = null)
     {
         $object = $this->fetch($token);
-        $id = $this->getProvider(get_class($object))->getId($object);
+        $id = $this->getProvider(\get_class($object))->getId($object);
 
         return $this->renderer->render($object, $id, $webspaceKey, $locale, false, $targetGroupId);
     }
@@ -149,7 +149,7 @@ class Preview implements PreviewInterface
      */
     protected function getProvider($objectClass)
     {
-        if (!array_key_exists($objectClass, $this->objectProviders)) {
+        if (!\array_key_exists($objectClass, $this->objectProviders)) {
             throw new ProviderNotFoundException($objectClass);
         }
 
@@ -166,8 +166,8 @@ class Preview implements PreviewInterface
      */
     protected function save($token, $object)
     {
-        $data = $this->getProvider(get_class($object))->serialize($object);
-        $data = sprintf("%s\n%s", get_class($object), $data);
+        $data = $this->getProvider(\get_class($object))->serialize($object);
+        $data = \sprintf("%s\n%s", \get_class($object), $data);
 
         $this->dataCache->save($token, $data, $this->cacheLifeTime);
     }
@@ -186,7 +186,7 @@ class Preview implements PreviewInterface
             throw new TokenNotFoundException($token);
         }
 
-        $cacheEntry = explode("\n", $this->dataCache->fetch($token), 2);
+        $cacheEntry = \explode("\n", $this->dataCache->fetch($token), 2);
 
         return $this->getProvider($cacheEntry[0])->deserialize($cacheEntry[1], $cacheEntry[0]);
     }

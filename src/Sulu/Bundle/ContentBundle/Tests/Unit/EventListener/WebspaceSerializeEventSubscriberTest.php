@@ -35,7 +35,7 @@ class WebspaceSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $events = $subscriber->getSubscribedEvents();
 
-        $reflection = new \ReflectionClass(get_class($subscriber));
+        $reflection = new \ReflectionClass(\get_class($subscriber));
 
         foreach ($events as $event) {
             $this->assertTrue($reflection->hasMethod($event['method']));
@@ -64,12 +64,12 @@ class WebspaceSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
         $context = $this->prophesize(Context::class);
         $visitor = $this->prophesize(JsonSerializationVisitor::class);
 
-        $context->accept(array_values($portalInformation))->willReturn('[{}, {}]');
+        $context->accept(\array_values($portalInformation))->willReturn('[{}, {}]');
         $visitor->addData('portalInformation', '[{}, {}]')->shouldBeCalled();
 
         $webspaceManager->getPortalInformationsByWebspaceKey('prod', 'sulu_io')->willReturn($portalInformation);
 
-        $reflection = new \ReflectionClass(get_class($subscriber));
+        $reflection = new \ReflectionClass(\get_class($subscriber));
         $method = $reflection->getMethod('appendPortalInformation');
         $method->setAccessible(true);
 
@@ -99,7 +99,7 @@ class WebspaceSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
         $context->accept($urls)->willReturn($serialzedData);
         $visitor->addData('urls', $serialzedData)->shouldBeCalled();
 
-        $reflection = new \ReflectionClass(get_class($subscriber));
+        $reflection = new \ReflectionClass(\get_class($subscriber));
         $method = $reflection->getMethod('appendUrls');
         $method->setAccessible(true);
 
@@ -129,7 +129,7 @@ class WebspaceSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getPortals()->willReturn(
-            array_map(
+            \array_map(
                 function($portal) {
                     return $portal->reveal();
                 },
@@ -160,7 +160,7 @@ class WebspaceSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
         )->willReturn($serialzedData);
         $visitor->addData('customUrls', $serialzedData)->shouldBeCalled();
 
-        $reflection = new \ReflectionClass(get_class($subscriber));
+        $reflection = new \ReflectionClass(\get_class($subscriber));
         $method = $reflection->getMethod('appendCustomUrls');
         $method->setAccessible(true);
 

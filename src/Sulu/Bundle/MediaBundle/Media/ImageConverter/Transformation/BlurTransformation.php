@@ -24,7 +24,7 @@ class BlurTransformation implements TransformationInterface
             throw new \RuntimeException('The parameter "sigma" is required for "blur" transformation.');
         }
 
-        if (!is_numeric($parameters['sigma'])) {
+        if (!\is_numeric($parameters['sigma'])) {
             throw new \RuntimeException('The parameter "sigma" need to be a numeric value for "blur" transformation.');
         }
 

@@ -59,7 +59,7 @@ class Collaboration
         $this->fullName = $fullName;
         $this->type = $type;
         $this->id = $id;
-        $this->changed = time();
+        $this->changed = \time();
     }
 
     /**

@@ -33,7 +33,7 @@ class ReservedPropertyNameException extends InvalidXmlException
 
         parent::__construct(
             $template,
-            sprintf(
+            \sprintf(
                 'The property with the name "%s" was used by the template "%s", although it is a reserved property name',
                 $this->propertyName,
                 $template

@@ -53,9 +53,9 @@ class ListBuilderMetadataProviderCompilerPassTest extends \PHPUnit_Framework_Tes
                     function(array $argument) use ($taggedServices) {
                         foreach ($argument as $item) {
                             if (!$item instanceof Reference
-                                || !in_array(
+                                || !\in_array(
                                     $item->__toString(),
-                                    array_keys($taggedServices),
+                                    \array_keys($taggedServices),
                                     true
                                 )
                             ) {

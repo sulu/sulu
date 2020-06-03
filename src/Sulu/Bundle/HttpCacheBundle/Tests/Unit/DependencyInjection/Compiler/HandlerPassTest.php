@@ -120,7 +120,7 @@ class HandlerPassTest extends AbstractCompilerPassTestCase
         $args = $res->getArguments();
 
         foreach ($expectedHandlerIds as $expectedHandlerId) {
-            $reference = array_shift($args[0]);
+            $reference = \array_shift($args[0]);
             $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $reference);
             $this->assertEquals($expectedHandlerId, (string) $reference);
         }

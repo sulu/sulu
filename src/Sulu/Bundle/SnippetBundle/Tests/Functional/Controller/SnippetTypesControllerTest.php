@@ -36,7 +36,7 @@ class SnippetTypesControllerTest extends BaseFunctionalTestCase
         $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/snippet-types');
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals(2, $response['total']);
         $this->assertEquals('car', $response['_embedded'][0]['template']);
@@ -59,7 +59,7 @@ class SnippetTypesControllerTest extends BaseFunctionalTestCase
             ['webspace' => 'sulu_io', 'default' => $this->car1->getUuid()]
         );
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('car', $response['template']);
         $this->assertEquals('Car', $response['title']);
@@ -67,7 +67,7 @@ class SnippetTypesControllerTest extends BaseFunctionalTestCase
         $this->assertEquals($this->car1->getTitle(), $response['defaultTitle']);
 
         $client->request('GET', '/snippet-types?defaults=true&webspace=sulu_io');
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals(2, $response['total']);
         $this->assertEquals('car', $response['_embedded'][0]['template']);
@@ -93,7 +93,7 @@ class SnippetTypesControllerTest extends BaseFunctionalTestCase
             ['webspace' => 'sulu_io', 'default' => $this->car1->getUuid()]
         );
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('car', $response['template']);
         $this->assertEquals('Car', $response['title']);
@@ -102,7 +102,7 @@ class SnippetTypesControllerTest extends BaseFunctionalTestCase
 
         $client->request('GET', '/snippet-types?defaults=true&webspace=sulu_io');
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
         $responseAreas = $response['_embedded'];
 
         $this->assertEquals(2, $response['total']);

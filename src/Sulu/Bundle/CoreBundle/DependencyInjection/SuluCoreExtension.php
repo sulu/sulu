@@ -190,26 +190,26 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         foreach ($config['locales'] as $locale => $localeName) {
-            if (strtolower($locale) !== $locale) {
+            if (\strtolower($locale) !== $locale) {
                 throw new InvalidConfigurationException('Invalid locale in configuration: ' . $locale);
             }
         }
 
         foreach ($config['translations'] as $translation) {
-            if (strtolower($translation) !== $translation) {
+            if (\strtolower($translation) !== $translation) {
                 throw new InvalidConfigurationException('Invalid translation in configuration: ' . $translation);
             }
         }
 
-        if (strtolower($config['fallback_locale']) !== $config['fallback_locale']) {
+        if (\strtolower($config['fallback_locale']) !== $config['fallback_locale']) {
             throw new InvalidConfigurationException(
                 'Invalid fallback_locale in configuration: ' . $config['fallback_locale']
             );
         }
 
-        $container->setParameter('sulu_core.locales', array_unique(array_keys($config['locales'])));
+        $container->setParameter('sulu_core.locales', \array_unique(\array_keys($config['locales'])));
         $container->setParameter('sulu_core.translated_locales', $config['locales']);
-        $container->setParameter('sulu_core.translations', array_unique($config['translations']));
+        $container->setParameter('sulu_core.translations', \array_unique($config['translations']));
         $container->setParameter('sulu_core.fallback_locale', $config['fallback_locale']);
 
         $container->setParameter('sulu.cache_dir', $config['cache_dir']);
@@ -218,8 +218,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $container->getParameter('sulu.cache_dir') . '/proxies'
         );
 
-        if (!is_dir($proxyCacheDirectory)) {
-            mkdir($proxyCacheDirectory, 0777, true);
+        if (!\is_dir($proxyCacheDirectory)) {
+            \mkdir($proxyCacheDirectory, 0777, true);
         }
 
         $container->setParameter('sulu_core.proxy_cache_dir', $proxyCacheDirectory);
@@ -411,16 +411,16 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $metadataPaths = [];
         foreach ($bundles as $bundle) {
             $refl = new \ReflectionClass($bundle);
-            $path = dirname($refl->getFilename());
+            $path = \dirname($refl->getFilename());
 
             foreach (['Entity', 'Document', 'Model'] as $entityNamespace) {
-                if (!file_exists($path . '/' . $entityNamespace)) {
+                if (!\file_exists($path . '/' . $entityNamespace)) {
                     continue;
                 }
 
                 $namespace = $refl->getNamespaceName() . '\\' . $entityNamespace;
-                $finalPath = implode('/', [$path, 'Resources', 'config', $dir]);
-                if (!file_exists($finalPath)) {
+                $finalPath = \implode('/', [$path, 'Resources', 'config', $dir]);
+                if (!\file_exists($finalPath)) {
                     continue;
                 }
 

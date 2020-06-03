@@ -76,7 +76,7 @@ class TemplateController extends RestController
 
         return $this->render(
             'SuluContactBundle:Template:account.form.html.twig',
-            array_merge(['categoryUrl' => $this->getCategoryUrl($categoryRoot)], $this->getRenderArray())
+            \array_merge(['categoryUrl' => $this->getCategoryUrl($categoryRoot)], $this->getRenderArray())
         );
     }
 

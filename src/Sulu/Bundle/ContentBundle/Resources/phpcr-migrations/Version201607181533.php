@@ -35,8 +35,8 @@ class Version201607181533 implements VersionInterface, ContainerAwareInterface
         $session->getWorkspace()->createWorkspace($liveSession->getWorkspace()->getName());
         $queryManager = $liveSession->getWorkspace()->getQueryManager();
 
-        $fileName = tempnam(sys_get_temp_dir(), 'sulu-publishing');
-        $file = fopen($fileName, 'w');
+        $fileName = \tempnam(\sys_get_temp_dir(), 'sulu-publishing');
+        $file = \fopen($fileName, 'w');
         $defaultSession->exportSystemView('/cmf', $file, false, false);
         $liveSession->importXML('/', $fileName, ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
 
@@ -47,7 +47,7 @@ class Version201607181533 implements VersionInterface, ContainerAwareInterface
 
         foreach ($localizations as $localization) {
             $rows = $queryManager
-                ->createQuery(sprintf($query, $localization->getLocale()), 'JCR-SQL2')
+                ->createQuery(\sprintf($query, $localization->getLocale()), 'JCR-SQL2')
                 ->execute();
 
             $propertyPrefix = 'i18n:' . $localization->getLocale() . '-*';
@@ -66,7 +66,7 @@ class Version201607181533 implements VersionInterface, ContainerAwareInterface
 
         $liveSession->save();
 
-        unlink($fileName);
+        \unlink($fileName);
     }
 
     public function down(SessionInterface $session)

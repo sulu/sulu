@@ -232,13 +232,13 @@ class Export
     protected function getTemplate($format)
     {
         if (!isset($this->formatFilePaths[$format])) {
-            throw new \Exception(sprintf('No format "%s" configured for Snippet export', $format));
+            throw new \Exception(\sprintf('No format "%s" configured for Snippet export', $format));
         }
 
         $templatePath = $this->formatFilePaths[$format];
 
         if (!$this->templating->exists($templatePath)) {
-            throw new \Exception(sprintf('No template file "%s" found for Snippet export', $format));
+            throw new \Exception(\sprintf('No template file "%s" found for Snippet export', $format));
         }
 
         return $templatePath;

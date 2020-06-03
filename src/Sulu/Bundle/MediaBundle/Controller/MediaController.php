@@ -66,7 +66,7 @@ class MediaController extends AbstractMediaController implements
         $locale = $this->getRequestParameter($request, 'locale', true);
 
         return $this->handleView(
-            $this->view(array_values($this->getFieldDescriptors($locale)), 200)
+            $this->view(\array_values($this->getFieldDescriptors($locale)), 200)
         );
     }
 
@@ -126,13 +126,13 @@ class MediaController extends AbstractMediaController implements
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
         $fieldDescriptors = $this->getFieldDescriptors($locale, false);
-        $ids = array_filter(explode(',', $request->get('ids')));
-        $types = array_filter(explode(',', $request->get('types')));
+        $ids = \array_filter(\explode(',', $request->get('ids')));
+        $types = \array_filter(\explode(',', $request->get('types')));
         $listBuilder = $this->getListBuilder($request, $fieldDescriptors, $ids, $types);
         $listResponse = $listBuilder->execute();
         $count = $listBuilder->count();
 
-        for ($i = 0, $length = count($listResponse); $i < $length; ++$i) {
+        for ($i = 0, $length = \count($listResponse); $i < $length; ++$i) {
             $format = $this->getFormatManager()->getFormats(
                 $listResponse[$i]['id'],
                 $listResponse[$i]['name'],
@@ -142,7 +142,7 @@ class MediaController extends AbstractMediaController implements
                 $listResponse[$i]['mimeType']
             );
 
-            if (0 < count($format)) {
+            if (0 < \count($format)) {
                 $listResponse[$i]['thumbnails'] = $format;
             }
 
@@ -153,13 +153,13 @@ class MediaController extends AbstractMediaController implements
             );
         }
 
-        if (0 < count($ids)) {
+        if (0 < \count($ids)) {
             $result = [];
             foreach ($listResponse as $item) {
-                $result[array_search($item['id'], $ids)] = $item;
+                $result[\array_search($item['id'], $ids)] = $item;
             }
-            ksort($result);
-            $listResponse = array_values($result);
+            \ksort($result);
+            $listResponse = \array_values($result);
         }
 
         $list = new ListRepresentation(
@@ -220,7 +220,7 @@ class MediaController extends AbstractMediaController implements
 
         // If no limit is set in request and limit is set by ids
         $requestLimit = $request->get('limit');
-        $idsCount = count($ids);
+        $idsCount = \count($ids);
 
         if ($idsCount > 0) {
             // correct request limit if more ids are requested
@@ -232,7 +232,7 @@ class MediaController extends AbstractMediaController implements
         }
 
         // set the types
-        if (count($types)) {
+        if (\count($types)) {
             $listBuilder->in($fieldDescriptors['type'], $types);
         }
 
@@ -351,7 +351,7 @@ class MediaController extends AbstractMediaController implements
         }
 
         if (!$currentFileVersion) {
-            throw new NotFoundHttpException(sprintf(
+            throw new NotFoundHttpException(\sprintf(
                 'Version "%s" for Media "%s"',
                 $version,
                 $id
@@ -389,7 +389,7 @@ class MediaController extends AbstractMediaController implements
                     return $this->saveEntity($id, $request);
                     break;
                 default:
-                    throw new RestException(sprintf('Unrecognized action: "%s"', $action));
+                    throw new RestException(\sprintf('Unrecognized action: "%s"', $action));
             }
         } catch (RestException $e) {
             $view = $this->view($e->toArray(), 400);

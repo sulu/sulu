@@ -37,7 +37,7 @@ class RouteControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            sprintf(
+            \sprintf(
                 '/api/routes?entityClass=%s&entityId=%s&locale=%s',
                 self::TEST_ENTITY,
                 self::TEST_ID,
@@ -45,7 +45,7 @@ class RouteControllerTest extends SuluTestCase
             )
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertCount(1, $result['_embedded']['routes']);
@@ -69,7 +69,7 @@ class RouteControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            sprintf(
+            \sprintf(
                 '/api/routes?history=true&entityClass=%s&entityId=%s&locale=%s',
                 self::TEST_ENTITY,
                 self::TEST_ID,
@@ -77,7 +77,7 @@ class RouteControllerTest extends SuluTestCase
             )
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertCount(3, $result['_embedded']['routes']);
@@ -114,14 +114,14 @@ class RouteControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf(
+            \sprintf(
                 '/api/routes?history=true&entityClass=%s&entityId=%s&locale=%s',
                 self::TEST_ENTITY,
                 self::TEST_ID,
                 self::TEST_LOCALE
             )
         );
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertCount(0, $result['_embedded']['routes']);
     }
@@ -144,7 +144,7 @@ class RouteControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            sprintf(
+            \sprintf(
                 '/api/routes?history=true&entityClass=%s&entityId=%s&locale=%s',
                 self::TEST_ENTITY,
                 self::TEST_ID,
@@ -152,7 +152,7 @@ class RouteControllerTest extends SuluTestCase
             )
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertCount(2, $result['_embedded']['routes']);

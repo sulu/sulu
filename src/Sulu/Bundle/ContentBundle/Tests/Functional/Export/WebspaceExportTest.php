@@ -73,7 +73,7 @@ class WebspaceExportTest extends SuluTestCase
 
         // FIXME ignore home site for testcase
         unset($exportData['documents'][0]);
-        $exportData['documents'] = array_values($exportData['documents']);
+        $exportData['documents'] = \array_values($exportData['documents']);
 
         // Ignore uuids
         unset($exportData['documents'][0]['uuid']);
@@ -366,8 +366,8 @@ class WebspaceExportTest extends SuluTestCase
 
             foreach ($page as $name => $property) {
                 if (
-                    false === strpos($name, 'seo')
-                    && false === strpos($name, 'excerpt')
+                    false === \strpos($name, 'seo')
+                    && false === \strpos($name, 'excerpt')
                 ) {
                     if ('block' === $name) {
                         $blockChildren = [];
@@ -439,7 +439,7 @@ class WebspaceExportTest extends SuluTestCase
                         'categories',
                         'category_list',
                         false,
-                        !empty($extensionData['excerpt']['categories']) ? json_encode(
+                        !empty($extensionData['excerpt']['categories']) ? \json_encode(
                             $extensionData['excerpt']['categories']
                         ) : ''
                     ),
@@ -447,7 +447,7 @@ class WebspaceExportTest extends SuluTestCase
                         'tags',
                         'tag_list',
                         false,
-                        !empty($extensionData['excerpt']['tags']) ? json_encode($extensionData['excerpt']['tags']) : ''
+                        !empty($extensionData['excerpt']['tags']) ? \json_encode($extensionData['excerpt']['tags']) : ''
                     ),
                     'icon' => $this->createItemArray(
                         'icon',
@@ -497,7 +497,7 @@ class WebspaceExportTest extends SuluTestCase
                     'shadowLocale' => $this->createItemArray('shadowLocale', '', false, ''),
                     'originalLocale' => $this->createItemArray('originalLocale', '', false, 'en'),
                     'locale' => $this->createItemArray('locale', '', false, 'en'),
-                    'path' => $this->createItemArray('path', '', false, '/cmf/sulu_io/contents/' . strtolower($page['title'])),
+                    'path' => $this->createItemArray('path', '', false, '/cmf/sulu_io/contents/' . \strtolower($page['title'])),
                     'resourceSegment' => $this->createItemArray('resourceSegment', '', false, $page['url']),
                     'redirectExternal' => $this->createItemArray('redirectExternal', '', false, ''),
                     'redirectTarget' => $this->createItemArray('redirectTarget', '', false, ''),
@@ -533,7 +533,7 @@ class WebspaceExportTest extends SuluTestCase
         $children = null,
         $forceValue = false
     ) {
-        if (is_bool($options)) {
+        if (\is_bool($options)) {
             $options = [
                 'translate' => $options,
             ];

@@ -62,10 +62,10 @@ class FormatCacheCleanupCommand extends Command
         $ui = new SymfonyStyle($input, $output);
 
         $finder = new Finder();
-        $finder->in(realpath($this->localFormatCachePath));
+        $finder->in(\realpath($this->localFormatCachePath));
         $files = $finder->files();
 
-        $progressBar = $ui->createProgressBar(count($files));
+        $progressBar = $ui->createProgressBar(\count($files));
         $removedIds = [];
         $removedCount = 0;
         $existsIds = [];
@@ -73,9 +73,9 @@ class FormatCacheCleanupCommand extends Command
         /** @var SplFileInfo $file */
         foreach ($files as $file) {
             $progressBar->setMessage($file->getPathname());
-            $mediaId = explode('-', $file->getBasename())[0];
+            $mediaId = \explode('-', $file->getBasename())[0];
 
-            if (!is_numeric($mediaId)) {
+            if (!\is_numeric($mediaId)) {
                 $progressBar->advance();
                 continue;
             }
@@ -104,7 +104,7 @@ class FormatCacheCleanupCommand extends Command
         $ui->writeln('');
         $ui->writeln('');
 
-        $message = 'Removed Media: ' . count($removedIds) . ' Removed Files: ' . $removedCount;
+        $message = 'Removed Media: ' . \count($removedIds) . ' Removed Files: ' . $removedCount;
 
         if ($input->getOption('dry-run')) {
             $ui->note('Dry Run: ' . $message);

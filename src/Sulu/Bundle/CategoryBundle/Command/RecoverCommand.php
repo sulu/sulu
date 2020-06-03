@@ -57,7 +57,7 @@ class RecoverCommand extends ContainerAwareCommand
 
         // fix nested tree
         if (true !== $verify) {
-            $output->writeln(sprintf('<comment>%s errors were found.</comment>', count($verify)));
+            $output->writeln(\sprintf('<comment>%s errors were found.</comment>', \count($verify)));
 
             if ($force) {
                 $repo->recover();
@@ -74,7 +74,7 @@ class RecoverCommand extends ContainerAwareCommand
             $numberParentLess = $this->findCategoriesWithoutParents();
             if ($numberParentLess > 0) {
                 $output->writeln(
-                    sprintf('<comment>%s categories without parent were found.</comment>', $numberParentLess)
+                    \sprintf('<comment>%s categories without parent were found.</comment>', $numberParentLess)
                 );
                 if ($force) {
                     $this->fixCategoriesWithoutParents();
@@ -88,7 +88,7 @@ class RecoverCommand extends ContainerAwareCommand
             // fix depth gaps
             $numberWrongDepth = $this->findInitialWrongDepthGap();
             if ($numberWrongDepth > 0) {
-                $output->writeln(sprintf('<comment>%s wrong depths were found.</comment>', $numberWrongDepth));
+                $output->writeln(\sprintf('<comment>%s wrong depths were found.</comment>', $numberWrongDepth));
                 if ($force) {
                     // update depths
                     $affected = 1;
@@ -104,7 +104,7 @@ class RecoverCommand extends ContainerAwareCommand
         }
 
         if (!$force) {
-            $output->writeln(sprintf('Call this command with <info>--force</info> option to perform recovery.'));
+            $output->writeln(\sprintf('Call this command with <info>--force</info> option to perform recovery.'));
         }
 
         if (true === $success) {

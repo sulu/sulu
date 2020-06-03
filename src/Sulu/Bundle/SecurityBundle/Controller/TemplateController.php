@@ -20,7 +20,7 @@ class TemplateController extends Controller
     {
         $pool = $this->get('sulu_admin.admin_pool');
         $contexts = $pool->getSecurityContexts();
-        $systems = array_keys($contexts);
+        $systems = \array_keys($contexts);
 
         /** @var SecurityType[] $securityTypes */
         $securityTypes = $this->getDoctrine()

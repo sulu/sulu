@@ -23,6 +23,6 @@ class SaltGenerator
      */
     public function getRandomSalt()
     {
-        return base64_encode(random_bytes(32));
+        return \base64_encode(\random_bytes(32));
     }
 }

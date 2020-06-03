@@ -29,16 +29,16 @@ class LoadOperators implements FixtureInterface, OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $metadata = $manager->getClassMetaData(get_class(new Operator()));
+        $metadata = $manager->getClassMetaData(\get_class(new Operator()));
         $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
         $i = 1;
-        $file = dirname(__FILE__) . '/../../operators.xml';
+        $file = \dirname(__FILE__) . '/../../operators.xml';
         $doc = new \DOMDocument();
         $doc->load($file);
         $xpath = new \DOMXpath($doc);
         $elements = $xpath->query('/operators/operator');
-        if (!is_null($elements)) {
+        if (!\is_null($elements)) {
             /** @var $element DOMNode */
             foreach ($elements as $element) {
                 $operator = new Operator();

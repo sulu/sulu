@@ -19,9 +19,9 @@ $config = [
     ],
 ];
 
-if (!in_array(@$argv[1], array_keys($config))) {
+if (!\in_array(@$argv[1], \array_keys($config))) {
     die('Error:' . "\n\t" . 'Database "' . @$argv[1] . '" not supported.' . "\n" .
-        'Usage:' . "\n\t" . 'php tests/' . basename(__FILE__) . ' [' . implode('|', array_keys($config)) . ']' . "\n");
+        'Usage:' . "\n\t" . 'php tests/' . \basename(__FILE__) . ' [' . \implode('|', \array_keys($config)) . ']' . "\n");
 }
 
 $dom = new \DOMDocument('1.0', 'UTF-8');
@@ -46,7 +46,7 @@ foreach ($config[$argv[1]] as $key => $value) {
     $parent->appendChild($node);
 }
 
-$destination = str_replace('phpunit.xml.dist', $argv[1] . '.phpunit.xml', $source);
+$destination = \str_replace('phpunit.xml.dist', $argv[1] . '.phpunit.xml', $source);
 $dom->save($destination);
 
-echo 'Created:' . "\n\t" . realpath($destination) . "\n";
+echo 'Created:' . "\n\t" . \realpath($destination) . "\n";

@@ -51,7 +51,7 @@ class MediaImageExtractor implements MediaImageExtractorInterface
     public function extract($content)
     {
         $finfo = new \finfo();
-        $mimeType = $finfo->buffer($content, FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($content, \FILEINFO_MIME_TYPE);
 
         if ('application/pdf' === $mimeType) {
             return $this->convertPdfToImage($content);
@@ -65,7 +65,7 @@ class MediaImageExtractor implements MediaImageExtractorInterface
             return $this->convertSvgToImage($content);
         }
 
-        if (fnmatch('video/*', $mimeType)) {
+        if (\fnmatch('video/*', $mimeType)) {
             return $this->convertVideoToImage($content);
         }
 
@@ -89,9 +89,9 @@ class MediaImageExtractor implements MediaImageExtractorInterface
             ' -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -sOutputFile=' . $temporaryFilePath . ' ' .
             '-dJPEGQ=100 -r300x300 -q ' . $temporaryFilePath . ' -c quit 2> /dev/null';
 
-        shell_exec($command);
-        $output = file_get_contents($temporaryFilePath);
-        unlink($temporaryFilePath);
+        \shell_exec($command);
+        $output = \file_get_contents($temporaryFilePath);
+        \unlink($temporaryFilePath);
 
         if (!$output) {
             throw new GhostScriptNotFoundException(
@@ -121,11 +121,11 @@ class MediaImageExtractor implements MediaImageExtractorInterface
             $image = $this->imagine->open($temporaryFilePath);
             $image = $image->layers()[0];
 
-            unlink($temporaryFilePath);
+            \unlink($temporaryFilePath);
 
             return $image->get('png');
         } catch (RuntimeException $e) {
-            unlink($temporaryFilePath);
+            \unlink($temporaryFilePath);
 
             throw new InvalidMimeTypeForPreviewException('image/vnd.adobe.photoshop');
         }
@@ -136,7 +136,7 @@ class MediaImageExtractor implements MediaImageExtractorInterface
         $temporaryFilePath = $this->createTemporaryFile($content);
 
         $image = $this->imagine->open($temporaryFilePath);
-        unlink($temporaryFilePath);
+        \unlink($temporaryFilePath);
 
         return $image->get('png');
     }
@@ -155,8 +155,8 @@ class MediaImageExtractor implements MediaImageExtractorInterface
         $temporaryFilePath = $this->createTemporaryFile($content);
         $this->videoThumbnail->generate($temporaryFilePath, '00:00:02:01', $temporaryFilePath);
 
-        $extractedImage = file_get_contents($temporaryFilePath);
-        unlink($temporaryFilePath);
+        $extractedImage = \file_get_contents($temporaryFilePath);
+        \unlink($temporaryFilePath);
 
         return $extractedImage;
     }
@@ -170,8 +170,8 @@ class MediaImageExtractor implements MediaImageExtractorInterface
      */
     private function createTemporaryFile($content)
     {
-        $path = tempnam(sys_get_temp_dir(), 'media');
-        file_put_contents($path, $content);
+        $path = \tempnam(\sys_get_temp_dir(), 'media');
+        \file_put_contents($path, $content);
 
         return $path;
     }

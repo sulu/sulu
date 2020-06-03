@@ -85,7 +85,7 @@ class MetaTwigExtension extends \Twig_Extension
             }
         }
 
-        return implode(PHP_EOL, $result);
+        return \implode(\PHP_EOL, $result);
     }
 
     /**
@@ -101,36 +101,36 @@ class MetaTwigExtension extends \Twig_Extension
     public function getSeoMetaTags($extension, $content)
     {
         $seo = [];
-        if (array_key_exists('seo', $extension)) {
+        if (\array_key_exists('seo', $extension)) {
             $seo = $extension['seo'];
         }
         $excerpt = [];
-        if (array_key_exists('excerpt', $extension)) {
+        if (\array_key_exists('excerpt', $extension)) {
             $excerpt = $extension['excerpt'];
         }
 
         // fallback for seo description
         if (
-            (!array_key_exists('description', $seo) || '' === $seo['description']) &&
-            array_key_exists('description', $excerpt) && '' !== $excerpt['description']
+            (!\array_key_exists('description', $seo) || '' === $seo['description']) &&
+            \array_key_exists('description', $excerpt) && '' !== $excerpt['description']
         ) {
-            $seo['description'] = strip_tags($excerpt['description']);
+            $seo['description'] = \strip_tags($excerpt['description']);
         }
 
-        $seo['description'] = substr($seo['description'], 0, 155);
+        $seo['description'] = \substr($seo['description'], 0, 155);
 
         // generate robots content
         $robots = [];
-        $robots[] = (array_key_exists('noIndex', $seo) && true === $seo['noIndex']) ? 'noIndex' : 'index';
-        $robots[] = (array_key_exists('noFollow', $seo) && true === $seo['noFollow']) ? 'noFollow' : 'follow';
+        $robots[] = (\array_key_exists('noIndex', $seo) && true === $seo['noIndex']) ? 'noIndex' : 'index';
+        $robots[] = (\array_key_exists('noFollow', $seo) && true === $seo['noFollow']) ? 'noFollow' : 'follow';
 
         // build meta tags
         $result = [];
         $result[] = $this->getMeta('description', $seo['description']);
         $result[] = $this->getMeta('keywords', $seo['keywords']);
-        $result[] = $this->getMeta('robots', strtoupper(implode(', ', $robots)));
+        $result[] = $this->getMeta('robots', \strtoupper(\implode(', ', $robots)));
 
-        return implode(PHP_EOL, $result);
+        return \implode(\PHP_EOL, $result);
     }
 
     /**
@@ -148,10 +148,10 @@ class MetaTwigExtension extends \Twig_Extension
     {
         $url = $this->contentPath->getContentPath($url, $webspaceKey, $locale);
 
-        return sprintf(
+        return \sprintf(
             '<link rel="alternate" href="%s" hreflang="%s" />',
             $url,
-            !$default ? str_replace('_', '-', $locale) : 'x-default'
+            !$default ? \str_replace('_', '-', $locale) : 'x-default'
         );
     }
 
@@ -166,6 +166,6 @@ class MetaTwigExtension extends \Twig_Extension
      */
     private function getMeta($name, $content)
     {
-        return sprintf('<meta name="%s" content="%s">', $name, $content);
+        return \sprintf('<meta name="%s" content="%s">', $name, $content);
     }
 }

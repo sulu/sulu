@@ -70,7 +70,7 @@ abstract class KernelTestCase extends \PHPUnit_Framework_TestCase
     {
         $this->requireKernel();
 
-        $options = array_merge([
+        $options = \array_merge([
             'environment' => 'test',
             'debug' => true,
             'sulu_context' => 'admin',
@@ -83,9 +83,9 @@ abstract class KernelTestCase extends \PHPUnit_Framework_TestCase
         );
 
         if (!$kernel instanceof SuluTestKernel) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'All Sulu testing Kernel classes must extend SuluTestKernel, "%s" does not',
-                get_class($kernel)
+                \get_class($kernel)
             ));
         }
 
@@ -150,19 +150,19 @@ abstract class KernelTestCase extends \PHPUnit_Framework_TestCase
      */
     private function requireKernel()
     {
-        if ($kernelPath = getenv('KERNEL_DIR')) {
+        if ($kernelPath = \getenv('KERNEL_DIR')) {
             $kernelPaths = [$kernelPath . '/AppKernel.php'];
         } else {
             $kernelPaths = [
-                sprintf('%s/Tests/app/AppKernel.php', getcwd()), // bundle test kernel
-                sprintf('%s/tests/app/AppKernel.php', getcwd()), // sulu-io/sulu test kernel
+                \sprintf('%s/Tests/app/AppKernel.php', \getcwd()), // bundle test kernel
+                \sprintf('%s/tests/app/AppKernel.php', \getcwd()), // sulu-io/sulu test kernel
             ];
         }
 
         $found = false;
 
         foreach ($kernelPaths as $kernelPath) {
-            if (file_exists($kernelPath)) {
+            if (\file_exists($kernelPath)) {
                 $found = true;
                 require_once $kernelPath;
                 break;
@@ -170,9 +170,9 @@ abstract class KernelTestCase extends \PHPUnit_Framework_TestCase
         }
 
         if (false === $found) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Could not find test kernel in paths "%s"',
-                implode('", "', $kernelPaths)
+                \implode('", "', $kernelPaths)
             ));
         }
     }
@@ -182,7 +182,7 @@ abstract class KernelTestCase extends \PHPUnit_Framework_TestCase
      */
     public function tearDown()
     {
-        while ($kernel = array_shift($this->kernelStack)) {
+        while ($kernel = \array_shift($this->kernelStack)) {
             $kernel->shutdown();
         }
     }
@@ -208,10 +208,10 @@ abstract class KernelTestCase extends \PHPUnit_Framework_TestCase
         if ($code !== $httpCode) {
             $message = $response->getContent();
 
-            if ($json = json_decode($message, true)) {
-                $message = explode(PHP_EOL, json_encode($json, JSON_PRETTY_PRINT));
-                $message = implode(PHP_EOL, array_slice($message, 0, $debugLength));
-                $message = sprintf(
+            if ($json = \json_decode($message, true)) {
+                $message = \explode(\PHP_EOL, \json_encode($json, \JSON_PRETTY_PRINT));
+                $message = \implode(\PHP_EOL, \array_slice($message, 0, $debugLength));
+                $message = \sprintf(
                     'HTTP status code %s is not expected %s, showing %s lines of the response body: %s',
                     $httpCode,
                     $code,

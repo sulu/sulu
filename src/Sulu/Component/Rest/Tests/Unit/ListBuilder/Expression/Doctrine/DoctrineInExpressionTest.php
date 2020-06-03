@@ -52,7 +52,7 @@ class DoctrineInExpressionTest extends \PHPUnit_Framework_TestCase
         $whereExpression = new DoctrineInExpression($fieldDescriptor, $values);
 
         $statement = $whereExpression->getStatement($this->queryBuilder);
-        $result = preg_match(
+        $result = \preg_match(
             '/^SuluCoreBundle_Example\.name IN \(:name\S{' . $this->uniqueIdLength . '}\)/',
             $statement
         );

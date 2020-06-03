@@ -51,7 +51,7 @@ class TextEditorJsConfig implements JsConfigInterface
                 continue;
             }
 
-            $result = array_merge_recursive($result, $setting->getValue());
+            $result = \array_merge_recursive($result, $setting->getValue());
             $exists = true;
         }
 
@@ -60,8 +60,8 @@ class TextEditorJsConfig implements JsConfigInterface
         }
 
         // array_merge_recursive accepts non-unique values they have to be removed
-        foreach (array_keys($result) as $section) {
-            $result[$section] = array_values(array_unique($result[$section]));
+        foreach (\array_keys($result) as $section) {
+            $result[$section] = \array_values(\array_unique($result[$section]));
         }
 
         return ['settingKey' => self::SETTING_KEY, 'userToolbar' => $result];

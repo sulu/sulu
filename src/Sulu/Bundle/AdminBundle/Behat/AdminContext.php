@@ -158,7 +158,7 @@ var f = function () {
 f();
 EOT;
 
-        $script = sprintf($script, $text);
+        $script = \sprintf($script, $text);
         $this->getSession()->executeScript($script);
     }
 
@@ -186,7 +186,7 @@ EOT;
             f();
 EOT;
 
-        $script = sprintf($script, $text);
+        $script = \sprintf($script, $text);
         $this->getSession()->executeScript($script);
     }
 
@@ -258,7 +258,7 @@ for (var i = 0; i < items.length; i++) {
 };
 EOT;
 
-        $script = sprintf($script, $selectListClass, $itemValue);
+        $script = \sprintf($script, $selectListClass, $itemValue);
         $this->getSession()->executeScript($script);
     }
 
@@ -401,7 +401,7 @@ EOT;
         $errorCount = $this->getSession()->evaluateScript("$('.husky-validate-error').length");
         if ($errorCount != $expectedErrorCount) {
             throw new \Exception(
-                sprintf(
+                \sprintf(
                     'Was expecting "%s" form errors, but got "%s"',
                     $expectedErrorCount,
                     $errorCount
@@ -428,7 +428,7 @@ EOT;
         $selector2 = 'div[data-aura-instance-name=\\"' . $name . '\\"]';
         $this->getSession()->wait(
             self::LONG_WAIT_TIME,
-            sprintf(
+            \sprintf(
                 '$(\'%s\').children().length > 0 || $(\'%s\').children().length > 0',
                 $selector1,
                 $selector2
@@ -442,7 +442,7 @@ EOT;
      */
     public function iSetValue($name, $value)
     {
-        $this->getSession()->evaluateScript("$('#$name').data('element').setValue(" . json_encode($value) . ')');
+        $this->getSession()->evaluateScript("$('#$name').data('element').setValue(" . \json_encode($value) . ')');
     }
 
     /**
@@ -451,11 +451,11 @@ EOT;
     public function IExpectTheValue($name, $value)
     {
         $result = $this->getSession()->evaluateScript(
-            "$('#$name').data('element').getValue() === " . json_encode($value)
+            "$('#$name').data('element').getValue() === " . \json_encode($value)
         );
 
         if (!$result) {
-            throw new \Exception(sprintf('Property "%s" doesnt contain the value "%s"', $name, json_encode($value)));
+            throw new \Exception(\sprintf('Property "%s" doesnt contain the value "%s"', $name, \json_encode($value)));
         }
     }
 
@@ -578,7 +578,7 @@ if (el !== null) {
 }
 EOT;
 
-            $script = sprintf($script, $parentSelector, $propertyName, $name, $value);
+            $script = \sprintf($script, $parentSelector, $propertyName, $name, $value);
 
             try {
                 $this->getSession()->executeScript($script);
@@ -590,6 +590,6 @@ EOT;
             }
         }
 
-        throw new \InvalidArgumentException(sprintf('Could not find husky field "%s"', $name));
+        throw new \InvalidArgumentException(\sprintf('Could not find husky field "%s"', $name));
     }
 }

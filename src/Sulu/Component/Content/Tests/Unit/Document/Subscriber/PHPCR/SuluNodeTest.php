@@ -86,11 +86,11 @@ class SuluNodeTest extends \PHPUnit_Framework_TestCase
     {
         $node = $this->prophesize(NodeInterface::class);
 
-        call_user_func_array([$node, $functionName], $arguments)->willReturn($returnValue);
+        \call_user_func_array([$node, $functionName], $arguments)->willReturn($returnValue);
 
         $suluNode = new SuluNode($node->reveal());
 
-        $this->assertEquals($returnValue, call_user_func_array([$suluNode, $functionName], $arguments));
+        $this->assertEquals($returnValue, \call_user_func_array([$suluNode, $functionName], $arguments));
     }
 
     public function testGetIterator()

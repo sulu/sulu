@@ -61,7 +61,7 @@ class CustomerManager implements CustomerManagerInterface
 
     public function findByIds($ids)
     {
-        if (0 === count($ids)) {
+        if (0 === \count($ids)) {
             return [];
         }
 
@@ -70,9 +70,9 @@ class CustomerManager implements CustomerManagerInterface
         $accounts = $this->findAccountsByIds($parsed['a']);
         $contacts = $this->findContactsByIds($parsed['c']);
 
-        $result = array_merge($accounts, $contacts);
+        $result = \array_merge($accounts, $contacts);
         // the @ is necessary in case of a PHP bug https://bugs.php.net/bug.php?id=50688
-        @usort(
+        @\usort(
             $result,
             function($a, $b) use ($ids) {
                 return $this->comparator->compare($a['id'], $b['id'], $ids);
@@ -91,7 +91,7 @@ class CustomerManager implements CustomerManagerInterface
      */
     private function findAccountsByIds($ids)
     {
-        if (0 === count($ids)) {
+        if (0 === \count($ids)) {
             return [];
         }
 
@@ -115,7 +115,7 @@ class CustomerManager implements CustomerManagerInterface
      */
     private function findContactsByIds($ids)
     {
-        if (0 === count($ids)) {
+        if (0 === \count($ids)) {
             return [];
         }
 

@@ -31,7 +31,7 @@ class GeolocatorPass implements CompilerPassInterface
 
         foreach ($ids as $id => $attributes) {
             if (!isset($attributes[0]['alias'])) {
-                throw new \InvalidArgumentException(sprintf(
+                throw new \InvalidArgumentException(\sprintf(
                     'No "alias" specified for geolocator with service ID: "%s"',
                     $id
                 ));

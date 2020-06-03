@@ -51,9 +51,9 @@ abstract class SuluKernel extends Kernel
     {
         if (null === $this->context) {
             throw new \RuntimeException(
-                sprintf(
+                \sprintf(
                     'No context has been set for kernel "%s"',
-                    get_class($this)
+                    \get_class($this)
                 )
             );
         }
@@ -71,7 +71,7 @@ abstract class SuluKernel extends Kernel
 
     protected function getKernelParameters()
     {
-        return array_merge(
+        return \array_merge(
             parent::getKernelParameters(),
             ['sulu.context' => $this->getContext()]
         );

@@ -215,10 +215,10 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     protected function getField(\DOMXPath $xpath, \DOMElement $fieldNode)
     {
         if (null !== $reference = XmlUtil::getValueFromXPath('@property-ref', $xpath, $fieldNode)) {
-            $nodeList = $xpath->query(sprintf('/x:class/x:properties/x:*[@name="%s"]', $reference));
+            $nodeList = $xpath->query(\sprintf('/x:class/x:properties/x:*[@name="%s"]', $reference));
 
             if (0 === $nodeList->length) {
-                throw new \Exception(sprintf('Rest metadata doctrine field reference "%s" was not found.', $reference));
+                throw new \Exception(\sprintf('Rest metadata doctrine field reference "%s" was not found.', $reference));
             }
 
             return $this->getField($xpath, $nodeList->item(0));
@@ -248,10 +248,10 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     protected function getJoinsMetadata(\DOMXPath $xpath, \DOMElement $joinsNode, FieldMetadata $field)
     {
         if (null !== $reference = XmlUtil::getValueFromXPath('@ref', $xpath, $joinsNode)) {
-            $nodeList = $xpath->query(sprintf('/x:class/orm:joins[@name="%s"]', $reference));
+            $nodeList = $xpath->query(\sprintf('/x:class/orm:joins[@name="%s"]', $reference));
 
             if (0 === $nodeList->length) {
-                throw new \Exception(sprintf('Rest metadata doctrine joins reference "%s" was not found.', $reference));
+                throw new \Exception(\sprintf('Rest metadata doctrine joins reference "%s" was not found.', $reference));
             }
 
             $this->getJoinsMetadata($xpath, $nodeList->item(0), $field);

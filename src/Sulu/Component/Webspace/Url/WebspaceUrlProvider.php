@@ -22,7 +22,7 @@ class WebspaceUrlProvider implements WebspaceUrlProviderInterface
     {
         $urls = [];
         foreach ($webspace->getPortals() as $portal) {
-            $urls = array_merge($urls, $portal->getEnvironment($environment)->getUrls());
+            $urls = \array_merge($urls, $portal->getEnvironment($environment)->getUrls());
         }
 
         return $urls;

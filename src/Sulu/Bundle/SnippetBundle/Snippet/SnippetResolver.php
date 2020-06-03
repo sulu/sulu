@@ -46,7 +46,7 @@ class SnippetResolver implements SnippetResolverInterface
     {
         $snippets = [];
         foreach ($uuids as $uuid) {
-            if (!array_key_exists($uuid, $this->snippetCache)) {
+            if (!\array_key_exists($uuid, $this->snippetCache)) {
                 $snippet = $this->contentMapper->load($uuid, $webspaceKey, $locale);
 
                 if (!$snippet->getHasTranslation() && null !== $shadowLocale) {

@@ -68,7 +68,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             ['id', 'firstName', 'lastName', 'avatar', 'fullName', 'city'],
-            array_keys($result->propertyMetadata)
+            \array_keys($result->propertyMetadata)
         );
 
         $this->assertSingleMetadata(
@@ -153,7 +153,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('stdClass', $result->name);
         $this->assertCount(3, $result->propertyMetadata);
 
-        $this->assertEquals(['id', 'firstName', 'lastName'], array_keys($result->propertyMetadata));
+        $this->assertEquals(['id', 'firstName', 'lastName'], \array_keys($result->propertyMetadata));
 
         $this->assertSingleMetadata(
             ['name' => 'id', 'entityName' => 'SuluContactBundle:Contact'],
@@ -178,7 +178,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('stdClass', $result->name);
         $this->assertCount(1, $result->propertyMetadata);
 
-        $this->assertEquals(['tags'], array_keys($result->propertyMetadata));
+        $this->assertEquals(['tags'], \array_keys($result->propertyMetadata));
 
         $this->assertGroupConcatMetadata(
             [
@@ -204,7 +204,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('stdClass', $result->name);
         $this->assertCount(1, $result->propertyMetadata);
 
-        $this->assertEquals(['tags'], array_keys($result->propertyMetadata));
+        $this->assertEquals(['tags'], \array_keys($result->propertyMetadata));
 
         $this->assertIdentityMetadata(
             [
@@ -224,7 +224,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('stdClass', $result->name);
         $this->assertCount(1, $result->propertyMetadata);
 
-        $this->assertEquals(['tags'], array_keys($result->propertyMetadata));
+        $this->assertEquals(['tags'], \array_keys($result->propertyMetadata));
 
         $this->assertCountMetadata(
             [
@@ -237,7 +237,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
     private function loadMetadataFromFile(XmlDriver $driver, $file)
     {
-        $reflectionMethod = new \ReflectionMethod(get_class($driver), 'loadMetadataFromFile');
+        $reflectionMethod = new \ReflectionMethod(\get_class($driver), 'loadMetadataFromFile');
         $reflectionMethod->setAccessible(true);
 
         return $reflectionMethod->invokeArgs(
@@ -272,7 +272,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
     private function assertField(array $expected, FieldMetadata $metadata)
     {
-        $expected = array_merge(
+        $expected = \array_merge(
             [
                 'name' => null,
                 'entityName' => null,
@@ -283,7 +283,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected['name'], $metadata->getName());
         $this->assertEquals($expected['entityName'], $metadata->getEntityName());
-        $this->assertCount(count($expected['joins']), $metadata->getJoins());
+        $this->assertCount(\count($expected['joins']), $metadata->getJoins());
 
         $i = 0;
         foreach ($expected['joins'] as $joinExpected) {
@@ -294,7 +294,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
     private function assertJoin(array $expected, JoinMetadata $metadata)
     {
-        $expected = array_merge(
+        $expected = \array_merge(
             [
                 'entityName' => null,
                 'entityField' => null,
@@ -314,7 +314,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
     private function assertConcatenationType($expected, PropertyMetadata $metadata)
     {
-        $expected = array_merge(
+        $expected = \array_merge(
             [
                 'glue' => null,
                 'fields' => [],
@@ -325,7 +325,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ConcatenationTypeMetadata::class, $metadata->getType());
 
         $this->assertEquals($expected['glue'], $metadata->getType()->getGlue());
-        $this->assertCount(count($expected['fields']), $metadata->getType()->getFields());
+        $this->assertCount(\count($expected['fields']), $metadata->getType()->getFields());
 
         $i = 0;
         foreach ($expected['fields'] as $fieldExpected) {

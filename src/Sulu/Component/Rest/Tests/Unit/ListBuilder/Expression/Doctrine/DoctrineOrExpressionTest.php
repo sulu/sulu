@@ -57,7 +57,7 @@ class DoctrineOrExpressionTest extends \PHPUnit_Framework_TestCase
         $andExpression = new DoctrineOrExpression([$whereExpression1, $whereExpression2]);
 
         $statement = $andExpression->getStatement($this->queryBuilder);
-        $result = preg_match(
+        $result = \preg_match(
             '/^SuluCoreBundle_Example\.name1 = :name1[\S]{' . $this->uniqueIdLength .
             '} OR SuluCoreBundle_Example\.name2 = :name2[\S]{' . $this->uniqueIdLength . '}/',
             $statement

@@ -141,7 +141,7 @@ class AnalyticsManager implements AnalyticsManagerInterface
      */
     private function getValue($data, $name, $default = null)
     {
-        if (!array_key_exists($name, $data)) {
+        if (!\array_key_exists($name, $data)) {
             return $default;
         }
 

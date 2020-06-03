@@ -44,7 +44,7 @@ trait MemoizeTwigExtensionTrait
             $result[] = new \Twig_SimpleFunction(
                 $name,
                 function() use ($callable, $name) {
-                    return $this->memoizeCache->memoizeById($name, func_get_args(), $callable, $this->lifeTime);
+                    return $this->memoizeCache->memoizeById($name, \func_get_args(), $callable, $this->lifeTime);
                 }
             );
         }

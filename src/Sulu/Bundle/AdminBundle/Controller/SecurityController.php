@@ -46,7 +46,7 @@ class SecurityController extends Controller
      */
     public function resetAction($token)
     {
-        return $this->render($this->getTemplate(), array_merge($this->getParameters(), ['token' => $token]));
+        return $this->render($this->getTemplate(), \array_merge($this->getParameters(), ['token' => $token]));
     }
 
     /**

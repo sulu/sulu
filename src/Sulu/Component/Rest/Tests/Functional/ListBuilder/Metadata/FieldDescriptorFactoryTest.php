@@ -98,7 +98,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             ['id', 'firstName', 'lastName', 'avatar', 'fullName', 'city'],
-            array_keys($fieldDescriptor)
+            \array_keys($fieldDescriptor)
         );
 
         $expected = [
@@ -137,7 +137,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
         $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
 
-        $this->assertEquals(['id', 'firstName', 'lastName'], array_keys($fieldDescriptor));
+        $this->assertEquals(['id', 'firstName', 'lastName'], \array_keys($fieldDescriptor));
 
         $expected = [
             'id' => ['name' => 'id', 'translation' => 'public.id', 'disabled' => true, 'type' => 'integer'],
@@ -157,7 +157,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
         $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
 
-        $this->assertEquals(['tags'], array_keys($fieldDescriptor));
+        $this->assertEquals(['tags'], \array_keys($fieldDescriptor));
 
         $expected = [
             'tags' => [
@@ -180,7 +180,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
         $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
 
-        $this->assertEquals(['tag'], array_keys($fieldDescriptor));
+        $this->assertEquals(['tag'], \array_keys($fieldDescriptor));
 
         $expected = [
             'tag' => [
@@ -208,7 +208,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
         $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
 
-        $this->assertEquals(['tags'], array_keys($fieldDescriptor));
+        $this->assertEquals(['tags'], \array_keys($fieldDescriptor));
 
         $expected = [
             'tags' => [
@@ -231,7 +231,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
         $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class, ['locale' => 'de']);
 
-        $this->assertEquals(['city'], array_keys($fieldDescriptor));
+        $this->assertEquals(['city'], \array_keys($fieldDescriptor));
 
         $expected = [
             'city' => [
@@ -267,7 +267,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
         $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
 
-        $this->assertEquals(['tags'], array_keys($fieldDescriptor));
+        $this->assertEquals(['tags'], \array_keys($fieldDescriptor));
 
         $expected = [
             'tags' => [
@@ -338,7 +338,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
 
     private function assertFieldDescriptor(array $expected, FieldDescriptorInterface $fieldDescriptor)
     {
-        $expected = array_merge(
+        $expected = \array_merge(
             [
                 'instance' => DoctrineFieldDescriptor::class,
                 'name' => null,
@@ -367,7 +367,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected['editable'], $fieldDescriptor->getEditable());
         $this->assertEquals($expected['class'], $fieldDescriptor->getClass());
 
-        if (array_key_exists('joins', $expected)) {
+        if (\array_key_exists('joins', $expected)) {
             foreach ($expected['joins'] as $name => $joinExpected) {
                 $this->assertJoin($joinExpected, $fieldDescriptor->getJoins()[$name]);
             }
@@ -376,7 +376,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
 
     private function assertJoin(array $expected, DoctrineJoinDescriptor $join)
     {
-        $expected = array_merge(
+        $expected = \array_merge(
             [
                 'entity-name' => null,
                 'field-name' => null,

@@ -29,13 +29,13 @@ class TeaserController extends RestController implements ClassResourceInterface
      */
     public function cgetAction(Request $request)
     {
-        $ids = array_map(
+        $ids = \array_map(
             function($item) {
-                $parts = explode(';', $item);
+                $parts = \explode(';', $item);
 
                 return ['type' => $parts[0], 'id' => $parts[1]];
             },
-            array_filter(explode(',', $request->get('ids', '')))
+            \array_filter(\explode(',', $request->get('ids', '')))
         );
 
         return $this->handleView(

@@ -32,7 +32,7 @@ class MissingParameterChoiceException extends RestException
      */
     public function __construct($controller, $names)
     {
-        parent::__construct(sprintf('Missing parameter "%s" in %s', implode('" or "', $names), $controller), 0);
+        parent::__construct(\sprintf('Missing parameter "%s" in %s', \implode('" or "', $names), $controller), 0);
 
         $this->controller = $controller;
         $this->names = $names;

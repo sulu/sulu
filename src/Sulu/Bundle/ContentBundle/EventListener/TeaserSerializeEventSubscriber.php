@@ -56,6 +56,6 @@ class TeaserSerializeEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $visitor->addData('teaserId', $context->accept(sprintf('%s;%s', $teaser->getType(), $teaser->getId())));
+        $visitor->addData('teaserId', $context->accept(\sprintf('%s;%s', $teaser->getType(), $teaser->getId())));
     }
 }

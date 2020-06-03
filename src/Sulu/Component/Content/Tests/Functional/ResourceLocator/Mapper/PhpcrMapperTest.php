@@ -392,35 +392,35 @@ class PhpcrMapperTest extends SuluTestCase
 
     public function testLoadHistoryByContentUuid()
     {
-        sleep(1);
+        \sleep(1);
 
         // create route for content
         $this->document1->setResourceSegment('/products/news/content1-news');
         $this->phpcrMapper->save($this->document1);
         $this->sessionManager->getSession()->save();
 
-        sleep(1);
+        \sleep(1);
 
         // move
         $this->document1->setResourceSegment('/products/asdf/content2-news');
         $this->phpcrMapper->save($this->document1);
         $this->sessionManager->getSession()->save();
 
-        sleep(1);
+        \sleep(1);
 
         // move
         $this->document1->setResourceSegment('/products/content2-news');
         $this->phpcrMapper->save($this->document1);
         $this->sessionManager->getSession()->save();
 
-        sleep(1);
+        \sleep(1);
 
         // move
         $this->document1->setResourceSegment('/content2-news');
         $this->phpcrMapper->save($this->document1);
         $this->sessionManager->getSession()->save();
 
-        sleep(1);
+        \sleep(1);
 
         // move
         $this->document1->setResourceSegment('/best-ur-ever');
@@ -429,7 +429,7 @@ class PhpcrMapperTest extends SuluTestCase
 
         $result = $this->phpcrMapper->loadHistoryByContentUuid($this->document1->getUuid(), 'sulu_io', 'de');
 
-        $this->assertEquals(5, count($result));
+        $this->assertEquals(5, \count($result));
         $this->assertEquals('/content2-news', $result[0]->getResourceLocator());
         $this->assertEquals('/products/content2-news', $result[1]->getResourceLocator());
         $this->assertEquals('/products/asdf/content2-news', $result[2]->getResourceLocator());

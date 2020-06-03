@@ -36,7 +36,7 @@ class SitemapProviderPoolTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->pool = new SitemapProviderPool(
-            array_map(
+            \array_map(
                 function($prophet) {
                     return $prophet->reveal();
                 },

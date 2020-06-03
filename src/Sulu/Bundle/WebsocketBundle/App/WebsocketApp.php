@@ -74,7 +74,7 @@ class WebsocketApp
         $address = '127.0.0.1',
         LoopInterface $loop = null
     ) {
-        if (3 !== strlen('✓')) {
+        if (3 !== \strlen('✓')) {
             throw new \DomainException(
                 'Bad encoding, length of unicode character ✓ should be 3. Ensure charset UTF-8 and check ini val mbstring.func_autoload'
             );
@@ -124,8 +124,8 @@ class WebsocketApp
             $httpHost = $this->httpHost;
         }
 
-        $allowedOrigins = array_values($allowedOrigins);
-        if (0 === count($allowedOrigins)) {
+        $allowedOrigins = \array_values($allowedOrigins);
+        if (0 === \count($allowedOrigins)) {
             $allowedOrigins[] = $httpHost;
         }
         if ('*' !== $allowedOrigins[0]) {

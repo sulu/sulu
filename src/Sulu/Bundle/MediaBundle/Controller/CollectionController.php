@@ -59,7 +59,7 @@ class CollectionController extends RestController implements ClassResourceInterf
      */
     public function getFieldsAction()
     {
-        $fieldDescriptors = array_values($this->getCollectionManager()->getFieldDescriptors());
+        $fieldDescriptors = \array_values($this->getCollectionManager()->getFieldDescriptors());
 
         return $this->handleView($this->view($fieldDescriptors, 200));
     }
@@ -94,7 +94,7 @@ class CollectionController extends RestController implements ClassResourceInterf
 
         try {
             $locale = $this->getRequestParameter($request, 'locale', true);
-            $depth = intval($request->get('depth', 0));
+            $depth = \intval($request->get('depth', 0));
             $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
             $collectionManager = $this->getCollectionManager();
 
@@ -282,7 +282,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                     return $this->moveEntity($id, $request);
                     break;
                 default:
-                    throw new RestException(sprintf('Unrecognized action: "%s"', $action));
+                    throw new RestException(\sprintf('Unrecognized action: "%s"', $action));
             }
         } catch (RestException $ex) {
             $view = $this->view($ex->toArray(), 400);
@@ -337,8 +337,8 @@ class CollectionController extends RestController implements ClassResourceInterf
         $systemCollectionManager = $this->get('sulu_media.system_collections.manager');
         $parent = $request->get('parent');
 
-        if ((null !== $id && $systemCollectionManager->isSystemCollection(intval($id))) ||
-            (null !== $parent && $systemCollectionManager->isSystemCollection(intval($parent)))
+        if ((null !== $id && $systemCollectionManager->isSystemCollection(\intval($id))) ||
+            (null !== $parent && $systemCollectionManager->isSystemCollection(\intval($parent)))
         ) {
             throw new AccessDeniedException('Permission "update" or "create" is not granted for system collections');
         }

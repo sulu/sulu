@@ -24,7 +24,7 @@ class RouteDefaultsProviderNotFoundException extends PreviewRendererException
     public function __construct($object, $id, $webspaceKey, $locale)
     {
         parent::__construct(
-            sprintf('RouteDefaultsProvider for "%s" not found.', get_class($object)),
+            \sprintf('RouteDefaultsProvider for "%s" not found.', \get_class($object)),
             self::BASE_CODE + 2,
             $object,
             $id,

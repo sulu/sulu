@@ -86,7 +86,7 @@ class DebugHandlerTest extends \PHPUnit_Framework_TestCase
 
         $this->handler->updateResponse($this->response->reveal(), $this->structure->reveal());
 
-        $this->assertEquals(implode(', ', $this->handlerNames), $this->parameterBag->get(DebugHandler::HEADER_HANDLERS));
+        $this->assertEquals(\implode(', ', $this->handlerNames), $this->parameterBag->get(DebugHandler::HEADER_HANDLERS));
         $this->assertEquals($this->proxyClientName, $this->parameterBag->get(DebugHandler::HEADER_CLIENT_NAME));
         $this->assertEquals('1234', $this->parameterBag->get(DebugHandler::HEADER_STRUCTURE_UUID));
     }

@@ -235,7 +235,7 @@ class PageLinkProviderTest extends \PHPUnit_Framework_TestCase
             $this->scheme
         )->will(
             function($arguments) {
-                return sprintf('/%s%s', $arguments[2], $arguments[0]);
+                return \sprintf('/%s%s', $arguments[2], $arguments[0]);
             }
         );
 

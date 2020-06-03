@@ -49,7 +49,7 @@ class DoctrineDescriptor
      */
     public function getSelect()
     {
-        return sprintf('%s.%s', $this->encodeAlias($this->entityName), $this->fieldName);
+        return \sprintf('%s.%s', $this->encodeAlias($this->entityName), $this->fieldName);
     }
 
     /**

@@ -80,9 +80,9 @@ abstract class ItemMetadata
      */
     public function __set($field, $value)
     {
-        throw new \InvalidArgumentException(sprintf(
+        throw new \InvalidArgumentException(\sprintf(
             'Property "%s" does not exist on "%s"',
-            $field, get_class($this)
+            $field, \get_class($this)
         ));
     }
 
@@ -96,9 +96,9 @@ abstract class ItemMetadata
     public function getChild($name)
     {
         if (!isset($this->children[$name])) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Unknown child "%s" in structure "%s" loaded from: "%s". Children: "%s"',
-                 $name, $this->name, $this->resource, implode('", "', array_keys($this->children))
+                 $name, $this->name, $this->resource, \implode('", "', \array_keys($this->children))
             ));
         }
 
@@ -126,7 +126,7 @@ abstract class ItemMetadata
     public function addChild(self $child)
     {
         if (isset($this->children[$child->name])) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Child with key "%s" already exists',
                 $child->name
             ));
@@ -159,7 +159,7 @@ abstract class ItemMetadata
             return $this->title[$locale];
         }
 
-        return ucfirst($this->name);
+        return \ucfirst($this->name);
     }
 
     /**
@@ -170,9 +170,9 @@ abstract class ItemMetadata
     public function getParameter($name)
     {
         if (!isset($this->parameters[$name])) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Unknown parameter "%s", known parameters: "%s"',
-                $name, implode('", "', array_keys($this->parameters))
+                $name, \implode('", "', \array_keys($this->parameters))
             ));
         }
 
@@ -216,7 +216,7 @@ abstract class ItemMetadata
             }
         }
 
-        throw new \InvalidArgumentException(sprintf(
+        throw new \InvalidArgumentException(\sprintf(
             'Unknown tag "%s"', $tagName
         ));
     }

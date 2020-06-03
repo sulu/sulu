@@ -44,7 +44,7 @@ class SettingsManager implements SettingsManagerInterface
 
         $value = $data;
         if (!($data instanceof NodeInterface)) {
-            $value = json_encode($data);
+            $value = \json_encode($data);
         }
 
         $this->sessionManager->setNodeProperty(
@@ -100,7 +100,7 @@ class SettingsManager implements SettingsManagerInterface
 
         $data = [];
         foreach ($properties as $property) {
-            $data[substr($property->getName(), 9)] = $this->decodeValue($property->getValue());
+            $data[\substr($property->getName(), 9)] = $this->decodeValue($property->getValue());
         }
 
         return $data;
@@ -114,7 +114,7 @@ class SettingsManager implements SettingsManagerInterface
 
         $data = [];
         foreach ($properties as $property) {
-            $data[substr($property->getName(), 9)] = $property->getString();
+            $data[\substr($property->getName(), 9)] = $property->getString();
         }
 
         return $data;
@@ -129,7 +129,7 @@ class SettingsManager implements SettingsManagerInterface
             return $value;
         }
 
-        return json_decode($value, true);
+        return \json_decode($value, true);
     }
 
     /**
@@ -141,6 +141,6 @@ class SettingsManager implements SettingsManagerInterface
      */
     private function getPropertyName($key)
     {
-        return sprintf('settings:%s', $key);
+        return \sprintf('settings:%s', $key);
     }
 }

@@ -249,7 +249,7 @@ class ContactMediaControllerTest extends SuluTestCase
             'color' => '#ffcc00',
         ];
 
-        $collection->setStyle(json_encode($style));
+        $collection->setStyle(\json_encode($style));
 
         // Create Collection Type
         $collectionType = new CollectionType();
@@ -286,13 +286,13 @@ class ContactMediaControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/contacts/' . $this->contact->getId() . '/medias?flat=true');
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
         $this->assertEquals($this->media2->getId(), $response->_embedded->media[0]->id);
         $this->assertObjectHasAttribute('thumbnails', $response->_embedded->media[0]);
         $this->assertObjectHasAttribute('sulu-100x100', $response->_embedded->media[0]->thumbnails);
-        $this->assertTrue(is_string($response->_embedded->media[0]->thumbnails->{'sulu-100x100'}));
+        $this->assertTrue(\is_string($response->_embedded->media[0]->thumbnails->{'sulu-100x100'}));
     }
 
     public function testContactMediaPost()
@@ -304,8 +304,8 @@ class ContactMediaControllerTest extends SuluTestCase
             '/api/contacts/' . $this->contact->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, count($response->medias));
+        $response = \json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, \count($response->medias));
 
         $client->request(
             'POST',
@@ -315,7 +315,7 @@ class ContactMediaControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertNotNull($response->id);
 
         $client->request(
@@ -323,8 +323,8 @@ class ContactMediaControllerTest extends SuluTestCase
             '/api/contacts/' . $this->contact->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(2, count($response->medias));
+        $response = \json_decode($client->getResponse()->getContent());
+        $this->assertEquals(2, \count($response->medias));
 
         $this->assertNotNull($response->medias[0]->id);
         $this->assertNotNull($response->medias[1]->id);
@@ -339,8 +339,8 @@ class ContactMediaControllerTest extends SuluTestCase
             '/api/contacts/' . $this->contact->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, count($response->medias));
+        $response = \json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, \count($response->medias));
 
         $client->request(
             'POST',
@@ -357,8 +357,8 @@ class ContactMediaControllerTest extends SuluTestCase
             '/api/contacts/' . $this->contact->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, count($response->medias));
+        $response = \json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, \count($response->medias));
     }
 
     public function testContactMediaDelete()
@@ -377,8 +377,8 @@ class ContactMediaControllerTest extends SuluTestCase
             '/api/contacts/' . $this->contact->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(0, count($response->medias));
+        $response = \json_decode($client->getResponse()->getContent());
+        $this->assertEquals(0, \count($response->medias));
     }
 
     public function testContactMediaDeleteNotExistingRelation()
@@ -396,7 +396,7 @@ class ContactMediaControllerTest extends SuluTestCase
             '/api/contacts/' . $this->contact->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, count($response->medias));
+        $response = \json_decode($client->getResponse()->getContent());
+        $this->assertEquals(1, \count($response->medias));
     }
 }

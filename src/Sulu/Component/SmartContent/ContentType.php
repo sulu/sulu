@@ -118,8 +118,8 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         $segmentKey
     ) {
         $data = $node->getPropertyValueWithDefault($property->getName(), '{}');
-        if (is_string($data)) {
-            $data = json_decode($data, true);
+        if (\is_string($data)) {
+            $data = \json_decode($data, true);
         }
 
         if (!empty($data['tags'])) {
@@ -145,7 +145,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         $this->resolveTags($value, 'tags');
         $this->resolveTags($value, 'websiteTags');
 
-        $node->setProperty($property->getName(), json_encode($value));
+        $node->setProperty($property->getName(), \json_encode($value));
     }
 
     public function remove(
@@ -205,7 +205,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
             $defaults['alias'] = $provider->getAlias();
         }
 
-        return array_merge(
+        return \array_merge(
             parent::getDefaultParams(),
             $defaults,
             $provider->getDefaultPropertyParameter()
@@ -220,13 +220,13 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
     public function getContentData(PropertyInterface $property)
     {
         // check memoize
-        $hash = spl_object_hash($property);
-        if (array_key_exists($hash, $this->cache)) {
+        $hash = \spl_object_hash($property);
+        if (\array_key_exists($hash, $this->cache)) {
             return $this->cache[$hash];
         }
 
         /** @var PropertyParameter[] $params */
-        $params = array_merge(
+        $params = \array_merge(
             $this->getDefaultParams($property),
             $property->getParams()
         );
@@ -236,10 +236,10 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         $filters['excluded'] = [$property->getStructure()->getUuid()];
 
         // default value of tags/category is an empty array
-        if (!array_key_exists('tags', $filters)) {
+        if (!\array_key_exists('tags', $filters)) {
             $filters['tags'] = [];
         }
-        if (!array_key_exists('categories', $filters)) {
+        if (!\array_key_exists('categories', $filters)) {
             $filters['categories'] = [];
         }
 
@@ -263,11 +263,11 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         // resolve website tags to id
         $this->resolveTags($filters, 'websiteTags');
 
-        foreach (array_merge($filters['tags'], $filters['websiteTags']) as $item) {
+        foreach (\array_merge($filters['tags'], $filters['websiteTags']) as $item) {
             $this->tagReferenceStore->add($item);
         }
 
-        foreach (array_merge($filters['categories'], $filters['websiteCategories']) as $item) {
+        foreach (\array_merge($filters['categories'], $filters['websiteCategories']) as $item) {
             $this->categoryReferenceStore->add($item);
         }
 
@@ -277,7 +277,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
 
         // prepare pagination, limitation and options
         $page = 1;
-        $limit = (array_key_exists('limitResult', $filters) && $configuration->hasLimit()) ?
+        $limit = (\array_key_exists('limitResult', $filters) && $configuration->hasLimit()) ?
             $filters['limitResult'] : null;
         $options = [
             'webspaceKey' => $property->getStructure()->getWebspaceKey(),
@@ -287,19 +287,19 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         if (isset($params['max_per_page']) && $configuration->hasPagination()) {
             // is paginated
             $page = $this->getCurrentPage($params['page_parameter']->getValue());
-            $pageSize = intval($params['max_per_page']->getValue());
+            $pageSize = \intval($params['max_per_page']->getValue());
 
             // resolve paginated filters
             $data = $provider->resolveResourceItems(
                 $filters,
                 $params,
                 $options,
-                (!empty($limit) ? intval($limit) : null),
+                (!empty($limit) ? \intval($limit) : null),
                 $page,
                 $pageSize
             );
 
-            if ($page > 1 && 0 === count($data->getItems())) {
+            if ($page > 1 && 0 === \count($data->getItems())) {
                 throw new PageOutOfBoundsException($page);
             }
         } else {
@@ -307,7 +307,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
                 $filters,
                 $params,
                 $options,
-                (!empty($limit) ? intval($limit) : null)
+                (!empty($limit) ? \intval($limit) : null)
             );
         }
 
@@ -324,7 +324,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
     public function getViewData(PropertyInterface $property)
     {
         /** @var PropertyParameter[] $params */
-        $params = array_merge(
+        $params = \array_merge(
             $this->getDefaultParams($property),
             $property->getParams()
         );
@@ -332,7 +332,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         $this->getContentData($property);
         $config = $property->getValue();
 
-        $config = array_merge(
+        $config = \array_merge(
             [
                 'dataSource' => null,
                 'includeSubFolders' => null,
@@ -366,7 +366,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
 
         // default fallback to content
         $providerAlias = 'content';
-        if (array_key_exists('provider', $params)) {
+        if (\array_key_exists('provider', $params)) {
             $providerAlias = $params['provider']->getValue();
         }
 
@@ -389,7 +389,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         }
 
         $page = $this->requestStack->getCurrentRequest()->get($pageParameter, 1);
-        if ($page < 1 || $page > PHP_INT_MAX) {
+        if ($page < 1 || $page > \PHP_INT_MAX) {
             throw new PageOutOfBoundsException($page);
         }
 
@@ -398,12 +398,12 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
 
     public function exportData($propertyValue)
     {
-        if (is_string($propertyValue)) {
+        if (\is_string($propertyValue)) {
             return $propertyValue;
         }
 
-        if (is_array($propertyValue)) {
-            return json_encode($propertyValue);
+        if (\is_array($propertyValue)) {
+            return \json_encode($propertyValue);
         }
 
         return '';
@@ -418,7 +418,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         $languageCode,
         $segmentKey = null
     ) {
-        $property->setValue(json_decode($value, true));
+        $property->setValue(\json_decode($value, true));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 
@@ -432,7 +432,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
             $ids = [];
             $names = [];
             foreach ($value[$key] as $tag) {
-                if (is_numeric($tag)) {
+                if (\is_numeric($tag)) {
                     $ids[] = $tag;
                 } else {
                     $names[] = $tag;

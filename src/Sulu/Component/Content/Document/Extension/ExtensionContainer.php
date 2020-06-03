@@ -67,22 +67,22 @@ class ExtensionContainer implements \ArrayAccess, \Iterator
 
     public function current()
     {
-        return current($this->data);
+        return \current($this->data);
     }
 
     public function key()
     {
-        return key($this->data);
+        return \key($this->data);
     }
 
     public function next()
     {
-        return next($this->data);
+        return \next($this->data);
     }
 
     public function rewind()
     {
-        return reset($this->data);
+        return \reset($this->data);
     }
 
     public function valid()

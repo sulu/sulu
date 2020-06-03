@@ -35,9 +35,9 @@ class CacheLifetimeResolver implements CacheLifetimeResolverInterface
 
     public function resolve($type, $value)
     {
-        $cacheLifetimeKey = sprintf('%s:%s', $type, $value);
+        $cacheLifetimeKey = \sprintf('%s:%s', $type, $value);
 
-        if (!array_key_exists($cacheLifetimeKey, $this->cacheLifetimes)) {
+        if (!\array_key_exists($cacheLifetimeKey, $this->cacheLifetimes)) {
             switch ($type) {
                 case self::TYPE_EXPRESSION:
                     $this->cacheLifetimes[$cacheLifetimeKey] = $this->getCacheLifetimeForExpression($value);
@@ -55,7 +55,7 @@ class CacheLifetimeResolver implements CacheLifetimeResolverInterface
 
     public function supports($type, $value)
     {
-        if (!in_array($type, self::$types)) {
+        if (!\in_array($type, self::$types)) {
             return false;
         }
 
@@ -63,7 +63,7 @@ class CacheLifetimeResolver implements CacheLifetimeResolverInterface
             return CronExpression::isValidExpression($value);
         }
 
-        return is_numeric($value);
+        return \is_numeric($value);
     }
 
     /**

@@ -66,7 +66,7 @@ class SecuredEntitySubscriber implements EventSubscriberInterface
         $event->getVisitor()->addData(
             '_permissions',
             $this->accessControlManager->getUserPermissions(
-                new SecurityCondition($object->getSecurityContext(), null, get_class($object), $object->getId()),
+                new SecurityCondition($object->getSecurityContext(), null, \get_class($object), $object->getId()),
                 $this->tokenStorage->getToken()->getUser()
             )
         );

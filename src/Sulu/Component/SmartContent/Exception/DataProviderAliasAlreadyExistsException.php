@@ -21,6 +21,6 @@ class DataProviderAliasAlreadyExistsException extends DataProviderException
      */
     public function __construct($alias)
     {
-        parent::__construct($alias, sprintf('DataProvider with alias "%s" already exists.', $alias));
+        parent::__construct($alias, \sprintf('DataProvider with alias "%s" already exists.', $alias));
     }
 }

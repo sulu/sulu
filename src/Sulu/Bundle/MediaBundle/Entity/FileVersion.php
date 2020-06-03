@@ -289,7 +289,7 @@ class FileVersion implements AuditableInterface
      */
     public function getExtension()
     {
-        $pathInfo = pathinfo($this->getName());
+        $pathInfo = \pathinfo($this->getName());
         $extension = ExtensionGuesser::getInstance()->guess($this->getMimeType());
         if ($extension) {
             return $extension;
@@ -759,7 +759,7 @@ class FileVersion implements AuditableInterface
      */
     public function getProperties()
     {
-        return json_decode($this->properties, true);
+        return \json_decode($this->properties, true);
     }
 
     /**
@@ -767,7 +767,7 @@ class FileVersion implements AuditableInterface
      */
     public function setProperties(array $properties)
     {
-        $this->properties = json_encode($properties);
+        $this->properties = \json_encode($properties);
 
         return $this;
     }

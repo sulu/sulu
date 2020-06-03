@@ -70,7 +70,7 @@ class ContentContext extends BaseStructureContext implements SnippetAcceptingCon
 </template>
 EOT;
 
-        $template = sprintf(
+        $template = \sprintf(
             $template,
             $arg1,
             $arg1,
@@ -111,7 +111,7 @@ EOT;
             . $document->getUuid() . '/content'
         );
         $this->getSession()->wait(5000, '$("#content-form").length');
-        sleep(1); // wait one more second to avoid flaky tests
+        \sleep(1); // wait one more second to avoid flaky tests
     }
 
     /**

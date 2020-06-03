@@ -25,13 +25,13 @@ class TreeLeafEditStrategy extends ResourceLocatorStrategy implements ResourceLo
 {
     public function getChildPart($resourceSegment)
     {
-        $divider = strrpos($resourceSegment, '/');
+        $divider = \strrpos($resourceSegment, '/');
 
         if (false === $divider) {
             return $resourceSegment;
         }
 
-        return substr($resourceSegment, $divider + 1);
+        return \substr($resourceSegment, $divider + 1);
     }
 
     public function getInputType()

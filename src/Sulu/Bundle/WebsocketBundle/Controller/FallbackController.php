@@ -41,7 +41,7 @@ class FallbackController
      */
     public function send($appName, Request $request)
     {
-        $sessionName = ini_get('session.name');
+        $sessionName = \ini_get('session.name');
 
         $message = $request->get('message');
         $id = $request->cookies->get($sessionName);
@@ -53,8 +53,8 @@ class FallbackController
 
         // clean output buffer if there is data in it
         // happens if a twig error occurs
-        if (ob_get_length() > 0) {
-            ob_clean();
+        if (\ob_get_length() > 0) {
+            \ob_clean();
         }
 
         return new Response($connection->getData(), 200, ['Content-Type' => 'application/json']);

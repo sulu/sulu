@@ -176,7 +176,7 @@ class SearchControllerTest extends SuluTestCase
 
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
-        $result = json_decode($response->getContent(), true);
+        $result = \json_decode($response->getContent(), true);
         unset($result['_links']);
 
         $this->assertArrayHasKey('time', $result);
@@ -191,7 +191,7 @@ class SearchControllerTest extends SuluTestCase
 
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
-        $result = json_decode($response->getContent(), true);
+        $result = \json_decode($response->getContent(), true);
 
         $this->assertEquals('product', $result[0]['indexName']);
         $this->assertEquals([], $result[0]['contexts']);

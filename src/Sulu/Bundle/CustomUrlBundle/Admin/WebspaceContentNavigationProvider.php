@@ -55,7 +55,7 @@ class WebspaceContentNavigationProvider implements ContentNavigationProviderInte
         $webspace = $this->webspaceManager->findWebspaceByKey($options['webspace']);
         $customUrls = $webspace->getPortals()[0]->getEnvironment($this->environment)->getCustomUrls();
 
-        if (count($customUrls)
+        if (\count($customUrls)
             && $this->securityChecker->hasPermission(
                 CustomUrlAdmin::getCustomUrlSecurityContext($options['webspace']),
                 PermissionTypes::VIEW

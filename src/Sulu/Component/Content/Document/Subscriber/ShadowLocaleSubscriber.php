@@ -229,22 +229,22 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
     private function validateShadow(ShadowLocaleBehavior $document)
     {
         if ($document->getLocale() === $document->getShadowLocale()) {
-            throw new \RuntimeException(sprintf(
+            throw new \RuntimeException(\sprintf(
                 'Document cannot be a shadow of itself for locale "%s"',
                 $document->getLocale()
             ));
         }
 
         $locales = $this->inspector->getConcreteLocales($document);
-        if (!in_array($document->getShadowLocale(), $locales)) {
+        if (!\in_array($document->getShadowLocale(), $locales)) {
             $this->inspector->getNode($document)->revert();
 
-            throw new \RuntimeException(sprintf(
+            throw new \RuntimeException(\sprintf(
                 'Attempting to create shadow for "%s" on a non-concrete locale "%s" for document at "%s". Concrete languages are "%s"',
                 $document->getLocale(),
                 $document->getShadowLocale(),
                 $this->inspector->getPath($document),
-                implode('", "', $locales)
+                \implode('", "', $locales)
             ));
         }
     }

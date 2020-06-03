@@ -39,7 +39,7 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
     public function __construct(array $providers)
     {
         $this->providers = $providers;
-        $this->aliases = array_keys($providers);
+        $this->aliases = \array_keys($providers);
     }
 
     public function getProvider($alias)
@@ -58,7 +58,7 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
 
     public function hasProvider($alias)
     {
-        return array_key_exists($alias, $this->providers);
+        return \array_key_exists($alias, $this->providers);
     }
 
     public function getIndex()

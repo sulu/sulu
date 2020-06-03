@@ -67,7 +67,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $this->assertEquals('Massive Art', $webspaces[0]->getName());
         $this->assertEquals('Sulu CMF', $webspaces[1]->getName());
 
-        $this->assertEquals(2, count($webspaces[0]->getNavigation()->getContexts()));
+        $this->assertEquals(2, \count($webspaces[0]->getNavigation()->getContexts()));
 
         $this->assertEquals('main', $webspaces[0]->getNavigation()->getContexts()[0]->getKey());
         $this->assertEquals('Hauptnavigation', $webspaces[0]->getNavigation()->getContexts()[0]->getTitle('de'));
@@ -91,8 +91,8 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
         $this->assertCount(12, $prodPortalInformations);
 
-        $prodPortalInformationKeys = array_keys($prodPortalInformations);
-        $prodPortalInformationValues = array_values($prodPortalInformations);
+        $prodPortalInformationKeys = \array_keys($prodPortalInformations);
+        $prodPortalInformationValues = \array_values($prodPortalInformations);
 
         // the values before have the same size, therefore the order cannot be determined
         $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $prodPortalInformationValues[0]->getType());
@@ -112,7 +112,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
         $devPortalInformationValues = [];
         foreach ($devPortalInformations as $portalInformation) {
-            $devPortalInformationValues[$portalInformation->getUrl()] = array_filter([
+            $devPortalInformationValues[$portalInformation->getUrl()] = \array_filter([
                 'type' => $portalInformation->getType(),
                 'redirect' => $portalInformation->getRedirect(),
                 'locale' => $portalInformation->getLocale(),
@@ -267,7 +267,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
             'austria.sulu.io',
             'usa.sulu.io/en',
             'usa.sulu.io',
-        ], array_keys($portalInformations));
+        ], \array_keys($portalInformations));
 
         $this->assertSame($portalInformations['austria.sulu.io/de']->getPriority(), 10);
         $this->assertSame($portalInformations['austria.sulu.io']->getPriority(), 9);

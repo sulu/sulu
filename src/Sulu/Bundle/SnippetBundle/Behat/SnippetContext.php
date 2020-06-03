@@ -50,7 +50,7 @@ class SnippetContext extends BaseStructureContext implements SnippetAcceptingCon
 </template>
 EOT;
 
-        $template = sprintf($template,
+        $template = \sprintf($template,
             $name, $string->getRaw()
         );
 

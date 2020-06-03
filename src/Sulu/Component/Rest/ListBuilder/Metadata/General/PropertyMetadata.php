@@ -82,7 +82,7 @@ class PropertyMetadata extends BasePropertyMetadata
         $this->name = $name;
 
         // default for translation can be overwritten by setter
-        $this->translation = ucfirst($name);
+        $this->translation = \ucfirst($name);
     }
 
     /**
@@ -259,7 +259,7 @@ class PropertyMetadata extends BasePropertyMetadata
 
     public function serialize()
     {
-        return serialize(
+        return \serialize(
             [
                 $this->class,
                 $this->name,
@@ -291,6 +291,6 @@ class PropertyMetadata extends BasePropertyMetadata
             $this->editable,
             $this->cssClass,
             $this->filterType,
-            $this->filterTypeParameters) = unserialize($str);
+            $this->filterTypeParameters) = \unserialize($str);
     }
 }

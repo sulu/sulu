@@ -49,7 +49,7 @@ class PagesSitemapProvider implements SitemapProviderInterface
 
         $pages = [];
         foreach ($portal->getLocalizations() as $localization) {
-            $pages = array_merge(
+            $pages = \array_merge(
                 $this->contentRepository->findAllByPortal(
                     $localization->getLocale(),
                     $portalKey,
@@ -73,7 +73,7 @@ class PagesSitemapProvider implements SitemapProviderInterface
             }
 
             $changed = $contentPage['changed'];
-            if (is_string($changed)) {
+            if (\is_string($changed)) {
                 $changed = new \DateTime($changed);
             }
 

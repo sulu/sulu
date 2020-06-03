@@ -32,7 +32,7 @@ class WebspaceUrlChainProvider implements WebspaceUrlProviderInterface
     {
         $urls = [];
         foreach ($this->chain as $provider) {
-            $urls = array_merge($urls, $provider->getUrls($webspace, $environment));
+            $urls = \array_merge($urls, $provider->getUrls($webspace, $environment));
         }
 
         return $urls;

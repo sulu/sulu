@@ -24,7 +24,7 @@ class VirtualPropertyMetadata extends PropertyMetadata
 
     public function serialize()
     {
-        return serialize(
+        return \serialize(
             [
                 $this->class,
                 $this->name,
@@ -37,6 +37,6 @@ class VirtualPropertyMetadata extends PropertyMetadata
     {
         list($this->class,
             $this->name,
-            $this->metadata) = unserialize($str);
+            $this->metadata) = \unserialize($str);
     }
 }

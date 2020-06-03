@@ -145,11 +145,11 @@ class ListRestHelper
      */
     public function getTotalPages($totalNumber = null)
     {
-        if (is_null($totalNumber)) {
+        if (\is_null($totalNumber)) {
             $totalNumber = $this->$totalNumberOfElements;
         }
 
-        return $this->getLimit() ? (ceil($totalNumber / $this->getLimit())) : 1;
+        return $this->getLimit() ? (\ceil($totalNumber / $this->getLimit())) : 1;
     }
 
     /**
@@ -174,7 +174,7 @@ class ListRestHelper
     {
         $fields = $this->getRequest()->get('fields');
 
-        return (null != $fields) ? explode(',', $fields) : null;
+        return (null != $fields) ? \explode(',', $fields) : null;
     }
 
     /**
@@ -194,7 +194,7 @@ class ListRestHelper
     {
         $searchFields = $this->getRequest()->get('searchFields');
 
-        return (null != $searchFields) ? explode(',', $searchFields) : [];
+        return (null != $searchFields) ? \explode(',', $searchFields) : [];
     }
 
     /**

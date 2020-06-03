@@ -37,7 +37,7 @@ class ProxySubscriber implements EventSubscriberInterface
         $object = $event->getObject();
 
         if ($object instanceof LazyLoadingInterface) {
-            $event->setType(ClassNameInflector::getUserClassName(get_class($object)));
+            $event->setType(ClassNameInflector::getUserClassName(\get_class($object)));
         }
     }
 }

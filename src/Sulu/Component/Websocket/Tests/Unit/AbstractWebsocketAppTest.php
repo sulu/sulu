@@ -25,7 +25,7 @@ class AbstractWebsocketAppTest extends \PHPUnit_Framework_TestCase
 
         $connection = $this->prophesize('Ratchet\ConnectionInterface');
         $connectionInstance = $connection->reveal();
-        $connectionInstance->resourceId = uniqid();
+        $connectionInstance->resourceId = \uniqid();
 
         $app->OnOpen($connectionInstance);
 
@@ -43,7 +43,7 @@ class AbstractWebsocketAppTest extends \PHPUnit_Framework_TestCase
 
         $connection = $this->prophesize('Ratchet\ConnectionInterface');
         $connectionInstance = $connection->reveal();
-        $connectionInstance->resourceId = uniqid();
+        $connectionInstance->resourceId = \uniqid();
 
         $clients = new \SplObjectStorage();
         $clients->attach($connectionInstance);

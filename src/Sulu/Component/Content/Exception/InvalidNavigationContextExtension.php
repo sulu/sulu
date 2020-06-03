@@ -30,10 +30,10 @@ class InvalidNavigationContextExtension extends \Exception
     public function __construct($selectedNavContexts, $navContexts)
     {
         parent::__construct(
-            sprintf(
+            \sprintf(
                 'Navigation Context "%s" not found in [%s]',
-                implode(',', $selectedNavContexts),
-                implode(',', $navContexts)
+                \implode(',', $selectedNavContexts),
+                \implode(',', $navContexts)
             )
         );
         $this->selectedNavContexts = $selectedNavContexts;

@@ -25,7 +25,7 @@ class WebspaceLocalizationNotFoundException extends PreviewRendererException
     public function __construct($object, $id, $webspaceKey, $locale)
     {
         parent::__construct(
-            sprintf('Localization "%s" in webspace "%s" not found', $locale, $webspaceKey),
+            \sprintf('Localization "%s" in webspace "%s" not found', $locale, $webspaceKey),
             self::BASE_CODE + 7,
             $object,
             $id,

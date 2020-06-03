@@ -41,8 +41,8 @@ class AddWebsocketAppPass implements CompilerPassInterface
 
             foreach ($tags as $attributes) {
                 $route = $attributes['route'];
-                $httpHost = array_key_exists('httpHost', $attributes) ? $attributes['httpHost'] : null;
-                $allowedOrigins = array_key_exists(
+                $httpHost = \array_key_exists('httpHost', $attributes) ? $attributes['httpHost'] : null;
+                $allowedOrigins = \array_key_exists(
                     'allowedOrigins',
                     $attributes
                 ) ? $attributes['allowedOrigins'] : ['*'];

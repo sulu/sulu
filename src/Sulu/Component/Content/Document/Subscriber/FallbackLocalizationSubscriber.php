@@ -100,7 +100,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
     {
         $availableLocales = $this->inspector->getLocales($document);
 
-        if (in_array($locale, $availableLocales)) {
+        if (\in_array($locale, $availableLocales)) {
             return $locale;
         }
 
@@ -115,7 +115,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         }
 
         if (!$fallbackLocale) {
-            $fallbackLocale = reset($availableLocales);
+            $fallbackLocale = \reset($availableLocales);
         }
 
         if (!$fallbackLocale) {

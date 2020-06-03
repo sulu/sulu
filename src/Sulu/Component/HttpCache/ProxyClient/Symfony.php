@@ -68,14 +68,14 @@ class Symfony implements ProxyClientInterface, PurgeInterface
     public function flush()
     {
         $queue = $this->queue;
-        if (0 === count($queue)) {
+        if (0 === \count($queue)) {
             return 0;
         }
 
         $this->queue = [];
         $this->sendRequests($queue);
 
-        return count($queue);
+        return \count($queue);
     }
 
     /**
@@ -177,24 +177,24 @@ class Symfony implements ProxyClientInterface, PurgeInterface
     {
         // parse_url doesn’t work properly when no scheme is supplied, so
         // prefix URL with HTTP scheme if necessary.
-        if (false === strpos($url, '://')) {
-            $url = sprintf('%s://%s', $this->getDefaultScheme(), $url);
+        if (false === \strpos($url, '://')) {
+            $url = \sprintf('%s://%s', $this->getDefaultScheme(), $url);
         }
 
-        if (!$parts = parse_url($url)) {
+        if (!$parts = \parse_url($url)) {
             throw InvalidUrlException::invalidUrl($url);
         }
         if (empty($parts['scheme'])) {
             throw InvalidUrlException::invalidUrl($url, 'empty scheme');
         }
 
-        if (!in_array(strtolower($parts['scheme']), $this->getAllowedSchemes())) {
+        if (!\in_array(\strtolower($parts['scheme']), $this->getAllowedSchemes())) {
             throw InvalidUrlException::invalidUrlScheme($url, $parts['scheme'], $this->getAllowedSchemes());
         }
 
-        if (count($allowedParts) > 0) {
-            $diff = array_diff(array_keys($parts), $allowedParts);
-            if (count($diff) > 0) {
+        if (\count($allowedParts) > 0) {
+            $diff = \array_diff(\array_keys($parts), $allowedParts);
+            if (\count($diff) > 0) {
                 throw InvalidUrlException::invalidUrlParts($url, $allowedParts);
             }
         }

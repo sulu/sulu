@@ -52,12 +52,12 @@ class PropertyValue implements \ArrayAccess
 
     public function offsetExists($offset)
     {
-        return is_array($this->value) && isset($this->value[$offset]);
+        return \is_array($this->value) && isset($this->value[$offset]);
     }
 
     public function offsetGet($offset)
     {
-        if (!is_array($this->value)) {
+        if (!\is_array($this->value)) {
             return;
         }
 
@@ -66,7 +66,7 @@ class PropertyValue implements \ArrayAccess
 
     public function offsetSet($offset, $value)
     {
-        if (!is_array($this->value)) {
+        if (!\is_array($this->value)) {
             return;
         }
 
@@ -75,7 +75,7 @@ class PropertyValue implements \ArrayAccess
 
     public function offsetUnset($offset)
     {
-        if (!is_array($this->value)) {
+        if (!\is_array($this->value)) {
             return;
         }
 

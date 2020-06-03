@@ -30,8 +30,8 @@ trait DataProviderRepositoryTrait
             ->orderBy($alias . '.id', 'ASC');
         $this->appendJoins($queryBuilder, $alias, $locale);
 
-        if (array_key_exists('sortBy', $filters) && is_array($filters['sortBy'])) {
-            $sortMethod = array_key_exists('sortMethod', $filters) ? $filters['sortMethod'] : 'asc';
+        if (\array_key_exists('sortBy', $filters) && \is_array($filters['sortBy'])) {
+            $sortMethod = \array_key_exists('sortMethod', $filters) ? $filters['sortMethod'] : 'asc';
             $this->appendSortBy($filters['sortBy'], $sortMethod, $queryBuilder, $alias, $locale);
         }
 
@@ -66,8 +66,8 @@ trait DataProviderRepositoryTrait
         $tagRelation = $this->appendTagsRelation($queryBuilder, 'c');
         $categoryRelation = $this->appendCategoriesRelation($queryBuilder, 'c');
 
-        if (array_key_exists('sortBy', $filters) && is_array($filters['sortBy'])) {
-            $sortMethod = array_key_exists('sortMethod', $filters) ? $filters['sortMethod'] : 'asc';
+        if (\array_key_exists('sortBy', $filters) && \is_array($filters['sortBy'])) {
+            $sortMethod = \array_key_exists('sortMethod', $filters) ? $filters['sortMethod'] : 'asc';
             $this->appendSortBy($filters['sortBy'], $sortMethod, $queryBuilder, 'c', $locale);
 
             foreach ($filters['sortBy'] as $sortColumn) {
@@ -75,36 +75,36 @@ trait DataProviderRepositoryTrait
             }
         }
 
-        $parameter = array_merge($parameter, $this->append($queryBuilder, 'c', $locale, $options));
+        $parameter = \array_merge($parameter, $this->append($queryBuilder, 'c', $locale, $options));
         if (isset($filters['dataSource'])) {
             $includeSubFolders = $this->getBoolean($filters['includeSubFolders'] ?: false);
-            $parameter = array_merge(
+            $parameter = \array_merge(
                 $parameter,
                 $this->appendDatasource($filters['dataSource'], $includeSubFolders, $queryBuilder, 'c')
             );
         }
 
         if (isset($filters['tags']) && !empty($filters['tags'])) {
-            $parameter = array_merge(
+            $parameter = \array_merge(
                 $parameter,
                 $this->appendRelation(
                     $queryBuilder,
                     $tagRelation,
                     $filters['tags'],
-                    strtolower($filters['tagOperator']),
+                    \strtolower($filters['tagOperator']),
                     'adminTags'
                 )
             );
         }
 
         if (isset($filters['categories']) && !empty($filters['categories'])) {
-            $parameter = array_merge(
+            $parameter = \array_merge(
                 $parameter,
                 $this->appendRelation(
                     $queryBuilder,
                     $categoryRelation,
                     $filters['categories'],
-                    strtolower($filters['categoryOperator']),
+                    \strtolower($filters['categoryOperator']),
                     'adminCategories'
                 )
             );
@@ -112,7 +112,7 @@ trait DataProviderRepositoryTrait
 
         if (isset($filters['targetGroupId']) && $filters['targetGroupId']) {
             $targetGroupRelation = $this->appendTargetGroupRelation($queryBuilder, 'c');
-            $parameter = array_merge(
+            $parameter = \array_merge(
                 $parameter,
                 $this->appendRelation(
                     $queryBuilder,
@@ -125,26 +125,26 @@ trait DataProviderRepositoryTrait
         }
 
         if (isset($filters['websiteTags']) && !empty($filters['websiteTags'])) {
-            $parameter = array_merge(
+            $parameter = \array_merge(
                 $parameter,
                 $this->appendRelation(
                     $queryBuilder,
                     $tagRelation,
                     $filters['websiteTags'],
-                    strtolower($filters['websiteTagsOperator']),
+                    \strtolower($filters['websiteTagsOperator']),
                     'websiteTags'
                 )
             );
         }
 
         if (isset($filters['websiteCategories']) && !empty($filters['websiteCategories'])) {
-            $parameter = array_merge(
+            $parameter = \array_merge(
                 $parameter,
                 $this->appendRelation(
                     $queryBuilder,
                     $categoryRelation,
                     $filters['websiteCategories'],
-                    strtolower($filters['websiteCategoriesOperator']),
+                    \strtolower($filters['websiteCategoriesOperator']),
                     'websiteCategories'
                 )
             );
@@ -173,7 +173,7 @@ trait DataProviderRepositoryTrait
             $query->setMaxResults($limit);
         }
 
-        return array_map(
+        return \array_map(
             function($item) {
                 return $item['id'];
             },
@@ -250,7 +250,7 @@ trait DataProviderRepositoryTrait
         $parameter = [];
         $expr = $queryBuilder->expr()->andX();
 
-        $length = count($values);
+        $length = \count($values);
         for ($i = 0; $i < $length; ++$i) {
             $queryBuilder->leftJoin($relation, $alias . $i);
 
@@ -358,7 +358,7 @@ trait DataProviderRepositoryTrait
     protected function appendSortBy($sortBy, $sortMethod, QueryBuilder $queryBuilder, $alias, $locale)
     {
         foreach ($sortBy as $column) {
-            if (!in_array(explode('.', $column)[0], $queryBuilder->getAllAliases())) {
+            if (!\in_array(\explode('.', $column)[0], $queryBuilder->getAllAliases())) {
                 $this->appendSortByJoins($queryBuilder, $alias, $locale);
             }
 

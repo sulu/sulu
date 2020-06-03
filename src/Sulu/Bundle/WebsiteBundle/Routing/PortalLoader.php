@@ -29,7 +29,7 @@ class PortalLoader extends Loader
         /** @var Route[] $importedRoutes */
         $importedRoutes = $this->import($resource, null);
 
-        $condition = sprintf(
+        $condition = \sprintf(
             'request.get("_sulu").getAttribute("portalInformation") !== null && request.get("_sulu").getAttribute("portalInformation").getType() === %s',
             RequestAnalyzerInterface::MATCH_TYPE_FULL
         );
@@ -42,7 +42,7 @@ class PortalLoader extends Loader
                 new PortalRoute(
                     '{prefix}' . $importedRoute->getPath(),
                     $importedRoute->getDefaults(),
-                    array_merge(['prefix' => '.*', 'host' => '.+'], $importedRoute->getRequirements()),
+                    \array_merge(['prefix' => '.*', 'host' => '.+'], $importedRoute->getRequirements()),
                     $importedRoute->getOptions(),
                     (!empty($importedRoute->getHost()) ? $importedRoute->getHost() : '{host}'),
                     $importedRoute->getSchemes(),

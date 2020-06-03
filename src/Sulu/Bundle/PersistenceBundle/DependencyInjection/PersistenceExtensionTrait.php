@@ -30,7 +30,7 @@ trait PersistenceExtensionTrait
         $configObjects = ['sulu' => $objects];
 
         if ($container->hasParameter('sulu.persistence.objects')) {
-            $configObjects = array_merge_recursive(
+            $configObjects = \array_merge_recursive(
                 $configObjects,
                 $container->getParameter('sulu.persistence.objects')
             );
@@ -45,7 +45,7 @@ trait PersistenceExtensionTrait
     private function defineRepositories(array $objects, ContainerBuilder $container)
     {
         foreach ($objects as $object => $services) {
-            if (array_key_exists('model', $services)) {
+            if (\array_key_exists('model', $services)) {
                 $repositoryDefinition = $this->getRepositoryDefinition($object, $services, $container);
 
                 $container->setDefinition(
@@ -112,7 +112,7 @@ trait PersistenceExtensionTrait
         foreach ($objects as $object => $services) {
             foreach ($services as $service => $class) {
                 $container->setParameter(
-                    sprintf(
+                    \sprintf(
                         'sulu.%s.%s.class',
                         $service,
                         $object
@@ -134,7 +134,7 @@ trait PersistenceExtensionTrait
      */
     private function getContainerKey($key, $object, $suffix = null)
     {
-        return sprintf('sulu.%s.%s%s', $key, $object, $suffix);
+        return \sprintf('sulu.%s.%s%s', $key, $object, $suffix);
     }
 
     /**

@@ -85,7 +85,7 @@ class CustomUrlRouteProvider implements RouteProviderInterface
         }
 
         $collection->add(
-            uniqid('custom_url_route_', true),
+            \uniqid('custom_url_route_', true),
             new Route(
                 $this->decodePathInfo($request->getPathInfo()),
                 [
@@ -127,10 +127,10 @@ class CustomUrlRouteProvider implements RouteProviderInterface
             $this->getRoutesPath($webspaceKey)
         );
 
-        $url = sprintf('%s://%s', $request->getScheme(), $resourceSegment);
+        $url = \sprintf('%s://%s', $request->getScheme(), $resourceSegment);
 
         $collection->add(
-            uniqid('custom_url_route_', true),
+            \uniqid('custom_url_route_', true),
             new Route(
                 $this->decodePathInfo($request->getPathInfo()),
                 [
@@ -166,6 +166,6 @@ class CustomUrlRouteProvider implements RouteProviderInterface
      */
     private function decodePathInfo($pathInfo)
     {
-        return rawurldecode($pathInfo);
+        return \rawurldecode($pathInfo);
     }
 }

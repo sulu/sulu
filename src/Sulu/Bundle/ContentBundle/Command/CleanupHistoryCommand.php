@@ -81,8 +81,8 @@ EOT
         $dryRun = $input->getOption('dry-run');
 
         $path = $this->sessionManager->getRoutePath($webspaceKey, $locale);
-        $relativePath = (null !== $basePath ? '/' . ltrim($basePath, '/') : '/');
-        $fullPath = rtrim($path . $relativePath, '/');
+        $relativePath = (null !== $basePath ? '/' . \ltrim($basePath, '/') : '/');
+        $fullPath = \rtrim($path . $relativePath, '/');
 
         $this->cleanSession($output, $this->defaultSession, $fullPath, $dryRun);
         $this->cleanSession($output, $this->liveSession, $fullPath, $dryRun);
@@ -99,11 +99,11 @@ EOT
     private function cleanSession(OutputInterface $output, SessionInterface $session, $path, $dryRun)
     {
         $sessionName = $session->getWorkspace()->getName();
-        $output->writeln(sprintf('<info>Session</info> %s', $sessionName));
+        $output->writeln(\sprintf('<info>Session</info> %s', $sessionName));
 
         if (!$session->nodeExists($path)) {
             $output->write(
-                sprintf(
+                \sprintf(
                     '<error>Resource-Locator "%s" not found in session "%s"</error>',
                     $path,
                     $sessionName
@@ -132,7 +132,7 @@ EOT
             $this->cleanup($output, $childNode, $rootPath, $dryRun);
         }
 
-        $path = ltrim(str_replace($rootPath, '', $node->getPath()), '/');
+        $path = \ltrim(\str_replace($rootPath, '', $node->getPath()), '/');
 
         if (!$node->getPropertyValueWithDefault('sulu:history', false)) {
             $output->writeln(

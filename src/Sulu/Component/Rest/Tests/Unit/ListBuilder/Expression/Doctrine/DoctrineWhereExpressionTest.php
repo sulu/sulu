@@ -52,7 +52,7 @@ class DoctrineWhereExpressionTest extends \PHPUnit_Framework_TestCase
 
         // parameter names will be generated (combined with unique ids with length of 23 characters)
         $statement = $whereExpression->getStatement($this->queryBuilder->reveal());
-        $result = preg_match(
+        $result = \preg_match(
             '/^SuluCoreBundle_Example\.name = :name[\S]{' . $this->uniqueIdLength . '}/',
             $statement
         );
@@ -91,7 +91,7 @@ class DoctrineWhereExpressionTest extends \PHPUnit_Framework_TestCase
 
         // parameter names will be generated (combined with unique ids with length of 23 characters)
         $statement = $whereExpression->getStatement($this->queryBuilder->reveal());
-        $result = preg_match(
+        $result = \preg_match(
             '/^SuluCoreBundle_Example\.name LIKE :name[\S]{' . $this->uniqueIdLength . '}/',
             $statement
         );
@@ -117,7 +117,7 @@ class DoctrineWhereExpressionTest extends \PHPUnit_Framework_TestCase
 
         // parameter names will be generated (combined with unique ids with length of 23 characters)
         $statement = $whereExpression->getStatement($this->queryBuilder->reveal());
-        $result = preg_match(
+        $result = \preg_match(
             '/^(SuluCoreBundle_Example\.name = :name[\S]{' . $this->uniqueIdLength . '}[\S]{1}( ' . $comparator . ' )?){3}/',
             $statement
         );

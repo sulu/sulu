@@ -26,9 +26,9 @@ class RouteNotCreatedException extends \Exception
     public function __construct(RoutableInterface $entity)
     {
         parent::__construct(
-            sprintf(
+            \sprintf(
                 'Route for entity of type "%s" and identifier "%s" was not created.',
-                get_class($entity),
+                \get_class($entity),
                 $entity->getId()
             )
         );

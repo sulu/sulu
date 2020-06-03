@@ -48,15 +48,15 @@ class LocalFormatCache implements FormatCacheInterface
         $this->filesystem = $filesystem;
         $this->path = $path;
         $this->pathUrl = $pathUrl;
-        $this->segments = intval($segments);
+        $this->segments = \intval($segments);
         $this->formats = $formats;
     }
 
     public function save($content, $id, $fileName, $options, $format)
     {
         $savePath = $this->getPath($this->path, $id, $fileName, $format);
-        if (!is_dir(dirname($savePath))) {
-            $this->filesystem->mkdir(dirname($savePath), 0775);
+        if (!\is_dir(\dirname($savePath))) {
+            $this->filesystem->mkdir(\dirname($savePath), 0775);
         }
 
         try {
@@ -88,8 +88,8 @@ class LocalFormatCache implements FormatCacheInterface
         $realCacheDir = $this->path;
         $oldCacheDir = $realCacheDir . '_old';
 
-        if (!is_writable($realCacheDir)) {
-            throw new \RuntimeException(sprintf('Unable to write in the "%s" directory', $realCacheDir));
+        if (!\is_writable($realCacheDir)) {
+            throw new \RuntimeException(\sprintf('Unable to write in the "%s" directory', $realCacheDir));
         }
 
         if ($this->filesystem->exists($oldCacheDir)) {
@@ -112,7 +112,7 @@ class LocalFormatCache implements FormatCacheInterface
     protected function getPath($prePath, $id, $fileName, $format)
     {
         $segment = $this->getSegment($id) . '/';
-        $prePath = rtrim($prePath, '/');
+        $prePath = \rtrim($prePath, '/');
 
         return $prePath . '/' . $format . '/' . $segment . $id . '-' . $fileName;
     }
@@ -130,11 +130,11 @@ class LocalFormatCache implements FormatCacheInterface
     protected function getPathUrl($prePath, $id, $fileName, $format, $version = '', $subVersion = '')
     {
         $segment = $this->getSegment($id) . '/';
-        $prePath = rtrim($prePath, '/');
+        $prePath = \rtrim($prePath, '/');
 
-        return str_replace(
+        return \str_replace(
             '{slug}',
-            $format . '/' . $segment . $id . '-' . rawurlencode($fileName),
+            $format . '/' . $segment . $id . '-' . \rawurlencode($fileName),
             $prePath
         ) . '?v=' . $version . '-' . $subVersion;
     }
@@ -162,16 +162,16 @@ class LocalFormatCache implements FormatCacheInterface
      */
     protected function getIdFromUrl($url)
     {
-        $fileName = basename($url);
-        $idParts = explode('-', $fileName);
+        $fileName = \basename($url);
+        $idParts = \explode('-', $fileName);
 
-        if (count($idParts) < 2) {
+        if (\count($idParts) < 2) {
             throw new ImageProxyInvalidUrl('No `id` was found in the url');
         }
 
         $id = $idParts[0];
 
-        if (preg_match('/[^0-9]/', $id)) {
+        if (\preg_match('/[^0-9]/', $id)) {
             throw new ImageProxyInvalidUrl('The founded `id` was not a valid integer');
         }
 
@@ -185,7 +185,7 @@ class LocalFormatCache implements FormatCacheInterface
      */
     protected function getSegment($id)
     {
-        return sprintf('%0' . strlen($this->segments) . 'd', ($id % $this->segments));
+        return \sprintf('%0' . \strlen($this->segments) . 'd', ($id % $this->segments));
     }
 
     /**
@@ -199,11 +199,11 @@ class LocalFormatCache implements FormatCacheInterface
      */
     protected function getFormatFromUrl($url)
     {
-        $path = dirname($url);
+        $path = \dirname($url);
 
-        $formatParts = array_reverse(explode('/', $path));
+        $formatParts = \array_reverse(\explode('/', $path));
 
-        if (count($formatParts) < 2) {
+        if (\count($formatParts) < 2) {
             throw new ImageProxyInvalidUrl('No `format` was found in the url');
         }
 

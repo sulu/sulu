@@ -25,7 +25,7 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
 {
     public function prepend(ContainerBuilder $container)
     {
-        if (in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
+        if (\in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
             $container->prependExtensionConfig(
                 'sulu_http_cache',
                 [
@@ -73,7 +73,7 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
 
             if (null !== $proxyClientName) {
                 throw new InvalidConfigurationException(
-                    sprintf(
+                    \sprintf(
                         'Cannot enable more than one proxy, trying to enable "%s" when "%s" is already enabled',
                         $name,
                         $proxyClientName

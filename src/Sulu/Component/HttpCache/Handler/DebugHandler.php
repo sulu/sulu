@@ -63,9 +63,9 @@ class DebugHandler implements HandlerUpdateResponseInterface
 
     public function updateResponse(Response $response, StructureInterface $structure)
     {
-        $response->headers->set(self::HEADER_HANDLERS, implode(', ', $this->handlerNames));
+        $response->headers->set(self::HEADER_HANDLERS, \implode(', ', $this->handlerNames));
         $response->headers->set(self::HEADER_CLIENT_NAME, $this->proxyClientName);
-        $response->headers->set(self::HEADER_STRUCTURE_TYPE, get_class($structure));
+        $response->headers->set(self::HEADER_STRUCTURE_TYPE, \get_class($structure));
         $response->headers->set(self::HEADER_STRUCTURE_UUID, $structure->getUuid());
 
         // Structures implementing PageInterface have a TTL

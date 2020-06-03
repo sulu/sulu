@@ -74,13 +74,13 @@ class ContentTwigExtension extends \Twig_Extension
      */
     private function mergeRecursive()
     {
-        $arrays = func_get_args();
-        $base = array_shift($arrays);
+        $arrays = \func_get_args();
+        $base = \array_shift($arrays);
 
         foreach ($arrays as $array) {
-            reset($base);
-            while (list($key, $value) = @each($array)) {
-                if (is_array($value) && @is_array($base[$key])) {
+            \reset($base);
+            while (list($key, $value) = @\each($array)) {
+                if (\is_array($value) && @\is_array($base[$key])) {
                     $base[$key] = $this->mergeRecursive($base[$key], $value);
                 } else {
                     $base[$key] = $value;
@@ -127,7 +127,7 @@ class ContentTwigExtension extends \Twig_Extension
         $minOccurs = $property->getMinOccurs();
         $maxOccurs = $property->getMaxOccurs();
 
-        if (is_null($maxOccurs) && $minOccurs >= 1) {
+        if (\is_null($maxOccurs) && $minOccurs >= 1) {
             return true;
         }
 
@@ -176,7 +176,7 @@ class ContentTwigExtension extends \Twig_Extension
     {
         $result = [];
 
-        if (is_array($parameters)) {
+        if (\is_array($parameters)) {
             foreach ($parameters as $parameter) {
                 $result[$parameter->getName()] = $parameter->getValue();
             }
@@ -196,7 +196,7 @@ class ContentTwigExtension extends \Twig_Extension
     {
         $result = [];
 
-        if (is_array($parameters)) {
+        if (\is_array($parameters)) {
             foreach ($parameters as $parameter) {
                 $result[] = $parameter->getName();
             }

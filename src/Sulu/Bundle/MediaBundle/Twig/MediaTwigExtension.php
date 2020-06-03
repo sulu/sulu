@@ -53,7 +53,7 @@ class MediaTwigExtension extends \Twig_Extension
             return;
         }
 
-        if (is_object($media)) {
+        if (\is_object($media)) {
             return $this->resolveMediaObject($media, $locale);
         }
 
@@ -75,17 +75,17 @@ class MediaTwigExtension extends \Twig_Extension
      */
     public function resolveMediasFunction($medias, $locale)
     {
-        if (0 === count($medias)) {
+        if (0 === \count($medias)) {
             return [];
         }
 
         $ids = [];
         $entities = [];
         $entitiesIndex = [];
-        for ($i = 0; $i < count($medias); ++$i) {
+        for ($i = 0; $i < \count($medias); ++$i) {
             $media = $medias[$i];
 
-            if (is_object($media)) {
+            if (\is_object($media)) {
                 $entities[$i] = $this->resolveMediaObject($media, $locale);
             } else {
                 $ids[] = $media;
@@ -93,15 +93,15 @@ class MediaTwigExtension extends \Twig_Extension
             }
         }
 
-        if (count($ids) > 0) {
+        if (\count($ids) > 0) {
             foreach ($this->mediaManager->getByIds($ids, $locale) as $media) {
                 $entities[$entitiesIndex[$media->getId()]] = $media;
             }
         }
 
-        ksort($entities);
+        \ksort($entities);
 
-        return array_values($entities);
+        return \array_values($entities);
     }
 
     private function resolveMediaObject($media, $locale)

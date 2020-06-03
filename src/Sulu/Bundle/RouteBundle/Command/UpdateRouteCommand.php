@@ -59,7 +59,7 @@ EOT
 
         $query = $repository->createQueryBuilder('entity')->getQuery();
         $output->writeln(
-            sprintf(
+            \sprintf(
                 '<comment>updating route for "%s" instances of "%s"</comment>',
                 $count,
                 $input->getArgument('entity')

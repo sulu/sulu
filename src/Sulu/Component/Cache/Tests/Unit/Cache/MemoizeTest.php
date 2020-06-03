@@ -54,8 +54,8 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
             );
         };
 
-        $id12 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\Tests\Unit\{closure}', serialize([1, 2])));
-        $id23 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\Tests\Unit\{closure}', serialize([2, 3])));
+        $id12 = \md5(\sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\Tests\Unit\{closure}', \serialize([1, 2])));
+        $id23 = \md5(\sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\Tests\Unit\{closure}', \serialize([2, 3])));
 
         $this->cache->save($id12, 3, $this->defaultLifeTime)->willReturn(null);
         $this->cache->contains($id12)->willReturn(false);
@@ -87,8 +87,8 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
             );
         };
 
-        $id12 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\Tests\Unit\{closure}', serialize([1, 2])));
-        $id23 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\Tests\Unit\{closure}', serialize([2, 3])));
+        $id12 = \md5(\sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\Tests\Unit\{closure}', \serialize([1, 2])));
+        $id23 = \md5(\sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\Tests\Unit\{closure}', \serialize([2, 3])));
 
         $this->cache->save($id12, 3, 100)->willReturn(null);
         $this->cache->contains($id12)->willReturn(false);
@@ -119,8 +119,8 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
             );
         };
 
-        $id12 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\Tests\Unit\{closure}', serialize([1, 2])));
-        $id23 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\Tests\Unit\{closure}', serialize([2, 3])));
+        $id12 = \md5(\sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\Tests\Unit\{closure}', \serialize([1, 2])));
+        $id23 = \md5(\sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\Tests\Unit\{closure}', \serialize([2, 3])));
 
         $this->cache->fetch($id12)->wilLReturn(3);
         $this->cache->contains($id12)->willReturn(true);
@@ -153,8 +153,8 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
             );
         };
 
-        $id12 = md5(sprintf('mem(%s)', serialize([1, 2])));
-        $id23 = md5(sprintf('mem(%s)', serialize([2, 3])));
+        $id12 = \md5(\sprintf('mem(%s)', \serialize([1, 2])));
+        $id23 = \md5(\sprintf('mem(%s)', \serialize([2, 3])));
 
         $this->cache->save($id12, 3, $this->defaultLifeTime)->willReturn(null);
         $this->cache->contains($id12)->willReturn(false);
@@ -188,8 +188,8 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
             );
         };
 
-        $id12 = md5(sprintf('mem(%s)', serialize([1, 2])));
-        $id23 = md5(sprintf('mem(%s)', serialize([2, 3])));
+        $id12 = \md5(\sprintf('mem(%s)', \serialize([1, 2])));
+        $id23 = \md5(\sprintf('mem(%s)', \serialize([2, 3])));
 
         $this->cache->save($id12, 3, 100)->willReturn(null);
         $this->cache->contains($id12)->willReturn(false);
@@ -222,8 +222,8 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
             );
         };
 
-        $id12 = md5(sprintf('mem(%s)', serialize([1, 2])));
-        $id23 = md5(sprintf('mem(%s)', serialize([2, 3])));
+        $id12 = \md5(\sprintf('mem(%s)', \serialize([1, 2])));
+        $id23 = \md5(\sprintf('mem(%s)', \serialize([2, 3])));
 
         $this->cache->fetch($id12)->wilLReturn(3);
         $this->cache->contains($id12)->willReturn(true);

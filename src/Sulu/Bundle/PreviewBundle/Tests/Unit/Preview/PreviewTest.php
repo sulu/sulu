@@ -63,10 +63,10 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $provider->setValues($object->reveal(), 'de', ['title' => 'SULU'])->shouldBeCalled();
         $provider->serialize($object->reveal())->willReturn('{"title": "SULU"}');
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
-        $token = $preview->start(get_class($object->reveal()), 1, 1, 'sulu_io', 'de', ['title' => 'SULU']);
+        $preview = $this->getPreview([\get_class($object->reveal()) => $provider]);
+        $token = $preview->start(\get_class($object->reveal()), 1, 1, 'sulu_io', 'de', ['title' => 'SULU']);
 
-        $this->dataCache->save($token, get_class($object->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
+        $this->dataCache->save($token, \get_class($object->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
             ->shouldBeCalled();
     }
 
@@ -79,10 +79,10 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $provider->setValues(Argument::any(), Argument::any(), Argument::any())->shouldNotBeCalled();
         $provider->serialize($object->reveal())->willReturn('{"title": "SULU"}');
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
-        $token = $preview->start(get_class($object->reveal()), 1, 1, 'sulu_io', 'de');
+        $preview = $this->getPreview([\get_class($object->reveal()) => $provider]);
+        $token = $preview->start(\get_class($object->reveal()), 1, 1, 'sulu_io', 'de');
 
-        $this->dataCache->save($token, get_class($object->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
+        $this->dataCache->save($token, \get_class($object->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
             ->shouldBeCalled();
     }
 
@@ -135,12 +135,12 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         $token = '123-123-123';
         $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
-        $this->dataCache->save($token, get_class($object->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
+        $this->dataCache->fetch($token)->willReturn(\get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+        $this->dataCache->save($token, \get_class($object->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
             ->shouldBeCalled();
 
         $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
+        $provider->deserialize('{"title": "test"}', \get_class($object->reveal()))->willReturn($object->reveal());
         $provider->setValues($object->reveal(), 'de', ['title' => 'SULU'])->shouldBeCalled();
         $provider->serialize($object->reveal())->willReturn('{"title": "SULU"}');
         $provider->getId($object->reveal())->willReturn(1);
@@ -148,7 +148,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true, null)
             ->willReturn('<h1 property="title">SULU</h1>');
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
+        $preview = $this->getPreview([\get_class($object->reveal()) => $provider]);
         $changes = $preview->update($token, 'sulu_io', 'de', ['title' => 'SULU']);
 
         $this->assertEquals(['title' => [['property' => 'title', 'html' => 'SULU']]], $changes);
@@ -160,12 +160,12 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         $token = '123-123-123';
         $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
-        $this->dataCache->save($token, get_class($object->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
+        $this->dataCache->fetch($token)->willReturn(\get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+        $this->dataCache->save($token, \get_class($object->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
             ->shouldBeCalled();
 
         $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
+        $provider->deserialize('{"title": "test"}', \get_class($object->reveal()))->willReturn($object->reveal());
         $provider->setValues($object->reveal(), 'de', ['title' => 'SULU'])->shouldBeCalled();
         $provider->serialize($object->reveal())->willReturn('{"title": "SULU"}');
         $provider->getId($object->reveal())->willReturn(1);
@@ -173,7 +173,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true, null)
             ->willReturn('<a property="title" href="/test">SULU</a>');
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
+        $preview = $this->getPreview([\get_class($object->reveal()) => $provider]);
         $changes = $preview->update($token, 'sulu_io', 'de', ['title' => 'SULU']);
 
         $this->assertEquals(['title' => [['property' => 'title', 'href' => '/test', 'html' => 'SULU']]], $changes);
@@ -204,7 +204,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $this->renderer->render(Argument::any(), Argument::any(), Argument::any(), Argument::any(), Argument::any())
             ->shouldNotBeCalled();
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
+        $preview = $this->getPreview([\get_class($object->reveal()) => $provider]);
         $preview->update($token, 'sulu_io', 'de', ['title' => 'SULU']);
     }
 
@@ -214,12 +214,12 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         $token = '123-123-123';
         $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
-        $this->dataCache->save($token, get_class($object->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
+        $this->dataCache->fetch($token)->willReturn(\get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+        $this->dataCache->save($token, \get_class($object->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
             ->shouldBeCalled();
 
         $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
+        $provider->deserialize('{"title": "test"}', \get_class($object->reveal()))->willReturn($object->reveal());
         $provider->setValues($object->reveal(), 'de', ['title' => 'SULU'])->shouldBeCalled();
         $provider->serialize($object->reveal())->willReturn('{"title": "SULU"}');
         $provider->getId($object->reveal())->willReturn(1);
@@ -227,7 +227,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
         $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true, 2)
             ->willReturn('<h1 property="title">SULU</h1>');
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
+        $preview = $this->getPreview([\get_class($object->reveal()) => $provider]);
         $changes = $preview->update($token, 'sulu_io', 'de', ['title' => 'SULU'], 2);
 
         $this->assertEquals(['title' => [['property' => 'title', 'html' => 'SULU']]], $changes);
@@ -240,12 +240,12 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         $token = '123-123-123';
         $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
-        $this->dataCache->save($token, get_class($newObject->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
+        $this->dataCache->fetch($token)->willReturn(\get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+        $this->dataCache->save($token, \get_class($newObject->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
             ->shouldBeCalled();
 
         $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
+        $provider->deserialize('{"title": "test"}', \get_class($object->reveal()))->willReturn($object->reveal());
         $provider->setContext($object->reveal(), 'de', ['template' => 'test-template'])
             ->shouldBeCalled()->willReturn($newObject->reveal());
         $provider->setValues($newObject->reveal(), 'de', ['title' => 'SULU'])->shouldBeCalled();
@@ -256,7 +256,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
             ->willReturn('<html><body><h1 property="title">SULU</h1></html></body>');
 
         $preview = $this->getPreview(
-            [get_class($object->reveal()) => $provider, get_class($newObject->reveal()) => $provider]
+            [\get_class($object->reveal()) => $provider, \get_class($newObject->reveal()) => $provider]
         );
         $response = $preview->updateContext(
             $token,
@@ -276,12 +276,12 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         $token = '123-123-123';
         $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
-        $this->dataCache->save($token, get_class($newObject->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
+        $this->dataCache->fetch($token)->willReturn(\get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+        $this->dataCache->save($token, \get_class($newObject->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
             ->shouldBeCalled();
 
         $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
+        $provider->deserialize('{"title": "test"}', \get_class($object->reveal()))->willReturn($object->reveal());
         $provider->setContext($object->reveal(), 'de', ['template' => 'test-template'])
             ->shouldBeCalled()->willReturn($newObject->reveal());
         $provider->setValues($newObject->reveal(), 'de', ['title' => 'SULU'])->shouldBeCalled();
@@ -292,7 +292,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
             ->willReturn('<html><body><a property="title" href="/test">SULU</a></html></body>');
 
         $preview = $this->getPreview(
-            [get_class($object->reveal()) => $provider, get_class($newObject->reveal()) => $provider]
+            [\get_class($object->reveal()) => $provider, \get_class($newObject->reveal()) => $provider]
         );
         $response = $preview->updateContext(
             $token,
@@ -311,16 +311,16 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         $token = '123-123-123';
         $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+        $this->dataCache->fetch($token)->willReturn(\get_class($object->reveal()) . "\n{\"title\": \"test\"}");
 
         $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
+        $provider->deserialize('{"title": "test"}', \get_class($object->reveal()))->willReturn($object->reveal());
         $provider->getId($object->reveal())->willReturn(1);
 
         $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', false, null)
             ->willReturn('<html><body><h1 property="title">SULU</h1></html></body>');
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
+        $preview = $this->getPreview([\get_class($object->reveal()) => $provider]);
         $response = $preview->updateContext(
             $token,
             'sulu_io',
@@ -338,16 +338,16 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         $token = '123-123-123';
         $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+        $this->dataCache->fetch($token)->willReturn(\get_class($object->reveal()) . "\n{\"title\": \"test\"}");
 
         $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
+        $provider->deserialize('{"title": "test"}', \get_class($object->reveal()))->willReturn($object->reveal());
         $provider->getId($object->reveal())->willReturn(1);
 
         $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', false, null)
             ->willReturn('<html><body><a property="title" href="/test">SULU</a></html></body>');
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
+        $preview = $this->getPreview([\get_class($object->reveal()) => $provider]);
         $response = $preview->updateContext(
             $token,
             'sulu_io',
@@ -366,12 +366,12 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         $token = '123-123-123';
         $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
-        $this->dataCache->save($token, get_class($newObject->reveal()) . "\n{\"title\": \"test\"}", $this->cacheLifeTime)
+        $this->dataCache->fetch($token)->willReturn(\get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+        $this->dataCache->save($token, \get_class($newObject->reveal()) . "\n{\"title\": \"test\"}", $this->cacheLifeTime)
             ->shouldBeCalled();
 
         $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
+        $provider->deserialize('{"title": "test"}', \get_class($object->reveal()))->willReturn($object->reveal());
         $provider->setContext($object->reveal(), 'de', ['template' => 'test-template'])
             ->shouldBeCalled()->willReturn($newObject->reveal());
         $provider->serialize($newObject->reveal())->willReturn('{"title": "test"}');
@@ -381,7 +381,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
             ->willReturn('<html><body><h1 property="title">test</h1></html></body>');
 
         $preview = $this->getPreview(
-            [get_class($object->reveal()) => $provider, get_class($newObject->reveal()) => $provider]
+            [\get_class($object->reveal()) => $provider, \get_class($newObject->reveal()) => $provider]
         );
         $response = $preview->updateContext(
             $token,
@@ -401,12 +401,12 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         $token = '123-123-123';
         $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
-        $this->dataCache->save($token, get_class($newObject->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
+        $this->dataCache->fetch($token)->willReturn(\get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+        $this->dataCache->save($token, \get_class($newObject->reveal()) . "\n{\"title\": \"SULU\"}", $this->cacheLifeTime)
             ->shouldBeCalled();
 
         $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
+        $provider->deserialize('{"title": "test"}', \get_class($object->reveal()))->willReturn($object->reveal());
         $provider->setContext($object->reveal(), 'de', ['template' => 'test-template'])
             ->shouldBeCalled()->willReturn($newObject->reveal());
         $provider->setValues($newObject->reveal(), 'de', ['title' => 'SULU'])->shouldBeCalled();
@@ -417,7 +417,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
             ->willReturn('<html><body><h1 property="title">SULU</h1></html></body>');
 
         $preview = $this->getPreview(
-            [get_class($object->reveal()) => $provider, get_class($newObject->reveal()) => $provider]
+            [\get_class($object->reveal()) => $provider, \get_class($newObject->reveal()) => $provider]
         );
         $response = $preview->updateContext(
             $token,
@@ -437,16 +437,16 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         $token = '123-123-123';
         $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+        $this->dataCache->fetch($token)->willReturn(\get_class($object->reveal()) . "\n{\"title\": \"test\"}");
 
         $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
+        $provider->deserialize('{"title": "test"}', \get_class($object->reveal()))->willReturn($object->reveal());
         $provider->getId($object->reveal())->willReturn(1);
 
         $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', false, null)
             ->willReturn('<h1 property="title">test</h1>');
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
+        $preview = $this->getPreview([\get_class($object->reveal()) => $provider]);
         $response = $preview->render($token, 'sulu_io', 'de');
 
         $this->assertEquals('<h1 property="title">test</h1>', $response);
@@ -458,16 +458,16 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         $token = '123-123-123';
         $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+        $this->dataCache->fetch($token)->willReturn(\get_class($object->reveal()) . "\n{\"title\": \"test\"}");
 
         $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
+        $provider->deserialize('{"title": "test"}', \get_class($object->reveal()))->willReturn($object->reveal());
         $provider->getId($object->reveal())->willReturn(1);
 
         $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', false, null)
             ->willReturn('<a property="title" href="/test">test</a>');
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
+        $preview = $this->getPreview([\get_class($object->reveal()) => $provider]);
         $response = $preview->render($token, 'sulu_io', 'de');
 
         $this->assertEquals('<a property="title" href="/test">test</a>', $response);
@@ -479,16 +479,16 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         $token = '123-123-123';
         $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+        $this->dataCache->fetch($token)->willReturn(\get_class($object->reveal()) . "\n{\"title\": \"test\"}");
 
         $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
+        $provider->deserialize('{"title": "test"}', \get_class($object->reveal()))->willReturn($object->reveal());
         $provider->getId($object->reveal())->willReturn(1);
 
         $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', false, null)
             ->willReturn('<link rel="stylesheet" type="text/css" href="theme.css">');
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
+        $preview = $this->getPreview([\get_class($object->reveal()) => $provider]);
         $response = $preview->render($token, 'sulu_io', 'de');
 
         $this->assertEquals('<link rel="stylesheet" type="text/css" href="theme.css">', $response);
@@ -500,10 +500,10 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         $token = '123-123-123';
         $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+        $this->dataCache->fetch($token)->willReturn(\get_class($object->reveal()) . "\n{\"title\": \"test\"}");
 
         $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
+        $provider->deserialize('{"title": "test"}', \get_class($object->reveal()))->willReturn($object->reveal());
         $provider->getId($object->reveal())->willReturn(1);
 
         $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', false, null)
@@ -515,7 +515,7 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
                 '<form class="form" action="/test"></form>'
             );
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
+        $preview = $this->getPreview([\get_class($object->reveal()) => $provider]);
         $response = $preview->render($token, 'sulu_io', 'de');
 
         $this->assertEquals(
@@ -534,16 +534,16 @@ class PreviewTest extends \PHPUnit_Framework_TestCase
 
         $token = '123-123-123';
         $this->dataCache->contains($token)->willReturn(true);
-        $this->dataCache->fetch($token)->willReturn(get_class($object->reveal()) . "\n{\"title\": \"test\"}");
+        $this->dataCache->fetch($token)->willReturn(\get_class($object->reveal()) . "\n{\"title\": \"test\"}");
 
         $provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $provider->deserialize('{"title": "test"}', get_class($object->reveal()))->willReturn($object->reveal());
+        $provider->deserialize('{"title": "test"}', \get_class($object->reveal()))->willReturn($object->reveal());
         $provider->getId($object->reveal())->willReturn(1);
 
         $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', false, 2)
             ->willReturn('<h1 property="title">test</h1>');
 
-        $preview = $this->getPreview([get_class($object->reveal()) => $provider]);
+        $preview = $this->getPreview([\get_class($object->reveal()) => $provider]);
         $response = $preview->render($token, 'sulu_io', 'de', 2);
 
         $this->assertEquals('<h1 property="title">test</h1>', $response);

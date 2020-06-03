@@ -260,7 +260,7 @@ class StructureBridge implements StructureInterface
 
     public function getPropertyNames()
     {
-        return array_keys($this->structure->children);
+        return \array_keys($this->structure->children);
     }
 
     public function setType($type)
@@ -349,7 +349,7 @@ class StructureBridge implements StructureInterface
 
         if ($complete) {
             if ($document instanceof ShadowLocaleBehavior) {
-                $result = array_merge(
+                $result = \array_merge(
                     $result,
                     [
                         'enabledShadowLanguages' => $this->inspector->getShadowLocales($document),
@@ -359,7 +359,7 @@ class StructureBridge implements StructureInterface
                 );
             }
 
-            $result = array_merge(
+            $result = \array_merge(
                 $result,
                 [
                     'template' => $this->structure->getName(),
@@ -381,7 +381,7 @@ class StructureBridge implements StructureInterface
                 $result['ext'] = $document->getExtensionsData();
             }
 
-            $result = array_merge($this->getDocument()->getStructure()->toArray(), $result);
+            $result = \array_merge($this->getDocument()->getStructure()->toArray(), $result);
 
             return $result;
         }
@@ -569,7 +569,7 @@ class StructureBridge implements StructureInterface
     protected function readOnlyException($method)
     {
         throw new \BadMethodCallException(
-            sprintf(
+            \sprintf(
                 'Compatibility layer StructureBridge instances are readonly. Tried to call "%s"',
                 $method
             )
@@ -596,10 +596,10 @@ class StructureBridge implements StructureInterface
         $document = $this->getDocument();
         if (!$document instanceof WorkflowStageBehavior) {
             throw new \BadMethodCallException(
-                sprintf(
+                \sprintf(
                     'Cannot call "%s" on Document which does not implement PageInterface. Is "%s"',
                     $method,
-                    get_class($document)
+                    \get_class($document)
                 )
             );
         }
@@ -610,7 +610,7 @@ class StructureBridge implements StructureInterface
     private function notImplemented($method)
     {
         throw new \InvalidArgumentException(
-            sprintf(
+            \sprintf(
                 'Method "%s" is not yet implemented',
                 $method
             )
@@ -623,12 +623,12 @@ class StructureBridge implements StructureInterface
             return;
         }
 
-        if (false === is_array($data)) {
+        if (false === \is_array($data)) {
             return $this->normalizeValue($data);
         }
 
         foreach ($data as &$value) {
-            if (is_array($value)) {
+            if (\is_array($value)) {
                 foreach ($value as $childKey => $childValue) {
                     $data[$childKey] = $this->normalizeData($childValue);
                 }

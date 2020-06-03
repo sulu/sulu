@@ -93,7 +93,7 @@ class SnippetImport extends Import implements SnippetImportInterface
             $output = new NullOutput();
         }
 
-        $progress = new ProgressBar($output, count($parsedDataList));
+        $progress = new ProgressBar($output, \count($parsedDataList));
         $progress->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %memory:6s%');
         $progress->start();
 
@@ -106,7 +106,7 @@ class SnippetImport extends Import implements SnippetImportInterface
                 ++$successCounter;
             }
 
-            $this->logger->info(sprintf('Document %s/%s', $importedCounter, count($parsedDataList)));
+            $this->logger->info(\sprintf('Document %s/%s', $importedCounter, \count($parsedDataList)));
 
             $progress->advance();
         }
@@ -115,7 +115,7 @@ class SnippetImport extends Import implements SnippetImportInterface
 
         $return = new \stdClass();
         $return->count = $importedCounter;
-        $return->fails = count($failedImports);
+        $return->fails = \count($failedImports);
         $return->successes = $successCounter;
         $return->failed = $failedImports;
         $return->exceptionStore = $this->exceptionStore;
@@ -150,7 +150,7 @@ class SnippetImport extends Import implements SnippetImportInterface
 
             if (!$document instanceof SnippetDocument) {
                 throw new \Exception(
-                    sprintf('Document(%s) is not an instanecof SnippetDocument', $uuid)
+                    \sprintf('Document(%s) is not an instanecof SnippetDocument', $uuid)
                 );
             }
 
@@ -174,12 +174,12 @@ class SnippetImport extends Import implements SnippetImportInterface
             }
 
             $this->logger->error(
-                sprintf(
+                \sprintf(
                     '<info>%s</info>%s: <error>%s</error>%s',
                     $uuid,
-                    PHP_EOL . get_class($e),
+                    \PHP_EOL . \get_class($e),
                     $e->getMessage(),
-                    PHP_EOL . $e->getTraceAsString()
+                    \PHP_EOL . $e->getTraceAsString()
                 )
             );
 
@@ -207,13 +207,13 @@ class SnippetImport extends Import implements SnippetImportInterface
         $structure = $this->structureManager->getStructure($document->getStructureType(), Structure::TYPE_SNIPPET);
         $properties = $structure->getProperties(true);
         $node = $this->documentRegistry->getNodeForDocument($document);
-        $node->setProperty(sprintf('i18n:%s-template', $locale), $document->getStructureType());
+        $node->setProperty(\sprintf('i18n:%s-template', $locale), $document->getStructureType());
         $state = $this->getParser($format)->getPropertyData('state', $data, null, null, 2);
-        $node->setProperty(sprintf('i18n:%s-state', $locale), $state);
+        $node->setProperty(\sprintf('i18n:%s-state', $locale), $state);
 
         // Check title is set in xliff-file.
         if ('' === $this->getParser($format)->getPropertyData('title', $data)) {
-            $this->addException(sprintf('Snippet(%s) has not set any title', $document->getUuid()), 'ignore');
+            $this->addException(\sprintf('Snippet(%s) has not set any title', $document->getUuid()), 'ignore');
 
             return false;
         }

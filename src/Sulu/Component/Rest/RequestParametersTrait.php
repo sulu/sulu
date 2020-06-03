@@ -35,7 +35,7 @@ trait RequestParametersTrait
     {
         $value = $request->get($name, $default);
         if ($force && null === $value) {
-            throw new MissingParameterException(get_class($this), $name);
+            throw new MissingParameterException(\get_class($this), $name);
         }
 
         return $value;
@@ -62,7 +62,7 @@ trait RequestParametersTrait
         } elseif ('false' === $value || false === $value) {
             $value = false;
         } elseif ($force && true !== $value && false !== $value) {
-            throw new ParameterDataTypeException(get_class($this), $name);
+            throw new ParameterDataTypeException(\get_class($this), $name);
         } else {
             $value = $default;
         }

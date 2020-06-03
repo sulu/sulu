@@ -117,12 +117,12 @@ class ExceptionController
      */
     protected function getAndCleanOutputBuffering($startObLevel)
     {
-        if (ob_get_level() <= $startObLevel) {
+        if (\ob_get_level() <= $startObLevel) {
             return '';
         }
 
         Response::closeOutputBuffers($startObLevel + 1, true);
 
-        return ob_get_clean();
+        return \ob_get_clean();
     }
 }
