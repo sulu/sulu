@@ -30,6 +30,18 @@ $blockIconsColor: $gray;
             margin: 10px;
             height: 18px;
         }
+
+        .icons {
+            border-right: 1px solid $blockBorderColor;
+            padding-right: 10px;
+            margin-right: 10px;
+        }
+    }
+
+    &.expanded {
+        .icons {
+            line-height: 30px;
+        }
     }
 }
 
@@ -72,9 +84,6 @@ $blockIconsColor: $gray;
 
 .icons {
     color: $blockIconsColor;
-    border-right: 1px solid $blockBorderColor;
-    padding-right: 10px;
-    margin-right: 10px;
     font-size: 14px;
 
     > * {

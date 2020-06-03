@@ -25,6 +25,9 @@ exports[`Render block with schema 1`] = `
           class="header"
         >
           <div
+            class="icons"
+          />
+          <div
             class="iconButtons"
           >
             <span
@@ -126,6 +129,9 @@ exports[`Render block with schema 1`] = `
         <header
           class="header"
         >
+          <div
+            class="icons"
+          />
           <div
             class="iconButtons"
           >
@@ -254,6 +260,9 @@ exports[`Render block with schema and error on fields already being modified 1`]
           class="header"
         >
           <div
+            class="icons"
+          />
+          <div
             class="iconButtons"
           >
             <span
@@ -326,6 +335,9 @@ exports[`Render block with schema and error on fields already being modified 1`]
         <header
           class="header"
         >
+          <div
+            class="icons"
+          />
           <div
             class="iconButtons"
           >
@@ -402,6 +414,9 @@ exports[`Render block with schema and error on fields already being modified 1`]
         <header
           class="header"
         >
+          <div
+            class="icons"
+          />
           <div
             class="iconButtons"
           >
@@ -501,6 +516,9 @@ exports[`Render block with schema and error on fields already being modified 2`]
           class="header"
         >
           <div
+            class="icons"
+          />
+          <div
             class="iconButtons"
           >
             <span
@@ -573,6 +591,9 @@ exports[`Render block with schema and error on fields already being modified 2`]
         <header
           class="header"
         >
+          <div
+            class="icons"
+          />
           <div
             class="iconButtons"
           >
@@ -649,6 +670,9 @@ exports[`Render block with schema and error on fields already being modified 2`]
         <header
           class="header"
         >
+          <div
+            class="icons"
+          />
           <div
             class="iconButtons"
           >

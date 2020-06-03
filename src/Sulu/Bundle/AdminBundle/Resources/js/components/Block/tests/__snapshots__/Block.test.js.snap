@@ -99,6 +99,18 @@ exports[`Render an expanded block with a multiple types 1`] = `
         </div>
       </div>
       <div
+        class="icons"
+      >
+        <span
+          aria-label="su-eye"
+          class="su-eye"
+        />
+        <span
+          aria-label="su-people"
+          class="su-people"
+        />
+      </div>
+      <div
         class="iconButtons"
       >
         <span

@@ -13,6 +13,7 @@ test('Render an expanded block with a multiple types', () => {
             activeType="type1"
             dragHandle={<span>Test</span>}
             expanded={true}
+            icons={['su-eye', 'su-people']}
             onCollapse={jest.fn()}
             onExpand={jest.fn()}
             onSettingsClick={jest.fn()}

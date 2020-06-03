@@ -77,6 +77,11 @@ export default class Block extends React.Component<Props> {
                                         </SingleSelect>
                                     </div>
                                 }
+                                {icons &&
+                                    <div className={blockStyles.icons}>
+                                        {icons.map((icon) => <Icon key={icon} name={icon} />)}
+                                    </div>
+                                }
                                 <div className={blockStyles.iconButtons}>
                                     {onSettingsClick && <Icon name="su-cog" onClick={onSettingsClick} />}
                                     {onRemove && <Icon name="su-trash-alt" onClick={onRemove} />}
