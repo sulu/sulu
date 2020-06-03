@@ -347,6 +347,8 @@ test('The userSchema should include schema properties that are not present in th
     listStore.updateStructureStrategy(structureStrategy);
     listStore.schema = {
         id: {
+            filterType: null,
+            filterTypeParameters: {},
             label: 'ID',
             name: 'id',
             sortable: true,
@@ -354,6 +356,8 @@ test('The userSchema should include schema properties that are not present in th
             visibility: 'no',
         },
         title: {
+            filterType: null,
+            filterTypeParameters: {},
             label: 'Title',
             name: 'title',
             sortable: true,
@@ -361,6 +365,8 @@ test('The userSchema should include schema properties that are not present in th
             visibility: 'no',
         },
         newSchemaProperty: {
+            filterType: null,
+            filterTypeParameters: {},
             label: 'New Schema Property',
             name: 'newSchemaProperty',
             sortable: true,
@@ -372,6 +378,8 @@ test('The userSchema should include schema properties that are not present in th
     expect(listStore.userSchema).toEqual(
         {
             id: {
+                filterType: null,
+                filterTypeParameters: {},
                 label: 'ID',
                 name: 'id',
                 sortable: true,
@@ -379,6 +387,8 @@ test('The userSchema should include schema properties that are not present in th
                 visibility: 'no',
             },
             title: {
+                filterType: null,
+                filterTypeParameters: {},
                 label: 'Title',
                 name: 'title',
                 sortable: true,
@@ -386,6 +396,8 @@ test('The userSchema should include schema properties that are not present in th
                 visibility: 'no',
             },
             newSchemaProperty: {
+                filterType: null,
+                filterTypeParameters: {},
                 label: 'New Schema Property',
                 name: 'newSchemaProperty',
                 sortable: true,
@@ -435,6 +447,8 @@ test('The userSchema should reflect the order of the schemaSetting of the user',
     listStore.updateStructureStrategy(structureStrategy);
     listStore.schema = {
         id: {
+            filterType: null,
+            filterTypeParameters: {},
             label: 'ID',
             name: 'id',
             sortable: true,
@@ -442,6 +456,8 @@ test('The userSchema should reflect the order of the schemaSetting of the user',
             visibility: 'no',
         },
         title: {
+            filterType: null,
+            filterTypeParameters: {},
             label: 'Title',
             name: 'title',
             sortable: true,
