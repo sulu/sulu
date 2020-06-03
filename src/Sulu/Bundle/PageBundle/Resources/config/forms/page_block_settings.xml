@@ -13,7 +13,7 @@
                         <title>sulu_page.hide_block_description</title>
                     </meta>
                 </param>
-                <param name="icon" value="su-eye" />
+                <param name="icon" value="su-hide" />
                 <param name="label">
                     <meta>
                         <title>sulu_page.hide_block_label</title>
@@ -23,7 +23,7 @@
                 <param name="type" value="toggler" />
             </params>
 
-            <tag name="sulu.block_setting_icon" icon="su-eye" />
+            <tag name="sulu.block_setting_icon" icon="su-hide" />
         </property>
     </properties>
 </form>

@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'sulu';
   src:
-    url('fonts/sulu.ttf?aawe35') format('truetype'),
-    url('fonts/sulu.woff?aawe35') format('woff'),
-    url('fonts/sulu.svg?aawe35#sulu') format('svg');
+    url('fonts/sulu.ttf?8gp16r') format('truetype'),
+    url('fonts/sulu.woff?8gp16r') format('woff'),
+    url('fonts/sulu.svg?8gp16r#sulu') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -492,4 +492,7 @@
 }
 .su-align-justify:before {
   content: "\e946";
+}
+.su-hide:before {
+  content: "\e97f";
 }
