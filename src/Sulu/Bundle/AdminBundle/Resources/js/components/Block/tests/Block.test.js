@@ -25,7 +25,7 @@ test('Render an expanded block with a multiple types', () => {
 
 test('Render a collapsed block', () => {
     expect(render(
-        <Block expanded={false} onCollapse={jest.fn()} onExpand={jest.fn()}>
+        <Block expanded={false} icons={['su-eye', 'su-people']} onCollapse={jest.fn()} onExpand={jest.fn()}>
             Some block content
         </Block>
     )).toMatchSnapshot();

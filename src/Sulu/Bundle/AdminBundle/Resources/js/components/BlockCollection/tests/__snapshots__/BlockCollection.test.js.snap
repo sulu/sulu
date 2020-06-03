@@ -24,6 +24,9 @@ exports[`Should render a fully filled block list 1`] = `
         <header
           class="header"
         >
+          <div
+            class="icons"
+          />
           <span
             aria-label="su-angle-down"
             class="su-angle-down"
@@ -51,6 +54,14 @@ exports[`Should render a fully filled block list 1`] = `
         <header
           class="header"
         >
+          <div
+            class="icons"
+          >
+            <span
+              aria-label="su-eye"
+              class="su-eye"
+            />
+          </div>
           <span
             aria-label="su-angle-down"
             class="su-angle-down"

@@ -12,6 +12,7 @@ import type {BlockEntry, RenderBlockContentCallback} from './types';
 type Props = {|
     defaultType: string,
     disabled: boolean,
+    icons?: Array<Array<string>>,
     maxOccurs?: ?number,
     minOccurs?: ?number,
     onChange: (value: Array<BlockEntry>) => void,
@@ -145,7 +146,7 @@ class BlockCollection extends React.Component<Props> {
     }
 
     render() {
-        const {disabled, onSettingsClick, renderBlockContent, types, value} = this.props;
+        const {disabled, icons, onSettingsClick, renderBlockContent, types, value} = this.props;
 
         return (
             <section className={blockCollectionStyles.blockCollection}>
@@ -153,6 +154,7 @@ class BlockCollection extends React.Component<Props> {
                     disabled={disabled}
                     expandedBlocks={this.expandedBlocks}
                     generatedBlockIds={this.generatedBlockIds}
+                    icons={icons}
                     lockAxis="y"
                     onCollapse={this.handleCollapse}
                     onExpand={this.handleExpand}

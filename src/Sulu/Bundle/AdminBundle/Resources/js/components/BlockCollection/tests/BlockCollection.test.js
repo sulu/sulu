@@ -22,6 +22,7 @@ test('Should render a fully filled block list', () => {
     expect(render(
         <BlockCollection
             defaultType="editor"
+            icons={[[], ['su-eye']]}
             maxOccurs={3}
             onChange={jest.fn()}
             renderBlockContent={jest.fn()}

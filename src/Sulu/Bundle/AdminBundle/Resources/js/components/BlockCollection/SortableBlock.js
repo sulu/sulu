@@ -9,6 +9,7 @@ import type {RenderBlockContentCallback} from './types';
 type Props = {
     activeType: string,
     expanded: boolean,
+    icons?: Array<string>,
     onCollapse: (index: number) => void,
     onExpand: (index: number) => void,
     onRemove?: (index: number) => void,
@@ -61,6 +62,7 @@ class SortableBlock extends React.Component<Props> {
         const {
             activeType,
             expanded,
+            icons,
             onRemove,
             onSettingsClick,
             renderBlockContent,
@@ -74,6 +76,7 @@ class SortableBlock extends React.Component<Props> {
                 activeType={activeType}
                 dragHandle={<SortableHandle />}
                 expanded={expanded}
+                icons={icons}
                 onCollapse={this.handleCollapse}
                 onExpand={this.handleExpand}
                 onRemove={onRemove ? this.handleRemove : undefined}

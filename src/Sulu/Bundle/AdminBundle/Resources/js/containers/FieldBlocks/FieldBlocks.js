@@ -17,6 +17,8 @@ import fieldBlocksStyles from './fieldBlocks.scss';
 const MISSING_BLOCK_ERROR_MESSAGE = 'The "block" field type needs at least one type to be configured!';
 const BLOCK_PREVIEW_TAG = 'sulu.block_preview';
 const SETTINGS_KEY = 'settings';
+const SETTINGS_PREFIX = '/settings/';
+const SETTINGS_TAG = 'sulu.block_setting_icon';
 
 @observer
 class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
@@ -86,6 +88,40 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         }
 
         return settingsFormKey;
+    }
+
+    @computed get iconsMapping() {
+        const settingsSchema = this.blockSettingsFormStore?.schema;
+
+        if (!settingsSchema) {
+            return {};
+        }
+
+        return Object.keys(settingsSchema).reduce((iconsMapping, schemaKey) => {
+            const blockSettingsTag = settingsSchema[schemaKey].tags.find((tag) => tag.name === SETTINGS_TAG);
+
+            if (blockSettingsTag) {
+                iconsMapping[SETTINGS_PREFIX + schemaKey] = blockSettingsTag.attributes.icon;
+            }
+
+            return iconsMapping;
+        }, {});
+    }
+
+    @computed get icons(): Array<Array<string>> {
+        const {value} = this.props;
+
+        if (!value) {
+            return [];
+        }
+
+        return value.map((value) => Object.keys(this.iconsMapping).reduce((icons, pointer) => {
+            if (jsonpointer.has(value, pointer) && jsonpointer.get(value, pointer)) {
+                icons.push(this.iconsMapping[pointer]);
+            }
+
+            return icons;
+        }, []));
     }
 
     setFormRef = (formRef: ?Form) => {
@@ -310,6 +346,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
                 <BlockCollection
                     defaultType={defaultType}
                     disabled={!!disabled}
+                    icons={this.icons}
                     maxOccurs={maxOccurs}
                     minOccurs={minOccurs}
                     onChange={onChange}

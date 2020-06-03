@@ -97,12 +97,27 @@ test('Render collapsed blocks with block previews', () => {
 
     formInspector.getSchemaEntryByPath.mockReturnValue({types});
 
+    const schemaPromise = Promise.resolve({
+        setting: {
+            tags: [
+                {attributes: {icon: 'su-eye'}, name: 'sulu.block_setting_icon'},
+            ],
+            type: 'checkbox',
+        },
+    });
+    const jsonSchemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
     const value = [
         {
             text1: 'Test 1',
             text2: undefined,
             something: 'Test 3',
             type: 'default',
+            settings: {
+                setting: true,
+            },
         },
         {
             text1: 'Test 4',
@@ -132,17 +147,21 @@ test('Render collapsed blocks with block previews', () => {
         }
     });
 
-    const fieldBlocks = shallow(
+    const fieldBlocks = mount(
         <FieldBlocks
             {...fieldTypeDefaultProps}
             defaultType="editor"
             formInspector={formInspector}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
             types={types}
             value={value}
         />
     );
 
-    expect(fieldBlocks.render()).toMatchSnapshot();
+    return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
+        fieldBlocks.update();
+        expect(fieldBlocks.render()).toMatchSnapshot();
+    });
 });
 
 test('Render collapsed blocks with block previews without tags', () => {
@@ -967,6 +986,7 @@ test('Should open and close block settings overlay when confirm button is clicke
 
     const schemaPromise = Promise.resolve({
         setting: {
+            tags: [],
             type: 'checkbox',
         },
     });
@@ -1026,6 +1046,7 @@ test('Should open and close block settings overlay when confirm button is clicke
 
     const schemaPromise = Promise.resolve({
         setting: {
+            tags: [],
             type: 'checkbox',
         },
     });
@@ -1055,7 +1076,6 @@ test('Should open and close block settings overlay when confirm button is clicke
     return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
         fieldBlocks.update();
         expect(changeSpy).not.toBeCalled();
-
         fieldBlocks.find('Checkbox[dataPath="/setting"]').prop('onChange')(true);
 
         fieldBlocks.find('Overlay Button[children="sulu_admin.apply"]').simulate('click');

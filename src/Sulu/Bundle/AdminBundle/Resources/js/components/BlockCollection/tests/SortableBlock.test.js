@@ -17,6 +17,7 @@ test('Render collapsed sortable block', () => {
         <SortableBlock
             activeType="editor"
             expanded={false}
+            icons={['su-eye', 'su-people']}
             onCollapse={jest.fn()}
             onExpand={jest.fn()}
             onRemove={jest.fn()}

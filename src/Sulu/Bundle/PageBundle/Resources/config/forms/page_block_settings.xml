@@ -22,6 +22,8 @@
                 <param name="skin" value="heading" />
                 <param name="type" value="toggler" />
             </params>
+
+            <tag name="sulu.block_setting_icon" icon="su-eye" />
         </property>
     </properties>
 </form>

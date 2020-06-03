@@ -13,6 +13,18 @@ exports[`Render a collapsed block 1`] = `
     <header
       class="header"
     >
+      <div
+        class="icons"
+      >
+        <span
+          aria-label="su-eye"
+          class="su-eye"
+        />
+        <span
+          aria-label="su-people"
+          class="su-people"
+        />
+      </div>
       <span
         aria-label="su-angle-down"
         class="su-angle-down"
@@ -87,7 +99,7 @@ exports[`Render an expanded block with a multiple types 1`] = `
         </div>
       </div>
       <div
-        class="icons"
+        class="iconButtons"
       >
         <span
           aria-label="su-cog"
