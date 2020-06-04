@@ -10,10 +10,6 @@ To make the update to symfony 5 as seamless as possible a new bundle need to be 
 HandcraftedInTheAlps\RestRoutingBundle\RestRoutingBundle::class => ['all' => true],
 ```
 
-### CSV Handler changed
-
-The Sulu `CsvHandler::createResponse` now accept a `ViewHandlerInterface` instead of `ViewHandler`.
-
 ## 2.1.0-RC1
 
 ### Deprecated ExceptionController changed to ErrorController
