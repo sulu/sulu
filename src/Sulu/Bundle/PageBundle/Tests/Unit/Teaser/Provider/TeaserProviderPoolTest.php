@@ -38,7 +38,7 @@ class TeaserProviderPoolTest extends TestCase
         ];
 
         $this->teaserProviderPool = new TeaserProviderPool(
-            array_map(
+            \array_map(
                 function($provider) {
                     return $provider->reveal();
                 },

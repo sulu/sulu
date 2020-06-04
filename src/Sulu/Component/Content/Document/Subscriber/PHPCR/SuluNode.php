@@ -119,7 +119,7 @@ class SuluNode implements \IteratorAggregate, NodeInterface
     public function setProperty($name, $value, $type = PropertyType::UNDEFINED)
     {
         $oldValue = $this->getPropertyValueWithDefault($name, null);
-        if (null !== $oldValue && gettype($value) !== gettype($oldValue)) {
+        if (null !== $oldValue && \gettype($value) !== \gettype($oldValue)) {
             $this->node->getProperty($name)->remove();
         }
 

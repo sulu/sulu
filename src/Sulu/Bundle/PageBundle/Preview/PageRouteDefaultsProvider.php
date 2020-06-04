@@ -79,8 +79,8 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
     {
         return HomeDocument::class === $entityClass
             || PageDocument::class === $entityClass
-            || is_subclass_of($entityClass, HomeDocument::class)
-            || is_subclass_of($entityClass, PageDocument::class);
+            || \is_subclass_of($entityClass, HomeDocument::class)
+            || \is_subclass_of($entityClass, PageDocument::class);
     }
 
     /**

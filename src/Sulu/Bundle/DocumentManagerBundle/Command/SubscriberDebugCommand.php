@@ -58,10 +58,10 @@ class SubscriberDebugCommand extends Command
 
         foreach ($listeners as $listenerTuple) {
             list($listener, $methodName) = $listenerTuple;
-            $refl = new \ReflectionClass(get_class($listener));
+            $refl = new \ReflectionClass(\get_class($listener));
             $priority = $this->getPriority($eventName, $methodName, $listener);
             $rows[] = [
-                sprintf(
+                \sprintf(
                     '<comment>%s</comment>\\%s',
                     $refl->getNamespaceName(),
                     $refl->getShortName()
@@ -71,7 +71,7 @@ class SubscriberDebugCommand extends Command
             ];
         }
 
-        usort($rows, function($a, $b) {
+        \usort($rows, function($a, $b) {
             return $a[2] < $b[2];
         });
 
@@ -88,7 +88,7 @@ class SubscriberDebugCommand extends Command
         $events = $listener::getSubscribedEvents();
         $events = $events[$eventName];
 
-        if (is_string($events)) {
+        if (\is_string($events)) {
             return 0;
         }
 
@@ -97,13 +97,13 @@ class SubscriberDebugCommand extends Command
 
     private function resolvePriority($value, $targetMethodName)
     {
-        if (1 == count($value)) {
+        if (1 == \count($value)) {
             return 0;
         }
 
         list($methodName, $priority) = $value;
 
-        if (is_string($methodName) && is_numeric($priority)) {
+        if (\is_string($methodName) && \is_numeric($priority)) {
             if ($methodName === $targetMethodName) {
                 return $priority;
             }
@@ -130,7 +130,7 @@ class SubscriberDebugCommand extends Command
         $table->setHeaders(['Event']);
         foreach ($constants as $name => $value) {
             $table->addRow([
-                substr($value, strlen(self::PREFIX)),
+                \substr($value, \strlen(self::PREFIX)),
             ]);
         }
         $table->render();

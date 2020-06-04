@@ -67,11 +67,11 @@ class TagControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('tag1', $response['name']);
-        $this->assertNotContains('creator', array_keys($response));
-        $this->assertNotContains('changer', array_keys($response));
+        $this->assertNotContains('creator', \array_keys($response));
+        $this->assertNotContains('changer', \array_keys($response));
     }
 
     public function testList()
@@ -87,7 +87,7 @@ class TagControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(2, $response->total);
         $this->assertEquals('tag1', $response->_embedded->tags[0]->name);
@@ -108,7 +108,7 @@ class TagControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
         $this->assertEquals('tag3', $response->_embedded->tags[0]->name);
@@ -127,7 +127,7 @@ class TagControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
         $this->assertEquals('tag1', $response->_embedded->tags[0]->name);
@@ -146,7 +146,7 @@ class TagControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
         $this->assertEquals('tag2', $response->_embedded->tags[0]->name);
@@ -160,7 +160,7 @@ class TagControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(0, $response->code);
         $this->assertTrue(isset($response->message));
@@ -175,7 +175,7 @@ class TagControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('tag3', $response->name);
 
@@ -185,11 +185,11 @@ class TagControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('tag3', $response['name']);
-        $this->assertNotContains('creator', array_keys($response));
-        $this->assertNotContains('changer', array_keys($response));
+        $this->assertNotContains('creator', \array_keys($response));
+        $this->assertNotContains('changer', \array_keys($response));
     }
 
     public function testPostExistingName()
@@ -205,7 +205,7 @@ class TagControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(400, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('A tag with the name "tag1"already exists!', $response->message);
         $this->assertEquals('name', $response->field);
@@ -223,7 +223,7 @@ class TagControllerTest extends SuluTestCase
             ['name' => 'tag1_new']
         );
 
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('tag1_new', $response->name);
 
@@ -233,11 +233,11 @@ class TagControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('tag1_new', $response['name']);
-        $this->assertNotContains('creator', array_keys($response));
-        $this->assertNotContains('changer', array_keys($response));
+        $this->assertNotContains('creator', \array_keys($response));
+        $this->assertNotContains('changer', \array_keys($response));
     }
 
     public function testPutExistingName()
@@ -254,7 +254,7 @@ class TagControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(400, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('A tag with the name "tag1"already exists!', $response->message);
         $this->assertEquals('name', $response->field);
@@ -334,7 +334,7 @@ class TagControllerTest extends SuluTestCase
         $this->client->request(
             'POST',
             '/api/tags/merge',
-            ['src' => implode(',', [
+            ['src' => \implode(',', [
                 $tag2Id, $tag3Id, $tag4Id,
             ]), 'dest' => $tag1Id]
         );
@@ -380,7 +380,7 @@ class TagControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
 
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('Entity with the type "SuluTagBundle:Tag" and the id "1233" not found.', $response->message);
     }
@@ -412,7 +412,7 @@ class TagControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('tag3', $response[0]->name);
         $this->assertEquals('tag4', $response[1]->name);
@@ -424,7 +424,7 @@ class TagControllerTest extends SuluTestCase
             '/api/tags?flat=true'
         );
 
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(6, $response->total);
         $this->assertEquals('tag1', $response->_embedded->tags[0]->name);
@@ -457,7 +457,7 @@ class TagControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(400, $this->client->getResponse());
 
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('A tag with the name "tag1"already exists!', $response->message);
         $this->assertEquals('name', $response->field);
     }
@@ -485,7 +485,7 @@ class TagControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('tag11', $response[0]->name);
         $this->assertEquals('tag33', $response[1]->name);
 
@@ -494,7 +494,7 @@ class TagControllerTest extends SuluTestCase
             '/api/tags?flat=true'
         );
 
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(3, $response->total);
         $this->assertEquals('tag11', $response->_embedded->tags[0]->name);

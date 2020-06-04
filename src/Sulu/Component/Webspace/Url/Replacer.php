@@ -76,7 +76,7 @@ class Replacer implements ReplacerInterface
 
     public function replace($url, $replacer, $value)
     {
-        return str_replace($replacer, $value, $url);
+        return \str_replace($replacer, $value, $url);
     }
 
     public function cleanup($url, array $replacers = null)
@@ -89,15 +89,15 @@ class Replacer implements ReplacerInterface
             $url = $this->replace($url, $replacer, '');
         }
 
-        $url = ltrim($url, '.');
-        $url = rtrim($url, '/');
+        $url = \ltrim($url, '.');
+        $url = \rtrim($url, '/');
 
-        return str_replace('//', '/', $url);
+        return \str_replace('//', '/', $url);
     }
 
     public function appendLocalizationReplacer($url)
     {
-        return rtrim($url, '/') . '/' . self::REPLACER_LOCALIZATION;
+        return \rtrim($url, '/') . '/' . self::REPLACER_LOCALIZATION;
     }
 
     /**
@@ -110,6 +110,6 @@ class Replacer implements ReplacerInterface
      */
     protected function hasReplacer($url, $replacer)
     {
-        return strpos($url, $replacer) > -1;
+        return \strpos($url, $replacer) > -1;
     }
 }

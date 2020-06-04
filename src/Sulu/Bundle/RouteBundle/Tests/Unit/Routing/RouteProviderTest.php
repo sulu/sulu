@@ -188,7 +188,7 @@ class RouteProviderTest extends TestCase
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
 
         $this->assertCount(1, $collection);
-        $routes = array_values(iterator_to_array($collection->getIterator()));
+        $routes = \array_values(\iterator_to_array($collection->getIterator()));
 
         $this->assertEquals('/de/test', $routes[0]->getPath());
         $this->assertEquals(['test' => 1], $routes[0]->getDefaults());
@@ -223,7 +223,7 @@ class RouteProviderTest extends TestCase
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
 
         $this->assertCount(1, $collection);
-        $routes = array_values(iterator_to_array($collection->getIterator()));
+        $routes = \array_values(\iterator_to_array($collection->getIterator()));
 
         $this->assertEquals('/de/test.json', $routes[0]->getPath());
         $this->assertEquals(['test' => 1], $routes[0]->getDefaults());
@@ -232,7 +232,7 @@ class RouteProviderTest extends TestCase
     public function testGetRouteCollectionForRequestWithUmlauts()
     {
         $request = $this->prophesize(Request::class);
-        $request->getPathInfo()->willReturn(rawurlencode('/de/käße'));
+        $request->getPathInfo()->willReturn(\rawurlencode('/de/käße'));
         $request->getLocale()->willReturn('de');
         $request->getRequestFormat()->willReturn('html');
 
@@ -258,7 +258,7 @@ class RouteProviderTest extends TestCase
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
 
         $this->assertCount(1, $collection);
-        $routes = array_values(iterator_to_array($collection->getIterator()));
+        $routes = \array_values(\iterator_to_array($collection->getIterator()));
 
         $this->assertEquals('/de/käße', $routes[0]->getPath());
         $this->assertEquals(['test' => 1], $routes[0]->getDefaults());
@@ -294,7 +294,7 @@ class RouteProviderTest extends TestCase
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
 
         $this->assertCount(1, $collection);
-        $routes = array_values(iterator_to_array($collection->getIterator()));
+        $routes = \array_values(\iterator_to_array($collection->getIterator()));
 
         $this->assertEquals('/de/test', $routes[0]->getPath());
         $this->assertEquals(['test' => 1], $routes[0]->getDefaults());
@@ -335,7 +335,7 @@ class RouteProviderTest extends TestCase
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
 
         $this->assertCount(1, $collection);
-        $routes = array_values(iterator_to_array($collection->getIterator()));
+        $routes = \array_values(\iterator_to_array($collection->getIterator()));
 
         $this->assertEquals('/de/test', $routes[0]->getPath());
         $this->assertEquals(
@@ -379,7 +379,7 @@ class RouteProviderTest extends TestCase
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
 
         $this->assertCount(1, $collection);
-        $routes = array_values(iterator_to_array($collection->getIterator()));
+        $routes = \array_values(\iterator_to_array($collection->getIterator()));
 
         $this->assertEquals('/de/test', $routes[0]->getPath());
         $this->assertEquals(
@@ -417,7 +417,7 @@ class RouteProviderTest extends TestCase
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
 
         $this->assertCount(1, $collection);
-        $routes = array_values(iterator_to_array($collection->getIterator()));
+        $routes = \array_values(\iterator_to_array($collection->getIterator()));
 
         $this->assertEquals('/test', $routes[0]->getPath());
         $this->assertEquals(['test' => 1], $routes[0]->getDefaults());
@@ -470,7 +470,7 @@ class RouteProviderTest extends TestCase
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
 
         $this->assertCount(1, $collection);
-        $routes = array_values(iterator_to_array($collection->getIterator()));
+        $routes = \array_values(\iterator_to_array($collection->getIterator()));
 
         $this->assertEquals('/de/test', $routes[0]->getPath());
         $this->assertEquals(['test' => 1], $routes[0]->getDefaults());

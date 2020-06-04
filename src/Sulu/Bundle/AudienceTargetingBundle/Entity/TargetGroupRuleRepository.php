@@ -30,7 +30,7 @@ class TargetGroupRuleRepository extends EntityRepository implements TargetGroupR
         $targetGroupRule = $this->getEntityManager()->merge($targetGroupRule);
 
         foreach ($targetGroupRule->getConditions()->toArray() as $condition) {
-            if (!in_array($condition, $newConditions)) {
+            if (!\in_array($condition, $newConditions)) {
                 $targetGroupRule->removeCondition($condition);
                 $this->getEntityManager()->remove($condition);
             }

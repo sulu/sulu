@@ -20,12 +20,12 @@ class FilterTypeRegistry
 
     public function __construct(iterable $filterTypes)
     {
-        $this->filterTypes = iterator_to_array($filterTypes);
+        $this->filterTypes = \iterator_to_array($filterTypes);
     }
 
     public function getFilterType(string $type): FilterTypeInterface
     {
-        if (!array_key_exists($type, $this->filterTypes)) {
+        if (!\array_key_exists($type, $this->filterTypes)) {
             throw new FilterTypeNotFoundException($type);
         }
 

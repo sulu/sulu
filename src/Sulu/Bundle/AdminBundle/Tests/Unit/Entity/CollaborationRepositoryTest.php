@@ -172,7 +172,7 @@ class CollaborationRepositoryTest extends TestCase
 
         $this->assertEquals([$collaboration1, $collaboration2], $result);
 
-        sleep($threshold + 1);
+        \sleep($threshold + 1);
 
         $collaboration2 = new Collaboration(
             $collaborationId2,
@@ -232,7 +232,7 @@ class CollaborationRepositoryTest extends TestCase
         $started = $collaboration1->getStarted();
         $this->assertEquals($started, $collaboration1->getChanged());
 
-        sleep(10);
+        \sleep(10);
 
         $this->cache->save($cacheItem)->shouldBeCalled();
         $result = $collaborationRepository->update($collaboration1);

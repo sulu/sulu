@@ -44,6 +44,6 @@ class PreviewObjectProviderRegistry implements PreviewObjectProviderRegistryInte
 
     public function hasPreviewObjectProvider(string $providerKey): bool
     {
-        return array_key_exists($providerKey, $this->previewObjectProviders);
+        return \array_key_exists($providerKey, $this->previewObjectProviders);
     }
 }

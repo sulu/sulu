@@ -137,7 +137,7 @@ class GeolocatorLocation
 
     public function setCountry(?string $country): self
     {
-        $this->country = mb_strtoupper($country);
+        $this->country = \mb_strtoupper($country);
 
         return $this;
     }
@@ -204,7 +204,7 @@ class GeolocatorLocation
             'longitude',
             'latitude',
         ] as $propertyName) {
-            $res[$propertyName] = $this->{'get' . ucfirst($propertyName)}();
+            $res[$propertyName] = $this->{'get' . \ucfirst($propertyName)}();
         }
 
         $res['name'] = TextUtils::truncate($this->getDisplayTitle(), 75);

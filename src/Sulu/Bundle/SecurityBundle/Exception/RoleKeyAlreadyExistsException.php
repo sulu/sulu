@@ -27,7 +27,7 @@ class RoleKeyAlreadyExistsException extends \Exception
     public function __construct($key)
     {
         $this->key = $key;
-        parent::__construct(sprintf('Role with key "%s" already exists', $key), 1101);
+        parent::__construct(\sprintf('Role with key "%s" already exists', $key), 1101);
     }
 
     /**

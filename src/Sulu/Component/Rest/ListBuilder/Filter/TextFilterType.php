@@ -21,11 +21,11 @@ class TextFilterType implements FilterTypeInterface
         FieldDescriptorInterface $fieldDescriptor,
         $options
     ): void {
-        if (!is_array($options)) {
+        if (!\is_array($options)) {
             throw new InvalidFilterTypeOptionsException('The TextFilterType requires its options to be an array');
         }
 
-        foreach (array_keys($options) as $operator) {
+        foreach (\array_keys($options) as $operator) {
             switch ($operator) {
                 case 'eq':
                     $listBuilderOperator = ListBuilderInterface::WHERE_COMPARATOR_EQUAL;

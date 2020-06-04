@@ -71,9 +71,9 @@ class AccountDataProviderTest extends TestCase
 
         return [
             [['tags' => [1]], null, 1, 3, $accounts, false, $dataItems],
-            [['tags' => [1]], null, 1, 2, $accounts, true, array_slice($dataItems, 0, 2)],
-            [['tags' => [1]], 5, 1, 2, $accounts, true, array_slice($dataItems, 0, 2)],
-            [['tags' => [1]], 1, 1, 2, array_slice($accounts, 0, 1), false, array_slice($dataItems, 0, 1)],
+            [['tags' => [1]], null, 1, 2, $accounts, true, \array_slice($dataItems, 0, 2)],
+            [['tags' => [1]], 5, 1, 2, $accounts, true, \array_slice($dataItems, 0, 2)],
+            [['tags' => [1]], 1, 1, 2, \array_slice($accounts, 0, 1), false, \array_slice($dataItems, 0, 1)],
         ];
     }
 
@@ -120,9 +120,9 @@ class AccountDataProviderTest extends TestCase
 
         return [
             [['tags' => [1]], null, 1, 3, $accounts, false, $dataItems],
-            [['tags' => [1]], null, 1, 2, $accounts, true, array_slice($dataItems, 0, 2)],
-            [['tags' => [1]], 5, 1, 2, $accounts, true, array_slice($dataItems, 0, 2)],
-            [['tags' => [1]], 1, 1, 2, array_slice($accounts, 0, 1), false, array_slice($dataItems, 0, 1)],
+            [['tags' => [1]], null, 1, 2, $accounts, true, \array_slice($dataItems, 0, 2)],
+            [['tags' => [1]], 5, 1, 2, $accounts, true, \array_slice($dataItems, 0, 2)],
+            [['tags' => [1]], 1, 1, 2, \array_slice($accounts, 0, 1), false, \array_slice($dataItems, 0, 1)],
         ];
     }
 

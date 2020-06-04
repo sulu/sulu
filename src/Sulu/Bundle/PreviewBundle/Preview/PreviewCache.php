@@ -31,23 +31,23 @@ class PreviewCache
     public function __construct($cache)
     {
         if ($cache instanceof Cache) {
-            @trigger_error(
-                sprintf(
+            @\trigger_error(
+                \sprintf(
                     'To inject $cache as instance of "%s" is deprecated use a "%s" instead.',
-                    get_class($cache),
+                    \get_class($cache),
                     CacheItemPoolInterface::class
                 ),
-                E_USER_DEPRECATED
+                \E_USER_DEPRECATED
             );
         }
 
         if (!$cache instanceof Cache && !$cache instanceof CacheItemPoolInterface) {
             throw new \RuntimeException(
-                sprintf(
+                \sprintf(
                     'The $cache need to be an instance of "%s" or "%s" but got "%s".',
                     CacheItemPoolInterface::class,
                     Cache::class,
-                    get_class($cache)
+                    \get_class($cache)
                 )
             );
         }

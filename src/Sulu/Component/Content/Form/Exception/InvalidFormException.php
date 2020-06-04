@@ -23,14 +23,14 @@ class InvalidFormException extends \Exception
         $message = [];
 
         foreach ($form->getErrors(true, true) as $error) {
-            $message[] = sprintf(
+            $message[] = \sprintf(
                 '[%s] %s (%s)',
                 $error->getOrigin() ? $error->getOrigin()->getPropertyPath() : '-',
                 $error->getMessage(),
-                json_encode($error->getMessageParameters())
+                \json_encode($error->getMessageParameters())
             );
         }
 
-        parent::__construct(implode("\n", $message));
+        parent::__construct(\implode("\n", $message));
     }
 }

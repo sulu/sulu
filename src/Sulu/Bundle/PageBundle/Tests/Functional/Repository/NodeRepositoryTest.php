@@ -127,7 +127,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('Child 1', $structure->getTitle());
 
         $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, false);
-        $this->assertEquals(2, count($result['_embedded']['pages']));
+        $this->assertEquals(2, \count($result['_embedded']['pages']));
     }
 
     /**
@@ -139,7 +139,7 @@ class NodeRepositoryTest extends SuluTestCase
         $structure = $structures[0];
 
         $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, false);
-        $this->assertEquals(2, count($result['_embedded']['pages']));
+        $this->assertEquals(2, \count($result['_embedded']['pages']));
         $this->assertEquals('Testtitle', $result['_embedded']['pages'][0]['title']);
         $this->assertEquals('/testtitle', $result['_embedded']['pages'][0]['path']);
         $this->assertTrue($result['_embedded']['pages'][0]['hasSub']);
@@ -154,7 +154,7 @@ class NodeRepositoryTest extends SuluTestCase
         $structure = $structures[0];
 
         $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'de', false, false);
-        $this->assertEquals(2, count($result['_embedded']['pages']));
+        $this->assertEquals(2, \count($result['_embedded']['pages']));
         $this->assertEquals('Testtitle', $result['_embedded']['pages'][0]['title']);
         $this->assertEquals('/testtitle', $result['_embedded']['pages'][0]['path']);
         $this->assertEquals('ghost', $result['_embedded']['pages'][0]['type']['name']);
@@ -218,7 +218,7 @@ class NodeRepositoryTest extends SuluTestCase
         $data = $this->prepareGetTestData();
 
         $result = $this->nodeRepository->getNodesByIds([], 'sulu_io', 'en');
-        $this->assertEquals(0, count($result['_embedded']['pages']));
+        $this->assertEquals(0, \count($result['_embedded']['pages']));
         $this->assertEquals(0, $result['total']);
 
         $result = $this->nodeRepository->getNodesByIds(
@@ -228,7 +228,7 @@ class NodeRepositoryTest extends SuluTestCase
             'sulu_io',
             'en'
         );
-        $this->assertEquals(1, count($result['_embedded']['pages']));
+        $this->assertEquals(1, \count($result['_embedded']['pages']));
         $this->assertEquals(1, $result['total']);
         $this->assertEquals('Testtitle', $result['_embedded']['pages'][0]['title']);
         $this->assertEquals('/testtitle', $result['_embedded']['pages'][0]['path']);
@@ -239,7 +239,7 @@ class NodeRepositoryTest extends SuluTestCase
         $data = $this->prepareGetTestData();
 
         $result = $this->nodeRepository->getNodesByIds([], 'sulu_io', 'en');
-        $this->assertEquals(0, count($result['_embedded']['pages']));
+        $this->assertEquals(0, \count($result['_embedded']['pages']));
         $this->assertEquals(0, $result['total']);
 
         $result = $this->nodeRepository->getNodesByIds(
@@ -250,7 +250,7 @@ class NodeRepositoryTest extends SuluTestCase
             'sulu_io',
             'en'
         );
-        $this->assertEquals(1, count($result['_embedded']['pages']));
+        $this->assertEquals(1, \count($result['_embedded']['pages']));
         $this->assertEquals(1, $result['total']);
         $this->assertEquals('Testtitle', $result['_embedded']['pages'][0]['title']);
         $this->assertEquals('/testtitle', $result['_embedded']['pages'][0]['path']);
@@ -291,7 +291,7 @@ class NodeRepositoryTest extends SuluTestCase
                 null,
                 StructureInterface::STATE_PUBLISHED
             );
-            sleep(1);
+            \sleep(1);
         }
 
         $nodes = $this->nodeRepository->getFilteredNodes(
@@ -357,7 +357,7 @@ class NodeRepositoryTest extends SuluTestCase
                 null,
                 StructureInterface::STATE_PUBLISHED
             );
-            sleep(1);
+            \sleep(1);
         }
 
         $nodes = $this->nodeRepository->getFilteredNodes(
@@ -437,7 +437,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('/news/test1', $result['url']);
 
         $test = $this->nodeRepository->getNodes(null, 'sulu_io', 'en');
-        $this->assertEquals(4, count($test['_embedded']['pages']));
+        $this->assertEquals(4, \count($test['_embedded']['pages']));
         $nodes = $test['_embedded']['pages'];
 
         $this->assertEquals('Test4', $nodes[0]['title']);

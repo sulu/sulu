@@ -28,7 +28,7 @@ class FormatControllerTest extends SuluTestCase
 
         $client->request('GET', '/api/formats?locale=de');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $formats = $response->_embedded->formats;

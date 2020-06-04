@@ -36,11 +36,11 @@ class TagRequestHandler implements TagRequestHandlerInterface
             $tags = '';
         }
 
-        return array_map(
+        return \array_map(
             function($item) {
-                return trim($item);
+                return \trim($item);
             },
-            array_filter(explode(',', $tags))
+            \array_filter(\explode(',', $tags))
         );
     }
 
@@ -48,39 +48,39 @@ class TagRequestHandler implements TagRequestHandlerInterface
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (is_array($tag) && !array_key_exists('name', $tag)) {
+        if (\is_array($tag) && !\array_key_exists('name', $tag)) {
             return;
         }
 
         // extend comma separated list
         $tags = $request->get($tagsParameter, '');
-        $tagsArray = array_filter(array_merge(explode(',', $tags), [$tag['name']]));
-        $tags = implode(',', array_unique($tagsArray));
+        $tagsArray = \array_filter(\array_merge(\explode(',', $tags), [$tag['name']]));
+        $tags = \implode(',', \array_unique($tagsArray));
 
         // get all parameter and extend with new tags string
         $query = $request->query->all();
-        $query = array_merge($query, [$tagsParameter => $tags]);
+        $query = \array_merge($query, [$tagsParameter => $tags]);
 
-        $queryString = http_build_query($query);
+        $queryString = \http_build_query($query);
 
-        return $request->getPathInfo() . (strlen($queryString) > 0 ? '?' . $queryString : '');
+        return $request->getPathInfo() . (\strlen($queryString) > 0 ? '?' . $queryString : '');
     }
 
     public function setTagToUrl($tag, $tagsParameter = 'tags')
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (is_array($tag) && !array_key_exists('name', $tag)) {
+        if (\is_array($tag) && !\array_key_exists('name', $tag)) {
             return;
         }
 
         // get all parameter and extend with new tags string
         $query = $request->query->all();
-        $query = array_merge($query, [$tagsParameter => $tag['name']]);
+        $query = \array_merge($query, [$tagsParameter => $tag['name']]);
 
-        $queryString = http_build_query($query);
+        $queryString = \http_build_query($query);
 
-        return $request->getPathInfo() . (strlen($queryString) > 0 ? '?' . $queryString : '');
+        return $request->getPathInfo() . (\strlen($queryString) > 0 ? '?' . $queryString : '');
     }
 
     public function removeTagsFromUrl($tagsParameter = 'tags')
@@ -91,8 +91,8 @@ class TagRequestHandler implements TagRequestHandlerInterface
         $query = $request->query->all();
         unset($query[$tagsParameter]);
 
-        $queryString = http_build_query($query);
+        $queryString = \http_build_query($query);
 
-        return $request->getPathInfo() . (strlen($queryString) > 0 ? '?' . $queryString : '');
+        return $request->getPathInfo() . (\strlen($queryString) > 0 ? '?' . $queryString : '');
     }
 }

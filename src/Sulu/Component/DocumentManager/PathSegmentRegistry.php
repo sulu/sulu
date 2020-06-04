@@ -47,10 +47,10 @@ class PathSegmentRegistry
     {
         if (!isset($this->pathSegments[$name])) {
             throw new \InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     'Unknown path segment "%s". Known path segments: "%s"',
                     $name,
-                    implode('", "', array_keys($this->pathSegments))
+                    \implode('", "', \array_keys($this->pathSegments))
                 )
             );
         }

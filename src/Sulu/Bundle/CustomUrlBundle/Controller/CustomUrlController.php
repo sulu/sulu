@@ -175,7 +175,7 @@ class CustomUrlController extends AbstractRestController implements SecuredContr
      */
     public function cdeleteAction($webspace, Request $request)
     {
-        $ids = array_filter(explode(',', $request->get('ids', '')));
+        $ids = \array_filter(\explode(',', $request->get('ids', '')));
 
         foreach ($ids as $ids) {
             $this->customUrlManager->delete($ids);

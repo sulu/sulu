@@ -93,7 +93,7 @@ class AuthenticationHandlerTest extends TestCase
         $this->assertTrue($response instanceof JsonResponse);
         $this->assertEquals(200, $response->getStatusCode());
 
-        $response = json_decode($response->getContent(), true);
+        $response = \json_decode($response->getContent(), true);
         $this->assertEquals('/admin/#target/path', $response['url']);
     }
 

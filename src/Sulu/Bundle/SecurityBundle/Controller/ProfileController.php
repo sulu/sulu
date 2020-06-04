@@ -161,7 +161,7 @@ class ProfileController implements ClassResourceInterface
                 }
 
                 // persist setting
-                $setting->setValue(json_encode($settingValue));
+                $setting->setValue(\json_encode($settingValue));
             }
             $this->objectManager->flush();
 

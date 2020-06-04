@@ -89,7 +89,7 @@ class BaseDataProviderTest extends TestCase
         $this->assertEquals($presentAs, $configuration->hasPresentAs());
         $this->assertEquals($sorting, $configuration->getSorting());
         $this->assertEquals($paginated, $configuration->hasPagination());
-        $this->assertEquals(count($sorting) > 0, $configuration->hasSorting());
+        $this->assertEquals(\count($sorting) > 0, $configuration->hasSorting());
     }
 
     public function testResolveDataSource()
@@ -282,7 +282,7 @@ class BaseDataProviderTest extends TestCase
         $hasNextPage,
         $items
     ) {
-        $mockedItems = array_map(
+        $mockedItems = \array_map(
             function($item) {
                 $mock = $this->prophesize(ResourceItemInterface::class);
                 $mock->getId()->willReturn($item['id']);
@@ -324,9 +324,9 @@ class BaseDataProviderTest extends TestCase
 
         $this->assertInstanceOf(DataProviderResult::class, $result);
         $this->assertEquals($hasNextPage, $result->getHasNextPage());
-        $this->assertCount(count($items), $result->getItems());
+        $this->assertCount(\count($items), $result->getItems());
 
-        for ($i = 0, $len = count($items); $i < $len; ++$i) {
+        for ($i = 0, $len = \count($items); $i < $len; ++$i) {
             $expected = $items[$i];
             $item = $result->getItems()[$i];
 
@@ -348,7 +348,7 @@ class BaseDataProviderTest extends TestCase
         $hasNextPage,
         $items
     ) {
-        $mockedItems = array_map(
+        $mockedItems = \array_map(
             function($item) {
                 $mock = $this->prophesize(ResourceItemInterface::class);
                 $mock->getId()->willReturn($item['id']);
@@ -395,9 +395,9 @@ class BaseDataProviderTest extends TestCase
 
         $this->assertInstanceOf(DataProviderResult::class, $result);
         $this->assertEquals($hasNextPage, $result->getHasNextPage());
-        $this->assertCount(count($items), $result->getItems());
+        $this->assertCount(\count($items), $result->getItems());
 
-        for ($i = 0, $len = count($items); $i < $len; ++$i) {
+        for ($i = 0, $len = \count($items); $i < $len; ++$i) {
             $expected = $items[$i];
             $item = $result->getItems()[$i];
 

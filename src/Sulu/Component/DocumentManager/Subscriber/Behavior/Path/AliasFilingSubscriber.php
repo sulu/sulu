@@ -54,7 +54,7 @@ class AliasFilingSubscriber extends AbstractFilingSubscriber
         }
         $parentName = $this->getParentName($document);
 
-        return sprintf('%s/%s', $currentPath, Inflector::pluralize($parentName));
+        return \sprintf('%s/%s', $currentPath, Inflector::pluralize($parentName));
     }
 
     /**
@@ -74,6 +74,6 @@ class AliasFilingSubscriber extends AbstractFilingSubscriber
      */
     protected function getParentName($document)
     {
-        return $this->metadataFactory->getMetadataForClass(get_class($document))->getAlias();
+        return $this->metadataFactory->getMetadataForClass(\get_class($document))->getAlias();
     }
 }

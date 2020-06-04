@@ -82,7 +82,7 @@ class WebspaceCollection implements \IteratorAggregate
      */
     public function getPortal($key)
     {
-        return array_key_exists($key, $this->portals) ? $this->portals[$key] : null;
+        return \array_key_exists($key, $this->portals) ? $this->portals[$key] : null;
     }
 
     /**
@@ -96,7 +96,7 @@ class WebspaceCollection implements \IteratorAggregate
     public function getPortalInformations($environment, $types = null)
     {
         if (!isset($this->portalInformations[$environment])) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Unknown portal environment "%s"', $environment
             ));
         }
@@ -104,10 +104,10 @@ class WebspaceCollection implements \IteratorAggregate
             return $this->portalInformations[$environment];
         }
 
-        return array_filter(
+        return \array_filter(
             $this->portalInformations[$environment],
             function(PortalInformation $portalInformation) use ($types) {
-                return in_array($portalInformation->getType(), $types);
+                return \in_array($portalInformation->getType(), $types);
             }
         );
     }
@@ -121,7 +121,7 @@ class WebspaceCollection implements \IteratorAggregate
      */
     public function getWebspace($key)
     {
-        return array_key_exists($key, $this->webspaces) ? $this->webspaces[$key] : null;
+        return \array_key_exists($key, $this->webspaces) ? $this->webspaces[$key] : null;
     }
 
     /**
@@ -131,7 +131,7 @@ class WebspaceCollection implements \IteratorAggregate
      */
     public function length()
     {
-        return count($this->webspaces);
+        return \count($this->webspaces);
     }
 
     public function getIterator()

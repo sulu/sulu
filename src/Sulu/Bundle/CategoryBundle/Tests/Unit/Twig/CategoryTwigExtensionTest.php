@@ -157,7 +157,7 @@ class CategoryTwigExtensionTest extends TestCase
         );
         $result = $extension->appendCategoryUrlFunction($category, $parameter);
 
-        $this->assertEquals($url . '?' . $parameter . '=' . urlencode($expected), $result);
+        $this->assertEquals($url . '?' . $parameter . '=' . \urlencode($expected), $result);
     }
 
     public function setProvider()
@@ -202,7 +202,7 @@ class CategoryTwigExtensionTest extends TestCase
         );
         $result = $extension->setCategoryUrlFunction($category, $parameter);
 
-        $this->assertEquals($url . '?' . $parameter . '=' . urlencode($expected), $result);
+        $this->assertEquals($url . '?' . $parameter . '=' . \urlencode($expected), $result);
     }
 
     public function clearProvider()

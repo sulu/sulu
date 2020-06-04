@@ -93,7 +93,7 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
     public function generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey = null)
     {
         // title should not have a slash
-        $title = str_replace('/', '-', $title);
+        $title = \str_replace('/', '-', $title);
 
         $parentPath = $this->getClosestResourceLocator($parentUuid, $webspaceKey, $languageCode);
 
@@ -104,7 +104,7 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
         $path = $this->cleaner->cleanup($path, $languageCode);
 
         // if no path was added throw an except that no url could be generated for the given title
-        if (substr($path, 0, -1) === $parentPath) {
+        if (\substr($path, 0, -1) === $parentPath) {
             throw new ResourceLocatorGeneratorException($title, $parentPath);
         }
 

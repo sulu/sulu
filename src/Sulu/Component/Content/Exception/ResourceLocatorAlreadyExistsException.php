@@ -29,7 +29,7 @@ class ResourceLocatorAlreadyExistsException extends \Exception
         $this->path = $path;
 
         parent::__construct(
-            sprintf(
+            \sprintf(
                 'The ResouceLocator "%s" already exists at the node "%s". Please choose a different resource locator'
                 . ' or delete the existing one before reassigning it.',
                 $this->resourceLocator,

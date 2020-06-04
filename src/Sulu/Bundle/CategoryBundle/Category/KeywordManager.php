@@ -55,7 +55,7 @@ class KeywordManager implements KeywordManagerInterface
         // overwrite existing keyword if force is present
         if (null === $force
             && $keyword->isReferencedMultiple()
-            && in_array($force, [self::FORCE_OVERWRITE, self::FORCE_DETACH, self::FORCE_MERGE, null])
+            && \in_array($force, [self::FORCE_OVERWRITE, self::FORCE_DETACH, self::FORCE_MERGE, null])
         ) {
             // return conflict if keyword is used by other categories
             throw new KeywordIsMultipleReferencedException($keyword);

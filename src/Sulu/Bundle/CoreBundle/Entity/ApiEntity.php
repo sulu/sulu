@@ -66,7 +66,7 @@ abstract class ApiEntity
      */
     public function getLinks()
     {
-        if (count($this->_links) < 1) {
+        if (\count($this->_links) < 1) {
             $this->createSelfLink();
         }
 
@@ -79,9 +79,9 @@ abstract class ApiEntity
     public function createSelfLink()
     {
         // if no apiPath is not set generate it from basepath
-        if (is_null($this->getApiPath())) {
-            $class = explode('\\', get_class($this));
-            $plural = Inflector::pluralize(strtolower(end($class)));
+        if (\is_null($this->getApiPath())) {
+            $class = \explode('\\', \get_class($this));
+            $plural = Inflector::pluralize(\strtolower(\end($class)));
             $this->apiPath = $this->apiBasePath . '/' . $plural;
         }
 

@@ -80,7 +80,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
     {
         $configCache = $this->getConfigCache($key, $locale);
 
-        if (!file_exists($configCache->getPath())) {
+        if (!\file_exists($configCache->getPath())) {
             return null;
         }
 
@@ -88,7 +88,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
             $this->warmUp($this->cacheDir);
         }
 
-        $form = unserialize(file_get_contents($configCache->getPath()));
+        $form = \unserialize(\file_get_contents($configCache->getPath()));
 
         if (isset($metadataOptions['webspace'])) {
             $webspace = $this->webspaceManager->findWebspaceByKey($metadataOptions['webspace']);
@@ -123,8 +123,8 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
                 $structure = $this->mapStructureMetadata($structuresMetadata, $locale);
                 $configCache = $this->getConfigCache($structureType, $locale);
                 $configCache->write(
-                    serialize($structure),
-                    array_map(function(ContentStructureMetadata $structureMetadata) {
+                    \serialize($structure),
+                    \array_map(function(ContentStructureMetadata $structureMetadata) {
                         return new FileResource($structureMetadata->getResource());
                     }, $structuresMetadata)
                 );
@@ -143,7 +143,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
             $form = new FormMetadata();
             $form->setTags($this->formMetadataMapper->mapTags($structureMetadata->getTags()));
             $form->setName($structureMetadata->getName());
-            $form->setTitle($structureMetadata->getTitle($locale) ?? ucfirst($structureMetadata->getName()));
+            $form->setTitle($structureMetadata->getTitle($locale) ?? \ucfirst($structureMetadata->getName()));
             $form->setItems($this->formMetadataMapper->mapChildren($structureMetadata->getChildren(), $locale));
             $form->setSchema($this->formMetadataMapper->mapSchema($structureMetadata->getProperties()));
 
@@ -160,6 +160,6 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
 
     private function getConfigCache(string $key, string $locale): ConfigCache
     {
-        return new ConfigCache(sprintf('%s%s%s.%s', $this->cacheDir, DIRECTORY_SEPARATOR, $key, $locale), $this->debug);
+        return new ConfigCache(\sprintf('%s%s%s.%s', $this->cacheDir, \DIRECTORY_SEPARATOR, $key, $locale), $this->debug);
     }
 }

@@ -227,7 +227,7 @@ class NavigationItem implements \Iterator
      */
     public function hasChildren()
     {
-        return count($this->getChildren()) > 0;
+        return \count($this->getChildren()) > 0;
     }
 
     /**
@@ -298,7 +298,7 @@ class NavigationItem implements \Iterator
         $stack = [$this];
         while (!empty($stack)) {
             /** @var NavigationItem $item */
-            $item = array_pop($stack);
+            $item = \array_pop($stack);
             if ($item->equalsChildless($navigationItem)) {
                 return $item;
             }
@@ -374,7 +374,7 @@ class NavigationItem implements \Iterator
      */
     public function valid()
     {
-        return $this->position < count($this->children);
+        return $this->position < \count($this->children);
     }
 
     /**
@@ -400,20 +400,20 @@ class NavigationItem implements \Iterator
             'icon' => $this->getIcon(),
             'view' => $this->getView(),
             'disabled' => $this->getDisabled(),
-            'id' => (null != $this->getId()) ? $this->getId() : str_replace('.', '', uniqid('', true)), //FIXME don't use uniqid()
+            'id' => (null != $this->getId()) ? $this->getId() : \str_replace('.', '', \uniqid('', true)), //FIXME don't use uniqid()
         ];
 
-        if (count($this->getChildViews()) > 0) {
+        if (\count($this->getChildViews()) > 0) {
             $array['childViews'] = $this->getChildViews();
         }
 
         $children = $this->getChildren();
 
-        usort(
+        \usort(
             $children,
             function(NavigationItem $a, NavigationItem $b) {
-                $aPosition = $a->getPosition() ?? PHP_INT_MAX;
-                $bPosition = $b->getPosition() ?? PHP_INT_MAX;
+                $aPosition = $a->getPosition() ?? \PHP_INT_MAX;
+                $bPosition = $b->getPosition() ?? \PHP_INT_MAX;
 
                 return $aPosition - $bPosition;
             }

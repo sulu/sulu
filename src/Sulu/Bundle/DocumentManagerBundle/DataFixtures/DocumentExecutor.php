@@ -51,7 +51,7 @@ class DocumentExecutor
      */
     public function execute(array $fixtures, $purge = true, $initialize = true, OutputInterface $output = null)
     {
-        usort($fixtures, function(DocumentFixtureInterface $fixture1, DocumentFixtureInterface $fixture2) {
+        \usort($fixtures, function(DocumentFixtureInterface $fixture1, DocumentFixtureInterface $fixture2) {
             return $fixture1->getOrder() > $fixture2->getOrder();
         });
 
@@ -64,10 +64,10 @@ class DocumentExecutor
 
         $output->writeln('<comment>Loading fixtures</comment>');
         foreach ($fixtures as $fixture) {
-            $output->writeln(sprintf(
+            $output->writeln(\sprintf(
                 ' - %s<info>loading "</info>%s<info>"</info>',
                 $fixture instanceof OrderedFixtureInterface ? '[' . $fixture->getOrder() . ']' : '',
-                get_class($fixture)
+                \get_class($fixture)
             ));
 
             $fixture->load($this->documentManager);

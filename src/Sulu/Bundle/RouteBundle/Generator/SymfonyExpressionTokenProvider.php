@@ -33,11 +33,11 @@ class SymfonyExpressionTokenProvider implements TokenProviderInterface
     public function __construct(TranslatorInterface $translator)
     {
         if (!$translator instanceof LocaleAwareInterface) {
-            throw new \LogicException(sprintf(
+            throw new \LogicException(\sprintf(
                 'Expected "translator" in "%s" to be instance of "%s" but "%s" given.',
                 __CLASS__,
                 LocaleAwareInterface::class,
-                get_class($translator)
+                \get_class($translator)
             ));
         }
 
@@ -50,7 +50,7 @@ class SymfonyExpressionTokenProvider implements TokenProviderInterface
         $locale = $this->translator->getLocale();
 
         try {
-            if (method_exists($entity, 'getLocale')) {
+            if (\method_exists($entity, 'getLocale')) {
                 $this->translator->setLocale($entity->getLocale());
             }
 

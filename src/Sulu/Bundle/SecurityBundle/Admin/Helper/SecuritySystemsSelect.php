@@ -34,10 +34,10 @@ class SecuritySystemsSelect
     public function getValues(): array
     {
         $values = [];
-        foreach (array_keys($this->adminPool->getSecurityContexts()) as $context) {
+        foreach (\array_keys($this->adminPool->getSecurityContexts()) as $context) {
             $values[] = [
                 'name' => $context,
-                'title' => ucfirst($context),
+                'title' => \ucfirst($context),
             ];
         }
 

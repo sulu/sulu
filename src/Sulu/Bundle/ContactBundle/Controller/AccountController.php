@@ -203,7 +203,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
                 $values,
                 'account_contacts',
                 'sulu_contact.get_account_addresses',
-                array_merge(['id' => $id], $request->query->all()),
+                \array_merge(['id' => $id], $request->query->all()),
                 $listBuilder->getCurrentPage(),
                 $listBuilder->getLimit(),
                 $listBuilder->count()
@@ -241,7 +241,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
                 $values,
                 'addresses',
                 'sulu_contact.get_account_addresses',
-                array_merge(['id' => $id], $request->query->all()),
+                \array_merge(['id' => $id], $request->query->all()),
                 $listBuilder->getCurrentPage(),
                 $listBuilder->getLimit(),
                 $listBuilder->count()
@@ -363,7 +363,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
             $account = $accountContact->getAccount();
 
             // Remove main contact when relation with main was removed.
-            if ($account->getMainContact() && strval($account->getMainContact()->getId()) === $id) {
+            if ($account->getMainContact() && \strval($account->getMainContact()->getId()) === $id) {
                 $account->setMainContact(null);
             }
 
@@ -440,11 +440,11 @@ class AccountController extends AbstractRestController implements ClassResourceI
      */
     protected function applyRequestParameters(Request $request, $listBuilder)
     {
-        if (json_decode($request->get('hasNoParent', null))) {
+        if (\json_decode($request->get('hasNoParent', null))) {
             $listBuilder->where($this->getFieldDescriptorForNoParent(), null);
         }
 
-        if (json_decode($request->get('hasEmail', null))) {
+        if (\json_decode($request->get('hasEmail', null))) {
             $listBuilder->whereNot($this->getFieldDescriptors()['mainEmail'], null);
         }
     }
@@ -526,7 +526,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
         }
 
         $logo = $request->get('logo', []);
-        if ($logo && array_key_exists('id', $logo)) {
+        if ($logo && \array_key_exists('id', $logo)) {
             $this->accountManager->setLogo($account, $request->get('logo')['id']);
         }
 
@@ -599,7 +599,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
         $account->setNote($request->get('note'));
 
         $logo = $request->get('logo', []);
-        if ($logo && array_key_exists('id', $logo)) {
+        if ($logo && \array_key_exists('id', $logo)) {
             $accountManager->setLogo($account, $request->get('logo')['id']);
         }
 
@@ -712,7 +712,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
         if (null !== $request->get('placeOfJurisdiction')) {
             $account->setPlaceOfJurisdiction($request->get('placeOfJurisdiction'));
         }
-        if (array_key_exists('id', $request->get('logo', []))) {
+        if (\array_key_exists('id', $request->get('logo', []))) {
             $accountManager->setLogo($account, $request->get('logo')['id']);
         }
         if (null !== $request->get('medias')) {
@@ -743,7 +743,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
     public function deleteAction($id, Request $request)
     {
         $children = $this->accountRepository->findChildAccounts($id);
-        if (count($children) > 0) {
+        if (\count($children) > 0) {
             $data = [
                 'id' => $id,
                 'items' => [],
@@ -847,7 +847,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
                 foreach ($accountContacts as $accountContact) {
                     /* @var AccountContactEntity $accountContact */
                     $contactId = $accountContact->getContact()->getId();
-                    if (!array_key_exists($contactId, $slicedContacts)) {
+                    if (!\array_key_exists($contactId, $slicedContacts)) {
                         if ($numContacts++ < 3) {
                             $slicedContacts[$contactId] = $accountContact->getContact();
                         }
@@ -902,7 +902,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
      */
     public function getAction($id, Request $request)
     {
-        $includes = explode(',', $request->get('include'));
+        $includes = \explode(',', $request->get('include'));
         $locale = $this->getUser()->getLocale();
 
         try {
@@ -1222,10 +1222,10 @@ class AccountController extends AbstractRestController implements ClassResourceI
      */
     private function addLogos($accounts, $locale)
     {
-        $ids = array_filter(array_column($accounts, 'logo'));
+        $ids = \array_filter(\array_column($accounts, 'logo'));
         $logos = $this->mediaManager->getFormatUrls($ids, $locale);
         foreach ($accounts as $key => $account) {
-            if (array_key_exists('logo', $account) && $account['logo'] && array_key_exists($account['logo'], $logos)) {
+            if (\array_key_exists('logo', $account) && $account['logo'] && \array_key_exists($account['logo'], $logos)) {
                 $accounts[$key]['logo'] = $logos[$account['logo']];
             }
         }
@@ -1246,8 +1246,8 @@ class AccountController extends AbstractRestController implements ClassResourceI
         $ids = $request->get('ids');
 
         if ($ids) {
-            if (is_string($ids)) {
-                $ids = explode(',', $ids);
+            if (\is_string($ids)) {
+                $ids = \explode(',', $ids);
             }
 
             $filter['id'] = $ids;

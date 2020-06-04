@@ -129,7 +129,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
 
     public function setSelectFields($fieldDescriptors)
     {
-        $this->selectFields = array_filter(
+        $this->selectFields = \array_filter(
             $fieldDescriptors,
             function(FieldDescriptorInterface $fieldDescriptor) {
                 if (null === $fieldDescriptor->getMetadata()) {
@@ -171,7 +171,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
 
     public function getSelectField($fieldName)
     {
-        if (array_key_exists($fieldName, $this->selectFields)) {
+        if (\array_key_exists($fieldName, $this->selectFields)) {
             return $this->selectFields[$fieldName];
         }
 
@@ -180,7 +180,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
 
     public function hasSelectField($name)
     {
-        return array_key_exists($name, $this->selectFields);
+        return \array_key_exists($name, $this->selectFields);
     }
 
     /**
@@ -188,7 +188,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      */
     public function hasField($name)
     {
-        return array_key_exists($name, $this->selectFields);
+        return \array_key_exists($name, $this->selectFields);
     }
 
     public function setFieldDescriptors(array $fieldDescriptors)
@@ -198,7 +198,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
 
     public function getFieldDescriptor($fieldName)
     {
-        if (array_key_exists($fieldName, $this->fieldDescriptors)) {
+        if (\array_key_exists($fieldName, $this->fieldDescriptors)) {
             return $this->fieldDescriptors[$fieldName];
         }
 

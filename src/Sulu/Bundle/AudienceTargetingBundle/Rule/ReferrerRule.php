@@ -56,8 +56,8 @@ class ReferrerRule implements RuleInterface
             $referrer = $request->headers->get($this->referrerHeader);
         }
 
-        return (bool) preg_match(
-            '/^' . str_replace(['*', '/'], ['(.*)', '\/'], $options[static::REFERRER]) . '$/',
+        return (bool) \preg_match(
+            '/^' . \str_replace(['*', '/'], ['(.*)', '\/'], $options[static::REFERRER]) . '$/',
             $referrer
         );
     }

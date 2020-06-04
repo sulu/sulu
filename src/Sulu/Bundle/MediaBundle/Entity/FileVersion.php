@@ -269,7 +269,7 @@ class FileVersion implements AuditableInterface
      */
     public function getExtension()
     {
-        $pathInfo = pathinfo($this->getName());
+        $pathInfo = \pathinfo($this->getName());
         $extension = MimeTypes::getDefault()->getExtensions($this->getMimeType())[0] ?? null;
         if ($extension) {
             return $extension;
@@ -282,14 +282,14 @@ class FileVersion implements AuditableInterface
 
     public function setStorageOptions(array $storageOptions)
     {
-        $this->storageOptions = json_encode($storageOptions);
+        $this->storageOptions = \json_encode($storageOptions);
 
         return $this;
     }
 
     public function getStorageOptions(): array
     {
-        $storageOptions = json_decode($this->storageOptions, true);
+        $storageOptions = \json_decode($this->storageOptions, true);
         if (!$storageOptions) {
             return [];
         }
@@ -612,7 +612,7 @@ class FileVersion implements AuditableInterface
      */
     public function getProperties()
     {
-        return json_decode($this->properties, true);
+        return \json_decode($this->properties, true);
     }
 
     /**
@@ -620,7 +620,7 @@ class FileVersion implements AuditableInterface
      */
     public function setProperties(array $properties)
     {
-        $this->properties = json_encode($properties);
+        $this->properties = \json_encode($properties);
 
         return $this;
     }

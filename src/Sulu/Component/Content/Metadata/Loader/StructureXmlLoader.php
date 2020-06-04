@@ -183,7 +183,7 @@ class StructureXmlLoader extends AbstractLoader
             throw new ReservedPropertyNameException($result['key'], $reservedProperty);
         }
 
-        $result['properties'] = array_filter($result['properties'], function($property) {
+        $result['properties'] = \array_filter($result['properties'], function($property) {
             if (!$property instanceof PropertyMetadata) {
                 return true;
             }
@@ -197,19 +197,19 @@ class StructureXmlLoader extends AbstractLoader
                 return false;
             }
 
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Content type with alias "%s" has not been registered. Known content types are: "%s"',
                 $propertyType,
-                implode('", "', $this->contentTypeManager->getAll())
+                \implode('", "', $this->contentTypeManager->getAll())
             ));
         });
 
         // FIXME until excerpt-template is no page template anymore
         // - https://github.com/sulu-io/sulu/issues/1220#issuecomment-110704259
-        if (!array_key_exists('internal', $result) || !$result['internal']) {
+        if (!\array_key_exists('internal', $result) || !$result['internal']) {
             if (isset($this->requiredTagNames[$type])) {
                 foreach ($this->requiredTagNames[$type] as $requiredTagName) {
-                    if (!array_key_exists($requiredTagName, $tags)) {
+                    if (!\array_key_exists($requiredTagName, $tags)) {
                         throw new RequiredTagNotFoundException($result['key'], $requiredTagName);
                     }
                 }
@@ -236,7 +236,7 @@ class StructureXmlLoader extends AbstractLoader
                 'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
             ];
 
-            $result = array_filter(
+            $result = \array_filter(
                 $result,
                 function($value) {
                     return null !== $value;
@@ -247,7 +247,7 @@ class StructureXmlLoader extends AbstractLoader
                 if (!isset($result[$requiredProperty])) {
                     throw new InvalidXmlException(
                         $type,
-                        sprintf(
+                        \sprintf(
                             'Property "%s" is required in XML template file "%s"',
                             $requiredProperty,
                             $resource
@@ -266,14 +266,14 @@ class StructureXmlLoader extends AbstractLoader
                 'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
             ];
 
-            $result = array_filter(
+            $result = \array_filter(
                 $result,
                 function($value) {
                     return null !== $value;
                 }
             );
 
-            if (count($result) < 1) {
+            if (\count($result) < 1) {
                 throw new InvalidXmlException($result['key']);
             }
         }
@@ -310,7 +310,7 @@ class StructureXmlLoader extends AbstractLoader
         $value = $node->nodeValue;
         if (!$this->cacheLifetimeResolver->supports($type, $value)) {
             throw new \InvalidArgumentException(
-                sprintf('CacheLifetime "%s" with type "%s" not supported.', $value, $type)
+                \sprintf('CacheLifetime "%s" with type "%s" not supported.', $value, $type)
             );
         }
 
@@ -322,7 +322,7 @@ class StructureXmlLoader extends AbstractLoader
 
     private function normalizeStructureData($data)
     {
-        $data = array_replace_recursive(
+        $data = \array_replace_recursive(
             [
                 'key' => null,
                 'view' => null,
@@ -339,7 +339,7 @@ class StructureXmlLoader extends AbstractLoader
 
     private function normalizeItem($data)
     {
-        $data = array_merge_recursive(
+        $data = \array_merge_recursive(
             [
                 'meta' => [
                     'title' => [],
@@ -363,7 +363,7 @@ class StructureXmlLoader extends AbstractLoader
 
     private function findMissingRequiredProperties(string $type, array $propertyData): ?string
     {
-        if (!array_key_exists($type, $this->requiredPropertyNames)) {
+        if (!\array_key_exists($type, $this->requiredPropertyNames)) {
             return null;
         }
 

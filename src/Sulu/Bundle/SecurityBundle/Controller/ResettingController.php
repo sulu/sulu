@@ -282,7 +282,7 @@ class ResettingController
         $constraint = new EmailConstraint();
         $result = $this->validator->validate($email, $constraint);
 
-        return 0 === count($result);
+        return 0 === \count($result);
     }
 
     /**
@@ -314,7 +314,7 @@ class ResettingController
             throw new EmailTemplateException($template);
         }
 
-        return trim(
+        return \trim(
             $this->twig->render(
                 $template,
                 [
@@ -433,7 +433,7 @@ class ResettingController
 
         $maxNumberEmails = $this->tokenSendLimit;
 
-        if ($user->getPasswordResetTokenEmailsSent() === intval($maxNumberEmails)) {
+        if ($user->getPasswordResetTokenEmailsSent() === \intval($maxNumberEmails)) {
             throw new TokenEmailsLimitReachedException($maxNumberEmails, $user);
         }
         $mailer = $this->mailer;

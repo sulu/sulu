@@ -94,6 +94,6 @@ class PreviewCacheItem
 
     public function getToken(): string
     {
-        return md5(sprintf('%s.%s.%s.%s', $this->providerKey, $this->id, $this->locale, $this->userId));
+        return \md5(\sprintf('%s.%s.%s.%s', $this->providerKey, $this->id, $this->locale, $this->userId));
     }
 }

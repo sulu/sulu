@@ -29,7 +29,7 @@ class LocalizedFormMetadataCollection
     public function get(string $locale): FormMetadata
     {
         if (!isset($this->items[$locale])) {
-            throw new \InvalidArgumentException(sprintf('Locale "%s" does not exist in collection.', $locale));
+            throw new \InvalidArgumentException(\sprintf('Locale "%s" does not exist in collection.', $locale));
         }
 
         return $this->items[$locale];

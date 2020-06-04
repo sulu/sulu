@@ -84,7 +84,7 @@ class OrderSubscriber implements EventSubscriberInterface
 
         $node = $event->getNode();
         $parent = $node->getParent();
-        $nodeCount = count($parent->getNodes());
+        $nodeCount = \count($parent->getNodes());
         $order = ($nodeCount + 1) * 10;
 
         $document->setSuluOrder($order);

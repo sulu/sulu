@@ -20,7 +20,7 @@ class NavigationItemNotFoundException extends \Exception
 
     public function __construct(string $navigationItem)
     {
-        parent::__construct(sprintf('The NavigationItem with the name "%s" does not exist.', $navigationItem));
+        parent::__construct(\sprintf('The NavigationItem with the name "%s" does not exist.', $navigationItem));
 
         $this->navigationItem = $navigationItem;
     }

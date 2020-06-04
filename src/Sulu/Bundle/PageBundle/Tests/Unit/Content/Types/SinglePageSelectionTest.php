@@ -73,7 +73,7 @@ class SinglePageSelectionTest extends TestCase
         $this->property->getValue()->willReturn($propertyValue);
         $this->type->preResolve($this->property->reveal());
 
-        if (0 === count($expected)) {
+        if (0 === \count($expected)) {
             $this->referenceStore->add(Argument::any())->shouldNotBeCalled();
         }
 

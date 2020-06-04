@@ -122,7 +122,7 @@ class MediaPreviewControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($media->getId(), $response->id);
         $this->assertEquals('photo', $response->title);
@@ -136,7 +136,7 @@ class MediaPreviewControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($media->getId(), $response->id);
         $this->assertEquals('photo', $response->title);
@@ -154,7 +154,7 @@ class MediaPreviewControllerTest extends SuluTestCase
         $this->client->request('DELETE', '/api/media/' . $mediaId . '/preview?locale=en');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($media->getId(), $response->id);
         $this->assertEquals('photo', $response->title);
@@ -194,10 +194,10 @@ class MediaPreviewControllerTest extends SuluTestCase
         $fileVersion->setStorageOptions(['segment' => '1', 'fileName' => $name . '.' . $extension]);
         $storagePath = $this->getStoragePath();
 
-        if (!file_exists($storagePath . '/1')) {
-            mkdir($storagePath . '/1', 0777, true);
+        if (!\file_exists($storagePath . '/1')) {
+            \mkdir($storagePath . '/1', 0777, true);
         }
-        copy($this->getImagePath(), $storagePath . '/1/' . $name . '.' . $extension);
+        \copy($this->getImagePath(), $storagePath . '/1/' . $name . '.' . $extension);
 
         // create meta
         $fileVersionMeta = new FileVersionMeta();

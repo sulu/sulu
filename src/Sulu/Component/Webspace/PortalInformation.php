@@ -258,7 +258,7 @@ class PortalInformation implements ArrayableInterface
      */
     public function getHost()
     {
-        return substr($this->url, 0, $this->getHostLength());
+        return \substr($this->url, 0, $this->getHostLength());
     }
 
     /**
@@ -268,7 +268,7 @@ class PortalInformation implements ArrayableInterface
      */
     public function getPrefix()
     {
-        $prefix = substr($this->url, $this->getHostLength() + 1);
+        $prefix = \substr($this->url, $this->getHostLength() + 1);
 
         return $prefix ? $prefix . '/' : null;
     }
@@ -352,8 +352,8 @@ class PortalInformation implements ArrayableInterface
      */
     private function getHostLength()
     {
-        $hostLength = strpos($this->url, '/');
-        $hostLength = (false === $hostLength) ? strlen($this->url) : $hostLength;
+        $hostLength = \strpos($this->url, '/');
+        $hostLength = (false === $hostLength) ? \strlen($this->url) : $hostLength;
 
         return $hostLength;
     }

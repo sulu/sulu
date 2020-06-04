@@ -236,7 +236,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
                     $webspace = $this->getWebspace($request);
 
                     // call repository method
-                    $data = $this->nodeRepository->copyLocale($id, $userId, $webspace, $locale, explode(',', $destLocale));
+                    $data = $this->nodeRepository->copyLocale($id, $userId, $webspace, $locale, \explode(',', $destLocale));
                     break;
                 case 'unpublish':
                     $document = $this->documentManager->find($id, $locale);
@@ -337,7 +337,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
 
         $this->checkActionParameterSecurity($action, $request, $document);
 
-        $formType = $this->metadataFactory->getMetadataForClass(get_class($document))->getFormType();
+        $formType = $this->metadataFactory->getMetadataForClass(\get_class($document))->getFormType();
 
         $this->requestHashChecker->checkHash($request, $document, $document->getUuid());
 
@@ -358,14 +358,14 @@ class PageController extends AbstractRestController implements ClassResourceInte
         $force = $this->getBooleanRequestParameter($request, 'force', false, false);
 
         if (!$force) {
-            $references = array_filter(
+            $references = \array_filter(
                 $this->nodeRepository->getReferences($id),
                 function(PropertyInterface $reference) {
                     return $reference->getParent()->isNodeType('sulu:page');
                 }
             );
 
-            if (count($references) > 0) {
+            if (\count($references) > 0) {
                 $data = [
                     'id' => $id,
                     'items' => [],
@@ -426,9 +426,9 @@ class PageController extends AbstractRestController implements ClassResourceInte
 
     public function cgetAction(Request $request)
     {
-        $ids = preg_split('/[,]/', $request->get('ids'), -1, PREG_SPLIT_NO_EMPTY);
+        $ids = \preg_split('/[,]/', $request->get('ids'), -1, \PREG_SPLIT_NO_EMPTY);
         $parent = $request->get('parentId');
-        $properties = array_filter(explode(',', $request->get('fields', 'title,published')));
+        $properties = \array_filter(\explode(',', $request->get('fields', 'title,published')));
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
         $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
         $expandedIds = $this->getRequestParameter(
@@ -446,15 +446,15 @@ class PageController extends AbstractRestController implements ClassResourceInte
         }
 
         if (!$locale) {
-            throw new MissingParameterException(get_class($this), 'locale');
+            throw new MissingParameterException(\get_class($this), 'locale');
         }
 
         if (!$webspaceKey && !$webspaceNodes && !$parent) {
-            throw new MissingParameterChoiceException(get_class($this), ['webspace', 'webspace-nodes', 'parentId']);
+            throw new MissingParameterChoiceException(\get_class($this), ['webspace', 'webspace-nodes', 'parentId']);
         }
 
-        if (!in_array($webspaceNodes, [self::WEBSPACE_NODE_SINGLE, static::WEBSPACE_NODES_ALL, null])) {
-            throw new ParameterDataTypeException(get_class($this), 'webspace-nodes');
+        if (!\in_array($webspaceNodes, [self::WEBSPACE_NODE_SINGLE, static::WEBSPACE_NODES_ALL, null])) {
+            throw new ParameterDataTypeException(\get_class($this), 'webspace-nodes');
         }
 
         $contentRepository = $this->contentRepository;
@@ -510,8 +510,8 @@ class PageController extends AbstractRestController implements ClassResourceInte
         MappingInterface $mapping,
         UserInterface $user
     ): Response {
-        if (!in_array($webspaceNodes, [static::WEBSPACE_NODE_SINGLE, static::WEBSPACE_NODES_ALL, null])) {
-            throw new ParameterDataTypeException(get_class($this), 'webspace-nodes');
+        if (!\in_array($webspaceNodes, [static::WEBSPACE_NODE_SINGLE, static::WEBSPACE_NODES_ALL, null])) {
+            throw new ParameterDataTypeException(\get_class($this), 'webspace-nodes');
         }
 
         try {
@@ -556,7 +556,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
         );
         $form->submit($data, false);
 
-        if (array_key_exists('author', $data) && null === $data['author']) {
+        if (\array_key_exists('author', $data) && null === $data['author']) {
             $document->setAuthor(null);
         }
 
@@ -666,7 +666,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
         UserInterface $user
     ) {
         $webspaceKey = null;
-        if ($firstContent = reset($contents)) {
+        if ($firstContent = \reset($contents)) {
             $webspaceKey = $firstContent->getWebspaceKey();
         }
 

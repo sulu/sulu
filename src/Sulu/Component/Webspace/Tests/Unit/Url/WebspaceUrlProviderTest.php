@@ -38,7 +38,7 @@ class WebspaceUrlProviderTest extends TestCase
 
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getPortals()->willReturn(
-            array_map(
+            \array_map(
                 function($portal) {
                     return $portal->reveal();
                 },

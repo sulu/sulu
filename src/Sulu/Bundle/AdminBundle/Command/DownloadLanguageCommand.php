@@ -68,7 +68,7 @@ class DownloadLanguageCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (!class_exists(\ZipArchive::class)) {
+        if (!\class_exists(\ZipArchive::class)) {
             $ui = new SymfonyStyle($input, $output);
             $ui->error('The "sulu:admin:download-language" command requires the "zip" php extension.');
 
@@ -91,8 +91,8 @@ class DownloadLanguageCommand extends Command
         $ui = new SymfonyStyle($input, $output);
         $ui->section('Language: ' . $language);
 
-        if (in_array($language, ['en', 'de'])) {
-            $ui->note(sprintf(
+        if (\in_array($language, ['en', 'de'])) {
+            $ui->note(\sprintf(
                 'Download skipped because Sulu includes a translation for the language "%s" per default.',
                 $language
             ));
@@ -100,20 +100,20 @@ class DownloadLanguageCommand extends Command
             return;
         }
 
-        $composerJson = json_decode(file_get_contents($this->projectDir . DIRECTORY_SEPARATOR . 'composer.json'), true);
-        $packages = array_keys($composerJson['require']);
-        $suluPackages = array_filter($packages, function($package) {
-            return 0 === strpos($package, 'sulu/');
+        $composerJson = \json_decode(\file_get_contents($this->projectDir . \DIRECTORY_SEPARATOR . 'composer.json'), true);
+        $packages = \array_keys($composerJson['require']);
+        $suluPackages = \array_filter($packages, function($package) {
+            return 0 === \strpos($package, 'sulu/');
         });
 
         $translationsFile = $this->projectDir
-            . DIRECTORY_SEPARATOR
+            . \DIRECTORY_SEPARATOR
             . 'translations/sulu'
-            . DIRECTORY_SEPARATOR
+            . \DIRECTORY_SEPARATOR
             . 'admin.' . $language . '.json';
 
-        if (file_exists($translationsFile)) {
-            $translations = json_decode(file_get_contents($translationsFile), true);
+        if (\file_exists($translationsFile)) {
+            $translations = \json_decode(\file_get_contents($translationsFile), true);
         } else {
             $translations = [];
         }
@@ -123,26 +123,26 @@ class DownloadLanguageCommand extends Command
             $packageTranslations = $this->downloadLanguage($output, $language, $suluPackage, $translationBaseUrl);
             $packages[$suluPackage] = [
                 'Package' => $suluPackage,
-                'Translations' => count($packageTranslations),
+                'Translations' => \count($packageTranslations),
             ];
-            $translations = array_merge($translations, $packageTranslations);
+            $translations = \array_merge($translations, $packageTranslations);
         }
 
         $ui->newLine();
 
         if (empty($translations)) {
-            $ui->warning(sprintf('Translation for language "%s" does not exist yet. Reach out to the Sulu team via https://sulu.io/contact-us if you are interested in creating it. Your contribution is highly appreciated!', $language));
+            $ui->warning(\sprintf('Translation for language "%s" does not exist yet. Reach out to the Sulu team via https://sulu.io/contact-us if you are interested in creating it. Your contribution is highly appreciated!', $language));
 
             return;
         }
 
         $ui->table(['Package', 'Translations'], $packages);
 
-        $output->writeln(sprintf('<info>Writing language %s into translations folder</info>', $language));
+        $output->writeln(\sprintf('<info>Writing language %s into translations folder</info>', $language));
 
-        $this->filesystem->mkdir(dirname($translationsFile));
+        $this->filesystem->mkdir(\dirname($translationsFile));
 
-        $this->filesystem->dumpFile($translationsFile, json_encode($translations));
+        $this->filesystem->dumpFile($translationsFile, \json_encode($translations));
     }
 
     private function downloadLanguage($output, $language, $project, $translationBaseUrl): array
@@ -153,7 +153,7 @@ class DownloadLanguageCommand extends Command
             $translationBaseUrl . $project . '/' . $language
         );
 
-        $tempDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'sulu-language-' . $language . DIRECTORY_SEPARATOR;
+        $tempDirectory = \sys_get_temp_dir() . \DIRECTORY_SEPARATOR . 'sulu-language-' . $language . \DIRECTORY_SEPARATOR;
         $tempFile = $tempDirectory . 'download.zip';
 
         $this->filesystem->mkdir($tempDirectory);
@@ -172,7 +172,7 @@ class DownloadLanguageCommand extends Command
             $zip->close();
 
             $languageFile = 'admin.' . $language . '.json';
-            $translations = json_decode(file_get_contents($tempDirectory . $languageFile), true);
+            $translations = \json_decode(\file_get_contents($tempDirectory . $languageFile), true);
         } else {
             $output->writeln('<error>Error when unpacking the ZIP archive</error>');
         }

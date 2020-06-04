@@ -26,7 +26,7 @@ class AddRulesPass implements CompilerPassInterface
         foreach ($taggedServices as $id => $attributes) {
             if (!isset($attributes[0]['alias'])) {
                 throw new \InvalidArgumentException(
-                    sprintf('No "alias" specified for audience targeting rule with service ID: "%s"', $id)
+                    \sprintf('No "alias" specified for audience targeting rule with service ID: "%s"', $id)
                 );
             }
 

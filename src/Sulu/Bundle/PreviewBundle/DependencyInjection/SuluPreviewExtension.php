@@ -42,7 +42,7 @@ class SuluPreviewExtension extends Extension implements PrependExtensionInterfac
         if ($config['cache']['type']) {
             if (!$container->hasExtension('doctrine_cache')) {
                 throw new \RuntimeException(
-                    'Deprecated "sulu_preview.cache" configuration used, but DoctrineCacheBundle was not registered.' . PHP_EOL .
+                    'Deprecated "sulu_preview.cache" configuration used, but DoctrineCacheBundle was not registered.' . \PHP_EOL .
                     'Register the DoctrineCacheBundle or use the "sulu_preview.cache_adapter" configuration.'
                 );
             }

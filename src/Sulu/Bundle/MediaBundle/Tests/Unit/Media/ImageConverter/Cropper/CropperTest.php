@@ -149,7 +149,7 @@ class CropperTest extends SuluTestCase
 
     private function createImagine()
     {
-        if (class_exists(\Imagick::class)) {
+        if (\class_exists(\Imagick::class)) {
             return new ImagickImagine();
         }
 

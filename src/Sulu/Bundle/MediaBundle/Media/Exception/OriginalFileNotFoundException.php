@@ -22,7 +22,7 @@ class OriginalFileNotFoundException extends MediaException
     public function __construct($uri)
     {
         parent::__construct(
-            sprintf('File not found in "%s".', $uri),
+            \sprintf('File not found in "%s".', $uri),
             self::EXCEPTION_CODE_ORIGINAL_FILE_NOT_FOUND
         );
     }

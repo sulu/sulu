@@ -101,7 +101,7 @@ class FieldDescriptor implements FieldDescriptorInterface
      */
     public function getDisabled()
     {
-        return in_array(
+        return \in_array(
             $this->visibility,
             [FieldDescriptorInterface::VISIBILITY_NO, FieldDescriptorInterface::VISIBILITY_NEVER]
         );
@@ -132,7 +132,7 @@ class FieldDescriptor implements FieldDescriptorInterface
      */
     public function getDefault()
     {
-        return in_array(
+        return \in_array(
             $this->visibility,
             [FieldDescriptorInterface::VISIBILITY_ALWAYS, FieldDescriptorInterface::VISIBILITY_NEVER]
         );

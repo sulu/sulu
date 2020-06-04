@@ -260,7 +260,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
                 $serializationGroups[] = 'select';
             } else {
                 $contacts = $this->contactRepository->findAll();
-                $serializationGroups = array_merge(
+                $serializationGroups = \array_merge(
                     $serializationGroups,
                     static::$contactSerializationGroups
                 );
@@ -278,7 +278,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
         $view = $this->view($list, 200);
 
         // set serialization groups
-        if (count($serializationGroups) > 0) {
+        if (\count($serializationGroups) > 0) {
             $context = new Context();
             $context->setGroups($serializationGroups);
             $view->setContext($context);
@@ -333,7 +333,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
         $ids = $listBuilder->getIds();
         if (null !== $ids) {
             // the @ is necessary in case of a PHP bug https://bugs.php.net/bug.php?id=50688
-            @usort(
+            @\usort(
                 $listResponse,
                 function($a, $b) use ($ids) {
                     return $this->indexComparator->compare($a['id'], $b['id'], $ids);
@@ -508,12 +508,12 @@ class ContactController extends AbstractRestController implements ClassResourceI
      */
     private function addAvatars($contacts, $locale)
     {
-        $ids = array_filter(array_column($contacts, 'avatar'));
+        $ids = \array_filter(\array_column($contacts, 'avatar'));
         $avatars = $this->mediaManager->getFormatUrls($ids, $locale);
         foreach ($contacts as $key => $contact) {
-            if (array_key_exists('avatar', $contact)
+            if (\array_key_exists('avatar', $contact)
                 && $contact['avatar']
-                && array_key_exists($contact['avatar'], $avatars)
+                && \array_key_exists($contact['avatar'], $avatars)
             ) {
                 $contacts[$key]['avatar'] = $avatars[$contact['avatar']];
             }

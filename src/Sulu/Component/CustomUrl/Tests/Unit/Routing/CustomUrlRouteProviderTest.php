@@ -68,7 +68,7 @@ class CustomUrlRouteProviderTest extends TestCase
 
         $request->getHost()->willReturn($host);
         $request->getRequestUri()->willReturn($requestedUri);
-        $request->getPathInfo()->willReturn(rawurlencode($requestedUri));
+        $request->getPathInfo()->willReturn(\rawurlencode($requestedUri));
         $request->getScheme()->willReturn('http');
 
         if (!$exists) {
@@ -124,7 +124,7 @@ class CustomUrlRouteProviderTest extends TestCase
 
         $this->assertCount(1, $collection);
         $all = $collection->all();
-        $defaults = array_pop($all)->getDefaults();
+        $defaults = \array_pop($all)->getDefaults();
 
         if ($history) {
             $this->assertEquals(

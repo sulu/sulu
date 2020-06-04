@@ -67,7 +67,7 @@ abstract class AbstractExtension implements ExtensionInterface
         }
 
         $this->translatedProperties = new MultipleTranslatedProperties(
-            $this->properties, $languageNamespace, implode('-', $namespaces)
+            $this->properties, $languageNamespace, \implode('-', $namespaces)
         );
         $this->translatedProperties->setLanguage($languageCode);
     }

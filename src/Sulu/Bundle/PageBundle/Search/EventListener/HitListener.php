@@ -48,16 +48,16 @@ class HitListener
             return;
         }
 
-        if ('/' != substr($url, 0, 1)) {
+        if ('/' != \substr($url, 0, 1)) {
             // is absolute URL
 
             return;
         }
 
-        $url = sprintf(
+        $url = \sprintf(
             '%s/%s',
-            rtrim($this->requestAnalyzer->getResourceLocatorPrefix(), '/'),
-            ltrim($document->getUrl(), '/')
+            \rtrim($this->requestAnalyzer->getResourceLocatorPrefix(), '/'),
+            \ltrim($document->getUrl(), '/')
         );
 
         $document->setUrl($url);

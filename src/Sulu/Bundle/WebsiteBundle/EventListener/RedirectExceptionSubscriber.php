@@ -92,8 +92,8 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
         $prefix = $attributes->getAttribute('resourceLocatorPrefix');
         $resourceLocator = $attributes->getAttribute('resourceLocator');
 
-        $route = '/' . trim($prefix . $resourceLocator, '/');
-        if (!in_array($request->getRequestFormat(), ['htm', 'html'])
+        $route = '/' . \trim($prefix . $resourceLocator, '/');
+        if (!\in_array($request->getRequestFormat(), ['htm', 'html'])
             || $route === $request->getPathInfo()
             || !$this->matchRoute($request->getSchemeAndHttpHost() . $route)
         ) {
@@ -122,7 +122,7 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
 
         $types = [RequestAnalyzerInterface::MATCH_TYPE_REDIRECT, RequestAnalyzerInterface::MATCH_TYPE_PARTIAL];
         $matchType = $attributes->getAttribute('matchType');
-        if (!in_array($matchType, $types)) {
+        if (!\in_array($matchType, $types)) {
             return;
         }
 
@@ -191,10 +191,10 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
         $redirectInfo = $this->parseUrl($redirectUrl);
         $requestInfo = $this->parseUrl($requestUri);
 
-        $url = sprintf('%s://%s', $requestInfo['scheme'], $requestInfo['host']);
+        $url = \sprintf('%s://%s', $requestInfo['scheme'], $requestInfo['host']);
 
         if (isset($redirectInfo['host'])) {
-            $url = sprintf('%s://%s', $requestInfo['scheme'], $redirectInfo['host']);
+            $url = \sprintf('%s://%s', $requestInfo['scheme'], $redirectInfo['host']);
         }
 
         if (isset($requestInfo['port'])) {
@@ -204,19 +204,19 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
         if (isset($redirectInfo['path'])
             && (// if requested url not starting with redirectUrl it need to be added
                 !isset($requestInfo['path'])
-                || 0 !== strpos($requestInfo['path'], $redirectInfo['path'] . '/'))
+                || 0 !== \strpos($requestInfo['path'], $redirectInfo['path'] . '/'))
         ) {
             $url .= $redirectInfo['path'];
         }
 
         if (isset($requestInfo['path']) && $resourceLocatorPrefix !== $requestInfo['path']) {
             $path = $requestInfo['path'];
-            if ($resourceLocatorPrefix && 0 === strpos($path, $resourceLocatorPrefix)) {
-                $path = substr($path, strlen($resourceLocatorPrefix));
+            if ($resourceLocatorPrefix && 0 === \strpos($path, $resourceLocatorPrefix)) {
+                $path = \substr($path, \strlen($resourceLocatorPrefix));
             }
 
             $url .= $path;
-            $url = rtrim($url, '/');
+            $url = \rtrim($url, '/');
         }
 
         if (isset($requestInfo['query'])) {
@@ -240,10 +240,10 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
      */
     private function parseUrl($url)
     {
-        if (!preg_match('{^https?://}', $url)) {
+        if (!\preg_match('{^https?://}', $url)) {
             $url = 'http://' . $url;
         }
 
-        return parse_url($url);
+        return \parse_url($url);
     }
 }

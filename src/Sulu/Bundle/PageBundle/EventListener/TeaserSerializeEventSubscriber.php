@@ -59,7 +59,7 @@ class TeaserSerializeEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $teaserId = sprintf('%s;%s', $teaser->getType(), $teaser->getId());
+        $teaserId = \sprintf('%s;%s', $teaser->getType(), $teaser->getId());
         $context->getNavigator()->accept($teaserId);
         $visitor->visitProperty(
             new StaticPropertyMetadata('', 'teaserId', $teaserId),

@@ -61,7 +61,7 @@ class OrderByTraitTest extends TestCase
      */
     public function testAddOrderBy($alias, $orderBy, $expectedOrderBy)
     {
-        if (0 === count($expectedOrderBy)) {
+        if (0 === \count($expectedOrderBy)) {
             $this->queryBuilder->addOrderBy(Argument::any(), Argument::any())->shouldNotBeCalled();
         }
 

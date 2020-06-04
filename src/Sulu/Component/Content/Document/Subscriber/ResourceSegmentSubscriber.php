@@ -250,7 +250,7 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
 
         if (!$property) {
             throw new \RuntimeException(
-                sprintf(
+                \sprintf(
                     'Structure "%s" does not have a "sulu.rlp" tag which is required for documents implementing the ' .
                     'ResourceSegmentBehavior. In "%s"',
                     $structure->getName(),

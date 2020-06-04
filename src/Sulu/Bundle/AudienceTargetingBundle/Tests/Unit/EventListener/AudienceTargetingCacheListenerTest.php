@@ -99,7 +99,7 @@ class AudienceTargetingCacheListenerTest extends TestCase
 
         if ($withCookiesSet) {
             $request->cookies->set(AudienceTargetingCacheListener::TARGET_GROUP_COOKIE, 'TARGET_GROUP_1');
-            $request->cookies->set(AudienceTargetingCacheListener::VISITOR_SESSION_COOKIE, time());
+            $request->cookies->set(AudienceTargetingCacheListener::VISITOR_SESSION_COOKIE, \time());
         }
 
         return $request;

@@ -78,7 +78,7 @@ class SocialMediaProfileType implements \JsonSerializable
     public function setName($name)
     {
         // Limit to maximal sql column length.
-        $this->name = substr($name, 0, 100);
+        $this->name = \substr($name, 0, 100);
 
         return $this;
     }

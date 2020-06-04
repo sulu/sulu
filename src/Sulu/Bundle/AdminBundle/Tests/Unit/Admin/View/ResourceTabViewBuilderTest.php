@@ -111,12 +111,12 @@ class ResourceTabViewBuilderTest extends TestCase
 
         if ($routerAttributesToBlacklist1) {
             $viewBuilder->addRouterAttributesToBlacklist($routerAttributesToBlacklist1);
-            $expectedRouterAttributesToBlacklist = array_merge($expectedRouterAttributesToBlacklist, $routerAttributesToBlacklist1 ?? []);
+            $expectedRouterAttributesToBlacklist = \array_merge($expectedRouterAttributesToBlacklist, $routerAttributesToBlacklist1 ?? []);
         }
 
         if ($routerAttributesToBlacklist2) {
             $viewBuilder->addRouterAttributesToBlacklist($routerAttributesToBlacklist2);
-            $expectedRouterAttributesToBlacklist = array_merge($expectedRouterAttributesToBlacklist, $routerAttributesToBlacklist2 ?? []);
+            $expectedRouterAttributesToBlacklist = \array_merge($expectedRouterAttributesToBlacklist, $routerAttributesToBlacklist2 ?? []);
         }
 
         $view = $viewBuilder->getView();

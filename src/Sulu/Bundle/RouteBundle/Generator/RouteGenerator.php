@@ -43,7 +43,7 @@ class RouteGenerator implements RouteGeneratorInterface
         $routeSchema = $options['route_schema'];
 
         $tokens = [];
-        preg_match_all('/{(.*?)}/', $routeSchema, $matches);
+        \preg_match_all('/{(.*?)}/', $routeSchema, $matches);
         $tokenNames = $matches[1];
 
         foreach ($tokenNames as $index => $name) {
@@ -53,13 +53,13 @@ class RouteGenerator implements RouteGeneratorInterface
             $tokens[$tokenName] = $this->slugifier->slugify($tokenValue);
         }
 
-        $path = strtr($routeSchema, $tokens);
-        if (0 !== strpos($path, '/')) {
+        $path = \strtr($routeSchema, $tokens);
+        if (0 !== \strpos($path, '/')) {
             throw new \InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     'Generated path "%s" for object "%s" has to start with a slash',
                     $path,
-                    get_class($entity)
+                    \get_class($entity)
                 )
             );
         }

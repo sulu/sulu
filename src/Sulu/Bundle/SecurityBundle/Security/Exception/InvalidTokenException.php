@@ -22,7 +22,7 @@ class InvalidTokenException extends SecurityException
     public function __construct($token)
     {
         $this->token = $token;
-        parent::__construct(sprintf('The token "%s" does not exist!', $token), 1005);
+        parent::__construct(\sprintf('The token "%s" does not exist!', $token), 1005);
     }
 
     public function getToken()

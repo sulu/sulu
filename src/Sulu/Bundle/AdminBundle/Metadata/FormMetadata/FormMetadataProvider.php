@@ -56,10 +56,10 @@ class FormMetadataProvider implements MetadataProviderInterface
                 $this->evaluateFormItemExpressions($formType->getItems());
             }
 
-            if (array_key_exists('tags', $metadataOptions)) {
+            if (\array_key_exists('tags', $metadataOptions)) {
                 foreach ($metadataOptions['tags'] as $tagName => $tagAttributes) {
-                    if (!is_array($tagAttributes)) {
-                        $tagAttributes = filter_var($tagAttributes, FILTER_VALIDATE_BOOLEAN);
+                    if (!\is_array($tagAttributes)) {
+                        $tagAttributes = \filter_var($tagAttributes, \FILTER_VALIDATE_BOOLEAN);
                     }
 
                     $this->filterByTag($form, $tagName, $tagAttributes);
@@ -88,7 +88,7 @@ class FormMetadataProvider implements MetadataProviderInterface
     private function matchFormAgainstTag(FormMetadata $form, string $tagName, $tagAttributes): bool
     {
         $tags = $form->getTagsByName($tagName);
-        if (is_bool($tagAttributes)) {
+        if (\is_bool($tagAttributes)) {
             return ($tagAttributes && 0 !== \count($tags)) || (!$tagAttributes && 0 === \count($tags));
         }
 

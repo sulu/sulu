@@ -114,7 +114,7 @@ class BaseFunctional extends SuluTestCase
      */
     protected function getValue(array $data, $name, $default = null)
     {
-        if (!array_key_exists($name, $data)) {
+        if (!\array_key_exists($name, $data)) {
             return $default;
         }
 

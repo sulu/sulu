@@ -70,9 +70,9 @@ class FormMetadataMapperTest extends TestCase
         $newForm->setItems($this->formMetadataMapper->mapChildren($form->getChildren(), 'en'));
 
         $this->assertCount(3, $newForm->getItems());
-        $this->assertContains('property1', array_keys($newForm->getItems()));
-        $this->assertContains('property2', array_keys($newForm->getItems()));
-        $this->assertContains('property3', array_keys($newForm->getItems()));
+        $this->assertContains('property1', \array_keys($newForm->getItems()));
+        $this->assertContains('property2', \array_keys($newForm->getItems()));
+        $this->assertContains('property3', \array_keys($newForm->getItems()));
 
         $newProperty1 = $newForm->getItems()['property1'];
         $this->assertInstanceOf(FieldMetadata::class, $newProperty1);
@@ -96,9 +96,9 @@ class FormMetadataMapperTest extends TestCase
         $newForm->setItems($this->formMetadataMapper->mapChildren($form->getChildren(), 'de'));
 
         $this->assertCount(3, $newForm->getItems());
-        $this->assertContains('property1', array_keys($newForm->getItems()));
-        $this->assertContains('property2', array_keys($newForm->getItems()));
-        $this->assertContains('property3', array_keys($newForm->getItems()));
+        $this->assertContains('property1', \array_keys($newForm->getItems()));
+        $this->assertContains('property2', \array_keys($newForm->getItems()));
+        $this->assertContains('property3', \array_keys($newForm->getItems()));
 
         $property1 = $newForm->getItems()['property1'];
         $this->assertInstanceOf(FieldMetadata::class, $property1);
@@ -122,7 +122,7 @@ class FormMetadataMapperTest extends TestCase
         $newForm->setItems($this->formMetadataMapper->mapChildren($form->getChildren(), 'en'));
 
         $this->assertCount(1, $newForm->getItems());
-        $this->assertContains('name', array_keys($newForm->getItems()));
+        $this->assertContains('name', \array_keys($newForm->getItems()));
 
         $item = $newForm->getItems()['name'];
         $this->assertInstanceOf(FieldMetadata::class, $item);
@@ -142,7 +142,7 @@ class FormMetadataMapperTest extends TestCase
         $newForm->setItems($this->formMetadataMapper->mapChildren($form->getChildren(), 'en'));
 
         $this->assertCount(1, $newForm->getItems());
-        $this->assertContains('name', array_keys($newForm->getItems()));
+        $this->assertContains('name', \array_keys($newForm->getItems()));
 
         $item = $newForm->getItems()['name'];
         $this->assertInstanceOf(FieldMetadata::class, $item);
@@ -173,7 +173,7 @@ class FormMetadataMapperTest extends TestCase
         $newForm->setItems($this->formMetadataMapper->mapChildren($form->getChildren(), 'de'));
 
         $this->assertCount(1, $newForm->getItems());
-        $this->assertContains('name', array_keys($newForm->getItems()));
+        $this->assertContains('name', \array_keys($newForm->getItems()));
 
         $item = $newForm->getItems()['name'];
         $this->assertInstanceOf(FieldMetadata::class, $item);
@@ -194,8 +194,8 @@ class FormMetadataMapperTest extends TestCase
         $newForm->setItems($this->formMetadataMapper->mapChildren($form->getChildren(), 'en'));
 
         $this->assertCount(2, $newForm->getItems());
-        $this->assertContains('section', array_keys($newForm->getItems()));
-        $this->assertContains('property4', array_keys($newForm->getItems()));
+        $this->assertContains('section', \array_keys($newForm->getItems()));
+        $this->assertContains('property4', \array_keys($newForm->getItems()));
 
         $section = $newForm->getItems()['section'];
         $this->assertInstanceOf(SectionMetadata::class, $section);
@@ -220,7 +220,7 @@ class FormMetadataMapperTest extends TestCase
         $newForm->setItems($this->formMetadataMapper->mapChildren($form->getChildren(), 'en'));
 
         $this->assertCount(1, $newForm->getItems());
-        $this->assertContains('block', array_keys($newForm->getItems()));
+        $this->assertContains('block', \array_keys($newForm->getItems()));
 
         $block = $newForm->getItems()['block'];
         $this->assertInstanceOf(FieldMetadata::class, $block);
@@ -232,14 +232,14 @@ class FormMetadataMapperTest extends TestCase
         $this->assertEquals('component1', $block->getTypes()['component1']->getName());
         $this->assertEquals('First Component', $block->getTypes()['component1']->getTitle());
         $this->assertCount(2, $block->getTypes()['component1']->getItems());
-        $this->assertContains('property1', array_keys($block->getTypes()['component1']->getItems()));
-        $this->assertContains('property2', array_keys($block->getTypes()['component1']->getItems()));
+        $this->assertContains('property1', \array_keys($block->getTypes()['component1']->getItems()));
+        $this->assertContains('property2', \array_keys($block->getTypes()['component1']->getItems()));
 
         $this->assertEquals('component2', $block->getTypes()['component2']->getName());
         $this->assertEquals('Second Component', $block->getTypes()['component2']->getTitle());
         $this->assertCount(2, $block->getTypes()['component2']->getItems());
-        $this->assertContains('property3', array_keys($block->getTypes()['component2']->getItems()));
-        $this->assertContains('property4', array_keys($block->getTypes()['component2']->getItems()));
+        $this->assertContains('property3', \array_keys($block->getTypes()['component2']->getItems()));
+        $this->assertContains('property4', \array_keys($block->getTypes()['component2']->getItems()));
     }
 
     public function testMapChildrenWithBlockGerman()
@@ -250,7 +250,7 @@ class FormMetadataMapperTest extends TestCase
         $newForm->setItems($this->formMetadataMapper->mapChildren($form->getChildren(), 'de'));
 
         $this->assertCount(1, $newForm->getItems());
-        $this->assertContains('block', array_keys($newForm->getItems()));
+        $this->assertContains('block', \array_keys($newForm->getItems()));
 
         $block = $newForm->getItems()['block'];
         $this->assertInstanceOf(FieldMetadata::class, $block);
@@ -262,14 +262,14 @@ class FormMetadataMapperTest extends TestCase
         $this->assertEquals('component1', $block->getTypes()['component1']->getName());
         $this->assertEquals('Erste Komponente', $block->getTypes()['component1']->getTitle());
         $this->assertCount(2, $block->getTypes()['component1']->getItems());
-        $this->assertContains('property1', array_keys($block->getTypes()['component1']->getItems()));
-        $this->assertContains('property2', array_keys($block->getTypes()['component1']->getItems()));
+        $this->assertContains('property1', \array_keys($block->getTypes()['component1']->getItems()));
+        $this->assertContains('property2', \array_keys($block->getTypes()['component1']->getItems()));
 
         $this->assertEquals('component2', $block->getTypes()['component2']->getName());
         $this->assertEquals('Zweite Komponente', $block->getTypes()['component2']->getTitle());
         $this->assertCount(2, $block->getTypes()['component2']->getItems());
-        $this->assertContains('property3', array_keys($block->getTypes()['component2']->getItems()));
-        $this->assertContains('property4', array_keys($block->getTypes()['component2']->getItems()));
+        $this->assertContains('property3', \array_keys($block->getTypes()['component2']->getItems()));
+        $this->assertContains('property4', \array_keys($block->getTypes()['component2']->getItems()));
     }
 
     public function testMapSchema()

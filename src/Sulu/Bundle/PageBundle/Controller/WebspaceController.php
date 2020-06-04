@@ -28,13 +28,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
-@trigger_error(
-    sprintf(
+@\trigger_error(
+    \sprintf(
         'The "%s" class is deprecated since Sulu 2.0, use data from "%s" instead.',
         WebspaceController::class,
         AdminController::class
     ),
-    E_USER_DEPRECATED
+    \E_USER_DEPRECATED
 );
 
 /**

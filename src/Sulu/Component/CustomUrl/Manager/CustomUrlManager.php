@@ -116,7 +116,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
         $customUrls = $webspace->getPortals()[0]->getEnvironment($this->environment)->getCustomUrls();
 
-        $baseDomains = array_map(
+        $baseDomains = \array_map(
             function(CustomUrl $customUrl) {
                 return $customUrl->getUrl();
             },
@@ -137,7 +137,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
 
         $routeDocuments = $this->findReferrer($customUrlDocument, $webspaceKey);
 
-        return array_filter($routeDocuments, function($routeDocument) {
+        return \array_filter($routeDocuments, function($routeDocument) {
             return $routeDocument->isHistory();
         });
     }
@@ -155,7 +155,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
 
                 $routes[$path] = $routeDocument;
                 $tmp = $this->findReferrer($routeDocument, $webspaceKey);
-                $routes = array_merge($routes, $tmp);
+                $routes = \array_merge($routes, $tmp);
             }
         }
 
@@ -181,7 +181,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
     public function findByPage(UuidBehavior $page)
     {
         $query = $this->documentManager->createQuery(
-            sprintf(
+            \sprintf(
                 'SELECT * FROM [nt:unstructured] AS a WHERE a.[jcr:mixinTypes] = "sulu:custom_url" AND a.[sulu:target] = "%s"',
                 $page->getUuid()
             )
@@ -195,7 +195,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
         try {
             /** @var RouteDocument $routeDocument */
             $routeDocument = $this->documentManager->find(
-                sprintf('%s/%s', $this->getRoutesPath($webspaceKey), $url),
+                \sprintf('%s/%s', $this->getRoutesPath($webspaceKey), $url),
                 $locale,
                 ['load_ghost_content' => true]
             );
@@ -297,12 +297,12 @@ class CustomUrlManager implements CustomUrlManagerInterface
         $accessor = PropertyAccess::createPropertyAccessor();
 
         foreach ($metadata->getFieldMappings() as $fieldName => $mapping) {
-            if (!array_key_exists($fieldName, $data)) {
+            if (!\array_key_exists($fieldName, $data)) {
                 continue;
             }
 
             $value = $data[$fieldName];
-            if (array_key_exists('type', $mapping) && 'reference' === $mapping['type']) {
+            if (\array_key_exists('type', $mapping) && 'reference' === $mapping['type']) {
                 $value = $this->documentManager->find($value, LOCALE, ['load_ghost_content' => true]);
             }
 

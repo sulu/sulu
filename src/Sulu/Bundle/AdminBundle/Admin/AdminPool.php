@@ -50,7 +50,7 @@ class AdminPool
     {
         $contexts = [];
         $this->iterateAdmins(function(Admin $admin) use (&$contexts) {
-            $contexts = array_merge_recursive($contexts, $admin->getSecurityContexts());
+            $contexts = \array_merge_recursive($contexts, $admin->getSecurityContexts());
         });
 
         return $contexts;
@@ -60,7 +60,7 @@ class AdminPool
     {
         $contexts = [];
         $this->iterateAdmins(function(Admin $admin) use (&$contexts) {
-            $contexts = array_merge_recursive($contexts, $admin->getSecurityContextsWithPlaceholder());
+            $contexts = \array_merge_recursive($contexts, $admin->getSecurityContextsWithPlaceholder());
         });
 
         return $contexts;

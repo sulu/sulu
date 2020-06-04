@@ -38,10 +38,10 @@ class Generator implements GeneratorInterface
         $domain = $baseDomain;
 
         foreach ($domainParts as $domainPart) {
-            $domain = preg_replace('/\*/', $domainPart, $domain, 1);
+            $domain = \preg_replace('/\*/', $domainPart, $domain, 1);
         }
 
-        if (strpos($domain, '*') > -1) {
+        if (\strpos($domain, '*') > -1) {
             throw new MissingDomainPartException($baseDomain, $domainParts, $domain);
         }
 
@@ -49,7 +49,7 @@ class Generator implements GeneratorInterface
             $domain = $this->localizeDomain($domain, $locale);
         }
 
-        return rtrim($domain, '/');
+        return \rtrim($domain, '/');
     }
 
     /**

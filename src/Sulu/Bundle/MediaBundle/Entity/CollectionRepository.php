@@ -32,7 +32,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
 
     public function findCollectionById($id)
     {
-        $dql = sprintf(
+        $dql = \sprintf(
             'SELECT n, collectionMeta, defaultMeta, collectionType, collectionParent, parentMeta, collectionChildren
                  FROM %s AS n
                      LEFT JOIN n.meta AS collectionMeta
@@ -50,7 +50,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         $query->setParameter('id', $id);
         $result = $query->getResult();
 
-        if (0 === count($result)) {
+        if (0 === \count($result)) {
             return;
         }
 
@@ -81,11 +81,11 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->where('collection.id IN (:ids)')
             ->setParameter('ids', $ids);
 
-        if (null !== $sortBy && is_array($sortBy) && count($sortBy) > 0) {
+        if (null !== $sortBy && \is_array($sortBy) && \count($sortBy) > 0) {
             foreach ($sortBy as $column => $order) {
                 $queryBuilder->addOrderBy(
                     'collectionMeta.' . $column,
-                    ('asc' === strtolower($order) ? 'ASC' : 'DESC')
+                    ('asc' === \strtolower($order) ? 'ASC' : 'DESC')
                 );
             }
         }
@@ -104,7 +104,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         $ids = $this->getIdsQuery($depth, $filter, [], $collection, 'DISTINCT collection.id')->getScalarResult();
 
         try {
-            return count($ids);
+            return \count($ids);
         } catch (NoResultException $e) {
             return;
         }
@@ -122,7 +122,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->where('collection.id = :id')
             ->setParameter('id', $collection->getId());
 
-        return intval($queryBuilder->getQuery()->getSingleScalarResult());
+        return \intval($queryBuilder->getQuery()->getSingleScalarResult());
     }
 
     public function countSubCollections(CollectionInterface $collection)
@@ -137,7 +137,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->where('collection.id = :id')
             ->setParameter('id', $collection->getId());
 
-        return intval($queryBuilder->getQuery()->getSingleScalarResult());
+        return \intval($queryBuilder->getQuery()->getSingleScalarResult());
     }
 
     public function findCollections($filter = [], $limit = null, $offset = null, $sortBy = [])
@@ -161,9 +161,9 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 ->addSelect('parent')
                 ->addSelect('children');
 
-            if (null !== $sortBy && is_array($sortBy) && count($sortBy) > 0) {
+            if (null !== $sortBy && \is_array($sortBy) && \count($sortBy) > 0) {
                 foreach ($sortBy as $column => $order) {
-                    $qb->addOrderBy('collectionMeta.' . $column, 'asc' === strtolower($order) ? 'ASC' : 'DESC');
+                    $qb->addOrderBy('collectionMeta.' . $column, 'asc' === \strtolower($order) ? 'ASC' : 'DESC');
                 }
             }
             $qb->addOrderBy('collection.id', 'ASC');
@@ -174,7 +174,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             } elseif (null !== $depth) {
                 // the combination of depth and parent needs a bigger refactoring of this query.
                 $qb->andWhere('collection.depth <= :depth');
-                $qb->setParameter('depth', intval($depth));
+                $qb->setParameter('depth', \intval($depth));
             }
             if (null !== $search) {
                 $qb->andWhere('collectionMeta.title LIKE :search');
@@ -196,7 +196,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     public function findCollectionBreadcrumbById($id)
     {
         try {
-            $sql = sprintf(
+            $sql = \sprintf(
                 'SELECT n, collectionMeta, defaultMeta
                  FROM %s AS p,
                       %s AS n
@@ -251,7 +251,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->leftJoin('collection.defaultMeta', 'defaultMeta')
             ->innerJoin('collection.type', 'type')
             ->leftJoin('collection.parent', 'parent')
-            ->where(sprintf('parent.id IN (%s)', $subQueryBuilder->getDQL()))
+            ->where(\sprintf('parent.id IN (%s)', $subQueryBuilder->getDQL()))
             ->orWhere('parent.id is NULL')
             ->orderBy('collection.lft')
             ->setParameter('id', $id)
@@ -303,45 +303,45 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             $queryBuilder->setParameter('id', $collection->getId());
         }
 
-        if (array_key_exists('search', $filter) && null !== $filter['search'] ||
-            array_key_exists('locale', $filter) ||
-            count($sortBy) > 0
+        if (\array_key_exists('search', $filter) && null !== $filter['search'] ||
+            \array_key_exists('locale', $filter) ||
+            \count($sortBy) > 0
         ) {
             $queryBuilder->leftJoin('collection.meta', 'collectionMeta');
             $queryBuilder->leftJoin('collection.defaultMeta', 'defaultMeta');
         }
 
-        if (array_key_exists('search', $filter) && null !== $filter['search']) {
+        if (\array_key_exists('search', $filter) && null !== $filter['search']) {
             $queryBuilder->andWhere('collectionMeta.title LIKE :search OR defaultMeta.locale != :locale');
             $queryBuilder->setParameter('search', '%' . $filter['search'] . '%');
         }
 
-        if (array_key_exists('locale', $filter)) {
+        if (\array_key_exists('locale', $filter)) {
             $queryBuilder->andWhere('collectionMeta.locale = :locale OR defaultMeta.locale != :locale');
             $queryBuilder->setParameter('locale', $filter['locale']);
         }
 
-        if (array_key_exists('systemCollections', $filter) && !$filter['systemCollections']) {
+        if (\array_key_exists('systemCollections', $filter) && !$filter['systemCollections']) {
             $queryBuilder->leftJoin('collection.type', 'collectionType');
             $queryBuilder->andWhere('collectionType.key != :type');
             $queryBuilder->setParameter('type', SystemCollectionManagerInterface::COLLECTION_TYPE);
         }
 
-        if (count($sortBy) > 0) {
+        if (\count($sortBy) > 0) {
             foreach ($sortBy as $column => $order) {
                 $queryBuilder->addOrderBy(
                     'collectionMeta.' . $column,
-                    ('asc' === strtolower($order) ? 'ASC' : 'DESC')
+                    ('asc' === \strtolower($order) ? 'ASC' : 'DESC')
                 );
             }
         }
 
         $queryBuilder->addOrderBy('collection.id', 'ASC');
 
-        if (array_key_exists('limit', $filter)) {
+        if (\array_key_exists('limit', $filter)) {
             $queryBuilder->setMaxResults($filter['limit']);
         }
-        if (array_key_exists('offset', $filter)) {
+        if (\array_key_exists('offset', $filter)) {
             $queryBuilder->setFirstResult($filter['offset']);
         }
 

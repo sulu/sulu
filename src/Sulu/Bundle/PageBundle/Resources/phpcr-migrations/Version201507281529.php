@@ -55,7 +55,7 @@ class Version201507281529 implements VersionInterface, ContainerAwareInterface
                 $locale = $localization->getLocale();
 
                 $query = $queryManager->createQuery(
-                    sprintf(
+                    \sprintf(
                         'SELECT * FROM [nt:base] WHERE [%s] = 4 AND [jcr:mixinTypes] = "sulu:page"',
                         $propertyEncoder->localizedSystemName('nodeType', $locale)
                     ),
@@ -78,7 +78,7 @@ class Version201507281529 implements VersionInterface, ContainerAwareInterface
                             $node->setProperty($templatePropertyName, 'external-link');
                         }
                     } catch (\Exception $e) {
-                        echo $e->getMessage() . PHP_EOL;
+                        echo $e->getMessage() . \PHP_EOL;
                     }
                 }
             }

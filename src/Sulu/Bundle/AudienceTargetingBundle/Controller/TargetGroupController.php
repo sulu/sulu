@@ -107,8 +107,8 @@ class TargetGroupController extends AbstractRestController implements ClassResou
         // If webspaces are concatinated we need to group by id. This happens
         // when no fields are supplied at all OR webspaces are requested as field.
         $fieldsParam = $request->get('fields');
-        $fields = explode(',', $fieldsParam);
-        if (null === $fieldsParam || false !== array_search('webspaceKeys', $fields)) {
+        $fields = \explode(',', $fieldsParam);
+        if (null === $fieldsParam || false !== \array_search('webspaceKeys', $fields)) {
             $listBuilder->addGroupBy($fieldDescriptors['id']);
         }
 
@@ -153,8 +153,8 @@ class TargetGroupController extends AbstractRestController implements ClassResou
      */
     public function postAction(Request $request)
     {
-        $data = $this->convertFromRequest(json_decode($request->getContent(), true));
-        $targetGroup = $this->deserializeData(json_encode($data));
+        $data = $this->convertFromRequest(\json_decode($request->getContent(), true));
+        $targetGroup = $this->deserializeData(\json_encode($data));
         $targetGroup = $this->targetGroupRepository->save($targetGroup);
 
         $this->entityManager->flush();
@@ -172,14 +172,14 @@ class TargetGroupController extends AbstractRestController implements ClassResou
     public function putAction(Request $request, $id)
     {
         $jsonData = $request->getContent();
-        $data = json_decode($jsonData, true);
+        $data = \json_decode($jsonData, true);
 
         // Id should be taken of request uri.
         $data['id'] = $id;
 
         $data = $this->convertFromRequest($data);
 
-        $targetGroup = $this->deserializeData(json_encode($data));
+        $targetGroup = $this->deserializeData(\json_encode($data));
         $targetGroup = $this->targetGroupRepository->save($targetGroup);
         $this->entityManager->flush();
 
@@ -213,9 +213,9 @@ class TargetGroupController extends AbstractRestController implements ClassResou
     public function cdeleteAction(Request $request)
     {
         $idsData = $request->get('ids');
-        $ids = explode(',', $idsData);
+        $ids = \explode(',', $idsData);
 
-        if (!count($ids)) {
+        if (!\count($ids)) {
             throw new MissingParameterException('TargetGroupController', 'ids');
         }
 
@@ -233,7 +233,7 @@ class TargetGroupController extends AbstractRestController implements ClassResou
     private function convertFromRequest(array $data)
     {
         if ($data['webspaceKeys']) {
-            $data['webspaces'] = array_map(function($webspaceKey) {
+            $data['webspaces'] = \array_map(function($webspaceKey) {
                 return ['webspaceKey' => $webspaceKey];
             }, $data['webspaceKeys']);
         } else {
@@ -245,11 +245,11 @@ class TargetGroupController extends AbstractRestController implements ClassResou
         }
 
         // Unset IDs of Conditions, otherwise they won't be able to save as id is null.
-        if (array_key_exists('rules', $data)) {
+        if (\array_key_exists('rules', $data)) {
             foreach ($data['rules'] as $ruleKey => &$rule) {
-                if (array_key_exists('conditions', $rule)) {
+                if (\array_key_exists('conditions', $rule)) {
                     foreach ($rule['conditions'] as $key => &$condition) {
-                        if (array_key_exists('id', $condition) && is_null($condition['id'])) {
+                        if (\array_key_exists('id', $condition) && \is_null($condition['id'])) {
                             unset($condition['id']);
                         }
                     }

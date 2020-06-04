@@ -24,15 +24,15 @@ class CropTransformation implements TransformationInterface
 {
     public function execute(ImageInterface $image, $parameters)
     {
-        @trigger_error(
+        @\trigger_error(
             'CropTransformation is deprecated since version 1.4. Use the scale config instead',
-            E_USER_DEPRECATED
+            \E_USER_DEPRECATED
         );
         $retina = isset($parameters['retina']) && 'false' != $parameters['retina'] ? 2 : 1;
-        $x = isset($parameters['x']) ? intval($parameters['x']) * $retina : 0;
-        $y = isset($parameters['y']) ? intval($parameters['y']) * $retina : 0;
-        $width = isset($parameters['w']) ? intval($parameters['w']) : 0;
-        $height = isset($parameters['h']) ? intval($parameters['h']) : 0;
+        $x = isset($parameters['x']) ? \intval($parameters['x']) * $retina : 0;
+        $y = isset($parameters['y']) ? \intval($parameters['y']) * $retina : 0;
+        $width = isset($parameters['w']) ? \intval($parameters['w']) : 0;
+        $height = isset($parameters['h']) ? \intval($parameters['h']) : 0;
 
         $point = new Point($x, $y);
         $box = new Box($width, $height);

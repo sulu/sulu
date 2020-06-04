@@ -33,7 +33,7 @@ class RegisterContentTypesCompilerPass implements CompilerPassInterface
         foreach ($ids as $id => $attributes) {
             if (!isset($attributes[0]['alias'])) {
                 throw new \InvalidArgumentException(
-                    sprintf(
+                    \sprintf(
                         'No "alias" specified for content type with service ID: "%s"',
                         $id
                     )

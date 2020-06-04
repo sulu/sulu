@@ -36,7 +36,7 @@ class MissingDomainPartException extends RestException
     public function __construct($baseDomain, array $domainParts, $domain)
     {
         parent::__construct(
-            sprintf('Missing domain-part for base-domain "%s" detected. Result domain: "%s"', $baseDomain, $domain),
+            \sprintf('Missing domain-part for base-domain "%s" detected. Result domain: "%s"', $baseDomain, $domain),
             9003
         );
 

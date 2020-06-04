@@ -55,7 +55,7 @@ class NavigationItem
         $this->nodeType = $nodeType;
         $this->excerpt = $excerpt;
 
-        $this->id = (null === $id ? uniqid() : $id);
+        $this->id = (null === $id ? \uniqid() : $id);
 
         $this->children = $children;
     }

@@ -56,7 +56,7 @@ class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
 
     public function getSelect()
     {
-        return sprintf(
+        return \sprintf(
             '(CASE WHEN %s IS NOT NULL THEN %s ELSE %s END)',
             $this->case1->getSelect(),
             $this->case1->getSelect(),
@@ -66,7 +66,7 @@ class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
 
     public function getSearch()
     {
-        return sprintf(
+        return \sprintf(
             '%s LIKE :search OR (%s is NULL AND %s LIKE :search)',
             $this->case1->getSelect(),
             $this->case1->getSelect(),
@@ -76,6 +76,6 @@ class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
 
     public function getJoins()
     {
-        return array_merge($this->case1->getJoins(), $this->case2->getJoins());
+        return \array_merge($this->case1->getJoins(), $this->case2->getJoins());
     }
 }

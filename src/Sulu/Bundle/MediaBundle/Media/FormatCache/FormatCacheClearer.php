@@ -33,7 +33,7 @@ class FormatCacheClearer implements FormatCacheClearerInterface
     public function clear($cache = null)
     {
         if (null !== $cache) {
-            if (!array_key_exists($cache, $this->caches)) {
+            if (!\array_key_exists($cache, $this->caches)) {
                 throw new CacheNotFoundException($cache);
             }
 

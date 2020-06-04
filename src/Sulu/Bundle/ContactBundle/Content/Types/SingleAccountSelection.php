@@ -100,7 +100,7 @@ class SingleAccountSelection extends ComplexContentType implements PreResolvable
     public function preResolve(PropertyInterface $property)
     {
         $account = $property->getValue();
-        if (!$account || !array_key_exists('id', $account)) {
+        if (!$account || !\array_key_exists('id', $account)) {
             return;
         }
 

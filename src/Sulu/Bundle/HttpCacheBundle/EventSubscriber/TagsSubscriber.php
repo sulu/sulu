@@ -64,11 +64,11 @@ class TagsSubscriber implements EventSubscriberInterface
     {
         $tags = $this->getTags();
         $currentStructureUuid = $this->getCurrentStructureUuid();
-        if ($currentStructureUuid && !in_array($currentStructureUuid, $tags)) {
+        if ($currentStructureUuid && !\in_array($currentStructureUuid, $tags)) {
             $tags[] = $currentStructureUuid;
         }
 
-        if (count($tags) <= 0) {
+        if (\count($tags) <= 0) {
             return;
         }
 
@@ -82,7 +82,7 @@ class TagsSubscriber implements EventSubscriberInterface
     {
         $tags = [];
         foreach ($this->referenceStorePool->getStores() as $alias => $referenceStore) {
-            $tags = array_merge($tags, $this->getTagsFromStore($alias, $referenceStore));
+            $tags = \array_merge($tags, $this->getTagsFromStore($alias, $referenceStore));
         }
 
         return $tags;

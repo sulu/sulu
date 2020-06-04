@@ -26,14 +26,14 @@ class TrailingHTMLEnhancer extends AbstractEnhancer
         array $defaults,
         Request $request
     ) {
-        if ('.html' !== substr($request->getRequestUri(), -5, 5)) {
+        if ('.html' !== \substr($request->getRequestUri(), -5, 5)) {
             return [];
         }
 
         return [
             '_finalized' => true,
             '_controller' => 'sulu_website.redirect_controller:redirectAction',
-            'url' => substr($request->getUri(), 0, -5),
+            'url' => \substr($request->getUri(), 0, -5),
         ];
     }
 }

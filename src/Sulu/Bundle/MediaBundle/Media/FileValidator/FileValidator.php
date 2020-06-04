@@ -50,20 +50,20 @@ class FileValidator implements FileValidatorInterface
             self::VALIDATOR_MAX_FILE_SIZE,
         ])
     {
-        if (in_array(self::VALIDATOR_FILE_ERRORS, $methods) && $file->getError() > 0) {
-            throw new InvalidFileException(sprintf('The file upload had an error("%s: %s")', $file->getError(), $file->getErrorMessage()));
+        if (\in_array(self::VALIDATOR_FILE_ERRORS, $methods) && $file->getError() > 0) {
+            throw new InvalidFileException(\sprintf('The file upload had an error("%s: %s")', $file->getError(), $file->getErrorMessage()));
         }
 
-        if (in_array(self::VALIDATOR_FILE_SET, $methods) && '' == $file->getFilename()) {
-            throw new UploadFileNotSetException(sprintf('No file "%s" was set', $file->getFilename()));
+        if (\in_array(self::VALIDATOR_FILE_SET, $methods) && '' == $file->getFilename()) {
+            throw new UploadFileNotSetException(\sprintf('No file "%s" was set', $file->getFilename()));
         }
 
-        if (in_array(self::VALIDATOR_BLOCK_FILE_TYPES, $methods) && in_array($file->getMimeType(), $this->blockedMimeTypes)) {
-            throw new InvalidFileTypeException(sprintf('The file type "%s" was blocked', $file->getMimeType()));
+        if (\in_array(self::VALIDATOR_BLOCK_FILE_TYPES, $methods) && \in_array($file->getMimeType(), $this->blockedMimeTypes)) {
+            throw new InvalidFileTypeException(\sprintf('The file type "%s" was blocked', $file->getMimeType()));
         }
 
-        if (in_array(self::VALIDATOR_MAX_FILE_SIZE, $methods) && null !== $this->maxFileSize && $file->getSize() >= $this->maxFileSize) {
-            throw new MaxFileSizeExceededException(sprintf('File "%s" exceeds the configured maximum filesize of "%s"', $file->getFilename(), $this->maxFileSize));
+        if (\in_array(self::VALIDATOR_MAX_FILE_SIZE, $methods) && null !== $this->maxFileSize && $file->getSize() >= $this->maxFileSize) {
+            throw new MaxFileSizeExceededException(\sprintf('File "%s" exceeds the configured maximum filesize of "%s"', $file->getFilename(), $this->maxFileSize));
         }
     }
 
@@ -81,11 +81,11 @@ class FileValidator implements FileValidatorInterface
         ];
         $defaultUnit = 'B';
 
-        $value = intval($maxFileSize);
-        $maxFileSizeParts = preg_split('/\d+/', $maxFileSize);
+        $value = \intval($maxFileSize);
+        $maxFileSizeParts = \preg_split('/\d+/', $maxFileSize);
         $digitalUnit = isset($maxFileSizeParts[1]) ? $maxFileSizeParts[1] : $defaultUnit;
 
-        $unitInBytes = isset($digitalUnits[strtoupper($digitalUnit)]) ? $digitalUnits[strtoupper($digitalUnit)] : $digitalUnits[$defaultUnit];
+        $unitInBytes = isset($digitalUnits[\strtoupper($digitalUnit)]) ? $digitalUnits[\strtoupper($digitalUnit)] : $digitalUnits[$defaultUnit];
 
         $this->maxFileSize = $value * $unitInBytes;
     }

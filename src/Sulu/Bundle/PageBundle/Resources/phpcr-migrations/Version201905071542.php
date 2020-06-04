@@ -52,12 +52,12 @@ class Version201905071542 implements VersionInterface, ContainerAwareInterface
             $node = $row->getNode();
 
             foreach ($node->getProperties() as $property) {
-                if (is_string($property->getValue())) {
-                    $propertyValue = json_decode($property->getValue(), true);
+                if (\is_string($property->getValue())) {
+                    $propertyValue = \json_decode($property->getValue(), true);
                     if ($propertyValue
-                        && is_array($propertyValue)
-                        && array_key_exists('items', $propertyValue)
-                        && array_key_exists('displayOption', $propertyValue)
+                        && \is_array($propertyValue)
+                        && \array_key_exists('items', $propertyValue)
+                        && \array_key_exists('displayOption', $propertyValue)
                     ) {
                         unset($propertyValue['displayOption']);
                         foreach ($propertyValue['items'] as &$item) {
@@ -66,7 +66,7 @@ class Version201905071542 implements VersionInterface, ContainerAwareInterface
                             }
                         }
 
-                        $property->setValue(json_encode($propertyValue));
+                        $property->setValue(\json_encode($propertyValue));
                     }
                 }
             }
@@ -84,11 +84,11 @@ class Version201905071542 implements VersionInterface, ContainerAwareInterface
             $node = $row->getNode();
 
             foreach ($node->getProperties() as $property) {
-                if (is_string($property->getValue())) {
-                    $propertyValue = json_decode($property->getValue(), true);
+                if (\is_string($property->getValue())) {
+                    $propertyValue = \json_decode($property->getValue(), true);
                     if ($propertyValue
-                        && is_array($propertyValue)
-                        && array_key_exists('items', $propertyValue)
+                        && \is_array($propertyValue)
+                        && \array_key_exists('items', $propertyValue)
                     ) {
                         $propertyValue['displayOption'] = 'top';
                         foreach ($propertyValue['items'] as &$item) {
@@ -97,7 +97,7 @@ class Version201905071542 implements VersionInterface, ContainerAwareInterface
                             }
                         }
 
-                        $property->setValue(json_encode($propertyValue));
+                        $property->setValue(\json_encode($propertyValue));
                     }
                 }
             }

@@ -12,7 +12,7 @@
 $filesystem = new \Symfony\Component\Filesystem\Filesystem();
 
 $context = $container->getParameter('sulu.context');
-$path = __DIR__ . DIRECTORY_SEPARATOR;
+$path = __DIR__ . \DIRECTORY_SEPARATOR;
 if (!$filesystem->exists($path . 'parameters.yml')) {
     $filesystem->copy($path . 'parameters.yml.dist', $path . 'parameters.yml');
 }

@@ -142,7 +142,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
 
     public function resolveDatasource($datasource, array $propertyParameter, array $options)
     {
-        $properties = array_key_exists('properties', $propertyParameter) ?
+        $properties = \array_key_exists('properties', $propertyParameter) ?
             $propertyParameter['properties']->getValue() : [];
 
         $this->contentQueryBuilder->init(
@@ -163,11 +163,11 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             0
         );
 
-        if (0 === count($result)) {
+        if (0 === \count($result)) {
             return;
         }
 
-        return new DatasourceItem($result[0]['id'], $result[0]['title'], '/' . ltrim($result[0]['path'], '/'));
+        return new DatasourceItem($result[0]['id'], $result[0]['title'], '/' . \ltrim($result[0]['path'], '/'));
     }
 
     public function resolveDataItems(
@@ -226,7 +226,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
     ) {
         $emptyFilterResult = [[], false];
 
-        if (!array_key_exists('dataSource', $filters)
+        if (!\array_key_exists('dataSource', $filters)
             || null === $filters['dataSource']
             || '' === $filters['dataSource']
             || (null !== $limit && $limit < 1)
@@ -240,14 +240,14 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             return $emptyFilterResult;
         }
 
-        $properties = array_key_exists('properties', $propertyParameter) ?
+        $properties = \array_key_exists('properties', $propertyParameter) ?
             $propertyParameter['properties']->getValue() : [];
 
         $excluded = isset($filters['excluded']) ? $filters['excluded'] : [];
-        if (array_key_exists('exclude_duplicates', $propertyParameter)
+        if (\array_key_exists('exclude_duplicates', $propertyParameter)
             && $propertyParameter['exclude_duplicates']->getValue()
         ) {
-            $excluded = array_merge($excluded, $this->referenceStore->getAll());
+            $excluded = \array_merge($excluded, $this->referenceStore->getAll());
         }
 
         $this->contentQueryBuilder->init(
@@ -262,8 +262,8 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         $hasNextPage = false;
         if (null !== $pageSize) {
             $result = $this->loadPaginated($options, $limit, $page, $pageSize);
-            $hasNextPage = (count($result) > $pageSize);
-            $items = array_splice($result, 0, $pageSize);
+            $hasNextPage = (\count($result) > $pageSize);
+            $items = \array_splice($result, 0, $pageSize);
         } else {
             $items = $this->load($options, $limit);
         }
@@ -282,7 +282,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
      */
     private function loadPaginated(array $options, $limit, $page, $pageSize)
     {
-        $pageSize = intval($pageSize);
+        $pageSize = \intval($pageSize);
         $offset = ($page - 1) * $pageSize;
 
         $position = $pageSize * $page;
@@ -332,7 +332,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
      */
     private function decorateDataItems(array $data, $locale)
     {
-        return array_map(
+        return \array_map(
             function($item) use ($locale) {
                 return new ContentDataItem($item, $this->getResource($item['id'], $locale));
             },
@@ -349,7 +349,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
      */
     private function decorateResourceItems(array $data, $locale)
     {
-        return array_map(
+        return \array_map(
             function($item) use ($locale) {
                 $this->referenceStore->add($item['id']);
 

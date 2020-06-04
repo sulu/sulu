@@ -406,6 +406,6 @@ class AdminControllerTest extends TestCase
         $this->translatorBag->getCatalogue('en')->willReturn($catalogue->reveal());
 
         $response = $this->adminController->translationsAction($request);
-        $this->assertEquals(['save' => 'Save'], json_decode($response->getContent(), true));
+        $this->assertEquals(['save' => 'Save'], \json_decode($response->getContent(), true));
     }
 }

@@ -54,8 +54,8 @@ class DoctrineBetweenExpressionTest extends TestCase
         $whereExpression = new DoctrineBetweenExpression($fieldDescriptor, $start, $end);
 
         $statement = $whereExpression->getStatement($this->queryBuilder);
-        $result = preg_match(
-            sprintf(
+        $result = \preg_match(
+            \sprintf(
                 '/^SuluCoreBundle_Example\.name BETWEEN :name[\S]{%1$s} AND :name[\S]{%1$s}/',
                 $this->uniqueIdLength
             ),

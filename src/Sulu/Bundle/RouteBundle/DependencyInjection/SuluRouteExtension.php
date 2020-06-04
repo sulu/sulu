@@ -82,7 +82,7 @@ class SuluRouteExtension extends Extension implements PrependExtensionInterface
 
         $bundles = $container->getParameter('kernel.bundles');
 
-        if ('task' === $pageRouteCascade && !array_key_exists('SuluAutomationBundle', $bundles)) {
+        if ('task' === $pageRouteCascade && !\array_key_exists('SuluAutomationBundle', $bundles)) {
             throw new InvalidConfigurationException(
                 'You need to install the SuluAutomationBundle to use task cascading!'
             );

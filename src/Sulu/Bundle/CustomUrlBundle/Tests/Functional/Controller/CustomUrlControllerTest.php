@@ -115,14 +115,14 @@ class CustomUrlControllerTest extends SuluTestCase
     public function testPost($data, $url, $statusCode = 200, $restErrorCode = null)
     {
         // content document is not there in provider
-        if (array_key_exists('targetDocument', $data)) {
+        if (\array_key_exists('targetDocument', $data)) {
             $data['targetDocument'] = $this->contentDocument->getUuid();
         }
 
         $this->client->request('POST', '/api/webspaces/sulu_io/custom-urls', $data);
 
         $response = $this->client->getResponse();
-        $responseData = json_decode($response->getContent(), true);
+        $responseData = \json_decode($response->getContent(), true);
 
         $this->assertHttpStatusCode($statusCode, $response);
 
@@ -143,7 +143,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->assertLessThanOrEqual(new \DateTime(), new \DateTime($responseData['created']));
         $this->assertLessThanOrEqual(new \DateTime(), new \DateTime($responseData['changed']));
         $this->assertEquals(Urlizer::urlize($data['title']), $responseData['nodeName']);
-        if (array_key_exists('targetDocument', $data)) {
+        if (\array_key_exists('targetDocument', $data)) {
             $this->assertEquals('Homepage', $responseData['targetTitle']);
         } else {
             $this->assertArrayNotHasKey('targetTitle', $responseData);
@@ -505,14 +505,14 @@ class CustomUrlControllerTest extends SuluTestCase
         }
 
         // content document is not there in provider
-        if (array_key_exists('targetDocument', $data)) {
+        if (\array_key_exists('targetDocument', $data)) {
             $data['targetDocument'] = $this->contentDocument->getUuid();
         }
 
         $this->client->request('PUT', '/api/webspaces/sulu_io/custom-urls/' . $uuid, $data);
 
         $response = $this->client->getResponse();
-        $responseData = json_decode($response->getContent(), true);
+        $responseData = \json_decode($response->getContent(), true);
 
         $this->assertHttpStatusCode($statusCode, $response);
 
@@ -533,7 +533,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->assertLessThanOrEqual(new \DateTime(), new \DateTime($responseData['created']));
         $this->assertLessThanOrEqual(new \DateTime(), new \DateTime($responseData['changed']));
         $this->assertEquals(Urlizer::urlize($data['title']), $responseData['nodeName']);
-        if (array_key_exists('targetDocument', $data)) {
+        if (\array_key_exists('targetDocument', $data)) {
             $this->assertEquals('Homepage', $responseData['targetTitle']);
         } else {
             $this->assertArrayNotHasKey('targetTitle', $responseData);
@@ -570,7 +570,7 @@ class CustomUrlControllerTest extends SuluTestCase
     public function testGet($data, $url)
     {
         // content document is not there in provider
-        if (array_key_exists('targetDocument', $data)) {
+        if (\array_key_exists('targetDocument', $data)) {
             $data['targetDocument'] = $this->contentDocument->getUuid();
         }
 
@@ -581,7 +581,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
 
         $response = $this->client->getResponse();
-        $responseData = json_decode($response->getContent(), true);
+        $responseData = \json_decode($response->getContent(), true);
 
         $this->assertHttpStatusCode(200, $response);
 
@@ -596,7 +596,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->assertGreaterThanOrEqual(new \DateTime($responseData['created']), $dateTime);
         $this->assertGreaterThanOrEqual(new \DateTime($responseData['changed']), $dateTime);
         $this->assertEquals(Urlizer::urlize($data['title']), $responseData['nodeName']);
-        if (array_key_exists('targetDocument', $data)) {
+        if (\array_key_exists('targetDocument', $data)) {
             $this->assertEquals('Homepage', $responseData['targetTitle']);
         } else {
             $this->assertArrayNotHasKey('targetTitle', $responseData);
@@ -651,7 +651,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $requestTime = new \DateTime();
 
         $response = $this->client->getResponse();
-        $responseDataComplete = json_decode($response->getContent(), true);
+        $responseDataComplete = \json_decode($response->getContent(), true);
 
         $this->assertHttpStatusCode(200, $response);
 
@@ -669,7 +669,7 @@ class CustomUrlControllerTest extends SuluTestCase
 
             $this->assertLessThanOrEqual($requestTime, new \DateTime($responseData['created']));
             $this->assertLessThanOrEqual($requestTime, new \DateTime($responseData['changed']));
-            if (array_key_exists('targetDocument', $data)) {
+            if (\array_key_exists('targetDocument', $data)) {
                 $this->assertEquals('Homepage', $responseData['targetTitle']);
             } else {
                 $this->assertArrayNotHasKey('targetTitle', $responseData);
@@ -721,7 +721,7 @@ class CustomUrlControllerTest extends SuluTestCase
             $uuids[] = $this->testPost($data, $url);
         }
 
-        $this->client->request('DELETE', '/api/webspaces/sulu_io/custom-urls?ids=' . implode(',', $uuids));
+        $this->client->request('DELETE', '/api/webspaces/sulu_io/custom-urls?ids=' . \implode(',', $uuids));
 
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(204, $response);
@@ -731,7 +731,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
 
-        $responseData = json_decode($response->getContent(), true);
+        $responseData = \json_decode($response->getContent(), true);
         $this->assertCount(1, $responseData['_embedded']['custom_urls']);
         $this->assertEquals($uuid, $responseData['_embedded']['custom_urls'][0]['id']);
     }

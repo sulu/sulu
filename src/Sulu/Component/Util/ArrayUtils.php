@@ -35,7 +35,7 @@ final class ArrayUtils
 
         $result = [];
         foreach ($collection as $key => $item) {
-            if ($language->evaluate($expression, array_merge($context, ['item' => $item, 'key' => $key]))) {
+            if ($language->evaluate($expression, \array_merge($context, ['item' => $item, 'key' => $key]))) {
                 $result[$key] = $item;
             }
         }

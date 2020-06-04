@@ -72,15 +72,15 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
 
     protected function encodeValue($value)
     {
-        return json_encode($value);
+        return \json_encode($value);
     }
 
     protected function decodeValue($value)
     {
-        if (!is_string($value)) {
+        if (!\is_string($value)) {
             return null;
         }
 
-        return json_decode($value, true);
+        return \json_decode($value, true);
     }
 }

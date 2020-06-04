@@ -26,7 +26,7 @@ class CategoryKeyNotFoundException extends \Exception
      */
     public function __construct($categoryKey)
     {
-        parent::__construct(sprintf('The category with the key "%s" does not exist.', $categoryKey));
+        parent::__construct(\sprintf('The category with the key "%s" does not exist.', $categoryKey));
 
         $this->categoryKey = $categoryKey;
     }

@@ -49,7 +49,7 @@ class StructureBridgeTest extends TestCase
         $propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
 
         $reveal = $copyFromStructure->reveal();
-        $property = new \ReflectionProperty(get_class($reveal), 'document');
+        $property = new \ReflectionProperty(\get_class($reveal), 'document');
         $property->setAccessible(true);
         $property->setValue($reveal, $document->reveal());
 

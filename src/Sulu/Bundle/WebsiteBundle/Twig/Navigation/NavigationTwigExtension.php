@@ -162,6 +162,6 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
             return true;
         }
 
-        return preg_match(sprintf('/%s([\/]|$)/', preg_quote($itemPath, '/')), $requestPath);
+        return \preg_match(\sprintf('/%s([\/]|$)/', \preg_quote($itemPath, '/')), $requestPath);
     }
 }

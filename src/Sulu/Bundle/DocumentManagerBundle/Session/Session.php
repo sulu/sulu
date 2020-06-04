@@ -161,11 +161,11 @@ class Session implements SessionInterface
 
     public function exportSystemView($absPath, $stream, $skipBinary, $noRecurse)
     {
-        $memoryStream = fopen('php://memory', 'w+');
+        $memoryStream = \fopen('php://memory', 'w+');
         $this->inner->exportSystemView($absPath, $memoryStream, $skipBinary, $noRecurse);
 
-        rewind($memoryStream);
-        $content = stream_get_contents($memoryStream);
+        \rewind($memoryStream);
+        $content = \stream_get_contents($memoryStream);
 
         $document = new \DOMDocument();
         $document->loadXML($content);
@@ -176,7 +176,7 @@ class Session implements SessionInterface
             $element->parentNode->removeChild($element);
         }
 
-        fwrite($stream, $document->saveXML());
+        \fwrite($stream, $document->saveXML());
     }
 
     public function exportDocumentView($absPath, $stream, $skipBinary, $noRecurse)

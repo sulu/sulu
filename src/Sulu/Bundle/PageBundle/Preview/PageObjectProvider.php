@@ -77,7 +77,7 @@ class PageObjectProvider implements PreviewObjectProviderInterface
      */
     public function setContext($object, $locale, array $context)
     {
-        if (array_key_exists('template', $context)) {
+        if (\array_key_exists('template', $context)) {
             $object->setStructureType($context['template']);
         }
 

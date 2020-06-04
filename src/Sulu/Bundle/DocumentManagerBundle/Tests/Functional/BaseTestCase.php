@@ -61,7 +61,7 @@ EOT
 
     protected function generateDataSet(array $options)
     {
-        $options = array_merge([
+        $options = \array_merge([
             'locales' => ['en'],
         ], $options);
 

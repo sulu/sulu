@@ -39,22 +39,22 @@ class XmlFormatLoader10Test extends WebspaceTestCase
     public function testSupports10()
     {
         $this->assertTrue(
-            $this->loader->supports(dirname(__DIR__) . '/../../Fixtures/image-formats/version10.xml')
+            $this->loader->supports(\dirname(__DIR__) . '/../../Fixtures/image-formats/version10.xml')
         );
     }
 
     public function testSupports11()
     {
         $this->assertFalse(
-            $this->loader->supports(dirname(__DIR__) . '/../../Fixtures/image-formats/version11.xml')
+            $this->loader->supports(\dirname(__DIR__) . '/../../Fixtures/image-formats/version11.xml')
         );
     }
 
     public function testLoadDeprecated()
     {
-        $result = $this->loader->load(dirname(__DIR__) . '/../../Fixtures/image-formats/version10.xml');
+        $result = $this->loader->load(\dirname(__DIR__) . '/../../Fixtures/image-formats/version10.xml');
 
-        $this->assertEquals(3, count($result));
+        $this->assertEquals(3, \count($result));
 
         $this->assertArrayHasKey('640x480', $result);
         $this->assertEquals(
@@ -137,6 +137,6 @@ class XmlFormatLoader10Test extends WebspaceTestCase
     public function testLoadDeprecatedWithMissingDimension()
     {
         $this->expectException(MissingScaleDimensionException::class);
-        $this->loader->load(dirname(__DIR__) . '/../../Fixtures/image-formats/version10_missing_dimension.xml');
+        $this->loader->load(\dirname(__DIR__) . '/../../Fixtures/image-formats/version10_missing_dimension.xml');
     }
 }

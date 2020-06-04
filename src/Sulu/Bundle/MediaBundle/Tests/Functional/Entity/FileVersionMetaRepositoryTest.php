@@ -79,7 +79,7 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
 
         $this->em->flush();
 
-        $titles = array_map(
+        $titles = \array_map(
             function(FileVersionMeta $fileVersionMeta) {
                 return $fileVersionMeta->getTitle();
             },
@@ -105,7 +105,7 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
 
         $this->em->flush();
 
-        $titles = array_map(
+        $titles = \array_map(
             function(FileVersionMeta $fileVersionMeta) {
                 return $fileVersionMeta->getTitle();
             },

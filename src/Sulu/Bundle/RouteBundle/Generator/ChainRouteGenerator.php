@@ -47,7 +47,7 @@ class ChainRouteGenerator implements ChainRouteGeneratorInterface
 
     public function generate(RoutableInterface $entity, $path = null)
     {
-        $config = $this->getClassMappingConfiguration(get_class($entity));
+        $config = $this->getClassMappingConfiguration(\get_class($entity));
 
         if (!$path) {
             $generator = $this->routeGenerators[$config['mapping']['generator']];
@@ -72,7 +72,7 @@ class ChainRouteGenerator implements ChainRouteGeneratorInterface
      */
     protected function getClassMappingConfiguration($className)
     {
-        if (array_key_exists($className, $this->mappings)) {
+        if (\array_key_exists($className, $this->mappings)) {
             return [
                 'className' => $className,
                 'mapping' => $this->mappings[$className],
@@ -81,7 +81,7 @@ class ChainRouteGenerator implements ChainRouteGeneratorInterface
 
         $reflection = new \ReflectionClass($className);
         while ($reflection = $reflection->getParentClass()) {
-            if (array_key_exists($reflection->getName(), $this->mappings)) {
+            if (\array_key_exists($reflection->getName(), $this->mappings)) {
                 return [
                     'className' => $reflection->getName(),
                     'mapping' => $this->mappings[$reflection->getName()],
@@ -89,6 +89,6 @@ class ChainRouteGenerator implements ChainRouteGeneratorInterface
             }
         }
 
-        throw new MissingClassMappingConfigurationException($className, array_keys($this->mappings));
+        throw new MissingClassMappingConfigurationException($className, \array_keys($this->mappings));
     }
 }

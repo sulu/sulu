@@ -30,7 +30,7 @@ class InvalidHashException extends RestException
     public function __construct($entity, $id)
     {
         parent::__construct(
-            sprintf(
+            \sprintf(
                 'The given hash for the entity of type "%s" with the id "%s" does not match the current hash.'
                 . ' The entity has probably been edited in the mean time.',
                 $entity,

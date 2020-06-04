@@ -49,7 +49,7 @@ class EncodeAliasTraitTest extends TestCase
      */
     public function testEncodeAlias($value, $expected)
     {
-        $method = new \ReflectionMethod(get_class($this->encodeAlias), 'encodeAlias');
+        $method = new \ReflectionMethod(\get_class($this->encodeAlias), 'encodeAlias');
         $method->setAccessible(true);
 
         $this->assertEquals($expected, $method->invoke($this->encodeAlias, $value));

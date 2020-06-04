@@ -32,7 +32,7 @@ class DocumentAccessor
     public function __construct($document)
     {
         $this->document = $document;
-        $documentClass = get_class($document);
+        $documentClass = \get_class($document);
 
         if ($document instanceof LazyLoadingInterface) {
             $documentClass = ClassNameInflector::getUserClassName($documentClass);
@@ -49,9 +49,9 @@ class DocumentAccessor
     public function set($field, $value)
     {
         if (!$this->has($field)) {
-            throw new DocumentManagerException(sprintf(
+            throw new DocumentManagerException(\sprintf(
                 'Document "%s" must have property "%s" (it is probably required by a behavior)',
-                get_class($this->document), $field
+                \get_class($this->document), $field
             ));
         }
 

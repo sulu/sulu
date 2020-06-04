@@ -32,8 +32,8 @@ class CollectionRepresentation implements RepresentationInterface
 
     public function __construct($data, string $rel)
     {
-        if (!is_array($data)) {
-            $data = iterator_to_array($data);
+        if (!\is_array($data)) {
+            $data = \iterator_to_array($data);
         }
 
         $this->data = $data;

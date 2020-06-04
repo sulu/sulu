@@ -54,13 +54,13 @@ class Version201903271333 implements VersionInterface, ContainerAwareInterface
             foreach ($node->getProperties() as $property) {
                 $propertyValue = $property->getValue();
 
-                if (is_string($propertyValue)) {
-                    if (false !== strpos($propertyValue, '<sulu:media')) {
-                        $propertyValue = preg_replace_callback(
+                if (\is_string($propertyValue)) {
+                    if (false !== \strpos($propertyValue, '<sulu:media')) {
+                        $propertyValue = \preg_replace_callback(
                             '/<sulu:media (.*?)>(.*?)<\/sulu:media>/',
                             function($match) {
                                 return '<sulu-link provider="media" '
-                                    . str_replace('id=', 'href=', $match[1]) . '>'
+                                    . \str_replace('id=', 'href=', $match[1]) . '>'
                                     . $match[2]
                                     . '</sulu-link>';
                             },
@@ -68,8 +68,8 @@ class Version201903271333 implements VersionInterface, ContainerAwareInterface
                         );
                     }
 
-                    if (false !== strpos($propertyValue, '<sulu:')) {
-                        $propertyValue = preg_replace(
+                    if (false !== \strpos($propertyValue, '<sulu:')) {
+                        $propertyValue = \preg_replace(
                             '/<sulu:(.*?) (.*?)>(.*?)<\/sulu:(.*?)>/',
                             '<sulu-$1 $2>$3</sulu-$4>',
                             $propertyValue
@@ -97,9 +97,9 @@ class Version201903271333 implements VersionInterface, ContainerAwareInterface
             foreach ($node->getProperties() as $property) {
                 $propertyValue = $property->getValue();
 
-                if (is_string($propertyValue)) {
-                    if (false !== strpos($propertyValue, '<sulu-link provider="media"')) {
-                        $propertyValue = preg_replace_callback(
+                if (\is_string($propertyValue)) {
+                    if (false !== \strpos($propertyValue, '<sulu-link provider="media"')) {
+                        $propertyValue = \preg_replace_callback(
                             '/<sulu-link provider="media" href="(.*?)">(.*?)<\/sulu-link>/',
                             function($match) {
                                 return '<sulu:media id="' . $match[1] . '">' . $match[2] . '</sulu:media>';
@@ -108,8 +108,8 @@ class Version201903271333 implements VersionInterface, ContainerAwareInterface
                         );
                     }
 
-                    if (false !== strpos($propertyValue, '<sulu-')) {
-                        $propertyValue = preg_replace(
+                    if (false !== \strpos($propertyValue, '<sulu-')) {
+                        $propertyValue = \preg_replace(
                             '/<sulu-(.*?) (.*?)>(.*?)<\/sulu-(.*?)>/',
                             '<sulu:$1 $2>$3</sulu:$4>',
                             $propertyValue

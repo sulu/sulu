@@ -24,7 +24,7 @@ class GammaTransformation implements TransformationInterface
             throw new \RuntimeException('The parameter "correction" is required for "gamma" transformation.');
         }
 
-        if (!is_numeric($parameters['correction'])) {
+        if (!\is_numeric($parameters['correction'])) {
             throw new \RuntimeException(
                 'The parameter "correction" need to be a numeric value for "gamma" transformation.'
             );

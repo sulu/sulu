@@ -46,7 +46,7 @@ class FormMetadataMapper
             } elseif ($child instanceof ContentSectionMetadata) {
                 $item = $this->mapSection($child, $locale);
             } else {
-                throw new \Exception('Unsupported property given "' . get_class($child) . '"');
+                throw new \Exception('Unsupported property given "' . \get_class($child) . '"');
             }
 
             $items[$item->getName()] = $item;
@@ -102,7 +102,7 @@ class FormMetadataMapper
             } elseif ($component instanceof ContentSectionMetadata) {
                 $item = $this->mapSection($component, $locale);
             } else {
-                throw new \Exception('Unsupported property given "' . get_class($property) . '"');
+                throw new \Exception('Unsupported property given "' . \get_class($property) . '"');
             }
 
             $section->addItem($item);
@@ -119,7 +119,7 @@ class FormMetadataMapper
         foreach ($property->getComponents() as $component) {
             $blockType = new FormMetadata();
             $blockType->setName($component->getName());
-            $blockType->setTitle($component->getTitle($locale) ?? ucfirst($component->getName()));
+            $blockType->setTitle($component->getTitle($locale) ?? \ucfirst($component->getName()));
 
             $blockTypeChildren = $this->mapChildren($component->getChildren(), $locale);
 
@@ -177,7 +177,7 @@ class FormMetadataMapper
             $option->setValue($parameter['value']);
             $this->mapOptionMeta($parameter, $locale, $option);
         } else {
-            throw new \Exception('Unsupported parameter given "' . get_class($parameter) . '"');
+            throw new \Exception('Unsupported parameter given "' . \get_class($parameter) . '"');
         }
 
         return $option;
@@ -185,12 +185,12 @@ class FormMetadataMapper
 
     private function mapOptionMeta(array $parameterValue, string $locale, OptionMetadata $option): void
     {
-        if (!array_key_exists('meta', $parameterValue)) {
+        if (!\array_key_exists('meta', $parameterValue)) {
             return;
         }
 
         foreach ($parameterValue['meta'] as $metaKey => $metaValues) {
-            if (array_key_exists($locale, $metaValues)) {
+            if (\array_key_exists($locale, $metaValues)) {
                 switch ($metaKey) {
                     case 'title':
                         $option->setTitle($metaValues[$locale]);
@@ -213,7 +213,7 @@ class FormMetadataMapper
      */
     private function mapSchemaProperties(array $itemsMetadata): array
     {
-        return array_filter(array_map(function(ContentItemMetadata $itemMetadata) {
+        return \array_filter(\array_map(function(ContentItemMetadata $itemMetadata) {
             if ($itemMetadata instanceof ContentSectionMetadata) {
                 return $this->mapSchemaProperties($itemMetadata->getChildren());
             }
@@ -222,7 +222,7 @@ class FormMetadataMapper
                 $blockTypeSchemas = [];
                 foreach ($itemMetadata->getComponents() as $blockType) {
                     $blockTypeSchemas[] = new SchemaMetadata(
-                        array_merge(
+                        \array_merge(
                             $this->mapSchemaProperties($blockType->getChildren()),
                             ['type' => new ConstMetadata('type', true, $blockType->getName())]
                         )

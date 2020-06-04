@@ -40,9 +40,9 @@ class MoveEvent extends AbstractEvent
 
     public function getDebugMessage()
     {
-        return sprintf(
+        return \sprintf(
             'd:%s did:%s, dnam:%s',
-            $this->document ? spl_object_hash($this->document) : '<no document>',
+            $this->document ? \spl_object_hash($this->document) : '<no document>',
             $this->destId ?: '<no dest>',
             $this->destName ?: '<no dest name>'
         );
@@ -88,10 +88,10 @@ class MoveEvent extends AbstractEvent
     public function getDestName()
     {
         if (!$this->destName) {
-            throw new \RuntimeException(sprintf(
+            throw new \RuntimeException(\sprintf(
                 'No destName set in copy/move event when copying/moving document "%s" to "%s". ' .
                 'This should have been set by a listener',
-                spl_object_hash($this->document),
+                \spl_object_hash($this->document),
                 $this->destId
             ));
         }

@@ -112,7 +112,7 @@ class ImagineImageConverter implements ImageConverterInterface
         }
 
         foreach ($this->supportedMimeTypes as $supportedMimeType) {
-            if (fnmatch($supportedMimeType, $mimeType)) {
+            if (\fnmatch($supportedMimeType, $mimeType)) {
                 $preferredExtension = 'jpg';
 
                 switch ($mimeType) {
@@ -134,7 +134,7 @@ class ImagineImageConverter implements ImageConverterInterface
                         break;
                 }
 
-                return array_unique([
+                return \array_unique([
                     $preferredExtension,
                     'jpg',
                     'gif',
@@ -192,7 +192,7 @@ class ImagineImageConverter implements ImageConverterInterface
 
         try {
             // Set Interlacing to plane for smaller image size.
-            if (1 == count($image->layers())) {
+            if (1 == \count($image->layers())) {
                 $image->interlace(ImageInterface::INTERLACE_PLANE);
             }
         } catch (RuntimeException $exception) {
@@ -380,7 +380,7 @@ class ImagineImageConverter implements ImageConverterInterface
             $layers = [];
         }
 
-        if (count($layers) > 1) {
+        if (\count($layers) > 1) {
             $countLayer = 0;
             $image->layers()->coalesce();
 
@@ -388,7 +388,7 @@ class ImagineImageConverter implements ImageConverterInterface
             $temporaryImage = null;
             foreach ($image->layers() as $layer) {
                 ++$countLayer;
-                $layer = call_user_func($modifier, $layer);
+                $layer = \call_user_func($modifier, $layer);
                 if (1 === $countLayer) {
                     $temporaryImage = clone $layer; // use first layer as main image
                 } else {
@@ -397,7 +397,7 @@ class ImagineImageConverter implements ImageConverterInterface
             }
             $image = $temporaryImage;
         } else {
-            $image = call_user_func($modifier, $image);
+            $image = \call_user_func($modifier, $image);
         }
 
         return $image;
@@ -430,11 +430,11 @@ class ImagineImageConverter implements ImageConverterInterface
     private function getOptionsFromImage(ImageInterface $image, $imageExtension, $imagineOptions)
     {
         $options = [];
-        if ('gif' == $imageExtension && count($image->layers()) > 1) {
+        if ('gif' == $imageExtension && \count($image->layers()) > 1) {
             $options['animated'] = true;
             $options['optimize'] = true;
         }
 
-        return array_merge($options, $imagineOptions);
+        return \array_merge($options, $imagineOptions);
     }
 }

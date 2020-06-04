@@ -94,7 +94,7 @@ class AppendAnalyticsListener
 
         $response = $event->getResponse();
 
-        if (0 !== strpos($response->headers->get('Content-Type'), 'text/html')
+        if (0 !== \strpos($response->headers->get('Content-Type'), 'text/html')
             || !$response->getContent()
             || null === $this->requestAnalyzer->getPortalInformation()
         ) {
@@ -125,7 +125,7 @@ class AppendAnalyticsListener
      */
     protected function generateAnalyticsContent(array $analyticsContent, Analytics $analytics)
     {
-        foreach (array_keys(self::$positions) as $position) {
+        foreach (\array_keys(self::$positions) as $position) {
             $template = '@SuluWebsite/Analytics/' . $analytics->getType() . '/' . $position . '.html.twig';
 
             if (!$this->engine->getLoader()->exists($template)) {
@@ -137,7 +137,7 @@ class AppendAnalyticsListener
                 continue;
             }
 
-            if (!array_key_exists($position, $analyticsContent)) {
+            if (!\array_key_exists($position, $analyticsContent)) {
                 $analyticsContent[$position] = '';
             }
 
@@ -161,9 +161,9 @@ class AppendAnalyticsListener
                 continue;
             }
 
-            $responseContent = preg_replace(
+            $responseContent = \preg_replace(
                 self::$positions[$id]['regex'],
-                sprintf(self::$positions[$id]['sprintf'], $content),
+                \sprintf(self::$positions[$id]['sprintf'], $content),
                 $responseContent
             );
         }

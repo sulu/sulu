@@ -56,7 +56,7 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
     {
         $configCache = $this->getConfigCache($key, $locale);
 
-        if (!file_exists($configCache->getPath())) {
+        if (!\file_exists($configCache->getPath())) {
             return null;
         }
 
@@ -64,7 +64,7 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
             $this->warmUp($this->cacheDir);
         }
 
-        $form = unserialize(file_get_contents($configCache->getPath()));
+        $form = \unserialize(\file_get_contents($configCache->getPath()));
 
         return $form;
     }
@@ -77,9 +77,9 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
         foreach ($formFinder as $formFile) {
             $formMetadataCollection = $this->formXmlLoader->load($formFile->getPathName());
             $items = $formMetadataCollection->getItems();
-            $formKey = reset($items)->getKey();
+            $formKey = \reset($items)->getKey();
             $formsMetadataResources[$formKey][] = $formFile->getPathName();
-            if (!array_key_exists($formKey, $formsMetadataCollection)) {
+            if (!\array_key_exists($formKey, $formsMetadataCollection)) {
                 $formsMetadataCollection[$formKey] = $formMetadataCollection;
             } else {
                 $formsMetadataCollection[$formKey] = $formsMetadataCollection[$formKey]->merge($formMetadataCollection);
@@ -90,8 +90,8 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
             foreach ($formMetadataCollection->getItems() as $locale => $formMetadata) {
                 $configCache = $this->getConfigCache($key, $locale);
                 $configCache->write(
-                    serialize($formMetadata),
-                    array_map(function(string $resource) {
+                    \serialize($formMetadata),
+                    \array_map(function(string $resource) {
                         return new FileResource($resource);
                     }, $formsMetadataResources[$key])
                 );
@@ -106,6 +106,6 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
 
     private function getConfigCache(string $key, string $locale): ConfigCache
     {
-        return new ConfigCache(sprintf('%s%s%s.%s', $this->cacheDir, DIRECTORY_SEPARATOR, $key, $locale), $this->debug);
+        return new ConfigCache(\sprintf('%s%s%s.%s', $this->cacheDir, \DIRECTORY_SEPARATOR, $key, $locale), $this->debug);
     }
 }

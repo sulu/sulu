@@ -60,12 +60,12 @@ class SmartContentItemController extends AbstractRestController
         // prepare filters and options
         $providerAlias = $this->getRequestParameter($request, 'provider', true);
         $filters = $request->query->all();
-        $filters['excluded'] = array_filter(explode(',', $this->getRequestParameter($request, 'excluded')));
+        $filters['excluded'] = \array_filter(\explode(',', $this->getRequestParameter($request, 'excluded')));
         if (isset($filters['categories'])) {
-            $filters['categories'] = explode(',', $this->getRequestParameter($request, 'categories'));
+            $filters['categories'] = \explode(',', $this->getRequestParameter($request, 'categories'));
         }
         if (isset($filters['tags'])) {
-            $filters['tags'] = explode(',', $this->getRequestParameter($request, 'tags'));
+            $filters['tags'] = \explode(',', $this->getRequestParameter($request, 'tags'));
         }
         if (isset($filters['sortBy'])) {
             $filters['sortBy'] = $this->getRequestParameter($request, 'sortBy');
@@ -73,7 +73,7 @@ class SmartContentItemController extends AbstractRestController
         if (isset($filters['includeSubFolders'])) {
             $filters['includeSubFolders'] = 'true' === $filters['includeSubFolders'];
         }
-        $filters = array_filter($filters);
+        $filters = \array_filter($filters);
         $options = [
             'webspaceKey' => $this->getRequestParameter($request, 'webspace'),
             'locale' => $this->getLocale($request),
@@ -87,9 +87,9 @@ class SmartContentItemController extends AbstractRestController
         // prepare provider
         $provider = $this->dataProviderPool->get($providerAlias);
 
-        $params = array_merge(
+        $params = \array_merge(
             $provider->getDefaultPropertyParameter(),
-            $this->getParams(json_decode($request->get('params', '{}'), true))
+            $this->getParams(\json_decode($request->get('params', '{}'), true))
         );
 
         // resolve datasource and items

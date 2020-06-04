@@ -49,12 +49,12 @@ class ListRepository extends EntityRepository
         $searchFields = $this->helper->getSearchFields();
 
         // if search string is set, but search fields are not, take all fields into account
-        if (!is_null($searchPattern) && '' != $searchPattern && (is_null($searchFields) || 0 == count($searchFields))) {
+        if (!\is_null($searchPattern) && '' != $searchPattern && (\is_null($searchFields) || 0 == \count($searchFields))) {
             $searchFields = $this->getEntityManager()->getClassMetadata($this->getEntityName())->getFieldNames();
         }
 
         $textFields = $this->getFieldsWitTypes(['text', 'string', 'guid'], $searchFields);
-        if (is_numeric($searchPattern)) {
+        if (\is_numeric($searchPattern)) {
             $numberFields = $this->getFieldsWitTypes(['integer', 'float', 'decimal'], $searchFields);
         } else {
             $numberFields = [];
@@ -86,11 +86,11 @@ class ListRepository extends EntityRepository
                 ->setMaxResults($this->helper->getLimit());
         }
         if (null != $searchPattern && '' != $searchPattern) {
-            if (count($searchFields) > 0) {
-                if (count($textFields) > 0) {
+            if (\count($searchFields) > 0) {
+                if (\count($textFields) > 0) {
                     $query->setParameter('search', '%' . $searchPattern . '%');
                 }
-                if (count($numberFields) > 0) {
+                if (\count($numberFields) > 0) {
                     $query->setParameter('strictSearch', $searchPattern);
                 }
             }
@@ -98,22 +98,22 @@ class ListRepository extends EntityRepository
 
         // if just used for counting
         if ($justCount) {
-            return intval($query->getSingleResult()['totalcount']);
+            return \intval($query->getSingleResult()['totalcount']);
         }
 
         $results = $query->getArrayResult();
 
         // check if relational filter was set ( e.g. emails[0]_email)
         // and filter result
-        if (count($filters = $queryBuilder->getRelationalFilters()) > 0) {
+        if (\count($filters = $queryBuilder->getRelationalFilters()) > 0) {
             $filteredResults = [];
             // check if fields do contain id, else skip
-            if (count($fields = $this->helper->getFields()) > 0 && false !== array_search('id', $fields)) {
+            if (\count($fields = $this->helper->getFields()) > 0 && false !== \array_search('id', $fields)) {
                 $ids = [];
                 foreach ($results as $result) {
                     $id = $result['id'];
                     // check if result already in resultset
-                    if (!array_key_exists($id, $ids)) {
+                    if (!\array_key_exists($id, $ids)) {
                         $ids[$id] = -1;
                         $filteredResults[] = $result;
                     }
@@ -181,13 +181,13 @@ class ListRepository extends EntityRepository
         $result = [];
         foreach ($this->getClassMetadata()->getFieldNames() as $field) {
             $type = $this->getClassMetadata()->getTypeOfField($field);
-            if (in_array($type, $types)) {
+            if (\in_array($type, $types)) {
                 $result[] = $field;
             }
         }
         // calculate intersection
-        if (!is_null($intersectArray)) {
-            $result = array_intersect($result, $intersectArray);
+        if (!\is_null($intersectArray)) {
+            $result = \array_intersect($result, $intersectArray);
         }
 
         return $result;

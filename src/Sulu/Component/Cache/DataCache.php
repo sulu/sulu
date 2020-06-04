@@ -34,19 +34,19 @@ class DataCache implements CacheInterface
 
     public function read()
     {
-        if (!is_file($this->file)) {
+        if (!\is_file($this->file)) {
             return;
         }
 
-        return unserialize(file_get_contents($this->file));
+        return \unserialize(\file_get_contents($this->file));
     }
 
     public function write($data)
     {
         $mode = 0666;
-        $umask = umask();
+        $umask = \umask();
         $filesystem = new Filesystem();
-        $filesystem->dumpFile($this->file, serialize($data));
+        $filesystem->dumpFile($this->file, \serialize($data));
 
         try {
             $filesystem->chmod($this->file, $mode, $umask);
@@ -63,6 +63,6 @@ class DataCache implements CacheInterface
 
     public function isFresh()
     {
-        return is_file($this->file);
+        return \is_file($this->file);
     }
 }

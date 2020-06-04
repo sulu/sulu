@@ -110,7 +110,7 @@ class Query
         }
 
         if (self::HYDRATE_DOCUMENT !== $hydrationMode) {
-            throw new DocumentManagerException(sprintf(
+            throw new DocumentManagerException(\sprintf(
                 'Unknown hydration mode "%s", should be either "document" or "phpcr_node"',
                 $hydrationMode
             ));

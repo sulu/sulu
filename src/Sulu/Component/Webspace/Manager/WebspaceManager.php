@@ -126,13 +126,13 @@ class WebspaceManager implements WebspaceManagerInterface
             $environment = $this->environment;
         }
 
-        return array_filter(
+        return \array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
             function(PortalInformation $portalInformation) use ($host) {
                 $portalHost = $portalInformation->getHost();
 
                 // add a slash to avoid problems with "example.co" and "example.com"
-                return false !== strpos($portalHost . '/', $host . '/');
+                return false !== \strpos($portalHost . '/', $host . '/');
             }
         );
     }
@@ -143,7 +143,7 @@ class WebspaceManager implements WebspaceManagerInterface
             $environment = $this->environment;
         }
 
-        return array_filter(
+        return \array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
             function(PortalInformation $portalInformation) use ($url) {
                 return $this->matchUrl($url, $portalInformation->getUrl());
@@ -160,7 +160,7 @@ class WebspaceManager implements WebspaceManagerInterface
             $environment = $this->environment;
         }
 
-        return array_filter(
+        return \array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
             function(PortalInformation $portalInformation) use ($webspaceKey, $locale) {
                 return $portalInformation->getWebspace()->getKey() === $webspaceKey
@@ -178,7 +178,7 @@ class WebspaceManager implements WebspaceManagerInterface
             $environment = $this->environment;
         }
 
-        return array_filter(
+        return \array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
             function(PortalInformation $portalInformation) use ($portalKey, $locale) {
                 return $portalInformation->getPortal()
@@ -248,14 +248,14 @@ class WebspaceManager implements WebspaceManagerInterface
             $url = $this->createResourceLocatorUrl($portalInformation->getUrl(), $resourceLocator, $domain, $scheme);
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
                 if ($portalInformation->isMain()) {
-                    array_unshift($urls, $url);
+                    \array_unshift($urls, $url);
                 } else {
                     $urls[] = $url;
                 }
             }
         }
 
-        return reset($urls) ?: null;
+        return \reset($urls) ?: null;
     }
 
     public function getPortals(): array
@@ -293,7 +293,7 @@ class WebspaceManager implements WebspaceManagerInterface
             $environment = $this->environment;
         }
 
-        return array_filter(
+        return \array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
             function(PortalInformation $portal) use ($webspaceKey) {
                 return $portal->getWebspaceKey() === $webspaceKey;
@@ -317,8 +317,8 @@ class WebspaceManager implements WebspaceManagerInterface
 
     public function getAllLocales(): array
     {
-        return array_values(
-            array_map(
+        return \array_values(
+            \array_map(
                 function(Localization $localization) {
                     return $localization->getLocale();
                 },
@@ -336,7 +336,7 @@ class WebspaceManager implements WebspaceManagerInterface
             $defaultLocale = $webspace->getDefaultLocalization();
             $locales[$defaultLocale->getLocale()] = $defaultLocale;
             foreach ($webspace->getAllLocalizations() as $localization) {
-                if (!array_key_exists($localization->getLocale(), $locales)) {
+                if (!\array_key_exists($localization->getLocale(), $locales)) {
                     $locales[$localization->getLocale()] = $localization;
                 }
             }
@@ -411,7 +411,7 @@ class WebspaceManager implements WebspaceManagerInterface
         ];
 
         // overwrite the default values with the given options
-        $this->options = array_merge($this->options, $options);
+        $this->options = \array_merge($this->options, $options);
     }
 
     /**
@@ -428,13 +428,13 @@ class WebspaceManager implements WebspaceManagerInterface
             return true;
         }
 
-        $parsedUrl = parse_url($url);
+        $parsedUrl = \parse_url($url);
         // if domain or subdomain
         if (
             isset($parsedUrl['host'])
             && (
                 $parsedUrl['host'] == $domain
-                || fnmatch('*.' . $domain, $parsedUrl['host'])
+                || \fnmatch('*.' . $domain, $parsedUrl['host'])
             )
         ) {
             return true;
@@ -472,11 +472,11 @@ class WebspaceManager implements WebspaceManagerInterface
             $scheme = $this->defaultScheme;
         }
 
-        if (false !== strpos($portalUrl, '/')) {
+        if (false !== \strpos($portalUrl, '/')) {
             // trim slash when resourceLocator is not domain root
-            $resourceLocator = rtrim($resourceLocator, '/');
+            $resourceLocator = \rtrim($resourceLocator, '/');
         }
 
-        return rtrim(sprintf('%s://%s', $scheme, $portalUrl), '/') . $resourceLocator;
+        return \rtrim(\sprintf('%s://%s', $scheme, $portalUrl), '/') . $resourceLocator;
     }
 }

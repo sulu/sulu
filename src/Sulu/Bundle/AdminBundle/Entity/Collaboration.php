@@ -64,8 +64,8 @@ class Collaboration
         $this->fullName = $fullName;
         $this->resourceKey = $resourceKey;
         $this->id = $id;
-        $this->started = time();
-        $this->changed = time();
+        $this->started = \time();
+        $this->changed = \time();
     }
 
     public function getConnectionId()
@@ -95,6 +95,6 @@ class Collaboration
 
     public function updateTime()
     {
-        $this->changed = time();
+        $this->changed = \time();
     }
 }

@@ -661,7 +661,7 @@ class Media extends ApiWrapper
         $tags = [];
         foreach ($this->getFileVersion()->getTags() as $tag) {
             /* @var TagInterface $tag */
-            array_push($tags, $tag->getName());
+            \array_push($tags, $tag->getName());
         }
 
         return $tags;
@@ -722,7 +722,7 @@ class Media extends ApiWrapper
      */
     public function setChanged($changed)
     {
-        if (is_string($changed)) {
+        if (\is_string($changed)) {
             $changed = new \DateTime($changed);
         }
         $this->getFileVersion()->setChanged($changed);
@@ -841,7 +841,7 @@ class Media extends ApiWrapper
         foreach ($this->getEntity()->getFiles() as $file) {
             /** @var FileVersion $fileVersion */
             foreach ($file->getFileVersions() as $fileVersion) {
-                $downloadCounter += intval($fileVersion->getDownloadCounter());
+                $downloadCounter += \intval($fileVersion->getDownloadCounter());
             }
         }
 
@@ -1004,7 +1004,7 @@ class Media extends ApiWrapper
         $fileVersion = $this->getFileVersion();
         $categories = $fileVersion->getCategories();
 
-        return array_map(function(CategoryEntity $category) {
+        return \array_map(function(CategoryEntity $category) {
             return $category->getId();
         }, $categories->toArray());
     }
@@ -1050,7 +1050,7 @@ class Media extends ApiWrapper
             return [];
         }
 
-        return array_map(function(TargetGroupInterface $targetGroup) {
+        return \array_map(function(TargetGroupInterface $targetGroup) {
             return $targetGroup->getId();
         }, $this->getFileVersion()->getTargetGroups()->toArray());
     }

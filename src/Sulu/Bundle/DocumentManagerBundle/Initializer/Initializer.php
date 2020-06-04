@@ -53,14 +53,14 @@ class Initializer
     {
         $output = $output ?: new NullOutput();
 
-        arsort($this->initializerMap);
+        \arsort($this->initializerMap);
 
-        foreach (array_keys($this->initializerMap) as $initializerId) {
-            $output->writeln(sprintf('<comment>%s</>', $initializerId));
+        foreach (\array_keys($this->initializerMap) as $initializerId) {
+            $output->writeln(\sprintf('<comment>%s</>', $initializerId));
             $initializer = $this->container->get($initializerId);
             $initializer->initialize($output, $purge);
         }
-        $output->write(PHP_EOL);
+        $output->write(\PHP_EOL);
         $output->writeln('<comment>*</> Legend: [+] Added [*] Updated [-] Purged [ ] No change');
     }
 }

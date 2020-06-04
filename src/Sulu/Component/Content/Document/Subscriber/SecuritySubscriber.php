@@ -88,12 +88,12 @@ class SecuritySubscriber implements EventSubscriberInterface
         $permissions = [];
         foreach ($node->getProperties('sec:*') as $property) {
             /** @var PropertyInterface $property */
-            $roleId = substr($property->getName(), 9); // remove the "sec:role-" prefix
+            $roleId = \substr($property->getName(), 9); // remove the "sec:role-" prefix
 
             $allowedPermissions = $property->getValue();
 
             foreach ($this->permissions as $permission => $value) {
-                $permissions[$roleId][$permission] = in_array($permission, $allowedPermissions);
+                $permissions[$roleId][$permission] = \in_array($permission, $allowedPermissions);
             }
         }
 

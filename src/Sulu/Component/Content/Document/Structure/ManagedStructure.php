@@ -168,7 +168,7 @@ class ManagedStructure extends Structure
     {
         $this->init();
         $values = [];
-        foreach (array_keys($this->structureMetadata->getProperties()) as $childName) {
+        foreach (\array_keys($this->structureMetadata->getProperties()) as $childName) {
             $values[$childName] = $this->normalize($this->getProperty($childName)->getValue());
         }
 
@@ -187,7 +187,7 @@ class ManagedStructure extends Structure
         $this->init();
 
         foreach ($this->structureMetadata->getProperties() as $childName => $child) {
-            if (false === $clearMissing && !array_key_exists($childName, $data)) {
+            if (false === $clearMissing && !\array_key_exists($childName, $data)) {
                 continue;
             }
 

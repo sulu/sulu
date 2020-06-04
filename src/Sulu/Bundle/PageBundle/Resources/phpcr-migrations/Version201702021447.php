@@ -72,21 +72,21 @@ class Version201702021447 implements VersionInterface, ContainerAwareInterface
 
             /** @var Localization $localization */
             foreach ($localizations as $localization) {
-                $createdPropertyName = sprintf('i18n:%s-created', $localization->getLocale());
+                $createdPropertyName = \sprintf('i18n:%s-created', $localization->getLocale());
                 if ($node->hasProperty($createdPropertyName)) {
                     $node->setProperty(
-                        sprintf('i18n:%s-authored', $localization->getLocale()),
+                        \sprintf('i18n:%s-authored', $localization->getLocale()),
                         $node->getPropertyValue($createdPropertyName)
                     );
                 }
 
-                $creatorPropertyName = sprintf('i18n:%s-creator', $localization->getLocale());
+                $creatorPropertyName = \sprintf('i18n:%s-creator', $localization->getLocale());
                 if ($node->hasProperty($creatorPropertyName)) {
                     $user = $this->userRepository->findUserById($node->getPropertyValue($creatorPropertyName));
 
                     if ($user) {
                         $node->setProperty(
-                            sprintf('i18n:%s-author', $localization->getLocale()),
+                            \sprintf('i18n:%s-author', $localization->getLocale()),
                             $user->getContact()->getId()
                         );
                     }
@@ -112,12 +112,12 @@ class Version201702021447 implements VersionInterface, ContainerAwareInterface
 
             /** @var Localization $localization */
             foreach ($localizations as $localization) {
-                $authoredPropertyName = sprintf('i18n:%s-authored', $localization->getLocale());
+                $authoredPropertyName = \sprintf('i18n:%s-authored', $localization->getLocale());
                 if ($node->hasProperty($authoredPropertyName)) {
                     $node->getProperty($authoredPropertyName)->remove();
                 }
 
-                $authorPropertyName = sprintf('i18n:%s-author', $localization->getLocale());
+                $authorPropertyName = \sprintf('i18n:%s-author', $localization->getLocale());
                 if ($node->hasProperty($authorPropertyName)) {
                     $node->getProperty($authoredPropertyName)->remove();
                 }

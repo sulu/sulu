@@ -26,7 +26,7 @@ class CategoryKeyNotUniqueException extends \Exception
      */
     public function __construct($categoryKey)
     {
-        parent::__construct(sprintf('The category key "%s" is already in use.', $categoryKey));
+        parent::__construct(\sprintf('The category key "%s" is already in use.', $categoryKey));
 
         $this->categoryKey = $categoryKey;
     }

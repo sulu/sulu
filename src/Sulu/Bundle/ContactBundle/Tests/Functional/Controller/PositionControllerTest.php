@@ -43,7 +43,7 @@ class PositionControllerTest extends SuluTestCase
 
         $this->client->request('GET', '/api/contact-positions');
 
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
         $positions = $response->_embedded->contact_positions;
 
         $this->assertCount(2, $positions);
@@ -63,7 +63,7 @@ class PositionControllerTest extends SuluTestCase
 
         $this->client->request('GET', '/api/contact-positions?ids=' . $position1->getId() . ',' . $position3->getId());
 
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
         $positions = $response->_embedded->contact_positions;
 
         $this->assertCount(2, $positions);
@@ -88,7 +88,7 @@ class PositionControllerTest extends SuluTestCase
 
         $this->client->request('GET', '/api/contact-positions');
 
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
         $positions = $response->_embedded->contact_positions;
 
         $this->assertCount(1, $positions);
@@ -110,7 +110,7 @@ class PositionControllerTest extends SuluTestCase
 
         $this->client->request('GET', '/api/contact-positions');
 
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
         $positions = $response->_embedded->contact_positions;
 
         $this->assertCount(3, $positions);

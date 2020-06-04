@@ -47,9 +47,9 @@ class DispositionTypeResolver implements DispositionTypeResolverInterface
 
     public function getByMimeType($mimeType)
     {
-        if (in_array($mimeType, $this->mimeTypesInline)) {
+        if (\in_array($mimeType, $this->mimeTypesInline)) {
             return ResponseHeaderBag::DISPOSITION_INLINE;
-        } elseif (in_array($mimeType, $this->mimeTypesAttachment)) {
+        } elseif (\in_array($mimeType, $this->mimeTypesAttachment)) {
             return ResponseHeaderBag::DISPOSITION_ATTACHMENT;
         }
 

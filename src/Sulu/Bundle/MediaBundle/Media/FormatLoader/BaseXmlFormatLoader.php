@@ -84,7 +84,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
      */
     public function supports($resource, $type = null)
     {
-        if (!is_string($resource) || 'xml' !== pathinfo($resource, PATHINFO_EXTENSION)) {
+        if (!\is_string($resource) || 'xml' !== \pathinfo($resource, \PATHINFO_EXTENSION)) {
             return false;
         }
 
@@ -92,12 +92,12 @@ abstract class BaseXmlFormatLoader extends FileLoader
         $document = XmlUtils::loadFile($file);
         $namespaces = $document->documentElement->attributes->getNamedItem('schemaLocation')->nodeValue;
 
-        $start = strpos($namespaces, static::XML_NAMESPACE_URI) + strlen(static::XML_NAMESPACE_URI) + 1;
-        $namespace = substr($namespaces, $start);
+        $start = \strpos($namespaces, static::XML_NAMESPACE_URI) + \strlen(static::XML_NAMESPACE_URI) + 1;
+        $namespace = \substr($namespaces, $start);
 
-        $end = strpos($namespace, ' ');
+        $end = \strpos($namespace, ' ');
         if (false !== $end) {
-            $namespace = substr($namespace, 0, $end);
+            $namespace = \substr($namespace, 0, $end);
         }
 
         return $namespace === static::SCHEMA_URI;
@@ -147,7 +147,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
             'meta' => $meta,
             'scale' => $scale,
             'transformations' => $transformations,
-            'options' => array_merge($this->globalOptions, $options),
+            'options' => \array_merge($this->globalOptions, $options),
         ];
     }
 
@@ -166,7 +166,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
             return XmlUtils::loadFile($file, __DIR__ . static::SCHEME_PATH);
         } catch (\InvalidArgumentException $e) {
             throw new InvalidMediaFormatException(
-                sprintf('Could not parse image formats XML file "%s"', $file),
+                \sprintf('Could not parse image formats XML file "%s"', $file),
                 null,
                 $e
             );
@@ -189,7 +189,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
         } elseif ('inset' === $mode) {
             $mode = ImageInterface::THUMBNAIL_INSET;
         } else {
-            throw new InvalidMediaFormatException(sprintf('The scale mode "%s" is not supported', $mode));
+            throw new InvalidMediaFormatException(\sprintf('The scale mode "%s" is not supported', $mode));
         }
 
         return $mode;

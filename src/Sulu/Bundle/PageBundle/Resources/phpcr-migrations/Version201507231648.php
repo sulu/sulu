@@ -90,9 +90,9 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
         $categories = $this->getCategories($node, $shadowLocale);
         $navigationContext = $this->getNavigationContext($node, $shadowLocale);
 
-        $node->setProperty(sprintf(self::TAGS_PROPERTY, $locale), $tags);
-        $node->setProperty(sprintf(self::CATEGORIES_PROPERTY, $locale), $categories);
-        $node->setProperty(sprintf(self::NAVIGATION_CONTEXT_PROPERTY, $locale), $navigationContext);
+        $node->setProperty(\sprintf(self::TAGS_PROPERTY, $locale), $tags);
+        $node->setProperty(\sprintf(self::CATEGORIES_PROPERTY, $locale), $categories);
+        $node->setProperty(\sprintf(self::NAVIGATION_CONTEXT_PROPERTY, $locale), $navigationContext);
     }
 
     /**
@@ -105,7 +105,7 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
      */
     private function getPropertyName($pattern, $locale)
     {
-        return sprintf($pattern, $locale);
+        return \sprintf($pattern, $locale);
     }
 
     /**
@@ -118,7 +118,7 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
     private function getTags(NodeInterface $node, $locale)
     {
         return $node->getPropertyValueWithDefault(
-            sprintf(self::TAGS_PROPERTY, $locale),
+            \sprintf(self::TAGS_PROPERTY, $locale),
             []
         );
     }
@@ -133,7 +133,7 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
     private function getCategories(NodeInterface $node, $locale)
     {
         return $node->getPropertyValueWithDefault(
-            sprintf(self::CATEGORIES_PROPERTY, $locale),
+            \sprintf(self::CATEGORIES_PROPERTY, $locale),
             []
         );
     }
@@ -148,7 +148,7 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
     private function getNavigationContext(NodeInterface $node, $locale)
     {
         return $node->getPropertyValueWithDefault(
-            sprintf(self::NAVIGATION_CONTEXT_PROPERTY, $locale),
+            \sprintf(self::NAVIGATION_CONTEXT_PROPERTY, $locale),
             []
         );
     }

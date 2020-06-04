@@ -45,7 +45,7 @@ class SecurityChecker extends AbstractSecurityChecker
             return true;
         }
 
-        if (is_string($subject)) {
+        if (\is_string($subject)) {
             $subject = new SecurityCondition($subject);
         }
 

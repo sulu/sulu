@@ -71,7 +71,7 @@ class TypeManager implements TypeManagerInterface
         $name = null;
         foreach ($this->mediaTypes as $mediaType) {
             foreach ($mediaType['mimeTypes'] as $mimeType) {
-                if (fnmatch($mimeType, $fileMimeType)) {
+                if (\fnmatch($mimeType, $fileMimeType)) {
                     $name = $mediaType['type'];
                 }
             }

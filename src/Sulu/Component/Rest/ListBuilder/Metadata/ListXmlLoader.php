@@ -35,9 +35,9 @@ class ListXmlLoader
     {
         $listMetadata = new ListMetadata();
 
-        $cwd = getcwd();
+        $cwd = \getcwd();
         // Necessary only for Windows, no effect on linux. Mute errors for PHP with chdir disabled to avoid E_WARNINGs
-        @chdir(dirname($resource));
+        @\chdir(\dirname($resource));
 
         $xmlDocument = XmlUtils::loadFile(
             $resource,
@@ -50,7 +50,7 @@ class ListXmlLoader
         );
 
         // Necessary only for Windows, no effect on linux. Mute errors for PHP with chdir disabled to avoid E_WARNINGs
-        @chdir($cwd);
+        @\chdir($cwd);
 
         $xpath = new \DOMXPath($xmlDocument);
         $xpath->registerNamespace('x', 'http://schemas.sulu.io/list-builder/list');
@@ -93,7 +93,7 @@ class ListXmlLoader
                 $propertyMetadata = $this->loadSinglePropertyMetadata($xpath, $propertyNode);
                 break;
             default:
-                throw new \InvalidArgumentException(sprintf(
+                throw new \InvalidArgumentException(\sprintf(
                     'The tag "%s" cannot be handled by this loader',
                     $propertyNode->nodeName
                 ));
@@ -129,7 +129,7 @@ class ListXmlLoader
         $propertyMetadata->setFilterType(XmlUtil::getValueFromXPath('x:filter/@type', $xpath, $propertyNode));
 
         $filterParamNodes = $xpath->query('x:filter/x:params', $propertyNode);
-        if (count($filterParamNodes) > 0) {
+        if (\count($filterParamNodes) > 0) {
             $propertyMetadata->setFilterTypeParameters(
                 $this->getFilterTypeParameters(
                     $xpath,
@@ -247,7 +247,7 @@ class ListXmlLoader
                 $parameters[$name] = $this->getFilterTypeParameters($xpath, $paramNode);
             } else {
                 $value = $this->parameterBag->resolveValue(
-                    trim(XmlUtil::getValueFromXPath('@value', $xpath, $paramNode))
+                    \trim(XmlUtil::getValueFromXPath('@value', $xpath, $paramNode))
                 );
 
                 if (null === $name) {
@@ -258,7 +258,7 @@ class ListXmlLoader
             }
         }
 
-        if (count($parameters) > 0) {
+        if (\count($parameters) > 0) {
             return $parameters;
         }
 
@@ -268,10 +268,10 @@ class ListXmlLoader
     private function getField(\DOMXPath $xpath, \DOMElement $fieldNode)
     {
         if (null !== $reference = XmlUtil::getValueFromXPath('@property-ref', $xpath, $fieldNode)) {
-            $nodeList = $xpath->query(sprintf('/x:list/x:properties/x:*[@name="%s"]', $reference));
+            $nodeList = $xpath->query(\sprintf('/x:list/x:properties/x:*[@name="%s"]', $reference));
 
             if (0 === $nodeList->length) {
-                throw new \Exception(sprintf('Rest metadata doctrine field reference "%s" was not found.', $reference));
+                throw new \Exception(\sprintf('Rest metadata doctrine field reference "%s" was not found.', $reference));
             }
 
             return $this->getField($xpath, $nodeList->item(0));
@@ -296,10 +296,10 @@ class ListXmlLoader
     private function getJoinsMetadata(\DOMXPath $xpath, \DOMElement $joinsNode, FieldMetadata $field)
     {
         if (null !== $reference = XmlUtil::getValueFromXPath('@ref', $xpath, $joinsNode)) {
-            $nodeList = $xpath->query(sprintf('/x:list/x:joins[@name="%s"]', $reference));
+            $nodeList = $xpath->query(\sprintf('/x:list/x:joins[@name="%s"]', $reference));
 
             if (0 === $nodeList->length) {
-                throw new \Exception(sprintf('Rest metadata doctrine joins reference "%s" was not found.', $reference));
+                throw new \Exception(\sprintf('Rest metadata doctrine joins reference "%s" was not found.', $reference));
             }
 
             $this->getJoinsMetadata($xpath, $nodeList->item(0), $field);

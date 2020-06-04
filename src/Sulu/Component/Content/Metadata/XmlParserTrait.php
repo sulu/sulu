@@ -34,7 +34,7 @@ trait XmlParserTrait
                 return false;
             }
 
-            $numericNodeValue = intval($item->nodeValue);
+            $numericNodeValue = \intval($item->nodeValue);
             if ((string) $numericNodeValue === $item->nodeValue) {
                 return $numericNodeValue;
             }

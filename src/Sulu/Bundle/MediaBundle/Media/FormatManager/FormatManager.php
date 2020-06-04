@@ -111,7 +111,7 @@ class FormatManager implements FormatManagerInterface
         $setExpireHeaders = false;
 
         try {
-            $info = pathinfo($fileName);
+            $info = \pathinfo($fileName);
 
             if (!isset($info['extension'])) {
                 throw new ImageProxyInvalidUrl('No `extension` was found in the url');
@@ -132,12 +132,12 @@ class FormatManager implements FormatManagerInterface
                 throw new InvalidMimeTypeForPreviewException($fileVersion->getMimeType());
             }
 
-            if (!in_array($imageFormat, $supportedImageFormats)) {
+            if (!\in_array($imageFormat, $supportedImageFormats)) {
                 throw new ImageProxyInvalidImageFormat(
-                    sprintf(
+                    \sprintf(
                         'Image format "%s" not supported. Supported image formats are: %s',
                         $imageFormat,
-                        implode(', ', $supportedImageFormats)
+                        \implode(', ', $supportedImageFormats)
                     ));
             }
 
@@ -148,7 +148,7 @@ class FormatManager implements FormatManagerInterface
             $status = 200;
             $setExpireHeaders = true;
 
-            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $finfo = new \finfo(\FILEINFO_MIME_TYPE);
             $mimeType = $finfo->buffer($responseContent);
 
             // Save image.
@@ -176,7 +176,7 @@ class FormatManager implements FormatManagerInterface
 
     public function getFormats($id, $fileName, $version, $subVersion, $mimeType)
     {
-        $fileName = pathinfo($fileName)['filename'];
+        $fileName = \pathinfo($fileName)['filename'];
 
         $formats = [];
 
@@ -239,10 +239,10 @@ class FormatManager implements FormatManagerInterface
         $format = $this->formats[$formatKey];
         $title = $format['key'];
 
-        if (array_key_exists($locale, $format['meta']['title'])) {
+        if (\array_key_exists($locale, $format['meta']['title'])) {
             $title = $format['meta']['title'][$locale];
-        } elseif (count($format['meta']['title']) > 0) {
-            $title = array_values($format['meta']['title'])[0];
+        } elseif (\count($format['meta']['title']) > 0) {
+            $title = \array_values($format['meta']['title'])[0];
         }
 
         $formatArray = [
@@ -285,7 +285,7 @@ class FormatManager implements FormatManagerInterface
             return $headers;
         }
 
-        $headers = array_merge(
+        $headers = \array_merge(
             $headers,
             $this->responseHeaders
         );
@@ -314,7 +314,7 @@ class FormatManager implements FormatManagerInterface
      */
     private function replaceExtension($filename, $newExtension)
     {
-        $info = pathinfo($filename);
+        $info = \pathinfo($filename);
 
         return $info['filename'] . '.' . $newExtension;
     }

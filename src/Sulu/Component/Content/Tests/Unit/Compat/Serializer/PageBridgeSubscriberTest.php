@@ -62,7 +62,7 @@ class PageBridgeSubscriberTest extends TestCase
 
         $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'documentClass' === $metadata->name;
-        }), get_class($document->reveal()))->shouldBeCalled();
+        }), \get_class($document->reveal()))->shouldBeCalled();
 
         $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'structure' === $metadata->name;

@@ -79,11 +79,11 @@ class FieldDescriptorFactoryTest extends TestCase
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('complete');
 
         $expectedFieldDescriptors = ['extension', 'id', 'firstName', 'lastName', 'avatar', 'fullName', 'city'];
-        $fieldDescriptorKeys = array_keys($fieldDescriptor);
+        $fieldDescriptorKeys = \array_keys($fieldDescriptor);
 
         $this->assertEquals(
-            asort($expectedFieldDescriptors),
-            asort($fieldDescriptorKeys)
+            \asort($expectedFieldDescriptors),
+            \asort($fieldDescriptorKeys)
         );
 
         $expected = [
@@ -118,7 +118,7 @@ class FieldDescriptorFactoryTest extends TestCase
     {
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('minimal');
 
-        $this->assertEquals(['id', 'firstName', 'lastName'], array_keys($fieldDescriptor));
+        $this->assertEquals(['id', 'firstName', 'lastName'], \array_keys($fieldDescriptor));
 
         $expected = [
             'id' => ['name' => 'id', 'translation' => 'public.id', 'disabled' => true, 'type' => 'integer'],
@@ -133,7 +133,7 @@ class FieldDescriptorFactoryTest extends TestCase
     {
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('group-concat');
 
-        $this->assertEquals(['tags'], array_keys($fieldDescriptor));
+        $this->assertEquals(['tags'], \array_keys($fieldDescriptor));
 
         $expected = [
             'tags' => [
@@ -151,7 +151,7 @@ class FieldDescriptorFactoryTest extends TestCase
     {
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('case');
 
-        $this->assertEquals(['tag'], array_keys($fieldDescriptor));
+        $this->assertEquals(['tag'], \array_keys($fieldDescriptor));
 
         $expected = [
             'tag' => [
@@ -174,7 +174,7 @@ class FieldDescriptorFactoryTest extends TestCase
     {
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('identity');
 
-        $this->assertEquals(['tags'], array_keys($fieldDescriptor));
+        $this->assertEquals(['tags'], \array_keys($fieldDescriptor));
 
         $expected = [
             'tags' => [
@@ -192,7 +192,7 @@ class FieldDescriptorFactoryTest extends TestCase
     {
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('options');
 
-        $this->assertEquals(['city'], array_keys($fieldDescriptor));
+        $this->assertEquals(['city'], \array_keys($fieldDescriptor));
 
         $expected = [
             'city' => [
@@ -223,7 +223,7 @@ class FieldDescriptorFactoryTest extends TestCase
     {
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('count');
 
-        $this->assertEquals(['tags'], array_keys($fieldDescriptor));
+        $this->assertEquals(['tags'], \array_keys($fieldDescriptor));
 
         $expected = [
             'tags' => [
@@ -266,7 +266,7 @@ class FieldDescriptorFactoryTest extends TestCase
 
     private function assertFieldDescriptor(array $expected, FieldDescriptorInterface $fieldDescriptor)
     {
-        $expected = array_merge(
+        $expected = \array_merge(
             [
                 'instance' => DoctrineFieldDescriptor::class,
                 'name' => null,
@@ -287,7 +287,7 @@ class FieldDescriptorFactoryTest extends TestCase
         $this->assertEquals($expected['type'], $fieldDescriptor->getType());
         $this->assertEquals($expected['sortable'], $fieldDescriptor->getSortable());
 
-        if (array_key_exists('joins', $expected)) {
+        if (\array_key_exists('joins', $expected)) {
             foreach ($expected['joins'] as $name => $joinExpected) {
                 $this->assertJoin($joinExpected, $fieldDescriptor->getJoins()[$name]);
             }
@@ -296,7 +296,7 @@ class FieldDescriptorFactoryTest extends TestCase
 
     private function assertJoin(array $expected, DoctrineJoinDescriptor $join)
     {
-        $expected = array_merge(
+        $expected = \array_merge(
             [
                 'entity-name' => null,
                 'field-name' => null,

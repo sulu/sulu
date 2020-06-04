@@ -122,57 +122,57 @@ class CustomUrlRouteControllerTest extends SuluTestCase
         $data['targetDocument'] = $this->contentDocument->getUuid();
 
         $response = $this->client->getResponse();
-        $responseData = json_decode($response->getContent(), true);
+        $responseData = \json_decode($response->getContent(), true);
         $uuid = $responseData['id'];
 
         $this->client->request('PUT', '/api/webspaces/sulu_io/custom-urls/' . $uuid, $data);
 
         $response = $this->client->getResponse();
-        $responseData = json_decode($response->getContent(), true);
+        $responseData = \json_decode($response->getContent(), true);
         $uuid = $responseData['id'];
 
         $this->client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid . '/routes');
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $customUrlRoutes = $response['_embedded']['custom_url_routes'];
 
         $uuids = [];
         foreach ($delete as $item) {
-            $customUrlRoute = array_filter($customUrlRoutes, function($customUrlRoute) use ($item) {
+            $customUrlRoute = \array_filter($customUrlRoutes, function($customUrlRoute) use ($item) {
                 return $customUrlRoute['resourcelocator'] === $item;
             });
 
-            if (count($customUrlRoute) > 0) {
+            if (\count($customUrlRoute) > 0) {
                 $uuids[] = $customUrlRoute[0]['id'];
             }
         }
 
         $this->client->request(
             'DELETE',
-            '/api/webspaces/sulu_io/custom-urls/' . $uuid . '/routes?ids=' . implode(',', $uuids)
+            '/api/webspaces/sulu_io/custom-urls/' . $uuid . '/routes?ids=' . \implode(',', $uuids)
         );
 
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode($statusCode, $response);
 
         if ($restErrorCode) {
-            $responseData = json_decode($response->getContent(), true);
+            $responseData = \json_decode($response->getContent(), true);
             $this->assertEquals($restErrorCode, $responseData['code']);
 
             return;
         }
 
         $this->client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
-        $customUrl = json_decode($this->client->getResponse()->getContent(), true);
+        $customUrl = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals($url, $customUrl['customUrl']);
 
         $this->client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid . '/routes');
-        $customUrlRoutes = json_decode($this->client->getResponse()->getContent(), true);
+        $customUrlRoutes = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals(
             $excpected,
-            array_map(function($route) {
+            \array_map(function($route) {
                 return $route['resourcelocator'];
             }, $customUrlRoutes['_embedded']['custom_url_routes'])
         );

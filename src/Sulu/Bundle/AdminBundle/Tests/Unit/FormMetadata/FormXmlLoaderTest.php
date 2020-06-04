@@ -509,13 +509,13 @@ class FormXmlLoaderTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         $this->loader->load(
-            __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'form_invalid.xml'
+            __DIR__ . \DIRECTORY_SEPARATOR . 'data' . \DIRECTORY_SEPARATOR . 'form_invalid.xml'
         );
     }
 
     private function getFormDirectory()
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR
-            . 'Application' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'forms' . DIRECTORY_SEPARATOR;
+        return __DIR__ . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR
+            . 'Application' . \DIRECTORY_SEPARATOR . 'config' . \DIRECTORY_SEPARATOR . 'forms' . \DIRECTORY_SEPARATOR;
     }
 }

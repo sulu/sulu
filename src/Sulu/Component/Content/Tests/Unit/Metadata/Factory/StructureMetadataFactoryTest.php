@@ -71,11 +71,11 @@ class StructureMetadataFactoryTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->cacheDir = __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'cache';
-        $this->apostropheMappingFile = implode(DIRECTORY_SEPARATOR, [__DIR__, 'data', 'apostrophe', 'apostrophe.xml']);
-        $this->somethingMappingFile = implode(DIRECTORY_SEPARATOR, [__DIR__, 'data', 'page', 'something.xml']);
-        $this->defaultMappingFile = implode(DIRECTORY_SEPARATOR, [__DIR__, 'data', 'other', 'default.xml']);
-        $this->overriddenDefaultMappingFile = implode(DIRECTORY_SEPARATOR, [__DIR__, 'data', 'page', 'default.xml']);
+        $this->cacheDir = __DIR__ . \DIRECTORY_SEPARATOR . 'data' . \DIRECTORY_SEPARATOR . 'cache';
+        $this->apostropheMappingFile = \implode(\DIRECTORY_SEPARATOR, [__DIR__, 'data', 'apostrophe', 'apostrophe.xml']);
+        $this->somethingMappingFile = \implode(\DIRECTORY_SEPARATOR, [__DIR__, 'data', 'page', 'something.xml']);
+        $this->defaultMappingFile = \implode(\DIRECTORY_SEPARATOR, [__DIR__, 'data', 'other', 'default.xml']);
+        $this->overriddenDefaultMappingFile = \implode(\DIRECTORY_SEPARATOR, [__DIR__, 'data', 'page', 'default.xml']);
         $this->translator = $this->prophesize(TranslatorInterface::class);
         $this->loader = $this->prophesize(LoaderInterface::class);
 
@@ -85,17 +85,17 @@ class StructureMetadataFactoryTest extends TestCase
                 'page' => [
                     [
                         'type' => 'page',
-                        'path' => __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'page',
+                        'path' => __DIR__ . \DIRECTORY_SEPARATOR . 'data' . \DIRECTORY_SEPARATOR . 'page',
                     ],
                     [
                         'type' => 'page',
-                        'path' => __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'other',
+                        'path' => __DIR__ . \DIRECTORY_SEPARATOR . 'data' . \DIRECTORY_SEPARATOR . 'other',
                     ],
                 ],
                 'snoopet' => [
                     [
                         'type' => 'page',
-                        'path' => __DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'snoops',
+                        'path' => __DIR__ . \DIRECTORY_SEPARATOR . 'data' . \DIRECTORY_SEPARATOR . 'snoops',
                     ],
                 ],
             ],

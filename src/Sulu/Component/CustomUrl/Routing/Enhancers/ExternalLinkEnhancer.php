@@ -23,7 +23,7 @@ class ExternalLinkEnhancer implements RouteEnhancerInterface
 {
     public function enhance(array $defaults, Request $request)
     {
-        if (!array_key_exists('_structure', $defaults)
+        if (!\array_key_exists('_structure', $defaults)
             || Structure::NODE_TYPE_EXTERNAL_LINK !== $defaults['_structure']->getNodeType()
         ) {
             return $defaults;
@@ -32,7 +32,7 @@ class ExternalLinkEnhancer implements RouteEnhancerInterface
         /** @var PageBridge $structure */
         $structure = $defaults['_structure'];
 
-        return array_merge(
+        return \array_merge(
             $defaults,
             [
                 '_controller' => 'sulu_website.redirect_controller:redirectAction',

@@ -138,9 +138,9 @@ abstract class BaseDataProvider implements DataProviderInterface
         $result = $this->repository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options);
 
         $hasNextPage = false;
-        if (null !== $pageSize && count($result) > $pageSize) {
+        if (null !== $pageSize && \count($result) > $pageSize) {
             $hasNextPage = true;
-            $result = array_splice($result, 0, $pageSize);
+            $result = \array_splice($result, 0, $pageSize);
         }
 
         return [$result, $hasNextPage];
@@ -175,7 +175,7 @@ abstract class BaseDataProvider implements DataProviderInterface
      */
     protected function decorateResourceItems(array $data, $locale)
     {
-        return array_map(
+        return \array_map(
             function($item) {
                 $itemData = $this->serializer->serialize($item, $this->getSerializationContext());
                 $id = $this->getIdForItem($item);

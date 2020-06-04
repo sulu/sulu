@@ -108,7 +108,7 @@ class BasePathSubscriberTest extends TestCase
     {
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
         $this->persistEvent->getLocale()->willReturn('fr');
-        $this->metadataFactory->getMetadataForClass(get_class($this->document->reveal()))->willReturn(
+        $this->metadataFactory->getMetadataForClass(\get_class($this->document->reveal()))->willReturn(
             $this->metadata->reveal()
         );
         $this->metadata->getAlias()->willReturn('test');

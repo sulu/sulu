@@ -92,7 +92,7 @@ class SecuredEntitySubscriberTest extends TestCase
         $entity->getSecurityContext()->willReturn('sulu.example');
         $this->objectEvent->getObject()->willReturn($entity);
 
-        $securityCondition = new SecurityCondition('sulu.example', null, get_class($entity->reveal()), 7);
+        $securityCondition = new SecurityCondition('sulu.example', null, \get_class($entity->reveal()), 7);
 
         $permission = ['_permissions' => ['permission' => 'value']];
         $this->accessControlManager->getUserPermissions($securityCondition, $this->user->reveal())->willReturn(
@@ -115,7 +115,7 @@ class SecuredEntitySubscriberTest extends TestCase
         $apiWrapper->getEntity()->willReturn($entity);
         $this->objectEvent->getObject()->willReturn($apiWrapper);
 
-        $securityCondition = new SecurityCondition('sulu.example', null, get_class($entity->reveal()), 7);
+        $securityCondition = new SecurityCondition('sulu.example', null, \get_class($entity->reveal()), 7);
 
         $permission = ['_permissions' => ['permission' => 'value']];
         $this->accessControlManager->getUserPermissions($securityCondition, $this->user->reveal())->willReturn(

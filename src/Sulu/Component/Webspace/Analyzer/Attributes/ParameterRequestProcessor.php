@@ -54,7 +54,7 @@ class ParameterRequestProcessor implements RequestProcessorInterface
 
         return new RequestAttributes(
             [
-                'portalInformation' => reset($portalInformations),
+                'portalInformation' => \reset($portalInformations),
             ]
         );
     }

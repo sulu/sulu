@@ -109,15 +109,15 @@ class CustomUrlRepository
         $query = $queryBuilder->getQuery();
         $result = $query->execute();
 
-        $uuids = array_map(
+        $uuids = \array_map(
             function(Row $item) {
                 return $item->getValue('a.targetDocument');
             },
-            iterator_to_array($result->getRows())
+            \iterator_to_array($result->getRows())
         );
 
         $targets = $this->contentRepository->findByUuids(
-            array_unique($uuids),
+            \array_unique($uuids),
             null,
             MappingBuilder::create()->addProperties(['title'])->getMapping()
         );
@@ -194,14 +194,14 @@ class CustomUrlRepository
         $query = $queryBuilder->getQuery();
         $result = $query->execute();
 
-        return array_map(
+        return \array_map(
             function(Row $item) {
                 return $this->generator->generate(
                     $item->getValue('a.baseDomain'),
-                    json_decode($item->getValue('a.domainParts'), true)
+                    \json_decode($item->getValue('a.domainParts'), true)
                 );
             },
-            iterator_to_array($result->getRows())
+            \iterator_to_array($result->getRows())
         );
     }
 }

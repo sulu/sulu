@@ -21,7 +21,7 @@ class DateTimeFilterType implements FilterTypeInterface
         FieldDescriptorInterface $fieldDescriptor,
         $options
     ): void {
-        if (!is_array($options) || (!isset($options['from']) && !isset($options['to']))) {
+        if (!\is_array($options) || (!isset($options['from']) && !isset($options['to']))) {
             throw new InvalidFilterTypeOptionsException(
                 'The DateTimeFilterType requires its options to be an array with a "from" or "to" key!'
             );

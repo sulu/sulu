@@ -21,8 +21,8 @@ class CustomerIdConverter implements IdConverterInterface
         $result = $default;
 
         foreach ($ids as $id) {
-            $type = substr($id, 0, 1);
-            $value = substr($id, 1);
+            $type = \substr($id, 0, 1);
+            $value = \substr($id, 1);
 
             if (!isset($result[$type])) {
                 $result[$type] = [];

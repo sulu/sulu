@@ -41,7 +41,7 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
     public function getProvider($alias)
     {
         if (!$this->hasProvider($alias)) {
-            throw new SitemapProviderNotFoundException($alias, array_keys($this->providers));
+            throw new SitemapProviderNotFoundException($alias, \array_keys($this->providers));
         }
 
         return $this->providers[$alias];
@@ -54,7 +54,7 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
 
     public function hasProvider($alias)
     {
-        return array_key_exists($alias, $this->providers);
+        return \array_key_exists($alias, $this->providers);
     }
 
     public function getIndex($scheme, $host)

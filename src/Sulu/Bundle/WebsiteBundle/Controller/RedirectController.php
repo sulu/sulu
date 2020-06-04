@@ -41,7 +41,7 @@ class RedirectController
      */
     public function redirectWebspaceAction(Request $request)
     {
-        @trigger_error(__METHOD__ . '() is deprecated since version 1.6 and will be removed in 2.0. Replaced by ExceptionListener::redirectPartialMatch.', E_USER_DEPRECATED);
+        @\trigger_error(__METHOD__ . '() is deprecated since version 1.6 and will be removed in 2.0. Replaced by ExceptionListener::redirectPartialMatch.', \E_USER_DEPRECATED);
 
         $url = $this->resolveRedirectUrl(
             $request->get('redirect'),
@@ -76,7 +76,7 @@ class RedirectController
             throw new HttpException($permanent ? 410 : 404);
         }
 
-        $attributes = array_merge($request->attributes->get('_route_params'), $request->query->all());
+        $attributes = \array_merge($request->attributes->get('_route_params'), $request->query->all());
         unset($attributes['route'], $attributes['permanent']);
 
         return new RedirectResponse(
@@ -100,10 +100,10 @@ class RedirectController
         $redirectInfo = $this->parseUrl($redirectUrl);
         $requestInfo = $this->parseUrl($requestUri);
 
-        $url = sprintf('%s://%s', $requestInfo['scheme'], $requestInfo['host']);
+        $url = \sprintf('%s://%s', $requestInfo['scheme'], $requestInfo['host']);
 
         if (isset($redirectInfo['host'])) {
-            $url = sprintf('%s://%s', $requestInfo['scheme'], $redirectInfo['host']);
+            $url = \sprintf('%s://%s', $requestInfo['scheme'], $redirectInfo['host']);
         }
 
         if (isset($requestInfo['port'])) {
@@ -114,7 +114,7 @@ class RedirectController
             && (
                 // if requested url not starting with redirectUrl it need to be added
                 !isset($requestInfo['path'])
-                || 0 !== strpos($requestInfo['path'], $redirectInfo['path'] . '/')
+                || 0 !== \strpos($requestInfo['path'], $redirectInfo['path'] . '/')
             )
         ) {
             $url .= $redirectInfo['path'];
@@ -122,12 +122,12 @@ class RedirectController
 
         if (isset($requestInfo['path']) && $resourceLocatorPrefix !== $requestInfo['path']) {
             $path = $requestInfo['path'];
-            if (0 === strpos($path, $resourceLocatorPrefix)) {
-                $path = substr($path, strlen($resourceLocatorPrefix));
+            if (0 === \strpos($path, $resourceLocatorPrefix)) {
+                $path = \substr($path, \strlen($resourceLocatorPrefix));
             }
 
             $url .= $path;
-            $url = rtrim($url, '/');
+            $url = \rtrim($url, '/');
         }
 
         if (isset($requestInfo['query'])) {
@@ -151,10 +151,10 @@ class RedirectController
      */
     private function parseUrl($url)
     {
-        if (!preg_match('{^https?://}', $url)) {
+        if (!\preg_match('{^https?://}', $url)) {
             $url = 'http://' . $url;
         }
 
-        return parse_url($url);
+        return \parse_url($url);
     }
 }

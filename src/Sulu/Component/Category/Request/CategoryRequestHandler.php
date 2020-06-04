@@ -36,11 +36,11 @@ class CategoryRequestHandler implements CategoryRequestHandlerInterface
             $categories = '';
         }
 
-        return array_map(
+        return \array_map(
             function($item) {
-                return trim($item);
+                return \trim($item);
             },
-            array_filter(explode(',', $categories))
+            \array_filter(\explode(',', $categories))
         );
     }
 
@@ -48,7 +48,7 @@ class CategoryRequestHandler implements CategoryRequestHandlerInterface
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!(is_array($category) && array_key_exists('id', $category))) {
+        if (!(\is_array($category) && \array_key_exists('id', $category))) {
             return;
         }
 
@@ -56,23 +56,23 @@ class CategoryRequestHandler implements CategoryRequestHandlerInterface
 
         // extend comma separated list
         $categories = $request->get($categoriesParameter, '');
-        $categoriesArray = array_filter(array_merge(explode(',', $categories), [$id]));
-        $categories = implode(',', array_unique($categoriesArray));
+        $categoriesArray = \array_filter(\array_merge(\explode(',', $categories), [$id]));
+        $categories = \implode(',', \array_unique($categoriesArray));
 
         // get all parameter and extend with new tags string
         $query = $request->query->all();
-        $query = array_merge($query, [$categoriesParameter => $categories]);
+        $query = \array_merge($query, [$categoriesParameter => $categories]);
 
-        $queryString = http_build_query($query);
+        $queryString = \http_build_query($query);
 
-        return $request->getPathInfo() . (strlen($queryString) > 0 ? '?' . $queryString : '');
+        return $request->getPathInfo() . (\strlen($queryString) > 0 ? '?' . $queryString : '');
     }
 
     public function setCategoryToUrl($category, $categoriesParameter = 'categories')
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!(is_array($category) && array_key_exists('id', $category))) {
+        if (!(\is_array($category) && \array_key_exists('id', $category))) {
             return;
         }
 
@@ -80,11 +80,11 @@ class CategoryRequestHandler implements CategoryRequestHandlerInterface
 
         // get all parameter and extend with new tags string
         $query = $request->query->all();
-        $query = array_merge($query, [$categoriesParameter => $id]);
+        $query = \array_merge($query, [$categoriesParameter => $id]);
 
-        $queryString = http_build_query($query);
+        $queryString = \http_build_query($query);
 
-        return $request->getPathInfo() . (strlen($queryString) > 0 ? '?' . $queryString : '');
+        return $request->getPathInfo() . (\strlen($queryString) > 0 ? '?' . $queryString : '');
     }
 
     public function removeCategoriesFromUrl($categoriesParameter = 'categories')
@@ -95,8 +95,8 @@ class CategoryRequestHandler implements CategoryRequestHandlerInterface
         $query = $request->query->all();
         unset($query[$categoriesParameter]);
 
-        $queryString = http_build_query($query);
+        $queryString = \http_build_query($query);
 
-        return $request->getPathInfo() . (strlen($queryString) > 0 ? '?' . $queryString : '');
+        return $request->getPathInfo() . (\strlen($queryString) > 0 ? '?' . $queryString : '');
     }
 }

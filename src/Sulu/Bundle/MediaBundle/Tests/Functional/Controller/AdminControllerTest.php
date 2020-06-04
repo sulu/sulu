@@ -21,7 +21,7 @@ class AdminControllerTest extends SuluTestCase
         $client->request('GET', '/admin/config');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $mediaConfig = $response->sulu_media;
 
@@ -35,7 +35,7 @@ class AdminControllerTest extends SuluTestCase
         $client->request('GET', '/admin/metadata/form/collection_details');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $form = $response->form;
 
@@ -54,7 +54,7 @@ class AdminControllerTest extends SuluTestCase
         $client->request('GET', '/admin/metadata/form/media_details');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $form = $response->form;
         $this->assertObjectHasAttribute('media_upload', $form);

@@ -44,6 +44,6 @@ class GeolocatorResponse implements \Countable
      */
     public function count(): int
     {
-        return count($this->locations);
+        return \count($this->locations);
     }
 }

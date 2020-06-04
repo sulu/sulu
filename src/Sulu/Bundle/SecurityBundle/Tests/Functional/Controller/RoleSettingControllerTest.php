@@ -62,7 +62,7 @@ class RoleSettingControllerTest extends SuluTestCase
 
         $this->client->request('PUT', '/api/roles/' . $this->role->getId() . '/settings/' . $key, ['value' => 'test-1']);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $this->assertEquals('test-1', json_decode($this->client->getResponse()->getContent()));
+        $this->assertEquals('test-1', \json_decode($this->client->getResponse()->getContent()));
 
         return $key;
     }
@@ -73,7 +73,7 @@ class RoleSettingControllerTest extends SuluTestCase
 
         $this->client->request('GET', '/api/roles/' . $this->role->getId() . '/settings/' . $key);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $this->assertEquals('test-1', json_decode($this->client->getResponse()->getContent()));
+        $this->assertEquals('test-1', \json_decode($this->client->getResponse()->getContent()));
     }
 
     public function testPutArray()
@@ -86,7 +86,7 @@ class RoleSettingControllerTest extends SuluTestCase
             ['value' => ['sulu' => 'awesome']]
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $this->assertEquals(['sulu' => 'awesome'], json_decode($this->client->getResponse()->getContent(), true));
+        $this->assertEquals(['sulu' => 'awesome'], \json_decode($this->client->getResponse()->getContent(), true));
 
         return $key;
     }
@@ -97,6 +97,6 @@ class RoleSettingControllerTest extends SuluTestCase
 
         $this->client->request('GET', '/api/roles/' . $this->role->getId() . '/settings/' . $key);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $this->assertEquals(['sulu' => 'awesome'], json_decode($this->client->getResponse()->getContent(), true));
+        $this->assertEquals(['sulu' => 'awesome'], \json_decode($this->client->getResponse()->getContent(), true));
     }
 }

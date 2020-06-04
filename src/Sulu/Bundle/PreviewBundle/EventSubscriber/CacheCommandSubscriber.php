@@ -55,7 +55,7 @@ class CacheCommandSubscriber implements EventSubscriberInterface
 
     public function onCommand(ConsoleCommandEvent $event)
     {
-        if (!in_array($event->getCommand()->getName(), [
+        if (!\in_array($event->getCommand()->getName(), [
             CacheClearCommand::getDefaultName(),
             CacheWarmupCommand::getDefaultName(),
         ])) {
@@ -65,7 +65,7 @@ class CacheCommandSubscriber implements EventSubscriberInterface
         // avoid to clear cache for preview if no \App\Kernel exists
         // can cause an error in test kernels of bundles
         // this can be removed when https://github.com/sulu/sulu/issues/4782 is fixed
-        if (!class_exists(\App\Kernel::class)) {
+        if (!\class_exists(\App\Kernel::class)) {
             return;
         }
 

@@ -60,12 +60,12 @@ class UserBuilder extends SuluBuilder
                 'system' => $system,
         ]);
         $this->output->writeln(
-            sprintf('Created role "<comment>%s</comment>" in system "<comment>%s</comment>"', $roleName, $system)
+            \sprintf('Created role "<comment>%s</comment>" in system "<comment>%s</comment>"', $roleName, $system)
         );
 
         // locale choosen doesn't exist, fallback
-        if (!in_array($locale, $userLocales)) {
-            $locale = array_shift($userLocales);
+        if (!\in_array($locale, $userLocales)) {
+            $locale = \array_shift($userLocales);
         }
 
         $this->execCommand(
@@ -82,7 +82,7 @@ class UserBuilder extends SuluBuilder
             ]
         );
         $this->output->writeln(
-            sprintf('Created user "<comment>%s</comment>" with password "<comment>%s</comment>"', $user, $password)
+            \sprintf('Created user "<comment>%s</comment>" with password "<comment>%s</comment>"', $user, $password)
         );
     }
 }
