@@ -2,10 +2,6 @@
 
 ## unreleased
 
-### CSV Handler changed
-
-The Sulu `CsvHandler::createResponse` now accept a `ViewHandlerInterface` instead of `ViewHandler`.
-
 ### Add RestRoutingBundle
 
 To make the update to symfony 5 as seamless as possible a new bundle need to be registered in your `config/bundles.php`:
@@ -13,6 +9,10 @@ To make the update to symfony 5 as seamless as possible a new bundle need to be 
 ```php
 HandcraftedInTheAlps\RestRoutingBundle\RestRoutingBundle::class => ['all' => true],
 ```
+
+### CSV Handler changed
+
+The Sulu `CsvHandler::createResponse` now accept a `ViewHandlerInterface` instead of `ViewHandler`.
 
 ## 2.1.0-RC1
 
