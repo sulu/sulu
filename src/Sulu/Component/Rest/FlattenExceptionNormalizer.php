@@ -32,7 +32,7 @@ class FlattenExceptionNormalizer implements NormalizerInterface
     {
         $data = $this->normalizer->normalize($exception, $format, $context);
 
-        if (is_array($data)) {
+        if (\is_array($data)) {
             $data['code'] = $exception->getCode();
         }
 

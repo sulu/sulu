@@ -115,7 +115,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             );
         }
 
-        if ($container->hasExtension('twig') && class_exists(ExceptionController::class)) {
+        if ($container->hasExtension('twig') && \class_exists(ExceptionController::class)) {
             // Disable the deprecated exception_controller to support the newer fos_rest bundle
             $container->prependExtensionConfig('twig', [
                 'exception_controller' => null,

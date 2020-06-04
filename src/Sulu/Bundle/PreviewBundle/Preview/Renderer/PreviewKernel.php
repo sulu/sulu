@@ -62,8 +62,8 @@ class PreviewKernel extends Kernel
 
     public function getRootDir(/* $triggerDeprecation = true */)
     {
-        if (0 === \func_num_args() || func_get_arg(0)) {
-            @trigger_error(sprintf('The "%s()" method is deprecated since Symfony 4.2, use getProjectDir() instead.', __METHOD__), E_USER_DEPRECATED);
+        if (0 === \func_num_args() || \func_get_arg(0)) {
+            @\trigger_error(\sprintf('The "%s()" method is deprecated since Symfony 4.2, use getProjectDir() instead.', __METHOD__), \E_USER_DEPRECATED);
         }
 
         if (null === $this->rootDir) {
