@@ -12,20 +12,6 @@
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\ContactBundle\Entity\Account;
-use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
-use Sulu\Bundle\ContactBundle\Entity\AccountContact;
-use Sulu\Bundle\ContactBundle\Entity\Address;
-use Sulu\Bundle\ContactBundle\Entity\AddressType;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\Email;
-use Sulu\Bundle\ContactBundle\Entity\EmailType;
-use Sulu\Bundle\ContactBundle\Entity\Fax;
-use Sulu\Bundle\ContactBundle\Entity\FaxType;
-use Sulu\Bundle\ContactBundle\Entity\Note;
-use Sulu\Bundle\ContactBundle\Entity\Phone;
-use Sulu\Bundle\ContactBundle\Entity\PhoneType;
-use Sulu\Bundle\ContactBundle\Entity\Url;
-use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
@@ -63,98 +49,10 @@ class AccountMediaControllerTest extends SuluTestCase
     {
         $this->account = new Account();
         $this->account->setName('Company');
-        $this->account->setPlaceOfJurisdiction('Feldkirch');
-
-        $urlType = new UrlType();
-        $urlType->setName('Private');
-
-        $url = new Url();
-        $url->setUrl('http://www.company.example');
-        $url->setUrlType($urlType);
-        $this->account->addUrl($url);
-
-        $emailType = new EmailType();
-        $emailType->setName('Private');
-
-        $email = new Email();
-        $email->setEmail('office@company.example');
-        $email->setEmailType($emailType);
-        $this->account->addEmail($email);
-
-        $phoneType = new PhoneType();
-        $phoneType->setName('Private');
-
-        $phone = new Phone();
-        $phone->setPhone('123456789');
-        $phone->setPhoneType($phoneType);
-        $this->account->addPhone($phone);
-
-        $faxType = new FaxType();
-        $faxType->setName('Private');
-
-        $fax = new Fax();
-        $fax->setFax('123654789');
-        $fax->setFaxType($faxType);
-        $this->account->addFax($fax);
-
-        $addressType = new AddressType();
-        $addressType->setName('Private');
-
-        $address = new Address();
-        $address->setStreet('Musterstraße');
-        $address->setNumber('1');
-        $address->setZip('0000');
-        $address->setCity('Musterstadt');
-        $address->setState('Musterland');
-        $address->setCountryCode('AT');
-        $address->setAddressType($addressType);
-        $address->setBillingAddress(true);
-        $address->setPrimaryAddress(true);
-        $address->setDeliveryAddress(false);
-        $address->setPostboxCity('Dornbirn');
-        $address->setPostboxPostcode('6850');
-        $address->setPostboxNumber('4711');
-
-        $accountAddress = new AccountAddress();
-        $accountAddress->setAddress($address);
-        $accountAddress->setAccount($this->account);
-        $accountAddress->setMain(true);
-        $this->account->addAccountAddress($accountAddress);
-        $address->addAccountAddress($accountAddress);
-
-        $contact = new Contact();
-        $contact->setFirstName('Vorname');
-        $contact->setLastName('Nachname');
-        $contact->setMiddleName('Mittelname');
-        $contact->setFormOfAddress(0);
-
-        $accountContact = new AccountContact();
-        $accountContact->setContact($contact);
-        $accountContact->setAccount($this->account);
-        $accountContact->setMain(true);
-        $this->account->addAccountContact($accountContact);
-
-        $note = new Note();
-        $note->setValue('Note');
-        $this->account->addNote($note);
 
         $this->setUpMediaEntities();
 
         $this->em->persist($this->account);
-        $this->em->persist($urlType);
-        $this->em->persist($url);
-        $this->em->persist($emailType);
-        $this->em->persist($accountContact);
-        $this->em->persist($email);
-        $this->em->persist($phoneType);
-        $this->em->persist($phone);
-        $this->em->persist($addressType);
-        $this->em->persist($address);
-        $this->em->persist($accountAddress);
-        $this->em->persist($note);
-        $this->em->persist($faxType);
-        $this->em->persist($fax);
-        $this->em->persist($contact);
 
         $this->em->flush();
     }
