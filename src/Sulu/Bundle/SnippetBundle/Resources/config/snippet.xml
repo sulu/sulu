@@ -71,7 +71,7 @@
         </service>
 
         <service id="sulu_snippet.document.snippet_initializer" class="%sulu_snippet.document.snippet_initializer.class%">
-            <argument type="service" id="sulu_document_manager.node_manager" />
+            <argument type="service" id="doctrine_phpcr" />
             <argument type="service" id="sulu_document_manager.path_builder" />
             <tag name="sulu_document_manager.initializer"/>
         </service>

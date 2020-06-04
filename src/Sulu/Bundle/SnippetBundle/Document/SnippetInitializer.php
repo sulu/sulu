@@ -11,8 +11,9 @@
 
 namespace Sulu\Bundle\SnippetBundle\Document;
 
+use Doctrine\Common\Persistence\ConnectionRegistry;
+use PHPCR\SessionInterface;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\InitializerInterface;
-use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\DocumentManager\PathBuilder;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -21,23 +22,36 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SnippetInitializer implements InitializerInterface
 {
-    private $nodeManager;
+    /**
+     * @var ConnectionRegistry
+     */
+    private $connectionRegistry;
 
+    /**
+     * @var PathBuilder
+     */
     private $pathBuilder;
 
     public function __construct(
-        NodeManager $nodeManager,
+        ConnectionRegistry $connectionRegistry,
         PathBuilder $pathBuilder
     ) {
-        $this->nodeManager = $nodeManager;
+        $this->connectionRegistry = $connectionRegistry;
         $this->pathBuilder = $pathBuilder;
     }
 
     public function initialize(OutputInterface $output, $purge = false)
     {
+        foreach ($this->connectionRegistry->getConnections() as $connection) {
+            $this->initializeSnippetPath($output, $connection);
+        }
+    }
+
+    public function initializeSnippetPath(OutputInterface $output, SessionInterface $session)
+    {
         $snippetPath = $this->pathBuilder->build(['%base%', '%snippet%']);
 
-        if (true === $this->nodeManager->has($snippetPath)) {
+        if (true === $session->nodeExists($snippetPath)) {
             $output->writeln(\sprintf('  [ ] <info>snippet path:</info>: %s ', $snippetPath));
 
             return;
@@ -45,7 +59,7 @@ class SnippetInitializer implements InitializerInterface
 
         $output->writeln(\sprintf('  [+] <info>snippet path:</info>: %s ', $snippetPath));
 
-        $this->nodeManager->createPath($snippetPath);
-        $this->nodeManager->save();
+        $session->getRootNode()->addNode(\ltrim($snippetPath, '/'));
+        $session->save();
     }
 }
