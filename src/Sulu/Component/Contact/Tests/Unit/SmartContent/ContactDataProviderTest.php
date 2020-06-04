@@ -71,9 +71,9 @@ class ContactDataProviderTest extends TestCase
 
         return [
             [['tags' => [1]], null, 1, 3, $contacts, false, $dataItems],
-            [['tags' => [1]], null, 1, 2, $contacts, true, array_slice($dataItems, 0, 2)],
-            [['tags' => [1]], 5, 1, 2, $contacts, true, array_slice($dataItems, 0, 2)],
-            [['tags' => [1]], 1, 1, 2, array_slice($contacts, 0, 1), false, array_slice($dataItems, 0, 1)],
+            [['tags' => [1]], null, 1, 2, $contacts, true, \array_slice($dataItems, 0, 2)],
+            [['tags' => [1]], 5, 1, 2, $contacts, true, \array_slice($dataItems, 0, 2)],
+            [['tags' => [1]], 1, 1, 2, \array_slice($contacts, 0, 1), false, \array_slice($dataItems, 0, 1)],
         ];
     }
 
@@ -145,9 +145,9 @@ class ContactDataProviderTest extends TestCase
 
         return [
             [['tags' => [1]], null, 1, 3, $contacts, false, $dataItems],
-            [['tags' => [1]], null, 1, 2, $contacts, true, array_slice($dataItems, 0, 2)],
-            [['tags' => [1]], 5, 1, 2, $contacts, true, array_slice($dataItems, 0, 2)],
-            [['tags' => [1]], 1, 1, 2, array_slice($contacts, 0, 1), false, array_slice($dataItems, 0, 1)],
+            [['tags' => [1]], null, 1, 2, $contacts, true, \array_slice($dataItems, 0, 2)],
+            [['tags' => [1]], 5, 1, 2, $contacts, true, \array_slice($dataItems, 0, 2)],
+            [['tags' => [1]], 1, 1, 2, \array_slice($contacts, 0, 1), false, \array_slice($dataItems, 0, 1)],
         ];
     }
 

@@ -89,9 +89,9 @@ abstract class ItemMetadata
 
     public function __get($name)
     {
-        @trigger_error(
-            sprintf('Do not use public property "%s" from "%s"', $name, __CLASS__),
-            E_USER_DEPRECATED
+        @\trigger_error(
+            \sprintf('Do not use public property "%s" from "%s"', $name, __CLASS__),
+            \E_USER_DEPRECATED
         );
 
         return $this[$name];
@@ -99,9 +99,9 @@ abstract class ItemMetadata
 
     public function __set($name, $value)
     {
-        @trigger_error(
-            sprintf('Do not use public property "%s" from "%s"', $name, __CLASS__),
-            E_USER_DEPRECATED
+        @\trigger_error(
+            \sprintf('Do not use public property "%s" from "%s"', $name, __CLASS__),
+            \E_USER_DEPRECATED
         );
 
         return $this[$name] = $value;
@@ -167,9 +167,9 @@ abstract class ItemMetadata
     public function getChild($name)
     {
         if (!isset($this->children[$name])) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Unknown child "%s" in structure "%s". Children: "%s"',
-                 $name, $this->name, implode('", "', array_keys($this->children))
+                 $name, $this->name, \implode('", "', \array_keys($this->children))
             ));
         }
 
@@ -197,7 +197,7 @@ abstract class ItemMetadata
     public function addChild(self $child)
     {
         if (isset($this->children[$child->name])) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Child with key "%s" already exists',
                 $child->name
             ));
@@ -252,9 +252,9 @@ abstract class ItemMetadata
     public function getParameter($name)
     {
         if (!isset($this->parameters[$name])) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Unknown parameter "%s", known parameters: "%s"',
-                $name, implode('", "', array_keys($this->parameters))
+                $name, \implode('", "', \array_keys($this->parameters))
             ));
         }
 
@@ -298,7 +298,7 @@ abstract class ItemMetadata
             }
         }
 
-        throw new \InvalidArgumentException(sprintf(
+        throw new \InvalidArgumentException(\sprintf(
             'Unknown tag "%s"', $tagName
         ));
     }

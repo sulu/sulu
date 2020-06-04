@@ -34,13 +34,13 @@ class AddAdminPass implements CompilerPassInterface
 
             /** @var callable $callable */
             $callable = [$class, 'getPriority'];
-            $priority = call_user_func($callable);
+            $priority = \call_user_func($callable);
 
             $adminServiceDefinitions[$priority][] = $serviceDefinition;
         }
 
-        krsort($adminServiceDefinitions);
-        $adminServiceDefinitions = array_merge(...$adminServiceDefinitions);
+        \krsort($adminServiceDefinitions);
+        $adminServiceDefinitions = \array_merge(...$adminServiceDefinitions);
 
         foreach ($adminServiceDefinitions as $id => $serviceDefinition) {
             $pool->addMethodCall('addAdmin', [$serviceDefinition]);

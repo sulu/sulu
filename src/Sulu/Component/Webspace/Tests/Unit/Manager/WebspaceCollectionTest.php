@@ -162,8 +162,8 @@ class WebspaceCollectionTest extends TestCase
         $this->assertEquals(false, $webspace['segments'][1]['default']);
         $this->assertEquals('portal1theme', $webspace['theme']);
 
-        $this->assertEquals(1, count($webspace['navigation']));
-        $this->assertEquals(1, count($webspace['navigation']['contexts']));
+        $this->assertEquals(1, \count($webspace['navigation']));
+        $this->assertEquals(1, \count($webspace['navigation']['contexts']));
         $this->assertEquals('main', $webspace['navigation']['contexts'][0]['key']);
         $this->assertEquals([], $webspace['navigation']['contexts'][0]['metadata']);
         $this->assertEquals('tree_leaf_edit', $webspace['resourceLocator']['strategy']);

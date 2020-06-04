@@ -36,9 +36,9 @@ abstract class AbstractDocumentEvent extends AbstractEvent
 
     public function getDebugMessage()
     {
-        return sprintf(
+        return \sprintf(
             'd:%s',
-            $this->document ? spl_object_hash($this->document) : '<no document>'
+            $this->document ? \spl_object_hash($this->document) : '<no document>'
         );
     }
 }

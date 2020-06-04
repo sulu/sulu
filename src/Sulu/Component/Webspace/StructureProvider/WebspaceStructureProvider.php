@@ -55,7 +55,7 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
 
         $keys = $this->cache->fetch($webspaceKey);
 
-        return array_map(
+        return \array_map(
             function($key) {
                 return $this->structureManager->getStructure($key);
             },
@@ -76,7 +76,7 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
         $keys = [];
         foreach ($this->structureManager->getStructures() as $page) {
             /* @var PageBridge $page */
-            $template = sprintf('%s.html.twig', $page->getView());
+            $template = \sprintf('%s.html.twig', $page->getView());
             if ($this->templateExists($template)) {
                 $keys[] = $page->getKey();
                 $structures[] = $page;
@@ -98,7 +98,7 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
     protected function templateExists($template)
     {
         $loader = $this->twig->getLoader();
-        if (method_exists($loader, 'exists')) {
+        if (\method_exists($loader, 'exists')) {
             return $loader->exists($template);
         }
 

@@ -23,7 +23,7 @@ trait CreateClientTrait
     {
         return static::createClient(
             $options,
-            array_merge(
+            \array_merge(
                 [
                     'PHP_AUTH_USER' => 'test',
                     'PHP_AUTH_PW' => 'test',
@@ -39,7 +39,7 @@ trait CreateClientTrait
     protected static function createAuthenticatedWebsiteClient(array $options = [], array $server = [])
     {
         return static::createAuthenticatedClient(
-            array_merge(['sulu.context' => SuluKernel::CONTEXT_WEBSITE], $options),
+            \array_merge(['sulu.context' => SuluKernel::CONTEXT_WEBSITE], $options),
             $server
         );
     }
@@ -49,6 +49,6 @@ trait CreateClientTrait
      */
     protected static function createWebsiteClient(array $options = [], array $server = [])
     {
-        return static::createClient(array_merge(['sulu.context' => SuluKernel::CONTEXT_WEBSITE], $options), $server);
+        return static::createClient(\array_merge(['sulu.context' => SuluKernel::CONTEXT_WEBSITE], $options), $server);
     }
 }

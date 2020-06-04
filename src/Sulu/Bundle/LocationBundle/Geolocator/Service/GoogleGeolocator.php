@@ -58,7 +58,7 @@ class GoogleGeolocator implements GeolocatorInterface
         if (200 !== $response->getStatusCode()) {
             throw new HttpException(
                 $response->getStatusCode(),
-                sprintf(
+                \sprintf(
                     'Server at "%s" returned HTTP "%s". Body: ',
                     self::ENDPOINT,
                     $response->getStatusCode()
@@ -66,7 +66,7 @@ class GoogleGeolocator implements GeolocatorInterface
             );
         }
 
-        $googleResponse = json_decode($response->getBody(), true);
+        $googleResponse = \json_decode($response->getBody(), true);
         $response = new GeolocatorResponse();
         if ('OK' != $googleResponse['status']) {
             return $response;
@@ -88,7 +88,7 @@ class GoogleGeolocator implements GeolocatorInterface
             }
 
             // google provides no ID - so we just make one up ...
-            $location->setId(md5(serialize($result)));
+            $location->setId(\md5(\serialize($result)));
             $location->setDisplayTitle($result['formatted_address']);
 
             foreach ([
@@ -103,7 +103,7 @@ class GoogleGeolocator implements GeolocatorInterface
                     foreach ($map[$field] as $fieldValue) {
                         $parts[] = $fieldValue[$property['field']];
                     }
-                    $location->{$property['method']}(implode(', ', $parts));
+                    $location->{$property['method']}(\implode(', ', $parts));
                 }
             }
 

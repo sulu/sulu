@@ -104,7 +104,7 @@ class SearchIntegrationTest extends SuluTestCase
 
         $documents = $testAdapter->getDocuments();
         $this->assertCount(1, $documents);
-        $document = end($documents);
+        $document = \end($documents);
         $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Document', $document);
         $this->assertEquals('myimage.jpg', $document->getImageUrl());
     }
@@ -122,7 +122,7 @@ class SearchIntegrationTest extends SuluTestCase
         $this->documentManager->flush();
 
         $documents = $testAdapter->getDocuments();
-        $document = end($documents);
+        $document = \end($documents);
         $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Document', $document);
         $this->assertNull($document->getImageUrl());
     }

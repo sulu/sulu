@@ -63,7 +63,7 @@ class NodeHelper implements NodeHelperInterface
 
         if (PathHelper::getParentPath($siblingPath) !== $parentNode->getPath()) {
             throw new DocumentManagerException(
-                sprintf(
+                \sprintf(
                     'Cannot reorder documents which are not sibilings. Trying to reorder "%s" to "%s".',
                     $node->getPath(),
                     $siblingPath

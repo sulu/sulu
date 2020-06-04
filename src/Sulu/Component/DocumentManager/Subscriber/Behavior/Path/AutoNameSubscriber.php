@@ -214,7 +214,7 @@ class AutoNameSubscriber implements EventSubscriberInterface
 
         if (!$title) {
             throw new DocumentManagerException(
-                sprintf(
+                \sprintf(
                     'Document has no title (title is required for auto name behavior): %s)',
                     DocumentHelper::getDebugTitle($document)
                 )
@@ -233,7 +233,7 @@ class AutoNameSubscriber implements EventSubscriberInterface
     private function rename(NodeInterface $node, $name)
     {
         $names = (array) $node->getParent()->getNodeNames();
-        $pos = array_search($node->getName(), $names);
+        $pos = \array_search($node->getName(), $names);
         $next = isset($names[$pos + 1]) ? $names[$pos + 1] : null;
 
         $node->rename($name);

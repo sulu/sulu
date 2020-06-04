@@ -52,7 +52,7 @@ class UserProvider implements UserProviderInterface
 
     public function loadUserByUsername($username)
     {
-        $exceptionMessage = sprintf(
+        $exceptionMessage = \sprintf(
             'Unable to find an Sulu\Component\Security\Authentication\UserInterface object identified by %s',
             $username
         );
@@ -82,10 +82,10 @@ class UserProvider implements UserProviderInterface
 
     public function refreshUser(BaseUserInterface $user)
     {
-        $class = get_class($user);
+        $class = \get_class($user);
         if (!$this->supportsClass($class)) {
             throw new UnsupportedUserException(
-                sprintf(
+                \sprintf(
                     'Instance of "%s" are not supported.',
                     $class
                 )
@@ -107,7 +107,7 @@ class UserProvider implements UserProviderInterface
 
     public function supportsClass($class)
     {
-        return is_subclass_of($class, UserInterface::class);
+        return \is_subclass_of($class, UserInterface::class);
     }
 
     /**

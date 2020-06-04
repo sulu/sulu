@@ -26,10 +26,10 @@ class ExpectedDefaultTemplatesNotFound extends WebspaceException
     public function __construct($webspace, $expected, $found)
     {
         parent::__construct(
-            sprintf(
+            \sprintf(
                 'One of expected types "[%s]" not found (found "[%s]") in webspace "%s".',
-                implode(', ', $expected),
-                implode(', ', $found),
+                \implode(', ', $expected),
+                \implode(', ', $found),
                 $webspace
             )
         );

@@ -49,7 +49,7 @@ abstract class AbstractRestController
         }
 
         $user = $token->getUser();
-        if (!is_object($user)) {
+        if (!\is_object($user)) {
             // e.g. anonymous authentication
             return null;
         }

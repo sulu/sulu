@@ -46,7 +46,7 @@ class MixinSubscriberTest extends TestCase
         $metadata->getPhpcrType()->willReturn('phpcr:type');
         $document = new \stdClass();
 
-        $this->metadataFactory->getMetadataForClass(get_class($document))->willReturn($metadata->reveal());
+        $this->metadataFactory->getMetadataForClass(\get_class($document))->willReturn($metadata->reveal());
 
         $event->getNode()->willReturn($node->reveal());
         $event->getDocument()->willReturn($document);
@@ -67,7 +67,7 @@ class MixinSubscriberTest extends TestCase
         $metadata->getPhpcrType()->willReturn('phpcr:type');
         $document = new \stdClass();
 
-        $this->metadataFactory->getMetadataForClass(get_class($document))->willReturn($metadata->reveal());
+        $this->metadataFactory->getMetadataForClass(\get_class($document))->willReturn($metadata->reveal());
 
         $event->getNode()->willReturn($node->reveal());
         $event->getDocument()->willReturn($document);

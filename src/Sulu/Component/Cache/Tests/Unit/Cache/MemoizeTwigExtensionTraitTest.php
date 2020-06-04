@@ -62,15 +62,15 @@ class MemoizeTwigExtensionTraitTest extends TestCase
 
         $this->trait = $this->getMockForTrait(MemoizeTwigExtensionTrait::class);
 
-        $this->extensionProperty = new \ReflectionProperty(get_class($this->trait), 'extension');
+        $this->extensionProperty = new \ReflectionProperty(\get_class($this->trait), 'extension');
         $this->extensionProperty->setAccessible(true);
         $this->extensionProperty->setValue($this->trait, $this->extension->reveal());
 
-        $this->memoizeCacheProperty = new \ReflectionProperty(get_class($this->trait), 'memoizeCache');
+        $this->memoizeCacheProperty = new \ReflectionProperty(\get_class($this->trait), 'memoizeCache');
         $this->memoizeCacheProperty->setAccessible(true);
         $this->memoizeCacheProperty->setValue($this->trait, $this->memoizeCache->reveal());
 
-        $this->lifeTimeProperty = new \ReflectionProperty(get_class($this->trait), 'lifeTime');
+        $this->lifeTimeProperty = new \ReflectionProperty(\get_class($this->trait), 'lifeTime');
         $this->lifeTimeProperty->setAccessible(true);
         $this->lifeTimeProperty->setValue($this->trait, $this->lifeTime);
     }
@@ -96,13 +96,13 @@ class MemoizeTwigExtensionTraitTest extends TestCase
         $this->memoizeCache->memoizeById('sulu_content_load', [], Argument::type('callable'), $this->lifeTime)
             ->will(
                 function($arguments) {
-                    return call_user_func($arguments[2]);
+                    return \call_user_func($arguments[2]);
                 }
             );
         $this->memoizeCache->memoizeById('sulu_content_load_parent', [], Argument::type('callable'), $this->lifeTime)
             ->will(
                 function($arguments) {
-                    return call_user_func($arguments[2]);
+                    return \call_user_func($arguments[2]);
                 }
             );
 
@@ -115,7 +115,7 @@ class MemoizeTwigExtensionTraitTest extends TestCase
         $this->assertInstanceOf(TwigFunction::class, $result[1]);
         $this->assertEquals('sulu_content_load_parent', $result[1]->getName());
 
-        $this->assertEquals(1, call_user_func($result[0]->getCallable()));
-        $this->assertEquals(2, call_user_func($result[1]->getCallable()));
+        $this->assertEquals(1, \call_user_func($result[0]->getCallable()));
+        $this->assertEquals(2, \call_user_func($result[1]->getCallable()));
     }
 }

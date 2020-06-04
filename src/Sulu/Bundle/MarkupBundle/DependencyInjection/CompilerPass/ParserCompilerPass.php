@@ -39,7 +39,7 @@ class ParserCompilerPass implements CompilerPassInterface
             }
         }
 
-        if (0 === count($references)) {
+        if (0 === \count($references)) {
             return;
         }
 

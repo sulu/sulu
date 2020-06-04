@@ -48,11 +48,11 @@ abstract class AbstractMediaController extends AbstractRestController
         $uploadedFile = $this->getUploadedFile($request, 'fileVersion');
 
         if ($uploadedFile) {
-            if (false === strpos($uploadedFile->getClientOriginalName(), '.')) {
+            if (false === \strpos($uploadedFile->getClientOriginalName(), '.')) {
                 return $uploadedFile->getClientOriginalName();
             }
 
-            return implode('.', explode('.', $uploadedFile->getClientOriginalName(), -1));
+            return \implode('.', \explode('.', $uploadedFile->getClientOriginalName(), -1));
         }
     }
 

@@ -49,7 +49,7 @@ class DataProviderPool implements DataProviderPoolInterface
 
     public function exists($alias)
     {
-        return array_key_exists($alias, $this->providers);
+        return \array_key_exists($alias, $this->providers);
     }
 
     public function get($alias)

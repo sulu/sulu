@@ -56,7 +56,7 @@ class TargetGroupControllerTest extends SuluTestCase
         $this->client->request('GET', self::BASE_URL . '/' . $targetGroup->getId());
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('Target Group Title', $response['title']);
         $this->assertEquals('Target group description number 1', $response['description']);
@@ -85,7 +85,7 @@ class TargetGroupControllerTest extends SuluTestCase
         $this->client->request('GET', self::BASE_URL);
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $targetGroups = $response['_embedded']['target_groups'];
         $this->assertCount(2, $targetGroups);
@@ -115,17 +115,17 @@ class TargetGroupControllerTest extends SuluTestCase
             ],
         ];
 
-        $this->client->request('POST', self::BASE_URL, [], [], [], json_encode($data));
+        $this->client->request('POST', self::BASE_URL, [], [], [], \json_encode($data));
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('id', $response);
         $this->assertEquals($data['title'], $response['title']);
         $this->assertEquals($data['description'], $response['description']);
         $this->assertEquals($data['priority'], $response['priority']);
         $this->assertEquals($data['active'], $response['active']);
-        $this->assertCount(count($data['webspaceKeys']), $response['webspaceKeys']);
+        $this->assertCount(\count($data['webspaceKeys']), $response['webspaceKeys']);
 
         $this->assertNotNull($this->getTargetGroupRepository()->find($response['id']));
         $targetGroup = $this->getTargetGroupRepository()->find($response['id']);
@@ -169,17 +169,17 @@ class TargetGroupControllerTest extends SuluTestCase
             ],
         ];
 
-        $this->client->request('PUT', self::BASE_URL . '/' . $targetGroup->getId(), [], [], [], json_encode($data));
+        $this->client->request('PUT', self::BASE_URL . '/' . $targetGroup->getId(), [], [], [], \json_encode($data));
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals($data['title'], $response['title']);
         $this->assertEquals($data['description'], $response['description']);
         $this->assertEquals($data['priority'], $response['priority']);
         $this->assertEquals($data['active'], $response['active']);
-        $this->assertCount(count($data['webspaceKeys']), $response['webspaces']);
-        $this->assertCount(count($data['rules']), $response['rules']);
+        $this->assertCount(\count($data['webspaceKeys']), $response['webspaces']);
+        $this->assertCount(\count($data['rules']), $response['rules']);
         $this->assertEquals($data['webspaceKeys'][0], $response['webspaces'][0]['webspaceKey']);
         $this->assertEquals($data['webspaceKeys'][0], $response['webspaceKeys'][0]);
 
@@ -187,14 +187,14 @@ class TargetGroupControllerTest extends SuluTestCase
 
         $targetGroup = $this->getTargetGroupRepository()->find($response['id']);
         $this->assertNotNull($targetGroup);
-        $this->assertCount(count($data['webspaceKeys']), $targetGroup->getWebspaces());
-        $this->assertCount(count($data['rules']), $targetGroup->getRules());
+        $this->assertCount(\count($data['webspaceKeys']), $targetGroup->getWebspaces());
+        $this->assertCount(\count($data['rules']), $targetGroup->getRules());
         $webspace1 = $targetGroup->getWebspaces()[0];
         $rule1 = $targetGroup->getRules()[0];
         $rule1Conditions = $rule1->getConditions()[0];
-        $this->assertCount(count($data['webspaceKeys']), $response['webspaces']);
+        $this->assertCount(\count($data['webspaceKeys']), $response['webspaces']);
         $this->assertEquals($data['webspaceKeys'][0], $webspace1->getWebspaceKey());
-        $this->assertCount(count($data['rules']), $response['rules']);
+        $this->assertCount(\count($data['rules']), $response['rules']);
         $this->assertEquals($data['rules'][0]['title'], $rule1->getTitle());
         $this->assertEquals($data['rules'][0]['frequency'], $rule1->getFrequency());
         $this->assertEquals($data['rules'][0]['conditions'][0]['type'], $rule1Conditions->getType());
@@ -272,27 +272,27 @@ class TargetGroupControllerTest extends SuluTestCase
             ],
         ];
 
-        $this->client->request('PUT', self::BASE_URL . '/' . $targetGroup->getId(), [], [], [], json_encode($data));
+        $this->client->request('PUT', self::BASE_URL . '/' . $targetGroup->getId(), [], [], [], \json_encode($data));
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertCount(count($data['webspaceKeys']), $response['webspaces']);
-        $this->assertCount(count($data['rules']), $response['rules']);
-        $this->assertCount(count($data['rules'][0]['conditions']), $response['rules'][0]['conditions']);
+        $this->assertCount(\count($data['webspaceKeys']), $response['webspaces']);
+        $this->assertCount(\count($data['rules']), $response['rules']);
+        $this->assertCount(\count($data['rules'][0]['conditions']), $response['rules'][0]['conditions']);
 
         $this->getEntityManager()->clear();
 
         $targetGroup = $this->getTargetGroupRepository()->find($response['id']);
         $this->assertNotNull($targetGroup);
-        $this->assertCount(count($data['webspaceKeys']), $targetGroup->getWebspaces());
+        $this->assertCount(\count($data['webspaceKeys']), $targetGroup->getWebspaces());
         $this->assertEquals($data['webspaceKeys'][0], $targetGroup->getWebspaces()[0]->getWebspaceKey());
         $this->assertEquals($data['webspaceKeys'][0], $targetGroup->getWebspaces()[0]->getWebspaceKey());
-        $this->assertCount(count($data['rules']), $targetGroup->getRules());
+        $this->assertCount(\count($data['rules']), $targetGroup->getRules());
         $rule1 = $targetGroup->getRules()[0];
         $this->assertEquals($data['rules'][0]['title'], $rule1->getTitle());
         $this->assertEquals($data['rules'][0]['frequency'], $rule1->getFrequency());
-        $this->assertCount(count($data['rules'][0]['conditions']), $rule1->getConditions());
+        $this->assertCount(\count($data['rules'][0]['conditions']), $rule1->getConditions());
         $this->assertEquals($data['rules'][0]['conditions'][0]['type'], $rule1->getConditions()[0]->getType());
         $this->assertEquals($data['rules'][0]['conditions'][0]['condition'], $rule1->getConditions()[0]->getCondition());
     }
@@ -330,31 +330,31 @@ class TargetGroupControllerTest extends SuluTestCase
             ],
         ];
 
-        $this->client->request('PUT', self::BASE_URL . '/' . $targetGroup->getId(), [], [], [], json_encode($data));
+        $this->client->request('PUT', self::BASE_URL . '/' . $targetGroup->getId(), [], [], [], \json_encode($data));
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals($data['title'], $response['title']);
         $this->assertEquals($data['description'], $response['description']);
         $this->assertEquals($data['priority'], $response['priority']);
         $this->assertEquals($data['active'], $response['active']);
-        $this->assertCount(count($data['webspaceKeys']), $response['webspaces']);
-        $this->assertCount(count($data['rules']), $response['rules']);
+        $this->assertCount(\count($data['webspaceKeys']), $response['webspaces']);
+        $this->assertCount(\count($data['rules']), $response['rules']);
         $this->assertEquals($data['webspaceKeys'][0], $response['webspaces'][0]['webspaceKey']);
 
         $this->getEntityManager()->clear();
 
         $targetGroup = $this->getTargetGroupRepository()->find($response['id']);
         $this->assertNotNull($targetGroup);
-        $this->assertCount(count($data['webspaceKeys']), $targetGroup->getWebspaces());
-        $this->assertCount(count($data['rules']), $targetGroup->getRules());
+        $this->assertCount(\count($data['webspaceKeys']), $targetGroup->getWebspaces());
+        $this->assertCount(\count($data['rules']), $targetGroup->getRules());
         $webspace1 = $targetGroup->getWebspaces()[0];
         $rule1 = $targetGroup->getRules()[0];
         $rule1Conditions = $rule1->getConditions()[0];
-        $this->assertCount(count($data['webspaceKeys']), $response['webspaces']);
+        $this->assertCount(\count($data['webspaceKeys']), $response['webspaces']);
         $this->assertEquals($data['webspaceKeys'][0], $webspace1->getWebspaceKey());
-        $this->assertCount(count($data['rules']), $response['rules']);
+        $this->assertCount(\count($data['rules']), $response['rules']);
         $this->assertEquals($data['rules'][0]['title'], $rule1->getTitle());
         $this->assertEquals($data['rules'][0]['frequency'], $rule1->getFrequency());
         $this->assertEquals($data['rules'][0]['conditions'][0]['type'], $rule1Conditions->getType());
@@ -399,7 +399,7 @@ class TargetGroupControllerTest extends SuluTestCase
 
         $this->client->request(
             'DELETE',
-            self::BASE_URL . '?ids=' . implode(',', [$targetGroupId1, $targetGroupId2])
+            self::BASE_URL . '?ids=' . \implode(',', [$targetGroupId1, $targetGroupId2])
         );
 
         $response = $this->client->getResponse();
@@ -458,7 +458,7 @@ class TargetGroupControllerTest extends SuluTestCase
         $webspace = $this->getTargetGroupWebspaceRepository()->createNew();
         $this->getEntityManager()->persist($targetGroup);
         $webspace->setTargetGroup($targetGroup);
-        $webspace->setWebspaceKey($this->getProperty($data, 'webspaceKey', 'webspacekey-' . uniqid()));
+        $webspace->setWebspaceKey($this->getProperty($data, 'webspaceKey', 'webspacekey-' . \uniqid()));
         $targetGroup->addWebspace($webspace);
 
         return $webspace;
@@ -501,7 +501,7 @@ class TargetGroupControllerTest extends SuluTestCase
      */
     private function getProperty($data, $key, $default)
     {
-        if (array_key_exists($key, $data)) {
+        if (\array_key_exists($key, $data)) {
             return $data[$key];
         }
 

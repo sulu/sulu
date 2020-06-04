@@ -27,19 +27,19 @@ abstract class BaseXmlFileLoader extends FileLoader
 
     public function supports($resource, $type = null)
     {
-        if (!is_string($resource) || 'xml' !== pathinfo($resource, PATHINFO_EXTENSION)) {
+        if (!\is_string($resource) || 'xml' !== \pathinfo($resource, \PATHINFO_EXTENSION)) {
             return false;
         }
 
         $document = XmlUtils::loadFile($resource);
         $namespaces = $document->documentElement->attributes->getNamedItem('schemaLocation')->nodeValue;
 
-        $start = strpos($namespaces, static::SCHEMA_IDENTIFIER) + strlen(static::SCHEMA_IDENTIFIER) + 1;
-        $namespace = substr($namespaces, $start);
+        $start = \strpos($namespaces, static::SCHEMA_IDENTIFIER) + \strlen(static::SCHEMA_IDENTIFIER) + 1;
+        $namespace = \substr($namespaces, $start);
 
-        $end = strpos($namespace, ' ');
+        $end = \strpos($namespace, ' ');
         if (false !== $end) {
-            $namespace = substr($namespace, 0, $end);
+            $namespace = \substr($namespace, 0, $end);
         }
 
         return $namespace === static::SCHEMA_URI;

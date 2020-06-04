@@ -47,7 +47,7 @@ class InitCommand extends Command
     {
         $output->writeln('Create Media Cache dir in ' . $this->formatCacheDir);
 
-        if (!is_dir($this->formatCacheDir)) {
+        if (!\is_dir($this->formatCacheDir)) {
             $this->filesystem->mkdir($this->formatCacheDir);
         } else {
             $output->writeLn('Directory "' . $this->formatCacheDir . '"" already exists');

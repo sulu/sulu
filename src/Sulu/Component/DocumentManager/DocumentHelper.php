@@ -25,7 +25,7 @@ class DocumentHelper
      */
     public static function getDebugTitle($document)
     {
-        $title = spl_object_hash($document);
+        $title = \spl_object_hash($document);
 
         if ($document instanceof PathBehavior && $document->getPath()) {
             $title .= ' (' . $document->getPath() . ')';

@@ -32,7 +32,7 @@ class RequestParametersTraitTest extends TestCase
     private function getGetRequestParameterReflection()
     {
         $getRequestParameterReflection = new \ReflectionMethod(
-            get_class($this->requestParametersTrait),
+            \get_class($this->requestParametersTrait),
             'getRequestParameter'
         );
 
@@ -44,7 +44,7 @@ class RequestParametersTraitTest extends TestCase
     private function getGetBooleanRequestParameterReflection()
     {
         $getBooleanRequestParameterReflection = new \ReflectionMethod(
-            get_class($this->requestParametersTrait),
+            \get_class($this->requestParametersTrait),
             'getBooleanRequestParameter'
         );
 

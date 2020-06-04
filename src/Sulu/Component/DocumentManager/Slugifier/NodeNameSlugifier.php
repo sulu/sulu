@@ -40,7 +40,7 @@ class NodeNameSlugifier implements SlugifierInterface
         $text = $this->slugifier->slugify($text);
 
         // jackrabbit can not handle node-names which contains a number followed by "e" e.g. 10e
-        $text = preg_replace('((\d+)([eE]))', '$1-$2', $text);
+        $text = \preg_replace('((\d+)([eE]))', '$1-$2', $text);
 
         return $text;
     }

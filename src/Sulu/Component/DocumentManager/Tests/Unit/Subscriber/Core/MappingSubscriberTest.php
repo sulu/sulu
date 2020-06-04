@@ -283,7 +283,7 @@ class MappingSubscriberTest extends TestCase
         $this->persistEvent->getNode()->willReturn($this->node->reveal());
         $this->encoder->encode('system', 'hello', 'de')->willReturn('sys:hello');
         $this->accessor->get('test')->willReturn(['key' => 'value']);
-        $this->node->setProperty('sys:hello', json_encode(['key' => 'value']))->shouldBeCalled();
+        $this->node->setProperty('sys:hello', \json_encode(['key' => 'value']))->shouldBeCalled();
         $this->mappingSubscriber->handleMapping($this->persistEvent->reveal());
     }
 
@@ -308,7 +308,7 @@ class MappingSubscriberTest extends TestCase
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
         $this->encoder->encode('system', 'hello', 'de')->willReturn('sys:hello');
         $this->metadataFactory->hasMetadataForClass('stdClass')->willReturn(true);
-        $this->node->getPropertyValueWithDefault('sys:hello', null)->willReturn(json_encode(['key' => 'value']));
+        $this->node->getPropertyValueWithDefault('sys:hello', null)->willReturn(\json_encode(['key' => 'value']));
         $this->accessor->set('test', ['key' => 'value'])->shouldBeCalled();
 
         $this->mappingSubscriber->handleHydrate($this->hydrateEvent->reveal());

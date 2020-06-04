@@ -32,7 +32,7 @@ class LinkProviderPool implements LinkProviderPoolInterface
     public function getProvider($name)
     {
         if (!$this->hasProvider($name)) {
-            throw new ProviderNotFoundException($name, array_keys($this->providers));
+            throw new ProviderNotFoundException($name, \array_keys($this->providers));
         }
 
         return $this->providers[$name];
@@ -40,7 +40,7 @@ class LinkProviderPool implements LinkProviderPoolInterface
 
     public function hasProvider($name)
     {
-        return array_key_exists($name, $this->providers);
+        return \array_key_exists($name, $this->providers);
     }
 
     public function getConfiguration()
@@ -50,6 +50,6 @@ class LinkProviderPool implements LinkProviderPoolInterface
             $configuration[$name] = $provider->getConfiguration();
         }
 
-        return array_filter($configuration);
+        return \array_filter($configuration);
     }
 }

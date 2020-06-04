@@ -46,9 +46,9 @@ class DownloadBuildCommand extends Command
      */
     private $remoteArchive;
 
-    const ASSETS_DIR = DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR;
+    const ASSETS_DIR = \DIRECTORY_SEPARATOR . 'assets' . \DIRECTORY_SEPARATOR . 'admin' . \DIRECTORY_SEPARATOR;
 
-    const BUILD_DIR = DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'build' . DIRECTORY_SEPARATOR . 'admin';
+    const BUILD_DIR = \DIRECTORY_SEPARATOR . 'public' . \DIRECTORY_SEPARATOR . 'build' . \DIRECTORY_SEPARATOR . 'admin';
 
     const REPOSITORY_NAME = 'skeleton';
 
@@ -72,10 +72,10 @@ class DownloadBuildCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!preg_match(static::VERSION_REGEX, $this->suluVersion)) {
+        if (!\preg_match(static::VERSION_REGEX, $this->suluVersion)) {
             throw new \Exception(
                 'This command only works for tagged sulu versions matching semantic versioning, not for branches etc. '
-                . 'Given version was "' . $this->suluVersion . '".' . PHP_EOL
+                . 'Given version was "' . $this->suluVersion . '".' . \PHP_EOL
                 . 'You would have to run "npm install" and "npm run build" in your "assets/admin" folder on your own.'
             );
         }
@@ -99,8 +99,8 @@ class DownloadBuildCommand extends Command
             || $localWebpackConfigJsHash !== $remoteWebpackConfigJsHash
         ) {
             throw new \Exception(
-                sprintf(
-                    'The files in the local "%s" folder do not match the ones in the remote repository "%s".' . PHP_EOL
+                \sprintf(
+                    'The files in the local "%s" folder do not match the ones in the remote repository "%s".' . \PHP_EOL
                     . 'Either bundles with custom JavaScript have been added, which means it has to be done manually '
                     . 'with NPM, or the files in your repository are outdated and have to be copied from the remote '
                     . 'repository.',
@@ -110,7 +110,7 @@ class DownloadBuildCommand extends Command
             );
         }
 
-        $tempDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . static::REPOSITORY_NAME . uniqid(rand(), true);
+        $tempDirectory = \sys_get_temp_dir() . \DIRECTORY_SEPARATOR . static::REPOSITORY_NAME . \uniqid(\rand(), true);
         $tempFileZip = $tempDirectory . '.zip';
 
         $output->writeln('<info>Download remote repository...</info>');
@@ -118,7 +118,7 @@ class DownloadBuildCommand extends Command
 
         $filesystem = new Filesystem();
 
-        file_put_contents($tempFileZip, $response->getContent());
+        \file_put_contents($tempFileZip, $response->getContent());
 
         $zip = new \ZipArchive();
         if ($zip->open($tempFileZip)) {
@@ -128,10 +128,10 @@ class DownloadBuildCommand extends Command
 
             $buildDir = $this->projectDir . static::BUILD_DIR;
             $extractedFolderName = static::REPOSITORY_NAME . '-' . $this->suluVersion;
-            $tempProjectDir = $tempDirectory . DIRECTORY_SEPARATOR . $extractedFolderName;
+            $tempProjectDir = $tempDirectory . \DIRECTORY_SEPARATOR . $extractedFolderName;
 
             $output->writeln('<info>Delete old build folder...</info>');
-            $filesystem->remove(glob($buildDir . DIRECTORY_SEPARATOR . '*'));
+            $filesystem->remove(\glob($buildDir . \DIRECTORY_SEPARATOR . '*'));
 
             $output->writeln('<info>Copy build folder from remote repository...</info>');
             $filesystem->mirror(
@@ -144,19 +144,19 @@ class DownloadBuildCommand extends Command
             $output->writeln('<error>Error when unpacking the ZIP archive</error>');
         }
 
-        unlink($tempFileZip);
+        \unlink($tempFileZip);
 
         return 0;
     }
 
     private function getLocaleFileHash(string $path)
     {
-        return $this->hash(file_get_contents($this->projectDir . $path));
+        return $this->hash(\file_get_contents($this->projectDir . $path));
     }
 
     private function getRemoteFileHash(string $path)
     {
-        $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
+        $path = \str_replace(\DIRECTORY_SEPARATOR, '/', $path);
         $response = $this->httpClient->request('GET', $this->remoteRepository . $path);
 
         return $this->hash($response->getContent());
@@ -165,6 +165,6 @@ class DownloadBuildCommand extends Command
     private function hash($content)
     {
         // we remove all whitespaces as the developer could change the indention or/and the line breaks of this files
-        return hash('sha256', preg_replace('/\s+/', '', $content));
+        return \hash('sha256', \preg_replace('/\s+/', '', $content));
     }
 }

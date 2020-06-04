@@ -98,7 +98,7 @@ EOT
         $groups = $input->getOption('group');
 
         if (empty($groups)) {
-            $fixtures = iterator_to_array($this->fixtures);
+            $fixtures = \iterator_to_array($this->fixtures);
         } else {
             $fixtures = $this->getFixturesByGroups($groups);
         }
@@ -107,11 +107,11 @@ EOT
             $output->writeln('<info>Could not find any fixtures.</info>');
 
             if ($input->getOption('verbose')) {
-                $output->writeln(sprintf(
+                $output->writeln(\sprintf(
                     'Found fixtures: <comment>"</comment>%s<comment>"</comment>',
-                        implode('<comment>", "</comment>', array_map(function($fixture) {
-                            return get_class($fixture);
-                        }, iterator_to_array($this->fixtures)))
+                        \implode('<comment>", "</comment>', \array_map(function($fixture) {
+                            return \get_class($fixture);
+                        }, \iterator_to_array($this->fixtures)))
                 ));
             }
 
@@ -121,14 +121,14 @@ EOT
         // check for deprecated document fixtures using the container directly
         foreach ($fixtures as $fixture) {
             if ($fixture instanceof ContainerAwareInterface) {
-                @trigger_error(
-                    sprintf(
-                        'Document fixtures with the "%s" are deprecated since sulu/sulu 2.1,' . PHP_EOL .
+                @\trigger_error(
+                    \sprintf(
+                        'Document fixtures with the "%s" are deprecated since sulu/sulu 2.1,' . \PHP_EOL .
                         'use dependency injection for the "%s" service instead.',
                         ContainerAwareInterface::class,
-                        get_class($fixture)
+                        \get_class($fixture)
                     ),
-                    E_USER_DEPRECATED
+                    \E_USER_DEPRECATED
                 );
             }
         }
@@ -136,9 +136,9 @@ EOT
         $this->executor->execute($fixtures, false === $append, false === $noInitialize, $output);
 
         $output->writeln('');
-        $output->writeln(sprintf(
+        $output->writeln(\sprintf(
             '<info>Done. Executed </info>%s</info><info> fixtures.</info>',
-            count($fixtures)
+            \count($fixtures)
         ));
 
         return 0;
@@ -157,11 +157,11 @@ EOT
             // similar to the doctrine fixture bundle the class name is used also as a group
             $fixtureGroups = [$this->getClassGroup($fixture)];
             if ($fixture instanceof DocumentFixtureGroupInterface) {
-                $fixtureGroups = array_merge($fixtureGroups, $fixture->getGroups());
+                $fixtureGroups = \array_merge($fixtureGroups, $fixture->getGroups());
             }
 
             // add to fixtures when one of the provided groups match
-            if (count(array_intersect($groups, $fixtureGroups))) {
+            if (\count(\array_intersect($groups, $fixtureGroups))) {
                 $fixtures[] = $fixture;
 
                 continue;
@@ -173,8 +173,8 @@ EOT
 
     private function getClassGroup(DocumentFixtureInterface $fixture): string
     {
-        $path = explode('\\', get_class($fixture));
+        $path = \explode('\\', \get_class($fixture));
 
-        return array_pop($path);
+        return \array_pop($path);
     }
 }

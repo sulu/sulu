@@ -61,7 +61,7 @@ abstract class AbstractFilingSubscriber implements EventSubscriberInterface
         $currentDefaultNode = $this->defaultSession->getRootNode();
         $currentLiveNode = $this->liveSession->getRootNode();
 
-        $pathSegments = explode('/', ltrim($path, '/'));
+        $pathSegments = \explode('/', \ltrim($path, '/'));
         foreach ($pathSegments as $pathSegment) {
             $uuid = UUIDHelper::generateUUID();
             $currentDefaultNode = $this->createNode($currentDefaultNode, $pathSegment, $uuid);

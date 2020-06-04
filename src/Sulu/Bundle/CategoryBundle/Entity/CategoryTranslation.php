@@ -133,7 +133,7 @@ class CategoryTranslation implements CategoryTranslationInterface
             $media->setPosition($position);
         }
 
-        for (; $position < count($medias); ++$position) {
+        for (; $position < \count($medias); ++$position) {
             $media = new CategoryTranslationMedia($this, $medias[$position], $position + 1);
             $this->medias->add($media);
         }

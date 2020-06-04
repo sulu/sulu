@@ -70,7 +70,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
         foreach ($listFinder as $listFile) {
             $listMetadata = $this->listXmlLoader->load($listFile->getPathName());
             $listKey = $listMetadata->getKey();
-            if (!array_key_exists($listKey, $listsMetadataByKey)) {
+            if (!\array_key_exists($listKey, $listsMetadataByKey)) {
                 $listsMetadataByKey[$listKey] = [];
             }
 
@@ -123,7 +123,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             }
 
             $configCache = $this->getConfigCache($listKey);
-            $configCache->write(serialize($fieldDescriptors), array_map(function(ListMetadata $listMetadata) {
+            $configCache->write(\serialize($fieldDescriptors), \array_map(function(ListMetadata $listMetadata) {
                 return new FileResource($listMetadata->getResource());
             }, $listsMetadata));
         }
@@ -142,11 +142,11 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $this->warmUp($this->cachePath);
         }
 
-        if (!file_exists($configCache->getPath())) {
+        if (!\file_exists($configCache->getPath())) {
             return null;
         }
 
-        return unserialize(file_get_contents($configCache->getPath()));
+        return \unserialize(\file_get_contents($configCache->getPath()));
     }
 
     private function getSingleFieldDescriptor(AbstractPropertyMetadata $propertyMetadata, $options)
@@ -226,7 +226,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
         $options
     ): DoctrineConcatenationFieldDescriptor {
         return new DoctrineConcatenationFieldDescriptor(
-            array_map(
+            \array_map(
                 function(FieldMetadata $fieldMetadata) use ($propertyMetadata, $options) {
                     return $this->getFieldDescriptor($propertyMetadata, $fieldMetadata, $options);
                 },
@@ -327,7 +327,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
     private function resolveOptions($string, array $options)
     {
         foreach ($options as $key => $value) {
-            $string = str_replace(':' . $key, $value, $string);
+            $string = \str_replace(':' . $key, $value, $string);
         }
 
         return $string;
@@ -353,10 +353,10 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
     private function getConfigCache($listKey)
     {
         return new ConfigCache(
-            sprintf(
+            \sprintf(
                 '%s%s%s',
                 $this->cachePath,
-                DIRECTORY_SEPARATOR,
+                \DIRECTORY_SEPARATOR,
                 $listKey
             ),
             $this->debug

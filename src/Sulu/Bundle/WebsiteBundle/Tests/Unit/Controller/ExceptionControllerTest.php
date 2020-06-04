@@ -57,7 +57,7 @@ class ExceptionControllerTest extends TestCase
 
     public function setUp(): void
     {
-        if (!class_exists(BaseExceptionController::class)) {
+        if (!\class_exists(BaseExceptionController::class)) {
             $this->markTestSkipped();
         }
 

@@ -81,7 +81,7 @@ class WebspaceExport extends Export implements WebspaceExportInterface
         }
 
         if (!$webspaceKey || !$locale) {
-            throw new \Exception(sprintf('Invalid parameters for export "%s (%s)"', $webspaceKey, $locale));
+            throw new \Exception(\sprintf('Invalid parameters for export "%s (%s)"', $webspaceKey, $locale));
         }
 
         return $this->templating->render(
@@ -99,7 +99,7 @@ class WebspaceExport extends Export implements WebspaceExportInterface
 
         $this->output->writeln('<info>Loading Data…</info>');
 
-        $progress = new ProgressBar($this->output, count($documents));
+        $progress = new ProgressBar($this->output, \count($documents));
         $progress->start();
 
         foreach ($documents as $key => $document) {
@@ -192,12 +192,12 @@ class WebspaceExport extends Export implements WebspaceExportInterface
             'locale' => $this->createProperty('locale', $document->getLocale(), $settingOptions),
             'navigationContexts' => $this->createProperty(
                 'navigationContexts',
-                json_encode($document->getNavigationContexts()),
+                \json_encode($document->getNavigationContexts()),
                 $settingOptions
             ),
             'permissions' => $this->createProperty(
                 'permissions',
-                json_encode($document->getPermissions()),
+                \json_encode($document->getPermissions()),
                 $settingOptions
             ),
             'shadowLocale' => $this->createProperty('shadowLocale', $document->getShadowLocale(), $settingOptions),
@@ -269,21 +269,21 @@ class WebspaceExport extends Export implements WebspaceExportInterface
         $where[] = '([jcr:mixinTypes] = "sulu:page" OR [jcr:mixinTypes] = "sulu:home")';
 
         // filter by webspace key
-        $where[] = sprintf(
+        $where[] = \sprintf(
             '(ISDESCENDANTNODE("/cmf/%s/contents") OR ISSAMENODE("/cmf/%s/contents"))',
             $webspaceKey,
             $webspaceKey
         );
 
         // filter by locale
-        $where[] = sprintf(
+        $where[] = \sprintf(
             '[i18n:%s-template] IS NOT NULL',
             $this->exportLocale
         );
 
         // filter by uuid
         if ($uuid) {
-            $where[] = sprintf('[jcr:uuid] = "%s"', $uuid);
+            $where[] = \sprintf('[jcr:uuid] = "%s"', $uuid);
         }
 
         $nodeWhere = $this->buildNodeUuidToPathWhere($nodes, false);
@@ -297,7 +297,7 @@ class WebspaceExport extends Export implements WebspaceExportInterface
             $where[] = $ignoreWhere;
         }
 
-        $queryString = 'SELECT * FROM [nt:unstructured] AS a WHERE ' . implode(' AND ', $where);
+        $queryString = 'SELECT * FROM [nt:unstructured] AS a WHERE ' . \implode(' AND ', $where);
 
         return $queryString;
     }
@@ -320,12 +320,12 @@ class WebspaceExport extends Export implements WebspaceExportInterface
             $wheres = [];
             foreach ($nodes as $key => $uuid) {
                 if (isset($paths[$uuid])) {
-                    $wheres[] = sprintf('ISDESCENDANTNODE("%s")', $paths[$uuid]);
+                    $wheres[] = \sprintf('ISDESCENDANTNODE("%s")', $paths[$uuid]);
                 }
             }
 
             if (!empty($wheres)) {
-                return ($not ? 'NOT ' : '') . '(' . implode(' OR ', $wheres) . ')';
+                return ($not ? 'NOT ' : '') . '(' . \implode(' OR ', $wheres) . ')';
             }
         }
     }
@@ -345,10 +345,10 @@ class WebspaceExport extends Export implements WebspaceExportInterface
 
         $where = [];
         foreach ($uuids as $uuid) {
-            $where[] = sprintf('[jcr:uuid] = "%s"', $uuid);
+            $where[] = \sprintf('[jcr:uuid] = "%s"', $uuid);
         }
 
-        $queryString = 'SELECT * FROM [nt:unstructured] AS a WHERE ' . implode(' OR ', $where);
+        $queryString = 'SELECT * FROM [nt:unstructured] AS a WHERE ' . \implode(' OR ', $where);
 
         $query = $this->documentManager->createQuery($queryString);
 

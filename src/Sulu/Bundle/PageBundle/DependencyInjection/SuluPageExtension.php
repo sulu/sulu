@@ -259,7 +259,7 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
-        if (array_key_exists('SuluSearchBundle', $bundles)) {
+        if (\array_key_exists('SuluSearchBundle', $bundles)) {
             $this->processSearch($config, $loader, $container);
         }
 
@@ -279,7 +279,7 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
         $loader->load('link-tag.xml');
         $loader->load('versioning.xml');
 
-        if (array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
+        if (\array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
             $loader->load('rule.xml');
         }
 

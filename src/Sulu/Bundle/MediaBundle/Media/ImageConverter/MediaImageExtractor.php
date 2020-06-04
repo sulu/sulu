@@ -49,7 +49,7 @@ class MediaImageExtractor implements MediaImageExtractorInterface
 
     public function extract($resource)
     {
-        $mimeType = mime_content_type($resource);
+        $mimeType = \mime_content_type($resource);
 
         if ('application/pdf' === $mimeType) {
             return $this->convertPdfToImage($resource);
@@ -59,7 +59,7 @@ class MediaImageExtractor implements MediaImageExtractorInterface
             return $this->convertPsdToImage($resource);
         }
 
-        if (fnmatch('video/*', $mimeType)) {
+        if (\fnmatch('video/*', $mimeType)) {
             return $this->convertVideoToImage($resource);
         }
 
@@ -83,9 +83,9 @@ class MediaImageExtractor implements MediaImageExtractorInterface
             ' -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -sOutputFile=' . $temporaryFilePath . ' ' .
             '-dJPEGQ=100 -r300x300 -q ' . $temporaryFilePath . ' -c quit 2> /dev/null';
 
-        shell_exec($command);
-        $output = file_get_contents($temporaryFilePath);
-        unlink($temporaryFilePath);
+        \shell_exec($command);
+        $output = \file_get_contents($temporaryFilePath);
+        \unlink($temporaryFilePath);
 
         if (!$output) {
             throw new GhostScriptNotFoundException(
@@ -115,11 +115,11 @@ class MediaImageExtractor implements MediaImageExtractorInterface
             $image = $this->imagine->open($temporaryFilePath);
             $image = $image->layers()[0];
 
-            unlink($temporaryFilePath);
+            \unlink($temporaryFilePath);
 
             return $this->createTemporaryResource($image->get('png'));
         } catch (RuntimeException $e) {
-            unlink($temporaryFilePath);
+            \unlink($temporaryFilePath);
 
             throw new InvalidMimeTypeForPreviewException('image/vnd.adobe.photoshop');
         }
@@ -135,12 +135,12 @@ class MediaImageExtractor implements MediaImageExtractorInterface
     private function convertVideoToImage($resource)
     {
         $source = $this->createTemporaryFile($resource);
-        $destination = tempnam(sys_get_temp_dir(), 'media');
+        $destination = \tempnam(\sys_get_temp_dir(), 'media');
         $this->videoThumbnail->generate($source, '00:00:02:01', $destination);
 
-        $extractedImage = file_get_contents($destination);
-        unlink($source);
-        unlink($destination);
+        $extractedImage = \file_get_contents($destination);
+        \unlink($source);
+        \unlink($destination);
 
         return $this->createTemporaryResource($extractedImage);
     }
@@ -152,9 +152,9 @@ class MediaImageExtractor implements MediaImageExtractorInterface
      */
     private function createTemporaryResource(string $content)
     {
-        $tempResource = fopen('php://memory', 'r+');
-        fwrite($tempResource, $content);
-        rewind($tempResource);
+        $tempResource = \fopen('php://memory', 'r+');
+        \fwrite($tempResource, $content);
+        \rewind($tempResource);
 
         return $tempResource;
     }
@@ -168,10 +168,10 @@ class MediaImageExtractor implements MediaImageExtractorInterface
      */
     private function createTemporaryFile($resource)
     {
-        $path = tempnam(sys_get_temp_dir(), 'media');
-        $tempResource = fopen($path, 'w');
+        $path = \tempnam(\sys_get_temp_dir(), 'media');
+        $tempResource = \fopen($path, 'w');
 
-        stream_copy_to_stream($resource, $tempResource);
+        \stream_copy_to_stream($resource, $tempResource);
 
         return $path;
     }

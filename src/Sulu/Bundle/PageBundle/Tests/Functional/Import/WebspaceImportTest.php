@@ -244,8 +244,8 @@ class WebspaceImportTest extends SuluTestCase
         try {
             $fs->copy($this->distPath, $this->path);
 
-            $distContent = file_get_contents($this->path, true);
-            $newContent = str_replace(
+            $distContent = \file_get_contents($this->path, true);
+            $newContent = \str_replace(
                 [
                     '%uuid_page_0%',
                     '%uuid_page_1%',
@@ -257,7 +257,7 @@ class WebspaceImportTest extends SuluTestCase
                 $distContent
             );
 
-            file_put_contents($this->path, $newContent);
+            \file_put_contents($this->path, $newContent);
         } catch (IOExceptionInterface $e) {
             echo 'An error occurred while creating your directory at ' . $e->getPath();
         }
@@ -265,8 +265,8 @@ class WebspaceImportTest extends SuluTestCase
         try {
             $fs->copy($this->distPathRU, $this->pathRU);
 
-            $distContent = file_get_contents($this->pathRU, true);
-            $newContent = str_replace(
+            $distContent = \file_get_contents($this->pathRU, true);
+            $newContent = \str_replace(
                 [
                     '%uuid_page_0%',
                     '%uuid_page_1%',
@@ -278,7 +278,7 @@ class WebspaceImportTest extends SuluTestCase
                 $distContent
             );
 
-            file_put_contents($this->pathRU, $newContent);
+            \file_put_contents($this->pathRU, $newContent);
         } catch (IOExceptionInterface $e) {
             echo 'An error occurred while creating your directory at ' . $e->getPath();
         }

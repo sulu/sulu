@@ -42,7 +42,7 @@ class Select extends SimpleContentType
         $languageCode,
         $segmentKey = null
     ) {
-        $property->setValue(json_decode($value, true));
+        $property->setValue(\json_decode($value, true));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

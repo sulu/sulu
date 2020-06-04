@@ -34,7 +34,7 @@ class ResourceTabViewBuilder implements ResourceTabViewBuilderInterface
     public function addLocales(array $locales): ResourceTabViewBuilderInterface
     {
         $oldLocales = $this->view->getOption('locales');
-        $newLocales = $oldLocales ? array_merge($oldLocales, $locales) : $locales;
+        $newLocales = $oldLocales ? \array_merge($oldLocales, $locales) : $locales;
         $this->view->setOption('locales', $newLocales);
 
         return $this;
@@ -78,14 +78,14 @@ class ResourceTabViewBuilder implements ResourceTabViewBuilderInterface
             );
         }
 
-        if ($this->view->getOption('locales') && false === strpos($this->view->getPath(), ':locale')) {
+        if ($this->view->getOption('locales') && false === \strpos($this->view->getPath(), ':locale')) {
             throw new \DomainException(
                 'A view for a ResourceTabs view needs a ":locale" placeholder in its URL'
                 . ' if some "locales" have been set.'
             );
         }
 
-        if (!$this->view->getOption('locales') && false !== strpos($this->view->getPath(), ':locale')) {
+        if (!$this->view->getOption('locales') && false !== \strpos($this->view->getPath(), ':locale')) {
             throw new \DomainException(
                 'A view for a ResourceTabs view needs a ":locale" placeholder in its URL'
                 . ' if some "locales" have been set.'

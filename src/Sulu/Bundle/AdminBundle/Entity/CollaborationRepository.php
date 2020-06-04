@@ -59,15 +59,15 @@ class CollaborationRepository
         $value = $cacheItem->get() ?? [];
         $value[$collaboration->getConnectionId()] = $collaboration;
 
-        $value = array_filter($value, function(Collaboration $collaboration) {
-            return $collaboration->getChanged() > time() - $this->threshold;
+        $value = \array_filter($value, function(Collaboration $collaboration) {
+            return $collaboration->getChanged() > \time() - $this->threshold;
         });
 
         $cacheItem->set($value);
 
         $this->cache->save($cacheItem);
 
-        return array_values($value);
+        return \array_values($value);
     }
 
     /**
@@ -76,14 +76,14 @@ class CollaborationRepository
     public function delete(Collaboration $collaboration): array
     {
         $cacheItem = $this->cache->getItem($this->getCacheIdFromCollaboration($collaboration));
-        $value = array_filter($cacheItem->get() ?? [], function(Collaboration $cachedCollaboration) use ($collaboration) {
+        $value = \array_filter($cacheItem->get() ?? [], function(Collaboration $cachedCollaboration) use ($collaboration) {
             return $collaboration->getConnectionId() !== $cachedCollaboration->getConnectionId();
         });
         $cacheItem->set($value);
 
         $this->cache->save($cacheItem);
 
-        return array_values($value);
+        return \array_values($value);
     }
 
     private function getCacheIdFromCollaboration(Collaboration $collaboration): string

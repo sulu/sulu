@@ -43,7 +43,7 @@ class FormatController extends AbstractRestController implements ClassResourceIn
 
         return $this->handleView($this->view(
             new CollectionRepresentation(
-                array_values($this->formatManager->getFormatDefinitions($locale)),
+                \array_values($this->formatManager->getFormatDefinitions($locale)),
                 'formats'
             )
         ));

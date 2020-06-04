@@ -27,7 +27,7 @@ class NavigationItemCollection
 
     public function get(string $navigationItemName): NavigationItem
     {
-        if (!array_key_exists($navigationItemName, $this->navigationItems)) {
+        if (!\array_key_exists($navigationItemName, $this->navigationItems)) {
             throw new NavigationItemNotFoundException($navigationItemName);
         }
 
@@ -36,7 +36,7 @@ class NavigationItemCollection
 
     public function has(string $navigationItemName): bool
     {
-        return array_key_exists($navigationItemName, $this->navigationItems);
+        return \array_key_exists($navigationItemName, $this->navigationItems);
     }
 
     /**

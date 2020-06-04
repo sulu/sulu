@@ -55,7 +55,7 @@ class MediaRedirectController
             return new RedirectResponse($media->getUrl());
         }
 
-        if (!array_key_exists($format, $media->getFormats())) {
+        if (!\array_key_exists($format, $media->getFormats())) {
             throw new NotFoundHttpException();
         }
 

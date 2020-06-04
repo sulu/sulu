@@ -30,7 +30,7 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
 {
     public function prepend(ContainerBuilder $container)
     {
-        if ($container->hasExtension('twig') && class_exists(ExceptionController::class)) {
+        if ($container->hasExtension('twig') && \class_exists(ExceptionController::class)) {
             $container->prependExtensionConfig('twig', [
                 'exception_controller' => null,
             ]);
@@ -129,7 +129,7 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
             $container->setAlias(DefaultController::class, 'sulu_website.default_controller')
                 ->setPublic(true);
 
-            if (class_exists(ExceptionController::class)) {
+            if (\class_exists(ExceptionController::class)) {
                 $loader->load('exception_controller.xml');
             }
         }

@@ -58,7 +58,7 @@ class ResourcelocatorController implements ClassResourceInterface
         $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspaceKey);
 
         $resourceLocator = $resourceLocatorStrategy->generate(
-            implode('-', $this->getRequestParameter($request, 'parts', true)),
+            \implode('-', $this->getRequestParameter($request, 'parts', true)),
             $this->getRequestParameter($request, 'parentId'),
             $webspaceKey,
             $this->getRequestParameter($request, 'locale')

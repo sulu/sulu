@@ -198,7 +198,7 @@ class Teaser
      */
     private function getValue($name, array $item, $default)
     {
-        if (!array_key_exists($name, $item)) {
+        if (!\array_key_exists($name, $item)) {
             return $default;
         }
 

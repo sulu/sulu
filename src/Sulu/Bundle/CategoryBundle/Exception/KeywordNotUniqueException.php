@@ -27,7 +27,7 @@ class KeywordNotUniqueException extends RestException
     public function __construct(KeywordInterface $keyword)
     {
         parent::__construct(
-            sprintf('The keyword "%s" is already in use.', $keyword->getKeyword()),
+            \sprintf('The keyword "%s" is already in use.', $keyword->getKeyword()),
             2001
         );
 

@@ -28,7 +28,7 @@ trait KernelTrait
 
     protected static function createKernel(array $options = []): SuluKernel
     {
-        $options = array_merge(static::getKernelConfiguration(), $options);
+        $options = \array_merge(static::getKernelConfiguration(), $options);
 
         if (null === static::$class) {
             static::$class = static::getKernelClass();

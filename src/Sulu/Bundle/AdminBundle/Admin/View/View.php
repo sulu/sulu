@@ -121,7 +121,7 @@ class View
 
     public function getOption(string $key)
     {
-        if (!array_key_exists($key, $this->options)) {
+        if (!\array_key_exists($key, $this->options)) {
             return null;
         }
 
@@ -130,7 +130,7 @@ class View
 
     public function mergeViewOptions(self $route): self
     {
-        $this->options = array_merge($route->options, $this->options);
+        $this->options = \array_merge($route->options, $this->options);
 
         return $this;
     }
@@ -144,7 +144,7 @@ class View
 
     public function getAttributeDefault(string $key)
     {
-        if (!array_key_exists($key, $this->attributeDefaults)) {
+        if (!\array_key_exists($key, $this->attributeDefaults)) {
             return null;
         }
 

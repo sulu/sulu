@@ -26,14 +26,14 @@ class TrailingSlashEnhancer extends AbstractEnhancer
         array $defaults,
         Request $request
     ) {
-        if ('/' === $request->getRequestUri() || '/' !== substr($request->getRequestUri(), -1, 1)) {
+        if ('/' === $request->getRequestUri() || '/' !== \substr($request->getRequestUri(), -1, 1)) {
             return [];
         }
 
         return [
             '_finalized' => true,
             '_controller' => 'sulu_website.redirect_controller:redirectAction',
-            'url' => substr($request->getUri(), 0, -1),
+            'url' => \substr($request->getUri(), 0, -1),
         ];
     }
 }

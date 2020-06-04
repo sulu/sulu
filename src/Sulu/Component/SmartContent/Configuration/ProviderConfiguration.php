@@ -150,7 +150,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
 
     public function hasSorting(): bool
     {
-        return count($this->sorting) > 0;
+        return \count($this->sorting) > 0;
     }
 
     public function setSorting(array $sorting)

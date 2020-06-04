@@ -58,7 +58,7 @@ class RouteControllerTest extends SuluTestCase
             ]
         );
 
-        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals($result['resourcelocator'], '/prefix/2019/test');
@@ -79,7 +79,7 @@ class RouteControllerTest extends SuluTestCase
 
         $this->client->request(
             'GET',
-            sprintf(
+            \sprintf(
                 '/api/routes?resourceKey=%s&id=%s&locale=%s',
                 self::TEST_RESOURCE_KEY,
                 self::TEST_ID,
@@ -87,7 +87,7 @@ class RouteControllerTest extends SuluTestCase
             )
         );
 
-        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertCount(1, $result['_embedded']['routes']);
@@ -101,7 +101,7 @@ class RouteControllerTest extends SuluTestCase
     {
         $this->client->request(
             'GET',
-            sprintf(
+            \sprintf(
                 '/api/routes?resourceKey=%s&id=%s&locale=%s',
                 'articles',
                 self::TEST_ID,
@@ -109,7 +109,7 @@ class RouteControllerTest extends SuluTestCase
             )
         );
 
-        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
@@ -127,7 +127,7 @@ class RouteControllerTest extends SuluTestCase
 
         $this->client->request(
             'GET',
-            sprintf(
+            \sprintf(
                 '/api/routes?history=true&resourceKey=%s&id=%s&locale=%s',
                 self::TEST_RESOURCE_KEY,
                 self::TEST_ID,
@@ -135,7 +135,7 @@ class RouteControllerTest extends SuluTestCase
             )
         );
 
-        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertCount(3, $result['_embedded']['routes']);
@@ -174,14 +174,14 @@ class RouteControllerTest extends SuluTestCase
 
         $this->client->request(
             'GET',
-            sprintf(
+            \sprintf(
                 '/api/routes?history=true&resourceKey=%s&id=%s&locale=%s',
                 self::TEST_RESOURCE_KEY,
                 self::TEST_ID,
                 self::TEST_LOCALE
             )
         );
-        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertCount(0, $result['_embedded']['routes']);
     }
@@ -203,7 +203,7 @@ class RouteControllerTest extends SuluTestCase
 
         $this->client->request(
             'GET',
-            sprintf(
+            \sprintf(
                 '/api/routes?history=true&resourceKey=%s&id=%s&locale=%s',
                 self::TEST_RESOURCE_KEY,
                 self::TEST_ID,
@@ -211,7 +211,7 @@ class RouteControllerTest extends SuluTestCase
             )
         );
 
-        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertCount(2, $result['_embedded']['routes']);

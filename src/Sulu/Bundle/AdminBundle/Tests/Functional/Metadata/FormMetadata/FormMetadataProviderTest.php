@@ -41,7 +41,7 @@ class FormMetadataProviderTest extends KernelTestCase
         $this->assertInstanceOf(FormMetadata::class, $form);
         $this->assertCount(3, $form->getItems());
         $schema = $form->getSchema()->toJsonSchema();
-        $this->assertCount(2, array_keys($schema));
+        $this->assertCount(2, \array_keys($schema));
     }
 
     public function testGetMetadataFromStructureLoader()
@@ -60,7 +60,7 @@ class FormMetadataProviderTest extends KernelTestCase
         );
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
         $this->assertCount(1, $typedForm->getForms());
-        $this->assertEquals(['default'], array_keys($typedForm->getForms()));
+        $this->assertEquals(['default'], \array_keys($typedForm->getForms()));
 
         $typedForm = $this->formMetadataProvider->getMetadata(
             'page',
@@ -85,7 +85,7 @@ class FormMetadataProviderTest extends KernelTestCase
         );
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
         $this->assertCount(1, $typedForm->getForms());
-        $this->assertEquals(['default'], array_keys($typedForm->getForms()));
+        $this->assertEquals(['default'], \array_keys($typedForm->getForms()));
 
         $typedForm = $this->formMetadataProvider->getMetadata(
             'page',
@@ -94,7 +94,7 @@ class FormMetadataProviderTest extends KernelTestCase
         );
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
         $this->assertCount(1, $typedForm->getForms());
-        $this->assertEquals(['overview'], array_keys($typedForm->getForms()));
+        $this->assertEquals(['overview'], \array_keys($typedForm->getForms()));
 
         $typedForm = $this->formMetadataProvider->getMetadata(
             'page',
@@ -103,7 +103,7 @@ class FormMetadataProviderTest extends KernelTestCase
         );
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
         $this->assertCount(1, $typedForm->getForms());
-        $this->assertEquals(['default'], array_keys($typedForm->getForms()));
+        $this->assertEquals(['default'], \array_keys($typedForm->getForms()));
 
         $typedForm = $this->formMetadataProvider->getMetadata(
             'page',
@@ -112,6 +112,6 @@ class FormMetadataProviderTest extends KernelTestCase
         );
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
         $this->assertCount(1, $typedForm->getForms());
-        $this->assertEquals(['default'], array_keys($typedForm->getForms()));
+        $this->assertEquals(['default'], \array_keys($typedForm->getForms()));
     }
 }

@@ -37,7 +37,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
             'webspace' => 'sulu_io',
         ]);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/test1-test2', $response->resourcelocator);
     }
 
@@ -54,7 +54,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
                 'url' => '/products',
             ]
         );
-        $parentPage = json_decode($this->client->getResponse()->getContent(), true);
+        $parentPage = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->client->request('POST', '/api/resourcelocators?action=generate', [
             'parentId' => $parentPage['id'],
@@ -63,7 +63,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
             'webspace' => 'sulu_io',
         ]);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/products/test1-test2', $response->resourcelocator);
     }
 
@@ -88,7 +88,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
             'webspace' => 'sulu_io',
         ]);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/test-1', $response->resourcelocator);
     }
 }

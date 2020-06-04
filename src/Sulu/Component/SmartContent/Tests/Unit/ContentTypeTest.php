@@ -208,7 +208,7 @@ class ContentTypeTest extends TestCase
 
         $node->expects($this->once())->method('setProperty')->with(
             'property',
-            json_encode(
+            \json_encode(
                 [
                     'dataSource' => [
                         'home/products',
@@ -307,7 +307,7 @@ class ContentTypeTest extends TestCase
         $property->expects($this->at(1))->method('getValue')
             ->willReturn($config);
         $property->expects($this->any())->method('getValue')
-            ->willReturn(array_merge($config, ['page' => 1, 'hasNextPage' => true]));
+            ->willReturn(\array_merge($config, ['page' => 1, 'hasNextPage' => true]));
 
         $property->expects($this->any())->method('getParams')
             ->will($this->returnValue($parameter));
@@ -379,7 +379,7 @@ class ContentTypeTest extends TestCase
 
         $viewData = $smartContent->getViewData($property);
 
-        $this->assertContains(array_merge($config, ['page' => 1, 'hasNextPage' => true]), $viewData);
+        $this->assertContains(\array_merge($config, ['page' => 1, 'hasNextPage' => true]), $viewData);
     }
 
     public function testGetContentData()
@@ -784,14 +784,14 @@ class ContentTypeTest extends TestCase
             ],
             ['webspaceKey' => 'sulu_io', 'locale' => 'de'],
             $limitResult,
-            $page < 1 ? 1 : ($page > PHP_INT_MAX ? PHP_INT_MAX : $page),
+            $page < 1 ? 1 : ($page > \PHP_INT_MAX ? \PHP_INT_MAX : $page),
             $pageSize
         )->willReturn(new DataProviderResult($expectedData, $hasNextPage));
 
         $property->expects($this->at(1))->method('getValue')
             ->willReturn($config);
         $property->expects($this->any())->method('getValue')
-            ->willReturn(array_merge($config, ['page' => $page, 'hasNextPage' => $hasNextPage]));
+            ->willReturn(\array_merge($config, ['page' => $page, 'hasNextPage' => $hasNextPage]));
 
         $property->expects($this->any())->method('getParams')
             ->will($this->returnValue(['max_per_page' => new PropertyParameter('max_per_page', $pageSize)]));
@@ -804,7 +804,7 @@ class ContentTypeTest extends TestCase
 
         $viewData = $smartContent->getViewData($property);
         $this->assertEquals(
-            array_merge(
+            \array_merge(
                 [
                     'dataSource' => null,
                     'includeSubFolders' => null,
@@ -852,11 +852,11 @@ class ContentTypeTest extends TestCase
 
         $this->pageDataProvider->resolveResourceItems(
             [
-                'categories' => array_key_exists('categories', $value) ? $value['categories'] : [],
-                'websiteCategories' => array_key_exists('websiteCategories', $value) ? $value['websiteCategories'] : [],
+                'categories' => \array_key_exists('categories', $value) ? $value['categories'] : [],
+                'websiteCategories' => \array_key_exists('websiteCategories', $value) ? $value['websiteCategories'] : [],
                 'websiteCategoriesOperator' => 'OR',
-                'tags' => array_key_exists('tags', $value) ? $value['tags'] : [],
-                'websiteTags' => array_key_exists('websiteTags', $value) ? $value['websiteTags'] : [],
+                'tags' => \array_key_exists('tags', $value) ? $value['tags'] : [],
+                'websiteTags' => \array_key_exists('websiteTags', $value) ? $value['websiteTags'] : [],
                 'websiteTagsOperator' => 'OR',
                 'dataSource' => $value['dataSource'],
                 'excluded' => [$value['dataSource']],
@@ -985,13 +985,13 @@ class ContentTypeTest extends TestCase
         $this->targetGroupStore->getTargetGroupId()->shouldNotBeCalled();
         $this->pageDataProvider->resolveResourceItems(
             Argument::that(function($value) {
-                return !array_key_exists('targetGroupId', $value);
+                return !\array_key_exists('targetGroupId', $value);
             }),
             Argument::cetera()
         )->willReturn(new DataProviderResult([], false));
 
         $property->setValue(Argument::that(function($value) {
-            return !array_key_exists('targetGroupId', $value);
+            return !\array_key_exists('targetGroupId', $value);
         }))->shouldBeCalled();
 
         $smartContent->getContentData($property->reveal());

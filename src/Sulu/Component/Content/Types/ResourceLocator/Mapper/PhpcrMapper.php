@@ -150,7 +150,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
         foreach ($node->getReferences('sulu:content') as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
                 $routeNode = $ref->getParent();
-                if (0 !== strpos($routeNode->getPath(), $routePath)) {
+                if (0 !== \strpos($routeNode->getPath(), $routePath)) {
                     continue;
                 }
 
@@ -228,7 +228,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
         );
 
         // sort history descending
-        usort(
+        \usort(
             $result,
             function(ResourceLocatorInformation $item1, ResourceLocatorInformation $item2) {
                 return $item1->getCreated() < $item2->getCreated();
@@ -240,8 +240,8 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
 
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        $resourceLocator = ltrim($resourceLocator, '/');
-        $path = sprintf(
+        $resourceLocator = \ltrim($resourceLocator, '/');
+        $path = \sprintf(
             '%s/%s',
             $this->getWebspaceRouteNodeBasePath($webspaceKey, $languageCode, $segmentKey),
             $resourceLocator
@@ -256,7 +256,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
                 $route = $this->getWebspaceRouteNode($webspaceKey, $languageCode, $segmentKey);
             }
         } catch (PathNotFoundException $e) {
-            throw new ResourceLocatorNotFoundException(sprintf('Path "%s" not found', $path), null, $e);
+            throw new ResourceLocatorNotFoundException(\sprintf('Path "%s" not found', $path), null, $e);
         }
 
         if ($route->hasProperty('sulu:content') && $route->hasProperty('sulu:history')) {
@@ -276,7 +276,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
                 );
             }
         } else {
-            throw new ResourceLocatorNotFoundException(sprintf(
+            throw new ResourceLocatorNotFoundException(\sprintf(
                 'Route has "%s" does not have either the "sulu:content" or "sulu:history" properties',
                 $route->getPath()
             ));
@@ -343,7 +343,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
     private function isUnique(NodeInterface $root, $path)
     {
         // check if root has node
-        return !$root->hasNode(ltrim($path, '/'));
+        return !$root->hasNode(\ltrim($path, '/'));
     }
 
     /**
@@ -388,7 +388,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
     {
         $basePath = $this->getWebspaceRouteNodeBasePath($webspaceKey, $languageCode, $segmentKey);
 
-        return '/' . ltrim($basePath, '/') . ('' !== $relPath ? '/' . ltrim($relPath, '/') : '');
+        return '/' . \ltrim($basePath, '/') . ('' !== $relPath ? '/' . \ltrim($relPath, '/') : '');
     }
 
     /**
@@ -408,9 +408,9 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
             return '/';
         }
 
-        if (false !== strpos($path, $basePath . '/')) {
-            $result = str_replace($basePath . '/', '/', $path);
-            if (0 === strpos($result, '/')) {
+        if (false !== \strpos($path, $basePath . '/')) {
+            $result = \str_replace($basePath . '/', '/', $path);
+            if (0 === \strpos($result, '/')) {
                 return $result;
             }
         }

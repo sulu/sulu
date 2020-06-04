@@ -542,7 +542,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         $address = null;
         $main = null;
 
-        if (!is_null($addresses)) {
+        if (!\is_null($addresses)) {
             /* @var AccountAddress $accountAddress */
             foreach ($addresses as $address) {
                 if ($conditionCallback($address->getAddress())) {
@@ -682,7 +682,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            array_filter($emails, function($email) {
+            \array_filter($emails, function($email) {
                 return $email['email'];
             }),
             $get,
@@ -791,7 +791,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            array_filter($urls, function($url) {
+            \array_filter($urls, function($url) {
                 return $url['website'];
             }),
             $get,
@@ -926,7 +926,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            array_filter($phones, function($phone) {
+            \array_filter($phones, function($phone) {
                 return $phone['phone'];
             }),
             $get,
@@ -1037,7 +1037,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            array_filter($faxes, function($fax) {
+            \array_filter($faxes, function($fax) {
                 return $fax['fax'];
             }),
             $get,
@@ -1139,7 +1139,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
         $result = $this->processSubEntities(
             $entities,
-            array_filter($socialMediaProfiles, function($socialMediaProfile) {
+            \array_filter($socialMediaProfiles, function($socialMediaProfile) {
                 return $socialMediaProfile['username'];
             }),
             $get,
@@ -1390,11 +1390,11 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     protected function getBooleanValue($value)
     {
-        if (is_string($value)) {
+        if (\is_string($value)) {
             return 'true' === $value ? true : false;
-        } elseif (is_bool($value)) {
+        } elseif (\is_bool($value)) {
             return $value;
-        } elseif (is_numeric($value)) {
+        } elseif (\is_numeric($value)) {
             return 1 === $value ? true : false;
         }
     }
@@ -1611,7 +1611,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
                 $entity->setBic($data['bic']);
             }
             $entity->setIban($data['iban']);
-            $entity->setPublic($this->getBooleanValue((array_key_exists('public', $data) ? $data['public'] : false)));
+            $entity->setPublic($this->getBooleanValue((\array_key_exists('public', $data) ? $data['public'] : false)));
             if (isset($data['bankName'])) {
                 $entity->setBankName($data['bankName']);
             }
@@ -1639,7 +1639,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
             $entity->setBic($data['bic']);
         }
         $entity->setIban($data['iban']);
-        $entity->setPublic($this->getBooleanValue((array_key_exists('public', $data) ? $data['public'] : false)));
+        $entity->setPublic($this->getBooleanValue((\array_key_exists('public', $data) ? $data['public'] : false)));
         if (isset($data['bankName'])) {
             $entity->setBankName($data['bankName']);
         }
@@ -1725,7 +1725,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     private function getProperty($data, $key, $default = null)
     {
-        if (array_key_exists($key, $data)) {
+        if (\array_key_exists($key, $data)) {
             return $data[$key];
         }
 
@@ -1739,7 +1739,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     private function resetIndexOfSubentites($entities)
     {
-        if ($entities && count($entities) > 0 && method_exists($entities, 'getValues')) {
+        if ($entities && \count($entities) > 0 && \method_exists($entities, 'getValues')) {
             $newEntities = $entities->getValues();
             $entities->clear();
             foreach ($newEntities as $value) {

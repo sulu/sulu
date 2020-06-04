@@ -51,7 +51,7 @@ class DataProviderRepositoryTraitTest extends TestCase
     public function testFindByFiltersIds()
     {
         $findByFiltersIdsReflection = new \ReflectionMethod(
-            get_class($this->dataProviderRepositoryTrait),
+            \get_class($this->dataProviderRepositoryTrait),
             'findByFiltersIds'
         );
         $findByFiltersIdsReflection->setAccessible(true);
@@ -78,7 +78,7 @@ class DataProviderRepositoryTraitTest extends TestCase
     public function testFindByFiltersIdsWithDatasourceWithoutIncludeSubFolders()
     {
         $findByFiltersIdsReflection = new \ReflectionMethod(
-            get_class($this->dataProviderRepositoryTrait),
+            \get_class($this->dataProviderRepositoryTrait),
             'findByFiltersIds'
         );
         $findByFiltersIdsReflection->setAccessible(true);

@@ -47,7 +47,7 @@ class LanguageController implements ClassResourceInterface
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             $i = 0;
             foreach ($webspace->getAllLocalizations() as $localization) {
-                if (!in_array($localization->getLocale(), $locales)) {
+                if (!\in_array($localization->getLocale(), $locales)) {
                     $locales[] = $localization->getLocale();
                     $localizations[] = [
                         'localization' => $localization->getLocale(),
@@ -60,7 +60,7 @@ class LanguageController implements ClassResourceInterface
 
         $data = [
             '_embedded' => $localizations,
-            'total' => count($localizations),
+            'total' => \count($localizations),
         ];
 
         return new JsonResponse($data);

@@ -92,7 +92,7 @@ class TimestampableSubscriber implements EventSubscriber
             return;
         }
 
-        $meta = $event->getObjectManager()->getClassMetadata(get_class($entity));
+        $meta = $event->getObjectManager()->getClassMetadata(\get_class($entity));
 
         $created = $meta->getFieldValue($entity, self::CREATED_FIELD);
         if (null === $created) {

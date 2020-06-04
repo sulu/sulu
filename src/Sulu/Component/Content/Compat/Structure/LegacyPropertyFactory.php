@@ -78,7 +78,7 @@ class LegacyPropertyFactory
         }
 
         if (null === $property->getType()) {
-            throw new \RuntimeException(sprintf(
+            throw new \RuntimeException(\sprintf(
                 'Property name "%s" has no type.',
                 $property->getName()
             ));
@@ -117,7 +117,7 @@ class LegacyPropertyFactory
         foreach ($arrayParams as $arrayParam) {
             $value = $arrayParam['value'];
 
-            if (is_array($value)) {
+            if (\is_array($value)) {
                 $value = $this->convertArrayToParameters($value);
             }
 

@@ -93,12 +93,12 @@ class Version201511171538 implements VersionInterface, ContainerAwareInterface
         $properties = [];
 
         // find templates containing date fields
-        $structureMetadatas = array_merge(
+        $structureMetadatas = \array_merge(
             $this->structureMetadataFactory->getStructures('page'),
             $this->structureMetadataFactory->getStructures('snippet')
         );
 
-        $structureMetadatas = array_filter(
+        $structureMetadatas = \array_filter(
             $structureMetadatas,
             function(StructureMetadata $structureMetadata) use (&$properties) {
                 $structureName = $structureMetadata->getName();
@@ -166,7 +166,7 @@ class Version201511171538 implements VersionInterface, ContainerAwareInterface
     {
         foreach ($this->localizationManager->getLocalizations() as $localization) {
             $rows = $this->session->getWorkspace()->getQueryManager()->createQuery(
-                sprintf(
+                \sprintf(
                     'SELECT * FROM [nt:unstructured] WHERE [%s] = "%s" OR [%s] = "%s"',
                     $this->propertyEncoder->localizedSystemName('template', $localization->getLocale()),
                     $structureMetadata->getName(),

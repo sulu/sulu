@@ -579,7 +579,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     {
         $tags = [];
 
-        if (!is_null($this->getTags())) {
+        if (!\is_null($this->getTags())) {
             foreach ($this->getTags() as $tag) {
                 $tags[] = $tag->getName();
             }
@@ -632,7 +632,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     public function getMainAccount()
     {
         $mainAccountContact = $this->getMainAccountContact();
-        if (!is_null($mainAccountContact)) {
+        if (!\is_null($mainAccountContact)) {
             return $mainAccountContact->getAccount();
         }
 
@@ -646,7 +646,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     {
         $accountContacts = $this->getAccountContacts();
 
-        if (!is_null($accountContacts)) {
+        if (!\is_null($accountContacts)) {
             /** @var AccountContact $accountContact */
             foreach ($accountContacts as $accountContact) {
                 if ($accountContact->getMain()) {
@@ -663,7 +663,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         $contactAddresses = $this->getContactAddresses();
         $addresses = [];
 
-        if (!is_null($contactAddresses)) {
+        if (!\is_null($contactAddresses)) {
             /** @var ContactAddress $contactAddress */
             foreach ($contactAddresses as $contactAddress) {
                 $address = $contactAddress->getAddress();
@@ -744,7 +744,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     {
         $contactAddresses = $this->getContactAddresses();
 
-        if (!is_null($contactAddresses)) {
+        if (!\is_null($contactAddresses)) {
             /** @var ContactAddress $contactAddress */
             foreach ($contactAddresses as $contactAddress) {
                 if ((bool) $contactAddress->getMain()) {

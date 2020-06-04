@@ -37,7 +37,7 @@ class GeolocatorControllerTest extends TestCase
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(
             ['_embedded' => ['geolocator_locations' => ['test']]],
-            json_decode($response->getContent(), true)
+            \json_decode($response->getContent(), true)
         );
     }
 }

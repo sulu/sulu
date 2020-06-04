@@ -46,9 +46,9 @@ class PathCleanup implements PathCleanupInterface
     public function __construct(array $replacers, SluggerInterface $slugger = null)
     {
         if (null === $slugger) {
-            @trigger_error(
+            @\trigger_error(
                 'Initializing the PathCleanup without a slugger is deprecated since Sulu 2.1.',
-                E_USER_DEPRECATED
+                \E_USER_DEPRECATED
             );
             $slugger = new AsciiSlugger();
         }
@@ -70,37 +70,37 @@ class PathCleanup implements PathCleanupInterface
         $replacers = $this->replacers['default'];
 
         if (null !== $languageCode) {
-            $replacers = array_merge(
+            $replacers = \array_merge(
                 $replacers,
                 (isset($this->replacers[$languageCode]) ? $this->replacers[$languageCode] : [])
             );
         }
 
-        if (count($replacers) > 0) {
+        if (\count($replacers) > 0) {
             foreach ($replacers as $key => $value) {
-                $dirty = str_replace($key, $value, $dirty);
+                $dirty = \str_replace($key, $value, $dirty);
             }
         }
         // replace multiple dash with one
-        $dirty = preg_replace('/([-]+)/', '-', $dirty);
+        $dirty = \preg_replace('/([-]+)/', '-', $dirty);
 
         // remove dash before slash
-        $dirty = preg_replace('/[-]+\//', '/', $dirty);
+        $dirty = \preg_replace('/[-]+\//', '/', $dirty);
 
         // remove dash after slash
-        $dirty = preg_replace('/\/[-]+/', '/', $dirty);
+        $dirty = \preg_replace('/\/[-]+/', '/', $dirty);
 
         // delete dash at the beginning or end
-        $dirty = preg_replace('/^([-])/', '', $dirty);
-        $dirty = preg_replace('/([-])$/', '', $dirty);
+        $dirty = \preg_replace('/^([-])/', '', $dirty);
+        $dirty = \preg_replace('/([-])$/', '', $dirty);
 
         // replace multiple slashes
-        $dirty = preg_replace('/([\/]+)/', '/', $dirty);
+        $dirty = \preg_replace('/([\/]+)/', '/', $dirty);
 
-        $parts = explode('/', $dirty);
+        $parts = \explode('/', $dirty);
         $newParts = [];
 
-        $totalParts = count($parts);
+        $totalParts = \count($parts);
         foreach ($parts as $i => $part) {
             $slug = $this->slugger->slug($part, '-', $languageCode);
             $slug = $slug->lower();
@@ -109,7 +109,7 @@ class PathCleanup implements PathCleanupInterface
             }
         }
 
-        return implode('/', $newParts);
+        return \implode('/', $newParts);
     }
 
     /**
@@ -121,6 +121,6 @@ class PathCleanup implements PathCleanupInterface
      */
     public function validate($path)
     {
-        return '/' === $path || 1 === preg_match($this->pattern, $path);
+        return '/' === $path || 1 === \preg_match($this->pattern, $path);
     }
 }

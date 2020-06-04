@@ -49,14 +49,14 @@ class DebugEventDispatcher extends EventDispatcher
 
         foreach ($listeners as $listener) {
             list($listenerInstance, $methodName) = $listener;
-            $className = get_class($listenerInstance);
+            $className = \get_class($listenerInstance);
             $name = $this->getDebugClassName($className);
 
             $listenerStopwatch = $this->stopwatch->start($className . '->' . $methodName, 'document_manager_listener');
 
-            call_user_func($listener, $event, $eventName, $this);
+            \call_user_func($listener, $event, $eventName, $this);
 
-            $this->logger->debug(sprintf(
+            $this->logger->debug(\sprintf(
                 '%-40s%-20s %s', $name, $methodName, $event->getDebugMessage()
             ));
 
@@ -76,12 +76,12 @@ class DebugEventDispatcher extends EventDispatcher
 
     private function getDebugClassName($className)
     {
-        $parts = explode('\\', $className);
-        $last = array_pop($parts);
-        $parts = array_map(function($part) {
-            return substr($part, 0, 1);
+        $parts = \explode('\\', $className);
+        $last = \array_pop($parts);
+        $parts = \array_map(function($part) {
+            return \substr($part, 0, 1);
         }, $parts);
 
-        return implode('\\', $parts) . '\\' . $last;
+        return \implode('\\', $parts) . '\\' . $last;
     }
 }

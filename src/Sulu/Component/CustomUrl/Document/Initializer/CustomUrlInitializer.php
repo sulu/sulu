@@ -75,19 +75,19 @@ class CustomUrlInitializer implements InitializerInterface
                 ['%base%', $webspace->getKey(), '%custom_urls%', '%custom_urls_routes%']
             );
 
-            $output->writeln(sprintf('  <info>%s</info>:', $webspace->getName()));
+            $output->writeln(\sprintf('  <info>%s</info>:', $webspace->getName()));
 
             if (true === $this->nodeManager->has($itemsPath)) {
-                $output->writeln(sprintf('  [ ] <info>items path:</info>: %s ', $itemsPath));
+                $output->writeln(\sprintf('  [ ] <info>items path:</info>: %s ', $itemsPath));
             } else {
-                $output->writeln(sprintf('  [+] <info>items path:</info>: %s ', $itemsPath));
+                $output->writeln(\sprintf('  [+] <info>items path:</info>: %s ', $itemsPath));
                 $this->nodeManager->createPath($itemsPath);
             }
 
             if (true === $this->nodeManager->has($routesPath)) {
-                $output->writeln(sprintf('  [ ] <info>items path:</info>: %s ', $routesPath));
+                $output->writeln(\sprintf('  [ ] <info>items path:</info>: %s ', $routesPath));
             } else {
-                $output->writeln(sprintf('  [+] <info>items path:</info>: %s ', $routesPath));
+                $output->writeln(\sprintf('  [+] <info>items path:</info>: %s ', $routesPath));
                 $this->nodeManager->createPath($routesPath);
             }
 

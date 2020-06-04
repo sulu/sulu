@@ -25,7 +25,7 @@ class TitleAlreadyExistsException extends RestException
 
     public function __construct($title)
     {
-        parent::__construct(sprintf('Title "%s" already in use', $title), 9001);
+        parent::__construct(\sprintf('Title "%s" already in use', $title), 9001);
 
         $this->title = $title;
     }

@@ -89,7 +89,7 @@ class MediaSelectionContentTypeTest extends TestCase
 
         $node->expects($this->once())->method('setProperty')->with(
             'property',
-            json_encode(
+            \json_encode(
                 [
                     'ids' => [1, 2, 3, 4],
                     'displayOption' => 'right',
@@ -145,7 +145,7 @@ class MediaSelectionContentTypeTest extends TestCase
 
         $node->expects($this->once())->method('setProperty')->with(
             'property',
-            json_encode(
+            \json_encode(
                 [
                     'ids' => [1, 2, 3, 4],
                     'displayOption' => 'right',
@@ -195,7 +195,7 @@ class MediaSelectionContentTypeTest extends TestCase
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
 
-        $property->expects($this->once())->method('setValue')->with(json_decode($config, true))->will(
+        $property->expects($this->once())->method('setValue')->with(\json_decode($config, true))->will(
             $this->returnValue(null)
         );
 
@@ -299,7 +299,7 @@ class MediaSelectionContentTypeTest extends TestCase
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
 
-        $property->expects($this->once())->method('setValue')->with(json_decode($config, true))->will(
+        $property->expects($this->once())->method('setValue')->with(\json_decode($config, true))->will(
             $this->returnValue(null)
         );
 
@@ -352,7 +352,7 @@ class MediaSelectionContentTypeTest extends TestCase
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
 
-        $property->expects($this->once())->method('setValue')->with(json_decode($config, true))->will(
+        $property->expects($this->once())->method('setValue')->with(\json_decode($config, true))->will(
             $this->returnValue(null)
         );
 

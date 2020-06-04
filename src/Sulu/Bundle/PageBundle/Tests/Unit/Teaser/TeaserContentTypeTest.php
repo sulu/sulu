@@ -96,7 +96,7 @@ class TeaserContentTypeTest extends TestCase
             ['type' => 'media', 'id' => 1, 'mediaId' => null],
         ];
 
-        $teasers = array_map(
+        $teasers = \array_map(
             function($item) {
                 $teaser = $this->prophesize(Teaser::class);
                 $teaser->getType()->willReturn($item['type']);

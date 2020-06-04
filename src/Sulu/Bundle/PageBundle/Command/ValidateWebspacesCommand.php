@@ -115,8 +115,8 @@ class ValidateWebspacesCommand extends Command
 
         $output->writeln($messages);
 
-        if (count($this->errors)) {
-            $this->output->writeln(sprintf('<error>%s Errors found.</error>', count($this->errors)));
+        if (\count($this->errors)) {
+            $this->output->writeln(\sprintf('<error>%s Errors found.</error>', \count($this->errors)));
 
             return 1;
         }
@@ -130,7 +130,7 @@ class ValidateWebspacesCommand extends Command
     private function outputWebspace(Webspace $webspace)
     {
         $this->output->writeln(
-            sprintf(
+            \sprintf(
                 '<info>%s</info> - <info>%s</info>',
                 $webspace->getKey(),
                 $webspace->getName()
@@ -173,7 +173,7 @@ class ValidateWebspacesCommand extends Command
         foreach ($structures as $structure) {
             $template = $structure->getKey();
 
-            if (!$structure->getInternal() && !in_array($template, $checkedTemplates)) {
+            if (!$structure->getInternal() && !\in_array($template, $checkedTemplates)) {
                 $this->validatePageTemplate('page', $structure->getKey());
             }
         }
@@ -200,7 +200,7 @@ class ValidateWebspacesCommand extends Command
 
         foreach ($webspace->getAllLocalizations() as $localization) {
             $this->output->writeln(
-                sprintf(
+                \sprintf(
                     '    %s',
                     $localization->getLocale()
                 )
@@ -221,12 +221,12 @@ class ValidateWebspacesCommand extends Command
         try {
             $this->validateStructure($type, $template);
         } catch (\Exception $e) {
-            $status = sprintf('<error>failed: %s</error>', $e->getMessage());
+            $status = \sprintf('<error>failed: %s</error>', $e->getMessage());
             $this->errors[] = $e->getMessage();
         }
 
         $this->output->writeln(
-            sprintf(
+            \sprintf(
                 '    %s: %s -> %s',
                 $type,
                 $template,
@@ -253,7 +253,7 @@ class ValidateWebspacesCommand extends Command
 
         if (!$metadata) {
             throw new \RuntimeException(
-                sprintf(
+                \sprintf(
                     'Structure meta data not found for type "%s" and template "%s".',
                     $type,
                     $template
@@ -264,7 +264,7 @@ class ValidateWebspacesCommand extends Command
         foreach (['title', 'url'] as $property) {
             if (!$metadata->hasProperty($property)) {
                 throw new \RuntimeException(
-                    sprintf(
+                    \sprintf(
                         'No property "%s" found in "%s" template.',
                         $property,
                         $metadata->getName()
@@ -292,12 +292,12 @@ class ValidateWebspacesCommand extends Command
         try {
             $this->validateTwigTemplate($template);
         } catch (\Exception $e) {
-            $status = sprintf('<error>failed: %s</error>', $e->getMessage());
+            $status = \sprintf('<error>failed: %s</error>', $e->getMessage());
             $this->errors[] = $e->getMessage();
         }
 
         $this->output->writeln(
-            sprintf(
+            \sprintf(
                 '    %s: %s -> %s',
                 $type,
                 $template,
@@ -317,7 +317,7 @@ class ValidateWebspacesCommand extends Command
     {
         $loader = $this->twig->getLoader();
         if (!$loader->exists($template)) {
-            throw new \Exception(sprintf(
+            throw new \Exception(\sprintf(
                 'Unable to find template "%s".',
                 $template
             ));
@@ -340,12 +340,12 @@ class ValidateWebspacesCommand extends Command
         } catch (\InvalidArgumentException $e) {
         }
 
-        list($class, $method) = explode('::', $controllerAction);
+        list($class, $method) = \explode('::', $controllerAction);
 
-        if (!method_exists($class, $method)) {
+        if (!\method_exists($class, $method)) {
             $reflector = new \ReflectionClass($class);
 
-            throw new \Exception(sprintf(
+            throw new \Exception(\sprintf(
                 'Controller Action "%s" not exist in "%s" (looked into: %s).',
                 $method,
                 $class,

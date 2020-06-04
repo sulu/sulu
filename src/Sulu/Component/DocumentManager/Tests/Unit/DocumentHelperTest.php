@@ -29,7 +29,7 @@ class DocumentHelperTest extends TestCase
     public function testDebugTitle()
     {
         $title = DocumentHelper::getDebugTitle($this->document);
-        $this->assertEquals(32, strlen($title));
+        $this->assertEquals(32, \strlen($title));
     }
 
     /**

@@ -34,7 +34,7 @@ class SwiftMailerListener implements \Swift_Events_SendListener
 
     public function __construct(\Traversable $markupParser, RequestStack $requestStack, string $defaultLocale)
     {
-        $this->markupParser = iterator_to_array($markupParser);
+        $this->markupParser = \iterator_to_array($markupParser);
         $this->requestStack = $requestStack;
         $this->defaultLocale = $defaultLocale;
     }
@@ -46,7 +46,7 @@ class SwiftMailerListener implements \Swift_Events_SendListener
         $body = $message->getBody();
         $format = $message->getBodyContentType();
 
-        if (count($explodedFormat = explode('/', $format)) > 1) {
+        if (\count($explodedFormat = \explode('/', $format)) > 1) {
             $format = $explodedFormat[1];
         }
 
@@ -57,7 +57,7 @@ class SwiftMailerListener implements \Swift_Events_SendListener
             $locale = $this->defaultLocale;
         }
 
-        if (!$body || !array_key_exists($format, $this->markupParser)) {
+        if (!$body || !\array_key_exists($format, $this->markupParser)) {
             return;
         }
 

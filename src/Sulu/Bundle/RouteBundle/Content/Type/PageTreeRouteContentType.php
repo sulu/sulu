@@ -124,10 +124,10 @@ class PageTreeRouteContentType extends SimpleContentType
         if (!$suffix) {
             $suffix = $this->generateSuffix($node, $languageCode);
         } else {
-            $suffix = trim($suffix, '/');
+            $suffix = \trim($suffix, '/');
         }
 
-        $path = rtrim($page['path'], '/') . '/' . $suffix;
+        $path = \rtrim($page['path'], '/') . '/' . $suffix;
         $path = $this->resolveConflicts($path);
         $suffix = '/' . $this->getSuffix($path, $page['path'] ?? '/');
 
@@ -193,7 +193,7 @@ class PageTreeRouteContentType extends SimpleContentType
      */
     private function getAttribute(string $name, array $value, $default = null)
     {
-        if (!array_key_exists($name, $value)) {
+        if (!\array_key_exists($name, $value)) {
             return $default;
         }
 
@@ -208,7 +208,7 @@ class PageTreeRouteContentType extends SimpleContentType
         $document = $this->documentRegistry->getDocumentForNode($node, $locale);
         $route = $this->chainRouteGenerator->generate($document);
 
-        return trim($route->getPath(), '/');
+        return \trim($route->getPath(), '/');
     }
 
     /**
@@ -216,7 +216,7 @@ class PageTreeRouteContentType extends SimpleContentType
      */
     private function getSuffix(string $path, string $pagePath): string
     {
-        return trim(substr($path, strlen(rtrim($pagePath, '/')) + 1), '/');
+        return \trim(\substr($path, \strlen(\rtrim($pagePath, '/')) + 1), '/');
     }
 
     /**

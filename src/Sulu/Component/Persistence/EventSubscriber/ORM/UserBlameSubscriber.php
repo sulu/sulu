@@ -141,7 +141,7 @@ class UserBlameSubscriber implements EventSubscriber
                 continue;
             }
 
-            $meta = $manager->getClassMetadata(get_class($blameEntity));
+            $meta = $manager->getClassMetadata(\get_class($blameEntity));
 
             $changeset = $unitOfWork->getEntityChangeSet($blameEntity);
             $recompute = false;

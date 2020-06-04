@@ -48,7 +48,7 @@ class RepresentationSubscriber implements EventSubscriberInterface
         $data = $representation->toArray();
 
         foreach ($data as $key => $value) {
-            $visitor->visitProperty(new StaticPropertyMetadata(get_class($representation), $key, $value), $value);
+            $visitor->visitProperty(new StaticPropertyMetadata(\get_class($representation), $key, $value), $value);
         }
     }
 }

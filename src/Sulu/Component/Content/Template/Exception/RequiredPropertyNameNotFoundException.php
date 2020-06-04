@@ -28,7 +28,7 @@ class RequiredPropertyNameNotFoundException extends InvalidXmlException
         $this->propertyName = $propertyName;
         parent::__construct(
             $template,
-            sprintf(
+            \sprintf(
                 'The property with the name "%s" is required, but was not found in the template "%s"',
                 $this->propertyName,
                 $template

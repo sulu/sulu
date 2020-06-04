@@ -22,7 +22,7 @@ class SuluVersionPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $dir = realpath($container->getParameter('kernel.project_dir'));
+        $dir = \realpath($container->getParameter('kernel.project_dir'));
 
         $container->setParameter('sulu.version', $this->getSuluVersion($dir));
         $container->setParameter('app.version', $this->getAppVersion($dir));
@@ -45,7 +45,7 @@ class SuluVersionPass implements CompilerPassInterface
             return $version;
         }
 
-        $composer = json_decode($composerFile->getContents(), true);
+        $composer = \json_decode($composerFile->getContents(), true);
         foreach ($composer['packages'] as $package) {
             if ('sulu/sulu' === $package['name']) {
                 return $package['version'];
@@ -72,8 +72,8 @@ class SuluVersionPass implements CompilerPassInterface
             return $version;
         }
 
-        $composerJson = json_decode($composerFile->getContents(), true);
-        if (!array_key_exists('version', $composerJson)) {
+        $composerJson = \json_decode($composerFile->getContents(), true);
+        if (!\array_key_exists('version', $composerJson)) {
             return $version;
         }
 

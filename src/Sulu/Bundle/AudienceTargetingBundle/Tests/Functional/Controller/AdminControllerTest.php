@@ -34,7 +34,7 @@ class AdminControllerTest extends SuluTestCase
         $this->client->request('GET', '/admin/config');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $audienceTargetingConfig = $response->sulu_audience_targeting;
 
@@ -49,7 +49,7 @@ class AdminControllerTest extends SuluTestCase
         $this->client->request('GET', '/admin/metadata/list/target_groups');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertObjectHasAttribute('id', $response);
         $this->assertObjectHasAttribute('title', $response);
@@ -63,7 +63,7 @@ class AdminControllerTest extends SuluTestCase
         $this->client->request('GET', '/admin/metadata/form/target_group_details');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $form = $response->form;
 

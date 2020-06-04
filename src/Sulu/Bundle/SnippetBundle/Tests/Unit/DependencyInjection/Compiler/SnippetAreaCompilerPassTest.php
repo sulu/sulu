@@ -125,8 +125,8 @@ class SnippetAreaCompilerPassTest extends TestCase
         $structureMetaData = $this->prophesize(StructureMetadata::class);
         $structureMetaData->getName()->willReturn($name);
         $structureMetaData->getAreas()->willReturn($areas);
-        $structureMetaData->getTitle('de')->willReturn(ucfirst($name) . ' DE');
-        $structureMetaData->getTitle('en')->willReturn(ucfirst($name) . ' EN');
+        $structureMetaData->getTitle('de')->willReturn(\ucfirst($name) . ' DE');
+        $structureMetaData->getTitle('en')->willReturn(\ucfirst($name) . ' EN');
 
         return $structureMetaData;
     }

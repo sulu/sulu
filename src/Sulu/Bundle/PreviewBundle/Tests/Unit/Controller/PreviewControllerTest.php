@@ -68,7 +68,7 @@ class PreviewControllerTest extends TestCase
             ->willReturn('test-token');
 
         $response = $this->previewController->startAction($request->reveal());
-        $this->assertEquals(json_encode(['token' => 'test-token']), $response->getContent());
+        $this->assertEquals(\json_encode(['token' => 'test-token']), $response->getContent());
     }
 
     public function testRender()
@@ -155,7 +155,7 @@ class PreviewControllerTest extends TestCase
         $response = $this->previewController->updateAction($request->reveal());
 
         $this->assertEquals(
-            json_encode(['content' => '<html><body><h1>SULU is awesome</h1></body></html>'], $this->encodingOptions),
+            \json_encode(['content' => '<html><body><h1>SULU is awesome</h1></body></html>'], $this->encodingOptions),
             $response->getContent()
         );
     }
@@ -178,7 +178,7 @@ class PreviewControllerTest extends TestCase
 
         $response = $this->previewController->updateAction($request->reveal());
         $this->assertEquals(
-            json_encode(
+            \json_encode(
                 ['content' => '<html><body><a href="/test">SULU is awesome</a></body></html>'],
                 $this->encodingOptions
             ),
@@ -204,7 +204,7 @@ class PreviewControllerTest extends TestCase
 
         $response = $this->previewController->updateContextAction($request->reveal());
         $this->assertEquals(
-            json_encode(['content' => '<html><body><h1>SULU is awesome</h1></body></html>'], $this->encodingOptions),
+            \json_encode(['content' => '<html><body><h1>SULU is awesome</h1></body></html>'], $this->encodingOptions),
             $response->getContent()
         );
     }
@@ -227,7 +227,7 @@ class PreviewControllerTest extends TestCase
 
         $response = $this->previewController->updateContextAction($request->reveal());
         $this->assertEquals(
-            json_encode(
+            \json_encode(
                 ['content' => '<html><body><a href="/test">SULU is awesome</a></body></html>'],
                 $this->encodingOptions
             ),

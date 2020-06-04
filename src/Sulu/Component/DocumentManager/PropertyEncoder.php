@@ -40,7 +40,7 @@ class PropertyEncoder
             case 'content':
                 return $this->contentName($name);
             default:
-                throw new \InvalidArgumentException(sprintf(
+                throw new \InvalidArgumentException(\sprintf(
                     'Invalid encoding "%s"', $encoding
                 ));
         }
@@ -104,7 +104,7 @@ class PropertyEncoder
             return $name;
         }
 
-        return sprintf(
+        return \sprintf(
             '%s:%s',
             $prefix,
             $name
@@ -116,10 +116,10 @@ class PropertyEncoder
         $prefix = $this->namespaceRegistry->getPrefix($role);
 
         if (!$prefix) {
-            return sprintf('%s-%s', $locale, $name);
+            return \sprintf('%s-%s', $locale, $name);
         }
 
-        return sprintf(
+        return \sprintf(
             '%s:%s-%s',
             $prefix,
             $locale,

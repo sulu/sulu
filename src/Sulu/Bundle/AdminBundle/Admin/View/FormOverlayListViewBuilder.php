@@ -57,7 +57,7 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
      */
     public function setRequestParameters(array $requestParameters): FormOverlayListViewBuilderInterface
     {
-        @trigger_error('The usage of the "setRequestParameters" method in the FormOverlayListViewBuilder is deprecated. Please use "addRequestParameters" instead.', E_USER_DEPRECATED);
+        @\trigger_error('The usage of the "setRequestParameters" method in the FormOverlayListViewBuilder is deprecated. Please use "addRequestParameters" instead.', \E_USER_DEPRECATED);
 
         $this->setRequestParametersToView($this->view, $requestParameters);
 
@@ -193,7 +193,7 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
     public function addResourceStorePropertiesToFormRequest(array $resourceStorePropertiesToFormRequest): FormOverlayListViewBuilderInterface
     {
         $oldResourceStorePropertiesToFormRequest = $this->view->getOption('resourceStorePropertiesToFormRequest');
-        $newResourceStorePropertiesToFormRequest = $oldResourceStorePropertiesToFormRequest ? array_merge($oldResourceStorePropertiesToFormRequest, $resourceStorePropertiesToFormRequest) : $resourceStorePropertiesToFormRequest;
+        $newResourceStorePropertiesToFormRequest = $oldResourceStorePropertiesToFormRequest ? \array_merge($oldResourceStorePropertiesToFormRequest, $resourceStorePropertiesToFormRequest) : $resourceStorePropertiesToFormRequest;
         $this->view->setOption('resourceStorePropertiesToFormRequest', $newResourceStorePropertiesToFormRequest);
 
         return $this;
@@ -250,13 +250,13 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
             );
         }
 
-        if ($this->view->getOption('locales') && false === strpos($this->view->getPath(), ':locale')) {
+        if ($this->view->getOption('locales') && false === \strpos($this->view->getPath(), ':locale')) {
             throw new \DomainException(
                 'A view for a form-overlay-list needs a ":locale" placeholder in its URL if some "locales" have been set.'
             );
         }
 
-        if (!$this->view->getOption('locales') && false !== strpos($this->view->getPath(), ':locale')) {
+        if (!$this->view->getOption('locales') && false !== \strpos($this->view->getPath(), ':locale')) {
             throw new \DomainException(
                 'A view for a form-overlay-list cannot have a ":locale" placeholder in its URL if no "locales" have been set.'
             );

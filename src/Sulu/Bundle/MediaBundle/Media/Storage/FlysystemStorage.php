@@ -40,7 +40,7 @@ abstract class FlysystemStorage implements StorageInterface
     {
         $segment = $this->getStorageOption($storageOptions, 'segment');
         if (!$segment) {
-            $segment = sprintf('%0' . strlen($this->segments) . 'd', rand(1, $this->segments));
+            $segment = \sprintf('%0' . \strlen($this->segments) . 'd', \rand(1, $this->segments));
         }
 
         $fileName = $this->getUniqueFileName($segment, $fileName);
@@ -53,7 +53,7 @@ abstract class FlysystemStorage implements StorageInterface
         try {
             $this->filesystem->writeStream(
                 $filePath,
-                fopen($tempPath, 'r'),
+                \fopen($tempPath, 'r'),
                 ['visibility' => AdapterInterface::VISIBILITY_PUBLIC]
             );
         } catch (FileExistsException $exception) {
@@ -75,7 +75,7 @@ abstract class FlysystemStorage implements StorageInterface
         try {
             return $this->filesystem->readStream($path);
         } catch (FileNotFoundException $exception) {
-            throw new ImageProxyMediaNotFoundException(sprintf('Original media at path "%s" not found', $path));
+            throw new ImageProxyMediaNotFoundException(\sprintf('Original media at path "%s" not found', $path));
         }
     }
 
@@ -98,7 +98,7 @@ abstract class FlysystemStorage implements StorageInterface
     {
         $newFileName = $fileName;
         if ($counter > 0) {
-            $fileNameParts = explode('.', $fileName, 2);
+            $fileNameParts = \explode('.', $fileName, 2);
             $newFileName = $fileNameParts[0] . '-' . $counter;
             if (isset($fileNameParts[1])) {
                 $newFileName .= '.' . $fileNameParts[1];

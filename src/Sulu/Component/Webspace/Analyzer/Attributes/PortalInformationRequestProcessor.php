@@ -67,7 +67,7 @@ class PortalInformationRequestProcessor implements RequestProcessorInterface
         $attributes['resourceLocator'] = $resourceLocator;
         $attributes['format'] = $format;
 
-        $attributes['resourceLocatorPrefix'] = substr($portalInformation->getUrl(), strlen($request->getHost()));
+        $attributes['resourceLocatorPrefix'] = \substr($portalInformation->getUrl(), \strlen($request->getHost()));
 
         if (null !== $format) {
             $request->setRequestFormat($format);
@@ -91,18 +91,18 @@ class PortalInformationRequestProcessor implements RequestProcessorInterface
     private function getResourceLocatorFromRequest(PortalInformation $portalInformation, Request $request, $path)
     {
         // extract file and extension info
-        $pathParts = explode('/', $path);
-        $fileInfo = explode('.', array_pop($pathParts));
+        $pathParts = \explode('/', $path);
+        $fileInfo = \explode('.', \array_pop($pathParts));
 
-        $path = rtrim(implode('/', $pathParts), '/') . '/' . $fileInfo[0];
+        $path = \rtrim(\implode('/', $pathParts), '/') . '/' . $fileInfo[0];
         $formatResult = null;
-        if (count($fileInfo) > 1) {
-            $formatResult = end($fileInfo);
+        if (\count($fileInfo) > 1) {
+            $formatResult = \end($fileInfo);
         }
 
-        $resourceLocator = substr(
+        $resourceLocator = \substr(
             $request->getHost() . $path,
-            strlen($portalInformation->getUrl())
+            \strlen($portalInformation->getUrl())
         );
 
         return [$resourceLocator, $formatResult];

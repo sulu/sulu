@@ -32,11 +32,11 @@ final class WildcardUrlUtil
      */
     private static function getRegularExpression($portalUrl)
     {
-        $patternUrl = rtrim($portalUrl, '/');
-        $patternUrl = preg_quote($patternUrl);
-        $patternUrl = str_replace(['/', '\*'], ['\/', '([^\/.]+)'], $patternUrl);
+        $patternUrl = \rtrim($portalUrl, '/');
+        $patternUrl = \preg_quote($patternUrl);
+        $patternUrl = \str_replace(['/', '\*'], ['\/', '([^\/.]+)'], $patternUrl);
 
-        return sprintf('/^%s($|([\/].*)|([.].*))$/', $patternUrl);
+        return \sprintf('/^%s($|([\/].*)|([.].*))$/', $patternUrl);
     }
 
     /**
@@ -49,7 +49,7 @@ final class WildcardUrlUtil
      */
     public static function match($url, $portalUrl)
     {
-        return preg_match(self::getRegularExpression($portalUrl), $url);
+        return \preg_match(self::getRegularExpression($portalUrl), $url);
     }
 
     /**
@@ -64,11 +64,11 @@ final class WildcardUrlUtil
     {
         $regexp = self::getRegularExpression($portalUrl);
 
-        if (preg_match($regexp, $url, $matches)) {
-            for ($i = 0, $countStar = substr_count($portalUrl, '*'); $i < $countStar; ++$i) {
-                $pos = strpos($portalUrl, '*');
+        if (\preg_match($regexp, $url, $matches)) {
+            for ($i = 0, $countStar = \substr_count($portalUrl, '*'); $i < $countStar; ++$i) {
+                $pos = \strpos($portalUrl, '*');
                 if (false !== $pos) {
-                    $portalUrl = substr_replace($portalUrl, $matches[$i + 1], $pos, 1);
+                    $portalUrl = \substr_replace($portalUrl, $matches[$i + 1], $pos, 1);
                 }
             }
 

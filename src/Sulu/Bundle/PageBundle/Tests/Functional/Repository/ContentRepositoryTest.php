@@ -632,7 +632,7 @@ class ContentRepositoryTest extends SuluTestCase
     public function testFindWithNonFallbackProperties()
     {
         $link = $this->createPage('test-1', 'de');
-        sleep(1); // create a difference between link and page (created / changed)
+        \sleep(1); // create a difference between link and page (created / changed)
         $page = $this->createInternalLinkPage('test-2', 'de', $link);
 
         $result = $this->contentRepository->find(
@@ -653,11 +653,11 @@ class ContentRepositoryTest extends SuluTestCase
 
         // Jackalope Jackrabbit will return a \DateTime and DBAL will return a
         // string. See: https://github.com/jackalope/jackalope-doctrine-dbal/issues/325
-        if (is_string($created)) {
+        if (\is_string($created)) {
             $created = new \DateTime($result['created']);
         }
 
-        if (is_string($changed)) {
+        if (\is_string($changed)) {
             $changed = new \DateTime($result['changed']);
         }
 
@@ -902,7 +902,7 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertCount(3, $result);
 
-        $items = array_map(
+        $items = \array_map(
             function(Content $content) {
                 return [
                     'uuid' => $content->getId(),
@@ -934,7 +934,7 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertCount(2, $result);
 
-        $items = array_map(
+        $items = \array_map(
             function(Content $content) {
                 return [
                     'uuid' => $content->getId(),
@@ -962,7 +962,7 @@ class ContentRepositoryTest extends SuluTestCase
             MappingBuilder::create()->addProperties(['title'])->getMapping()
         );
 
-        $paths = array_map(
+        $paths = \array_map(
             function(Content $content) {
                 return $content->getPath();
             },
@@ -986,7 +986,7 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertCount(1, $result);
 
-        $paths = array_map(
+        $paths = \array_map(
             function(Content $content) {
                 return $content->getPath();
             },
@@ -1006,8 +1006,8 @@ class ContentRepositoryTest extends SuluTestCase
             MappingBuilder::create()->setResolveUrl(true)->getMapping()
         );
 
-        usort($result, function($content1, $content2) {
-            return strcmp($content1->getPath(), $content2->getPath());
+        \usort($result, function($content1, $content2) {
+            return \strcmp($content1->getPath(), $content2->getPath());
         });
 
         $this->assertCount(2, $result);
@@ -1184,7 +1184,7 @@ class ContentRepositoryTest extends SuluTestCase
 
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $document->setShadowLocaleEnabled(true);
-        $document->setTitle(strrev($title));
+        $document->setTitle(\strrev($title));
         $document->setShadowLocale($locale);
         $document->setLocale($shadowedLocale);
         $document->setResourceSegment($document1->getResourceSegment());

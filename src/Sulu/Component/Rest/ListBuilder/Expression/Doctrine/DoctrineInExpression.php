@@ -49,14 +49,14 @@ class DoctrineInExpression extends AbstractDoctrineExpression implements InExpre
         $values = $this->filterNullValues($this->getValues());
         $statement = '';
 
-        if (count($values) > 0) {
+        if (\count($values) > 0) {
             $queryBuilder->setParameter($paramName, $values);
             $statement = $this->field->getSelect() . ' IN (:' . $paramName . ')';
 
-            if (false !== array_search(null, $this->getValues())) {
+            if (false !== \array_search(null, $this->getValues())) {
                 $statement .= ' OR ' . $this->field->getSelect() . ' IS NULL';
             }
-        } elseif (false !== array_search(null, $this->getValues())) { // only null in values array
+        } elseif (false !== \array_search(null, $this->getValues())) { // only null in values array
             $statement .= $this->field->getSelect() . ' IS NULL';
         }
 
@@ -70,7 +70,7 @@ class DoctrineInExpression extends AbstractDoctrineExpression implements InExpre
      */
     protected function filterNullValues(array $values)
     {
-        $result = array_filter(
+        $result = \array_filter(
             $values,
             function($val) {
                 return $val || 0 === $val || false === $val;

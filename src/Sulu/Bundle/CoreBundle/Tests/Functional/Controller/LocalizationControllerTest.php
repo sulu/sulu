@@ -36,7 +36,7 @@ class LocalizationControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $data = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertCount(4, $data['_embedded']['localizations']);
     }

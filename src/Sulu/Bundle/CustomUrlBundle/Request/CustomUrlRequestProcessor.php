@@ -61,18 +61,18 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
 
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
-        $url = $this->decodeUrl(rtrim(sprintf('%s%s', $request->getHost(), $request->getRequestUri()), '/'));
-        if ('.html' === substr($url, -5, 5)) {
-            $url = substr($url, 0, -5);
+        $url = $this->decodeUrl(\rtrim(\sprintf('%s%s', $request->getHost(), $request->getRequestUri()), '/'));
+        if ('.html' === \substr($url, -5, 5)) {
+            $url = \substr($url, 0, -5);
         }
         $portalInformations = $this->webspaceManager->findPortalInformationsByUrl($url, $this->environment);
 
-        if (0 === count($portalInformations)) {
+        if (0 === \count($portalInformations)) {
             return new RequestAttributes();
         }
 
         /** @var PortalInformation[] $portalInformations */
-        $portalInformations = array_filter(
+        $portalInformations = \array_filter(
             $portalInformations,
             function(PortalInformation $portalInformation) {
                 return RequestAnalyzer::MATCH_TYPE_WILDCARD === $portalInformation->getType();
@@ -108,7 +108,7 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
     {
         $webspace = $portalInformation->getWebspace();
         $routeDocument = $this->customUrlManager->findRouteByUrl(
-            rawurldecode($url),
+            \rawurldecode($url),
             $webspace->getKey()
         );
 
@@ -120,7 +120,7 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
         }
 
         $customUrlDocument = $this->customUrlManager->findByUrl(
-            rawurldecode($url),
+            \rawurldecode($url),
             $webspace->getKey(),
             $routeDocument->getTargetDocument()->getTargetLocale()
         );
@@ -142,7 +142,7 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
             $this->environment
         );
 
-        if (0 === count($portalInformations)) {
+        if (0 === \count($portalInformations)) {
             return ['customUrlRoute' => $routeDocument, 'customUrl' => $customUrlDocument];
         }
 
@@ -169,6 +169,6 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
      */
     private function decodeUrl($pathInfo)
     {
-        return rawurldecode($pathInfo);
+        return \rawurldecode($pathInfo);
     }
 }

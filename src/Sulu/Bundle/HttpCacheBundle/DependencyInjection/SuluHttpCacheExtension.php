@@ -47,17 +47,17 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
             if ($config['proxy_client']['symfony']['enabled']) {
                 $symfonyProxyClient = $config['proxy_client']['symfony'];
                 $fosHttpCacheConfig['proxy_client']['symfony']['http']['servers'] =
-                    count($symfonyProxyClient['servers']) ? $symfonyProxyClient['servers'] : ['127.0.0.1'];
+                    \count($symfonyProxyClient['servers']) ? $symfonyProxyClient['servers'] : ['127.0.0.1'];
             }
 
             if ($config['proxy_client']['varnish']['enabled']) {
                 $varnishProxyClient = $config['proxy_client']['varnish'];
 
                 $fosHttpCacheConfig['proxy_client']['varnish']['http']['servers'] =
-                    count($varnishProxyClient['servers']) ? $varnishProxyClient['servers'] : ['127.0.0.1'];
+                    \count($varnishProxyClient['servers']) ? $varnishProxyClient['servers'] : ['127.0.0.1'];
             }
 
-            if (array_key_exists('proxy_client', $fosHttpCacheConfig)) {
+            if (\array_key_exists('proxy_client', $fosHttpCacheConfig)) {
                 $fosHttpCacheConfig['tags']['enabled'] = $config['tags']['enabled'];
             }
         }
@@ -87,7 +87,7 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
         }
 
         $proxyClientAvailable = false;
-        if (array_key_exists('proxy_client', $config)) {
+        if (\array_key_exists('proxy_client', $config)) {
             foreach ($config['proxy_client'] as $proxyClient) {
                 if (true === $proxyClient['enabled']) {
                     $proxyClientAvailable = true;
@@ -111,6 +111,6 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
      */
     private function shouldCache(ContainerInterface $container): bool
     {
-        return !in_array($container->getParameter('kernel.environment'), ['dev', 'test']);
+        return !\in_array($container->getParameter('kernel.environment'), ['dev', 'test']);
     }
 }

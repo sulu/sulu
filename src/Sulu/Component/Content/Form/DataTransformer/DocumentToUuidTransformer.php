@@ -34,9 +34,9 @@ class DocumentToUuidTransformer implements DataTransformerInterface
 
         // TODO: Use the document inspector instead of the UUID behavior
         if (!$document instanceof UuidBehavior) {
-            throw new \RuntimeException(sprintf(
+            throw new \RuntimeException(\sprintf(
                 'Document must implement UuuidBehavior to be used in a form. Got "%s"',
-                is_object($document) ? get_class($document) : gettype($document)
+                \is_object($document) ? \get_class($document) : \gettype($document)
             ));
         }
 
@@ -50,7 +50,7 @@ class DocumentToUuidTransformer implements DataTransformerInterface
         }
 
         if (!UUIDHelper::isUuid($uuid)) {
-            throw new TransformationFailedException(sprintf(
+            throw new TransformationFailedException(\sprintf(
                 'Given UUID is not a UUID, given: "%s"',
                 $uuid
             ));
@@ -59,7 +59,7 @@ class DocumentToUuidTransformer implements DataTransformerInterface
         $document = $this->documentManager->find($uuid);
 
         if (null === $document) {
-            throw new TransformationFailedException(sprintf(
+            throw new TransformationFailedException(\sprintf(
                 'Could not find document with UUID "%s"', $uuid
             ));
         }

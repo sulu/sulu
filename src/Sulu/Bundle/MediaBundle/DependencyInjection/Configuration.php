@@ -191,7 +191,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end();
 
-        if (class_exists(GoogleStorageAdapter::class)) {
+        if (\class_exists(GoogleStorageAdapter::class)) {
             $storages[] = self::STORAGE_GOOGLE_CLOUD;
 
             $storagesNode
@@ -206,7 +206,7 @@ class Configuration implements ConfigurationInterface
                 ->end();
         }
 
-        if (class_exists(AwsS3Adapter::class)) {
+        if (\class_exists(AwsS3Adapter::class)) {
             $storages[] = self::STORAGE_S3;
             $storagesNode
                 ->arrayNode(self::STORAGE_S3)
@@ -227,7 +227,7 @@ class Configuration implements ConfigurationInterface
                 ->end();
         }
 
-        if (class_exists(AzureBlobStorageAdapter::class)) {
+        if (\class_exists(AzureBlobStorageAdapter::class)) {
             $storages[] = self::STORAGE_AZURE_BLOB;
 
             $storagesNode

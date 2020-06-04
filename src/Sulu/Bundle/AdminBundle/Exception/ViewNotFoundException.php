@@ -23,7 +23,7 @@ class ViewNotFoundException extends \Exception
 
     public function __construct(string $view)
     {
-        parent::__construct(sprintf('The view with the name "%s" does not exist.', $view));
+        parent::__construct(\sprintf('The view with the name "%s" does not exist.', $view));
 
         $this->view = $view;
     }

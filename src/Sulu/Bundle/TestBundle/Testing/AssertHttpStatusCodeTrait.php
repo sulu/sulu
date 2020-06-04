@@ -35,7 +35,7 @@ trait AssertHttpStatusCodeTrait
         $message = '';
         if ($code !== $httpCode) {
             if ($response instanceof RedirectResponse) {
-                $message = sprintf(
+                $message = \sprintf(
                     'Unexpected "%s" status code with redirect to "%s".',
                     $httpCode,
                     $response->getTargetUrl()
@@ -43,15 +43,15 @@ trait AssertHttpStatusCodeTrait
             } else {
                 $message = $response->getContent();
 
-                if ('null' !== ($json = json_encode(json_decode($message, true), JSON_PRETTY_PRINT))
+                if ('null' !== ($json = \json_encode(\json_decode($message, true), \JSON_PRETTY_PRINT))
                     && $json) {
-                    $message = explode(PHP_EOL, $json);
+                    $message = \explode(\PHP_EOL, $json);
                 } else {
-                    $message = explode(PHP_EOL, $message);
+                    $message = \explode(\PHP_EOL, $message);
                 }
 
-                $message = implode(PHP_EOL, \array_slice($message, 0, $debugLength));
-                $message = sprintf(
+                $message = \implode(\PHP_EOL, \array_slice($message, 0, $debugLength));
+                $message = \sprintf(
                     'HTTP status code %s is not expected %s, showing %s lines of the response body: %s',
                     $httpCode,
                     $code,

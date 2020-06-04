@@ -28,7 +28,7 @@ class PageOutOfBoundsException extends NotFoundHttpException
      */
     public function __construct($page)
     {
-        parent::__construct(sprintf('Page "%s" out of bounds exception.', $page));
+        parent::__construct(\sprintf('Page "%s" out of bounds exception.', $page));
 
         $this->page = $page;
     }

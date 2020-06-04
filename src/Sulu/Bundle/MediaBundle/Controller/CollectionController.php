@@ -126,7 +126,7 @@ class CollectionController extends AbstractRestController implements ClassResour
 
         try {
             $locale = $this->getRequestParameter($request, 'locale', true);
-            $depth = intval($request->get('depth', 0));
+            $depth = \intval($request->get('depth', 0));
             $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
             $children = $this->getBooleanRequestParameter($request, 'children', false, false);
 
@@ -317,7 +317,7 @@ class CollectionController extends AbstractRestController implements ClassResour
                     return $this->moveEntity($id, $request);
                     break;
                 default:
-                    throw new RestException(sprintf('Unrecognized action: "%s"', $action));
+                    throw new RestException(\sprintf('Unrecognized action: "%s"', $action));
             }
         } catch (RestException $ex) {
             $view = $this->view($ex->toArray(), 400);
@@ -392,8 +392,8 @@ class CollectionController extends AbstractRestController implements ClassResour
 
     private function checkSystemCollection($id, $parent)
     {
-        if ((null !== $id && $this->systemCollectionManager->isSystemCollection(intval($id))) ||
-            (null !== $parent && $this->systemCollectionManager->isSystemCollection(intval($parent)))
+        if ((null !== $id && $this->systemCollectionManager->isSystemCollection(\intval($id))) ||
+            (null !== $parent && $this->systemCollectionManager->isSystemCollection(\intval($parent)))
         ) {
             throw new AccessDeniedException('Permission "update" or "create" is not granted for system collections');
         }

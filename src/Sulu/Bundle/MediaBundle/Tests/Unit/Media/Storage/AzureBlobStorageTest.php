@@ -52,7 +52,7 @@ class AzureBlobStorageTest extends TestCase
 
         $flysystem->createDir('1')->shouldBeCalled();
 
-        $storageOptions = $storage->save(tempnam(sys_get_temp_dir(), 'test'), 'test.jpg');
+        $storageOptions = $storage->save(\tempnam(\sys_get_temp_dir(), 'test'), 'test.jpg');
         $this->assertEquals(['segment' => '1', 'fileName' => 'test.jpg'], $storageOptions);
     }
 
@@ -73,7 +73,7 @@ class AzureBlobStorageTest extends TestCase
 
         $flysystem->createDir(Argument::any())->shouldNotBeCalled();
 
-        $storageOptions = $storage->save(tempnam(sys_get_temp_dir(), 'test'), 'test.jpg');
+        $storageOptions = $storage->save(\tempnam(\sys_get_temp_dir(), 'test'), 'test.jpg');
         $this->assertEquals(['segment' => '1', 'fileName' => 'test.jpg'], $storageOptions);
     }
 
@@ -95,7 +95,7 @@ class AzureBlobStorageTest extends TestCase
 
         $flysystem->createDir('1')->shouldBeCalled();
 
-        $storageOptions = $storage->save(tempnam(sys_get_temp_dir(), 'test'), 'test.jpg');
+        $storageOptions = $storage->save(\tempnam(\sys_get_temp_dir(), 'test'), 'test.jpg');
         $this->assertEquals(['segment' => '1', 'fileName' => 'test-1.jpg'], $storageOptions);
     }
 
@@ -109,11 +109,11 @@ class AzureBlobStorageTest extends TestCase
 
         $storage = new AzureBlobStorage($flysystem->reveal(), $client, 'test-container', 1);
 
-        $handle = tmpfile();
+        $handle = \tmpfile();
         $flysystem->readStream('1/test.jpg')->willReturn($handle)->shouldBeCalled();
 
         $result = $storage->load(['segment' => '1', 'fileName' => 'test.jpg']);
-        $this->assertEquals(stream_get_contents($handle), stream_get_contents($result));
+        $this->assertEquals(\stream_get_contents($handle), \stream_get_contents($result));
     }
 
     public function testLoadNotFound(): void
@@ -128,7 +128,7 @@ class AzureBlobStorageTest extends TestCase
 
         $storage = new AzureBlobStorage($flysystem->reveal(), $client, 'test-container', 1);
 
-        $handle = tmpfile();
+        $handle = \tmpfile();
         $flysystem->readStream('1/test.jpg')->willThrow(new FileNotFoundException('1/test.jpg'))->shouldBeCalled();
 
         $result = $storage->load(['segment' => '1', 'fileName' => 'test.jpg']);

@@ -43,7 +43,7 @@ class SessionManager implements SessionManagerInterface
 
     public function getRoutePath($webspaceKey, $languageCode, $segment = null)
     {
-        $path = sprintf(
+        $path = \sprintf(
             '/%s/%s/%s/%s%s',
             $this->nodeNames['base'],
             $webspaceKey,
@@ -62,7 +62,7 @@ class SessionManager implements SessionManagerInterface
 
     public function getContentPath($webspaceKey)
     {
-        $path = sprintf(
+        $path = \sprintf(
             '/%s/%s/%s',
             $this->nodeNames['base'],
             $webspaceKey,
@@ -79,7 +79,7 @@ class SessionManager implements SessionManagerInterface
 
     public function getWebspacePath($webspaceKey)
     {
-        return sprintf(
+        return \sprintf(
             '/%s/%s',
             $this->nodeNames['base'],
             $webspaceKey

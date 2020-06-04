@@ -46,9 +46,9 @@ abstract class AbstractLoader implements LoaderInterface
     {
         $schemaPath = __DIR__ . $this->schemaPath;
 
-        $cwd = getcwd();
+        $cwd = \getcwd();
         // Necessary only for Windows, no effect on linux. Mute errors for PHP with chdir disabled to avoid E_WARNINGs
-        @chdir(dirname($resource));
+        @\chdir(\dirname($resource));
 
         // read file
         $xmlDocument = XmlUtils::loadFile(
@@ -62,7 +62,7 @@ abstract class AbstractLoader implements LoaderInterface
         );
 
         // Necessary only for Windows, no effect on linux. Mute errors for PHP with chdir disabled to avoid E_WARNINGs
-        @chdir($cwd);
+        @\chdir($cwd);
 
         // generate xpath for file
         $xpath = new \DOMXPath($xmlDocument);
@@ -97,7 +97,7 @@ abstract class AbstractLoader implements LoaderInterface
             ];
 
             foreach ($node->attributes as $key => $attr) {
-                if (in_array($key, ['name'])) {
+                if (\in_array($key, ['name'])) {
                     $tag[$key] = $attr->value;
                 } else {
                     $tag['attributes'][$key] = $attr->value;
@@ -133,7 +133,7 @@ abstract class AbstractLoader implements LoaderInterface
             $area = [];
 
             foreach ($node->attributes as $key => $attr) {
-                if (in_array($key, ['key'])) {
+                if (\in_array($key, ['key'])) {
                     $area[$key] = $attr->value;
                 } else {
                     $area['attributes'][$key] = $attr->value;

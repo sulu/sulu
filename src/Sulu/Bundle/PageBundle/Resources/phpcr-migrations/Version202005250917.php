@@ -53,14 +53,14 @@ class Version202005250917 implements VersionInterface, ContainerAwareInterface
 
             foreach ($node->getProperties() as $property) {
                 if (\is_string($property->getValue())) {
-                    $propertyValue = json_decode($property->getValue(), true);
+                    $propertyValue = \json_decode($property->getValue(), true);
                     if (\is_array($propertyValue) && \array_key_exists('presentAs', $propertyValue) &&
                         \array_key_exists('limitResult', $propertyValue) && \array_key_exists('sortBy', $propertyValue)) {
-                        if (is_array($propertyValue['sortBy'])) {
+                        if (\is_array($propertyValue['sortBy'])) {
                             $propertyValue['sortBy'] = \count($propertyValue['sortBy']) > 0 ? $propertyValue['sortBy'][0] : null;
                         }
 
-                        $property->setValue(json_encode($propertyValue));
+                        $property->setValue(\json_encode($propertyValue));
                     }
                 }
             }
@@ -79,14 +79,14 @@ class Version202005250917 implements VersionInterface, ContainerAwareInterface
 
             foreach ($node->getProperties() as $property) {
                 if (\is_string($property->getValue())) {
-                    $propertyValue = json_decode($property->getValue(), true);
+                    $propertyValue = \json_decode($property->getValue(), true);
                     if (\is_array($propertyValue) && \array_key_exists('presentAs', $propertyValue) &&
                         \array_key_exists('limitResult', $propertyValue) && \array_key_exists('sortBy', $propertyValue)) {
-                        if (is_array($propertyValue['sortBy'])) {
+                        if (\is_array($propertyValue['sortBy'])) {
                             $propertyValue['sortBy'] = [$propertyValue['sortBy']];
                         }
 
-                        $property->setValue(json_encode($propertyValue));
+                        $property->setValue(\json_encode($propertyValue));
                     }
                 }
             }

@@ -41,7 +41,7 @@ class LinkTag implements TagInterface
         foreach ($attributesByTag as $tag => $attributes) {
             $provider = $this->getValue($attributes, 'provider', self::DEFAULT_PROVIDER);
             if (!isset($attributes['href'])
-                || !array_key_exists($provider . '-' . $attributes['href'], $contents)
+                || !\array_key_exists($provider . '-' . $attributes['href'], $contents)
             ) {
                 $result[$tag] = $this->getContent($attributes);
 
@@ -53,21 +53,21 @@ class LinkTag implements TagInterface
             $attributes['href'] = $item->getUrl();
             $attributes['title'] = $this->getValue($attributes, 'title', $item->getTitle());
 
-            $htmlAttributes = array_map(
+            $htmlAttributes = \array_map(
                 function($value, $name) {
-                    if (in_array($name, ['provider', 'content', 'validation-state']) || empty($value)) {
+                    if (\in_array($name, ['provider', 'content', 'validation-state']) || empty($value)) {
                         return;
                     }
 
-                    return sprintf('%s="%s"', $name, $value);
+                    return \sprintf('%s="%s"', $name, $value);
                 },
                 $attributes,
-                array_keys($attributes)
+                \array_keys($attributes)
             );
 
-            $result[$tag] = sprintf(
+            $result[$tag] = \sprintf(
                 '<a %s>%s</a>',
-                implode(' ', array_filter($htmlAttributes)),
+                \implode(' ', \array_filter($htmlAttributes)),
                 $this->getValue($attributes, 'content', $item->getTitle())
             );
         }
@@ -83,7 +83,7 @@ class LinkTag implements TagInterface
         foreach ($attributesByTag as $tag => $attributes) {
             $provider = $this->getValue($attributes, 'provider', self::DEFAULT_PROVIDER);
             if (!isset($attributes['href'])
-                || !array_key_exists($provider . '-' . $attributes['href'], $items)
+                || !\array_key_exists($provider . '-' . $attributes['href'], $items)
             ) {
                 $result[$tag] = self::VALIDATE_REMOVED;
             } elseif (!$items[$provider . '-' . $attributes['href']]->isPublished()) {
@@ -108,7 +108,7 @@ class LinkTag implements TagInterface
         $hrefsByType = [];
         foreach ($attributesByTag as $attributes) {
             $provider = $this->getValue($attributes, 'provider', self::DEFAULT_PROVIDER);
-            if (!array_key_exists($provider, $hrefsByType)) {
+            if (!\array_key_exists($provider, $hrefsByType)) {
                 $hrefsByType[$provider] = [];
             }
 
@@ -120,7 +120,7 @@ class LinkTag implements TagInterface
         $result = [];
         foreach ($hrefsByType as $provider => $hrefs) {
             $items = $this->linkProviderPool->getProvider($provider)->preload(
-                array_unique($hrefs),
+                \array_unique($hrefs),
                 $locale,
                 $published
             );
@@ -140,7 +140,7 @@ class LinkTag implements TagInterface
      */
     private function getValue(array $attributes, $name, $default = null)
     {
-        if (array_key_exists($name, $attributes) && !empty($attributes[$name])) {
+        if (\array_key_exists($name, $attributes) && !empty($attributes[$name])) {
             return $attributes[$name];
         }
 
@@ -154,7 +154,7 @@ class LinkTag implements TagInterface
      */
     private function getContent(array $attributes)
     {
-        if (array_key_exists('content', $attributes)) {
+        if (\array_key_exists('content', $attributes)) {
             return $attributes['content'];
         }
 

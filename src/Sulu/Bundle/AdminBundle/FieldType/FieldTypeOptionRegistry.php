@@ -20,7 +20,7 @@ class FieldTypeOptionRegistry implements FieldTypeOptionRegistryInterface
 
     public function add(string $name, string $baseFieldType, array $fieldTypeOptions): void
     {
-        if (!array_key_exists($baseFieldType, $this->options)) {
+        if (!\array_key_exists($baseFieldType, $this->options)) {
             $options[$baseFieldType] = [];
         }
 

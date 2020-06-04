@@ -35,11 +35,11 @@ class UserLocaleListener
     public function __construct(TokenStorageInterface $tokenStorage, TranslatorInterface $translator)
     {
         if (!$translator instanceof LocaleAwareInterface) {
-            throw new \LogicException(sprintf(
+            throw new \LogicException(\sprintf(
                 'Expected "translator" in "%s" to be instance of "%s" but "%s" given.',
                 __CLASS__,
                 LocaleAwareInterface::class,
-                get_class($translator)
+                \get_class($translator)
             ));
         }
 

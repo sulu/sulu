@@ -41,8 +41,8 @@ class LocalizationManager implements LocalizationManagerInterface
 
     public function getLocales(): array
     {
-        return array_values(
-            array_map(
+        return \array_values(
+            \array_map(
                 function(Localization $localization) {
                     return $localization->getLocale();
                 },

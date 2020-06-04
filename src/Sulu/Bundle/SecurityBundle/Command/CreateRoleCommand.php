@@ -74,7 +74,7 @@ class CreateRoleCommand extends Command
         $role = $this->roleRepository->findOneByName($name);
 
         if ($role) {
-            $output->writeln(sprintf(
+            $output->writeln(\sprintf(
                 '<error>Role "%s" already exists.</error>',
                 $name
             ));
@@ -94,7 +94,7 @@ class CreateRoleCommand extends Command
 
         foreach ($securityContexts['Sulu'] as $section => $contexts) {
             foreach ($contexts as $context => $permissionTypes) {
-                if (is_array($permissionTypes)) {
+                if (\is_array($permissionTypes)) {
                     $securityContextsFlat[] = $context;
                 } else {
                     // FIXME here for BC reasons, because the array used to only contain values without permission types
@@ -115,7 +115,7 @@ class CreateRoleCommand extends Command
         $this->entityManager->flush();
 
         $output->writeln(
-            sprintf(
+            \sprintf(
                 'Created role "<comment>%s</comment>" in system "<comment>%s</comment>".',
                 $role->getName(),
                 $role->getSystem()
@@ -133,7 +133,7 @@ class CreateRoleCommand extends Command
         $helper = $this->getHelper('question');
 
         $contexts = $this->adminPool->getSecurityContexts();
-        $systems = array_keys($contexts);
+        $systems = \array_keys($contexts);
 
         if (!$input->getArgument('name')) {
             $question = new Question('Please choose a rolename: ');
@@ -144,8 +144,8 @@ class CreateRoleCommand extends Command
                     }
 
                     $roles = $this->roleRepository->findBy(['name' => $name]);
-                    if (count($roles) > 0) {
-                        throw new \InvalidArgumentException(sprintf('Rolename "%s" is not unique', $name));
+                    if (\count($roles) > 0) {
+                        throw new \InvalidArgumentException(\sprintf('Rolename "%s" is not unique', $name));
                     }
 
                     return $name;

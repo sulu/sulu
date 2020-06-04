@@ -32,7 +32,7 @@ class ReorderEvent extends AbstractMappingEvent
 
     public function getDebugMessage()
     {
-        return sprintf(
+        return \sprintf(
             '%s did:%s',
             parent::getDebugMessage(),
             $this->destId ?: '<no dest>'

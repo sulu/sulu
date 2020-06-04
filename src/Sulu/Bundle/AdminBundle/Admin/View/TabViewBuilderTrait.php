@@ -26,7 +26,7 @@ trait TabViewBuilderTrait
      */
     private function setTabTitleToView(View $view, string $tabTitle): void
     {
-        @trigger_error('The method TabViewBuilderTrait::setTabTitleToView() is deprecated since Sulu 2.1. Use TabViewChildBuilderTrait::setTabTitleToView() instead.', E_USER_DEPRECATED);
+        @\trigger_error('The method TabViewBuilderTrait::setTabTitleToView() is deprecated since Sulu 2.1. Use TabViewChildBuilderTrait::setTabTitleToView() instead.', \E_USER_DEPRECATED);
 
         $this->parentSetTabTitleToView($view, $tabTitle);
     }
@@ -37,7 +37,7 @@ trait TabViewBuilderTrait
      */
     private function setTabConditionToView(View $view, string $tabCondition): void
     {
-        @trigger_error('The method TabViewBuilderTrait::setTabConditionToView() is deprecated since Sulu 2.1. Use TabViewChildBuilderTrait::setTabConditionToView() instead.', E_USER_DEPRECATED);
+        @\trigger_error('The method TabViewBuilderTrait::setTabConditionToView() is deprecated since Sulu 2.1. Use TabViewChildBuilderTrait::setTabConditionToView() instead.', \E_USER_DEPRECATED);
 
         $this->parentSetTabConditionToView($view, $tabCondition);
     }
@@ -48,7 +48,7 @@ trait TabViewBuilderTrait
      */
     private function setTabOrderToView(View $view, int $tabOrder): void
     {
-        @trigger_error('The method TabViewBuilderTrait::setTabOrderToView() is deprecated since Sulu 2.1. Use TabViewChildBuilderTrait::setTabOrderToView() instead.', E_USER_DEPRECATED);
+        @\trigger_error('The method TabViewBuilderTrait::setTabOrderToView() is deprecated since Sulu 2.1. Use TabViewChildBuilderTrait::setTabOrderToView() instead.', \E_USER_DEPRECATED);
 
         $this->parentSetTabOrderToView($view, $tabOrder);
     }
@@ -59,7 +59,7 @@ trait TabViewBuilderTrait
      */
     private function setTabPriorityToView(View $view, int $tabPriority): void
     {
-        @trigger_error('The method TabViewBuilderTrait::setTabPriorityToView() is deprecated since Sulu 2.1. Use TabViewChildBuilderTrait::setTabPriorityToView() instead.', E_USER_DEPRECATED);
+        @\trigger_error('The method TabViewBuilderTrait::setTabPriorityToView() is deprecated since Sulu 2.1. Use TabViewChildBuilderTrait::setTabPriorityToView() instead.', \E_USER_DEPRECATED);
 
         $this->parentSetTabPriorityToView($view, $tabPriority);
     }
@@ -68,7 +68,7 @@ trait TabViewBuilderTrait
     {
         $oldRouterAttributesToBlacklist = $this->view->getOption('routerAttributesToBlacklist');
         $newRouterAttributesToBlacklist = $oldRouterAttributesToBlacklist
-            ? array_merge($oldRouterAttributesToBlacklist, $routerAttributesToBlacklist)
+            ? \array_merge($oldRouterAttributesToBlacklist, $routerAttributesToBlacklist)
             : $routerAttributesToBlacklist;
 
         $this->view->setOption('routerAttributesToBlacklist', $newRouterAttributesToBlacklist);

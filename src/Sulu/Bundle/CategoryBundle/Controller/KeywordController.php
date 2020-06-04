@@ -140,7 +140,7 @@ class KeywordController extends AbstractRestController implements ClassResourceI
             $listResponse,
             self::$entityKey,
             'sulu_category.get_category_keywords',
-            array_merge(['categoryId' => $categoryId], $request->query->all()),
+            \array_merge(['categoryId' => $categoryId], $request->query->all()),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),
             $listBuilder->count()
@@ -236,7 +236,7 @@ class KeywordController extends AbstractRestController implements ClassResourceI
     {
         $category = $this->categoryRepository->findCategoryById($categoryId);
 
-        $ids = array_filter(explode(',', $request->get('ids')));
+        $ids = \array_filter(\explode(',', $request->get('ids')));
         foreach ($ids as $id) {
             $keyword = $this->keywordRepository->findById($id);
             $this->keywordManager->delete($keyword, $category);

@@ -72,7 +72,7 @@ class SnippetAdminTest extends TestCase
         $this->securityChecker->hasPermission('sulu.global.snippets', 'delete')->willReturn(true);
         $this->securityChecker->hasPermission('sulu.global.snippets', 'view')->willReturn(true);
 
-        $this->webspaceManager->getAllLocales()->willReturn(array_values($locales));
+        $this->webspaceManager->getAllLocales()->willReturn(\array_values($locales));
 
         $viewCollection = new ViewCollection();
         $snippetAdmin->configureViews($viewCollection);
@@ -96,14 +96,14 @@ class SnippetAdminTest extends TestCase
             'adapters' => ['table'],
             'addView' => 'sulu_snippet.add_form',
             'editView' => 'sulu_snippet.edit_form',
-            'locales' => array_keys($locales),
+            'locales' => \array_keys($locales),
         ], $this->readObjectAttribute($listView, 'options'));
-        $this->assertEquals(['locale' => array_keys($locales)[0]], $this->readObjectAttribute($listView, 'attributeDefaults'));
+        $this->assertEquals(['locale' => \array_keys($locales)[0]], $this->readObjectAttribute($listView, 'attributeDefaults'));
         $this->assertEquals('sulu_snippet.add_form', $addFormView->getName());
         $this->assertEquals([
             'resourceKey' => 'snippets',
             'backView' => 'sulu_snippet.list',
-            'locales' => array_keys($locales),
+            'locales' => \array_keys($locales),
         ], $this->readObjectAttribute($addFormView, 'options'));
         $this->assertEquals('sulu_snippet.add_form', $addDetailView->getParent());
         $this->assertEquals([
@@ -121,7 +121,7 @@ class SnippetAdminTest extends TestCase
         $this->assertEquals([
             'resourceKey' => 'snippets',
             'backView' => 'sulu_snippet.list',
-            'locales' => array_keys($locales),
+            'locales' => \array_keys($locales),
             'titleProperty' => 'title',
         ], $this->readObjectAttribute($editFormView, 'options'));
         $this->assertEquals('sulu_snippet.edit_form.details', $editDetailView->getName());

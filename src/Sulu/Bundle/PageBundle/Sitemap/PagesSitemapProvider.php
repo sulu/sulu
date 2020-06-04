@@ -105,7 +105,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
         string $scheme
     ) {
         $changed = $contentPage['changed'];
-        if (is_string($changed)) {
+        if (\is_string($changed)) {
             $changed = new \DateTime($changed);
         }
 

@@ -132,7 +132,7 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
             isset($data) ? $data : [],
             $this->contentQueryExecutor,
             $this->contentQueryBuilder,
-            array_merge($this->getDefaultParams(), $property->getParams()),
+            \array_merge($this->getDefaultParams(), $property->getParams()),
             $property->getStructure()->getWebspaceKey(),
             $property->getStructure()->getLanguageCode(),
             $this->showDrafts
@@ -143,11 +143,11 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
 
     public function exportData($propertyValue)
     {
-        if (!is_array($propertyValue) || empty($propertyValue)) {
+        if (!\is_array($propertyValue) || empty($propertyValue)) {
             return '';
         }
 
-        return json_encode($propertyValue);
+        return \json_encode($propertyValue);
     }
 
     public function importData(
@@ -159,14 +159,14 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
         $languageCode,
         $segmentKey = null
     ) {
-        $property->setValue(json_decode($value));
+        $property->setValue(\json_decode($value));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 
     public function preResolve(PropertyInterface $property)
     {
         $uuids = $property->getValue();
-        if (!is_array($uuids)) {
+        if (!\is_array($uuids)) {
             return;
         }
 

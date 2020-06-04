@@ -71,7 +71,7 @@ class MappingSubscriber implements EventSubscriberInterface
 
     public function handleMapping(AbstractMappingEvent $event)
     {
-        $metadata = $this->factory->getMetadataForClass(get_class($event->getDocument()));
+        $metadata = $this->factory->getMetadataForClass(\get_class($event->getDocument()));
         $locale = $event->getLocale();
         $node = $event->getNode();
         $accessor = $event->getAccessor();
@@ -114,7 +114,7 @@ class MappingSubscriber implements EventSubscriberInterface
 
         if ($fieldMapping['multiple']) {
             throw new \InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     'Mapping references as multiple not currently supported (when mapping "%s")',
                     $fieldName
                 )
@@ -166,7 +166,7 @@ class MappingSubscriber implements EventSubscriberInterface
             $phpcrName = $this->encoder->encode($fieldMapping['encoding'], $fieldMapping['property'], $locale);
             $value = $accessor->get($fieldName);
             $this->validateFieldValue($value, $fieldName, $fieldMapping);
-            $node->setProperty($phpcrName, json_encode($value));
+            $node->setProperty($phpcrName, \json_encode($value));
         } catch (InvalidLocaleException $ex) {
             // arguments invalid, no valid propertyname could be generated (e.g. no locale given for localized encoding)
             return;
@@ -175,7 +175,7 @@ class MappingSubscriber implements EventSubscriberInterface
 
     public function handleHydrate(AbstractMappingEvent $event)
     {
-        $class = get_class($event->getDocument());
+        $class = \get_class($event->getDocument());
 
         // TODO: Return false here in case this is for instance an UnknownDocument.
         //       But we should probably map the UnknownDocument and let an Exception be
@@ -288,7 +288,7 @@ class MappingSubscriber implements EventSubscriberInterface
                 $phpcrName,
                 $this->getDefaultValue($fieldMapping)
             );
-            $accessor->set($fieldName, json_decode($value, true));
+            $accessor->set($fieldName, \json_decode($value, true));
         } catch (InvalidLocaleException $ex) {
             // arguments invalid, no valid propertyname could be generated (e.g. no locale given for localized encoding)
             return;
@@ -306,12 +306,12 @@ class MappingSubscriber implements EventSubscriberInterface
 
     private function validateFieldValue($value, $fieldName, $fieldMapping)
     {
-        if ($fieldMapping['multiple'] && !is_array($value)) {
+        if ($fieldMapping['multiple'] && !\is_array($value)) {
             throw new \InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     'Field "%s" is mapped as multiple, and therefore must be an array, got "%s"',
                     $fieldName,
-                    is_object($value) ? get_class($value) : gettype($value)
+                    \is_object($value) ? \get_class($value) : \gettype($value)
                 )
             );
         }

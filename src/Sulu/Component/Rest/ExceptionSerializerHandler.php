@@ -36,7 +36,7 @@ class ExceptionSerializerHandler extends ExceptionHandler
     {
         $data = parent::convertToArray($exception, $context);
         $data['code'] = $exception->getCode();
-        if (in_array($this->environment, ['dev', 'test'])) {
+        if (\in_array($this->environment, ['dev', 'test'])) {
             $data['errors'] = [(string) $exception];
         }
 

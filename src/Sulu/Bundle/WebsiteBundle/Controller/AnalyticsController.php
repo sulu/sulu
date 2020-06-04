@@ -161,7 +161,7 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
      */
     public function cdeleteAction(Request $request, $webspace)
     {
-        $ids = array_filter(explode(',', $request->get('ids', '')));
+        $ids = \array_filter(\explode(',', $request->get('ids', '')));
 
         $this->analyticsManager->removeMultiple($ids);
         $this->entityManager->flush();
@@ -179,7 +179,7 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
 
     private function buildContent(array $data)
     {
-        if (!array_key_exists('type', $data)) {
+        if (!\array_key_exists('type', $data)) {
             return null;
         }
 

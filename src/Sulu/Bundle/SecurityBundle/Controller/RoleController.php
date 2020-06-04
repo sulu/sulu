@@ -146,7 +146,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
             $convertedRoles = [];
             if (null != $roles) {
                 foreach ($roles as $role) {
-                    array_push($convertedRoles, $this->convertRole($role));
+                    \array_push($convertedRoles, $this->convertRole($role));
                 }
             }
             $list = new CollectionRepresentation($convertedRoles, static::$entityKey);
@@ -223,7 +223,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
 
                 $view = $this->view($this->convertRole($role), 200);
             } catch (UniqueConstraintViolationException $e) {
-                if (strpos($e->getMessage(), 'Duplicate entry \'' . $role->getName())) {
+                if (\strpos($e->getMessage(), 'Duplicate entry \'' . $role->getName())) {
                     throw new RoleNameAlreadyExistsException($name);
                 } else {
                     throw new RoleKeyAlreadyExistsException($key);
@@ -276,7 +276,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (UniqueConstraintViolationException $e) {
-            if (strpos($e->getMessage(), 'Duplicate entry \'' . $role->getName())) {
+            if (\strpos($e->getMessage(), 'Duplicate entry \'' . $role->getName())) {
                 throw new RoleNameAlreadyExistsException($name);
             } else {
                 throw new RoleKeyAlreadyExistsException($key);

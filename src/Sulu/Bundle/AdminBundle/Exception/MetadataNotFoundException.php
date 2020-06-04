@@ -29,7 +29,7 @@ class MetadataNotFoundException extends \Exception
         $this->key = $key;
 
         parent::__construct(
-            sprintf('There is no Metadata available for the type "%s" with the key "%s".', $this->type, $this->key)
+            \sprintf('There is no Metadata available for the type "%s" with the key "%s".', $this->type, $this->key)
         );
     }
 

@@ -136,8 +136,8 @@ class TagController extends AbstractRestController implements ClassResourceInter
             $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('tags');
             $listBuilder = $this->listBuilderFactory->create($this->tagClass);
 
-            $names = array_filter(explode(',', $request->get('names', '')));
-            if (count($names) > 0) {
+            $names = \array_filter(\explode(',', $request->get('names', '')));
+            if (\count($names) > 0) {
                 $listBuilder->in($fieldDescriptors['name'], $names);
             }
 
@@ -274,7 +274,7 @@ class TagController extends AbstractRestController implements ClassResourceInter
     public function postMergeAction(Request $request)
     {
         try {
-            $srcTagIds = explode(',', $request->get('src'));
+            $srcTagIds = \explode(',', $request->get('src'));
             $destTagId = $request->get('dest');
 
             $destTag = $this->tagManager->merge($srcTagIds, $destTagId);

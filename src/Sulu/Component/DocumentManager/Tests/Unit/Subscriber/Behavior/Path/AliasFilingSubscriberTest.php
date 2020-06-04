@@ -97,7 +97,7 @@ class AliasFilingSubscriberTest extends TestCase
         $this->liveSession = $this->prophesize(SessionInterface::class);
         $this->liveNode = $this->prophesize(NodeInterface::class);
 
-        $this->metadataFactory->getMetadataForClass(get_class($this->document->reveal()))
+        $this->metadataFactory->getMetadataForClass(\get_class($this->document->reveal()))
             ->willReturn($this->metadata->reveal());
         $this->defaultSession->getRootNode()->willReturn($this->defaultNode->reveal());
         $this->liveSession->getRootNode()->willReturn($this->liveNode->reveal());

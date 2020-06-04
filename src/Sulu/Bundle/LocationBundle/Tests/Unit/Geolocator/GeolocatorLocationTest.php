@@ -41,7 +41,7 @@ class GeolocatorLocationTest extends TestCase
         ];
 
         foreach ($data as $propName => $value) {
-            $this->location->{'set' . ucfirst($propName)}($value);
+            $this->location->{'set' . \ucfirst($propName)}($value);
         }
 
         $data['name'] = 'This is title';

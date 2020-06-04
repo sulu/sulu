@@ -22,20 +22,20 @@ class AuditableHasher implements HasherInterface
     public function hash($object)
     {
         if ($object instanceof AuditableInterface) {
-            return md5(
+            return \md5(
                 ($object->getChanger() ? $object->getChanger()->getId() : '')
                 . ($object->getChanged() ? $object->getChanged()->getTimestamp() : '')
             );
         }
 
         if ($object instanceof LocalizedAuditableBehavior) {
-            return md5($object->getChanger() . ($object->getChanged() ? $object->getChanged()->getTimestamp() : ''));
+            return \md5($object->getChanger() . ($object->getChanged() ? $object->getChanged()->getTimestamp() : ''));
         }
 
         throw new \InvalidArgumentException(
-            sprintf(
+            \sprintf(
                 'The AuditableHasher only supports objects implementing the AuditableInterface, "%s" given.',
-                get_class($object)
+                \get_class($object)
             )
         );
     }

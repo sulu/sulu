@@ -293,7 +293,7 @@ class QueryBuilderTest extends SuluTestCase
 
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
-        $this->assertEquals(count($nodes), count($result));
+        $this->assertEquals(\count($nodes), \count($result));
         foreach ($result as $item) {
             /** @var PageDocument $expectedDocument */
             $expectedDocument = $nodes[$item['id']];
@@ -309,7 +309,7 @@ class QueryBuilderTest extends SuluTestCase
 
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
-        $this->assertEquals(0, count($result));
+        $this->assertEquals(0, \count($result));
     }
 
     public function testIncludeSubFolder()
@@ -327,12 +327,12 @@ class QueryBuilderTest extends SuluTestCase
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
         // nodes + news + products
-        $this->assertEquals(count($nodes) + 2, count($result));
+        $this->assertEquals(\count($nodes) + 2, \count($result));
 
         $nodes[$news->getUuid()] = $news;
         $nodes[$products->getUuid()] = $products;
 
-        for ($i = 0; $i < count($nodes); ++$i) {
+        for ($i = 0; $i < \count($nodes); ++$i) {
             $item = $result[$i];
 
             /** @var StructureInterface $expected */
@@ -570,7 +570,7 @@ class QueryBuilderTest extends SuluTestCase
         ]);
 
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $titles = array_map(
+        $titles = \array_map(
             function($item) {
                 return $item['title'];
             },
@@ -603,7 +603,7 @@ class QueryBuilderTest extends SuluTestCase
 
             /** @var PageDocument $document */
             $document = $this->documentManager->create('page');
-            $document->setTitle('News ' . rand(1, 100));
+            $document->setTitle('News ' . \rand(1, 100));
             $document->setResourceSegment('/news/news-' . $i);
             $document->setExtensionsData(
                 [
@@ -646,28 +646,28 @@ class QueryBuilderTest extends SuluTestCase
             ]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals($t1t2, count($result));
+        $this->assertEquals($t1t2, \count($result));
 
         // tag 1
         $builder->init(
             ['config' => ['dataSource' => $root->getIdentifier(), 'tags' => [$this->tag1->getId()], 'tagOperator' => 'and']]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals($t1t2 + $t1, count($result));
+        $this->assertEquals($t1t2 + $t1, \count($result));
 
         // tag 2
         $builder->init(
             ['config' => ['dataSource' => $root->getIdentifier(), 'tags' => [$this->tag2->getId()], 'tagOperator' => 'and']]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals($t1t2 + $t2, count($result));
+        $this->assertEquals($t1t2 + $t2, \count($result));
 
         // tag 3
         $builder->init(
             ['config' => ['dataSource' => $root->getIdentifier(), 'tags' => [$this->tag3->getId()], 'tagOperator' => 'and']]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals(0, count($result));
+        $this->assertEquals(0, \count($result));
     }
 
     public function testWebsiteTags()
@@ -692,7 +692,7 @@ class QueryBuilderTest extends SuluTestCase
             ]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals($t1t2, count($result));
+        $this->assertEquals($t1t2, \count($result));
 
         // tag 1 or 2
         $builder->init(
@@ -705,7 +705,7 @@ class QueryBuilderTest extends SuluTestCase
             ]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals($t1t2 + $t1 + $t2, count($result));
+        $this->assertEquals($t1t2 + $t1 + $t2, \count($result));
 
         // tag 3 or 2
         $builder->init(
@@ -718,7 +718,7 @@ class QueryBuilderTest extends SuluTestCase
             ]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals($t2 + $t1t2, count($result)); // no t3 pages there
+        $this->assertEquals($t2 + $t1t2, \count($result)); // no t3 pages there
 
         // tag 1
         $builder->init(
@@ -731,7 +731,7 @@ class QueryBuilderTest extends SuluTestCase
             ]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals($t1t2 + $t1, count($result));
+        $this->assertEquals($t1t2 + $t1, \count($result));
 
         // tag 2
         $builder->init(
@@ -744,7 +744,7 @@ class QueryBuilderTest extends SuluTestCase
             ]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals($t1t2 + $t2, count($result));
+        $this->assertEquals($t1t2 + $t2, \count($result));
 
         // tag 3
         $builder->init(
@@ -757,7 +757,7 @@ class QueryBuilderTest extends SuluTestCase
             ]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals(0, count($result));
+        $this->assertEquals(0, \count($result));
     }
 
     public function testTagsBoth()
@@ -783,7 +783,7 @@ class QueryBuilderTest extends SuluTestCase
             ]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals($t1t2, count($result));
+        $this->assertEquals($t1t2, \count($result));
 
         $builder->init(
             [
@@ -797,7 +797,7 @@ class QueryBuilderTest extends SuluTestCase
             ]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals($t1t2 + $t2, count($result));
+        $this->assertEquals($t1t2 + $t2, \count($result));
     }
 
     public function categoriesProvider()
@@ -882,7 +882,7 @@ class QueryBuilderTest extends SuluTestCase
             ]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals(3, count($result));
+        $this->assertEquals(3, \count($result));
         $builder->init(
             [
                 'config' => [
@@ -893,7 +893,7 @@ class QueryBuilderTest extends SuluTestCase
             ]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals(3, count($result));
+        $this->assertEquals(3, \count($result));
 
         // category 1 and 2
         $builder->init(
@@ -906,7 +906,7 @@ class QueryBuilderTest extends SuluTestCase
             ]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals(1, count($result));
+        $this->assertEquals(1, \count($result));
 
         // category 1 or 3
         $builder->init(
@@ -919,7 +919,7 @@ class QueryBuilderTest extends SuluTestCase
             ]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals(4, count($result));
+        $this->assertEquals(4, \count($result));
 
         // category 1 and 3
         $builder->init(
@@ -932,7 +932,7 @@ class QueryBuilderTest extends SuluTestCase
             ]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals(1, count($result));
+        $this->assertEquals(1, \count($result));
 
         $builder->init(
             [
@@ -944,7 +944,7 @@ class QueryBuilderTest extends SuluTestCase
             ]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals(4, count($result));
+        $this->assertEquals(4, \count($result));
     }
 
     public function orderByProvider()
@@ -1115,7 +1115,7 @@ class QueryBuilderTest extends SuluTestCase
 
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
-        $paths = array_map(
+        $paths = \array_map(
             function($item) {
                 return $item['path'];
             },
@@ -1183,13 +1183,13 @@ class QueryBuilderTest extends SuluTestCase
             $this->sessionManager,
             $this->languageNamespace
         );
-        $builder->init(['ids' => [array_keys($nodes)[0], array_keys($nodes)[1]]]);
+        $builder->init(['ids' => [\array_keys($nodes)[0], \array_keys($nodes)[1]]]);
 
-        $tStart = microtime(true);
+        $tStart = \microtime(true);
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $tDiff = microtime(true) - $tStart;
+        $tDiff = \microtime(true) - $tStart;
 
-        $this->assertEquals(2, count($result));
+        $this->assertEquals(2, \count($result));
         $this->assertArrayHasKey($result[0]['id'], $nodes);
         $this->assertArrayHasKey($result[1]['id'], $nodes);
     }
@@ -1197,7 +1197,7 @@ class QueryBuilderTest extends SuluTestCase
     public function testExcluded()
     {
         $nodes = $this->propertiesProvider();
-        $uuids = array_keys($nodes);
+        $uuids = \array_keys($nodes);
 
         $builder = new QueryBuilder(
             $this->structureManager,
@@ -1209,7 +1209,7 @@ class QueryBuilderTest extends SuluTestCase
 
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
-        $this->assertEquals(14, count($result));
+        $this->assertEquals(14, \count($result));
         unset($uuids[0]);
         foreach ($result as $item) {
             $this->assertContains($item['id'], $uuids);
@@ -1220,7 +1220,7 @@ class QueryBuilderTest extends SuluTestCase
     {
         $nodesEn = [];
         $nodesDe = [];
-        $nodesEn = array_merge(
+        $nodesEn = \array_merge(
             $nodesEn,
             $this->save(
                 [
@@ -1230,7 +1230,7 @@ class QueryBuilderTest extends SuluTestCase
                 'en'
             )
         );
-        $nodesEn = array_merge(
+        $nodesEn = \array_merge(
             $nodesEn,
             $this->save(
                 [
@@ -1245,7 +1245,7 @@ class QueryBuilderTest extends SuluTestCase
                 Structure::STATE_TEST
             )
         );
-        $nodesEn = array_merge(
+        $nodesEn = \array_merge(
             $nodesEn,
             $this->save(
                 [
@@ -1257,7 +1257,7 @@ class QueryBuilderTest extends SuluTestCase
                 $nodesEn['/team']->getUuid()
             )
         );
-        $nodesEn = array_merge(
+        $nodesEn = \array_merge(
             $nodesEn,
             $this->save(
                 [
@@ -1273,7 +1273,7 @@ class QueryBuilderTest extends SuluTestCase
             )
         );
 
-        $nodesDe = array_merge(
+        $nodesDe = \array_merge(
             $nodesDe,
             $this->save(
                 [
@@ -1287,7 +1287,7 @@ class QueryBuilderTest extends SuluTestCase
                 'en'
             )
         );
-        $nodesDe = array_merge(
+        $nodesDe = \array_merge(
             $nodesDe,
             $this->save(
                 [
@@ -1301,7 +1301,7 @@ class QueryBuilderTest extends SuluTestCase
                 'en'
             )
         );
-        $nodesDe = array_merge(
+        $nodesDe = \array_merge(
             $nodesDe,
             $this->save(
                 [
@@ -1315,7 +1315,7 @@ class QueryBuilderTest extends SuluTestCase
                 'en'
             )
         );
-        $nodesDe = array_merge(
+        $nodesDe = \array_merge(
             $nodesDe,
             $this->save(
                 [
@@ -1398,7 +1398,7 @@ class QueryBuilderTest extends SuluTestCase
 
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
-        $this->assertEquals(3, count($result));
+        $this->assertEquals(3, \count($result));
         $this->assertEquals('/team/thomas', $result[0]['url']);
         $this->assertEquals('Thomas', $result[0]['title']);
         $this->assertEquals(false, $result[0]['publishedState']);
@@ -1414,7 +1414,7 @@ class QueryBuilderTest extends SuluTestCase
 
         $result = $this->contentQuery->execute('sulu_io', ['de'], $builder);
 
-        $this->assertEquals(3, count($result));
+        $this->assertEquals(3, \count($result));
         $this->assertEquals('/team/thomas', $result[0]['url']);
         $this->assertEquals('Thomas', $result[0]['title']);
         $this->assertEquals(false, $result[0]['publishedState']);

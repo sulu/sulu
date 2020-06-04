@@ -79,10 +79,10 @@ class BlockProperty extends Property implements BlockPropertyInterface
     {
         if (!$this->hasType($name)) {
             throw new \InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     'The block type "%s" has not been registered. Known block types are: [%s]',
                     $name,
-                    implode(', ', array_keys($this->types))
+                    \implode(', ', \array_keys($this->types))
                 )
             );
         }
@@ -128,9 +128,9 @@ class BlockProperty extends Property implements BlockPropertyInterface
     public function getProperties($index)
     {
         if (!isset($this->properties[$index])) {
-            throw new \OutOfRangeException(sprintf(
+            throw new \OutOfRangeException(\sprintf(
                 'No properties at index "%s" in block "%s". Valid indexes: [%s]',
-                $index, $this->getName(), implode(', ', array_keys($this->properties))
+                $index, $this->getName(), \implode(', ', \array_keys($this->properties))
             ));
         }
 
@@ -139,7 +139,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
 
     public function getLength()
     {
-        return count($this->properties);
+        return \count($this->properties);
     }
 
     public function setValue($value)
@@ -175,13 +175,13 @@ class BlockProperty extends Property implements BlockPropertyInterface
         }
 
         // check value for single value
-        if (array_keys($items) !== range(0, count($items) - 1)) {
+        if (\array_keys($items) !== \range(0, \count($items) - 1)) {
             $items = [$items];
         }
 
         $this->properties = [];
 
-        for ($i = 0; $i < count($items); ++$i) {
+        for ($i = 0; $i < \count($items); ++$i) {
             $item = $items[$i];
             $type = $this->initProperties($i, $item['type']);
 
@@ -219,8 +219,8 @@ class BlockProperty extends Property implements BlockPropertyInterface
     public function getValue()
     {
         // if size of children smaller than minimum
-        if (count($this->properties) < $this->getMinOccurs()) {
-            for ($i = count($this->properties); $i < $this->getMinOccurs(); ++$i) {
+        if (\count($this->properties) < $this->getMinOccurs()) {
+            for ($i = \count($this->properties); $i < $this->getMinOccurs(); ++$i) {
                 $this->initProperties($i, $this->getDefaultTypeName());
             }
         }
@@ -249,7 +249,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
 
     public function getIsMultiple()
     {
-        if (is_null($this->getMinOccurs()) || is_null($this->getMaxOccurs())) {
+        if (\is_null($this->getMinOccurs()) || \is_null($this->getMaxOccurs())) {
             // in contrast to properties blocks are multiple by default
             return true;
         }

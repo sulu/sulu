@@ -136,17 +136,17 @@ class CreateUserCommand extends Command
         $existing = $this->userRepository->findOneBy(['username' => $username]);
 
         if ($existing) {
-            $output->writeln(sprintf('<error>User "%s" already exists</error>',
+            $output->writeln(\sprintf('<error>User "%s" already exists</error>',
                 $username
             ));
 
             return 1;
         }
 
-        if (!in_array($locale, $this->locales)) {
-            $output->writeln(sprintf(
+        if (!\in_array($locale, $this->locales)) {
+            $output->writeln(\sprintf(
                 'Given locale "%s" is invalid, must be one of "%s"',
-                $locale, implode('", "', $this->locales)
+                $locale, \implode('", "', $this->locales)
             ));
 
             return 1;
@@ -171,9 +171,9 @@ class CreateUserCommand extends Command
         $role = $this->roleRepository->findOneBy(['name' => $roleName]);
 
         if (!$role) {
-            $output->writeln(sprintf('<error>Role "%s" not found. The following roles are available: "%s"</error>',
+            $output->writeln(\sprintf('<error>Role "%s" not found. The following roles are available: "%s"</error>',
                 $roleName,
-                implode('", "', $this->getRoleNames())
+                \implode('", "', $this->getRoleNames())
             ));
 
             return 1;
@@ -182,14 +182,14 @@ class CreateUserCommand extends Command
         $userRole = new UserRole();
         $userRole->setRole($role);
         $userRole->setUser($user);
-        $userRole->setLocale(json_encode($locales)); // set all locales
+        $userRole->setLocale(\json_encode($locales)); // set all locales
         $this->entityManager->persist($userRole);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
         $output->writeln(
-            sprintf('Created user "<comment>%s</comment>" in role "<comment>%s</comment>"', $username, $roleName)
+            \sprintf('Created user "<comment>%s</comment>" in role "<comment>%s</comment>"', $username, $roleName)
         );
 
         return 0;
@@ -222,8 +222,8 @@ class CreateUserCommand extends Command
                     }
 
                     $users = $userRepository->findBy(['username' => $username]);
-                    if (count($users) > 0) {
-                        throw new \InvalidArgumentException(sprintf('Username "%s" is not unique', $username));
+                    if (\count($users) > 0) {
+                        throw new \InvalidArgumentException(\sprintf('Username "%s" is not unique', $username));
                     }
 
                     return $username;
@@ -275,8 +275,8 @@ class CreateUserCommand extends Command
                     }
                     if (null !== $email) {
                         $users = $userRepository->findBy(['email' => $email]);
-                        if (count($users) > 0) {
-                            throw new \InvalidArgumentException(sprintf('Email "%s" is not unique', $email));
+                        if (\count($users) > 0) {
+                            throw new \InvalidArgumentException(\sprintf('Email "%s" is not unique', $email));
                         }
                     }
 
@@ -359,7 +359,7 @@ class CreateUserCommand extends Command
         $roleNames = $this->roleRepository->getRoleNames();
 
         if (empty($roleNames)) {
-            throw new \RuntimeException(sprintf(
+            throw new \RuntimeException(\sprintf(
                 'The system currently has no roles. Use the "sulu:security:role:create" command to create roles.'
             ));
         }

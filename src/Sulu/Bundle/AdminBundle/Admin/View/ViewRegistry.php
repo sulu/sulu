@@ -68,7 +68,7 @@ class ViewRegistry
             $admin->configureViews($viewCollection);
         }
 
-        $views = array_map(function(ViewBuilderInterface $viewBuilder) {
+        $views = \array_map(function(ViewBuilderInterface $viewBuilder) {
             return $viewBuilder->getView();
         }, $viewCollection->all());
 
@@ -87,7 +87,7 @@ class ViewRegistry
 
     private function validateViews(array $views): void
     {
-        $viewNames = array_map(function(View $view) {
+        $viewNames = \array_map(function(View $view) {
             return $view->getName();
         }, $views);
 
@@ -98,7 +98,7 @@ class ViewRegistry
                 continue;
             }
 
-            if (!in_array($viewParent, $viewNames)) {
+            if (!\in_array($viewParent, $viewNames)) {
                 throw new ParentViewNotFoundException($viewParent, $view->getName());
             }
         }
@@ -107,7 +107,7 @@ class ViewRegistry
     private function mergeViewOptions(array $views, string $parent = null)
     {
         /** @var View[] $childViews */
-        $childViews = array_filter($views, function(View $view) use ($parent) {
+        $childViews = \array_filter($views, function(View $view) use ($parent) {
             return $view->getParent() === $parent;
         });
 
@@ -116,7 +116,7 @@ class ViewRegistry
         }
 
         /** @var View $parentView */
-        $parentViews = array_values(array_filter($views, function(View $view) use ($parent) {
+        $parentViews = \array_values(\array_filter($views, function(View $view) use ($parent) {
             return $view->getName() === $parent;
         }));
 
@@ -128,7 +128,7 @@ class ViewRegistry
         $mergedViews = [];
         foreach ($childViews as $childView) {
             $mergedViews[] = $parentView ? $childView->mergeViewOptions($parentView) : $childView;
-            $mergedViews = array_merge($mergedViews, $this->mergeViewOptions($views, $childView->getName()));
+            $mergedViews = \array_merge($mergedViews, $this->mergeViewOptions($views, $childView->getName()));
         }
 
         return $mergedViews;

@@ -278,7 +278,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
         // get urls for resource-locators
         $urls = [];
         foreach ($resourceLocators as $resourceLocator) {
-            $urls = array_merge($urls, $this->findUrlsByResourceLocator($resourceLocator, $locale, $webspace));
+            $urls = \array_merge($urls, $this->findUrlsByResourceLocator($resourceLocator, $locale, $webspace));
         }
 
         return $urls;

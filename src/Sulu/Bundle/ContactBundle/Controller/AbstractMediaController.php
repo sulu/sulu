@@ -222,7 +222,7 @@ abstract class AbstractMediaController extends AbstractRestController
                     $listResponse,
                     static::$mediaEntityKey,
                     $routeName,
-                    array_merge(['contactId' => $contactId], $request->query->all()),
+                    \array_merge(['contactId' => $contactId], $request->query->all()),
                     $listBuilder->getCurrentPage(),
                     $listBuilder->getLimit(),
                     $listBuilder->count()
@@ -456,12 +456,12 @@ abstract class AbstractMediaController extends AbstractRestController
      */
     private function addThumbnails($entities, $locale)
     {
-        $ids = array_filter(array_column($entities, 'thumbnails'));
+        $ids = \array_filter(\array_column($entities, 'thumbnails'));
         $thumbnails = $this->mediaManager->getFormatUrls($ids, $locale);
         foreach ($entities as $key => $entity) {
-            if (array_key_exists('thumbnails', $entity)
+            if (\array_key_exists('thumbnails', $entity)
                 && $entity['thumbnails']
-                && array_key_exists($entity['thumbnails'], $thumbnails)
+                && \array_key_exists($entity['thumbnails'], $thumbnails)
             ) {
                 $entities[$key]['thumbnails'] = $thumbnails[$entity['thumbnails']];
             }
@@ -480,7 +480,7 @@ abstract class AbstractMediaController extends AbstractRestController
      */
     private function addUrls($entities, $locale)
     {
-        $ids = array_filter(array_column($entities, 'id'));
+        $ids = \array_filter(\array_column($entities, 'id'));
         $apiEntities = $this->mediaManager->getByIds($ids, $locale);
         $i = 0;
         foreach ($entities as $key => $entity) {

@@ -115,7 +115,7 @@ class BlockPropertyType
      */
     public function getTitle($languageCode)
     {
-        return $this->metadata->get('title', $languageCode, ucfirst($this->getName()));
+        return $this->metadata->get('title', $languageCode, \ucfirst($this->getName()));
     }
 
     /**

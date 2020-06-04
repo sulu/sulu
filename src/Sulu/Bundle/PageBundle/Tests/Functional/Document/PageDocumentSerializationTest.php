@@ -74,7 +74,7 @@ class PageDocumentSerializationTest extends SuluTestCase
 
         $jsonResult = $this->serializer->serialize($page, 'json');
         $this->assertNotNull($jsonResult);
-        $result = json_decode($jsonResult, true);
+        $result = \json_decode($jsonResult, true);
 
         $this->assertEquals('Foobar', $result['title']);
         $this->assertEquals(1234, $result['structure']['integer']);
@@ -116,7 +116,7 @@ class PageDocumentSerializationTest extends SuluTestCase
         $jsonResult = $this->serializer->serialize($page, 'json');
 
         $this->assertNotNull($jsonResult);
-        $result = json_decode($jsonResult, true);
+        $result = \json_decode($jsonResult, true);
         $this->assertEquals('Hello', $result['title']);
     }
 

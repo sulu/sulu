@@ -58,7 +58,7 @@ abstract class WebsiteController extends AbstractController
         if (!$this->get('twig')->getLoader()->exists($viewTemplate)) {
             throw new HttpException(
                 406,
-                sprintf('Page does not exist in "%s" format.', $requestFormat)
+                \sprintf('Page does not exist in "%s" format.', $requestFormat)
             );
         }
 
@@ -125,17 +125,17 @@ abstract class WebsiteController extends AbstractController
 
         $template = $twig->load($template);
 
-        $level = ob_get_level();
-        ob_start();
+        $level = \ob_get_level();
+        \ob_start();
 
         try {
             $rendered = $template->renderBlock($block, $attributes);
-            ob_end_clean();
+            \ob_end_clean();
 
             return $rendered;
         } catch (\Exception $e) {
-            while (ob_get_level() > $level) {
-                ob_end_clean();
+            while (\ob_get_level() > $level) {
+                \ob_end_clean();
             }
 
             throw $e;

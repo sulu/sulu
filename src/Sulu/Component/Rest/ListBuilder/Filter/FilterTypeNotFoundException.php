@@ -18,7 +18,7 @@ class FilterTypeNotFoundException extends \Exception
     public function __construct(string $type)
     {
         $this->type = $type;
-        parent::__construct(sprintf('There is no FilterType registered for the type "%s".', $this->type));
+        parent::__construct(\sprintf('There is no FilterType registered for the type "%s".', $this->type));
     }
 
     public function getType(): string

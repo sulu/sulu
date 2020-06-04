@@ -106,7 +106,7 @@ class MediaSearchSubscriber implements EventSubscriberInterface
         // Do not try and get the image URL if the mime type is not in the
         // list of mime types for which thumbnails are generated.
         foreach ($this->thumbnailMimeTypes as $type) {
-            if (fnmatch($type, $fileVersion->getMimeType())) {
+            if (\fnmatch($type, $fileVersion->getMimeType())) {
                 $document->setImageUrl($this->getImageUrl($media, $locale));
                 break;
             }
@@ -142,7 +142,7 @@ class MediaSearchSubscriber implements EventSubscriberInterface
         $formats = $mediaApi->getThumbnails();
 
         if (!isset($formats[$this->searchImageFormat])) {
-            $this->logger->warning(sprintf(
+            $this->logger->warning(\sprintf(
                 'Media with ID "%s" does not have thumbnail format "%s". This thumbnail would be used by the search results.',
                 $media->getId(),
                 $this->searchImageFormat

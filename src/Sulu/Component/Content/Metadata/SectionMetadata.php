@@ -28,7 +28,7 @@ class SectionMetadata extends ItemMetadata
 
     public function getTitle($locale)
     {
-        if (!array_key_exists($locale, $this->titles)) {
+        if (!\array_key_exists($locale, $this->titles)) {
             return;
         }
 

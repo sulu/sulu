@@ -21,7 +21,7 @@ class BooleanFilterType implements FilterTypeInterface
         FieldDescriptorInterface $fieldDescriptor,
         $options
     ): void {
-        if (!is_string($options) || ('true' !== $options && 'false' !== $options)) {
+        if (!\is_string($options) || ('true' !== $options && 'false' !== $options)) {
             throw new InvalidFilterTypeOptionsException(
                 'The BooleanFilterType requires its options to be true or false'
             );

@@ -113,7 +113,7 @@ class PublishSubscriber implements EventSubscriberInterface
     public function removeNodeFromPublicWorkspace(RemoveEvent $event)
     {
         $document = $event->getDocument();
-        $metadata = $this->metadataFactory->getMetadataForClass(get_class($document));
+        $metadata = $this->metadataFactory->getMetadataForClass(\get_class($document));
         if (!$metadata->getSyncRemoveLive()) {
             return;
         }
@@ -241,7 +241,7 @@ class PublishSubscriber implements EventSubscriberInterface
         $currentDefaultNode = $node->getSession()->getRootNode();
         $currentLiveNode = $this->liveSession->getRootNode();
 
-        $pathSegments = explode('/', ltrim($path, '/'));
+        $pathSegments = \explode('/', \ltrim($path, '/'));
         foreach ($pathSegments as $pathSegment) {
             $currentDefaultNode = $currentDefaultNode->getNode($pathSegment);
 

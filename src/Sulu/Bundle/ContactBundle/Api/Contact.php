@@ -842,7 +842,7 @@ class Contact extends ApiWrapper
     public function getAccount()
     {
         $mainAccount = $this->entity->getMainAccount();
-        if (!is_null($mainAccount)) {
+        if (!\is_null($mainAccount)) {
             return new Account($mainAccount, $this->locale);
         }
 
@@ -861,7 +861,7 @@ class Contact extends ApiWrapper
         $contactAddresses = $this->entity->getContactAddresses();
         $addresses = [];
 
-        if (!is_null($contactAddresses)) {
+        if (!\is_null($contactAddresses)) {
             /** @var ContactAddressEntity $contactAddress */
             foreach ($contactAddresses as $contactAddress) {
                 $address = $contactAddress->getAddress();
@@ -996,7 +996,7 @@ class Contact extends ApiWrapper
     {
         $contactAddresses = $this->entity->getContactAddresses();
 
-        if (!is_null($contactAddresses)) {
+        if (!\is_null($contactAddresses)) {
             /** @var ContactAddressEntity $contactAddress */
             foreach ($contactAddresses as $contactAddress) {
                 if ((bool) $contactAddress->getMain()) {
@@ -1078,7 +1078,7 @@ class Contact extends ApiWrapper
      */
     public function getCategories()
     {
-        return array_map(function($category) {
+        return \array_map(function($category) {
             return $category->getId();
         }, $this->entity->getCategories()->toArray());
     }

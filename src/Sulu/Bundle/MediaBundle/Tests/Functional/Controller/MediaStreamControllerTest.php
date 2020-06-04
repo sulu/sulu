@@ -50,7 +50,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
         $filePath = $this->createMediaFile('test.jpg');
         $media = $this->createMedia($filePath, 'file-without-extension');
 
-        $this->client->request('GET', str_replace('v=1', 'v=99', $media->getUrl()));
+        $this->client->request('GET', \str_replace('v=1', 'v=99', $media->getUrl()));
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(404, $response);
     }
@@ -65,7 +65,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
         $this->assertEquals(
-            sprintf(
+            \sprintf(
                 '<%s>; rel="canonical"',
                 $newMedia->getUrl()
             ),
@@ -98,7 +98,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
 
         $this->assertEquals(
             'attachment; filename=fitness-seasons.jpeg; filename*=utf-8\'\'fitness-seasons.agency--C-%26-C--Rodach%2C-Johannes',
-            str_replace('"', '', $response->headers->get('Content-Disposition'))
+            \str_replace('"', '', $response->headers->get('Content-Disposition'))
         );
     }
 
@@ -139,7 +139,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
 
     public function testGetImageActionSvgAsJpg()
     {
-        if (!class_exists(\Imagick::class)) {
+        if (!\class_exists(\Imagick::class)) {
             $this->markTestSkipped('Imagick pecl extension is not installed.');
 
             return;
@@ -162,7 +162,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
 
     private function createUploadedFile($path)
     {
-        return new UploadedFile($path, basename($path), mime_content_type($path));
+        return new UploadedFile($path, \basename($path), \mime_content_type($path));
     }
 
     private function createCollection($title = 'Test')
@@ -218,8 +218,8 @@ class MediaStreamControllerTest extends WebsiteTestCase
 
     private function createMediaFile(string $name, string $fileName = 'photo.jpeg')
     {
-        $filePath = sys_get_temp_dir() . '/' . $name;
-        copy(__DIR__ . '/../../Fixtures/files/' . $fileName, $filePath);
+        $filePath = \sys_get_temp_dir() . '/' . $name;
+        \copy(__DIR__ . '/../../Fixtures/files/' . $fileName, $filePath);
 
         return $filePath;
     }

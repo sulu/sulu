@@ -21,13 +21,13 @@ class SelectionFilterType implements FilterTypeInterface
         FieldDescriptorInterface $fieldDescriptor,
         $options
     ): void {
-        if (!is_string($options)) {
+        if (!\is_string($options)) {
             throw new InvalidFilterTypeOptionsException(
                 'The SelectionFilterType requires its options to be comma-separated list of IDs'
             );
         }
 
-        $listBuilder->in($fieldDescriptor, explode(',', $options));
+        $listBuilder->in($fieldDescriptor, \explode(',', $options));
     }
 
     public static function getDefaultIndexName(): string

@@ -21,6 +21,6 @@ class DataProviderNotExistsException extends DataProviderException
      */
     public function __construct($alias)
     {
-        parent::__construct($alias, sprintf('DataProvider with alias "%s" not exists.', $alias));
+        parent::__construct($alias, \sprintf('DataProvider with alias "%s" not exists.', $alias));
     }
 }

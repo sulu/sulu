@@ -23,7 +23,7 @@ class RequestAttributes
 
     public function __construct(array $attributes = [])
     {
-        $this->attributes = array_filter($attributes);
+        $this->attributes = \array_filter($attributes);
     }
 
     /**
@@ -34,7 +34,7 @@ class RequestAttributes
      */
     public function getAttribute($name, $default = null)
     {
-        if (!array_key_exists($name, $this->attributes)) {
+        if (!\array_key_exists($name, $this->attributes)) {
             return $default;
         }
 
@@ -50,6 +50,6 @@ class RequestAttributes
      */
     public function merge(self $requestAttributes)
     {
-        return new self(array_merge($requestAttributes->attributes, $this->attributes));
+        return new self(\array_merge($requestAttributes->attributes, $this->attributes));
     }
 }

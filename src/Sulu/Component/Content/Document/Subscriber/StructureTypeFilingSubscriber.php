@@ -38,7 +38,7 @@ class StructureTypeFilingSubscriber extends AbstractFilingSubscriber
         }
         $parentName = $this->getParentName($document);
 
-        return sprintf('%s/%s', $currentPath, $parentName);
+        return \sprintf('%s/%s', $currentPath, $parentName);
     }
 
     protected function supports($document)

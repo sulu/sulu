@@ -99,7 +99,7 @@ class PropertyParameter implements \JsonSerializable
      */
     public function getTitle($languageCode)
     {
-        return $this->metadata->get('title', $languageCode, ucfirst($this->name));
+        return $this->metadata->get('title', $languageCode, \ucfirst($this->name));
     }
 
     /**
@@ -142,9 +142,9 @@ class PropertyParameter implements \JsonSerializable
     {
         $value = $this->getValue();
 
-        if (is_string($value)) {
+        if (\is_string($value)) {
             return $value;
-        } elseif (is_bool($value)) {
+        } elseif (\is_bool($value)) {
             return $value ? 'true' : 'false';
         } else {
             return '';

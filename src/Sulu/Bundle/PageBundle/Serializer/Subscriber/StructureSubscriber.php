@@ -105,7 +105,7 @@ class StructureSubscriber implements EventSubscriberInterface
             );
 
             if ($context->hasAttribute('groups')
-                && in_array('defaultPage', $context->getAttribute('groups'))
+                && \in_array('defaultPage', $context->getAttribute('groups'))
             ) {
                 $this->addStructureProperties($structureMetadata, $document, $visitor);
             }
@@ -124,7 +124,7 @@ class StructureSubscriber implements EventSubscriberInterface
         $structure = $document->getStructure();
         $data = $structure->toArray();
         foreach ($structureMetadata->getProperties() as $name => $property) {
-            if ('title' === $name || !array_key_exists($name, $data) || $property->hasTag('sulu.rlp')) {
+            if ('title' === $name || !\array_key_exists($name, $data) || $property->hasTag('sulu.rlp')) {
                 continue;
             }
 

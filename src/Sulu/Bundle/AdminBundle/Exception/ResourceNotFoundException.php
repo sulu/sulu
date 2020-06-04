@@ -23,7 +23,7 @@ class ResourceNotFoundException extends \Exception
 
     public function __construct(string $resourceKey)
     {
-        parent::__construct(sprintf('The resource with the key "%s" does not exist.', $resourceKey));
+        parent::__construct(\sprintf('The resource with the key "%s" does not exist.', $resourceKey));
 
         $this->resourceKey = $resourceKey;
     }

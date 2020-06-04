@@ -133,7 +133,7 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
         $value = $property->getValue();
         $locale = $property->getStructure()->getLanguageCode();
 
-        if (null === $value || !is_array($value) || 0 === count($value)) {
+        if (null === $value || !\is_array($value) || 0 === \count($value)) {
             return [];
         }
 
@@ -145,8 +145,8 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
         $accounts = $this->accountManager->getByIds($ids[self::PREFIX_ACCOUNT], $locale);
         $contacts = $this->contactManager->getByIds($ids[self::PREFIX_CONTACT], $locale);
 
-        $result = array_merge($accounts, $contacts);
-        @usort(
+        $result = \array_merge($accounts, $contacts);
+        @\usort(
             $result,
             function($a, $b) use ($value) {
                 $typeA = $a instanceof Contact ? self::PREFIX_CONTACT : self::PREFIX_ACCOUNT;
@@ -156,7 +156,7 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
             }
         );
 
-        return array_map(
+        return \array_map(
             function($entity) {
                 $groups = ['fullContact', 'partialAccount'];
                 if ($entity instanceof Account) {
@@ -189,8 +189,8 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
 
     public function exportData($propertyValue)
     {
-        if (is_array($propertyValue)) {
-            return json_encode($propertyValue);
+        if (\is_array($propertyValue)) {
+            return \json_encode($propertyValue);
         }
 
         return '';
@@ -205,14 +205,14 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
         $languageCode,
         $segmentKey = null
     ) {
-        $property->setValue(json_decode($value));
+        $property->setValue(\json_decode($value));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 
     public function preResolve(PropertyInterface $property)
     {
         $value = $property->getValue();
-        if (null === $value || !is_array($value) || 0 === count($value)) {
+        if (null === $value || !\is_array($value) || 0 === \count($value)) {
             return [];
         }
 

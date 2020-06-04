@@ -81,7 +81,7 @@ class TagRequestHandlerTest extends TestCase
         $handler = new TagRequestHandler($requestStack->reveal());
         $result = $handler->appendTagToUrl($tag, $tagsParameter);
 
-        $this->assertEquals($url . '?' . $tagsParameter . '=' . urlencode($expected), $result);
+        $this->assertEquals($url . '?' . $tagsParameter . '=' . \urlencode($expected), $result);
     }
 
     public function setProvider()
@@ -115,7 +115,7 @@ class TagRequestHandlerTest extends TestCase
         $handler = new TagRequestHandler($requestStack->reveal());
         $result = $handler->setTagToUrl($tag, $tagsParameter);
 
-        $this->assertEquals($url . '?' . $tagsParameter . '=' . urlencode($expected), $result);
+        $this->assertEquals($url . '?' . $tagsParameter . '=' . \urlencode($expected), $result);
     }
 
     public function removeProvider()

@@ -48,7 +48,7 @@ trait FormViewBuilderTrait
     private function addLocalesToView(View $view, array $locales): void
     {
         $oldLocales = $view->getOption('locales');
-        $newLocales = $oldLocales ? array_merge($oldLocales, $locales) : $locales;
+        $newLocales = $oldLocales ? \array_merge($oldLocales, $locales) : $locales;
         $view->setOption('locales', $newLocales);
 
         if (!$view->getAttributeDefault('locale') && isset($newLocales[0])) {
@@ -60,7 +60,7 @@ trait FormViewBuilderTrait
     {
         $oldRouterAttributesToFormRequest = $view->getOption('routerAttributesToFormRequest');
         $newRouterAttributesToFormRequest = $oldRouterAttributesToFormRequest
-            ? array_merge($oldRouterAttributesToFormRequest, $routerAttributesToFormRequest)
+            ? \array_merge($oldRouterAttributesToFormRequest, $routerAttributesToFormRequest)
             : $routerAttributesToFormRequest;
 
         $view->setOption('routerAttributesToFormRequest', $newRouterAttributesToFormRequest);
@@ -70,7 +70,7 @@ trait FormViewBuilderTrait
     {
         $oldRouterAttributesToEditView = $view->getOption('routerAttributesToEditView');
         $newRouterAttributesToEditView = $oldRouterAttributesToEditView
-            ? array_merge($oldRouterAttributesToEditView, $routerAttributesToEditView)
+            ? \array_merge($oldRouterAttributesToEditView, $routerAttributesToEditView)
             : $routerAttributesToEditView;
 
         $view->setOption('routerAttributesToEditView', $newRouterAttributesToEditView);
@@ -80,7 +80,7 @@ trait FormViewBuilderTrait
     {
         $oldRouterAttributesToBackView = $view->getOption('routerAttributesToBackView');
         $newRouterAttributesToBackView = $oldRouterAttributesToBackView
-            ? array_merge($oldRouterAttributesToBackView, $routerAttributesToBackView)
+            ? \array_merge($oldRouterAttributesToBackView, $routerAttributesToBackView)
             : $routerAttributesToBackView;
 
         $view->setOption('routerAttributesToBackView', $newRouterAttributesToBackView);
@@ -90,7 +90,7 @@ trait FormViewBuilderTrait
     {
         $oldRouterAttributesToFormMetadata = $route->getOption('routerAttributesToFormMetadata');
         $newRouterAttributesToFormMetadata = $oldRouterAttributesToFormMetadata
-            ? array_merge($oldRouterAttributesToFormMetadata, $routerAttributesToFormMetadata)
+            ? \array_merge($oldRouterAttributesToFormMetadata, $routerAttributesToFormMetadata)
             : $routerAttributesToFormMetadata;
 
         $route->setOption('routerAttributesToFormMetadata', $newRouterAttributesToFormMetadata);
@@ -99,7 +99,7 @@ trait FormViewBuilderTrait
     private function addMetadataRequestParametersToView(View $route, array $metadataRequestParameters): void
     {
         $oldMetadataRequestParameters = $route->getOption('metadataRequestParameters');
-        $newMetadataRequestParameters = $oldMetadataRequestParameters ? array_merge($oldMetadataRequestParameters, $metadataRequestParameters) : $metadataRequestParameters;
+        $newMetadataRequestParameters = $oldMetadataRequestParameters ? \array_merge($oldMetadataRequestParameters, $metadataRequestParameters) : $metadataRequestParameters;
 
         $route->setOption('metadataRequestParameters', $newMetadataRequestParameters);
     }
@@ -107,7 +107,7 @@ trait FormViewBuilderTrait
     private function addRequestParametersToView(View $route, array $requestParameters): void
     {
         $oldRequestParameters = $route->getOption('requestParameters');
-        $newRequestParameters = $oldRequestParameters ? array_merge($oldRequestParameters, $requestParameters) : $requestParameters;
+        $newRequestParameters = $oldRequestParameters ? \array_merge($oldRequestParameters, $requestParameters) : $requestParameters;
 
         $route->setOption('requestParameters', $newRequestParameters);
     }

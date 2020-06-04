@@ -27,7 +27,7 @@ class NodeNameAlreadyExistsException extends DocumentManagerException
     public function __construct($nodeName)
     {
         parent::__construct(
-            sprintf('The node name "%s" already exists, and therefore cannot be used to create a new node', $nodeName)
+            \sprintf('The node name "%s" already exists, and therefore cannot be used to create a new node', $nodeName)
         );
         $this->nodeName = $nodeName;
     }

@@ -279,7 +279,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
      */
     private function setDefaultForFormOfAddress($config)
     {
-        if (!array_key_exists('form_of_address', $config) || 0 == count($config['form_of_address'])) {
+        if (!\array_key_exists('form_of_address', $config) || 0 == \count($config['form_of_address'])) {
             $config['form_of_address'] = [
                 'male' => [
                     'id' => 0,

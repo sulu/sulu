@@ -37,14 +37,14 @@ class TargetGroupRepository extends EntityRepository implements TargetGroupRepos
         $targetGroup = $this->getEntityManager()->merge($targetGroup);
 
         foreach ($targetGroup->getRules()->toArray() as $rule) {
-            if (!in_array($rule, $newRules)) {
+            if (!\in_array($rule, $newRules)) {
                 $targetGroup->removeRule($rule);
                 $this->getEntityManager()->remove($rule);
             }
         }
 
         foreach ($targetGroup->getWebspaces()->toArray() as $webspace) {
-            if (!in_array($webspace, $newWebspaces)) {
+            if (!\in_array($webspace, $newWebspaces)) {
                 $targetGroup->removeWebspace($webspace);
                 $this->getEntityManager()->remove($webspace);
             }

@@ -34,7 +34,7 @@ class DelegatingTagExtractorTest extends TestCase
         $extractors[1]->count($this->html)->willReturn(1)->shouldBeCalledTimes(1);
 
         $extractor = new DelegatingTagExtractor(
-            array_map(
+            \array_map(
                 function($extrator) {
                     return $extrator->reveal();
                 },
@@ -70,7 +70,7 @@ class DelegatingTagExtractorTest extends TestCase
         )->shouldBeCalledTimes(1);
 
         $extractor = new DelegatingTagExtractor(
-            array_map(
+            \array_map(
                 function($extrator) {
                     return $extrator->reveal();
                 },

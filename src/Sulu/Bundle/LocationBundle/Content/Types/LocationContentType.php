@@ -20,7 +20,7 @@ class LocationContentType extends ComplexContentType implements ContentTypeExpor
 {
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $data = json_decode($node->getPropertyValueWithDefault($property->getName(), null), true);
+        $data = \json_decode($node->getPropertyValueWithDefault($property->getName(), null), true);
         $property->setValue($data);
     }
 
@@ -33,7 +33,7 @@ class LocationContentType extends ComplexContentType implements ContentTypeExpor
         $segmentKey
     ) {
         $value = $property->getValue();
-        $node->setProperty($property->getName(), json_encode($value));
+        $node->setProperty($property->getName(), \json_encode($value));
     }
 
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
@@ -45,7 +45,7 @@ class LocationContentType extends ComplexContentType implements ContentTypeExpor
 
     public function exportData($propertyValue)
     {
-        if (false === is_string($propertyValue)) {
+        if (false === \is_string($propertyValue)) {
             return '';
         }
 

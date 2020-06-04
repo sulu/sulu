@@ -188,7 +188,7 @@ class Webspace implements ArrayableInterface
         $localizations = [];
         foreach ($this->getLocalizations() as $child) {
             $localizations[] = $child;
-            $localizations = array_merge($localizations, $child->getAllLocalizations());
+            $localizations = \array_merge($localizations, $child->getAllLocalizations());
         }
 
         return $localizations;
@@ -428,13 +428,13 @@ class Webspace implements ArrayableInterface
      */
     public function hasDomain($domain, $environment, $locale = null)
     {
-        $localizationParts = explode('_', $locale);
+        $localizationParts = \explode('_', $locale);
         $language = $localizationParts[0];
         $country = isset($localizationParts[1]) ? $localizationParts[1] : '';
 
         foreach ($this->getPortals() as $portal) {
             foreach ($portal->getEnvironment($environment)->getUrls() as $url) {
-                $host = parse_url('//' . $url->getUrl())['host'];
+                $host = \parse_url('//' . $url->getUrl())['host'];
                 if ((null === $locale || $url->isValidLocale($language, $country))
                     && ($host === $domain || '{host}' === $host)
                 ) {
@@ -467,7 +467,7 @@ class Webspace implements ArrayableInterface
      */
     public function getTemplate($type, $format = 'html')
     {
-        if (array_key_exists($type, $this->templates)) {
+        if (\array_key_exists($type, $this->templates)) {
             return $this->templates[$type] . '.' . $format . '.twig';
         }
 
@@ -504,7 +504,7 @@ class Webspace implements ArrayableInterface
      */
     public function getDefaultTemplate($type)
     {
-        if (array_key_exists($type, $this->defaultTemplates)) {
+        if (\array_key_exists($type, $this->defaultTemplates)) {
             return $this->defaultTemplates[$type];
         }
 

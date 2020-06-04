@@ -84,8 +84,8 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
     {
         $systemCollections = $this->getSystemCollections();
 
-        if (!array_key_exists($key, $systemCollections)) {
-            throw new UnrecognizedSystemCollection($key, array_keys($systemCollections));
+        if (!\array_key_exists($key, $systemCollections)) {
+            throw new UnrecognizedSystemCollection($key, \array_keys($systemCollections));
         }
 
         return $systemCollections[$key];
@@ -93,7 +93,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
 
     public function isSystemCollection($id)
     {
-        return in_array($id, $this->getSystemCollections());
+        return \in_array($id, $this->getSystemCollections());
     }
 
     /**
@@ -149,7 +149,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
     {
         $root = $this->getOrCreateRoot(SystemCollectionManagerInterface::COLLECTION_KEY, 'System', $locale, $userId);
         $collections = ['root' => $root->getId()];
-        $collections = array_merge($collections, $this->iterateOverCollections($this->config, $userId, $root->getId()));
+        $collections = \array_merge($collections, $this->iterateOverCollections($this->config, $userId, $root->getId()));
 
         $this->entityManager->flush();
 
@@ -172,7 +172,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
         $format = ('' !== $namespace ? '%s.%s' : '%s%s');
         $collections = [];
         foreach ($children as $collectionKey => $collectionItem) {
-            $key = sprintf($format, $namespace, $collectionKey);
+            $key = \sprintf($format, $namespace, $collectionKey);
             $collections[$key] = $this->getOrCreateCollection(
                 $key,
                 $collectionItem['meta_title'],
@@ -180,14 +180,14 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
                 $parent
             )->getId();
 
-            if (array_key_exists('collections', $collectionItem)) {
+            if (\array_key_exists('collections', $collectionItem)) {
                 $childCollections = $this->iterateOverCollections(
                     $collectionItem['collections'],
                     $userId,
                     $collections[$key],
                     $key
                 );
-                $collections = array_merge($collections, $childCollections);
+                $collections = \array_merge($collections, $childCollections);
             }
         }
 
@@ -228,8 +228,8 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
      */
     private function getOrCreateCollection($key, $localizedTitles, $userId, $parent)
     {
-        $locales = array_keys($localizedTitles);
-        $firstLocale = array_shift($locales);
+        $locales = \array_keys($localizedTitles);
+        $firstLocale = \array_shift($locales);
 
         $collection = $this->collectionManager->getByKey($key, $firstLocale);
         if (null === $collection) {

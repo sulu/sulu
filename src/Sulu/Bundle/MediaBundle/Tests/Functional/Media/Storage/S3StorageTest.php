@@ -46,14 +46,14 @@ class S3StorageTest extends SuluTestCase
         $storage = $kernel->getContainer()->get('sulu_media.storage.s3');
         $this->assertInstanceOf(S3Storage::class, $storage);
 
-        $file = file_get_contents($this->getImagePath());
+        $file = \file_get_contents($this->getImagePath());
 
         $adapter->addDirectory('02');
         $adapter->addFile('02/sulu.jpg', $file);
 
         $result = $storage->load(['segment' => '02', 'fileName' => 'sulu.jpg']);
 
-        $this->assertSame($file, stream_get_contents($result));
+        $this->assertSame($file, \stream_get_contents($result));
     }
 
     public function testRemove(): void
@@ -65,7 +65,7 @@ class S3StorageTest extends SuluTestCase
         $storage = $kernel->getContainer()->get('sulu_media.storage.s3');
         $this->assertInstanceOf(S3Storage::class, $storage);
 
-        $file = file_get_contents($this->getImagePath());
+        $file = \file_get_contents($this->getImagePath());
 
         $adapter->addDirectory('02');
         $adapter->addFile('02/sulu.jpg', $file);

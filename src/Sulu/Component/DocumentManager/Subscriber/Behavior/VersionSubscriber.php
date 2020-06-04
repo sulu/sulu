@@ -112,7 +112,7 @@ class VersionSubscriber implements EventSubscriberInterface
         $versions = [];
         $versionProperty = $node->getPropertyValueWithDefault(static::VERSION_PROPERTY, []);
         foreach ($versionProperty as $version) {
-            $versionInformation = json_decode($version);
+            $versionInformation = \json_decode($version);
             $versions[] = new Version(
                 $versionInformation->version,
                 $versionInformation->locale,
@@ -178,20 +178,20 @@ class VersionSubscriber implements EventSubscriberInterface
 
             $version = $this->versionManager->checkpoint($path);
 
-            if (!array_key_exists($path, $nodes)) {
+            if (!\array_key_exists($path, $nodes)) {
                 $nodes[$path] = $this->defaultSession->getNode($path);
             }
             $versions = $nodes[$path]->getPropertyValueWithDefault(static::VERSION_PROPERTY, []);
 
-            if (!array_key_exists($path, $nodeVersions)) {
+            if (!\array_key_exists($path, $nodeVersions)) {
                 $nodeVersions[$path] = $versions;
             }
-            $nodeVersions[$path][] = json_encode(
+            $nodeVersions[$path][] = \json_encode(
                 [
                     'locale' => $versionInformation['locale'],
                     'version' => $version->getName(),
                     'author' => $versionInformation['author'],
-                    'authored' => date('c'),
+                    'authored' => \date('c'),
                 ]
             );
         }
@@ -299,9 +299,9 @@ class VersionSubscriber implements EventSubscriberInterface
     {
         // return all localized and non-translatable properties
         // non-translatable properties can be recognized by their missing namespace, therfore the check for the colon
-        if (0 === strpos($propertyName, $contentPrefix)
-            || 0 === strpos($propertyName, $systemPrefix)
-            || false === strpos($propertyName, ':')
+        if (0 === \strpos($propertyName, $contentPrefix)
+            || 0 === \strpos($propertyName, $systemPrefix)
+            || false === \strpos($propertyName, ':')
         ) {
             return true;
         }

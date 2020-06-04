@@ -62,7 +62,7 @@ class ExceptionController
         Environment $twig,
         $debug
     ) {
-        @trigger_error(__CLASS__ . ' is deprecated since version sulu/sulu 2.0 and will be removed in 3.0. Use the ErrorController instead.', E_USER_DEPRECATED);
+        @\trigger_error(__CLASS__ . ' is deprecated since version sulu/sulu 2.0 and will be removed in 3.0. Use the ErrorController instead.', \E_USER_DEPRECATED);
 
         $this->exceptionController = $exceptionController;
         $this->requestAnalyzer = $requestAnalyzer;
@@ -124,12 +124,12 @@ class ExceptionController
      */
     protected function getAndCleanOutputBuffering($startObLevel)
     {
-        if (ob_get_level() <= $startObLevel) {
+        if (\ob_get_level() <= $startObLevel) {
             return '';
         }
 
         Response::closeOutputBuffers($startObLevel + 1, true);
 
-        return ob_get_clean();
+        return \ob_get_clean();
     }
 }

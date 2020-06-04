@@ -87,8 +87,8 @@ class InstantiatorSubscriber implements EventSubscriberInterface
     {
         $class = $metadata->getClass();
 
-        if (!class_exists($class)) {
-            throw new \RuntimeException(sprintf(
+        if (!\class_exists($class)) {
+            throw new \RuntimeException(\sprintf(
                 'Document class "%s" does not exist', $class
             ));
         }

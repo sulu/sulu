@@ -60,7 +60,7 @@ class PathBuilder
             $results[] = $result;
         }
 
-        return '/' . implode('/', $results);
+        return '/' . \implode('/', $results);
     }
 
     /**
@@ -72,9 +72,9 @@ class PathBuilder
             return;
         }
 
-        if ('%' == substr($segment, 0, 1)) {
-            if ('%' == substr($segment, -1)) {
-                return $this->registry->getPathSegment(substr($segment, 1, -1));
+        if ('%' == \substr($segment, 0, 1)) {
+            if ('%' == \substr($segment, -1)) {
+                return $this->registry->getPathSegment(\substr($segment, 1, -1));
             }
         }
 

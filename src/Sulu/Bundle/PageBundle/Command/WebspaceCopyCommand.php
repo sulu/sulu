@@ -108,11 +108,11 @@ class WebspaceCopyCommand extends Command
         $this->io = new SymfonyStyle($input, $output);
 
         $webspaceKeySource = $input->getArgument('source-webspace');
-        $localesSource = explode(',', $input->getArgument('source-locale'));
+        $localesSource = \explode(',', $input->getArgument('source-locale'));
         $webspaceKeyDestination = $input->getArgument('destination-webspace');
-        $localesDestination = explode(',', $input->getArgument('destination-locale'));
+        $localesDestination = \explode(',', $input->getArgument('destination-locale'));
 
-        if (count($localesSource) !== count($localesDestination)) {
+        if (\count($localesSource) !== \count($localesDestination)) {
             $output->writeln([
                 '<error>Aborted!</error>',
                 '<comment>Provide correct source and destination locales</comment>',
@@ -122,7 +122,7 @@ class WebspaceCopyCommand extends Command
         }
 
         $localesPairs = [];
-        for ($i = 0; $i < count($localesSource); ++$i) {
+        for ($i = 0; $i < \count($localesSource); ++$i) {
             $localesPairs[] = $localesSource[$i] . ' => ' . $localesDestination[$i];
         }
 
@@ -133,7 +133,7 @@ class WebspaceCopyCommand extends Command
             '<info>Options</info>',
             '------------------------------',
             'Webspace: ' . $webspaceKeySource . ' => ' . $webspaceKeyDestination,
-            'Locales: ' . implode(', ', $localesPairs),
+            'Locales: ' . \implode(', ', $localesPairs),
             '------------------------------',
             '',
         ]);
@@ -177,7 +177,7 @@ class WebspaceCopyCommand extends Command
             '==============================',
             '2. Copy pages to destination webspace',
         ]);
-        for ($i = 0; $i < count($localesSource); ++$i) {
+        for ($i = 0; $i < \count($localesSource); ++$i) {
             $this->copyWebspace(
                 $localesSource[$i],
                 $localesDestination[$i]
@@ -188,7 +188,7 @@ class WebspaceCopyCommand extends Command
             '==============================',
             '3. Copy redirects and structure',
         ]);
-        for ($i = 0; $i < count($localesSource); ++$i) {
+        for ($i = 0; $i < \count($localesSource); ++$i) {
             $this->copyRedirectsAndStructure(
                 $localesSource[$i],
                 $localesDestination[$i]
@@ -298,7 +298,7 @@ class WebspaceCopyCommand extends Command
             return;
         }
 
-        $newPath = str_replace(
+        $newPath = \str_replace(
             $this->sessionManager->getContentPath($this->webspaceKeySource),
             $this->sessionManager->getContentPath($this->webspaceKeyDestination),
             $documentSource->getPath()
@@ -349,7 +349,7 @@ class WebspaceCopyCommand extends Command
         $localeDestination
     ) {
         if (LocalizationState::LOCALIZED === $this->documentInspector->getLocalizationState($documentSource)) {
-            $newPath = str_replace(
+            $newPath = \str_replace(
                 $this->sessionManager->getContentPath($this->webspaceKeySource),
                 $this->sessionManager->getContentPath($this->webspaceKeyDestination),
                 $documentSource->getPath()
@@ -364,7 +364,7 @@ class WebspaceCopyCommand extends Command
                 // Copy the redirects and correct the target.
                 switch ($documentSource->getRedirectType()) {
                     case RedirectType::INTERNAL:
-                        $newPathTarget = str_replace(
+                        $newPathTarget = \str_replace(
                             $this->sessionManager->getContentPath($this->webspaceKeySource),
                             $this->sessionManager->getContentPath($this->webspaceKeyDestination),
                             $documentSource->getRedirectTarget()->getPath()
@@ -483,7 +483,7 @@ class WebspaceCopyCommand extends Command
         $localeSource,
         $localeDestination
     ) {
-        if (!array_key_exists($property->getName(), $structureArray) || !$structureArray[$property->getName()]) {
+        if (!\array_key_exists($property->getName(), $structureArray) || !$structureArray[$property->getName()]) {
             return;
         }
 
@@ -518,7 +518,7 @@ class WebspaceCopyCommand extends Command
     ) {
         /** @var PropertyParameter $parameter */
         foreach ($property->getParameters() as $parameter) {
-            if (!array_key_exists($property->getName(), $structureArray)) {
+            if (!\array_key_exists($property->getName(), $structureArray)) {
                 continue;
             }
 
@@ -526,7 +526,7 @@ class WebspaceCopyCommand extends Command
                 continue;
             }
 
-            if (!array_key_exists('dataSource', $structureArray[$property->getName()])) {
+            if (!\array_key_exists('dataSource', $structureArray[$property->getName()])) {
                 continue;
             }
 
@@ -589,11 +589,11 @@ class WebspaceCopyCommand extends Command
         $localeSource,
         $localeDestination
     ) {
-        if (!array_key_exists($property->getName(), $structureArray) || !$structureArray[$property->getName()]) {
+        if (!\array_key_exists($property->getName(), $structureArray) || !$structureArray[$property->getName()]) {
             return;
         }
 
-        if (!strpos($structureArray[$property->getName()], 'sulu-link')) {
+        if (!\strpos($structureArray[$property->getName()], 'sulu-link')) {
             return;
         }
 
@@ -619,7 +619,7 @@ class WebspaceCopyCommand extends Command
                         continue;
                     }
 
-                    $structureArray[$property->getName()] = str_replace(
+                    $structureArray[$property->getName()] = \str_replace(
                         $targetUuid,
                         $targetDocumentDestination->getUuid(),
                         $structureArray[$property->getName()]
@@ -641,7 +641,7 @@ class WebspaceCopyCommand extends Command
         $localeSource,
         $localeDestination
     ) {
-        if (!array_key_exists($property->getName(), $structureArray) || !$structureArray[$property->getName()]) {
+        if (!\array_key_exists($property->getName(), $structureArray) || !$structureArray[$property->getName()]) {
             return;
         }
 
@@ -672,7 +672,7 @@ class WebspaceCopyCommand extends Command
         $localeSource,
         $localeDestination
     ) {
-        if (!array_key_exists($property->getName(), $structureArray) || !$structureArray[$property->getName()]) {
+        if (!\array_key_exists($property->getName(), $structureArray) || !$structureArray[$property->getName()]) {
             return;
         }
 
@@ -708,7 +708,7 @@ class WebspaceCopyCommand extends Command
             return null;
         }
 
-        $newPathTarget = str_replace(
+        $newPathTarget = \str_replace(
             $this->sessionManager->getContentPath($this->webspaceKeySource),
             $this->sessionManager->getContentPath($this->webspaceKeyDestination),
             $targetDocumentSource->getPath()

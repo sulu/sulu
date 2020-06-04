@@ -60,7 +60,7 @@ class MediaFormatController extends AbstractRestController implements ClassResou
     {
         $formatOptions = $this->formatOptionsManager->getAll($id);
 
-        return $this->handleView($this->view(count($formatOptions) > 0 ? $formatOptions : new \stdClass()));
+        return $this->handleView($this->view(\count($formatOptions) > 0 ? $formatOptions : new \stdClass()));
     }
 
     /**
