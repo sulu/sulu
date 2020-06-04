@@ -60,8 +60,8 @@ class WebspaceImportCommand extends Command
     {
         $webspaceKey = $input->getArgument('webspace');
         $filePath = $input->getArgument('file');
-        if (0 === !strpos($filePath, '/')) {
-            $filePath = getcwd() . '/' . $filePath;
+        if (0 === !\strpos($filePath, '/')) {
+            $filePath = \getcwd() . '/' . $filePath;
         }
         $locale = $input->getArgument('locale');
         $format = $input->getOption('format');
@@ -107,7 +107,7 @@ class WebspaceImportCommand extends Command
         );
 
         if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-            $output->writeln(sprintf('<info>Imported %s/%s</info>', $import->successes, $import->count));
+            $output->writeln(\sprintf('<info>Imported %s/%s</info>', $import->successes, $import->count));
         }
 
         $this->printExceptions($import, $output);
@@ -133,7 +133,7 @@ class WebspaceImportCommand extends Command
             '<info>Import Result</info>',
             '<info>===============</info>',
             '<info>' . $import->successes . ' Documents imported.</info>',
-            '<comment>' . count($import->failed) . ' Documents ignored.</comment>',
+            '<comment>' . \count($import->failed) . ' Documents ignored.</comment>',
         ]);
 
         if (!isset($import->exceptionStore['ignore'])) {
@@ -141,7 +141,7 @@ class WebspaceImportCommand extends Command
         }
 
         // If more than 20 exceptions write only into log.
-        if (count($import->exceptionStore['ignore']) > 20) {
+        if (\count($import->exceptionStore['ignore']) > 20) {
             foreach ($import->exceptionStore['ignore'] as $msg) {
                 $this->logger->info($msg);
             }

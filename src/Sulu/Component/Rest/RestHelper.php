@@ -45,7 +45,7 @@ class RestHelper implements RestHelperInterface
         $fields = $this->listRestHelper->getFields();
         if (null != $fields) {
             foreach ($fields as $field) {
-                if (!array_key_exists($field, $fieldDescriptors)) {
+                if (!\array_key_exists($field, $fieldDescriptors)) {
                     continue;
                 }
 

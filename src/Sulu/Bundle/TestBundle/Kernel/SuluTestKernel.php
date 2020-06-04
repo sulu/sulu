@@ -72,19 +72,19 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\AudienceTargetingBundle\SuluAudienceTargetingBundle(),
         ];
 
-        if (class_exists(\Symfony\Bundle\MonologBundle\MonologBundle::class)) {
+        if (\class_exists(\Symfony\Bundle\MonologBundle\MonologBundle::class)) {
             $bundles[] = new \Symfony\Bundle\MonologBundle\MonologBundle();
         }
 
-        if (class_exists(\Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class)) {
+        if (\class_exists(\Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class)) {
             $bundles[] = new \Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle();
         }
 
-        if (class_exists(\Massive\Bundle\BuildBundle\MassiveBuildBundle::class)) {
+        if (\class_exists(\Massive\Bundle\BuildBundle\MassiveBuildBundle::class)) {
             $bundles[] = new \Massive\Bundle\BuildBundle\MassiveBuildBundle();
         }
 
-        if (class_exists(\FOS\HttpCacheBundle\FOSHttpCacheBundle::class)) {
+        if (\class_exists(\FOS\HttpCacheBundle\FOSHttpCacheBundle::class)) {
             $bundles[] = new \FOS\HttpCacheBundle\FOSHttpCacheBundle();
         }
 
@@ -137,6 +137,6 @@ class SuluTestKernel extends SuluKernel
      */
     protected function getContainerClass()
     {
-        return $this->name . ucfirst($this->getContext()) . ucfirst($this->environment) . ($this->debug ? 'Debug' : '') . 'ProjectContainer';
+        return $this->name . \ucfirst($this->getContext()) . \ucfirst($this->environment) . ($this->debug ? 'Debug' : '') . 'ProjectContainer';
     }
 }

@@ -55,7 +55,7 @@ class LocalStorage implements StorageInterface
     {
         $segment = $this->getStorageOption($storageOptions, 'segment');
         if (!$segment) {
-            $segment = sprintf('%0' . strlen($this->segments) . 'd', rand(1, $this->segments));
+            $segment = \sprintf('%0' . \strlen($this->segments) . 'd', \rand(1, $this->segments));
         }
 
         $segmentPath = $this->createPath($segment);
@@ -83,7 +83,7 @@ class LocalStorage implements StorageInterface
 
     public function load(array $storageOptions)
     {
-        return fopen($this->getPath($storageOptions), 'r');
+        return \fopen($this->getPath($storageOptions), 'r');
     }
 
     public function getPath(array $storageOptions): string
@@ -126,7 +126,7 @@ class LocalStorage implements StorageInterface
         $newFileName = $fileName;
 
         if ($counter > 0) {
-            $fileNameParts = explode('.', $fileName, 2);
+            $fileNameParts = \explode('.', $fileName, 2);
             $newFileName = $fileNameParts[0] . '-' . $counter;
 
             if (isset($fileNameParts[1])) {
@@ -149,16 +149,16 @@ class LocalStorage implements StorageInterface
 
     private function getPathByFolderAndFileName(string $folder, string $fileName): string
     {
-        return rtrim($folder, '/') . '/' . ltrim($fileName, '/');
+        return \rtrim($folder, '/') . '/' . \ltrim($fileName, '/');
     }
 
     private function createPath(string $segment, ?string $fileName = null): string
     {
-        return implode('/', array_filter([$this->uploadPath, $segment, $fileName]));
+        return \implode('/', \array_filter([$this->uploadPath, $segment, $fileName]));
     }
 
     private function getStorageOption(array $storageOption, string $key): ?string
     {
-        return array_key_exists($key, $storageOption) ? $storageOption[$key] : null;
+        return \array_key_exists($key, $storageOption) ? $storageOption[$key] : null;
     }
 }

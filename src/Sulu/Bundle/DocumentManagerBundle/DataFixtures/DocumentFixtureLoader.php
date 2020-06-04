@@ -45,13 +45,13 @@ class DocumentFixtureLoader
         $fixtures = [];
 
         foreach ($finder as $file) {
-            $declaredClasses = get_declared_classes();
+            $declaredClasses = \get_declared_classes();
             require_once $file;
-            $declaredClassesDiff = array_diff(get_declared_classes(), $declaredClasses);
-            $fixtureClass = array_pop($declaredClassesDiff);
+            $declaredClassesDiff = \array_diff(\get_declared_classes(), $declaredClasses);
+            $fixtureClass = \array_pop($declaredClassesDiff);
 
             if (!$fixtureClass) {
-                throw new \InvalidArgumentException(sprintf(
+                throw new \InvalidArgumentException(\sprintf(
                     'Could not determine class from included file "%s". Class detection will only work once per request.',
                     $file
                 ));
@@ -76,7 +76,7 @@ class DocumentFixtureLoader
             $fixtures[] = $fixture;
         }
 
-        usort($fixtures, function(DocumentFixtureInterface $fixture1, DocumentFixtureInterface $fixture2) {
+        \usort($fixtures, function(DocumentFixtureInterface $fixture1, DocumentFixtureInterface $fixture2) {
             return $fixture1->getOrder() > $fixture2->getOrder();
         });
 

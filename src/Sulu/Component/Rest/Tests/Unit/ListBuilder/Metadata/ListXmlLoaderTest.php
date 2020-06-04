@@ -338,7 +338,7 @@ class ListXmlLoaderTest extends TestCase
 
     private function assertPropertyMetadata(array $expected, AbstractPropertyMetadata $metadata)
     {
-        $expected = array_merge(
+        $expected = \array_merge(
             [
                 'instance' => AbstractPropertyMetadata::class,
                 'name' => null,
@@ -372,7 +372,7 @@ class ListXmlLoaderTest extends TestCase
 
     private function assertFieldMetadata(array $expected, FieldMetadata $fieldMetadata)
     {
-        $expected = array_merge(
+        $expected = \array_merge(
             [
                 'joins' => [],
             ],
@@ -380,7 +380,7 @@ class ListXmlLoaderTest extends TestCase
         );
 
         $this->assertEquals($expected['entityName'], $fieldMetadata->getEntityName());
-        $this->assertCount(count($expected['joins']), $fieldMetadata->getJoins());
+        $this->assertCount(\count($expected['joins']), $fieldMetadata->getJoins());
 
         $i = 0;
         foreach ($expected['joins'] as $joinExpected) {
@@ -391,7 +391,7 @@ class ListXmlLoaderTest extends TestCase
 
     private function assertJoin(array $expected, JoinMetadata $metadata)
     {
-        $expected = array_merge(
+        $expected = \array_merge(
             [
                 'entityName' => null,
                 'entityField' => null,
@@ -411,7 +411,7 @@ class ListXmlLoaderTest extends TestCase
 
     private function assertConcatenationMetadata($expected, AbstractPropertyMetadata $metadata)
     {
-        $expected = array_merge(
+        $expected = \array_merge(
             [
                 'glue' => null,
                 'fields' => [],
@@ -422,7 +422,7 @@ class ListXmlLoaderTest extends TestCase
         $this->assertInstanceOf(ConcatenationPropertyMetadata::class, $metadata);
 
         $this->assertEquals($expected['glue'], $metadata->getGlue());
-        $this->assertCount(count($expected['fields']), $metadata->getFields());
+        $this->assertCount(\count($expected['fields']), $metadata->getFields());
 
         $i = 0;
         foreach ($expected['fields'] as $fieldExpected) {

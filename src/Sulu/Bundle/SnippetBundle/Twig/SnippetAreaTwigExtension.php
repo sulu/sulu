@@ -88,7 +88,7 @@ class SnippetAreaTwigExtension extends AbstractExtension
 
         $snippets = $this->snippetResolver->resolve([$snippet->getUuid()], $webspaceKey, $locale);
 
-        if (!array_key_exists(0, $snippets)) {
+        if (!\array_key_exists(0, $snippets)) {
             return null;
         }
 

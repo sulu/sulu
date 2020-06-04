@@ -57,15 +57,15 @@ class WebsiteRequestProcessor implements RequestProcessorInterface
             $this->environment
         );
 
-        if (0 === count($portalInformations)) {
+        if (0 === \count($portalInformations)) {
             return new RequestAttributes();
         }
 
-        usort(
+        \usort(
             $portalInformations,
             function(PortalInformation $a, PortalInformation $b) {
                 if ($a->getPriority() === $b->getPriority()) {
-                    return strlen($a->getUrl()) < strlen($b->getUrl());
+                    return \strlen($a->getUrl()) < \strlen($b->getUrl());
                 }
 
                 return $a->getPriority() < $b->getPriority();
@@ -73,7 +73,7 @@ class WebsiteRequestProcessor implements RequestProcessorInterface
         );
 
         /** @var PortalInformation $portalInformation */
-        $portalInformation = reset($portalInformations);
+        $portalInformation = \reset($portalInformations);
 
         return new RequestAttributes(['portalInformation' => $portalInformation]);
     }

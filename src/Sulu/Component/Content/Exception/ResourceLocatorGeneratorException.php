@@ -27,7 +27,7 @@ class ResourceLocatorGeneratorException extends Exception
 
     public function __construct($title, $parentPath)
     {
-        parent::__construct(sprintf("Could not generate ResourceLocator for given title '%s'", $title));
+        parent::__construct(\sprintf("Could not generate ResourceLocator for given title '%s'", $title));
 
         $this->title = $title;
         $this->parentPath = $parentPath;

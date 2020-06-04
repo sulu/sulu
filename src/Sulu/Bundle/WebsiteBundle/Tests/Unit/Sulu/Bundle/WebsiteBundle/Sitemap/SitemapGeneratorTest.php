@@ -281,7 +281,7 @@ class SitemapGeneratorTest extends SuluTestCase
     {
         $result = $this->sitemapGenerator->generateAllLocals('test_io', true)->getSitemap();
 
-        $result = array_map(
+        $result = \array_map(
             function($item) {
                 return [$item['title'], $item['url'], $item['nodeType']];
             },
@@ -339,7 +339,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->assertEquals('/', $root['url']);
         $this->assertEquals(1, $root['nodeType']);
 
-        $layer1 = array_values($root['children']);
+        $layer1 = \array_values($root['children']);
 
         $this->assertCount(3, $layer1);
 
@@ -355,7 +355,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->assertEquals('/news', $layer1[2]['url']);
         $this->assertEquals(2, $layer1[2]['nodeType']);
 
-        $layer21 = array_values($layer1[0]['children']);
+        $layer21 = \array_values($layer1[0]['children']);
 
         $this->assertEquals('News-1 en', $layer21[0]['title']);
         $this->assertEquals('/news/news-1', $layer21[0]['url']);

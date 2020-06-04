@@ -94,16 +94,16 @@ class MediaWebsiteControllerTest extends SuluTestCase
 
     public function recursiveRemoveDirectory($directory, $counter = 0)
     {
-        foreach (glob($directory . '/*') as $file) {
-            if (is_dir($file)) {
+        foreach (\glob($directory . '/*') as $file) {
+            if (\is_dir($file)) {
                 $this->recursiveRemoveDirectory($file, $counter + 1);
-            } elseif (file_exists($file)) {
-                unlink($file);
+            } elseif (\file_exists($file)) {
+                \unlink($file);
             }
         }
 
         if (0 != $counter) {
-            rmdir($directory);
+            \rmdir($directory);
         }
     }
 
@@ -158,10 +158,10 @@ class MediaWebsiteControllerTest extends SuluTestCase
         $fileVersion->setStorageOptions(['segment' => '1', 'fileName' => $name . '.' . $extension]);
         $storagePath = $this->getStoragePath();
 
-        if (!file_exists($storagePath . '/1')) {
-            mkdir($storagePath . '/1', 0777, true);
+        if (!\file_exists($storagePath . '/1')) {
+            \mkdir($storagePath . '/1', 0777, true);
         }
-        copy($this->getImagePath(), $storagePath . '/1/' . $name . '.' . $extension);
+        \copy($this->getImagePath(), $storagePath . '/1/' . $name . '.' . $extension);
 
         // create meta
         $fileVersionMeta = new FileVersionMeta();
@@ -195,7 +195,7 @@ class MediaWebsiteControllerTest extends SuluTestCase
             'type' => 'circle', 'color' => '#ffcc00',
         ];
 
-        $this->collection->setStyle(json_encode($style));
+        $this->collection->setStyle(\json_encode($style));
 
         // Create Collection Type
         $this->collectionType = new CollectionType();

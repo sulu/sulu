@@ -96,13 +96,13 @@ class WebspaceInitializer implements InitializerInterface
         }
 
         foreach ($webspaceLocales as $webspaceLocale) {
-            if (in_array($webspaceLocale, $existingLocales)) {
-                $output->writeln(sprintf('  [ ] <info>homepage</info>: %s (%s)', $homePath, $webspaceLocale));
+            if (\in_array($webspaceLocale, $existingLocales)) {
+                $output->writeln(\sprintf('  [ ] <info>homepage</info>: %s (%s)', $homePath, $webspaceLocale));
 
                 continue;
             }
 
-            $output->writeln(sprintf('  [+] <info>homepage</info>: [%s] %s (%s)', $homeType, $homePath, $webspaceLocale));
+            $output->writeln(\sprintf('  [+] <info>homepage</info>: [%s] %s (%s)', $homeType, $homePath, $webspaceLocale));
 
             $persistOptions = ['ignore_required' => true];
             $publishOptions = ['ignore_required' => true];
@@ -133,7 +133,7 @@ class WebspaceInitializer implements InitializerInterface
                 if ($routeDocument->getTargetDocument()
                     && $routeDocument->getTargetDocument()->getUuid() === $homeDocument->getUuid()
                 ) {
-                    $output->writeln(sprintf('  [ ] <info>route</info>: %s (%s)', $routePath, $webspaceLocale));
+                    $output->writeln(\sprintf('  [ ] <info>route</info>: %s (%s)', $routePath, $webspaceLocale));
 
                     continue;
                 }
@@ -141,7 +141,7 @@ class WebspaceInitializer implements InitializerInterface
                 $routeDocument = $this->documentManager->create('route');
             }
 
-            $output->writeln(sprintf('  [+] <info>route</info>: %s (%s)', $routePath, $webspaceLocale));
+            $output->writeln(\sprintf('  [+] <info>route</info>: %s (%s)', $routePath, $webspaceLocale));
 
             $routeDocument->setTargetDocument($homeDocument);
             $this->documentManager->persist($routeDocument, $webspaceLocale, [

@@ -67,7 +67,7 @@ class MediaTypeUpdateCommand extends Command
                             $media->setType($newType);
                             $em->persist($media);
                             ++$counter;
-                            $output->writeln(sprintf('Media with id <comment>%s</comment> change from type <comment>%s</comment> to <comment>%s</comment>', $media->getId(), $oldType->getName(), $newType->getName()));
+                            $output->writeln(\sprintf('Media with id <comment>%s</comment> change from type <comment>%s</comment> to <comment>%s</comment>', $media->getId(), $oldType->getName(), $newType->getName()));
                         }
                     }
                 }
@@ -76,7 +76,7 @@ class MediaTypeUpdateCommand extends Command
 
         if ($counter) {
             $em->flush();
-            $output->writeln(sprintf('<info>SUCCESS FULLY UPDATED (%s)</info>', $counter));
+            $output->writeln(\sprintf('<info>SUCCESS FULLY UPDATED (%s)</info>', $counter));
         } else {
             $output->writeln('<comment>Nothing to update</comment>');
         }

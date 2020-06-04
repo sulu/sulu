@@ -44,7 +44,7 @@ class SuluSecurityListener
         $controller = $event->getController();
         $action = '__invoke';
 
-        if (is_array($controller)) {
+        if (\is_array($controller)) {
             if (isset($controller[1])) {
                 $action = $controller[1];
             }
@@ -71,7 +71,7 @@ class SuluSecurityListener
                 $permission = PermissionTypes::VIEW;
                 break;
             case 'POST':
-                if (in_array($action, ['postAction', '__invoke'])) { // means that the ClassResourceInterface has to be used
+                if (\in_array($action, ['postAction', '__invoke'])) { // means that the ClassResourceInterface has to be used
                     $permission = PermissionTypes::ADD;
                 } else {
                     $permission = PermissionTypes::EDIT;

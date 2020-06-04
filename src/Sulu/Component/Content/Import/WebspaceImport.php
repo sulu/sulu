@@ -129,7 +129,7 @@ class WebspaceImport extends Import implements WebspaceImportInterface
             $output = new NullOutput();
         }
 
-        $progress = new ProgressBar($output, count($parsedDataList));
+        $progress = new ProgressBar($output, \count($parsedDataList));
         $progress->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %memory:6s%');
         $progress->start();
 
@@ -155,7 +155,7 @@ class WebspaceImport extends Import implements WebspaceImportInterface
                 ++$successCounter;
             }
 
-            $this->logger->info(sprintf('Document %s/%s', $importedCounter, $uuid ? 1 : count($parsedDataList)));
+            $this->logger->info(\sprintf('Document %s/%s', $importedCounter, $uuid ? 1 : \count($parsedDataList)));
 
             $progress->advance();
         }
@@ -164,7 +164,7 @@ class WebspaceImport extends Import implements WebspaceImportInterface
 
         $return = new \stdClass();
         $return->count = $importedCounter;
-        $return->fails = count($failedImports);
+        $return->fails = \count($failedImports);
         $return->successes = $successCounter;
         $return->failed = $failedImports;
         $return->exceptionStore = $this->exceptionStore;
@@ -213,16 +213,16 @@ class WebspaceImport extends Import implements WebspaceImportInterface
             $document->setStructureType($structureType);
 
             if ($document->getWebspaceName() != $webspaceKey) {
-                $this->addException(sprintf('Document(%s) is part of another webspace: "%s"', $uuid, $document->getWebspaceName()), 'ignore');
+                $this->addException(\sprintf('Document(%s) is part of another webspace: "%s"', $uuid, $document->getWebspaceName()), 'ignore');
 
                 throw new \Exception(
-                    sprintf('Document(%s) is part of another webspace: "%s"', $uuid, $document->getWebspaceName())
+                    \sprintf('Document(%s) is part of another webspace: "%s"', $uuid, $document->getWebspaceName())
                 );
             }
 
             if (!$document instanceof BasePageDocument) {
                 throw new \Exception(
-                    sprintf('Document(%s) is not an instanecof BasePageDocument', $uuid)
+                    \sprintf('Document(%s) is not an instanecof BasePageDocument', $uuid)
                 );
             }
 
@@ -244,12 +244,12 @@ class WebspaceImport extends Import implements WebspaceImportInterface
             }
 
             $this->logger->error(
-                sprintf(
+                \sprintf(
                     '<info>%s</info>%s: <error>%s</error>%s',
                     $uuid,
-                    PHP_EOL . get_class($e),
+                    \PHP_EOL . \get_class($e),
                     $e->getMessage(),
-                    PHP_EOL . $e->getTraceAsString()
+                    \PHP_EOL . $e->getTraceAsString()
                 )
             );
 
@@ -284,12 +284,12 @@ class WebspaceImport extends Import implements WebspaceImportInterface
         $structure = $this->structureManager->getStructure($structureType);
         $properties = $structure->getProperties(true);
         $node = $this->documentRegistry->getNodeForDocument($document);
-        $node->setProperty(sprintf('i18n:%s-template', $locale), $structureType);
+        $node->setProperty(\sprintf('i18n:%s-template', $locale), $structureType);
         $state = $this->getParser($format)->getPropertyData('state', $data, null, null, 2);
-        $node->setProperty(sprintf('i18n:%s-state', $locale), $state);
+        $node->setProperty(\sprintf('i18n:%s-state', $locale), $state);
 
         if ('' === $this->getParser($format)->getPropertyData('title', $data)) {
-            $this->addException(sprintf('Document(%s) has not set any title', $document->getUuid()), 'ignore');
+            $this->addException(\sprintf('Document(%s) has not set any title', $document->getUuid()), 'ignore');
 
             return false;
         }
@@ -330,7 +330,7 @@ class WebspaceImport extends Import implements WebspaceImportInterface
                         if (!$resourceSegment || '/' === $resourceSegment) {
                             if (!$value) {
                                 $this->addException(
-                                    sprintf('Document(%s) needs an resource locator (%s) because no url could be generated', $document->getUuid(), $property->getName()),
+                                    \sprintf('Document(%s) needs an resource locator (%s) because no url could be generated', $document->getUuid(), $property->getName()),
                                     'ignore'
                                 );
 
@@ -386,9 +386,9 @@ class WebspaceImport extends Import implements WebspaceImportInterface
         }
 
         foreach ($data as $key => $property) {
-            $setter = 'set' . ucfirst($key);
+            $setter = 'set' . \ucfirst($key);
 
-            if (in_array($key, self::$excludedSettings) || !method_exists($document, $setter)) {
+            if (\in_array($key, self::$excludedSettings) || !\method_exists($document, $setter)) {
                 continue;
             }
 
@@ -422,10 +422,10 @@ class WebspaceImport extends Import implements WebspaceImportInterface
                 $value = $this->documentManager->find($value);
                 break;
             case 'permissions':
-                $value = json_decode($value, true);
+                $value = \json_decode($value, true);
                 break;
             case 'navigationContexts':
-                $value = json_decode($value);
+                $value = \json_decode($value);
                 break;
         }
 
@@ -494,7 +494,7 @@ class WebspaceImport extends Import implements WebspaceImportInterface
             );
         }
 
-        $title = trim(implode(' ', $rlpParts));
+        $title = \trim(\implode(' ', $rlpParts));
 
         return $this->rlpStrategy->generate($title, $parentUuid, $webspaceKey, $locale);
     }

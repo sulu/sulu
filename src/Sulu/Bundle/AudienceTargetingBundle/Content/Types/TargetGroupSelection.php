@@ -43,7 +43,7 @@ class TargetGroupSelection extends ComplexContentType implements ContentTypeExpo
     public function getContentData(PropertyInterface $property)
     {
         $audienceTargetGroupIds = $property->getValue();
-        if (!is_array($audienceTargetGroupIds) || empty($audienceTargetGroupIds)) {
+        if (!\is_array($audienceTargetGroupIds) || empty($audienceTargetGroupIds)) {
             return [];
         }
 
@@ -70,8 +70,8 @@ class TargetGroupSelection extends ComplexContentType implements ContentTypeExpo
 
     public function exportData($propertyValue)
     {
-        if (is_array($propertyValue) && count($propertyValue) > 0) {
-            return json_encode($propertyValue);
+        if (\is_array($propertyValue) && \count($propertyValue) > 0) {
+            return \json_encode($propertyValue);
         }
 
         return [];
@@ -86,7 +86,7 @@ class TargetGroupSelection extends ComplexContentType implements ContentTypeExpo
         $languageCode,
         $segmentKey = null
     ) {
-        $property->setValue(json_decode($value));
+        $property->setValue(\json_decode($value));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

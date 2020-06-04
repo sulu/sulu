@@ -132,12 +132,12 @@ class ContentRepository implements ContentRepositoryInterface
 
         $queryResult = $queryBuilder->execute();
 
-        $rows = iterator_to_array($queryResult->getRows());
-        if (1 !== count($rows)) {
+        $rows = \iterator_to_array($queryResult->getRows());
+        if (1 !== \count($rows)) {
             throw new ItemNotFoundException();
         }
 
-        return $this->resolveContent(current($rows), $locale, $locales, $mapping, $user);
+        return $this->resolveContent(\current($rows), $locale, $locales, $mapping, $user);
     }
 
     public function findByParentUuid(
@@ -151,7 +151,7 @@ class ContentRepository implements ContentRepositoryInterface
 
         if (!$webspaceKey) {
             // TODO find a better solution than this (e.g. reuse logic from DocumentInspector and preferably in the PageController)
-            $webspaceKey = explode('/', $path)[2];
+            $webspaceKey = \explode('/', $path)[2];
         }
 
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
@@ -231,7 +231,7 @@ class ContentRepository implements ContentRepositoryInterface
         MappingInterface $mapping,
         UserInterface $user = null
     ) {
-        if (0 === count($uuids)) {
+        if (0 === \count($uuids)) {
             return [];
         }
 
@@ -316,18 +316,18 @@ class ContentRepository implements ContentRepositoryInterface
                 continue;
             }
 
-            ksort($childrenByPath[$content->getPath()]);
+            \ksort($childrenByPath[$content->getPath()]);
 
-            $content->setChildren(array_values($childrenByPath[$content->getPath()]));
+            $content->setChildren(\array_values($childrenByPath[$content->getPath()]));
         }
 
-        if (!array_key_exists('/', $childrenByPath) || !is_array($childrenByPath['/'])) {
+        if (!\array_key_exists('/', $childrenByPath) || !\is_array($childrenByPath['/'])) {
             return [];
         }
 
-        ksort($childrenByPath['/']);
+        \ksort($childrenByPath['/']);
 
-        return array_values($childrenByPath['/']);
+        return \array_values($childrenByPath['/']);
     }
 
     /**
@@ -356,7 +356,7 @@ class ContentRepository implements ContentRepositoryInterface
 
         $rows = $queryBuilder->execute();
 
-        if (1 !== count(iterator_to_array($rows->getRows()))) {
+        if (1 !== \count(\iterator_to_array($rows->getRows()))) {
             throw new ItemNotFoundException();
         }
 
@@ -378,13 +378,13 @@ class ContentRepository implements ContentRepositoryInterface
         MappingInterface $mapping,
         UserInterface $user = null
     ) {
-        return array_values(
-            array_filter(
-                array_map(
+        return \array_values(
+            \array_filter(
+                \array_map(
                     function(Row $row) use ($mapping, $locale, $locales, $user) {
                         return $this->resolveContent($row, $locale, $locales, $mapping, $user);
                     },
-                    iterator_to_array($queryBuilder->execute())
+                    \iterator_to_array($queryBuilder->execute())
                 )
             )
         );
@@ -422,8 +422,8 @@ class ContentRepository implements ContentRepositoryInterface
             foreach ($user->getRoleObjects() as $role) {
                 $queryBuilder->addSelect(
                     'node',
-                    sprintf('sec:%s', 'role-' . $role->getId()),
-                    sprintf('role%s', $role->getId())
+                    \sprintf('sec:%s', 'role-' . $role->getId()),
+                    \sprintf('role%s', $role->getId())
                 );
             }
         }
@@ -451,7 +451,7 @@ class ContentRepository implements ContentRepositoryInterface
     {
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
 
-        return array_map(
+        return \array_map(
             function(Localization $localization) {
                 return $localization->getLocale();
             },
@@ -470,7 +470,7 @@ class ContentRepository implements ContentRepositoryInterface
     {
         $portal = $this->webspaceManager->findPortalByKey($portalKey);
 
-        return array_map(
+        return \array_map(
             function(Localization $localization) {
                 return $localization->getLocale();
             },
@@ -529,7 +529,7 @@ class ContentRepository implements ContentRepositoryInterface
     private function appendSingleMapping(QueryBuilder $queryBuilder, $propertyName, $locales)
     {
         foreach ($locales as $locale) {
-            $alias = sprintf('%s%s', $locale, str_replace('-', '_', ucfirst($propertyName)));
+            $alias = \sprintf('%s%s', $locale, \str_replace('-', '_', \ucfirst($propertyName)));
 
             $queryBuilder->addSelect(
                 'node',
@@ -556,7 +556,7 @@ class ContentRepository implements ContentRepositoryInterface
 
             $propertyName = $structure->getPropertyByTagName('sulu.rlp')->getName();
 
-            if (!in_array($propertyName, $urlNames)) {
+            if (!\in_array($propertyName, $urlNames)) {
                 $this->appendSingleMapping($queryBuilder, $propertyName, $locales);
                 $urlNames[] = $propertyName;
             }
@@ -590,7 +590,7 @@ class ContentRepository implements ContentRepositoryInterface
             $locale
         );
         if (null === $ghostLocale) {
-            $ghostLocale = reset($availableLocales);
+            $ghostLocale = \reset($availableLocales);
         }
 
         $type = null;
@@ -648,7 +648,7 @@ class ContentRepository implements ContentRepositoryInterface
         if ($mapping->resolveUrl()) {
             $url = $this->resolveUrl($row, $locale);
             $urls = [];
-            array_walk(
+            \array_walk(
                 $locales,
                 function($item) use (&$urls, $row) {
                     $urls[$item] = $this->resolveUrl($row, $item);
@@ -676,8 +676,8 @@ class ContentRepository implements ContentRepositoryInterface
     {
         $locales = [];
         foreach ($row->getValues() as $key => $value) {
-            if (preg_match('/^node.([a-zA-Z_]*?)Template/', $key, $matches) && '' !== $value
-                && !$row->getValue(sprintf('node.%sShadow_on', $matches[1]))
+            if (\preg_match('/^node.([a-zA-Z_]*?)Template/', $key, $matches) && '' !== $value
+                && !$row->getValue(\sprintf('node.%sShadow_on', $matches[1]))
             ) {
                 $locales[] = $matches[1];
             }
@@ -710,7 +710,7 @@ class ContentRepository implements ContentRepositoryInterface
 
         // properties which are in the intersection of the data and non
         // fallback properties should be handled on the original row.
-        $properties = array_intersect(self::$nonFallbackProperties, array_keys($data));
+        $properties = \array_intersect(self::$nonFallbackProperties, \array_keys($data));
         foreach ($properties as $property) {
             $data[$property] = $this->resolveProperty($row, $property, $locale);
         }
@@ -744,15 +744,15 @@ class ContentRepository implements ContentRepositoryInterface
      */
     private function resolveProperty(Row $row, $name, $locale, $shadowLocale = null)
     {
-        if (array_key_exists(sprintf('node.%s', $name), $row->getValues())) {
+        if (\array_key_exists(\sprintf('node.%s', $name), $row->getValues())) {
             return $row->getValue($name);
         }
 
-        if (null !== $shadowLocale && !in_array($name, self::$nonFallbackProperties)) {
+        if (null !== $shadowLocale && !\in_array($name, self::$nonFallbackProperties)) {
             $locale = $shadowLocale;
         }
 
-        $name = sprintf('%s%s', $locale, str_replace('-', '_', ucfirst($name)));
+        $name = \sprintf('%s%s', $locale, \str_replace('-', '_', \ucfirst($name)));
 
         try {
             return $row->getValue($name);
@@ -799,7 +799,7 @@ class ContentRepository implements ContentRepositoryInterface
      */
     private function resolvePath(Row $row, $webspaceKey)
     {
-        return '/' . ltrim(str_replace($this->sessionManager->getContentPath($webspaceKey), '', $row->getPath()), '/');
+        return '/' . \ltrim(\str_replace($this->sessionManager->getContentPath($webspaceKey), '', $row->getPath()), '/');
     }
 
     /**
@@ -813,7 +813,7 @@ class ContentRepository implements ContentRepositoryInterface
     {
         $permissions = [];
 
-        $hasObjectPermissions = count($row->getNode()->getProperties('sec:*')) > 0;
+        $hasObjectPermissions = \count($row->getNode()->getProperties('sec:*')) > 0;
 
         if (!$hasObjectPermissions) {
             return [];
@@ -825,7 +825,7 @@ class ContentRepository implements ContentRepositoryInterface
                     $permissions[$role->getId()][$permissionKey] = false;
                 }
 
-                foreach (array_filter(explode(' ', $row->getValue(sprintf('role%s', $role->getId())))) as $permission) {
+                foreach (\array_filter(\explode(' ', $row->getValue(\sprintf('role%s', $role->getId())))) as $permission) {
                     $permissions[$role->getId()][$permission] = true;
                 }
             }
@@ -851,6 +851,6 @@ class ContentRepository implements ContentRepositoryInterface
 
         $result = $queryBuilder->execute();
 
-        return count(iterator_to_array($result->getRows())) > 0;
+        return \count(\iterator_to_array($result->getRows())) > 0;
     }
 }

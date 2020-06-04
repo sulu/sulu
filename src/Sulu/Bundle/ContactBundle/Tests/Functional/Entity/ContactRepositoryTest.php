@@ -147,17 +147,17 @@ class ContactRepositoryTest extends SuluTestCase
             // no pagination
             [[], null, 0, null, $this->contactData],
             // page 1, no limit
-            [[], 1, 3, null, array_slice($this->contactData, 0, 4)],
+            [[], 1, 3, null, \array_slice($this->contactData, 0, 4)],
             // page 2, no limit
-            [[], 2, 3, null, array_slice($this->contactData, 3, 4)],
+            [[], 2, 3, null, \array_slice($this->contactData, 3, 4)],
             // no pagination, limit 3
-            [[], null, 0, 3, array_slice($this->contactData, 0, 3)],
+            [[], null, 0, 3, \array_slice($this->contactData, 0, 3)],
             // page 1, limit 5
-            [[], 1, 3, 5, array_slice($this->contactData, 0, 4)],
+            [[], 1, 3, 5, \array_slice($this->contactData, 0, 4)],
             // page 2, limit 5
-            [[], 2, 3, 5, array_slice($this->contactData, 3, 2)],
+            [[], 2, 3, 5, \array_slice($this->contactData, 3, 2)],
             // no pagination, tag 0 or 1
-            [['tags' => [0, 1], 'tagOperator' => 'or'], null, 0, null, array_slice($this->contactData, 0, 7)],
+            [['tags' => [0, 1], 'tagOperator' => 'or'], null, 0, null, \array_slice($this->contactData, 0, 7)],
             // no pagination, tag 0 and 3
             [['tags' => [0, 3], 'tagOperator' => 'and'], null, 0, null, [$this->contactData[1]], [0, 3]],
             // no pagination, website-tag 0 or 1
@@ -166,7 +166,7 @@ class ContactRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->contactData, 0, 7),
+                \array_slice($this->contactData, 0, 7),
             ],
             // no pagination, website-tag 0 and 1
             [
@@ -174,7 +174,7 @@ class ContactRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->contactData, 0, 4),
+                \array_slice($this->contactData, 0, 4),
                 [0, 1],
             ],
             // no pagination, website-tag 1, tags 3
@@ -210,7 +210,7 @@ class ContactRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->contactData, 0, 7),
+                \array_slice($this->contactData, 0, 7),
             ],
             // no pagination, category 0 and 1
             [
@@ -218,7 +218,7 @@ class ContactRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->contactData, 0, 4),
+                \array_slice($this->contactData, 0, 4),
                 [0, 1],
             ],
             // no pagination, category 0 and 3
@@ -237,7 +237,7 @@ class ContactRepositoryTest extends SuluTestCase
                 2,
                 3,
                 null,
-                array_slice($this->contactData, 3, 4),
+                \array_slice($this->contactData, 3, 4),
                 [0],
                 [0],
             ],
@@ -247,7 +247,7 @@ class ContactRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->contactData, 0, 7),
+                \array_slice($this->contactData, 0, 7),
             ],
             // no pagination, website-category 0 and 1
             [
@@ -255,7 +255,7 @@ class ContactRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->contactData, 0, 4),
+                \array_slice($this->contactData, 0, 4),
                 [0, 1],
                 [0, 1],
             ],
@@ -310,7 +310,7 @@ class ContactRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->contactData, 0, 4),
+                \array_slice($this->contactData, 0, 4),
                 [0],
             ],
             // no pagination, website-category 0 and website-tag 1
@@ -324,7 +324,7 @@ class ContactRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->contactData, 0, 4),
+                \array_slice($this->contactData, 0, 4),
                 [0],
             ],
             // combination website/admin-category/tag
@@ -342,7 +342,7 @@ class ContactRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->contactData, 0, 4),
+                \array_slice($this->contactData, 0, 4),
                 [0, 1],
                 [0, 1],
             ],
@@ -364,8 +364,8 @@ class ContactRepositoryTest extends SuluTestCase
         $repository = $this->em->getRepository(Contact::class);
 
         // if tags isset replace the array indexes with database id
-        if (array_key_exists('tags', $filters)) {
-            $filters['tags'] = array_map(
+        if (\array_key_exists('tags', $filters)) {
+            $filters['tags'] = \array_map(
                 function($tag) {
                     return $this->tags[$tag]->getId();
                 },
@@ -374,8 +374,8 @@ class ContactRepositoryTest extends SuluTestCase
         }
 
         // if website tags isset replace the array indexes with database id
-        if (array_key_exists('websiteTags', $filters)) {
-            $filters['websiteTags'] = array_map(
+        if (\array_key_exists('websiteTags', $filters)) {
+            $filters['websiteTags'] = \array_map(
                 function($tag) {
                     return $this->tags[$tag]->getId();
                 },
@@ -384,8 +384,8 @@ class ContactRepositoryTest extends SuluTestCase
         }
 
         // if categories isset replace the array indexes with database id
-        if (array_key_exists('categories', $filters)) {
-            $filters['categories'] = array_map(
+        if (\array_key_exists('categories', $filters)) {
+            $filters['categories'] = \array_map(
                 function($category) {
                     return $this->categories[$category]->getId();
                 },
@@ -394,8 +394,8 @@ class ContactRepositoryTest extends SuluTestCase
         }
 
         // if website categories isset replace the array indexes with database id
-        if (array_key_exists('websiteCategories', $filters)) {
-            $filters['websiteCategories'] = array_map(
+        if (\array_key_exists('websiteCategories', $filters)) {
+            $filters['websiteCategories'] = \array_map(
                 function($category) {
                     return $this->categories[$category]->getId();
                 },
@@ -405,7 +405,7 @@ class ContactRepositoryTest extends SuluTestCase
 
         $result = $repository->findByFilters($filters, $page, $pageSize, $limit, 'de');
 
-        $length = count($expected);
+        $length = \count($expected);
         $this->assertCount($length, $result);
 
         for ($i = 0; $i < $length; ++$i) {
@@ -421,7 +421,7 @@ class ContactRepositoryTest extends SuluTestCase
     public function findByIdsProvider()
     {
         return [
-            [[0, 1, 2], array_slice($this->contactData, 0, 3)],
+            [[0, 1, 2], \array_slice($this->contactData, 0, 3)],
             [[], []],
             [[15, 99], []],
         ];
@@ -435,7 +435,7 @@ class ContactRepositoryTest extends SuluTestCase
      */
     public function testFindByIds($ids, $expected)
     {
-        for ($i = 0; $i < count($ids); ++$i) {
+        for ($i = 0; $i < \count($ids); ++$i) {
             if (isset($this->contacts[$ids[$i]])) {
                 $ids[$i] = $this->contacts[$ids[$i]]->getId();
             }
@@ -445,9 +445,9 @@ class ContactRepositoryTest extends SuluTestCase
 
         $result = $repository->findByIds($ids);
 
-        $this->assertCount(count($expected), $result);
+        $this->assertCount(\count($expected), $result);
 
-        for ($i = 0; $i < count($expected); ++$i) {
+        for ($i = 0; $i < \count($expected); ++$i) {
             $this->assertEquals($ids[$i], $result[$i]->getId());
             $this->assertEquals($expected[$i][0], $result[$i]->getFirstName());
             $this->assertEquals($expected[$i][1], $result[$i]->getLastName());
@@ -458,8 +458,8 @@ class ContactRepositoryTest extends SuluTestCase
     {
         return [
             [null, null, ['id' => 'asc'], [], $this->contactData],
-            [3, null, ['id' => 'asc'], [], array_slice($this->contactData, 0, 3)],
-            [3, 2, ['id' => 'asc'], [], array_slice($this->contactData, 2, 3)],
+            [3, null, ['id' => 'asc'], [], \array_slice($this->contactData, 0, 3)],
+            [3, 2, ['id' => 'asc'], [], \array_slice($this->contactData, 2, 3)],
             [1, 0, ['id' => 'asc'], ['lastName' => 'Gabler'], [$this->contactData[4]]],
             [1, 0, ['firstName' => 'asc'], [], [$this->contactData[1]]],
             [null, 0, ['firstName' => 'desc'], ['lastName' => 'Musterfrau'], [$this->contactData[3], $this->contactData[2]]],
@@ -480,8 +480,8 @@ class ContactRepositoryTest extends SuluTestCase
         $repository = $this->em->getRepository(Contact::class);
         $result = $repository->findGetAll($limit, $offset, $sorting, $where);
 
-        $this->assertEquals(count($expected), count($result));
-        for ($i = 0; $i < count($result); ++$i) {
+        $this->assertEquals(\count($expected), \count($result));
+        for ($i = 0; $i < \count($result); ++$i) {
             $this->assertEquals($expected[$i][0], $result[$i]['firstName']);
         }
     }

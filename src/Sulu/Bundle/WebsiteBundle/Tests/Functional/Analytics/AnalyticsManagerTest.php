@@ -178,14 +178,14 @@ class AnalyticsManagerTest extends BaseFunctional
         }
 
         if ($result->getDomains()) {
-            for ($i = 0; $i < count($result->getDomains()); ++$i) {
+            for ($i = 0; $i < \count($result->getDomains()); ++$i) {
                 $this->assertEquals($data['domains'][0], $result->getDomains()[0]);
             }
         }
 
         $this->assertCount(
             1,
-            array_filter(
+            \array_filter(
                 $this->analyticsManager->findAll($webspaceKey),
                 function(Analytics $analytics) use ($result) {
                     return $analytics->getId() === $result->getId();
@@ -211,14 +211,14 @@ class AnalyticsManagerTest extends BaseFunctional
         }
 
         if ($result->getDomains()) {
-            for ($i = 0; $i < count($result->getDomains()); ++$i) {
+            for ($i = 0; $i < \count($result->getDomains()); ++$i) {
                 $this->assertEquals($data['domains'][0], $result->getDomains()[0]);
             }
         }
 
         $this->assertCount(
             1,
-            array_filter(
+            \array_filter(
                 $this->analyticsManager->findAll('sulu_io'),
                 function(Analytics $analytics) use ($result) {
                     return $analytics->getTitle() === $result->getTitle();
@@ -276,7 +276,7 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
 
         $this->assertEmpty(
-            array_filter(
+            \array_filter(
                 $this->analyticsManager->findAll('sulu_io'),
                 function(Analytics $analytics) {
                     return $analytics->getId() === $this->entities[0]->getId();
@@ -292,10 +292,10 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
 
         $this->assertEmpty(
-            array_filter(
+            \array_filter(
                 $this->analyticsManager->findAll('sulu_io'),
                 function(Analytics $analytics) use ($ids) {
-                    return in_array($analytics->getId(), $ids);
+                    return \in_array($analytics->getId(), $ids);
                 }
             )
         );

@@ -51,6 +51,6 @@ class UserNotInSystemException extends SecurityException
 
     public function toArray()
     {
-        return array_merge(parent::toArray(), ['system' => $this->system, 'identifier' => $this->identifier]);
+        return \array_merge(parent::toArray(), ['system' => $this->system, 'identifier' => $this->identifier]);
     }
 }

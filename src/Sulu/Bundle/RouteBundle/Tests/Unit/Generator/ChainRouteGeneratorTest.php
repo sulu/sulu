@@ -80,7 +80,7 @@ class ChainRouteGeneratorTest extends TestCase
         $result = $this->chainRouteGenerator->generate($this->entity);
         $this->assertInstanceOf(Route::class, $result);
         $this->assertEquals('/test', $result->getPath());
-        $this->assertEquals(get_class($this->entity), $result->getEntityClass());
+        $this->assertEquals(\get_class($this->entity), $result->getEntityClass());
     }
 
     public function testGenerateWithPath()
@@ -90,7 +90,7 @@ class ChainRouteGeneratorTest extends TestCase
         $result = $this->chainRouteGenerator->generate($this->entity, '/test');
         $this->assertInstanceOf(Route::class, $result);
         $this->assertEquals('/test', $result->getPath());
-        $this->assertEquals(get_class($this->entity), $result->getEntityClass());
+        $this->assertEquals(\get_class($this->entity), $result->getEntityClass());
     }
 
     public function testGenerateInheritMapping()

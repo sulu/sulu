@@ -139,7 +139,7 @@ class SmartContentItemControllerTest extends SuluTestCase
         $userRole1 = new UserRole();
         $userRole1->setRole($role1);
         $userRole1->setUser($user);
-        $userRole1->setLocale(json_encode(['de', 'en']));
+        $userRole1->setLocale(\json_encode(['de', 'en']));
         $this->em->persist($userRole1);
         $this->em->flush();
 
@@ -204,7 +204,7 @@ class SmartContentItemControllerTest extends SuluTestCase
      */
     private function savePage($template, $data, $parent, $publish = false, $tags = [])
     {
-        $data = array_merge(
+        $data = \array_merge(
             [
                 'template' => $template,
                 'parent' => $parent,
@@ -253,7 +253,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(
             [
                 'id' => $this->team->getUuid(),
@@ -303,7 +303,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(
             [
                 'id' => $this->team->getUuid(),
@@ -350,7 +350,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(
             [
                 'id' => $this->team->getUuid(),
@@ -388,7 +388,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(
             [
                 'id' => $this->team->getUuid(),
@@ -433,7 +433,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(
             [
                 'id' => $this->team->getUuid(),
@@ -476,7 +476,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(
             [
                 'id' => $this->team->getUuid(),
@@ -519,7 +519,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(
             [
                 'id' => $this->team->getUuid(),

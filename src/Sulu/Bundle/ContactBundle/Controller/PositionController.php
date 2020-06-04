@@ -159,7 +159,7 @@ class PositionController extends AbstractRestController implements ClassResource
 
     public function cdeleteAction(Request $request)
     {
-        $ids = array_filter(explode(',', $request->get('ids', '')));
+        $ids = \array_filter(\explode(',', $request->get('ids', '')));
 
         try {
             foreach ($ids as $id) {

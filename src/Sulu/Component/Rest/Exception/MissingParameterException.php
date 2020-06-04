@@ -28,7 +28,7 @@ class MissingParameterException extends RestException
 
     public function __construct($controller, $name)
     {
-        parent::__construct(sprintf('Missing parameter %s in %s', $name, $controller), 0);
+        parent::__construct(\sprintf('Missing parameter %s in %s', $name, $controller), 0);
         $this->controller = $controller;
         $this->name = $name;
     }

@@ -132,7 +132,7 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
             $webspace->getKey()
         );
 
-        $portalInformation = $context->getNavigator()->accept(array_values($portalInformation));
+        $portalInformation = $context->getNavigator()->accept(\array_values($portalInformation));
 
         $visitor->visitProperty(
             new StaticPropertyMetadata('', 'portalInformation', $portalInformation),
@@ -161,7 +161,7 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
     {
         $customUrls = [];
         foreach ($webspace->getPortals() as $portal) {
-            $customUrls = array_merge(
+            $customUrls = \array_merge(
                 $customUrls,
                 $this->getCustomUrlsForEnvironment($portal, $portal->getEnvironment($this->environment), $context)
             );

@@ -38,7 +38,7 @@ trait ListViewBuilderTrait
     private function addListAdaptersToView(View $route, array $listAdapters): void
     {
         $oldListAdapters = $route->getOption('adapters');
-        $newListAdapters = $oldListAdapters ? array_merge($oldListAdapters, $listAdapters) : $listAdapters;
+        $newListAdapters = $oldListAdapters ? \array_merge($oldListAdapters, $listAdapters) : $listAdapters;
         $route->setOption('adapters', $newListAdapters);
     }
 
@@ -66,7 +66,7 @@ trait ListViewBuilderTrait
     {
         $oldRouterAttributesToListRequest = $route->getOption('routerAttributesToListRequest');
         $newRouterAttributesToListRequest = $oldRouterAttributesToListRequest
-            ? array_merge($oldRouterAttributesToListRequest, $routerAttributesToListRequest)
+            ? \array_merge($oldRouterAttributesToListRequest, $routerAttributesToListRequest)
             : $routerAttributesToListRequest;
 
         $route->setOption('routerAttributesToListRequest', $newRouterAttributesToListRequest);
@@ -76,7 +76,7 @@ trait ListViewBuilderTrait
     {
         $oldRouterAttributesToListMetadata = $route->getOption('routerAttributesToListMetadata');
         $newRouterAttributesToListMetadata = $oldRouterAttributesToListMetadata
-            ? array_merge($oldRouterAttributesToListMetadata, $routerAttributesToListMetadata)
+            ? \array_merge($oldRouterAttributesToListMetadata, $routerAttributesToListMetadata)
             : $routerAttributesToListMetadata;
 
         $route->setOption('routerAttributesToListMetadata', $newRouterAttributesToListMetadata);
@@ -85,7 +85,7 @@ trait ListViewBuilderTrait
     private function addLocalesToView(View $route, array $locales): void
     {
         $oldLocales = $route->getOption('locales');
-        $newLocales = $oldLocales ? array_merge($oldLocales, $locales) : $locales;
+        $newLocales = $oldLocales ? \array_merge($oldLocales, $locales) : $locales;
         $route->setOption('locales', $newLocales);
 
         if (!$route->getAttributeDefault('locale') && isset($newLocales[0])) {
@@ -107,7 +107,7 @@ trait ListViewBuilderTrait
     {
         $oldResourceStorePropertiesToListRequest = $route->getOption('resourceStorePropertiesToListRequest');
         $newResourceStorePropertiesToListRequest = $oldResourceStorePropertiesToListRequest
-            ? array_merge($oldResourceStorePropertiesToListRequest, $resourceStorePropertiesToListRequest)
+            ? \array_merge($oldResourceStorePropertiesToListRequest, $resourceStorePropertiesToListRequest)
             : $resourceStorePropertiesToListRequest;
 
         $route->setOption('resourceStorePropertiesToListRequest', $newResourceStorePropertiesToListRequest);
@@ -117,7 +117,7 @@ trait ListViewBuilderTrait
     {
         $oldResourceStorePropertiesToListMetadata = $route->getOption('resourceStorePropertiesToListMetadata');
         $newResourceStorePropertiesToListMetadata = $oldResourceStorePropertiesToListMetadata
-            ? array_merge($oldResourceStorePropertiesToListMetadata, $resourceStorePropertiesToListMetadata)
+            ? \array_merge($oldResourceStorePropertiesToListMetadata, $resourceStorePropertiesToListMetadata)
             : $resourceStorePropertiesToListMetadata;
 
         $route->setOption('resourceStorePropertiesToListMetadata', $newResourceStorePropertiesToListMetadata);
@@ -126,7 +126,7 @@ trait ListViewBuilderTrait
     private function addRequestParametersToView(View $route, array $requestParameters): void
     {
         $oldRequestParameters = $route->getOption('requestParameters');
-        $newRequestParameters = $oldRequestParameters ? array_merge($oldRequestParameters, $requestParameters) : $requestParameters;
+        $newRequestParameters = $oldRequestParameters ? \array_merge($oldRequestParameters, $requestParameters) : $requestParameters;
 
         $route->setOption('requestParameters', $newRequestParameters);
     }

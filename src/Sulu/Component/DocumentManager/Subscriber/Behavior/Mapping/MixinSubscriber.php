@@ -42,7 +42,7 @@ class MixinSubscriber implements EventSubscriberInterface
         $node = $event->getNode();
         $document = $event->getDocument();
 
-        $metadata = $this->metadataFactory->getMetadataForClass(get_class($document));
+        $metadata = $this->metadataFactory->getMetadataForClass(\get_class($document));
 
         $node->addMixin($metadata->getPhpcrType());
 

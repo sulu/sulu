@@ -147,7 +147,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
      */
     public function __construct()
     {
-        $this->apiKey = md5(uniqid());
+        $this->apiKey = \md5(\uniqid());
 
         $this->userRoles = new ArrayCollection();
         $this->userGroups = new ArrayCollection();
@@ -303,7 +303,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
      */
     public function serialize()
     {
-        return serialize(
+        return \serialize(
             [
                 $this->id,
                 $this->password,
@@ -326,7 +326,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     {
         list(
             $this->id, $this->password, $this->salt, $this->username, $this->locked, $this->enabled
-            ) = unserialize($serialized);
+            ) = \unserialize($serialized);
     }
 
     /**
@@ -672,7 +672,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     {
         $userSettingValues = [];
         foreach ($this->userSettings as $userSetting) {
-            $userSettingValues[$userSetting->getKey()] = json_decode($userSetting->getValue(), true);
+            $userSettingValues[$userSetting->getKey()] = \json_decode($userSetting->getValue(), true);
         }
 
         return $userSettingValues;

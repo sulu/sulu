@@ -63,22 +63,22 @@ class TaggedServiceCollectorCompilerPass implements CompilerPassInterface
         $references = [];
         foreach ($container->findTaggedServiceIds($this->tagName) as $id => $tags) {
             foreach ($tags as $attributes) {
-                $priority = array_key_exists('priority', $attributes) ? $attributes['priority'] : 0;
+                $priority = \array_key_exists('priority', $attributes) ? $attributes['priority'] : 0;
                 $reference = new Reference($id);
                 if (!$this->aliasAttribute) {
                     $references[$priority][] = $reference;
-                } elseif (array_key_exists($this->aliasAttribute, $attributes)) {
+                } elseif (\array_key_exists($this->aliasAttribute, $attributes)) {
                     $references[$priority][$attributes[$this->aliasAttribute]] = $reference;
                 }
             }
         }
 
-        if (0 === count($references)) {
+        if (0 === \count($references)) {
             return;
         }
 
-        krsort($references);
-        $references = call_user_func_array('array_merge', $references);
+        \krsort($references);
+        $references = \call_user_func_array('array_merge', $references);
 
         $container->getDefinition($this->serviceId)->replaceArgument($this->argumentNumber, $references);
     }

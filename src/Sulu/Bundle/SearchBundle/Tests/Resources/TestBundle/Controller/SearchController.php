@@ -30,7 +30,7 @@ class SearchController
     {
         $q = $request->get('query', '');
 
-        if (strlen($q) <= 3) {
+        if (\strlen($q) <= 3) {
             throw new \Exception('Length of query string must be greater than 3 (Zend Search)');
         }
 

@@ -60,10 +60,10 @@ class DocumentExecutor
 
         $output->writeln('<comment>Loading fixtures</comment>');
         foreach ($fixtures as $fixture) {
-            $output->writeln(sprintf(
+            $output->writeln(\sprintf(
                 ' - %s<info>loading "</info>%s<info>"</info>',
                 $fixture instanceof OrderedFixtureInterface ? '[' . $fixture->getOrder() . ']' : '',
-                get_class($fixture)
+                \get_class($fixture)
             ));
 
             $fixture->load($this->documentManager);

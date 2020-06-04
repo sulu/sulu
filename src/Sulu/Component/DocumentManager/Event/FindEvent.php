@@ -45,10 +45,10 @@ class FindEvent extends AbstractEvent
 
     public function getDebugMessage()
     {
-        return sprintf(
+        return \sprintf(
             'i:%s d:%s l:%s',
             $this->identifier,
-            $this->document ? spl_object_hash($this->document) : '<no document>',
+            $this->document ? \spl_object_hash($this->document) : '<no document>',
             $this->locale ?: '<no locale>'
         );
     }
@@ -77,7 +77,7 @@ class FindEvent extends AbstractEvent
     public function getDocument()
     {
         if (!$this->document) {
-            throw new DocumentManagerException(sprintf(
+            throw new DocumentManagerException(\sprintf(
                 'No document has been set for the findEvent for "%s". An event listener should have done this.',
                 $this->identifier
             ));

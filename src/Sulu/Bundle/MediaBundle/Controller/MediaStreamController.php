@@ -91,8 +91,8 @@ class MediaStreamController
     public function getImageAction(Request $request)
     {
         try {
-            if (ob_get_length()) {
-                ob_end_clean();
+            if (\ob_get_length()) {
+                \ob_end_clean();
             }
 
             $url = $request->getPathInfo();
@@ -117,8 +117,8 @@ class MediaStreamController
     public function downloadAction(Request $request, $id)
     {
         try {
-            if (ob_get_length()) {
-                ob_end_clean();
+            if (\ob_get_length()) {
+                \ob_end_clean();
             }
 
             $version = $request->get('v', null);
@@ -168,7 +168,7 @@ class MediaStreamController
             return $this->createBinaryFileResponse($fileVersion, $this->storage, $locale, $dispositionType);
         }
 
-        throw new \RuntimeException(sprintf('Storage type "%s" not supported.', $storageType));
+        throw new \RuntimeException(\sprintf('Storage type "%s" not supported.', $storageType));
     }
 
     private function createBinaryFileResponse(
@@ -199,7 +199,7 @@ class MediaStreamController
 
             $response->headers->set(
                 'Link',
-                sprintf(
+                \sprintf(
                     '<%s>; rel="canonical"',
                     $this->mediaManager->getUrl(
                         $file->getMedia()->getId(),
@@ -267,7 +267,7 @@ class MediaStreamController
      */
     private function cleanUpFileName($fileName, $locale, $extension)
     {
-        $pathInfo = pathinfo($fileName);
+        $pathInfo = \pathinfo($fileName);
         $cleanedFileName = $this->pathCleaner->cleanup($pathInfo['filename'], $locale);
         if ($extension) {
             $cleanedFileName .= '.' . $extension;

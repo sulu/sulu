@@ -23,7 +23,7 @@ class ProviderNotFoundException extends PreviewException
 
     public function __construct(string $providerKey)
     {
-        parent::__construct(sprintf('No provider found for key "%s"', $providerKey), 9900);
+        parent::__construct(\sprintf('No provider found for key "%s"', $providerKey), 9900);
 
         $this->providerKey = $providerKey;
     }

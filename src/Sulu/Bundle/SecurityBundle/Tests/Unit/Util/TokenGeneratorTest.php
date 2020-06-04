@@ -20,7 +20,7 @@ class TokenGeneratorTest extends TestCase
         $tokenGenerator = new TokenGenerator();
         $token = $tokenGenerator->generateToken();
 
-        $this->assertTrue(is_string($token));
-        $this->assertGreaterThan(0, strlen($token));
+        $this->assertTrue(\is_string($token));
+        $this->assertGreaterThan(0, \strlen($token));
     }
 }

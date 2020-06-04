@@ -70,7 +70,7 @@ class TagTwigExtension extends AbstractExtension
     {
         return $this->memoizeCache->memoizeById(
             'sulu_tags',
-            func_get_args(),
+            \func_get_args(),
             function() {
                 $tags = $this->tagManager->findAll();
 

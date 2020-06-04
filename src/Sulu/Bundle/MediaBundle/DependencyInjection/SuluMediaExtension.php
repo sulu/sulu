@@ -271,7 +271,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         if ('auto' === $config['adapter']) {
             $container->setAlias(
                 'sulu_media.adapter',
-                'sulu_media.adapter.' . (class_exists('Imagick') ? 'imagick' : 'gd')
+                'sulu_media.adapter.' . (\class_exists('Imagick') ? 'imagick' : 'gd')
             );
         } else {
             // set used adapter for imagine
@@ -280,7 +280,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
 
         // enable search
         if (true === $config['search']['enabled']) {
-            if (!class_exists('Sulu\Bundle\SearchBundle\SuluSearchBundle')) {
+            if (!\class_exists('Sulu\Bundle\SearchBundle\SuluSearchBundle')) {
                 throw new \InvalidArgumentException(
                     'You have enabled sulu search integration for the SuluMediaBundle, but the SuluSearchBundle must be installed'
                 );
@@ -289,20 +289,20 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $loader->load('search.xml');
         }
 
-        if (array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
+        if (\array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
             $loader->load('audience_targeting.xml');
         }
 
         $ffmpegBinary = $config['ffmpeg']['ffmpeg_binary'] ?? null;
         $ffprobeBinary = $config['ffmpeg']['ffprobe_binary'] ?? null;
 
-        if (method_exists($container, 'resolveEnvPlaceholders')) {
+        if (\method_exists($container, 'resolveEnvPlaceholders')) {
             $ffmpegBinary = $container->resolveEnvPlaceholders($ffmpegBinary, true);
             $ffprobeBinary = $container->resolveEnvPlaceholders($ffprobeBinary, true);
         }
 
         if ($ffmpegBinary || $ffprobeBinary) {
-            if (!class_exists(FFMpeg::class)) {
+            if (!\class_exists(FFMpeg::class)) {
                 throw new InvalidConfigurationException(
                     'The "php-ffmpeg/php-ffmpeg" need to be installed to use ffmpeg.'
                 );
@@ -317,7 +317,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         }
 
         $mimeTypes = $config['format_manager']['mime_types'];
-        if (0 === count($mimeTypes)) {
+        if (0 === \count($mimeTypes)) {
             $mimeTypes = $this->getSupportedMimeTypes($ghostScriptPath, $ffmpegBinary, $ffprobeBinary);
         }
         $container->setParameter('sulu_media.format_manager.mime_types', $mimeTypes);
@@ -330,7 +330,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
     private function configureStorage(array $config, ContainerBuilder $container, LoaderInterface $loader)
     {
         $storage = $config['storage'];
-        if (method_exists($container, 'resolveEnvPlaceholders')) {
+        if (\method_exists($container, 'resolveEnvPlaceholders')) {
             $storage = $container->resolveEnvPlaceholders($storage, true);
         }
         $container->setParameter('sulu_media.media.storage', $storage);
@@ -340,7 +340,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                 if ($storageKey === $storage) {
                     $container->setParameter('sulu_media.media.storage.' . $storageKey . '.' . $key, $value);
                 } else {
-                    if (method_exists($container, 'resolveEnvPlaceholders')) {
+                    if (\method_exists($container, 'resolveEnvPlaceholders')) {
                         // Resolve unused ENV Variables of other Adapter
                         $container->resolveEnvPlaceholders($value, true);
                     }
@@ -374,7 +374,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
 
     private function checkCommandAvailability($command)
     {
-        return null !== $this->executableFinder->find($command) || @is_executable($command);
+        return null !== $this->executableFinder->find($command) || @\is_executable($command);
     }
 
     private function configureFileValidator(array $config, ContainerBuilder $container)

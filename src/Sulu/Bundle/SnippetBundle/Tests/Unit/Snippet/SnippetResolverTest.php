@@ -47,7 +47,7 @@ class SnippetResolverTest extends TestCase
         $structureResolver = $this->prophesize(StructureResolverInterface::class);
 
         $structures = [];
-        foreach (array_unique($uuids) as $uuid) {
+        foreach (\array_unique($uuids) as $uuid) {
             $structure = $this->prophesize(SnippetBridge::class);
             $structure->getUuid()->willReturn($uuid);
             $structure->getKey()->willReturn('test');
@@ -63,12 +63,12 @@ class SnippetResolverTest extends TestCase
         $contentMapper->load(
             Argument::that(
                 function($item) use ($uuids) {
-                    return in_array($item, $uuids);
+                    return \in_array($item, $uuids);
                 }
             ),
             $webspaceKey,
             $locale
-        )->shouldBeCalledTimes(count(array_unique($uuids)))->will(
+        )->shouldBeCalledTimes(\count(\array_unique($uuids)))->will(
             function($arguments) use ($structures) {
                 return $structures[$arguments[0]];
             }
@@ -77,11 +77,11 @@ class SnippetResolverTest extends TestCase
         $structureResolver->resolve(
             Argument::that(
                 function(StructureInterface $structure) use ($uuids) {
-                    return in_array($structure->getUuid(), $uuids);
+                    return \in_array($structure->getUuid(), $uuids);
                 }
             ),
             false
-        )->shouldBeCalledTimes(count(array_unique($uuids)))->willReturn(
+        )->shouldBeCalledTimes(\count(\array_unique($uuids)))->willReturn(
             ['content' => ['title' => 'test'], 'view' => ['title' => []]]
         );
 

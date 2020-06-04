@@ -37,15 +37,15 @@ class NavigationQueryBuilder extends ContentQueryBuilder
     {
         $where = [];
         if (null !== $this->context) {
-            $where[] = sprintf("page.[i18n:%s-navContexts] = '%s'", $locale, $this->context);
+            $where[] = \sprintf("page.[i18n:%s-navContexts] = '%s'", $locale, $this->context);
         }
         if (null !== $this->parent) {
-            $where[] = sprintf("ISDESCENDANTNODE(page, '%s')", $this->parent);
+            $where[] = \sprintf("ISDESCENDANTNODE(page, '%s')", $this->parent);
         } else {
-            $where[] = sprintf("ISDESCENDANTNODE(page, '%s')", '/cmf/' . $webspaceKey . '/contents');
+            $where[] = \sprintf("ISDESCENDANTNODE(page, '%s')", '/cmf/' . $webspaceKey . '/contents');
         }
 
-        return implode(' AND ', $where);
+        return \implode(' AND ', $where);
     }
 
     /**

@@ -152,7 +152,7 @@ class DocumentInspectorTest extends TestCase
         $document = $this->prophesize(StructureBehavior::class);
         $document->getStructureType()->willReturn('foo');
 
-        $this->metadataFactory->getMetadataForClass(get_class($document->reveal()))->willReturn($this->metadata->reveal());
+        $this->metadataFactory->getMetadataForClass(\get_class($document->reveal()))->willReturn($this->metadata->reveal());
         $this->metadata->getAlias()->willReturn('page');
         $this->structureMetadataFactory->getStructureMetadata('page', 'foo')->willReturn($structure);
         $result = $this->documentInspector->getStructureMetadata($document->reveal());
@@ -167,7 +167,7 @@ class DocumentInspectorTest extends TestCase
         $document = $this->prophesize(StructureBehavior::class);
         $document->getStructureType()->willReturn('foo');
 
-        $this->metadataFactory->getMetadataForClass(get_class($document->reveal()))
+        $this->metadataFactory->getMetadataForClass(\get_class($document->reveal()))
             ->willReturn($this->metadata->reveal());
         $this->metadata->getAlias()->willReturn('page');
         $this->structureMetadataFactory->getStructureMetadata('page', 'foo')
@@ -262,7 +262,7 @@ class DocumentInspectorTest extends TestCase
         $this->documentRegistry->getNodeForDocument($document->reveal())->willReturn($this->node->reveal());
         $this->node->getProperties()->willReturn([$englishShadowOnProperty->reveal(), $germanShadowOnProperty->reveal()]);
 
-        $this->assertEquals('["de"]', json_encode($this->documentInspector->getConcreteLocales($document->reveal())));
+        $this->assertEquals('["de"]', \json_encode($this->documentInspector->getConcreteLocales($document->reveal())));
     }
 
     /**

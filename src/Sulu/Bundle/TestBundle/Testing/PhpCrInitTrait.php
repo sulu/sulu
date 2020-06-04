@@ -79,13 +79,13 @@ trait PhpCrInitTrait
             $filesystem->mkdir(\dirname($initializerDump));
         }
 
-        $handle = fopen($initializerDump, 'w');
+        $handle = \fopen($initializerDump, 'w');
         if (!$handle) {
             throw new \InvalidArgumentException('Could not open ' . $initializerDump);
         }
 
         $session->exportSystemView('/cmf', $handle, false, false);
-        fclose($handle);
+        \fclose($handle);
     }
 
     /**
@@ -115,7 +115,7 @@ trait PhpCrInitTrait
             throw new \TypeError(
                 'Expected that Kernel is "%s" but "%s" given.',
                 SuluKernel::class,
-                get_class(static::$kernel)
+                \get_class(static::$kernel)
             );
         }
 
@@ -129,7 +129,7 @@ trait PhpCrInitTrait
 
                 break;
             default:
-                throw new \InvalidArgumentException(sprintf('Workspace "%s" is not a valid option', $workspace));
+                throw new \InvalidArgumentException(\sprintf('Workspace "%s" is not a valid option', $workspace));
         }
     }
 

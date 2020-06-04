@@ -106,7 +106,7 @@ EOT
 
         $candidatePaths = [];
         if (!$paths) {
-            $directories = array_map(
+            $directories = \array_map(
                 function(BundleInterface $bundle) {
                     return $bundle->getPath();
                 },
@@ -119,7 +119,7 @@ EOT
             foreach ($directories as $directory) {
                 $candidatePath = $directory . '/DataFixtures/Document';
                 $candidatePaths[] = $candidatePath;
-                if (file_exists($candidatePath)) {
+                if (\file_exists($candidatePath)) {
                     $paths[] = $candidatePath;
                 }
             }
@@ -131,8 +131,8 @@ EOT
             );
 
             if ($input->getOption('verbose')) {
-                $output->writeln(sprintf('Looked for: </comment>%s<comment>"</comment>',
-                   implode('"<comment>", "</comment>', $candidatePaths)
+                $output->writeln(\sprintf('Looked for: </comment>%s<comment>"</comment>',
+                   \implode('"<comment>", "</comment>', $candidatePaths)
                ));
             }
 
@@ -142,9 +142,9 @@ EOT
         $fixtures = $this->loader->load($paths);
         $this->executor->execute($fixtures, false === $append, false === $noInitialize, $output);
         $output->writeln('');
-        $output->writeln(sprintf(
+        $output->writeln(\sprintf(
             '<info>Done. Executed </info>%s</info><info> fixtures.</info>',
-            count($fixtures)
+            \count($fixtures)
         ));
     }
 }

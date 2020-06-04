@@ -65,7 +65,7 @@ class SnippetAdmin extends Admin
      */
     public static function getDefaultSnippetsSecurityContext($webspaceKey)
     {
-        return sprintf('%s%s.%s', PageAdmin::SECURITY_CONTEXT_PREFIX, $webspaceKey, 'default-snippets');
+        return \sprintf('%s%s.%s', PageAdmin::SECURITY_CONTEXT_PREFIX, $webspaceKey, 'default-snippets');
     }
 
     public function __construct(

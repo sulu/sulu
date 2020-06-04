@@ -45,17 +45,17 @@ class Version201904110902 implements VersionInterface, ContainerAwareInterface
             $node = $row->getNode();
 
             $property = $node->getProperty('domainParts');
-            $oldDomainParts = json_decode($property->getValue('domainParts'), true);
+            $oldDomainParts = \json_decode($property->getValue('domainParts'), true);
             $newDomainParts = [];
 
             if ($oldDomainParts['prefix']) {
                 $newDomainParts[] = $oldDomainParts['prefix'];
             }
 
-            $newDomainParts = array_merge($newDomainParts, $oldDomainParts['suffix']);
+            $newDomainParts = \array_merge($newDomainParts, $oldDomainParts['suffix']);
 
             $property->remove('domainParts');
-            $node->setProperty('domainParts', json_encode($newDomainParts));
+            $node->setProperty('domainParts', \json_encode($newDomainParts));
         }
     }
 }

@@ -56,10 +56,10 @@ class PageControllerTest extends SuluTestCase
         $this->client->request('GET', '/api/pages?locale=en&flat=true');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertCount(2, $response->_embedded->pages);
 
-        $titles = array_map(function($page) {
+        $titles = \array_map(function($page) {
             return $page->title;
         }, $response->_embedded->pages);
 
@@ -72,7 +72,7 @@ class PageControllerTest extends SuluTestCase
         $this->client->request('GET', '/api/pages?locale=en&flat=true&webspace=sulu_io');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertCount(1, $response->_embedded->pages);
         $this->assertEquals('Sulu CMF', $response->_embedded->pages[0]->title);
     }
@@ -84,7 +84,7 @@ class PageControllerTest extends SuluTestCase
         $this->client->request('GET', '/api/pages?locale=en&flat=true&parentId=' . $webspaceUuid);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertCount(0, $response->_embedded->pages);
     }
 
@@ -95,9 +95,9 @@ class PageControllerTest extends SuluTestCase
             $this->session->getNode('/cmf/sulu_io/contents')->getIdentifier(),
         ];
 
-        $this->client->request('GET', '/api/pages?locale=en&flat=true&ids=' . implode(',', $webspaceUuids));
+        $this->client->request('GET', '/api/pages?locale=en&flat=true&ids=' . \implode(',', $webspaceUuids));
 
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertCount(2, $response->_embedded->pages);
 
         $page1 = $response->_embedded->pages[0];
@@ -159,7 +159,7 @@ class PageControllerTest extends SuluTestCase
         $this->documentManager->flush();
 
         $this->client->request('GET', '/api/pages?locale=de&flat=true&webspace=sulu_io');
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $childPages = $response->_embedded->pages[0]->_embedded->pages;
 
@@ -191,13 +191,13 @@ class PageControllerTest extends SuluTestCase
             '/api/pages?expandedIds=' . $securedPage->getUuid() . '&fields=title&webspace=sulu_io&language=en'
         );
 
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('_permissions', $response['_embedded']['pages'][0]);
 
         $this->client->request('GET', '/api/pages/' . $securedPage->getUuid() . '?language=en&webspace=sulu_io');
 
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('_permissions', $response);
     }
@@ -232,7 +232,7 @@ class PageControllerTest extends SuluTestCase
         $this->client->request('GET', '/api/pages/' . $data[0]['id'] . '?webspace=sulu_io&language=en&complete=false');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('id', $response);
         $this->assertArrayHasKey('title', $response);
@@ -287,7 +287,7 @@ class PageControllerTest extends SuluTestCase
             $data1
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
         $uuid = $response->id;
 
         $this->client->request(
@@ -296,7 +296,7 @@ class PageControllerTest extends SuluTestCase
             $data2
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('test-1', $response->title);
         $this->assertEquals('Test', $response->article);
@@ -344,7 +344,7 @@ class PageControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('Testtitle', $response->title);
         $this->assertEquals('Test', $response->article);
@@ -436,7 +436,7 @@ class PageControllerTest extends SuluTestCase
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager')->clear();
 
         $this->client->request('GET', '/api/pages/' . $document->getUuid() . '?language=en');
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('test_en', $response['title']);
         $this->assertEquals('/test-en', $response['path']);
@@ -445,7 +445,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('Test English', $response['article']);
 
         $this->client->request('GET', '/api/pages/' . $document->getUuid() . '?language=de');
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('test_de', $response['title']);
         $this->assertEquals('/test-en', $response['path']);
@@ -491,12 +491,12 @@ class PageControllerTest extends SuluTestCase
         $this->documentManager->flush();
 
         $this->client->request('GET', '/api/pages/' . $document->getUuid() . '?language=en');
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertArrayNotHasKey('article', $response);
 
         $this->client->request('GET', '/api/pages/' . $document->getUuid() . '?language=en&template=default');
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('Test English', $response['article']);
     }
@@ -531,14 +531,14 @@ class PageControllerTest extends SuluTestCase
         $this->documentManager->flush();
 
         $this->client->request('GET', '/api/pages/' . $document->getUuid() . '?language=de&ghost-content=true');
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('test_en', $response['title']);
         $this->assertEquals(['name' => 'ghost', 'value' => 'en'], $response['type']);
         $this->assertEquals('en', $response['ghostLocale']);
 
         $this->client->request('GET', '/api/pages/' . $document->getUuid() . '?language=de');
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('', $response['title']);
         $this->assertArrayNotHasKey('type', $response);
@@ -576,7 +576,7 @@ class PageControllerTest extends SuluTestCase
         $this->documentManager->flush();
 
         $this->client->request('GET', '/api/pages/' . $document->getUuid() . '?language=de');
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('test_en', $response['title']);
         $this->assertEquals('Test English', $response['article']);
@@ -612,7 +612,7 @@ class PageControllerTest extends SuluTestCase
         $this->documentManager->flush();
 
         $this->client->request('GET', '/api/pages/' . $internalLinkPage->getUuid() . '?webspace=sulu_io&language=en');
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('internal', $response['linked']);
         $this->assertEquals($targetPage->getUuid(), $response['internal_link']);
@@ -630,7 +630,7 @@ class PageControllerTest extends SuluTestCase
         $this->documentManager->flush();
 
         $this->client->request('GET', '/api/pages/' . $externalLinkPage->getUuid() . '?webspace=sulu_io&language=en');
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('external', $response['linked']);
         $this->assertEquals('http://www.sulu.io', $response['external']);
@@ -685,7 +685,7 @@ class PageControllerTest extends SuluTestCase
             '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
             $data
         );
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->client->request(
             'PUT',
@@ -713,7 +713,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->client->request('GET', '/api/pages/' . $response['id'] . '?language=de');
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('Testtitle DE', $response['title']);
         $this->assertEquals('/test-de', $response['url']);
@@ -725,7 +725,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals(1, $response['author']);
 
         $this->client->request('GET', '/api/pages/' . $response['id'] . '?language=en');
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('Testtitle EN', $response['title']);
         $this->assertEquals('/test-en', $response['url']);
@@ -769,7 +769,7 @@ class PageControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($data[0]['title'], $response->title);
         $this->assertEquals($data[0]['tags'], $response->tags);
@@ -782,7 +782,7 @@ class PageControllerTest extends SuluTestCase
         $this->client->request('GET', '/api/pages/' . $data[0]['id'] . '?language=en');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($data[0]['title'], $response->title);
         $this->assertEquals($data[0]['tags'], $response->tags);
@@ -827,7 +827,7 @@ class PageControllerTest extends SuluTestCase
         ];
 
         $this->client->request('GET', '/api/pages?webspace=sulu_io&language=en');
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
         $homepage = $response->_embedded->pages[0];
 
         $this->client->request(
@@ -837,14 +837,14 @@ class PageControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($data['title'], $response->title);
 
         $this->client->request('GET', '/api/pages/' . $homepage->id . '?webspace=sulu_io&language=en');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($data['title'], $response->title);
     }
@@ -877,7 +877,7 @@ class PageControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('default', $response->template);
         $this->assertEquals('article test', $response->article);
@@ -885,7 +885,7 @@ class PageControllerTest extends SuluTestCase
         $this->client->request('GET', '/api/pages/' . $data[0]['id'] . '?webspace=sulu_io&language=en');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('default', $response->template);
         $this->assertEquals('article test', $response->article);
@@ -906,16 +906,16 @@ class PageControllerTest extends SuluTestCase
             '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
             $data
         );
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->client->request('PUT', '/api/pages/' . $response['id'] . '?webspace=sulu_io&language=de', $data);
         $this->client->request(
             'PUT',
             '/api/pages/' . $response['id'] . '?webspace=sulu_io&language=de',
-            array_merge($data, ['shadowOn' => true, 'shadowBaseLanguage' => 'en'])
+            \array_merge($data, ['shadowOn' => true, 'shadowBaseLanguage' => 'en'])
         );
         $this->client->request('GET', '/api/pages/' . $response['id'] . '?language=de');
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(true, $response['shadowOn']);
         $this->assertEquals('en', $response['shadowBaseLanguage']);
         $this->assertEquals('shadow', $response['type']['name']);
@@ -924,10 +924,10 @@ class PageControllerTest extends SuluTestCase
         $this->client->request(
             'PUT',
             '/api/pages/' . $response['id'] . '?webspace=sulu_io&language=de',
-            array_merge($data, ['shadowOn' => false, 'shadowBaseLanguage' => null])
+            \array_merge($data, ['shadowOn' => false, 'shadowBaseLanguage' => null])
         );
         $this->client->request('GET', '/api/pages/' . $response['id'] . '?language=de');
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(false, $response['shadowOn']);
         $this->assertEquals(null, $response['shadowBaseLanguage']);
         $this->assertArrayNotHasKey('type', $response);
@@ -960,7 +960,7 @@ class PageControllerTest extends SuluTestCase
         $this->documentManager->flush();
 
         $this->client->request('GET', '/api/pages/' . $document->getUuid() . '?language=de');
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals(true, $response['shadowOn']);
         $this->assertEquals('default', $response['template']);
@@ -978,7 +978,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $this->client->request('GET', '/api/pages/' . $document->getUuid() . '?language=de');
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals(false, $response['shadowOn']);
         $this->assertEquals('overview', $response['template']);
@@ -995,15 +995,15 @@ class PageControllerTest extends SuluTestCase
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->request('POST', '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en', $data);
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->client->request('GET', '/api/pages/' . $response['id'] . '?language=en', $data);
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->client->request(
             'PUT',
             '/api/pages/' . $response['id'] . '?webspace=sulu_io&language=en&state=2',
-            array_merge(['_hash' => $response['_hash']], $data)
+            \array_merge(['_hash' => $response['_hash']], $data)
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -1024,23 +1024,23 @@ class PageControllerTest extends SuluTestCase
             '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
             $data
         );
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
         $id = $response['id'];
 
         $this->client->request(
             'PUT',
             '/api/pages/' . $id . '?webspace=sulu_io&language=en&state=2',
-            array_merge(['_hash' => md5('wrong-hash')], $data)
+            \array_merge(['_hash' => \md5('wrong-hash')], $data)
         );
 
         $this->assertHttpStatusCode(409, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(1102, $response['code']);
 
         $this->client->request(
             'PUT',
             '/api/pages/' . $id . '?webspace=sulu_io&language=en&state=2&force=true',
-            array_merge(['_hash' => md5('wrong-hash')], $data)
+            \array_merge(['_hash' => \md5('wrong-hash')], $data)
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -1073,7 +1073,7 @@ class PageControllerTest extends SuluTestCase
             $data
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $data['url'] = '/test';
         $this->client->request(
@@ -1082,7 +1082,7 @@ class PageControllerTest extends SuluTestCase
             $data
         );
         $this->assertHttpStatusCode(409, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(1103, $response['code']);
     }
 
@@ -1106,7 +1106,7 @@ class PageControllerTest extends SuluTestCase
             '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en&action=publish',
             $data
         );
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
         $uuid = $response['id'];
         $data = [
             'title' => 'news',
@@ -1119,7 +1119,7 @@ class PageControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
-        sleep(1);
+        \sleep(1);
 
         $this->client->request('PUT', '/api/pages/' . $uuid . '?webspace=sulu_io&language=en&action=publish', $data);
         $data = [
@@ -1138,7 +1138,7 @@ class PageControllerTest extends SuluTestCase
             'GET',
             '/api/pages/' . $uuid . '/resourcelocators?webspace=sulu_io&locale=en'
         );
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('/a2', $response['_embedded']['page_resourcelocators'][0]['resourcelocator']);
         $this->assertEquals('/a1', $response['_embedded']['page_resourcelocators'][1]['resourcelocator']);
@@ -1155,7 +1155,7 @@ class PageControllerTest extends SuluTestCase
 
         $response = $this->client->getResponse()->getContent();
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $homepage = $response->_embedded->pages[0];
 
@@ -1192,7 +1192,7 @@ class PageControllerTest extends SuluTestCase
 
         $response = $this->client->getResponse()->getContent();
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $homepage = $response->_embedded->pages[0];
 
@@ -1229,7 +1229,7 @@ class PageControllerTest extends SuluTestCase
 
         $response = $this->client->getResponse()->getContent();
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $homepage = $response->_embedded->pages[0];
 
@@ -1286,7 +1286,7 @@ class PageControllerTest extends SuluTestCase
 
         $response = $this->client->getResponse()->getContent();
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
         $homepage = $response->_embedded->pages[0];
 
@@ -1307,7 +1307,7 @@ class PageControllerTest extends SuluTestCase
             '/api/pages/' . $data[4]['id'] . '?webspace=sulu_io&language=en&action=move&destination=' . $data[2]['id']
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         // check some properties
         $this->assertEquals($data[4]['id'], $response['id']);
@@ -1384,7 +1384,7 @@ class PageControllerTest extends SuluTestCase
             '/api/pages/' . $data[4]['id'] . '?webspace=sulu_io&language=en&action=copy&destination=' . $data[2]['id']
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         // check some properties
         $this->assertNotEquals($data[4]['id'], $response['id']);
@@ -1400,7 +1400,7 @@ class PageControllerTest extends SuluTestCase
             '/api/pages/' . $data[4]['id'] . '?webspace=sulu_io&language=en'
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals($data[4]['id'], $response['id']);
         $this->assertEquals($data[4]['title'], $response['title']);
@@ -1454,14 +1454,14 @@ class PageControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            sprintf(
+            \sprintf(
                 '/api/pages/%s?webspace=sulu_io&language=en&action=copy&destination=%s',
                 $document->getUuid(),
                 $document->getUuid()
             )
         );
 
-        $uuid = json_decode($this->client->getResponse()->getContent(), true)['id'];
+        $uuid = \json_decode($this->client->getResponse()->getContent(), true)['id'];
 
         $germanDocument = $this->documentManager->find($uuid, 'de');
         $this->assertStringStartsWith('/test-de/test-de', $germanDocument->getResourceSegment());
@@ -1542,7 +1542,7 @@ class PageControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals('published title', $response['title']);
 
         $this->session->refresh(false);
@@ -1593,7 +1593,7 @@ class PageControllerTest extends SuluTestCase
             ]
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         // check some properties
         $this->assertEquals($data[1]['id'], $response['id']);
@@ -1610,7 +1610,7 @@ class PageControllerTest extends SuluTestCase
             ]
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         // check some properties
         $this->assertEquals($data[3]['id'], $response['id']);
@@ -1621,11 +1621,11 @@ class PageControllerTest extends SuluTestCase
 
         $this->client->request('GET', '/api/pages?fields=title,order&webspace=sulu_io&language=de');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
         $homepage = $response['_embedded']['pages'][0];
         $items = $homepage['_embedded']['pages'];
 
-        $this->assertEquals(4, count($items));
+        $this->assertEquals(4, \count($items));
         $this->assertEquals('test4', $items[0]['title']);
         $this->assertEquals(10, $items[0]['order']);
         $this->assertEquals('test1', $items[1]['title']);
@@ -1648,7 +1648,7 @@ class PageControllerTest extends SuluTestCase
             ]
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         // check some properties
         $this->assertEquals($data[1]['id'], $response['id']);
@@ -1663,7 +1663,7 @@ class PageControllerTest extends SuluTestCase
             ]
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         // check some properties
         $this->assertEquals($data[3]['id'], $response['id']);
@@ -1672,11 +1672,11 @@ class PageControllerTest extends SuluTestCase
 
         $this->client->request('GET', '/api/pages?fields=title,order&webspace=sulu_io&language=de');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
         $homepage = $response['_embedded']['pages'][0];
         $items = $homepage['_embedded']['pages'];
 
-        $this->assertEquals(4, count($items));
+        $this->assertEquals(4, \count($items));
         $this->assertEquals('test4', $items[0]['title']);
         $this->assertEquals(10, $items[0]['order']);
         $this->assertEquals('test1', $items[1]['title']);
@@ -1716,7 +1716,7 @@ class PageControllerTest extends SuluTestCase
             '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
             $data[0]
         );
-        $data[0] = json_decode($this->client->getResponse()->getContent(), true);
+        $data[0] = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->client->request(
             'POST',
@@ -1748,7 +1748,7 @@ class PageControllerTest extends SuluTestCase
             '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
             $data
         );
-        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $data = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('id', $data);
         $this->assertEquals('test1', $data['title']);
@@ -1760,7 +1760,7 @@ class PageControllerTest extends SuluTestCase
 
         $this->client->request('GET', '/api/pages/' . $data['id'] . '?webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('id', $response);
         $this->assertEquals('test1', $response['title']);
@@ -1797,7 +1797,7 @@ class PageControllerTest extends SuluTestCase
             '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
             $data
         );
-        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $data = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->client->request(
             'POST',
@@ -1809,7 +1809,7 @@ class PageControllerTest extends SuluTestCase
             'GET',
             '/api/pages/' . $data['id'] . '?webspace=sulu_io&language=de'
         );
-        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals($data['id'], $result['id']);
         $this->assertEquals($data['title'], $result['title']);
         $this->assertEquals($data['url'], $result['url']);
@@ -1834,7 +1834,7 @@ class PageControllerTest extends SuluTestCase
             '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
             $data
         );
-        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $data = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->client->request(
             'POST',
@@ -1846,7 +1846,7 @@ class PageControllerTest extends SuluTestCase
             'GET',
             '/api/pages/' . $data['id'] . '?webspace=sulu_io&language=de'
         );
-        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals($data['id'], $result['id']);
         $this->assertEquals($data['title'], $result['title']);
         $this->assertEquals($data['url'], $result['url']);
@@ -1857,7 +1857,7 @@ class PageControllerTest extends SuluTestCase
             'GET',
             '/api/pages/' . $data['id'] . '?webspace=sulu_io&language=de_at'
         );
-        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals($data['id'], $result['id']);
         $this->assertEquals($data['title'], $result['title']);
         $this->assertEquals($data['url'], $result['url']);
@@ -1888,17 +1888,17 @@ class PageControllerTest extends SuluTestCase
             '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
             $data[0]
         );
-        $data[0] = json_decode($this->client->getResponse()->getContent(), true);
+        $data[0] = \json_decode($this->client->getResponse()->getContent(), true);
         $this->client->request('POST', '/api/pages?webspace=sulu_io&language=en&parentId=' . $data[0]['id'], $data[1]);
-        $data[1] = json_decode($this->client->getResponse()->getContent(), true);
+        $data[1] = \json_decode($this->client->getResponse()->getContent(), true);
 
         $data[0]['internalLinks'][] = $data[1]['id'];
         $this->client->request('PUT', '/api/pages/' . $data[0]['id'] . '?webspace=sulu_io&language=en', $data[0]);
-        $data[0] = json_decode($this->client->getResponse()->getContent(), true);
+        $data[0] = \json_decode($this->client->getResponse()->getContent(), true);
 
         $data[0]['title'] = 'Dornbirn';
         $this->client->request('PUT', '/api/pages/' . $data[0]['id'] . '?webspace=sulu_io&language=en', $data[0]);
-        $result = json_decode($this->client->getResponse()->getContent(), true);
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('/dornbirn', $result['path']);
         $this->assertEquals('Dornbirn', $result['title']);
@@ -1923,7 +1923,7 @@ class PageControllerTest extends SuluTestCase
         $this->documentManager->clear();
 
         $this->client->request('GET', '/api/pages/' . $document->getUuid() . '?webspace=sulu_io&language=en');
-        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $data = \json_decode($this->client->getResponse()->getContent(), true);
         $data['title'] = 'Sulu is awesome';
 
         $this->client->request(
@@ -1933,7 +1933,7 @@ class PageControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $data = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('/sulu-is-awesome', $data['path']);
 
@@ -1974,7 +1974,7 @@ class PageControllerTest extends SuluTestCase
 
         $this->client->request('DELETE', '/api/pages/' . $linkedDocument->getUuid() . '?webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(409, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals($linkedDocument->getUuid(), $response['id']);
         $this->assertCount(1, $response['items'][0]);
         $this->assertEquals('test2', $response['items'][0]['name']);
@@ -1998,13 +1998,13 @@ class PageControllerTest extends SuluTestCase
     {
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
-        for ($i = 0; $i < count($data); ++$i) {
+        for ($i = 0; $i < \count($data); ++$i) {
             $this->client->request(
                 'POST',
                 '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
                 $data[$i]
             );
-            $data[$i] = (array) json_decode($this->client->getResponse()->getContent(), true);
+            $data[$i] = (array) \json_decode($this->client->getResponse()->getContent(), true);
         }
 
         return $data;

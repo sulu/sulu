@@ -75,7 +75,7 @@ class RouteController extends AbstractRestController implements ClassResourceInt
         $entityClass = $this->resourceKeyMappings[$resourceKey] ?? null;
 
         if (!$entityClass) {
-            throw new NotFoundHttpException(sprintf('No route mapping configured for resourceKey "%s"', $resourceKey));
+            throw new NotFoundHttpException(\sprintf('No route mapping configured for resourceKey "%s"', $resourceKey));
         }
 
         $routes = $this->findRoutes($history, $entityClass, $id, $locale);
@@ -111,7 +111,7 @@ class RouteController extends AbstractRestController implements ClassResourceInt
      */
     public function cdeleteAction(Request $request)
     {
-        $ids = explode(',', $request->get('ids'));
+        $ids = \explode(',', $request->get('ids'));
 
         foreach ($ids as $id) {
             $route = $this->routeRepository->find($id);

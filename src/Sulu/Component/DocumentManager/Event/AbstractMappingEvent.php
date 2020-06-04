@@ -40,10 +40,10 @@ abstract class AbstractMappingEvent extends AbstractEvent
 
     public function getDebugMessage()
     {
-        return sprintf(
+        return \sprintf(
             'n:%s d:%s l:%s',
             $this->node ? $this->node->getPath() : '<no node>',
-            $this->document ? spl_object_hash($this->document) : '<no document>',
+            $this->document ? \spl_object_hash($this->document) : '<no document>',
             $this->locale ?: '<no locale>'
         );
     }

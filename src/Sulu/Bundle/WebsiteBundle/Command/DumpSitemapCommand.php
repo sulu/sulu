@@ -108,11 +108,11 @@ class DumpSitemapCommand extends Command
         $hosts = [];
         foreach ($portalInformations as $portalInformation) {
             $portalUrl = $portalInformation->getUrl();
-            $urlParts = parse_url($this->scheme . '://' . $portalUrl);
+            $urlParts = \parse_url($this->scheme . '://' . $portalUrl);
             $hosts[] = $urlParts['host'];
         }
 
-        $hosts = array_unique(array_filter($hosts));
+        $hosts = \array_unique(\array_filter($hosts));
 
         foreach ($hosts as $host) {
             $this->sitemapDumper->dumpHost($this->scheme, $host);
@@ -124,6 +124,6 @@ class DumpSitemapCommand extends Command
      */
     private function clear()
     {
-        $this->filesystem->remove(rtrim($this->baseDirectory, '/') . '/' . $this->scheme);
+        $this->filesystem->remove(\rtrim($this->baseDirectory, '/') . '/' . $this->scheme);
     }
 }

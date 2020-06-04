@@ -67,9 +67,9 @@ class BaseMetadataFactory implements MetadataFactoryInterface
     public function getMetadataForAlias($alias)
     {
         if (!isset($this->aliasMap[$alias])) {
-            throw new MetadataNotFoundException(sprintf(
+            throw new MetadataNotFoundException(\sprintf(
                 'Metadata with alias "%s" not found, known aliases: "%s"',
-                $alias, implode('", "', array_keys($this->aliasMap))
+                $alias, \implode('", "', \array_keys($this->aliasMap))
             ));
         }
 
@@ -81,9 +81,9 @@ class BaseMetadataFactory implements MetadataFactoryInterface
     public function getMetadataForPhpcrType($phpcrType)
     {
         if (!isset($this->phpcrTypeMap[$phpcrType])) {
-            throw new MetadataNotFoundException(sprintf(
+            throw new MetadataNotFoundException(\sprintf(
                 'Metadata with phpcrType "%s" not found, known phpcrTypes: "%s"',
-                $phpcrType, implode('", "', array_keys($this->phpcrTypeMap))
+                $phpcrType, \implode('", "', \array_keys($this->phpcrTypeMap))
             ));
         }
 
@@ -109,9 +109,9 @@ class BaseMetadataFactory implements MetadataFactoryInterface
         $class = ClassNameInflector::getUserClassName($class);
 
         if (!isset($this->classMap[$class])) {
-            throw new MetadataNotFoundException(sprintf(
+            throw new MetadataNotFoundException(\sprintf(
                 'Metadata with class "%s" not found, known classes: "%s"',
-                $class, implode('", "', array_keys($this->classMap))
+                $class, \implode('", "', \array_keys($this->classMap))
             ));
         }
 
@@ -127,7 +127,7 @@ class BaseMetadataFactory implements MetadataFactoryInterface
 
     public function getAliases()
     {
-        return array_keys($this->aliasMap);
+        return \array_keys($this->aliasMap);
     }
 
     public function getMetadataForPhpcrNode(NodeInterface $node)
@@ -148,7 +148,7 @@ class BaseMetadataFactory implements MetadataFactoryInterface
     public function getAllMetadata()
     {
         $metadatas = [];
-        foreach (array_keys($this->aliasMap) as $alias) {
+        foreach (\array_keys($this->aliasMap) as $alias) {
             $metadatas[] = $this->getMetadataForAlias($alias);
         }
 
@@ -162,7 +162,7 @@ class BaseMetadataFactory implements MetadataFactoryInterface
      */
     private function loadMetadata($mapping)
     {
-        $mapping = array_merge([
+        $mapping = \array_merge([
             'alias' => null,
             'phpcr_type' => null,
             'form_type' => null,
@@ -185,7 +185,7 @@ class BaseMetadataFactory implements MetadataFactoryInterface
         $metadata->setDefaultAuthor($mapping['set_default_author']);
 
         foreach ($mapping['mapping'] as $fieldName => $fieldMapping) {
-            $fieldMapping = array_merge([
+            $fieldMapping = \array_merge([
                 'encoding' => 'content',
                 'property' => $fieldName,
             ], $fieldMapping);

@@ -37,7 +37,7 @@ class ContactTitleControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/contact-titles');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $contactTitles = $response->_embedded->contact_titles;
 
         $this->assertCount(2, $contactTitles);
@@ -63,7 +63,7 @@ class ContactTitleControllerTest extends SuluTestCase
 
         $client->request('GET', '/api/contact-titles');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $contactTitles = $response->_embedded->contact_titles;
 
         $this->assertCount(1, $contactTitles);
@@ -86,7 +86,7 @@ class ContactTitleControllerTest extends SuluTestCase
 
         $client->request('GET', '/api/contact-titles');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $contactTitles = $response->_embedded->contact_titles;
 
         $this->assertCount(3, $contactTitles);

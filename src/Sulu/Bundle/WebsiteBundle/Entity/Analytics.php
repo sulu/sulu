@@ -236,7 +236,7 @@ class Analytics
      */
     public function getDomains()
     {
-        if (0 === count($this->domains)) {
+        if (0 === \count($this->domains)) {
             return null;
         }
 

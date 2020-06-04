@@ -59,7 +59,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertCount(4, $result['_embedded']['items']);
         $this->assertEquals($media2->getId(), $result['_embedded']['items'][0]['id']);
         $this->assertEquals($media1->getId(), $result['_embedded']['items'][1]['id']);
@@ -91,7 +91,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertCount(4, $result['_embedded']['items']);
         $this->assertEquals($media1->getId(), $result['_embedded']['items'][0]['id']);
         $this->assertEquals($media2->getId(), $result['_embedded']['items'][1]['id']);

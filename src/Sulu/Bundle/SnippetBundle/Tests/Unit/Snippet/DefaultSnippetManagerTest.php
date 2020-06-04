@@ -104,7 +104,7 @@ class DefaultSnippetManagerTest extends TestCase
             }
 
             $document = $this->prophesize(SnippetDocument::class);
-            $document->getStructureType()->willReturn($sameType ? $structureType : strrev($structureType));
+            $document->getStructureType()->willReturn($sameType ? $structureType : \strrev($structureType));
 
             $document = $document->reveal();
 
@@ -180,7 +180,7 @@ class DefaultSnippetManagerTest extends TestCase
             }
 
             $document = $this->prophesize(SnippetDocument::class);
-            $document->getStructureType()->willReturn($sameType ? $type : strrev($type));
+            $document->getStructureType()->willReturn($sameType ? $type : \strrev($type));
 
             $document = $document->reveal();
             $node = $this->prophesize(NodeInterface::class);

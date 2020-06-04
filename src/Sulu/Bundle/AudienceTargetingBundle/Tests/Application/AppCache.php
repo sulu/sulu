@@ -122,7 +122,7 @@ class AppCache extends SuluHttpCache implements KernelInterface
     public function isClassInActiveBundle($class)
     {
         // necessary check, because method was removed in Symfony 3.0
-        if (method_exists($this->kernel, 'isClassInActiveBundle')) {
+        if (\method_exists($this->kernel, 'isClassInActiveBundle')) {
             return $this->kernel->isClassInActiveBundle($class);
         }
     }

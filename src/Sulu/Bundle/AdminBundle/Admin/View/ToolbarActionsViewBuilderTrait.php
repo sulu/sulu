@@ -20,7 +20,7 @@ trait ToolbarActionsViewBuilderTrait
     {
         $oldToolbarActions = $view->getOption('toolbarActions');
         $newToolbarActions = $oldToolbarActions
-            ? array_merge($oldToolbarActions, $toolbarActions)
+            ? \array_merge($oldToolbarActions, $toolbarActions)
             : $toolbarActions;
         $view->setOption('toolbarActions', $newToolbarActions);
     }

@@ -27,10 +27,10 @@ class S3Kernel extends Kernel implements CompilerPassInterface
 
     public function getCacheDir()
     {
-        return $this->getProjectDir() . DIRECTORY_SEPARATOR
-            . 'var' . DIRECTORY_SEPARATOR
-            . 'cache' . DIRECTORY_SEPARATOR
-            . $this->getContext() . '_s3' . DIRECTORY_SEPARATOR
+        return $this->getProjectDir() . \DIRECTORY_SEPARATOR
+            . 'var' . \DIRECTORY_SEPARATOR
+            . 'cache' . \DIRECTORY_SEPARATOR
+            . $this->getContext() . '_s3' . \DIRECTORY_SEPARATOR
             . $this->environment;
     }
 

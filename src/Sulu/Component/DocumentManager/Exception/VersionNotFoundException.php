@@ -30,7 +30,7 @@ class VersionNotFoundException extends DocumentManagerException
     public function __construct($document, $version)
     {
         parent::__construct(
-            sprintf('Version "%s" for document "%s" not found', $version, $document->getUuid())
+            \sprintf('Version "%s" for document "%s" not found', $version, $document->getUuid())
         );
         $this->document = $document;
         $this->version = $version;

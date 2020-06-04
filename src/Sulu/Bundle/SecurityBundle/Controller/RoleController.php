@@ -146,7 +146,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
             $convertedRoles = [];
             if (null != $roles) {
                 foreach ($roles as $role) {
-                    array_push($convertedRoles, $this->convertRole($role));
+                    \array_push($convertedRoles, $this->convertRole($role));
                 }
             }
             $list = new CollectionRepresentation($convertedRoles, static::$entityKey);

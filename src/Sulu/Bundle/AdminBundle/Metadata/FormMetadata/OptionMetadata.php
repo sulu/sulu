@@ -93,7 +93,7 @@ class OptionMetadata
 
     public function addValueOption(self $option): void
     {
-        if (!is_array($this->value)) {
+        if (!\is_array($this->value)) {
             $this->value = [];
         }
 

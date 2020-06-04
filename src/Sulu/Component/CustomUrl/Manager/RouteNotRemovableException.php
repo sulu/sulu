@@ -38,7 +38,7 @@ class RouteNotRemovableException extends RestException
     public function __construct($route, RouteDocument $routeDocument, CustomUrlDocument $customUrl)
     {
         parent::__construct(
-            sprintf('Cannot delete current route "%s" of custom-url "%s"', $route, $customUrl->getTitle()),
+            \sprintf('Cannot delete current route "%s" of custom-url "%s"', $route, $customUrl->getTitle()),
             9000
         );
 

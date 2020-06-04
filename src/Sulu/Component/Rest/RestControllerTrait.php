@@ -78,23 +78,23 @@ trait RestControllerTrait
     public function replaceOrAddUrlString($url, $key, $value, $add = true)
     {
         if ($value) {
-            if ($pos = strpos($url, $key)) {
-                return preg_replace('/(.*' . $key . ')([\,|\w]*)(\&*.*)/', '${1}' . $value . '${3}', $url);
+            if ($pos = \strpos($url, $key)) {
+                return \preg_replace('/(.*' . $key . ')([\,|\w]*)(\&*.*)/', '${1}' . $value . '${3}', $url);
             } else {
                 if ($add) {
-                    $and = (false === strpos($url, '?')) ? '?' : '&';
+                    $and = (false === \strpos($url, '?')) ? '?' : '&';
 
                     return $url . $and . $key . $value;
                 }
             }
         } else {
             // remove if key exists
-            if ($pos = strpos($url, $key)) {
-                $result = preg_replace('/(.*)([\\?|\&]{1}' . $key . ')([\,|\w]*)(\&*.*)/', '${1}${4}', $url);
+            if ($pos = \strpos($url, $key)) {
+                $result = \preg_replace('/(.*)([\\?|\&]{1}' . $key . ')([\,|\w]*)(\&*.*)/', '${1}${4}', $url);
 
                 // if was first variable, redo questionmark
-                if (strpos($url, '?' . $key)) {
-                    $result = preg_replace('/&/', '?', $result, 1);
+                if (\strpos($url, '?' . $key)) {
+                    $result = \preg_replace('/&/', '?', $result, 1);
                 }
 
                 return $result;
@@ -214,7 +214,7 @@ trait RestControllerTrait
         // FIXME: this is just a hack to avoid relations that start with index != 0
         // FIXME: otherwise deserialization process will parse relations as object instead of an array
         // reindex entities
-        if (count($entities) > 0 && method_exists($entities, 'getValues')) {
+        if (\count($entities) > 0 && \method_exists($entities, 'getValues')) {
             $newEntities = $entities->getValues();
             $entities->clear();
             foreach ($newEntities as $value) {

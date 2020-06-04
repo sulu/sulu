@@ -62,7 +62,7 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
 
     public function findByFilters($filters, $page, $pageSize, $limit, $locale, $options = [])
     {
-        if (!array_key_exists('dataSource', $filters) ||
+        if (!\array_key_exists('dataSource', $filters) ||
             '' === $filters['dataSource'] ||
             (null !== $limit && $limit < 1)
         ) {
@@ -76,7 +76,7 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
 
         $entities = $this->parentFindByFilters($filters, $page, $pageSize, $limit, $locale, $options);
 
-        return array_map(
+        return \array_map(
             function(Media $media) use ($locale) {
                 return $this->mediaManager->addFormatsAndUrl(new MediaApi($media, $locale));
             },
@@ -127,13 +127,13 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
     {
         $parameter = [];
 
-        if (array_key_exists('mimetype', $options)) {
+        if (\array_key_exists('mimetype', $options)) {
             $queryBuilder
                 ->andWhere('fileVersion.mimeType = :mimeType');
 
             $parameter['mimeType'] = $options['mimetype'];
         }
-        if (array_key_exists('type', $options)) {
+        if (\array_key_exists('type', $options)) {
             $queryBuilder
                 ->innerJoin($alias . '.type', 'type')
                 ->andWhere('type.name = :type');

@@ -156,10 +156,10 @@ class ListQueryBuilder
         $this->associationNames = $associationNames;
         $this->fieldNames = $fieldNames;
         $this->entityName = $entityName;
-        $this->fields = (is_array($fields)) ? $fields : [];
+        $this->fields = (\is_array($fields)) ? $fields : [];
         $this->sorting = $sorting;
         $this->where = $where;
-        $this->searchFields = array_merge($searchTextFields, $searchNumberFields);
+        $this->searchFields = \array_merge($searchTextFields, $searchNumberFields);
         $this->searchTextFields = $searchTextFields;
         $this->searchNumberFields = $searchNumberFields;
         $this->joinConditions = $joinConditions;
@@ -181,7 +181,7 @@ class ListQueryBuilder
         } else {
             $orderDQL = '';
         }
-        $dql = sprintf('%s %s %s', $selectFromDQL, $whereDQL, $orderDQL);
+        $dql = \sprintf('%s %s %s', $selectFromDQL, $whereDQL, $orderDQL);
 
         return $dql;
     }
@@ -208,14 +208,14 @@ class ListQueryBuilder
         $this->prefixes = [$prefix];
 
         // select and where fields
-        $fieldsWhere = array_merge(
+        $fieldsWhere = \array_merge(
             (null != $this->fields) ? $this->fields : [],
-            array_keys($this->where)
+            \array_keys($this->where)
         );
 
-        $fieldsWhere = array_merge($fieldsWhere, $this->searchTextFields, $this->searchNumberFields);
+        $fieldsWhere = \array_merge($fieldsWhere, $this->searchTextFields, $this->searchNumberFields);
 
-        if (null != $fieldsWhere && count($fieldsWhere) >= 0) {
+        if (null != $fieldsWhere && \count($fieldsWhere) >= 0) {
             foreach ($fieldsWhere as $field) {
                 $this->performSelectFromField($field, $prefix);
             }
@@ -223,7 +223,7 @@ class ListQueryBuilder
         // if no field is selected take prefix
         if (true === $this->countQuery) {
             $this->select = $this->replaceSelect;
-        } elseif (0 == strlen($this->select)) {
+        } elseif (0 == \strlen($this->select)) {
             $this->select = $prefix;
         }
 
@@ -231,7 +231,7 @@ class ListQueryBuilder
                 FROM %s %s
                   %s';
 
-        return sprintf($dql, $this->select, $this->entityName, $prefix, $this->joins);
+        return \sprintf($dql, $this->select, $this->entityName, $prefix, $this->joins);
     }
 
     /**
@@ -243,23 +243,23 @@ class ListQueryBuilder
     private function performSelectFromField($field, $prefix = 'u')
     {
         // Relation name and field delimited by underscore
-        $fieldParts = explode('_', $field);
+        $fieldParts = \explode('_', $field);
 
         // temporary variable for saving field name (needed for array results like [0])
         $realFieldName = $field;
         // check if a certain field number is searched
-        if (preg_match('/^(.*)\[(\d+)\]$/', $fieldParts[0], $regresult)) {
+        if (\preg_match('/^(.*)\[(\d+)\]$/', $fieldParts[0], $regresult)) {
             $fieldParts[0] = $regresult[1];
-            $realFieldName = implode('_', $fieldParts);
+            $realFieldName = \implode('_', $fieldParts);
             $this->relationalFilters[$realFieldName] = $regresult[2];
         }
 
         // If field is delimited and is a Relation
-        if (count($fieldParts) >= 2 && $this->isRelation($fieldParts[0])) {
+        if (\count($fieldParts) >= 2 && $this->isRelation($fieldParts[0])) {
             $this->joins .= $this->generateJoins($fieldParts, $prefix);
-            if (in_array($field, $this->fields)) {
+            if (\in_array($field, $this->fields)) {
                 // last element is column name and next-to-last is the associationPrefix
-                $i = count($fieldParts) - 1;
+                $i = \count($fieldParts) - 1;
 
                 // {associationPrefix}.{columnName} {alias}
                 $parent = $fieldParts[$i - 1];
@@ -268,7 +268,7 @@ class ListQueryBuilder
 
                 $this->addToSelect($parent, $tempField, $alias);
             }
-        } elseif (in_array($field, $this->fields) && in_array($field, $this->fieldNames)) {
+        } elseif (\in_array($field, $this->fields) && \in_array($field, $this->fieldNames)) {
             $this->addToSelect($prefix, $field);
         }
     }
@@ -282,7 +282,7 @@ class ListQueryBuilder
      */
     private function addToSelect($prefix, $field, $alias = '')
     {
-        if (strlen($this->select) > 0) {
+        if (\strlen($this->select) > 0) {
             $this->select .= ', ';
         }
         $this->select .= $this->generateSelect($prefix, $field, $alias);
@@ -301,7 +301,7 @@ class ListQueryBuilder
     {
         $format = '%s.%s %s';
 
-        return sprintf($format, $prefix, $field, $alias);
+        return \sprintf($format, $prefix, $field, $alias);
     }
 
     /**
@@ -316,8 +316,8 @@ class ListQueryBuilder
     {
         $i = 0;
         $result = '';
-        while ($i <= count($fieldParts) - 2) {
-            if (!in_array($fieldParts[$i], $this->prefixes)) {
+        while ($i <= \count($fieldParts) - 2) {
+            if (!\in_array($fieldParts[$i], $this->prefixes)) {
                 $result .= $this->generateJoin(
                     (0 == $i) ? $prefix : $fieldParts[$i - 1],
                     $fieldParts[$i],
@@ -346,7 +346,7 @@ class ListQueryBuilder
         $format = '
                 LEFT JOIN %s.%s %s %s';
 
-        return sprintf($format, $parent, $field, $alias, $this->generateJoinCondition($field));
+        return \sprintf($format, $parent, $field, $alias, $this->generateJoinCondition($field));
     }
 
     /**
@@ -358,14 +358,14 @@ class ListQueryBuilder
      */
     private function generateJoinCondition($field)
     {
-        if (!array_key_exists($field, $this->joinConditions)) {
+        if (!\array_key_exists($field, $this->joinConditions)) {
             return '';
         }
 
         // ON {joinConditino}
         $format = ' WITH %s';
 
-        return sprintf($format, $this->joinConditions[$field]);
+        return \sprintf($format, $this->joinConditions[$field]);
     }
 
     /**
@@ -377,7 +377,7 @@ class ListQueryBuilder
      */
     private function isRelation($field)
     {
-        return in_array($field, $this->associationNames);
+        return \in_array($field, $this->associationNames);
     }
 
     /**
@@ -391,38 +391,38 @@ class ListQueryBuilder
     {
         $result = '';
         // Only return where clause if there actually is some data
-        if (count($this->where) > 0 || count($this->searchFields) > 0) {
+        if (\count($this->where) > 0 || \count($this->searchFields) > 0) {
             $wheres = [];
             $searches = [];
 
-            $whereKeys = array_keys($this->where);
+            $whereKeys = \array_keys($this->where);
 
             // Get all fields which will appear in the where clause
             // The search fields already have the right format, and we have to use only the keys of where, because its
             // values contain the filter expression
-            $fields = array_unique(array_merge($whereKeys, $this->searchFields));
+            $fields = \array_unique(\array_merge($whereKeys, $this->searchFields));
 
             foreach ($fields as $key) {
-                $keys = explode('_', $key);
+                $keys = \explode('_', $key);
                 $prefixActual = $prefix;
-                if (1 == count($keys)) {
+                if (1 == \count($keys)) {
                     $col = $keys[0];
                 } else {
-                    $i = count($keys);
+                    $i = \count($keys);
                     $prefixActual = $keys[$i - 2];
                     $col = $keys[$i - 1];
                 }
                 // Add where clause y.z for x_y_z
                 // FIXME DQL injection?
-                if (in_array($key, $whereKeys)) {
+                if (\in_array($key, $whereKeys)) {
                     $wheres[] = $prefixActual . '.' . $col . ' = ' . $this->where[$key];
                 }
-                if (in_array($key, $this->searchFields)) {
+                if (\in_array($key, $this->searchFields)) {
                     $comparator = '=';
                     $search = ':strictSearch';
 
                     // search by like
-                    if (in_array($key, $this->searchTextFields)) {
+                    if (\in_array($key, $this->searchTextFields)) {
                         $comparator = 'LIKE';
                         $search = ':search';
                     }
@@ -432,14 +432,14 @@ class ListQueryBuilder
 
             // concatenate the query
             if (!empty($wheres)) {
-                $result .= implode(' AND ', $wheres);
+                $result .= \implode(' AND ', $wheres);
             }
 
             if (!empty($searches)) {
                 if ('' != $result) {
                     $result .= ' AND ';
                 }
-                $result .= '(' . implode(' OR ', $searches) . ')';
+                $result .= '(' . \implode(' OR ', $searches) . ')';
             }
 
             $result = 'WHERE ' . $result;
@@ -459,11 +459,11 @@ class ListQueryBuilder
     {
         $result = '';
         // If sorting is defined
-        if (null != $this->sorting && count($this->sorting) > 0) {
+        if (null != $this->sorting && \count($this->sorting) > 0) {
             $orderBy = '';
             // TODO OrderBy relations translations_value
             foreach ($this->sorting as $col => $dir) {
-                if (strlen($orderBy) > 0) {
+                if (\strlen($orderBy) > 0) {
                     $orderBy .= ', ';
                 }
                 $orderBy .= $prefix . '.' . $col . ' ' . $dir;

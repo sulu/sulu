@@ -41,7 +41,7 @@ class Memoize implements MemoizeInterface
     {
         // used to get information of the caller
         // returns a callstack (0 is current function, 1 is caller function)
-        $callers = debug_backtrace();
+        $callers = \debug_backtrace();
 
         if (
             !isset($callers[1]) ||
@@ -53,7 +53,7 @@ class Memoize implements MemoizeInterface
         }
 
         // build cache key
-        $id = sprintf('%s::%s', $callers[1]['class'], $callers[1]['function']);
+        $id = \sprintf('%s::%s', $callers[1]['class'], $callers[1]['function']);
 
         return $this->memoizeById($id, $callers[1]['args'], $compute, $lifeTime);
     }
@@ -66,14 +66,14 @@ class Memoize implements MemoizeInterface
         }
 
         // determine cache key
-        $id = md5(sprintf('%s(%s)', $id, serialize($arguments)));
+        $id = \md5(\sprintf('%s(%s)', $id, \serialize($arguments)));
 
         // memoize pattern: save result for arguments once and
         // return the value from cache if it is called more than once
         if ($this->cache->contains($id)) {
             return $this->cache->fetch($id);
         } else {
-            $value = call_user_func_array($compute, $arguments);
+            $value = \call_user_func_array($compute, $arguments);
             $this->cache->save($id, $value, $lifeTime);
 
             return $value;

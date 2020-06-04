@@ -278,7 +278,7 @@ class VersionSubscriberTest extends TestCase
             'sulu:versions',
             [
                 '{"locale":"en","version":"0","author":null,"authored":"2016-12-05T19:47:22+01:00"}',
-                '{"locale":"de","version":"a","author":1,"authored":"' . date('c', ClockMock::time()) . '"}',
+                '{"locale":"de","version":"a","author":1,"authored":"' . \date('c', ClockMock::time()) . '"}',
             ]
         )->shouldBeCalled();
         $this->session->save()->shouldBeCalled();
@@ -334,15 +334,15 @@ class VersionSubscriberTest extends TestCase
             'sulu:versions',
             [
                 '{"locale":"fr","version":"0","author":1,"authored":"2016-12-05T19:47:22+01:00"}',
-                '{"locale":"de","version":"b","author":2,"authored":"' . date('c', ClockMock::time()) . '"}',
-                '{"locale":"en","version":"b","author":3,"authored":"' . date('c', ClockMock::time()) . '"}',
+                '{"locale":"de","version":"b","author":2,"authored":"' . \date('c', ClockMock::time()) . '"}',
+                '{"locale":"en","version":"b","author":3,"authored":"' . \date('c', ClockMock::time()) . '"}',
             ]
         )->shouldBeCalled();
         $node2->setProperty(
             'sulu:versions',
             [
                 '{"locale":"en","version":"0","author":2,"authored":"2016-12-05T19:47:22+01:00"}',
-                '{"locale":"en","version":"c","author":1,"authored":"' . date('c', ClockMock::time()) . '"}',
+                '{"locale":"en","version":"c","author":1,"authored":"' . \date('c', ClockMock::time()) . '"}',
             ]
         )->shouldBeCalled();
 

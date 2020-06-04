@@ -30,7 +30,7 @@ class InvalidErrorTemplateException extends WebspaceException
     public function __construct($template, $webspace)
     {
         parent::__construct(
-            sprintf(
+            \sprintf(
                 'Error template "%s" in webspace "%s" has to be defined as default or with a code.',
                 $template,
                 $webspace

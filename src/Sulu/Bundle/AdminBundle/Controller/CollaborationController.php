@@ -64,7 +64,7 @@ class CollaborationController implements ClassResourceInterface
             $this->getConnectionId($request)
         ) ?? $this->createCollaboration($request);
 
-        $collaborations = array_values(array_filter(
+        $collaborations = \array_values(\array_filter(
             $this->collaborationRepository->update($collaboration),
             function(Collaboration $collaboration) use ($request) {
                 return $collaboration->getConnectionId() !== $this->getConnectionId($request);
@@ -78,7 +78,7 @@ class CollaborationController implements ClassResourceInterface
 
     public function cdeleteAction(Request $request)
     {
-        $collaborations = array_values($this->collaborationRepository->delete($this->createCollaboration($request)));
+        $collaborations = \array_values($this->collaborationRepository->delete($this->createCollaboration($request)));
 
         return $this->viewHandler->handle(
             View::create(new CollectionRepresentation($collaborations, static::$resourceKey))
@@ -114,6 +114,6 @@ class CollaborationController implements ClassResourceInterface
 
     private function getConnectionId(Request $request)
     {
-        return sha1($request->getSession()->getId() . $this->secret);
+        return \sha1($request->getSession()->getId() . $this->secret);
     }
 }

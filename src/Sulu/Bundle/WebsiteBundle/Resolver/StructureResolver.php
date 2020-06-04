@@ -61,7 +61,7 @@ class StructureResolver implements StructureResolverInterface
         $document = $structure->getDocument();
         if ($document instanceof ExtensionBehavior && $loadExcerpt) {
             $extensionData = null;
-            if (method_exists($structure, 'getExt')) {
+            if (\method_exists($structure, 'getExt')) {
                 // BC Layer for old behaviour
                 $extensionData = $structure->getExt();
             }

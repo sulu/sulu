@@ -65,7 +65,7 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
             $this->setTargetGroupCookie($response, $request);
         }
 
-        if (in_array(static::TARGET_GROUP_HEADER, $response->getVary())) {
+        if (\in_array(static::TARGET_GROUP_HEADER, $response->getVary())) {
             $response->setMaxAge(0);
             $response->setSharedMaxAge(0);
         }
@@ -146,7 +146,7 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
         $response->headers->setCookie(
             Cookie::create(
                 static::VISITOR_SESSION_COOKIE,
-                time()
+                \time()
             )
         );
     }

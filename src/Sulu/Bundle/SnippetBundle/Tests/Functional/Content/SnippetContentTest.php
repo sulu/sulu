@@ -112,7 +112,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
 
         $this->assertCount(2, $values);
 
-        $hotel1 = reset($values);
+        $hotel1 = \reset($values);
         $this->assertEquals('Le grande budapest', $hotel1->getPropertyValue('i18n:de-title'));
     }
 
@@ -135,9 +135,9 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $property = $pageStructure->getProperty('hotels');
         $data = $this->contentType->getContentData($property);
         $this->assertCount(2, $data);
-        $hotel1 = reset($data);
+        $hotel1 = \reset($data);
         $this->assertEquals('Le grande budapest', $hotel1['title']);
-        $hotel2 = next($data);
+        $hotel2 = \next($data);
         $this->assertEquals('L\'Hôtel New Hampshire', $hotel2['title']);
     }
 
@@ -150,9 +150,9 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $data = $this->contentType->getContentData($property);
 
         $this->assertCount(2, $data);
-        $hotel1 = reset($data);
+        $hotel1 = \reset($data);
         $this->assertEquals('Le grande budapest (en)', $hotel1['title']);
-        $hotel2 = next($data);
+        $hotel2 = \next($data);
         $this->assertEquals('L\'Hôtel New Hampshire', $hotel2['title']);
     }
 

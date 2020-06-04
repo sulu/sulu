@@ -135,6 +135,6 @@ class InvalidationSubscriber implements EventSubscriberInterface
             $scheme = $request->getScheme();
         }
 
-        return sprintf('%s://%s', $scheme, $url);
+        return \sprintf('%s://%s', $scheme, $url);
     }
 }

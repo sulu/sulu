@@ -182,10 +182,10 @@ class MediaRepositoryTest extends SuluTestCase
         $fileVersion->setChanged(new \DateTime('1937-04-20'));
         $fileVersion->setCreated(new \DateTime('1937-04-20'));
         $fileVersion->setStorageOptions(['segment' => 1, 'fileName' => $name . '.jpeg']);
-        if (!file_exists(__DIR__ . '/../../uploads/media/1')) {
-            mkdir(__DIR__ . '/../../uploads/media/1', 0777, true);
+        if (!\file_exists(__DIR__ . '/../../uploads/media/1')) {
+            \mkdir(__DIR__ . '/../../uploads/media/1', 0777, true);
         }
-        copy($this->getImagePath(), __DIR__ . '/../../uploads/media/1/' . $name . '.jpeg');
+        \copy($this->getImagePath(), __DIR__ . '/../../uploads/media/1/' . $name . '.jpeg');
 
         // create meta
         $fileVersionMeta = new FileVersionMeta();
@@ -460,9 +460,9 @@ class MediaRepositoryTest extends SuluTestCase
         $media4 = $this->createMedia('test-4', 'test-4-title', 'video');
 
         $result = $this->mediaRepository->findMediaDisplayInfo([$media1->getId(), $media3->getId()], 'en-gb');
-        $this->assertEquals(2, count($result));
-        $this->assertEquals(5, count($result[0]));
-        $this->assertEquals(5, count($result[1]));
+        $this->assertEquals(2, \count($result));
+        $this->assertEquals(5, \count($result[0]));
+        $this->assertEquals(5, \count($result[1]));
         $this->assertEquals($media1->getId(), $result[0]['id']);
         $this->assertEquals($media1->getFiles()[0]->getVersion(), $result[0]['version']);
         $this->assertEquals('test-1.jpeg', $result[0]['name']);
@@ -480,7 +480,7 @@ class MediaRepositoryTest extends SuluTestCase
         $result = $this->mediaRepository->findMediaDisplayInfo([-1], 'en-gb');
 
         $this->assertNotNull($result);
-        $this->assertEquals(0, count($result));
+        $this->assertEquals(0, \count($result));
     }
 
     public function testCount()
@@ -499,13 +499,13 @@ class MediaRepositoryTest extends SuluTestCase
         $retrievedMedia = $this->mediaRepository->findMediaByIdForRendering($media->getId(), 'my-format');
 
         $this->assertEquals($media->getId(), $retrievedMedia->getId());
-        $this->assertEquals(1, count($retrievedMedia->getFiles()));
-        $this->assertEquals(1, count($retrievedMedia->getFiles()->get(0)->getFileVersions()));
+        $this->assertEquals(1, \count($retrievedMedia->getFiles()));
+        $this->assertEquals(1, \count($retrievedMedia->getFiles()->get(0)->getFileVersions()));
 
         /** @var FileVersion $fileVersion */
         $fileVersion = $retrievedMedia->getFiles()->get(0)->getFileVersions()->get(0);
 
-        $this->assertEquals(1, count($fileVersion->getFormatOptions()));
+        $this->assertEquals(1, \count($fileVersion->getFormatOptions()));
 
         /** @var FormatOptions $formatOptions */
         $formatOptions = $fileVersion->getFormatOptions()->get('my-format');

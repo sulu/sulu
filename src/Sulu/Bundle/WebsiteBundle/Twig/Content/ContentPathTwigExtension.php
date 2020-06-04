@@ -58,7 +58,7 @@ class ContentPathTwigExtension extends AbstractExtension implements ContentPathI
     {
         // if the request analyzer null or a route is passed which is relative or inclusive a domain nothing should be
         // done (this is important for external-links in navigations)
-        if (!$this->requestAnalyzer || 0 !== strpos($route, '/')) {
+        if (!$this->requestAnalyzer || 0 !== \strpos($route, '/')) {
             return $route;
         }
 
@@ -84,9 +84,9 @@ class ContentPathTwigExtension extends AbstractExtension implements ContentPathI
         );
 
         $port = $this->requestAnalyzer->getAttribute('port');
-        if ($url && false !== strpos($url, $host)) {
+        if ($url && false !== \strpos($url, $host)) {
             if (!('http' == $scheme && 80 == $port) && !('https' == $scheme && 443 == $port)) {
-                $url = str_replace($host, $host . ':' . $port, $url);
+                $url = \str_replace($host, $host . ':' . $port, $url);
             }
         }
 

@@ -62,7 +62,7 @@ abstract class AbstractPropertyMetadata
     {
         $this->name = $name;
         // default for translation can be overwritten by setter
-        $this->translation = ucfirst($name);
+        $this->translation = \ucfirst($name);
     }
 
     /**

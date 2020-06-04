@@ -26,7 +26,7 @@ class CategoryIdNotFoundException extends \Exception
      */
     public function __construct($categoryId)
     {
-        parent::__construct(sprintf('The category with the id "%s" does not exist.', $categoryId));
+        parent::__construct(\sprintf('The category with the id "%s" does not exist.', $categoryId));
 
         $this->categoryId = $categoryId;
     }

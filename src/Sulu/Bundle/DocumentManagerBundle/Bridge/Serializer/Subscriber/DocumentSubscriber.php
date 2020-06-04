@@ -68,7 +68,7 @@ class DocumentSubscriber implements EventSubscriberInterface
         $document = $event->getObject();
 
         // only register documents
-        if (!$this->metadataFactory->hasMetadataForClass(get_class($document))) {
+        if (!$this->metadataFactory->hasMetadataForClass(\get_class($document))) {
             return;
         }
 

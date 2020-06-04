@@ -33,7 +33,7 @@ class SitemapProviderNotFoundException extends \Exception
     public function __construct($requested, array $available)
     {
         parent::__construct(
-            sprintf('The requested provider "%s" was not found. Available: "%s"', $requested, implode('", "', $available))
+            \sprintf('The requested provider "%s" was not found. Available: "%s"', $requested, \implode('", "', $available))
         );
 
         $this->requested = $requested;

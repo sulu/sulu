@@ -145,8 +145,8 @@ class TargetGroup implements TargetGroupInterface
      */
     public function getWebspaceKeys()
     {
-        return array_values(
-            array_map(function(TargetGroupWebspaceInterface $targetGroupWebspace) {
+        return \array_values(
+            \array_map(function(TargetGroupWebspaceInterface $targetGroupWebspace) {
                 return $targetGroupWebspace->getWebspaceKey();
             }, $this->webspaces->toArray())
         );

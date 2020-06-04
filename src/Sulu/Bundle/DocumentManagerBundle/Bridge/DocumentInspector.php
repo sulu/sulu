@@ -93,8 +93,8 @@ class DocumentInspector extends BaseDocumentInspector
         $path = $this->getPath($document);
         $webspaceKey = $this->getWebspace($document);
 
-        return str_replace(
-            sprintf(
+        return \str_replace(
+            \sprintf(
                 '/%s/%s/%s',
                 $this->pathSegmentRegistry->getPathSegment('base'),
                 $webspaceKey,
@@ -131,7 +131,7 @@ class DocumentInspector extends BaseDocumentInspector
      */
     public function getMetadata($document)
     {
-        return $this->metadataFactory->getMetadataForClass(get_class($document));
+        return $this->metadataFactory->getMetadataForClass(\get_class($document));
     }
 
     /**
@@ -205,8 +205,8 @@ class DocumentInspector extends BaseDocumentInspector
         $prefix = $this->namespaceRegistry->getPrefix('system_localized');
 
         foreach ($node->getProperties() as $property) {
-            preg_match(
-                sprintf('/^%s:([a-zA-Z_]*?)-.*/', $prefix),
+            \preg_match(
+                \sprintf('/^%s:([a-zA-Z_]*?)-.*/', $prefix),
                 $property->getName(),
                 $matches
             );
@@ -216,7 +216,7 @@ class DocumentInspector extends BaseDocumentInspector
             }
         }
 
-        return array_values(array_unique($locales));
+        return \array_values(\array_unique($locales));
     }
 
     /**
@@ -231,10 +231,10 @@ class DocumentInspector extends BaseDocumentInspector
         $locales = $this->getLocales($document);
 
         if ($document instanceof ShadowLocaleBehavior) {
-            $locales = array_diff($locales, array_keys($this->getShadowLocales($document)));
+            $locales = \array_diff($locales, \array_keys($this->getShadowLocales($document)));
         }
 
-        return array_values($locales);
+        return \array_values($locales);
     }
 
     /**
@@ -363,8 +363,8 @@ class DocumentInspector extends BaseDocumentInspector
      */
     private function extractWebspaceFromPath($path)
     {
-        $match = preg_match(
-            sprintf(
+        $match = \preg_match(
+            \sprintf(
                 '/^\/%s\/([\w\.-]*?)\/.*$/',
                 $this->pathSegmentRegistry->getPathSegment('base')
             ),

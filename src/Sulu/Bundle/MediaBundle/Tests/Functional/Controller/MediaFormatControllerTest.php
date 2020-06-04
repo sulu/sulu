@@ -112,13 +112,13 @@ class MediaFormatControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/media/%d/formats', $this->media->getId()),
+            \sprintf('/api/media/%d/formats', $this->media->getId()),
             [
                 'locale' => 'en',
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertNotNull($response->{'big-squared'});
@@ -137,10 +137,10 @@ class MediaFormatControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/media/%d/formats?locale=en', $this->media->getId())
+            \sprintf('/api/media/%d/formats?locale=en', $this->media->getId())
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertNotNull($response->{'big-squared'});
@@ -154,7 +154,7 @@ class MediaFormatControllerTest extends SuluTestCase
 
         $client->request(
             'PATCH',
-            sprintf('/api/media/%d/formats', $this->media->getId()),
+            \sprintf('/api/media/%d/formats', $this->media->getId()),
             [
                 'big-squared' => [],
                 'small-inset' => [
@@ -168,10 +168,10 @@ class MediaFormatControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/media/%d/formats?locale=en', $this->media->getId())
+            \sprintf('/api/media/%d/formats?locale=en', $this->media->getId())
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertObjectNotHasAttribute('big-squared', $response);
@@ -191,7 +191,7 @@ class MediaFormatControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            sprintf('/api/media/%d/formats/small-inset?locale=de', $this->media->getId()),
+            \sprintf('/api/media/%d/formats/small-inset?locale=de', $this->media->getId()),
             [
                 'cropX' => 10,
                 'cropY' => 15,
@@ -200,7 +200,7 @@ class MediaFormatControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals(10, $response->cropX);
@@ -214,10 +214,10 @@ class MediaFormatControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/media/%d/formats?locale=de', $this->media->getId())
+            \sprintf('/api/media/%d/formats?locale=de', $this->media->getId())
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertNotNull($response->{'small-inset'});
@@ -233,11 +233,11 @@ class MediaFormatControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            sprintf('/api/media/%d/formats/big-squared?locale=en', $this->media->getId()),
+            \sprintf('/api/media/%d/formats/big-squared?locale=en', $this->media->getId()),
             []
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals([], $response);
@@ -247,11 +247,11 @@ class MediaFormatControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/media/%d/formats?locale=en', $this->media->getId()),
+            \sprintf('/api/media/%d/formats?locale=en', $this->media->getId()),
             []
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertObjectNotHasAttribute('big-squared', $response);
@@ -263,7 +263,7 @@ class MediaFormatControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            sprintf('/api/media/%d/formats/format-not-existing', $this->media->getId()),
+            \sprintf('/api/media/%d/formats/format-not-existing', $this->media->getId()),
             [
                 'locale' => 'en',
                 'options' => [],
@@ -279,7 +279,7 @@ class MediaFormatControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            sprintf('/api/media/%d/formats/format-not-existing', 12345),
+            \sprintf('/api/media/%d/formats/format-not-existing', 12345),
             [
                 'locale' => 'en',
                 'options' => [],

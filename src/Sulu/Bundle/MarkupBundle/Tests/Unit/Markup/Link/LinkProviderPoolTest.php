@@ -39,7 +39,7 @@ class LinkProviderPoolTest extends TestCase
         ];
 
         $this->pool = new LinkProviderPool(
-            array_map(
+            \array_map(
                 function($provider) {
                     return $provider->reveal();
                 },

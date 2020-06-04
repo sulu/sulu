@@ -77,8 +77,8 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
             }
 
             $scale = [
-                'x' => (null !== $xNode) ? intval($xNode->nodeValue) : null,
-                'y' => (null !== $yNode) ? intval($yNode->nodeValue) : null,
+                'x' => (null !== $xNode) ? \intval($xNode->nodeValue) : null,
+                'y' => (null !== $yNode) ? \intval($yNode->nodeValue) : null,
                 'mode' => $this->getMode($modeNode),
                 'retina' => $retina,
                 'forceRatio' => $forceRatio,

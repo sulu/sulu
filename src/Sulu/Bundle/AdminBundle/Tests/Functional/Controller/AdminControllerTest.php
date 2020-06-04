@@ -33,7 +33,7 @@ class AdminControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertObjectHasAttribute('sulu_admin', $response);
         $this->assertObjectHasAttribute('navigation', $response->sulu_admin);

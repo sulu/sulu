@@ -42,7 +42,7 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
     {
         $form = $this->xmlFormMetadataLoader->getMetadata('form_with_schema', 'en');
         $schema = $form->getSchema()->toJsonSchema();
-        $this->assertCount(2, array_keys($schema));
+        $this->assertCount(2, \array_keys($schema));
         $this->assertCount(0, $schema['required']);
         $this->assertCount(2, $schema['allOf']);
         $this->assertEquals(['first', 'third'], $schema['allOf'][0]['required']);
@@ -93,7 +93,7 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
     {
         $form = $this->xmlFormMetadataLoader->getMetadata('form_with_expression_param', 'en');
         $this->assertNotNull($form);
-        $this->assertContains('name', array_keys($form->getItems()));
+        $this->assertContains('name', \array_keys($form->getItems()));
         $this->assertEquals('expression', $form->getItems()['name']->getOptions()['id']->getType());
         $this->assertEquals('service(\'test\').getId()', $form->getItems()['name']->getOptions()['id']->getValue());
     }
@@ -107,8 +107,8 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
     public function testGetMetadataFromMultipleFiles()
     {
         $form = $this->xmlFormMetadataLoader->getMetadata('merged_form', 'en');
-        $this->assertContains('field1', array_keys($form->getItems()));
-        $this->assertContains('field2', array_keys($form->getItems()));
+        $this->assertContains('field1', \array_keys($form->getItems()));
+        $this->assertContains('field2', \array_keys($form->getItems()));
 
         $schema = $form->getSchema()->toJsonSchema();
         $this->assertCount(2, $schema['allOf']);

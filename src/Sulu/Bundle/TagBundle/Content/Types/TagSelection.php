@@ -64,12 +64,12 @@ class TagSelection extends ComplexContentType implements ContentTypeExportInterf
 
     public function exportData($propertyValue)
     {
-        if (false === is_array($propertyValue)) {
+        if (false === \is_array($propertyValue)) {
             return '';
         }
 
         foreach ($propertyValue as &$propertyValueItem) {
-            if (is_string($propertyValueItem)) {
+            if (\is_string($propertyValueItem)) {
                 $tag = $this->tagManager->findByName($propertyValueItem);
                 if ($tag) {
                     $propertyValueItem = $tag->getId();
@@ -78,7 +78,7 @@ class TagSelection extends ComplexContentType implements ContentTypeExportInterf
         }
 
         if (!empty($propertyValue)) {
-            return json_encode($propertyValue);
+            return \json_encode($propertyValue);
         }
 
         return '';
@@ -94,7 +94,7 @@ class TagSelection extends ComplexContentType implements ContentTypeExportInterf
         $segmentKey = null
     ) {
         $tagNames = [];
-        $tagIds = json_decode($value);
+        $tagIds = \json_decode($value);
         if (!empty($tagIds)) {
             $tagNames = $this->tagManager->resolveTagIds($tagIds);
         }

@@ -45,7 +45,7 @@ class HtmlMarkupParser implements MarkupParserInterface
             $tags = $this->tagRegistry->getTag($tagMatchGroup->getTagName(), 'html', $tagMatchGroup->getNamespace())
                 ->parseAll($tagMatchGroup->getTags(), $locale);
 
-            $content = str_replace(array_keys($tags), array_values($tags), $content);
+            $content = \str_replace(\array_keys($tags), \array_values($tags), $content);
         }
 
         return $this->parse($content, $locale);
@@ -63,7 +63,7 @@ class HtmlMarkupParser implements MarkupParserInterface
             $tags = $this->tagRegistry->getTag($tagMatchGroup->getTagName(), 'html', $tagMatchGroup->getNamespace())
                 ->validateAll($tagMatchGroup->getTags(), $locale);
 
-            $result = array_merge($result, $tags);
+            $result = \array_merge($result, $tags);
         }
 
         return $result;

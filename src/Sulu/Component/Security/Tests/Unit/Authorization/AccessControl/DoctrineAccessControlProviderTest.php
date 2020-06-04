@@ -185,7 +185,7 @@ class DoctrineAccessControlProviderTest extends TestCase
 
         return [
             [\stdClass::class, false],
-            [get_class($securedEntity->reveal()), true],
+            [\get_class($securedEntity->reveal()), true],
         ];
     }
 }

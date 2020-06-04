@@ -98,7 +98,7 @@ class Version201510210733 implements VersionInterface, ContainerAwareInterface
     {
         foreach ($this->localizationManager->getLocalizations() as $localization) {
             $rows = $this->session->getWorkspace()->getQueryManager()->createQuery(
-                sprintf(
+                \sprintf(
                     'SELECT * FROM [nt:unstructured] WHERE [%s] = "%s"',
                     $this->propertyEncoder->localizedSystemName('nodeType', $localization->getLocale()),
                     RedirectType::EXTERNAL
@@ -132,12 +132,12 @@ class Version201510210733 implements VersionInterface, ContainerAwareInterface
         $properties = [];
 
         // find templates containing URL fields
-        $structureMetadatas = array_merge(
+        $structureMetadatas = \array_merge(
             $this->structureMetadataFactory->getStructures('page'),
             $this->structureMetadataFactory->getStructures('snippet')
         );
 
-        $structureMetadatas = array_filter(
+        $structureMetadatas = \array_filter(
             $structureMetadatas,
             function(StructureMetadata $structureMetadata) use (&$properties) {
                 $structureName = $structureMetadata->getName();
@@ -206,7 +206,7 @@ class Version201510210733 implements VersionInterface, ContainerAwareInterface
     {
         foreach ($this->localizationManager->getLocalizations() as $localization) {
             $rows = $this->session->getWorkspace()->getQueryManager()->createQuery(
-                sprintf(
+                \sprintf(
                     'SELECT * FROM [nt:unstructured] WHERE [%s] = "%s" OR [%s] = "%s"',
                     $this->propertyEncoder->localizedSystemName('template', $localization->getLocale()),
                     $structureMetadata->getName(),
@@ -236,7 +236,7 @@ class Version201510210733 implements VersionInterface, ContainerAwareInterface
         $document = $this->documentManager->find($node->getIdentifier(), $locale);
         $documentLocales = $this->documentInspector->getLocales($document);
 
-        if (!in_array($locale, $documentLocales)) {
+        if (!\in_array($locale, $documentLocales)) {
             return;
         }
 
@@ -256,7 +256,7 @@ class Version201510210733 implements VersionInterface, ContainerAwareInterface
     private function upgradeProperty(PropertyValue $property, $addScheme)
     {
         $value = $property->getValue();
-        if (is_array($value)) {
+        if (\is_array($value)) {
             foreach ($value as $key => $entry) {
                 if ('url' !== $entry['type']) {
                     continue;
@@ -286,7 +286,7 @@ class Version201510210733 implements VersionInterface, ContainerAwareInterface
      */
     private function upgradeUrl(&$value)
     {
-        if (!empty($value) && !strpos($value, '://')) {
+        if (!empty($value) && !\strpos($value, '://')) {
             $value = 'http://' . $value;
         }
     }
@@ -298,8 +298,8 @@ class Version201510210733 implements VersionInterface, ContainerAwareInterface
      */
     private function downgradeUrl(&$value)
     {
-        if (0 === strpos($value, 'http://')) {
-            $value = substr($value, 7);
+        if (0 === \strpos($value, 'http://')) {
+            $value = \substr($value, 7);
         }
     }
 }

@@ -24,7 +24,7 @@ abstract class AbstractSecurityChecker implements SecurityCheckerInterface
     {
         if (!$this->hasPermission($subject, $permission)) {
             if ($subject instanceof SecurityCondition) {
-                $message = sprintf(
+                $message = \sprintf(
                     'Permission "%s" in localization "%s" for object with id "%s" and of type "%s" not granted',
                     $permission,
                     $subject->getLocale(),
@@ -32,7 +32,7 @@ abstract class AbstractSecurityChecker implements SecurityCheckerInterface
                     $subject->getObjectType()
                 );
             } else {
-                $message = sprintf('Permission "%s" in security context "%s" not granted', $permission, $subject);
+                $message = \sprintf('Permission "%s" in security context "%s" not granted', $permission, $subject);
             }
 
             throw new AccessDeniedException($message);

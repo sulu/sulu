@@ -24,7 +24,7 @@ class WebspaceNotFoundException extends PreviewRendererException
     public function __construct($object, $id, $webspaceKey, $locale)
     {
         parent::__construct(
-            sprintf('Webspace "%s" not found', $webspaceKey),
+            \sprintf('Webspace "%s" not found', $webspaceKey),
             self::BASE_CODE + 6,
             $object,
             $id,

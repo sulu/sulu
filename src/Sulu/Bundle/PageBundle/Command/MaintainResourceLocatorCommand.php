@@ -121,7 +121,7 @@ class MaintainResourceLocatorCommand extends Command
         OutputInterface $output
     ) {
         foreach ($parentNode->getNodes() as $childNode) {
-            $this->upgradeNode($childNode, $webspace, $localization, $output, substr_count($childNode->getPath(), '/'));
+            $this->upgradeNode($childNode, $webspace, $localization, $output, \substr_count($childNode->getPath(), '/'));
             $this->upgradeByParent($childNode, $webspace, $localization, $output);
         }
     }
@@ -157,7 +157,7 @@ class MaintainResourceLocatorCommand extends Command
 
         $baseRoutePath = $this->sessionManager->getRoutePath($webspace->getKey(), $localization->getLocale());
         foreach ($node->getReferences('sulu:content') as $routeProperty) {
-            if (0 !== strpos($routeProperty->getPath(), $baseRoutePath)) {
+            if (0 !== \strpos($routeProperty->getPath(), $baseRoutePath)) {
                 continue;
             }
 
@@ -166,7 +166,7 @@ class MaintainResourceLocatorCommand extends Command
                 continue;
             }
 
-            $resourceLocator = substr($routeNode->getPath(), strlen($baseRoutePath));
+            $resourceLocator = \substr($routeNode->getPath(), \strlen($baseRoutePath));
 
             if ($resourceLocator) {
                 // only set if resource locator is not empty

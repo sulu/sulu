@@ -119,7 +119,7 @@ class StructureProvider implements LocalizedReindexProviderInterface
         // note that this count does NOT take into account any documents that
         // may have security (and should thus be excluded) - checking the
         // permissions on each document here would cause significant overhead.
-        return count($query->execute());
+        return \count($query->execute());
     }
 
     public function getClassFqns()
@@ -141,7 +141,7 @@ class StructureProvider implements LocalizedReindexProviderInterface
         $metadata = $this->metadataFactory->getMetadataForClass($classFqn);
 
         // TODO: Use the document manager query builder.
-        return $this->documentManager->createQuery(sprintf(
+        return $this->documentManager->createQuery(\sprintf(
             'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "%s"',
             $metadata->getPhpcrType()
         ));

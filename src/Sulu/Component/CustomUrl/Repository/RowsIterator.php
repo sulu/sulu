@@ -70,14 +70,14 @@ class RowsIterator extends \IteratorIterator
                 continue;
             }
 
-            $result[str_replace('a.', '', $column)] = $row->getValue($column);
+            $result[\str_replace('a.', '', $column)] = $row->getValue($column);
         }
 
         $result['targetTitle'] = '';
-        if (!empty($result['targetDocument']) && array_key_exists($result['targetDocument'], $this->targets)) {
+        if (!empty($result['targetDocument']) && \array_key_exists($result['targetDocument'], $this->targets)) {
             $result['targetTitle'] = $this->targets[$result['targetDocument']]['title'];
         }
-        $result['domainParts'] = json_decode($result['domainParts'], true);
+        $result['domainParts'] = \json_decode($result['domainParts'], true);
         $result['customUrl'] = $this->generator->generate(
             $result['baseDomain'],
             $result['domainParts']

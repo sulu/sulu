@@ -127,7 +127,7 @@ class ContentRouteProviderTest extends TestCase
         $document->getTitle()->willReturn('');
         $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
 
-        $request = new Request([], [], [], [], [], ['REQUEST_URI' => rawurlencode('/')]);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => \rawurlencode('/')]);
 
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
         $this->assertCount(0, $routes);
@@ -181,7 +181,7 @@ class ContentRouteProviderTest extends TestCase
             ['_sulu' => $attributes->reveal()],
             [],
             [],
-            ['REQUEST_URI' => rawurlencode('/de')]
+            ['REQUEST_URI' => \rawurlencode('/de')]
         );
 
         $pageBridge->setDocument($document->reveal())->shouldBeCalled();
@@ -244,7 +244,7 @@ class ContentRouteProviderTest extends TestCase
             ['_sulu' => $attributes->reveal()],
             [],
             [],
-            ['REQUEST_URI' => rawurlencode('/de/käße')]
+            ['REQUEST_URI' => \rawurlencode('/de/käße')]
         );
 
         $pageBridge->setDocument($document->reveal())->shouldBeCalled();
@@ -296,7 +296,7 @@ class ContentRouteProviderTest extends TestCase
         $this->documentInspector->getMetadata($document->reveal())->willReturn($metadata);
         $this->documentInspector->getStructureMetadata($document->reveal())->willReturn(null);
 
-        $request = new Request([], [], [], [], [], ['REQUEST_URI' => rawurlencode('/')]);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => \rawurlencode('/')]);
 
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
         $this->assertCount(0, $routes);
@@ -350,7 +350,7 @@ class ContentRouteProviderTest extends TestCase
             ['_sulu' => $attributes->reveal()],
             [],
             [],
-            ['REQUEST_URI' => rawurlencode('/de')]
+            ['REQUEST_URI' => \rawurlencode('/de')]
         );
 
         $pageBridge->setDocument($document->reveal())->shouldBeCalled();
@@ -379,7 +379,7 @@ class ContentRouteProviderTest extends TestCase
         $this->requestAnalyzer->getResourceLocator()->willReturn('');
         $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
 
-        $request = new Request([], [], [], [], [], ['REQUEST_URI' => rawurlencode('/')]);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => \rawurlencode('/')]);
 
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
 
@@ -407,7 +407,7 @@ class ContentRouteProviderTest extends TestCase
         $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de')
             ->willThrow(ResourceLocatorNotFoundException::class);
 
-        $request = new Request([], [], [], [], [], ['REQUEST_URI' => rawurlencode('/')]);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => \rawurlencode('/')]);
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
 
         $this->assertCount(0, $routes);
@@ -451,7 +451,7 @@ class ContentRouteProviderTest extends TestCase
         $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
 
         $request = new Request(
-            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => rawurlencode('/de/test')]
+            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => \rawurlencode('/de/test')]
         );
 
         $this->webspaceManager->findUrlByResourceLocator('/other-test', null, 'de', 'sulu')
@@ -513,7 +513,7 @@ class ContentRouteProviderTest extends TestCase
             [],
             ['_sulu' => $attributes->reveal()],
             [],
-            [], ['REQUEST_URI' => rawurlencode('/de/test'), 'QUERY_STRING' => 'test1=value1']
+            [], ['REQUEST_URI' => \rawurlencode('/de/test'), 'QUERY_STRING' => 'test1=value1']
         );
 
         // Test the route provider
@@ -560,7 +560,7 @@ class ContentRouteProviderTest extends TestCase
         $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
 
         $request = new Request(
-            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => rawurlencode('/de/test')]
+            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => \rawurlencode('/de/test')]
         );
 
         // Test the route provider
@@ -598,7 +598,7 @@ class ContentRouteProviderTest extends TestCase
             ->willThrow(new ResourceLocatorMovedException('/new-test', '123-123-123'));
 
         $request = new Request(
-            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => rawurlencode('/de/qwertz/')]
+            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => \rawurlencode('/de/qwertz/')]
         );
 
         // Test the route provider
@@ -652,7 +652,7 @@ class ContentRouteProviderTest extends TestCase
         $this->structureManager->wrapStructure('page', $structureMetadata)->willReturn($pageBridge->reveal());
 
         $request = new Request(
-            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => rawurlencode('/')]
+            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => \rawurlencode('/')]
         );
 
         $pageBridge->setDocument($document->reveal())->shouldBeCalled();
@@ -693,7 +693,7 @@ class ContentRouteProviderTest extends TestCase
         );
 
         $request = new Request(
-            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => rawurlencode('/de/qwertz/')]
+            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => \rawurlencode('/de/qwertz/')]
         );
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
 
@@ -738,7 +738,7 @@ class ContentRouteProviderTest extends TestCase
             [],
             ['_sulu' => $attributes->reveal()],
             [],
-            [], ['REQUEST_URI' => rawurlencode('/de/foo/'), 'QUERY_STRING' => 'bar=baz']
+            [], ['REQUEST_URI' => \rawurlencode('/de/foo/'), 'QUERY_STRING' => 'bar=baz']
         );
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
         $this->assertCount(1, $routes);
@@ -777,7 +777,7 @@ class ContentRouteProviderTest extends TestCase
         );
 
         $request = new Request(
-            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => rawurlencode('/qwertz/')]
+            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => \rawurlencode('/qwertz/')]
         );
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
 
@@ -817,7 +817,7 @@ class ContentRouteProviderTest extends TestCase
         );
 
         $request = new Request(
-            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => rawurlencode('/de/')]
+            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => \rawurlencode('/de/')]
         );
 
         // Test the route provider
@@ -875,7 +875,7 @@ class ContentRouteProviderTest extends TestCase
         $this->structureManager->wrapStructure('page', $structureMetadata)->willReturn($pageBridge->reveal());
 
         $request = new Request(
-            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => rawurlencode('/')]
+            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => \rawurlencode('/')]
         );
 
         // Test the route provider

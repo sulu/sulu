@@ -58,7 +58,7 @@ class SuluNodeHelper
         StructureMetadataFactoryInterface $structureMetadataFactory
     ) {
         $this->languageNamespace = $languageNamespace;
-        $this->paths = array_merge(
+        $this->paths = \array_merge(
             [
                 'base' => null,
                 'content' => null,
@@ -82,14 +82,14 @@ class SuluNodeHelper
         $languages = [];
         foreach ($node->getProperties() as $property) {
             /* @var PropertyInterface $property */
-            preg_match('/^' . $this->languageNamespace . ':([a-zA-Z_]*?)-changer/', $property->getName(), $matches);
+            \preg_match('/^' . $this->languageNamespace . ':([a-zA-Z_]*?)-changer/', $property->getName(), $matches);
 
             if ($matches) {
                 $languages[$matches[1]] = $matches[1];
             }
         }
 
-        return array_values($languages);
+        return \array_values($languages);
     }
 
     /**
@@ -101,11 +101,11 @@ class SuluNodeHelper
     {
         $mixinTypes = $node->getPropertyValueWithDefault('jcr:mixinTypes', []);
 
-        if (in_array('sulu:' . Structure::TYPE_PAGE, $mixinTypes)) {
+        if (\in_array('sulu:' . Structure::TYPE_PAGE, $mixinTypes)) {
             return Structure::TYPE_PAGE;
         }
 
-        if (in_array('sulu:' . Structure::TYPE_SNIPPET, $mixinTypes)) {
+        if (\in_array('sulu:' . Structure::TYPE_SNIPPET, $mixinTypes)) {
             return Structure::TYPE_SNIPPET;
         }
 
@@ -123,7 +123,7 @@ class SuluNodeHelper
         $values = [];
         foreach ($node->getProperties() as $property) {
             /* @var PropertyInterface $property */
-            preg_match('/^' . $this->languageNamespace . ':([a-zA-Z_]*?)-' . $name . '/', $property->getName(), $matches);
+            \preg_match('/^' . $this->languageNamespace . ':([a-zA-Z_]*?)-' . $name . '/', $property->getName(), $matches);
 
             if ($matches) {
                 $values[$matches[1]] = $property->getValue();
@@ -152,7 +152,7 @@ class SuluNodeHelper
     public function hasSuluNodeType($node, $suluNodeTypes)
     {
         foreach ((array) $suluNodeTypes as $suluNodeType) {
-            if (in_array($suluNodeType, $node->getPropertyValueWithDefault('jcr:mixinTypes', []))) {
+            if (\in_array($suluNodeType, $node->getPropertyValueWithDefault('jcr:mixinTypes', []))) {
                 return true;
             }
         }
@@ -171,7 +171,7 @@ class SuluNodeHelper
      */
     public function extractWebspaceFromPath($path)
     {
-        $match = preg_match('/^\/' . $this->getPath('base') . '\/([^\/]*)\/.*$/', $path, $matches);
+        $match = \preg_match('/^\/' . $this->getPath('base') . '\/([^\/]*)\/.*$/', $path, $matches);
 
         if ($match) {
             return $matches[1];
@@ -210,18 +210,18 @@ class SuluNodeHelper
         try {
             return $this->session->getNode($this->getBaseSnippetPath($type))->getIdentifier();
         } catch (PathNotFoundException $e) {
-            $snippetStructures = array_map(function(StructureMetadata $structureMetadata) {
+            $snippetStructures = \array_map(function(StructureMetadata $structureMetadata) {
                 return $structureMetadata->getName();
             }, $this->structureMetadataFactory->getStructures('snippet'));
 
-            if (in_array($type, $snippetStructures)) {
+            if (\in_array($type, $snippetStructures)) {
                 return null;
             }
 
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Snippet type "%s" not available, available snippet types are: [%s]',
                 $type,
-                implode(', ', $snippetStructures)
+                \implode(', ', $snippetStructures)
             ));
         }
     }
@@ -237,9 +237,9 @@ class SuluNodeHelper
      */
     public function extractSnippetTypeFromPath($path)
     {
-        if ('/' !== substr($path, 0, 1)) {
+        if ('/' !== \substr($path, 0, 1)) {
             throw new \InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     'Path must be absolute, got "%s"',
                     $path
                 )
@@ -248,11 +248,11 @@ class SuluNodeHelper
 
         $snippetsPath = $this->getBaseSnippetPath() . '/';
         $newPath = PathHelper::getParentPath($path);
-        $newPath = substr($newPath, strlen($snippetsPath));
+        $newPath = \substr($newPath, \strlen($snippetsPath));
 
         if (false === $newPath) {
             throw new \InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     'Cannot extract snippet template type from path "%s"',
                     $path
                 )
@@ -292,7 +292,7 @@ class SuluNodeHelper
      */
     public function getTranslatedPropertyName($propertyName, $locale)
     {
-        return sprintf('%s:%s-%s', $this->languageNamespace, $locale, $propertyName);
+        return \sprintf('%s:%s-%s', $this->languageNamespace, $locale, $propertyName);
     }
 
     /**
@@ -325,17 +325,17 @@ class SuluNodeHelper
         $children = $parentNode->getNodes();
         $previousNode = null;
 
-        while ($child = current($children)) {
+        while ($child = \current($children)) {
             if ($child->getPath() === $node->getPath()) {
-                return $previous ? $previousNode : next($children);
+                return $previous ? $previousNode : \next($children);
             }
 
             $previousNode = $child;
-            next($children);
+            \next($children);
         }
 
         throw new \RuntimeException(
-            sprintf(
+            \sprintf(
                 'Could not find node with path "%s" as a child of "%s". This should not happen',
                 $node->getPath(),
                 $parentNode->getPath()
@@ -356,10 +356,10 @@ class SuluNodeHelper
     {
         if (!isset($this->paths[$name])) {
             throw new \InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     'Unknown path segment name "%s", known paths are "%s"',
                     $name,
-                    implode('", "', array_keys($this->paths))
+                    \implode('", "', \array_keys($this->paths))
                 )
             );
         }

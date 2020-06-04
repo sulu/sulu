@@ -174,7 +174,7 @@ class StructureProviderTest extends TestCase
 
         $count = $this->provider->getCount($class);
 
-        $this->assertEquals(count($objects), $count);
+        $this->assertEquals(\count($objects), $count);
     }
 
     /**

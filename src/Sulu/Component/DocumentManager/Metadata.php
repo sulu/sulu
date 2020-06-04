@@ -74,7 +74,7 @@ class Metadata
      */
     public function addFieldMapping($name, $mapping)
     {
-        $mapping = array_merge([
+        $mapping = \array_merge([
             'encoding' => 'content',
             'property' => $name,
             'type' => null,

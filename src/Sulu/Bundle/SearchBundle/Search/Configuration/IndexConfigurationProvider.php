@@ -56,7 +56,7 @@ class IndexConfigurationProvider implements IndexConfigurationProviderInterface
      */
     public function getIndexConfiguration($name)
     {
-        if (!array_key_exists($name, $this->indexConfigurations)) {
+        if (!\array_key_exists($name, $this->indexConfigurations)) {
             return;
         }
 

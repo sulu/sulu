@@ -69,7 +69,7 @@ class StructureBridgeSerializationTest extends SuluTestCase
 
         $this->assertNotSame('null', $data);
 
-        $arrayData = json_decode($data, true);
+        $arrayData = \json_decode($data, true);
 
         $this->assertArrayHasKey('document', $arrayData);
         $this->assertArrayHasKey('documentClass', $arrayData);

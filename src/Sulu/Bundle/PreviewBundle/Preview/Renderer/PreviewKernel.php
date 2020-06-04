@@ -35,12 +35,12 @@ class PreviewKernel extends Kernel
             // disable web_profiler toolbar in preview if the web_profiler extension exist
             if ($container->hasExtension('web_profiler')) {
                 $loader->load(
-                    implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'Resources', 'config', 'config_preview_dev.yml'])
+                    \implode(\DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'Resources', 'config', 'config_preview_dev.yml'])
                 );
             }
         });
 
-        $loader->load(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'Resources', 'config', 'config_preview.yml']));
+        $loader->load(\implode(\DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'Resources', 'config', 'config_preview.yml']));
     }
 
     /**
@@ -52,14 +52,14 @@ class PreviewKernel extends Kernel
     protected function getContainerClass()
     {
         // use parent class to normalize the generated container class.
-        return $this->generateContainerClass(get_parent_class());
+        return $this->generateContainerClass(\get_parent_class());
     }
 
     public function getRootDir()
     {
         if (null === $this->rootDir) {
             $reflectionClass = new \ReflectionClass(Kernel::class);
-            $this->rootDir = dirname($reflectionClass->getFileName());
+            $this->rootDir = \dirname($reflectionClass->getFileName());
         }
 
         return $this->rootDir;
@@ -69,12 +69,12 @@ class PreviewKernel extends Kernel
     {
         if (null === $this->projectDir) {
             $reflectionClass = new \ReflectionClass(Kernel::class);
-            $dir = $rootDir = dirname($reflectionClass->getFileName());
-            while (!file_exists($dir . '/composer.json')) {
-                if ($dir === dirname($dir)) {
+            $dir = $rootDir = \dirname($reflectionClass->getFileName());
+            while (!\file_exists($dir . '/composer.json')) {
+                if ($dir === \dirname($dir)) {
                     return $this->projectDir = $rootDir;
                 }
-                $dir = dirname($dir);
+                $dir = \dirname($dir);
             }
             $this->projectDir = $dir;
         }
@@ -108,7 +108,7 @@ class PreviewKernel extends Kernel
 
     public function getKernelParameters()
     {
-        return array_merge(
+        return \array_merge(
             parent::getKernelParameters(),
             ['sulu.preview' => true]
         );

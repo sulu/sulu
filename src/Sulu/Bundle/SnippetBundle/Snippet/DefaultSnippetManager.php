@@ -113,7 +113,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             $settings = $this->settingsManager->loadStringByWildcard($webspace->getKey(), 'snippets-*');
 
-            if (in_array($uuid, $settings)) {
+            if (\in_array($uuid, $settings)) {
                 return true;
             }
         }
@@ -126,13 +126,13 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             $settings = $this->settingsManager->loadStringByWildcard($webspace->getKey(), 'snippets-*');
 
-            if (!in_array($uuid, $settings)) {
+            if (!\in_array($uuid, $settings)) {
                 continue;
             }
 
-            $index = array_search($uuid, $settings);
+            $index = \array_search($uuid, $settings);
 
-            return substr($index, 9);
+            return \substr($index, 9);
         }
 
         return null;
@@ -145,7 +145,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
             $webspaceKey = $webspace->getKey();
             $settings = $this->settingsManager->loadStringByWildcard($webspaceKey, 'snippets-*');
 
-            if (!in_array($uuid, $settings)) {
+            if (!\in_array($uuid, $settings)) {
                 continue;
             }
 

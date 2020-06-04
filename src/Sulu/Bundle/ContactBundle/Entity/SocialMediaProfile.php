@@ -80,7 +80,7 @@ class SocialMediaProfile
     public function setUsername($username)
     {
         // Limit to maximal sql column length.
-        $this->username = substr($username, 0, 255);
+        $this->username = \substr($username, 0, 255);
 
         return $this;
     }

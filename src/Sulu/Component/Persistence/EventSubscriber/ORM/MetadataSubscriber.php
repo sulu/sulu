@@ -81,17 +81,17 @@ class MetadataSubscriber implements EventSubscriber
 
     private function setAssociationMappings(ClassMetadataInfo $metadata, Configuration $configuration)
     {
-        if (!class_exists($metadata->getName())) {
+        if (!\class_exists($metadata->getName())) {
             return;
         }
 
-        foreach (class_parents($metadata->getName()) as $parent) {
+        foreach (\class_parents($metadata->getName()) as $parent) {
             $parentMetadata = new ClassMetadata(
                 $parent,
                 $configuration->getNamingStrategy()
             );
 
-            if (!in_array($parent, $this->getAllClassNames($configuration))) {
+            if (!\in_array($parent, $this->getAllClassNames($configuration))) {
                 continue;
             }
 
@@ -126,7 +126,7 @@ class MetadataSubscriber implements EventSubscriber
      */
     private function hasRelation($type)
     {
-        return in_array(
+        return \in_array(
             $type,
             [
                 ClassMetadataInfo::MANY_TO_MANY,

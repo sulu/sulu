@@ -148,7 +148,7 @@ class CollectionManager implements CollectionManagerInterface
     {
         $collectionEntities = $this->collectionRepository->findCollections($filter, $limit, $offset, $sortBy);
         $this->count = $collectionEntities instanceof Paginator ?
-            $collectionEntities->count() : count($collectionEntities);
+            $collectionEntities->count() : \count($collectionEntities);
 
         $collections = [];
         foreach ($collectionEntities as $entity) {
@@ -574,7 +574,7 @@ class CollectionManager implements CollectionManagerInterface
         $medias = $this->mediaRepository
             ->findMedia(['collection' => $id, 'paginator' => false], 1);
 
-        if (count($medias) > 0) {
+        if (\count($medias) > 0) {
             $media = $medias[0];
             foreach ($media->getFiles() as $file) {
                 foreach ($file->getFileVersions() as $fileVersion) {

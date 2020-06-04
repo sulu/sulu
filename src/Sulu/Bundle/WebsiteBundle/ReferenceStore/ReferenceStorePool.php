@@ -36,8 +36,8 @@ class ReferenceStorePool implements ReferenceStorePoolInterface
 
     public function getStore($alias)
     {
-        if (!array_key_exists($alias, $this->stores)) {
-            throw new ReferenceStoreNotExistsException($alias, array_keys($this->stores));
+        if (!\array_key_exists($alias, $this->stores)) {
+            throw new ReferenceStoreNotExistsException($alias, \array_keys($this->stores));
         }
 
         return $this->stores[$alias];

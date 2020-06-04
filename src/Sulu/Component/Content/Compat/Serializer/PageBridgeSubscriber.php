@@ -47,7 +47,7 @@ class PageBridgeSubscriber implements EventSubscriberInterface
 
         $data = [
             'document' => $document,
-            'documentClass' => get_class($document),
+            'documentClass' => \get_class($document),
             'structure' => $bridge->getStructure()->getName(),
         ];
 

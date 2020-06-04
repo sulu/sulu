@@ -39,7 +39,7 @@ class PropertiesXmlParser
     public function __construct(TranslatorInterface $translator, array $locales)
     {
         $this->translator = $translator;
-        $this->locales = array_keys($locales);
+        $this->locales = \array_keys($locales);
     }
 
     public function load(
@@ -131,7 +131,7 @@ class PropertiesXmlParser
         ];
 
         foreach ($node->attributes as $key => $attr) {
-            if (in_array($key, ['name', 'priority'])) {
+            if (\in_array($key, ['name', 'priority'])) {
                 $tag[$key] = $attr->value;
             } else {
                 $tag['attributes'][$key] = $attr->value;
@@ -168,11 +168,11 @@ class PropertiesXmlParser
         $result['meta'] = $this->loadMeta($xpath, $node);
         $result['types'] = $this->loadTypes($tags, $xpath, $node);
 
-        $typeNames = array_map(function($type) {
+        $typeNames = \array_map(function($type) {
             return $type['name'];
         }, $result['types']);
 
-        if (!in_array($result['default-type'], $typeNames)) {
+        if (!\in_array($result['default-type'], $typeNames)) {
             throw new InvalidBlockDefaultTypeException($result['name'], $result['default-type'], $typeNames);
         }
 
@@ -302,7 +302,7 @@ class PropertiesXmlParser
             return $result;
         }
 
-        $missingLocales = array_diff($this->locales, array_keys($result));
+        $missingLocales = \array_diff($this->locales, \array_keys($result));
         foreach ($missingLocales as $missingLocale) {
             $result[$missingLocale] = $this->translator->trans($translationKey, [], 'admin', $missingLocale);
         }
@@ -472,22 +472,22 @@ class PropertiesXmlParser
         $property->setSpaceAfter($data['spaceAfter']);
         $property->setCssClass($data['cssClass']);
         $property->setTags($data['tags']);
-        $property->setMinOccurs(null !== $data['minOccurs'] ? intval($data['minOccurs']) : null);
-        $property->setMaxOccurs(null !== $data['maxOccurs'] ? intval($data['maxOccurs']) : null);
+        $property->setMinOccurs(null !== $data['minOccurs'] ? \intval($data['minOccurs']) : null);
+        $property->setMaxOccurs(null !== $data['maxOccurs'] ? \intval($data['maxOccurs']) : null);
         $property->setDisabledCondition(
-            array_key_exists('disabledCondition', $data) ? $data['disabledCondition'] : null
+            \array_key_exists('disabledCondition', $data) ? $data['disabledCondition'] : null
         );
         $property->setVisibleCondition(
-            array_key_exists('visibleCondition', $data) ? $data['visibleCondition'] : null
+            \array_key_exists('visibleCondition', $data) ? $data['visibleCondition'] : null
         );
         $property->setParameters($data['params']);
-        $property->setOnInvalid(array_key_exists('onInvalid', $data) ? $data['onInvalid'] : null);
+        $property->setOnInvalid(\array_key_exists('onInvalid', $data) ? $data['onInvalid'] : null);
         $this->mapMeta($property, $data['meta']);
     }
 
     private function normalizePropertyData($data): array
     {
-        $data = array_replace_recursive(
+        $data = \array_replace_recursive(
             [
                 'type' => null,
                 'multilingual' => true,
@@ -506,7 +506,7 @@ class PropertiesXmlParser
 
     private function normalizeItem($data): array
     {
-        $data = array_merge_recursive(
+        $data = \array_merge_recursive(
             [
                 'meta' => [
                     'title' => [],

@@ -93,7 +93,7 @@ class ExplicitSubscriber implements EventSubscriberInterface
 
         if ($options['node_name']) {
             if (!$event->hasParentNode()) {
-                throw new DocumentManagerException(sprintf(
+                throw new DocumentManagerException(\sprintf(
                     'The "node_name" option can only be used either with the "parent_path" option ' .
                     'or when a parent node has been established by a previous subscriber. ' .
                     'When persisting document: %s',
@@ -120,7 +120,7 @@ class ExplicitSubscriber implements EventSubscriberInterface
             $node = $event->getParentNode()->getNode($nodeName);
         } else {
             throw new ItemExistsException(
-                sprintf(
+                \sprintf(
                     'The node \'%s\' already has a child named \'%s\'.',
                     $event->getParentNode()->getPath(),
                     $nodeName

@@ -107,7 +107,7 @@ class SnippetDataProviderTest extends TestCase
             $pageSize ? $pageSize * ($page - 1) : null
         )->willReturn($result);
 
-        if (array_key_exists('type', $propertyParameter)) {
+        if (\array_key_exists('type', $propertyParameter)) {
             $this->nodeHelper->getBaseSnippetUuid($propertyParameter['type'])->willReturn('some-uuid');
         } else {
             $this->nodeHelper->getBaseSnippetUuid(null)->willReturn(null);
@@ -116,7 +116,7 @@ class SnippetDataProviderTest extends TestCase
         $this->snippetQueryBuilder->init([
             'config' => [
                 'excluded' => null,
-                'dataSource' => array_key_exists('type', $propertyParameter) ? 'some-uuid' : null,
+                'dataSource' => \array_key_exists('type', $propertyParameter) ? 'some-uuid' : null,
                 'includeSubFolders' => true,
             ],
             'properties' => [],
@@ -132,7 +132,7 @@ class SnippetDataProviderTest extends TestCase
             $pageSize
         );
 
-        $this->assertCount(count($result), $dataProviderResult->getItems());
+        $this->assertCount(\count($result), $dataProviderResult->getItems());
         $this->assertEquals($hasNextPage, $dataProviderResult->getHasNextPage());
     }
 
@@ -219,7 +219,7 @@ class SnippetDataProviderTest extends TestCase
             $pageSize
         );
 
-        $this->assertCount(count($result), $dataProviderResult->getItems());
+        $this->assertCount(\count($result), $dataProviderResult->getItems());
         $this->assertEquals($hasNextPage, $dataProviderResult->getHasNextPage());
     }
 
@@ -240,7 +240,7 @@ class SnippetDataProviderTest extends TestCase
 
         $this->snippetQueryBuilder->init(
             [
-                'config' => array_merge($filters, ['dataSource' => null, 'includeSubFolders' => true]),
+                'config' => \array_merge($filters, ['dataSource' => null, 'includeSubFolders' => true]),
                 'properties' => [],
                 'excluded' => ['456-456-456'],
             ]
@@ -262,7 +262,7 @@ class SnippetDataProviderTest extends TestCase
             $options
         );
 
-        $this->assertCount(count($result), $dataProviderResult->getItems());
+        $this->assertCount(\count($result), $dataProviderResult->getItems());
         $this->assertEquals(false, $dataProviderResult->getHasNextPage());
     }
 

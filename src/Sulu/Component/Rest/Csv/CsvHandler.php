@@ -76,14 +76,14 @@ class CsvHandler
 
         $viewData = $view->getData();
         $data = new CallbackCollection($viewData->getData(), [$this, 'prepareData']);
-        $fileName = sprintf('%s.csv', $viewData->getRel());
+        $fileName = \sprintf('%s.csv', $viewData->getRel());
 
         $config = new ExporterConfig();
         $exporter = new Exporter($config);
 
         $data->rewind();
         if ($row = $data->current()) {
-            $config->setColumnHeaders(array_keys($row));
+            $config->setColumnHeaders(\array_keys($row));
         }
 
         $config->setDelimiter($this->convertValue($request->get('delimiter', ';'), self::$delimiterMap));
@@ -120,17 +120,17 @@ class CsvHandler
             return $row;
         }
 
-        if (!is_array($row)) {
+        if (!\is_array($row)) {
             $row = $this->serializer->serialize($row, SerializationContext::create()->setSerializeNull(true));
         }
 
         foreach ($row as $key => $value) {
             if ($value instanceof \DateTime) {
                 $row[$key] = $value->format(\DateTime::RFC3339);
-            } elseif (is_bool($value)) {
+            } elseif (\is_bool($value)) {
                 $row[$key] = true === $value ? 1 : 0;
-            } elseif (is_array($value) || is_object($value)) {
-                $row[$key] = json_encode($value);
+            } elseif (\is_array($value) || \is_object($value)) {
+                $row[$key] = \json_encode($value);
             }
         }
 
@@ -146,7 +146,7 @@ class CsvHandler
      */
     private function convertValue($value, array $map)
     {
-        if (array_key_exists($value, $map)) {
+        if (\array_key_exists($value, $map)) {
             return $map[$value];
         }
 

@@ -89,7 +89,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
     {
         $events = $this->webspaceSerializeEventSubscriber->getSubscribedEvents();
 
-        $reflection = new \ReflectionClass(get_class($this->webspaceSerializeEventSubscriber));
+        $reflection = new \ReflectionClass(\get_class($this->webspaceSerializeEventSubscriber));
 
         foreach ($events as $event) {
             $this->assertTrue($reflection->hasMethod($event['method']));
@@ -116,7 +116,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
         $context->getNavigator()->willReturn($graphNavigator->reveal());
         $visitor = $this->prophesize(SerializationVisitorInterface::class);
 
-        $graphNavigator->accept(array_values($portalInformation))->willReturn('[{}, {}]')->shouldBeCalled();
+        $graphNavigator->accept(\array_values($portalInformation))->willReturn('[{}, {}]')->shouldBeCalled();
         $visitor->visitProperty(
             Argument::that(function(StaticPropertyMetadata $metadata) {
                 return 'portalInformation' === $metadata->name;
@@ -126,7 +126,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
 
         $this->webspaceManager->getPortalInformationsByWebspaceKey('prod', 'sulu_io')->willReturn($portalInformation);
 
-        $reflection = new \ReflectionClass(get_class($this->webspaceSerializeEventSubscriber));
+        $reflection = new \ReflectionClass(\get_class($this->webspaceSerializeEventSubscriber));
         $method = $reflection->getMethod('appendPortalInformation');
         $method->setAccessible(true);
 
@@ -161,7 +161,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
             $serialzedData
         )->shouldBeCalled();
 
-        $reflection = new \ReflectionClass(get_class($this->webspaceSerializeEventSubscriber));
+        $reflection = new \ReflectionClass(\get_class($this->webspaceSerializeEventSubscriber));
         $method = $reflection->getMethod('appendUrls');
         $method->setAccessible(true);
 
@@ -194,7 +194,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
 
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getPortals()->willReturn(
-            array_map(
+            \array_map(
                 function($portal) {
                     return $portal->reveal();
                 },
@@ -226,7 +226,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
             $serialzedData
         )->shouldBeCalled();
 
-        $reflection = new \ReflectionClass(get_class($this->webspaceSerializeEventSubscriber));
+        $reflection = new \ReflectionClass(\get_class($this->webspaceSerializeEventSubscriber));
         $method = $reflection->getMethod('appendCustomUrls');
         $method->setAccessible(true);
 
@@ -268,7 +268,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
             $serialzedData
         )->shouldBeCalled();
 
-        $reflection = new \ReflectionClass(get_class($this->webspaceSerializeEventSubscriber));
+        $reflection = new \ReflectionClass(\get_class($this->webspaceSerializeEventSubscriber));
         $method = $reflection->getMethod('appendPermissions');
         $method->setAccessible(true);
 

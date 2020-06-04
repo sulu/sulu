@@ -33,8 +33,8 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
             $publicDir = 'public';
 
             $composerFile = $container->getParameter('kernel.project_dir') . '/composer.json';
-            if (file_exists($composerFile)) {
-                $composerConfig = json_decode(file_get_contents($composerFile), true);
+            if (\file_exists($composerFile)) {
+                $composerConfig = \json_decode(\file_get_contents($composerFile), true);
                 $publicDir = $composerConfig['extra']['public-dir'] ?? $publicDir;
             }
 

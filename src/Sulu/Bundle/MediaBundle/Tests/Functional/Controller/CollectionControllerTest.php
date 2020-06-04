@@ -102,11 +102,11 @@ class CollectionControllerTest extends SuluTestCase
      */
     protected function iterateOverSystemCollections($config, $depth = null)
     {
-        $amount = count($config);
+        $amount = \count($config);
 
         if ($depth > 0 || null === $depth) {
             foreach ($config as $child) {
-                if (array_key_exists('collections', $child)) {
+                if (\array_key_exists('collections', $child)) {
                     $amount += $this->iterateOverSystemCollections($child['collections'], $depth - 1);
                 }
             }
@@ -163,7 +163,7 @@ class CollectionControllerTest extends SuluTestCase
             'color' => '#ffcc00',
         ];
 
-        $collection->setStyle(json_encode($style));
+        $collection->setStyle(\json_encode($style));
         $collection->setKey($key);
         $collection->setType($collectionType);
 
@@ -244,10 +244,10 @@ class CollectionControllerTest extends SuluTestCase
                     'collections' => $this->mapCollections($collection->_embedded->collections),
                 ];
             }
-            ksort($result);
+            \ksort($result);
         }
 
-        return array_values($result);
+        return \array_values($result);
     }
 
     private function mapCollectionsFlat($collections)
@@ -258,19 +258,19 @@ class CollectionControllerTest extends SuluTestCase
             foreach ($collection->_embedded->collections as $child) {
                 $children[$child->title] = $child->title;
             }
-            ksort($children);
+            \ksort($children);
 
             $result[$collection->title] = [
                 'title' => $collection->title,
                 'parent' => $collection->_embedded->parent ? $collection->_embedded->parent->title : null,
-                'collections' => array_values($children),
+                'collections' => \array_values($children),
             ];
 
-            $result = array_merge($result, $this->mapCollectionsFlat($collection->_embedded->collections));
+            $result = \array_merge($result, $this->mapCollectionsFlat($collection->_embedded->collections));
         }
-        ksort($result);
+        \ksort($result);
 
-        return array_values($result);
+        return \array_values($result);
     }
 
     public function testGetById()
@@ -285,11 +285,11 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $style = json_decode(
-            json_encode(
+        $style = \json_decode(
+            \json_encode(
                 [
                     'type' => 'circle',
                     'color' => '#ffcc00',
@@ -307,8 +307,8 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNotNull($response->type->id);
         $this->assertEquals('Default Collection Type', $response->type->name);
         $this->assertEquals('Default Collection Type', $response->type->description);
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($response->created)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($response->changed)));
     }
 
     public function testCGet()
@@ -330,7 +330,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertNotEmpty($response->_embedded->collections);
@@ -354,7 +354,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertNotEmpty($response->_embedded->collections);
@@ -379,7 +379,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertNotEmpty($response->_embedded->collections);
@@ -411,7 +411,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertNotEmpty($response->_embedded->collections);
@@ -444,7 +444,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals(2, $response->pages);
@@ -469,7 +469,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals(1, $response->pages);
@@ -495,7 +495,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals(1, $response->pages);
@@ -533,11 +533,11 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals(3, $response->total);
-        $this->assertEquals(2, count($response->_embedded->collections));
+        $this->assertEquals(2, \count($response->_embedded->collections));
         $this->assertEquals(5, $response->_embedded->collections[0]->mediaCount);
         $this->assertEquals(0, $response->_embedded->collections[0]->subCollectionCount);
         $this->assertEquals(5, $response->_embedded->collections[0]->objectCount);
@@ -557,7 +557,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(404, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertEquals(5005, $response->code);
         $this->assertTrue(isset($response->message));
     }
@@ -569,7 +569,7 @@ class CollectionControllerTest extends SuluTestCase
         $generateColor = '#ffcc00';
 
         $this->assertNotEmpty($generateColor);
-        $this->assertEquals(7, strlen($generateColor));
+        $this->assertEquals(7, \strlen($generateColor));
 
         $client->request(
             'POST',
@@ -589,7 +589,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -601,8 +601,8 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals($style, $response->style);
         $this->assertNotNull($response->id);
         $this->assertNotNull($response->type->id);
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($response->created)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($response->changed)));
         $this->assertEquals('Test Collection 2', $response->title);
         $this->assertEquals('This Description 2 is only for testing', $response->description);
         /*
@@ -622,7 +622,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
 
@@ -673,7 +673,7 @@ class CollectionControllerTest extends SuluTestCase
         $generateColor = '#ffcc00';
 
         $this->assertNotEmpty($generateColor);
-        $this->assertEquals(7, strlen($generateColor));
+        $this->assertEquals(7, \strlen($generateColor));
 
         $client->request(
             'POST',
@@ -693,7 +693,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -705,8 +705,8 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals($style, $response->style);
         $this->assertNotNull($response->id);
         $this->assertNotNull($response->type->id);
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($response->created)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($response->changed)));
         $this->assertEquals('Test Collection 2', $response->title);
         $this->assertEquals('This Description 2 is only for testing', $response->description);
         $this->assertEquals($this->collection1->getId(), $response->_embedded->parent->id);
@@ -721,7 +721,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertNotEmpty($response);
@@ -751,7 +751,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertNotEmpty($response);
@@ -774,15 +774,15 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals('en', $response->locale);
         $this->assertNotNull($response->id);
         $this->assertNotNull($response->type->id);
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($response->created)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($response->changed)));
         $this->assertEquals('Test Collection 2', $response->title);
 
         // get collection in locale 'en-gb'
@@ -798,7 +798,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
 
@@ -816,8 +816,8 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('en-gb', $responseFirstEntity->locale);
         $this->assertEquals($style, $responseFirstEntity->style);
         $this->assertNotNull($responseFirstEntity->type->id);
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->created)));
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->changed)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($responseFirstEntity->created)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($responseFirstEntity->changed)));
         $this->assertEquals('Test Collection', $responseFirstEntity->title);
         $this->assertEquals('This Description is only for testing', $responseFirstEntity->description);
 
@@ -828,8 +828,8 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNotNull($responseSecondEntity->id);
         $this->assertEquals('en-gb', $responseSecondEntity->locale);
         $this->assertNotNull($responseSecondEntity->type->id);
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseSecondEntity->created)));
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseSecondEntity->changed)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($responseSecondEntity->created)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($responseSecondEntity->changed)));
         $this->assertEquals('Test Collection 2', $responseSecondEntity->title);
 
         // get collection in locale 'en'
@@ -845,7 +845,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
 
@@ -863,8 +863,8 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('en', $responseFirstEntity->locale);
         $this->assertEquals($style, $responseFirstEntity->style);
         $this->assertNotNull($responseFirstEntity->type->id);
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->created)));
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->changed)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($responseFirstEntity->created)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($responseFirstEntity->changed)));
         $this->assertEquals('Test Collection', $responseFirstEntity->title);
         $this->assertEquals('This Description is only for testing', $responseFirstEntity->description);
 
@@ -875,8 +875,8 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNotNull($responseSecondEntity->id);
         $this->assertEquals('en', $responseSecondEntity->locale);
         $this->assertNotNull($responseSecondEntity->type->id);
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseSecondEntity->created)));
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseSecondEntity->changed)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($responseSecondEntity->created)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($responseSecondEntity->changed)));
         $this->assertEquals('Test Collection 2', $responseSecondEntity->title);
     }
 
@@ -887,7 +887,7 @@ class CollectionControllerTest extends SuluTestCase
         $generateColor = '#ffcc00';
 
         $this->assertNotEmpty($generateColor);
-        $this->assertEquals(7, strlen($generateColor));
+        $this->assertEquals(7, \strlen($generateColor));
 
         $client->request(
             'POST',
@@ -906,7 +906,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(400, $client->getResponse());
         $this->assertTrue(isset($response->message));
@@ -942,7 +942,7 @@ class CollectionControllerTest extends SuluTestCase
                 'locale' => 'en-gb',
             ]
         );
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -955,8 +955,8 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals($style, $response->style);
         $this->assertEquals($this->collection1->getId(), $response->id);
         $this->assertNotNull($response->type->id);
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($response->created)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($response->changed)));
         $this->assertEquals('Test Collection changed', $response->title);
         $this->assertEquals('This Description is only for testing changed', $response->description);
         $this->assertEquals('en-gb', $response->locale);
@@ -968,7 +968,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
 
@@ -991,8 +991,8 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals($style, $responseFirstEntity->style);
         $this->assertEquals($this->collection1->getId(), $responseFirstEntity->id);
         $this->assertNotNull($responseFirstEntity->type->id);
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->created)));
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->changed)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($responseFirstEntity->created)));
+        $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($responseFirstEntity->changed)));
         $this->assertEquals('Test Collection changed', $responseFirstEntity->title);
         $this->assertEquals('This Description is only for testing changed', $responseFirstEntity->description);
         $this->assertEquals('en-gb', $responseFirstEntity->locale);
@@ -1048,7 +1048,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals($this->collection1->getId(), $response->_embedded->parent->id);
         $this->assertEquals($this->collection1->getId(), $response->_embedded->breadcrumb[0]->id);
@@ -1083,7 +1083,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertNull($response['_embedded']['breadcrumb']);
     }
@@ -1124,7 +1124,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections/' . $this->collection1->getId() . '?locale=en-gb'
         );
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $style = new \stdClass();
@@ -1170,7 +1170,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(404, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertEquals(5005, $response->code);
         $this->assertTrue(isset($response->message));
     }
@@ -1183,7 +1183,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $client->getResponse());
 
         $client->request('GET', '/api/collections?locale=en&flat=true');
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertEquals(2, $response->total);
     }
 
@@ -1264,7 +1264,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertNotEmpty($response);
@@ -1283,7 +1283,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertNotEmpty($response);
@@ -1306,7 +1306,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertNotEmpty($response);
@@ -1336,7 +1336,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertNotEmpty($response);
@@ -1354,7 +1354,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertNotEmpty($response);
@@ -1392,7 +1392,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertNotEmpty($response);
@@ -1443,7 +1443,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals($titles[6], $response['title']);
 
         $breadcrumb = $response['_embedded']['breadcrumb'];
@@ -1467,7 +1467,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($titles[3], $response->title);
@@ -1482,7 +1482,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($titles[3], $response->title);
@@ -1502,7 +1502,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($titles[3], $response->title);
@@ -1538,7 +1538,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($ids[0], $response->_embedded->parent->id);
@@ -1551,7 +1551,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
         $items = $this->mapCollectionsFlat($response->_embedded->collections);
         $this->assertEquals(7, $response->total);

@@ -100,7 +100,7 @@ class StructureProvider implements ProviderInterface
             return;
         }
 
-        $documentMetadata = $this->metadataFactory->getMetadataForClass(get_class($object));
+        $documentMetadata = $this->metadataFactory->getMetadataForClass(\get_class($object));
         $structure = $this->structureFactory->getStructureMetadata(
             $documentMetadata->getAlias(),
             $object->getStructureType()
@@ -202,7 +202,7 @@ class StructureProvider implements ProviderInterface
 EOT;
 
                 $field = new Expression(
-                    sprintf(
+                    \sprintf(
                         $expression,
                         RedirectType::INTERNAL,
                         RedirectType::EXTERNAL
@@ -368,10 +368,10 @@ EOT;
                     break;
                 default:
                     throw new \InvalidArgumentException(
-                        sprintf(
+                        \sprintf(
                             'Unknown search field role "%s", role must be one of "%s"',
                             $tagAttributes['role'],
-                            implode(', ', ['title', 'description', 'image'])
+                            \implode(', ', ['title', 'description', 'image'])
                         )
                     );
             }
@@ -395,7 +395,7 @@ EOT;
     private function getContentField(PropertyMetadata $property)
     {
         $field = $this->factory->createMetadataExpression(
-            sprintf(
+            \sprintf(
                 'object.getStructure().%s.getValue()',
                 $property->getName()
             )

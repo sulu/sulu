@@ -111,7 +111,7 @@ class AuthorSubscriber implements EventSubscriberInterface
             $document->setAuthored(new \DateTime());
         }
 
-        $metadata = $this->metadataFactory->getMetadataForClass(get_class($document));
+        $metadata = $this->metadataFactory->getMetadataForClass(\get_class($document));
         if ($metadata->getSetDefaultAuthor()) {
             $this->setDefaultAuthor($document);
         }

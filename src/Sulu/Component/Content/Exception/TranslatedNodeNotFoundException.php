@@ -25,7 +25,7 @@ class TranslatedNodeNotFoundException extends \Exception
 
     public function __construct($uuid, $languageCode)
     {
-        parent::__construct(sprintf('Node "%s" not found in localization "%s"', $uuid, $languageCode));
+        parent::__construct(\sprintf('Node "%s" not found in localization "%s"', $uuid, $languageCode));
         $this->uuid = $uuid;
         $this->languageCode = $languageCode;
     }

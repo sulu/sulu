@@ -58,7 +58,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
      */
     public function getParams($params)
     {
-        return array_merge($this->getDefaultParams(), $params);
+        return \array_merge($this->getDefaultParams(), $params);
     }
 
     public function read(
@@ -68,7 +68,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         $languageCode,
         $segmentKey
     ) {
-        $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{"ids": []}'), true);
+        $data = \json_decode($node->getPropertyValueWithDefault($property->getName(), '{"ids": []}'), true);
 
         $property->setValue(isset($data['ids']) ? $data : null);
     }
@@ -92,7 +92,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         }
 
         // set value to node
-        $node->setProperty($property->getName(), json_encode($value));
+        $node->setProperty($property->getName(), \json_encode($value));
     }
 
     public function remove(
@@ -133,12 +133,12 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
 
     public function exportData($propertyValue)
     {
-        if (!is_array($propertyValue)) {
+        if (!\is_array($propertyValue)) {
             return '';
         }
 
         if (!empty($propertyValue)) {
-            return json_encode($propertyValue);
+            return \json_encode($propertyValue);
         }
 
         return '';
@@ -153,14 +153,14 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         $languageCode,
         $segmentKey = null
     ) {
-        $property->setValue(json_decode($value, true));
+        $property->setValue(\json_decode($value, true));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 
     public function preResolve(PropertyInterface $property)
     {
         $data = $property->getValue();
-        if (!isset($data['ids']) || !is_array($data['ids'])) {
+        if (!isset($data['ids']) || !\is_array($data['ids'])) {
             return;
         }
 

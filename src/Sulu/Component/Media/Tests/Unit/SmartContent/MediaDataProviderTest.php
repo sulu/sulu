@@ -91,9 +91,9 @@ class MediaDataProviderTest extends TestCase
 
         return [
             [['dataSource' => 42, 'tags' => [1]], null, 1, 3, $medias, false, $dataItems],
-            [['dataSource' => 42, 'tags' => [1]], null, 1, 2, $medias, true, array_slice($dataItems, 0, 2)],
-            [['dataSource' => 42, 'tags' => [1]], 5, 1, 2, $medias, true, array_slice($dataItems, 0, 2)],
-            [['dataSource' => 42, 'tags' => [1]], 1, 1, 2, array_slice($medias, 0, 1), false, array_slice($dataItems, 0, 1)],
+            [['dataSource' => 42, 'tags' => [1]], null, 1, 2, $medias, true, \array_slice($dataItems, 0, 2)],
+            [['dataSource' => 42, 'tags' => [1]], 5, 1, 2, $medias, true, \array_slice($dataItems, 0, 2)],
+            [['dataSource' => 42, 'tags' => [1]], 1, 1, 2, \array_slice($medias, 0, 1), false, \array_slice($dataItems, 0, 1)],
         ];
     }
 
@@ -144,9 +144,9 @@ class MediaDataProviderTest extends TestCase
 
         return [
             [['dataSource' => 42, 'tags' => [1]], null, 1, 3, $medias, false, $resourceItems],
-            [['dataSource' => 42, 'tags' => [1]], null, 1, 2, $medias, true, array_slice($resourceItems, 0, 2)],
-            [['dataSource' => 42, 'tags' => [1]], 5, 1, 2, $medias, true, array_slice($resourceItems, 0, 2)],
-            [['dataSource' => 42, 'tags' => [1]], 1, 1, 2, array_slice($medias, 0, 1), false, array_slice($resourceItems, 0, 1)],
+            [['dataSource' => 42, 'tags' => [1]], null, 1, 2, $medias, true, \array_slice($resourceItems, 0, 2)],
+            [['dataSource' => 42, 'tags' => [1]], 5, 1, 2, $medias, true, \array_slice($resourceItems, 0, 2)],
+            [['dataSource' => 42, 'tags' => [1]], 1, 1, 2, \array_slice($medias, 0, 1), false, \array_slice($resourceItems, 0, 1)],
         ];
     }
 
@@ -269,7 +269,7 @@ class MediaDataProviderTest extends TestCase
         return [
             'id' => $media->getId(),
             'title' => $media->getTitle(),
-            'tags' => array_map(
+            'tags' => \array_map(
                 function($tag) {
                     return $tag->getName();
                 },

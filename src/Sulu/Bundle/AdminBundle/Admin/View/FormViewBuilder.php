@@ -43,7 +43,7 @@ class FormViewBuilder implements FormViewBuilderInterface
      */
     public function setRequestParameters(array $requestParameters): FormViewBuilderInterface
     {
-        @trigger_error('The usage of the "setRequestParameters" method in the FormViewBuilder is deprecated. Please use "addRequestParameters" instead.', E_USER_DEPRECATED);
+        @\trigger_error('The usage of the "setRequestParameters" method in the FormViewBuilder is deprecated. Please use "addRequestParameters" instead.', \E_USER_DEPRECATED);
 
         $this->setRequestParametersToView($this->view, $requestParameters);
 
@@ -179,13 +179,13 @@ class FormViewBuilder implements FormViewBuilderInterface
             );
         }
 
-        if ($this->view->getOption('locales') && false === strpos($this->view->getPath(), ':locale')) {
+        if ($this->view->getOption('locales') && false === \strpos($this->view->getPath(), ':locale')) {
             throw new \DomainException(
                 'A view for a Form view needs a ":locale" placeholder in its URL if some "locales" have been set.'
             );
         }
 
-        if (!$this->view->getOption('locales') && false !== strpos($this->view->getPath(), ':locale')) {
+        if (!$this->view->getOption('locales') && false !== \strpos($this->view->getPath(), ':locale')) {
             throw new \DomainException(
                 'A view for a Form view cannot have a ":locale" placeholder in its URL if no "locales" have been set.'
             );

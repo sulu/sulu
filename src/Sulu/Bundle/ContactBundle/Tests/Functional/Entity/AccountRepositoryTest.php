@@ -146,28 +146,28 @@ class AccountRepositoryTest extends SuluTestCase
             // no pagination
             [[], null, 0, null, $this->accountData],
             // page 1, no limit
-            [[], 1, 3, null, array_slice($this->accountData, 0, 4)],
+            [[], 1, 3, null, \array_slice($this->accountData, 0, 4)],
             // page 2, no limit
-            [[], 2, 3, null, array_slice($this->accountData, 3, 4)],
+            [[], 2, 3, null, \array_slice($this->accountData, 3, 4)],
             // no pagination, limit 3
-            [[], null, 0, 3, array_slice($this->accountData, 0, 3)],
+            [[], null, 0, 3, \array_slice($this->accountData, 0, 3)],
             // page 1, limit 5
-            [[], 1, 3, 5, array_slice($this->accountData, 0, 4)],
+            [[], 1, 3, 5, \array_slice($this->accountData, 0, 4)],
             // page 2, limit 5
-            [[], 2, 3, 5, array_slice($this->accountData, 3, 2)],
+            [[], 2, 3, 5, \array_slice($this->accountData, 3, 2)],
             // no pagination, tag 0
-            [['tags' => [0], 'tagOperator' => 'or'], null, 0, null, array_slice($this->accountData, 0, 7), [0]],
+            [['tags' => [0], 'tagOperator' => 'or'], null, 0, null, \array_slice($this->accountData, 0, 7), [0]],
             // no pagination, tag 0 or 1
-            [['tags' => [0, 1], 'tagOperator' => 'or'], null, 0, null, array_slice($this->accountData, 0, 7)],
+            [['tags' => [0, 1], 'tagOperator' => 'or'], null, 0, null, \array_slice($this->accountData, 0, 7)],
             // no pagination, tag 0 and 1
-            [['tags' => [0, 1], 'tagOperator' => 'and'], null, 0, null, array_slice($this->accountData, 0, 4), [0, 1]],
+            [['tags' => [0, 1], 'tagOperator' => 'and'], null, 0, null, \array_slice($this->accountData, 0, 4), [0, 1]],
             // page 1, no limit, tag 0
             [
                 ['tags' => [0], 'tagOperator' => 'or'],
                 1,
                 3,
                 null,
-                array_slice($this->accountData, 0, 4),
+                \array_slice($this->accountData, 0, 4),
                 [0],
             ],
             // no pagination, website-tag 0 or 1
@@ -176,7 +176,7 @@ class AccountRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->accountData, 0, 7),
+                \array_slice($this->accountData, 0, 7),
             ],
             // no pagination, website-tag 0 and 1
             [
@@ -184,7 +184,7 @@ class AccountRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->accountData, 0, 4),
+                \array_slice($this->accountData, 0, 4),
                 [0, 1],
             ],
             // no pagination, website-tag 1, tags 3
@@ -220,7 +220,7 @@ class AccountRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->accountData, 0, 7),
+                \array_slice($this->accountData, 0, 7),
             ],
             // no pagination, category 0 and 1
             [
@@ -228,7 +228,7 @@ class AccountRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->accountData, 0, 4),
+                \array_slice($this->accountData, 0, 4),
                 [0, 1],
             ],
             // page 2, no limit, category 0
@@ -237,7 +237,7 @@ class AccountRepositoryTest extends SuluTestCase
                 2,
                 3,
                 null,
-                array_slice($this->accountData, 3, 4),
+                \array_slice($this->accountData, 3, 4),
                 [0],
                 [0],
             ],
@@ -247,7 +247,7 @@ class AccountRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->accountData, 0, 7),
+                \array_slice($this->accountData, 0, 7),
                 [0],
             ],
             // no pagination, website-category 0 or 1
@@ -256,7 +256,7 @@ class AccountRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->accountData, 0, 7),
+                \array_slice($this->accountData, 0, 7),
             ],
             // no pagination, website-category 0 and 1
             [
@@ -264,7 +264,7 @@ class AccountRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->accountData, 0, 4),
+                \array_slice($this->accountData, 0, 4),
                 [0, 1],
                 [0, 1],
             ],
@@ -304,7 +304,7 @@ class AccountRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->accountData, 0, 4),
+                \array_slice($this->accountData, 0, 4),
                 [0],
             ],
             // no pagination, website-category 0 and website-tag 1
@@ -318,7 +318,7 @@ class AccountRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->accountData, 0, 4),
+                \array_slice($this->accountData, 0, 4),
                 [0],
             ],
             // combination website/admin-category/tag
@@ -336,7 +336,7 @@ class AccountRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->accountData, 0, 4),
+                \array_slice($this->accountData, 0, 4),
                 [0, 1],
                 [0, 1],
             ],
@@ -359,8 +359,8 @@ class AccountRepositoryTest extends SuluTestCase
         $repository = $this->em->getRepository(Account::class);
 
         // if tags isset replace the array indexes with database id
-        if (array_key_exists('tags', $filters)) {
-            $filters['tags'] = array_map(
+        if (\array_key_exists('tags', $filters)) {
+            $filters['tags'] = \array_map(
                 function($tag) {
                     return $this->tags[$tag]->getId();
                 },
@@ -369,8 +369,8 @@ class AccountRepositoryTest extends SuluTestCase
         }
 
         // if tags isset replace the array indexes with database id
-        if (array_key_exists('websiteTags', $filters)) {
-            $filters['websiteTags'] = array_map(
+        if (\array_key_exists('websiteTags', $filters)) {
+            $filters['websiteTags'] = \array_map(
                 function($tag) {
                     return $this->tags[$tag]->getId();
                 },
@@ -379,8 +379,8 @@ class AccountRepositoryTest extends SuluTestCase
         }
 
         // if tags isset replace the array indexes with database id
-        if (array_key_exists('categories', $filters)) {
-            $filters['categories'] = array_map(
+        if (\array_key_exists('categories', $filters)) {
+            $filters['categories'] = \array_map(
                 function($category) {
                     return $this->categories[$category]->getId();
                 },
@@ -389,8 +389,8 @@ class AccountRepositoryTest extends SuluTestCase
         }
 
         // if tags isset replace the array indexes with database id
-        if (array_key_exists('websiteCategories', $filters)) {
-            $filters['websiteCategories'] = array_map(
+        if (\array_key_exists('websiteCategories', $filters)) {
+            $filters['websiteCategories'] = \array_map(
                 function($category) {
                     return $this->categories[$category]->getId();
                 },
@@ -400,7 +400,7 @@ class AccountRepositoryTest extends SuluTestCase
 
         $result = $repository->findByFilters($filters, $page, $pageSize, $limit, 'de');
 
-        $length = count($expected);
+        $length = \count($expected);
         $this->assertCount($length, $result);
 
         for ($i = 0; $i < $length; ++$i) {
@@ -418,7 +418,7 @@ class AccountRepositoryTest extends SuluTestCase
     public function findByIdsProvider()
     {
         return [
-            [[0, 1, 2], array_slice($this->accountData, 0, 3)],
+            [[0, 1, 2], \array_slice($this->accountData, 0, 3)],
             [[], []],
             [[15, 99], []],
         ];
@@ -432,7 +432,7 @@ class AccountRepositoryTest extends SuluTestCase
      */
     public function testFindByIds($ids, $expected)
     {
-        for ($i = 0; $i < count($ids); ++$i) {
+        for ($i = 0; $i < \count($ids); ++$i) {
             if (isset($this->accounts[$ids[$i]])) {
                 $ids[$i] = $this->accounts[$ids[$i]]->getId();
             }
@@ -442,9 +442,9 @@ class AccountRepositoryTest extends SuluTestCase
 
         $result = $repository->findByIds($ids);
 
-        $this->assertCount(count($expected), $result);
+        $this->assertCount(\count($expected), $result);
 
-        for ($i = 0; $i < count($expected); ++$i) {
+        for ($i = 0; $i < \count($expected); ++$i) {
             $this->assertEquals($ids[$i], $result[$i]->getId());
             $this->assertEquals($expected[$i][0], $result[$i]->getName());
         }

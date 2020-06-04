@@ -108,7 +108,7 @@ class DocumentRegistry
      */
     public function hasNode(NodeInterface $node, $locale)
     {
-        return array_key_exists($this->getNodeLocaleKey($node->getIdentifier(), $locale), $this->nodeDocumentMap);
+        return \array_key_exists($this->getNodeLocaleKey($node->getIdentifier(), $locale), $this->nodeDocumentMap);
     }
 
     /**
@@ -225,12 +225,12 @@ class DocumentRegistry
      */
     private function assertDocumentExists($document)
     {
-        $oid = spl_object_hash($document);
+        $oid = \spl_object_hash($document);
 
         if (!isset($this->documentMap[$oid])) {
-            throw new \RuntimeException(sprintf(
+            throw new \RuntimeException(\sprintf(
                 'Document "%s" with OID "%s" is not managed, there are "%s" managed objects,',
-                get_class($document), $oid, count($this->documentMap)
+                \get_class($document), $oid, \count($this->documentMap)
             ));
         }
     }
@@ -238,9 +238,9 @@ class DocumentRegistry
     private function assertNodeExists($identifier)
     {
         if (!isset($this->nodeMap[$identifier])) {
-            throw new \RuntimeException(sprintf(
+            throw new \RuntimeException(\sprintf(
                 'Node with identifier "%s" is not managed, there are "%s" managed objects,',
-                $identifier, count($this->documentMap)
+                $identifier, \count($this->documentMap)
             ));
         }
     }
@@ -254,7 +254,7 @@ class DocumentRegistry
      */
     private function getObjectIdentifier($document)
     {
-        return spl_object_hash($document);
+        return \spl_object_hash($document);
     }
 
     /**
@@ -270,24 +270,24 @@ class DocumentRegistry
     private function validateDocumentRegistration($document, $locale, NodeInterface $node, $oid, $uuid)
     {
         if (null === $uuid) {
-            throw new DocumentManagerException(sprintf(
+            throw new DocumentManagerException(\sprintf(
                 'Node "%s" of type "%s" has no UUID. Only referencable nodes can be registered by the document manager',
                 $node->getPath(), $node->getPrimaryNodeType()->getName()
             ));
         }
 
         $documentNodeKey = $this->getNodeLocaleKey($node->getIdentifier(), $locale);
-        if (array_key_exists($uuid, $this->nodeMap) && array_key_exists($documentNodeKey, $this->nodeDocumentMap)) {
+        if (\array_key_exists($uuid, $this->nodeMap) && \array_key_exists($documentNodeKey, $this->nodeDocumentMap)) {
             $registeredDocument = $this->nodeDocumentMap[$documentNodeKey];
 
-            throw new \RuntimeException(sprintf(
+            throw new \RuntimeException(\sprintf(
                 'Document "%s" (%s) is already registered for node "%s" (%s) when trying to register document "%s" (%s)',
-                spl_object_hash($registeredDocument),
-                get_class($registeredDocument),
+                \spl_object_hash($registeredDocument),
+                \get_class($registeredDocument),
                 $uuid,
                 $node->getPath(),
                 $oid,
-                get_class($document)
+                \get_class($document)
             ));
         }
     }
@@ -300,7 +300,7 @@ class DocumentRegistry
      */
     public function markDocumentAsHydrated($document)
     {
-        $oid = spl_object_hash($document);
+        $oid = \spl_object_hash($document);
         $this->hydrationState[$oid] = true;
     }
 
@@ -312,7 +312,7 @@ class DocumentRegistry
      */
     public function unmarkDocumentAsHydrated($document)
     {
-        $oid = spl_object_hash($document);
+        $oid = \spl_object_hash($document);
 
         unset($this->hydrationState[$oid]);
     }
@@ -326,7 +326,7 @@ class DocumentRegistry
      */
     public function isHydrated($document)
     {
-        $oid = spl_object_hash($document);
+        $oid = \spl_object_hash($document);
 
         if (isset($this->hydrationState[$oid])) {
             return true;
@@ -345,6 +345,6 @@ class DocumentRegistry
      */
     private function getNodeLocaleKey($uuid, $locale)
     {
-        return sprintf('%s_%s', $uuid, $locale);
+        return \sprintf('%s_%s', $uuid, $locale);
     }
 }

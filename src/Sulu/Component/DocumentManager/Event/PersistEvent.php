@@ -34,7 +34,7 @@ class PersistEvent extends AbstractMappingEvent
 
     public function getDebugMessage()
     {
-        return sprintf(
+        return \sprintf(
             '%s p:%s',
             parent::getDebugMessage(),
             $this->parentNode ? $this->parentNode->getPath() : '<no parent node>'
@@ -59,7 +59,7 @@ class PersistEvent extends AbstractMappingEvent
     public function getNode()
     {
         if (!$this->node) {
-            throw new \RuntimeException(sprintf(
+            throw new \RuntimeException(\sprintf(
                 'Trying to retrieve node when no node has been set. An event ' .
                 'listener should have set the node when persisting document "%s"',
                 DocumentHelper::getDebugTitle($this->document)
@@ -77,7 +77,7 @@ class PersistEvent extends AbstractMappingEvent
     public function getParentNode()
     {
         if (!$this->parentNode) {
-            throw new \RuntimeException(sprintf(
+            throw new \RuntimeException(\sprintf(
                 'Trying to retrieve parent node when no parent node has been set. An event ' .
                 'listener should have set the node when persisting document "%s"',
                 DocumentHelper::getDebugTitle($this->document)

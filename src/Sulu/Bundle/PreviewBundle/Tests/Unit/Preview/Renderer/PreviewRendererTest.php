@@ -151,8 +151,8 @@ class PreviewRendererTest extends TestCase
         $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
             ->willReturn([$portalInformation->reveal()]);
 
-        $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
-        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
+        $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(true);
+        $this->routeDefaultsProvider->getByEntity(\get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
         $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
@@ -224,8 +224,8 @@ class PreviewRendererTest extends TestCase
         $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
             ->willReturn([$portalInformation->reveal()]);
 
-        $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
-        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
+        $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(true);
+        $this->routeDefaultsProvider->getByEntity(\get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
         $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
@@ -253,8 +253,8 @@ class PreviewRendererTest extends TestCase
         $webspace->addLocalization($localization);
         $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn($webspace);
 
-        $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
-        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
+        $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(true);
+        $this->routeDefaultsProvider->getByEntity(\get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
         $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
@@ -279,7 +279,7 @@ class PreviewRendererTest extends TestCase
         $request = new Request();
         $this->requestStack->getCurrentRequest()->willReturn($request);
 
-        $this->routeDefaultsProvider->supports(get_class($object))->willReturn(true);
+        $this->routeDefaultsProvider->supports(\get_class($object))->willReturn(true);
 
         $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('not_existing', 'de', $this->environment)
             ->willReturn([]);
@@ -297,7 +297,7 @@ class PreviewRendererTest extends TestCase
         $this->requestStack->getCurrentRequest()->willReturn($request);
 
         $object = new \stdClass();
-        $this->routeDefaultsProvider->supports(get_class($object))->willReturn(true);
+        $this->routeDefaultsProvider->supports(\get_class($object))->willReturn(true);
 
         $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
             ->willReturn([]);
@@ -326,8 +326,8 @@ class PreviewRendererTest extends TestCase
         $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
             ->willReturn([$portalInformation->reveal()]);
 
-        $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(false);
-        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
+        $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(false);
+        $this->routeDefaultsProvider->getByEntity(\get_class($object->reveal()), 1, 'de', $object)
             ->shouldNotBeCalled();
 
         $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
@@ -360,8 +360,8 @@ class PreviewRendererTest extends TestCase
         $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
             ->willReturn([$portalInformation->reveal()]);
 
-        $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
-        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
+        $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(true);
+        $this->routeDefaultsProvider->getByEntity(\get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
         $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
@@ -394,8 +394,8 @@ class PreviewRendererTest extends TestCase
         $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
             ->willReturn([$portalInformation->reveal()]);
 
-        $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
-        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
+        $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(true);
+        $this->routeDefaultsProvider->getByEntity(\get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
         $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
@@ -428,8 +428,8 @@ class PreviewRendererTest extends TestCase
         $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
             ->willReturn([$portalInformation->reveal()]);
 
-        $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
-        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
+        $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(true);
+        $this->routeDefaultsProvider->getByEntity(\get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
         $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
@@ -464,8 +464,8 @@ class PreviewRendererTest extends TestCase
         $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
             ->willReturn([$portalInformation->reveal()]);
 
-        $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
-        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
+        $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(true);
+        $this->routeDefaultsProvider->getByEntity(\get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
         $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
@@ -498,8 +498,8 @@ class PreviewRendererTest extends TestCase
         $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
             ->willReturn([$portalInformation->reveal()]);
 
-        $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
-        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
+        $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(true);
+        $this->routeDefaultsProvider->getByEntity(\get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
         $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
@@ -530,7 +530,7 @@ class PreviewRendererTest extends TestCase
                         $this->assertEquals(
                             $expectedValue,
                             $value,
-                            sprintf(
+                            \sprintf(
                                 'Expected for $_SERVER["%s"]: "%s" but "%s" was given',
                                 $key,
                                 $expectedValue,

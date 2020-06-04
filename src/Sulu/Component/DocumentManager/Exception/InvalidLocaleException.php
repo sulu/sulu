@@ -26,7 +26,7 @@ class InvalidLocaleException extends \InvalidArgumentException
      */
     public function __construct($locale)
     {
-        parent::__construct(sprintf('Invalid locale "%s"', $locale));
+        parent::__construct(\sprintf('Invalid locale "%s"', $locale));
 
         $this->locale = $locale;
     }

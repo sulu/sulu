@@ -55,9 +55,9 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
 
     public function getIndexDumpPath($scheme, $host)
     {
-        return sprintf(
+        return \sprintf(
             '%s/%s/%s/sitemap.xml',
-            rtrim($this->baseDirectory, '/'),
+            \rtrim($this->baseDirectory, '/'),
             $scheme,
             $host
         );
@@ -65,9 +65,9 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
 
     public function getDumpPath($scheme, $host, $alias, $page)
     {
-        return sprintf(
+        return \sprintf(
             '%s/%s/%s/sitemaps/%s-%s.xml',
-            rtrim($this->baseDirectory, '/'),
+            \rtrim($this->baseDirectory, '/'),
             $scheme,
             $host,
             $alias,
@@ -80,11 +80,11 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
         $dumpPath = $this->getIndexDumpPath($scheme, $host);
         $sitemap = $this->sitemapRenderer->renderIndex($scheme, $host);
         if (!$sitemap) {
-            $aliases = array_keys($this->sitemapProviderPool->getProviders());
+            $aliases = \array_keys($this->sitemapProviderPool->getProviders());
             $this->dumpFile(
                 $dumpPath,
                 $this->sitemapRenderer->renderSitemap(
-                    reset($aliases),
+                    \reset($aliases),
                     1,
                     $scheme,
                     $host

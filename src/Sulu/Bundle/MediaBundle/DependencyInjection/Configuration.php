@@ -33,7 +33,7 @@ class Configuration implements ConfigurationInterface
                 ->defaultValue('auto')
                 ->validate()
                     ->ifTrue(function($v) {
-                        return !in_array($v, ['auto', 'gd', 'imagick', 'gmagick']);
+                        return !\in_array($v, ['auto', 'gd', 'imagick', 'gmagick']);
                     })
                     ->thenInvalid('Invalid imagine adapted specified: %s')
                 ->end()
@@ -194,7 +194,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end();
 
-        if (class_exists(GoogleStorageAdapter::class)) {
+        if (\class_exists(GoogleStorageAdapter::class)) {
             $storages[] = self::STORAGE_GOOGLE_CLOUD;
 
             $storagesNode
@@ -209,7 +209,7 @@ class Configuration implements ConfigurationInterface
                 ->end();
         }
 
-        if (class_exists(AwsS3Adapter::class)) {
+        if (\class_exists(AwsS3Adapter::class)) {
             $storages[] = self::STORAGE_S3;
             $storagesNode
                 ->arrayNode(self::STORAGE_S3)

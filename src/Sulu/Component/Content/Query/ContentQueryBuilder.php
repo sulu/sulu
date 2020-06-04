@@ -88,7 +88,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
         $this->extensionManager = $extensionManager;
         $this->languageNamespace = $languageNamespace;
 
-        $properties = array_unique(array_merge($this->defaultProperties, $this->properties));
+        $properties = \array_unique(\array_merge($this->defaultProperties, $this->properties));
         $this->translatedProperties = new MultipleTranslatedProperties($properties, $this->languageNamespace);
     }
 
@@ -132,7 +132,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             }
 
             if ($this->published) {
-                $where .= sprintf(
+                $where .= \sprintf(
                     '%s ((page.[%s] = %s OR page.[%s] = %s)',
                     '' !== $where ? 'OR ' : '',
                     $this->getPropertyName('state'),
@@ -159,21 +159,21 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             }
         }
 
-        $mixinTypeWhere = implode(' OR ', array_map(function($mixinType) {
+        $mixinTypeWhere = \implode(' OR ', \array_map(function($mixinType) {
             return 'page.[jcr:mixinTypes] = "' . $mixinType . '"';
         }, static::$mixinTypes));
 
-        $sql2 = sprintf(
+        $sql2 = \sprintf(
             'SELECT %s
              FROM [nt:unstructured] AS page
              WHERE (%s)
                 AND (%s)
                 %s %s',
-            implode(', ', $select),
+            \implode(', ', $select),
             $mixinTypeWhere,
             $where,
-            count($order) > 0 ? 'ORDER BY' : '',
-            implode(', ', $order)
+            \count($order) > 0 ? 'ORDER BY' : '',
+            \implode(', ', $order)
         );
 
         return [$sql2, $additionalFields];
@@ -226,7 +226,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
         $result = '';
 
         $name = $this->getTranslatedProperty($nodeNameProperty, $locale)->getName();
-        if (!in_array($name, $names)) {
+        if (!\in_array($name, $names)) {
             $names[] = $name;
             $result .= ', ' . $this->buildSelector($name);
         }
@@ -235,7 +235,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             $urlProperty = $structure->getPropertyByTagName('sulu.rlp');
             $name = $this->getTranslatedProperty($urlProperty, $locale)->getName();
 
-            if ('resource_locator' !== $urlProperty->getContentTypeName() && !in_array($name, $names)) {
+            if ('resource_locator' !== $urlProperty->getContentTypeName() && !\in_array($name, $names)) {
                 $names[] = $name;
                 $result .= ', ' . $this->buildSelector($name);
             }
@@ -267,7 +267,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
      */
     protected function buildSelector($name)
     {
-        return sprintf('page.[%s]', $name);
+        return \sprintf('page.[%s]', $name);
     }
 
     /**

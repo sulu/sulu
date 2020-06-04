@@ -51,8 +51,8 @@ class SuluRouteExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu_route.mappings', $config['mappings']);
         $container->setParameter(
             'sulu_route.resource_key_mappings',
-            array_flip(
-                array_map(function($mapping) {
+            \array_flip(
+                \array_map(function($mapping) {
                     return $mapping['resource_key'];
                 }, $config['mappings'])
             )
@@ -79,7 +79,7 @@ class SuluRouteExtension extends Extension implements PrependExtensionInterface
 
         $bundles = $container->getParameter('kernel.bundles');
 
-        if ('task' === $pageRouteCascade && !array_key_exists('SuluAutomationBundle', $bundles)) {
+        if ('task' === $pageRouteCascade && !\array_key_exists('SuluAutomationBundle', $bundles)) {
             throw new InvalidConfigurationException(
                 'You need to install the SuluAutomationBundle to use task cascading!'
             );

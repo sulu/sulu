@@ -47,7 +47,7 @@ class CacheManager implements CacheManagerInterface
     public function invalidateReference(string $alias, string $id): void
     {
         if (!Uuid::isValid($id)) {
-            $id = sprintf('%s-%s', $alias, $id);
+            $id = \sprintf('%s-%s', $alias, $id);
         }
 
         $this->invalidateTag($id);

@@ -21,7 +21,7 @@ trait PurgeDatabaseTrait
 {
     protected static function purgeDatabase(): void
     {
-        if (!class_exists(ORMPurger::class)) {
+        if (!\class_exists(ORMPurger::class)) {
             throw new \RuntimeException(
                 'The composer package "doctrine/data-fixtures" is required to purge the database'
             );

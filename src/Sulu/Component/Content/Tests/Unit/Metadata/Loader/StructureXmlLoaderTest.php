@@ -187,7 +187,7 @@ class StructureXmlLoaderTest extends TestCase
     {
         $result = $this->load('template_with_nested_sections.xml');
 
-        $this->assertEquals(['title', 'test21', 'test221'], array_keys($result->getProperties()));
+        $this->assertEquals(['title', 'test21', 'test221'], \array_keys($result->getProperties()));
     }
 
     public function testLoadInvalidIgnore()

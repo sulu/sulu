@@ -58,7 +58,7 @@ class ListRestHelper implements ListRestHelperInterface
     {
         $idsString = $this->getRequest()->get('ids');
 
-        return (null !== $idsString) ? array_filter(explode(',', $idsString)) : null;
+        return (null !== $idsString) ? \array_filter(\explode(',', $idsString)) : null;
     }
 
     /**
@@ -70,7 +70,7 @@ class ListRestHelper implements ListRestHelperInterface
     {
         $excludedIdsString = $this->getRequest()->get('excludedIds');
 
-        return (null !== $excludedIdsString) ? array_filter(explode(',', $excludedIdsString)) : [];
+        return (null !== $excludedIdsString) ? \array_filter(\explode(',', $excludedIdsString)) : [];
     }
 
     /**
@@ -108,7 +108,7 @@ class ListRestHelper implements ListRestHelperInterface
         // set default limit to count of ids if result is restricted to specific ids
         $ids = $this->getIds();
         if (null != $ids) {
-            $default = count($ids);
+            $default = \count($ids);
         }
 
         return $this->getRequest()->get('limit', $default);
@@ -146,7 +146,7 @@ class ListRestHelper implements ListRestHelperInterface
     {
         $fields = $this->getRequest()->get('fields');
 
-        return (null != $fields) ? explode(',', $fields) : null;
+        return (null != $fields) ? \explode(',', $fields) : null;
     }
 
     /**
@@ -166,6 +166,6 @@ class ListRestHelper implements ListRestHelperInterface
     {
         $searchFields = $this->getRequest()->get('searchFields');
 
-        return (null != $searchFields) ? explode(',', $searchFields) : [];
+        return (null != $searchFields) ? \explode(',', $searchFields) : [];
     }
 }

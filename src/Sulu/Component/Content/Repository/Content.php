@@ -178,7 +178,7 @@ class Content implements \ArrayAccess
      */
     public function getPropertyWithDefault($name, $default = null)
     {
-        if (!array_key_exists($name, $this->data)) {
+        if (!\array_key_exists($name, $this->data)) {
             return $default;
         }
 
@@ -333,7 +333,7 @@ class Content implements \ArrayAccess
      */
     public function getMapping()
     {
-        return implode(',', array_keys($this->data));
+        return \implode(',', \array_keys($this->data));
     }
 
     /**
@@ -386,7 +386,7 @@ class Content implements \ArrayAccess
 
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $this->data);
+        return \array_key_exists($offset, $this->data);
     }
 
     public function offsetGet($offset)

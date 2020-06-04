@@ -179,13 +179,13 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      */
     public function getByIds($ids, $locale)
     {
-        if (!is_array($ids) || 0 === count($ids)) {
+        if (!\is_array($ids) || 0 === \count($ids)) {
             return [];
         }
 
         $accounts = $this->accountRepository->findByIds($ids);
 
-        return array_map(
+        return \array_map(
             function($account) use ($locale) {
                 return $this->getApiObject($account, $locale);
             },
@@ -206,7 +206,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      */
     public function getByIdAndInclude($id, $locale, $includes)
     {
-        $account = $this->accountRepository->findAccountById($id, in_array('contacts', $includes));
+        $account = $this->accountRepository->findAccountById($id, \in_array('contacts', $includes));
 
         if (!$account) {
             throw new EntityNotFoundException($this->accountRepository->getClassName(), $id);
@@ -269,15 +269,15 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     public function setMedias(Account $account, $mediaIds)
     {
         $foundMedias = $this->mediaRepository->findById($mediaIds);
-        $foundMediaIds = array_map(
+        $foundMediaIds = \array_map(
             function($mediaEntity) {
                 return $mediaEntity->getId();
             },
             $foundMedias
         );
 
-        if ($missingMediaIds = array_diff($mediaIds, $foundMediaIds)) {
-            throw new EntityNotFoundException($this->mediaRepository->getClassName(), reset($missingMediaIds));
+        if ($missingMediaIds = \array_diff($mediaIds, $foundMediaIds)) {
+            throw new EntityNotFoundException($this->mediaRepository->getClassName(), \reset($missingMediaIds));
         }
 
         $account->getMedias()->clear();
@@ -354,7 +354,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     {
         $entities = $this->accountRepository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options);
 
-        return array_map(
+        return \array_map(
             function($contact) use ($locale) {
                 return $this->getApiObject($contact, $locale);
             },

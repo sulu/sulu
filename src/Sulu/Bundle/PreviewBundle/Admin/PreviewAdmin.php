@@ -65,7 +65,7 @@ class PreviewAdmin extends Admin
             ],
             'debounceDelay' => $this->previewDelay,
             'mode' => $this->previewMode,
-            'audienceTargeting' => array_key_exists('SuluAudienceTargetingBundle', $this->bundles),
+            'audienceTargeting' => \array_key_exists('SuluAudienceTargetingBundle', $this->bundles),
         ];
     }
 }

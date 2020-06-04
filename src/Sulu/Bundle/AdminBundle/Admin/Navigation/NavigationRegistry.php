@@ -75,7 +75,7 @@ class NavigationRegistry
             $admin->configureNavigationItems($navigationItemCollection);
         }
 
-        $navigationItems = array_filter($navigationItemCollection->all(), function($navigationItem) {
+        $navigationItems = \array_filter($navigationItemCollection->all(), function($navigationItem) {
             return $navigationItem->getChildren() || $navigationItem->getView();
         });
 
@@ -83,11 +83,11 @@ class NavigationRegistry
             $this->processNavigationItem($navigationItem);
         }
 
-        usort(
+        \usort(
             $navigationItems,
             function(NavigationItem $a, NavigationItem $b) {
-                $aPosition = $a->getPosition() ?? PHP_INT_MAX;
-                $bPosition = $b->getPosition() ?? PHP_INT_MAX;
+                $aPosition = $a->getPosition() ?? \PHP_INT_MAX;
+                $bPosition = $b->getPosition() ?? \PHP_INT_MAX;
 
                 return $aPosition - $bPosition;
             }
@@ -112,7 +112,7 @@ class NavigationRegistry
             $mainPath = $this->viewRegistry->findViewByName($mainView)->getPath();
             if ('/' !== $mainPath) {
                 foreach ($this->viewRegistry->getViews() as $view) {
-                    if (0 === strpos($view->getPath(), $mainPath)) {
+                    if (0 === \strpos($view->getPath(), $mainPath)) {
                         $navigationItem->addChildView($view->getName());
                     }
                 }

@@ -46,7 +46,7 @@ class S3AdapterMock extends AwsS3Adapter implements AdapterInterface
      */
     public function has($path)
     {
-        return array_key_exists($path, $this->objectMap);
+        return \array_key_exists($path, $this->objectMap);
     }
 
     public function write($path, $contents, Config $config)
@@ -54,7 +54,7 @@ class S3AdapterMock extends AwsS3Adapter implements AdapterInterface
         $this->objectMap[$path] = $contents;
 
         $type = 'file';
-        $result = compact('contents', 'type', 'path');
+        $result = \compact('contents', 'type', 'path');
 
         if ($visibility = $config->get('visibility')) {
             $result['visibility'] = $visibility;
@@ -70,7 +70,7 @@ class S3AdapterMock extends AwsS3Adapter implements AdapterInterface
 
     public function read($path)
     {
-        if (array_key_exists($path, $this->objectMap)) {
+        if (\array_key_exists($path, $this->objectMap)) {
             return ['contents' => $this->objectMap[$path]];
         }
 
@@ -121,7 +121,7 @@ class S3AdapterMock extends AwsS3Adapter implements AdapterInterface
 
     public function setVisibility($path, $visibility)
     {
-        return compact('visibility');
+        return \compact('visibility');
     }
 
     public function createDir($dirname, Config $config)

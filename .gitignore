@@ -29,6 +29,7 @@ node_modules/
 yarn.lock
 .php_cs.cache
 .eslintcache
+.env.local
 
 # phpunit
 .phpunit

@@ -19,13 +19,13 @@ use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Symfony\Component\HttpFoundation\Response;
 
-@trigger_error(
-    sprintf(
+@\trigger_error(
+    \sprintf(
         'The "%s" class is deprecated since Sulu 2.0, use data from "%s" instead.',
         LocalizationController::class,
         AdminController::class
     ),
-    E_USER_DEPRECATED
+    \E_USER_DEPRECATED
 );
 
 /**
@@ -55,7 +55,7 @@ class LocalizationController extends AbstractRestController implements ClassReso
     public function cgetAction()
     {
         $representation = new CollectionRepresentation(
-            array_values($this->localizationManager->getLocalizations()),
+            \array_values($this->localizationManager->getLocalizations()),
             'localizations'
         );
 

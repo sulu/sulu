@@ -26,9 +26,9 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
 
     public function load($resource, $type = null)
     {
-        @trigger_error(
+        @\trigger_error(
             'XmlFormatLoader10 is deprecated since version 1.4 and will be removed in 2.0. Use XmlFormatLoader11 instead.',
-            E_USER_DEPRECATED
+            \E_USER_DEPRECATED
         );
 
         return parent::load($resource, $type);
@@ -70,10 +70,10 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
                 $forceRatio = static::SCALE_FORCE_RATIO_DEFAULT;
                 $retina = static::SCALE_RETINA_DEFAULT;
                 if (null !== $xNode && '' !== $xNode->nodeValue) {
-                    $xValue = intval($xNode->nodeValue);
+                    $xValue = \intval($xNode->nodeValue);
                 }
                 if (null !== $yNode && '' !== $yNode->nodeValue) {
-                    $yValue = intval($yNode->nodeValue);
+                    $yValue = \intval($yNode->nodeValue);
                 }
                 if (null === $xValue && null === $yValue) {
                     throw new MissingScaleDimensionException();

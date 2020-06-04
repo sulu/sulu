@@ -27,7 +27,7 @@ class RoleNameAlreadyExistsException extends \Exception
     public function __construct($name)
     {
         $this->name = $name;
-        parent::__construct(sprintf('Role "%s" already exists', $name), 1101);
+        parent::__construct(\sprintf('Role "%s" already exists', $name), 1101);
     }
 
     /**

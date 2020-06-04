@@ -70,7 +70,7 @@ class HtmlTagExtractorTest extends TestCase
         ];
 
         return [
-            ['<html><body>' . implode($tags) . '</body></html>', ['tag' => 11, 'link' => 2], 15],
+            ['<html><body>' . \implode($tags) . '</body></html>', ['tag' => 11, 'link' => 2], 15],
         ];
     }
 
@@ -82,7 +82,7 @@ class HtmlTagExtractorTest extends TestCase
         $extractor = new HtmlTagExtractor('sulu');
         $result = $extractor->extract($html);
 
-        $this->assertCount(count($counts), $result);
+        $this->assertCount(\count($counts), $result);
         foreach ($result as $tagMatchGroup) {
             $this->assertCount($counts[$tagMatchGroup->getTagName()], $tagMatchGroup->getTags());
         }

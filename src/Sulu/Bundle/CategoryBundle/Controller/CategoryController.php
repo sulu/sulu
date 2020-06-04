@@ -123,7 +123,7 @@ class CategoryController extends AbstractRestController implements ClassResource
 
         if ('true' == $request->get('flat')) {
             $rootId = ($rootKey) ? $this->categoryManager->findByKey($rootKey)->getId() : null;
-            $expandedIds = array_filter(explode(',', $request->get('expandedIds', $request->get('selectedIds'))));
+            $expandedIds = \array_filter(\explode(',', $request->get('expandedIds', $request->get('selectedIds'))));
             $list = $this->getListRepresentation(
                 $request,
                 $locale,
@@ -133,7 +133,7 @@ class CategoryController extends AbstractRestController implements ClassResource
                 $includeRoot
             );
         } elseif ($request->query->has('ids')) {
-            $entities = $this->categoryManager->findByIds(explode(',', $request->query->get('ids')));
+            $entities = $this->categoryManager->findByIds(\explode(',', $request->query->get('ids')));
             $categories = $this->categoryManager->getApiObjects($entities, $locale);
             $list = new CollectionRepresentation($categories, self::$entityKey);
         } else {
@@ -155,7 +155,7 @@ class CategoryController extends AbstractRestController implements ClassResource
                     return $this->move($id, $request);
                     break;
                 default:
-                    throw new RestException(sprintf('Unrecognized action: "%s"', $action));
+                    throw new RestException(\sprintf('Unrecognized action: "%s"', $action));
             }
         } catch (RestException $ex) {
             $view = $this->view($ex->toArray(), 400);
@@ -208,7 +208,7 @@ class CategoryController extends AbstractRestController implements ClassResource
     {
         $mediasData = $request->get('medias');
         $medias = null;
-        if ($mediasData && array_key_exists('ids', $mediasData)) {
+        if ($mediasData && \array_key_exists('ids', $mediasData)) {
             $medias = $mediasData['ids'];
         }
 
@@ -245,14 +245,14 @@ class CategoryController extends AbstractRestController implements ClassResource
         $idsToExpand = [$parentId];
         if ($expandedIds) {
             $pathIds = $this->categoryRepository->findCategoryIdsBetween([$parentId], $expandedIds);
-            $idsToExpand = array_merge($idsToExpand, $pathIds);
+            $idsToExpand = \array_merge($idsToExpand, $pathIds);
             if ($expandSelf) {
-                $idsToExpand = array_merge($idsToExpand, $expandedIds);
+                $idsToExpand = \array_merge($idsToExpand, $expandedIds);
             }
         }
 
         if ('csv' === $request->getRequestFormat()) {
-            $idsToExpand = array_filter($idsToExpand);
+            $idsToExpand = \array_filter($idsToExpand);
         }
 
         // generate expressions for collected parent-categories
@@ -267,9 +267,9 @@ class CategoryController extends AbstractRestController implements ClassResource
 
         if (!$request->get('search')) {
             // expand collected parents if search is not set
-            if (count($parentExpressions) >= 2) {
+            if (\count($parentExpressions) >= 2) {
                 $listBuilder->addExpression($listBuilder->createOrExpression($parentExpressions));
-            } elseif (count($parentExpressions) >= 1) {
+            } elseif (\count($parentExpressions) >= 1) {
                 $listBuilder->addExpression($parentExpressions[0]);
             }
         } elseif ($request->get('search') && $parentId && !$expandedIds) {

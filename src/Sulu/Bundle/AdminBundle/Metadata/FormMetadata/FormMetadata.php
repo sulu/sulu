@@ -156,7 +156,7 @@ class FormMetadata extends AbstractMetadata
             $mergedForm->setTitle($this->title);
         }
 
-        $mergedForm->setItems(array_merge($this->getItems(), $otherForm->getItems()));
+        $mergedForm->setItems(\array_merge($this->getItems(), $otherForm->getItems()));
         $mergedForm->setSchema($this->getSchema()->merge($otherForm->getSchema()));
 
         return $mergedForm;

@@ -104,7 +104,7 @@ class RouteSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
         $options = $event->getOptions();
-        if (!$document instanceof RouteBehavior || !array_key_exists('path', $options)) {
+        if (!$document instanceof RouteBehavior || !\array_key_exists('path', $options)) {
             return;
         }
 

@@ -48,7 +48,7 @@ class DeviceTypeRule implements RuleInterface
 
     public function evaluate(array $options)
     {
-        if (!array_key_exists(static::DEVICE_TYPE, $options)) {
+        if (!\array_key_exists(static::DEVICE_TYPE, $options)) {
             return false;
         }
 
@@ -71,7 +71,7 @@ class DeviceTypeRule implements RuleInterface
 
     public function getType()
     {
-        return new SingleSelect(static::DEVICE_TYPE, array_map(function($deviceTypes) {
+        return new SingleSelect(static::DEVICE_TYPE, \array_map(function($deviceTypes) {
             return [
                 'id' => $deviceTypes,
                 'name' => $this->translator->trans(

@@ -53,8 +53,8 @@ class DoctrineInExpressionTest extends TestCase
         $whereExpression = new DoctrineInExpression($fieldDescriptor, $values);
 
         $statement = $whereExpression->getStatement($this->queryBuilder);
-        $result = preg_match(
-            sprintf('/^SuluCoreBundle_Example\.name IN \(:name\S{%s}\)/', $this->uniqueIdLength),
+        $result = \preg_match(
+            \sprintf('/^SuluCoreBundle_Example\.name IN \(:name\S{%s}\)/', $this->uniqueIdLength),
             $statement
         );
 
@@ -68,7 +68,7 @@ class DoctrineInExpressionTest extends TestCase
         $whereExpression = new DoctrineInExpression($fieldDescriptor, $values);
 
         $statement = $whereExpression->getStatement($this->queryBuilder);
-        $result = preg_match(
+        $result = \preg_match(
             '/^SuluCoreBundle_Example\.name IS NULL/',
             $statement
         );

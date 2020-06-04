@@ -104,7 +104,7 @@ class PageAdmin extends Admin
     public function configureViews(ViewCollection $viewCollection): void
     {
         /** @var Webspace $firstWebspace */
-        $firstWebspace = current($this->webspaceManager->getWebspaceCollection()->getWebspaces());
+        $firstWebspace = \current($this->webspaceManager->getWebspaceCollection()->getWebspaces());
         $publishDisplayCondition = '(!_permissions || _permissions.live)';
 
         $formToolbarActionsWithType = [
@@ -308,7 +308,7 @@ class PageAdmin extends Admin
             ];
         }
 
-        return array_merge(
+        return \array_merge(
             [
                 self::SULU_ADMIN_SECURITY_SYSTEM => [
                     'Webspaces' => $webspaceContexts,
@@ -320,7 +320,7 @@ class PageAdmin extends Admin
 
     public function getSecurityContextsWithPlaceholder()
     {
-        return array_merge(
+        return \array_merge(
             [
                 self::SULU_ADMIN_SECURITY_SYSTEM => [
                     'Webspaces' => [

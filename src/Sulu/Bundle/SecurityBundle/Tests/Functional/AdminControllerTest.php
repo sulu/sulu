@@ -21,7 +21,7 @@ class AdminControllerTest extends SuluTestCase
         $client->request('GET', '/admin/config');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $routeConfig = $response->sulu_admin->routes;
 
@@ -43,7 +43,7 @@ class AdminControllerTest extends SuluTestCase
         $client->request('GET', '/admin/metadata/form/user_details');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $form = $response->form;
 
@@ -64,7 +64,7 @@ class AdminControllerTest extends SuluTestCase
         $client->request('GET', '/admin/metadata/form/role_details');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $form = $response->form;
 

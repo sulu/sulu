@@ -36,7 +36,7 @@ class WrongSnippetTypeException extends \Exception
     public function __construct($actual, $expected, SnippetDocument $document)
     {
         parent::__construct(
-            sprintf('Wrong snippet type were detected (actual: "%s", expected: "%s").', $actual, $expected)
+            \sprintf('Wrong snippet type were detected (actual: "%s", expected: "%s").', $actual, $expected)
         );
 
         $this->actual = $actual;

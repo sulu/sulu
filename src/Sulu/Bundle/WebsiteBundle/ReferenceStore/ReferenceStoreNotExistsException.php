@@ -33,10 +33,10 @@ class ReferenceStoreNotExistsException extends \Exception
     public function __construct($alias, $availableStores)
     {
         parent::__construct(
-            sprintf(
+            \sprintf(
                 'ReferenceStore with alias "%s" not exists. Available stores: "%s"',
                 $alias,
-                implode('", "', $availableStores)
+                \implode('", "', $availableStores)
             )
         );
 

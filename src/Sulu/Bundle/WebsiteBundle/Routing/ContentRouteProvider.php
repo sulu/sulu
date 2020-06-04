@@ -102,7 +102,7 @@ class ContentRouteProvider implements RouteProviderInterface
 
         $pathInfo = $this->decodePathInfo($request->getPathInfo());
         $htmlRedirect = $pathInfo !== $prefix . $resourceLocator
-                        && in_array($request->getRequestFormat(), ['htm', 'html']);
+                        && \in_array($request->getRequestFormat(), ['htm', 'html']);
 
         if ($htmlRedirect
             || RequestAnalyzerInterface::MATCH_TYPE_REDIRECT == $matchType
@@ -123,7 +123,7 @@ class ContentRouteProvider implements RouteProviderInterface
             /** @var PageDocument $document */
             $document = $this->documentManager->find(
                 $resourceLocatorStrategy->loadByResourceLocator(
-                    rtrim($resourceLocator, '/'),
+                    \rtrim($resourceLocator, '/'),
                     $portal->getWebspace()->getKey(),
                     $locale
                 ),
@@ -139,13 +139,13 @@ class ContentRouteProvider implements RouteProviderInterface
                 return $collection;
             }
 
-            if (preg_match('/\/$/', $resourceLocator) && ('/' !== $resourceLocator || $prefix)) {
+            if (\preg_match('/\/$/', $resourceLocator) && ('/' !== $resourceLocator || $prefix)) {
                 // redirect page to page without slash at the end
-                $url = $prefix . rtrim($resourceLocator, '/');
+                $url = $prefix . \rtrim($resourceLocator, '/');
                 if ($request->getQueryString()) {
                     $url .= '?' . $request->getQueryString();
                 }
-                $collection->add('redirect_' . uniqid(), $this->getRedirectRoute($request, $url));
+                $collection->add('redirect_' . \uniqid(), $this->getRedirectRoute($request, $url));
             } elseif (RedirectType::INTERNAL === $document->getRedirectType()) {
                 $redirectUrl = $this->webspaceManager->findUrlByResourceLocator(
                     $document->getRedirectTarget()->getResourceSegment(),
@@ -194,7 +194,7 @@ class ContentRouteProvider implements RouteProviderInterface
         } catch (ResourceLocatorMovedException $exc) {
             // old url resource was moved
             $collection->add(
-                $exc->getNewResourceLocatorUuid() . '_' . uniqid(),
+                $exc->getNewResourceLocatorUuid() . '_' . \uniqid(),
                 $this->getRedirectRoute($request, $prefix . $exc->getNewResourceLocator())
             );
         } catch (RepositoryException $exc) {
@@ -276,6 +276,6 @@ class ContentRouteProvider implements RouteProviderInterface
             return '';
         }
 
-        return '/' . ltrim(rawurldecode($pathInfo), '/');
+        return '/' . \ltrim(\rawurldecode($pathInfo), '/');
     }
 }

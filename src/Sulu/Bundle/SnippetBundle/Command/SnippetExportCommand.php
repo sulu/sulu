@@ -46,6 +46,6 @@ class SnippetExportCommand extends Command
         $locale = $input->getArgument('locale');
         $file = $this->snippetExporter->export($locale, $output, '1.2.xliff');
 
-        file_put_contents($target, $file);
+        \file_put_contents($target, $file);
     }
 }

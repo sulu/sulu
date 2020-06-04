@@ -216,16 +216,16 @@ class MediaManager implements MediaManagerInterface
     {
         $media = [];
         $mediaEntities = $this->mediaRepository->findMedia(['pagination' => false, 'ids' => $ids]);
-        $this->count = count($mediaEntities);
+        $this->count = \count($mediaEntities);
         foreach ($mediaEntities as $mediaEntity) {
-            $media[array_search($mediaEntity->getId(), $ids)] = $this->addFormatsAndUrl(
+            $media[\array_search($mediaEntity->getId(), $ids)] = $this->addFormatsAndUrl(
                 new Media($mediaEntity, $locale, null)
             );
         }
 
-        ksort($media);
+        \ksort($media);
 
-        return array_values($media);
+        return \array_values($media);
     }
 
     public function get($locale, $filter = [], $limit = null, $offset = null)
@@ -273,7 +273,7 @@ class MediaManager implements MediaManagerInterface
 
         try {
             // if the file is a video we add the duration
-            if (fnmatch('video/*', $mimeType) && $this->ffprobe) {
+            if (\fnmatch('video/*', $mimeType) && $this->ffprobe) {
                 $properties['duration'] = $this->ffprobe->format($uploadedFile->getPathname())->get('duration');
 
                 // Dimensions
@@ -346,7 +346,7 @@ class MediaManager implements MediaManagerInterface
                 $currentFileVersion->getStorageOptions()
             );
             $data['name'] = $uploadedFile->getClientOriginalName();
-            $data['size'] = intval($uploadedFile->getSize());
+            $data['size'] = \intval($uploadedFile->getSize());
             $data['mimeType'] = $uploadedFile->getMimeType();
             $data['properties'] = $this->getProperties($uploadedFile);
             $data['type'] = [
@@ -382,7 +382,7 @@ class MediaManager implements MediaManagerInterface
             unset($data['version']);
             unset($data['mimeType']);
             unset($data['storageOptions']);
-            $data['changed'] = date('Y-m-d H:i:s');
+            $data['changed'] = \date('Y-m-d H:i:s');
 
             if ((isset($data['focusPointX']) && $data['focusPointX'] != $currentFileVersion->getFocusPointX())
                 || (isset($data['focusPointY']) && $data['focusPointY'] != $currentFileVersion->getFocusPointY())
@@ -553,7 +553,7 @@ class MediaManager implements MediaManagerInterface
                         break;
                     case 'tags':
                         $media->removeTags();
-                        if (count($value)) {
+                        if (\count($value)) {
                             foreach ($value as $tag) {
                                 $tagEntity = $this->tagManager->findOrCreateByName($tag, $user->getId());
                                 $media->addTag($tagEntity);
@@ -595,7 +595,7 @@ class MediaManager implements MediaManagerInterface
                         $categoryIds = $value;
                         $media->removeCategories();
 
-                        if (is_array($categoryIds) && !empty($categoryIds)) {
+                        if (\is_array($categoryIds) && !empty($categoryIds)) {
                             /** @var CategoryRepositoryInterface $repository */
                             $categories = $this->categoryRepository->findCategoriesByIds($categoryIds);
 
@@ -608,7 +608,7 @@ class MediaManager implements MediaManagerInterface
                         $targetGroupIds = $value;
                         $media->removeTargetGroups();
 
-                        if (is_array($targetGroupIds) && !empty($targetGroupIds)) {
+                        if (\is_array($targetGroupIds) && !empty($targetGroupIds)) {
                             $targetGroups = $this->targetGroupRepository->findByIds($targetGroupIds);
 
                             foreach ($targetGroups as $targetGroup) {
@@ -834,14 +834,14 @@ class MediaManager implements MediaManagerInterface
 
     public function getUrl($id, $fileName, $version)
     {
-        return str_replace(
+        return \str_replace(
             [
                 '{id}',
                 '{slug}',
             ],
             [
                 $id,
-                rawurlencode($fileName),
+                \rawurlencode($fileName),
             ],
             $this->downloadPath
         ) . '?v=' . $version;
@@ -880,8 +880,8 @@ class MediaManager implements MediaManagerInterface
      */
     private function getNormalizedFileName($originalFileName)
     {
-        if (false !== strpos($originalFileName, '.')) {
-            $pathParts = pathinfo($originalFileName);
+        if (false !== \strpos($originalFileName, '.')) {
+            $pathParts = \pathinfo($originalFileName);
             $fileName = $this->pathCleaner->cleanup($pathParts['filename']);
             $fileName .= '.' . $pathParts['extension'];
         } else {

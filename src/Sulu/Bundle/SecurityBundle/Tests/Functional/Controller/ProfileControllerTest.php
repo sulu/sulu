@@ -37,7 +37,7 @@ class ProfileControllerTest extends SuluTestCase
         );
 
         $this->assertEquals('setting-key', $userSetting->getKey());
-        $this->assertEquals('setting-value', json_decode($userSetting->getValue()));
+        $this->assertEquals('setting-value', \json_decode($userSetting->getValue()));
     }
 
     public function testGet()
@@ -46,7 +46,7 @@ class ProfileControllerTest extends SuluTestCase
 
         $client->request('GET', '/api/profile');
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals('test', $response->username);
@@ -74,7 +74,7 @@ class ProfileControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals('Hans', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
@@ -100,7 +100,7 @@ class ProfileControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(409, $client->getResponse());
         $this->assertEquals(
             'The email "" is not unique!',
@@ -125,7 +125,7 @@ class ProfileControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(409, $client->getResponse());
         $this->assertEquals(
             'a username has to be unique!',
@@ -148,7 +148,7 @@ class ProfileControllerTest extends SuluTestCase
                 'locale' => 'de',
             ]
         );
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(400, $client->getResponse());
         $this->assertEquals(
@@ -173,7 +173,7 @@ class ProfileControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(400, $client->getResponse());
         $this->assertEquals(
@@ -198,7 +198,7 @@ class ProfileControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(400, $client->getResponse());
         $this->assertEquals(
@@ -223,7 +223,7 @@ class ProfileControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(400, $client->getResponse());
         $this->assertEquals(
@@ -248,7 +248,7 @@ class ProfileControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(400, $client->getResponse());
         $this->assertEquals(
@@ -273,7 +273,7 @@ class ProfileControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(200, $client->getResponse());
     }
@@ -295,7 +295,7 @@ class ProfileControllerTest extends SuluTestCase
         );
 
         $this->assertEquals('setting-key', $userSetting->getKey());
-        $this->assertEquals('setting-value', json_decode($userSetting->getValue()));
+        $this->assertEquals('setting-value', \json_decode($userSetting->getValue()));
 
         $client->request(
             'DELETE',

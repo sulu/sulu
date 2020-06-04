@@ -22,7 +22,7 @@ class AdminControllerTest extends SuluTestCase
         $client->request('GET', '/admin/metadata/form/tag_details');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $form = $response->form;
 

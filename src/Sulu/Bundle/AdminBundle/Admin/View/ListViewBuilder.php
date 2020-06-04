@@ -201,13 +201,13 @@ class ListViewBuilder implements ListViewBuilderInterface
             );
         }
 
-        if ($this->view->getOption('locales') && false === strpos($this->view->getPath(), ':locale')) {
+        if ($this->view->getOption('locales') && false === \strpos($this->view->getPath(), ':locale')) {
             throw new \DomainException(
                 'A view for a list needs a ":locale" placeholder in its URL if some "locales" have been set.'
             );
         }
 
-        if (!$this->view->getOption('locales') && false !== strpos($this->view->getPath(), ':locale')) {
+        if (!$this->view->getOption('locales') && false !== \strpos($this->view->getPath(), ':locale')) {
             throw new \DomainException(
                 'A view for a list cannot have a ":locale" placeholder in its URL if no "locales" have been set.'
             );

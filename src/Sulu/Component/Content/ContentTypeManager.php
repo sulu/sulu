@@ -48,10 +48,10 @@ class ContentTypeManager implements ContentTypeManagerInterface
     public function get($alias)
     {
         if (!isset($this->aliasServiceIdMap[$alias])) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 'Content type with alias "%s" has not been registered. Known content types are: "%s"',
                 $alias,
-                implode('", "', array_keys($this->aliasServiceIdMap))
+                \implode('", "', \array_keys($this->aliasServiceIdMap))
             ));
         }
 
@@ -67,6 +67,6 @@ class ContentTypeManager implements ContentTypeManagerInterface
 
     public function getAll(): array
     {
-        return array_keys($this->aliasServiceIdMap);
+        return \array_keys($this->aliasServiceIdMap);
     }
 }

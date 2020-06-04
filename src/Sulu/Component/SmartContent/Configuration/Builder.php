@@ -92,9 +92,9 @@ class Builder implements BuilderInterface
     public function enableSorting(array $sorting)
     {
         $this->configuration->setSorting(
-            array_map(
+            \array_map(
                 function($item) {
-                    return new PropertyParameter($item['column'], $item['title'] ?: ucfirst($item['column']));
+                    return new PropertyParameter($item['column'], $item['title'] ?: \ucfirst($item['column']));
                 },
                 $sorting
             )

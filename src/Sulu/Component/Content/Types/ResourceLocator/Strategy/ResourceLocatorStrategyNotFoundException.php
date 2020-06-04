@@ -32,7 +32,7 @@ class ResourceLocatorStrategyNotFoundException extends \Exception
      */
     public function __construct($name, $available)
     {
-        parent::__construct(sprintf('Strategy "%s" not found. Available: ["%s"]', $name, implode('", "', $available)));
+        parent::__construct(\sprintf('Strategy "%s" not found. Available: ["%s"]', $name, \implode('", "', $available)));
 
         $this->name = $name;
         $this->available = $available;

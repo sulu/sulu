@@ -118,7 +118,7 @@ class Structure implements StructureInterface
             $value = $value->getValue();
         }
 
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
             return $value;
         }
 

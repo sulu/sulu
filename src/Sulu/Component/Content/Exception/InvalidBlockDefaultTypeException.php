@@ -33,13 +33,13 @@ class InvalidBlockDefaultTypeException extends \Exception
      */
     public function __construct(string $name, string $defaultType, array $availableTypes)
     {
-        parent::__construct(sprintf(
+        parent::__construct(\sprintf(
             'Block "%s" has invalid default-type "%s". Available types are %s',
             $name,
             $defaultType,
-            implode(
+            \implode(
                 ', ',
-                array_map(function($availableType) {
+                \array_map(function($availableType) {
                     return '"' . $availableType . '"';
                 }, $availableTypes)
             )

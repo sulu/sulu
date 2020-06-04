@@ -108,7 +108,7 @@ class PermissionController implements ClassResourceInterface
             $webspace = $request->get('webspace');
 
             $rawSecurityContext = $this->resources[$resourceKey]['security_context'] ?? null;
-            $securityContext = $rawSecurityContext ? str_replace('#webspace#', $webspace, $rawSecurityContext) : null;
+            $securityContext = $rawSecurityContext ? \str_replace('#webspace#', $webspace, $rawSecurityContext) : null;
 
             if (!$identifier) {
                 throw new MissingParameterException(static::class, 'id');
@@ -118,7 +118,7 @@ class PermissionController implements ClassResourceInterface
                 throw new MissingParameterException(static::class, 'resourceKey');
             }
 
-            if (!is_array($permissions)) {
+            if (!\is_array($permissions)) {
                 throw new RestException('The "permissions" must be passed as an array');
             }
 
@@ -132,7 +132,7 @@ class PermissionController implements ClassResourceInterface
 
             // transfer all permission strings to booleans
             foreach ($permissions as &$permission) {
-                array_walk($permission, function(&$permissionLine) {
+                \array_walk($permission, function(&$permissionLine) {
                     $permissionLine = 'true' === $permissionLine || true === $permissionLine;
                 });
             }

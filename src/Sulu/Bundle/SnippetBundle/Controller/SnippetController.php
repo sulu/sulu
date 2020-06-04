@@ -153,7 +153,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         // if the type parameter is falsy, assign NULL to $type
         $types = $request->query->get('types', null) ?: null;
 
-        if (false !== strpos($types, ',')) {
+        if (false !== \strpos($types, ',')) {
             // TODO Implement filtering by multiple types
             throw new \Exception('Filtering by multiple types at once is currently not supported!');
         }
@@ -161,9 +161,9 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $idsString = $request->get('ids');
 
         if ($idsString) {
-            $ids = explode(',', $idsString);
+            $ids = \explode(',', $idsString);
             $snippets = $this->snippetRepository->getSnippetsByUuids($ids, $locale);
-            $total = count($snippets);
+            $total = \count($snippets);
         } else {
             $snippets = $this->snippetRepository->getSnippets(
                 $locale,
@@ -269,7 +269,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
 
         $references = $this->snippetRepository->getReferences($id);
 
-        if (count($references) > 0) {
+        if (\count($references) > 0) {
             $force = $request->query->get('force', false);
             if ($force) {
                 $this->contentMapper->delete($id, $webspaceKey, true);
@@ -301,7 +301,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         try {
             switch ($action) {
                 case 'copy-locale':
-                    $destLocales = explode(',', $this->getRequestParameter($request, 'dest', true));
+                    $destLocales = \explode(',', $this->getRequestParameter($request, 'dest', true));
 
                     // call repository method
                     $snippet = $this->snippetRepository->copyLocale(
@@ -356,7 +356,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      */
     private function decorateSnippet(array $snippet, $locale)
     {
-        return array_merge(
+        return \array_merge(
             $snippet,
             [
                 '_links' => [
@@ -385,7 +385,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         }
 
         if ($request->query->has('language')) {
-            @trigger_error('The usage of the "language" parameter in the SnippetController is deprecated. Please use "locale" instead.', E_USER_DEPRECATED);
+            @\trigger_error('The usage of the "language" parameter in the SnippetController is deprecated. Please use "locale" instead.', \E_USER_DEPRECATED);
         }
 
         return $request->query->get('language', null);

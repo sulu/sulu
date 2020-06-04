@@ -82,10 +82,10 @@ class KeywordControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertEquals(2, $response->total);
 
-        usort($response->_embedded->category_keywords, function($key1, $key2) {
+        \usort($response->_embedded->category_keywords, function($key1, $key2) {
             return $key1->id > $key2->id;
         });
 
@@ -105,7 +105,7 @@ class KeywordControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('keyword1', $response->keyword);
     }
@@ -130,7 +130,7 @@ class KeywordControllerTest extends SuluTestCase
             ['locale' => $locale, 'keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
@@ -151,7 +151,7 @@ class KeywordControllerTest extends SuluTestCase
             ['locale' => $locale, 'keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
@@ -168,7 +168,7 @@ class KeywordControllerTest extends SuluTestCase
             ['locale' => 'it', 'keyword' => 'my-keyword']
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals('my-keyword', $result['keyword']);
@@ -187,7 +187,7 @@ class KeywordControllerTest extends SuluTestCase
             ['locale' => $locale, 'keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
@@ -208,7 +208,7 @@ class KeywordControllerTest extends SuluTestCase
             ['locale' => $locale, 'keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
@@ -228,7 +228,7 @@ class KeywordControllerTest extends SuluTestCase
             ['keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
@@ -247,7 +247,7 @@ class KeywordControllerTest extends SuluTestCase
             ['keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
@@ -266,7 +266,7 @@ class KeywordControllerTest extends SuluTestCase
             ['keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
@@ -290,7 +290,7 @@ class KeywordControllerTest extends SuluTestCase
             ['keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(409, $client->getResponse());
         $this->assertEquals(2002, $result['code']);
     }
@@ -306,7 +306,7 @@ class KeywordControllerTest extends SuluTestCase
             ['keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
@@ -325,7 +325,7 @@ class KeywordControllerTest extends SuluTestCase
             ['keyword' => $keyword]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
@@ -349,7 +349,7 @@ class KeywordControllerTest extends SuluTestCase
             ['keyword' => $data1['keyword']]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(409, $client->getResponse());
         $this->assertEquals(2001, $result['code']);
     }
@@ -366,7 +366,7 @@ class KeywordControllerTest extends SuluTestCase
             ['keyword' => $data1['keyword']]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword1, $result['keyword']);

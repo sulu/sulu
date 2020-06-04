@@ -47,7 +47,7 @@ class PageControllerFieldsTest extends SuluTestCase
         $client->request('GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $homepage = $result['_embedded']['pages'][0];
         $items = $homepage['_embedded']['pages'];
@@ -72,7 +72,7 @@ class PageControllerFieldsTest extends SuluTestCase
 
         $client->request('GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $homepage = $result['_embedded']['pages'][0];
         $items = $homepage['_embedded']['pages'];
@@ -98,7 +98,7 @@ class PageControllerFieldsTest extends SuluTestCase
             ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-shadows' => true]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $homepage = $result['_embedded']['pages'][0];
         $items = $homepage['_embedded']['pages'];
@@ -119,7 +119,7 @@ class PageControllerFieldsTest extends SuluTestCase
 
         $client->request('GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $homepage = $result['_embedded']['pages'][0];
         $items = $homepage['_embedded']['pages'];
@@ -145,7 +145,7 @@ class PageControllerFieldsTest extends SuluTestCase
             ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-ghosts' => true]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $homepage = $result['_embedded']['pages'][0];
         $items = $homepage['_embedded']['pages'];
@@ -166,7 +166,7 @@ class PageControllerFieldsTest extends SuluTestCase
 
         $client->request('GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $homepage = $result['_embedded']['pages'][0];
         $items = $homepage['_embedded']['pages'];
@@ -192,7 +192,7 @@ class PageControllerFieldsTest extends SuluTestCase
             ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-ghosts' => true, 'exclude-shadows' => true]
         );
 
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $homepage = $result['_embedded']['pages'][0];
         $items = $homepage['_embedded']['pages'];
@@ -211,10 +211,10 @@ class PageControllerFieldsTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/pages/%s', $page->getUuid()),
+            \sprintf('/api/pages/%s', $page->getUuid()),
             ['webspace' => 'sulu_io', 'language' => 'en', 'fields' => 'title']
         );
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('internal', $result['linked']);
     }
@@ -227,10 +227,10 @@ class PageControllerFieldsTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/pages/%s', $page->getUuid()),
+            \sprintf('/api/pages/%s', $page->getUuid()),
             ['webspace' => 'sulu_io', 'language' => 'en', 'fields' => 'title']
         );
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('external', $result['linked']);
     }
@@ -243,10 +243,10 @@ class PageControllerFieldsTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/pages/%s', $page->getUuid()),
+            \sprintf('/api/pages/%s', $page->getUuid()),
             ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']
         );
-        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals('shadow', $result['type']['name']);
         $this->assertEquals('en', $result['type']['value']);
@@ -315,7 +315,7 @@ class PageControllerFieldsTest extends SuluTestCase
         );
 
         $document->setShadowLocaleEnabled(true);
-        $document->setTitle(strrev($title));
+        $document->setTitle(\strrev($title));
         $document->setShadowLocale($locale);
         $document->setLocale($shadowedLocale);
         $document->setResourceSegment($document1->getResourceSegment());

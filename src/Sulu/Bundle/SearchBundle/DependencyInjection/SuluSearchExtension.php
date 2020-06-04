@@ -58,12 +58,12 @@ class SuluSearchExtension extends Extension implements PrependExtensionInterface
                 'directories' => [
                     [
                         'name' => 'massive_search',
-                        'path' => realpath(__DIR__ . '/..') . '/Resources/config/serializer/massive',
+                        'path' => \realpath(__DIR__ . '/..') . '/Resources/config/serializer/massive',
                         'namespace_prefix' => 'Massive\Bundle\SearchBundle\Search',
                     ],
                     [
                         'name' => 'sulu_search',
-                        'path' => realpath(__DIR__ . '/..') . '/Resources/config/serializer/sulu',
+                        'path' => \realpath(__DIR__ . '/..') . '/Resources/config/serializer/sulu',
                         'namespace_prefix' => 'Sulu\Bundle\SearchBundle\Search',
                     ],
                 ],

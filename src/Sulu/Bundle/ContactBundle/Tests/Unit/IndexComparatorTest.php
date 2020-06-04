@@ -40,7 +40,7 @@ class IndexComparatorTest extends TestCase
     {
         $comparator = new IndexComparator();
         // the @ is necessary in case of a PHP bug https://bugs.php.net/bug.php?id=50688
-        @usort(
+        @\usort(
             $array,
             function($a, $b) use ($ids, $comparator) {
                 return $comparator->compare($a, $b, $ids);
@@ -53,6 +53,6 @@ class IndexComparatorTest extends TestCase
             }
         }
 
-        $this->assertEquals($startsWith, array_slice($array, 0, count($startsWith)));
+        $this->assertEquals($startsWith, \array_slice($array, 0, \count($startsWith)));
     }
 }

@@ -135,16 +135,16 @@ class MediaControllerTest extends SuluTestCase
 
     public function recursiveRemoveDirectory($directory, $counter = 0)
     {
-        foreach (glob($directory . '/*') as $file) {
-            if (is_dir($file)) {
+        foreach (\glob($directory . '/*') as $file) {
+            if (\is_dir($file)) {
                 $this->recursiveRemoveDirectory($file, $counter + 1);
-            } elseif (file_exists($file)) {
-                unlink($file);
+            } elseif (\file_exists($file)) {
+                \unlink($file);
             }
         }
 
         if (0 != $counter) {
-            rmdir($directory);
+            \rmdir($directory);
         }
     }
 
@@ -288,10 +288,10 @@ class MediaControllerTest extends SuluTestCase
         $fileVersion->setStorageOptions(['segment' => '1', 'fileName' => $name . '.' . $extension]);
         $storagePath = $this->getStoragePath();
 
-        if (!file_exists($storagePath . '/1')) {
-            mkdir($storagePath . '/1', 0777, true);
+        if (!\file_exists($storagePath . '/1')) {
+            \mkdir($storagePath . '/1', 0777, true);
         }
-        copy($this->getImagePath(), $storagePath . '/1/' . $name . '.' . $extension);
+        \copy($this->getImagePath(), $storagePath . '/1/' . $name . '.' . $extension);
 
         // create meta
         $fileVersionMeta = new FileVersionMeta();
@@ -338,7 +338,7 @@ class MediaControllerTest extends SuluTestCase
             'type' => 'circle', 'color' => '#ffcc00',
         ];
 
-        $this->collection->setStyle(json_encode($style));
+        $this->collection->setStyle(\json_encode($style));
 
         // Create Collection Type
         $this->collectionType = new CollectionType();
@@ -394,15 +394,15 @@ class MediaControllerTest extends SuluTestCase
     {
         $media = $this->createMedia('photo');
         $client = $this->createAuthenticatedClient();
-        ob_start();
+        \ob_start();
         $client->request(
             'GET',
             '/media/' . $media->getId() . '/download/photo.jpg'
         );
-        ob_end_clean();
+        \ob_end_clean();
         $this->assertEquals(
             'attachment; filename=photo.jpeg',
-            str_replace('"', '', $client->getResponse()->headers->get('Content-Disposition'))
+            \str_replace('"', '', $client->getResponse()->headers->get('Content-Disposition'))
         );
     }
 
@@ -413,15 +413,15 @@ class MediaControllerTest extends SuluTestCase
     {
         $media = $this->createMedia('photo');
         $client = $this->createAuthenticatedClient();
-        ob_start();
+        \ob_start();
         $client->request(
             'GET',
             '/media/' . $media->getId() . '/download/photo.jpg?inline=1'
         );
-        ob_end_clean();
+        \ob_end_clean();
         $this->assertEquals(
             'inline; filename=photo.jpeg',
-            str_replace('"', '', $client->getResponse()->headers->get('Content-Disposition'))
+            \str_replace('"', '', $client->getResponse()->headers->get('Content-Disposition'))
         );
     }
 
@@ -432,15 +432,15 @@ class MediaControllerTest extends SuluTestCase
     {
         $media = $this->createMedia('wöchentlich');
         $client = $this->createAuthenticatedClient();
-        ob_start();
+        \ob_start();
         $client->request(
             'GET',
             '/media/' . $media->getId() . '/download/wöchentlich.jpeg?inline=1'
         );
-        ob_end_clean();
+        \ob_end_clean();
         $this->assertEquals(
             'inline; filename=woechentlich.jpeg; filename*=utf-8\'\'w%C3%B6chentlich.jpeg',
-            str_replace('"', '', $client->getResponse()->headers->get('Content-Disposition'))
+            \str_replace('"', '', $client->getResponse()->headers->get('Content-Disposition'))
         );
     }
 
@@ -459,7 +459,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals($media->getId(), $response['id']);
         $this->assertNotNull($response['type']['id']);
@@ -503,7 +503,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals($media->getId(), $response['id']);
         $this->assertEquals('de', $response['locale']);
@@ -522,7 +522,7 @@ class MediaControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
         $this->assertEquals(2, $response->total);
@@ -542,7 +542,7 @@ class MediaControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
         $this->assertStringContainsString('photo1', $response->_embedded->media[0]->url);
@@ -577,7 +577,7 @@ class MediaControllerTest extends SuluTestCase
         $media2 = $this->createMedia('photo2');
         $this->createMedia('photo3');
         $client = $this->createAuthenticatedClient();
-        $excludedIds = implode(',', [$media->getId(), $media2->getId()]);
+        $excludedIds = \implode(',', [$media->getId(), $media2->getId()]);
 
         $client->request(
             'GET',
@@ -585,7 +585,7 @@ class MediaControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
         $this->assertEquals(2, $response->total);
@@ -614,7 +614,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
 
@@ -637,7 +637,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
 
@@ -657,7 +657,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
 
@@ -679,7 +679,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
 
@@ -704,10 +704,10 @@ class MediaControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertNotEmpty($response);
 
-        $medias = array_map(
+        $medias = \array_map(
             function($item) {
                 return [
                     'id' => $item->id,
@@ -757,7 +757,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
 
@@ -781,9 +781,9 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
-        $medias = array_map(
+        $medias = \array_map(
             function($item) {
                 return ['id' => $item->id, 'name' => $item->name];
             },
@@ -811,12 +811,12 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals(2, $response['total']);
         $this->assertCount(2, $response['_embedded']['media']);
 
-        $titles = array_map(
+        $titles = \array_map(
             function($media) {
                 return $media['name'];
             },
@@ -838,7 +838,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
 
@@ -856,7 +856,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(404, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertEquals(5015, $response->code);
         $this->assertTrue(isset($response->message));
     }
@@ -881,7 +881,7 @@ class MediaControllerTest extends SuluTestCase
         $this->getEntityManager()->flush();
 
         $imagePath = $this->getImagePath();
-        $this->assertTrue(file_exists($imagePath));
+        $this->assertTrue(\file_exists($imagePath));
         $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg');
 
         $client->request(
@@ -919,9 +919,9 @@ class MediaControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertEquals(1, count($client->getRequest()->files->all()));
+        $this->assertEquals(1, \count($client->getRequest()->files->all()));
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals('photo.jpeg', $response->name);
@@ -972,7 +972,7 @@ class MediaControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $imagePath = $this->getImagePath();
-        $this->assertTrue(file_exists($imagePath));
+        $this->assertTrue(\file_exists($imagePath));
         $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg');
 
         $client->request(
@@ -987,9 +987,9 @@ class MediaControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertEquals(1, count($client->getRequest()->files->all()));
+        $this->assertEquals(1, \count($client->getRequest()->files->all()));
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals($this->mediaDefaultTitle, $response->title);
@@ -1006,7 +1006,7 @@ class MediaControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $imagePath = $this->getImagePath();
-        $this->assertTrue(file_exists($imagePath));
+        $this->assertTrue(\file_exists($imagePath));
         $photo = new UploadedFile($imagePath, 'photo', 'image/jpeg');
 
         $client->request(
@@ -1021,9 +1021,9 @@ class MediaControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertEquals(1, count($client->getRequest()->files->all()));
+        $this->assertEquals(1, \count($client->getRequest()->files->all()));
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals($this->mediaDefaultTitle, $response->title);
@@ -1040,7 +1040,7 @@ class MediaControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $filePath = $this->getFilePath();
-        $this->assertTrue(file_exists($filePath));
+        $this->assertTrue(\file_exists($filePath));
         $photo = new UploadedFile($filePath, 'small.txt', 'text/plain');
 
         $client->request(
@@ -1055,9 +1055,9 @@ class MediaControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertEquals(1, count($client->getRequest()->files->all()));
+        $this->assertEquals(1, \count($client->getRequest()->files->all()));
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals('small', $response->title);
@@ -1073,7 +1073,7 @@ class MediaControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $imagePath = $this->getImagePath();
-        $this->assertTrue(file_exists($imagePath));
+        $this->assertTrue(\file_exists($imagePath));
         $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg');
 
         $client->request(
@@ -1101,9 +1101,9 @@ class MediaControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertEquals(1, count($client->getRequest()->files->all()));
+        $this->assertEquals(1, \count($client->getRequest()->files->all()));
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals($media->getId(), $response->id);
@@ -1140,7 +1140,7 @@ class MediaControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $imagePath = $this->getImagePath();
-        $this->assertTrue(file_exists($imagePath));
+        $this->assertTrue(\file_exists($imagePath));
         $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg');
 
         $client->request(
@@ -1152,7 +1152,7 @@ class MediaControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertCount(2, (array) $response->versions);
 
         $client->request(
@@ -1167,7 +1167,7 @@ class MediaControllerTest extends SuluTestCase
             '/api/media/' . $media->getId() . '?locale=en'
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertCount(1, (array) $response->versions);
         $this->assertEquals(2, $response->version);
@@ -1208,7 +1208,7 @@ class MediaControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $imagePath = $this->getImagePath();
-        $this->assertTrue(file_exists($imagePath));
+        $this->assertTrue(\file_exists($imagePath));
         $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg');
 
         $client->request(
@@ -1220,7 +1220,7 @@ class MediaControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertCount(2, (array) $response->versions);
 
         $client->request(
@@ -1245,7 +1245,7 @@ class MediaControllerTest extends SuluTestCase
                 'credits' => null,
             ]
         );
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertSame(null, $response['description']);
         $this->assertSame(null, $response['copyright']);
@@ -1281,7 +1281,7 @@ class MediaControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals([], $response->targetGroups);
     }
@@ -1317,7 +1317,7 @@ class MediaControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals($media->getId(), $response->id);
@@ -1366,7 +1366,7 @@ class MediaControllerTest extends SuluTestCase
             '/api/media/' . $media->getId() . '?locale=en'
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals(['Tag 2'], $response->tags);
     }
@@ -1378,7 +1378,7 @@ class MediaControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $imagePath = $this->getImagePath();
-        $this->assertTrue(file_exists($imagePath));
+        $this->assertTrue(\file_exists($imagePath));
         $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg');
 
         $client->request(
@@ -1392,9 +1392,9 @@ class MediaControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertEquals(1, count($client->getRequest()->files->all()));
+        $this->assertEquals(1, \count($client->getRequest()->files->all()));
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -1427,7 +1427,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(404, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertEquals(5015, $response->code);
         $this->assertTrue(isset($response->message));
 
@@ -1452,7 +1452,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(404, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertEquals(5015, $response->code);
         $this->assertTrue(isset($response->message));
     }
@@ -1466,7 +1466,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $client->getResponse());
 
         $client->request('GET', '/api/media?locale=en-gb');
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
         $this->assertEquals(1, $response->total);
     }
 
@@ -1476,12 +1476,12 @@ class MediaControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        ob_start();
+        \ob_start();
         $client->request(
             'GET',
             '/media/' . $media->getId() . '/download/photo.jpeg'
         );
-        ob_end_clean();
+        \ob_end_clean();
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -1492,7 +1492,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals($media->getId(), $response->id);
         $this->assertNotNull($response->type->id);
@@ -1511,7 +1511,7 @@ class MediaControllerTest extends SuluTestCase
             'color' => '#ffcc00',
         ];
 
-        $destCollection->setStyle(json_encode($style));
+        $destCollection->setStyle(\json_encode($style));
         $destCollection->setType($this->collectionType);
         $destCollection->addMeta($this->collectionMeta);
 
@@ -1526,7 +1526,7 @@ class MediaControllerTest extends SuluTestCase
             '/api/media/' . $media->getId() . '?locale=en-gb&action=move&destination=' . $destCollection->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals($destCollection->getId(), $response['collection']);
         $this->assertEquals($this->mediaDefaultTitle, $response['title']);
@@ -1540,7 +1540,7 @@ class MediaControllerTest extends SuluTestCase
             'color' => '#ffcc00',
         ];
 
-        $destCollection->setStyle(json_encode($style));
+        $destCollection->setStyle(\json_encode($style));
         $destCollection->setType($this->collectionType);
         $destCollection->addMeta($this->collectionMeta);
 

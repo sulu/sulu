@@ -50,6 +50,6 @@ class RequestHashChecker implements RequestHashCheckerInterface
             return true;
         }
 
-        throw new InvalidHashException(get_class($object), $identifier);
+        throw new InvalidHashException(\get_class($object), $identifier);
     }
 }

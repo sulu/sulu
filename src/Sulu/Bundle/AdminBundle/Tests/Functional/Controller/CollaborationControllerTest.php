@@ -30,11 +30,11 @@ class CollaborationControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEmpty($response->_embedded->collaborations);
 
-        $collaborations = array_values(
+        $collaborations = \array_values(
             $this->getContainer()->get('sulu_admin.collaboration_cache')->getItem('page_4')->get()
         );
 
@@ -59,7 +59,7 @@ class CollaborationControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertCount(2, $response->_embedded->collaborations);
 

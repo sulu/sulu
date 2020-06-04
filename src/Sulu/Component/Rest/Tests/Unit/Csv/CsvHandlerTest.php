@@ -67,15 +67,15 @@ class CsvHandlerTest extends TestCase
 
         $handler = new CsvHandler($serializer->reveal());
 
-        ob_start();
+        \ob_start();
         $response = $handler->createResponse($viewHandler->reveal(), $view->reveal(), $request->reveal(), $format);
-        $content = ob_get_contents();
-        ob_end_clean();
+        $content = \ob_get_contents();
+        \ob_end_clean();
 
         $this->assertInstanceOf(StreamedResponse::class, $response);
         $this->assertEquals($response->headers->get('Content-Type'), 'text/csv');
         $this->assertEquals(
-            str_replace('"', '', $response->headers->get('Content-Disposition')),
+            \str_replace('"', '', $response->headers->get('Content-Disposition')),
             'attachment; filename=contacts.csv'
         );
 
@@ -111,15 +111,15 @@ class CsvHandlerTest extends TestCase
 
         $handler = new CsvHandler($serializer->reveal());
 
-        ob_start();
+        \ob_start();
         $response = $handler->createResponse($viewHandler->reveal(), $view->reveal(), $request->reveal(), $format);
-        $content = ob_get_contents();
-        ob_end_clean();
+        $content = \ob_get_contents();
+        \ob_end_clean();
 
         $this->assertInstanceOf(StreamedResponse::class, $response);
         $this->assertEquals($response->headers->get('Content-Type'), 'text/csv');
         $this->assertEquals(
-            str_replace('"', '', $response->headers->get('Content-Disposition')),
+            \str_replace('"', '', $response->headers->get('Content-Disposition')),
             'attachment; filename=contacts.csv'
         );
 
@@ -155,15 +155,15 @@ class CsvHandlerTest extends TestCase
 
         $handler = new CsvHandler($serializer->reveal());
 
-        ob_start();
+        \ob_start();
         $response = $handler->createResponse($viewHandler->reveal(), $view->reveal(), $request->reveal(), $format);
-        $content = ob_get_contents();
-        ob_end_clean();
+        $content = \ob_get_contents();
+        \ob_end_clean();
 
         $this->assertInstanceOf(StreamedResponse::class, $response);
         $this->assertEquals($response->headers->get('Content-Type'), 'text/csv');
         $this->assertEquals(
-            str_replace('"', '', $response->headers->get('Content-Disposition')),
+            \str_replace('"', '', $response->headers->get('Content-Disposition')),
             'attachment; filename=contacts.csv'
         );
 
@@ -199,15 +199,15 @@ class CsvHandlerTest extends TestCase
 
         $handler = new CsvHandler($serializer->reveal());
 
-        ob_start();
+        \ob_start();
         $response = $handler->createResponse($viewHandler->reveal(), $view->reveal(), $request->reveal(), $format);
-        $content = ob_get_contents();
-        ob_end_clean();
+        $content = \ob_get_contents();
+        \ob_end_clean();
 
         $this->assertInstanceOf(StreamedResponse::class, $response);
         $this->assertEquals($response->headers->get('Content-Type'), 'text/csv');
         $this->assertEquals(
-            str_replace('"', '', $response->headers->get('Content-Disposition')),
+            \str_replace('"', '', $response->headers->get('Content-Disposition')),
             'attachment; filename=contacts.csv'
         );
 
@@ -238,15 +238,15 @@ class CsvHandlerTest extends TestCase
 
         $handler = new CsvHandler($serializer->reveal());
 
-        ob_start();
+        \ob_start();
         $response = $handler->createResponse($viewHandler->reveal(), $view->reveal(), $request->reveal(), $format);
-        $content = ob_get_contents();
-        ob_end_clean();
+        $content = \ob_get_contents();
+        \ob_end_clean();
 
         $this->assertInstanceOf(StreamedResponse::class, $response);
         $this->assertEquals($response->headers->get('Content-Type'), 'text/csv');
         $this->assertEquals(
-            str_replace('"', '', $response->headers->get('Content-Disposition')),
+            \str_replace('"', '', $response->headers->get('Content-Disposition')),
             'attachment; filename=contacts.csv'
         );
 

@@ -88,18 +88,18 @@ class SearchController
 
         $page = $this->listRestHelper->getPage();
         $limit = $this->listRestHelper->getLimit();
-        $startTime = microtime(true);
+        $startTime = \microtime(true);
 
         $indexNames = $this->searchManager->getIndexNames();
 
-        $indexes = array_filter(
+        $indexes = \array_filter(
             $index
                 ? [$index]
-                : array_map(function(IndexConfiguration $index) {
+                : \array_map(function(IndexConfiguration $index) {
                     return $index->getIndexName();
                 }, $this->getAllowedIndexes()),
             function(string $indexName) use ($indexNames) {
-                return false !== array_search($indexName, $indexNames);
+                return false !== \array_search($indexName, $indexNames);
             }
         );
 
@@ -112,9 +112,9 @@ class SearchController
         $query->indexes($indexes);
         $query->setLimit($limit);
 
-        $time = microtime(true) - $startTime;
+        $time = \microtime(true) - $startTime;
 
-        $adapter = new ArrayAdapter(iterator_to_array($query->execute()));
+        $adapter = new ArrayAdapter(\iterator_to_array($query->execute()));
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage($limit);
         $pager->setCurrentPage($page);
@@ -146,7 +146,7 @@ class SearchController
             View::create(
                 [
                     '_embedded' => [
-                        'search_indexes' => array_values($this->getAllowedIndexes()),
+                        'search_indexes' => \array_values($this->getAllowedIndexes()),
                     ],
                 ]
             )
@@ -158,14 +158,14 @@ class SearchController
      */
     private function getAllowedIndexes()
     {
-        return array_filter(
+        return \array_filter(
             $this->indexConfigurationProvider->getIndexConfigurations(),
             function(IndexConfiguration $indexConfiguration) {
                 $securityContext = $indexConfiguration->getSecurityContext();
                 $contexts = $indexConfiguration->getContexts();
 
                 return $this->securityChecker->hasPermission($securityContext, PermissionTypes::VIEW)
-                    && empty($contexts) || false !== array_search('admin', $contexts);
+                    && empty($contexts) || false !== \array_search('admin', $contexts);
             }
         );
     }

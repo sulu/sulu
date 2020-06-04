@@ -40,7 +40,7 @@ class OperatingSystemRule implements RuleInterface
 
     public function evaluate(array $options)
     {
-        if (!array_key_exists(static::OPERATING_SYSTEM, $options)) {
+        if (!\array_key_exists(static::OPERATING_SYSTEM, $options)) {
             return false;
         }
 
@@ -56,7 +56,7 @@ class OperatingSystemRule implements RuleInterface
 
     public function getType()
     {
-        return new SingleSelect(static::OPERATING_SYSTEM, array_map(function($operatingSystem) {
+        return new SingleSelect(static::OPERATING_SYSTEM, \array_map(function($operatingSystem) {
             return [
                 'id' => $operatingSystem,
                 'name' => $operatingSystem,

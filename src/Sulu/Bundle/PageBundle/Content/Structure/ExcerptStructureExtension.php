@@ -102,7 +102,7 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
         foreach ($excerptStructure->getProperties() as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
 
-            if (array_key_exists($property->getName(), $data)) {
+            if (\array_key_exists($property->getName(), $data)) {
                 $property->setValue($data[$property->getName()]);
                 $contentType->write(
                     $node,
@@ -184,10 +184,10 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
             $tag = $property->getTag('sulu.search.field');
             $tagAttributes = $tag->getAttributes();
 
-            $mappings['excerpt' . ucfirst($property->getName())] = [
+            $mappings['excerpt' . \ucfirst($property->getName())] = [
                 'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
                 'field' => $this->factory->createMetadataExpression(
-                    sprintf('object.getExtensionsData()["excerpt"]["%s"]', $property->getName())
+                    \sprintf('object.getExtensionsData()["excerpt"]["%s"]', $property->getName())
                 ),
             ];
         }

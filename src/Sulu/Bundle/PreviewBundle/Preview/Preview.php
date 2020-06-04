@@ -100,7 +100,7 @@ class Preview implements PreviewInterface
         $cacheItem = $this->fetch($token);
 
         $provider = $this->getProvider($cacheItem->getProviderKey());
-        if (0 === count($context)) {
+        if (0 === \count($context)) {
             return $this->renderer->render(
                 $cacheItem->getObject(),
                 $cacheItem->getId(),
@@ -158,12 +158,12 @@ class Preview implements PreviewInterface
             $targetGroupId
         );
 
-        return str_replace(self::CONTENT_REPLACER, $partialHtml, $cacheItem->getHtml());
+        return \str_replace(self::CONTENT_REPLACER, $partialHtml, $cacheItem->getHtml());
     }
 
     protected function removeContent(string $html): string
     {
-        $parts = explode(self::CONTENT_REPLACER, $html);
+        $parts = \explode(self::CONTENT_REPLACER, $html);
 
         if (!isset($parts[2])) {
             throw new \RuntimeException('The "{% block content %}" could not be found in the twig template.');
@@ -186,10 +186,10 @@ class Preview implements PreviewInterface
             'providerKey' => $item->getProviderKey(),
             'html' => $item->getHtml(),
             'object' => $this->getProvider($item->getProviderKey())->serialize($item->getObject()),
-            'objectClass' => get_class($item->getObject()),
+            'objectClass' => \get_class($item->getObject()),
         ];
 
-        $this->cache->save($item->getToken(), json_encode($data), $this->cacheLifeTime);
+        $this->cache->save($item->getToken(), \json_encode($data), $this->cacheLifeTime);
     }
 
     protected function fetch(string $token): PreviewCacheItem
@@ -198,7 +198,7 @@ class Preview implements PreviewInterface
             throw new TokenNotFoundException($token);
         }
 
-        $data = json_decode($this->cache->fetch($token), true);
+        $data = \json_decode($this->cache->fetch($token), true);
         $provider = $this->getProvider($data['providerKey']);
 
         $cacheItem = new PreviewCacheItem(

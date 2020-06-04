@@ -28,7 +28,7 @@ class RuleNotFoundException extends \RuntimeException
     {
         $this->name = $name;
 
-        parent::__construct(sprintf('The rule with the name "%s" could not be found.', $this->name));
+        parent::__construct(\sprintf('The rule with the name "%s" could not be found.', $this->name));
     }
 
     /**

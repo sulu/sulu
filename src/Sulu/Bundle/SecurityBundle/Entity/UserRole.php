@@ -92,7 +92,7 @@ class UserRole extends ApiEntity
      */
     public function getLocales()
     {
-        return json_decode($this->locale);
+        return \json_decode($this->locale);
     }
 
     /**

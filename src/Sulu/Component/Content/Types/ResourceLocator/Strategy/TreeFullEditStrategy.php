@@ -22,7 +22,7 @@ class TreeFullEditStrategy extends ResourceLocatorStrategy implements ResourceLo
 {
     public function getChildPart($resourceSegment)
     {
-        return ltrim($resourceSegment, '/');
+        return \ltrim($resourceSegment, '/');
     }
 
     public function getInputType()

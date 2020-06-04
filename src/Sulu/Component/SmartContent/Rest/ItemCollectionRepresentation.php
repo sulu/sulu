@@ -37,7 +37,7 @@ class ItemCollectionRepresentation extends CollectionRepresentation
         parent::__construct($items, 'items');
 
         $this->datasource = $datasource;
-        $this->total = count($items);
+        $this->total = \count($items);
     }
 
     /**

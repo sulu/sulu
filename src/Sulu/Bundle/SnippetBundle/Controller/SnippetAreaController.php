@@ -127,13 +127,13 @@ class SnippetAreaController implements ClassResourceInterface
             $dataList[$key] = $areaData;
         }
 
-        ksort($dataList);
+        \ksort($dataList);
 
         $data = [
             '_embedded' => [
-                'areas' => array_values($dataList),
+                'areas' => \array_values($dataList),
             ],
-            'total' => count($dataList),
+            'total' => \count($dataList),
         ];
 
         return new JsonResponse($data);
@@ -223,7 +223,7 @@ class SnippetAreaController implements ClassResourceInterface
         $localizedAreas = [];
 
         foreach ($areas as $type) {
-            $title = ucfirst($type['key']);
+            $title = \ucfirst($type['key']);
 
             if (isset($type['title'][$locale])) {
                 $title = $type['title'][$locale];

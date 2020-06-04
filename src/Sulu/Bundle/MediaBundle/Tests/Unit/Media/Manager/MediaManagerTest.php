@@ -187,7 +187,7 @@ class MediaManagerTest extends TestCase
         $this->formatManager->getFormats(Argument::cetera())->willReturn(null);
         $medias = $this->mediaManager->getByIds($ids, 'en');
 
-        for ($i = 0; $i < count($medias); ++$i) {
+        for ($i = 0; $i < \count($medias); ++$i) {
             $this->assertEquals($result[$i]->getId(), $medias[$i]->getId());
         }
     }

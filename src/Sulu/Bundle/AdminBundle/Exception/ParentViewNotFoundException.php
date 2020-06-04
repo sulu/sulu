@@ -29,7 +29,7 @@ class ParentViewNotFoundException extends \Exception
     public function __construct(string $parentRoute, string $route)
     {
         parent::__construct(
-            sprintf(
+            \sprintf(
                 'The route "%s" was defined as the parent of "%s", but the route "%s" does not exist',
                 $parentRoute,
                 $route,

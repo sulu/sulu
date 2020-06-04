@@ -105,7 +105,7 @@ class FormatManagerTest extends TestCase
     public function testReturnImage()
     {
         $media = new Media();
-        $reflection = new \ReflectionClass(get_class($media));
+        $reflection = new \ReflectionClass(\get_class($media));
         $property = $reflection->getProperty('id');
         $property->setAccessible(true);
         $property->setValue($media, 1);
@@ -141,7 +141,7 @@ class FormatManagerTest extends TestCase
     public function testReturnImageWithVideo()
     {
         $media = new Media();
-        $reflection = new \ReflectionClass(get_class($media));
+        $reflection = new \ReflectionClass(\get_class($media));
         $property = $reflection->getProperty('id');
         $property->setAccessible(true);
         $property->setValue($media, 1);

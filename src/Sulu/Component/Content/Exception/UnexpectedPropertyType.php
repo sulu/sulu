@@ -28,7 +28,7 @@ class UnexpectedPropertyType extends \Exception
 
     public function __construct(PropertyInterface $property, ContentTypeInterface $contentType)
     {
-        parent::__construct(sprintf('Property "%s" is unexcepted in content type "%s"', $property->getName(), get_class($contentType)));
+        parent::__construct(\sprintf('Property "%s" is unexcepted in content type "%s"', $property->getName(), \get_class($contentType)));
         $this->property = $property;
         $this->contentType = $contentType;
     }

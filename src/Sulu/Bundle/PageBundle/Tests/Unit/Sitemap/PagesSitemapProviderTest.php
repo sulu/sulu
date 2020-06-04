@@ -269,7 +269,7 @@ class PagesSitemapProviderTest extends TestCase
         $content = new Content(
             $locale,
             $this->portalKey,
-            uniqid('test-'),
+            \uniqid('test-'),
             $url,
             WorkflowStage::PUBLISHED,
             $redirectTarget,

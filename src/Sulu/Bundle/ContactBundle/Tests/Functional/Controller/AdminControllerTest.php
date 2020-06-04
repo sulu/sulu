@@ -81,7 +81,7 @@ class AdminControllerTest extends SuluTestCase
         $client->request('GET', '/admin/config');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $contactConfig = $response->sulu_contact;
 
@@ -123,7 +123,7 @@ class AdminControllerTest extends SuluTestCase
         $client->request('GET', '/admin/metadata/list/contacts');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertObjectHasAttribute('id', $response);
         $this->assertObjectHasAttribute('title', $response);
@@ -138,7 +138,7 @@ class AdminControllerTest extends SuluTestCase
         $client->request('GET', '/admin/metadata/list/accounts');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertObjectHasAttribute('id', $response);
         $this->assertObjectHasAttribute('name', $response);
@@ -154,7 +154,7 @@ class AdminControllerTest extends SuluTestCase
         $client->request('GET', '/admin/metadata/form/contact_details');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $form = $response->form;
 
@@ -174,7 +174,7 @@ class AdminControllerTest extends SuluTestCase
         $client->request('GET', '/admin/metadata/form/account_details');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent());
 
         $form = $response->form;
 

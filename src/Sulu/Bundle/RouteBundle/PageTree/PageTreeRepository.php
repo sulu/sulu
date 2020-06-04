@@ -96,7 +96,7 @@ class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInter
                     continue;
                 }
 
-                $where[] = sprintf(
+                $where[] = \sprintf(
                     '([%s] = "%s" AND [%s-%s] = "%s")',
                     $this->propertyEncoder->localizedSystemName('template', $locale),
                     $metadata->getName(),
@@ -107,14 +107,14 @@ class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInter
             }
         }
 
-        if (0 === count($where)) {
+        if (0 === \count($where)) {
             return [];
         }
 
         $query = $this->documentManager->createQuery(
-            sprintf(
+            \sprintf(
                 'SELECT * FROM [nt:unstructured] WHERE (%s)',
-                implode(' OR ', $where)
+                \implode(' OR ', $where)
             ),
             $locale
         );
@@ -139,7 +139,7 @@ class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInter
 
         $suffix = $node->getPropertyValueWithDefault($propertyName . '-suffix', null);
         if ($suffix) {
-            $path = rtrim($resourceSegment, '/') . '/' . $suffix;
+            $path = \rtrim($resourceSegment, '/') . '/' . $suffix;
             $node->setProperty($propertyName, $path);
             $document->setRoutePath($path);
 

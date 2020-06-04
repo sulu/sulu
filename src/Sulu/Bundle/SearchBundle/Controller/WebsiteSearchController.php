@@ -72,15 +72,15 @@ class WebsiteSearchController
         $webspace = $this->requestAnalyzer->getWebspace();
 
         $queryString = '';
-        if (strlen($query) < 3) {
+        if (\strlen($query) < 3) {
             $queryString .= '+("' . self::escapeDoubleQuotes($query) . '") ';
         } else {
-            $queryValues = explode(' ', $query);
+            $queryValues = \explode(' ', $query);
             foreach ($queryValues as $queryValue) {
-                if (strlen($queryValue) > 2) {
+                if (\strlen($queryValue) > 2) {
                     $queryString .= '+("' . self::escapeDoubleQuotes($queryValue) . '" OR ' .
-                        '"' . preg_replace('/([^\pL\s\d])/u', '?', $queryValue) . '*" OR ' .
-                        '"' . preg_replace('/([^\pL\s\d])/u', '', $queryValue) . '~") ';
+                        '"' . \preg_replace('/([^\pL\s\d])/u', '?', $queryValue) . '*" OR ' .
+                        '"' . \preg_replace('/([^\pL\s\d])/u', '', $queryValue) . '~") ';
                 } else {
                     $queryString .= '+("' . self::escapeDoubleQuotes($queryValue) . '") ';
                 }
@@ -127,6 +127,6 @@ class WebsiteSearchController
      */
     private static function escapeDoubleQuotes($query)
     {
-        return str_replace('"', '\\"', $query);
+        return \str_replace('"', '\\"', $query);
     }
 }

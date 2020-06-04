@@ -40,7 +40,7 @@ class CreateRoleCommandTest extends SuluTestCase
     public function testCreateRole()
     {
         $this->createRole('foo');
-        $this->assertEquals('Created role "foo" in system "Sulu".' . PHP_EOL, $this->tester->getDisplay());
+        $this->assertEquals('Created role "foo" in system "Sulu".' . \PHP_EOL, $this->tester->getDisplay());
     }
 
     public function testCreateRoleAlreadyExisting()
@@ -48,7 +48,7 @@ class CreateRoleCommandTest extends SuluTestCase
         $this->createRole('foo');
         $this->createRole('foo');
 
-        $this->assertEquals('Role "foo" already exists.' . PHP_EOL, $this->tester->getDisplay());
+        $this->assertEquals('Role "foo" already exists.' . \PHP_EOL, $this->tester->getDisplay());
     }
 
     private function createRole($name)

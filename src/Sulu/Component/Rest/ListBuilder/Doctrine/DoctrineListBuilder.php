@@ -137,7 +137,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     public function setSelectFields($fieldDescriptors)
     {
         parent::setSelectFields($fieldDescriptors);
-        $this->selectFields = array_filter(
+        $this->selectFields = \array_filter(
             $this->selectFields,
             function(FieldDescriptorInterface $fieldDescriptor) {
                 return $fieldDescriptor instanceof DoctrineFieldDescriptorInterface;
@@ -173,11 +173,11 @@ class DoctrineListBuilder extends AbstractListBuilder
         $this->assignParameters($subQueryBuilder);
 
         $result = $subQueryBuilder->getQuery()->getScalarResult();
-        $numResults = count($result);
+        $numResults = \count($result);
         if ($numResults > 1) {
             return $numResults;
         } elseif (1 == $numResults) {
-            $result = array_values($result[0]);
+            $result = \array_values($result[0]);
 
             return (int) $result[0];
         }
@@ -204,7 +204,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         $ids = $this->findIdsByGivenCriteria();
 
         // if no results are found - return
-        if (count($ids) < 1) {
+        if (\count($ids) < 1) {
             return [];
         }
 
@@ -271,11 +271,11 @@ class DoctrineListBuilder extends AbstractListBuilder
         $ids = $subQueryBuilder->getQuery()->getArrayResult();
 
         // if no results are found - return
-        if (count($ids) < 1) {
+        if (\count($ids) < 1) {
             return [];
         }
 
-        $ids = array_map(
+        $ids = \array_map(
             function($array) {
                 return $array[$this->idField->getName()];
             },
@@ -290,7 +290,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         $dql = $queryBuilder->getDQL();
 
         foreach ($this->parameters as $key => $parameter) {
-            if (false !== strpos($dql, ':' . $key)) {
+            if (false !== \strpos($dql, ':' . $key)) {
                 $queryBuilder->setParameter($key, $parameter);
             }
         }
@@ -304,7 +304,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected function assignSortFields($queryBuilder)
     {
         // if no sort has been assigned add order by id ASC as default
-        if (0 === count($this->sortFields)) {
+        if (0 === \count($this->sortFields)) {
             $queryBuilder->addOrderBy($this->idField->getSelect(), 'ASC');
         }
 
@@ -353,10 +353,10 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected function getJoins()
     {
         $joins = [];
-        $fields = array_merge($this->sortFields, $this->selectFields, $this->searchFields, $this->expressionFields);
+        $fields = \array_merge($this->sortFields, $this->selectFields, $this->searchFields, $this->expressionFields);
 
         foreach ($fields as $field) {
-            $joins = array_merge($joins, $field->getJoins());
+            $joins = \array_merge($joins, $field->getJoins());
         }
 
         return $joins;
@@ -371,17 +371,17 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function getAllFields($onlyReturnFilterFields = false)
     {
-        $fields = array_merge(
+        $fields = \array_merge(
             $this->searchFields,
             $this->sortFields,
             $this->getUniqueExpressionFieldDescriptors($this->expressions)
         );
 
         if (true !== $onlyReturnFilterFields) {
-            $fields = array_merge($fields, $this->selectFields);
+            $fields = \array_merge($fields, $this->selectFields);
         }
 
-        return array_filter($fields, function(FieldDescriptorInterface $fieldDescriptor) {
+        return \array_filter($fields, function(FieldDescriptorInterface $fieldDescriptor) {
             return $fieldDescriptor instanceof DoctrineFieldDescriptorInterface;
         });
     }
@@ -411,7 +411,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         // create querybuilder and add select
         $queryBuilder = $this->createQueryBuilder($addJoins)->select($select);
 
-        if ($this->user && $this->permission && array_key_exists($this->permission, $this->permissions)) {
+        if ($this->user && $this->permission && \array_key_exists($this->permission, $this->permissions)) {
             $this->addAccessControl(
                 $queryBuilder,
                 $this->user,
@@ -439,26 +439,26 @@ class DoctrineListBuilder extends AbstractListBuilder
         foreach ($this->getAllFields() as $key => $field) {
             // if field is in any conditional clause -> add join
             if (($field instanceof DoctrineFieldDescriptor || $field instanceof DoctrineJoinDescriptor) &&
-                false !== array_search($field->getEntityName(), $necessaryEntityNames)
+                false !== \array_search($field->getEntityName(), $necessaryEntityNames)
                 && $field->getEntityName() !== $this->entityName
             ) {
-                $addJoins = array_merge($addJoins, $field->getJoins());
+                $addJoins = \array_merge($addJoins, $field->getJoins());
             } else {
                 // include inner joins
                 foreach ($field->getJoins() as $entityName => $join) {
                     if (DoctrineJoinDescriptor::JOIN_METHOD_INNER !== $join->getJoinMethod() &&
-                        false === array_search($entityName, $necessaryEntityNames)
+                        false === \array_search($entityName, $necessaryEntityNames)
                     ) {
                         break;
                     }
-                    $addJoins = array_merge($addJoins, [$entityName => $join]);
+                    $addJoins = \array_merge($addJoins, [$entityName => $join]);
                 }
             }
         }
 
-        if ($this->user && $this->permission && array_key_exists($this->permission, $this->permissions)) {
+        if ($this->user && $this->permission && \array_key_exists($this->permission, $this->permissions)) {
             foreach ($this->permissionCheckFields as $permissionCheckField) {
-                $addJoins = array_merge($addJoins, $permissionCheckField->getJoins());
+                $addJoins = \array_merge($addJoins, $permissionCheckField->getJoins());
             }
         }
 
@@ -479,7 +479,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         // filter array for DoctrineFieldDescriptors
         foreach ($filterFields as $field) {
             // add joins of field
-            $fields = array_merge($fields, $field->getJoins());
+            $fields = \array_merge($fields, $field->getJoins());
 
             if ($field instanceof DoctrineFieldDescriptor
                 || $field instanceof DoctrineJoinDescriptor
@@ -498,7 +498,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         // unify result
-        return array_unique($fieldEntityNames);
+        return \array_unique($fieldEntityNames);
     }
 
     /**
@@ -538,8 +538,8 @@ class DoctrineListBuilder extends AbstractListBuilder
                 $searchParts[] = $searchField->getSearch();
             }
 
-            $this->queryBuilder->andWhere('(' . implode(' OR ', $searchParts) . ')');
-            $this->queryBuilder->setParameter('search', '%' . str_replace('*', '%', $this->search) . '%');
+            $this->queryBuilder->andWhere('(' . \implode(' OR ', $searchParts) . ')');
+            $this->queryBuilder->setParameter('search', '%' . \str_replace('*', '%', $this->search) . '%');
         }
 
         return $this->queryBuilder;
@@ -641,9 +641,9 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function getUniqueExpressionFieldDescriptors(array $expressions)
     {
-        if (0 === count($this->expressionFields)) {
+        if (0 === \count($this->expressionFields)) {
             $descriptors = [];
-            $uniqueNames = array_unique($this->getAllFieldNames($expressions));
+            $uniqueNames = \array_unique($this->getAllFieldNames($expressions));
             foreach ($uniqueNames as $uniqueName) {
                 $descriptors[] = $this->fieldDescriptors[$uniqueName];
             }
@@ -668,7 +668,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         $fieldNames = [];
         foreach ($expressions as $expression) {
             if ($expression instanceof ConjunctionExpressionInterface) {
-                $fieldNames = array_merge($fieldNames, $expression->getFieldNames());
+                $fieldNames = \array_merge($fieldNames, $expression->getFieldNames());
             } elseif ($expression instanceof BasicExpressionInterface) {
                 $fieldNames[] = $expression->getFieldName();
             }
@@ -679,7 +679,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
     public function createAndExpression(array $expressions)
     {
-        if (count($expressions) >= 2) {
+        if (\count($expressions) >= 2) {
             return new DoctrineAndExpression($expressions);
         }
 
@@ -688,7 +688,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
     public function createOrExpression(array $expressions)
     {
-        if (count($expressions) >= 2) {
+        if (\count($expressions) >= 2) {
             return new DoctrineOrExpression($expressions);
         }
 

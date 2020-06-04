@@ -90,7 +90,7 @@ class MetaTwigExtensionTest extends TestCase
                 '<link rel="alternate" href="/en/test-en-us" hreflang="en-us" />',
                 '<link rel="alternate" href="/fr/test-fr" hreflang="fr" />',
             ],
-            explode(PHP_EOL, $urls)
+            \explode(\PHP_EOL, $urls)
         );
     }
 
@@ -126,7 +126,7 @@ class MetaTwigExtensionTest extends TestCase
                 '<link rel="alternate" href="/en/test-en-us" hreflang="en-us" />',
                 '<link rel="alternate" href="/fr/test-fr" hreflang="fr" />',
             ],
-            explode(PHP_EOL, $urls)
+            \explode(\PHP_EOL, $urls)
         );
     }
 
@@ -155,7 +155,7 @@ class MetaTwigExtensionTest extends TestCase
                 '<link rel="alternate" href="/en/test-en-us" hreflang="en-us" />',
                 '<link rel="alternate" href="/fr/test-fr" hreflang="fr" />',
             ],
-            explode(PHP_EOL, $urls)
+            \explode(\PHP_EOL, $urls)
         );
     }
 
@@ -192,7 +192,7 @@ class MetaTwigExtensionTest extends TestCase
                 '<meta name="keywords" content="SEO, Keywords">',
                 '<meta name="robots" content="NOINDEX, NOFOLLOW">',
             ],
-            explode(PHP_EOL, $metaTags)
+            \explode(\PHP_EOL, $metaTags)
         );
     }
 
@@ -228,7 +228,7 @@ class MetaTwigExtensionTest extends TestCase
                 '<meta name="keywords" content="SEO, Keywords">',
                 '<meta name="robots" content="INDEX, FOLLOW">',
             ],
-            explode(PHP_EOL, $metaTags)
+            \explode(\PHP_EOL, $metaTags)
         );
     }
 }

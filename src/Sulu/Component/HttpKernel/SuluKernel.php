@@ -112,10 +112,10 @@ abstract class SuluKernel extends Kernel
      */
     protected function generateContainerClass($class)
     {
-        $class = false !== strpos($class, "@anonymous\0") ? get_parent_class($class) . str_replace('.', '_', ContainerBuilder::hash($class)) : $class;
-        $class = str_replace('\\', '_', $class) . ucfirst($this->environment) . ($this->debug ? 'Debug' : '') . 'Container';
-        if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $class)) {
-            throw new \InvalidArgumentException(sprintf('The environment "%s" contains invalid characters, it can only contain characters allowed in PHP class names.', $this->environment));
+        $class = false !== \strpos($class, "@anonymous\0") ? \get_parent_class($class) . \str_replace('.', '_', ContainerBuilder::hash($class)) : $class;
+        $class = \str_replace('\\', '_', $class) . \ucfirst($this->environment) . ($this->debug ? 'Debug' : '') . 'Container';
+        if (!\preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $class)) {
+            throw new \InvalidArgumentException(\sprintf('The environment "%s" contains invalid characters, it can only contain characters allowed in PHP class names.', $this->environment));
         }
 
         return $class;
@@ -139,7 +139,7 @@ abstract class SuluKernel extends Kernel
         $excludedConfigFiles = $this->glob($confDir, $pattern . $reversedConfigExtensions);
 
         foreach ($configFiles as $resource) {
-            if (!in_array($resource, $excludedConfigFiles)) {
+            if (!\in_array($resource, $excludedConfigFiles)) {
                 $loader->load($resource);
             }
         }
@@ -154,7 +154,7 @@ abstract class SuluKernel extends Kernel
         $excludedConfigFiles = $this->glob($confDir, $pattern . $reversedConfigExtensions);
 
         foreach ($configFiles as $resource) {
-            if (!in_array($resource, $excludedConfigFiles)) {
+            if (!\in_array($resource, $excludedConfigFiles)) {
                 $routes->import($resource, '/');
             }
         }
@@ -164,32 +164,32 @@ abstract class SuluKernel extends Kernel
     {
         $resources = new GlobResource($confDir, $pattern, false);
 
-        return array_keys(iterator_to_array($resources));
+        return \array_keys(\iterator_to_array($resources));
     }
 
     public function getCacheDir()
     {
-        return $this->getProjectDir() . DIRECTORY_SEPARATOR
-            . 'var' . DIRECTORY_SEPARATOR
-            . 'cache' . DIRECTORY_SEPARATOR
-            . $this->context . DIRECTORY_SEPARATOR
+        return $this->getProjectDir() . \DIRECTORY_SEPARATOR
+            . 'var' . \DIRECTORY_SEPARATOR
+            . 'cache' . \DIRECTORY_SEPARATOR
+            . $this->context . \DIRECTORY_SEPARATOR
             . $this->environment;
     }
 
     public function getCommonCacheDir()
     {
-        return $this->getProjectDir() . DIRECTORY_SEPARATOR
-            . 'var' . DIRECTORY_SEPARATOR
-            . 'cache' . DIRECTORY_SEPARATOR
-            . 'common' . DIRECTORY_SEPARATOR
+        return $this->getProjectDir() . \DIRECTORY_SEPARATOR
+            . 'var' . \DIRECTORY_SEPARATOR
+            . 'cache' . \DIRECTORY_SEPARATOR
+            . 'common' . \DIRECTORY_SEPARATOR
             . $this->environment;
     }
 
     public function getLogDir()
     {
-        return $this->getProjectDir() . DIRECTORY_SEPARATOR
-            . 'var' . DIRECTORY_SEPARATOR
-            . 'log' . DIRECTORY_SEPARATOR
+        return $this->getProjectDir() . \DIRECTORY_SEPARATOR
+            . 'var' . \DIRECTORY_SEPARATOR
+            . 'log' . \DIRECTORY_SEPARATOR
             . $this->context;
     }
 
@@ -223,7 +223,7 @@ abstract class SuluKernel extends Kernel
 
     protected function getKernelParameters()
     {
-        return array_merge(
+        return \array_merge(
             parent::getKernelParameters(),
             [
                 'sulu.context' => $this->context,

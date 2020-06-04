@@ -98,7 +98,7 @@ class SitemapController
                 }
 
                 if (!$sitemapAlias) {
-                    throw new NotFoundHttpException(sprintf(
+                    throw new NotFoundHttpException(\sprintf(
                         'No sitemaps found for "%s".',
                         $request->getHttpHost()
                     ));

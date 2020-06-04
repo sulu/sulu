@@ -35,7 +35,7 @@ class CustomUrlAdmin extends Admin
      */
     public static function getCustomUrlSecurityContext($webspaceKey)
     {
-        return sprintf('%s%s.%s', PageAdmin::SECURITY_CONTEXT_PREFIX, $webspaceKey, 'custom-urls');
+        return \sprintf('%s%s.%s', PageAdmin::SECURITY_CONTEXT_PREFIX, $webspaceKey, 'custom-urls');
     }
 
     /**

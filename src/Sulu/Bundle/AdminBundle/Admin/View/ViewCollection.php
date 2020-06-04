@@ -27,7 +27,7 @@ class ViewCollection
 
     public function get(string $viewName): ViewBuilderInterface
     {
-        if (!array_key_exists($viewName, $this->views)) {
+        if (!\array_key_exists($viewName, $this->views)) {
             throw new ViewNotFoundException($viewName);
         }
 
@@ -36,7 +36,7 @@ class ViewCollection
 
     public function has(string $viewName): bool
     {
-        return array_key_exists($viewName, $this->views);
+        return \array_key_exists($viewName, $this->views);
     }
 
     /**
