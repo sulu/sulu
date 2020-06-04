@@ -59,7 +59,17 @@ class SnippetInitializer implements InitializerInterface
 
         $output->writeln(\sprintf('  [+] <info>snippet path:</info>: %s ', $snippetPath));
 
-        $session->getRootNode()->addNode(\ltrim($snippetPath, '/'));
+        $currentNode = $session->getRootNode();
+        $pathSegments = \explode('/', \trim($snippetPath, '/'));
+
+        foreach ($pathSegments as $pathSegment) {
+            if (!$currentNode->hasNode($pathSegment)) {
+                $currentNode->addNode($pathSegment);
+            }
+
+            $currentNode = $currentNode->getNode($pathSegment);
+        }
+
         $session->save();
     }
 }
