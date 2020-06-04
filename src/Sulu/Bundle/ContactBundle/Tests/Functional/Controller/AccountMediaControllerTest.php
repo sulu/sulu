@@ -59,21 +59,9 @@ class AccountMediaControllerTest extends SuluTestCase
 
     public function setUpMediaEntities()
     {
-        $mediaType = new MediaType();
-        $mediaType->setName('document');
-        $mediaType->setDescription('This is a document');
-
         $imageType = new MediaType();
         $imageType->setName('image');
         $imageType->setDescription('This is an image');
-
-        $videoType = new MediaType();
-        $videoType->setName('video');
-        $videoType->setDescription('This is a video');
-
-        $audioType = new MediaType();
-        $audioType->setName('audio');
-        $audioType->setDescription('This is an audio');
 
         $media = new Media();
         $media->setType($imageType);
@@ -119,59 +107,23 @@ class AccountMediaControllerTest extends SuluTestCase
         $file2->addFileVersion($fileVersion);
 
         $collection = new Collection();
-        $this->setUpCollection($collection);
-
-        $media->setCollection($collection);
-        $media2->setCollection($collection);
-        $this->em->persist($media);
-        $this->em->persist($media2);
-        $this->em->persist($collection);
-        $this->em->persist($file);
-        $this->em->persist($file2);
-        $this->em->persist($videoType);
-        $this->em->persist($imageType);
-        $this->em->persist($audioType);
-        $this->em->persist($mediaType);
-    }
-
-    public function setUpCollection(&$collection)
-    {
-        $style = [
-            'type' => 'circle',
-            'color' => '#ffcc00',
-        ];
-
-        $collection->setStyle(\json_encode($style));
-
-        // Create Collection Type
         $collectionType = new CollectionType();
         $collectionType->setName('Default Collection Type');
         $collectionType->setDescription('Default Collection Type');
 
         $collection->setType($collectionType);
 
-        // Collection Meta 1
-        $collectionMeta = new CollectionMeta();
-        $collectionMeta->setTitle('Test Collection');
-        $collectionMeta->setDescription('This Description is only for testing');
-        $collectionMeta->setLocale('en-gb');
-        $collectionMeta->setCollection($collection);
-
-        $collection->addMeta($collectionMeta);
-
-        // Collection Meta 2
-        $collectionMeta2 = new CollectionMeta();
-        $collectionMeta2->setTitle('Test Kollektion');
-        $collectionMeta2->setDescription('Dies ist eine Test Beschreibung');
-        $collectionMeta2->setLocale('de');
-        $collectionMeta2->setCollection($collection);
-
-        $collection->addMeta($collectionMeta2);
+        $media->setCollection($collection);
+        $media2->setCollection($collection);
 
         $this->em->persist($collection);
         $this->em->persist($collectionType);
-        $this->em->persist($collectionMeta);
-        $this->em->persist($collectionMeta2);
+        $this->em->persist($media);
+        $this->em->persist($media2);
+        $this->em->persist($collection);
+        $this->em->persist($file);
+        $this->em->persist($file2);
+        $this->em->persist($imageType);
     }
 
     public function testGetList()
