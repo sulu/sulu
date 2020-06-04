@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ErrorController as SymfonyErrorController;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class ErrorControllerTest extends TestCase
 {
@@ -36,6 +37,11 @@ class ErrorControllerTest extends TestCase
     private $twig;
 
     /**
+     * @var FilesystemLoader
+     */
+    private $loader;
+
+    /**
      * @var TemplateAttributeResolverInterface
      */
     private $templateAttributeResolver;
@@ -45,6 +51,7 @@ class ErrorControllerTest extends TestCase
         $this->twig = $this->prophesize(Environment::class);
         $this->templateAttributeResolver = $this->prophesize(TemplateAttributeResolverInterface::class);
         $this->symfonyErrorController = $this->prophesize(SymfonyErrorController::class);
+        $this->loader = $this->prophesize(FilesystemLoader::class);
     }
 
     public function testPreview(): void
@@ -87,6 +94,15 @@ class ErrorControllerTest extends TestCase
 
         $this->symfonyErrorController->__invoke($exception)->shouldNotBeCalled();
         $this->templateAttributeResolver->resolve(Argument::any())->willReturnArgument(0);
+
+        $this->twig->getLoader()
+            ->shouldBeCalled()
+            ->willReturn($this->loader->reveal());
+
+        $this->loader->exists('error/error-404.html.twig')
+            ->shouldBeCalled()
+            ->willReturn(true);
+
         $this->twig->render('error/error-404.html.twig', Argument::any())
             ->willReturn('Error 404 Template')
             ->shouldBeCalled();
@@ -94,6 +110,38 @@ class ErrorControllerTest extends TestCase
         $response = $errorController->__invoke($request, $exception);
         $this->assertSame($code, $response->getStatusCode());
         $this->assertSame('Error 404 Template', $response->getContent());
+    }
+
+    public function testWebspace404WithoutTemplate(): void
+    {
+        $code = 404;
+        $exception = new HttpException($code, 'Page not found');
+        $webspace = new Webspace();
+        $webspace->addTemplate('error-404', 'error/error-404');
+        $request = $this->createRequest($webspace);
+        $request->setRequestFormat('xml');
+        $errorController = $this->createErrorController();
+
+        $this->templateAttributeResolver->resolve(Argument::any())->willReturnArgument(0);
+
+        $this->twig->getLoader()
+            ->shouldBeCalled()
+            ->willReturn($this->loader->reveal());
+
+        $this->loader->exists('error/error-404.xml.twig')
+            ->shouldBeCalled()
+            ->willReturn(false);
+
+        $this->symfonyErrorController->__invoke($exception)
+            ->shouldBeCalled()
+            ->willReturn(new Response('Page not found', $code));
+
+        $this->twig->render('error/error-404.xml.twig', Argument::any())
+            ->shouldNotBeCalled();
+
+        $response = $errorController->__invoke($request, $exception);
+        $this->assertSame($code, $response->getStatusCode());
+        $this->assertSame('Page not found', $response->getContent());
     }
 
     public function testWebspaceErrorFallbackTemplate(): void
@@ -107,6 +155,15 @@ class ErrorControllerTest extends TestCase
 
         $this->symfonyErrorController->__invoke($exception)->shouldNotBeCalled();
         $this->templateAttributeResolver->resolve(Argument::any())->willReturnArgument(0);
+
+        $this->twig->getLoader()
+            ->shouldBeCalled()
+            ->willReturn($this->loader->reveal());
+
+        $this->loader->exists('error/error.html.twig')
+            ->shouldBeCalled()
+            ->willReturn(true);
+
         $this->twig->render('error/error.html.twig', Argument::any())
             ->willReturn('Error Fallback Template')
             ->shouldBeCalled();
