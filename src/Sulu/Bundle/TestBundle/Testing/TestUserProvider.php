@@ -159,11 +159,4 @@ class TestUserProvider implements UserProviderInterface
     {
         return $this->userProvider->supportsClass($class);
     }
-
-    /**
-     * Sets the standard credentials for the user.
-     */
-    private function setCredentials(UserInterface $user)
-    {
-    }
 }
