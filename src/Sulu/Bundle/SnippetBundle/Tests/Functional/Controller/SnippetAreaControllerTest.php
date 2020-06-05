@@ -41,15 +41,19 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
         $response = \json_decode($client->getResponse()->getContent(), true);
 
         $data = $response['_embedded']['areas'];
-        $this->assertEquals(2, $response['total']);
+        $this->assertEquals(3, $response['total']);
         $this->assertEquals('car', $data[0]['template']);
         $this->assertEquals('Car', $data[0]['title']);
         $this->assertEquals(null, $data[0]['defaultTitle']);
         $this->assertEquals(null, $data[0]['defaultUuid']);
         $this->assertEquals('hotel', $data[1]['template']);
-        $this->assertEquals('Hotel', $data[1]['title']);
+        $this->assertEquals('Golf hotel', $data[1]['title']);
         $this->assertEquals(null, $data[1]['defaultTitle']);
         $this->assertEquals(null, $data[1]['defaultUuid']);
+        $this->assertEquals('hotel', $data[2]['template']);
+        $this->assertEquals('Sport hotel', $data[2]['title']);
+        $this->assertEquals(null, $data[2]['defaultTitle']);
+        $this->assertEquals(null, $data[2]['defaultUuid']);
     }
 
     public function testPutDefault()
@@ -76,15 +80,19 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
         $response = \json_decode($client->getResponse()->getContent(), true);
         $data = $response['_embedded']['areas'];
 
-        $this->assertEquals(2, $response['total']);
+        $this->assertEquals(3, $response['total']);
         $this->assertEquals('car', $data[0]['template']);
         $this->assertEquals('Car', $data[0]['title']);
         $this->assertEquals($this->car1->getTitle(), $data[0]['defaultTitle']);
         $this->assertEquals($this->car1->getUuid(), $data[0]['defaultUuid']);
         $this->assertEquals('hotel', $data[1]['template']);
-        $this->assertEquals('Hotel', $data[1]['title']);
+        $this->assertEquals('Golf hotel', $data[1]['title']);
         $this->assertEquals(null, $data[1]['defaultTitle']);
         $this->assertEquals(null, $data[1]['defaultUuid']);
+        $this->assertEquals('hotel', $data[2]['template']);
+        $this->assertEquals('Sport hotel', $data[2]['title']);
+        $this->assertEquals(null, $data[2]['defaultTitle']);
+        $this->assertEquals(null, $data[2]['defaultUuid']);
     }
 
     /**
@@ -114,14 +122,18 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
         $response = \json_decode($client->getResponse()->getContent(), true);
         $data = $response['_embedded']['areas'];
 
-        $this->assertEquals(2, $response['total']);
+        $this->assertEquals(3, $response['total']);
         $this->assertEquals('car', $data[0]['template']);
         $this->assertEquals('Car', $data[0]['title']);
         $this->assertEquals(null, $data[0]['defaultTitle']);
         $this->assertEquals(null, $data[0]['defaultUuid']);
         $this->assertEquals('hotel', $data[1]['template']);
-        $this->assertEquals('Hotel', $data[1]['title']);
+        $this->assertEquals('Golf hotel', $data[1]['title']);
         $this->assertEquals(null, $data[1]['defaultTitle']);
         $this->assertEquals(null, $data[1]['defaultUuid']);
+        $this->assertEquals('hotel', $data[2]['template']);
+        $this->assertEquals('Sport hotel', $data[2]['title']);
+        $this->assertEquals(null, $data[2]['defaultTitle']);
+        $this->assertEquals(null, $data[2]['defaultUuid']);
     }
 }

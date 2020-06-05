@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {shallow, mount, render} from 'enzyme';
 import {Router} from 'sulu-admin-bundle/services';
 import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
 
@@ -23,7 +23,7 @@ beforeEach(() => {
     jest.resetModules();
 });
 
-test('Render snippet areas with loading icon', () => {
+test('Show loader when loading snippet areas', () => {
     const SnippetAreas = require('../SnippetAreas').default;
     const SnippetAreaStore = require('../stores/SnippetAreaStore');
 
@@ -37,8 +37,8 @@ test('Render snippet areas with loading icon', () => {
         this.loading = true;
     });
 
-    expect(render(<SnippetAreas route={router.route} router={router} />)).toMatchSnapshot();
-    expect(SnippetAreaStore).toBeCalledWith('sulu');
+    const snippetAreas = shallow(<SnippetAreas route={router.route} router={router} />);
+    expect(snippetAreas.find('Loader')).toHaveLength(1);
 });
 
 test('Render snippet areas with data as table', () => {
@@ -103,6 +103,7 @@ test('Close after clicking add without choosing a snippet', () => {
     expect(snippetAreas.find(SingleListOverlay).prop('open')).toEqual(false);
     snippetAreas.find('Button[className="addButton"] button').simulate('click');
     expect(snippetAreas.find(SingleListOverlay).prop('open')).toEqual(true);
+    expect(snippetAreas.find(SingleListOverlay).prop('options')).toEqual({areas: 'default'});
 
     snippetAreas.find(SingleListOverlay).prop('onClose')();
     snippetAreas.update();

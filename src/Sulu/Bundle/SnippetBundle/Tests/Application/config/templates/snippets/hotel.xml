@@ -12,6 +12,22 @@
         <title lang="fr">Hôtel</title>
     </meta>
 
+    <areas>
+        <area key="golf_hotel">
+            <meta>
+                <title lang="en">Golf hotel</title>
+                <title lang="de">Golfhotel</title>
+            </meta>
+        </area>
+
+        <area key="sport_hotel">
+            <meta>
+                <title lang="en">Sport hotel</title>
+                <title lang="de">Sporthotel</title>
+            </meta>
+        </area>
+    </areas>
+
     <properties>
         <property name="title" type="text_line" mandatory="true">
             <meta>

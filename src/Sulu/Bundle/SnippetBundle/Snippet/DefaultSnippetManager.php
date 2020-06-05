@@ -162,6 +162,17 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         return $this->settingsManager->loadString($webspaceKey, 'snippets-' . $area['key']);
     }
 
+    public function getTypeForArea(string $area): ?string
+    {
+        $area = $this->areas->get($area);
+
+        if (!$area) {
+            return null;
+        }
+
+        return $area['template'];
+    }
+
     /**
      * Check template.
      *
