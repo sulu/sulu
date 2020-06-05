@@ -69,6 +69,7 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
 
         $this->request = $this->prophesize(Request::class);
         $this->request->getScheme()->willReturn('http');
+        $this->request->getHost()->willReturn('sulu.io');
         $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
 
         $this->linkProviderPool = new LinkProviderPool(
@@ -135,7 +136,7 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
             $this->environment,
             $content->getLocale(),
             $content->getWebspaceKey(),
-            null,
+            'sulu.io',
             'http'
         )->willReturn('/de' . $content->getUrl());
 
@@ -156,7 +157,7 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
             $this->environment,
             $content1->getLocale(),
             $content1->getWebspaceKey(),
-            null,
+            'sulu.io',
             'http'
         )->willReturn('/de' . $content1->getUrl());
 
@@ -165,7 +166,7 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
             $this->environment,
             $content2->getLocale(),
             $content2->getWebspaceKey(),
-            null,
+            'sulu.io',
             'http'
         )->willReturn('/de' . $content2->getUrl());
 
