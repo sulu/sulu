@@ -133,14 +133,4 @@ class SuluTestKernel extends SuluKernel
             ));
         });
     }
-
-    /**
-     * {@inheritdoc}
-     *
-     * Add the Sulu environment to the container name
-     */
-    protected function getContainerClass()
-    {
-        return $this->name . \ucfirst($this->getContext()) . \ucfirst($this->environment) . ($this->debug ? 'Debug' : '') . 'ProjectContainer';
-    }
 }
