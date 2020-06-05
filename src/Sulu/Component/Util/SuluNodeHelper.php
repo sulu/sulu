@@ -222,7 +222,7 @@ class SuluNodeHelper
                 'Snippet type "%s" not available, available snippet types are: [%s]',
                 $type,
                 \implode(', ', $snippetStructures)
-            ));
+            ), 0, $e);
         }
     }
 
