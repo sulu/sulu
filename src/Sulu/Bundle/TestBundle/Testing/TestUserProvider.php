@@ -87,13 +87,15 @@ class TestUserProvider implements UserProviderInterface
             $this->entityManager->persist($contact);
 
             $user = $this->userRepository->createNew();
-            $this->setCredentials($user);
-            $user->setLocale('en');
             $user->setContact($contact);
             $this->entityManager->persist($user);
-        } else {
-            $this->setCredentials($user);
         }
+
+        $user->setUsername(self::TEST_USER_USERNAME);
+        $user->setSalt('');
+        $encoder = $this->userPasswordEncoderFactory->getEncoder($user);
+        $user->setPassword($encoder->encodePassword('test', $user->getSalt()));
+        $user->setLocale('en');
 
         $this->entityManager->flush();
 
@@ -163,9 +165,5 @@ class TestUserProvider implements UserProviderInterface
      */
     private function setCredentials(UserInterface $user)
     {
-        $user->setUsername(self::TEST_USER_USERNAME);
-        $user->setSalt('');
-        $encoder = $this->userPasswordEncoderFactory->getEncoder($user);
-        $user->setPassword($encoder->encodePassword('test', $user->getSalt()));
     }
 }

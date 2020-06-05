@@ -7,6 +7,15 @@
 
     <key>car</key>
 
+    <areas>
+        <area key="car">
+            <meta>
+                <title lang="en">Car</title>
+                <title lang="de">Auto</title>
+            </meta>
+        </area>
+    </areas>
+
     <properties>
         <property name="title" type="text_line" mandatory="true">
             <meta>

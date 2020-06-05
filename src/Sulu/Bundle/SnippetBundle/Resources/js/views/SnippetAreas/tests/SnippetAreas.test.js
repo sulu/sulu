@@ -103,7 +103,7 @@ test('Close after clicking add without choosing a snippet', () => {
     expect(snippetAreas.find(SingleListOverlay).prop('open')).toEqual(false);
     snippetAreas.find('Button[className="addButton"] button').simulate('click');
     expect(snippetAreas.find(SingleListOverlay).prop('open')).toEqual(true);
-    expect(snippetAreas.find(SingleListOverlay).prop('options')).toEqual({types: 'default'});
+    expect(snippetAreas.find(SingleListOverlay).prop('options')).toEqual({areas: 'default'});
 
     snippetAreas.find(SingleListOverlay).prop('onClose')();
     snippetAreas.update();
