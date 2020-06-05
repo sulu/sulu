@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Rest;
 
+use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
@@ -23,9 +24,15 @@ class FlattenExceptionNormalizer implements NormalizerInterface
      */
     private $normalizer;
 
-    public function __construct(NormalizerInterface $normalizer)
+    /**
+     * @var string
+     */
+    private $environment;
+
+    public function __construct(NormalizerInterface $normalizer, string $environment)
     {
         $this->normalizer = $normalizer;
+        $this->environment = $environment;
     }
 
     public function normalize($exception, $format = null, array $context = [])
@@ -34,6 +41,26 @@ class FlattenExceptionNormalizer implements NormalizerInterface
 
         if (\is_array($data)) {
             $data['code'] = $exception->getCode();
+        }
+
+        if (\in_array($this->environment, ['dev', 'test'])) {
+            $errors = '';
+
+            if ($exception instanceof FlattenException) {
+                $errors .= $exception->getClass();
+                $errors .= ': ';
+                $errors .= $exception->getMessage();
+                $errors .= ' in ';
+                $errors .= $exception->getFile();
+                $errors .= ':';
+                $errors .= $exception->getLine();
+                $errors .= \PHP_EOL . 'Stack trace:' . \PHP_EOL;
+                $errors .= $exception->getTraceAsString();
+            } else {
+                $errors = (string) $exception;
+            }
+
+            $data['errors'] = [$errors];
         }
 
         return $data;
