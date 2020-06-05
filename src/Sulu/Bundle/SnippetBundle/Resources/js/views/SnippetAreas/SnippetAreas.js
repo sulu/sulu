@@ -27,6 +27,10 @@ class SnippetAreas extends React.Component<ViewProps> {
             },
         } = router;
 
+        if (typeof webspace !== 'string') {
+            throw new Error('The "webspace" router attribute must be a string!');
+        }
+
         this.snippetAreaStore = new SnippetAreaStore(webspace);
         this.cacheClearToolbarAction = new CacheClearToolbarAction();
     }

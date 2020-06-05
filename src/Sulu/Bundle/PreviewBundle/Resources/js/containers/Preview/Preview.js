@@ -58,6 +58,14 @@ class Preview extends React.Component<Props> {
             },
         } = this.props;
 
+        if (webspace !== undefined && typeof webspace !== 'string') {
+            throw new Error('The "webspace" router attribute must be a string if set!');
+        }
+
+        if (locale !== undefined && typeof locale !== 'string') {
+            throw new Error('The "webspace" router attribute must be a string if set!');
+        }
+
         if (Preview.audienceTargeting) {
             const targetGroupsStore = new ResourceListStore('target_groups');
             this.targetGroupsStore = targetGroupsStore;

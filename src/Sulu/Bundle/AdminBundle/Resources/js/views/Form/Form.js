@@ -19,7 +19,8 @@ import formToolbarActionRegistry from './registries/formToolbarActionRegistry';
 import AbstractFormToolbarAction from './toolbarActions/AbstractFormToolbarAction';
 import formStyles from './form.scss';
 
-type Props = ViewProps & {
+type Props = {
+    ...ViewProps,
     locales: Array<string>,
     resourceStore: ResourceStore,
     title?: string,
@@ -91,6 +92,10 @@ class Form extends React.Component<Props> {
             },
         } = router;
         const {id} = attributes;
+
+        if (id !== undefined && typeof id !== 'string' && typeof id !== 'number') {
+            throw new Error('The "id" router attribute must be a string or a number if given!');
+        }
 
         if (!resourceStore) {
             throw new Error(

@@ -11,7 +11,7 @@ import Route from './Route';
 export default class Router {
     history: Object;
     @observable route: Route;
-    @observable attributes: Object = {};
+    @observable attributes: AttributeMap = {};
     @observable bindings: Map<string, IObservableValue<*>> = new Map();
     bindingDefaults: Map<string, ?string | number | boolean> = new Map();
     attributesHistory: {[string]: Array<AttributeMap>} = {};
