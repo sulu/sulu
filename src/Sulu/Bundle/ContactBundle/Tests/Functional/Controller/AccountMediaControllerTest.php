@@ -12,22 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\ContactBundle\Entity\Account;
-use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
-use Sulu\Bundle\ContactBundle\Entity\AccountContact;
-use Sulu\Bundle\ContactBundle\Entity\Address;
-use Sulu\Bundle\ContactBundle\Entity\AddressType;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\Email;
-use Sulu\Bundle\ContactBundle\Entity\EmailType;
-use Sulu\Bundle\ContactBundle\Entity\Fax;
-use Sulu\Bundle\ContactBundle\Entity\FaxType;
-use Sulu\Bundle\ContactBundle\Entity\Note;
-use Sulu\Bundle\ContactBundle\Entity\Phone;
-use Sulu\Bundle\ContactBundle\Entity\PhoneType;
-use Sulu\Bundle\ContactBundle\Entity\Url;
-use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
-use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
@@ -58,239 +43,55 @@ class AccountMediaControllerTest extends SuluTestCase
      */
     protected $media2;
 
+    /**
+     * @var MediaType
+     */
+    protected $imageType;
+
+    /**
+     * @var Collection
+     */
+    protected $collection;
+
     public function setUp(): void
     {
         $this->client = $this->createAuthenticatedClient();
         $this->em = $this->getEntityManager();
         $this->purgeDatabase();
-        $this->initOrm();
-    }
 
-    private function initOrm()
-    {
         $this->account = new Account();
         $this->account->setName('Company');
-        $this->account->setPlaceOfJurisdiction('Feldkirch');
 
-        $urlType = new UrlType();
-        $urlType->setName('Private');
+        $this->imageType = new MediaType();
+        $this->imageType->setName('image');
 
-        $url = new Url();
-        $url->setUrl('http://www.company.example');
-        $url->setUrlType($urlType);
-        $this->account->addUrl($url);
-
-        $emailType = new EmailType();
-        $emailType->setName('Private');
-
-        $email = new Email();
-        $email->setEmail('office@company.example');
-        $email->setEmailType($emailType);
-        $this->account->addEmail($email);
-
-        $phoneType = new PhoneType();
-        $phoneType->setName('Private');
-
-        $phone = new Phone();
-        $phone->setPhone('123456789');
-        $phone->setPhoneType($phoneType);
-        $this->account->addPhone($phone);
-
-        $faxType = new FaxType();
-        $faxType->setName('Private');
-
-        $fax = new Fax();
-        $fax->setFax('123654789');
-        $fax->setFaxType($faxType);
-        $this->account->addFax($fax);
-
-        $addressType = new AddressType();
-        $addressType->setName('Private');
-
-        $address = new Address();
-        $address->setStreet('Musterstraße');
-        $address->setNumber('1');
-        $address->setZip('0000');
-        $address->setCity('Musterstadt');
-        $address->setState('Musterland');
-        $address->setCountryCode('AT');
-        $address->setAddressType($addressType);
-        $address->setBillingAddress(true);
-        $address->setPrimaryAddress(true);
-        $address->setDeliveryAddress(false);
-        $address->setPostboxCity('Dornbirn');
-        $address->setPostboxPostcode('6850');
-        $address->setPostboxNumber('4711');
-
-        $accountAddress = new AccountAddress();
-        $accountAddress->setAddress($address);
-        $accountAddress->setAccount($this->account);
-        $accountAddress->setMain(true);
-        $this->account->addAccountAddress($accountAddress);
-        $address->addAccountAddress($accountAddress);
-
-        $contact = new Contact();
-        $contact->setFirstName('Vorname');
-        $contact->setLastName('Nachname');
-        $contact->setMiddleName('Mittelname');
-        $contact->setFormOfAddress(0);
-
-        $accountContact = new AccountContact();
-        $accountContact->setContact($contact);
-        $accountContact->setAccount($this->account);
-        $accountContact->setMain(true);
-        $this->account->addAccountContact($accountContact);
-
-        $note = new Note();
-        $note->setValue('Note');
-        $this->account->addNote($note);
-
-        $this->setUpMediaEntities();
-
-        $this->em->persist($this->account);
-        $this->em->persist($urlType);
-        $this->em->persist($url);
-        $this->em->persist($emailType);
-        $this->em->persist($accountContact);
-        $this->em->persist($email);
-        $this->em->persist($phoneType);
-        $this->em->persist($phone);
-        $this->em->persist($addressType);
-        $this->em->persist($address);
-        $this->em->persist($accountAddress);
-        $this->em->persist($note);
-        $this->em->persist($faxType);
-        $this->em->persist($fax);
-        $this->em->persist($contact);
-
-        $this->em->flush();
-        $this->em->clear();
-    }
-
-    public function setUpMediaEntities()
-    {
-        $mediaType = new MediaType();
-        $mediaType->setName('document');
-        $mediaType->setDescription('This is a document');
-
-        $imageType = new MediaType();
-        $imageType->setName('image');
-        $imageType->setDescription('This is an image');
-
-        $videoType = new MediaType();
-        $videoType->setName('video');
-        $videoType->setDescription('This is a video');
-
-        $audioType = new MediaType();
-        $audioType->setName('audio');
-        $audioType->setDescription('This is an audio');
-
-        $media = new Media();
-        $media->setType($imageType);
-
-        $this->media = $media;
-
-        $media2 = new Media();
-        $media2->setType($imageType);
-
-        $this->media2 = $media2;
-
-        $this->account->addMedia($media2);
-
-        // create file
-        $file = new File();
-        $file->setVersion(1);
-        $file->setMedia($media);
-
-        $file2 = new File();
-        $file2->setVersion(1);
-        $file2->setMedia($media2);
-
-        // create file version
-        $fileVersion = new FileVersion();
-        $fileVersion->setVersion(1);
-        $fileVersion->setName('photo.jpeg');
-        $fileVersion->setMimeType('image/jpg');
-        $fileVersion->setFile($file);
-        $fileVersion->setSize(1124214);
-        $fileVersion->setDownloadCounter(2);
-        $fileVersion->setStorageOptions(['segment' => '01', 'fileName' => 'photo.jpeg']);
-        $file->addFileVersion($fileVersion);
-
-        // create file version
-        $fileVersion = new FileVersion();
-        $fileVersion->setVersion(1);
-        $fileVersion->setName('photo.jpeg');
-        $fileVersion->setMimeType('image/jpg');
-        $fileVersion->setFile($file2);
-        $fileVersion->setSize(1124214);
-        $fileVersion->setDownloadCounter(2);
-        $fileVersion->setStorageOptions(['segment' => '01', 'fileName' => 'photo.jpeg']);
-        $file2->addFileVersion($fileVersion);
-
-        $collection = new Collection();
-        $this->setUpCollection($collection);
-
-        $media->setCollection($collection);
-        $media2->setCollection($collection);
-        $this->em->persist($media);
-        $this->em->persist($media2);
-        $this->em->persist($collection);
-        $this->em->persist($file);
-        $this->em->persist($file2);
-        $this->em->persist($videoType);
-        $this->em->persist($imageType);
-        $this->em->persist($audioType);
-        $this->em->persist($mediaType);
-    }
-
-    public function setUpCollection(&$collection)
-    {
-        $style = [
-            'type' => 'circle',
-            'color' => '#ffcc00',
-        ];
-
-        $collection->setStyle(\json_encode($style));
-
-        // Create Collection Type
+        $this->collection = new Collection();
         $collectionType = new CollectionType();
         $collectionType->setName('Default Collection Type');
         $collectionType->setDescription('Default Collection Type');
 
-        $collection->setType($collectionType);
+        $this->collection->setType($collectionType);
 
-        // Collection Meta 1
-        $collectionMeta = new CollectionMeta();
-        $collectionMeta->setTitle('Test Collection');
-        $collectionMeta->setDescription('This Description is only for testing');
-        $collectionMeta->setLocale('en-gb');
-        $collectionMeta->setCollection($collection);
-
-        $collection->addMeta($collectionMeta);
-
-        // Collection Meta 2
-        $collectionMeta2 = new CollectionMeta();
-        $collectionMeta2->setTitle('Test Kollektion');
-        $collectionMeta2->setDescription('Dies ist eine Test Beschreibung');
-        $collectionMeta2->setLocale('de');
-        $collectionMeta2->setCollection($collection);
-
-        $collection->addMeta($collectionMeta2);
-
-        $this->em->persist($collection);
+        $this->em->persist($this->account);
+        $this->em->persist($this->collection);
         $this->em->persist($collectionType);
-        $this->em->persist($collectionMeta);
-        $this->em->persist($collectionMeta2);
+        $this->em->persist($this->imageType);
+        $this->em->flush();
     }
 
     public function testGetList()
     {
+        $media1 = $this->createMedia('photo.jpeg');
+        $this->account->addMedia($media1);
+
+        $this->em->flush();
+
+        $this->client = $this->createAuthenticatedClient();
         $this->client->request('GET', '/api/accounts/' . $this->account->getId() . '/medias?flat=true');
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
-        $this->assertEquals($this->media2->getId(), $response->_embedded->account_media[0]->id);
+        $this->assertEquals($media1->getId(), $response->_embedded->account_media[0]->id);
         $this->assertObjectHasAttribute('thumbnails', $response->_embedded->account_media[0]);
         $this->assertObjectHasAttribute('sulu-100x100', $response->_embedded->account_media[0]->thumbnails);
         $this->assertTrue(\is_string($response->_embedded->account_media[0]->thumbnails->{'sulu-100x100'}));
@@ -298,6 +99,13 @@ class AccountMediaControllerTest extends SuluTestCase
 
     public function testAccountMediaPost()
     {
+        $media1 = $this->createMedia('photo.jpeg');
+        $this->account->addMedia($media1);
+
+        $media2 = $this->createMedia('photo.jpeg');
+
+        $this->em->flush();
+
         $this->client->request(
             'GET',
             '/api/accounts/' . $this->account->getId()
@@ -310,7 +118,7 @@ class AccountMediaControllerTest extends SuluTestCase
             'POST',
             '/api/accounts/' . $this->account->getId() . '/medias',
             [
-                'mediaId' => $this->media->getId(),
+                'mediaId' => $media2->getId(),
             ]
         );
 
@@ -330,13 +138,18 @@ class AccountMediaControllerTest extends SuluTestCase
 
     public function testAccountMediaPostNotExistingMedia()
     {
+        $media1 = $this->createMedia('photo.jpeg');
+        $this->account->addMedia($media1);
+
+        $this->em->flush();
+
         $this->client->request(
             'GET',
             '/api/accounts/' . $this->account->getId()
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(1, \count($response->medias));
+        $this->assertCount(1, $response->medias);
 
         $this->client->request(
             'POST',
@@ -354,14 +167,19 @@ class AccountMediaControllerTest extends SuluTestCase
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(1, \count($response->medias));
+        $this->assertCount(1, $response->medias);
     }
 
     public function testAccountMediaDelete()
     {
+        $media1 = $this->createMedia('photo.jpeg');
+        $this->account->addMedia($media1);
+
+        $this->em->flush();
+
         $this->client->request(
             'DELETE',
-            '/api/accounts/' . $this->account->getId() . '/medias/' . $this->media2->getId()
+            '/api/accounts/' . $this->account->getId() . '/medias/' . $media1->getId()
         );
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
@@ -377,6 +195,11 @@ class AccountMediaControllerTest extends SuluTestCase
 
     public function testAccountMediaDeleteNotExistingRelation()
     {
+        $media1 = $this->createMedia('photo.jpeg');
+        $this->account->addMedia($media1);
+
+        $this->em->flush();
+
         $this->client->request(
             'DELETE',
             '/api/accounts/' . $this->account->getId() . '/medias/99'
@@ -390,6 +213,34 @@ class AccountMediaControllerTest extends SuluTestCase
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(1, \count($response->medias));
+        $this->assertCount(1, $response->medias);
+    }
+
+    private function createMedia(string $name)
+    {
+        $file = new File();
+        $file->setVersion(1);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setName($name);
+        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setFile($file);
+        $fileVersion->setSize(111111);
+        $fileVersion->setDownloadCounter(2);
+        $fileVersion->setChanged(new \DateTime('1950-04-20'));
+        $fileVersion->setCreated(new \DateTime('1950-04-20'));
+        $file->addFileVersion($fileVersion);
+        $this->em->persist($fileVersion);
+
+        $media = new Media();
+        $media->setType($this->imageType);
+        $media->setCollection($this->collection);
+        $media->addFile($file);
+        $file->setMedia($media);
+        $this->em->persist($media);
+        $this->em->persist($file);
+
+        return $media;
     }
 }
