@@ -44,12 +44,6 @@ install:
         )
     )
 
-  # install composer
-  - IF NOT EXIST C:\tools\composer.phar (
-        cd C:\tools
-        && appveyor DownloadFile https://getcomposer.org/composer.phar
-    )
-
   # install php
   - IF NOT EXIST C:\tools\php (
         cinst --yes --allow-empty-checksums php --version %PHP_VERSION% --params '/InstallDir:C:\tools\php'
@@ -67,6 +61,13 @@ install:
   - echo extension=php_intl.dll >> php.ini
   - echo extension=php_pdo_mysql.dll >> php.ini
   - echo extension=php_fileinfo.dll >> php.ini
+
+  # install composer
+  - IF NOT EXIST C:\tools\composer.phar (
+        cd C:\tools
+        && appveyor DownloadFile https://getcomposer.org/composer.phar
+    )
+  - php -dmemory_limit=-1 C:\tools\composer.phar self-update 
 
 before_test:
   - cd %APPVEYOR_BUILD_FOLDER%
