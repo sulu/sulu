@@ -86,7 +86,6 @@ class AccountMediaControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $this->client = $this->createAuthenticatedClient();
         $this->client->request('GET', '/api/accounts/' . $this->account->getId() . '/medias?flat=true');
         $response = \json_decode($this->client->getResponse()->getContent());
 
