@@ -90,4 +90,6 @@ interface DefaultSnippetManagerInterface
      * @return Webspace[]
      */
     public function loadWebspaces($uuid);
+
+    public function getTypeForArea(string $area): ?string;
 }

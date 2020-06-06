@@ -203,6 +203,24 @@ class SnippetControllerTest extends SuluTestCase
             ],
             [
                 [
+                    'areas' => 'car',
+                ],
+                4,
+            ],
+            [
+                [
+                    'areas' => 'golf_hotel',
+                ],
+                2,
+            ],
+            [
+                [
+                    'areas' => 'sport_hotel',
+                ],
+                2,
+            ],
+            [
+                [
                     'types' => 'hotel',
                 ],
                 2,
@@ -234,7 +252,7 @@ class SnippetControllerTest extends SuluTestCase
     /**
      * @dataProvider provideIndex
      */
-    public function testIndex($params, $expectedNbResults)
+    public function testIndex($params, $expectedResultCount)
     {
         $params = \array_merge([
             'locale' => 'de',
@@ -247,7 +265,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $response);
 
         $result = \json_decode($response->getContent(), true);
-        $this->assertCount($expectedNbResults, $result['_embedded']['snippets']);
+        $this->assertCount($expectedResultCount, $result['_embedded']['snippets']);
 
         foreach ($result['_embedded']['snippets'] as $snippet) {
             // check if all snippets have a title, even if it is a ghost page
@@ -481,7 +499,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->documentManager->persist($page, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
         $this->documentManager->flush();
 
-        $this->defaultSnippetManager->save('sulu_io', 'hotel', $this->hotel1->getUuid(), 'en');
+        $this->defaultSnippetManager->save('sulu_io', 'sport_hotel', $this->hotel1->getUuid(), 'en');
 
         $this->client->request('DELETE', '/api/snippets/' . $this->hotel1->getUuid());
         $response = $this->client->getResponse();

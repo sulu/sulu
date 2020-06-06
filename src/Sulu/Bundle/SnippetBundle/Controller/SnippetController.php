@@ -151,11 +151,19 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $locale = $this->getLocale($request);
 
         // if the type parameter is falsy, assign NULL to $type
-        $types = $request->query->get('types', null) ?: null;
+        $types = null;
 
-        if (false !== \strpos($types, ',')) {
+        if ($request->query->has('areas')) {
+            $types = \array_map(function($area) {
+                return $this->defaultSnippetManager->getTypeForArea($area);
+            }, \explode(',', $request->query->get('areas')));
+        } elseif ($request->query->has('types')) {
+            $types = \explode(',', $request->query->get('types'));
+        }
+
+        if ($types && \count($types) > 1) {
             // TODO Implement filtering by multiple types
-            throw new \Exception('Filtering by multiple types at once is currently not supported!');
+            throw new \Exception('Filtering by multiple types or areas at once is currently not supported!');
         }
 
         $idsString = $request->get('ids');
@@ -167,7 +175,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         } else {
             $snippets = $this->snippetRepository->getSnippets(
                 $locale,
-                $types,
+                $types ? $types[0] : null,
                 $this->listRestHelper->getOffset(),
                 $this->listRestHelper->getLimit(),
                 $this->listRestHelper->getSearchPattern(),
@@ -177,7 +185,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
 
             $total = $this->snippetRepository->getSnippetsAmount(
                 $locale,
-                $types,
+                $types ? $types[0] : null,
                 $this->listRestHelper->getSearchPattern(),
                 $this->listRestHelper->getSortColumn(),
                 $this->listRestHelper->getSortOrder()
