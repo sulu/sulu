@@ -18,13 +18,13 @@ export default class PreviewStore {
 
     resourceKey: string;
     id: ?string | number;
-    locale: string;
+    locale: ?string;
     @observable webspace: string;
     @observable targetGroup: number = -1;
 
     @observable token: ?string;
 
-    constructor(resourceKey: string, id: ?string | number, locale: string, webspace: string) {
+    constructor(resourceKey: string, id: ?string | number, locale: ?string, webspace: string) {
         this.resourceKey = resourceKey;
         this.id = id;
         this.locale = locale;

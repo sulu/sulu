@@ -78,8 +78,8 @@ class Login extends React.Component<Props> {
 
         const {forgotPasswordToken} = router.attributes;
 
-        if (!forgotPasswordToken) {
-            throw new Error('The "forgotPasswordToken" is not set. This should not happen and is likely a bug.');
+        if (typeof forgotPasswordToken !== 'string') {
+            throw new Error('The "forgotPasswordToken" router attribute must be a string!');
         }
 
         userStore.resetPassword(password, forgotPasswordToken)

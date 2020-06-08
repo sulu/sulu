@@ -21,7 +21,8 @@ function getUserSettingsKeyForWebspace(webspace: string) {
     return [USER_SETTINGS_KEY, webspace].join('_');
 }
 
-type Props = ViewProps & {
+type Props = {
+    ...ViewProps,
     webspace: Webspace,
     webspaceKey: IObservableValue<string>,
 };
@@ -37,6 +38,10 @@ class PageList extends React.Component<Props> {
     webspaceKeyDisposer: () => void;
 
     static getDerivedRouteAttributes(route: Route, attributes: AttributeMap) {
+        if (typeof attributes.webspace !== 'string') {
+            throw new Error('The "webspace" router attribute must be a string!');
+        }
+
         return {
             active: ListStore.getActiveSetting(PAGES_RESOURCE_KEY, getUserSettingsKeyForWebspace(attributes.webspace)),
         };
@@ -96,6 +101,10 @@ class PageList extends React.Component<Props> {
                 webspace,
             },
         } = router;
+
+        if (typeof webspace !== 'string') {
+            throw new Error('The "webspace" router attribute must be a string!');
+        }
 
         const observableOptions = {};
         const requestParameters = {webspace};
