@@ -161,7 +161,7 @@ class StructureProvider implements ProviderInterface
                                         '[' . $componentProperty->getName() . ']'
                                     ),
                                     'aggregate' => true,
-                                    'indexed' => false,
+                                    'indexed' => isset($tagAttributes['index']) && 'indexed' === $tagAttributes['index'],
                                 ]
                             );
                         }
@@ -388,7 +388,7 @@ EOT;
                     'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
                     'field' => $this->getContentField($property),
                     'aggregate' => true,
-                    'indexed' => false,
+                    'indexed' => isset($tagAttributes['index']) && 'indexed' === $tagAttributes['index'],
                 ]
             );
         }

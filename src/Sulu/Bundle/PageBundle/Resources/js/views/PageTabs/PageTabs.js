@@ -18,6 +18,10 @@ class PageTabs extends React.Component<ViewProps> {
             },
         } = this.props;
 
+        if (typeof webspace !== 'string') {
+            throw new Error('The "webspace" router attribute must be a string!');
+        }
+
         return (
             <ResourceTabs
                 {...props}

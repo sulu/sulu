@@ -11,7 +11,7 @@ export type RouteConfig = {|
     type: string,
 |};
 
-export type AttributeMap = {[string]: any };
+export type AttributeMap = {[string]: ?mixed};
 
 export type RouteMap = {[string]: Route};
 

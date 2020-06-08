@@ -321,4 +321,24 @@ class DefaultSnippetManagerTest extends TestCase
         $this->assertEquals([$webspace2], $manager->loadWebspaces('456'));
         $this->assertEquals([], $manager->loadWebspaces('321-321-321'));
     }
+
+    public function testGetTypeForArea()
+    {
+        $settingsManager = $this->prophesize(SettingsManagerInterface::class);
+        $documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $registry = $this->prophesize(DocumentRegistry::class);
+
+        $manager = new DefaultSnippetManager(
+            $settingsManager->reveal(),
+            $documentManager->reveal(),
+            $webspaceManager->reveal(),
+            $registry->reveal(),
+            $this->defaultTypes
+        );
+
+        $this->assertEquals('test', $manager->getTypeForArea('test_homepage'));
+        $this->assertEquals('test', $manager->getTypeForArea('testCase'));
+        $this->assertEquals('test', $manager->getTypeForArea('test'));
+    }
 }
