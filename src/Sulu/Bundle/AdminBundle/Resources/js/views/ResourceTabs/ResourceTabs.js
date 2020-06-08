@@ -11,7 +11,8 @@ import {Route} from '../../services/Router';
 import type {AttributeMap} from '../../services/Router';
 import resourceTabsStyles from './resourceTabs.scss';
 
-type Props = ViewProps & {
+type Props = {
+    ...ViewProps,
     locales?: Array<string>,
     titleProperty?: string,
 };
@@ -32,11 +33,35 @@ class ResourceTabs extends React.Component<Props> {
     }
 
     @computed get id() {
-        return this.router.attributes.id;
+        const {
+            router: {
+                attributes: {
+                    id,
+                },
+            },
+        } = this.props;
+
+        if (id !== undefined && typeof id !== 'string' && typeof id !== 'number') {
+            throw new Error('The "id" router attribute must be a string or a number if given!');
+        }
+
+        return id;
     }
 
     @computed get resourceKey() {
-        return this.route.options.resourceKey;
+        const {
+            route: {
+                options: {
+                    resourceKey,
+                },
+            },
+        } = this.props;
+
+        if (!resourceKey) {
+            throw new Error('The route does not define the mandatory "resourceKey" option');
+        }
+
+        return resourceKey;
     }
 
     constructor(props: Props) {
@@ -58,10 +83,6 @@ class ResourceTabs extends React.Component<Props> {
         if (this.locales) {
             options.locale = observable.box();
             this.router.bind('locale', options.locale);
-        }
-
-        if (!this.resourceKey) {
-            throw new Error('The route does not define the mandatory "resourceKey" option');
         }
 
         if (this.resourceStore) {

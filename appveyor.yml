@@ -39,11 +39,6 @@ install:
     - cd C:\tools\mysql\current\bin
     - mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';"
 
-    - IF NOT EXIST C:\tools\composer.phar (
-          cd C:\tools
-          && appveyor DownloadFile https://getcomposer.org/composer.phar
-      )
-
     - IF NOT EXIST C:\tools\php (
           choco install --yes --allow-empty-checksums php --version %PHP_VERSION% --params '/InstallDir:C:\tools\php'
       )
@@ -60,6 +55,13 @@ install:
     - echo extension=php_pdo_mysql.dll >> php.ini
     - echo extension=php_pdo_sqlite.dll >> php.ini
     - echo extension=php_fileinfo.dll >> php.ini
+
+    # install composer
+    - IF NOT EXIST C:\tools\composer.phar (
+          cd C:\tools
+          && appveyor DownloadFile https://getcomposer.org/download/1.10.7/composer.phar
+      )
+    - php -dmemory_limit=-1 C:\tools\composer.phar self-update
 
 before_test:
     - cd %APPVEYOR_BUILD_FOLDER%

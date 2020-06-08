@@ -129,7 +129,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
                 const attributeKey = routerAttributesToBackView[key];
                 const attributeName = isNaN(key) ? key : routerAttributesToBackView[key];
 
-                if (typeof attributeKey !== 'string') {
+                if (typeof attributeKey !== 'string' || typeof attributeName !== 'string') {
                     throw new Error('The value of the "router_attributes_to_back_view" option must be a string!');
                 }
 

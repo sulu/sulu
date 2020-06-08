@@ -13,7 +13,16 @@ const updateUserStoreContentLocaleFromRouterAttributes: UpdateRouteHook = functi
     }
 
     if (newAttributes.locale) {
-        userStore.updateContentLocale(newAttributes.locale);
+        const locale = typeof newAttributes.locale.get === 'function'
+            // $FlowFixMe
+            ? newAttributes.locale.get()
+            : newAttributes.locale;
+
+        if (typeof locale !== 'string') {
+            throw new Error('The "locale" router attribute must be a string if given!');
+        }
+
+        userStore.updateContentLocale(locale);
     }
 
     return true;
