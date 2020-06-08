@@ -98,7 +98,7 @@
                  decorates="fos_rest.serializer.flatten_exception_normalizer"
         >
             <argument type="service" id="sulu_core.rest.flatten_exception_normalizer.inner"/>
-            <argument>%kernel.environment%</argument>
+            <argument>%kernel.debug%</argument>
         </service>
     </services>
 </container>

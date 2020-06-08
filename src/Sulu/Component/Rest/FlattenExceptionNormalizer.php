@@ -25,14 +25,14 @@ class FlattenExceptionNormalizer implements NormalizerInterface
     private $normalizer;
 
     /**
-     * @var string
+     * @var bool
      */
-    private $environment;
+    private $debug;
 
-    public function __construct(NormalizerInterface $normalizer, string $environment)
+    public function __construct(NormalizerInterface $normalizer, string $debug)
     {
         $this->normalizer = $normalizer;
-        $this->environment = $environment;
+        $this->debug = $debug;
     }
 
     public function normalize($exception, $format = null, array $context = [])
@@ -43,19 +43,9 @@ class FlattenExceptionNormalizer implements NormalizerInterface
             $data['code'] = $exception->getCode();
         }
 
-        if (\in_array($this->environment, ['dev', 'test'])) {
-            $errors = '';
-
+        if ($this->debug) {
             if ($exception instanceof FlattenException) {
-                $errors .= $exception->getClass();
-                $errors .= ': ';
-                $errors .= $exception->getMessage();
-                $errors .= ' in ';
-                $errors .= $exception->getFile();
-                $errors .= ':';
-                $errors .= $exception->getLine();
-                $errors .= \PHP_EOL . 'Stack trace:' . \PHP_EOL;
-                $errors .= $exception->getTraceAsString();
+                $errors = $exception->getAsString();
             } else {
                 $errors = (string) $exception;
             }
