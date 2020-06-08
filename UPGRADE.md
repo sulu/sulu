@@ -20,6 +20,16 @@ imports:
     - { resource: '../prod/sulu_http_cache.yaml' }
 ```
 
+## dev-release/2.1
+
+### Add RestRoutingBundle
+
+To make the update to symfony 5 as seamless as possible a new bundle need to be registered in your `config/bundles.php`:
+
+```php
+HandcraftedInTheAlps\RestRoutingBundle\RestRoutingBundle::class => ['all' => true],
+```
+
 ## 2.1.0-RC1
 
 ### Deprecated ExceptionController changed to ErrorController

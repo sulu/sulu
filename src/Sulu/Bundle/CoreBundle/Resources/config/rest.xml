@@ -91,5 +91,14 @@
         <service id="sulu_core.rest.view_handler.csv" class="Sulu\Component\Rest\Csv\CsvHandler">
             <argument type="service" id="sulu_core.array_serializer"/>
         </service>
+
+        <!-- @internal the following service is only for internal use -->
+        <service id="sulu_core.rest.flatten_exception_normalizer"
+                 class="Sulu\Component\Rest\FlattenExceptionNormalizer"
+                 decorates="fos_rest.serializer.flatten_exception_normalizer"
+        >
+            <argument type="service" id="sulu_core.rest.flatten_exception_normalizer.inner"/>
+            <argument>%kernel.debug%</argument>
+        </service>
     </services>
 </container>

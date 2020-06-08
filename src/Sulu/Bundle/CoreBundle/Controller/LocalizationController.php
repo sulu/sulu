@@ -11,8 +11,8 @@
 
 namespace Sulu\Bundle\CoreBundle\Controller;
 
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;

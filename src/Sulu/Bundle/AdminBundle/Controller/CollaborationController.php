@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\AdminBundle\Controller;
 
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
+use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\AdminBundle\Entity\Collaboration;
 use Sulu\Bundle\AdminBundle\Entity\CollaborationRepository;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;

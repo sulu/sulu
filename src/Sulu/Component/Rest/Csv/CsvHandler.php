@@ -12,7 +12,7 @@
 namespace Sulu\Component\Rest\Csv;
 
 use FOS\RestBundle\View\View;
-use FOS\RestBundle\View\ViewHandler;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Goodby\CSV\Export\Standard\Collection\CallbackCollection;
 use Goodby\CSV\Export\Standard\Exporter;
 use Goodby\CSV\Export\Standard\ExporterConfig;
@@ -68,7 +68,7 @@ class CsvHandler
      *
      * @throws ObjectNotSupportedException
      */
-    public function createResponse(ViewHandler $handler, View $view, Request $request, $format)
+    public function createResponse(ViewHandlerInterface $handler, View $view, Request $request, $format)
     {
         if (!$view->getData() instanceof CollectionRepresentation) {
             throw new ObjectNotSupportedException($view);

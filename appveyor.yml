@@ -64,6 +64,7 @@ install:
     - php -dmemory_limit=-1 C:\tools\composer.phar self-update
 
 before_test:
+    - php -dmemory_limit=-1 C:\tools\composer.phar --version
     - cd %APPVEYOR_BUILD_FOLDER%
 
     - IF "%SULU_PHPCR_TRANSPORT%" == "jackrabbit" (

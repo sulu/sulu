@@ -11,8 +11,8 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Api\RootCollection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;

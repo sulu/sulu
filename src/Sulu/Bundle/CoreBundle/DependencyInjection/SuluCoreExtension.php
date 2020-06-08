@@ -22,6 +22,7 @@ use Sulu\Component\Rest\DQL\Cast;
 use Sulu\Component\Rest\Exception\InvalidHashException;
 use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\ListBuilder\Filter\InvalidFilterTypeOptionsException;
+use Symfony\Bundle\TwigBundle\Controller\ExceptionController;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -87,25 +88,49 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $container->prependExtensionConfig(
                 'fos_rest',
                 [
-                    'routing_loader' => [
-                        'default_format' => 'json',
-                    ],
                     'exception' => [
                         'enabled' => true,
+                        'map_exception_codes' => true,
                         'codes' => [
                             MissingParameterException::class => 400,
                             InvalidHashException::class => 409,
                             ObjectNotSupportedException::class => 406,
                             InvalidFilterTypeOptionsException::class => 400,
                         ],
+                        'exception_listener' => false,
+                        'serialize_exceptions' => false,
+                        'flatten_exception_format' => 'legacy',
                     ],
                     'serializer' => [
                         'serialize_null' => true,
                     ],
-                    'service' => [
-                        'templating' => 'twig',
+                    'body_listener' => [
+                        'enabled' => true,
                     ],
+                    'routing_loader' => false,
                     'view' => [
+                        'formats' => [
+                            'json' => true,
+                            'csv' => true,
+                        ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('twig') && \class_exists(ExceptionController::class)) {
+            // Disable the deprecated exception_controller to support the newer fos_rest bundle
+            $container->prependExtensionConfig('twig', [
+                'exception_controller' => null,
+            ]);
+        }
+
+        if ($container->hasExtension('handcraftedinthealps_rest_routing')) {
+            $container->prependExtensionConfig(
+                'handcraftedinthealps_rest_routing',
+                [
+                    'routing_loader' => [
+                        'default_format' => 'json',
                         'formats' => [
                             'json' => true,
                             'csv' => true,

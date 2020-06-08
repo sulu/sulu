@@ -11,8 +11,8 @@
 
 namespace Sulu\Bundle\CategoryBundle\Controller;
 
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Api\RootCategory;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
