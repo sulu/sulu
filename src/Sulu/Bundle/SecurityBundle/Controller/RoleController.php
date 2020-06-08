@@ -13,8 +13,8 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Exception\RoleKeyAlreadyExistsException;
 use Sulu\Bundle\SecurityBundle\Exception\RoleNameAlreadyExistsException;

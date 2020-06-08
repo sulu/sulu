@@ -12,9 +12,9 @@
 namespace Sulu\Bundle\ContactBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\RestBundle\Controller\Annotations\RouteResource;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
+use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
 use Sulu\Bundle\ContactBundle\Entity\ContactTitleRepository;
 use Sulu\Component\Rest\AbstractRestController;

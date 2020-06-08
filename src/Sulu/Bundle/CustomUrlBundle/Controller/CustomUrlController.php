@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\CustomUrlBundle\Controller;
 
 use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use Sulu\Bundle\CustomUrlBundle\Admin\CustomUrlAdmin;
 use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;

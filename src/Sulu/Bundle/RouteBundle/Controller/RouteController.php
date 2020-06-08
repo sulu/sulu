@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\RouteBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;

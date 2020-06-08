@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\WebsiteBundle\Admin\WebsiteAdmin;
 use Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManagerInterface;
 use Sulu\Bundle\WebsiteBundle\Cache\CacheClearerInterface;

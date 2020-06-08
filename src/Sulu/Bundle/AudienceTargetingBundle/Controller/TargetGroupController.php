@@ -12,9 +12,9 @@
 namespace Sulu\Bundle\AudienceTargetingBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\RestBundle\Controller\Annotations\RouteResource;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
+use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Admin\AudienceTargetingAdmin;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;

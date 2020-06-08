@@ -13,8 +13,8 @@ namespace Sulu\Bundle\TagBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\TagBundle\Admin\TagAdmin;
 use Sulu\Bundle\TagBundle\Controller\Exception\ConstraintViolationException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;

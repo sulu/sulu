@@ -11,7 +11,7 @@
 
 use App\Kernel;
 use Sulu\Component\HttpKernel\SuluKernel;
-use Symfony\Component\Debug\Debug;
+use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
 \defined('SULU_MAINTENANCE') || \define('SULU_MAINTENANCE', \getenv('SULU_MAINTENANCE') ?: false);
