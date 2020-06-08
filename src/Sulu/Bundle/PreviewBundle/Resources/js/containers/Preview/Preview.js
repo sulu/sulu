@@ -63,7 +63,7 @@ class Preview extends React.Component<Props> {
         }
 
         if (locale !== undefined && typeof locale !== 'string') {
-            throw new Error('The "webspace" router attribute must be a string if set!');
+            throw new Error('The "locale" router attribute must be a string if set!');
         }
 
         if (Preview.audienceTargeting) {
