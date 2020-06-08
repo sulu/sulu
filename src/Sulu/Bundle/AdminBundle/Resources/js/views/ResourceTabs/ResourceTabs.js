@@ -10,7 +10,8 @@ import ResourceStore from '../../stores/ResourceStore';
 import {Route} from '../../services/Router';
 import resourceTabsStyles from './resourceTabs.scss';
 
-type Props = ViewProps & {
+type Props = {
+    ...ViewProps,
     locales?: Array<string>,
     titleProperty?: string,
 };
@@ -43,6 +44,10 @@ class ResourceTabs extends React.Component<Props> {
         if (this.locales) {
             options.locale = observable.box();
             router.bind('locale', options.locale);
+        }
+
+        if (id !== undefined && typeof id !== 'string' && typeof id !== 'number') {
+            throw new Error('The "id" router attribute must be a string or a number if given!');
         }
 
         this.resourceStore = new ResourceStore(resourceKey, id, options);
