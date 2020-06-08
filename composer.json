@@ -190,7 +190,8 @@
         "branch-alias": {
             "dev-release/1.6": "1.6.x-dev",
             "dev-release/2.0": "2.0.x-dev",
-            "dev-master": "2.1.x-dev"
+            "dev-release/2.1": "2.1.x-dev",
+            "dev-master": "2.x-dev"
         }
     }
 }
