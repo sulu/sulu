@@ -155,10 +155,22 @@ class PageList extends React.Component<Props> {
 
     handleItemAdd = (id: ?string | number) => {
         const {router} = this.props;
+
+        // Find template for id
+        let pageArray = [];
+        this.listStore.data.forEach((pages) => {
+            pageArray = [...pageArray, ...pages];
+        })
+        const page = pageArray.find((page) => {
+            return page.id === id
+        });
+        const template = page.template;
+
         router.navigate(
             'sulu_page.page_add_form',
             {
                 parentId: id,
+                parentTemplate: template,
                 locale: this.locale.get(),
                 webspace: router.attributes.webspace,
             }

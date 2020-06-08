@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\Loader;
 
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\CustomUrl;
+use Sulu\Component\Webspace\DefaultTemplate;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Exception\InvalidWebspaceException;
 use Sulu\Component\Webspace\Loader\Exception\ExpectedDefaultTemplatesNotFound;
@@ -417,9 +418,9 @@ class XmlFileLoader10 extends BaseXmlFileLoader
             $template = $node->nodeValue;
             $type = $node->attributes->getNamedItem('type')->nodeValue;
 
-            $webspace->addDefaultTemplate($type, $template);
+            $webspace->addDefaultTemplate(new DefaultTemplate($type, $template));
             if ('homepage' === $type) {
-                $webspace->addDefaultTemplate('home', $template);
+                $webspace->addDefaultTemplate(new DefaultTemplate('home', $template));
             }
         }
 

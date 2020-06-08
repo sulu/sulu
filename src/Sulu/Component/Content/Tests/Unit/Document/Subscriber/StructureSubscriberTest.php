@@ -27,6 +27,7 @@ use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\Metadata;
+use Sulu\Component\Webspace\DefaultTemplate;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 
@@ -426,7 +427,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->inspector->getMetadata($this->document->reveal())->willReturn($metadata->reveal());
 
         $webspace = new Webspace();
-        $webspace->addDefaultTemplate('page', 'default');
+        $webspace->addDefaultTemplate(new DefaultTemplate('page', 'default'));
 
         $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn($webspace);
 

@@ -30,6 +30,7 @@ use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\DefaultTemplate;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
@@ -144,7 +145,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->webspace->setLocalizations([$local1, $local2]);
         $this->webspace->setName('Default');
 
-        $this->webspace->addDefaultTemplate('page', 'default');
+        $this->webspace->addDefaultTemplate(new DefaultTemplate('page', 'default'));
         $this->webspace->setTheme('test');
 
         $this->webspace->setNavigation(
