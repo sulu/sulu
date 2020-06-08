@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Component\Rest\Exception\SearchFieldNotFoundException;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\RestHelper;
@@ -143,6 +144,28 @@ class RestHelperTest extends TestCase
         $listBuilder->expects($this->at(0))->method('addSearchField')->with($field1);
         $listBuilder->expects($this->at(1))->method('addSearchField')->with($field2);
         $listBuilder->expects($this->once())->method('search')->with('searchValue');
+
+        $this->restHelper->initializeListBuilder($listBuilder, ['name' => $field1, 'desc' => $field2]);
+    }
+
+    public function testInitializeListBuilderAddSearchWithNonExistingSearchField()
+    {
+        $this->expectException(SearchFieldNotFoundException::class);
+
+        $listBuilder = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\AbstractListBuilder')
+            ->setMethods(['search'])
+            ->getMockForAbstractClass();
+
+        $field1 = $this->getMockBuilder(FieldDescriptor::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $field2 = $this->getMockBuilder(FieldDescriptor::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->listRestHelper->expects($this->any())->method('getSearchFields')->willReturn(['non-existing']);
+        $this->listRestHelper->expects($this->any())->method('getSearchPattern')->willReturn('searchValue');
 
         $this->restHelper->initializeListBuilder($listBuilder, ['name' => $field1, 'desc' => $field2]);
     }

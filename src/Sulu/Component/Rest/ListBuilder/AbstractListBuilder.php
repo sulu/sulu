@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
+use Sulu\Component\Rest\Exception\InvalidSearchException;
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\AbstractPropertyMetadata;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -306,6 +307,13 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     {
         $this->expressions[] = $this->createBetweenExpression($fieldDescriptor, $values);
         $this->addFieldDescriptor($fieldDescriptor);
+    }
+
+    public function execute()
+    {
+        if (null !== $this->search && \count($this->searchFields) <= 0) {
+            throw new InvalidSearchException('Searching is not possible, because no search fields have been defined');
+        }
     }
 
     /**

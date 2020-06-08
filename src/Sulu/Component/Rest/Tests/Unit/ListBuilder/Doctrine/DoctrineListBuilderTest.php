@@ -21,6 +21,7 @@ use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
+use Sulu\Component\Rest\Exception\InvalidSearchException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
@@ -451,6 +452,16 @@ class DoctrineListBuilderTest extends TestCase
         )->shouldBeCalled();
         $this->queryBuilder->setParameter('search', '%val%e%')->shouldBeCalled();
 
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSearchWithoutSearchFields()
+    {
+        $this->expectException(InvalidSearchException::class);
+
+        $this->queryBuilder->addOrderBy(Argument::cetera())->shouldNotBeCalled();
+
+        $this->doctrineListBuilder->search('value');
         $this->doctrineListBuilder->execute();
     }
 
