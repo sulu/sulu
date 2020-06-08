@@ -65,7 +65,7 @@ install:
   # install composer
   - IF NOT EXIST C:\tools\composer.phar (
         cd C:\tools
-        && appveyor DownloadFile https://getcomposer.org/composer.phar
+        && appveyor DownloadFile https://getcomposer.org/download/1.10.7/composer.phar
     )
   - php -dmemory_limit=-1 C:\tools\composer.phar self-update 
 
