@@ -56,12 +56,12 @@ install:
     - echo extension=php_pdo_sqlite.dll >> php.ini
     - echo extension=php_fileinfo.dll >> php.ini
 
-  # install composer
-  - IF NOT EXIST C:\tools\composer.phar (
-        cd C:\tools
-        && appveyor DownloadFile https://getcomposer.org/download/1.10.7/composer.phar
-    )
-  - php -dmemory_limit=-1 C:\tools\composer.phar self-update
+    # install composer
+    - IF NOT EXIST C:\tools\composer.phar (
+          cd C:\tools
+          && appveyor DownloadFile https://getcomposer.org/download/1.10.7/composer.phar
+      )
+    - php -dmemory_limit=-1 C:\tools\composer.phar self-update
 
 before_test:
     - cd %APPVEYOR_BUILD_FOLDER%
