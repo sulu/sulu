@@ -80,8 +80,14 @@ script:
   - bin/adminconsole cache:clear --env=dev
   - bin/websiteconsole cache:clear --env=dev
   - if [[ $PHPSTAN = true ]]; then ./vendor/bin/phpstan analyze; fi
-  - if [[ $LINT_CONTAINER = true ]]; then bin/adminconsole lint:container; fi
-  - if [[ $LINT_CONTAINER = true ]]; then bin/websiteconsole lint:container; fi
+  - if [[ $LINT_CONTAINER = true ]]; then bin/adminconsole lint:container --env dev; fi
+  - if [[ $LINT_CONTAINER = true ]]; then bin/websiteconsole lint:container --env dev; fi
+  - if [[ $LINT_CONTAINER = true ]]; then bin/adminconsole lint:container --env test; fi
+  - if [[ $LINT_CONTAINER = true ]]; then bin/websiteconsole lint:container --env test; fi
+  - if [[ $LINT_CONTAINER = true ]]; then bin/adminconsole lint:container --env stage; fi
+  - if [[ $LINT_CONTAINER = true ]]; then bin/websiteconsole lint:container --env stage; fi
+  - if [[ $LINT_CONTAINER = true ]]; then bin/adminconsole lint:container --env prod; fi
+  - if [[ $LINT_CONTAINER = true ]]; then bin/websiteconsole lint:container --env prod; fi
   - time ./bin/runtests -i -a
 
 notifications:
