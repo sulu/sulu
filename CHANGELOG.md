@@ -1,9 +1,10 @@
 CHANGELOG for Sulu
 ==================
 
-* release/1.6
+* 1.6.34 (2020-06-09)
     * BUGFIX      #5323  [SnippetBundle]           Fix /cmf/snippets node not exist in live workspace
     * BUGFIX      #5328  [ContentBundle]           Fix url generation in link-prover with portals
+    * BUGFIX      #5304  [SearchBundle]            Make it possible to include search fields as needed
 
 * 1.6.33 (2020-05-11)
     * BUGFIX      #5284  [MediaBundle]             Conflict doctrine/inflector 1.4.0 and 2.0.0 version to fix media routes
