@@ -187,17 +187,17 @@ class ContactAdmin extends Admin
             $accountDocumentsToolbarActions = [];
             $accountDocumentsItemActions = [];
 
-            if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::ADD)) {
+            if ($this->securityChecker->hasPermission(static::ACCOUNT_SECURITY_CONTEXT, PermissionTypes::ADD)) {
                 $accountListToolbarActions[] = new ToolbarAction('sulu_admin.add');
             }
 
-            if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
+            if ($this->securityChecker->hasPermission(static::ACCOUNT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
                 $accountFormToolbarActions[] = new ToolbarAction('sulu_admin.save');
                 $accountDocumentsToolbarActions[] = new ToolbarAction('sulu_contact.add_media');
                 $accountDocumentsToolbarActions[] = new ToolbarAction('sulu_contact.delete_media');
             }
 
-            if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::DELETE)) {
+            if ($this->securityChecker->hasPermission(static::ACCOUNT_SECURITY_CONTEXT, PermissionTypes::DELETE)) {
                 $accountFormToolbarActions[] = new ToolbarAction(
                     'sulu_admin.delete',
                     ['allow_conflict_deletion' => false]
@@ -208,7 +208,7 @@ class ContactAdmin extends Admin
                 );
             }
 
-            if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::VIEW)) {
+            if ($this->securityChecker->hasPermission(static::ACCOUNT_SECURITY_CONTEXT, PermissionTypes::VIEW)) {
                 $accountListToolbarActions[] = new ToolbarAction('sulu_admin.export');
                 $accountDocumentsItemActions[] = new ListItemAction(
                     'link',
