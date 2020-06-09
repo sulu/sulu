@@ -155,7 +155,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
         return $typedForm;
     }
 
-    private function enhanceBlockMetadata(array $itemsMetadata)
+    private function enhanceBlockMetadata(array $itemsMetadata): void
     {
         foreach ($itemsMetadata as $itemMetadata) {
             if ('block' === $itemMetadata->getType()) {

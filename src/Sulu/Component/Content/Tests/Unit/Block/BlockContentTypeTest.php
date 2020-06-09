@@ -198,6 +198,74 @@ class BlockContentTypeTest extends TestCase
         $this->assertEquals($data, $this->blockProperty->getValue());
     }
 
+    public function testReadWithoutSettings()
+    {
+        $this->prepareSingleBlockProperty();
+
+        $data = [
+            [
+                'type' => 'type1',
+                'title' => 'Test-Title',
+                'article' => 'Test-Article',
+                'sub-block' => [
+                    [
+                        'type' => 'subType1',
+                        'title' => 'Test-Sub-Title',
+                        'article' => 'Test-Sub-Article',
+                    ],
+                ],
+            ],
+        ];
+
+        $valueMap = [
+            'i18n:de-block1-length' => 1,
+            'i18n:de-block1-type#0' => $data[0]['type'],
+            'i18n:de-block1-title#0' => $data[0]['title'],
+            'i18n:de-block1-article#0' => $data[0]['article'],
+            'i18n:de-block1-sub-block#0-length' => 1,
+            'i18n:de-block1-sub-block#0-type#0' => $data[0]['sub-block'][0]['type'],
+            'i18n:de-block1-sub-block#0-title#0' => $data[0]['sub-block'][0]['title'],
+            'i18n:de-block1-sub-block#0-article#0' => $data[0]['sub-block'][0]['article'],
+            'i18n:de-block1-settings#0' => null,
+            'i18n:de-block1-sub-block#0-settings#0' => null,
+        ];
+
+        $this->node = $this->prophesize(Node::class);
+        foreach ($valueMap as $name => $value) {
+            $this->node->getPropertyValue($name)->willReturn($value);
+            $this->node->hasProperty($name)->willReturn(true);
+        }
+
+        $this->blockContentType->read(
+            $this->node->reveal(),
+            new TranslatedProperty($this->blockProperty, 'de', 'i18n'),
+            'default',
+            'de',
+            ''
+        );
+
+        // check resulted structure
+        $this->assertEquals(
+            [
+                [
+                    'type' => 'type1',
+                    'title' => 'Test-Title',
+                    'article' => 'Test-Article',
+                    'settings' => new \stdClass(),
+                    'sub-block' => [
+                        [
+                            'type' => 'subType1',
+                            'title' => 'Test-Sub-Title',
+                            'article' => 'Test-Sub-Article',
+                            'settings' => new \stdClass(),
+                        ],
+                    ],
+                ],
+            ],
+            $this->blockProperty->getValue()
+        );
+    }
+
     public function testReadWithEmptySettings()
     {
         $this->prepareSingleBlockProperty();
@@ -655,6 +723,41 @@ class BlockContentTypeTest extends TestCase
                 'type' => 'type2',
                 'name' => 'Test-Name-2',
                 'settings' => [],
+            ],
+        ];
+        $this->blockProperty->setValue($data);
+
+        $result = $this->blockContentType->getContentData($this->blockProperty);
+
+        $this->assertEquals($data, $result);
+    }
+
+    public function testGetContentDataWithEmptySettings()
+    {
+        $this->prepareSingleBlockProperty();
+
+        $data = [
+            [
+                'type' => 'type1',
+                'title' => 'Test-Title-1',
+                'article' => [
+                    'Test-Article-1-1',
+                    'Test-Article-1-2',
+                ],
+                'sub-block' => [
+                    [
+                        'type' => 'subType1',
+                        'title' => 'Test-Title-Sub-1',
+                        'article' => 'Test-Article-Sub-1',
+                        'settings' => new \stdClass(),
+                    ],
+                ],
+                'settings' => [],
+            ],
+            [
+                'type' => 'type2',
+                'name' => 'Test-Name-2',
+                'settings' => new \stdClass(),
             ],
         ];
         $this->blockProperty->setValue($data);
