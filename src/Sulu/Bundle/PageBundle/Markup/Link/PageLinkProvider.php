@@ -79,8 +79,10 @@ class PageLinkProvider implements LinkProviderInterface
     {
         $request = $this->requestStack->getCurrentRequest();
         $scheme = 'http';
+        $domain = null;
         if ($request) {
             $scheme = $request->getScheme();
+            $domain = $request->getHost();
         }
 
         $contents = $this->contentRepository->findByUuids(
@@ -95,8 +97,8 @@ class PageLinkProvider implements LinkProviderInterface
         );
 
         return \array_map(
-            function(Content $content) use ($locale, $scheme) {
-                return $this->getLinkItem($content, $locale, $scheme);
+            function(Content $content) use ($locale, $scheme, $domain) {
+                return $this->getLinkItem($content, $locale, $scheme, $domain);
             },
             $contents
         );
@@ -110,7 +112,7 @@ class PageLinkProvider implements LinkProviderInterface
      *
      * @return LinkItem
      */
-    protected function getLinkItem(Content $content, $locale, $scheme)
+    protected function getLinkItem(Content $content, $locale, $scheme, $domain = null)
     {
         $published = !empty($content->getPropertyWithDefault('published'));
         $url = $this->webspaceManager->findUrlByResourceLocator(
@@ -118,7 +120,7 @@ class PageLinkProvider implements LinkProviderInterface
             $this->environment,
             $locale,
             $content->getWebspaceKey(),
-            null,
+            $domain,
             $scheme
         );
 
