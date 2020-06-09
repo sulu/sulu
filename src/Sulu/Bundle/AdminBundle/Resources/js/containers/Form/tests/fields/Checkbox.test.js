@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render, shallow} from 'enzyme';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
@@ -12,6 +12,36 @@ import Toggler from '../../../../components/Toggler';
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
+
+test('Render Toggler component as heading', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    const schemaOptions = {
+        description: {
+            name: 'description',
+            title: 'Hides a block',
+        },
+        icon: {
+            name: 'icon',
+            value: 'su-eye',
+        },
+        label: {
+            name: 'label',
+            title: 'Hide block',
+        },
+        skin: {
+            name: 'skin',
+            value: 'heading',
+        },
+    };
+
+    expect(render(
+        <Checkbox
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    )).toMatchSnapshot();
+});
 
 test('Pass the label correctly to Checkbox component', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
@@ -247,6 +277,26 @@ test('Call onChange and onFinish on the changed callback of the Toggler', () => 
             onChange={changeSpy}
             onFinish={finishSpy}
             schemaOptions={{type: {name: 'type', value: 'toggler'}}}
+        />
+    );
+    checkbox.find(Toggler).simulate('change', true);
+
+    expect(changeSpy).toBeCalledWith(true);
+    expect(finishSpy).toBeCalledWith();
+});
+
+test('Call onChange and onFinish on the changed callback of the Toggler with the header skin', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const checkbox = shallow(
+        <Checkbox
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            schemaOptions={{skin: {name: 'skin', value: 'heading'}, type: {name: 'type', value: 'toggler'}}}
         />
     );
     checkbox.find(Toggler).simulate('change', true);

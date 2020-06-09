@@ -7,29 +7,16 @@ jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
-test('Render an expanded block', () => {
-    expect(render(
-        <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()}>
-            Some block content
-        </Block>
-    )).toMatchSnapshot();
-});
-
-test('Render an expanded block with a single type', () => {
-    expect(render(
-        <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} types={{'type': 'Type'}}>
-            Some block content
-        </Block>
-    )).toMatchSnapshot();
-});
-
 test('Render an expanded block with a multiple types', () => {
     expect(render(
         <Block
             activeType="type1"
+            dragHandle={<span>Test</span>}
             expanded={true}
+            icons={['su-eye', 'su-people']}
             onCollapse={jest.fn()}
             onExpand={jest.fn()}
+            onSettingsClick={jest.fn()}
             types={{'type1': 'Type1', 'type2': 'Type2'}}
         >
             Some block content
@@ -39,26 +26,40 @@ test('Render an expanded block with a multiple types', () => {
 
 test('Render a collapsed block', () => {
     expect(render(
-        <Block expanded={false} onCollapse={jest.fn()} onExpand={jest.fn()}>
+        <Block expanded={false} icons={['su-eye', 'su-people']} onCollapse={jest.fn()} onExpand={jest.fn()}>
             Some block content
         </Block>
     )).toMatchSnapshot();
 });
 
-test('Render the dragHandle prop if passed', () => {
-    expect(render(
-        <Block dragHandle={<span>Test</span>} onCollapse={jest.fn()} onExpand={jest.fn()}>
-            Block Content with custom drag handle
-        </Block>
-    )).toMatchSnapshot();
-});
-
-test('Passing a onRemove callback should render the remove icon', () => {
-    expect(render(
-        <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} onRemove={jest.fn()}>
+test('Do not show type dropdown if only a single type is passed', () => {
+    const block = shallow(
+        <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} types={{'type': 'Type'}}>
             Some block content
         </Block>
-    )).toMatchSnapshot();
+    );
+
+    expect(block.find('SingleSelect')).toHaveLength(0);
+});
+
+test('Do not show remove icon if no onRemove prop has been passed', () => {
+    const block = shallow(
+        <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} types={{'type': 'Type'}}>
+            Some block content
+        </Block>
+    );
+
+    expect(block.find('Icon[name="su-trash-alt"]')).toHaveLength(0);
+});
+
+test('Do not show settings icon if no onSettingsClick prop has been passed', () => {
+    const block = shallow(
+        <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} types={{'type': 'Type'}}>
+            Some block content
+        </Block>
+    );
+
+    expect(block.find('Icon[name="su-cog"]')).toHaveLength(0);
 });
 
 test('Clicking on a collapsed block should call the onExpand callback', () => {

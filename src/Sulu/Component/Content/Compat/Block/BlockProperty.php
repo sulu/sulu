@@ -184,6 +184,9 @@ class BlockProperty extends Property implements BlockPropertyInterface
         for ($i = 0; $i < \count($items); ++$i) {
             $item = $items[$i];
             $type = $this->initProperties($i, $item['type']);
+            if (isset($item['settings'])) {
+                $type->setSettings($item['settings']);
+            }
 
             /** @var PropertyInterface $subProperty */
             foreach ($type->getChildProperties() as $subProperty) {
@@ -227,7 +230,10 @@ class BlockProperty extends Property implements BlockPropertyInterface
 
         $data = [];
         foreach ($this->properties as $type) {
-            $result = ['type' => $type->getName()];
+            $result = [
+                'type' => $type->getName(),
+                'settings' => $type->getSettings(),
+            ];
             foreach ($type->getChildProperties() as $property) {
                 $result[$property->getName()] = $property->getValue();
             }

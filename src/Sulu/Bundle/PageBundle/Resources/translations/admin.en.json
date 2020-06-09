@@ -51,5 +51,7 @@
     "sulu_page.unpublish_warning_text": "Do you really want to unpublish the page? All website links will be lost. This setting can be changed at any time without data loss.",
     "sulu_page.unpublish": "Set to unpublished",
     "sulu_page.restore_version": "Restore version?",
-    "sulu_page.restore_version_text": "A new draft will be created. An existing draft version will be overwritten"
+    "sulu_page.restore_version_text": "A new draft will be created. An existing draft version will be overwritten",
+    "sulu_page.hide_block_label": "Don't display on public website",
+    "sulu_page.hide_block_description": "This block will not be published, but remains editable in the admin."
 }

@@ -1,44 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Passing a onRemove callback should render the remove icon 1`] = `
-<section
-  class="block expanded"
->
-  <div
-    class="handle"
-  />
-  <div
-    class="content"
-  >
-    <header
-      class="header"
-    >
-      <div
-        class="icons"
-      >
-        <span
-          aria-label="su-trash-alt"
-          class="su-trash-alt clickable"
-          role="button"
-          tabindex="0"
-        />
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up clickable"
-          role="button"
-          tabindex="0"
-        />
-      </div>
-    </header>
-    <article
-      class="children"
-    >
-      Some block content
-    </article>
-  </div>
-</section>
-`;
-
 exports[`Render a collapsed block 1`] = `
 <section
   class="block"
@@ -52,43 +13,22 @@ exports[`Render a collapsed block 1`] = `
     <header
       class="header"
     >
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
-      />
-    </header>
-    <article
-      class="children"
-    >
-      Some block content
-    </article>
-  </div>
-</section>
-`;
-
-exports[`Render an expanded block 1`] = `
-<section
-  class="block expanded"
->
-  <div
-    class="handle"
-  />
-  <div
-    class="content"
-  >
-    <header
-      class="header"
-    >
       <div
         class="icons"
       >
         <span
-          aria-label="su-angle-up"
-          class="su-angle-up clickable"
-          role="button"
-          tabindex="0"
+          aria-label="su-eye"
+          class="su-eye"
+        />
+        <span
+          aria-label="su-people"
+          class="su-people"
         />
       </div>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down"
+      />
     </header>
     <article
       class="children"
@@ -105,7 +45,11 @@ exports[`Render an expanded block with a multiple types 1`] = `
 >
   <div
     class="handle"
-  />
+  >
+    <span>
+      Test
+    </span>
+  </div>
   <div
     class="content"
   >
@@ -158,38 +102,23 @@ exports[`Render an expanded block with a multiple types 1`] = `
         class="icons"
       >
         <span
-          aria-label="su-angle-up"
-          class="su-angle-up clickable"
+          aria-label="su-eye"
+          class="su-eye"
+        />
+        <span
+          aria-label="su-people"
+          class="su-people"
+        />
+      </div>
+      <div
+        class="iconButtons"
+      >
+        <span
+          aria-label="su-cog"
+          class="su-cog clickable"
           role="button"
           tabindex="0"
         />
-      </div>
-    </header>
-    <article
-      class="children"
-    >
-      Some block content
-    </article>
-  </div>
-</section>
-`;
-
-exports[`Render an expanded block with a single type 1`] = `
-<section
-  class="block expanded"
->
-  <div
-    class="handle"
-  />
-  <div
-    class="content"
-  >
-    <header
-      class="header"
-    >
-      <div
-        class="icons"
-      >
         <span
           aria-label="su-angle-up"
           class="su-angle-up clickable"
@@ -202,37 +131,6 @@ exports[`Render an expanded block with a single type 1`] = `
       class="children"
     >
       Some block content
-    </article>
-  </div>
-</section>
-`;
-
-exports[`Render the dragHandle prop if passed 1`] = `
-<section
-  class="block"
->
-  <div
-    class="handle"
-  >
-    <span>
-      Test
-    </span>
-  </div>
-  <div
-    class="content"
-  >
-    <header
-      class="header"
-    >
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
-      />
-    </header>
-    <article
-      class="children"
-    >
-      Block Content with custom drag handle
     </article>
   </div>
 </section>

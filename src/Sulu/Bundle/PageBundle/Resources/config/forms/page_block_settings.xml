@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>page_block_settings</key>
+
+    <properties>
+        <property name="hidden" type="checkbox">
+            <params>
+                <param name="description">
+                    <meta>
+                        <title>sulu_page.hide_block_description</title>
+                    </meta>
+                </param>
+                <param name="icon" value="su-hide" />
+                <param name="label">
+                    <meta>
+                        <title>sulu_page.hide_block_label</title>
+                    </meta>
+                </param>
+                <param name="skin" value="heading" />
+                <param name="type" value="toggler" />
+            </params>
+
+            <tag name="sulu.block_setting_icon" icon="su-hide" />
+        </property>
+    </properties>
+</form>

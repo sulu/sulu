@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Should render a block list 1`] = `
+exports[`Should render a fully filled block list 1`] = `
 <section
   class="blockCollection"
 >
@@ -24,6 +24,9 @@ exports[`Should render a block list 1`] = `
         <header
           class="header"
         >
+          <div
+            class="icons"
+          />
           <span
             aria-label="su-angle-down"
             class="su-angle-down"
@@ -51,6 +54,14 @@ exports[`Should render a block list 1`] = `
         <header
           class="header"
         >
+          <div
+            class="icons"
+          >
+            <span
+              aria-label="su-eye"
+              class="su-eye"
+            />
+          </div>
           <span
             aria-label="su-angle-down"
             class="su-angle-down"
@@ -62,190 +73,6 @@ exports[`Should render a block list 1`] = `
       </div>
     </section>
   </div>
-  <button
-    class="button secondary"
-    type="button"
-  >
-    <span
-      aria-label="su-plus"
-      class="su-plus buttonIcon"
-    />
-    <span
-      class="text"
-    >
-      Add block
-    </span>
-  </button>
-</section>
-`;
-
-exports[`Should render a disabled block list 1`] = `
-<section
-  class="blockCollection"
->
-  <div
-    class="sortableBlockList disabled"
-  >
-    <section
-      class="block"
-    >
-      <div
-        class="handle"
-      >
-        <span
-          aria-label="su-more"
-          class="su-more sortableHandle"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <header
-          class="header"
-        >
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down"
-          />
-        </header>
-        <article
-          class="children"
-        />
-      </div>
-    </section>
-    <section
-      class="block"
-    >
-      <div
-        class="handle"
-      >
-        <span
-          aria-label="su-more"
-          class="su-more sortableHandle"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <header
-          class="header"
-        >
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down"
-          />
-        </header>
-        <article
-          class="children"
-        />
-      </div>
-    </section>
-  </div>
-  <button
-    class="button secondary"
-    disabled=""
-    type="button"
-  >
-    <span
-      aria-label="su-plus"
-      class="su-plus buttonIcon"
-    />
-    <span
-      class="text"
-    >
-      Add block
-    </span>
-  </button>
-</section>
-`;
-
-exports[`Should render a fully filled block list without add button if maxOccurs is reached 1`] = `
-<section
-  class="blockCollection"
->
-  <div
-    class="sortableBlockList"
-  >
-    <section
-      class="block"
-    >
-      <div
-        class="handle"
-      >
-        <span
-          aria-label="su-more"
-          class="su-more sortableHandle"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <header
-          class="header"
-        >
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down"
-          />
-        </header>
-        <article
-          class="children"
-        />
-      </div>
-    </section>
-    <section
-      class="block"
-    >
-      <div
-        class="handle"
-      >
-        <span
-          aria-label="su-more"
-          class="su-more sortableHandle"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <header
-          class="header"
-        >
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down"
-          />
-        </header>
-        <article
-          class="children"
-        />
-      </div>
-    </section>
-  </div>
-  <button
-    class="button secondary"
-    disabled=""
-    type="button"
-  >
-    <span
-      aria-label="su-plus"
-      class="su-plus buttonIcon"
-    />
-    <span
-      class="text"
-    >
-      Add block
-    </span>
-  </button>
-</section>
-`;
-
-exports[`Should render an empty block list 1`] = `
-<section
-  class="blockCollection"
->
-  <div
-    class="sortableBlockList"
-  />
   <button
     class="button secondary"
     type="button"

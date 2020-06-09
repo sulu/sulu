@@ -28,6 +28,11 @@ class BlockPropertyType
     private $name;
 
     /**
+     * @var array
+     */
+    private $settings = [];
+
+    /**
      * @var Metadata
      * @Type("Sulu\Component\Content\Compat\Metadata")
      */
@@ -106,6 +111,16 @@ class BlockPropertyType
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getSettings()
+    {
+        return $this->settings;
+    }
+
+    public function setSettings($settings)
+    {
+        $this->settings = $settings;
     }
 
     /**

@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render Toggler component as heading 1`] = `
+Array [
+  <div
+    class="line"
+  >
+    <span
+      aria-label="su-eye"
+      class="su-eye icon"
+    />
+    <div
+      class="label"
+    >
+      Hide block
+    </div>
+  </div>,
+  <div
+    class="description"
+  >
+    Hides a block
+  </div>,
+]
+`;

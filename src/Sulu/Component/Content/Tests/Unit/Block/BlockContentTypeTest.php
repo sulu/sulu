@@ -88,7 +88,7 @@ class BlockContentTypeTest extends TestCase
         $type1->addChild(new Property('article', '', 'text_area', false, true));
         $this->blockProperty->addType($type1);
 
-        $this->subBlockProperty = new BlockProperty('sub-block', '', 'subType1', false, true);
+        $this->subBlockProperty = new BlockProperty('sub-block', '', 'subType1', false, true, 999, 1);
         $subType1 = new BlockPropertyType('subType1', '');
         $subType1->addChild(new Property('title', '', 'text_line', false, true));
         $subType1->addChild(new Property('article', '', 'text_area', false, true));
@@ -160,8 +160,10 @@ class BlockContentTypeTest extends TestCase
                         'type' => 'subType1',
                         'title' => 'Test-Sub-Title',
                         'article' => 'Test-Sub-Article',
+                        'settings' => new \stdClass(),
                     ],
                 ],
+                'settings' => new \stdClass(),
             ],
         ];
 
@@ -174,6 +176,8 @@ class BlockContentTypeTest extends TestCase
             'i18n:de-block1-sub-block#0-type#0' => $data[0]['sub-block'][0]['type'],
             'i18n:de-block1-sub-block#0-title#0' => $data[0]['sub-block'][0]['title'],
             'i18n:de-block1-sub-block#0-article#0' => $data[0]['sub-block'][0]['article'],
+            'i18n:de-block1-settings#0' => '[]',
+            'i18n:de-block1-sub-block#0-settings#0' => '{}',
         ];
 
         $this->node = $this->prophesize(Node::class);
@@ -192,6 +196,144 @@ class BlockContentTypeTest extends TestCase
 
         // check resulted structure
         $this->assertEquals($data, $this->blockProperty->getValue());
+    }
+
+    public function testReadWithoutSettings()
+    {
+        $this->prepareSingleBlockProperty();
+
+        $data = [
+            [
+                'type' => 'type1',
+                'title' => 'Test-Title',
+                'article' => 'Test-Article',
+                'sub-block' => [
+                    [
+                        'type' => 'subType1',
+                        'title' => 'Test-Sub-Title',
+                        'article' => 'Test-Sub-Article',
+                    ],
+                ],
+            ],
+        ];
+
+        $valueMap = [
+            'i18n:de-block1-length' => 1,
+            'i18n:de-block1-type#0' => $data[0]['type'],
+            'i18n:de-block1-title#0' => $data[0]['title'],
+            'i18n:de-block1-article#0' => $data[0]['article'],
+            'i18n:de-block1-sub-block#0-length' => 1,
+            'i18n:de-block1-sub-block#0-type#0' => $data[0]['sub-block'][0]['type'],
+            'i18n:de-block1-sub-block#0-title#0' => $data[0]['sub-block'][0]['title'],
+            'i18n:de-block1-sub-block#0-article#0' => $data[0]['sub-block'][0]['article'],
+            'i18n:de-block1-settings#0' => null,
+            'i18n:de-block1-sub-block#0-settings#0' => null,
+        ];
+
+        $this->node = $this->prophesize(Node::class);
+        foreach ($valueMap as $name => $value) {
+            $this->node->getPropertyValue($name)->willReturn($value);
+            $this->node->hasProperty($name)->willReturn(true);
+        }
+
+        $this->blockContentType->read(
+            $this->node->reveal(),
+            new TranslatedProperty($this->blockProperty, 'de', 'i18n'),
+            'default',
+            'de',
+            ''
+        );
+
+        // check resulted structure
+        $this->assertEquals(
+            [
+                [
+                    'type' => 'type1',
+                    'title' => 'Test-Title',
+                    'article' => 'Test-Article',
+                    'settings' => new \stdClass(),
+                    'sub-block' => [
+                        [
+                            'type' => 'subType1',
+                            'title' => 'Test-Sub-Title',
+                            'article' => 'Test-Sub-Article',
+                            'settings' => new \stdClass(),
+                        ],
+                    ],
+                ],
+            ],
+            $this->blockProperty->getValue()
+        );
+    }
+
+    public function testReadWithEmptySettings()
+    {
+        $this->prepareSingleBlockProperty();
+
+        $data = [
+            [
+                'type' => 'type1',
+                'title' => 'Test-Title',
+                'article' => 'Test-Article',
+                'sub-block' => [
+                    [
+                        'type' => 'subType1',
+                        'title' => 'Test-Sub-Title',
+                        'article' => 'Test-Sub-Article',
+                        'settings' => [],
+                    ],
+                ],
+                'settings' => [],
+            ],
+        ];
+
+        $valueMap = [
+            'i18n:de-block1-length' => 1,
+            'i18n:de-block1-type#0' => $data[0]['type'],
+            'i18n:de-block1-title#0' => $data[0]['title'],
+            'i18n:de-block1-article#0' => $data[0]['article'],
+            'i18n:de-block1-sub-block#0-length' => 1,
+            'i18n:de-block1-sub-block#0-type#0' => $data[0]['sub-block'][0]['type'],
+            'i18n:de-block1-sub-block#0-title#0' => $data[0]['sub-block'][0]['title'],
+            'i18n:de-block1-sub-block#0-article#0' => $data[0]['sub-block'][0]['article'],
+            'i18n:de-block1-settings#0' => '[]',
+            'i18n:de-block1-sub-block#0-settings#0' => '{}',
+        ];
+
+        $this->node = $this->prophesize(Node::class);
+        foreach ($valueMap as $name => $value) {
+            $this->node->getPropertyValue($name)->willReturn($value);
+            $this->node->hasProperty($name)->willReturn(true);
+        }
+
+        $this->blockContentType->read(
+            $this->node->reveal(),
+            new TranslatedProperty($this->blockProperty, 'de', 'i18n'),
+            'default',
+            'de',
+            ''
+        );
+
+        // check resulted structure
+        $this->assertEquals(
+            [
+                [
+                    'type' => 'type1',
+                    'title' => 'Test-Title',
+                    'article' => 'Test-Article',
+                    'sub-block' => [
+                        [
+                            'type' => 'subType1',
+                            'title' => 'Test-Sub-Title',
+                            'article' => 'Test-Sub-Article',
+                            'settings' => new \stdClass(),
+                        ],
+                    ],
+                    'settings' => new \stdClass(),
+                ],
+            ],
+            $this->blockProperty->getValue()
+        );
     }
 
     public function testWrite()
@@ -217,8 +359,10 @@ class BlockContentTypeTest extends TestCase
                         'type' => 'subType1',
                         'title' => 'Test-Title',
                         'article' => 'Test-Article',
+                        'settings' => [],
                     ],
                 ],
+                'settings' => [],
             ],
         ];
         $this->blockProperty->setValue($data);
@@ -243,6 +387,8 @@ class BlockContentTypeTest extends TestCase
                 'i18n:de-block1-sub-block#0-type#0' => $data[0]['sub-block'][0]['type'],
                 'i18n:de-block1-sub-block#0-title#0' => $data[0]['sub-block'][0]['title'],
                 'i18n:de-block1-sub-block#0-article#0' => $data[0]['sub-block'][0]['article'],
+                'i18n:de-block1-settings#0' => '[]',
+                'i18n:de-block1-sub-block#0-settings#0' => '[]',
             ],
             $result
         );
@@ -268,8 +414,10 @@ class BlockContentTypeTest extends TestCase
                         'type' => 'subType1',
                         'title' => 'Test-Title-Sub-1',
                         'article' => 'Test-Article-Sub-1',
+                        'settings' => new \stdClass(),
                     ],
                 ],
+                'settings' => ['segment' => 'w'],
             ],
             [
                 'type' => 'type1',
@@ -280,8 +428,10 @@ class BlockContentTypeTest extends TestCase
                         'type' => 'subType1',
                         'title' => 'Test-Title-Sub-2',
                         'article' => 'Test-Article-Sub-2',
+                        'settings' => new \stdClass(),
                     ],
                 ],
+                'settings' => new \stdClass(),
             ],
         ];
 
@@ -301,6 +451,10 @@ class BlockContentTypeTest extends TestCase
             'i18n:de-block1-sub-block#1-type#0' => 'subType1',
             'i18n:de-block1-sub-block#1-title#0' => $data[1]['sub-block'][0]['title'],
             'i18n:de-block1-sub-block#1-article#0' => $data[1]['sub-block'][0]['article'],
+            'i18n:de-block1-settings#0' => '{"segment": "w"}',
+            'i18n:de-block1-sub-block#0-settings#0' => '{}',
+            'i18n:de-block1-settings#1' => '{}',
+            'i18n:de-block1-sub-block#1-settings#0' => '{}',
         ];
 
         $this->node = $this->prophesize(Node::class);
@@ -347,8 +501,10 @@ class BlockContentTypeTest extends TestCase
                         'type' => 'subType1',
                         'title' => 'Test-Title-Sub-1',
                         'article' => 'Test-Article-Sub-1',
+                        'settings' => [],
                     ],
                 ],
+                'settings' => [],
             ],
             [
                 'type' => 'type1',
@@ -359,8 +515,10 @@ class BlockContentTypeTest extends TestCase
                         'type' => 'subType1',
                         'title' => 'Test-Title-Sub-2',
                         'article' => 'Test-Article-Sub-2',
+                        'settings' => [],
                     ],
                 ],
+                'settings' => [],
             ],
         ];
         $this->blockProperty->setValue($data);
@@ -392,6 +550,10 @@ class BlockContentTypeTest extends TestCase
                 'i18n:de-block1-sub-block#1-type#0' => $data[1]['sub-block'][0]['type'],
                 'i18n:de-block1-sub-block#1-title#0' => $data[1]['sub-block'][0]['title'],
                 'i18n:de-block1-sub-block#1-article#0' => $data[1]['sub-block'][0]['article'],
+                'i18n:de-block1-settings#0' => '[]',
+                'i18n:de-block1-sub-block#0-settings#0' => '[]',
+                'i18n:de-block1-settings#1' => '[]',
+                'i18n:de-block1-sub-block#1-settings#0' => '[]',
             ],
             $result
         );
@@ -417,12 +579,15 @@ class BlockContentTypeTest extends TestCase
                         'type' => 'subType1',
                         'title' => 'Test-Title-Sub-1',
                         'article' => 'Test-Article-Sub-1',
+                        'settings' => new \stdClass(),
                     ],
                 ],
+                'settings' => new \stdClass(),
             ],
             [
                 'type' => 'type2',
                 'name' => 'Test-Name-2',
+                'settings' => new \stdClass(),
             ],
         ];
 
@@ -437,6 +602,9 @@ class BlockContentTypeTest extends TestCase
             'i18n:de-block1-sub-block#0-article#0' => $data[0]['sub-block'][0]['article'],
             'i18n:de-block1-type#1' => $data[1]['type'],
             'i18n:de-block1-name#1' => $data[1]['name'],
+            'i18n:de-block1-settings#0' => '[]',
+            'i18n:de-block1-sub-block#0-settings#0' => '[]',
+            'i18n:de-block1-settings#1' => '[]',
         ];
 
         $this->node = $this->prophesize(Node::class);
@@ -483,12 +651,15 @@ class BlockContentTypeTest extends TestCase
                         'type' => 'subType1',
                         'title' => 'Test-Title-Sub-1',
                         'article' => 'Test-Article-Sub-1',
+                        'settings' => [],
                     ],
                 ],
+                'settings' => [],
             ],
             [
                 'type' => 'type2',
                 'name' => 'Test-Name-2',
+                'settings' => [],
             ],
         ];
         $this->blockProperty->setValue($data);
@@ -515,6 +686,9 @@ class BlockContentTypeTest extends TestCase
                 'i18n:de-block1-sub-block#0-article#0' => $data[0]['sub-block'][0]['article'],
                 'i18n:de-block1-type#1' => $data[1]['type'],
                 'i18n:de-block1-name#1' => $data[1]['name'],
+                'i18n:de-block1-settings#0' => '[]',
+                'i18n:de-block1-sub-block#0-settings#0' => '[]',
+                'i18n:de-block1-settings#1' => '[]',
             ],
             $result
         );
@@ -536,14 +710,19 @@ class BlockContentTypeTest extends TestCase
                     'Test-Article-1-2',
                 ],
                 'sub-block' => [
-                    'type' => 'subType1',
-                    'title' => 'Test-Title-Sub-1',
-                    'article' => 'Test-Article-Sub-1',
+                    [
+                        'type' => 'subType1',
+                        'title' => 'Test-Title-Sub-1',
+                        'article' => 'Test-Article-Sub-1',
+                        'settings' => [],
+                    ],
                 ],
+                'settings' => [],
             ],
             [
                 'type' => 'type2',
                 'name' => 'Test-Name-2',
+                'settings' => [],
             ],
         ];
         $this->blockProperty->setValue($data);
@@ -551,5 +730,112 @@ class BlockContentTypeTest extends TestCase
         $result = $this->blockContentType->getContentData($this->blockProperty);
 
         $this->assertEquals($data, $result);
+    }
+
+    public function testGetContentDataWithEmptySettings()
+    {
+        $this->prepareSingleBlockProperty();
+
+        $data = [
+            [
+                'type' => 'type1',
+                'title' => 'Test-Title-1',
+                'article' => [
+                    'Test-Article-1-1',
+                    'Test-Article-1-2',
+                ],
+                'sub-block' => [
+                    [
+                        'type' => 'subType1',
+                        'title' => 'Test-Title-Sub-1',
+                        'article' => 'Test-Article-Sub-1',
+                        'settings' => new \stdClass(),
+                    ],
+                ],
+                'settings' => [],
+            ],
+            [
+                'type' => 'type2',
+                'name' => 'Test-Name-2',
+                'settings' => new \stdClass(),
+            ],
+        ];
+        $this->blockProperty->setValue($data);
+
+        $result = $this->blockContentType->getContentData($this->blockProperty);
+
+        $this->assertEquals($data, $result);
+    }
+
+    public function testGetContentDataWithHiddenBlocks()
+    {
+        $this->prepareSingleBlockProperty();
+
+        $data = [
+            [
+                'type' => 'type1',
+                'title' => 'Test-Title-1',
+                'article' => [
+                    'Test-Article-1-1',
+                    'Test-Article-1-2',
+                ],
+                'sub-block' => [
+                    [
+                        'type' => 'subType1',
+                        'title' => 'Test-Title-Sub-1',
+                        'article' => 'Test-Article-Sub-1',
+                        'settings' => [],
+                    ],
+                    [
+                        'type' => 'subType1',
+                        'title' => 'Test-Title-Sub-1',
+                        'article' => 'Test-Article-Sub-1',
+                        'settings' => ['hidden' => true],
+                    ],
+                ],
+                'settings' => [],
+            ],
+            [
+                'type' => 'type2',
+                'name' => 'Test-Name-2',
+                'settings' => [],
+            ],
+            [
+                'type' => 'type2',
+                'name' => 'Test-Name-3',
+                'settings' => ['hidden' => true],
+            ],
+        ];
+        $this->blockProperty->setValue($data);
+
+        $result = $this->blockContentType->getContentData($this->blockProperty);
+
+        $this->assertEquals(
+            [
+                [
+                    'type' => 'type1',
+                    'title' => 'Test-Title-1',
+                    'article' => [
+                        'Test-Article-1-1',
+                        'Test-Article-1-2',
+                    ],
+                    'sub-block' => [
+                        [
+                            'type' => 'subType1',
+                            'title' => 'Test-Title-Sub-1',
+                            'article' => 'Test-Article-Sub-1',
+                            'settings' => [],
+                        ],
+                    ],
+                    'settings' => [],
+                ],
+                [
+                    'type' => 'type2',
+                    'name' => 'Test-Name-2',
+                    'settings' => [],
+                ],
+            ],
+            $result
+        );
     }
 }

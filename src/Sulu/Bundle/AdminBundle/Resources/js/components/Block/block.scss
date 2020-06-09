@@ -6,6 +6,7 @@ $blockHandleColor: $black;
 $blockHandleBackgroundColor: $silver;
 $blockCollapsedColor: $gray;
 $blockHandleWidth: 20px;
+$blockIconsColor: $gray;
 
 .block {
     display: flex;
@@ -28,6 +29,18 @@ $blockHandleWidth: 20px;
             padding: 0;
             margin: 10px;
             height: 18px;
+        }
+
+        .icons {
+            border-right: 1px solid $blockBorderColor;
+            padding-right: 10px;
+            margin-right: 10px;
+        }
+    }
+
+    &.expanded {
+        .icons {
+            line-height: 30px;
         }
     }
 }
@@ -66,10 +79,19 @@ $blockHandleWidth: 20px;
     color: $blockCollapsedColor;
     margin-right: 10px;
     text-align: right;
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .icons {
+    color: $blockIconsColor;
+    font-size: 14px;
+
+    > * {
+        margin-left: 10px;
+    }
+}
+
+.icon-buttons {
     flex-grow: 1;
     text-align: right;
 

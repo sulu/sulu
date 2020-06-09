@@ -12,9 +12,11 @@ import type {BlockEntry, RenderBlockContentCallback} from './types';
 type Props = {|
     defaultType: string,
     disabled: boolean,
+    icons?: Array<Array<string>>,
     maxOccurs?: ?number,
     minOccurs?: ?number,
     onChange: (value: Array<BlockEntry>) => void,
+    onSettingsClick?: (index: number) => void,
     onSortEnd?: (oldIndex: number, newIndex: number) => void,
     renderBlockContent: RenderBlockContentCallback,
     types?: {[key: string]: string},
@@ -116,6 +118,14 @@ class BlockCollection extends React.Component<Props> {
         this.expandedBlocks[index] = true;
     };
 
+    handleSettingsClick = (index: number) => {
+        const {onSettingsClick} = this.props;
+
+        if (onSettingsClick) {
+            onSettingsClick(index);
+        }
+    };
+
     @action handleTypeChange = (type: string, index: number) => {
         const {onChange, value} = this.props;
         const newValue = toJS(value);
@@ -136,7 +146,7 @@ class BlockCollection extends React.Component<Props> {
     }
 
     render() {
-        const {disabled, renderBlockContent, types, value} = this.props;
+        const {disabled, icons, onSettingsClick, renderBlockContent, types, value} = this.props;
 
         return (
             <section className={blockCollectionStyles.blockCollection}>
@@ -144,10 +154,12 @@ class BlockCollection extends React.Component<Props> {
                     disabled={disabled}
                     expandedBlocks={this.expandedBlocks}
                     generatedBlockIds={this.generatedBlockIds}
+                    icons={icons}
                     lockAxis="y"
                     onCollapse={this.handleCollapse}
                     onExpand={this.handleExpand}
                     onRemove={this.hasMinimumReached() ? undefined : this.handleRemoveBlock}
+                    onSettingsClick={onSettingsClick ? this.handleSettingsClick : undefined}
                     onSortEnd={this.handleSortEnd}
                     onTypeChange={this.handleTypeChange}
                     renderBlockContent={renderBlockContent}

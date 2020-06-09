@@ -18,16 +18,12 @@ jest.mock('../../../utils/Translator', () => ({
     }),
 }));
 
-test('Should render an empty block list', () => {
-    expect(render(
-        <BlockCollection defaultType="editor" onChange={jest.fn()} renderBlockContent={jest.fn()} />
-    )).toMatchSnapshot();
-});
-
-test('Should render a block list', () => {
+test('Should render a fully filled block list', () => {
     expect(render(
         <BlockCollection
             defaultType="editor"
+            icons={[[], ['su-eye']]}
+            maxOccurs={3}
             onChange={jest.fn()}
             renderBlockContent={jest.fn()}
             value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
@@ -36,7 +32,7 @@ test('Should render a block list', () => {
 });
 
 test('Should render a disabled block list', () => {
-    expect(render(
+    const blockCollection = mount(
         <BlockCollection
             defaultType="editor"
             disabled={true}
@@ -44,11 +40,14 @@ test('Should render a disabled block list', () => {
             renderBlockContent={jest.fn()}
             value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(blockCollection.find('.sortableBlockList.disabled')).toHaveLength(1);
+    expect(blockCollection.find('Button[icon="su-plus"]').prop('disabled')).toEqual(true);
 });
 
-test('Should render a fully filled block list without add button if maxOccurs is reached', () => {
-    expect(render(
+test('Should mark the add button disabled if maxOccurs is reached', () => {
+    const blockCollection = shallow(
         <BlockCollection
             defaultType="editor"
             maxOccurs={2}
@@ -56,7 +55,9 @@ test('Should render a fully filled block list without add button if maxOccurs is
             renderBlockContent={jest.fn()}
             value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(blockCollection.find('Button[icon="su-plus"]').prop('disabled')).toEqual(true);
 });
 
 test('Should add at least the minOccurs amount of blocks', () => {
@@ -345,6 +346,29 @@ test('Should throw an exception if a block is removed and the minimum has alread
     );
 
     expect(() => blockCollection.instance().handleRemoveBlock()).toThrow(/minimum amount of blocks/);
+});
+
+test('Should call onSettingsClick callback when settings icon is clicked', () => {
+    const settingsClickSpy = jest.fn();
+    const value: any = observable([{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]);
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={jest.fn()}
+            onSettingsClick={settingsClickSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    blockCollection.find('Block').at(0).simulate('click');
+    blockCollection.find('Block').at(1).simulate('click');
+
+    blockCollection.find('Block Icon[name="su-cog"]').at(0).simulate('click');
+    expect(settingsClickSpy).toHaveBeenLastCalledWith(0);
+
+    blockCollection.find('Block Icon[name="su-cog"]').at(1).simulate('click');
+    expect(settingsClickSpy).toHaveBeenLastCalledWith(1);
 });
 
 test('Should apply renderBlockContent before rendering the block content', () => {

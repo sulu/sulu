@@ -1,5 +1,6 @@
 [options]
 esproposal.decorators=ignore
+esproposal.optional_chaining=enable
 module.name_mapper='.+\.s?css' -> 'empty/object'
 module.name_mapper='fos-jsrouting/router' -> 'empty/object'
 

@@ -18,6 +18,18 @@ exports[`Render collapsed sortable block 1`] = `
     <header
       class="header"
     >
+      <div
+        class="icons"
+      >
+        <span
+          aria-label="su-eye"
+          class="su-eye"
+        />
+        <span
+          aria-label="su-people"
+          class="su-people"
+        />
+      </div>
       <span
         aria-label="su-angle-down"
         class="su-angle-down"
@@ -26,50 +38,6 @@ exports[`Render collapsed sortable block 1`] = `
     <article
       class="children"
     />
-  </div>
-</section>
-`;
-
-exports[`Render expanded sortable block 1`] = `
-<section
-  class="block expanded"
->
-  <div
-    class="handle"
-  >
-    <span
-      aria-label="su-more"
-      class="su-more sortableHandle"
-    />
-  </div>
-  <div
-    class="content"
-  >
-    <header
-      class="header"
-    >
-      <div
-        class="icons"
-      >
-        <span
-          aria-label="su-trash-alt"
-          class="su-trash-alt clickable"
-          role="button"
-          tabindex="0"
-        />
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up clickable"
-          role="button"
-          tabindex="0"
-        />
-      </div>
-    </header>
-    <article
-      class="children"
-    >
-      Test for Test Content
-    </article>
   </div>
 </section>
 `;
@@ -135,8 +103,14 @@ exports[`Render expanded sortable block with types 1`] = `
         </div>
       </div>
       <div
-        class="icons"
+        class="iconButtons"
       >
+        <span
+          aria-label="su-cog"
+          class="su-cog clickable"
+          role="button"
+          tabindex="0"
+        />
         <span
           aria-label="su-trash-alt"
           class="su-trash-alt clickable"
@@ -155,44 +129,6 @@ exports[`Render expanded sortable block with types 1`] = `
       class="children"
     >
       Test for Test Content and type type2
-    </article>
-  </div>
-</section>
-`;
-
-exports[`Render expanded sortable block without remove icon 1`] = `
-<section
-  class="block expanded"
->
-  <div
-    class="handle"
-  >
-    <span
-      aria-label="su-more"
-      class="su-more sortableHandle"
-    />
-  </div>
-  <div
-    class="content"
-  >
-    <header
-      class="header"
-    >
-      <div
-        class="icons"
-      >
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up clickable"
-          role="button"
-          tabindex="0"
-        />
-      </div>
-    </header>
-    <article
-      class="children"
-    >
-      Test for Test Content
     </article>
   </div>
 </section>

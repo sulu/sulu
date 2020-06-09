@@ -26,6 +26,9 @@ exports[`Render block with schema 1`] = `
         >
           <div
             class="icons"
+          />
+          <div
+            class="iconButtons"
           >
             <span
               aria-label="su-trash-alt"
@@ -128,6 +131,9 @@ exports[`Render block with schema 1`] = `
         >
           <div
             class="icons"
+          />
+          <div
+            class="iconButtons"
           >
             <span
               aria-label="su-trash-alt"
@@ -255,6 +261,9 @@ exports[`Render block with schema and error on fields already being modified 1`]
         >
           <div
             class="icons"
+          />
+          <div
+            class="iconButtons"
           >
             <span
               aria-label="su-trash-alt"
@@ -328,6 +337,9 @@ exports[`Render block with schema and error on fields already being modified 1`]
         >
           <div
             class="icons"
+          />
+          <div
+            class="iconButtons"
           >
             <span
               aria-label="su-trash-alt"
@@ -404,6 +416,9 @@ exports[`Render block with schema and error on fields already being modified 1`]
         >
           <div
             class="icons"
+          />
+          <div
+            class="iconButtons"
           >
             <span
               aria-label="su-trash-alt"
@@ -502,6 +517,9 @@ exports[`Render block with schema and error on fields already being modified 2`]
         >
           <div
             class="icons"
+          />
+          <div
+            class="iconButtons"
           >
             <span
               aria-label="su-trash-alt"
@@ -575,6 +593,9 @@ exports[`Render block with schema and error on fields already being modified 2`]
         >
           <div
             class="icons"
+          />
+          <div
+            class="iconButtons"
           >
             <span
               aria-label="su-trash-alt"
@@ -651,6 +672,9 @@ exports[`Render block with schema and error on fields already being modified 2`]
         >
           <div
             class="icons"
+          />
+          <div
+            class="iconButtons"
           >
             <span
               aria-label="su-trash-alt"
@@ -751,6 +775,14 @@ exports[`Render collapsed blocks with block previews 1`] = `
           class="header"
         >
           <div
+            class="icons"
+          >
+            <span
+              aria-label="su-eye"
+              class="su-eye"
+            />
+          </div>
+          <div
             class="type"
           >
             Default
@@ -786,6 +818,9 @@ exports[`Render collapsed blocks with block previews 1`] = `
         <header
           class="header"
         >
+          <div
+            class="icons"
+          />
           <div
             class="type"
           >
@@ -848,6 +883,9 @@ exports[`Render collapsed blocks with block previews 2`] = `
           class="header"
         >
           <div
+            class="icons"
+          />
+          <div
             class="type"
           >
             Default
@@ -889,6 +927,9 @@ exports[`Render collapsed blocks with block previews 2`] = `
         <header
           class="header"
         >
+          <div
+            class="icons"
+          />
           <div
             class="type"
           >
@@ -957,6 +998,9 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
           class="header"
         >
           <div
+            class="icons"
+          />
+          <div
             class="type"
           >
             Default
@@ -998,6 +1042,9 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
         <header
           class="header"
         >
+          <div
+            class="icons"
+          />
           <div
             class="type"
           >

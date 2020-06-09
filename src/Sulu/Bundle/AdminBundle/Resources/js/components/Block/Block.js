@@ -11,9 +11,11 @@ type Props = {
     children: Node,
     dragHandle?: Node,
     expanded: boolean,
+    icons?: Array<string>,
     onCollapse: () => void,
     onExpand: () => void,
     onRemove?: () => void,
+    onSettingsClick?: () => void,
     onTypeChange?: (type: string | number) => void,
     types?: {[key: string]: string},
 };
@@ -37,14 +39,6 @@ export default class Block extends React.Component<Props> {
         }
     };
 
-    handleRemove = () => {
-        const {onRemove} = this.props;
-
-        if (onRemove) {
-            onRemove();
-        }
-    };
-
     handleTypeChange = (type: string | number) => {
         const {onTypeChange} = this.props;
 
@@ -54,7 +48,7 @@ export default class Block extends React.Component<Props> {
     };
 
     render() {
-        const {activeType, children, dragHandle, expanded, onRemove, types} = this.props;
+        const {activeType, children, dragHandle, expanded, icons, onSettingsClick, onRemove, types} = this.props;
 
         const blockClass = classNames(
             blockStyles.block,
@@ -83,12 +77,23 @@ export default class Block extends React.Component<Props> {
                                         </SingleSelect>
                                     </div>
                                 }
-                                <div className={blockStyles.icons}>
-                                    {onRemove && <Icon name="su-trash-alt" onClick={this.handleRemove} />}
+                                {icons &&
+                                    <div className={blockStyles.icons}>
+                                        {icons.map((icon) => <Icon key={icon} name={icon} />)}
+                                    </div>
+                                }
+                                <div className={blockStyles.iconButtons}>
+                                    {onSettingsClick && <Icon name="su-cog" onClick={onSettingsClick} />}
+                                    {onRemove && <Icon name="su-trash-alt" onClick={onRemove} />}
                                     <Icon name="su-angle-up" onClick={this.handleCollapse} />
                                 </div>
                             </Fragment>
                             : <Fragment>
+                                {icons &&
+                                    <div className={blockStyles.icons}>
+                                        {icons.map((icon) => <Icon key={icon} name={icon} />)}
+                                    </div>
+                                }
                                 {types && activeType && <div className={blockStyles.type}>{types[activeType]}</div>}
                                 <Icon name="su-angle-down" />
                             </Fragment>

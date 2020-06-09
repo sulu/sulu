@@ -2,17 +2,40 @@
 import equals from 'fast-deep-equal';
 import jsonpointer from 'json-pointer';
 import React, {Fragment} from 'react';
-import {toJS} from 'mobx';
+import {action, observable, computed, toJS} from 'mobx';
+import {observer} from 'mobx-react';
 import BlockCollection from '../../components/BlockCollection';
 import type {BlockEntry} from '../../components/BlockCollection/types';
-import type {BlockError, FieldTypeProps} from '../Form/types';
+import Overlay from '../../components/Overlay';
+import {translate} from '../../utils/Translator';
+import Form, {memoryFormStoreFactory} from '../Form';
+import type {BlockError, FieldTypeProps, FormStoreInterface} from '../Form/types';
 import blockPreviewTransformerRegistry from './registries/blockPreviewTransformerRegistry';
 import FieldRenderer from './FieldRenderer';
+import fieldBlocksStyles from './fieldBlocks.scss';
 
 const MISSING_BLOCK_ERROR_MESSAGE = 'The "block" field type needs at least one type to be configured!';
 const BLOCK_PREVIEW_TAG = 'sulu.block_preview';
+const SETTINGS_KEY = 'settings';
+const SETTINGS_PREFIX = '/settings/';
+const SETTINGS_TAG = 'sulu.block_setting_icon';
 
-export default class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
+@observer
+class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
+    formRef: ?Form;
+    @observable blockSettingsOpen: number | typeof undefined = undefined;
+    @observable blockSettingsFormStore: FormStoreInterface;
+
+    @action componentDidMount() {
+        if (this.settingsFormKey) {
+            this.blockSettingsFormStore = memoryFormStoreFactory.createFromFormKey(
+                this.settingsFormKey,
+                {},
+                undefined
+            );
+        }
+    }
+
     componentDidUpdate(prevProps: FieldTypeProps<Array<BlockEntry>>) {
         const {defaultType, onChange, types, value} = this.props;
         const {types: oldTypes} = prevProps;
@@ -46,6 +69,64 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
             onChange(newValue);
         }
     }
+
+    componentWillUnmount() {
+        this.blockSettingsFormStore?.destroy();
+    }
+
+    @computed get settingsFormKey() {
+        const {
+            schemaOptions: {
+                settings_form_key: {
+                    value: settingsFormKey,
+                } = {},
+            },
+        } = this.props;
+
+        if (settingsFormKey !== undefined && typeof settingsFormKey !== 'string') {
+            throw new Error('The "block" field types only accepts strings as "settings_form_key" schema option!');
+        }
+
+        return settingsFormKey;
+    }
+
+    @computed get iconsMapping() {
+        const settingsSchema = this.blockSettingsFormStore?.schema;
+
+        if (!settingsSchema) {
+            return {};
+        }
+
+        return Object.keys(settingsSchema).reduce((iconsMapping, schemaKey) => {
+            const blockSettingsTag = settingsSchema[schemaKey].tags.find((tag) => tag.name === SETTINGS_TAG);
+
+            if (blockSettingsTag) {
+                iconsMapping[SETTINGS_PREFIX + schemaKey] = blockSettingsTag.attributes.icon;
+            }
+
+            return iconsMapping;
+        }, {});
+    }
+
+    @computed get icons(): Array<Array<string>> {
+        const {value} = this.props;
+
+        if (!value) {
+            return [];
+        }
+
+        return value.map((value) => Object.keys(this.iconsMapping).reduce((icons, pointer) => {
+            if (jsonpointer.has(value, pointer) && jsonpointer.get(value, pointer)) {
+                icons.push(this.iconsMapping[pointer]);
+            }
+
+            return icons;
+        }, []));
+    }
+
+    setFormRef = (formRef: ?Form) => {
+        this.formRef = formRef;
+    };
 
     handleBlockChange = (index: number, name: string, value: Object) => {
         const {onChange, value: oldValues} = this.props;
@@ -203,6 +284,47 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
         );
     };
 
+    @action handleSettingsClick = (index: number) => {
+        const {value} = this.props;
+
+        if (!this.settingsFormKey || !value) {
+            return;
+        }
+
+        this.blockSettingsOpen = index;
+        this.blockSettingsFormStore.setMultiple(value[index][SETTINGS_KEY] ?? {});
+        this.blockSettingsFormStore.dirty = false;
+    };
+
+    @action handleSettingsOverlayClose = () => {
+        this.closeSettingsOverlay();
+    };
+
+    @action handleSettingsOverlayConfirm = () => {
+        this.formRef?.submit();
+        this.closeSettingsOverlay();
+    };
+
+    @action closeSettingsOverlay = () => {
+        this.blockSettingsOpen = undefined;
+    };
+
+    handleSettingsSubmit = () => {
+        const {onChange, value = []} = this.props;
+
+        const {blockSettingsFormStore, blockSettingsOpen} = this;
+
+        if (!blockSettingsFormStore || blockSettingsOpen === undefined || !value) {
+            return;
+        }
+
+        onChange([
+            ...value.slice(0, blockSettingsOpen),
+            {...value[blockSettingsOpen], [SETTINGS_KEY]: blockSettingsFormStore.data},
+            ...value.slice(blockSettingsOpen + 1),
+        ]);
+    };
+
     render() {
         const {defaultType, disabled, maxOccurs, minOccurs, onChange, types, value} = this.props;
 
@@ -220,17 +342,43 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
         }, {});
 
         return (
-            <BlockCollection
-                defaultType={defaultType}
-                disabled={!!disabled}
-                maxOccurs={maxOccurs}
-                minOccurs={minOccurs}
-                onChange={onChange}
-                onSortEnd={this.handleSortEnd}
-                renderBlockContent={this.renderBlockContent}
-                types={blockTypes}
-                value={value || []}
-            />
+            <>
+                <BlockCollection
+                    defaultType={defaultType}
+                    disabled={!!disabled}
+                    icons={this.icons}
+                    maxOccurs={maxOccurs}
+                    minOccurs={minOccurs}
+                    onChange={onChange}
+                    onSettingsClick={this.settingsFormKey ? this.handleSettingsClick : undefined}
+                    onSortEnd={this.handleSortEnd}
+                    renderBlockContent={this.renderBlockContent}
+                    types={blockTypes}
+                    value={value || []}
+                />
+                {this.settingsFormKey &&
+                    <Overlay
+                        confirmText={translate('sulu_admin.apply')}
+                        onClose={this.handleSettingsOverlayClose}
+                        onConfirm={this.handleSettingsOverlayConfirm}
+                        open={this.blockSettingsOpen !== undefined}
+                        size="small"
+                        title={translate('sulu_admin.block_settings')}
+                    >
+                        {!!this.blockSettingsFormStore &&
+                            <div className={fieldBlocksStyles.settingsOverlay}>
+                                <Form
+                                    onSubmit={this.handleSettingsSubmit}
+                                    ref={this.setFormRef}
+                                    store={this.blockSettingsFormStore}
+                                />
+                            </div>
+                        }
+                    </Overlay>
+                }
+            </>
         );
     }
 }
+
+export default FieldBlocks;

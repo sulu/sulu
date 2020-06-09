@@ -53,7 +53,7 @@ export type SchemaOption = {
     value?: ?string | number | boolean | Array<SchemaOption>,
 };
 
-export type SchemaOptions = {[key: string]: SchemaOption};
+export type SchemaOptions = {[key: string]: SchemaOption | typeof undefined};
 
 type BaseSchemaEntry = {
     colSpan?: ColSpan,
@@ -115,6 +115,7 @@ export interface FormStoreInterface {
     +options: SchemaOptions,
     +resourceKey: ?string,
     +schema: Object,
+    +setMultiple: (data: Object) => void,
     +validate: () => boolean,
 }
 

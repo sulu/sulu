@@ -110,6 +110,7 @@
     <xs:complexType name="blockType">
         <xs:sequence minOccurs="1" maxOccurs="unbounded">
             <xs:element type="metaType" name="meta" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="paramsType" name="params" minOccurs="0" maxOccurs="1"/>
             <xs:element type="tagType" name="tag" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="blockTypesType" name="types" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
