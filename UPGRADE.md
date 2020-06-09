@@ -20,7 +20,7 @@ imports:
     - { resource: '../prod/sulu_http_cache.yaml' }
 ```
 
-## dev-release/2.1
+## 2.1.0-RC2
 
 ### Add RestRoutingBundle
 
