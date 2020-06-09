@@ -106,7 +106,7 @@ class Webspace implements ArrayableInterface
     /**
      * Template which is selected by default if no other template is chosen.
      *
-     * @var string[]
+     * @var DefaultTemplate[]
      */
     private $defaultTemplates = [];
 
@@ -513,7 +513,7 @@ class Webspace implements ArrayableInterface
     /**
      * Returns a array of default template.
      *
-     * @return string[]
+     * @return DefaultTemplate[]
      */
     public function getDefaultTemplates()
     {

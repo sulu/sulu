@@ -5,7 +5,7 @@ export type Webspace = {
     _permissions: {[permission: string]: boolean},
     allLocalizations: Array<LocalizationItem>,
     customUrls: Array<CustomUrl>,
-    defaultTemplates: {[type: string]: string},
+    defaultTemplates: {[type: string]: Array<DefaultTemplate>},
     key: string,
     localizations: Array<Localization>,
     name: string,
@@ -13,6 +13,12 @@ export type Webspace = {
     portalInformation: Array<PortalInformation>,
     resourceLocatorStrategy: ResourceLocatorStrategy,
     urls: Array<Url>,
+};
+
+export type DefaultTemplate = {
+    parentTemplate: string | null,
+    template: string,
+    type: string
 };
 
 export type ResourceLocatorStrategy = {

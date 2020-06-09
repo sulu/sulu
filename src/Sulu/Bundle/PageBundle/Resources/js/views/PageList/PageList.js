@@ -154,7 +154,7 @@ class PageList extends React.Component<Props> {
     };
 
     handleItemAdd = (id: ?string | number) => {
-        const {router} = this.props;
+        const {router, webspace} = this.props;
 
         // Find template for id
         let pageArray = [];
@@ -164,7 +164,10 @@ class PageList extends React.Component<Props> {
         const page = pageArray.find((page) => {
             return page.id === id
         });
+
+        const key = page.path === '/' ? 'home' : 'page';
         const template = page.template;
+        console.log(template, webspace.defaultTemplates[key]);
 
         router.navigate(
             'sulu_page.page_add_form',
