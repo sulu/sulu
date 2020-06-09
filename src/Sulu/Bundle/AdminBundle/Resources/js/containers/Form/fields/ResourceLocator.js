@@ -7,6 +7,8 @@ import ResourceLocatorHistory from '../../../containers/ResourceLocatorHistory';
 import Requester from '../../../services/Requester';
 import type {FieldTypeProps} from '../../../types';
 import resourceLocatorStyles from './resourceLocator.scss';
+import {translate} from "../../../utils/Translator";
+import Button from "../../../components/Button";
 
 const PART_TAG = 'sulu.rlp.part';
 
@@ -15,9 +17,11 @@ const HOMEPAGE_RESOURCE_LOCATOR = '/';
 @observer
 class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
     @observable mode: string;
+    @observable forceRefresh: boolean;
 
     constructor(props: FieldTypeProps<?string>) {
         super(props);
+        this.forceRefresh = false;
 
         const {dataPath, onChange, fieldTypeOptions, formInspector, value} = this.props;
         const {generationUrl, modeResolver} = fieldTypeOptions;
@@ -41,18 +45,25 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
         }
 
         formInspector.addFinishFieldHandler((finishedFieldDataPath, finishedFieldSchemaPath) => {
-            if (value !== undefined) {
+            if (value !== undefined && !this.forceRefresh) {
                 return;
             }
 
-            if (formInspector.isFieldModified(dataPath)) {
+            if (formInspector.isFieldModified(dataPath) && !this.forceRefresh) {
                 return;
             }
+
 
             const {tags: finishedFieldTags} = formInspector.getSchemaEntryByPath(finishedFieldSchemaPath) || {};
-            if (!finishedFieldTags || !finishedFieldTags.some((tag) => tag.name === PART_TAG)) {
+            console.log(finishedFieldTags)
+            if (
+                (!finishedFieldTags || !finishedFieldTags.some((tag) => tag.name === PART_TAG)) &&
+                !this.forceRefresh
+            ) {
                 return;
             }
+
+            this.forceRefresh = false;
 
             const partEntries = formInspector.getPathsByTag(PART_TAG)
                 .map((path: string) => [path, formInspector.getValueByPath(path)])
@@ -70,6 +81,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                 return;
             }
 
+
             Requester.post(
                 generationUrl,
                 {
@@ -86,6 +98,13 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
 
     handleBlur = () => {
         const {onFinish} = this.props;
+        onFinish();
+    };
+
+    handleButtonClick = () => {
+        const {onFinish} = this.props;
+        this.forceRefresh = true;
+        console.log(this);
         onFinish();
     };
 
@@ -135,6 +154,9 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                 </div>
                 {formInspector.id &&
                     <div className={resourceLocatorStyles.resourceLocatorHistory}>
+                        <Button icon="su-sync" onClick={this.handleButtonClick} skin="link">
+                            {translate('sulu_admin.refresh_url')}
+                        </Button>
                         <ResourceLocatorHistory
                             id={formInspector.id}
                             options={{
