@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest;
 
 use Sulu\Component\Persistence\RelationTrait;
+use Sulu\Component\Rest\Exception\SearchFieldNotFoundException;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
@@ -65,6 +66,10 @@ class RestHelper implements RestHelperInterface
             }
 
             foreach ($searchFields as $searchField) {
+                if (!isset($fieldDescriptors[$searchField])) {
+                    throw new SearchFieldNotFoundException($searchField);
+                }
+
                 $fieldDescriptor = $fieldDescriptors[$searchField];
 
                 if (FieldDescriptorInterface::SEARCHABILITY_NEVER === $fieldDescriptor->getSearchability()) {

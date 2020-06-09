@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Sulu\Component\Rest\Exception\SearchFieldNotFoundException;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
@@ -129,6 +130,23 @@ class RestHelperTest extends TestCase
         $this->listBuilder->addSearchField($field1->reveal())->shouldBeCalled();
         $this->listBuilder->addSearchField($field2->reveal())->shouldBeCalled();
         $this->listBuilder->search('searchValue')->shouldBeCalled();
+
+        $this->restHelper->initializeListBuilder(
+            $this->listBuilder->reveal(),
+            ['name' => $field1->reveal(), 'desc' => $field2->reveal()]
+        );
+    }
+
+    public function testInitializeListBuilderAddSearchWithNonExistingSearchField()
+    {
+        $this->expectException(SearchFieldNotFoundException::class);
+
+        $field1 = $this->prophesize(FieldDescriptor::class);
+
+        $field2 = $this->prophesize(FieldDescriptor::class);
+
+        $this->listRestHelper->getSearchFields()->willReturn(['non-existing']);
+        $this->listRestHelper->getSearchPattern()->willReturn('searchValue');
 
         $this->restHelper->initializeListBuilder(
             $this->listBuilder->reveal(),

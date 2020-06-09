@@ -69,6 +69,11 @@ class PageLinkProviderTest extends TestCase
     /**
      * @var string
      */
+    protected $domain = 'sulu.io';
+
+    /**
+     * @var string
+     */
     protected $webspaceKey = 'sulu_io';
 
     /**
@@ -85,6 +90,7 @@ class PageLinkProviderTest extends TestCase
         $this->translator = $this->prophesize(TranslatorInterface::class);
 
         $this->request->getScheme()->willReturn($this->scheme);
+        $this->request->getHost()->willReturn($this->domain);
 
         $this->pageLinkProvider = new PageLinkProvider(
             $this->contentRepository->reveal(),
@@ -202,7 +208,7 @@ class PageLinkProviderTest extends TestCase
         $this->requestStack->getCurrentRequest()->willReturn(null);
 
         $contents = [
-            $this->createContent(1, 'Test 1', '/test-1'),
+            $this->createContent(1, 'Test 1', '/test-1', null, null),
         ];
 
         $this->contentRepository->findByUuids(
@@ -236,10 +242,11 @@ class PageLinkProviderTest extends TestCase
      * @param string $title
      * @param string $url
      * @param \DateTime|null $published
+     * @param string|null $domain
      *
      * @return Content
      */
-    private function createContent($id, $title, $url, $published = null)
+    private function createContent($id, $title, $url, $published = null, $domain = 'sulu.io')
     {
         $content = $this->prophesize(Content::class);
         $content->getId()->willReturn($id);
@@ -253,7 +260,7 @@ class PageLinkProviderTest extends TestCase
             $this->environment,
             $this->locale,
             $this->webspaceKey,
-            null,
+            $domain,
             $this->scheme
         )->will(
             function($arguments) {
