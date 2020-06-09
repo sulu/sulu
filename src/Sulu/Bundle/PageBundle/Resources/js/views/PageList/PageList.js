@@ -167,13 +167,16 @@ class PageList extends React.Component<Props> {
 
         const key = page.path === '/' ? 'home' : 'page';
         const template = page.template;
-        console.log(template, webspace.defaultTemplates[key]);
+        const defaultTemplates = webspace.defaultTemplates[key];
+        const defaultTemplate = defaultTemplates.find((defaultTemplate) => {
+            return defaultTemplate.parentTemplate === template;
+        });
 
         router.navigate(
             'sulu_page.page_add_form',
             {
                 parentId: id,
-                parentTemplate: template,
+                defaultTemplate: defaultTemplate.template,
                 locale: this.locale.get(),
                 webspace: router.attributes.webspace,
             }

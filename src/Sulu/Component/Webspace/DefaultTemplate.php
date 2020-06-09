@@ -11,16 +11,19 @@ class DefaultTemplate implements \JsonSerializable, ArrayableInterface
 {
     /**
      * @var string
+     * @Serializer\Groups({"frontend", "Default"})
      */
     private $type;
 
     /**
      * @var string
+     * @Serializer\Groups({"frontend", "Default"})
      */
     private $template;
 
     /**
      * @var string|null
+     * @Serializer\Groups({"frontend", "Default"})
      */
     private $parentTemplate;
 
@@ -44,5 +47,19 @@ class DefaultTemplate implements \JsonSerializable, ArrayableInterface
     public function getParentTemplate(): ?string
     {
         return $this->parentTemplate;
+    }
+
+    public function toArray($depth = null)
+    {
+        return [
+            'template' => $this->template,
+            'type' => $this->type,
+            'parentTemplate' => $this->parentTemplate
+        ];
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->toArray();
     }
 }
