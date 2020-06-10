@@ -215,9 +215,9 @@ class NavigationTest extends SuluTestCase
     public function testMainNavigationWithSegment()
     {
         $main = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 2, false, null, false, 'w');
-        $this->assertEquals(2, count($main));
-        $this->assertEquals(2, count($main[0]['children']));
-        $this->assertEquals(1, count($main[1]['children']));
+        $this->assertEquals(2, \count($main));
+        $this->assertEquals(2, \count($main[0]['children']));
+        $this->assertEquals(1, \count($main[1]['children']));
 
         $this->assertEquals('/news', $main[0]['url']);
         $this->assertEquals('/news/news-1', $main[0]['children'][0]['url']);
@@ -226,9 +226,9 @@ class NavigationTest extends SuluTestCase
         $this->assertEquals('/products/products-2', $main[1]['children'][0]['url']);
 
         $main = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 2, false, null, false, 's');
-        $this->assertEquals(2, count($main));
-        $this->assertEquals(2, count($main[0]['children']));
-        $this->assertEquals(1, count($main[1]['children']));
+        $this->assertEquals(2, \count($main));
+        $this->assertEquals(2, \count($main[0]['children']));
+        $this->assertEquals(1, \count($main[1]['children']));
 
         $this->assertEquals('/news', $main[0]['url']);
         $this->assertEquals('/news/news-1', $main[0]['children'][0]['url']);

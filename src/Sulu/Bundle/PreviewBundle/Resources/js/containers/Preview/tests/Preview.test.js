@@ -215,6 +215,26 @@ test('Change webspace in PreviewStore when selection of webspace has changed', (
     });
 });
 
+test('Use router attribute to determine webspace', () => {
+    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    const router = new Router({});
+    router.attributes.webspace = 'example';
+
+    const preview = shallow(<Preview formStore={formStore} router={router} />);
+
+    const startPromise = Promise.resolve();
+    const previewStore = preview.instance().previewStore;
+    previewStore.start.mockReturnValue(startPromise);
+    previewStore.starting = false;
+
+    preview.instance().handleStartClick();
+
+    return startPromise.then(() => {
+        expect(PreviewStore).toBeCalledWith(undefined, undefined, 'de', 'example', undefined);
+    });
+});
+
 test('Change segment in PreviewStore when selection of segment has changed', () => {
     const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
     const formStore = new ResourceFormStore(resourceStore, 'pages');

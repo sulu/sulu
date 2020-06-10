@@ -168,7 +168,7 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $environmentProd = $portal->getEnvironment('prod');
         $this->assertEquals('prod', $environmentProd->getType());
-        $this->assertEquals(2, count($environmentProd->getUrls()));
+        $this->assertEquals(2, \count($environmentProd->getUrls()));
         $this->assertEquals('{language}.massiveart.{country}', $environmentProd->getUrls()[0]->getUrl());
         $this->assertEquals(null, $environmentProd->getUrls()[0]->getLanguage());
         $this->assertEquals(null, $environmentProd->getUrls()[0]->getCountry());

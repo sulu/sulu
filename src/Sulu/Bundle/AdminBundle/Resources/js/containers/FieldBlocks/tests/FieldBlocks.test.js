@@ -1010,8 +1010,8 @@ test('Should open and close block settings overlay when confirm button is clicke
     fieldBlocks.find('Block').at(1).simulate('click');
     fieldBlocks.find('Block').at(1).find('Icon[name="su-cog"]').simulate('click');
     expect(fieldBlocks.find('Overlay').prop('open')).toEqual(true);
-    expect(metadataStore.getSchema).toBeCalledWith('page_block_settings');
-    expect(metadataStore.getJsonSchema).toBeCalledWith('page_block_settings');
+    expect(metadataStore.getSchema).toBeCalledWith('page_block_settings', undefined, undefined);
+    expect(metadataStore.getJsonSchema).toBeCalledWith('page_block_settings', undefined, undefined);
 
     return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
         fieldBlocks.update();
@@ -1070,8 +1070,8 @@ test('Should open and close block settings overlay when confirm button is clicke
     fieldBlocks.find('Block').at(1).simulate('click');
     fieldBlocks.find('Block').at(1).find('Icon[name="su-cog"]').simulate('click');
     expect(fieldBlocks.find('Overlay').prop('open')).toEqual(true);
-    expect(metadataStore.getSchema).toBeCalledWith('page_block_settings');
-    expect(metadataStore.getJsonSchema).toBeCalledWith('page_block_settings');
+    expect(metadataStore.getSchema).toBeCalledWith('page_block_settings', undefined, undefined);
+    expect(metadataStore.getJsonSchema).toBeCalledWith('page_block_settings', undefined, undefined);
 
     return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
         fieldBlocks.update();

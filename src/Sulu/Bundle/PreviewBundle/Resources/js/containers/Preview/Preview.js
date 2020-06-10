@@ -58,7 +58,7 @@ class Preview extends React.Component<Props> {
             throw new Error('The "webspace" router attribute must be a string if set!');
         }
 
-        return webspace;
+        return webspace || this.webspaceOptions[0].value;
     }
 
     @computed get segments() {
@@ -99,7 +99,7 @@ class Preview extends React.Component<Props> {
             formStore.resourceKey,
             formStore.id,
             locale,
-            this.webspaceKey || this.webspaceOptions[0].value,
+            this.webspaceKey,
             this.segments.find((segment) => segment.default === true)?.key
         );
 

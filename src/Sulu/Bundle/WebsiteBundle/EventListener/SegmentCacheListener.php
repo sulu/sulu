@@ -42,7 +42,7 @@ class SegmentCacheListener implements EventSubscriberInterface
     {
         $response = $cacheEvent->getResponse();
 
-        if (in_array(static::SEGMENT_HEADER, $response->getVary())) {
+        if (\in_array(static::SEGMENT_HEADER, $response->getVary())) {
             $response->setMaxAge(0);
             $response->setSharedMaxAge(0);
         }

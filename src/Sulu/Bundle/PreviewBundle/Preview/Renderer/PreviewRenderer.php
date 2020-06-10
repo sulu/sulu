@@ -118,7 +118,7 @@ class PreviewRenderer implements PreviewRendererInterface
         $targetGroupId = null,
         $segmentKey = null
     ) {
-        if (!$this->routeDefaultsProvider->supports(get_class($object))) {
+        if (!$this->routeDefaultsProvider->supports(\get_class($object))) {
             throw new RouteDefaultsProviderNotFoundException($object, $id, $webspaceKey, $locale);
         }
 

@@ -1902,7 +1902,7 @@ class PageControllerTest extends SuluTestCase
             '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
             $data
         );
-        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $data = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('id', $data);
         $this->assertEquals('test1', $data['title']);
@@ -1913,7 +1913,7 @@ class PageControllerTest extends SuluTestCase
 
         $this->client->request('GET', '/api/pages/' . $data['id'] . '?webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertArrayHasKey('id', $response);
         $this->assertEquals('test1', $response['title']);

@@ -48,7 +48,7 @@ class SegmentSubscriber implements EventSubscriberInterface
         $response = $event->getResponse();
         $webspace = $this->requestAnalyzer->getWebspace();
 
-        if ($webspace && count($webspace->getSegments())) {
+        if ($webspace && \count($webspace->getSegments())) {
             $response->setVary($this->segmentHeader, false);
         }
     }

@@ -205,9 +205,9 @@ class PortalInformation implements ArrayableInterface
      */
     public function setSegment($segment)
     {
-        @trigger_error(
+        @\trigger_error(
             'Segment on the PortalInformation will be removed and should not be used anymore since Sulu 2.2',
-            E_USER_DEPRECATED
+            \E_USER_DEPRECATED
         );
         $this->segment = $segment;
     }
@@ -221,9 +221,9 @@ class PortalInformation implements ArrayableInterface
      */
     public function getSegment()
     {
-        @trigger_error(
+        @\trigger_error(
             'Segment on the PortalInformation will be removed and should not be used anymore since Sulu 2.2',
-            E_USER_DEPRECATED
+            \E_USER_DEPRECATED
         );
 
         return $this->segment;
@@ -234,9 +234,9 @@ class PortalInformation implements ArrayableInterface
      */
     public function getSegmentKey()
     {
-        @trigger_error(
+        @\trigger_error(
             'Segment on the PortalInformation will be removed and should not be used anymore since Sulu 2.2',
-            E_USER_DEPRECATED
+            \E_USER_DEPRECATED
         );
 
         return $this->segment ? $this->segment->getKey() : null;

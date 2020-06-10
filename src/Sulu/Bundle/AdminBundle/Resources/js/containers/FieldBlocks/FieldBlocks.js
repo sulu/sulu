@@ -28,10 +28,13 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
     @action componentDidMount() {
         if (this.settingsFormKey) {
+            const {formInspector} = this.props;
+
             this.blockSettingsFormStore = memoryFormStoreFactory.createFromFormKey(
                 this.settingsFormKey,
                 {},
-                undefined
+                formInspector.locale,
+                formInspector.options
             );
         }
     }

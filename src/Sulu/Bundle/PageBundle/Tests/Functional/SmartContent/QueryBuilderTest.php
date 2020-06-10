@@ -650,7 +650,7 @@ class QueryBuilderTest extends SuluTestCase
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
         $this->assertCount(2, $result);
 
-        $resultTitles = array_map(function($row) {
+        $resultTitles = \array_map(function($row) {
             return $row['title'];
         }, $result);
         $this->assertContains('Hiking', $resultTitles);
@@ -675,7 +675,7 @@ class QueryBuilderTest extends SuluTestCase
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
         $this->assertCount(2, $result);
 
-        $resultTitles = array_map(function($row) {
+        $resultTitles = \array_map(function($row) {
             return $row['title'];
         }, $result);
         $this->assertContains('Hiking', $resultTitles);

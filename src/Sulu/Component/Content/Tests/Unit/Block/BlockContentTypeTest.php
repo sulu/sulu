@@ -798,7 +798,7 @@ class BlockContentTypeTest extends TestCase
                         'title' => 'Test-Title-Sub-1',
                         'article' => 'Test-Article-Sub-1',
                         'settings' => new \stdClass(),
-                    ]
+                    ],
                 ],
                 'settings' => ['segment' => 'w'],
             ],
@@ -948,5 +948,4 @@ class BlockContentTypeTest extends TestCase
             $result
         );
     }
-
 }
