@@ -31,7 +31,7 @@
         "ext-simplexml": "*",
         "aferrandini/urlizer": "^1.0",
         "antishov/doctrine-extensions-bundle": "^1.2.2",
-        "contao/imagine-svg": "^0.2.2",
+        "contao/imagine-svg": "^0.2.2 || ^1.0",
         "dantleech/phpcr-migrations-bundle": "^1.0",
         "doctrine/annotations": "^1.2",
         "doctrine/common": "^2.7.1",
