@@ -2,6 +2,7 @@
 import {computed} from 'mobx';
 import React from 'react';
 import GhostIndicator from '../../../components/GhostIndicator';
+import PublishIndicator from '../../../components/PublishIndicator';
 import Table from '../../../components/Table';
 import listFieldTransformerRegistry from '../registries/listFieldTransformerRegistry';
 import type {Schema} from '../types';
@@ -40,6 +41,13 @@ export default class AbstractTableAdapter extends AbstractAdapter {
 
             return (
                 <Table.Cell key={item.id + schemaKey}>
+                    {index === 0 && !item.ghostLocale && (item.hasOwnProperty('publishedState') || item.hasOwnProperty('published')) && !item.publishedState &&
+                        <PublishIndicator
+                            containerClass={abstractTableAdapterStyles.publishIndicator}
+                            draft={item.publishedState === undefined ? false : !item.publishedState}
+                            published={item.published === undefined ? false : !!item.published}
+                        />
+                    }
                     {index === 0 && item.ghostLocale &&
                         <GhostIndicator
                             className={abstractTableAdapterStyles.ghostIndicator}
