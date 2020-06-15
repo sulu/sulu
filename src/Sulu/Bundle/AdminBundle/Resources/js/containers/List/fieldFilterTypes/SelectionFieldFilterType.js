@@ -30,7 +30,7 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
     ) {
         super(onChange, parameters, value);
 
-        this.selectionStore = new MultiSelectionStore(this.resourceKey, []);
+        this.selectionStore = new MultiSelectionStore(this.resourceKey, [], null, 'ids', this.requestParameters);
 
         this.selectionStoreDisposer = autorun(() => {
             const {onChange, selectionStore} = this;
@@ -61,7 +61,7 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
         this.valueDisposer();
     }
 
-    @computed get resourceKey() {
+    @computed get resourceKey(): string {
         const {parameters} = this;
 
         if (!parameters) {
@@ -77,7 +77,23 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
         return resourceKey;
     }
 
-    @computed get displayProperty() {
+    @computed get requestParameters(): {[string]: mixed} {
+        const {parameters} = this;
+
+        if (!parameters) {
+            throw new Error('The "SelectionFieldFilterType" needs some parameters to work!');
+        }
+
+        const {requestParameters = {}} = parameters;
+
+        if (typeof requestParameters !== 'object') {
+            throw new Error('The "requestParameters" parameter must be an object!');
+        }
+
+        return requestParameters;
+    }
+
+    @computed get displayProperty(): string {
         const {parameters} = this;
 
         if (!parameters) {
@@ -126,6 +142,7 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
                     <ResourceCheckboxGroup
                         displayProperty={this.displayProperty}
                         onChange={this.handleSelectChange}
+                        requestParameters={this.requestParameters}
                         resourceKey={this.resourceKey}
                         values={this.selectValue}
                     />

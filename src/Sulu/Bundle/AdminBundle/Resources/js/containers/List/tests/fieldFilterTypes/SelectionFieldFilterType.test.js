@@ -18,6 +18,8 @@ test.each([
     [undefined, 'parameters'],
     [{}, 'resourceKey'],
     [{resourceKey: 35}, 'resourceKey'],
+    [{requestParameters: ''}, 'requestParameters'],
+    [{requestParameters: []}, 'requestParameters'],
 ])('Throw error if "%s" is passed as a parameter', (parameters, errorMessage) => {
     expect(() => new SelectionFieldFilterType(jest.fn(), parameters, undefined)).toThrow(errorMessage);
 });
@@ -25,7 +27,7 @@ test.each([
 test('Pass correct props to MultiAutoComplete', () => {
     const selectionFieldFilterType = new SelectionFieldFilterType(
         jest.fn(),
-        {displayProperty: 'name', resourceKey: 'accounts'},
+        {displayProperty: 'name', resourceKey: 'accounts', requestParameters: {limit: '99'}},
         undefined
     );
 
@@ -40,7 +42,7 @@ test('Pass correct props to MultiAutoComplete', () => {
 test('Pass correct props to Select', () => {
     const selectionFieldFilterType = new SelectionFieldFilterType(
         jest.fn(),
-        {displayProperty: 'name', resourceKey: 'accounts', type: 'select'},
+        {displayProperty: 'name', resourceKey: 'accounts', type: 'select', requestParameters: {limit: '99'}},
         [4, 6]
     );
 
@@ -49,6 +51,7 @@ test('Pass correct props to Select', () => {
     expect(selectionFieldFilterTypeForm.find('ResourceCheckboxGroup').props()).toEqual(expect.objectContaining({
         displayProperty: 'name',
         resourceKey: 'accounts',
+        requestParameters: {limit: '99'},
         values: [4, 6],
     }));
 });
