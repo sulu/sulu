@@ -68,6 +68,84 @@ test('Render data with schema', () => {
     expect(tableAdapter).toMatchSnapshot();
 });
 
+test('Render different kind of data with schema', () => {
+    const data = [
+        {
+            id: 1,
+            title: 'Page 1',
+            published: '2017-08-23',
+            publishedState: true,
+        },
+        {
+            id: 2,
+            title: 'Page 2',
+            publishedState: true,
+            published: null,
+        },
+        {
+            id: 3,
+            title: 'Page 3',
+            publishedState: false,
+            published: '2017-08-23',
+        },
+        {
+            id: 4,
+            title: 'Page 4',
+            publishedState: false,
+            published: null,
+        },
+        {
+            id: 5,
+            title: 'Page 5',
+            published: '2017-08-23',
+            publishedState: true,
+            ghostLocale: 'de',
+        },
+        {
+            id: 6,
+            title: 'Page 6',
+            publishedState: true,
+            published: null,
+            ghostLocale: 'de',
+        },
+        {
+            id: 7,
+            title: 'Page 7',
+            publishedState: false,
+            published: '2017-08-23',
+            ghostLocale: 'de',
+        },
+        {
+            id: 8,
+            title: 'Page 8',
+            publishedState: false,
+            published: null,
+            ghostLocale: 'de',
+        },
+    ];
+
+    const schema = {
+        title: {
+            type: 'string',
+            sortable: true,
+            visibility: 'yes',
+            label: 'Title',
+        },
+    };
+
+    const tableAdapter = render(
+        <TableAdapter
+            {...listAdapterDefaultProps}
+            data={data}
+            page={1}
+            pageCount={1}
+            schema={schema}
+        />
+    );
+
+    expect(tableAdapter).toMatchSnapshot();
+});
+
 test('Render data with skin', () => {
     const data = [];
 

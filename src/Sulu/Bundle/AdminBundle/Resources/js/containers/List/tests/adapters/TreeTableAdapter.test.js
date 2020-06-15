@@ -78,6 +78,114 @@ test('Render data with schema', () => {
     expect(treeListAdapter).toMatchSnapshot();
 });
 
+test('Render different kind of data with schema', () => {
+    const data = [
+        {
+            data: {
+                id: 1,
+                title: 'Page 1',
+                published: '2017-08-23',
+                publishedState: true,
+            },
+            children: [],
+            hasChildren: true,
+        },
+        {
+            data: {
+                id: 2,
+                title: 'Page 2',
+                publishedState: true,
+                published: null,
+            },
+            children: [],
+            hasChildren: true,
+        },
+        {
+            data: {
+                id: 3,
+                title: 'Page 3',
+                publishedState: false,
+                published: '2017-08-23',
+            },
+            children: [],
+            hasChildren: true,
+        },
+        {
+            data: {
+                id: 4,
+                title: 'Page 4',
+                publishedState: false,
+                published: null,
+            },
+            children: [],
+            hasChildren: true,
+        },
+        {
+            data: {
+                id: 5,
+                title: 'Page 5',
+                published: '2017-08-23',
+                publishedState: true,
+                ghostLocale: 'de',
+            },
+            children: [],
+            hasChildren: true,
+        },
+        {
+            data: {
+                id: 6,
+                title: 'Page 6',
+                publishedState: true,
+                published: null,
+                ghostLocale: 'de',
+            },
+            children: [],
+            hasChildren: true,
+        },
+        {
+            data: {
+                id: 7,
+                title: 'Page 7',
+                publishedState: false,
+                published: '2017-08-23',
+                ghostLocale: 'de',
+            },
+            children: [],
+            hasChildren: true,
+        },
+        {
+            data: {
+                id: 8,
+                title: 'Page 8',
+                publishedState: false,
+                published: null,
+                ghostLocale: 'de',
+            },
+            children: [],
+            hasChildren: true,
+        },
+    ];
+
+    const schema = {
+        title: {
+            type: 'string',
+            sortable: true,
+            visibility: 'yes',
+            label: 'Title',
+        },
+    };
+
+    const treeTableAdapter = render(
+        <TreeTableAdapter
+            {...listAdapterDefaultProps}
+            data={data}
+            schema={schema}
+        />
+    );
+
+    expect(treeTableAdapter).toMatchSnapshot();
+});
+
 test('Render data without header', () => {
     const test1 = {
         data: {
