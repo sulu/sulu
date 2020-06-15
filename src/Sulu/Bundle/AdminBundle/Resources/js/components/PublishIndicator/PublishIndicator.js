@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import publishIndicatorStyles from './publishIndicator.scss';
 import classNames from 'classnames';
+import publishIndicatorStyles from './publishIndicator.scss';
 
 type Props = {
     containerClass?: string,
@@ -20,7 +20,7 @@ export default class PublishIndicator extends React.Component<Props> {
 
         const className = classNames(
             publishIndicatorStyles.publishIndicator,
-            containerClass,
+            containerClass
         );
 
         return (

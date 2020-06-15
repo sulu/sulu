@@ -41,7 +41,9 @@ export default class AbstractTableAdapter extends AbstractAdapter {
 
             return (
                 <Table.Cell key={item.id + schemaKey}>
-                    {index === 0 && !item.ghostLocale && (item.hasOwnProperty('publishedState') || item.hasOwnProperty('published')) && !item.publishedState &&
+                    {index === 0 && !item.ghostLocale
+                        && (item.hasOwnProperty('publishedState') || item.hasOwnProperty('published'))
+                        && !item.publishedState &&
                         <PublishIndicator
                             containerClass={abstractTableAdapterStyles.publishIndicator}
                             draft={item.publishedState === undefined ? false : !item.publishedState}
