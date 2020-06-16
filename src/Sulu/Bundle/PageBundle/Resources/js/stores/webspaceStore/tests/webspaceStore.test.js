@@ -1,5 +1,6 @@
 // @flow
 import log from 'loglevel';
+import {defaultWebspace} from 'sulu-admin-bundle/utils/TestHelper';
 import webspaceStore from '../webspaceStore';
 
 jest.mock('loglevel', () => ({
@@ -12,35 +13,23 @@ beforeEach(() => {
 
 test('Has webspace', () => {
     const webspace1 = {
+        ...defaultWebspace,
         _permissions: {
             view: true,
         },
         name: 'sulu',
         key: 'sulu',
-        allLocalizations: [],
-        customUrls: [],
-        defaultTemplates: {},
-        localizations: [],
-        navigations: [],
-        portalInformation: [],
         resourceLocatorStrategy: {inputType: 'leaf'},
-        urls: [],
     };
 
     const webspace2 = {
+        ...defaultWebspace,
         _permissions: {
             view: false,
         },
         name: 'Sulu Blog',
         key: 'sulu_blog',
-        allLocalizations: [],
-        customUrls: [],
-        defaultTemplates: {},
-        localizations: [],
-        navigations: [],
-        portalInformation: [],
         resourceLocatorStrategy: {inputType: 'leaf'},
-        urls: [],
     };
 
     const webspaces = [webspace1, webspace2];
@@ -54,35 +43,23 @@ test('Has webspace', () => {
 
 test('Load granted webspaces', () => {
     const webspace1 = {
+        ...defaultWebspace,
         _permissions: {
             view: true,
         },
         name: 'sulu',
         key: 'sulu',
-        allLocalizations: [],
-        customUrls: [],
-        defaultTemplates: {},
-        localizations: [],
-        navigations: [],
-        portalInformation: [],
         resourceLocatorStrategy: {inputType: 'leaf'},
-        urls: [],
     };
 
     const webspace2 = {
+        ...defaultWebspace,
         _permissions: {
             view: false,
         },
         name: 'Sulu Blog',
         key: 'sulu_blog',
-        allLocalizations: [],
-        customUrls: [],
-        defaultTemplates: {},
-        localizations: [],
-        navigations: [],
-        portalInformation: [],
         resourceLocatorStrategy: {inputType: 'leaf'},
-        urls: [],
     };
 
     const webspaces = [webspace1, webspace2];
@@ -99,35 +76,23 @@ test('Load granted webspaces', () => {
 
 test('Load webspace with given key', () => {
     const webspace1 = {
+        ...defaultWebspace,
         _permissions: {
             view: true,
         },
         name: 'sulu',
         key: 'sulu',
-        allLocalizations: [],
-        customUrls: [],
-        defaultTemplates: {},
-        localizations: [],
-        navigations: [],
-        portalInformation: [],
         resourceLocatorStrategy: {inputType: 'leaf'},
-        urls: [],
     };
 
     const webspace2 = {
+        ...defaultWebspace,
         _permissions: {
             view: false,
         },
         name: 'Sulu Blog',
         key: 'sulu_blog',
-        allLocalizations: [],
-        customUrls: [],
-        defaultTemplates: {},
-        localizations: [],
-        navigations: [],
-        portalInformation: [],
         resourceLocatorStrategy: {inputType: 'leaf'},
-        urls: [],
     };
 
     const webspaces = [webspace1, webspace2];
@@ -144,35 +109,23 @@ test('Load webspace with given key', () => {
 
 test('Get granted webspaces', () => {
     const webspace1 = {
+        ...defaultWebspace,
         _permissions: {
             view: true,
         },
         name: 'sulu',
         key: 'sulu',
-        allLocalizations: [],
-        customUrls: [],
-        defaultTemplates: {},
-        localizations: [],
-        navigations: [],
-        portalInformation: [],
         resourceLocatorStrategy: {inputType: 'leaf'},
-        urls: [],
     };
 
     const webspace2 = {
+        ...defaultWebspace,
         _permissions: {
             view: false,
         },
         name: 'Sulu Blog',
         key: 'sulu_blog',
-        allLocalizations: [],
-        customUrls: [],
-        defaultTemplates: {},
-        localizations: [],
-        navigations: [],
-        portalInformation: [],
         resourceLocatorStrategy: {inputType: 'leaf'},
-        urls: [],
     };
 
     const webspaces = [webspace1, webspace2];
@@ -185,35 +138,23 @@ test('Get granted webspaces', () => {
 
 test('Get webspace with given key', () => {
     const webspace1 = {
+        ...defaultWebspace,
         _permissions: {
             view: true,
         },
         name: 'sulu',
         key: 'sulu',
-        allLocalizations: [],
-        customUrls: [],
-        defaultTemplates: {},
-        localizations: [],
-        navigations: [],
-        portalInformation: [],
         resourceLocatorStrategy: {inputType: 'leaf'},
-        urls: [],
     };
 
     const webspace2 = {
+        ...defaultWebspace,
         _permissions: {
             view: false,
         },
         name: 'Sulu Blog',
         key: 'sulu_blog',
-        allLocalizations: [],
-        customUrls: [],
-        defaultTemplates: {},
-        localizations: [],
-        navigations: [],
-        portalInformation: [],
         resourceLocatorStrategy: {inputType: 'leaf'},
-        urls: [],
     };
 
     const webspaces = [webspace1, webspace2];
