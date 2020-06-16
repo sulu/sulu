@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import publishIndicatorStyles from './publishIndicator.scss';
 
 type Props = {
-    containerClass?: string,
+    className?: string,
     draft: boolean,
     published: boolean,
 };
@@ -16,15 +16,15 @@ export default class PublishIndicator extends React.Component<Props> {
     };
 
     render() {
-        const {containerClass, draft, published} = this.props;
+        const {className, draft, published} = this.props;
 
-        const className = classNames(
+        const containerClass = classNames(
             publishIndicatorStyles.publishIndicator,
-            containerClass
+            className
         );
 
         return (
-            <div className={className}>
+            <div className={containerClass}>
                 {published && <span className={publishIndicatorStyles.published} />}
                 {draft && <span className={publishIndicatorStyles.draft} />}
             </div>

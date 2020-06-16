@@ -372,6 +372,9 @@ exports[`Should render the list with a title 1`] = `
                 <div
                   class="cellContent"
                 >
+                  <div
+                    class="publishIndicator publishIndicator"
+                  />
                   Description 1
                 </div>
               </td>
@@ -406,6 +409,9 @@ exports[`Should render the list with a title 1`] = `
                 <div
                   class="cellContent"
                 >
+                  <div
+                    class="publishIndicator publishIndicator"
+                  />
                   Description 2
                 </div>
               </td>
@@ -635,6 +641,9 @@ exports[`Should render the list with the correct resourceKey 1`] = `
                 <div
                   class="cellContent"
                 >
+                  <div
+                    class="publishIndicator publishIndicator"
+                  />
                   Description 1
                 </div>
               </td>
@@ -669,6 +678,9 @@ exports[`Should render the list with the correct resourceKey 1`] = `
                 <div
                   class="cellContent"
                 >
+                  <div
+                    class="publishIndicator publishIndicator"
+                  />
                   Description 2
                 </div>
               </td>

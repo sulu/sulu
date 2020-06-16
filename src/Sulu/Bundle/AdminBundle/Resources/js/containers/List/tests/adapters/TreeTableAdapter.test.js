@@ -28,57 +28,6 @@ jest.mock('../../registries/listFieldTransformerRegistry', () => ({
 }));
 
 test('Render data with schema', () => {
-    const test1 = {
-        data: {
-            id: 2,
-            title: 'Test1',
-        },
-        children: [],
-        hasChildren: false,
-    };
-    const test2 = {
-        data: {
-            ghostLocale: 'en',
-            id: 3,
-            title: 'Test2',
-        },
-        children: [],
-        hasChildren: true,
-    };
-    const test3 = {
-        data: {
-            id: 6,
-            title: 'Test3',
-        },
-        children: [],
-        hasChildren: true,
-    };
-
-    const data = [
-        test1,
-        test2,
-        test3,
-    ];
-    const schema = {
-        title: {
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
-    const treeListAdapter = render(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            schema={schema}
-        />
-    );
-
-    expect(treeListAdapter).toMatchSnapshot();
-});
-
-test('Render different kind of data with schema', () => {
     const data = [
         {
             data: {

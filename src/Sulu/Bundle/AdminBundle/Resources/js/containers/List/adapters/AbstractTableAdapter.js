@@ -39,23 +39,34 @@ export default class AbstractTableAdapter extends AbstractAdapter {
             const transformer = listFieldTransformerRegistry.get(this.schema[schemaKey].type);
             const value = transformer.transform(item[schemaKey]);
 
-            return (
-                <Table.Cell key={item.id + schemaKey}>
-                    {index === 0 && !item.ghostLocale
-                        && (item.hasOwnProperty('publishedState') || item.hasOwnProperty('published'))
-                        && !item.publishedState &&
-                        <PublishIndicator
-                            containerClass={abstractTableAdapterStyles.publishIndicator}
-                            draft={item.publishedState === undefined ? false : !item.publishedState}
-                            published={item.published === undefined ? false : !!item.published}
-                        />
-                    }
-                    {index === 0 && item.ghostLocale &&
+            const indicators = [];
+            if (index === 0) {
+                if (item.ghostLocale) {
+                    indicators.push(
                         <GhostIndicator
                             className={abstractTableAdapterStyles.ghostIndicator}
                             locale={item.ghostLocale}
                         />
+                    );
+                } else {
+                    const draft = item.publishedState === undefined ? false : !item.publishedState;
+                    const published = item.published === undefined ? false : !!item.published;
+
+                    if (draft || !published) {
+                        indicators.push(
+                            <PublishIndicator
+                                className={abstractTableAdapterStyles.publishIndicator}
+                                draft={draft}
+                                published={published}
+                            />
+                        );
                     }
+                }
+            }
+
+            return (
+                <Table.Cell key={item.id + schemaKey}>
+                    {indicators}
                     {value}
                 </Table.Cell>
             );

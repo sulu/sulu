@@ -31,47 +31,6 @@ test('Render data with schema', () => {
     const data = [
         {
             id: 1,
-            title: 'Title 1',
-            description: 'Description 1',
-        },
-        {
-            id: 2,
-            title: 'Title 2',
-            description: 'Description 2',
-            ghostLocale: 'en',
-        },
-    ];
-    const schema = {
-        title: {
-            type: 'string',
-            sortable: true,
-            visibility: 'no',
-            label: 'Title',
-        },
-        description: {
-            type: 'string',
-            sortable: true,
-            visibility: 'yes',
-            label: 'Description',
-        },
-    };
-    const tableAdapter = render(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            page={2}
-            pageCount={5}
-            schema={schema}
-        />
-    );
-
-    expect(tableAdapter).toMatchSnapshot();
-});
-
-test('Render different kind of data with schema', () => {
-    const data = [
-        {
-            id: 1,
             title: 'Page 1',
             published: '2017-08-23',
             publishedState: true,
@@ -137,8 +96,8 @@ test('Render different kind of data with schema', () => {
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
-            page={1}
-            pageCount={1}
+            page={2}
+            pageCount={5}
             schema={schema}
         />
     );

@@ -53,7 +53,11 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
         >
           <div
             class="cellContent"
-          />
+          >
+            <div
+              class="publishIndicator publishIndicator"
+            />
+          </div>
         </td>
       </tr>
     </tbody>
@@ -114,7 +118,11 @@ exports[`Render data with plus button when onItemAdd callback is passed 1`] = `
         >
           <div
             class="cellContent"
-          />
+          >
+            <div
+              class="publishIndicator publishIndicator"
+            />
+          </div>
         </td>
       </tr>
     </tbody>
@@ -123,386 +131,6 @@ exports[`Render data with plus button when onItemAdd callback is passed 1`] = `
 `;
 
 exports[`Render data with schema 1`] = `
-<div
-  class="tableContainer dark"
->
-  <table
-    class="table"
-  >
-    <thead
-      class="header"
-    >
-      <tr>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Title
-          </button>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Test1
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            <span
-              class="toggleIcon"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right clickable"
-                role="button"
-                tabindex="0"
-              />
-            </span>
-            <span
-              class="ghostIndicator ghostIndicator"
-            >
-              en
-            </span>
-            Test2
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            <span
-              class="toggleIcon"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right clickable"
-                role="button"
-                tabindex="0"
-              />
-            </span>
-            Test3
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-`;
-
-exports[`Render data with schema and selections 1`] = `
-<div
-  class="tableContainer dark"
->
-  <table
-    class="table"
-  >
-    <thead
-      class="header"
-    >
-      <tr>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Title
-          </button>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Test1
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            <span
-              class="toggleIcon"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right clickable"
-                role="button"
-                tabindex="0"
-              />
-            </span>
-            Test2
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            <span
-              class="toggleIcon"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right clickable"
-                role="button"
-                tabindex="0"
-              />
-            </span>
-            Test3
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-`;
-
-exports[`Render data with two columns 1`] = `
-<div
-  class="tableContainer dark"
->
-  <table
-    class="table"
-  >
-    <thead
-      class="header"
-    >
-      <tr>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Title
-          </button>
-        </th>
-        <th
-          class="headerCell clickable"
-        >
-          <button>
-            Title2
-          </button>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Test1
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Title2 - Test1
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            <span
-              class="toggleIcon"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right clickable"
-                role="button"
-                tabindex="0"
-              />
-            </span>
-            Test2
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Title2 - Test2
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            <span
-              class="toggleIcon"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right clickable"
-                role="button"
-                tabindex="0"
-              />
-            </span>
-            Test3
-          </div>
-        </td>
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Title2 - Test3
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-`;
-
-exports[`Render data without header 1`] = `
-<div
-  class="tableContainer dark"
->
-  <table
-    class="table"
-  >
-    <tbody>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            Test1
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            <span
-              class="toggleIcon"
-            >
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right clickable"
-                role="button"
-                tabindex="0"
-              />
-            </span>
-            Test2
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-          >
-            <span
-              class="toggleIcon"
-            >
-              <span
-                aria-label="su-angle-down"
-                class="su-angle-down clickable"
-                role="button"
-                tabindex="0"
-              />
-            </span>
-            Test3
-          </div>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="cell"
-        >
-          <div
-            class="cellContent"
-            style="padding-left:25px"
-          >
-            Test4
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-`;
-
-exports[`Render different kind of data with schema 1`] = `
 <div
   class="tableContainer dark"
 >
@@ -565,6 +193,9 @@ exports[`Render different kind of data with schema 1`] = `
                 tabindex="0"
               />
             </span>
+            <div
+              class="publishIndicator publishIndicator"
+            />
             Page 2
           </div>
         </td>
@@ -741,6 +372,326 @@ exports[`Render different kind of data with schema 1`] = `
               de
             </span>
             Page 8
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`Render data with schema and selections 1`] = `
+<div
+  class="tableContainer dark"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr>
+        <th
+          class="headerCell clickable"
+        >
+          <button>
+            Title
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <div
+              class="publishIndicator publishIndicator"
+            />
+            Test1
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <div
+              class="publishIndicator publishIndicator"
+            />
+            Test2
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <div
+              class="publishIndicator publishIndicator"
+            />
+            Test3
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`Render data with two columns 1`] = `
+<div
+  class="tableContainer dark"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr>
+        <th
+          class="headerCell clickable"
+        >
+          <button>
+            Title
+          </button>
+        </th>
+        <th
+          class="headerCell clickable"
+        >
+          <button>
+            Title2
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <div
+              class="publishIndicator publishIndicator"
+            />
+            Test1
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Title2 - Test1
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <div
+              class="publishIndicator publishIndicator"
+            />
+            Test2
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Title2 - Test2
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <div
+              class="publishIndicator publishIndicator"
+            />
+            Test3
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Title2 - Test3
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`Render data without header 1`] = `
+<div
+  class="tableContainer dark"
+>
+  <table
+    class="table"
+  >
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <div
+              class="publishIndicator publishIndicator"
+            />
+            Test1
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <div
+              class="publishIndicator publishIndicator"
+            />
+            Test2
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-down"
+                class="su-angle-down clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <div
+              class="publishIndicator publishIndicator"
+            />
+            Test3
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+            style="padding-left:25px"
+          >
+            <div
+              class="publishIndicator publishIndicator"
+            />
+            Test4
           </div>
         </td>
       </tr>
