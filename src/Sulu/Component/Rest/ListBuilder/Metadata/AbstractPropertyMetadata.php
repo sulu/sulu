@@ -49,6 +49,11 @@ abstract class AbstractPropertyMetadata
     private $sortable = true;
 
     /**
+     * @var array
+     */
+    private $parameters;
+
+    /**
      * @var string
      */
     private $filterType;
@@ -139,7 +144,6 @@ abstract class AbstractPropertyMetadata
 
     /**
      * @return bool
-     * @return bool
      */
     public function isSortable()
     {
@@ -148,11 +152,26 @@ abstract class AbstractPropertyMetadata
 
     /**
      * @param bool $sortable
-     * @param bool $sortable
      */
     public function setSortable($sortable)
     {
         $this->sortable = $sortable;
+    }
+
+    /**
+     * @return array
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @param array $parameters
+     */
+    public function setParameters($parameters)
+    {
+        $this->parameters = $parameters;
     }
 
     /**

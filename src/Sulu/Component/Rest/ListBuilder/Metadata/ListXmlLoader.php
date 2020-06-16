@@ -126,12 +126,23 @@ class ListXmlLoader
         $propertyMetadata->setSortable(
             XmlUtil::getBooleanValueFromXPath('@sortable', $xpath, $propertyNode, true)
         );
+
+        $parameters = $xpath->query('x:params', $propertyNode);
+        if (\count($parameters) > 0) {
+            $propertyMetadata->setParameters(
+                $this->getParameters(
+                    $xpath,
+                    $parameters->item(0) // There can only be one filter node
+                )
+            );
+        }
+
         $propertyMetadata->setFilterType(XmlUtil::getValueFromXPath('x:filter/@type', $xpath, $propertyNode));
 
         $filterParamNodes = $xpath->query('x:filter/x:params', $propertyNode);
         if (\count($filterParamNodes) > 0) {
             $propertyMetadata->setFilterTypeParameters(
-                $this->getFilterTypeParameters(
+                $this->getParameters(
                     $xpath,
                     $filterParamNodes->item(0) // There can only be one filter node
                 )
@@ -236,7 +247,7 @@ class ListXmlLoader
      *
      * @return ?array
      */
-    protected function getFilterTypeParameters(\DOMXPath $xpath, \DOMNode $filterNode)
+    protected function getParameters(\DOMXPath $xpath, \DOMNode $filterNode)
     {
         $parameters = [];
         foreach ($xpath->query('x:param', $filterNode) as $paramNode) {
@@ -244,7 +255,7 @@ class ListXmlLoader
             $type = XmlUtil::getValueFromXPath('@type', $xpath, $paramNode);
 
             if ('collection' === $type) {
-                $parameters[$name] = $this->getFilterTypeParameters($xpath, $paramNode);
+                $parameters[$name] = $this->getParameters($xpath, $paramNode);
             } else {
                 $value = $this->parameterBag->resolveValue(
                     \trim(XmlUtil::getValueFromXPath('@value', $xpath, $paramNode))

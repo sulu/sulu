@@ -15,6 +15,7 @@ export type SchemaEntry = {
     filterType: ?string,
     filterTypeParameters: ?{[string]: mixed},
     label: string,
+    parameters: ?{[string]: mixed},
     sortable: boolean,
     type: string,
     visibility: 'always' | 'yes' | 'no' | 'never',
@@ -105,7 +106,7 @@ export type TreeItem = {
 };
 
 export interface FieldTransformer {
-    transform(value: *): Node,
+    transform(value: *, parameters: ?{[string]: mixed}): Node,
 }
 
 export type ResolveCopyArgument = {copied: boolean, parent?: ?Object};
