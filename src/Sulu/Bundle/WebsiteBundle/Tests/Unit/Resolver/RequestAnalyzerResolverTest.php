@@ -16,6 +16,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -100,6 +101,9 @@ class RequestAnalyzerResolverTest extends TestCase
         $localization->setLanguage('de');
         $localization->setCountry('at');
 
+        $segment = new Segment();
+        $segment->setKey('s');
+
         $portalInformation = $this->prophesize(PortalInformation::class);
         $portalInformation->getHost()->willReturn('sulu.lo');
         $portalInformation->getPrefix()->willReturn('de_at');
@@ -112,6 +116,7 @@ class RequestAnalyzerResolverTest extends TestCase
         $requestAnalyzer->getResourceLocator()->willReturn('/search');
         $requestAnalyzer->getPortal()->willReturn($portal);
         $requestAnalyzer->getPortalInformation()->willReturn($portalInformation->reveal());
+        $requestAnalyzer->getSegment()->willReturn($segment);
 
         $result = $this->resolver->resolve($requestAnalyzer->reveal());
         $this->assertEquals(
@@ -119,6 +124,7 @@ class RequestAnalyzerResolverTest extends TestCase
                 'request' => [
                     'webspaceKey' => 'sulu_io',
                     'webspaceName' => 'Sulu',
+                    'segmentKey' => 's',
                     'portalKey' => 'sulu_io_portal',
                     'portalName' => 'Sulu Portal',
                     'defaultLocale' => 'de',
@@ -126,6 +132,7 @@ class RequestAnalyzerResolverTest extends TestCase
                     'resourceLocatorPrefix' => '/de',
                     'resourceLocator' => '/search',
                 ],
+                'segmentKey' => 's',
             ],
             $result
         );

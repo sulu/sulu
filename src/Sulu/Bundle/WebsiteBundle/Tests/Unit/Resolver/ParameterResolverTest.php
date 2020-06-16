@@ -116,10 +116,12 @@ class ParameterResolverTest extends TestCase
                     'seo' => [],
                     'excerpt' => [],
                 ],
+                'segmentKey' => 'w',
+                'webspaceKey' => 'sulu',
             ]);
         $this->requestAnalyzerResolver->resolve($this->requestAnalyzer)
             ->shouldBeCalledTimes(1)
-            ->willReturn(['webspaceKey' => 'sulu']);
+            ->willReturn(['request' => [], 'webspaceKey' => 'sulu']);
         $this->webspaceManager->findUrlByResourceLocator('/test', null, 'en')->willReturn('/en/test');
         $this->webspaceManager->findUrlByResourceLocator('/test', null, 'de')->willReturn('/de/test');
         $this->request->getUri()->willReturn('/test');
@@ -132,6 +134,7 @@ class ParameterResolverTest extends TestCase
         $segment2 = new Segment();
         $segment2->setKey('w');
         $this->webspace->getSegments()->willReturn([$segment1, $segment2]);
+        $this->requestAnalyzer->getSegment()->willReturn($segment2);
 
         $resolvedData = $parameterResolver->resolve(
             [
@@ -163,11 +166,13 @@ class ParameterResolverTest extends TestCase
                     'url' => '/de/test',
                 ],
             ],
+            'segmentKey' => 'w',
             'webspaceKey' => 'sulu',
             'segmentUrls' => [
                 's' => '_sulu_segment_switch?segment=s&url=/test',
                 'w' => '_sulu_segment_switch?segment=w&url=/test',
             ],
+            'request' => [],
         ], $resolvedData);
     }
 
