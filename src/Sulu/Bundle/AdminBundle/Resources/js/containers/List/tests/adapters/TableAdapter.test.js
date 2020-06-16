@@ -108,6 +108,73 @@ test('Render data with schema', () => {
     expect(tableAdapter).toMatchSnapshot();
 });
 
+test('Render data as icons', () => {
+    const data = [
+        {
+            id: 1,
+            title: 'Title 1',
+            status: 'planned',
+        },
+        {
+            id: 2,
+            title: 'Title 2',
+            status: 'running',
+        },
+        {
+            id: 3,
+            title: 'Title 3',
+            status: 'succeeded',
+        },
+        {
+            id: 4,
+            title: 'Title 4',
+            status: 'failed',
+        },
+    ];
+    const schema = {
+        status: {
+            filterType: null,
+            filterTypeParameters: null,
+            parameters: {
+                icons: {
+                    planned: 'su-clock',
+                    succeeded: {
+                        icon: 'su-check-circle',
+                        color: 'green',
+                    },
+                    failed: {
+                        icon: 'su-ban',
+                    },
+                },
+            },
+            type: 'icon',
+            sortable: false,
+            visibility: 'always',
+            label: 'Status',
+        },
+        title: {
+            filterType: null,
+            filterTypeParameters: null,
+            parameters: null,
+            type: 'string',
+            sortable: true,
+            visibility: 'yes',
+            label: 'Title',
+        },
+    };
+    const tableAdapter = render(
+        <TableAdapter
+            {...listAdapterDefaultProps}
+            data={data}
+            page={1}
+            pageCount={1}
+            schema={schema}
+        />
+    );
+
+    expect(tableAdapter).toMatchSnapshot();
+});
+
 test('Render data with skin', () => {
     const data = [];
 

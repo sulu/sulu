@@ -314,6 +314,226 @@ exports[`Render column with descending sort icon 1`] = `
 </section>
 `;
 
+exports[`Render data as icons 1`] = `
+<section>
+  <div
+    class="tableContainer dark"
+  >
+    <table
+      class="table"
+    >
+      <thead
+        class="header"
+      >
+        <tr>
+          <th
+            class="headerCell"
+          >
+            <span>
+              Status
+            </span>
+          </th>
+          <th
+            class="headerCell clickable"
+          >
+            <button>
+              Title
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              planned
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Title 1
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              running
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Title 2
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              succeeded
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Title 3
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              failed
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Title 4
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <nav
+    class="pagination"
+  >
+    <span
+      class="display"
+    >
+      :
+    </span>
+    <span>
+      <div
+        class="select"
+      >
+        <button
+          class="displayValue dark"
+          type="button"
+        >
+          <div
+            aria-label="10"
+            class="croppedText"
+            title="10"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              1
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                0
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              10
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down toggle"
+          />
+        </button>
+      </div>
+    </span>
+    <div
+      class="loader"
+    />
+    <span>
+      Page:
+    </span>
+    <span
+      class="inputContainer"
+    >
+      <label
+        class="input dark center"
+      >
+        <input
+          inputmode="numeric"
+          type="text"
+          value="1"
+        />
+      </label>
+    </span>
+    <span
+      class="display"
+    >
+      of 1
+    </span>
+    <div
+      class="buttonGroup"
+    >
+      <button
+        class="button icon button"
+        disabled=""
+        type="button"
+      >
+        <span
+          aria-label="su-angle-left"
+          class="su-angle-left buttonIcon"
+        />
+      </button>
+      <button
+        class="button icon button"
+        disabled=""
+        type="button"
+      >
+        <span
+          aria-label="su-angle-right"
+          class="su-angle-right buttonIcon"
+        />
+      </button>
+    </div>
+  </nav>
+</section>
+`;
+
 exports[`Render data with all different visibility types schema 1`] = `
 <section>
   <div

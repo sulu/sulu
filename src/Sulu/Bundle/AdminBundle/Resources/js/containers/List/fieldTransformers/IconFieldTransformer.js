@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import type {Node} from 'react';
+import log from 'loglevel';
 import type {FieldTransformer} from '../types';
 import Icon from '../../../components/Icon';
 import iconFieldTransformerStyles from './iconFieldTransformer.scss';
@@ -17,7 +18,9 @@ export default class IconFieldTransformer implements FieldTransformer {
         }
 
         if (typeof icons !== 'object') {
-            throw new Error('Parameter "icons" needs to be of type collection!');
+            log.error('Parameter "icons" needs to be of type collection.');
+
+            return null;
         }
 
         const iconConfig = icons[value];
@@ -30,18 +33,24 @@ export default class IconFieldTransformer implements FieldTransformer {
         switch (typeof iconConfig) {
             case 'object':
                 if (!iconConfig.icon) {
-                    throw new Error(`Parameter "icons/${value}/icon" needs to be set!`);
+                    log.error(`Parameter "icons/${value}/icon" needs to be set.`);
+
+                    return null;
                 }
 
                 if (typeof iconConfig.icon !== 'string') {
-                    throw new Error(`Parameter "icons/${value}/icon" needs to be of type string!`);
+                    log.error(`Parameter "icons/${value}/icon" needs to be of type string.`);
+
+                    return null;
                 }
 
                 icon = iconConfig.icon;
 
                 if (iconConfig.color) {
                     if (typeof iconConfig.color !== 'string') {
-                        throw new Error(`Parameter "icons/${value}/color" needs to be of type string!`);
+                        log.error(`Parameter "icons/${value}/color" needs to be of type string.`);
+
+                        return null;
                     }
 
                     color = iconConfig.color;
@@ -53,7 +62,9 @@ export default class IconFieldTransformer implements FieldTransformer {
 
                 break;
             default:
-                throw new Error(`Parameter "icons/${value}" needs to be either of type string or collection!`);
+                log.error(`Parameter "icons/${value}" needs to be either of type string or collection.`);
+
+                return null;
         }
 
         return <Icon className={iconFieldTransformerStyles.listIcon} name={icon} style={{color}} />;
