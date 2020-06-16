@@ -119,6 +119,7 @@ test('Render data with schema', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -181,6 +182,7 @@ test('Render data without header', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -208,6 +210,7 @@ test('Attach onClick handler for sorting if schema says the header is sortable',
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -216,6 +219,7 @@ test('Attach onClick handler for sorting if schema says the header is sortable',
         description: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             type: 'string',
             sortable: false,
             visibility: 'yes',
@@ -273,6 +277,7 @@ test('Render data with two columns', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -281,6 +286,7 @@ test('Render data with two columns', () => {
         title2: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -333,6 +339,7 @@ test('Render data with schema and selections', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -405,6 +412,7 @@ test('Execute onItemActivate respectively onItemDeactivate callback when an item
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -450,6 +458,7 @@ test('Render data with pencil button and given itemActions when onItemEdit callb
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -458,6 +467,7 @@ test('Render data with pencil button and given itemActions when onItemEdit callb
         description: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -537,6 +547,7 @@ test('Render correct buttons based on permissions when item permissions are prov
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -606,6 +617,7 @@ test('Render disabled rows based on given disabledIds prop', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -644,6 +656,7 @@ test('Render data with plus button when onItemAdd callback is passed', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -652,6 +665,7 @@ test('Render data with plus button when onItemAdd callback is passed', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -687,6 +701,7 @@ test('Click on pencil should execute onItemClick callback', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -695,6 +710,7 @@ test('Click on pencil should execute onItemClick callback', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -733,6 +749,7 @@ test('Click on add should execute onItemAdd callback', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -741,6 +758,7 @@ test('Click on add should execute onItemAdd callback', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -779,6 +797,7 @@ test('Click on itemAction should execute its callback', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -787,6 +806,7 @@ test('Click on itemAction should execute its callback', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',

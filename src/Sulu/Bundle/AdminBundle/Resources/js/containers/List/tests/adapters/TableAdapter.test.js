@@ -87,6 +87,7 @@ test('Render data with schema', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -114,6 +115,7 @@ test('Render data with skin', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             type: 'string',
             sortable: true,
             visibility: 'no',
@@ -122,6 +124,7 @@ test('Render data with skin', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -151,6 +154,7 @@ test('Attach onClick handler for sorting if schema says the header is sortable',
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -159,6 +163,7 @@ test('Attach onClick handler for sorting if schema says the header is sortable',
         description: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             type: 'string',
             sortable: false,
             visibility: 'yes',
@@ -195,6 +200,7 @@ test('Render data with all different visibility types schema', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             type: 'string',
             sortable: true,
             visibility: 'no',
@@ -203,6 +209,7 @@ test('Render data with all different visibility types schema', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -211,6 +218,7 @@ test('Render data with all different visibility types schema', () => {
         test1: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             type: 'string',
             sortable: true,
             visibility: 'always',
@@ -219,6 +227,7 @@ test('Render data with all different visibility types schema', () => {
         test2: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             type: 'string',
             sortable: true,
             visibility: 'never',
@@ -260,6 +269,7 @@ test('Render data with schema and selections', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -268,6 +278,7 @@ test('Render data with schema and selections', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -306,6 +317,7 @@ test('Render data with schema in different order', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -314,6 +326,7 @@ test('Render data with schema in different order', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -350,6 +363,7 @@ test('Render data with schema not containing all fields', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -386,6 +400,7 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -394,6 +409,7 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
         description: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -439,6 +455,7 @@ test('Render correct button based on permissions when item permissions are provi
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -485,6 +502,7 @@ test('Render disabled rows based on given disabledIds prop', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -525,6 +543,7 @@ test('Render data with pencil button and given itemActions when onItemEdit callb
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -533,6 +552,7 @@ test('Render data with pencil button and given itemActions when onItemEdit callb
         description: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -578,6 +598,7 @@ test('Render column with ascending sort icon', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -586,6 +607,7 @@ test('Render column with ascending sort icon', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -619,6 +641,7 @@ test('Render column with descending sort icon', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -627,6 +650,7 @@ test('Render column with descending sort icon', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -666,6 +690,7 @@ test('Click on pencil should execute onItemClick callback', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -674,6 +699,7 @@ test('Click on pencil should execute onItemClick callback', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -715,6 +741,7 @@ test('Click on itemAction should execute its callback', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -723,6 +750,7 @@ test('Click on itemAction should execute its callback', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -778,6 +806,7 @@ test('Click on checkbox should call onItemSelectionChange callback', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -786,6 +815,7 @@ test('Click on checkbox should call onItemSelectionChange callback', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -813,6 +843,7 @@ test('Click on checkbox in header should call onAllSelectionChange callback', ()
         title: {
             filterType: null,
             filterTypeParameters: null,
+            parameters: null,
             label: 'Title',
             sortable: true,
             type: 'string',

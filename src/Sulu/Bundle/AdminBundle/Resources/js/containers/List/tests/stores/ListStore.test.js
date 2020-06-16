@@ -249,6 +249,7 @@ test('The user store should be called correctly when changing the schema', () =>
             id: {
                 filterType: null,
                 filterTypeParameters: null,
+                parameters: null,
                 label: 'ID',
                 name: 'id',
                 sortable: true,
@@ -258,6 +259,7 @@ test('The user store should be called correctly when changing the schema', () =>
             changed: {
                 filterType: null,
                 filterTypeParameters: null,
+                parameters: null,
                 label: 'Changed at',
                 name: 'changed',
                 sortable: true,
@@ -267,6 +269,7 @@ test('The user store should be called correctly when changing the schema', () =>
             title: {
                 filterType: null,
                 filterTypeParameters: null,
+                parameters: null,
                 label: 'Title',
                 name: 'title',
                 sortable: true,
@@ -276,6 +279,7 @@ test('The user store should be called correctly when changing the schema', () =>
             name: {
                 filterType: null,
                 filterTypeParameters: null,
+                parameters: null,
                 label: 'Name',
                 name: 'name',
                 sortable: true,
@@ -349,6 +353,7 @@ test('The userSchema should include schema properties that are not present in th
         id: {
             filterType: null,
             filterTypeParameters: {},
+            parameters: {},
             label: 'ID',
             name: 'id',
             sortable: true,
@@ -358,6 +363,7 @@ test('The userSchema should include schema properties that are not present in th
         title: {
             filterType: null,
             filterTypeParameters: {},
+            parameters: {},
             label: 'Title',
             name: 'title',
             sortable: true,
@@ -367,6 +373,7 @@ test('The userSchema should include schema properties that are not present in th
         newSchemaProperty: {
             filterType: null,
             filterTypeParameters: {},
+            parameters: {},
             label: 'New Schema Property',
             name: 'newSchemaProperty',
             sortable: true,
@@ -380,6 +387,7 @@ test('The userSchema should include schema properties that are not present in th
             id: {
                 filterType: null,
                 filterTypeParameters: {},
+                parameters: {},
                 label: 'ID',
                 name: 'id',
                 sortable: true,
@@ -389,6 +397,7 @@ test('The userSchema should include schema properties that are not present in th
             title: {
                 filterType: null,
                 filterTypeParameters: {},
+                parameters: {},
                 label: 'Title',
                 name: 'title',
                 sortable: true,
@@ -398,6 +407,7 @@ test('The userSchema should include schema properties that are not present in th
             newSchemaProperty: {
                 filterType: null,
                 filterTypeParameters: {},
+                parameters: {},
                 label: 'New Schema Property',
                 name: 'newSchemaProperty',
                 sortable: true,
@@ -449,6 +459,7 @@ test('The userSchema should reflect the order of the schemaSetting of the user',
         id: {
             filterType: null,
             filterTypeParameters: {},
+            parameters: {},
             label: 'ID',
             name: 'id',
             sortable: true,
@@ -458,6 +469,7 @@ test('The userSchema should reflect the order of the schemaSetting of the user',
         title: {
             filterType: null,
             filterTypeParameters: {},
+            parameters: {},
             label: 'Title',
             name: 'title',
             sortable: true,
