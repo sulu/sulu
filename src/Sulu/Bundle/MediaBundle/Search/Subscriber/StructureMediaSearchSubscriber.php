@@ -118,8 +118,15 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
             $medias = $data->getData('de');
         // old ones an array ...
         } else {
-            $ids = $data['ids'] ?? $data['id'] ?? null;
-            if (!is_array($ids)) {
+            $ids = [];
+
+            if (isset($data['ids'])) {
+                $ids = \array_merge($ids, $data['ids']);
+            } elseif (isset($data['id'])) {
+                $ids = \array_merge($ids, [$data['id']]);
+            }
+
+            if (0 === \count($ids)) {
                 return;
             }
 
