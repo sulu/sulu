@@ -952,7 +952,7 @@ exports[`Render data with schema 1`] = `
             class="headerCell clickable"
           >
             <button>
-              Description
+              Title
             </button>
           </th>
         </tr>
@@ -967,7 +967,63 @@ exports[`Render data with schema 1`] = `
             <div
               class="cellContent"
             >
-              Description 1
+              Page 1
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Page 2
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <div
+                class="publishIndicator publishIndicator"
+              >
+                <span
+                  class="published"
+                />
+                <span
+                  class="draft"
+                />
+              </div>
+              Page 3
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <div
+                class="publishIndicator publishIndicator"
+              >
+                <span
+                  class="draft"
+                />
+              </div>
+              Page 4
             </div>
           </td>
         </tr>
@@ -983,9 +1039,63 @@ exports[`Render data with schema 1`] = `
               <span
                 class="ghostIndicator ghostIndicator"
               >
-                en
+                de
               </span>
-              Description 2
+              Page 5
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <span
+                class="ghostIndicator ghostIndicator"
+              >
+                de
+              </span>
+              Page 6
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <span
+                class="ghostIndicator ghostIndicator"
+              >
+                de
+              </span>
+              Page 7
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              <span
+                class="ghostIndicator ghostIndicator"
+              >
+                de
+              </span>
+              Page 8
             </div>
           </td>
         </tr>

@@ -94,11 +94,19 @@ class ColumnListAdapter extends AbstractAdapter {
             indicators.push(<Icon key="shadow" name="su-shadow-page" />);
         }
 
-        const draft = item.publishedState === undefined ? false : !item.publishedState;
-        const published = item.published === undefined ? false : !!item.published;
+        if (item.publishedState !== undefined || item.published !== undefined) {
+            const draft = !item.publishedState;
+            const published = !!item.published;
 
-        if (draft || !published) {
-            indicators.push(<PublishIndicator draft={draft} key="publish" published={published} />);
+            if (draft || !published) {
+                indicators.push(
+                    <PublishIndicator
+                        draft={draft}
+                        key="publish"
+                        published={published}
+                    />
+                );
+            }
         }
 
         return indicators;
