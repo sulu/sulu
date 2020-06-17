@@ -11,7 +11,6 @@ import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
 import ColumnStructureStrategy from '../structureStrategies/ColumnStructureStrategy';
 import AbstractAdapter from './AbstractAdapter';
 import columnListAdapterStyles from './columnListAdapter.scss';
-import abstractTableAdapterStyles from './abstractTableAdapter.scss';
 
 @observer
 class ColumnListAdapter extends AbstractAdapter {
