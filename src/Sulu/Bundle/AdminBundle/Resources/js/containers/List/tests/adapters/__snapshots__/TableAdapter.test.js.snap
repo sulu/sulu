@@ -42,9 +42,6 @@ exports[`Render column with ascending sort icon 1`] = `
             <div
               class="cellContent"
             >
-              <div
-                class="publishIndicator publishIndicator"
-              />
               Title 1
             </div>
           </td>
@@ -202,9 +199,6 @@ exports[`Render column with descending sort icon 1`] = `
             <div
               class="cellContent"
             >
-              <div
-                class="publishIndicator publishIndicator"
-              />
               Title 1
             </div>
           </td>
@@ -358,9 +352,6 @@ exports[`Render data with all different visibility types schema 1`] = `
             <div
               class="cellContent"
             >
-              <div
-                class="publishIndicator publishIndicator"
-              />
               Description 1
             </div>
           </td>
@@ -381,9 +372,6 @@ exports[`Render data with all different visibility types schema 1`] = `
             <div
               class="cellContent"
             >
-              <div
-                class="publishIndicator publishIndicator"
-              />
               Description 2
             </div>
           </td>
@@ -599,9 +587,6 @@ exports[`Render data with pencil button and given actions when onItemEdit callba
             <div
               class="cellContent"
             >
-              <div
-                class="publishIndicator publishIndicator"
-              />
               Description 1
             </div>
           </td>
@@ -657,9 +642,6 @@ exports[`Render data with pencil button and given actions when onItemEdit callba
             <div
               class="cellContent"
             >
-              <div
-                class="publishIndicator publishIndicator"
-              />
               Description 2
             </div>
           </td>
@@ -821,9 +803,6 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
             <div
               class="cellContent"
             >
-              <div
-                class="publishIndicator publishIndicator"
-              />
               Description 1
             </div>
           </td>
@@ -851,9 +830,6 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
             <div
               class="cellContent"
             >
-              <div
-                class="publishIndicator publishIndicator"
-              />
               Description 2
             </div>
           </td>
@@ -1004,9 +980,6 @@ exports[`Render data with schema 1`] = `
             <div
               class="cellContent"
             >
-              <div
-                class="publishIndicator publishIndicator"
-              />
               Page 2
             </div>
           </td>
@@ -1303,9 +1276,6 @@ exports[`Render data with schema and selections 1`] = `
             <div
               class="cellContent"
             >
-              <div
-                class="publishIndicator publishIndicator"
-              />
               Description 1
             </div>
           </td>
@@ -1340,9 +1310,6 @@ exports[`Render data with schema and selections 1`] = `
             <div
               class="cellContent"
             >
-              <div
-                class="publishIndicator publishIndicator"
-              />
               Description 2
             </div>
           </td>
@@ -1383,9 +1350,6 @@ exports[`Render data with schema and selections 1`] = `
             <div
               class="cellContent"
             >
-              <div
-                class="publishIndicator publishIndicator"
-              />
               Description 3
             </div>
           </td>
@@ -1523,9 +1487,6 @@ exports[`Render data with schema in different order 1`] = `
             <div
               class="cellContent"
             >
-              <div
-                class="publishIndicator publishIndicator"
-              />
               Description 1
             </div>
           </td>
@@ -1539,9 +1500,6 @@ exports[`Render data with schema in different order 1`] = `
             <div
               class="cellContent"
             >
-              <div
-                class="publishIndicator publishIndicator"
-              />
               Description 2
             </div>
           </td>

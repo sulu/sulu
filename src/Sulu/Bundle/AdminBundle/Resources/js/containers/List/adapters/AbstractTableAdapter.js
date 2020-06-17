@@ -45,21 +45,25 @@ export default class AbstractTableAdapter extends AbstractAdapter {
                     indicators.push(
                         <GhostIndicator
                             className={abstractTableAdapterStyles.ghostIndicator}
+                            key="ghost"
                             locale={item.ghostLocale}
                         />
                     );
                 } else {
-                    const draft = item.publishedState === undefined ? false : !item.publishedState;
-                    const published = item.published === undefined ? false : !!item.published;
+                    if (item.publishedState !== undefined || item.published !== undefined) {
+                        const draft = !item.publishedState;
+                        const published = !!item.published;
 
-                    if (draft || !published) {
-                        indicators.push(
-                            <PublishIndicator
-                                className={abstractTableAdapterStyles.publishIndicator}
-                                draft={draft}
-                                published={published}
-                            />
-                        );
+                        if (draft || !published) {
+                            indicators.push(
+                                <PublishIndicator
+                                    className={abstractTableAdapterStyles.publishIndicator}
+                                    draft={draft}
+                                    key="publish"
+                                    published={published}
+                                />
+                            );
+                        }
                     }
                 }
             }

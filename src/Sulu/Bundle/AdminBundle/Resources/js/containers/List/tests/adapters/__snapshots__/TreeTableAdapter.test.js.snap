@@ -53,11 +53,7 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
         >
           <div
             class="cellContent"
-          >
-            <div
-              class="publishIndicator publishIndicator"
-            />
-          </div>
+          />
         </td>
       </tr>
     </tbody>
@@ -118,11 +114,7 @@ exports[`Render data with plus button when onItemAdd callback is passed 1`] = `
         >
           <div
             class="cellContent"
-          >
-            <div
-              class="publishIndicator publishIndicator"
-            />
-          </div>
+          />
         </td>
       </tr>
     </tbody>
@@ -193,9 +185,6 @@ exports[`Render data with schema 1`] = `
                 tabindex="0"
               />
             </span>
-            <div
-              class="publishIndicator publishIndicator"
-            />
             Page 2
           </div>
         </td>
@@ -410,9 +399,6 @@ exports[`Render data with schema and selections 1`] = `
           <div
             class="cellContent"
           >
-            <div
-              class="publishIndicator publishIndicator"
-            />
             Test1
           </div>
         </td>
@@ -436,9 +422,6 @@ exports[`Render data with schema and selections 1`] = `
                 tabindex="0"
               />
             </span>
-            <div
-              class="publishIndicator publishIndicator"
-            />
             Test2
           </div>
         </td>
@@ -462,9 +445,6 @@ exports[`Render data with schema and selections 1`] = `
                 tabindex="0"
               />
             </span>
-            <div
-              class="publishIndicator publishIndicator"
-            />
             Test3
           </div>
         </td>
@@ -511,9 +491,6 @@ exports[`Render data with two columns 1`] = `
           <div
             class="cellContent"
           >
-            <div
-              class="publishIndicator publishIndicator"
-            />
             Test1
           </div>
         </td>
@@ -546,9 +523,6 @@ exports[`Render data with two columns 1`] = `
                 tabindex="0"
               />
             </span>
-            <div
-              class="publishIndicator publishIndicator"
-            />
             Test2
           </div>
         </td>
@@ -581,9 +555,6 @@ exports[`Render data with two columns 1`] = `
                 tabindex="0"
               />
             </span>
-            <div
-              class="publishIndicator publishIndicator"
-            />
             Test3
           </div>
         </td>
@@ -619,9 +590,6 @@ exports[`Render data without header 1`] = `
           <div
             class="cellContent"
           >
-            <div
-              class="publishIndicator publishIndicator"
-            />
             Test1
           </div>
         </td>
@@ -645,9 +613,6 @@ exports[`Render data without header 1`] = `
                 tabindex="0"
               />
             </span>
-            <div
-              class="publishIndicator publishIndicator"
-            />
             Test2
           </div>
         </td>
@@ -671,9 +636,6 @@ exports[`Render data without header 1`] = `
                 tabindex="0"
               />
             </span>
-            <div
-              class="publishIndicator publishIndicator"
-            />
             Test3
           </div>
         </td>
@@ -688,9 +650,6 @@ exports[`Render data without header 1`] = `
             class="cellContent"
             style="padding-left:25px"
           >
-            <div
-              class="publishIndicator publishIndicator"
-            />
             Test4
           </div>
         </td>
