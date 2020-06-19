@@ -18,6 +18,8 @@ use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestProcessorInterface;
 use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
+use Sulu\Component\Webspace\Segment;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -117,6 +119,40 @@ class RequestAnalyzerTest extends TestCase
 
         $this->assertEquals(1, $requestAnalyzer->getAttribute('test'));
         $this->assertEquals(2, $requestAnalyzer->getAttribute('test1', 2));
+    }
+
+    public function testGetAttributeAfterChangingSegment()
+    {
+        $provider = $this->prophesize(RequestProcessorInterface::class);
+
+        $webspace = new Webspace();
+
+        $winterSegment = new Segment();
+        $winterSegment->setKey('w');
+        $summerSegment = new Segment();
+        $summerSegment->setKey('s');
+
+        $webspace->addSegment($winterSegment);
+        $webspace->addSegment($summerSegment);
+
+        $request = new Request();
+
+        $provider->process($request, Argument::type(RequestAttributes::class))
+             ->shouldBeCalled()
+             ->willReturn(new RequestAttributes(['segment' => $winterSegment, 'webspace' => $webspace]));
+        $provider->validate(Argument::type(RequestAttributes::class))->shouldBeCalled()->willReturn(true);
+
+        $requestStack = $this->prophesize(RequestStack::class);
+        $requestStack->getCurrentRequest()->willReturn($request);
+        $requestAnalyzer = new RequestAnalyzer($requestStack->reveal(), [$provider->reveal()]);
+        $requestAnalyzer->analyze($request);
+        $requestAnalyzer->validate($request);
+
+        $this->assertSame($winterSegment, $requestAnalyzer->getSegment());
+
+        $requestAnalyzer->changeSegment('s');
+
+        $this->assertSame($summerSegment, $requestAnalyzer->getSegment());
     }
 
     public function testAnalyzeMultipleProvider()

@@ -31,13 +31,7 @@ class SegmentRequestProcessor implements RequestProcessorInterface
         $webspace = $requestAttributes->getAttribute('portalInformation')->getWebspace();
 
         $segmentKey = $request->cookies->get($this->segmentCookieName);
-        $cookieSegment = null;
-        foreach ($webspace->getSegments() as $segment) {
-            if ($segment->getKey() === $segmentKey) {
-                $cookieSegment = $segment;
-                break;
-            }
-        }
+        $cookieSegment = $segmentKey ? $webspace->getSegment($segmentKey) : null;
 
         $attributes['segment'] = $cookieSegment ?? $webspace->getDefaultSegment();
 

@@ -93,6 +93,13 @@ interface RequestAnalyzerInterface
     public function getSegment();
 
     /**
+     * Changes the current segment for this request.
+     *
+     * @return void
+     */
+    public function changeSegment(string $segmentKey);
+
+    /**
      * Returns the current localization for this Request.
      *
      * @return Localization

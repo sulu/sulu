@@ -16,6 +16,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
@@ -59,18 +60,25 @@ class ContentRouteProvider implements RouteProviderInterface
      */
     private $webspaceManager;
 
+    /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
     public function __construct(
         DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
         ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
         StructureManagerInterface $structureManager,
-        WebspaceManagerInterface $webspaceManager
+        WebspaceManagerInterface $webspaceManager,
+        RequestAnalyzerInterface $requestAnalyzer
     ) {
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
         $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
         $this->structureManager = $structureManager;
         $this->webspaceManager = $webspaceManager;
+        $this->requestAnalyzer = $requestAnalyzer;
     }
 
     public function getRouteCollectionForRequest(Request $request)
@@ -170,6 +178,15 @@ class ContentRouteProvider implements RouteProviderInterface
             } elseif (!$this->checkResourceLocator($resourceLocator, $prefix)) {
                 return $collection;
             } else {
+                if ($document instanceof ExtensionBehavior) {
+                    $documentSegmentKey = $document->getExtensionsData()['excerpt']['segment'];
+                    $segment = $this->requestAnalyzer->getSegment();
+
+                    if ($segment && $segment->getKey() !== $documentSegmentKey) {
+                        $this->requestAnalyzer->changeSegment($documentSegmentKey);
+                    }
+                }
+
                 // convert the page to a StructureBridge because of BC
                 $metadata = $this->documentInspector->getStructureMetadata($document);
                 if (!$metadata) {
