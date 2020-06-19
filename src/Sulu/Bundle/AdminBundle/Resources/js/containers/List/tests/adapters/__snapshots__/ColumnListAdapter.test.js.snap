@@ -82,13 +82,6 @@ exports[`Render data with disabled items 1`] = `
               </div>
             </span>
             <span
-              class="indicator"
-            >
-              <div
-                class="publishIndicator"
-              />
-            </span>
-            <span
               class="children"
             >
               <span
@@ -144,13 +137,6 @@ exports[`Render data with disabled items 1`] = `
                   Page 1.1
                 </div>
               </div>
-            </span>
-            <span
-              class="indicator"
-            >
-              <div
-                class="publishIndicator"
-              />
             </span>
             <span
               class="children"
@@ -242,13 +228,6 @@ exports[`Render data with loading column 1`] = `
               </div>
             </span>
             <span
-              class="indicator"
-            >
-              <div
-                class="publishIndicator"
-              />
-            </span>
-            <span
               class="children"
             >
               <span
@@ -292,13 +271,6 @@ exports[`Render data with loading column 1`] = `
                   Page 2
                 </div>
               </div>
-            </span>
-            <span
-              class="indicator"
-            >
-              <div
-                class="publishIndicator"
-              />
             </span>
             <span
               class="children"
@@ -383,13 +355,6 @@ exports[`Render data with name as fallback for title 1`] = `
                   Page 1
                 </div>
               </div>
-            </span>
-            <span
-              class="indicator"
-            >
-              <div
-                class="publishIndicator"
-              />
             </span>
             <span
               class="children"
@@ -484,13 +449,6 @@ exports[`Render data with selection 1`] = `
               </div>
             </span>
             <span
-              class="indicator"
-            >
-              <div
-                class="publishIndicator"
-              />
-            </span>
-            <span
               class="children"
             >
               <span
@@ -579,13 +537,6 @@ exports[`Render data without edit button 1`] = `
                   Page 1
                 </div>
               </div>
-            </span>
-            <span
-              class="indicator"
-            >
-              <div
-                class="publishIndicator"
-              />
             </span>
             <span
               class="children"

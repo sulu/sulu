@@ -3,6 +3,7 @@
 exports[`Render collapsed sortable block 1`] = `
 <section
   class="block"
+  role="switch"
 >
   <div
     class="handle"
@@ -45,6 +46,7 @@ exports[`Render collapsed sortable block 1`] = `
 exports[`Render expanded sortable block with types 1`] = `
 <section
   class="block expanded"
+  role="switch"
 >
   <div
     class="handle"

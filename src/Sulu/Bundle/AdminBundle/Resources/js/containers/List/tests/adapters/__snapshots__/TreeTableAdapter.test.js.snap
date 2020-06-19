@@ -200,7 +200,103 @@ exports[`Render data with schema 1`] = `
           <div
             class="cellContent"
           >
-            Test1
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            Page 1
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            Page 2
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <div
+              class="publishIndicator publishIndicator"
+            >
+              <span
+                class="published"
+              />
+              <span
+                class="draft"
+              />
+            </div>
+            Page 3
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <div
+              class="publishIndicator publishIndicator"
+            >
+              <span
+                class="draft"
+              />
+            </div>
+            Page 4
           </div>
         </td>
       </tr>
@@ -226,9 +322,9 @@ exports[`Render data with schema 1`] = `
             <span
               class="ghostIndicator ghostIndicator"
             >
-              en
+              de
             </span>
-            Test2
+            Page 5
           </div>
         </td>
       </tr>
@@ -251,7 +347,68 @@ exports[`Render data with schema 1`] = `
                 tabindex="0"
               />
             </span>
-            Test3
+            <span
+              class="ghostIndicator ghostIndicator"
+            >
+              de
+            </span>
+            Page 6
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <span
+              class="ghostIndicator ghostIndicator"
+            >
+              de
+            </span>
+            Page 7
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            <span
+              class="ghostIndicator ghostIndicator"
+            >
+              de
+            </span>
+            Page 8
           </div>
         </td>
       </tr>
