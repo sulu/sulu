@@ -40,7 +40,7 @@ abstract class Admin implements ViewProviderInterface, NavigationProviderInterfa
     /**
      * Returns all the security contexts, which are available in the concrete bundle.
      *
-     * @return array
+     * @return mixed[]
      */
     public function getSecurityContexts()
     {

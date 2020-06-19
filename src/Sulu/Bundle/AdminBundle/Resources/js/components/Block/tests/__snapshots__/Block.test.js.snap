@@ -3,6 +3,7 @@
 exports[`Passing a onRemove callback should render the remove icon 1`] = `
 <section
   class="block expanded"
+  role="switch"
 >
   <div
     class="handle"
@@ -42,6 +43,7 @@ exports[`Passing a onRemove callback should render the remove icon 1`] = `
 exports[`Render a collapsed block 1`] = `
 <section
   class="block"
+  role="switch"
 >
   <div
     class="handle"
@@ -69,6 +71,7 @@ exports[`Render a collapsed block 1`] = `
 exports[`Render an expanded block 1`] = `
 <section
   class="block expanded"
+  role="switch"
 >
   <div
     class="handle"
@@ -102,6 +105,7 @@ exports[`Render an expanded block 1`] = `
 exports[`Render an expanded block with a multiple types 1`] = `
 <section
   class="block expanded"
+  role="switch"
 >
   <div
     class="handle"
@@ -177,6 +181,7 @@ exports[`Render an expanded block with a multiple types 1`] = `
 exports[`Render an expanded block with a single type 1`] = `
 <section
   class="block expanded"
+  role="switch"
 >
   <div
     class="handle"
@@ -210,6 +215,7 @@ exports[`Render an expanded block with a single type 1`] = `
 exports[`Render the dragHandle prop if passed 1`] = `
 <section
   class="block"
+  role="switch"
 >
   <div
     class="handle"

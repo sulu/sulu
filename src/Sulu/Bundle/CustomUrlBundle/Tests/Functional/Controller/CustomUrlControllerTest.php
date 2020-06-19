@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\CustomUrlBundle\Tests\Functional\Controller;
 
-use Ferrandini\Urlizer;
+use Sulu\Bundle\DocumentManagerBundle\Slugifier\Urlizer;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
