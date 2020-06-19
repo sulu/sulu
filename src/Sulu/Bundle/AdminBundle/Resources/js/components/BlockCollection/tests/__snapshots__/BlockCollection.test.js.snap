@@ -9,6 +9,7 @@ exports[`Should render a block list 1`] = `
   >
     <section
       class="block"
+      role="switch"
     >
       <div
         class="handle"
@@ -26,6 +27,7 @@ exports[`Should render a block list 1`] = `
     </section>
     <section
       class="block"
+      role="switch"
     >
       <div
         class="handle"
@@ -68,6 +70,7 @@ exports[`Should render a disabled block list 1`] = `
   >
     <section
       class="block"
+      role="switch"
     >
       <div
         class="handle"
@@ -85,6 +88,7 @@ exports[`Should render a disabled block list 1`] = `
     </section>
     <section
       class="block"
+      role="switch"
     >
       <div
         class="handle"
@@ -128,6 +132,7 @@ exports[`Should render a fully filled block list without add button if maxOccurs
   >
     <section
       class="block"
+      role="switch"
     >
       <div
         class="handle"
@@ -145,6 +150,7 @@ exports[`Should render a fully filled block list without add button if maxOccurs
     </section>
     <section
       class="block"
+      role="switch"
     >
       <div
         class="handle"
