@@ -64,7 +64,7 @@ export default class Block extends React.Component<Props> {
         );
 
         return (
-            <section className={blockClass} onClick={this.handleExpand}>
+            <section className={blockClass} onClick={this.handleExpand} role="switch">
                 <div className={blockStyles.handle}>
                     {dragHandle}
                 </div>
