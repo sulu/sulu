@@ -4,6 +4,7 @@ import {mount, render, shallow} from 'enzyme';
 import listAdapterDefaultProps from '../../../../utils/TestHelper/listAdapterDefaultProps';
 import TableAdapter from '../../adapters/TableAdapter';
 import StringFieldTransformer from '../../fieldTransformers/StringFieldTransformer';
+import IconFieldTransformer from '../../fieldTransformers/IconFieldTransformer';
 import listFieldTransformerRegistry from '../../registries/listFieldTransformerRegistry';
 
 jest.mock('../../../../utils/Translator', () => ({
@@ -109,25 +110,23 @@ test('Render data with schema', () => {
 });
 
 test('Render data as icons', () => {
+    listFieldTransformerRegistry.get.mockReturnValue(new IconFieldTransformer());
+
     const data = [
         {
             id: 1,
-            title: 'Title 1',
             status: 'planned',
         },
         {
             id: 2,
-            title: 'Title 2',
             status: 'running',
         },
         {
             id: 3,
-            title: 'Title 3',
             status: 'succeeded',
         },
         {
             id: 4,
-            title: 'Title 4',
             status: 'failed',
         },
     ];
@@ -136,7 +135,7 @@ test('Render data as icons', () => {
             filterType: null,
             filterTypeParameters: null,
             transformerTypeParameters: {
-                icons: {
+                mapping: {
                     planned: 'su-clock',
                     succeeded: {
                         icon: 'su-check-circle',
@@ -151,15 +150,6 @@ test('Render data as icons', () => {
             sortable: false,
             visibility: 'always',
             label: 'Status',
-        },
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            type: 'string',
-            sortable: true,
-            visibility: 'yes',
-            label: 'Title',
         },
     };
     const tableAdapter = render(

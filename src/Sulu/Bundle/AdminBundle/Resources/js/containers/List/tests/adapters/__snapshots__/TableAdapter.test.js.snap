@@ -333,13 +333,6 @@ exports[`Render data as icons 1`] = `
               Status
             </span>
           </th>
-          <th
-            class="headerCell clickable"
-          >
-            <button>
-              Title
-            </button>
-          </th>
         </tr>
       </thead>
       <tbody>
@@ -352,16 +345,10 @@ exports[`Render data as icons 1`] = `
             <div
               class="cellContent"
             >
-              planned
-            </div>
-          </td>
-          <td
-            class="cell"
-          >
-            <div
-              class="cellContent"
-            >
-              Title 1
+              <span
+                aria-label="su-clock"
+                class="su-clock listIcon"
+              />
             </div>
           </td>
         </tr>
@@ -377,13 +364,21 @@ exports[`Render data as icons 1`] = `
               running
             </div>
           </td>
+        </tr>
+        <tr
+          class="row"
+        >
           <td
             class="cell"
           >
             <div
               class="cellContent"
             >
-              Title 2
+              <span
+                aria-label="su-check-circle"
+                class="su-check-circle listIcon"
+                style="color:green"
+              />
             </div>
           </td>
         </tr>
@@ -396,38 +391,10 @@ exports[`Render data as icons 1`] = `
             <div
               class="cellContent"
             >
-              succeeded
-            </div>
-          </td>
-          <td
-            class="cell"
-          >
-            <div
-              class="cellContent"
-            >
-              Title 3
-            </div>
-          </td>
-        </tr>
-        <tr
-          class="row"
-        >
-          <td
-            class="cell"
-          >
-            <div
-              class="cellContent"
-            >
-              failed
-            </div>
-          </td>
-          <td
-            class="cell"
-          >
-            <div
-              class="cellContent"
-            >
-              Title 4
+              <span
+                aria-label="su-ban"
+                class="su-ban listIcon"
+              />
             </div>
           </td>
         </tr>
