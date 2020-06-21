@@ -249,7 +249,7 @@ test('The user store should be called correctly when changing the schema', () =>
             id: {
                 filterType: null,
                 filterTypeParameters: null,
-                parameters: null,
+                transformerTypeParameters: {},
                 label: 'ID',
                 name: 'id',
                 sortable: true,
@@ -259,7 +259,7 @@ test('The user store should be called correctly when changing the schema', () =>
             changed: {
                 filterType: null,
                 filterTypeParameters: null,
-                parameters: null,
+                transformerTypeParameters: {},
                 label: 'Changed at',
                 name: 'changed',
                 sortable: true,
@@ -269,7 +269,7 @@ test('The user store should be called correctly when changing the schema', () =>
             title: {
                 filterType: null,
                 filterTypeParameters: null,
-                parameters: null,
+                transformerTypeParameters: {},
                 label: 'Title',
                 name: 'title',
                 sortable: true,
@@ -279,7 +279,7 @@ test('The user store should be called correctly when changing the schema', () =>
             name: {
                 filterType: null,
                 filterTypeParameters: null,
-                parameters: null,
+                transformerTypeParameters: {},
                 label: 'Name',
                 name: 'name',
                 sortable: true,
@@ -353,7 +353,7 @@ test('The userSchema should include schema properties that are not present in th
         id: {
             filterType: null,
             filterTypeParameters: {},
-            parameters: {},
+            transformerTypeParameters: {},
             label: 'ID',
             name: 'id',
             sortable: true,
@@ -363,7 +363,7 @@ test('The userSchema should include schema properties that are not present in th
         title: {
             filterType: null,
             filterTypeParameters: {},
-            parameters: {},
+            transformerTypeParameters: {},
             label: 'Title',
             name: 'title',
             sortable: true,
@@ -373,7 +373,7 @@ test('The userSchema should include schema properties that are not present in th
         newSchemaProperty: {
             filterType: null,
             filterTypeParameters: {},
-            parameters: {},
+            transformerTypeParameters: {},
             label: 'New Schema Property',
             name: 'newSchemaProperty',
             sortable: true,
@@ -387,7 +387,7 @@ test('The userSchema should include schema properties that are not present in th
             id: {
                 filterType: null,
                 filterTypeParameters: {},
-                parameters: {},
+                transformerTypeParameters: {},
                 label: 'ID',
                 name: 'id',
                 sortable: true,
@@ -397,7 +397,7 @@ test('The userSchema should include schema properties that are not present in th
             title: {
                 filterType: null,
                 filterTypeParameters: {},
-                parameters: {},
+                transformerTypeParameters: {},
                 label: 'Title',
                 name: 'title',
                 sortable: true,
@@ -407,7 +407,7 @@ test('The userSchema should include schema properties that are not present in th
             newSchemaProperty: {
                 filterType: null,
                 filterTypeParameters: {},
-                parameters: {},
+                transformerTypeParameters: {},
                 label: 'New Schema Property',
                 name: 'newSchemaProperty',
                 sortable: true,
@@ -459,7 +459,7 @@ test('The userSchema should reflect the order of the schemaSetting of the user',
         id: {
             filterType: null,
             filterTypeParameters: {},
-            parameters: {},
+            transformerTypeParameters: {},
             label: 'ID',
             name: 'id',
             sortable: true,
@@ -469,7 +469,7 @@ test('The userSchema should reflect the order of the schemaSetting of the user',
         title: {
             filterType: null,
             filterTypeParameters: {},
-            parameters: {},
+            transformerTypeParameters: {},
             label: 'Title',
             name: 'title',
             sortable: true,

@@ -79,6 +79,13 @@
         <xs:attributeGroup ref="filterAttributeGroup"/>
     </xs:complexType>
 
+    <xs:complexType name="transformerType">
+        <xs:sequence>
+            <xs:element type="paramsType" name="params" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="transformerAttributeGroup"/>
+    </xs:complexType>
+
     <xs:complexType name="paramsType">
         <xs:sequence>
             <xs:element type="paramType" name="param" minOccurs="0" maxOccurs="unbounded"/>
@@ -126,7 +133,7 @@
         <xs:sequence>
             <xs:group ref="fieldGroup"/>
             <xs:element name="filter" type="filterType" minOccurs="0" maxOccurs="1"/>
-            <xs:element type="paramsType" name="params" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="transformer" type="transformerType" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:group>
 
@@ -134,7 +141,7 @@
         <xs:sequence>
             <xs:element type="fieldType" name="field" minOccurs="1" maxOccurs="unbounded"/>
             <xs:element name="filter" type="filterType" minOccurs="0" maxOccurs="1"/>
-            <xs:element type="paramsType" name="params" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="transformer" type="transformerType" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:group>
 
@@ -143,6 +150,10 @@
     </xs:attributeGroup>
 
     <xs:attributeGroup name="filterAttributeGroup">
+        <xs:attribute type="xs:string" name="type"/>
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="transformerAttributeGroup">
         <xs:attribute type="xs:string" name="type"/>
     </xs:attributeGroup>
 
@@ -161,7 +172,7 @@
         <xs:sequence>
             <xs:element type="fieldType" name="field" minOccurs="1" maxOccurs="unbounded"/>
             <xs:element name="filter" type="filterType" minOccurs="0" maxOccurs="1"/>
-            <xs:element type="paramsType" name="params" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="transformer" type="transformerType" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:group>
 

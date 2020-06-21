@@ -103,10 +103,6 @@ class ListXmlLoader
             $propertyMetadata->setTranslation($translation);
         }
 
-        if (null !== $type = XmlUtil::getValueFromXPath('@type', $xpath, $propertyNode)) {
-            $propertyMetadata->setType($type);
-        }
-
         $propertyMetadata->setVisibility(
             XmlUtil::getValueFromXPath(
                 '@visibility',
@@ -127,12 +123,19 @@ class ListXmlLoader
             XmlUtil::getBooleanValueFromXPath('@sortable', $xpath, $propertyNode, true)
         );
 
-        $parameters = $xpath->query('x:params', $propertyNode);
-        if (\count($parameters) > 0) {
-            $propertyMetadata->setParameters(
+        if (null !== $type = XmlUtil::getValueFromXPath('x:transformer/@type', $xpath, $propertyNode)) {
+            $propertyMetadata->setType($type);
+        } elseif (null !== $type = XmlUtil::getValueFromXPath('@type', $xpath, $propertyNode)) {
+            @\trigger_error('Attribute "type" of list property should not be used anymore! Use "<transformer type="..."/>" inside of property instead.');
+            $propertyMetadata->setType($type);
+        }
+
+        $transformerParamNodes = $xpath->query('x:transformer/x:params', $propertyNode);
+        if (\count($transformerParamNodes) > 0) {
+            $propertyMetadata->setTransformerTypeParameters(
                 $this->getParameters(
                     $xpath,
-                    $parameters->item(0) // There can only be one filter node
+                    $transformerParamNodes->item(0) // There can only be one transformer node
                 )
             );
         }

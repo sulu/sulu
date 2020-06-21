@@ -39,17 +39,17 @@ class FieldMetadata
     protected $sortable;
 
     /**
-     * @var ?array
+     * @var array|null
      */
-    protected $parameters;
+    protected $transformerTypeParameters;
 
     /**
-     * @var ?string
+     * @var string|null
      */
     protected $filterType;
 
     /**
-     * @var ?array
+     * @var array|null
      */
     protected $filterTypeParameters;
 
@@ -103,14 +103,14 @@ class FieldMetadata
         $this->sortable = $sortable;
     }
 
-    public function getParameters()
+    public function getTransformerTypeParameters(): array
     {
-        return $this->parameters;
+        return $this->transformerTypeParameters ?? [];
     }
 
-    public function setParameters($parameters): void
+    public function setTransformerTypeParameters(?array $transformerTypeParameters): void
     {
-        $this->parameters = $parameters;
+        $this->transformerTypeParameters = $transformerTypeParameters;
     }
 
     public function setFilterType(?string $filterType): void

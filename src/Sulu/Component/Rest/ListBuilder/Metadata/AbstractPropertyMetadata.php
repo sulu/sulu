@@ -51,7 +51,7 @@ abstract class AbstractPropertyMetadata
     /**
      * @var array
      */
-    private $parameters;
+    private $transformerTypeParameters;
 
     /**
      * @var string
@@ -161,17 +161,17 @@ abstract class AbstractPropertyMetadata
     /**
      * @return array
      */
-    public function getParameters()
+    public function getTransformerTypeParameters()
     {
-        return $this->parameters;
+        return $this->transformerTypeParameters;
     }
 
     /**
-     * @param array $parameters
+     * @param array $transformerTypeParameters
      */
-    public function setParameters($parameters)
+    public function setTransformerTypeParameters($transformerTypeParameters)
     {
-        $this->parameters = $parameters;
+        $this->transformerTypeParameters = $transformerTypeParameters;
     }
 
     /**

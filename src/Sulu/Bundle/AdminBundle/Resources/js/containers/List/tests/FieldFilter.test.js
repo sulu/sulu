@@ -24,7 +24,7 @@ test('Render FieldFilter with schema and value', () => {
         firstName: {
             filterType: 'text',
             filterTypeParameters: {test: 'value'},
-            parameters: {},
+            transformerTypeParameters: {},
             label: 'First name',
             sortable: true,
             type: 'string',
@@ -33,7 +33,7 @@ test('Render FieldFilter with schema and value', () => {
         lastName: {
             filterType: 'text',
             filterTypeParameters: null,
-            parameters: null,
+            transformerTypeParameters: {},
             label: 'Last name',
             sortable: true,
             type: 'string',
@@ -77,7 +77,7 @@ test('Show filter options in disabled state if a filter for them was already add
         firstName: {
             filterType: 'text',
             filterTypeParameters: null,
-            parameters: null,
+            transformerTypeParameters: {},
             label: 'First name',
             sortable: true,
             type: 'string',
@@ -86,7 +86,7 @@ test('Show filter options in disabled state if a filter for them was already add
         lastName: {
             filterType: 'text',
             filterTypeParameters: null,
-            parameters: null,
+            transformerTypeParameters: {},
             label: 'Last name',
             sortable: true,
             type: 'string',
@@ -119,7 +119,7 @@ test('Call onChange with new filter chip when Action in ArrowMenu was clicked', 
         firstName: {
             filterType: 'text',
             filterTypeParameters: null,
-            parameters: null,
+            transformerTypeParameters: {},
             label: 'First name',
             sortable: true,
             type: 'string',
@@ -128,7 +128,7 @@ test('Call onChange with new filter chip when Action in ArrowMenu was clicked', 
         lastName: {
             filterType: 'text',
             filterTypeParameters: null,
-            parameters: null,
+            transformerTypeParameters: {},
             label: 'Last name',
             sortable: true,
             type: 'string',
@@ -160,7 +160,7 @@ test('Call onChange with new filter value when onChange from FieldFilterItem is 
         firstName: {
             filterType: 'text',
             filterTypeParameters: null,
-            parameters: null,
+            transformerTypeParameters: {},
             label: 'First name',
             sortable: true,
             type: 'string',
@@ -169,7 +169,7 @@ test('Call onChange with new filter value when onChange from FieldFilterItem is 
         lastName: {
             filterType: 'text',
             filterTypeParameters: null,
-            parameters: null,
+            transformerTypeParameters: {},
             label: 'Last name',
             sortable: true,
             type: 'string',
@@ -208,7 +208,7 @@ test('Call onChange without filter chip for which delete icon was clicked', () =
         firstName: {
             filterType: 'text',
             filterTypeParameters: null,
-            parameters: null,
+            transformerTypeParameters: {},
             label: 'First name',
             sortable: true,
             type: 'string',
@@ -217,7 +217,7 @@ test('Call onChange without filter chip for which delete icon was clicked', () =
         lastName: {
             filterType: 'text',
             filterTypeParameters: null,
-            parameters: null,
+            transformerTypeParameters: {},
             label: 'Last name',
             sortable: true,
             type: 'string',
