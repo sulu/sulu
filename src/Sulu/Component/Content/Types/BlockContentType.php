@@ -377,6 +377,8 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
 
             if (
                 \is_array($blockPropertyTypeSettings)
+                && isset($blockPropertyTypeSettings['segment_enabled'])
+                && $blockPropertyTypeSettings['segment_enabled']
                 && isset($blockPropertyTypeSettings['segment'])
                 && $segment
                 && $blockPropertyTypeSettings['segment'] !== $segment->getKey()

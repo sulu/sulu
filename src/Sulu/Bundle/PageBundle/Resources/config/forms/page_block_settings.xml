@@ -25,17 +25,39 @@
 
             <tag name="sulu.block_setting_icon" icon="su-hide" />
         </property>
-        <property name="segment" type="single_select" visibleCondition="__webspace.segments.length &gt; 0">
-            <meta>
-                <title>sulu_admin.segments</title>
-            </meta>
-            <params>
-                <param
-                    name="values"
-                    type="expression"
-                    value="service('sulu_page.segment_select_helper').getValues(webspace)"
-                />
-            </params>
-        </property>
+
+        <section name="segment" visibleCondition="__webspace.segments.length &gt; 0">
+            <properties>
+                <property name="segment_enabled" type="checkbox">
+                    <params>
+                        <param name="description">
+                            <meta>
+                                <title>sulu_page.segment_description</title>
+                            </meta>
+                        </param>
+                        <param name="icon" value="su-hide" />
+                        <param name="label">
+                            <meta>
+                                <title>sulu_page.segment_label</title>
+                            </meta>
+                        </param>
+                        <param name="skin" value="heading" />
+                        <param name="type" value="toggler" />
+                    </params>
+
+                    <tag name="sulu.block_setting_icon" icon="su-focus" />
+                </property>
+
+                <property name="segment" type="single_select" visibleCondition="segment_enabled == true">
+                    <params>
+                        <param
+                            name="values"
+                            type="expression"
+                            value="service('sulu_page.segment_select_helper').getValues(webspace)"
+                        />
+                    </params>
+                </property>
+            </properties>
+        </section>
     </properties>
 </form>

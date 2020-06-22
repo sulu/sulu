@@ -15,7 +15,9 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, op
     this.save = jest.fn().mockReturnValue(Promise.resolve());
     this.delete = jest.fn().mockReturnValue(Promise.resolve());
     this.set = jest.fn();
-    this.setMultiple = jest.fn();
+    this.setMultiple = jest.fn(function(data) {
+        Object.assign(this.data, data);
+    });
     this.change = jest.fn();
     this.copyFromLocale = jest.fn();
     this.data = mockObservable({});
@@ -228,6 +230,35 @@ test('Evaluate all disabledConditions and visibleConditions for schema', () => {
         expect(resourceFormStore.schema.section.visible).toEqual(false);
         expect(blockTypes5.text_line.form.item41.disabled).toEqual(false);
         expect(blockTypes5.text_line.form.item41.visible).toEqual(true);
+
+        resourceFormStore.destroy();
+    }, 0);
+});
+
+test('Evaluate all disabledConditions and visibleConditions for schema after calling setMultiple', () => {
+    const metadata = {
+        item1: {
+            type: 'text_line',
+        },
+        item2: {
+            type: 'text_line',
+            disabledCondition: 'item1 != "item2"',
+            visibleCondition: 'item1 == "item2"',
+        },
+    };
+
+    const metadataPromise = Promise.resolve(metadata);
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
+    const resourceStore = new ResourceStore('snippets', '1');
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+
+    setTimeout(() => {
+        expect(isObservable(resourceFormStore.schema)).toBe(false);
+
+        resourceFormStore.setMultiple({item1: 'item2'});
+        expect(resourceFormStore.schema.item2.disabled).toEqual(false);
+        expect(resourceFormStore.schema.item2.visible).toEqual(true);
 
         resourceFormStore.destroy();
     }, 0);

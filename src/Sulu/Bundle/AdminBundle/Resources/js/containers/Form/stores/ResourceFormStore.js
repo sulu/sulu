@@ -143,6 +143,8 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
 
     setMultiple(data: Object) {
         this.resourceStore.setMultiple(data);
+
+        super.setMultiple();
     }
 
     change(name: string, value: mixed) {

@@ -104,6 +104,17 @@ test('Render collapsed blocks with block previews', () => {
             ],
             type: 'checkbox',
         },
+        section: {
+            items: {
+                section_setting: {
+                    tags: [
+                        {attributes: {icon: 'su-hide'}, name: 'sulu.block_setting_icon'},
+                    ],
+                    type: 'checkbox',
+                },
+            },
+            type: 'section',
+        },
     });
     const jsonSchemaPromise = Promise.resolve({});
     metadataStore.getSchema.mockReturnValue(schemaPromise);
@@ -124,6 +135,9 @@ test('Render collapsed blocks with block previews', () => {
             text2: undefined,
             something: 'Test 6',
             type: 'default',
+            settings: {
+                section_setting: true,
+            },
         },
     ];
 

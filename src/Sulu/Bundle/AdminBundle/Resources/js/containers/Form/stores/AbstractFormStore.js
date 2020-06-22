@@ -200,6 +200,10 @@ export default class AbstractFormStore
         this.updateFieldPathEvaluations();
     }
 
+    setMultiple() {
+        this.updateFieldPathEvaluations();
+    }
+
     @action validate() {
         const {validator} = this;
         const errors = {};
