@@ -132,16 +132,16 @@
     <xs:group name="propertyGroup">
         <xs:sequence>
             <xs:group ref="fieldGroup"/>
-            <xs:element name="filter" type="filterType" minOccurs="0" maxOccurs="1"/>
             <xs:element name="transformer" type="transformerType" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="filter" type="filterType" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:group>
 
     <xs:group name="concatenationPropertyGroup">
         <xs:sequence>
             <xs:element type="fieldType" name="field" minOccurs="1" maxOccurs="unbounded"/>
-            <xs:element name="filter" type="filterType" minOccurs="0" maxOccurs="1"/>
             <xs:element name="transformer" type="transformerType" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="filter" type="filterType" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:group>
 
@@ -171,8 +171,8 @@
     <xs:group name="casePropertyGroup">
         <xs:sequence>
             <xs:element type="fieldType" name="field" minOccurs="1" maxOccurs="unbounded"/>
-            <xs:element name="filter" type="filterType" minOccurs="0" maxOccurs="1"/>
             <xs:element name="transformer" type="transformerType" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="filter" type="filterType" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:group>
 

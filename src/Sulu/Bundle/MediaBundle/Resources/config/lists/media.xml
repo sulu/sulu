@@ -171,8 +171,9 @@
         <property name="size" translation="sulu_media.size" visibility="always">
             <field-name>size</field-name>
             <entity-name>SuluMediaBundle:FileVersion</entity-name>
-            <transformer type="bytes"/>
             <joins ref="fileVersion"/>
+
+            <transformer type="bytes"/>
         </property>
 
         <property name="mimeType" translation="sulu_media.mime_type" visibility="always">

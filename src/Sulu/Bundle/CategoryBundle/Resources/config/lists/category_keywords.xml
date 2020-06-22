@@ -37,14 +37,14 @@
         >
             <field-name>id</field-name>
             <entity-name>%sulu.model.category_translation.class%</entity-name>
-            <transformer type="category_keywords_multiple_usage"/>
-
             <joins>
                 <join>
                     <entity-name>%sulu.model.category_translation.class%</entity-name>
                     <field-name>%sulu.model.keyword.class%.categoryTranslations</field-name>
                 </join>
             </joins>
+
+            <transformer type="category_keywords_multiple_usage"/>
         </count-property>
     </properties>
 </list>

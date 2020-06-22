@@ -44,14 +44,14 @@
         >
             <field-name>id</field-name>
             <entity-name>SuluMediaBundle:Media</entity-name>
-            <transformer type="thumbnails"/>
-
             <joins>
                 <join>
                     <entity-name>SuluMediaBundle:Media</entity-name>
                     <field-name>%sulu.model.contact.class%.avatar</field-name>
                 </join>
             </joins>
+
+            <transformer type="thumbnails"/>
         </property>
 
         <concatenation-property
