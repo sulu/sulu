@@ -26,14 +26,16 @@
             name="created"
             visibility="no"
             translation="sulu_admin.created"
-            type="datetime"
-        />
+        >
+            <transformer type="datetime"/>
+        </property>
 
         <property
             name="changed"
             visibility="no"
             translation="sulu_admin.changed"
-            type="datetime"
-        />
+        >
+            <transformer type="datetime"/>
+        </property>
     </properties>
 </list>

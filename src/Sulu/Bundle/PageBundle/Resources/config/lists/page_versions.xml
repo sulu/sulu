@@ -14,7 +14,8 @@
             visibility="always"
             sortable="false"
             translation="sulu_admin.published"
-            type="datetime"
-        />
+        >
+            <transformer type="datetime"/>
+        </property>
     </properties>
 </list>

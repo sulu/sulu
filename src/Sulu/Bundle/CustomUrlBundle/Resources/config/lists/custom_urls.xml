@@ -19,9 +19,10 @@
             name="published"
             visibility="yes"
             translation="sulu_custom_url.published"
-            type="bool"
             sortable="false"
-        />
+        >
+            <transformer type="bool"/>
+        </property>
         <property
             name="targetTitle"
             visibility="yes"
@@ -32,29 +33,29 @@
             name="changerFullName"
             visibility="yes"
             translation="sulu_admin.changer"
-            type="string"
             sortable="false"
         />
         <property
             name="changed"
             visibility="yes"
             translation="sulu_admin.changed"
-            type="datetime"
             sortable="false"
-        />
+        >
+            <transformer type="datetime"/>
+        </property>
         <property
             name="creatorFullName"
             visibility="yes"
             translation="sulu_admin.creator"
-            type="string"
             sortable="false"
         />
         <property
             name="created"
             visibility="yes"
             translation="sulu_admin.created"
-            type="datetime"
             sortable="false"
-        />
+        >
+            <transformer type="datetime"/>
+        </property>
     </properties>
 </list>

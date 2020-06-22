@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
+import log from 'loglevel';
 import listAdapterDefaultProps from '../../../../utils/TestHelper/listAdapterDefaultProps';
 import TableAdapter from '../../adapters/TableAdapter';
 import StringFieldTransformer from '../../fieldTransformers/StringFieldTransformer';
@@ -22,6 +23,10 @@ jest.mock('../../registries/listFieldTransformerRegistry', () => ({
     add: jest.fn(),
     get: jest.fn(),
     has: jest.fn(),
+}));
+
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
 }));
 
 beforeEach(() => {
@@ -152,7 +157,7 @@ test('Render data as icons', () => {
             label: 'Status',
         },
     };
-    const tableAdapter = render(
+    const tableAdapter = mount(
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -162,7 +167,18 @@ test('Render data as icons', () => {
         />
     );
 
-    expect(tableAdapter).toMatchSnapshot();
+    expect(tableAdapter.find('Row').at(0).find('Icon').props().name).toEqual('su-clock');
+    expect(tableAdapter.find('Row').at(0).find('Icon').props().style).toEqual(undefined);
+
+    expect(tableAdapter.find('Row').at(1).find('Cell').text()).toEqual('running');
+    expect(tableAdapter.find('Row').at(1).find('Icon')).toHaveLength(0);
+    expect(log.warn).toBeCalledWith('Transformer parameter "mapping/running" is not set.');
+
+    expect(tableAdapter.find('Row').at(2).find('Icon').props().name).toEqual('su-check-circle');
+    expect(tableAdapter.find('Row').at(2).find('Icon').props().style).toEqual({color: 'green'});
+
+    expect(tableAdapter.find('Row').at(3).find('Icon').props().name).toEqual('su-ban');
+    expect(tableAdapter.find('Row').at(3).find('Icon').props().style).toEqual(undefined);
 });
 
 test('Render data with skin', () => {

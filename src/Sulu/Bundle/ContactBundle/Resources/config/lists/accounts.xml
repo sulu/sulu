@@ -23,13 +23,10 @@
     </joins>
 
     <properties>
-        <property name="logo" visibility="always"
-            translation="sulu_contact.logo"
-            type="thumbnails"
-            sortable="false"
-        >
+        <property name="logo" visibility="always" translation="sulu_contact.logo" sortable="false">
             <field-name>id</field-name>
             <entity-name>SuluMediaBundle:Media</entity-name>
+            <transformer type="thumbnails"/>
 
             <joins>
                 <join>
@@ -196,44 +193,38 @@
             <entity-name>%sulu.model.account.class%</entity-name>
         </property>
 
-        <property name="created" translation="sulu_admin.created" type="datetime">
+        <property name="created" translation="sulu_admin.created">
             <field-name>created</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
+            <transformer type="datetime"/>
 
             <filter type="datetime" />
         </property>
 
-        <property name="changed" translation="sulu_admin.changed" type="datetime">
+        <property name="changed" translation="sulu_admin.changed">
             <field-name>changed</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
+            <transformer type="datetime"/>
 
             <filter type="datetime" />
         </property>
 
-        <property name="id" translation="sulu_admin.id" type="string">
+        <property name="id" translation="sulu_admin.id">
             <field-name>id</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
         </property>
 
-        <property name="uid" translation="sulu_contact.uid" type="string">
+        <property name="uid" translation="sulu_contact.uid">
             <field-name>uid</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
         </property>
 
-        <property
-            name="registerNumber"
-            translation="sulu_contact.register_number"
-            type="string"
-        >
+        <property name="registerNumber" translation="sulu_contact.register_number">
             <field-name>registerNumber</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
         </property>
 
-        <property
-            name="placeOfJurisdiction"
-            translation="sulu_contact.jurisdiction"
-            type="string"
-        >
+        <property name="placeOfJurisdiction" translation="sulu_contact.jurisdiction">
             <field-name>placeOfJurisdiction</field-name>
             <entity-name>%sulu.model.account.class%</entity-name>
         </property>

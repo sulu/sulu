@@ -3,7 +3,7 @@
     <key>target_groups</key>
 
     <properties>
-        <property name="id" translation="sulu_admin.id" type="string">
+        <property name="id" translation="sulu_admin.id">
             <field-name>id</field-name>
             <entity-name>%sulu.model.target_group.class%</entity-name>
         </property>
@@ -14,12 +14,11 @@
         <property
             name="active"
             visibility="yes"
-            type="bool"
             translation="sulu_audience_targeting.active"
         >
             <field-name>active</field-name>
             <entity-name>%sulu.model.target_group.class%</entity-name>
-
+            <transformer type="bool"/>
             <filter type="boolean" />
         </property>
         <property

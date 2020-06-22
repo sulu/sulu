@@ -40,11 +40,11 @@
             name="avatar"
             visibility="always"
             translation="sulu_contact.avatar"
-            type="thumbnails"
             sortable="false"
         >
             <field-name>id</field-name>
             <entity-name>SuluMediaBundle:Media</entity-name>
+            <transformer type="thumbnails"/>
 
             <joins>
                 <join>
@@ -188,7 +188,7 @@
             <entity-name>%sulu.model.contact.class%</entity-name>
         </property>
 
-        <property name="id" translation="sulu_admin.id" type="string">
+        <property name="id" translation="sulu_admin.id">
             <field-name>id</field-name>
             <entity-name>%sulu.model.contact.class%</entity-name>
         </property>
@@ -203,24 +203,24 @@
             <entity-name>%sulu.model.contact.class%</entity-name>
         </property>
 
-        <property name="created" translation="sulu_admin.created" type="datetime">
+        <property name="created" translation="sulu_admin.created">
             <field-name>created</field-name>
             <entity-name>%sulu.model.contact.class%</entity-name>
-
+            <transformer type="datetime"/>
             <filter type="datetime" />
         </property>
 
-        <property name="changed" translation="sulu_admin.changed" type="datetime">
+        <property name="changed" translation="sulu_admin.changed">
             <field-name>changed</field-name>
             <entity-name>%sulu.model.contact.class%</entity-name>
-
+            <transformer type="datetime"/>
             <filter type="datetime" />
         </property>
 
-        <property name="birthday" translation="sulu_contact.birthday" type="date">
+        <property name="birthday" translation="sulu_contact.birthday">
             <field-name>birthday</field-name>
             <entity-name>%sulu.model.contact.class%</entity-name>
-
+            <transformer type="date"/>
             <filter type="datetime" />
         </property>
 
