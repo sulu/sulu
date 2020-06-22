@@ -25,7 +25,7 @@ export default class IconFieldTransformer implements FieldTransformer {
 
         const iconConfig = mapping[value];
         if (!iconConfig) {
-            log.warn(`Transformer parameter "mapping/${value}" is not set.`);
+            log.warn(`There was no icon specified in the "mapping" transformer parameter for the value "${value}".`);
 
             return value;
         }
@@ -44,33 +44,27 @@ export default class IconFieldTransformer implements FieldTransformer {
     }
 
     transformObjectConfig(value: *, iconConfig: Object): Node {
-        if (!iconConfig.icon) {
-            log.error(`Transformer parameter "mapping/${value}/icon" needs to be set.`);
+        const {icon, color} = iconConfig;
 
-            return null;
-        }
-
-        if (typeof iconConfig.icon !== 'string') {
+        if (!icon || typeof icon !== 'string') {
             log.error(`Transformer parameter "mapping/${value}/icon" needs to be of type string.`);
 
             return null;
         }
 
-        const icon = iconConfig.icon;
+        if (color !== undefined && typeof color !== 'string') {
+            log.error(`Transformer parameter "mapping/${value}/color" needs to be of type string.`);
 
-        if (iconConfig.color) {
-            if (typeof iconConfig.color !== 'string') {
-                log.error(`Transformer parameter "mapping/${value}/color" needs to be of type string.`);
-
-                return null;
-            }
-
-            return (
-                <Icon className={iconFieldTransformerStyles.listIcon} name={icon} style={{color: iconConfig.color}} />
-            );
+            return null;
         }
 
-        return <Icon className={iconFieldTransformerStyles.listIcon} name={icon} />;
+        const style = {};
+
+        if (color) {
+            style.color = color;
+        }
+
+        return <Icon className={iconFieldTransformerStyles.listIcon} name={icon} style={style} />;
     }
 
     transformStringConfig(iconConfig: Object): Node {

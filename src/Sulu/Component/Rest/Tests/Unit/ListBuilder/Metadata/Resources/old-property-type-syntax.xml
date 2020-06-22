@@ -2,10 +2,9 @@
     <key>minimal</key>
 
     <properties>
-        <property name="id" translation="public.id">
+        <property name="id" translation="public.id" type="integer">
             <field-name>id</field-name>
             <entity-name>%sulu.model.contact.class%</entity-name>
-            <transformer type="integer"/>
         </property>
 
         <property name="firstName" translation="contact.contacts.firstName" searchability="yes" visibility="always">

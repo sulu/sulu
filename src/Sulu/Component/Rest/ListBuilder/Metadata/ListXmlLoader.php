@@ -126,7 +126,7 @@ class ListXmlLoader
         if (null !== $type = XmlUtil::getValueFromXPath('x:transformer/@type', $xpath, $propertyNode)) {
             $propertyMetadata->setType($type);
         } elseif (null !== $type = XmlUtil::getValueFromXPath('@type', $xpath, $propertyNode)) {
-            @\trigger_error('Attribute "type" of list property should not be used anymore! Use "<transformer type="..."/>" inside of property instead.');
+            @\trigger_error('Attribute "type" of list property should not be used anymore! Use "<transformer type="..."/>" inside of property instead.', \E_USER_DEPRECATED);
             $propertyMetadata->setType($type);
         }
 

@@ -90,6 +90,7 @@ class XmlListMetadataLoaderTest extends TestCase
         $accountMetadata = new SinglePropertyMetadata('name');
         $accountMetadata->setFilterType('single_selection');
         $accountMetadata->setFilterTypeParameters(['resource_key' => 'accounts']);
+        $lastNameMetadata->setTransformerTypeParameters(['color' => 'red']);
         $accountFieldDescriptor->setMetadata($accountMetadata);
 
         $this->fieldDescriptorFactory->getFieldDescriptors('contact')->willReturn(
@@ -138,6 +139,7 @@ class XmlListMetadataLoaderTest extends TestCase
         );
         $this->assertEquals('single_selection', $accountListFields['name']->getFilterType());
         $this->assertEquals(['resource_key' => 'accounts'], $accountListFields['name']->getFilterTypeParameters());
+        $this->assertEquals(['color' => 'red'], $accountListFields['name']->getTransformerTypeParameters());
     }
 
     public function testGetMetadataNotExisting()

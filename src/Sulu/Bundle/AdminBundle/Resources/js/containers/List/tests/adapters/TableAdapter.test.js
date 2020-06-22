@@ -172,13 +172,15 @@ test('Render data as icons', () => {
 
     expect(tableAdapter.find('Row').at(1).find('Cell').text()).toEqual('running');
     expect(tableAdapter.find('Row').at(1).find('Icon')).toHaveLength(0);
-    expect(log.warn).toBeCalledWith('Transformer parameter "mapping/running" is not set.');
+    expect(log.warn).toBeCalledWith(
+        'There was no icon specified in the "mapping" transformer parameter for the value "running".'
+    );
 
     expect(tableAdapter.find('Row').at(2).find('Icon').props().name).toEqual('su-check-circle');
     expect(tableAdapter.find('Row').at(2).find('Icon').props().style).toEqual({color: 'green'});
 
     expect(tableAdapter.find('Row').at(3).find('Icon').props().name).toEqual('su-ban');
-    expect(tableAdapter.find('Row').at(3).find('Icon').props().style).toEqual(undefined);
+    expect(tableAdapter.find('Row').at(3).find('Icon').props().style).toEqual({});
 });
 
 test('Render data with skin', () => {

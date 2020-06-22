@@ -15,9 +15,11 @@
     </joins>
 
     <properties>
-        <property name="id" translation="public.id" searchability="never" type="integer">
+        <property name="id" translation="public.id" searchability="never">
             <field-name>id</field-name>
             <entity-name>%sulu.model.contact.class%</entity-name>
+
+            <transformer type="integer"/>
         </property>
 
         <property name="firstName" translation="contact.contacts.firstName" visibility="always">
@@ -30,24 +32,23 @@
             <entity-name>%sulu.model.contact.class%</entity-name>
         </property>
 
-        <property name="avatar" translation="public.avatar" visibility="always" type="thumbnails"
-            sortable="false">
+        <property name="avatar" translation="public.avatar" visibility="always" sortable="false">
             <field-name>id</field-name>
             <entity-name>SuluMediaBundle:Media</entity-name>
-
             <joins>
                 <join>
                     <entity-name>SuluMediaBundle:Media</entity-name>
                     <field-name>%sulu.model.contact.class%.avatar</field-name>
                 </join>
             </joins>
+
+            <transformer type="thumbnails"/>
         </property>
 
         <concatenation-property
             name="fullName"
             glue=" "
             translation="public.name"
-            type="string"
             sortable="false"
         >
             <field>
@@ -55,12 +56,13 @@
                 <entity-name>%sulu.model.contact.class%</entity-name>
             </field>
             <field property-ref="lastName"/>
+
+            <transformer type="string"/>
         </concatenation-property>
 
-        <property name="city" translation="contact.address.city" visibility="yes" type="string">
+        <property name="city" translation="contact.address.city" visibility="yes">
             <field-name>city</field-name>
             <entity-name>SuluContactBundle:Address</entity-name>
-
             <joins ref="address"/>
         </property>
     </properties>

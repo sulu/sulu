@@ -42,7 +42,7 @@ test('Test icon wrong type', () => {
 
 test('Test icon is object without icon', () => {
     expect(iconFieldTransformer.transform('failed', {mapping: {failed: {}}})).toBe(null);
-    expect(log.error).toBeCalledWith('Transformer parameter "mapping/failed/icon" needs to be set.');
+    expect(log.error).toBeCalledWith('Transformer parameter "mapping/failed/icon" needs to be of type string.');
 });
 
 test('Test icon is object with icon having wrong type', () => {
@@ -57,7 +57,9 @@ test('Test icon is object with color having wrong type', () => {
 
 test('Test icon not configured', () => {
     expect(iconFieldTransformer.transform('succeeded', {mapping: {failed: 'su-ban'}})).toBe('succeeded');
-    expect(log.warn).toBeCalledWith('Transformer parameter "mapping/succeeded" is not set.');
+    expect(log.warn).toBeCalledWith(
+        'There was no icon specified in the "mapping" transformer parameter for the value "succeeded".'
+    );
 });
 
 test('Test icon string', () => {
@@ -68,7 +70,7 @@ test('Test icon string', () => {
 
 test('Test icon object', () => {
     expect(iconFieldTransformer.transform('failed', {mapping: {failed: {icon: 'su-ban'}}})).toEqual(
-        <Icon className={iconFieldTransformerStyles.listIcon} name="su-ban" />
+        <Icon className={iconFieldTransformerStyles.listIcon} name="su-ban" style={{}} />
     );
 });
 
