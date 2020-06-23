@@ -14,6 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\Resolver;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
  * Implements logic to resolve parameters for website rendering.
@@ -31,14 +32,21 @@ class ParameterResolver implements ParameterResolverInterface
     private $requestAnalyzerResolver;
 
     /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
      * ParameterResolver constructor.
      */
     public function __construct(
         StructureResolverInterface $structureResolver,
-        RequestAnalyzerResolverInterface $requestAnalyzerResolver
+        RequestAnalyzerResolverInterface $requestAnalyzerResolver,
+        WebspaceManagerInterface $webspaceManager
     ) {
         $this->structureResolver = $structureResolver;
         $this->requestAnalyzerResolver = $requestAnalyzerResolver;
+        $this->webspaceManager = $webspaceManager;
     }
 
     public function resolve(
@@ -63,19 +71,27 @@ class ParameterResolver implements ParameterResolverInterface
 
         $pageUrls = \array_key_exists('urls', $structureData) ? $structureData['urls'] : [];
         $urls = [];
+        $localizations = [];
 
         foreach ($allLocalizations as $localization) {
             /* @var Localization $localization */
             $locale = $localization->getLocale();
 
             if (\array_key_exists($locale, $pageUrls)) {
-                $urls[$locale] = $pageUrls[$locale];
+                $url = $this->webspaceManager->findUrlByResourceLocator($pageUrls[$locale], null, $locale);
             } else {
-                $urls[$locale] = '/';
+                $url = $this->webspaceManager->findUrlByResourceLocator('/', null, $locale);
             }
+
+            $urls[$locale] = $url;
+            $localizations[$locale] = [
+                'locale' => $locale,
+                'url' => $url,
+            ];
         }
 
         $structureData['urls'] = $urls;
+        $structureData['localizations'] = $localizations;
 
         return \array_merge(
             $parameter,

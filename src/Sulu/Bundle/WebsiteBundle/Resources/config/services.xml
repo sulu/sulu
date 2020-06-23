@@ -215,6 +215,7 @@
         <service id="sulu_website.resolver.parameter" class="%sulu_website.resolver.parameter.class%" public="true">
             <argument type="service" id="sulu_website.resolver.structure"/>
             <argument type="service" id="sulu_website.resolver.request_analyzer"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager" />
         </service>
 
         <service id="Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface"
