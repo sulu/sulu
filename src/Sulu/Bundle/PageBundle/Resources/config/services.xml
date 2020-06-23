@@ -206,6 +206,9 @@
         >
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="translator"/>
+            <argument type="service" id="security.token_storage"/>
+
+            <tag name="sulu.context" context="admin" />
         </service>
     </services>
 </container>

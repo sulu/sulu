@@ -85,10 +85,10 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('test_io', $pageConfig->webspaces->test_io->key);
 
         $this->assertEquals('w', $pageConfig->webspaces->test_io->segments[0]->key);
-        $this->assertEquals('winter', $pageConfig->webspaces->test_io->segments[0]->name);
+        $this->assertEquals('Winter', $pageConfig->webspaces->test_io->segments[0]->title);
         $this->assertEquals(false, $pageConfig->webspaces->test_io->segments[0]->default);
         $this->assertEquals('s', $pageConfig->webspaces->test_io->segments[1]->key);
-        $this->assertEquals('summer', $pageConfig->webspaces->test_io->segments[1]->name);
+        $this->assertEquals('Summer', $pageConfig->webspaces->test_io->segments[1]->title);
         $this->assertEquals(true, $pageConfig->webspaces->test_io->segments[1]->default);
 
         $this->assertEquals('Destination CMF', $pageConfig->webspaces->destination_io->name);

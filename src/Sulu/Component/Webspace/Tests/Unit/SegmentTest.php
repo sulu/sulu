@@ -29,14 +29,14 @@ class SegmentTest extends TestCase
     {
         $expected = [
             'key' => 'foo',
-            'name' => 'ello',
             'default' => 'def',
+            'metadata' => ['title' => ['en' => 'english title', 'de' => 'german title']],
         ];
 
         $this->segment->setKey($expected['key']);
-        $this->segment->setName($expected['name']);
+        $this->segment->setMetadata($expected['metadata']);
         $this->segment->setDefault($expected['default']);
 
-        $this->assertEquals($expected, $this->segment->toArray());
+        $this->assertEquals($expected, $this->segment->toArray('en'));
     }
 }

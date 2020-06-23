@@ -306,8 +306,8 @@ class XmlFileLoader10 extends BaseXmlFileLoader
         foreach ($this->xpath->query('/x:webspace/x:segments/x:segment') as $segmentNode) {
             /** @var \DOMNode $segmentNode */
             $segment = new Segment();
-            $segment->setName($segmentNode->nodeValue);
             $segment->setKey($segmentNode->attributes->getNamedItem('key')->nodeValue);
+            $segment->setMetadata($this->loadMeta('x:meta/x:*', $segmentNode));
 
             $defaultNode = $segmentNode->attributes->getNamedItem('default');
             if ($defaultNode) {

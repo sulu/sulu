@@ -19,8 +19,18 @@
     </localizations>
 
     <segments>
-        <segment key="w" default="true">winter</segment>
-        <segment key="s">summer</segment>
+        <segment key="w" default="true">
+            <meta>
+                <title lang="en">Winter</title>
+                <title lang="de">Winter</title>
+            </meta>
+        </segment>
+        <segment key="s" default="false">
+            <meta>
+                <title lang="en">Summer</title>
+                <title lang="de">Sommer</title>
+            </meta>
+        </segment>
     </segments>
 
     <theme>massiveart</theme>

@@ -103,6 +103,7 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
         $this->appendUrls($webspace, $context, $visitor);
         $this->appendCustomUrls($webspace, $context, $visitor);
         $this->appendNavigations($webspace, $context, $visitor);
+        $this->appendSegments($webspace, $context, $visitor);
         $this->appendResourceLocatorStrategy($webspace, $context, $visitor);
         $this->appendPermissions($webspace, $context, $visitor);
 
@@ -205,6 +206,24 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
         $visitor->visitProperty(
             new StaticPropertyMetadata('', 'navigations', $navigations),
             $navigations
+        );
+    }
+
+    private function appendSegments(Webspace $webspace, Context $context, SerializationVisitorInterface $visitor)
+    {
+        $segments = [];
+        foreach ($webspace->getSegments() as $segment) {
+            $segments[] = [
+                'key' => $segment->getKey(),
+                'title' => $segment->getTitle($context->getAttribute('locale')),
+                'default' => $segment->isDefault(),
+            ];
+        }
+
+        $segments = $context->getNavigator()->accept($segments);
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'segments', $segments),
+            $segments
         );
     }
 

@@ -80,11 +80,11 @@ class WebspaceCollectionTest extends TestCase
         $webspace->addLocalization($localizationEnUs);
         $webspace->addLocalization($localizationFrCa);
         $segmentSummer = new Segment();
-        $segmentSummer->setName('Summer');
+        $segmentSummer->setMetadata(['title' => ['en' => 'Summer', 'de' => 'Sommer']]);
         $segmentSummer->setKey('s');
         $segmentSummer->setDefault(true);
         $segmentWinter = new Segment();
-        $segmentWinter->setName('Winter');
+        $segmentWinter->setMetadata(['title' => ['en' => 'Winter', 'de' => 'Winter']]);
         $segmentWinter->setKey('w');
         $segmentWinter->setDefault(false);
         $webspace->addSegment($segmentSummer);
@@ -154,10 +154,12 @@ class WebspaceCollectionTest extends TestCase
         $this->assertEquals('ca', $webspace['localizations'][1]['country']);
         $this->assertEquals('fr', $webspace['localizations'][1]['language']);
         $this->assertEquals(false, $webspace['localizations'][1]['default']);
-        $this->assertEquals('Summer', $webspace['segments'][0]['name']);
+        $this->assertEquals('Summer', $webspace['segments'][0]['metadata']['title']['en']);
+        $this->assertEquals('Sommer', $webspace['segments'][0]['metadata']['title']['de']);
         $this->assertEquals('s', $webspace['segments'][0]['key']);
         $this->assertEquals(true, $webspace['segments'][0]['default']);
-        $this->assertEquals('Winter', $webspace['segments'][1]['name']);
+        $this->assertEquals('Winter', $webspace['segments'][1]['metadata']['title']['en']);
+        $this->assertEquals('Winter', $webspace['segments'][1]['metadata']['title']['de']);
         $this->assertEquals('w', $webspace['segments'][1]['key']);
         $this->assertEquals(false, $webspace['segments'][1]['default']);
         $this->assertEquals('portal1theme', $webspace['theme']);

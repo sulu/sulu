@@ -55,8 +55,8 @@ class {{ cache_class }} extends {{ base_class }}
 {% for segment in webspace.segments %}
         // add segment to webspace
         $segment = new Segment();
-        $segment->setName('{{ segment.name }}');
         $segment->setKey('{{ segment.key }}');
+        $segment->setMetadata({{ self.renderArray(segment.metadata)}});
         $segment->setDefault('{{ segment.default }}');
         $webspace->addSegment($segment);
         $segmentRefs['{{ webspace.key }}_{{ segment.key }}'] = $segment;
