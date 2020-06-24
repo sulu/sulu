@@ -498,10 +498,11 @@ class Webspace implements ArrayableInterface
      * Returns a error template for given code.
      *
      * @param string $type
+     * @param string $defaultTemplate
      *
      * @return string|null
      */
-    public function getDefaultTemplate($type)
+    public function getDefaultTemplate($type, $defaultTemplate = null)
     {
         if (\array_key_exists($type, $this->defaultTemplates)) {
             return $this->defaultTemplates[$type][0]->getTemplate();

@@ -159,7 +159,7 @@ class PageAdmin extends Admin
         ];
 
         $routerAttributesToFormRequest = ['parentId', 'webspace'];
-        $routerAttributesToFormMetdata = ['webspace'];
+        $routerAttributesToFormMetdata = ['webspace', 'defaultTemplate'];
 
         $previewCondition = 'nodeType == 1';
 
