@@ -7,7 +7,7 @@
 The `urls` twig variable has been deprecated in favour of the `localizations` variable. So the code should be adapted
 as shown in the following snippet:
 
-```jinja
+```twig
 {# Before #}
 <ul>
     {% for locale, url in urls %}

@@ -6,6 +6,19 @@
  # localizations array
 -#}
 
+{% if localizationsa is not defined %}
+    {% deprecated 'The "urls" variable is deprecated, set "localizations" instead in the "seo.html.twig".' %}
+    {% set localizations = {} %}
+    {% for locale, url in urls %}
+        {% set localizations = localizations|merge({
+            (locale): {
+                locale: locale,
+                url: sulu_content_path(url, null, locale),
+            }
+        }) %}
+    {% endfor %}
+{% endif %}
+
 {#- merge seo data with _seo from attributes for custom urls -#}
 {% set seo = seo|default([])|merge(app.request.attributes.get('_seo', [])|default([])) %}
 
@@ -29,7 +42,7 @@
 {% set seoCanonical = seo.canonicalUrl|default() %}
 
 {%- if not seoCanonical and shadowBaseLocale and localizations[shadowBaseLocale]|default() %}
-    {% set seoCanonical = localizations ? localizations[shadowBaseLocale].url : urls[shadowBaseLocale] %}
+    {% set seoCanonical = localizations[shadowBaseLocale].url %}
 {%- endif -%}
 
 {#- render blocks -#}
@@ -66,13 +79,6 @@
                 <link rel="alternate" href="{{ localization.url }}" hreflang="x-default"/>
             {%- endif -%}
             <link rel="alternate" href="{{ localization.url }}" hreflang="{{ localization.locale|replace({'_': '-'}) }}"/>
-        {%- endfor -%}
-    {%- elseif urls|length > 1 -%}
-        {%- for locale, url in urls -%}
-            {%- if defaultLocale == locale -%}
-                <link rel="alternate" href="{{ sulu_content_path(url, null, locale) }}" hreflang="x-default"/>
-            {%- endif -%}
-            <link rel="alternate" href="{{ sulu_content_path(url, null, locale) }}" hreflang="{{ locale|replace({'_': '-'}) }}"/>
         {%- endfor -%}
     {%- endif -%}
 {%- endblock -%}
