@@ -33,6 +33,22 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('twig')
                 ->addDefaultsIfNotSet()
                 ->children()
+                    ->arrayNode('attributes')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->booleanNode('urls')
+                                ->defaultTrue()
+                                ->beforeNormalization()
+                                    ->ifTrue(function($v) { return false !== $v; })
+                                    ->then(function($v) {
+                                        @\trigger_error('Enable the urls parameter is deprecated since sulu/sulu 2.2.', \E_USER_DEPRECATED);
+
+                                        return $v;
+                                    })
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
                     ->arrayNode('navigation')
                         ->addDefaultsIfNotSet()
                         ->children()
