@@ -6,7 +6,7 @@
  # localizations array
 -#}
 
-{% if localizationsa is not defined %}
+{% if localizations is not defined %}
     {% deprecated 'The "urls" variable is deprecated, set "localizations" instead in the "seo.html.twig".' %}
     {% set localizations = {} %}
     {% for locale, url in urls %}

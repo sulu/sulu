@@ -11,8 +11,7 @@
             "content": content|default([]),
             "localizations": localizations|default([]),
             "shadowBaseLocale": shadowBaseLocale|default(),
-            "defaultLocale": app.request.locale,
-            "urls": urls|default([])
+            "defaultLocale": app.request.locale
         } %}
     {% endblock %}
 
@@ -34,9 +33,7 @@
                         </li>
                     {% endfor %}
                 </ul>
-            </nav>
 
-            <nav>
                 <ul>
                     {% for localization in localizations %}
                         <li>
