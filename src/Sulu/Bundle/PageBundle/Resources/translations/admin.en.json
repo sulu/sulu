@@ -53,5 +53,7 @@
     "sulu_page.restore_version": "Restore version?",
     "sulu_page.restore_version_text": "A new draft will be created. An existing draft version will be overwritten",
     "sulu_page.hide_block_label": "Don't display on public website",
-    "sulu_page.hide_block_description": "This block will not be published, but remains editable in the admin."
+    "sulu_page.hide_block_description": "This block will not be published, but remains editable in the admin.",
+    "sulu_page.segment_label": "Assign segment",
+    "sulu_page.segment_description": "The block will be automatically filtered on the website by the chosen segment."
 }

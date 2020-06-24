@@ -35,7 +35,7 @@
                                 <title>sulu_page.segment_description</title>
                             </meta>
                         </param>
-                        <param name="icon" value="su-hide" />
+                        <param name="icon" value="su-focus" />
                         <param name="label">
                             <meta>
                                 <title>sulu_page.segment_label</title>

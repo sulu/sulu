@@ -53,5 +53,7 @@
     "sulu_page.restore_version": "Version wiederherstellen?",
     "sulu_page.restore_version_text": "Aus dieser Version wird ein neuer Entwurf erstellt. Wenn bereits eine Entwurfsversion besteht, wird diese überschrieben.",
     "sulu_page.hide_block_label": "Nicht auf publizierter Website darstellen",
-    "sulu_page.hide_block_description": "Dieser Block wird nicht veröffentlicht, kann aber weiterhin im Admin bearbeitet werden."
+    "sulu_page.hide_block_description": "Dieser Block wird nicht veröffentlicht, kann aber weiterhin im Admin bearbeitet werden.",
+    "sulu_page.segment_label": "Segment zuweisen",
+    "sulu_page.segment_description": "Der Block wird automatisch nach dem gewählten Segment auf der Website gefiltert."
 }
