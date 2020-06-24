@@ -17,13 +17,11 @@ const HOMEPAGE_RESOURCE_LOCATOR = '/';
 @observer
 class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
     @observable mode: string;
-    @observable forceRefresh: boolean;
 
     constructor(props: FieldTypeProps<?string>) {
         super(props);
-        this.forceRefresh = false;
 
-        const {dataPath, onChange, fieldTypeOptions, formInspector, value} = this.props;
+        const {dataPath, fieldTypeOptions, formInspector, value} = this.props;
         const {generationUrl, modeResolver} = fieldTypeOptions;
 
         if (!modeResolver) {
@@ -45,54 +43,23 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
         }
 
         formInspector.addFinishFieldHandler((finishedFieldDataPath, finishedFieldSchemaPath) => {
-            if (value !== undefined && !this.forceRefresh) {
+            if (value !== undefined) {
                 return;
             }
 
-            if (formInspector.isFieldModified(dataPath) && !this.forceRefresh) {
+            if (formInspector.isFieldModified(dataPath)) {
                 return;
             }
 
 
             const {tags: finishedFieldTags} = formInspector.getSchemaEntryByPath(finishedFieldSchemaPath) || {};
-            console.log(finishedFieldTags)
             if (
-                (!finishedFieldTags || !finishedFieldTags.some((tag) => tag.name === PART_TAG)) &&
-                !this.forceRefresh
+                !finishedFieldTags || !finishedFieldTags.some((tag) => tag.name === PART_TAG)
             ) {
                 return;
             }
 
-            this.forceRefresh = false;
-
-            const partEntries = formInspector.getPathsByTag(PART_TAG)
-                .map((path: string) => [path, formInspector.getValueByPath(path)])
-                .filter(([, value: mixed]) => !!value)
-                .map(([path: string, value: mixed]) => {
-                    // path is a jsonpointer but the api controller requires property names
-                    if (path.startsWith('/')) {
-                        return [path.substr(1), value];
-                    }
-
-                    return [path, value];
-                });
-
-            if (partEntries.length === 0) {
-                return;
-            }
-
-
-            Requester.post(
-                generationUrl,
-                {
-                    parts: Object.fromEntries(partEntries),
-                    resourceKey: formInspector.resourceKey,
-                    locale: formInspector.locale ? formInspector.locale.get() : undefined,
-                    ...formInspector.options,
-                }
-            ).then((response) => {
-                onChange(response.resourcelocator);
-            });
+            this.regenerateUrl();
         });
     }
 
@@ -101,11 +68,41 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
         onFinish();
     };
 
-    handleButtonClick = () => {
-        const {onFinish} = this.props;
-        this.forceRefresh = true;
-        console.log(this);
-        onFinish();
+    regenerateUrl = () => {
+        const {onChange, fieldTypeOptions, formInspector} = this.props;
+        const {generationUrl} = fieldTypeOptions;
+
+        const partEntries = formInspector.getPathsByTag(PART_TAG)
+            .map((path: string) => [path, formInspector.getValueByPath(path)])
+            .filter(([, value: mixed]) => !!value)
+            .map(([path: string, value: mixed]) => {
+                // path is a jsonpointer but the api controller requires property names
+                if (path.startsWith('/')) {
+                    return [path.substr(1), value];
+                }
+
+                return [path, value];
+            });
+
+        if (partEntries.length === 0) {
+            return;
+        }
+
+        Requester.post(
+            generationUrl,
+            {
+                parts: Object.fromEntries(partEntries),
+                resourceKey: formInspector.resourceKey,
+                locale: formInspector.locale ? formInspector.locale.get() : undefined,
+                ...formInspector.options,
+            }
+        ).then((response) => {
+            onChange(response.resourcelocator);
+        });
+    };
+
+    handleRegenerateButtonClick = () => {
+        this.regenerateUrl();
     };
 
     render() {
@@ -154,7 +151,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                 </div>
                 {formInspector.id &&
                     <div className={resourceLocatorStyles.resourceLocatorHistory}>
-                        <Button icon="su-sync" onClick={this.handleButtonClick} skin="link">
+                        <Button icon="su-sync" onClick={this.handleRegenerateButtonClick} skin="link">
                             {translate('sulu_admin.refresh_url')}
                         </Button>
                         <ResourceLocatorHistory
