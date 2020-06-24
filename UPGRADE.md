@@ -2,6 +2,33 @@
 
 ## dev-master
 
+### Deprecated urls variable in twig
+
+The `urls` twig variable has been deprecated in favour of the `localizations` variable. So the code should be adapted
+as shown in the following snippet:
+
+```jinja
+{# Before #}
+<ul>
+    {% for locale, url in urls %}
+        <li>
+            <a href="{{ sulu_content_path(url, request.webspaceKey, locale) }}">{{ locale }}</a>
+        </li>
+    {% endfor %}
+</ul>
+
+{# After #}
+<ul>
+    {% for localization in localizations %}
+        <li>
+            <a href="{{ localization.url }}">{{ localization.locale }}</a>
+        </li>
+    {% endfor %}
+</ul>
+```
+
+### HTTP Cache environment handling
+
 The `sulu_http_cache` configuration behaved differently based on the configured environment. Since this behavior was
 causing some configuration to be ignored in the `dev` and `test` environment, it was very hard to understand. Therefore
 we removed this behavior. In order to imitate the old behavior, the `sulu_http_cache` has to be configured
