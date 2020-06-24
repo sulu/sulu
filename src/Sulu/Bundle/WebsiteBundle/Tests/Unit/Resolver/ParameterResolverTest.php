@@ -82,7 +82,6 @@ class ParameterResolverTest extends TestCase
         $this->structure = $this->prophesize(PageBridge::class);
         $this->portal = $this->prophesize(Portal::class);
         $this->webspace = $this->prophesize(Webspace::class);
-        $this->localization = $this->prophesize(Localization::class);
 
         $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
         $this->requestAnalyzer->getWebspace()->willReturn($this->webspace->reveal());
@@ -99,9 +98,9 @@ class ParameterResolverTest extends TestCase
         );
 
         $localization1 = $this->prophesize(Localization::class);
-        $localization1->getLocale()->willReturn('en')->shouldBeCalledTimes(1);
+        $localization1->getLocale()->willReturn('en');
         $localization2 = $this->prophesize(Localization::class);
-        $localization2->getLocale()->willReturn('de')->shouldBeCalledTimes(1);
+        $localization2->getLocale()->willReturn('de');
 
         $this->structureResolver->resolve($this->structure->reveal(), true)
             ->shouldBeCalledTimes(1)
@@ -126,13 +125,16 @@ class ParameterResolverTest extends TestCase
         $this->webspaceManager->findUrlByResourceLocator('/test', null, 'de')->willReturn('/de/test');
         $this->request->getUri()->willReturn('/test');
         $this->requestAnalyzer->getPortal()->willReturn($this->portal->reveal())->shouldBeCalledTimes(1);
+        $this->requestAnalyzer->getCurrentLocalization()->willReturn($localization1->reveal());
         $this->portal->getLocalizations()
             ->willReturn([$localization1->reveal(), $localization2->reveal()])->shouldBeCalledTimes(1);
 
         $segment1 = new Segment();
         $segment1->setKey('s');
+        $segment1->setMetadata(['title' => ['en' => 'Summer']]);
         $segment2 = new Segment();
         $segment2->setKey('w');
+        $segment2->setMetadata(['title' => ['en' => 'Winter']]);
         $this->webspace->getSegments()->willReturn([$segment1, $segment2]);
         $this->requestAnalyzer->getSegment()->willReturn($segment2);
 
@@ -168,9 +170,15 @@ class ParameterResolverTest extends TestCase
             ],
             'segmentKey' => 'w',
             'webspaceKey' => 'sulu',
-            'segmentUrls' => [
-                's' => '_sulu_segment_switch?segment=s&url=/test',
-                'w' => '_sulu_segment_switch?segment=w&url=/test',
+            'segments' => [
+                's' => [
+                    'title' => 'Summer',
+                    'url' => '_sulu_segment_switch?segment=s&url=/test',
+                ],
+                'w' => [
+                    'title' => 'Winter',
+                    'url' => '_sulu_segment_switch?segment=w&url=/test',
+                ],
             ],
             'request' => [],
         ], $resolvedData);
@@ -188,9 +196,9 @@ class ParameterResolverTest extends TestCase
         );
 
         $localization1 = $this->prophesize(Localization::class);
-        $localization1->getLocale()->willReturn('en')->shouldBeCalledTimes(1);
+        $localization1->getLocale()->willReturn('en');
         $localization2 = $this->prophesize(Localization::class);
-        $localization2->getLocale()->willReturn('de')->shouldBeCalledTimes(1);
+        $localization2->getLocale()->willReturn('de');
 
         $this->structureResolver->resolve($this->structure->reveal(), true)
             ->shouldBeCalledTimes(1)
@@ -244,7 +252,7 @@ class ParameterResolverTest extends TestCase
                 ],
             ],
             'webspaceKey' => 'sulu',
-            'segmentUrls' => [],
+            'segments' => [],
         ], $resolvedData);
     }
 }

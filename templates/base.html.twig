@@ -45,9 +45,9 @@
 
             <nav>
                 <ul>
-                    {% for segmentKey, segmentUrl in segmentUrls %}
+                    {% for segment in segments %}
                         <li>
-                            <a href="{{ segmentUrl }}">{{ segmentKey }}</a>
+                            <a href="{{ segment.url }}">{{ segment.title }}</a>
                         </li>
                     {% endfor %}
                 </ul>

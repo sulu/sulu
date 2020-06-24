@@ -130,13 +130,17 @@ class ParameterResolver implements ParameterResolverInterface
 
         $url = $this->requestStack->getCurrentRequest()->getUri();
 
-        $segmentSwitchUrls = [];
+        $segments = [];
         foreach ($webspace->getSegments() as $segment) {
             $segmentKey = $segment->getKey();
             $segmentSwitchUrls[$segmentKey] = $this->segmentSwitchUrl . '?segment=' . $segmentKey . '&url=' . $url;
+            $segments[$segmentKey] = [
+                'title' => $segment->getTitle($requestAnalyzer->getCurrentLocalization()->getLocale()),
+                'url' => $this->segmentSwitchUrl . '?segment=' . $segmentKey . '&url=' . $url,
+            ];
         }
 
-        $structureData['segmentUrls'] = $segmentSwitchUrls;
+        $structureData['segments'] = $segments;
 
         return \array_merge(
             $parameter,
