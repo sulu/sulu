@@ -3,7 +3,7 @@
  # defaultLocale string
  # seo array
  # shadowBaseLocale string
- # urls array
+ # localizations array
 -#}
 
 {#- merge seo data with _seo from attributes for custom urls -#}
@@ -28,8 +28,8 @@
 
 {% set seoCanonical = seo.canonicalUrl|default() %}
 
-{%- if not seoCanonical and shadowBaseLocale and urls[shadowBaseLocale]|default() %}
-    {% set seoCanonical = sulu_content_path(urls[shadowBaseLocale], null, shadowBaseLocale) %}
+{%- if not seoCanonical and shadowBaseLocale and localizations[shadowBaseLocale]|default() %}
+    {% set seoCanonical = localizations ? localizations[shadowBaseLocale].url : urls[shadowBaseLocale] %}
 {%- endif -%}
 
 {#- render blocks -#}
@@ -60,7 +60,14 @@
 
 {%- block urls -%}
     {#- when only one language do not show alternative -#}
-    {%- if urls|length > 1 -%}
+    {%- if localizations|length > 1 -%}
+        {%- for localization in localizations -%}
+            {%- if defaultLocale == localization.locale -%}
+                <link rel="alternate" href="{{ localization.url }}" hreflang="x-default"/>
+            {%- endif -%}
+            <link rel="alternate" href="{{ localization.url }}" hreflang="{{ localization.locale|replace({'_': '-'}) }}"/>
+        {%- endfor -%}
+    {%- elseif urls|length > 1 -%}
         {%- for locale, url in urls -%}
             {%- if defaultLocale == locale -%}
                 <link rel="alternate" href="{{ sulu_content_path(url, null, locale) }}" hreflang="x-default"/>

@@ -69,7 +69,7 @@ class ParameterResolverTest extends TestCase
         $parameterResolver = new ParameterResolver(
             $this->structureResolver->reveal(),
             $this->requestAnalyzerResolver->reveal(),
-            $this->webspaceManager->reveal(),
+            $this->webspaceManager->reveal()
         );
 
         $localization1 = $this->prophesize(Localization::class);
