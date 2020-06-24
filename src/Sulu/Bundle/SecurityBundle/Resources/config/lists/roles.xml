@@ -61,12 +61,11 @@
         <property
             name="changed"
             visibility="no"
-            type="datetime"
             translation="sulu_admin.changed"
         >
             <field-name>changed</field-name>
             <entity-name>%sulu.model.role.class%</entity-name>
-
+            <transformer type="datetime"/>
             <filter type="datetime" />
         </property>
     </properties>

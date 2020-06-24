@@ -59,7 +59,7 @@
     </joins>
 
     <properties>
-        <property name="id" translation="sulu_admin.id" visibility="no" type="string">
+        <property name="id" translation="sulu_admin.id" visibility="no">
             <field-name>id</field-name>
             <entity-name>%sulu.model.media.class%</entity-name>
         </property>
@@ -97,17 +97,17 @@
             <joins ref="previewImageFileVersion"/>
         </property>
 
-        <property name="changed" translation="sulu_admin.changed" visibility="no" type="datetime">
+        <property name="changed" translation="sulu_admin.changed" visibility="no">
             <field-name>changed</field-name>
             <entity-name>%sulu.model.media.class%</entity-name>
-
+            <transformer type="datetime"/>
             <filter type="datetime" />
         </property>
 
-        <property name="created" translation="sulu_admin.created" visibility="no" type="datetime">
+        <property name="created" translation="sulu_admin.created" visibility="no">
             <field-name>created</field-name>
             <entity-name>%sulu.model.media.class%</entity-name>
-
+            <transformer type="datetime"/>
             <filter type="datetime" />
         </property>
 
@@ -121,10 +121,11 @@
         <property
             name="thumbnails"
             translation="sulu_media.thumbnail"
-            type="thumbnails"
             sortable="false"
             visibility="always"
-        />
+        >
+            <transformer type="thumbnails"/>
+        </property>
 
         <property name="url" visibility="never"/>
 
@@ -167,11 +168,12 @@
             <joins ref="fileVersion"/>
         </property>
 
-        <property name="size" translation="sulu_media.size" visibility="always" type="bytes">
+        <property name="size" translation="sulu_media.size" visibility="always">
             <field-name>size</field-name>
             <entity-name>SuluMediaBundle:FileVersion</entity-name>
-
             <joins ref="fileVersion"/>
+
+            <transformer type="bytes"/>
         </property>
 
         <property name="mimeType" translation="sulu_media.mime_type" visibility="always">
@@ -210,7 +212,7 @@
             </field>
         </case-property>
 
-        <case-property name="title" translation="sulu_admin.title" visibility="always" type="title" searchability="yes">
+        <case-property name="title" translation="sulu_admin.title" visibility="always" searchability="yes">
             <field>
                 <field-name>title</field-name>
                 <entity-name>SuluMediaBundle:FileVersionMeta</entity-name>
@@ -223,6 +225,7 @@
 
                 <joins ref="defaultFileVersionMeta"/>
             </field>
+            <transformer type="title"/>
         </case-property>
 
         <property name="description" translation="sulu_admin.description" searchability="yes">

@@ -76,15 +76,17 @@
                 <entity-name>%sulu.model.category.class%</entity-name>
             </field>
         </case-property>
-        <property name="created" translation="sulu_admin.created" visibility="no" type="datetime">
+        <property name="created" translation="sulu_admin.created" visibility="no">
             <field-name>created</field-name>
             <entity-name>%sulu.model.category_translation.class%</entity-name>
             <joins ref="translation"/>
+            <transformer type="datetime"/>
         </property>
-        <property name="changed" translation="sulu_admin.changed" visibility="no" type="datetime">
+        <property name="changed" translation="sulu_admin.changed" visibility="no">
             <field-name>changed</field-name>
             <entity-name>%sulu.model.category_translation.class%</entity-name>
             <joins ref="translation"/>
+            <transformer type="datetime"/>
         </property>
     </properties>
 </list>

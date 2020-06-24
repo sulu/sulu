@@ -103,10 +103,6 @@ class ListXmlLoader
             $propertyMetadata->setTranslation($translation);
         }
 
-        if (null !== $type = XmlUtil::getValueFromXPath('@type', $xpath, $propertyNode)) {
-            $propertyMetadata->setType($type);
-        }
-
         $propertyMetadata->setVisibility(
             XmlUtil::getValueFromXPath(
                 '@visibility',
@@ -126,12 +122,30 @@ class ListXmlLoader
         $propertyMetadata->setSortable(
             XmlUtil::getBooleanValueFromXPath('@sortable', $xpath, $propertyNode, true)
         );
+
+        if (null !== $type = XmlUtil::getValueFromXPath('x:transformer/@type', $xpath, $propertyNode)) {
+            $propertyMetadata->setType($type);
+        } elseif (null !== $type = XmlUtil::getValueFromXPath('@type', $xpath, $propertyNode)) {
+            @\trigger_error('Attribute "type" of list property should not be used anymore! Use "<transformer type="..."/>" inside of property instead.', \E_USER_DEPRECATED);
+            $propertyMetadata->setType($type);
+        }
+
+        $transformerParamNodes = $xpath->query('x:transformer/x:params', $propertyNode);
+        if (\count($transformerParamNodes) > 0) {
+            $propertyMetadata->setTransformerTypeParameters(
+                $this->getParameters(
+                    $xpath,
+                    $transformerParamNodes->item(0) // There can only be one transformer node
+                )
+            );
+        }
+
         $propertyMetadata->setFilterType(XmlUtil::getValueFromXPath('x:filter/@type', $xpath, $propertyNode));
 
         $filterParamNodes = $xpath->query('x:filter/x:params', $propertyNode);
         if (\count($filterParamNodes) > 0) {
             $propertyMetadata->setFilterTypeParameters(
-                $this->getFilterTypeParameters(
+                $this->getParameters(
                     $xpath,
                     $filterParamNodes->item(0) // There can only be one filter node
                 )
@@ -236,7 +250,7 @@ class ListXmlLoader
      *
      * @return ?array
      */
-    protected function getFilterTypeParameters(\DOMXPath $xpath, \DOMNode $filterNode)
+    protected function getParameters(\DOMXPath $xpath, \DOMNode $filterNode)
     {
         $parameters = [];
         foreach ($xpath->query('x:param', $filterNode) as $paramNode) {
@@ -244,7 +258,7 @@ class ListXmlLoader
             $type = XmlUtil::getValueFromXPath('@type', $xpath, $paramNode);
 
             if ('collection' === $type) {
-                $parameters[$name] = $this->getFilterTypeParameters($xpath, $paramNode);
+                $parameters[$name] = $this->getParameters($xpath, $paramNode);
             } else {
                 $value = $this->parameterBag->resolveValue(
                     \trim(XmlUtil::getValueFromXPath('@value', $xpath, $paramNode))

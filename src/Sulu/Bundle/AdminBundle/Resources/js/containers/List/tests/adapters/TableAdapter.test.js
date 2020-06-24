@@ -1,9 +1,11 @@
 // @flow
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
+import log from 'loglevel';
 import listAdapterDefaultProps from '../../../../utils/TestHelper/listAdapterDefaultProps';
 import TableAdapter from '../../adapters/TableAdapter';
 import StringFieldTransformer from '../../fieldTransformers/StringFieldTransformer';
+import IconFieldTransformer from '../../fieldTransformers/IconFieldTransformer';
 import listFieldTransformerRegistry from '../../registries/listFieldTransformerRegistry';
 
 jest.mock('../../../../utils/Translator', () => ({
@@ -21,6 +23,10 @@ jest.mock('../../registries/listFieldTransformerRegistry', () => ({
     add: jest.fn(),
     get: jest.fn(),
     has: jest.fn(),
+}));
+
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
 }));
 
 beforeEach(() => {
@@ -87,6 +93,7 @@ test('Render data with schema', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -107,6 +114,75 @@ test('Render data with schema', () => {
     expect(tableAdapter).toMatchSnapshot();
 });
 
+test('Render data as icons', () => {
+    listFieldTransformerRegistry.get.mockReturnValue(new IconFieldTransformer());
+
+    const data = [
+        {
+            id: 1,
+            status: 'planned',
+        },
+        {
+            id: 2,
+            status: 'running',
+        },
+        {
+            id: 3,
+            status: 'succeeded',
+        },
+        {
+            id: 4,
+            status: 'failed',
+        },
+    ];
+    const schema = {
+        status: {
+            filterType: null,
+            filterTypeParameters: null,
+            transformerTypeParameters: {
+                mapping: {
+                    planned: 'su-clock',
+                    succeeded: {
+                        icon: 'su-check-circle',
+                        color: 'green',
+                    },
+                    failed: {
+                        icon: 'su-ban',
+                    },
+                },
+            },
+            type: 'icon',
+            sortable: false,
+            visibility: 'always',
+            label: 'Status',
+        },
+    };
+    const tableAdapter = mount(
+        <TableAdapter
+            {...listAdapterDefaultProps}
+            data={data}
+            page={1}
+            pageCount={1}
+            schema={schema}
+        />
+    );
+
+    expect(tableAdapter.find('Row').at(0).find('Icon').props().name).toEqual('su-clock');
+    expect(tableAdapter.find('Row').at(0).find('Icon').props().style).toEqual(undefined);
+
+    expect(tableAdapter.find('Row').at(1).find('Cell').text()).toEqual('running');
+    expect(tableAdapter.find('Row').at(1).find('Icon')).toHaveLength(0);
+    expect(log.warn).toBeCalledWith(
+        'There was no icon specified in the "mapping" transformer parameter for the value "running".'
+    );
+
+    expect(tableAdapter.find('Row').at(2).find('Icon').props().name).toEqual('su-check-circle');
+    expect(tableAdapter.find('Row').at(2).find('Icon').props().style).toEqual({color: 'green'});
+
+    expect(tableAdapter.find('Row').at(3).find('Icon').props().name).toEqual('su-ban');
+    expect(tableAdapter.find('Row').at(3).find('Icon').props().style).toEqual({});
+});
+
 test('Render data with skin', () => {
     const data = [];
 
@@ -114,6 +190,7 @@ test('Render data with skin', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             type: 'string',
             sortable: true,
             visibility: 'no',
@@ -122,6 +199,7 @@ test('Render data with skin', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -151,6 +229,7 @@ test('Attach onClick handler for sorting if schema says the header is sortable',
         title: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -159,6 +238,7 @@ test('Attach onClick handler for sorting if schema says the header is sortable',
         description: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             type: 'string',
             sortable: false,
             visibility: 'yes',
@@ -195,6 +275,7 @@ test('Render data with all different visibility types schema', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             type: 'string',
             sortable: true,
             visibility: 'no',
@@ -203,6 +284,7 @@ test('Render data with all different visibility types schema', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             type: 'string',
             sortable: true,
             visibility: 'yes',
@@ -211,6 +293,7 @@ test('Render data with all different visibility types schema', () => {
         test1: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             type: 'string',
             sortable: true,
             visibility: 'always',
@@ -219,6 +302,7 @@ test('Render data with all different visibility types schema', () => {
         test2: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             type: 'string',
             sortable: true,
             visibility: 'never',
@@ -260,6 +344,7 @@ test('Render data with schema and selections', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -268,6 +353,7 @@ test('Render data with schema and selections', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -306,6 +392,7 @@ test('Render data with schema in different order', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -314,6 +401,7 @@ test('Render data with schema in different order', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -350,6 +438,7 @@ test('Render data with schema not containing all fields', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -386,6 +475,7 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
         title: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -394,6 +484,7 @@ test('Render data with pencil button when onItemEdit callback is passed', () => 
         description: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -439,6 +530,7 @@ test('Render correct button based on permissions when item permissions are provi
         title: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -485,6 +577,7 @@ test('Render disabled rows based on given disabledIds prop', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -525,6 +618,7 @@ test('Render data with pencil button and given itemActions when onItemEdit callb
         title: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -533,6 +627,7 @@ test('Render data with pencil button and given itemActions when onItemEdit callb
         description: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -578,6 +673,7 @@ test('Render column with ascending sort icon', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -586,6 +682,7 @@ test('Render column with ascending sort icon', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -619,6 +716,7 @@ test('Render column with descending sort icon', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -627,6 +725,7 @@ test('Render column with descending sort icon', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -666,6 +765,7 @@ test('Click on pencil should execute onItemClick callback', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -674,6 +774,7 @@ test('Click on pencil should execute onItemClick callback', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -715,6 +816,7 @@ test('Click on itemAction should execute its callback', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -723,6 +825,7 @@ test('Click on itemAction should execute its callback', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -778,6 +881,7 @@ test('Click on checkbox should call onItemSelectionChange callback', () => {
         title: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Title',
             sortable: true,
             type: 'string',
@@ -786,6 +890,7 @@ test('Click on checkbox should call onItemSelectionChange callback', () => {
         description: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Description',
             sortable: true,
             type: 'string',
@@ -813,6 +918,7 @@ test('Click on checkbox in header should call onAllSelectionChange callback', ()
         title: {
             filterType: null,
             filterTypeParameters: null,
+            transformerTypeParameters: {},
             label: 'Title',
             sortable: true,
             type: 'string',

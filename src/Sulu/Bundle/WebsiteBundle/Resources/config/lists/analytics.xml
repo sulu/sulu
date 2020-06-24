@@ -19,15 +19,17 @@
             name="allDomains"
             visibility="yes"
             translation="sulu_website.all_domains"
-            type="bool"
             sortable="false"
-        />
+        >
+            <transformer type="bool"/>
+        </property>
         <property
             name="domains"
             visibility="yes"
             translation="sulu_website.domains"
-            type="array"
             sortable="false"
-        />
+        >
+            <transformer type="array"/>
+        </property>
     </properties>
 </list>

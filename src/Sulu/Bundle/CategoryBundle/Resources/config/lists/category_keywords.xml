@@ -3,7 +3,7 @@
     <key>category_keywords</key>
 
     <properties>
-        <property name="id" translation="sulu_admin.id" visibility="no" type="string">
+        <property name="id" translation="sulu_admin.id" visibility="no">
             <field-name>id</field-name>
             <entity-name>%sulu.model.keyword.class%</entity-name>
         </property>
@@ -34,17 +34,17 @@
             name="categoryTranslationCount"
             visibility="always"
             translation="sulu_category.multiple_usage"
-            type="category_keywords_multiple_usage"
         >
             <field-name>id</field-name>
             <entity-name>%sulu.model.category_translation.class%</entity-name>
-
             <joins>
                 <join>
                     <entity-name>%sulu.model.category_translation.class%</entity-name>
                     <field-name>%sulu.model.keyword.class%.categoryTranslations</field-name>
                 </join>
             </joins>
+
+            <transformer type="category_keywords_multiple_usage"/>
         </count-property>
     </properties>
 </list>

@@ -90,6 +90,7 @@ class XmlListMetadataLoaderTest extends TestCase
         $accountMetadata = new SinglePropertyMetadata('name');
         $accountMetadata->setFilterType('single_selection');
         $accountMetadata->setFilterTypeParameters(['resource_key' => 'accounts']);
+        $accountMetadata->setTransformerTypeParameters(['color' => 'red']);
         $accountFieldDescriptor->setMetadata($accountMetadata);
 
         $this->fieldDescriptorFactory->getFieldDescriptors('contact')->willReturn(
@@ -113,6 +114,7 @@ class XmlListMetadataLoaderTest extends TestCase
         );
         $this->assertEquals('string', $contactListFields['firstName']->getFilterType());
         $this->assertEquals(null, $contactListFields['firstName']->getFilterTypeParameters());
+        $this->assertEquals([], $contactListFields['firstName']->getTransformerTypeParameters());
 
         $this->assertEquals('lastName', $contactListFields['lastName']->getName());
         $this->assertEquals('Last name', $contactListFields['lastName']->getLabel());
@@ -124,6 +126,7 @@ class XmlListMetadataLoaderTest extends TestCase
         );
         $this->assertEquals('integer', $contactListFields['lastName']->getFilterType());
         $this->assertEquals(null, $contactListFields['lastName']->getFilterTypeParameters());
+        $this->assertEquals([], $contactListFields['lastName']->getTransformerTypeParameters());
 
         $accountListMetadata = $this->xmlListMetadataLoader->getMetadata('account', 'en');
         $accountListFields = $accountListMetadata->getFields();
@@ -138,6 +141,7 @@ class XmlListMetadataLoaderTest extends TestCase
         );
         $this->assertEquals('single_selection', $accountListFields['name']->getFilterType());
         $this->assertEquals(['resource_key' => 'accounts'], $accountListFields['name']->getFilterTypeParameters());
+        $this->assertEquals(['color' => 'red'], $accountListFields['name']->getTransformerTypeParameters());
     }
 
     public function testGetMetadataNotExisting()

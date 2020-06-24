@@ -70,12 +70,11 @@
         <property
             name="changed"
             visibility="no"
-            type="datetime"
             translation="sulu_admin.changed"
         >
             <field-name>changed</field-name>
             <entity-name>%sulu.model.tag.class%</entity-name>
-
+            <transformer type="datetime"/>
             <filter type="datetime" />
         </property>
 
@@ -105,11 +104,10 @@
             name="created"
             visibility="yes"
             translation="sulu_admin.created"
-            type="datetime"
         >
             <field-name>created</field-name>
             <entity-name>%sulu.model.tag.class%</entity-name>
-
+            <transformer type="datetime"/>
             <filter type="datetime" />
         </property>
     </properties>
