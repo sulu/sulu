@@ -50,11 +50,6 @@ class ParameterResolverTest extends TestCase
     private $structure;
 
     /**
-     * @var ParameterResolver
-     */
-    private $parameterResolver;
-
-    /**
      * @var Portal
      */
     private $portal;
@@ -67,16 +62,16 @@ class ParameterResolverTest extends TestCase
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->structure = $this->prophesize(PageBridge::class);
         $this->portal = $this->prophesize(Portal::class);
-
-        $this->parameterResolver = new ParameterResolver(
-            $this->structureResolver->reveal(),
-            $this->requestAnalyzerResolver->reveal(),
-            $this->webspaceManager->reveal()
-        );
     }
 
     public function testResolve()
     {
+        $parameterResolver = new ParameterResolver(
+            $this->structureResolver->reveal(),
+            $this->requestAnalyzerResolver->reveal(),
+            $this->webspaceManager->reveal(),
+        );
+
         $localization1 = $this->prophesize(Localization::class);
         $localization1->getLocale()->willReturn('en')->shouldBeCalledTimes(1);
         $localization2 = $this->prophesize(Localization::class);
@@ -105,7 +100,7 @@ class ParameterResolverTest extends TestCase
         $this->portal->getLocalizations()
             ->willReturn([$localization1->reveal(), $localization2->reveal()])->shouldBeCalledTimes(1);
 
-        $resolvedData = $this->parameterResolver->resolve(
+        $resolvedData = $parameterResolver->resolve(
             [
                 'testKey' => 'testValue',
             ],
@@ -113,7 +108,7 @@ class ParameterResolverTest extends TestCase
             $this->structure->reveal()
         );
 
-        $this->assertSame([
+        $this->assertEquals([
             'testKey' => 'testValue',
             'content' => [],
             'view' => [],
@@ -121,6 +116,73 @@ class ParameterResolverTest extends TestCase
                 'en' => '/en/test',
                 'de' => '/de/test',
             ],
+            'extension' => [
+                'seo' => [],
+                'excerpt' => [],
+            ],
+            'localizations' => [
+                'en' => [
+                    'locale' => 'en',
+                    'url' => '/en/test',
+                ],
+                'de' => [
+                    'locale' => 'de',
+                    'url' => '/de/test',
+                ],
+            ],
+            'webspaceKey' => 'sulu',
+        ], $resolvedData);
+    }
+
+    public function testResolveWithoutUrlsParameter()
+    {
+        $parameterResolver = new ParameterResolver(
+            $this->structureResolver->reveal(),
+            $this->requestAnalyzerResolver->reveal(),
+            $this->webspaceManager->reveal(),
+            ['urls' => false]
+        );
+
+        $localization1 = $this->prophesize(Localization::class);
+        $localization1->getLocale()->willReturn('en')->shouldBeCalledTimes(1);
+        $localization2 = $this->prophesize(Localization::class);
+        $localization2->getLocale()->willReturn('de')->shouldBeCalledTimes(1);
+
+        $this->structureResolver->resolve($this->structure->reveal(), true)
+            ->shouldBeCalledTimes(1)
+            ->willReturn([
+                'content' => [],
+                'view' => [],
+                'urls' => [
+                    'en' => '/test',
+                    'de' => '/test',
+                ],
+                'extension' => [
+                    'seo' => [],
+                    'excerpt' => [],
+                ],
+            ]);
+        $this->requestAnalyzerResolver->resolve($this->requestAnalyzer)
+            ->shouldBeCalledTimes(1)
+            ->willReturn(['webspaceKey' => 'sulu']);
+        $this->webspaceManager->findUrlByResourceLocator('/test', null, 'en')->willReturn('/en/test');
+        $this->webspaceManager->findUrlByResourceLocator('/test', null, 'de')->willReturn('/de/test');
+        $this->requestAnalyzer->getPortal()->willReturn($this->portal->reveal())->shouldBeCalledTimes(1);
+        $this->portal->getLocalizations()
+            ->willReturn([$localization1->reveal(), $localization2->reveal()])->shouldBeCalledTimes(1);
+
+        $resolvedData = $parameterResolver->resolve(
+            [
+                'testKey' => 'testValue',
+            ],
+            $this->requestAnalyzer->reveal(),
+            $this->structure->reveal()
+        );
+
+        $this->assertEquals([
+            'testKey' => 'testValue',
+            'content' => [],
+            'view' => [],
             'extension' => [
                 'seo' => [],
                 'excerpt' => [],

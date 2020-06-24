@@ -107,6 +107,10 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
             'sulu_website.sitemap.dump_dir',
             $config['sitemap']['dump_dir']
         );
+        $container->setParameter(
+            'sulu_website.enabled_twig_attributes',
+            $config['twig']['attributes']
+        );
         $container->registerForAutoconfiguration(SitemapProviderInterface::class)
             ->addTag('sulu.sitemap.provider');
 

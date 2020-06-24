@@ -37,16 +37,25 @@ class ParameterResolver implements ParameterResolverInterface
     private $webspaceManager;
 
     /**
+     * @var array
+     */
+    private $enabledTwigAttributes;
+
+    /**
      * ParameterResolver constructor.
      */
     public function __construct(
         StructureResolverInterface $structureResolver,
         RequestAnalyzerResolverInterface $requestAnalyzerResolver,
-        WebspaceManagerInterface $webspaceManager
+        WebspaceManagerInterface $webspaceManager,
+        array $enabledTwigAttributes = [
+            'urls' => true,
+        ]
     ) {
         $this->structureResolver = $structureResolver;
         $this->requestAnalyzerResolver = $requestAnalyzerResolver;
         $this->webspaceManager = $webspaceManager;
+        $this->enabledTwigAttributes = $enabledTwigAttributes;
     }
 
     public function resolve(
@@ -69,8 +78,11 @@ class ParameterResolver implements ParameterResolverInterface
             $allLocalizations = $requestAnalyzer->getWebspace()->getLocalizations();
         }
 
-        $pageUrls = \array_key_exists('urls', $structureData) ? $structureData['urls'] : [];
-        $urls = [];
+        $pageUrls = [];
+        if (\array_key_exists('urls', $structureData)) {
+            $pageUrls = $structureData['urls'];
+            unset($structureData['urls']);
+        }
         $localizations = [];
 
         foreach ($allLocalizations as $localization) {
@@ -83,14 +95,22 @@ class ParameterResolver implements ParameterResolverInterface
                 $url = $this->webspaceManager->findUrlByResourceLocator('/', null, $locale);
             }
 
-            $urls[$locale] = $url;
             $localizations[$locale] = [
                 'locale' => $locale,
                 'url' => $url,
             ];
         }
 
-        $structureData['urls'] = $urls;
+        if ($this->enabledTwigAttributes['urls'] ?? true) {
+            @trigger_error('Enabling the "urls" parameter is deprecated since Sulu 2.2', E_USER_DEPRECATED);
+
+            $structureData['urls'] = [];
+            foreach ($localizations as $localization) {
+                $structureData['urls'][$localization['locale']] = $localization['url'];
+            }
+
+        }
+
         $structureData['localizations'] = $localizations;
 
         return \array_merge(
