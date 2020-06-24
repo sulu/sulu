@@ -11,34 +11,20 @@
 
 namespace Sulu\Bundle\SecurityBundle\Command;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
-use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
-use Sulu\Bundle\SecurityBundle\Entity\UserRole;
-use Sulu\Component\Localization\Localization;
-use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
+use Sulu\Bundle\SecurityBundle\Factory\UserFactoryInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
-use Sulu\Component\Security\Authentication\SaltGenerator;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 class CreateUserCommand extends Command
 {
     protected static $defaultName = 'sulu:security:user:create';
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
 
     /**
      * @var UserRepository
@@ -51,24 +37,9 @@ class CreateUserCommand extends Command
     private $roleRepository;
 
     /**
-     * @var ContactRepositoryInterface
+     * @var UserFactoryInterface
      */
-    private $contactRepository;
-
-    /**
-     * @var LocalizationManagerInterface
-     */
-    private $localizationManager;
-
-    /**
-     * @var SaltGenerator
-     */
-    private $saltGenerator;
-
-    /**
-     * @var EncoderFactoryInterface
-     */
-    private $encoderFactory;
+    private $userFactory;
 
     /**
      * @var string[]
@@ -76,28 +47,20 @@ class CreateUserCommand extends Command
     private $locales;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
         UserRepository $userRepository,
         RoleRepositoryInterface $roleRepository,
-        ContactRepositoryInterface $contactRepository,
-        LocalizationManagerInterface $localizationManager,
-        SaltGenerator $saltGenerator,
-        EncoderFactoryInterface $encoderFactory,
+        UserFactoryInterface $userFactory,
         array $locales
     ) {
         parent::__construct();
 
-        $this->entityManager = $entityManager;
         $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
-        $this->contactRepository = $contactRepository;
-        $this->localizationManager = $localizationManager;
-        $this->saltGenerator = $saltGenerator;
-        $this->encoderFactory = $encoderFactory;
         $this->locales = $locales;
+        $this->userFactory = $userFactory;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Create a user.')
             ->setDefinition(
@@ -113,16 +76,8 @@ class CreateUserCommand extends Command
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $localizations = $this->localizationManager->getLocalizations();
-        $locales = [];
-
-        foreach ($localizations as $localization) {
-            /* @var Localization $localization */
-            $locales[] = $localization->getLocale();
-        }
-
         $username = $input->getArgument('username');
         $firstName = $input->getArgument('firstName');
         $lastName = $input->getArgument('lastName');
@@ -130,8 +85,6 @@ class CreateUserCommand extends Command
         $locale = $input->getArgument('locale');
         $roleName = $input->getArgument('role');
         $password = $input->getArgument('password');
-
-        $user = $this->getUser();
 
         $existing = $this->userRepository->findOneBy(['username' => $username]);
 
@@ -143,7 +96,7 @@ class CreateUserCommand extends Command
             return 1;
         }
 
-        if (!\in_array($locale, $this->locales)) {
+        if (!\in_array($locale, $this->locales, true)) {
             $output->writeln(\sprintf(
                 'Given locale "%s" is invalid, must be one of "%s"',
                 $locale, \implode('", "', $this->locales)
@@ -151,21 +104,6 @@ class CreateUserCommand extends Command
 
             return 1;
         }
-
-        /** @var ContactInterface $contact */
-        $contact = $this->contactRepository->createNew();
-        $contact->setFirstName($firstName);
-        $contact->setLastName($lastName);
-
-        $this->entityManager->persist($contact);
-        $this->entityManager->flush();
-
-        $user->setContact($contact);
-        $user->setUsername($username);
-        $user->setSalt($this->generateSalt());
-        $user->setPassword($this->encodePassword($user, $password, $user->getSalt()));
-        $user->setLocale($locale);
-        $user->setEmail($email);
 
         /** @var RoleInterface $role */
         $role = $this->roleRepository->findOneBy(['name' => $roleName]);
@@ -179,14 +117,7 @@ class CreateUserCommand extends Command
             return 1;
         }
 
-        $userRole = new UserRole();
-        $userRole->setRole($role);
-        $userRole->setUser($user);
-        $userRole->setLocale(\json_encode($locales)); // set all locales
-        $this->entityManager->persist($userRole);
-
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        $this->userFactory->create($username, $firstName, $lastName, $email, $locale, $password, $roleName);
 
         $output->writeln(
             \sprintf('Created user "<comment>%s</comment>" in role "<comment>%s</comment>"', $username, $roleName)
@@ -195,18 +126,7 @@ class CreateUserCommand extends Command
         return 0;
     }
 
-    /**
-     * Returns a new instance of the user.
-     * Can be overwritten to use a different implementation.
-     *
-     * @return UserInterface
-     */
-    protected function getUser()
-    {
-        return $this->userRepository->createNew();
-    }
-
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output): void
     {
         $roleNames = $this->getRoleNames();
         $helper = $this->getHelper('question');
@@ -216,7 +136,7 @@ class CreateUserCommand extends Command
         if (!$input->getArgument('username')) {
             $question = new Question('Please choose a username: ');
             $question->setValidator(
-                function($username) use ($userRepository) {
+                static function($username) use ($userRepository) {
                     if (empty($username)) {
                         throw new \InvalidArgumentException('Username can not be empty');
                     }
@@ -237,7 +157,7 @@ class CreateUserCommand extends Command
         if (!$input->getArgument('firstName')) {
             $question = new Question('Please choose a FirstName: ');
             $question->setValidator(
-                function($firstName) {
+                static function($firstName) {
                     if (empty($firstName)) {
                         throw new \InvalidArgumentException('FirstName can not be empty');
                     }
@@ -253,7 +173,7 @@ class CreateUserCommand extends Command
         if (!$input->getArgument('lastName')) {
             $question = new Question('Please choose a LastName: ');
             $question->setValidator(
-                function($lastName) {
+                static function($lastName) {
                     if (empty($lastName)) {
                         throw new \InvalidArgumentException('LastName can not be empty');
                     }
@@ -269,7 +189,7 @@ class CreateUserCommand extends Command
         if (!$input->getArgument('email')) {
             $question = new Question('Please choose a Email: ');
             $question->setValidator(
-                function($email) use ($userRepository) {
+                static function($email) use ($userRepository) {
                     if (empty($email)) {
                         $email = null;
                     }
@@ -308,7 +228,7 @@ class CreateUserCommand extends Command
             $question = new Question('Please choose a Password: ');
             $question->setHidden(true);
             $question->setValidator(
-                function($password) {
+                static function($password) {
                     if (empty($password)) {
                         throw new \InvalidArgumentException('Password can not be empty');
                     }
@@ -323,38 +243,11 @@ class CreateUserCommand extends Command
     }
 
     /**
-     * Generates a random salt for the password.
-     *
-     * @return string
-     */
-    private function generateSalt()
-    {
-        return $this->saltGenerator->getRandomSalt();
-    }
-
-    /**
-     * Encodes the given password, for the given password, with he given salt and returns the result.
-     *
-     * @param $user
-     * @param $password
-     * @param $salt
-     */
-    private function encodePassword($user, $password, $salt)
-    {
-        /** @var PasswordEncoderInterface $encoder */
-        $encoder = $this->encoderFactory->getEncoder($user);
-
-        return $encoder->encodePassword($password, $salt);
-    }
-
-    /**
      * Return the names of all the roles.
-     *
-     * @return array
      *
      * @throws \RuntimeException If no roles exist
      */
-    private function getRoleNames()
+    private function getRoleNames(): array
     {
         $roleNames = $this->roleRepository->getRoleNames();
 

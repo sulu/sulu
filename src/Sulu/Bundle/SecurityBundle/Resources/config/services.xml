@@ -288,5 +288,15 @@
         <service id="sulu_security.fixtures.security_types" class="Sulu\Bundle\SecurityBundle\DataFixtures\ORM\LoadSecurityTypes">
             <tag name="doctrine.fixture.orm"/>
         </service>
+
+        <service id="sulu_security.user_factory" class="Sulu\Bundle\SecurityBundle\Factory\UserFactory">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_security.user_repository"/>
+            <argument type="service" id="sulu.repository.role"/>
+            <argument type="service" id="sulu.repository.contact"/>
+            <argument type="service" id="sulu.core.localization_manager"/>
+            <argument type="service" id="sulu_security.salt_generator"/>
+            <argument type="service" id="security.encoder_factory"/>
+        </service>
     </services>
 </container>
