@@ -14,9 +14,12 @@ test('Return webspace from data', () => {
         key: 'sulu',
         name: 'Sulu',
     };
-    webspaceStore.setWebspaces([webspace1, webspace2]);
 
-    expect(webspaceConditionDataProvider({webspace: 'sulu'}, {webspace: 'test'}, {})).toEqual({__webspace: webspace2});
+    const webspaces = [webspace1, webspace2];
+    webspaceStore.setWebspaces(webspaces);
+
+    expect(webspaceConditionDataProvider({webspace: 'sulu'}, {webspace: 'test'}, {}))
+        .toEqual({__webspace: webspace2, __webspaces: webspaces});
 });
 
 test('Return webspace from options', () => {
@@ -30,9 +33,13 @@ test('Return webspace from options', () => {
         key: 'sulu',
         name: 'Sulu',
     };
-    webspaceStore.setWebspaces([webspace1, webspace2]);
 
-    expect(webspaceConditionDataProvider({}, {webspace: 'sulu'}, {webspace: 'test'})).toEqual({__webspace: webspace2});
+    const webspaces = [webspace1, webspace2];
+
+    webspaceStore.setWebspaces(webspaces);
+
+    expect(webspaceConditionDataProvider({}, {webspace: 'sulu'}, {webspace: 'test'}))
+        .toEqual({__webspace: webspace2, __webspaces: webspaces});
 });
 
 test('Return webspace from metadataOptions', () => {
@@ -46,9 +53,13 @@ test('Return webspace from metadataOptions', () => {
         key: 'sulu',
         name: 'Sulu',
     };
-    webspaceStore.setWebspaces([webspace1, webspace2]);
 
-    expect(webspaceConditionDataProvider({}, {}, {webspace: 'test'})).toEqual({__webspace: webspace1});
+    const webspaces = [webspace1, webspace2];
+
+    webspaceStore.setWebspaces(webspaces);
+
+    expect(webspaceConditionDataProvider({}, {}, {webspace: 'test'}))
+        .toEqual({__webspace: webspace1, __webspaces: webspaces});
 });
 
 test('Return empty data if webspace does not exist', () => {
@@ -57,9 +68,12 @@ test('Return empty data if webspace does not exist', () => {
         key: 'test',
         name: 'Test',
     };
-    webspaceStore.setWebspaces([webspace1]);
 
-    expect(webspaceConditionDataProvider({webspace: 'sulu'}, {}, {})).toEqual({});
+    const webspaces = [webspace1];
+
+    webspaceStore.setWebspaces(webspaces);
+
+    expect(webspaceConditionDataProvider({webspace: 'sulu'}, {}, {})).toEqual({__webspaces: webspaces});
 });
 
 test('Return empty data if no webspace prop exists on data', () => {
@@ -68,7 +82,10 @@ test('Return empty data if no webspace prop exists on data', () => {
         key: 'test',
         name: 'Test',
     };
-    webspaceStore.setWebspaces([webspace1]);
 
-    expect(webspaceConditionDataProvider({}, {}, {})).toEqual({});
+    const webspaces = [webspace1];
+
+    webspaceStore.setWebspaces(webspaces);
+
+    expect(webspaceConditionDataProvider({}, {}, {})).toEqual({__webspaces: webspaces});
 });

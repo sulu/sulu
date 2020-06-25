@@ -1,4 +1,5 @@
 // @flow
+import {toJS} from 'mobx';
 import webspaceStore from '../../../stores/webspaceStore';
 
 export default function(
@@ -7,9 +8,12 @@ export default function(
     metadataOptions: ?{[string]: any}
 ): {[string]: any} {
     const webspaceKey = data.webspace || options.webspace || (metadataOptions && metadataOptions.webspace);
-    if (!webspaceKey || !webspaceStore.hasWebspace(webspaceKey)) {
-        return {};
+
+    const conditionData = {};
+    conditionData.__webspaces = toJS(webspaceStore.allWebspaces);
+    if (webspaceKey && webspaceStore.hasWebspace(webspaceKey)) {
+        conditionData.__webspace = webspaceStore.getWebspace(webspaceKey);
     }
 
-    return {__webspace: webspaceStore.getWebspace(webspaceKey)};
+    return conditionData;
 }

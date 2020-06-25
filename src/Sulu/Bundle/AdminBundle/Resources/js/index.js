@@ -117,6 +117,7 @@ log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : l
 
 Requester.handleResponseHooks.push(logoutOnUnauthorizedResponse);
 
+jexl.addTransform('length', (value: Array<*>) => value.length);
 jexl.addTransform('values', (value: Array<*>) => Object.values(value));
 
 const FIELD_TYPE_BLOCK = 'block';
