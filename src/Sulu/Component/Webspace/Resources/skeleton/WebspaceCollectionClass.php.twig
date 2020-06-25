@@ -44,7 +44,7 @@ class {{ cache_class }} extends {{ base_class }}
         $localization0->setLanguage('{{ localization.language }}');
         $localization0->setCountry('{{ localization.country }}');
         $localization0->setShadow('{{ (localization.shadow) }}');
-        $localization0->setDefault('{{ localization.default }}');
+        $localization0->setDefault({{ localization.default ? 'true' : 'false' }});
         $localization0->setXDefault('{{ localization.xDefault }}');
 {% for childLocalization in localization.children %}
 {{ self.create_localizations(childLocalization, 1, 0, webspace) }}
@@ -57,7 +57,7 @@ class {{ cache_class }} extends {{ base_class }}
         $segment = new Segment();
         $segment->setKey('{{ segment.key }}');
         $segment->setMetadata({{ self.renderArray(segment.metadata)}});
-        $segment->setDefault('{{ segment.default }}');
+        $segment->setDefault({{ segment.default ? 'true' : 'false' }});
         $webspace->addSegment($segment);
         $segmentRefs['{{ webspace.key }}_{{ segment.key }}'] = $segment;
 

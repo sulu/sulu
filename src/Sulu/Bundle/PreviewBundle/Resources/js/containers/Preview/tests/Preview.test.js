@@ -76,6 +76,13 @@ test('Render correct preview', () => {
     const formStore = new ResourceFormStore(resourceStore, 'pages');
     const router = new Router({});
 
+    webspaceStore.getWebspace.mockReturnValue({
+        segments: [
+            {key: 's', name: 'Summer', default: false},
+            {key: 'w', name: 'Winter', default: true},
+        ],
+    });
+
     const preview = mount(<Preview formStore={formStore} router={router} />);
 
     const startPromise = Promise.resolve();

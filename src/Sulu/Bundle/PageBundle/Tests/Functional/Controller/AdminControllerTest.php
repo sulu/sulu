@@ -84,12 +84,17 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('sulu_io', $pageConfig->webspaces->sulu_io->key);
         $this->assertEquals('test_io', $pageConfig->webspaces->test_io->key);
 
+        $this->assertEquals('en', $pageConfig->webspaces->test_io->localizations[0]->language);
+        $this->assertTrue($pageConfig->webspaces->test_io->localizations[0]->default);
+        $this->assertEquals('de', $pageConfig->webspaces->test_io->localizations[1]->language);
+        $this->assertFalse($pageConfig->webspaces->test_io->localizations[1]->default);
+
         $this->assertEquals('w', $pageConfig->webspaces->test_io->segments[0]->key);
         $this->assertEquals('Winter', $pageConfig->webspaces->test_io->segments[0]->title);
-        $this->assertEquals(false, $pageConfig->webspaces->test_io->segments[0]->default);
+        $this->assertSame(false, $pageConfig->webspaces->test_io->segments[0]->default);
         $this->assertEquals('s', $pageConfig->webspaces->test_io->segments[1]->key);
         $this->assertEquals('Summer', $pageConfig->webspaces->test_io->segments[1]->title);
-        $this->assertEquals(true, $pageConfig->webspaces->test_io->segments[1]->default);
+        $this->assertSame(true, $pageConfig->webspaces->test_io->segments[1]->default);
 
         $this->assertEquals('Destination CMF', $pageConfig->webspaces->destination_io->name);
         $this->assertEquals('default', $pageConfig->webspaces->destination_io->defaultTemplates->page);

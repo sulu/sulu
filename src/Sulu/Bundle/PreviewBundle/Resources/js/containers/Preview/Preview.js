@@ -334,9 +334,9 @@ class Preview extends React.Component<Props> {
                                     icon="su-focus"
                                     onChange={this.handleSegmentChange}
                                     options={
-                                        this.segments.map((segment) => ({
-                                            label: segment.name,
-                                            value: segment.key,
+                                        this.segments.map(({title, key}) => ({
+                                            label: title,
+                                            value: key,
                                         }))
                                     }
                                     value={this.previewStore && this.previewStore.segment}
