@@ -48,15 +48,7 @@
                     <tag name="sulu.block_setting_icon" icon="su-focus" />
                 </property>
 
-                <property name="segment" type="single_select" visibleCondition="segment_enabled == true">
-                    <params>
-                        <param
-                            name="values"
-                            type="expression"
-                            value="service('sulu_page.segment_select_helper').getValues(webspace)"
-                        />
-                    </params>
-                </property>
+                <property name="segment" type="segment_select" visibleCondition="segment_enabled == true" />
             </properties>
         </section>
     </properties>

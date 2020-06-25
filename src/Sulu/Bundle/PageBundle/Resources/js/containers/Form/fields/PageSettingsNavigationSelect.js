@@ -14,6 +14,7 @@ class PageSettingsNavigationSelect extends React.Component<FieldTypeProps<Array<
 
         return webspaceStore.getWebspace(formInspector.options.webspace);
     }
+
     handleChange = (value: Array<string | number>) => {
         const {onChange, onFinish} = this.props;
 

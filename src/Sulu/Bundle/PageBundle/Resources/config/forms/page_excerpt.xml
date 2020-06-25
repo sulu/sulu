@@ -37,19 +37,13 @@
             </meta>
         </property>
         <property
-            name="ext/excerpt/segment" type="single_select"
-            visibleCondition="__webspace.segments.length &gt; 0"
+            name="ext/excerpt/segment"
+            type="segment_select"
+            visibleCondition="__webspace ? __webspace.segments|length &gt; 0 : false"
         >
             <meta>
                 <title>sulu_admin.segments</title>
             </meta>
-            <params>
-                <param
-                    name="values"
-                    type="expression"
-                    value="service('sulu_page.segment_select_helper').getValues(webspace)"
-                />
-            </params>
         </property>
         <property name="ext/excerpt/icon" type="media_selection">
             <meta>

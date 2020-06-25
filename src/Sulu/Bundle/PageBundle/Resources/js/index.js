@@ -8,6 +8,7 @@ import {
 } from 'sulu-admin-bundle/containers';
 import webspaceConditionDataProvider from './containers/Form/conditionDataProviders/webspaceConditionDataProvider';
 import SearchResult from './containers/Form/fields/SearchResult';
+import SegmentSelect from './containers/Form/fields/SegmentSelect';
 import TeaserSelection from './containers/Form/fields/TeaserSelection';
 import {teaserProviderRegistry} from './containers/TeaserSelection';
 import PageSettingsNavigationSelect from './containers/Form/fields/PageSettingsNavigationSelect';
@@ -34,6 +35,7 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
     fieldRegistry.add('page_settings_navigation_select', PageSettingsNavigationSelect);
     fieldRegistry.add('page_settings_shadow_locale_select', PageSettingsShadowLocaleSelect);
     fieldRegistry.add('search_result', SearchResult);
+    fieldRegistry.add('segment_select', SegmentSelect);
     fieldRegistry.add('teaser_selection', TeaserSelection);
 
     conditionDataProviderRegistry.add(webspaceConditionDataProvider);

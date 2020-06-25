@@ -29,6 +29,7 @@ export type Segment = {
     default: boolean,
     key: string,
     name: string,
+    title: string,
 };
 
 export type CustomUrl = {

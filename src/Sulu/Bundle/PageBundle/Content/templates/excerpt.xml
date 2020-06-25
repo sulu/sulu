@@ -69,13 +69,6 @@
                 <title lang="de">Segmente</title>
                 <title lang="en">Segments</title>
             </meta>
-            <params>
-                <param
-                    name="values"
-                    type="expression"
-                    value="service('sulu_page.segment_select_helper').getValues(webspace)"
-                />
-            </params>
         </property>
 
         <property name="icon" type="media_selection">
