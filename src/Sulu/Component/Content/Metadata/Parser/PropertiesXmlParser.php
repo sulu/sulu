@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Metadata\Parser;
 
 use Sulu\Component\Content\Exception\InvalidBlockDefaultTypeException;
+use Sulu\Component\Content\Exception\ReservedPropertyNameException;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
@@ -36,6 +37,11 @@ class PropertiesXmlParser
      */
     private $locales;
 
+    private $reservedBlockPropertyNames = [
+        'type',
+        'settings',
+    ];
+
     public function __construct(TranslatorInterface $translator, array $locales)
     {
         $this->translator = $translator;
@@ -52,9 +58,6 @@ class PropertiesXmlParser
         return $this->mapProperties($propertyData);
     }
 
-    /**
-     * load properties from given context.
-     */
     private function loadProperties(&$tags, \DOMXPath $xpath, \DOMNode $context): array
     {
         $result = [];
@@ -76,9 +79,6 @@ class PropertiesXmlParser
         return $result;
     }
 
-    /**
-     * load single property.
-     */
     private function loadProperty(\DOMXPath $xpath, \DOMNode $node, &$tags)
     {
         $result = $this->loadValues(
@@ -107,9 +107,6 @@ class PropertiesXmlParser
         return $result;
     }
 
-    /**
-     * validates a single tag.
-     */
     private function validateTag($tag, &$tags)
     {
         if (!isset($tags[$tag['name']])) {
@@ -119,9 +116,6 @@ class PropertiesXmlParser
         $tags[$tag['name']][] = $tag['priority'];
     }
 
-    /**
-     * load single tag.
-     */
     private function loadTag(\DOMXPath $xpath, \DOMNode $node)
     {
         $tag = [
@@ -141,9 +135,6 @@ class PropertiesXmlParser
         return $tag;
     }
 
-    /**
-     * load single block.
-     */
     private function loadBlock(\DOMXPath $xpath, \DOMNode $node, &$tags)
     {
         $result = $this->loadValues(
@@ -168,6 +159,14 @@ class PropertiesXmlParser
         $result['meta'] = $this->loadMeta($xpath, $node);
         $result['types'] = $this->loadTypes($tags, $xpath, $node);
 
+        foreach ($result['types'] as $type) {
+            foreach (array_keys($type['properties']) as $typePropertyName) {
+                if (\in_array($typePropertyName, $this->reservedBlockPropertyNames)) {
+                    throw new ReservedPropertyNameException($result['name'], $typePropertyName);
+                }
+            }
+        }
+
         $typeNames = \array_map(function($type) {
             return $type['name'];
         }, $result['types']);
@@ -179,9 +178,6 @@ class PropertiesXmlParser
         return $result;
     }
 
-    /**
-     * load single block.
-     */
     private function loadSection(\DOMXPath $xpath, \DOMNode $node, &$tags)
     {
         $result = $this->loadValues(
@@ -200,9 +196,6 @@ class PropertiesXmlParser
         return $result;
     }
 
-    /**
-     * load tags from given tag and validates them.
-     */
     private function loadTags(&$tags, \DOMXPath $xpath, \DOMNode $context = null)
     {
         $result = [];
@@ -218,9 +211,6 @@ class PropertiesXmlParser
         return $result;
     }
 
-    /**
-     * load types from given node.
-     */
     private function loadTypes(&$tags, \DOMXPath $xpath, \DOMNode $context = null)
     {
         $result = [];
@@ -234,9 +224,6 @@ class PropertiesXmlParser
         return $result;
     }
 
-    /**
-     * load single param.
-     */
     private function loadType(\DOMXPath $xpath, \DOMNode $node, &$tags)
     {
         $result = $this->loadValues($xpath, $node, ['name']);
@@ -249,9 +236,6 @@ class PropertiesXmlParser
         return $result;
     }
 
-    /**
-     * load values defined by key from given node.
-     */
     private function loadValues(\DOMXPath $xpath, \DOMNode $node, $keys, $prefix = '@')
     {
         $result = [];
@@ -310,9 +294,6 @@ class PropertiesXmlParser
         return $result;
     }
 
-    /**
-     * load params from given node.
-     */
     private function loadParams($path, \DOMXPath $xpath, \DOMNode $context = null)
     {
         $result = [];
@@ -325,9 +306,6 @@ class PropertiesXmlParser
         return $result;
     }
 
-    /**
-     * load single param.
-     */
     private function loadParam(\DOMXPath $xpath, \DOMNode $node)
     {
         $result = [

@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>form_with_block_type_property</key>
+
+    <properties>
+        <block name="blocks" default-type="editor" minOccurs="0">
+            <types>
+                <type name="editor">
+                    <properties>
+                        <property name="settings" type="text_editor" />
+                    </properties>
+                </type>
+            </types>
+        </block>
+    </properties>
+</form>
