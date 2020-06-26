@@ -51,15 +51,12 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                 return;
             }
 
-
             const {tags: finishedFieldTags} = formInspector.getSchemaEntryByPath(finishedFieldSchemaPath) || {};
-            if (
-                !finishedFieldTags || !finishedFieldTags.some((tag) => tag.name === PART_TAG)
-            ) {
+            if (!finishedFieldTags || !finishedFieldTags.some((tag) => tag.name === PART_TAG)) {
                 return;
             }
 
-            this.regenerateUrl();
+            this.generateUrl();
         });
     }
 
@@ -68,7 +65,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
         onFinish();
     };
 
-    regenerateUrl = () => {
+    generateUrl = () => {
         const {onChange, fieldTypeOptions, formInspector} = this.props;
         const {generationUrl} = fieldTypeOptions;
 
@@ -102,7 +99,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
     };
 
     handleRegenerateButtonClick = () => {
-        this.regenerateUrl();
+        this.generateUrl();
     };
 
     render() {
@@ -150,10 +147,12 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                     />
                 </div>
                 {formInspector.id &&
-                    <div className={resourceLocatorStyles.resourceLocatorHistory}>
-                        <Button icon="su-sync" onClick={this.handleRegenerateButtonClick} skin="link">
-                            {translate('sulu_admin.refresh_url')}
-                        </Button>
+                    <div className={resourceLocatorStyles.resourceLocatorActions}>
+                        {formInspector.formStore.isFieldModified(dataPath) &&
+                            <Button icon="su-sync" onClick={this.handleRegenerateButtonClick} skin="link">
+                                {translate('sulu_admin.refresh_url')}
+                            </Button>
+                        }
                         <ResourceLocatorHistory
                             id={formInspector.id}
                             options={{
