@@ -135,6 +135,17 @@
 
             <joins ref="type"/>
 
+            <transformer type="icon">
+                <params>
+                    <param name="mapping" type="collection">
+                        <param name="audio" value="su-audio"/>
+                        <param name="document" value="su-document"/>
+                        <param name="image" value="su-image"/>
+                        <param name="video" value="su-video"/>
+                    </param>
+                </params>
+            </transformer>
+
             <filter type="select">
                 <params>
                     <param name="options" type="collection">
