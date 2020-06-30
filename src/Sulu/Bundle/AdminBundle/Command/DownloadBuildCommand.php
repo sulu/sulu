@@ -14,11 +14,17 @@ namespace Sulu\Bundle\AdminBundle\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Process\Process;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class DownloadBuildCommand extends Command
 {
+    const EXIT_CODE_INVALID_FILES = 1;
+    const EXIT_CODE_COULD_NOT_INSTALL_NPM_PACKAGES = 2;
+    const EXIT_CODE_COULD_NOT_BUILD_ADMIN_ASSETS = 3;
+
     protected static $defaultName = 'sulu:admin:download-build';
 
     /**
@@ -80,34 +86,46 @@ class DownloadBuildCommand extends Command
             );
         }
 
+        $ui = new SymfonyStyle($input, $output);
+
         $output->writeln('<info>Checking for changed files...</info>');
 
-        $indexJs = static::ASSETS_DIR . 'index.js';
-        $packageJson = static::ASSETS_DIR . 'package.json';
-        $webpackConfigJs = static::ASSETS_DIR . 'webpack.config.js';
+        $assetFiles = [
+            'index.js',
+            'package.json',
+            'webpack.config.js',
+            '.babelrc',
+        ];
 
-        $localIndexJsHash = $this->getLocaleFileHash($indexJs);
-        $localPackageJsonHash = $this->getLocaleFileHash($packageJson);
-        $localWebpackConfigJsHash = $this->getLocaleFileHash($webpackConfigJs);
+        $invalidAssetsFiles = true;
 
-        $remoteIndexJsHash = $this->getRemoteFileHash($indexJs);
-        $remotePackageJsonHash = $this->getRemoteFileHash($packageJson);
-        $remoteWebpackConfigJsHash = $this->getRemoteFileHash($webpackConfigJs);
+        foreach ($assetFiles as $file) {
+            $filePath = static::ASSETS_DIR . $file;
+            $ui->section('Checking: ' . $filePath);
+            $localContent = $this->getLocalFile($filePath);
+            $remoteContent = $this->getRemoteFile($filePath);
 
-        if ($localIndexJsHash !== $remoteIndexJsHash
-            || $localPackageJsonHash !== $remotePackageJsonHash
-            || $localWebpackConfigJsHash !== $remoteWebpackConfigJsHash
-        ) {
-            throw new \Exception(
-                \sprintf(
-                    'The files in the local "%s" folder do not match the ones in the remote repository "%s".' . \PHP_EOL
-                    . 'Either bundles with custom JavaScript have been added, which means it has to be done manually '
-                    . 'with NPM, or the files in your repository are outdated and have to be copied from the remote '
-                    . 'repository.',
-                    static::ASSETS_DIR,
-                    $this->remoteRepository
-                )
-            );
+            if ($this->hash($localContent) !== $this->hash($remoteContent)) {
+                $ui->writeln('Differences between local and remote version of the file found:');
+                $ui->writeln('');
+
+                $ui->table(['Old Version', 'New Version'], [
+                    [$localContent, $remoteContent],
+                ]);
+
+                if ('y' !== \strtolower($ui->ask('Do you want to use the new version?', 'y'))) {
+                    $invalidAssetsFiles = true;
+
+                    continue;
+                }
+
+                $ui->writeln(\sprintf('Update "%s" file.', $file));
+                $this->writeFile($filePath, $remoteContent);
+            }
+        }
+
+        if ($invalidAssetsFiles) {
+            return $this->doManualBuild($ui);
         }
 
         $tempDirectory = \sys_get_temp_dir() . \DIRECTORY_SEPARATOR . static::REPOSITORY_NAME . \uniqid(\rand(), true);
@@ -147,22 +165,118 @@ class DownloadBuildCommand extends Command
         \unlink($tempFileZip);
     }
 
-    private function getLocaleFileHash(string $path)
+    private function getLocalFile(string $path)
     {
-        return $this->hash(\file_get_contents($this->projectDir . $path));
+        if (!\file_exists($this->projectDir . $path)) {
+            return '';
+        }
+
+        return \file_get_contents($this->projectDir . $path);
     }
 
-    private function getRemoteFileHash(string $path)
+    private function getRemoteFile(string $path)
     {
         $path = \str_replace(\DIRECTORY_SEPARATOR, '/', $path);
         $response = $this->httpClient->request('GET', $this->remoteRepository . $path);
 
-        return $this->hash($response->getContent());
+        return $response->getContent();
     }
 
     private function hash($content)
     {
         // we remove all whitespaces as the developer could change the indention or/and the line breaks of this files
         return \hash('sha256', \preg_replace('/\s+/', '', $content));
+    }
+
+    private function writeFile(string $path, string $content): void
+    {
+        \file_put_contents($this->projectDir . $path, $content);
+    }
+
+    private function doManualBuild(SymfonyStyle $ui): int
+    {
+        $ui->warning(\sprintf(
+            'The files in the local "%s" folder do not match the ones in the remote repository "%s".' . \PHP_EOL
+            . 'Either bundles with custom JavaScript have been added, which means it has to be done manually '
+            . 'with NPM. Do you want start a manually build?',
+            static::ASSETS_DIR,
+            $this->remoteRepository
+        ));
+
+        $ui->title('Start manual build ...');
+
+        if ('y' !== \strtolower($ui->ask('Do you want start a manually build now?', 'y'))) {
+            return self::EXIT_CODE_INVALID_FILES;
+        }
+
+        $ui->section('Clean up node modules folders');
+        $this->cleanupNodeModulesFolders();
+
+        $ui->section('Install npm dependencies');
+        if ($this->runProcess($ui, 'npm install')) {
+            $ui->error('Could not build correctly install npm dependendencies.');
+
+            return self::EXIT_CODE_COULD_NOT_INSTALL_NPM_PACKAGES;
+        }
+
+        $ui->section('Build admin assets');
+        if ($this->runProcess($ui, 'npm run build')) {
+            $ui->error('Could not build correctly build admin assets.');
+
+            return self::EXIT_CODE_COULD_NOT_BUILD_ADMIN_ASSETS;
+        }
+
+        return 0;
+    }
+
+    private function cleanupNodeModulesFolders(): void
+    {
+        $removeBlockingFiles = [
+            'package-lock.json',
+            'yarn.lock',
+            'node_modules',
+        ];
+
+        $packageJson = \json_decode($this->getLocalFile(self::ASSETS_DIR . 'package.json'), true);
+
+        if (!$packageJson) {
+            throw new \Exception(\sprintf('Could not parse "%s" file', self::ASSETS_DIR . 'package.json'));
+        }
+
+        $nodeModulesFolders = [
+            $this->projectDir . self::ASSETS_DIR,
+        ];
+
+        foreach ($packageJson['dependencies'] as $dependency => $path) {
+            if (0 !== \strpos($path, 'file:')) {
+                continue;
+            }
+
+            $nodeModulesFolders[] = $this->projectDir . self::ASSETS_DIR . \substr($path, \strlen('file:'));
+        }
+
+        $filesystem = new Filesystem();
+        foreach ($nodeModulesFolders as $folder) {
+            foreach ($removeBlockingFiles as $blockingFile) {
+                $path = $folder . $blockingFile;
+
+                if (!$filesystem->exists($path)) {
+                    continue;
+                }
+
+                $filesystem->remove($path);
+            }
+        }
+    }
+
+    private function runProcess(SymfonyStyle $ui, $command): int
+    {
+        $process = Process::fromShellCommandline($command, $this->projectDir . self::ASSETS_DIR);
+        $process->setTimeout(3600);
+        $process->run(function($type, $buffer) use ($ui) {
+            $ui->write($buffer, false, OutputInterface::OUTPUT_RAW);
+        });
+
+        return $process->getExitCode();
     }
 }
