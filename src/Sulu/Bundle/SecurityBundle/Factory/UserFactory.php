@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -17,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Bundle\SecurityBundle\Exception\RoleNotFoundException;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
@@ -24,29 +23,42 @@ use Sulu\Component\Security\Authentication\SaltGenerator;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Webmozart\Assert\Assert;
 
-final class UserFactory implements UserFactoryInterface
+class UserFactory implements UserFactoryInterface
 {
-    /** @var EntityManagerInterface */
+    /**
+     * @var EntityManagerInterface
+     */
     private $entityManager;
 
-    /** @var UserRepositoryInterface */
+    /**
+     * @var UserRepositoryInterface
+     */
     private $userRepository;
 
-    /** @var RoleRepositoryInterface */
+    /**
+     * @var RoleRepositoryInterface
+     */
     private $roleRepository;
 
-    /** @var ContactRepositoryInterface */
+    /**
+     * @var ContactRepositoryInterface
+     */
     private $contactRepository;
 
-    /** @var LocalizationManagerInterface */
+    /**
+     * @var LocalizationManagerInterface
+     */
     private $localizationManager;
 
-    /** @var SaltGenerator */
+    /**
+     * @var SaltGenerator
+     */
     private $saltGenerator;
 
-    /** @var EncoderFactoryInterface */
+    /**
+     * @var EncoderFactoryInterface
+     */
     private $encoderFactory;
 
     public function __construct(
@@ -76,9 +88,9 @@ final class UserFactory implements UserFactoryInterface
         string $password,
         string $roleName = 'User'
     ): UserInterface {
-        $existing = $this->userRepository->findOneBy(['username' => $username]);
-        if ($existing instanceof UserInterface) {
-            return $existing;
+        $user = $this->userRepository->findOneBy(['username' => $username]);
+        if ($user instanceof UserInterface) {
+            return $user;
         }
 
         $locales = \array_keys($this->localizationManager->getLocalizations());
@@ -86,22 +98,12 @@ final class UserFactory implements UserFactoryInterface
         return $this->createUser($firstName, $lastName, $email, $username, $password, $locale, $roleName, $locales);
     }
 
-    /**
-     * Generates a random salt for the password.
-     */
     private function generateSalt(): string
     {
         return $this->saltGenerator->getRandomSalt();
     }
 
-    /**
-     * Encodes the given password, for the given password, with he given salt and returns the result.
-     *
-     * @param string $user
-     * @param string $password
-     * @param string $salt
-     */
-    private function encodePassword($user, $password, $salt): string
+    private function encodePassword(string $user, string $password, string $salt): string
     {
         return $this->encoderFactory->getEncoder($user)->encodePassword($password, $salt);
     }
@@ -136,7 +138,10 @@ final class UserFactory implements UserFactoryInterface
 
         /** @var RoleInterface|null $role */
         $role = $this->roleRepository->findOneBy(['name' => $roleName]);
-        Assert::notNull($role);
+
+        if (null === $role) {
+            throw new RoleNotFoundException($roleName);
+        }
 
         $userRole = new UserRole();
         $userRole->setRole($role);

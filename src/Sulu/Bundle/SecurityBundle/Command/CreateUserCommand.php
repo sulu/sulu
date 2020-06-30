@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\Command;
 
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
+use Sulu\Bundle\SecurityBundle\Exception\RoleNotFoundException;
 use Sulu\Bundle\SecurityBundle\Factory\UserFactoryInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
@@ -96,7 +97,7 @@ class CreateUserCommand extends Command
             return 1;
         }
 
-        if (!\in_array($locale, $this->locales, true)) {
+        if (!\in_array($locale, $this->locales)) {
             $output->writeln(\sprintf(
                 'Given locale "%s" is invalid, must be one of "%s"',
                 $locale, \implode('", "', $this->locales)
@@ -105,10 +106,9 @@ class CreateUserCommand extends Command
             return 1;
         }
 
-        /** @var RoleInterface $role */
-        $role = $this->roleRepository->findOneBy(['name' => $roleName]);
-
-        if (!$role) {
+        try {
+            $this->userFactory->create($username, $firstName, $lastName, $email, $locale, $password, $roleName);
+        } catch (RoleNotFoundException $roleNotFoundException) {
             $output->writeln(\sprintf('<error>Role "%s" not found. The following roles are available: "%s"</error>',
                 $roleName,
                 \implode('", "', $this->getRoleNames())
@@ -116,8 +116,6 @@ class CreateUserCommand extends Command
 
             return 1;
         }
-
-        $this->userFactory->create($username, $firstName, $lastName, $email, $locale, $password, $roleName);
 
         $output->writeln(
             \sprintf('Created user "<comment>%s</comment>" in role "<comment>%s</comment>"', $username, $roleName)
@@ -136,7 +134,7 @@ class CreateUserCommand extends Command
         if (!$input->getArgument('username')) {
             $question = new Question('Please choose a username: ');
             $question->setValidator(
-                static function($username) use ($userRepository) {
+                function($username) use ($userRepository) {
                     if (empty($username)) {
                         throw new \InvalidArgumentException('Username can not be empty');
                     }
@@ -157,7 +155,7 @@ class CreateUserCommand extends Command
         if (!$input->getArgument('firstName')) {
             $question = new Question('Please choose a FirstName: ');
             $question->setValidator(
-                static function($firstName) {
+                function($firstName) {
                     if (empty($firstName)) {
                         throw new \InvalidArgumentException('FirstName can not be empty');
                     }
@@ -173,7 +171,7 @@ class CreateUserCommand extends Command
         if (!$input->getArgument('lastName')) {
             $question = new Question('Please choose a LastName: ');
             $question->setValidator(
-                static function($lastName) {
+                function($lastName) {
                     if (empty($lastName)) {
                         throw new \InvalidArgumentException('LastName can not be empty');
                     }
@@ -189,7 +187,7 @@ class CreateUserCommand extends Command
         if (!$input->getArgument('email')) {
             $question = new Question('Please choose a Email: ');
             $question->setValidator(
-                static function($email) use ($userRepository) {
+                function($email) use ($userRepository) {
                     if (empty($email)) {
                         $email = null;
                     }
@@ -228,7 +226,7 @@ class CreateUserCommand extends Command
             $question = new Question('Please choose a Password: ');
             $question->setHidden(true);
             $question->setValidator(
-                static function($password) {
+                function($password) {
                     if (empty($password)) {
                         throw new \InvalidArgumentException('Password can not be empty');
                     }
