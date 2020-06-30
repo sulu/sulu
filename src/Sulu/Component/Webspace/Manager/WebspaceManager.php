@@ -208,7 +208,7 @@ class WebspaceManager implements WebspaceManagerInterface
         foreach ($portals as $portalInformation) {
             $sameLocalization = $portalInformation->getLocalization()->getLocale() === $languageCode;
             $sameWebspace = null === $webspaceKey || $portalInformation->getWebspace()->getKey() === $webspaceKey;
-            $url = $this->createResourceLocatorUrl($portalInformation->getUrl(), $resourceLocator, $domain, $scheme);
+            $url = $this->createResourceLocatorUrl($portalInformation->getUrl(), $resourceLocator, $scheme);
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
                 $urls[] = $url;
             }
@@ -245,7 +245,7 @@ class WebspaceManager implements WebspaceManagerInterface
                 || $portalInformation->getLocalization()->getLocale() === $languageCode
             );
             $sameWebspace = null === $webspaceKey || $portalInformation->getWebspace()->getKey() === $webspaceKey;
-            $url = $this->createResourceLocatorUrl($portalInformation->getUrl(), $resourceLocator, $domain, $scheme);
+            $url = $this->createResourceLocatorUrl($portalInformation->getUrl(), $resourceLocator, $scheme);
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
                 if ($portalInformation->isMain()) {
                     \array_unshift($urls, $url);
@@ -466,7 +466,7 @@ class WebspaceManager implements WebspaceManagerInterface
      *
      * @return string
      */
-    private function createResourceLocatorUrl($portalUrl, $resourceLocator, $domain = null, $scheme = null)
+    private function createResourceLocatorUrl($portalUrl, $resourceLocator, $scheme = null)
     {
         if (!$scheme) {
             $scheme = $this->defaultScheme;
@@ -477,6 +477,21 @@ class WebspaceManager implements WebspaceManagerInterface
             $resourceLocator = \rtrim($resourceLocator, '/');
         }
 
-        return \rtrim(\sprintf('%s://%s', $scheme, $portalUrl), '/') . $resourceLocator;
+        $url = \rtrim(\sprintf('%s://%s', $scheme, $portalUrl), '/') . $resourceLocator;
+
+        // add port if url points to host of current request and current request uses a custom port
+        $currentRequest = $this->requestStack->getCurrentRequest();
+        if ($currentRequest) {
+            $host = $currentRequest->getHost();
+            $port = $currentRequest->getPort();
+
+            if ($url && false !== \strpos($url, $host)) {
+                if (!('http' == $scheme && 80 == $port) && !('https' == $scheme && 443 == $port)) {
+                    $url = \str_replace($host, $host . ':' . $port, $url);
+                }
+            }
+        }
+
+        return $url;
     }
 }

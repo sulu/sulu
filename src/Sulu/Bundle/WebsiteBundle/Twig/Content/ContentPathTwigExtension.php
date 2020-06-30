@@ -83,13 +83,6 @@ class ContentPathTwigExtension extends AbstractExtension implements ContentPathI
             $scheme
         );
 
-        $port = $this->requestAnalyzer->getAttribute('port');
-        if ($url && false !== \strpos($url, $host)) {
-            if (!('http' == $scheme && 80 == $port) && !('https' == $scheme && 443 == $port)) {
-                $url = \str_replace($host, $host . ':' . $port, $url);
-            }
-        }
-
         if (!$withoutDomain && !$url) {
             $url = $this->webspaceManager->findUrlByResourceLocator(
                 $route,
