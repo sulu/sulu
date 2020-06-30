@@ -14,7 +14,6 @@ namespace Sulu\Bundle\SecurityBundle\Command;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\SecurityBundle\Exception\RoleNotFoundException;
 use Sulu\Bundle\SecurityBundle\Factory\UserFactoryInterface;
-use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

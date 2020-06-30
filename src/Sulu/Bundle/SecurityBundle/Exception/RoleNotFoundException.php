@@ -20,14 +20,11 @@ class RoleNotFoundException extends \Exception
 
     public function __construct(string $roleName)
     {
-        parent::__construct(sprintf('Role with name %s could not be found.', $roleName));
+        parent::__construct(\sprintf('Role with name %s could not be found.', $roleName));
 
         $this->roleName = $roleName;
     }
 
-    /**
-     * @return string
-     */
     public function getRoleName(): string
     {
         return $this->roleName;
