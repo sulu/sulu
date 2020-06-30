@@ -25,6 +25,10 @@ $textEditorUnpublishedLinkColor: $gold;
         --ck-font-size-base: $textEditorFontSize;
         --ck-icon-size: $textEditorFontSize;
 
+        /* z-index */
+        /* set it to auto instead of 1 to fix problem with overlapping components https://github.com/sulu/sulu/issues/5375 */
+        --ck-z-default: auto;
+
         /* shadows */
         --ck-color-shadow-inner: none;
         --ck-color-shadow-drop: none;
@@ -97,8 +101,6 @@ $textEditorUnpublishedLinkColor: $gold;
     }
 
     .ck.ck-editor {
-        z-index: 0;
-
         .ck.ck-toolbar__separator {
             background: none;
             width: $textEditorButtonMinSize;
