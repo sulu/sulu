@@ -461,7 +461,6 @@ class WebspaceManager implements WebspaceManagerInterface
      *
      * @param string $portalUrl
      * @param string $resourceLocator
-     * @param string|null $domain
      * @param string|null $scheme
      *
      * @return string
