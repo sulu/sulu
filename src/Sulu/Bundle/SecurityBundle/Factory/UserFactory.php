@@ -118,6 +118,13 @@ class UserFactory implements UserFactoryInterface
         string $roleName,
         array $locales
     ): UserInterface {
+        /** @var RoleInterface|null $role */
+        $role = $this->roleRepository->findOneBy(['name' => $roleName]);
+
+        if (null === $role) {
+            throw new RoleNotFoundException($roleName);
+        }
+
         $user = $this->userRepository->createNew();
 
         /** @var ContactInterface $contact */
@@ -135,13 +142,6 @@ class UserFactory implements UserFactoryInterface
         $user->setPassword($this->encodePassword($user, $password, $user->getSalt()));
         $user->setLocale($locale);
         $user->setEmail($email);
-
-        /** @var RoleInterface|null $role */
-        $role = $this->roleRepository->findOneBy(['name' => $roleName]);
-
-        if (null === $role) {
-            throw new RoleNotFoundException($roleName);
-        }
 
         $userRole = new UserRole();
         $userRole->setRole($role);
