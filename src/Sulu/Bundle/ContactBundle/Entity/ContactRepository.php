@@ -448,6 +448,8 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
             ->addSelect('tags')
             ->addSelect('categories')
             ->addSelect('translations')
+            ->addSelect('accountContacts')
+            ->addSelect('position')
             ->leftJoin($alias . '.emails', 'emails')
             ->leftJoin('emails.emailType', 'emailType')
             ->leftJoin($alias . '.phones', 'phones')
@@ -458,6 +460,8 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
             ->leftJoin('urls.urlType', 'urlType')
             ->leftJoin($alias . '.tags', 'tags')
             ->leftJoin($alias . '.categories', 'categories')
-            ->leftJoin('categories.translations', 'translations');
+            ->leftJoin('categories.translations', 'translations')
+            ->leftJoin($alias . '.accountContacts', 'accountContacts')
+            ->leftJoin('accountContacts.position', 'position');
     }
 }
