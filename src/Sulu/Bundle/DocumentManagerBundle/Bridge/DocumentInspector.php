@@ -108,7 +108,7 @@ class DocumentInspector extends BaseDocumentInspector
     /**
      * Return the structure for the given StructureBehavior implementing document.
      *
-     * @return StructureMetadata
+     * @return StructureMetadata|null
      */
     public function getStructureMetadata(StructureBehavior $document)
     {
