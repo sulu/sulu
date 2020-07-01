@@ -11,37 +11,37 @@
 
 namespace Sulu\Bundle\ContactBundle\Content\Types;
 
-use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
-use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
+use Sulu\Bundle\ContactBundle\Api\Account;
+use Sulu\Bundle\ContactBundle\Contact\AccountManager;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
 
-class ContactSelection extends SimpleContentType implements PreResolvableContentTypeInterface
+class AccountSelection extends SimpleContentType implements PreResolvableContentTypeInterface
 {
     /**
-     * @var ContactRepositoryInterface
+     * @var AccountManager
      */
-    protected $contactRepository;
+    protected $accountManager;
 
     /**
      * @var ReferenceStoreInterface
      */
-    private $contactReferenceStore;
+    private $accountReferenceStore;
 
     public function __construct(
-        ContactRepositoryInterface $contactRepository,
-        ReferenceStoreInterface $contactReferenceStore
+        AccountManager $accountManager,
+        ReferenceStoreInterface $accountReferenceStore
     ) {
-        $this->contactRepository = $contactRepository;
-        $this->contactReferenceStore = $contactReferenceStore;
+        $this->accountManager = $accountManager;
+        $this->accountReferenceStore = $accountReferenceStore;
 
-        parent::__construct('ContactSelection');
+        parent::__construct('ion ');
     }
 
     /**
-     * @return ContactInterface[]
+     * @return Account[]
      */
     public function getContentData(PropertyInterface $property): array
     {
@@ -50,7 +50,7 @@ class ContactSelection extends SimpleContentType implements PreResolvableContent
             return [];
         }
 
-        return $this->contactRepository->findByIds($ids);
+        return $this->accountManager->getByIds($ids, $property->getStructure()->getLanguageCode());
     }
 
     public function preResolve(PropertyInterface $property)
@@ -61,7 +61,7 @@ class ContactSelection extends SimpleContentType implements PreResolvableContent
         }
 
         foreach ($ids as $id) {
-            $this->contactReferenceStore->add($id);
+            $this->accountReferenceStore->add($id);
         }
     }
 }
