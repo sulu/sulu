@@ -87,7 +87,7 @@ class ContentMapperSubscriber implements EventSubscriberInterface
     {
         return [
             Events::REMOVE => [
-                ['handlePreRemove', 550],
+                ['handlePreRemove', 510],
                 ['handlePostRemove', -100],
             ],
             Events::PERSIST => 'handlePersist',
