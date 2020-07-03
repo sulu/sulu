@@ -35,6 +35,13 @@ class SnippetAreas extends React.Component<ViewProps> {
         this.cacheClearToolbarAction = new CacheClearToolbarAction();
     }
 
+    @action handleSnippetClick = (snippetUuid: string) => {
+        const {router, route} = this.props;
+        const {snippetEditView} = route.options;
+
+        router.navigate(snippetEditView, {id: snippetUuid});
+    };
+
     @action handleAddClick = (areaKey: string) => {
         this.openedAreaKey = areaKey;
     };
@@ -97,9 +104,14 @@ class SnippetAreas extends React.Component<ViewProps> {
                                     <Table.Cell>
                                         {defaultUuid
                                             ? <Fragment>
-                                                <div className={snippetAreasStyles.title}>
+                                                <Button
+                                                    className={snippetAreasStyles.titleButton}
+                                                    onClick={this.handleSnippetClick}
+                                                    skin="link"
+                                                    value={defaultUuid}
+                                                >
                                                     {defaultTitle}
-                                                </div>
+                                                </Button>
                                                 <Button
                                                     className={snippetAreasStyles.deleteButton}
                                                     icon="su-trash-alt"
