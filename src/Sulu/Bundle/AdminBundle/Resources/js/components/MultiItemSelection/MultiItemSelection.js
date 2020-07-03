@@ -117,7 +117,7 @@ class MultiItemSelection<T, U: string | number, V: string | number, W> extends R
                                     item,
                                     {
                                         ...item.props,
-                                        onClick: onItemClick,
+                                        onClick: onItemClick ? onItemClick : item.props.onClick,
                                         onEdit: onItemEdit ? this.handleItemEdit : item.props.onEdit,
                                         onRemove: onItemRemove ? this.handleItemRemove : item.props.onRemove,
                                         sortable,

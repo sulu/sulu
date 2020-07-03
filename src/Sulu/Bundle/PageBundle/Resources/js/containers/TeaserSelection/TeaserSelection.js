@@ -228,7 +228,6 @@ class TeaserSelection extends React.Component<Props> {
                         options: addButtonOptions,
                     }}
                     loading={this.teaserStore.loading}
-                    onItemClick={onItemClick}
                     onItemsSorted={this.handleSorted}
                     rightButton={rightButton}
                 >
@@ -240,6 +239,7 @@ class TeaserSelection extends React.Component<Props> {
                                 id={teaserId}
                                 index={index + 1}
                                 key={teaserId}
+                                onClick={this.editIds.includes(teaserId) ? undefined : onItemClick}
                                 onEdit={this.editIds.includes(teaserId) ? undefined : this.handleEdit}
                                 onRemove={this.handleRemove}
                                 value={teaserItem}
