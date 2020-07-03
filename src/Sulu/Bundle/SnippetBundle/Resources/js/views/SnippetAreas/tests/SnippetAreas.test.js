@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import {shallow, mount, render} from 'enzyme';
-import {Router} from 'sulu-admin-bundle/services';
+import Router from 'sulu-admin-bundle/services/Router';
+import Route from 'sulu-admin-bundle/services/Router/Route';
 import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
@@ -18,6 +19,12 @@ jest.mock('sulu-website-bundle/containers/CacheClearToolbarAction', () => jest.f
     this.getNode = jest.fn();
     this.getToolbarItemConfig = jest.fn();
 }));
+jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
+    this.navigate = jest.fn();
+    this.attributes = {
+        webspace: 'sulu',
+    };
+}));
 
 beforeEach(() => {
     jest.resetModules();
@@ -27,10 +34,7 @@ test('Show loader when loading snippet areas', () => {
     const SnippetAreas = require('../SnippetAreas').default;
     const SnippetAreaStore = require('../stores/SnippetAreaStore');
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    const router = new Router();
 
     // $FlowFixMe
     SnippetAreaStore.mockImplementation(function() {
@@ -45,10 +49,7 @@ test('Render snippet areas with data as table', () => {
     const SnippetAreas = require('../SnippetAreas').default;
     const SnippetAreaStore = require('../stores/SnippetAreaStore');
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    const router = new Router();
 
     // $FlowFixMe
     SnippetAreaStore.mockImplementation(function() {
@@ -77,10 +78,7 @@ test('Close after clicking add without choosing a snippet', () => {
     const SnippetAreaStore = require('../stores/SnippetAreaStore');
     const SingleListOverlay = require('sulu-admin-bundle/containers').SingleListOverlay;
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    const router = new Router();
 
     // $FlowFixMe
     SnippetAreaStore.mockImplementation(function() {
@@ -117,10 +115,7 @@ test('Save after adding a new snippet area', () => {
     const SnippetAreaStore = require('../stores/SnippetAreaStore');
     const SingleListOverlay = require('sulu-admin-bundle/containers').SingleListOverlay;
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    const router = new Router();
 
     const savePromise = Promise.resolve();
 
@@ -160,10 +155,7 @@ test('Close after clicking delete and cancel dialog', () => {
     const SnippetAreas = require('../SnippetAreas').default;
     const SnippetAreaStore = require('../stores/SnippetAreaStore');
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    const router = new Router();
 
     // $FlowFixMe
     SnippetAreaStore.mockImplementation(function() {
@@ -198,10 +190,7 @@ test('Delete after confirming the confirmation dialog', () => {
     const SnippetAreas = require('../SnippetAreas').default;
     const SnippetAreaStore = require('../stores/SnippetAreaStore');
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    const router = new Router();
 
     const deletePromise = Promise.resolve();
 
@@ -237,6 +226,40 @@ test('Delete after confirming the confirmation dialog', () => {
     });
 });
 
+test('Navigate when selected default snippet is clicked', () => {
+    const SnippetAreas = require('../SnippetAreas').default;
+    const SnippetAreaStore = require('../stores/SnippetAreaStore');
+
+    const route = new Route({
+        name: 'snippet_areas',
+        path: '/snippet-areas',
+        type: 'snippet_areas',
+        options: {
+            snippetEditView: 'sulu_snippet.edit_form',
+        },
+    });
+    const router = new Router();
+
+    // $FlowFixMe
+    SnippetAreaStore.mockImplementation(function() {
+        this.snippetAreas = {
+            default: {
+                defaultTitle: 'Default Snippet',
+                defaultUuid: 'some-uuid',
+                key: 1,
+                title: 'Default',
+            },
+        };
+
+        this.save = jest.fn();
+    });
+
+    const snippetAreas = mount(<SnippetAreas route={route} router={router} />);
+    snippetAreas.find('Button[className="titleButton"] button').simulate('click');
+
+    expect(router.navigate).toBeCalledWith('sulu_snippet.edit_form', {id: 'some-uuid'});
+});
+
 test('Should use CacheClearToolbarAction for cache clearing', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const SnippetAreas = require('../SnippetAreas').default;
@@ -244,10 +267,7 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
     const toolbarFunction = findWithHighOrderFunction(withToolbar, SnippetAreas);
     const CacheClearToolbarAction = require('sulu-website-bundle/containers').CacheClearToolbarAction;
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    const router = new Router();
 
     // $FlowFixMe
     SnippetAreaStore.mockImplementation(function() {
