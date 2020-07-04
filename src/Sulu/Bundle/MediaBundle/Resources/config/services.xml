@@ -388,6 +388,14 @@
             <tag name="console.command"/>
         </service>
 
+        <service id="sulu_media.command.format_cache.regenerate"
+                 class="Sulu\Bundle\MediaBundle\Command\FormatCacheRegenerateFormats">
+            <argument type="service" id="filesystem"/>
+            <argument>%sulu_media.format_cache.path%</argument>
+
+            <tag name="console.command"/>
+        </service>
+
         <service id="sulu_media.fixtures.collection_types" class="Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes">
             <tag name="doctrine.fixture.orm"/>
         </service>
