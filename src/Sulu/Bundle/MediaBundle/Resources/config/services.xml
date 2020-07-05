@@ -391,6 +391,7 @@
         <service id="sulu_media.command.format_cache.regenerate"
                  class="Sulu\Bundle\MediaBundle\Command\FormatCacheRegenerateFormats">
             <argument type="service" id="filesystem"/>
+            <argument type="service" id="sulu_media.format_manager" />
             <argument>%sulu_media.format_cache.path%</argument>
 
             <tag name="console.command"/>
