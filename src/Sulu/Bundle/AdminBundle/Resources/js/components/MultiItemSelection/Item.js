@@ -107,9 +107,19 @@ export default class Item<T, U> extends React.PureComponent<Props<T, U>> {
                     {sortable && <Icon name={DRAG_ICON} />}
                     <span className={itemStyles.index}>{index}</span>
                 </DragHandle>
-                <div className={itemContentClass} onClick={this.handleClick} role="button">
-                    {children}
-                </div>
+                {
+                    onClick ?
+                        <div
+                            className={itemContentClass}
+                            onClick={this.handleClick}
+                            role="button"
+                        >
+                            {children}
+                        </div>
+                        : <div className={itemContentClass}>
+                            {children}
+                        </div>
+                }
                 <div className={itemStyles.buttons}>
                     {onEdit && !disabled &&
                         <button className={itemStyles.button} onClick={this.handleEdit} type="button">
