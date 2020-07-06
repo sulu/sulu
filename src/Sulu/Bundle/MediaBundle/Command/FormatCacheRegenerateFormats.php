@@ -24,7 +24,7 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class FormatCacheRegenerateFormats extends Command
 {
-    protected static $defaultName = 'sulu:media:regenerate:formats';
+    protected static $defaultName = 'sulu:media:regenerate-formats';
 
     /**
      * @var Filesystem
@@ -67,14 +67,15 @@ class FormatCacheRegenerateFormats extends Command
         $finder->in(\realpath($this->localFormatCachePath));
         $files = $finder->files();
 
-        $progressBar = $ui->createProgressBar(\count($files));
+        if (!\count($files)) {
+            $ui->writeln(sprintf('No images to regenerate found in "%s".', $this->localFormatCachePath));
 
-        if (!count($files)) {
-            $ui->writeln('No images to regenerate');
             return 0;
         }
 
-        $ui->writeln('Starting to regenerate: ' . count($files) .' images');
+        $progressBar = $ui->createProgressBar(\count($files));
+
+        $ui->writeln('Starting to regenerate: ' . \count($files) .' images');
         $ui->writeln('');
 
         /** @var SplFileInfo $file */
@@ -90,23 +91,27 @@ class FormatCacheRegenerateFormats extends Command
             $progressBar->advance();
         }
 
-        $ui->writeln('');
-        $ui->writeln('');
-        $ui->writeln('DONE');
-
         $progressBar->finish();
+
+        $ui->writeln('');
+        $ui->writeln('');
+
+        $ui->success(sprintf('Finished regenerating of "%s" images.', \count($files)));
 
         return 0;
     }
 
     private function getFileInformationArrayFromPath($path): array
     {
-        $exploded = explode('/', $path);
+        $exploded = \explode('/', $path);
+
+        $directories = \explode('/', $path, 2);
+        $fileNameParts = \explode('-', $directories[1], 2);
 
         return [
-            'id' => $exploded[1],
-            'formatKey' => $exploded[0],
-            'fileName' => $exploded[2]
+            'id' => $fileNameParts[0],
+            'formatKey' => $directories[0],
+            'fileName' => $fileNameParts[1]
         ];
     }
 }
