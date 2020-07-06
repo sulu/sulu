@@ -274,6 +274,7 @@ class TargetGroupController extends AbstractRestController implements ClassResou
             $this->targetGroupRepository->getClassName(),
             'json'
         );
+        $this->entityManager->clear();
 
         return $result;
     }
