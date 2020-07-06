@@ -73,7 +73,7 @@ class FormatCacheRegenerateFormats extends Command
 
         $progressBar = $ui->createProgressBar(\count($files));
 
-        $ui->writeln('Starting to regenerate: ' . \count($files) .' images');
+        $ui->writeln('Starting to regenerate: ' . \count($files) . ' images');
         $ui->writeln('');
 
         /** @var SplFileInfo $file */
