@@ -11,10 +11,8 @@
 
 namespace Sulu\Bundle\MediaBundle\Command;
 
-use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheClearerInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -68,7 +66,7 @@ class FormatCacheRegenerateFormats extends Command
         $files = $finder->files();
 
         if (!\count($files)) {
-            $ui->writeln(sprintf('No images to regenerate found in "%s".', $this->localFormatCachePath));
+            $ui->writeln(\sprintf('No images to regenerate found in "%s".', $this->localFormatCachePath));
 
             return 0;
         }
@@ -96,7 +94,7 @@ class FormatCacheRegenerateFormats extends Command
         $ui->writeln('');
         $ui->writeln('');
 
-        $ui->success(sprintf('Finished regenerating of "%s" images.', \count($files)));
+        $ui->success(\sprintf('Finished regenerating of "%s" images.', \count($files)));
 
         return 0;
     }
@@ -111,7 +109,7 @@ class FormatCacheRegenerateFormats extends Command
         return [
             'id' => $fileNameParts[0],
             'formatKey' => $directories[0],
-            'fileName' => $fileNameParts[1]
+            'fileName' => $fileNameParts[1],
         ];
     }
 }
