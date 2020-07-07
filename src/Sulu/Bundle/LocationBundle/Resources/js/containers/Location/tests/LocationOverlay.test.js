@@ -393,6 +393,46 @@ test('Should call onConfirm callback when the Overlay is confirmed after marker 
     }));
 });
 
+test('Should call onConfirm callback when the Overlay is confirmed after setting lat and ling to zero', () => {
+    const locationData = {
+        lat: 1,
+        long: 1,
+        zoom: 1,
+        title: 'old-title',
+        street: 'old-street',
+        number: 'old-number',
+        code: 'old-code',
+        town: 'old-town',
+        country: 'old-country',
+    };
+    const confirmSpy = jest.fn();
+
+    const locationOverlay = mount(
+        <LocationOverlay
+            onClose={jest.fn()}
+            onConfirm={confirmSpy}
+            open={true}
+            value={locationData}
+        />
+    );
+
+    locationOverlay.find(Number).at(0).props().onChange(0); // lat
+    locationOverlay.find(Number).at(1).props().onChange(0); // long
+    locationOverlay.find(Overlay).props().onConfirm();
+
+    expect(confirmSpy).toBeCalledWith(expect.objectContaining({
+        lat: 0,
+        long: 0,
+        zoom: 1,
+        title: 'old-title',
+        street: 'old-street',
+        number: 'old-number',
+        code: 'old-code',
+        town: 'old-town',
+        country: 'old-country',
+    }));
+});
+
 test('Should pass correct props to the map, marker and input fields after reset', () => {
     const locationData = {
         code: 'code-123',
