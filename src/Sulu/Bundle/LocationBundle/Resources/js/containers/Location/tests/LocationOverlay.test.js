@@ -582,4 +582,19 @@ test('Should enable confirm button if longitude and latitude are both not set or
     locationOverlay.find(Number).at(1).props().onChange(11); // long
     locationOverlay.update();
     expect(locationOverlay.find(Overlay).props().confirmDisabled).toEqual(false);
+
+    locationOverlay.find(Number).at(0).props().onChange(0); // lat
+    locationOverlay.find(Number).at(1).props().onChange(11); // long
+    locationOverlay.update();
+    expect(locationOverlay.find(Overlay).props().confirmDisabled).toEqual(false);
+
+    locationOverlay.find(Number).at(0).props().onChange(11); // lat
+    locationOverlay.find(Number).at(1).props().onChange(0); // long
+    locationOverlay.update();
+    expect(locationOverlay.find(Overlay).props().confirmDisabled).toEqual(false);
+
+    locationOverlay.find(Number).at(0).props().onChange(0); // lat
+    locationOverlay.find(Number).at(1).props().onChange(0); // long
+    locationOverlay.update();
+    expect(locationOverlay.find(Overlay).props().confirmDisabled).toEqual(false);
 });

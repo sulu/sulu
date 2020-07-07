@@ -179,7 +179,8 @@ class LocationOverlay extends React.Component<Props> {
         } = this.props;
 
         // enable confirm button if all marker properties are set or no property is set in case of a reset
-        const confirmEnabled = (this.markerLat && this.markerLong) || (!this.markerLat && !this.markerLong);
+        const confirmEnabled = (this.markerLat !== null && this.markerLong !== null)
+            || (this.markerLat === null && this.markerLong === null);
 
         return (
             <Overlay
