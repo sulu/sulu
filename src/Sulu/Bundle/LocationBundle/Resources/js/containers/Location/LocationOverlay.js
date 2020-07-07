@@ -64,7 +64,7 @@ class LocationOverlay extends React.Component<Props> {
         const {onConfirm} = this.props;
         const {title, street, number, code, town, country, markerLat, markerLong, mapZoom} = this;
 
-        if (!markerLat || !markerLong) {
+        if (markerLat === null || markerLat === undefined || markerLong === null || markerLong === undefined) {
             onConfirm(null);
 
             return;
@@ -112,10 +112,8 @@ class LocationOverlay extends React.Component<Props> {
     };
 
     @action handleMarkerDragEnd = () => {
-        if (this.markerLong && this.markerLat) {
-            this.mapLong = this.markerLong;
-            this.mapLat = this.markerLat;
-        }
+        this.mapLong = this.markerLong || 0;
+        this.mapLat = this.markerLat || 0;
     };
 
     @action handleResetLocation = () => {
@@ -179,7 +177,8 @@ class LocationOverlay extends React.Component<Props> {
         } = this.props;
 
         // enable confirm button if all marker properties are set or no property is set in case of a reset
-        const confirmEnabled = (this.markerLat && this.markerLong) || (!this.markerLat && !this.markerLong);
+        const confirmEnabled = (this.markerLat !== null && this.markerLong !== null)
+            || (this.markerLat === null && this.markerLong === null);
 
         return (
             <Overlay
