@@ -1,6 +1,7 @@
 // @flow
 import type {Node} from 'react';
 import {observer} from 'mobx-react';
+import {computed} from 'mobx';
 import React from 'react';
 import withContainerSize from '../withContainerSize';
 import type {Normalizer, RectangleChange, SelectionData} from './types';
@@ -27,8 +28,6 @@ class RectangleSelection extends React.Component<Props> {
     static defaultProps = {
         round: true,
     };
-
-    normalizers: Array<Normalizer> = [];
 
     static createNormalizers(props: Props): Array<Normalizer> {
         if (!props.containerWidth || !props.containerHeight) {
@@ -59,14 +58,8 @@ class RectangleSelection extends React.Component<Props> {
         return normalizers;
     }
 
-    constructor(props: Props) {
-        super(props);
-
-        this.normalizers = RectangleSelection.createNormalizers(this.props);
-    }
-
-    componentDidUpdate() {
-        this.normalizers = RectangleSelection.createNormalizers(this.props);
+    @computed get normalizers() {
+        return RectangleSelection.createNormalizers(this.props);
     }
 
     normalize(selection: SelectionData): SelectionData {
