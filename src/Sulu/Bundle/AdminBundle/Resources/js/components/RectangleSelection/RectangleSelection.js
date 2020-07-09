@@ -35,13 +35,14 @@ class RectangleSelection extends React.Component<Props> {
         }
 
         const normalizers = [];
+
         normalizers.push(new SizeNormalizer(
             props.containerWidth,
             props.containerHeight,
             props.minWidth,
             props.minHeight
         ));
-        normalizers.push(new PositionNormalizer(props.containerWidth, props.containerHeight));
+
         if (props.minWidth && props.minHeight) {
             normalizers.push(new RatioNormalizer(
                 props.containerWidth,
@@ -50,6 +51,8 @@ class RectangleSelection extends React.Component<Props> {
                 props.minHeight
             ));
         }
+
+        normalizers.push(new PositionNormalizer(props.containerWidth, props.containerHeight));
 
         if (props.round) {
             normalizers.push(new RoundingNormalizer());
