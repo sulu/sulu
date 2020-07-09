@@ -70,6 +70,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                         options: {
                             ...babelConfig,
                             cacheDirectory: true,
+                            cacheCompression: false,
                         },
                     },
                 },
