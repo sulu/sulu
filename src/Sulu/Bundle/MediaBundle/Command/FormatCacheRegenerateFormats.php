@@ -103,7 +103,7 @@ class FormatCacheRegenerateFormats extends Command
     {
         $pathParts = \explode('/', $path);
         $formatKey = \reset($pathParts);
-        $filenameParts = explode('-', \end($pathParts), 2);
+        $filenameParts = \explode('-', \end($pathParts), 2);
         $id = (int) $filenameParts[0];
         $fileName = $filenameParts[1];
 

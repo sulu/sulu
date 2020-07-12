@@ -42,7 +42,6 @@ class FormatCacheRegenerateFormatsTest extends TestCase
         $this->formatManager->returnImage(3, '400x400-inset', '2020-test-test.svg')
             ->shouldBeCalled();
 
-
         $this->executeCommand(__DIR__ . '/../../Fixtures/regenerate-formats');
     }
 
