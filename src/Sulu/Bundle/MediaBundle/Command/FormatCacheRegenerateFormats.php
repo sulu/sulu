@@ -101,15 +101,16 @@ class FormatCacheRegenerateFormats extends Command
 
     private function getFileInformationArrayFromPath($path): array
     {
-        $exploded = \explode('/', $path);
-
-        $directories = \explode('/', $path, 2);
-        $fileNameParts = \explode('-', $directories[1], 2);
+        $pathParts = \explode('/', $path);
+        $formatKey = \reset($pathParts);
+        $filenameParts = explode('-', \end($pathParts), 2);
+        $id = (int) $filenameParts[0];
+        $fileName = $filenameParts[1];
 
         return [
-            'id' => $fileNameParts[0],
-            'formatKey' => $directories[0],
-            'fileName' => $fileNameParts[1],
+            'id' => $id,
+            'formatKey' => $formatKey,
+            'fileName' => $fileName,
         ];
     }
 }
