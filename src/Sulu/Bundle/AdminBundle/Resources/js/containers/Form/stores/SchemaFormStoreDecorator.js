@@ -9,11 +9,12 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
     constructor(
         initializer: (schema: RawSchema, jsonSchema: Object) => FormStoreInterface,
         formKey: string,
+        type: ?string,
         metadataOptions: ?{[string]: any}
     ) {
         Promise.all([
-            metadataStore.getSchema(formKey, undefined, metadataOptions),
-            metadataStore.getJsonSchema(formKey, undefined, metadataOptions),
+            metadataStore.getSchema(formKey, type, metadataOptions),
+            metadataStore.getJsonSchema(formKey, type, metadataOptions),
         ]).then(action(([schema, jsonSchema]) => {
             this.innerFormStore = initializer(schema, jsonSchema);
         }));

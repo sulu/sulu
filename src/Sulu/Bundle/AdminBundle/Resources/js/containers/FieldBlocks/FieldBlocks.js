@@ -34,6 +34,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
                 this.settingsFormKey,
                 {},
                 formInspector.locale,
+                undefined,
                 formInspector.options
             );
         }
