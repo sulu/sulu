@@ -48,7 +48,7 @@ interface DefaultSnippetManagerInterface
      * @param string $type
      * @param string $locale
      *
-     * @return SnippetDocument
+     * @return SnippetDocument|null
      *
      * @throws WrongSnippetTypeException
      */
@@ -78,7 +78,7 @@ interface DefaultSnippetManagerInterface
      *
      * @param string $uuid
      *
-     * @return string
+     * @return string|null
      */
     public function loadType($uuid);
 
