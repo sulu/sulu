@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
 use Doctrine\Common\Collections\Collection;
-use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
@@ -56,14 +56,14 @@ interface CategoryTranslationInterface extends AuditableInterface
     /**
      * Get description.
      *
-     * @return Media[]
+     * @return MediaInterface[]
      */
     public function getMedias();
 
     /**
      * Set images.
      *
-     * @param Media[] $images
+     * @param MediaInterface[] $images
      *
      * @return CategoryTranslationInterface
      */

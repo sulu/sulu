@@ -537,8 +537,10 @@ test('Should not fail when MultiSelection item is clicked without configured vie
 
     expect(selection.find('MultiSelection').prop('onItemClick')).toEqual(undefined);
 
-    selection.find('MultiItemSelection Item .content').at(0).prop('onClick')();
-    selection.find('MultiItemSelection Item .content').at(1).prop('onClick')();
+    expect(selection.find('MultiItemSelection Item .content').at(0).prop('onClick')).toEqual(undefined);
+    expect(selection.find('MultiItemSelection Item .content').at(0).prop('role')).toEqual(undefined);
+    expect(selection.find('MultiItemSelection Item .content').at(1).prop('onClick')).toEqual(undefined);
+    expect(selection.find('MultiItemSelection Item .content').at(1).prop('role')).toEqual(undefined);
     expect(router.navigate).not.toBeCalled();
 });
 

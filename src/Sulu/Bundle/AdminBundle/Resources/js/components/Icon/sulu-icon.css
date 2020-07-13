@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'sulu';
   src:
-    url('fonts/sulu.ttf?8gp16r') format('truetype'),
-    url('fonts/sulu.woff?8gp16r') format('woff'),
-    url('fonts/sulu.svg?8gp16r#sulu') format('svg');
+    url('fonts/sulu.ttf?qz0ha3') format('truetype'),
+    url('fonts/sulu.woff?qz0ha3') format('woff'),
+    url('fonts/sulu.svg?qz0ha3#sulu') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -12,7 +12,7 @@
 [class^="su-"], [class*=" su-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'sulu' !important;
-  speak: none;
+  speak: never;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
@@ -24,6 +24,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.su-file-audio:before {
+  content: "\e98c";
+}
+.su-audio:before {
+  content: "\e991";
+}
+.su-video:before {
+  content: "\e992";
+}
 .su-filter:before {
   content: "\e977";
 }

@@ -48,7 +48,6 @@ exports[`Load combined data from TeaserStore and props 1`] = `
         </span>
         <div
           class="content"
-          role="button"
         >
           <div
             class="item"
@@ -127,7 +126,6 @@ exports[`Load combined data from TeaserStore and props 1`] = `
         </span>
         <div
           class="content"
-          role="button"
         >
           <div
             class="item"
@@ -202,7 +200,6 @@ exports[`Load combined data from TeaserStore and props 1`] = `
         </span>
         <div
           class="content"
-          role="button"
         >
           <div
             class="item"
@@ -324,7 +321,6 @@ exports[`Render loading teaser selection 1`] = `
         </span>
         <div
           class="content"
-          role="button"
         >
           <div
             class="item"
@@ -430,7 +426,6 @@ exports[`Render teaser selection with data 1`] = `
         </span>
         <div
           class="content"
-          role="button"
         >
           <div
             class="item"
@@ -554,7 +549,6 @@ exports[`Render teaser selection with presentations 1`] = `
         </span>
         <div
           class="content"
-          role="button"
         >
           <div
             class="item"
