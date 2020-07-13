@@ -109,7 +109,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
             const schemaEntry = jsonpointer.get(settingsSchema, pointer);
 
-            if (!schemaEntry.tags && schemaEntry.items) {
+            if (schemaEntry.items) {
                 return Object.keys(schemaEntry.items).reduce(
                     iconMappingReducerCreator(schemaKey + '/items/'),
                     iconsMapping
