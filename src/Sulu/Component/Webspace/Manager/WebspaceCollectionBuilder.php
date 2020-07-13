@@ -298,7 +298,7 @@ class WebspaceCollectionBuilder
                 $url
             );
         } else {
-            // create all the urls for every localizationcombination
+            // create all the urls for every localization combination
             foreach ($portal->getLocalizations() as $localization) {
                 $language = $url->getLanguage() ? $url->getLanguage() : $localization->getLanguage();
                 $country = $url->getCountry() ? $url->getCountry() : $localization->getCountry();
